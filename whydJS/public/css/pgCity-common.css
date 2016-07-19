@@ -1,0 +1,403 @@
+body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: white;
+    color: black;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.pgCitySection {
+    background: #fff;
+}
+
+#page1 {
+    display: block;
+}
+
+#page2, #page3, #page4 {
+    display: none;
+}
+
+.pgCitySection #page1 {
+    display: none;
+}
+
+.pgCitySection #page2, .pgCitySection #page3, .pgCitySection #page4 {
+    display: block;
+}
+
+/* Black overlay on background image */
+#overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+}
+
+/* WHYD HEADER */
+
+#header {
+    height: 80px;
+    background: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#header .homeLink img,
+#header #baseline,
+#header #inviteBanner,
+#header #notifIcon,
+#header #navbar,
+#header #searchBar,
+#header #navLinks {
+    display: none;
+}
+
+#header .homeLink {
+    /* set custom logo here */
+    display: block;
+    width: 60px;
+    height: 60px;
+    background: url(/images/logo-white.png) no-repeat center left;
+}
+
+#header .cityLink {
+    display: none;
+}
+
+body.pgCitySection #header .cityLink {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 114px;
+    width: 180px;
+    height: 80px;
+    background: url(images/cityname-header.png) no-repeat 8px 17px;
+    text-indent: -9999px;
+}
+
+/* Navitation inks in the header */
+
+#header #city-links {
+    float: right;
+    height: 80px;
+}
+
+#header #city-links nav {
+    height: 100%;
+}
+
+#header #city-links ul {
+    display: block;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#header #city-links li {
+    display: inline-block;
+    height: 100%;
+    line-height: 80px;
+    margin-right: 40px;
+}
+
+#header #city-links li.share {
+    margin-top: 27px;
+    line-height: 18px;
+    vertical-align: top;
+}
+
+#city-links .share > div {
+    height: 22px;
+    line-height: 22px;
+    overflow: hidden;
+}
+
+#header #city-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+}
+
+#header #city-links .join {
+    padding: 5px 20px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+}
+
+#header #city-links .join:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* modifications for POSTS / PEOPLE / PLAYLISTS pages */
+
+.pgCitySection #header {
+    background: white url(images/background.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#contentPane {
+    width: 100%;
+    padding: 0;
+}
+
+#contentPane.withPlayer {
+    padding-bottom: 60px;
+}
+
+.pgCitySection #contentPane {
+    width: 100%;
+    background: white;
+    color: black;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.pgCitySection #mainPanel {
+    overflow: auto;
+    width: 968px;
+    margin: 0 auto;
+    min-height: 90%;
+}
+
+/* POSTS */
+
+.posts {
+    background: none;
+    border: 0 none;
+    padding: 0 15px;
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.post {
+    border: 0 none;
+    padding: 0;
+}
+
+.post > .thumb {
+    width: 80px;
+    height: 80px;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+.post > h2, .post > .title {
+    width: 185px;
+    font-weight: 500;
+    color: white;
+    font-size: 14px;
+}
+
+.post > .author {
+    width: 175px;
+}
+
+#colTracks .post > .author a {
+    font-weight: normal;
+    color: white;    
+}
+
+.post > .author span {
+    border-radius: 16px;
+}
+
+.post > .ago,
+.post > .stats,
+.post > .btns,
+.post > .ext {
+    display: none;
+}
+
+/* PEOPLE */
+
+.people {
+    margin: 0;
+    padding: 0 15px;
+    list-style: none;
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.people li {
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
+.people li .thumb {
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin-right: 14px;
+    background-position: 50% 50%;
+    background-size: cover;
+    border-radius: 40px;
+}
+
+.people .userSubscribe {
+    display: none;
+}
+
+.people .username {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #fff;
+    font-weight: 500;
+}
+
+/* PLAYLISTS */
+
+.playlists {
+    margin: 0;
+    padding: 0 15px;
+    list-style: none;
+}
+
+.playlists li .title {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+}
+
+.playlists li {
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
+.playlists li .thumb {
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin-right: 14px;
+    background-position: 50% 50%;
+    background-size: cover;
+}
+
+
+#categories .posts, #categories .people, #categories .playlists {
+    overflow: hidden;
+}
+
+.column .posts li:last-child, .column .people li:last-child, .column .playlists li:last-child {
+    margin-bottom: 0;
+}
+
+
+
+#mainPanel .notice {
+    margin: 0 auto;
+    clear: both;
+}
+
+#mainPanel .notice p {
+    font-weight: 300;
+    text-align: center;
+}
+
+#mainPanel .notice .title {
+    margin: 0 auto 20px auto;
+    font-size: 30px;
+    color: #515f6a;
+}
+
+#mainPanel .notice a {
+    width: 220px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 18px;
+    color: #3077b4;
+    border: 1px solid #3077b4;
+}
+
+
+#mainPanel .centered {
+    display: block;
+    width: 100%;
+}
+
+#mainPanel .rounded {
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#mainPanel hr {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 50px auto;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    clear: both;
+}
+
+.btnLoadMore, .btnLoadMore:hover {
+    top: 0;
+    width: 100px;
+    height: 32px;
+    line-height: 32px;
+    margin: 20px auto;
+    padding: 0;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #0074cd;
+    border: 1px solid #0074cd;
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+.load {
+    font-weight: 300;
+    font-size: 30px;
+    text-align: center;
+    color: #213950;
+}
+
+/* Page navigation */
+
+#navigation {
+    margin-bottom: 40px;
+}
+
+#navigation ul {
+    display: block;
+    height: 60px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+#navigation li {
+    display: inline-block;
+    height: 100%;
+    margin: 0 30px;
+    line-height: 60px;
+}
+
+#navigation a {
+    color: rgba(0, 0, 0, 0.75);
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#navigation .selected a {
+    color: #3177AF;
+}
+
+#dz-root {
+    display: none;
+}

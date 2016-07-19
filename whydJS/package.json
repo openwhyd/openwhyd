@@ -1,0 +1,53 @@
+{
+  "name": "openwhyd",
+  "version": "0.1.0",
+  "description": "keep play share",
+  "homepage": "http://openwhyd.org",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whyd/whyd.git"
+  },
+  "scripts": {
+    "stop": "forever stop app.js",
+    "start":         "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
+    "start-preprod": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 --emailAdminsOnly start app.js $@",
+    "restart": "npm run stop; npm run start $@;",
+    "run":     "node app.js --color --fakeEmail --digestInterval -1 $@",
+    "run-dev": "node app.js --color --fakeEmail --digestInterval -1 --dev $@",
+    "run-dev-local": "echo to test deezer connect, add local.whyd.com to /private/etc/hosts, then dscacheutil -flushcache; node app.js --color --fakeEmail --digestInterval -1 --dev --urlPrefix http://local.whyd.com:8080 $@",
+    "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
+    "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@"
+  },
+  "engines": {
+    "node": "0.8.14",
+    "npm": ">= 1.0.0"
+  },
+  "directories": {
+    "app": "./app",
+    "config": "./config",
+    "dataTools": "./dataTools",
+    "public": "./public",
+    "tests": "./tests",
+    "get": "./node_modules/get",
+    "hypem": "./node_modules/hypem",
+    "my": "./node_modules/my"
+  },
+  "dependencies": {
+    "algolia-search": "1.5.8",
+    "apn": "1.5.2",
+    "async": "*",
+    "colors": "*",
+    "connect": "2.4.6",
+    "emailjs": "0.3.3",
+    "ent": "2.0.0",
+    "hogan.js": "2.0.0",
+    "htmlparser": "*",
+    "iconv": ">=2.0.6",
+    "mongodb": "^1.4.40",
+    "object-sizeof": "^0.1.2",
+    "request": "2.x",
+    "start-stop-daemon": "0.1.0"
+  },
+  "devDependencies": {}
+}

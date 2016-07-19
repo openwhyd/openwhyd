@@ -1,0 +1,237 @@
+<h1>Create a playlist</h1>
+<div>
+	<form id="playlistForm" action="/api/user" method="get">
+		<div class="fld">
+			<div class="fldLabel">Name:</div>
+			<input type="text" name="name">
+		</div>
+	</form>
+	<div id="formToggler">
+		<a href="#"><b>Add/set playlist cover image</b> (optional)</a>
+	</div>
+	<form id="imageForm" action="/upload" method="post" enctype="multipart/form-data" >
+		<div class="dlgImgPane">
+			<img src="/images/no_image.png" /><br/>
+		</div>
+		<div class="dlgText">
+			<p>Select the image file to import</p>
+			<small>Only JPG, PNG or GIF formats are accepted</small>
+		</div>
+		<input type="file" name="postImg" />
+		<input type="hidden" name="thumbDims" value="300x" />
+		<span class="btnDelete">Delete custom image</span>
+	</form>
+	<div id="buttonBar">
+		<a class="deletePl" href="#">Delete playlist</a>
+		<button class="btnSave greenButton">Save</button>
+	</div>
+</div>
+
+<script>
+/*<![CDATA[*/
+
+$(function() {
+
+	console.log("init dlgEditPlaylist...");
+
+	var lastAvatarUrl = null, lastUploadUrl = null;
+	var $dlg = $(".dlgEditPlaylist");
+	var $img = $dlg.find(".dlgImgPane > img");
+	var $imageForm = $dlg.find('#imageForm');
+	var $input = $dlg.find("input[type=file]");
+	var $playlistForm = $("#playlistForm");
+	var $btnSave = $dlg.find(".btnSave");
+
+	if (window.pagePlaylist) {
+		$dlg.find("input[name=name]").val(decodeHtmlEntities(window.pagePlaylist.name));
+		if (window.pageUser)
+			$img.attr("src", "/img/playlist/" + window.pageUser.id + "_" + window.pagePlaylist.id);
+	}
+	else
+		$dlg.find("a.deletePl").hide();
+
+	function closeAndRefresh(url) {
+		goToPage(url || window.location.href); //window.location.reload(false);
+		window.onDialogClose();
+		//$.modal.close();
+		avgrundClose();
+	}
+
+	$dlg.find("#formToggler a").click(function(e){
+		e.preventDefault();
+		var $dlgCont = $dlg.css("height", "auto").parent().parent().css("height", "auto");
+		$imageForm.toggle();
+		$dlgCont.css("top", $(window).height() / 2 - $dlgCont.height() / 2);
+	});
+
+	$dlg.find("a.deletePl").click(function(e){
+		e.preventDefault();
+		if (confirm("Are you sure you want to delete this playlist?")) {
+			$.ajax({
+				type: "POST",
+				url: "/api/playlist",
+				data: {
+					action: "delete",
+					id: window.pagePlaylist.id
+				},
+				complete: function(res, status) {
+					try {
+						if (status != "success" || !res.responseText) throw 0;
+						var json = JSON.parse(""+res.responseText);
+						closeAndRefresh("/u/" + user.id + "/playlists");
+					}
+					catch(e) {
+						showMessage("An error occured. Please try again.");
+						console.log("error", status, res);
+					}
+				}
+			});
+		}
+	});
+
+	function deleteTempAvatar () {
+		if (lastUploadUrl)
+			$.ajax({
+				type: "POST", url: "/upload",
+				data: {
+					action:"delete",
+					id:lastUploadUrl.split("/").pop()
+				}
+			});
+		lastUploadUrl = null;
+	}
+
+	function setAvatar (url) {
+		if (!url || typeof url != "string") {
+			url = "(blank)";
+			$img.attr("src", "/img/playlist/blank");
+		}
+		else
+			$img.attr("src", url);		
+		lastAvatarUrl = url;
+		$input.show();
+		$dlg.removeClass("loading");
+		$btnSave.show();
+	}
+
+	$dlg.find(".btnDelete").click(setAvatar);
+
+	$imageForm.iframePostForm ({
+		post : function () {
+			deleteTempAvatar();
+			var msg = !$input.val().length ? 'Submitting form...' : 'Uploading file...';
+			console.log(msg);
+			$input.hide();
+			$dlg.addClass("loading");
+			$btnSave.hide();
+		},
+		complete : function (res) {
+			var data = res.substring(res.indexOf('{'), res.lastIndexOf('}')+1);
+			console.log('received', data);
+			lastAvatarUrl = null;
+			try {
+				data = JSON.parse(data);
+				var img = data.postImg;
+				img.path = ""+img.path;
+				var imgPath = (img.path[0] != "/" ? "/" : "") + img.path;
+				if (img.mime && img.mime.indexOf("image/") == 0)
+					lastAvatarUrl = imgPath;
+				else
+					console.log("Invalid image. Please try with another image!");
+				lastUploadUrl = imgPath;
+			}
+			catch (e) {
+				console.log(e);
+				console.log("Upload did not work... Please try again!");
+			}
+			setAvatar(lastAvatarUrl);
+		}
+	});
+
+	$input.change(function (){
+		$imageForm.submit();
+	});
+
+	function savePlaylistImg(pl, whenUpdated) {
+		console.log("lastAvatarUrl", lastAvatarUrl);
+		//if (!lastAvatarUrl)
+		//	return alert("Avatar upload failed... Please try again!");
+		lastUploadUrl = null; // prevent file from being deleted
+		if (lastAvatarUrl)
+			$.ajax({
+				type: "POST",
+				url: "/api/playlist",
+				data: {
+					action: "update",
+					id: pl.id,
+					img: lastAvatarUrl
+				},
+				complete: function() {
+					// update user avatar in page header
+					//$('img[src="/img/u/'+user.id+'"]').attr("src", '/img/u/'+user.id);
+					//var $headerAvatar = $("#loginDiv a[style]");
+					//$headerAvatar.css("background-image", $headerAvatar.css("background-image"));
+					var $thumb = $(".feedHeader .thumb");
+					if ($thumb.length) {
+						// the following is not necessary when uploading image while creating a new playlist
+						var plUrl = "/img/playlist/" + user.id + "_" + pl.id + "?";
+						$thumb.css("background-image", plUrl + $thumb.css("background-image").split("?").pop());
+						var $blur = $thumb.find(".blur");
+						$blur.css("background-image", plUrl + $blur.css("background-image").split("?").pop());
+					}
+					whenUpdated();
+				}
+			});
+		else
+			whenUpdated();
+	}
+
+	$dlg.find(".btnSave").click(function(){
+		$playlistForm.submit();
+	});
+
+	$playlistForm.submit(function(e) {
+		var data = {
+			action: window.pagePlaylist ? "rename" : "create",
+			name: $("input[name=name]").val()
+		};
+		if (window.pagePlaylist)
+			data.id = window.pagePlaylist.id;
+		e.preventDefault();
+		$.ajax({
+			type: "POST",
+			url: "/api/playlist",
+			data: data,
+			success: function(result) {
+				console.log("result", result);
+				savePlaylistImg(result, function(){
+					showMessage("Your playlist has been successfully "+(window.pagePlaylist?"updated":"created")+"!");
+					if (window.pagePlaylist) {
+						window.pagePlaylist = result;
+						$("#mainPanel .feedHeader h1").text(result.name);
+						if (window.pageUser) {
+							var img = "/img/playlist/" + window.pageUser.id + "_" + result.id + "?_t=" + (new Date()).getTime();
+							$("#mainPanel .feedHeader .thumb").css("background-image", "url('"+img+"&localOnly=1')")
+								.find(".blur").attr("src", img + "&remoteOnly=1");
+						}
+					}
+					closeAndRefresh("/u/" + window.user.id + "/playlist/" + result.id);
+				});
+			},
+			error: function(result) {
+				console.log("error", result);
+				showMessage("Oops! something went wrong... Please try again!", true);
+			}
+		});
+		return false;
+	});
+
+	window.onDialogClose = function() {
+		console.log("closing dlgEditProfile");
+		deleteTempAvatar();
+		delete window.onDialogClose;
+	}
+});
+	
+/*]]>*/
+</script>

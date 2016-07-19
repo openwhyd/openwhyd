@@ -1,0 +1,163 @@
+		/								-> controllers.userLibrary
+GET		/home							-> controllers.userLibrary
+POST	/home							-> controllers.userLibrary
+
+GET		/now							-> controllers.now
+
+GET		/favicon.ico					-> controllers.static
+GET		/favicon.png					-> controllers.static
+GET		/about							-> controllers.static
+GET		/press							-> controllers.static
+GET		/privacy						-> controllers.static
+GET		/investors						-> controllers.static
+GET		/concertvenue					-> controllers.static
+GET		/artist							-> controllers.static
+GET		/DJ								-> controllers.static
+GET		/blogger						-> controllers.static
+GET		/label							-> controllers.static
+GET		/tos							-> controllers.static
+GET		/mobile							-> controllers.static
+GET		/iphone							-> controllers.static
+
+GET		/paris							-> controllers.api.city
+GET		/paris/							-> controllers.api.city
+GET		/madrid							-> controllers.api.city
+GET		/madrid/						-> controllers.api.city
+GET		/london							-> controllers.api.city
+GET		/london/						-> controllers.api.city
+
+GET   /crashme -> controllers.crashme
+
+GET		/playlistcontest				-> controllers.playlistcontest
+POST	/playlistcontest				-> controllers.playlistcontest
+GET		/playlistcontest/{uri}			-> controllers.playlistcontest
+GET		/playlistcontest/{uri}/{action}	-> controllers.playlistcontest
+
+GET		/upload_data/{id}				-> controllers.uploadedFile
+GET		/uAvatarImg/{uAvatarImg}		-> controllers.uploadedFile
+GET		/uCoverImg/{uCoverImg}			-> controllers.uploadedFile
+GET		/uPlaylistImg/{uPlaylistImg}	-> controllers.uploadedFile
+GET		/img/{type}/{id}				-> controllers.uploadedFile
+
+GET		/btn							-> controllers.btn
+GET		/btn/{type}						-> controllers.btn
+
+GET		/search							-> controllers.public.search
+POST	/search							-> controllers.public.search
+
+GET		/welcome						-> controllers.userLibrary
+GET		/all							-> controllers.userLibrary
+GET		/stream							-> controllers.userLibrary
+GET		/recent							-> controllers.recentActivity
+GET		/hot							-> controllers.hotTracks
+GET		/hot/							-> controllers.hotTracks
+GET		/hot/{genre}					-> controllers.hotTracks
+GET		/fbconvert						-> controllers.fbConvert
+POST	/fbconvert						-> controllers.fbConvert
+
+GET		/settings						-> controllers.settings
+POST	/settings						-> controllers.settings
+
+GET		/signup							-> controllers.invite
+GET		/api/signup/rTk/{rTk}			-> controllers.invite
+GET		/invite							-> controllers.invite
+POST	/invite							-> controllers.invite
+GET		/invite/{inviteCode}			-> controllers.invite
+DELETE	/invite/{inviteCode}			-> controllers.invite
+
+GET		/button							-> controllers.onboarding
+GET		/bookmarklet					-> controllers.onboarding
+POST	/onboarding						-> controllers.onboarding
+POST	/pick/{step}					-> controllers.onboarding
+GET		/pick/{step}					-> controllers.onboarding
+GET		/pick/{step}/					-> controllers.onboarding
+
+GET		/discover						-> controllers.discover
+POST	/discover						-> controllers.discover
+GET		/discover/{tab}					-> controllers.discover
+POST	/discover/{tab}					-> controllers.discover
+GET		/discover/{tab}/				-> controllers.discover
+POST	/discover/{tab}/				-> controllers.discover
+
+GET		/login							-> controllers.api.login
+POST	/login							-> controllers.api.login
+GET		/facebookLogin					-> controllers.api.facebookLogin
+POST	/facebookLogin					-> controllers.api.facebookLogin
+
+GET		/dlBetaApp/{file}				-> controllers.private.dlBetaApp
+GET		/digest							-> controllers.private.digest
+GET		/contentType					-> controllers.private.contentType
+POST	/contentType					-> controllers.private.contentType
+GET		/getResourceMetadata			-> controllers.private.getResourceMetadata
+POST	/getResourceMetadata			-> controllers.private.getResourceMetadata
+GET		/password						-> controllers.private.password
+POST	/password						-> controllers.private.password
+GET		/thanks							-> controllers.private.thanks
+POST	/thanks							-> controllers.private.thanks
+GET		/upload							-> controllers.private.upload
+POST	/upload							-> controllers.private.upload
+GET		/visit							-> controllers.private.visit
+POST	/visit							-> controllers.private.visit
+
+GET		/post							-> controllers.api.postEdit
+GET		/post/add						-> controllers.api.postEdit
+GET		/post/{pId}						-> controllers.api.postEdit
+GET		/post/{pId}/add					-> controllers.api.postEdit
+GET		/post/{pId}/edit				-> controllers.api.postEdit
+GET		/post/{id}						-> controllers.postViewer
+GET		/post/{id}/{orig}				-> controllers.postViewer
+GET		/c/{id}							-> controllers.postViewer
+GET		/c/{id}/{orig}					-> controllers.postViewer
+GET		/yt/{eId}						-> controllers.postViewer
+GET		/sc/{eId}/{_1}					-> controllers.postViewer
+GET		/dm/{eId}						-> controllers.postViewer
+GET		/vi/{eId}						-> controllers.postViewer
+GET		/ja/{eId}						-> controllers.postViewer
+GET		/dz/{eId}						-> controllers.postViewer
+GET		/fi/{eId}						-> controllers.postViewer
+GET		/bc/{eId}						-> controllers.postViewer
+GET		/bc/{eId}/{_1}					-> controllers.postViewer
+GET		/bc/{eId}/{_1}/{_2}				-> controllers.postViewer
+
+GET		/playlist/{id}					-> controllers.collabPl
+GET		/playlist/{id}/contributors		-> controllers.collabPl
+
+GET		/api/{_subCtr}					-> controllers.subdir
+POST	/api/{_subCtr}					-> controllers.subdir
+GET		/api/{_subCtr}/{_1}				-> controllers.subdir
+POST	/api/{_subCtr}/{_1}				-> controllers.subdir
+GET		/api/{_subCtr}/{_1}/{_2}		-> controllers.subdir
+POST	/api/{_subCtr}/{_1}/{_2}		-> controllers.subdir
+GET		/api/{_subCtr}/{_1}/{_2}/{_3}	-> controllers.subdir
+POST	/api/{_subCtr}/{_1}/{_2}/{_3}	-> controllers.subdir
+
+GET		/admin/{_subCtr}				-> controllers.subdir
+POST	/admin/{_subCtr}				-> controllers.subdir
+GET		/admin/{_subCtr}/{action}		-> controllers.subdir
+
+GET		/style/{style}					-> controllers.userLibrary
+GET		/genre/{genre}					-> controllers.pgGenre
+GET		/genre/{genre}/{tab}			-> controllers.pgGenre
+
+GET		/app							-> controllers.pgApp
+GET		/apps							-> controllers.pgApp
+GET		/app/{appId}					-> controllers.pgApp
+GET		/app/{appId}/{action}			-> controllers.pgApp
+
+GET		/me								-> controllers.userLibrary
+GET		/u/{id}							-> controllers.userLibrary
+GET		/u/{id}/likes					-> controllers.userLibrary
+GET		/u/{id}/playlists				-> controllers.userLibrary
+GET		/u/{id}/playlist/{playlistId}	-> controllers.userLibrary
+GET		/u/{id}/activity				-> controllers.userLibrary
+GET		/u/{id}/subscribers				-> controllers.userLibrary
+GET		/u/{id}/subscriptions			-> controllers.userLibrary
+GET		/{handle}						-> controllers.userLibrary
+GET		/{handle}/likes					-> controllers.userLibrary
+GET		/{handle}/playlists				-> controllers.userLibrary
+GET		/{handle}/playlist/{playlistId}	-> controllers.userLibrary
+GET		/{handle}/activity				-> controllers.userLibrary
+GET		/{handle}/subscribers			-> controllers.userLibrary
+GET		/{handle}/subscriptions			-> controllers.userLibrary
+
+GET		/u/{uId}/playlist/{plId}/edit	-> controllers.private.playlistOrder

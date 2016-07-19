@@ -1,0 +1,202 @@
+<link href="/css/pgCity-common.css" rel="stylesheet" type="text/css" />
+<link href="/css/pgCity-index.css" rel="stylesheet" type="text/css" />
+<link href="/css/pgCity-people.css" rel="stylesheet" type="text/css" />
+<link href="/css/pgCity-playlists.css" rel="stylesheet" type="text/css" />
+<link href="/css/pgCity-tracks.css" rel="stylesheet" type="text/css" />
+<link href="/css/pgCity-popup.css" rel="stylesheet" type="text/css" />
+
+<!-- rewrite relative image URLs -->
+<style>
+    body, .pgCitySection #header {
+        background-image: url({{cityImgPrefix}}background.jpg);
+    }
+    body.pgCitySection #header .cityLink {
+        background-image: url({{cityImgPrefix}}cityname-header.png);
+    }
+    #pgCityPanel h1 {
+        background-image: url({{cityImgPrefix}}cityname.png);
+    }
+</style>
+
+<!-- Index page -->
+<div id="page1" class="switch-page">
+    <div id="pgCityPanel">
+        <h1>{{cityName}}</h1>
+        <p>The best of the music curated by the {{cityName}} community</p>
+        <a href="#tracks" class="button no-ajaxy cityBtn" data-autoplay="true">Start listening</a>
+    </div>
+
+    <div id="wrap-cat">
+      <div id="categories">
+          <div id="colTracks" class="column">
+            <p>Tracks</p>
+            <div class="posts">
+            </div>
+            <p class="more"><a class="cityBtn" href="#tracks">See more</a></p>
+          </div>
+          <div id="colPeople" class="column">
+            <p>People</p>
+            <ul class="people">
+            </ul>
+            <p class="more"><a class="cityBtn" href="#people">See more</a></p>
+          </div>
+          <div id="colPlaylists" class="column">
+            <p>Playlists</p>
+            <div class="playlists">
+            </div>
+            <p class="more"><a class="cityBtn" href="#playlists">See more</a></p>
+          </div>
+      </div>
+    </div>
+</div>
+
+
+
+<!-- Tracks page -->
+<div id="page2" class="switch-page">
+
+    <div id="navigation">
+        <ul>
+            <li class="selected"><a href="#tracks" class="cityBtn">Tracks</a></li>
+            <li><a href="#people" class="cityBtn">People</a></li>
+            <li><a href="#playlists" class="cityBtn">Playlists</a></li>
+        </ul>
+    </div>
+
+    <div id="genres">
+      <p>Genres</p>
+      <ul class="genres">
+      </ul>
+    </div>
+
+    <div id="tracks">
+      <p>Tracks</p>
+      <div class="posts">
+        <p class="load">Loading...</p>
+      </div>
+      <div class="btnLoadMore"><div>&nbsp;</div><span>Load more</span></div>
+    </div>
+    <hr />
+    <div class="notice">
+        <p class="title centered">Are you in {{cityName}}? Get your tracks up here</p>
+        <p><a target="_blank" href="mailto:tony@whyd.com?subject=Please%20feature%20me%20on%20Whyd%20{{cityName}}%20page" class="rounded">Become featured</a></p>
+    </div>
+</div>
+
+
+
+<!-- People page -->
+<div id="page3" class="switch-page">
+
+    <div id="navigation">
+        <ul>
+            <li><a href="#tracks" class="cityBtn">Tracks</a></li>
+            <li class="selected"><a href="#people" class="cityBtn">People</a></li>
+            <li><a href="#playlists" class="cityBtn">Playlists</a></li>
+        </ul>
+    </div>
+
+    <div id="people">
+        <p class="sub centered">Discover these three trending {{citizensName}} curators</p>
+        <div class="top-featured">
+            <p class="load">Loading...</p>
+            <div class="top-posts">
+                <li data-id="">
+                    <div class="cover" style="">
+                        <a class="no-ajaxy" target="_blank" href="#">
+                            <div class="thumb" style=""></div>
+                        </a>
+                        <p class="username">Loading...</p>
+                        <p class="userbio"></p>
+                        <p class="website"><a href="#"></a></p>
+                        <div class="grad"></div>
+                    </div>
+                    <ul class="tags">
+                    </ul>
+                    <p class="artists"></p>
+                    <p class="action"><a href="#">Start listening</a></p>
+                </li>
+                <li data-id="">
+                    <div class="cover" style="">
+                        <a class="no-ajaxy" target="_blank" href="#">
+                            <div class="thumb" style=""></div>
+                        </a>
+                        <p class="username">Loading...</p>
+                        <p class="userbio"></p>
+                        <p class="website"><a href="#"></a></p>
+                        <div class="grad"></div>
+                    </div>
+                    <ul class="tags">
+                    </ul>
+                    <p class="artists"></p>
+                    <p class="action"><a href="#">Start listening</a></p>
+                </li>
+                <li data-id="">
+                    <div class="cover" style="">
+                        <a class="no-ajaxy" target="_blank" href="#">
+                            <div class="thumb" style=""></div>
+                        </a>
+                        <p class="username"><a href="#">Loading...</a></p>
+                        <p class="userbio"></p>
+                        <p class="website"><a href="#"></a></p>
+                        <div class="grad"></div>
+                    </div>
+                    <ul class="tags">
+                    </ul>
+                    <p class="artists"></p>
+                    <p class="action"><a href="#">Start listening</a></p>
+                </li>
+            </div>
+        </div>
+        <hr />
+        <p class="sub centered">These are the people who are active right now, listen to what they're sharing</p>
+        <div class="featured">
+            <div class="posts">
+                <p class="load">Loading...</p>
+            </div>
+            <p class="see-all centered"><a href="#" class="rounded">See everybody</a></p>
+        </div>
+        <hr />
+        <div class="notice">
+            <p class="title centered">Are you in {{cityName}}? Get featured here</p>
+            <p><a target="_blank" href="mailto:tony@whyd.com?subject=Please%20feature%20me%20on%20Whyd%20{{cityName}}%20page" class="rounded">Become featured</a></p>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Playlists page -->
+<div id="page4" class="switch-page">
+
+    <div id="navigation">
+        <ul>
+            <li><a href="#tracks" class="cityBtn">Tracks</a></li>
+            <li><a href="#people" class="cityBtn">People</a></li>
+            <li class="selected"><a href="#playlists" class="cityBtn">Playlists</a></li>
+        </ul>
+    </div>
+
+    <div id="playlists">
+        <p class="sub centered">Three new playlists inspired by {{cityName}} every day</p>
+        <div class="posts">
+            <p class="load">Loading...</p>
+        </div>
+    </div>
+    <hr />
+    <div class="notice">
+        <p class="title centered">Are you in {{cityName}}? Get your playlist here</p>
+        <p><a target="_blank" href="mailto:tony@whyd.com?subject=Please%20feature%20me%20on%20Whyd%20{{cityName}}%20page" class="rounded">Become featured</a></p>
+    </div>
+</div>
+
+<script>
+    if (document.body)
+        document.body.innerHTML = '<div id="overlay"></div>' + document.body.innerHTML;
+    var loggedUser = "{{#loggedUser}}yes{{/loggedUser}}";
+    var headCenter = document.getElementById("headCenter");
+    headCenter.innerHTML += '<a target="_top" class="cityLink no-ajaxy" href="./">{{cityName}}</a>';
+    headCenter.parentNode.innerHTML += '<div id="city-links"><nav><ul><li>'
+        + (!loggedUser ? '<a href="/" class="join no-ajaxy">Join the community</a>' : '<a href="/">Go back to your stream</a>')
+        + '</li><li class="share"><div><div class="fb-share-button" data-href="{{cityUrl}}" data-type="button"></div></div></li></ul></nav></div>';
+</script>

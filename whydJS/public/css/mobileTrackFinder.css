@@ -1,0 +1,203 @@
+html {
+	-webkit-text-size-adjust: 100%; /* keep text size when changing display orientation */ 
+}
+
+body {
+	position: relative;
+	white-space: nowrap;
+	vertical-align: top;
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
+}
+
+body > #searchField {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
+    background: white;
+    opacity: 0.95;
+    z-index: 1;
+}
+
+body > #searchPane {
+	white-space: normal;
+	vertical-align: top;
+	padding: 0;
+	margin: 0;
+	color: #555;
+	width: 100%;
+	padding-top: 26px;
+}
+
+a {
+	color: #555;
+	text-decoration: none;
+}
+
+.page {
+	display: none;
+}
+
+#pgMain {
+	display: block;
+}
+
+#pleaseLogin {
+	margin-top: 200px;
+	text-align: center
+}
+
+#pleaseLogin a {
+	color: #3177AF;
+}
+
+#q {
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	width: 100%;
+	padding: 4px;
+	padding-left: 30px;
+	outline: none;
+	margin: 0;
+	background: url(/images/big-icon-filter-hover.png) no-repeat 5px 50%;
+	border: none;
+	color: #555;
+	font-size: 16px;
+}
+
+.searchClear {
+	position: absolute;
+	top: 7px;
+	right: 0px;
+	border: none;
+	background: url(/images/icon-close.png) no-repeat 0 -16px;
+	width: 16px;
+	height: 16px;
+}
+
+.searchClear.loading {
+	background: url(/images/loader.gif) no-repeat 0 0;
+}
+
+h1 {
+	margin: 0;
+	border-top: 1px solid #ddd;
+	background: #eee;
+	font-size: 12px;
+	padding: 3px;
+	font-weight: normal;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0 5px;
+}
+
+li {
+	overflow: auto;
+	margin: 5px 0;
+	font-size: 14px;
+	line-height: 36px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+li:hover {
+	background: #f0f0f0;
+}
+
+.btnAdd {
+	float: right;
+	margin-top: 5px;
+	font-size: 16px;
+	line-height: 16px;
+	background-color: #eee;
+	padding: 5px;
+	color: #3177AF;
+	cursor: pointer;
+}
+
+#myPosts .btnAdd,
+#pgMain .btnAdd,
+#pgPlaylist .btnAdd {
+	display: none;
+}
+
+.thumb {
+	float: left;
+	width: 40px;
+	height: 40px;
+	background-position: 50% 50%;
+	background-size: cover;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.fadeIn {
+	display: block;
+	-webkit-animation: fadein 0.3s; /* Safari and Chrome */
+	-moz-animation: fadein 0.3s; /* Firefox */
+	-ms-animation: fadein 0.3s; /* Internet Explorer */
+	-o-animation: fadein 0.3s; /* Opera */
+	animation: fadein 0.3s;
+}
+
+li {
+	display: none;
+}
+
+#playlistHeader {
+	overflow: auto;
+}
+
+#playlistHeader > div {
+	float: left;
+	padding: 4px;
+	margin: 4px;
+	margin-right: 4px;
+	border: 1px solid gray;
+	cursor: pointer;
+}
+
+#playlistHeader > div:hover {
+	background: gray;
+	color: white;
+}
+
+/* CSS 3 for fade-in animation */
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}​
+
+/* Opera */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}​

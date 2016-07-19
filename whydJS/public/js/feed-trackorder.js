@@ -1,0 +1,50 @@
+var init = function() {
+	console.log("trackorder init");
+
+	$(".posts").disableSelection().sortable({
+		placeholder: "postDropZone"
+	});
+
+	function submitTrackOrder(plId, order, cb) {
+		$.ajax({
+			type: "POST",
+			url: "/api/playlist",
+			data: {
+				action: "setOrder",
+				id: plId,
+				order: order
+			},
+			success: function(res) {
+				cb(res);
+			},
+			error: function(e) {
+				cb();
+			}
+		});
+	}
+
+	$("#playlistTrackOrderSubmit").click(function() {
+		var order = [];
+		var posts = $(".post").each(function() {
+			order.push($(this).attr("data-pid"));
+		});
+		submitTrackOrder(plId, order, function(res) {
+			if (!res || res.error) {
+				showMessage("Something went wrong... Please excuse us and try again!");
+				console.log("error", res);
+			}
+			else
+				goToPage("/u/" + uId + "/playlist/" + plId);
+		});
+	});
+};
+
+$(function(){
+	var interval = setInterval(function(){
+		console.log("jquery ui loading ready?", !!$.fn.disableSelection);
+		if ($.fn.disableSelection) {
+			init();
+			clearInterval(interval);
+		}
+	}, 500);
+});

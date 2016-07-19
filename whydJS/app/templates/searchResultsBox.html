@@ -1,0 +1,16 @@
+<ul class="showAllResults">
+	<li><a href="/search?q={{q}}" target="_blank">Show all results...</a></li>
+</ul>
+{{#categories}}
+<ul class="resultCategory">
+	<div>{{name}}</div>
+	{{#results}}
+	<li>
+		<a href="{{url}}" target="_blank">
+			<div style="background-image:url('{{img}}');"></div>
+			{{name}}
+		</a>
+	</li>
+	{{/results}}
+</ul>
+{{/categories}}

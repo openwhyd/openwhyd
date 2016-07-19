@@ -1,0 +1,82 @@
+<style>
+	#appPanel {
+		color: #333;
+		font-size: 14px;
+	}
+	#appHeader {
+		overflow: auto;
+		margin-bottom: 20px;
+	}
+	#appHeader > img {
+		float: left;
+		margin: 0 16px;
+	}
+	#appBody {
+		background: #F7F7F7;
+		padding: 100px 150px;
+	}
+	#appBody p {
+		margin-top: 20px;
+	}
+	#appBody ol {
+		margin-top: 20px;
+	}
+	#appBody li {
+		margin-bottom: 20px;
+	}
+	#appBody li.done {
+		color: green;
+		background: url(/images/checkmark.gif) no-repeat 90% -2px;
+	}
+	#appBody li.done > span {
+		display: none;
+	}
+	#appBody li.notyet {
+		color: gray;
+	}
+	#appBody li.notyet > * {
+		display: none;
+	}
+	.foursquarebtn {
+		display: block;
+		background: url(http://adrienjoly.com/heariam/foursquarebtn.png) no-repeat;
+		width: 218px;
+		height: 39px;
+		cursor: pointer;
+	}
+	#appPanel code {
+		margin-top: 8px;
+		background: #FEFFE4;
+		padding: 8px;
+	}
+</style>
+
+{{#app}}
+<div id="appPanel" class="whitePanel">
+	<div id="appHeader">
+		<img src="{{img}}">
+		<h1>{{name}}</h1>
+		<p>{{desc}}</p>
+	</div>
+	<div id="appBody">
+	{{^done1}}
+		<p>Whyd is a place to collect and share your favorite tracks from Youtube, Soundcloud, and Vimeo.</p>
+		<p>Hear I Am suggests relevant Music Lovers (i.e. Whyd users), based on the venues where you check-in.</p>
+		<p>In order to subscribe to these suggestions:</p>
+		<ol>
+			<li>Connect to your Whyd account
+				<span>(<a href="/login?redirect=/app/heariam">log in</a>
+				or <a href="/app/heariam/signup">sign up</a>)</span></li>
+			<li>Connect to your Hear I Am account (via Foursquare)</li>
+		</ol>
+	{{/done1}}
+	{{#done1}}
+		<p>You're one step away from linking your <b>Whyd</b> and <b>Hear I Am</b> accounts!</p>
+		<p><a class="foursquarebtn" href="https://foursquare.com/oauth2/authenticate?client_id=CXU1TGVX5T2E0YOMR5KHMI4VLH53ZNR1CVL12IHKQE1KWRSU&amp;response_type=code&amp;redirect_uri=http://www.hearim.net/4sqCallback/whyd/{{#loggedUser}}{{id}}{{/loggedUser}}"></a></p>
+	{{/done1}}
+	</div>
+</div>
+{{/app}}
+
+<script>
+</script>

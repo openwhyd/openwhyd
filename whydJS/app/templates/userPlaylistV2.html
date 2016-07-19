@@ -1,0 +1,159 @@
+{{#header}}
+{{#playlist}}
+<div class="container">
+{{#inContest}}
+
+
+	
+
+	<div class="playlistContestHeader">
+
+		<div class="divVote">
+			<div class="btnVote">Vote</div>
+			<div class="dlgVote" style="display:none;">
+				<div class="pointe"></div>
+				<p>1 Share = 1 Vote</p>
+				<div class="sharing"></div>
+			</div>
+			<script>
+				var $dlg = $(".dlgVote");
+				var $btn = $(".btnVote").click(function(e){
+					$btn.addClass("active");
+					var offset = $btn.offset();
+					offset.top += 50;
+					offset.left -= 20;
+
+					window.onDialogClose = function() {
+						$btn.removeClass("active");
+						delete window.onDialogClose;
+					};
+
+					if($('.dlgVote').css('display') == "block") {
+						$(".dlgVote").hide();
+						$btn.removeClass("active");
+					}
+					else {
+						$dlg.show();
+						$dlg.offset(offset);
+					}
+
+				});
+				$(document).ready(function(){
+					$(".feedHeader .sharing iframe").appendTo('.dlgVote .sharing');
+				});
+			</script>
+		</div>
+
+		<div class="thumb" style="background-image:url('/img/u/{{uId}}?width=100&amp;height=100');"></div>
+		Hey! This is an official entry in the <strong>{{title}}</strong> playlist contest. If you like the music, vote for it by sharing!
+		<br>Want to make your own entry? Check out the details <a href="{{url}}" target="_blank">here</a>.
+	</div>
+	{{/inContest}}
+
+	<div class="feedHeader">
+		<div class="thumb" style="background-image:url('/img/playlist/{{#user}}{{id}}{{/user}}_{{id}}?localOnly=1');">
+			<img class="blur" src="/img/playlist/{{#user}}{{id}}{{/user}}_{{id}}?remoteOnly=1">
+			<div class="cover-playlist-vinyle"></div>
+		</div>
+		<div class="sharing">
+			<iframe class="twitter-share-button twitter-count-horizontal" src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;via=whyd&amp;text={{{urlEncodedTweet}}}" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
+			<iframe class="fblikeBtn" src="//www.facebook.com/plugins/like.php?href={{urlEncoded}}&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+			<a class="embedPlaylist button" href="javascript:embedPlaylist();">Embed</a>
+		</div>
+		<h1>{{name}}</h1>
+		{{#ownProfile}}
+		<div id="playlistActions">
+			<a class="btnEditPlaylist button" href="javascript:dlgEditPlaylist();">Edit</a>
+		</div>
+		{{/ownProfile}}
+		{{#user}}
+		<div class="playlistOwner">
+			<div style="background-image:url('/img/u/{{id}}?width=100&amp;height=100')"></div>
+			<p>by <a href="/u/{{id}}">{{name}}</a></p>
+		</div>
+		{{/user}}
+	</div>
+	<div class="postsHeader">
+		<a class="btnPlayAll button" href="javascript:window.whydPlayer.playAll();"><i></i>Play all</a>
+		{{#ownProfile}}
+		<a class="orderPlaylist button" href="{{trackOrderUrl}}"><i></i>Change order</a>
+		{{/ownProfile}}
+		<span>{{nbTracks}} tracks</span>
+	</div>
+	{{/playlist}}
+
+	<div class="posts">
+	{{/header}}
+
+	{{{posts}}}
+
+	{{#emptyFeed}}
+		{{#ownProfile}}
+			<!--<div class="emptyFeed">Please add a track this playlist...</div>-->
+			<div class="emptyFeed post">
+				<a class="fakePost" href="javascript:modalPostBox(onNewPost)">
+					<div class="grayOverlay"></div>
+					<div class="addButton">
+						<div id="btnAdd" class="btnAdd"><div></div></div>
+						<span>Add a track</span>
+					</div>
+				</a>
+				<a class="fakePost" href="javascript:modalPostBox(onNewPost)">
+					<div class="grayOverlay"></div>
+					<div class="addButton">
+						<div id="btnAdd" class="btnAdd"><div></div></div>
+						<span>Add a track</span>
+					</div>
+				</a>
+			</div>
+		{{/ownProfile}}
+		{{^ownProfile}}
+			<div class="emptyFeed">No tracks in this playlist yet...</div>
+		{{/ownProfile}}
+	{{/emptyFeed}}
+
+	{{#hasMore}}
+		<div class="btnLoadMore" onclick="loadMore()"><div>&nbsp;</div><span>Load more</span></div>
+	{{/hasMore}}
+
+	{{#user}}
+		<script>
+		function embedPlaylist() {
+			openRemoteDialog('/html/embedPlaylist.html', 'dlgEmbedPlaylist');
+		};
+		$(function(){
+				window.pageUser = {id:"{{id}}", name: "{{{_js_name}}}"};
+			{{#hasMore}}
+				window.nextPageUrl = makeUrl({after:"{{lastPid}}"}); //window.location.href + "?after=" + "{{lastPid}}";
+			{{/hasMore}}
+			{{#hasLess}}
+				window.prevPageUrl = makeUrl({before:"{{firstPid}}"}); //window.location.href + "?before=" + "{{firstPid}}";
+			{{/hasLess}}
+			{{#playlist}}
+				window.pagePlaylist = {id:"{{id}}", name: "{{{_js_name}}}"};
+			{{/playlist}}
+			window.prevPageInList = "{{prevPageInList}}";
+			window.nextPageInList = "{{nextPageInList}}";
+			window.onPageLeave = function() {
+				console.log("on page leave playlist")
+				delete window.prevPageInList;
+				delete window.nextPageInList;
+				delete window.pagePlaylist;
+				delete window.pageUser;
+			}
+		});
+		</script>
+	{{/user}}
+		
+	{{#header}}
+	</div>
+	<a href="/u/{{#user}}{{id}}{{/user}}/playlists" class="btnBackToPlaylists">See all playlists</a>
+	<p class="shortcut-playlist">Keyboard shortcuts: <span><strong>&larr;</strong>previous playlist</span> <span><strong>&rarr;</strong>next playlist</span></p>
+	{{/header}}
+
+	{{#ownProfile}}
+	<script src="/js/feed-edit.js" type="text/javascript" charset="utf-8"></script>
+	{{/ownProfile}}
+
+	
+</div>

@@ -1,0 +1,439 @@
+<style type="text/css">
+/*<![CDATA[*/
+
+	.whitePanel.loading {
+		padding-bottom: 200px;
+	}
+
+	.pgDiscover h1 {
+		font-size: 14px;
+		color: #999;
+		margin-bottom: 15px;
+		font-weight: normal;
+	}
+
+	.pgDiscover p {
+		font-size: 14px;
+		color: #999;
+		margin-bottom: 15px;
+	}
+
+	.pgDiscover .whitePanel {
+		overflow-x: hidden;
+	}
+
+	/* tabs */
+
+	#bigTabSelector {
+		width: 105%;
+		margin-bottom: 40px;
+		overflow: hidden;
+	}
+
+	#bigTabSelector > a {
+		position: relative;
+		float: left;
+		display: block;
+		padding: 20px;
+		padding-top: 60px;
+		background-color: #ececec;
+		color: #5e5e5e;
+		font-weight: bold;
+		border-radius: 4px;
+		text-shadow: 0 1px 0 rgba(255,255,255,1);
+		font-size: 17px;
+		margin-right: 12px;
+		width: 185px;
+		text-align: center;
+		background-repeat: no-repeat;
+		background-position: 50% 20px;
+	}
+
+	#tabSimilar { background-image: url('/images/icon-discover-similar.png'); }
+	#tabFeatured { background-image: url('/images/icon-discover-featured.png'); }
+	#tabRankings { background-image: url('/images/icon-discover-ranking.png'); }
+	#tabFbFriends { background-image: url('/images/icon-discover-friends.png'); }
+	#tabSimilar.selected { background-image: url('/images/icon-discover-similar-actif.png'); }
+	#tabFeatured.selected { background-image: url('/images/icon-discover-featured-actif.png'); }
+	#tabRankings.selected { background-image: url('/images/icon-discover-ranking-actif.png'); }
+	#tabFbFriends.selected { background-image: url('/images/icon-discover-friends-actif.png'); }
+
+	#bigTabSelector > a:hover {
+		background-color: #dddddd;
+	}
+
+	#bigTabSelector > a.selected {
+		background-color: rgb(41, 131, 182);
+		color: white;
+		text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+	}
+
+	/* common section styling */
+
+	.section {
+		/*width: 700px;*/
+		background-position: 50% 50%;
+		padding-bottom: 30px;
+		display: none;
+	}
+
+	.section ul/*.userList*/ > li {
+		padding: 15px 0;
+		border-bottom: 1px dotted #ccc;
+	}
+
+	.section ul/*.userList*/ > li > a {
+		float: left;
+		font-size: 16px;
+	}
+
+	.section ul/*.userList*/ > li > .userSubscribe {
+		position: relative;
+		top: 0px;
+		right: 0;
+		float: left;
+		margin-left: 15px;
+		padding: 7px;
+		font-size: 15px;
+	}
+
+	.section ul/*.userList*/ > li > small {
+		position: absolute;
+		top: 64px;
+		left: 120px;
+	}
+
+	.section ul/*.userList*/ > li > div.thumb {
+		width: 100px;
+		height: 100px;
+		background-size: cover;
+	}
+
+	/* similar users section */
+
+	#secSimilar .nocontent {
+		margin-top: 120px;
+		background: url('/images/back-boo.png') no-repeat top center;
+		padding: 120px 0;
+		text-align: center;
+	}
+
+	#secSimilar .nocontent p {
+		font-size: 16px;
+	}
+
+	#secSimilar .userList div.recomBox {
+		position: relative;
+		float:right;
+		background: #fafafa;
+		border: 1px solid #f1f1f1;
+		width: 250px;
+		height: auto;
+		padding: 10px;
+		font-size: 13px;
+		color: #333;
+		margin: 0;
+	}
+
+	div.recomBox > .scoreClass {
+		position:absolute;
+		top: 9px;
+		right: 9px;
+		font-weight: bold;
+	}
+
+	div.recomBox > .bar {
+		margin: 8px 0;
+		width: 100%;
+		background: #ddd;
+		border-top: 1px solid #ccc;
+		height: 5px;
+		border-radius: 3px;
+	}
+
+	div.recomBox > .bar > div {
+		position: relative;
+		top: -1px;
+		left: -1px;
+		background: #2fa1e2;
+		height: 100%;
+		border-radius: 3px;
+		border-top: 1px solid #2fa1e2;
+		height: 5px;
+	}
+
+	div.recomBox span {
+		font-size: 12px;
+		color: #999;
+		line-height: 20px;
+	}
+
+	/* ranking */
+
+	.rankMedal {
+		position: absolute;
+		top: 4px;
+		left: 73px;
+		width: 44px;
+		height: 56px;
+		line-height: 45px;
+		text-align: center;
+		font-size: 18px;
+		font-weight: bold;
+		color: #555;
+	}
+
+	.rank1 {
+		background-image: url('/images/icon-ranking-first.png');
+	}
+
+	.rank2 {
+		background-image: url('/images/icon-ranking-second.png');
+	}
+
+	.rank3 {
+		background-image: url('/images/icon-ranking-third.png');
+	}
+
+	.userList div.statBox {
+		position: relative;
+		float:right;
+		background: #fafafa;
+		border: 1px solid #f1f1f1;
+		width: 204px;
+		height: auto;
+		padding: 5px 0;
+		font-size: 13px;
+		color: #666;
+		margin: 0;
+		overflow: hidden;
+		text-align: center;
+	}
+
+	div.statBox > div {
+		float: left;
+		padding: 10px 0px;
+		padding-top: 28px;
+		border-right: 1px solid #eee;
+		background-position: 50% 5px;
+		background-repeat: no-repeat;
+		width: 50px;
+	}
+
+	div.statBox > div:last-child {
+		border: none;
+	}
+
+	div.statBox > div.nbAdds {
+		background-image: url('/images/icon-ranking-nbAdds.png');
+	}
+
+	div.statBox > div.nbLikes {
+		background-image: url('/images/icon-ranking-nbLikes.png');
+	}
+
+	div.statBox > div.nbPlays {
+		background-image: url('/images/icon-ranking-nbPlays.png');
+	}
+
+	div.statBox > div.nbSubscribers {
+		background-image: url('/images/icon-ranking-nbSubscribers.png');
+	}
+
+	/* fbfriends */
+
+	#secFbFriends a#fbConnect {
+		display:block;
+		border:none;
+		background: url(/images/fb-connect.png);
+		width: 352px;
+		height: 53px;
+		margin: 20px;
+	}
+	
+	#secFbFriends a#fbConnect:hover {
+		background-position: 0 -54px;
+	}
+	
+	#secFbFriends a#fbConnect:active {
+		background-position: 0 -108px;
+	}
+
+	/* featured (admin only) */
+
+	#btnNewFeatured {
+		width: 100%;
+		border: 1px dashed #CCC;
+		text-align: center;
+		padding: 20px 0;
+		background: #EEE;
+		font-size: 18px;
+	}
+
+	.pgDiscoverFeatured form {
+		padding-left: 200px;
+		padding-top: 20px;
+	}
+
+	.pgDiscoverFeatured form fieldset {
+		padding: 0;
+		margin: 0;
+		border: none;
+		position: relative;
+		margin-bottom: 20px;
+	}
+
+	.pgDiscoverFeatured form fieldset legend {
+		position: absolute;
+		top: 5px;
+		left: -200px;
+		width: 180px;
+		text-align: right;
+		font-weight: bold;
+		font-size: 11px;
+	}
+
+	.pgDiscoverFeatured form fieldset input {
+		float: left;
+		width: 200px;
+		padding: 4px;
+		margin-right: 10px;
+	}
+
+	.pgDiscoverFeatured form fieldset textarea {
+		width: 400px;
+		padding: 4px;
+	}
+
+	.pgDiscoverFeatured form fieldset div.thumb {
+		float: left;
+		width: 100px;
+		height: 50px;
+		background-size: cover;
+		background-position: 50% 50%;
+	}
+
+	/* featured */
+
+	.pgDiscoverFeatured ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.pgDiscoverFeatured ul > li {
+		position: relative;
+		overflow: auto;
+		margin: 0;
+	}
+
+	.pgDiscoverFeatured ul > li > a {
+		color: #333;
+		display: block;
+		font-weight: bold;
+		margin: 8px 0;
+	}
+
+	.pgDiscoverFeatured ul > li > small {
+		position: absolute;
+		top: 64px;
+		left: 320px;
+		color: #777;
+		display: block;
+		width: 600px;
+		font-size: 12px;
+		line-height: 18px;
+	}
+
+	.pgDiscoverFeatured ul > li > div.thumb {
+		float: left;
+		margin-right: 20px;
+		position: relative;
+		overflow: hidden;
+		width: 300px;
+		height: 200px;
+		cursor: pointer;
+	}
+
+	.pgDiscoverFeatured ul > li > div.thumb > div {
+		position:relative;
+		top: 15px;
+		background: #000 url('/images/icon-clock-small.png') no-repeat 5px 5px;
+		padding: 7px;
+		padding-left: 26px;
+		color: white;
+		opacity: 0.8;
+		float: left;
+	}
+
+
+/*]]>*/
+</style>
+
+<div class="whitePanel">
+	<div id="bigTabSelector">
+		<!--{{#isLogged}}<a id="tabSimilar" href="/discover/users">Similar to you<div></div></a>{{/isLogged}}-->
+		<a id="tabFeatured" href="/discover/featured">Featured<div></div></a>
+		<a id="tabRankings" href="/discover/ranking">World Whyd Ranking<div></div></a>
+		{{#isLogged}}<a id="tabFbFriends" href="/discover/fbfriends">Your friends<div></div></a>{{/isLogged}}
+		<!--<a href="/discover/trending">Trending<div></div></a>-->
+	</div>
+
+	<div class="section" id="secSimilar">
+		<p id="subtitle">Please wait a few seconds while we're finding your best matches...</p>
+		<div class="nocontent" style="display:none;">
+			<p>We need to know more about you to recommend you other people...</p>
+			<p>So, add some tracks!</p>
+		</div>
+	</div>
+	<div class="section" id="secFeatured">
+		<p>These are some of the top Whyd community members who have given their time to tell us about their musical projects.</p>
+		<!--<p>They all constantly seek out the best of the newest music, and you can learn more about them in the interviews on our blog.</p>-->
+		{{#isAdmin}}
+			<div id="btnNewFeatured" onclick="$('#addFeatured').toggle();">
+				+ new featured user
+			</div>
+			<form id="addFeatured" action="/discover" method="post" style="display:none">
+				<input type="hidden" name="ajax" value="addFeatured">
+				<input type="hidden" name="date" value="">
+				<fieldset>
+					<legend>Blog post URL</legend>
+					<input type="text" name="url" placeholder="http://blog.whyd.com/XXX">
+					<input type="text" name="title" placeholder="First playlist from Le Digitalophone">
+				</fieldset>
+				<fieldset>
+					<legend>Thumb URL (200x60)</legend>
+					<input type="text" name="img" placeholder="http://images.com/thumb.png">
+					<div class="thumb"></div>
+				</fieldset>
+				<fieldset>
+					<legend>User name + id</legend>
+					<input type="text" name="uNm" placeholder="Le Digitalophone">
+					<input type="text" name="uId" placeholder="4d94501d1f78ac091dbc9b4d">
+				</fieldset>
+				<fieldset>
+					<legend>Description (100 words)</legend>
+					<textarea name="desc" placeholder="Bla bla bla"></textarea>
+				</fieldset>
+				<fieldset>
+					<button class="greenButton">Save</button>
+				</fieldset>
+			</form>
+		{{/isAdmin}}
+		<ul>
+		</ul>
+	</div>
+	<div class="section" id="secRankings"></div>
+	<div class="section" id="secFbFriends">
+		<div id="needFbConnect">
+			<p>Click on the Facebook Connect button to find your friends who are already on Whyd.</p>
+			<a id="fbConnect" href="#"></a>
+		</div>
+		<div id="noFriends" style="display:none;">
+			<p>Hey, looks like you are a music groundbreaker! You're the first of your friends on Whyd.</p>
+			<p>Check out the trending users, or <a href="/invite">invite some of your friends</a>!</p>
+		</div>
+	</div>
+</div>
+
+<script src="/js/discover.js" type="text/javascript" charset="utf-8"></script>

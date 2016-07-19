@@ -1,0 +1,73 @@
+{{#firstTrack}}
+<div id="trackThumb" style="background-image:url('/img/playlist/{{#user}}{{id}}{{/user}}_{{#playlist}}{{id}}{{/playlist}}?localOnly=1');"></div>
+<img id="blur" src="/img/playlist/{{#user}}{{id}}{{/user}}_{{#playlist}}{{id}}{{/playlist}}?remoteOnly=1">
+{{/firstTrack}}
+
+<div id="headingBox">
+	<div class="bg"></div>
+	<div>
+		<p id="playlistRef">
+			{{#playlist}}
+			<a href="{{libRootUrl}}/playlist/{{id}}" target="_blank">{{name}}</a> playlist by
+			{{/playlist}}
+			{{#user}}
+			<a href="/u/{{id}}" target="_blank">{{name}}</a>
+			{{/user}}
+		</p>
+		<p>
+			<!--<span id="trackNumber"></span>-->
+			<span id="trackTitle">
+				<a href="javascript:{}" target="_blank">{{#playlist}}{{nbTracks}} tracks{{/playlist}}</a>
+			</span>
+		</p>
+	</div>
+	<a id="trackSrc" target="_blank" href="javascript:{};"></a>
+</div>
+
+<div id="whydPlayer">
+	<div class="buttons">
+		<button id="btnPrev" onclick="whydPlayer.prev()"></button>
+		<button id="btnPlay" onclick="whydPlayer.playPause()"></button>
+		<button id="btnNext" onclick="whydPlayer.next()"></button>
+		<button id="btnLike" onclick="whydPlayer.like()"></button>
+		<button id="btnRepost" onclick="whydPlayer.repost()"></button>
+	</div>
+	<div class="progressPanel">
+		<div id="progressTrack" class="progressTrack">
+			<div id="progressBar" class="progressBar"></div>
+			<div id="progressCursor" class="progressCursor"></div>
+		</div>
+		<div id="progressTimer"></div>
+	</div>
+	<a id="whydLogo" href="/" target="_blank"></a>
+</div>
+
+<div id="posts" class="customScrollbar">
+	<div class="viewport">
+	    <div class="overview">
+			{{{posts}}}
+			{{#emptyFeed}}
+				<div class="emptyFeed">No tracks in this playlist yet...</div>
+			{{/emptyFeed}}
+	    </div>
+	</div>
+	<div class="scrollbar"><div class="track"><div class="thumb"></div></div></div>
+</div>
+
+<script>
+/*<![CDATA[*/
+	$("body").addClass("playing_none"); // for blur effect on thumb, on startup only
+	$(".post").click(function(e) {
+		playTrack($(this).find("a").first()[0]);
+	});
+	$(".post > a.thumb").attr("onclick","return false;");
+	$(".post > h2 > a").unbind("click").click(function(e) { e.preventDefault(); })
+		.each(function(i, a) {
+			a.innerText = (i+1) + ". " + a.innerText;
+		});
+	$(".post .via").click(function(e) { e.stopPropagation(); });
+	$(document).ready(function() {
+		$("#posts").tinyscrollbar();
+	});
+/*]]>*/
+</script>

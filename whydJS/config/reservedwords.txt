@@ -1,0 +1,373 @@
+### General List of Reserved Words
+### Stuart P. Bentley <stuart@testtrack4.com>, June 4, 2013
+
+## This is a general list of words you may want to consider reserving,
+## in a system where users can pick any name, in a context where the
+## system may use names as well. One prominent example of a system
+## where this is the case would be a site that serves pages for users,
+## at their username, from the site root, like
+## http://twitter.com/stuartpb . In this system, you would want to
+## reserve some routes for pages that would commonly be expected to
+## have certain content, such as http://twitter.com/about
+##
+## This list is written as a very large blacklist, covering any words
+## that could plausibly represent a common subject. Many of these may
+## not apply for your specific context: you should really evaluate
+## each word to see if you *should* reserve it, in a specific context,
+## than just blindly reserving every word on the list. (It's more
+## likely that a user is going to want the name "gopher" than that
+## you'll need to reserve a path for serving files under the Gopher
+## protocol.)
+##
+## It should be noted that reserving the words on this list should be
+## approached from a social standpoint, as well as a technical one.
+## You may want to blacklist some words as even being present in
+## substrings, or using similar-looking characters: for instance,
+## a user with the name "securityupdate" will have an easier time
+## convincing users to run untrustworthy code.
+##
+## This list only includes words of at least two characters with
+## alphanumeric characters, hyphens, and underscores. Other paths
+## you may need to handle specially, such as favicon.ico and
+## robots.txt, are not listed.
+##
+## Hyphenated and otherwise compound words are included sparingly:
+## only in specific cases where the specific compound has a
+## notable existing presence (such as cgi-bin).
+##
+## Note that some words may appear in multiple contexts (such as
+## "less", which is listed both as a term, and the name of a
+## language.)
+
+## Service
+api
+embed
+robots
+spiders
+service
+status
+static
+statics
+dynamic
+
+## Resource paths
+script
+scripts
+style
+styles
+res
+resources
+src
+source
+sources
+img
+image
+images
+
+## Formats and protocols
+js
+cs
+rb
+py
+php
+pl
+cgi
+bin
+cgi-bin
+css
+less
+json
+htm
+html
+asp
+xml
+rss
+atom
+sms
+ssh
+sh
+www
+http
+https
+ssl
+tls
+arpa
+darpa
+telnet
+gopher
+
+## Documentation and policy
+contact
+about
+blog
+rules
+terms
+conditions
+tos
+tac
+tou
+privacy
+policy
+pp
+dmca
+copyright
+complaints
+spam
+phishing
+police
+proof
+
+## Security and support
+security
+support
+help
+update
+updates
+notice
+notices
+alert
+alerts
+warning
+warnings
+patch
+patches
+bug
+bugs
+
+## User accounts
+auth
+authorize
+authorization
+authorizations
+user
+users
+username
+usernames
+password
+passwords
+register
+registration
+me
+myself
+my
+you
+us
+them
+her
+him
+openid
+oauth
+oauth2
+
+## Relationships
+author
+authors
+owner
+owners
+creator
+creators
+master
+masters
+slave
+slaves
+parent
+parents
+child
+children
+branch
+branches
+leaf
+leaves
+root
+roots
+top
+bottom
+left
+right
+up
+down
+before
+after
+
+## Variables
+configuration
+configurations
+cfg
+cfgs
+conf
+config
+configs
+option
+options
+setting
+settings
+rc
+
+## Metadata
+new
+now
+today
+yesterday
+week
+all
+hot
+live
+rising
+popular
+unpopular
+tag
+tags
+more
+less
+private
+public
+
+## Sales
+sales
+billing
+prices
+shop
+cart
+checkout
+
+## Authority
+admin
+admins
+administrator
+administrators
+root
+roots
+master
+master
+satan
+snake
+gonzo
+waldo
+webmaster
+webmasters
+postmaster
+postmasters
+
+## Infrastructure
+syn
+ack
+host
+hosts
+debug
+debugger
+debuggers
+daemon
+daemons
+service
+services
+port
+ports
+console
+consoles
+terminal
+terminals
+server
+servers
+dyno
+dynos
+dynamo
+dynamos
+connect
+connection
+connections
+trace
+traces
+tracer
+tracers
+endpoint
+endpoints
+bucket
+buckets
+event
+events
+firewall
+firewalls
+
+## General verbs
+do
+set
+get
+put
+post
+track
+delete
+insert
+select
+
+## Query terms
+where
+is
+it
+in
+limit
+from
+order
+by
+of
+or
+and
+until
+unless
+either
+if
+not
+when
+
+## Components
+head
+heads
+header
+headers
+foot
+feet
+tail
+tails
+origin
+start
+starts
+begin
+beginning
+beginnings
+end
+ends
+endpoint
+endpoints
+first
+last
+
+## Common nouns
+set
+sets
+page
+pages
+post
+posts
+card
+cards
+clip
+clips 
+token
+tokens
+board
+boards
+mention
+mentions
+
+## Third parties
+aws
+s3
+facebook
+twitter
+google
+gmail
+hotmail
+outlook
+yahoo
+comcast
+centurylink
+aol

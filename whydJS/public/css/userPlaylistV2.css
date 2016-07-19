@@ -1,0 +1,281 @@
+.userPlaylistV2 {
+	background: #F4F4F4;
+}
+
+
+
+
+/* HEAD */
+.userPlaylistV2 .container .feedHeader {
+	padding: 0;
+	margin-bottom: 18px;
+	border-radius: 3px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
+
+.userPlaylistV2 .feedHeader > .thumb {
+	float: left;
+	width: 168px;
+	height: 168px;
+	background-size: cover;
+	background-position: 50% 50%;
+	margin-right: 20px;
+	position: relative;
+	overflow: hidden;
+}
+
+/* http://demosthenes.info/blog/534/Crossbrowser-Image-Blur */
+.userPlaylistV2 .feedHeader > .thumb > img.blur {
+	position: absolute;
+	top: -10px;
+	left: -40px;
+	width: 247px;
+	height: 187px;
+	filter: blur(18px);
+	-webkit-filter: blur(18px);
+	-moz-filter: blur(18px);
+	-o-filter: blur(18px);
+	-ms-filter: blur(18px);
+	filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='18');
+}
+
+.userPlaylistV2 .feedHeader > .thumb > .cover-playlist-vinyle {
+	background: url(/images/pochette-page-playlist.png) no-repeat;
+	width: 168px;
+	height: 168px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.userPlaylistV2 .feedHeader h1 {
+	font-size: 18px;
+	width: 600px;
+	line-height: 22px;
+}
+
+.userPlaylistV2 .feedHeader > .playlistOwner {
+	clear: none;
+	float: left;
+	width: 400px;
+}
+
+.userPlaylistV2 .feedHeader > .playlistOwner > div {
+	width: 48px;
+	height: 48px;
+	border-radius: 24px;
+	-webkit-border-radius: 24px;
+	-moz-border-radius: 24px;
+}
+
+.userPlaylistV2 .feedHeader .sharing {
+	height: 26px;
+	right: 14px;
+	top: 14px;
+}
+
+.userPlaylistV2 .feedHeader #playlistActions {
+	right: 14px;
+}
+
+.userPlaylistV2 .container .button /*.userPlaylistV2 .feedHeader #playlistActions .btnEditPlaylist*/ {
+	border-radius: 3px;
+	color: #646464;
+	font-size: 13px;
+	font-weight: bold;
+	padding: 6px 12px 6px 12px;
+	background: -o-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background: -moz-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background: -webkit-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background: -ms-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background: linear-gradient(-180deg, #FAFAFA 0%, #EDEDED 100%);
+	border: 1px solid #DEDEDE;
+	text-shadow: 0 1px 0 rgba(255,255,255,1);
+	
+}
+
+/*.userPlaylistV2 #contentPane .btnPlayAll {
+	background-image: url(/images/icon-small-play-all.png);
+	background-repeat: no-repeat;
+	background-position: 6px 9px;
+}*/
+.userPlaylistV2 .container .btnPlayAll > i {
+	background: url(/images/icon-small-play-all.png)no-repeat 0 2px;
+	width: 9px;
+	height: 12px;
+	display: inline-block;
+	margin-right: 6px;
+}
+
+.userPlaylistV2 .container.orderPlaylist {
+}
+
+.userPlaylistV2 .container .orderPlaylist > i {
+	background: url(/images/icon-small-changeorder.png)no-repeat;
+	width: 6px;
+	height: 16px;
+	display: inline-block;
+	vertical-align: -3px;
+	margin-right: 6px;
+}
+
+.userPlaylistV2 .container .button:active /*.userPlaylistV2 .feedHeader #playlistActions .btnEditPlaylist:active,
+.userPlaylistV2 .feedHeader .sharing .embedPlaylist:active*/ {
+	background: #EEEEEE;
+	webkit-box-shadow:inset 0 1px 2px rgba(29,29,29,0.2),0 0 1px rgba(255,255,255,0.3);
+	-moz-box-shadow:inset 0 1px 2px rgba(29,29,29,0.2),0 0 1px rgba(255,255,255,0.3);
+	box-shadow:inset 0 1px 2px rgba(29,29,29,0.2),0 0 1px rgba(255,255,255,0.3);
+	border: 1px solid #CFCFCF;
+}
+
+.userPlaylistV2 .container .button.embedPlaylist {
+    padding: 4px 6px;
+	font-size: 11px;
+	display: inline-block;
+	margin-left: 20px;
+    /*color: #646464;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255,255,255,1);
+    font-family: "Helvetica Neue", arial, Sans-serif;
+	border-radius: 3px;
+	background-image: -o-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background-image: -moz-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background-image: -webkit-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background-image: -ms-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
+	background-image: linear-gradient(-180deg, #FAFAFA 0%, #EDEDED 100%);
+	border: 1px solid #DEDEDE;*/
+}
+
+.userPlaylistV2 .feedHeader {
+	overflow: auto;
+	margin-bottom: 15px;
+}
+
+.userPlaylistV2 .feedHeader > .playlistOwner {
+	clear: none;
+	float: left;
+	width: 400px;
+}
+
+.userPlaylistV2 .container  .postsHeader {
+	background: #eee;
+	padding: 5px;
+	overflow: auto;
+}
+
+.userPlaylistV2 .postsHeader > * {
+	display: block;
+	float: right;
+}
+
+.userPlaylistV2 .postsHeader > span {
+	color: #888;
+	font-size: 12px;
+	margin-right: 10px;
+	padding: 8px 3px;
+}
+
+.userPlaylistV2 .postsHeader > .button {
+	font-weight: bold;
+	background: #efefef;
+	color: #555;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.userPlaylistV2 .postsHeader > .btnPlayAll {
+	float: left;
+}
+
+/* POST */
+.userPlaylistV2 .container .posts {
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	margin-bottom: 20px;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+}
+
+.userPlaylistV2 .container .posts {
+	border-top: 0;
+	padding-top: 10px;
+}
+
+.userPlaylistV2 .post {
+	padding: 12px 0;
+	border: 0;
+	border-top: 1px dotted #cccccc;
+}
+
+.userPlaylistV2 .post:first-child {
+	border-top: 0;
+	padding-top: 0;
+}
+
+.userPlaylistV2 .post > .stats > a {
+	width: auto;
+	padding-right: 8px;
+}
+
+/* FOOTER */
+.userPlaylistV2 .container .btnBackToPlaylists {
+	display: block;
+	width: 100px;
+	margin: 0 auto;
+	color: #A5A5A5;
+	padding: 10px 10px 10px 26px;
+	background: url(/images/icon-see-all.png) no-repeat 0 8px;
+	font-family: "HelveticaNeue-Medium", "Helvetica Neue", Helvetica, Arial, Sans-serif;
+}
+
+.userPlaylistV2 .container .btnBackToPlaylists:hover{
+	opacity: 0.8;
+}
+
+.userPlaylistV2 .container .shortcut-playlist {
+	color: #a8a8a8;
+	margin: 40px auto 0 auto;
+	text-align: center;
+}
+
+.userPlaylistV2 .container .shortcut-playlist > span {
+	margin: 0 20px;
+}
+
+.userPlaylistV2 .container .shortcut-playlist > span > strong {
+	margin: 0 10px;
+}
+
+/* PLAYLIST CONTEST */
+
+/* playlist contest header */
+
+.userPlaylistV2 .playlistContestHeader {
+	margin-top: 30px;
+	position: relative;
+	background-color: white;
+	padding: 50px;
+	padding-left: 140px;
+	color: #999;
+	line-height: 18px;
+}
+
+.userPlaylistV2 .playlistContestHeader > .thumb {
+	position: absolute;
+	top: 14px;
+	left: 16px;
+	width: 100px;
+	height: 100px;
+	background-size: cover;
+	background-position: 50% 50%;
+}
+
+.userPlaylistV2 .playlistContestHeader .divVote {
+	float: right;
+}

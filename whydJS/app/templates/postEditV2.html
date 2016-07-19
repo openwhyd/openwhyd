@@ -1,0 +1,114 @@
+{{^embedded}}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="expires" content="0" />
+	<title>Add a track to Whyd</title>
+	{{{head}}}
+	<script>
+		/* playem init */
+		window.SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad";
+		window.DEEZER_APP_ID = 125765;
+		window.DEEZER_CHANNEL_URL = "{{urlPrefix}}/html/deezer.channel.html".replace(/^http\:/, "https:");
+		window.JAMENDO_CLIENT_ID = "c9cb2a0a";	
+		window.YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI"; 
+
+	</script>
+</head>
+<body class="dlgPostEdit {{^embedded}}dlgRepostBox{{/embedded}} loading">
+{{/embedded}}
+	<link rel="stylesheet" type="text/css" media="screen" href="/css/postBoxV2.css" />
+	<div id="contentThumb">
+		<div class="whydGrad"></div>
+		<p id="contentTitle">{{title}}</p>
+		
+		<div class="thumbOverlay failed"></div>
+		<div class="thumbOverlay success"></div>
+	</div>
+	<div id="postForm" class="postPanel">
+		<div id="selPlaylist">
+			<span class="head">Select a playlist (optional)<span>&#x25BC;</span></span>
+			<div class="content">
+				<form action="javascript:;">
+					<input type="text" id="newPlaylistName" placeholder="Create a playlist">
+					<input type="submit" class="greenButton" value="Create">
+				</form>
+				<ul>
+					<li data-plid="null" data-text="Select a playlist (optional)">No playlist</li>
+					{{#playlists}}
+					<li data-plid="{{id}}" data-text="{{name}}">{{name}}</li>
+					{{/playlists}}
+				</ul>
+
+			</div>
+		</div>		
+		<div class="authorImg" style="background-image:url('/img/u/{{uId}}')"></div>
+		<div id="descForm">
+			<textarea name="text" id="text" class="shareField" placeholder="Add a comment">{{text}}</textarea>
+		</div>
+{{#trackPresenceMsg}}
+		<div class="note">
+			NOTE
+			<p id="trackPresenceMsg">{{trackPresenceMsg}}</p>
+		</div>
+{{/trackPresenceMsg}}
+	</div>
+	<div id="confirmationScreen" class="postPanel success">
+		<h1>Yay, you added a new track!</h1>
+		<a href="" target="_blank">See your track</a>
+		<div class="note">
+			<p>Share it with your friends</p>
+			<div class="sharing"></div>
+		</div>
+	</div>
+	<div id="errorScreen" class="postPanel failed">
+		<h1>Sorry it did not work...</h1>
+		<p>Please try again in a few seconds</p>
+		<div class="note">
+			NOTE <p>Check that you're connected to the internet.</p>
+		</div>
+	</div>
+	<div class="buttons">
+		<span id="btnClose">Close</span>
+		<span id="btnCancel">Close</span>
+		<span id="btnRetry">Retry</span>
+		<span id="btnSubmit">
+			{{^editPost}}Add{{/editPost}}
+			{{#editPost}}Save{{/editPost}}
+		</span>
+	{{#editPost}}
+		<div id="lnkDeletePost">Delete this track</div>
+	{{/editPost}}
+	</div>
+	<div id='pageLoader'></div>
+{{^embedded}}
+	<!--<script src="/js/jquery-1.8.2.min.js"></script>-->
+	<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.js"></script>
+	<script src="/js/underscore-min.js"></script> <!-- for jquery.mentionsInput.js -->
+	<script src="/js/jquery.mentionsInput.js"></script>
+	<script src="/js/playem-min.js"></script>
+	<script src="/js/facebook.js"></script>
+{{/embedded}}
+	<script src="/js/postBoxV2.js"></script>
+	<script>
+	/*<![CDATA[*/
+	initPostBox({
+		mode: "{{^embedded}}addFromBookmarklet{{/embedded}}{{#editPost}}editPost{{/editPost}}{{#repost}}repost{{/repost}}"
+		, ctx: "{{ctx}}"
+		, pId: "{{pId}}"
+		, embed: "{{{embed}}}"
+		, title: "{{title}}"
+		, img: "{{img}}"
+		, src: { id: "{{{refUrl}}}".replace(/\&amp\;/g, "&"), name: "{{refTtl}}" }
+{{#pl}} , pl: { id: "{{id}}", name: "{{{_js_name}}}".replace(/\&amp\;/g, "&") }{{/pl}}
+	});
+	/*]]>*/
+	</script>
+{{^embedded}}
+</body>
+</html>
+{{/embedded}}

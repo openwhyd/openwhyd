@@ -1,0 +1,8 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"> 
+    <ShortName>Whyd</ShortName> 
+    <Description>Search music tracks, playlists and users on Whyd</Description> 
+    <InputEncoding>UTF-8</InputEncoding> 
+    <Image width="16" height="16" type="image/x-icon">http://whyd.com/images/favicon.ico</Image> 
+    <Url type="text/html" method="GET" template="http://whyd.com/search?q={searchTerms}"></Url>
+    <!--<Url type="application/x-suggestions+json" template="http://whyd.com/search?q={searchTerms}"/> -->
+</OpenSearchDescription>

@@ -1,0 +1,139 @@
+<h1>Edit profile cover</h1>
+
+<!-- upload -->
+
+<div class="steps">
+
+	<div class="step stepLoading" style="display:block;">
+		loading...
+	</div>
+
+	<!-- legacy upload (fallback) -->
+
+	<form class="step stepUpload" id="avatarForm" action="/upload" method="post" enctype="multipart/form-data" >
+		<div class="dlgText">
+			<p>Select the image file to import</p>
+			<small>Only JPG, PNG or GIF formats are accepted</small>
+		</div>
+		<input type="file" name="postImg" />
+		<input type="hidden" name="thumbDims" value="960x" />
+	</form>
+
+	<!-- html5 / drag'n'drop upload -->
+
+	<div id="avatarDrop" class="step">
+		<p>Drop your image file here</p>
+		<small>Only JPG, PNG or GIF formats are accepted</small>
+		<button>Or Select from computer</button>
+	</div>
+
+	<div id="avatarUploading" class="step">
+		<p>Uploading image, please wait...</p>
+		<div class="progress">
+			<div></div>
+		</div>
+	</div>
+
+	<!-- preview/edit -->
+
+	<div class="step stepEdit">
+		<div class="dlgImgPane">
+			<img src="/images/no_image.png" /><br/>
+		</div>
+		<span id="deleteImage">Delete</span>
+		<span id="uploadImage">Upload another image...</span>
+		<button id="btnSave" class="greenButton">Save</button>
+	</div>
+</div>
+
+
+<script>
+/*<![CDATA[*/
+
+$(function() {
+
+	console.log("init dlgEditProfileCover...");
+
+	var $dlg = $(".dlgEditProfileCover .steps");
+	var $img = $dlg.find(".dlgImgPane img");
+
+	function switchToPage(pageClass) {
+		$(".step").hide();
+		$(pageClass).show();
+	}
+
+	switchToPage("stepLoading");
+
+	var _whydImgUpload = null; // singleton
+
+	function getUploader() {
+		if (!_whydImgUpload) {
+			_whydImgUpload = new WhydImgUpload({
+				holder: $dlg,
+				$boxes: $dlg.find(".step"),
+				onError: function(msg) {
+					showMessage(msg, true);
+				},
+				onImageUploadComplete: function(url) {
+					switchToPage(".stepEdit");
+				}
+			});
+			window.onDialogClose = function() {
+				console.log("closing dlgEditProfileCover");
+				_whydImgUpload.dispose(); //deleteTempAvatar();
+				delete window.onDialogClose;
+			}
+		}
+		return _whydImgUpload;
+	}
+
+	function switchToUploadPage() {
+		getUploader().activate();
+	}
+
+	function closeAndRefresh() {
+		goToPage(window.location.href); //window.location.reload(false);
+		window.onDialogClose && window.onDialogClose();
+		avgrundClose();
+	}
+
+	$("#btnSave").click(function(){
+		save(getUploader().getImgUrl());
+	});
+
+	$("#deleteImage").click(function(){
+		save("(blank)");
+	});
+
+	$("#uploadImage").click(switchToUploadPage);
+
+	function save(url) {
+		if (url)
+			$.ajax({
+				type: "POST",
+				url: "/api/user",
+				data: {cvrImg: url},
+				complete: closeAndRefresh
+			});
+		else
+			closeAndRefresh();
+	}
+
+
+	// populate current cover image
+	$.ajax({
+		type: "GET", url: "/api/user",
+		success: function(user){
+			if (user && user.cvrImg) {
+				$img.attr("src", user.cvrImg);
+				switchToPage(".stepEdit");
+			}
+			else {
+				switchToUploadPage();
+			}
+		}
+	});
+});
+	
+/*]]>*/
+</script>

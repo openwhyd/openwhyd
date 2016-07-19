@@ -1,0 +1,52 @@
+
+{{^rawFeed}}
+<div class="container">
+	<div id="filterSelector">
+		<h2 class="head-name-tab ">Select a genre</h2>
+
+		<ul>
+			{{#genres}}<li class="{{#selected}}selected{{/selected}}"><a href="{{url}}">{{name}}</a></li>{{/genres}}
+		</ul>
+		<div id="sideFooter">
+			<ul>
+				<li><a target="_blank" href="http://blog.whyd.com/">Blog</a></li>
+				<li><a target="_blank" href="http://www.facebook.com/usewhyd">Facebook</a></li>
+				<li><a target="_blank" href="http://twitter.com/whyd">Twitter</a></li>
+			</ul>
+			<p>OpenWhyd © 2016 Lovingly hand-crafted in Paris</p> <!-- TODO: add link to Github -->
+		</div>
+
+	</div>
+	<div class="sub-container">
+		<h2 class="head-name-tab ">Hot Tracks
+			<span class="genreSelector">/ {{#genre}}{{genre}}{{/genre}}{{^genre}}All{{/genre}}</span>
+		</h2>
+		<div class="posts">
+{{/rawFeed}}
+
+	{{{posts}}}
+
+	{{#hasMore}}
+		<div class="btnLoadMore" onclick="loadMore()"><div>&nbsp;</div><span>Load more</span></div>
+		<script> window.nextPageUrl = window.location.href + "?skip=" + "{{skip}}"; </script>
+	{{/hasMore}}
+
+{{^rawFeed}}
+		</div> <!-- end posts -->
+	</div>
+</div>
+<script>
+	window.whydCtx = "hot";
+	$(function() {
+		$(".post:eq(0) .thumb").append('<div class="medal">1</div>');
+		$(".post:eq(1) .thumb").append('<div class="medal">2</div>');
+		$(".post:eq(2) .thumb").append('<div class="medal">3</div>');
+		/*$(".post .thumb").each(function(i){
+			var $post = $(this);
+			if (!$post.find(".medal").length)
+				$post.append('<div class="medal smallMedal">'+(i+1)+'</div>');
+		});
+		$(".post:eq(0) .thumb .smallMedal").removeClass('smallMedal').addClass('bigMedal');*/
+	});
+</script>
+{{/rawFeed}}

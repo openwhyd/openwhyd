@@ -1,0 +1,66 @@
+<div id="mainPanel">
+	<div id="feedHeader">
+		{{#firstTrack}}
+		<div id="trackThumb" style="background-image:url('{{img}}');"></div>
+		<p id="trackTitle">
+			<a href="javascript:{}" target="_blank">{{name}}</a>
+		</p>
+		{{/firstTrack}}
+		<p id="playlistRef">
+			{{#playlist}}
+			<a href="{{libRootUrl}}/playlist/{{id}}" target="_blank">{{name}}</a> by
+			{{/playlist}}
+			{{#user}}
+			<a href="/u/{{id}}" target="_blank">{{name}}</a>
+			{{/user}}
+		</p>
+	</div>
+
+	<div id="whydPlayer">
+		<div class="buttons">
+			<button id="btnPrev" onclick="whydPlayer.prev()"></button>
+			<button id="btnPlay" onclick="whydPlayer.playPause()"></button>
+			<button id="btnNext" onclick="whydPlayer.next()"></button>
+			<button id="btnLike" onclick="whydPlayer.like()"></button>
+			<button id="btnRepost" onclick="whydPlayer.repost()"></button>
+		</div>
+		<div class="progressPanel">
+			<div id="progressTrack" class="progressTrack">
+				<div id="progressBar" class="progressBar"></div>
+				<div id="progressCursor" class="progressCursor"></div>
+			</div>
+			<div id="progressTimer"></div>
+		</div>
+		<a id="whydLogo" href="/" target="_blank"></a>
+	</div>
+
+	<div id="posts" class="customScrollbar">
+		<div class="viewport">
+		    <div class="overview">
+				{{{posts}}}
+				{{#emptyFeed}}
+					<div class="emptyFeed">No tracks in this playlist yet...</div>
+				{{/emptyFeed}}
+		    </div>
+		</div>
+		<div class="scrollbar"><div class="track"><div class="thumb"></div></div></div>
+	</div>
+</div>
+
+<script>
+/*<![CDATA[*/
+	$(".post").click(function() {
+		playTrack($(this).find("a").first()[0]);
+	});
+	$(".post > a.thumb").unbind("click").click(function(e){ //.attr("onclick", null);
+		e.preventDefault();
+	});
+	//$(".post h2 a").attr("href", "javascript:{}");
+	$(".post > h2 > a").click(function(e) {
+		e.preventDefault();
+	});
+	$(document).ready(function() {
+		$("#posts").tinyscrollbar();
+	});
+/*]]>*/
+</script>

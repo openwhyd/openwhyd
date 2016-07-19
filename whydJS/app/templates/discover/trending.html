@@ -1,0 +1,124 @@
+<style type="text/css">
+/*<![CDATA[*/
+	h1 {
+		margin-bottom: 32px;
+	}
+
+	h1, h2 {
+		color: #333;
+	}
+
+	#sideTabSelector {
+		width: 180px;
+		float: left;
+		margin-right: 40px;
+	}
+
+	#sideTabSelector > a {
+		position: relative;
+		display: block;
+		margin-top: 10px;
+		padding: 14px;
+		padding-left: 30px;
+		background: #ececec;
+		color: #5e5e5e;
+		font-weight: bold;
+		border-radius: 4px;
+		text-shadow: 0 1px 0 rgba(255,255,255,1);
+	}
+
+	#sideTabSelector > a.loading {
+		background-position: 8px 50% !important;
+	}
+
+	#sideTabSelector > a:hover {
+		background: #dddddd;
+	}
+
+	#sideTabSelector > a.selected {
+		background: #2fa1e2;
+		color: white;
+		text-shadow: 0 1px 0 rgba(0,0,0,0.1);
+	}
+
+	#sideTabSelector > a.selected > div {
+		position: absolute;
+		right: -6px;
+		top: 15px;
+		background: url("/images/pointe-activetab-discover.png") right center;
+		width: 6px;
+		height: 13px;
+	}
+
+	#mainBox {
+		float: left;
+		width: 560px;
+		background-position: 50% 50%;
+		padding-bottom: 30px;
+	}
+
+	p {
+		font-size: 14px;
+		color: #999;
+		margin-bottom: 15px;
+	}
+
+/*]]>*/
+</style>
+
+<div class="whitePanel">
+	<h1>Subscribe to other music lovers to discover new tracks</h1>
+
+	<div id="sideTabSelector">
+		<a href="/discover/trending" class="selected loading">Trending music lovers<div></div></a>
+		<a href="/discover/fbfriends">Facebook friends<div></div></a>
+	</div>
+
+	<form id="mainBox" action="library" method="post">
+		<h2>Trending music lovers</h2>
+		<p id="subtitle">Please wait...</p>
+	</form>
+</div>
+
+<script>
+/*<![CDATA[*/
+	$("#sideTabSelector a").click(function() {
+		$(this).addClass("loading");
+	});
+	function getFriends(fbId, fbAccessToken, cb) {
+		$.ajax({
+			type: "POST",
+			url: "/discover",
+			data: {
+				ajax: "trending",
+				//fbAccessToken: fbAccessToken,
+				//fbUserId: fbId //res.authResponse.userID
+			},
+			complete: function(res, status) {
+				try {
+					if (status != "success" || !res.responseText) throw 0;
+					//console.log("result", res.responseText);
+					var json = JSON.parse(""+res.responseText) || {};
+					//console.log("result", json);
+					cb && cb(json);
+				}
+				catch(e) {
+					cb && cb({error: e || "An error occured. Please try again."});
+					if (e) throw e;
+				}
+			}
+		});
+	}
+	$(function() {
+		getFriends(null, null, function(json) {
+			$(".loading").removeClass("loading");
+			if (json && !json.error && (json.trendingUsers || []).length) {
+				$("#mainBox").append(_renderUserList(json.trendingUsers));
+				$("#subtitle").text("These people have been sharing a lot of music lately, subscribe to them!");
+			}
+			else
+				(json || {}).error ? showMessage(json.error) : console.log("trendingUsers error", json);
+		})
+	});
+/*]]>*/
+</script>

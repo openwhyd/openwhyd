@@ -1,0 +1,573 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
+	width: 100%;
+	/*height: 300px;*/
+	overflow: hidden;
+	background: #3C3C3C;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+p {
+	padding: 0;
+	margin: 0;
+}
+
+img {
+	border:none;
+}
+
+button {
+	display:block; /* for firefox compat */
+}
+
+.clear {
+	clear: both;
+}
+
+.loading {
+	background-image: url(/images/loader.gif) !important;
+	background-repeat: no-repeat !important;
+}
+
+div.loading {
+	border: none !important;
+	font-size: 0px !important;
+	background-position: center center !important;
+}
+
+/* feed header */
+
+#trackThumb {
+	position:fixed;
+	height: 300px;
+	width: 100%;
+	background-position: 50% 50%;
+	background-size: cover;
+}
+
+body.playing_SoundCloud #trackThumb {
+	background-size: 200px 200px;
+	background-repeat: no-repeat; 
+}
+
+img#blur {
+	display: none;
+	position:fixed;
+	height: 300px;
+	width: 100%;
+}
+
+body.playing_none img#blur {
+	/* http://demosthenes.info/blog/534/Crossbrowser-Image-Blur */
+	display: inline;
+	filter: blur(15px);
+	-webkit-filter: blur(15px);
+	-moz-filter: blur(15px);
+	-o-filter: blur(15px);
+	-ms-filter: blur(15px);
+	filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='15');
+}
+/*
+body.playing_none #trackThumb {
+	display: none;
+}
+*/
+#headingBox {
+	position: absolute;
+	top:10px;
+	left: 10px;
+	right: 10px;
+	height: 60px;
+	z-index: 1;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+}
+
+body.playing #headingBox {
+	display: none;
+}
+
+body.playing:hover #headingBox {
+	display: block;
+}
+
+#headingBox > div {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+#headingBox > div.bg {
+	background: #333;
+	opacity: 0.8;
+}
+
+#headingBox p {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: white;
+	margin: 10px;
+}
+
+#headingBox p#playlistRef {
+	font-size: 14px;
+}
+
+#headingBox p#playlistRef > a {
+	font-weight: bold;
+}
+
+#headingBox #trackTitle.loading {
+	background-image: none !important;
+}
+
+#headingBox #trackSrc {
+	display: none;
+	position: absolute;
+	top: 235px;
+	right: 0;
+	width: 100px;
+	height: 40px;
+	opacity: 0.3;
+}
+/*
+body.playing_Youtube:hover #headingBox #trackSrc {
+	display: block;
+	background-image: url(/images/icon-embedsrc-youtube.png);
+}
+*/
+body.playing_SoundCloud:hover #headingBox #trackSrc {
+	display: block;
+	background-image: url(/images/icon-embedsrc-soundcloud.png);
+}
+
+body.playing_Vimeo:hover #headingBox #trackSrc {
+	display: block;
+	background-image: url(/images/icon-embedsrc-vimeo.png);
+}
+
+/* player bar */
+
+#whydPlayer {
+	position:fixed;
+	top: 300px;
+	width: 100%;
+	background-color: #535558;
+	overflow: hidden;
+	border-top: 1px solid #222;
+	border-bottom: 1px solid black;
+}
+/*
+#whydPlayer button {
+	float: left;
+	width: 16px;
+	height: 16px;
+	padding: 15px;
+	border: none;
+	border-right: 1px solid #222;
+	background-position: 50% 50%;
+	background-color: inherit;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+#whydPlayer #btnPrev {
+	background-image: url("/images/btn-embedplayer-prev.png");
+}
+
+#whydPlayer #btnPlay {
+	background-image: url("/images/btn-embedplayer-play.png");
+}
+
+#whydPlayer #btnPlay.playing {
+	background-image: url("/images/btn-embedplayer-pause.png");
+}
+
+#whydPlayer #btnNext {
+	background-image: url("/images/btn-embedplayer-next.png");
+}
+*/
+
+
+#whydPlayer .buttons button {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	float: left;
+	width: 35px;
+	height: 36px;
+	border: none;
+	background-image: url("/images/btn-player.png");
+	background-color: transparent;
+	cursor: pointer;
+	margin-right: 2px;
+}
+
+#whydPlayer #btnPrev {
+	margin-left: 5px;
+}
+
+#whydPlayer #btnPlay {
+	width: 39px;
+	height: 39px;
+}
+#whydPlayer #btnPrev        { background-position: 0px 0px; }
+#whydPlayer #btnPrev:hover  { background-position: 0px -40px; }
+#whydPlayer #btnPrev:active { background-position: 0px -80px; }
+
+#whydPlayer #btnPlay        { background-position: -36px 0px; }
+#whydPlayer #btnPlay:hover  { background-position: -36px -40px; }
+#whydPlayer #btnPlay:active { background-position: -36px -80px; }
+
+#whydPlayer #btnPlay.playing        { background-position: -36px -120px; }
+#whydPlayer #btnPlay.playing:hover  { background-position: -36px -160px; }
+#whydPlayer #btnPlay.playing:active { background-position: -36px -200px; }
+
+#whydPlayer #btnNext        { background-position: -76px 0px; }
+#whydPlayer #btnNext:hover  { background-position: -76px -40px; }
+#whydPlayer #btnNext:active { background-position: -76px -80px; }
+
+
+
+#whydPlayer #btnLike {
+	display: none;
+}
+
+#whydPlayer #btnRepost {
+	display: none;
+}
+
+#whydPlayer > #whydLogo {
+	position: absolute;
+	top: 15px;
+	right: 10px;
+	width: 42px;
+	height: 18px;
+	background: url('/images/logo-verysmall.png') no-repeat;
+}
+/*
+.progressPanel {
+	display: none;
+}
+*/
+@media all and (max-width: 460px) {
+	.progressPanel * {
+		display: none;
+	}
+}
+
+#progressTimer {
+	position: absolute;
+	top: 17px;
+	left: 375px;
+	color: #777;
+	font-size: 10px;
+}
+
+#progressTrack {
+	position: absolute;
+	top: 21px;
+	left: 135px;
+	width: 230px;
+	height: 6px;
+	border: 1px solid #777;
+	border-top: 1px solid #333;
+	border-radius: 5px;
+	background: #151515;
+}
+
+#progressTrack > #progressBar {
+	height: 100%;
+	width: 0%;
+	background: #68696A;
+	border-radius: 5px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+#progressTrack > #progressCursor {
+	position: absolute;
+	top: -3px;
+	left: -6px;
+	width: 12px;
+	height: 12px;
+	background: url("/images/player-cursor.png");
+}
+
+/* track list */
+
+#posts {
+	position:fixed;
+	top: 351px;
+	bottom: 0px;
+	width: 100%;
+	background: #ddd;
+	overflow: hidden;
+}
+/*
+#posts {
+	height: 0;
+}
+*/
+.emptyFeed {
+	clear:both;
+	display: block;
+	margin: 30px 0;
+	text-align: center;
+}
+
+.post {
+	position: relative;
+	overflow: hidden;
+	padding: 10px;
+	text-shadow: 0 1px 0 rgba(255,255,255,1);
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #888;
+}
+
+.post:hover {
+	background: #f0f1f2;
+}
+
+.post.playing {
+	background-color: #eaf5fc;
+}
+
+.post > h2 {
+	font-size: 14px;
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-weight: normal;
+}
+
+.post > h2 > a {
+	color: #555;
+}
+
+.post > p > a {
+	font-weight: bold;
+}
+
+.post > .author, .post > .postEdit, .post > .text, .post > .src, .post > .stats {
+	display:none;
+}
+
+.post > .via {
+	position: absolute;
+	top: 10px;
+	right: 16px;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	text-indent: 40px;
+}
+
+.post > .via > a {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 16px;
+	height: 16px;
+}
+
+.post > .via > a:hover {
+	background-position: 0 -17px;
+}
+
+.post > .via.soundcloud > a {
+	background-image: url(/images/icon-embedv2-soundcloud.png);
+}
+
+.post > .via.youtube > a {
+	background-image: url(/images/icon-embedv2-youtube.png);
+}
+
+.post > .via.vimeo > a {
+	background-image: url(/images/icon-embedv2-vimeo.png);
+}
+
+.post > .via.file > a {
+	background-image: url(/images/icon-embedv2-mp3.png);
+}
+
+.post > .thumb {
+	float: left;
+	position: relative;
+	margin-top: 2px;
+	margin-right: 8px;
+	width: 12px;
+	height: 12px;
+	overflow: hidden;
+	background: inherit !important;
+}
+
+.post .ago,
+.post .stats,
+.post .btns,
+.post .ext,
+.post > .thumb > img {
+	display: none;
+}
+
+.post > .thumb > .play {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-image: url("/images/icon-embedv2-play-pause.png");
+	opacity: 0.9;
+	background-position: 0 -14px;
+}
+
+.post > .thumb > .play.playing {
+	background-position: 0 0;
+}
+
+.post > .thumb:hover > .play {
+	opacity: 1.0;
+}
+
+/* music video player */
+
+#playerContainer {
+	position:fixed;
+	top: 0 !important;
+	left: 0 !important;
+	right: 0;
+	height: 300px;
+	background-position: 50% 50%;
+	background-size: cover;
+	z-index: 1;
+}
+/*
+#playerContainer.reduced {
+	width: 1px;
+	height: 1px;
+}
+*/
+#playerContainer > div {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+#playerContainer > div > #blackBack {
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	z-index: 1;
+}
+
+#playerContainer > div > #playBtnOverlay {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	background: url("/images/play-big.png") no-repeat center center;
+	opacity: 0.5;
+}
+
+#playerContainer > div > #playBtnOverlay:hover {
+	opacity: 0.8;
+}
+
+/*
+#playerContainer > div > #playBtnOverlay.paused {
+	background: url("/images/play-big.png") no-repeat center center;
+}
+*/
+#playerContainer > div > #playBtnOverlay.playing {
+	background: none;
+}
+
+#playerContainer > div > #playBtnOverlay.playing:hover {
+	background: url("/images/pause-big.png") no-repeat center center;
+}
+
+#playerContainer > div > #genericholder {
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+}
+
+#playerContainer > div > #genericholder > * {
+	width: 100%;
+	height: 100%;
+}
+
+#playerContainer > div > #genericholder embed {
+	width: 100%;
+	height: 100%;
+}
+
+#containerSoundCloud {
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+body.playing_Youtube #playerContainer > div > #playBtnOverlay {
+	display: none;
+}
+
+
+/* scrollbars - Tiny Scrollbar */
+
+.customScrollbar {
+	position: relative;
+	overflow: hidden;
+}
+
+.customScrollbar > .viewport {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+.customScrollbar > .viewport > .overview {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+.customScrollbar > .scrollbar{
+	position: relative;
+	float: right;
+	width: 10px;
+	height: 100% !important;
+}
+.customScrollbar > .scrollbar > .track {
+	height: 100% !important;
+	width:10px;
+	position: relative;
+	background: #bbb;
+}
+.customScrollbar > .scrollbar > .track > .thumb {
+	height: 20px;
+	width: 10px;
+	background: #777;
+	border-radius: 5px;
+	cursor: pointer;
+	overflow: hidden;
+	position: absolute;
+}
+.customScrollbar .disable {
+	display: none;
+}
+

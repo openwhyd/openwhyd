@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdns-files.deezer.com/js/min/dz.js"></script>
+</head>
+<body>
+	<script>
+        console.log("DZ.override_https() from channel file", window.location.protocol === "https:");
+        if (window.location.protocol === "https:")
+          DZ.override_https();
+	</script>
+</body>
+</html>

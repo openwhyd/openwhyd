@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:fb="https://www.facebook.com/2008/fbml">
+  <head>
+    <title>Request Tester C</title>
+  </head>
+
+  <body>
+    <div id="fb-root"></div>
+    <script src="/js/jquery-1.8.2.min.js"></script>
+    <script src="/js/topicBrowser.js"></script>
+    <script src="http://connect.facebook.net/en_US/sdk.js"></script>
+      <input type="button"
+        onclick="FB.login(); return false;"
+        value="login"
+      />
+    <p>
+      <input type="button"
+        onclick="sendRequestToOneRecipient(); return false;"
+        value="Send Request to One User"
+      />
+      <input type="text" value="100002293124890" name="user_id" />
+      </p>
+    <p>
+    <input type="button"
+      onclick="sendRequestToManyRecipients(); return false;"
+      value="Send Request to Many Users"
+    />
+    </p>
+    
+    <script>
+	  //<![CDATA[
+    var fbId;
+    if (href.indexOf("whyd.com/") >0) {
+      fbId = "169250156435902";
+    }else if(href.indexOf("whyd.fr/") >0){
+      fbId = "1059973490696893";
+    }else{
+      fbId = "118010211606360";
+    };
+
+	  window.user = {id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly"};
+  
+      FB.init({
+        appId  : fbId,
+        version : "v2.3",
+        status : true,
+        cookie : true,
+        oauth: true
+      });
+
+      function sendRequestToOneRecipient() {
+        var user_id = document.getElementsByName("user_id")[0].value;
+        FB.ui({method: 'apprequests',
+          message: 'Show me your interests on whyd!',
+          to: user_id
+        }, requestCallback);
+      }
+
+      function sendRequestToManyRecipients() {
+        FB.ui({method: 'apprequests',
+          message: 'Show me your interests on whyd!'
+        }, requestCallback);
+      }
+      
+      function requestCallback(response) {
+        console.log(response);
+		// old requests 1.0 format
+		if (response && response.request_ids)
+			invitedToConversation(null, {fbRequestIds:response.request_ids}, window.user.name + " invited you to join whyd", function(params) {
+				console.log("sent!");
+			});
+		else if (response && response.request && response.to)
+			invitedToConversation(null, {fbRequestIds:response.request, fbTo:response.to}, window.user.name + " invited you to join whyd", function(params) {
+				console.log("sent!");
+			});
+		else
+			console.log("invalid response");
+      }
+	  //]]>
+    </script>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<style media="screen" type="text/css">
+
+#dlgWelcome > h1 {
+	margin: 0;
+}
+
+#dlgWelcome p {
+	color: #888;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+#dlgWelcome > p {
+	margin: 12px 0;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #ccc;
+}
+
+#dlgWelcome > div {
+	margin-top: 30px;
+	padding-left: 200px;
+	height: 160px;
+}
+
+#dlgWelcome > div > h2 {
+	padding-top: 10px;
+	font-size: 18px;
+}
+
+#addFirstTrack {
+	background: url('/images/addFirstTrack.png') no-repeat;
+	position: relative;
+}
+
+#addFromUser {
+	background: url('/images/addFromUser.png') no-repeat;
+	position: relative;
+}
+
+.point {
+	width: 12px;
+	height: 12px;
+	background: rgba(255,0,0,0.7);
+	position: absolute;
+	top: 33px;
+	left: 132px;
+	z-index: 0;
+	border-radius: 100px;
+	box-shadow: 0 0 10px rgba(255,0,0,0.70);
+}
+
+.point2 {
+	width: 12px;
+	height: 12px;
+	background: rgba(255,0,0,0.7);
+	position: absolute;
+	top: 82px;
+	left: 122px;
+	z-index: 0;
+	border-radius: 100px;
+	box-shadow: 0 0 10px rgba(255,0,0,0.70);
+}
+
+
+#dlgWelcome > a {
+	float: right;
+	width: 133px;
+	height: 50px;
+	background: url('/images/btn-letsrock.png') no-repeat;
+}
+
+#dlgWelcome > a:hover {
+	background-position: 0 -51px;
+}
+
+#dlgWelcome > a:active {
+	background-position: 0 -102px;
+}
+
+</style>
+<div id="dlgWelcome">
+
+	<h1>Welcome to Whyd!</h1>
+	<p>Whyd is a simple way to keep, play and share all the tracks you find on Youtube, Soundcloud, Hype Machine, etc...</p>
+
+	<div id="addFirstTrack">
+		<div class="point">	</div>
+		<h2>Add a first track to your library</h2>
+		<p>Click on the green add button, search for your track, and add it to your library in 2 clicks!</p>
+	</div>
+
+	<div id="addFromUser">
+		<div class="point2"></div>
+		<h2>Add a track from another user</h2>
+		<p>Listen to the tracks posted by other users, and add the ones you love to your own library, instantly.</p>
+	</div>
+
+	<a href="/stream"></a>
+
+</div>
+<script>
+/*<![CDATA[*/
+
+	window.onDialogClose = function() {
+		console.log("closing dlgWelcome");
+		goToPage("/stream");
+		avgrundClose();
+		delete window.onDialogClose;
+		return false;
+	}
+	$('#dlgWelcome > a').click(window.onDialogClose);
+/*]]>*/
+</script>

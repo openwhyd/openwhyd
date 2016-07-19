@@ -1,0 +1,22 @@
+{
+ "background": {"scripts": ["chrome.js"]},
+ "browser_action": {
+ "default_icon": "icon-48.png",
+ "default_title": "OpenWhyd ✚ track"
+ },
+ "name": "OpenWhyd ✚ track",
+ "description": "Add a music track to OpenWhyd, from any web page",
+ "homepage_url": "https://openwhyd.org",
+ "icons": {
+     "16": "icon-16.png",
+     "64": "icon-64.png",
+     "96": "icon-96.png",
+     "152": "icon-152.png" },
+ "permissions": [
+     "tabs",
+     "http://*/*",
+     "https://*/*"
+ ],
+ "version": "2.2",
+ "manifest_version": 2
+}
