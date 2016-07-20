@@ -17,6 +17,6 @@
      "http://*/*",
      "https://*/*"
  ],
- "version": "2.2",
+ "version": "2.21",
  "manifest_version": 2
 }
