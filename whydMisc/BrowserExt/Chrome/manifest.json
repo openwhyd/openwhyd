@@ -1,7 +1,7 @@
 {
  "background": {"scripts": ["chrome.js"]},
  "browser_action": {
- "default_icon": "icon-48.png",
+ "default_icon": "icon-96.png",
  "default_title": "OpenWhyd ✚ track"
  },
  "name": "OpenWhyd ✚ track",
