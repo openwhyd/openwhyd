@@ -32,8 +32,15 @@ whydJS/appd.dmn
 whydJS/prev.out
 whydJS/prev.err
 whydJS/v8.log
+
+!whydJS/node_modules
+whydJS/node_modules/*
+
+!whydJS/node_modules/get
+!whydJS/node_modules/my
+!whydJS/node_modules/hypem
+
 whydJS/access.log
-whydJS/node_modules
 whydJS/npm-debug.log
 
 whydDB/db
