@@ -10,14 +10,15 @@
   },
   "scripts": {
     "stop": "forever stop app.js",
-    "start":         "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
+    "start": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
     "start-preprod": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 --emailAdminsOnly start app.js $@",
     "restart": "npm run stop; npm run start $@;",
-    "run":     "node app.js --color --fakeEmail --digestInterval -1 $@",
+    "run": "node app.js --color --fakeEmail --digestInterval -1 $@",
     "run-dev": "node app.js --color --fakeEmail --digestInterval -1 --dev $@",
     "run-dev-local": "echo to test deezer connect, add local.whyd.com to /private/etc/hosts, then dscacheutil -flushcache; node app.js --color --fakeEmail --digestInterval -1 --dev --urlPrefix http://local.whyd.com:8080 $@",
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
-    "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@"
+    "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@",
+    "lint": "eslint app"
   },
   "engines": {
     "node": "0.8.14",
@@ -49,5 +50,11 @@
     "request": "2.x",
     "start-stop-daemon": "0.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^3.1.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.11.1",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^5.2.2"
+  }
 }
