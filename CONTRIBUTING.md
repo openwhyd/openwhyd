@@ -34,3 +34,7 @@ More generally, make sure to follow these three principles:
 - Keep your PRs short
 - Keep your PRs simple
 - Avoid submitting PRs that may cause long discussions with the PR reviewer and/or other contributors
+
+## Code guidelines
+
+- Optimize for search: [Like in the React.js project](https://facebook.github.io/react/contributing/design-principles.html), we want to make it easy for contributors to search for symbols (constants, variables and function names. So don't hesitate to give them verbose/specific names.
