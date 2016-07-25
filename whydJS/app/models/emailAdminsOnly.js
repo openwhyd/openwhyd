@@ -12,7 +12,7 @@ console.log("EMAIL ADMINS ONLY");
 exports.email = function(emailAddr, subject, textContent, htmlContent, userName, callback) {
 	
 	var isAdmin = (
-		emailAddr.indexOf(process.env.WHYD_ADMIN_EMAIL.split('@')[0])_> -1
+		emailAddr.indexOf(process.env.WHYD_ADMIN_EMAIL.split('@')[0]) > -1
 	);
 		
 	console.log("email address is admin? ", isAdmin);
