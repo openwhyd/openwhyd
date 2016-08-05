@@ -32,6 +32,7 @@ An awesome web platform for collecting, playing and sharing music from various s
 * `WHYD_URL_PREFIX` (default: `http://localhost:8080`)
 * `WHYD_PORT` (default: `8080`)
 * `WHYD_DEV` (default: `false`)
+* `WHYD_USE_GRAPHICS_MAGICK` (if set to `false`, imagemagick will be used instead of image manipulation)
 * `MONGODB_DATABASE` (default: `openwhyd_data`)
 * `MONGODB_HOST` (default: `localhost`)
 * `MONGODB_PORT` (default: `27017`)
