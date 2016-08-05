@@ -27,7 +27,7 @@ function inviteByRequestId(reqIds, response) {
 				console.log("request id not found: ", reqId);
 			if (--remaining == 0) {
 				console.log("invitation token not found => redirect to /");
-				//response.render("Your invite code is invalid or expired. Please go to http://whyd.com/ to request an invite.");
+				//response.render("Your invite code is invalid or expired. Please go to http://openwhyd.org/ to request an invite.");
 				response.redirect("/");
 			}
 		});

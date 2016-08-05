@@ -1,6 +1,6 @@
 var get = require('get');
 
-get('http://whyd.com', function(err, page) {
+get('http://openwhyd.org', function(err, page) {
   if (err) {
     console.log(err);
   } else {

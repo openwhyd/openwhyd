@@ -24,14 +24,14 @@ var i18n = {
 	"EN": {
 		h1: "Create a playlist contest",
 		/*t1: "Overview",*/
-		c1: "Playlist contests engage your community and helps you grow your fans by engaging the Whyd community too.",
+		c1: "Playlist contests engage your community and helps you grow your fans by engaging the OpenWhyd community too.",
 		t2: "Engage and reward your community",
 		c2: [
 			{li: "Encourage your audience to dig deeper and identify your personality"},
 			{li: "Give people an option to participate, and declare their tastes"},
 			{li: "Reward your community by featuring their playlists or with other prizes!"}
 		],
-		t3: "Engage the Whyd community and grow your audience",
+		t3: "Engage the OpenWhyd community and grow your audience",
 		c3: [
 			{li: "Whyd music lovers are constantly searching for new music, engage them by offering a chance to get to know your site"},
 			{li: "Grow the number of fans for your site/project"}
@@ -40,7 +40,7 @@ var i18n = {
 		c4: [
 			{li: "You create a playlist contest with the name of your site/brand/project/event, giving people a starting point to build a playlist, and choose dates that you’d like the contest to begin and end (optimal time is two weeks)."},
 			{li: "You copy and paste the rules (see below) into a post on your site, or other announcements via social media."},
-			{li: "Participants go to Whyd to create a playlist with the title you select."},
+			{li: "Participants go to OpenWhyd to create a playlist with the title you select."},
 			{li: "Whyd will feature the contest and push it out to all users across the site, plus provide support on social media and individual invitations to key users."},
 			{li: "Participants then share their playlists as much as possible. Every time a playlist is shared it is shared with your name (because it’s the title)."},
 			{li: "Listeners can find the playlists by searching for the title, and then vote by sharing it to their networks via FB and Twitter. But most people will be driven to listen to the playlists by the participant themselves!"},
@@ -55,7 +55,7 @@ var i18n = {
 				{li: "The top three most-shared playlists (judged by the counters for FB and Twitter shares) are the finalists, and the winner is then selected by you to be featured on your site or receive another great prize!"}
 			]},
 			{h: "Participants", ul: [
-				{li: "Participants go to Whyd to create a playlist with the title you select."},
+				{li: "Participants go to OpenWhyd to create a playlist with the title you select."},
 				{li: "Participants then share their playlists as much as possible. Every time a playlist is shared it is shared with your name (because it’s the title)"},
 				{li: "The winner will share again the victory page!"}
 			]},
@@ -67,7 +67,7 @@ var i18n = {
 		t6: "Copy and Paste (or completely rewrite) the basics for your site:",
 		t7: "Contest Rules & Instructions",
 		c7: [
-			{p: "Make a playlist titled [[YOURNAME]] on Whyd (use this invite link to sign up if you are not already a member)"},
+			{p: "Make a playlist titled [[YOURNAME]] on OpenWhyd (use this invite link to sign up if you are not already a member)"},
 			{p: "Add tracks to the playlist (at least XX tracks) that reflect our style."},
 			{p: "Share this playlist as much as possible on FB and Twitter, the top 3 most-shared playlists (according to the tickers on the playlists) are finalists."},
 			{p: "The best playlist will be featured on our site"}
@@ -89,16 +89,16 @@ var i18n = {
 	//////////////////
 	"FR": {
 		h1: "Créer une compétition de playlists",
-		c1: "Les concours de playlist engagent votre communauté et aident à monter votre fan base avec les music lovers de Whyd aussi!",
+		c1: "Les concours de playlist engagent votre communauté et aident à monter votre fan base avec les music lovers de OpenWhyd aussi!",
 		t2: "Engagez et Récompensez votre communauté",
 		c2: [
 			{li: "Encouragez votre audience à mieux connaître votre identité"},
 			{li: "Donnez la possibilité de participer et déclarer leurs goûts musicaux"},
 			{li: "Récompensez votre communauté en relayant leurs playlists ou avec d'autres prix!"}
 		],
-		t3: "Engagez la communauté Whyd et montez votre audience",
+		t3: "Engagez la communauté OpenWhyd et montez votre audience",
 		c3: [
-			{li: "Les membres de Whyd sont des diggers de sons, engagez avec eux et mettez en avant votre site."}
+			{li: "Les membres de OpenWhyd sont des diggers de sons, engagez avec eux et mettez en avant votre site."}
 		],
 		t5: "BREAKDOWN: Qui fait quoi ?",
 		c5: [
@@ -109,7 +109,7 @@ var i18n = {
 				{li: "Les trois playlists les plus partagées (selon les stats de partage via FB ou Twitter) seront finalistes, et c'est à vous de choisir le vainqueur!"}
 			]},
 			{h: "Participants", ul: [
-				{li: "Les participants vont sur Whyd pour créer leurs playlists avec le nom de votre site/marque/projet/évènement que vous avez sélectionné."},
+				{li: "Les participants vont sur OpenWhyd pour créer leurs playlists avec le nom de votre site/marque/projet/évènement que vous avez sélectionné."},
 				{li: "Les participants partagent leurs playlists au maximum via les réseaux sociaux. Chaque fois qu'une playlist est partagée, le nom de votre site/marque/projet/évènement est partagé."},
 				{li: "Le vainqueur partage encore!"}
 			]},
@@ -121,7 +121,7 @@ var i18n = {
 		t6: "Copiez et Collez (ou récrire complètement) les règes de base pour votre site:",
 		t7: "Règles et Instructions",
 		c7: [
-			{p: "Créez une playlist avec le titre {{VOTRE NOM DE SITE}} sur Whyd (utilisez ce lien d'invite si vous n'êtes pas encore un membre)"},
+			{p: "Créez une playlist avec le titre {{VOTRE NOM DE SITE}} sur OpenWhyd (utilisez ce lien d'invite si vous n'êtes pas encore un membre)"},
 			{p: "Ajoutez {{NUMÉRO MINIMUM}} des tracks qui reflètent votre style."},
 			{p: "Partagez votre playlist au maximum sur Facebook et Twitter, les trois playlists les plus partagées (voir stats sur les playlists) seront finalistes."},
 			{p: "La meilleure des trois playlists sera présentée comme vainqueur sur notre site!"}
@@ -151,7 +151,7 @@ exports.renderInfoPage = function(plC) {
 		'<p>Title: ' + safe.title + '</p>',
 		'<p>Organizer: ' + uiSnippets.htmlEntities((mongodb.usernames[plC.uId] || {}).name) + '</p>',
 		'<p>URL: '+renderLink(safe.url)+'</p>',
-		'<p>Whyd URL (redirection): '+renderLink(config.urlPrefix + '/playlistcontest/' + safe.uri) + '</p>',
+		'<p>OpenWhyd URL (redirection): '+renderLink(config.urlPrefix + '/playlistcontest/' + safe.uri) + '</p>',
 		'<p>=> JOIN URL: '+renderLink(config.urlPrefix + '/playlistcontest/' + safe.uri + '/join') + ' (to include in your contest page, for candidates to join)</p>',
 		'</div>'
 	].join("\n");

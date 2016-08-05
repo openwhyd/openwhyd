@@ -141,7 +141,7 @@
 			jsonPost("/api/notif", {action:"test"}, function(){
 				cb(
 					confirm("have you received a push notification?") &&
-					confirm("is there a badge with 3 pending notifications on the whyd app icon?")
+					confirm("is there a badge with 3 pending notifications on the openwhyd app icon?")
 				);
 			});
 		},

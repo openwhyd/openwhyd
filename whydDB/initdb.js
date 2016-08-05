@@ -1,7 +1,7 @@
 print("connecting to openwhyd_data database...");
 db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
 
-print("creating whyd collections...");
+print("creating openwhyd collections...");
 db.createCollection("config");
 db.createCollection("email");
 db.createCollection("invite");

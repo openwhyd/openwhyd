@@ -1,5 +1,5 @@
 /**
- * whyd embed script
+ * openwhyd embed script
  * @author adrienjoly, whyd
  **/
 
@@ -10,7 +10,7 @@ var DEBUG = false, // for soundmanager
 	DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf("/", 10)) + "/html/channel.html";
 
 (function(){
-	console.log("-= whyd embed script =-");
+	console.log("-= openwhyd embed script =-");
 
 	// prevents bug in firefox 3
 	window.console = window.console || {log:function(){}};
@@ -94,7 +94,7 @@ var DEBUG = false, // for soundmanager
 		})(url);
 	})("/js/whydEmbed.js");
 
-	// whyd api + rendering
+	// openwhyd api + rendering
 
 	var view = (function(){
 		var that = {
@@ -229,7 +229,7 @@ var DEBUG = false, // for soundmanager
 			for (var i in tracks)
 				playem.addTrackByUrl(getTrackUrl(tracks[i].eId), tracks[i]);
 			forEachElement("li", function(element) {
-				var wtn = element.getAttribute("data-wtn"); // whyd track number
+				var wtn = element.getAttribute("data-wtn"); // openwhyd track number
 				if (wtn !== null)
 					element.onclick = function(){
 						playem.play(wtn);

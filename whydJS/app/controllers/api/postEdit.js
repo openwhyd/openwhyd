@@ -23,7 +23,7 @@ function renderLoginForm(form) {
 	/* other way (ajax) of doing this:
 		var loginDiv = document.getElementById("whydLogin");
 		function checkUserLogin(){
-			console.log("checking whyd user login...");
+			console.log("checking openwhyd user login...");
 			include(urlPrefix + "/api/user?callback=_whyd_auth_cb");
 		};
 		window._whyd_auth_cb = function(user) {
@@ -136,12 +136,12 @@ exports.controller = function(request, reqParams, response, error) {
 	userModel.fetchByUid(user.id, function(user) {
 		userModel.fetchPlaylists(user, {}, function(playlists){
 			if (reqParams.pId) {
-				// repost or edit from whyd ui
+				// repost or edit from openwhyd ui
 				var action = request.url.split("?")[0].split("/").pop();
 				makePostEditDlg(action, reqParams, playlists, render);
 			}
 			else if (reqParams.embed || reqParams.eId) {
-				// adding new track from bookmarklet or external search results on whyd.com
+				// adding new track from bookmarklet or external search results on openwhyd.org
 				makeAddDlg(reqParams, playlists, user, render);
 			}
 			else

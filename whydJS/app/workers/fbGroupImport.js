@@ -1,6 +1,6 @@
 /**
  * fbGroupImport
- * transforms a facebook group feed of videos to whyd posts
+ * transforms a facebook group feed of videos to openwhyd posts
  * @author adrienjoly, whyd
  */
 

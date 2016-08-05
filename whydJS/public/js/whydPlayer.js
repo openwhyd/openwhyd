@@ -1,5 +1,5 @@
 /**
- * whyd player
+ * openwhyd player
  * @author adrienjoly
  **/
 
@@ -549,11 +549,11 @@ function WhydPlayer () {
 
 	var defaultDefaultParams = {
 		playerId: "genericplayer",
-		origin: window.location.host || window.location.hostname || "whyd.com",
+		origin: window.location.host || window.location.hostname || "openwhyd.org",
 		playerContainer: genericHolder
 	};
 
-	var inProduction = window.location.href.indexOf("//whyd.com") > -1;
+	var inProduction = window.location.href.indexOf("//openwhyd.org") > -1;
 	var inTest = window.location.href.indexOf("//whyd.fr") > -1;
 
 	var PLAYERS = {

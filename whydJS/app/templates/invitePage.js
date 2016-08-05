@@ -32,7 +32,7 @@ exports.renderSignupPage = function(p) {
 	var params = {
 		title: "Join Whyd",
 		pageDesc: !p.sender ? mainTemplate.defaultPageMeta.desc :
-			p.sender.name + " uses Whyd to access the billions of tracks available on the web today. "
+			p.sender.name + " uses OpenWhyd to access the billions of tracks available on the web today. "
 			+ "Join our community to listen to " + p.sender.name + "'s music and add your favorite tracks!",
 		pageThumb: !p.sender ? mainTemplate.defaultPageMeta.img : config.imgUrl("/u/" + p.sender.id),
 		urlPrefix: config.urlPrefix,
@@ -60,7 +60,7 @@ exports.renderInvitePage = function (sender, loggedUser, inviteCode, iPo, email,
 	var params = {};
 	params.title = /*config.landingStream &&*/ !inviteCode ? "Join Whyd" : "Your invitation to Whyd";
 	params.pageDesc = !sender ? mainTemplate.defaultPageMeta.desc :
-		sender.name + " uses Whyd to access the billions of tracks available on the web today. "
+		sender.name + " uses OpenWhyd to access the billions of tracks available on the web today. "
 		+ "Join our community to listen to " + sender.name + "'s music and add your favorite tracks!";
 	params.pageThumb = !sender ? mainTemplate.defaultPageMeta.img : config.imgUrl("/u/" + sender.id);
 	params.urlPrefix = config.urlPrefix;

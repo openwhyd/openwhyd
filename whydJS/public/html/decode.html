@@ -7,7 +7,7 @@
 
     function throwError()
     {
-        window.location.href = 'signaturedecodererror://whyd.com/' ;
+        window.location.href = 'signaturedecodererror://openwhyd.org/' ;
 
     }
 
@@ -16,7 +16,7 @@
            var script = unescape(decodeURIComponent(script_escaped));
            var decypher = makeDecyper(script);
            signatures_encoded = eval('(' + signatures_encoded + ')');
-           window.location.href = 'signaturedecoder://whyd.com/' + signatures_encoded.map(decypher);
+           window.location.href = 'signaturedecoder://openwhyd.org/' + signatures_encoded.map(decypher);
     }
 
 function FunctionInterpreter(code, scopeChain){

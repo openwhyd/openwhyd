@@ -30,7 +30,7 @@
 
   - - - notice - - -
   since the periodic call of refreshHotTracksCache() was removed:
-  -> the prevRank is never updated => no movement information will be displayed on whyd.com/hot
+  -> the prevRank is never updated => no movement information will be displayed on openwhyd.org/hot
   -> the score of a track will only be updated on a (re-)post, like, or play operation on that track
 */
 

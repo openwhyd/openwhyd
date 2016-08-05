@@ -1,5 +1,5 @@
 /**
- * whyd bookmarklet v2
+ * openwhyd bookmarklet v2
  * @author adrienjoly, whyd
  **/
 
@@ -7,7 +7,7 @@
 if (undefined == window.console) 
 	console = {log:function(){}, info:function(){}, error:function(){}, warn:function(){}};
 
-console.log("-= whyd bookmarklet v2 =-");
+console.log("-= openwhyd bookmarklet v2 =-");
 
 (function(){
 
@@ -96,7 +96,7 @@ console.log("-= whyd bookmarklet v2 =-");
 	
 	// PARAMETERS
 	
-	var urlPrefix = findScriptHost(FILENAME) || "https://whyd.com",
+	var urlPrefix = findScriptHost(FILENAME) || "https://openwhyd.org",
 		urlSuffix = "?" + (new Date()).getTime();
 
 	// user interface
@@ -174,7 +174,7 @@ console.log("-= whyd bookmarklet v2 =-");
 				id: 'whydThumb' + (this.nbTracks++),
 				title: track.name || track.title || "Search Whyd",
 				element: img,
-			}), href = "http://whyd.com/search?q=" + encodeURIComponent(track.name);
+			}), href = "http://openwhyd.org/search?q=" + encodeURIComponent(track.name);
 			divThumb.onclick = function() {
 				var whydPop = window.open(href, "whydSearch");
 			};

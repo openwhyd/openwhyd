@@ -237,7 +237,7 @@ function appendTrackMappings(track, cb){
 }
 
 // given the eId of a track -> returns a track object with metadata and mappings fields.
-// called whenever a track is posted on whyd => saved in the track collection in db.
+// called whenever a track is posted on openwhyd => saved in the track collection in db.
 exports.fetchMetadataForEid = function(eId, callback){
 	var cb = worker.newJob("fetchMetadataForEid:"+eId).wrapCallback(callback);
 	var match = parseEid(eId);

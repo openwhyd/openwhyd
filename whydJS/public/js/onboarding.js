@@ -173,7 +173,7 @@ function initOnbButton() {
 
 	$(".toggleMode").click(toggleMode);
 
-	// NB: this only works when run from whyd.com (verified domain for the chrome extension)
+	// NB: this only works when run from openwhyd.org (verified domain for the chrome extension)
 	if ($.browser.chrome && parseInt((""+$.browser.version).split(".")[0]) >= 15) {
 		$("#btnInstallChromeExt").click(function(e){
 			console.log("trying to install chrome extension", e.target.href);

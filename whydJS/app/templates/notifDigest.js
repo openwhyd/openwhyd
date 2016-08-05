@@ -156,13 +156,13 @@ exports.NotifDigest.prototype.renderText = function() {
 	}
 	text = text.concat([
 		"",
-		"The whyd team",
+		"The openwhyd team",
 		"",
 		"P.S : We're all ears at " + p.supportEmail + ", or you can chat live with us while browsing on " + p.whydUrl,
 		""
 	]);
 	if (p.linkUnsubscribeNotifs) {
-		text.push("You receive too many Whyd notifications? You can: ");
+		text.push("You receive too many OpenWhyd notifications? You can: ");
 		text.push("- " + p.linkUnsubscribeNotifs.text + " (" + p.linkUnsubscribeNotifs.url + ")");
 		if (p.linkReduceNotifs)
 			text.push("- or " + p.linkReduceNotifs.text + " (" + p.linkReduceNotifs.url + ")");

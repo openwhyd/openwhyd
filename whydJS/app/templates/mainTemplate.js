@@ -1,6 +1,6 @@
 /**
  * mainTemplate templates
- * server-side functions that are commonly used to render whyd pages
+ * server-side functions that are commonly used to render openwhyd pages
  * @author adrienjoly, whyd
  **/
 
@@ -14,7 +14,7 @@ var mongodb = require("../models/mongodb.js");
 var render = {urlPrefix:""};
 
 var includeSuffix = "?" + config.version;
-var fbLikeUrl = 'http://www.facebook.com/usewhyd'; // 'http://whyd.com';
+var fbLikeUrl = 'http://www.facebook.com/openwhyd'; // 'http://openwhyd.org';
 
 var youtubeKeyApi, playemFile;
 var fbId;
@@ -161,7 +161,7 @@ exports.renderWhydFrame = function (html, params) {
 		'  <body class="'+(params.bodyClass || '')+'">',
 		'   <div id="fb-root"></div>',
 			html,
-			"<script>", // for all whyd pages, including playlist embed
+			"<script>", // for all openwhyd pages, including playlist embed
 
 			'var DEEZER_APP_ID = 125765;',
 			'var DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf("/", 10)) + "/html/channel.html";',

@@ -2248,7 +2248,7 @@ body.pgPost .powered{
 
 }
 
-#tabGoodies > div .content > div /* whyd icon/button */ {
+#tabGoodies > div .content > div /* openwhyd icon/button */ {
 	display: inline-block;
 	margin-right: 20px;
 	vertical-align:bottom;

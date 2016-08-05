@@ -1,6 +1,6 @@
 /**
  * ContentEmbed
- * a class for embedding content from whyd and other web sites: youtube, dailymotion, vimeo, soundcloud...
+ * a class for embedding content from openwhyd and other web sites: youtube, dailymotion, vimeo, soundcloud...
  * @author adrienjoly, whyd
  */
 
@@ -432,7 +432,7 @@ function ContentEmbed () {
 						embedRef.url = embedRef.url || url;
 						embedRef.id = embedRef.id || "/"+embedDetectors[i].whydPrefix+"/"+embedRef.videoId;
 						embedRef.embedType = embedDetectors[i];
-						if (embedDetectors[i].require) { // e.g. whyd topics need to be queried to the server before rendering
+						if (embedDetectors[i].require) { // e.g. openwhyd topics need to be queried to the server before rendering
 							var timeout = setTimeout(function() {
 								//console.log("ContentEmbed: unable to embed from this URL, request timed out")
 								callback({error:"unable to embed from this URL, request timed out"});

@@ -6,7 +6,7 @@
 
 `GET  /login/action=logout`
 
-Clears whyd cookie (HTTP headers) and session (database)
+Clears openwhyd cookie (HTTP headers) and session (database)
 
 Parameters: (GET or POST)
 
@@ -82,19 +82,19 @@ Response: (JSON)
 
 *   **error**: (string, optional) error message, if any
 *   **redirect**: (string, optional) url to redirect to, if login succeeded
-*   **fbUser**: (object, optional) contains Facebook user data {id, name, email}, if this Facebook user is not connected to a Whyd account
+*   **fbUser**: (object, optional) contains Facebook user data {id, name, email}, if this Facebook user is not connected to a OpenWhyd account
 *   **user**: (object, if `includeUser` is set to true): complete db object about the logged in user, containing following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions` 
 
 **CONNECT FACEBOOK ACCOUNT TO WHYD ACCOUNT**
 
 Enables:
 
-*   Possibility to log in to Whyd using Facebook connect
+*   Possibility to log in to OpenWhyd using Facebook connect
 *   Find Facebook friends that have an account on Whyd
 *   Recommendation of friends to invite
 *   Receive a notification when a Facebook friend signs up to Whyd
 
-This endpoint is called when a Whyd user (that is already logged in) clicks on a Facebook Connect button, and this Facebook account is not yet connected to another Whyd account.
+This endpoint is called when a OpenWhyd user (that is already logged in) clicks on a Facebook Connect button, and this Facebook account is not yet connected to another OpenWhyd account.
 
 `html : (GET  /facebookLogin/action=link&fbUid&fbAccessToken)`
 
@@ -126,9 +126,9 @@ Parameters:
 *   **redirect**: (string, optional) URL to be redirected to, if sign up succeeds
 *   **ajax**: (string ,optional) set to "true" if response is to be given in JSON format, instead of redirects
 *   **fbUid**: (string, optional) Facebook user id (if using FB connect)
-*   **fbTok**: (string, optional) Facebook access token (if using FB connect) => Facebook friends that are already on whyd will be notified by email.
+*   **fbTok**: (string, optional) Facebook access token (if using FB connect) => Facebook friends that are already on openwhyd will be notified by email.
 *   **<s>fbRequest</s>**<s>: (string, deprecated) Facebook request id. Used when the visitor was invited through a Facebook request, so that the request could be cleared after the visitor successfully signed up.</s>
-*   **<s>inviteCode</s>**<s>: (string, deprecated) code given by another user who invited the current visitor to signup. can be the user id of that user. this code was used for validation, when whyd was still in closed beta.</s>
+*   **<s>inviteCode</s>**<s>: (string, deprecated) code given by another user who invited the current visitor to signup. can be the user id of that user. this code was used for validation, when openwhyd was still in closed beta.</s>
 *   **iBy**: (string, optional) id of the user who invited the visitor to sign up to whyd. the invited visitor will be automatically subscribed to the inviter, and the inviter will be notified upon his friend's sign up.
 *   **iPg:** (string, optional) URL of the page from which the sign up was initiated (for analytics)
 *   **iRf**: (string, optional) referrer of the sign up page (origin of the visitor, for analytics)
@@ -148,7 +148,7 @@ This endpoint is called between the sign up of the new user ("register" endpoint
 The aim of the onboarding process is to prevent the new user from seeing an empty stream on his first visit. In order to do that, the user is invited to:
 
 1.  pick one or more genres that he enjoys listening to
-2.  follow a list of recommended whyd users, based on the genres he picked
+2.  follow a list of recommended openwhyd users, based on the genres he picked
 3.  install the "whyd button" (bookmarklet) in order to ease the process of adding tracks
 
 List of valid genre tags: electro, hip hop, indie, folk, rock, punk, metal, blues, r&b, soul, jazz, classical, reggae, pop, latin, world
@@ -156,7 +156,7 @@ List of valid genre tags: electro, hip hop, indie, folk, rock, punk, metal, blue
 Note: user must be logged in to use this endpoint.
 
 `POST  /onboarding`
-<undefined><li>**Action 1: fetch recommended whyd users, based on a list of genres**</li></undefined>
+<undefined><li>**Action 1: fetch recommended openwhyd users, based on a list of genres**</li></undefined>
 
 Parameters:
 
@@ -167,7 +167,7 @@ Response: (JSON)
 
 *   **error**: (string, optional) error message, if any
 
-<undefined><li>**Action 2: fetch Facebook friends that have a whyd account**</li></undefined>
+<undefined><li>**Action 2: fetch Facebook friends that have a openwhyd account**</li></undefined>
 
 Parameters:
 
@@ -178,12 +178,12 @@ Response: (JSON)
 
 *   **error**: (string, optional) error message, if any
 
-<undefined><li>**Action 3: subscribe to selected whyd users + send a "welcome" email to the new user**</li></undefined>
+<undefined><li>**Action 3: subscribe to selected openwhyd users + send a "welcome" email to the new user**</li></undefined>
 
 Parameters:
 
 *   **ajax="follow"**
-*   **uids:** (string) comma-separated list of whyd user IDs to follow
+*   **uids:** (string) comma-separated list of openwhyd user IDs to follow
 
 Response: (JSON)
 
@@ -207,7 +207,7 @@ Response: (JSON)
 
 *   _id: user id
 *   name: full name of the user
-*   handle: username used to create a custom whyd.com/username profile URL
+*   handle: username used to create a custom openwhyd.org/username profile URL
 *   email: (string)
 *   bio: (string)
 *   loc: (string) free text describing the declared location of the user
@@ -222,7 +222,7 @@ Response: (JSON)
 *   **lastArtists**: (if `includeTags` set to true) an array of artist names, extracted from the user's last posts
 *   fbId: id of the facebook user connected to this account
 *   fbTok: last session token received from connecting to facebook (used for fb requests)
-*   **twId**: Twitter handle connected to this whyd account
+*   **twId**: Twitter handle connected to this openwhyd account
 *   **twTok**: last session token received from connecting to Twitter
 *   **twSec**: last session secret received from connecting to Twitter
 *   lastFm: (object)
@@ -230,7 +230,7 @@ Response: (JSON)
     *   name: username of the user's connected last.fm account
     *   sk: session key provided by last.fm (used for last.fm api requests)
 
-*   lnk: (object) links to the following websites / social networks of the user (for whyd profile):
+*   lnk: (object) links to the following websites / social networks of the user (for openwhyd profile):
 
     *   fb: facebook profile
     *   igrm: instagram handle
@@ -266,15 +266,15 @@ Updates one or more fields of the logged in user.
 Allowed Parameters (one or many can be passed):
 
 *   **name:** (string) full user name, to be displayed publicly on whyd
-*   **img**: (string) user's avatar, must be the url of a file that was just uploaded to whyd (**cf upload API**)
-*   **cvrImg:** (string) user's profile banner, must be the url of a file that was just uploaded to whyd (**cf upload API**)
+*   **img**: (string) user's avatar, must be the url of a file that was just uploaded to openwhyd (**cf upload API**)
+*   **cvrImg:** (string) user's profile banner, must be the url of a file that was just uploaded to openwhyd (**cf upload API**)
 *   **pwd:** (string) new password (plain, no md5), `oldPwd` must also be set
 *   **oldPwd**: (string) old password (plain, no md5), to be provided if intending to change password using `pwd`
 *   **handle**: (string) user's handle / username / profile custom URL --  will be validated against a list of reserved words
-*   **email**: (string) user's email address (for whyd use only, not displayed publicly)
+*   **email**: (string) user's email address (for openwhyd use only, not displayed publicly)
 *   **fbId**: (integer) user's Facebook user id, after a successful Facebook connect / auth. **fbTok** must be provided too.
 *   **fbTok**: (string, mandatory if **fbId** was set) user's Facebook auth token, after a successful Facebook connect / auth.
-*   **twId**: (string) Twitter handle connected to this whyd account (set to empty string to disconnect)
+*   **twId**: (string) Twitter handle connected to this openwhyd account (set to empty string to disconnect)
 *   **twTok**: (string) last session token received from connecting to Twitter (to send with **twId**)
 *   **twSec**: (string) last session secret received from connecting to Twitter (to send with **twId**)
 *   **apTok**: (string) user's Apple Push Notification token (string of 64 hexadecimal chars)
@@ -315,7 +315,7 @@ Response:
 
 Returns a list of tracks posted the logged in user, and by other users, matching the given full-text search query.
 
-This endpoint is used on the experimental whyd.com/mobile page, as a compromise between looking up one's own tracks and re-adding from others.
+This endpoint is used on the experimental openwhyd.org/mobile page, as a compromise between looking up one's own tracks and re-adding from others.
 
 `html : (GET  /search?context=quick&q=coco)`
 
@@ -341,7 +341,7 @@ Returns a list of matching:
 *   users
 *   playlists
 
-This endpoint is used for the whyd.com/search page.
+This endpoint is used for the openwhyd.org/search page.
 
 `html : (GET  /search?q=coco)`
 
@@ -432,7 +432,7 @@ _Parameters:_
 *   **action** : ("insert" to insert or edit a track)
 *   **_id** : (string, optional) id of the post to edit (if not provided, a new track is added)
 *   **pId** : (string, optional) id of the post to re-add (if not provided, no existing post is referred to)
-*   **eId** : (string) whyd id of the track embed (ex : "/yt/XdJVWSqb4Ck", see "_syntax of eid identifiers_", below)
+*   **eId** : (string) openwhyd id of the track embed (ex : "/yt/XdJVWSqb4Ck", see "_syntax of eid identifiers_", below)
 *   **name** : (string) artist and title of the track
 *   **text** : (string, optional) comment of the track
 *   **img :** (string, optional) url of the image representing the track
@@ -485,7 +485,7 @@ Return:
 
 **Likes Tracks by User**
 
-[GET /[uId]/likes?format=json](http://whyd.com/adrien/likes?format=json)
+[GET /[uId]/likes?format=json](http://openwhyd.org/adrien/likes?format=json)
 
 Parameters:
 
@@ -593,8 +593,8 @@ Return:
 
 Exemples:
 
-*   [/adrien?format=json](http://whyd.com/adrien?format=json) : returns the last 20 tracks I posted in JSON format
-*   [/adrien/playlist/10?format=json&limit=10000](http://whyd.com/adrien/playlist/10?format=json&limit=10000) : returns the last 10000 tracks I posted in my "electronica" playlist
+*   [/adrien?format=json](http://openwhyd.org/adrien?format=json) : returns the last 20 tracks I posted in JSON format
+*   [/adrien/playlist/10?format=json&limit=10000](http://openwhyd.org/adrien/playlist/10?format=json&limit=10000) : returns the last 10000 tracks I posted in my "electronica" playlist
 
 **INCOMING STREAM (HOMEPAGE)**
 
@@ -637,11 +637,11 @@ _Parameters:_
 
 Return:
 
-**Share a post to Whyd users (notification)**
+**Share a post to OpenWhyd users (notification)**
 
 `POST /api/post/<pId>/sendToUsers`
 
-User must be logged in => whyd session cookie must be included.
+User must be logged in => openwhyd session cookie must be included.
 
 _Parameters:_
 
@@ -757,7 +757,7 @@ _Parameters:_
 
 *   **action**: "update"
 *   **id**: (int) number of the playlist (0 being the id of the user's first playlist)
-*   **img**: (string) path of the uploaded image, in Whyd upload directory.
+*   **img**: (string) path of the uploaded image, in OpenWhyd upload directory.
 
 Returns: (JSON)
 
@@ -765,11 +765,11 @@ Returns: (JSON)
 *   **id**: the id of updated playlist (as provided in the call)
 *   **name**: the name of the updated playlist
 
-**Share a playlist to Whyd users (notification)**
+**Share a playlist to OpenWhyd users (notification)**
 
 `POST /api/playlist`
 
-User must be logged in => whyd session cookie must be included.
+User must be logged in => openwhyd session cookie must be included.
 
 _Parameters:_
 
@@ -842,7 +842,7 @@ syntax:
 
 **URLs for fetching images**
 
-Images can be fetched for any Whyd resource (tracks, user, playlists...) from a unified URL scheme, provided the id of this ressource.
+Images can be fetched for any OpenWhyd resource (tracks, user, playlists...) from a unified URL scheme, provided the id of this ressource.
 
 The controller will either redirect to the external ressource (e.g. facebook avatars, hosted by facebook) or return the image directly. In the first case, HTTP GET parameters are passed through to the redirect URL.
 
