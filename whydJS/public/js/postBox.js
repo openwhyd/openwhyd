@@ -1,5 +1,5 @@
 /**
- * post box for whyd music
+ * post box for openwhyd music
  * @author adrienjoly, whyd
  **/
 
@@ -221,11 +221,11 @@ function initPostBox(params){
 			url += "/c/" + postId;
 			$("body > div").hide();
 			var $confirm = $("#confirmationScreen").show();
-			$confirm.find(".sharing").html('<a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-via="whyd" data-text="'+htmlEntities('♫ ' + posted.name /*+ " " + url*/)+'" data-url="'+htmlEntities(url)+'">Tweet</a><'+'script src="https://platform.twitter.com/widgets.js" type="text/javascript"></'+'script><div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-href="'+htmlEntities(url)+'"></div>');
+			$confirm.find(".sharing").html('<a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-via="open_whyd" data-text="'+htmlEntities('♫ ' + posted.name /*+ " " + url*/)+'" data-url="'+htmlEntities(url)+'">Tweet</a><'+'script src="https://platform.twitter.com/widgets.js" type="text/javascript"></'+'script><div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-href="'+htmlEntities(url)+'"></div>');
 			$confirm.find("a").first().attr("href", url);
 		}
 		else {
-			/* from whyd ui: close dialog and show message with link to playlist */
+			/* from openwhyd ui: close dialog and show message with link to playlist */
 			avgrundClose();
 			if (!posted) {
 				(window.showMessage || alert)("Oops; an error occurred... Please try again!", true);

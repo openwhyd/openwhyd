@@ -31,7 +31,7 @@ exports.sendWaitingList = function (emailAddr) {
 	emailModel.email(emailAddr, temp.subject, temp.bodyText, temp.bodyHtml);
 };
 
-// 2) when a whyd admin accepted a visitor to register => "The team is glad to invite you to join whyd"
+// 2) when a openwhyd admin accepted a visitor to register => "The team is glad to invite you to join whyd"
 exports.sendAcceptedInvite = function (storedUser) {
 	var temp = notifTemplate.generateAcceptedInvite(storedUser);
 	emailModel.email(storedUser.email, temp.subject, temp.bodyText, temp.bodyHtml);
@@ -49,7 +49,7 @@ exports.sendRegWelcomeAsync = function (storedUser, inviteSender, cb) {
 	});
 };
 
-// 4) when a user invites a friends => "your friend invited you to join whyd => register"
+// 4) when a user invites a friends => "your friend invited you to join openwhyd => register"
 exports.sendInviteBy = function (senderName, inviteId, email, message) {
 	var temp = notifTemplate.generateInviteBy(senderName, inviteId, message);
 	emailModel.email(email, temp.subject, temp.bodyText, temp.bodyHtml);
@@ -84,13 +84,13 @@ exports.sendPasswordReset = function (uid, resetCode, redirect) {
 	emailModel.notif(uid, temp.subject, temp.bodyText, temp.bodyHtml);
 };
 
-// 2) when a user has just set a new password => "your whyd password was successfully updated"
+// 2) when a user has just set a new password => "your openwhyd password was successfully updated"
 exports.sendPasswordUpdated = function (uid, emailAddr) {
 	var temp = notifTemplate.generatePasswordUpdated({id:uid, email:emailAddr});
 	emailModel.notif(uid, temp.subject, temp.bodyText, temp.bodyHtml);
 };
 
-// 3) when a user has just set a new email address => "your whyd email was successfully updated"
+// 3) when a user has just set a new email address => "your openwhyd email was successfully updated"
 exports.sendEmailUpdated = function (uid, emailAddr) {
 	var temp = notifTemplate.generateEmailUpdated({id:uid, email:emailAddr});
 	emailModel.notif(uid, temp.subject, temp.bodyText, temp.bodyHtml);

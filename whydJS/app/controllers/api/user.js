@@ -79,7 +79,7 @@ var publicActions = {
 				console.log("deleted user", p.loggedUser.id, r)
 			});
 			notifEmails.sendUserDeleted(p.loggedUser.id, p.loggedUser.name);
-			cb({ok:1, message:"We are deleting your Whyd account. Sorry to see you leave..."});
+			cb({ok:1, message:"We are deleting your OpenWhyd account. Sorry to see you leave..."});
 		}
 	},
 	"askAccountDeletion": function(p, cb) {
@@ -412,6 +412,6 @@ exports.controller = function(request, reqParams, response) {
 	handleRequest(loggedUser, request.method.toLowerCase() === 'post' ? request.body : reqParams, localRendering);
 }
 
-// tests: run the following line(s) in the javascript console of a whyd page:
+// tests: run the following line(s) in the javascript console of a openwhyd page:
 // $.get("http://localhost:8080/api/user?callback=alert");
 // $.getJSON("http://localhost:8080/api/user?callback=?", function(a){console.log(a);});

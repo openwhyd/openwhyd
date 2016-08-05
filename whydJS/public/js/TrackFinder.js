@@ -346,8 +346,8 @@ function WhydTrackFinder() {
 			eId: track.eid,
 			img: track.img,
 			name: elt.getElementsByTagName("a")[0].innerText,
-			"src[id]": "http://whyd.com/mobile",
-			"src[name]": "Whyd Mobile Track Finder",
+			"src[id]": "http://openwhyd.org/mobile",
+			"src[name]": "OpenWhyd Mobile Track Finder",
 		};
 		console.log("posting...", postData);
 		var params = Object.keys(postData).map(function(key){

@@ -187,7 +187,7 @@ exports.controller = function(request, p, response) {
 				});*/
 			}
 			else
-				render("Unable to connect whyd to last.fm. Please try again!");
+				render("Unable to connect openwhyd to last.fm. Please try again!");
 		});
 	}
 }

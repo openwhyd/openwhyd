@@ -1,4 +1,4 @@
-// whyd tracking
+// openwhyd tracking
 
 window.Whyd = window.Whyd || {};
 

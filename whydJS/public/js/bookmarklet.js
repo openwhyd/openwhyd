@@ -1,5 +1,5 @@
 /**
- * whyd bookmarklet v2.2
+ * openwhyd bookmarklet v2.2
  * @author adrienjoly, whyd
  **/
 
@@ -7,7 +7,7 @@
 if (undefined == window.console) 
 	console = {log:function(){}, info:function(){}, error:function(){}, warn:function(){}};
 
-console.log("-= whyd bookmarklet v2.2 =-");
+console.log("-= openwhyd bookmarklet v2.2 =-");
 var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI"; 
 
 (window._initWhydBk = function(){

@@ -1,5 +1,5 @@
 /**
- * post box for whyd music
+ * post box for openwhyd music
  * @author adrienjoly, whyd
  **/
 
@@ -250,7 +250,7 @@ function initPostBox(params){
 			var $confirm = $("#confirmationScreen");
 			$confirm.find("a").first().attr("href", url).unbind().click(close);
 			$confirm.find(".sharing").html('<a href="https://twitter.com/share" class="twitter-share-button"'
-				+ ' data-count="none" data-via="whyd" data-url="' + htmlEntities(url) + '"'
+				+ ' data-count="none" data-via="open_whyd" data-url="' + htmlEntities(url) + '"'
 				+ ' data-text="' + htmlEntities('♫ ' + posted.name /*+ " " + url*/) + '">Tweet</a>'
 				+ '<'+'script src="https://platform.twitter.com/widgets.js" type="text/javascript"></'+'script>' // '+' avoids this script from being interpreted as a html file
 				+ '<div class="fb-like" data-send="false" data-layout="button_count" data-width="450"'
@@ -258,7 +258,7 @@ function initPostBox(params){
 		}
 	}
 
-	// for whyd ui (add/edit/repost)
+	// for openwhyd ui (add/edit/repost)
 	function closeAndShowTrack(posted){
 		avgrundClose();
 		if (!posted)

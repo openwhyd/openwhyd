@@ -80,7 +80,7 @@ var sections = {
 			console.log("ranking", json)
 			if (json && !json.error) {
 				var $li = $content.html(renderUserRanking(json))
-					.prepend("<p>The World Whyd Ranking reflects the most influential people sharing music on Whyd this week</p>")
+					.prepend("<p>The World OpenWhyd Ranking reflects the most influential people sharing music on OpenWhyd this week</p>")
 					.find("li");
 				$li.eq(0).append("<div class='rankMedal rank1'>1</div>");
 				$li.eq(1).append("<div class='rankMedal rank2'>2</div>");

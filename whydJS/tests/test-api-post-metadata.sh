@@ -3,7 +3,7 @@
 echo -n -e "\033]0;whyd test\007" # set mac osx's terminal title
 cd `dirname "$0"` # make sure to switch to the script's dir (e.g. when launched via mac osx's finder)
 
-URL_PREFIX=http://localhost:8080 # URL_PREFIX=http://whyd.com
+URL_PREFIX=http://localhost:8080 # URL_PREFIX=http://openwhyd.org
 TEST_USER_EMAIL=apitest@whyd.com
 TEST_USER_PWD=coco
 TEST_USER_MD5=ac0ddf9e65d57b6a56b2453386cd5db5

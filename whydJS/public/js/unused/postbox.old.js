@@ -1,6 +1,6 @@
 // deprecated code from postbox.js:
 
-//================ POST BOX (for the "add track dialog" on the main whyd ui, with real-time search and track preview)
+//================ POST BOX (for the "add track dialog" on the main openwhyd ui, with real-time search and track preview)
 
 function initPostBox($box, onPostComplete) {
 	var $result = $box.find("#postBoxResults");//.hide();

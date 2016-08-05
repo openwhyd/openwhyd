@@ -66,7 +66,7 @@ $(function() {
 			$html.find("span").eq(1).css("color", "red").text("Your profile and playlists will be deleted permanently!");
 			$html.last().text("Delete my data now!").unbind("click").click(onDeleteConfirm);
 		});
-		openJqueryDialog($html, "dlgDeletePost", "Delete your whyd account");
+		openJqueryDialog($html, "dlgDeletePost", "Delete your openwhyd account");
 	});
 
 	function validateUsername() {
@@ -317,7 +317,7 @@ $(function() {
 	$goodiesBtns.each(function(i, btn){
 		var $btn = $(btn);
 		var width = $btn.attr("data-width");
-		var src = "//whyd.com/btn/profile?uId=" + window.user.id + (width ? "&width=" + width : "");
+		var src = "//openwhyd.org/btn/profile?uId=" + window.user.id + (width ? "&width=" + width : "");
 		var html = '<iframe src="'+encodeURI(src)+'" width="'+(width||"180")+'" height="'+(width||"20")+'"'
 			+ ' frameborder="0" allowtransparency="true" scrolling="no"></iframe>';
 		$btn.click(function() {

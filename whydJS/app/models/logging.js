@@ -134,13 +134,13 @@ http.IncomingMessage.prototype.getFbUid = function() {
 };
 
 /**
- * Returns the logged in user's uid, from its whyd session cookie
+ * Returns the logged in user's uid, from its openwhyd session cookie
  */
 http.IncomingMessage.prototype.getUid = function() {
 	/*
 	var uid = (this.getCookies() || {})["whydUid"];
 	if (uid) uid = uid.replace(/\"/g, "");
-	//if (uid) console.log("found whyd session cookie", uid);
+	//if (uid) console.log("found openwhyd session cookie", uid);
 	return uid;
 	*/
 	return (this.session || {}).whydUid;

@@ -5,7 +5,7 @@
  */
 
 // testing phase 3: send welcome email
-// $ curl -v --data "ajax=follow" --cookie "whydSid=4j8OSWWYknxyPlmGmgqURg12AiBoKDQpqt4iU610PT9nKkIkRdlMgHWF9kFMsQEvU" http://whyd.com/onboarding
+// $ curl -v --data "ajax=follow" --cookie "whydSid=4j8OSWWYknxyPlmGmgqURg12AiBoKDQpqt4iU610PT9nKkIkRdlMgHWF9kFMsQEvU" http://openwhyd.org/onboarding
 
 var snip = require("../snip.js");
 var config = require("../models/config.js");
@@ -27,7 +27,7 @@ var MAX_RECOM_USERS = 10;
 
 var templates = {
 	//"people": "app/templates/onboarding/pickPeople.html",
-	"bookmarklet-legacy": "app/templates/onboarding/bookmarklet.html" // old version (still bound to whyd.com/bookmarklet and whyd.com/button)
+	"bookmarklet-legacy": "app/templates/onboarding/bookmarklet.html" // old version (still bound to openwhyd.org/bookmarklet and openwhyd.org/button)
 };
 
 function makeTemplateRenderer(cb) {

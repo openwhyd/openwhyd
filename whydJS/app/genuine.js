@@ -1,16 +1,16 @@
 /**
  * genuine signup token compiler and checker
- * tools to make sure that accounts can be created only from official whyd clients (iOS and web ui)
+ * tools to make sure that accounts can be created only from official openwhyd clients (iOS and web ui)
  * @author adrienjoly, whyd
  */
 
 var crypto = require('crypto');
 
-var GENUINE_SIGNUP_SECRET = process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(), // secret key (only known by secure whyd clients), used to hash sTk
+var GENUINE_SIGNUP_SECRET = process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(), // secret key (only known by secure openwhyd clients), used to hash sTk
 	TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
 
 
-// hack caused by proxy on whyd server
+// hack caused by proxy on openwhyd server
 function realIP(request){
 	var realIP = (request.headers || {})['x-real-ip'];
 	return realIP ? { connection: { remoteAddress: realIP } } : request;

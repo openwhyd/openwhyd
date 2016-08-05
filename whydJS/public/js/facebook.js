@@ -13,7 +13,7 @@ if (href.indexOf("openwhyd.org/") >0) {
 };
 
 var facebookPerms = 'publish_pages,manage_pages,public_profile,email,user_friends'; // 'user_interests,user_likes,email,publish_stream';
-var FB_ACTION_URI_PREFIX = href.substr(0, href.indexOf('/', 10)); //"http://whyd.com";
+var FB_ACTION_URI_PREFIX = href.substr(0, href.indexOf('/', 10)); //"http://openwhyd.org";
 
 var whenFbReadyQueue = [];
 
@@ -111,7 +111,7 @@ function fbAuth (perms, cb, dontLink) {
 			response = response || {};
 			cb((response.authResponse || {}).userID, response);
 			
-			// associate (store) the fbUid and accesstoken to the user in whyd DB
+			// associate (store) the fbUid and accesstoken to the user in openwhyd DB
 			if (!dontLink && response.authResponse)
 				$.ajax({
 					type: "POST",

@@ -1,13 +1,13 @@
 Hi,
 
-{{userName}} invited you on Whyd, a few days ago, but you didn't get in.
+{{userName}} invited you on OpenWhyd, a few days ago, but you didn't get in.
 
-Whyd is an amazing new way to talk about your interests with people having same interests.
+OpenWhyd is an amazing new way to talk about your interests with people having same interests.
 
 Get started by creating your account. Follow this link: {{inviteUrl}}
 
 We're looking forward to discovering your interests.
 
-The whyd team
+The openwhyd team
 
 P.S : We're all ears at feedback@whyd.com. You can also chat live with us while browsing on {{whydUrl}}

@@ -1,12 +1,12 @@
 Hey,
 
-You asked for a Whyd invitation but you didn't get in. I'm excited to invite you to join our little community.
+You asked for a OpenWhyd invitation but you didn't get in. I'm excited to invite you to join our little community.
 
-Whyd is a virtual library to add and share photos, videos and sounds on music, movies, books and art you love.
+OpenWhyd is a virtual library to add and share photos, videos and sounds on music, movies, books and art you love.
 
-To create your library on whyd, click the link below: {{inviteUrl}}
+To create your library on openwhyd, click the link below: {{inviteUrl}}
 
 Have fun!
 
 
-Gilles and the Whyd team
+The OpenWhyd team

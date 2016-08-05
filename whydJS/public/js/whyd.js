@@ -1,5 +1,5 @@
 /**
- * whyd web client
+ * openwhyd web client
  * @author adrienjoly
  **/
 
@@ -295,7 +295,7 @@ function onNewPost(whydPost) {
 		+ encodeHtmlEntities((p.pl || {}).name || "your tracks") + "</a>");
 
 	try {
-		window.Whyd.tracking.log("Added track using button on whyd.com", p._id);
+		window.Whyd.tracking.log("Added track using button on openwhyd.org", p._id);
 		if (p.pl && whydPost.postData.pl && whydPost.postData.pl.id == "create")
 			window.Whyd.tracking.log("Created playlist", p.pl.id);
 	}

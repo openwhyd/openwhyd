@@ -44,7 +44,7 @@ exports.email = function(emailAddr, subject, textContent, htmlContent, userName,
 	var content = {
 		api_user: process.env.SENDGRID_API_USER.substr(), // "contact@whyd.com",
 		api_key: process.env.SENDGRID_API_KEY.substr(),
-		from: process.env.SENDGRID_API_FROM_EMAIL.substr(), // "no-reply@whyd.com",
+		from: process.env.SENDGRID_API_FROM_EMAIL.substr(), // "no-reply@whyd.org",
 		fromname: process.env.SENDGRID_API_FROM_NAME.substr(), // "whyd",
 		to: emailAddr,
 		subject: subject,

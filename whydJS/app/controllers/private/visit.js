@@ -1,6 +1,6 @@
 /**
  * visit controller
- * logs external visits to whyd pages, e.g. to wrap links in email digest
+ * logs external visits to openwhyd pages, e.g. to wrap links in email digest
  * @author adrienjoly, whyd
  */
 

@@ -479,12 +479,12 @@ var initCityPage = function(urlPrefix, cityName){
 
                     // Populate
                     $li.attr('data-id', data.id);
-                    $li.find('.cover > a').attr('href', '//whyd.com/u/' + data.id);
+                    $li.find('.cover > a').attr('href', '//openwhyd.org/u/' + data.id);
 
                     // Does user have a cover image
                     if(data.cvrImg) {
                         // Apply cover image
-                        $li.find('.cover').css('background-image', 'url(//whyd.com' + data.cvrImg + ')');
+                        $li.find('.cover').css('background-image', 'url(//openwhyd.org' + data.cvrImg + ')');
                     }
                     else {
                         // Not cover image, just grey
@@ -492,10 +492,10 @@ var initCityPage = function(urlPrefix, cityName){
                     }
 
                     $li.find('.thumb').css('background-image', 'url(/img/u/' + data.id + '?width=100&amp;height=100)');
-                    $li.find('.username').html('<a href="//whyd.com/u/' + data.id + '">' + data.name + '</a>');
+                    $li.find('.username').html('<a href="//openwhyd.org/u/' + data.id + '">' + data.name + '</a>');
                     $li.find('.userbio').text("");
                     $li.find('.userbio').text(data.bio);
-                    $li.find('.action a').attr('href', '//whyd.com/u/' + data.id);
+                    $li.find('.action a').attr('href', '//openwhyd.org/u/' + data.id);
 
                     // Check if user has a personal website
                     if(data.lnk) {
