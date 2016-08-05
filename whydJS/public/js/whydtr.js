@@ -6,7 +6,7 @@ window.Whyd.tracking = window.Whyd.tracking || (function(options){
 
 	options = options || {};
 
-	var runsLocally = window.location.href.split("/")[2].indexOf("whyd.com") == -1;
+	var runsLocally = window.location.href.split("/")[2].indexOf("openwhyd.org") == -1;
 	var loggedUser = options.loggedUser || {};
 	var uId = loggedUser._id || loggedUser.id;
 
