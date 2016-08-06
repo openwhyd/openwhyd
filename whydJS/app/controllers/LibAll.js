@@ -39,7 +39,7 @@ function renderAllLibrary (lib) {
 	else
 		renderFeed(function(feedHtml){
 			//lib.renderSidebar(/*uidList*/ null, null/*user*/, options, function(sidebarHtml){
-				lib.renderPage({name:"Whyd"}, null/*sidebarHtml*/, feedHtml);
+				lib.renderPage({/*name:"Whyd"*/}, null/*sidebarHtml*/, feedHtml);
 			//});
 		});
 }

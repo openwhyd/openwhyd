@@ -49,7 +49,7 @@ exports.renderLandingPage = function (loggedUser, form, callback) {
 	var whydPageParams = {
 		//request: request, // => pageUrl => meta og:url element (useless)
 		loggedUser: loggedUser,
-		pageTitle: "Whyd",
+		//pageTitle: "OpenWhyd",
 		js: [],
 		css: [],
 		endOfBody: [].join('\n'),
@@ -66,7 +66,7 @@ exports.renderLandingPage = function (loggedUser, form, callback) {
 exports.renderLoginPage = function (form) {
 	var params = {
 		urlPrefix: config.urlPrefix,
-		title: "whyd",
+		title: "openwhyd",
 		email:"",
 		password:"",
 //		landingStream: config.landingStream,
