@@ -3,7 +3,7 @@ node_js:
   - "4.4"
   - "6"
 
-before_script:
+before_install:
   - cd whydJS
 
 script:
