@@ -1,4 +1,5 @@
-# OpenWhyd.org (formerly whyd.com)
+# OpenWhyd.org (formerly whyd.com) [![Build Status](https://travis-ci.org/openwhyd/openwhyd.svg?branch=master)](https://travis-ci.org/openwhyd/openwhyd) [![Code Climate](https://codeclimate.com/github/openwhyd/openwhyd/badges/gpa.svg)](https://codeclimate.com/github/openwhyd/openwhyd)
+
 
 An awesome web platform for collecting, playing and sharing music from various streaming platforms.
 
