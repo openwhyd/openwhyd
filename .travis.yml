@@ -1,15 +1,11 @@
 language: node_js
+
 node_js:
   - "4.4"
   - "6"
 
-before_install:
-  - cd whydJS
-
-after_script:
-  - codeclimate-test-reporter < lcov.info
-
 # required for node v4 native module compilation
+# https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements
 env:
   - CXX=g++-4.8
 
@@ -19,6 +15,14 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-  code_climate:
-    repo_token:
-      secure: "dcvhsPtp+tsMuR9U/vHrwH4tFpNSEV7AH3kO48gvciue5DteWPFy5YPk9w5AG80d6IoYjoEDKNX8nUSbV0Kzma4revYP74gdnVO2c/DnHkeRWGqwsOAocB1aPqaUjL+NFU6i8m/QDMT9ulmV3z2eVLd/8yoz37DcPUvkRPB7ml6SNsCIz1vS8S0mVihGfF634d0gPibJtGw/PwjKjO8dImVY2suJs69ffolOYMbFkBmDg4Vbu5UOQVupAQfiWBJMUOzJaFN7ewx2aZoXo5ph8mixbbJ3x3Xu7rnemhcsqT5DCKn7W8M3IsjWeUb0+4V/G3iY07yDcmuplyMJJrfe9Q3o4CPB/WHdmYBw8g6iLrK1BIKGcBXlokNvzUb1nN00BIIzO/Emd+AHVpHWBURUfjH3+iBZLm7fqtjDb33HO7Q4p9NedfntgOVUty8prUTD+H47qC9gnnfh5wc0+B6CoSu4O6xjHG7WgAy/q1Tcs965Lw5Y8BPLMAF4Iirysw7xT2pjqRhEj8Gq8HzjbYFbUnHytLTqGrEdMJofOLW/1mDaIlwSNtCfVd1r73QB3UVEMguIAtRWNjh+nJBD1BcwJJvul50T8bPF06h6WxD9q/81F0iEUpU1VxeI2+B8fHRmCmy4UCuPRO+rb1JrGZdMl+rAHrxaQl5AdvbLaPpe+YU="
+  # code_climate:
+  #   repo_token:
+  #     secure: "FIXME"
+
+# change directory before `npm install`
+before_install:
+  - cd whydJS
+
+## upload test coverage to codeclimate
+# after_script:
+#   - codeclimate-test-reporter < lcov.info
