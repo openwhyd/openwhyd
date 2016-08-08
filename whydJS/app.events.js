@@ -8,7 +8,7 @@ var lastError = '';
 
 var smtpServerOptions = {
 	user: 'whyd.crash', 
-	password: 'whyd2012', 
+	password: 'TODO_SET_PASSWORD_HERE', 
 	host: 'smtp.gmail.com', 
 	ssl: true 
 };
