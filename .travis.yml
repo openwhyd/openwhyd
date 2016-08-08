@@ -6,9 +6,6 @@ node_js:
 before_install:
   - cd whydJS
 
-script:
-  - npm run lint
-
 after_script:
   - codeclimate-test-reporter < lcov.info
 
