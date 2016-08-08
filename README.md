@@ -2,6 +2,19 @@
 
 An awesome web platform for collecting, playing and sharing music from various streaming platforms.
 
+You can use it on [openwhyd.org](https://openwhyd.org).
+
+## Important notes
+
+If you want to contribute, please:
+
+- read the contribution guidelines: [CONTRIBUTING.md](https://openwhyd.org)
+- then, introduce yourself here: [application form](https://openwhyd.typeform.com/to/cEur7Q)
+
+Also, be aware that this project has become open-source very recently, so please be kind and constructive about code quality, and about the management of this project.
+
+Thank you for your understanding! ^^
+
 ## Prerequisites
 * Node.js
 * MongoDB
