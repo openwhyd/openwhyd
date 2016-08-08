@@ -3,8 +3,11 @@ node_js:
   - "4.4"
   - "6"
 
+before_script:
+  - cd whydJS
+
 script:
-  - npm lint
+  - npm run lint
 
 after_script:
   - codeclimate-test-reporter < lcov.info
