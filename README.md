@@ -1,8 +1,18 @@
 # OpenWhyd.org (formerly whyd.com)
 
-An awesome web platform for collecting, playing and sharing music from various streaming platforms.
+> Collect, play and share music from various streaming platforms
 
-You can use it on [openwhyd.org](https://openwhyd.org).
+Openwhyd's curating platform (website + iphone app) allows music lovers to find and play very specific versions of songs that their love, and are not available on major music platforms such as Spotify or iTunes. E.g. rare remixes, DJ sets, bootlegs and epic live performances.
+
+Features:
+
+- a bookmarklet / chrome extension for adding music tracks from the web (e.g. a Youtube page)
+- add tracks to playlists, from heterogeneous streaming platforms
+- social curation: users can subscribe/follow you, so that your latests tracks can be played from their stream
+- you can add a description to each track
+- supports music from youtube, soundcloud, vimeo, bandcamp, and MP3 files (as long as they are hosted on the web)
+
+**You can use it on [openwhyd.org](https://openwhyd.org).**
 
 ## Important notes
 
