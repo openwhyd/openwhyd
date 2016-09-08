@@ -217,7 +217,7 @@ console.log("-= openwhyd bookmarklet v2 =-");
 
 	function makePlayemStreamDetector(eidSet){
 		window.SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad";
-		window.DEEZER_APP_ID = 125765;
+		window.DEEZER_APP_ID = 190482;
 		window.DEEZER_CHANNEL_URL = urlPrefix + "/html/deezer.channel.html";
 		window.JAMENDO_CLIENT_ID = "c9cb2a0a";	
 		var players = { // playem-all.js must be loaded at that point
