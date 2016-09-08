@@ -27,7 +27,7 @@ exports.email = function(emailAddr, subject, textContent, htmlContent, userName,
 	/*
 	var message = email.message.create({
 		text: textContent, 
-		from: "whyd <noreply@whyd.com>",
+		from: "openwhyd <contact@openwhyd.org>",
 		to: emailAddr,
 		subject: subject
 	});
@@ -42,7 +42,7 @@ exports.email = function(emailAddr, subject, textContent, htmlContent, userName,
    
    // Set up message
 	var content = {
-		api_user: process.env.SENDGRID_API_USER.substr(), // "contact@whyd.com",
+		api_user: process.env.SENDGRID_API_USER.substr(), // "contact@openwhyd.org",
 		api_key: process.env.SENDGRID_API_KEY.substr(),
 		from: process.env.SENDGRID_API_FROM_EMAIL.substr(), // "no-reply@whyd.org",
 		fromname: process.env.SENDGRID_API_FROM_NAME.substr(), // "whyd",

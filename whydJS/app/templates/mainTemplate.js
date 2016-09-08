@@ -303,7 +303,7 @@ exports.renderWhydPage = function (params) {
 		'<!--[if lt IE 8]>',
 		'<div class="topWarning">Warning: your web browser is not supported by OpenWhyd. Please upgrade to a modern browser.</div>',
 		'<![endif]-->',
-	//	'<a id="feedbackLink" href="mailto:contact@whyd.com?subject=[proto-support]&body=Please%20enter%20your%20feedback%20here">Send feedback</a>',
+	//	'<a id="feedbackLink" href="mailto:contact@openwhyd.org?subject=[proto-support]&body=Please%20enter%20your%20feedback%20here">Send feedback</a>',
 	//	'<a id="feedbackLink" href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;">&nbsp;</a>',
 		exports.renderHeader(user, params.whydHeaderContent, params),
 		'<div id="contentPane">',

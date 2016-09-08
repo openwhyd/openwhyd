@@ -60,7 +60,7 @@ $(function() {
 		var $html = $('<div>'
 		  + '<img src="/images/fun-y_u_no_use_whyd.jpg" style="float:left;margin:15px;">'
 		  + '<span style="line-height:30px;">Are you sure?</span><br>'
-		  + '<span style="font-weight:normal;">If you have a question or problem,<br>we\'re happy to help at hello\@whyd.com.</span>'
+		  + '<span style="font-weight:normal;">If you have a question or problem,<br>we\'re happy to help at contact@openwhyd.org.</span>'
 		  + '</div><span class="redButton">Delete my account</span>');
 		$html.last().click(function(){
 			$html.find("span").eq(1).css("color", "red").text("Your profile and playlists will be deleted permanently!");

@@ -10,4 +10,4 @@ We're looking forward to discovering your interests.
 
 The openwhyd team
 
-P.S : We're all ears at feedback@whyd.com. You can also chat live with us while browsing on {{whydUrl}}
+P.S : We're all ears at contact@openwhyd.org. You can also chat live with us while browsing on {{whydUrl}}
