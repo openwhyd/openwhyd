@@ -31,7 +31,7 @@ function fetch(url, cb){
 
 function initAnalytics(loggedUser){
 	window._gaq = (window._gaq || []).concat([
-		['_setAccount', 'UA-23759101-1'],
+		['_setAccount', 'UA-83857066-1'],
 		['_setDomainName', 'openwhyd.org'],
 		['_setAllowHash', 'false'],
 		['_trackPageview'],
