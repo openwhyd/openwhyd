@@ -42,7 +42,7 @@ var sections = {
 				}
 			});
 			$li.find("small").text(p.desc)
-				.append('<br><br><a target="_blank" href="'+p.url+'" class="blogLink">Read '+p.uNm+'\'s full interview</a>');
+				.append('<br><br><a href="'+p.url+'" class="blogLink">Read '+p.uNm+'\'s full interview</a>');
 			if (p.date)
 				$('<div>').text(p.date).appendTo($li.find(".thumb"));
 			return $li;

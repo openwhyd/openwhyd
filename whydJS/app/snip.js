@@ -50,11 +50,11 @@ var regexUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-
 var regexUrl2 = /(\b(https?|ftp|file):\/\/([^\/\s]*)[^\s]*)/ig;
 
 exports.replaceURLWithHTMLLinks = function(text) {
-	return String(text || "").replace(regexUrl2, "<a target='_blank' href='$1'>$3...</a>"); 
+	return String(text || "").replace(regexUrl2, "<a href='$1'>$3...</a>"); 
 };
 
 exports.replaceURLWithFullHTMLLinks = function(text) {
-	return String(text || "").replace(regexUrl, "<a target='_blank' href='$1'>$1</a>"); 
+	return String(text || "").replace(regexUrl, "<a href='$1'>$1</a>"); 
 };
 
 exports.shortenURLs = function(text) {

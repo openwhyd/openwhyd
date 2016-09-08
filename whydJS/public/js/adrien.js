@@ -197,7 +197,7 @@ function coucou() {
 		//var url = $post.find("[href]").first().attr("href");
 		$post.append(
 			$("<div style='position:absolute; top:0px; right:0px; color:#A5ACB1; font-size:10px;'>")
-			.append($("<a target='_blank'>")/*.attr("href", url)*/.text(renderDate(t)))
+			.append($("<a >")/*.attr("href", url)*/.text(renderDate(t)))
 			.append($("<div class='score'>score: " + $post.attr("data-score") + "</div>"))
 		);
 	}

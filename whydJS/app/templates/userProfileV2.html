@@ -43,12 +43,12 @@
 					<ul class="lnkIcons">
 						{{#loc}}<li class="loc"><span>{{loc}}</span></li>{{/loc}}
 						{{#lnk}}
-						{{#home}}<li class="home"><a href="{{url}}" target="_blank">{{renderedUrl}}</a></li>{{/home}}
-						{{#fb}}<li class="fb"><a href="{{fb}}" target="_blank">Facebook</a></li>{{/fb}}
-						{{#tw}}<li class="tw"><a href="{{tw}}" target="_blank">Twitter</a></li>{{/tw}}
-						{{#sc}}<li class="sc"><a href="{{sc}}" target="_blank">Soundcloud</a></li>{{/sc}}
-						{{#yt}}<li class="yt"><a href="{{yt}}" target="_blank">Youtube</a></li>{{/yt}}
-						{{#igrm}}<li class="igrm"><a href="{{igrm}}" target="_blank">Instagram</a></li>{{/igrm}}
+						{{#home}}<li class="home"><a href="{{url}}" >{{renderedUrl}}</a></li>{{/home}}
+						{{#fb}}<li class="fb"><a href="{{fb}}" >Facebook</a></li>{{/fb}}
+						{{#tw}}<li class="tw"><a href="{{tw}}" >Twitter</a></li>{{/tw}}
+						{{#sc}}<li class="sc"><a href="{{sc}}" >Soundcloud</a></li>{{/sc}}
+						{{#yt}}<li class="yt"><a href="{{yt}}" >Youtube</a></li>{{/yt}}
+						{{#igrm}}<li class="igrm"><a href="{{igrm}}" >Instagram</a></li>{{/igrm}}
 						{{/lnk}}
 					</ul>
 
@@ -279,7 +279,7 @@
 			{{#items}}
 			<li class="user" data-id="{{id}}" data-subscribed="{{subscribed}}">
 				
-					<a  href="{{url}}" class="thumb" style="background-image:url('{{img}}?width=100&amp;height=100');"></a>
+					<a href="{{url}}" class="thumb" style="background-image:url('{{img}}?width=100&amp;height=100');"></a>
 					<a href="{{url}}" class="username">{{name}}</a>
 					<div class="userbio">{{bio}}</div>
 					<!--{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}} -->
