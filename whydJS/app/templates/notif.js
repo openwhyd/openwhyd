@@ -190,7 +190,7 @@ exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
 		};
 
 		cb({
-			subject: "Welcome to Whyd, "+user.name+"!",
+			subject: "Welcome to OpenWhyd, "+user.name+"!",
 			bodyText: exports.generateRegWelcome(user, inviteSender).bodyText,
 			bodyHtml: renderTemplateFile("welcome", p)
 		});
@@ -200,9 +200,9 @@ exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
 exports.generateInviteBy = function (senderName, inviteId, message) {
 	var inviteUrl = urlPrefix + "/invite/" + inviteId;
 	return {
-		subject: senderName + " invited you to join Whyd",
+		subject: senderName + " invited you to join OpenWhyd",
 		bodyText: (message ? message + "\n\n--\n\n" : "") + [
-			"Hey, I wanted to invite you to join our community of music lovers at Whyd. It's a social network designed exclusively for music.",
+			"Hey, I wanted to invite you to join our community of music lovers at OpenWhyd. It's a social network designed exclusively for music.",
 			"OpenWhyd is the place to keep, play, and share all of the internet's music from sites like Soundcloud, Vimeo, and YouTube.",
 			"OpenWhyd is invite only, so here is your personal invite: " + inviteUrl,
 			"Never stop jamming,",
@@ -214,12 +214,12 @@ exports.generateInviteBy = function (senderName, inviteId, message) {
 
 exports.generateInviteAccepted = function (user) {
 	return {
-		subject: "Your friend "+user.name+" accepted your invite to whyd",
-		bodyText: "Great news! Your friend "+user.name+" just accepted your invitation to whyd!\n\n"
+		subject: "Your friend "+user.name+" accepted your invite to OpenWhyd",
+		bodyText: "Great news! Your friend "+user.name+" just accepted your invitation to OpenWhyd!\n\n"
 			+ "Check out his/her library: "+urlPrefix+"/u/"+user.id+"\n\n"
-			+ "Thanks for adding interesting people to the openwhyd community!\n\n"
-			+ "We look forward to listening to your next amazing tracks on whyd: "+urlPrefix+"\n\n"
-			+ "Greetings from the openwhyd team!\n\n"
+			+ "Thanks for adding interesting people to the OpenWhyd community!\n\n"
+			+ "We look forward to listening to your next amazing tracks on OpenWhyd: "+urlPrefix+"\n\n"
+			+ "Greetings from the OpenWhyd team!\n\n"
 			+ FEEDBACK_FOOTER
 	}
 };
@@ -232,7 +232,7 @@ exports.generatePasswordReset = function (user, options) {
 	if (options.redirect)
 		href += "&redirect=" + encodeURIComponent(options.redirect);
 	return {
-		subject: "whyd password",
+		subject: "OpenWhyd password",
 		bodyText: "If you want to set a new password to your openwhyd account, open this link:\n\n"
 			+ href + "\n\n"
 			+ "Greetings from the openwhyd team!\n\n"
@@ -243,10 +243,10 @@ exports.generatePasswordReset = function (user, options) {
 exports.generatePasswordUpdated = function (user) {
 	return {
 		subject: "your openwhyd password was successfully updated!",
-		bodyText: "As you requested, we updated your password on whyd.\n\n"
+		bodyText: "As you requested, we updated your password on OpenWhyd.\n\n"
 			+ "In order to login, open this URL: "+urlPrefix+"\n"
 			+ "Then, enter your email ("+user.email+") and your new password.\n\n"
-			+ "We're eager to hearing your feedback about whyd!\n\n"
+			+ "We're eager to hearing your feedback about OpenWhyd!\n\n"
 			+ "Greetings from the openwhyd team!\n\n"
 			+ FEEDBACK_FOOTER
 	}
@@ -256,9 +256,9 @@ exports.generateEmailUpdated = function (user) {
 	return {
 		subject: "your openwhyd email address was successfully updated!",
 		bodyText: [
-			"As you requested, we updated your email address on whyd.",
+			"As you requested, we updated your email address on OpenWhyd.",
 			"From now on, you must use your new email address in order to log in: "+urlPrefix,
-			"We're eager to hearing your feedback about whyd!",
+			"We're eager to hearing your feedback about OpenWhyd!",
 			"Greetings from the openwhyd team!",
 			FEEDBACK_FOOTER
 		].join("\n\n")
@@ -280,7 +280,7 @@ exports.generateRepost = function (reposter, post) {
 			notifType: "emAdd"
 		}))
 		.addRepostedTrack(post, reposter)		
-		.renderNotifEmailObj(reposter.name + " has added one of your tracks on Whyd!");
+		.renderNotifEmailObj(reposter.name + " has added one of your tracks on OpenWhyd!");
 };
 
 exports.generateSubscribedToUser = function (sender, favoritedId) {
@@ -289,7 +289,7 @@ exports.generateSubscribedToUser = function (sender, favoritedId) {
 			subscriptions: [sender],
 			notifType: "emSub"
 		}))
-		.renderNotifEmailObj(sender.name + " has subscribed to you on Whyd!");
+		.renderNotifEmailObj(sender.name + " has subscribed to you on OpenWhyd!");
 };
 
 exports.generateLike = function (user, post, postAuthor) {
@@ -298,7 +298,7 @@ exports.generateLike = function (user, post, postAuthor) {
 			notifType: "emLik"
 		}))
 		.addLikedTrack(post, user)		
-		.renderNotifEmailObj(user.name + " has liked one of your tracks on Whyd!");
+		.renderNotifEmailObj(user.name + " has liked one of your tracks on OpenWhyd!");
 };
 
 exports.generateComment = function (post, comment) {
@@ -339,7 +339,7 @@ exports.generateCommentReply = function (post, comment, repliedUid) {
 // 1) your facebook friend just joined whyd
 exports.generateFbFriendJoinedWhyd = function(newUser) {
 	return {
-		subject: "Your friend " + newUser.name + " just joined whyd",
+		subject: "Your friend " + newUser.name + " just joined OpenWhyd",
 		bodyText: [
 			"Hooray!",
 			"Your friend " + newUser.name + " just joined openwhyd !",
