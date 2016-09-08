@@ -15,6 +15,7 @@ var userApi = require("../../controllers/api/user.js");
 var htmlRedirect = require("../../templates/logging.js").htmlRedirect;
 var genuine = require('../../genuine.js');
 
+var ENFORCE_GENUINE_SIGNUP_FROM_IOS = false; // TODO: set to true, after x-real-ip header is set by the nginx proxy
 var onboardingUrl = "/pick/genres";
 var checkInvites = false;
 
@@ -56,16 +57,18 @@ exports.registerInvitedUser = function(request, user, response) {
 	user = user || {};
 	
 	var error = !user.ajax ? inviteController.renderRegisterPage : renderError;
-	var genuineToken;	
 
-	if (!user.sTk || (typeof user.sTk !== 'string'))
-		return error(request, user, response, "Invalid sTk");
+	if (ENFORCE_GENUINE_SIGNUP_FROM_IOS || user.iRf !== 'iPhoneApp') {
+		var genuineToken;	
 
-	genuineToken = genuine.checkSignupToken(user.sTk || "", request);
-	//console.log("genuine:", genuineToken, genuine.validateSignupToken(user.sTk || "", request));
-	if (!genuineToken)
-		return error(request, user, response, "Non genuine signup request");
-	// TODO: TESTING
+		if (!user.sTk || (typeof user.sTk !== 'string'))
+			return error(request, user, response, "Invalid sTk");
+
+		genuineToken = genuine.checkSignupToken(user.sTk || "", request);
+		//console.log("genuine:", genuineToken, genuine.validateSignupToken(user.sTk || "", request));
+		if (!genuineToken)
+			return error(request, user, response, "Non genuine signup request");
+	}
 
 	if (!user.name)
 		return error(request, user, response, "Please enter your name");
