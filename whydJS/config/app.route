@@ -18,6 +18,7 @@ GET		/label							-> controllers.static
 GET		/tos							-> controllers.static
 GET		/mobile							-> controllers.static
 GET		/iphone							-> controllers.static
+POST  /fbcanvas/          -> controllers.static
 
 GET		/paris							-> controllers.api.city
 GET		/paris/							-> controllers.api.city
