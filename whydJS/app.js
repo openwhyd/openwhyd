@@ -55,6 +55,9 @@ var params = process.appParams = {
 	mongoDbAuthPassword: process.env['MONGODB_PASS'],
 	mongoDbDatabase: process.env['MONGODB_DATABASE'] || "openwhyd_data",
 
+	// secrets
+	genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
+
 	// workers and general site logic
 	searchModule: "searchAlgolia", // "searchElastic"  // "" => no search index
 //	recomPopulation: true, // populate recommendation index at startup
