@@ -726,7 +726,7 @@ function sharePost(pId) {
 				'<div id="sharePopin">',
 					'<div class="pointe"></div>',
 					'<div class="sharing">',
-						'<iframe class="twitter-share-button twitter-count-horizontal" src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;text='+encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/)+'&amp;url='+encodeURIComponent(postUrl)+'&amp;via=whyd&amp;original_referer='+encodeURIComponent(window.location.href)+'" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
+						'<iframe class="twitter-share-button twitter-count-horizontal" src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;text='+encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/)+'&amp;url='+encodeURIComponent(postUrl)+'&amp;via=open_whyd&amp;original_referer='+encodeURIComponent(window.location.href)+'" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
 						'<iframe class="fblikeBtn" src="//www.facebook.com/plugins/like.php?href='+encodeURIComponent(postUrl)+'&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;font&amp;colorscheme=light&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>',
 					'</div>',
 					'<p>Permalink</p>',
