@@ -154,7 +154,7 @@ exports.generateRegWelcome = function (user, inviteSender) {
 		" - Tony",
 		//FEEDBACK_FOOTER
 		"PS: I'd love to hear all of your feedback, and I'm here to answer any questions, just email me! " + renderLink("tony@openwhyd.org", "mailto:tony@openwhyd.org"),
-		"Follow us " + renderLink("@whyd on Twitter", "http://twitter.com/open_whyd") + " and definitely Like " + renderLink("our Facebook page!", "http://facebook.com/openwhyd")
+		"Follow us " + renderLink("@open_whyd on Twitter", "http://twitter.com/open_whyd") + " and definitely Like " + renderLink("our Facebook page!", "http://facebook.com/openwhyd")
 	]);
 };
 
