@@ -70,7 +70,7 @@ var params = process.appParams = {
 	feedbackEmail: process.env.WHYD_CONTACT_EMAIL.substr(), // mandatory
 
 	// rendering preferences
-	version: 23, // refactored postEdit/postBox (jan 2015)
+	version: 24, // mentions to @whyd -> @open_whyd (twitter sharing)
 	// landingPage: "public/html/landingPhoto.html", //"public/html/landingPageLaunch.html",  //cf logging.js
 	nbPostsPerNewsfeedPage: 20,
 	nbTracksPerPlaylistEmbed: 100,
