@@ -71,6 +71,7 @@ var params = process.appParams = {
 
 	// rendering preferences
 	version: 24, // mentions to @whyd -> @open_whyd (twitter sharing)
+	startTime: new Date(),
 	// landingPage: "public/html/landingPhoto.html", //"public/html/landingPageLaunch.html",  //cf logging.js
 	nbPostsPerNewsfeedPage: 20,
 	nbTracksPerPlaylistEmbed: 100,
