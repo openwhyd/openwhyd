@@ -708,12 +708,6 @@ function WhydPlayer () {
 				$body.toggleClass("isShuffle", isShuffle);
 			}
 		},
-		toggleVideo: function(toggle) {
-			if ($body.hasClass("fullscreenVideo"))
-				$body.removeClass("fullscreenVideo")
-			else
-				$body.toggleClass("reduced", toggle);
-		},
 		toggleFullscreen: function(toggle) {
 			$body.removeClass("reduced").toggleClass("fullscreenVideo", toggle);
 		},
