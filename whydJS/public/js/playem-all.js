@@ -1,6 +1,6 @@
 var YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI"; // dirty hack, until https://d3qdgup1c3urcq.cloudfront.net/html/YoutubePlayerIframe.html is refreshed/invalidated
 
-/* playemjs commit: e9b3cf35e6fb0710de878f115ddb52798ef9b3bc */
+/* playemjs commit: 7cd7bb394a039a80cd7826ecbc1f35a028b723d7 */
 
 // configuration
 
@@ -1187,9 +1187,9 @@ function DeezerPlayer(){
             DZ.override_https();
           DZ.getLoginStatus(function(response) {
             IS_LOGGED = response.userID;
+            hookHandlers(self);
+            onload.call(null, arguments);
           });
-          hookHandlers(self);
-          onload.call(null, arguments);
         }
       }
     });
