@@ -1,6 +1,6 @@
 var YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI"; // dirty hack, until https://d3qdgup1c3urcq.cloudfront.net/html/YoutubePlayerIframe.html is refreshed/invalidated
 
-/* playemjs commit: b3a829a5283d5bc14a68a2ec1ca6fcb04cb04e0b */
+/* playemjs commit: e9b3cf35e6fb0710de878f115ddb52798ef9b3bc */
 
 // configuration
 
@@ -1055,11 +1055,6 @@ function DeezerPlayer(){
     this.currentTrack = {position: 0, duration: 0};
         
     loadSDK(function() {
-      DZ.getLoginStatus(function(response) {
-        IS_LOGGED = response.userID;
-      });
-      DZ.player.setRepeat(0);
-      hookHandlers(self);
       self.isReady = true;
       try {
         eventHandlers.onApiReady(self);
@@ -1100,18 +1095,20 @@ function DeezerPlayer(){
   //============================================================================
   Player.prototype.play = function(id) {
     var self = this;
-    if (IS_LOGGED) {
-      DZ.player.playTracks([id], 0);
-    } else {
-      DZ.api('/track/' + id, function(data) {
-        showMessage(
-          'This is a 30 secs preview. ' + 
-          '<a href="javascript:DeezerPlayer.login()">' +
-          'Connect to Deezer</a> to listen to the full track.'
-        );
-        self.sound = createSound(self, data.preview)
-      });
-    }    
+    this.init(function() {
+      if (IS_LOGGED) {
+        DZ.player.playTracks([id], 0);
+      } else {
+        DZ.api('/track/' + id, function(data) {
+          showMessage(
+            'This is a 30 secs preview. ' + 
+            '<a href="javascript:DeezerPlayer.login()">' +
+            'Connect to Deezer</a> to listen to the full track.'
+          );
+          self.sound = createSound(self, data.preview)
+        });
+      }    
+    });
   }
   
   //============================================================================
@@ -1125,6 +1122,7 @@ function DeezerPlayer(){
   
   //============================================================================
   Player.prototype.stop = function() {
+    console.log('DEEZER STOP');
     if (!this.isReady)
       return;
     if (this.sound) {
@@ -1132,7 +1130,8 @@ function DeezerPlayer(){
       this.sound.destruct();
       this.sound = null;
     } else {
-      DZ.player.pause();
+      //DZ.player.pause();
+      document.getElementById('dz-root').innerHTML = '';
     }    
   }
   
@@ -1165,7 +1164,7 @@ function DeezerPlayer(){
     
   //============================================================================  
   function loadSDK(cb) {
-    var alreadyInit = false, dz;
+    var dz;
     if (window.DZ)
       return cb();
     if (!document.getElementById('dz-root')) {
@@ -1173,28 +1172,28 @@ function DeezerPlayer(){
       dz.id = 'dz-root';
       document.getElementsByTagName("body")[0].appendChild(dz);
     }
-    loader.includeJS(SDK_URL, function(){
-      if (window.location.protocol === "https:")
-        DZ.override_https();
-      init(function() {
-        if (alreadyInit)
-          return;
-        alreadyInit = true;
-        cb();
-      });
-    });
+    loader.includeJS(SDK_URL, cb);
   }
 
   //============================================================================
-  function init(onload) {
+  Player.prototype.init = function(onload) {
+    var self = this;
     DZ.init({
       appId: DEEZER_APP_ID,
       channelUrl: DEEZER_CHANNEL_URL,
       player: {
-        onload: onload
+        onload: function(){
+          if (window.location.protocol === "https:")
+            DZ.override_https();
+          DZ.getLoginStatus(function(response) {
+            IS_LOGGED = response.userID;
+          });
+          hookHandlers(self);
+          onload.call(null, arguments);
+        }
       }
     });
-  }
+  };
   
   //============================================================================
   function hookHandlers(self) {
