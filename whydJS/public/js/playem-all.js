@@ -1,6 +1,6 @@
 var YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI"; // dirty hack, until https://d3qdgup1c3urcq.cloudfront.net/html/YoutubePlayerIframe.html is refreshed/invalidated
 
-/* playemjs commit: 7cd7bb394a039a80cd7826ecbc1f35a028b723d7 */
+/* playemjs commit: 79fe2f187c41212680eadc87992108e43efc8588 */
 
 // configuration
 
@@ -1467,6 +1467,15 @@ function SoundCloudPlayer(){
 
     var that = this;
 
+    this.callHandler = function(name, params) {
+      try {
+        eventHandlers[name] && eventHandlers[name](params);//.apply(null, params);
+      }
+      catch (e) {
+        console.error("SC error:", e, e.stack);
+      }
+    };
+
     function init() {
       for (var i in EVENT_MAP)
         (function(i) {
@@ -1501,15 +1510,6 @@ function SoundCloudPlayer(){
         window.SC.initialize({client_id: window.SOUNDCLOUD_CLIENT_ID});
         init();
       });
-    }
-
-    this.callHandler = function(name, params) {
-      try {
-        eventHandlers[name] && eventHandlers[name](params);//.apply(null, params);
-      }
-      catch (e) {
-        console.error("SC error:", e, e.stack);
-      }
     }
   }
 
