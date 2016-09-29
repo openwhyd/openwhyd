@@ -36,5 +36,11 @@ The procedure consists of the following steps:
 3. **Make sure that there is a test in the [playemjs repo](https://github.com/adrienjoly/playemjs) that fails in a matching context** (cf data from step 1), or write that test and commit it with a message like "failing test for openwhyd issue #XXX".
 4. **Make the test pass by fixing playemjs**, then -- after making sure you did not break playemjs' other tests -- commit your fix with a message like "fixed openwhyd issue #XXX".
 5. **Make sure that this fix solves the problem on Openwhyd**: in your local `playemjs` directory, run `make compile`, then copy the `/dist/playemjs-*.js` files to the `/whydJS/public/js` directory of your local Openwhyd repository, and test step 1's scenario.
-6. If your fix solved the issue, you can commit with a message like "playemjs fix for issue #XXX", and send a pull request.
-7. Go tell the person who reported the bug that you proposed a fix, and that it should hopefully solve their problem on openwhyd.org soon (i.e. as soon as )
+6. **If your fix solved the issue, you can commit to the [Openwhyd repo](https://github.com/openwhyd/openwhyd)** with a message like "playemjs fix for issue #XXX", and send a pull request.
+7. **Go tell the person who reported the bug that you proposed a fix**, and that it should hopefully solve their problem on openwhyd.org soon (i.e. as soon as the pull request is accepted). My advice is to stay humble until you're sure that their problem is fixed, because shit happen.
+
+## That's it for now!
+
+As stated [there](https://github.com/openwhyd/openwhyd/issues/17), I'm thinking of ways to integrate Playemjs into Openwhyd in a cleaner/safer way. 
+
+If you have any constructive suggestions to make, be it on this document or on Playemjs' integration itself, please ping me! :-)
