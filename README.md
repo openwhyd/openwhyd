@@ -14,6 +14,9 @@ Features:
 
 **You can use it on [openwhyd.org](https://openwhyd.org).**
 
+Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2016](https://infograph.venngage.com/p/160097/openwhyd-data-report-mid-october-2016)
+[Like us on Facebook](https://facebook.com/openwhyd/), and [follow us on Twitter](https://twitter.com/open_whyd).
+
 ## Important notes
 
 If you want to contribute, please:
