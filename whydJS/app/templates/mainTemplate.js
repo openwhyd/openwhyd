@@ -52,6 +52,8 @@ function makeMetaHead(options) {
 		'<meta name="google-site-verification" content="mmqzgEU1bjTfJ__nW6zioi7O9vuur1SyYfW44DH6ozg" />',
 		'<meta name="apple-itunes-app" content="app-id=874380201' + (appUrl ? ', app-argument=' + appUrl : '') + '">',
 		'<link rel="image_src" href="' + pageImg + '"/>',
+		'<meta name="twitter:card" content="summary" />',
+		'<meta name="twitter:site" content="@open_whyd" />',
 		'<meta property="og:image" content="' + pageImg + '" />',
 		'<meta property="og:description" content="' + pageDesc + '" />',
 		'<meta property="fb:app_id" content="' + fbId + '" />',
