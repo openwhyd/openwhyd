@@ -469,8 +469,9 @@ function renderUserLinks(lnk){
 
 	// make sure URLs are valid
 	for (var i in lnk)
-		if (lnk[i])
+		if (lnk[i] && i !== "home") {
 			lnk[i] = "//" + lnk[i].split("//").pop();
+		}
 		else
 			delete lnk[i];
 
