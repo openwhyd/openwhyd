@@ -469,8 +469,15 @@ function renderUserLinks(lnk){
 
 	// make sure URLs are valid
 	for (var i in lnk)
-		if (lnk[i])
-			lnk[i] = "//" + lnk[i].split("//").pop();
+		if (lnk[i]) {
+			var lnkBody = "//" + lnk[i].split("//").pop();
+			if (i == "home") {
+				var isHttps = lnk[i].match(/^https:\/\//);
+				lnk[i] = (isHttps ? 'https' : 'http') + ':' + lnkBody;
+			} else {
+				lnk[i] = lnkBody;
+			}
+		}
 		else
 			delete lnk[i];
 
