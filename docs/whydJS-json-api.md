@@ -583,6 +583,7 @@ Return: (JSON)
 _Parameters:_
 
 *   **format**: "json" or "html" (default)
+*   **callback**: (string, optional) name of the function name to use for JSONP
 *   **limit**: (int, optional) number of posts to return
 *   **after**: (string, optional) id of the last post of the previous page (for pagination)
 *   **before**: (string, optional) id of the first post currently displayed => will return fresher posts (used to refresh the list of tracks, e.g. when a track was just added)
@@ -591,7 +592,7 @@ Return:
 
 *   **list of track objects**
 
-Exemples:
+Examples:
 
 *   [/adrien?format=json](http://openwhyd.org/adrien?format=json) : returns the last 20 tracks I posted in JSON format
 *   [/adrien/playlist/10?format=json&limit=10000](http://openwhyd.org/adrien/playlist/10?format=json&limit=10000) : returns the last 10000 tracks I posted in my "electronica" playlist
