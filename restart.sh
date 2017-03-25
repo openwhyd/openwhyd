@@ -3,7 +3,7 @@
 # Constants
 PORT_A=1094
 PORT_B=1095
-MAX_RETRY=20
+MAX_RETRY=50
 CURR_DIR=`pwd`
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
@@ -21,6 +21,7 @@ cd whydJS && source env-vars-local.sh && WHYD_PORT=$port npm start &
 i=0
 while :
 do
+    echo $i
     sleep 1
 
     if [ $i -ge $MAX_RETRY ]; then
@@ -58,3 +59,4 @@ forever stop 0
 
 echo "NGINX restarted. Current app listening on port $port."
 echo "Deployment ended."
+
