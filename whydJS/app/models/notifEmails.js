@@ -9,6 +9,8 @@ var emailModel = require("../models/email.js");
 var userModel = require("../models/user.js");
 var notifTemplate = require("../templates/notif.js");
 
+var SEND_USER_DELETION_EMAILS = false;
+
 // helpers
 
 function getUserPrefs(uId){
@@ -71,8 +73,10 @@ exports.askAccountDeletion = function (uId, uNm) {
 
 // 7) when user chose to delete their account => notify team
 exports.sendUserDeleted = function (uId, uNm) {
-	var text = (uNm || "A user") + " deleted their profile: " + process.appParams.urlPrefix + "/u/" + uId;
-	emailModel.email(process.appParams.feedbackEmail, "[" + process.appParams.urlPrefix + "] user account deleted", text);
+	if (SEND_USER_DELETION_EMAILS) {
+		var text = (uNm || "A user") + " deleted their profile: " + process.appParams.urlPrefix + "/u/" + uId;
+		emailModel.email(process.appParams.feedbackEmail, "[" + process.appParams.urlPrefix + "] user account deleted", text);
+	}
 };
 
 
