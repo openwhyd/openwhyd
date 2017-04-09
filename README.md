@@ -18,6 +18,14 @@ Latest stats, analytics and demographics: [Openwhyd data report, mid-october 201
 
 [Like us on Facebook](https://facebook.com/openwhyd/), and [follow us on Twitter](https://twitter.com/open_whyd).
 
+## Tech stack
+
+- Node.js
+- Express-like Web Server
+- jQuery
+- HTML + CSS
+- [Playemjs](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
+
 ## Important notes
 
 If you want to contribute, please:
