@@ -20,6 +20,12 @@ Latest stats, analytics and demographics: [Openwhyd data report, mid-october 201
 
 [Like us on Facebook](https://facebook.com/openwhyd/), and [follow us on Twitter](https://twitter.com/open_whyd).
 
+## Status of the project
+
+This product is the result of years of iterative development, by the start-up company [Whyd](https://whyd.com). Read [the full story from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
+
+Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the-music-streaming-social-network-becomes-openwhyd-and-gives-keys-to-the-community-18067/), [Adrien Joly](https://github.com/adrienjoly) (ex-lead developer at Whyd) has been maintaining it on his spare time (i.e. backing up openwhyd's database, maintaing issues based on user feedback...), and coordinating contibutors.
+
 ## Tech stack
 
 - Node.js
@@ -28,7 +34,7 @@ Latest stats, analytics and demographics: [Openwhyd data report, mid-october 201
 - HTML + CSS
 - [Playemjs](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
 
-## Important notes
+## Contribute
 
 If you want to contribute, please:
 
