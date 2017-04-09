@@ -1,4 +1,4 @@
-# OpenWhyd.org (formerly whyd.com)
+# Openwhyd.org (formerly whyd.com)
 
 > Collect, play and share music from various streaming platforms
 
@@ -22,8 +22,9 @@ Latest stats, analytics and demographics: [Openwhyd data report, mid-october 201
 
 If you want to contribute, please:
 
-- read the contribution guidelines: [CONTRIBUTING.md](https://github.com/openwhyd/openwhyd/blob/master/CONTRIBUTING.md)
-- then, introduce yourself here: [application form](https://openwhyd.typeform.com/to/cEur7Q)
+- read the contribution guidelines: [CONTRIBUTING.md](https://github.com/openwhyd/openwhyd/blob/master/CONTRIBUTING.md);
+- pick an issue from [our roadmap](https://github.com/openwhyd/openwhyd/projects/1), work on it, then propose a Pull-Request;
+- if you need help, [ask us on Slack](https://openwhyd-slack.herokuapp.com/).
 
 Also, be aware that this project has become open-source very recently, so please be kind and constructive about code quality, and about the management of this project.
 
