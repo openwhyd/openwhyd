@@ -4,6 +4,8 @@
 
 Openwhyd's curating platform (website + iphone app) allows music lovers to find and play very specific versions of songs that their love, and are not available on major music platforms such as Spotify or iTunes. E.g. rare remixes, DJ sets, bootlegs and epic live performances.
 
+[![Whyd Music Demo Video](http://img.youtube.com/vi/aZT8VlTV1YY/0.jpg)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Whyd Music Demo Video")
+
 Features:
 
 - a bookmarklet / chrome extension for adding music tracks from the web (e.g. a Youtube page)
