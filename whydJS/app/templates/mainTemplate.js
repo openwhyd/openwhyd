@@ -302,6 +302,7 @@ exports.renderWhydPage = function (params) {
 	var uid = (user || {}).id;
 
 	var out = [
+		'<div class="topWarning">🚧 Openwhyd will be under maintenance during the night between Sunday 30th and Monday 1st of May.</div>',
 		'<!--[if lt IE 8]>',
 		'<div class="topWarning">Warning: your web browser is not supported by OpenWhyd. Please upgrade to a modern browser.</div>',
 		'<![endif]-->',

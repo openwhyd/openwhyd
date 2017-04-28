@@ -415,10 +415,17 @@ box-shadow: 0 0 5px rgba(169,208,90,1);
 	z-index: 2;
 	width: 100%;
 	margin: 0;
-	padding:0;
-	background-color: #F24E4C;
 	text-align: center;
+	/*
 	padding:5px;
+	background-color: #F24E4C;
+	*/
+	padding: 1px;
+	background-color: black;
+	color: yellow;
+	position: absolute;
+	top: 50px;
+	font-size: 13px;
 }
 
 #header {
