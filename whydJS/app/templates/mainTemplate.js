@@ -121,9 +121,11 @@ exports.renderWhydFrame = function (html, params) {
 	params.head = params.head || makeMetaHead(params);
 
 	var out = htmlHeading.concat(params.head || []).concat([
+		/* invalid html5 meta => replaced by Cache-Control HTTP header:
 		'    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />',
 		'    <meta http-equiv="Pragma" content="no-cache" />',
 		'    <meta http-equiv="expires" content="0" />',
+		*/
 	//	'    <meta name="ROBOTS" content="NONE" />',
 		'    <link href="'+render.urlPrefix+'/favicon.ico" rel="shortcut icon" type="image/x-icon" />',
 		'    <link href="'+render.urlPrefix+'/favicon.png" rel="icon" type="image/png" />',
