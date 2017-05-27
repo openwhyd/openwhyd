@@ -52,6 +52,8 @@ function makeMetaHead(options) {
 		'<meta name="google-site-verification" content="mmqzgEU1bjTfJ__nW6zioi7O9vuur1SyYfW44DH6ozg" />',
 		'<meta name="apple-itunes-app" content="app-id=874380201' + (appUrl ? ', app-argument=' + appUrl : '') + '">',
 		'<link rel="image_src" href="' + pageImg + '"/>',
+		'<meta name="description" content="' + pageDesc + '" />',
+		'<meta name="keywords" content="discover, music, curation, streaming, tracks, youtube, soundcloud, bandcamp, playlists, play, free" />',
 		'<meta name="twitter:card" content="summary" />',
 		'<meta name="twitter:site" content="@open_whyd" />',
 		'<meta property="og:image" content="' + pageImg + '" />',
@@ -69,7 +71,7 @@ function makeMetaHead(options) {
 
 var htmlHeading = [
 	'<!DOCTYPE html>',
-	'<html>',
+	'<html lang="en">',
 	'  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">', // music: http://ogp.me/ns/music# video: http://ogp.me/ns/video# website: http://ogp.me/ns/website#
 	'    <meta charset="utf-8" />'
 ];
@@ -254,7 +256,8 @@ exports.renderHeader = function(user, content, params) {
 exports.renderWhydPage = function (params) {
 	var params = params || {};
 
-	params.title = (params.pageTitle ? params.pageTitle + ' - ' : '') + "openwhyd";
+	params.title = (params.pageTitle ? params.pageTitle + ' - ' : '') + "Openwhyd"
+		+ (params.pageTitle ? "" : " – Discover and collect the best music tracks from the web");
 
 	params.js = (params.noDefaultJs ? [] : [
 		"jquery.avgrund.js",
