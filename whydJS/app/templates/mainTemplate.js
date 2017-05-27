@@ -185,7 +185,7 @@ exports.renderHeader = function(user, content, params) {
 	var uid = user ? user.id : null;
 	var content = content || [
 		'  <div id="headCenter">',
-		'   <a id="logo" alt="OpenWhyd" target="_top" class="homeLink" href="/">',
+		'   <a id="logo" title="OpenWhyd" target="_top" class="homeLink" href="/">',
 		// '     <img id="logo" src="'+render.urlPrefix+'/images/logo-s.png" />',
 		'   </a>',
 		(uid ? '<div id="notifIcon">0</div><div id="notifPanel"></div>' : ''),
@@ -242,7 +242,7 @@ exports.renderHeader = function(user, content, params) {
 		'   <div class="searchResults" id="searchResults"></div>',
 		'  </div>',
 		'  <div id="logBox">',
-		'   <a id="get-app" href="https://itunes.apple.com/fr/app/whyd-everyones-music-playlist/id874380201" target="_black">Get App</a>',
+		'   <a id="get-app" href="https://itunes.apple.com/fr/app/whyd-everyones-music-playlist/id874380201" target="_blank">Get App</a>',
 		'   <a id="signin" href="/login">Login</a>',
 		'   <a id="signup" onclick="login();">Sign up</a>',
 		'  </div>'
