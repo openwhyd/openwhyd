@@ -4,6 +4,8 @@
 
 Openwhyd's curating platform (website + iphone app) allows music lovers to find and play very specific versions of songs that their love, and are not available on major music platforms such as Spotify or iTunes. E.g. rare remixes, DJ sets, bootlegs and epic live performances.
 
+**You can use it on [openwhyd.org](https://openwhyd.org).**
+
 [![Whyd Music Demo Video](./docs/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Whyd Music Demo Video")
 
 Features:
@@ -14,12 +16,6 @@ Features:
 - you can add a description to each track
 - supports music from youtube, soundcloud, vimeo, bandcamp, and MP3 files (as long as they are hosted on the web)
 
-**You can use it on [openwhyd.org](https://openwhyd.org).**
-
-Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2016](https://infograph.venngage.com/p/160097/openwhyd-data-report-mid-october-2016)
-
-[Like us on Facebook](https://facebook.com/openwhyd/), and [follow us on Twitter](https://twitter.com/open_whyd).
-
 ## Status of the project
 
 This product is the result of years of iterative development, by the start-up company [Whyd](https://whyd.com). Read [the full story from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
@@ -27,6 +23,10 @@ This product is the result of years of iterative development, by the start-up co
 Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the-music-streaming-social-network-becomes-openwhyd-and-gives-keys-to-the-community-18067/), [Adrien Joly](https://github.com/adrienjoly) (ex-lead developer at Whyd) has been maintaining it on his spare time (i.e. replying to user feedback on twitter and facebook, maintaing issues based on user feedback, backing up openwhyd's database, updating SSL certificates...), and coordinating [contributors](https://github.com/openwhyd/openwhyd/network/members).
 
 We welcome contributors, including beginners!
+
+- Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2016](https://infograph.venngage.com/p/160097/openwhyd-data-report-mid-october-2016)
+- A question / problem? --> Check out [our FAQ](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md)
+- ... and don't forget to [like us on Facebook](https://facebook.com/openwhyd/), and [follow us on Twitter](https://twitter.com/open_whyd).
 
 ## Tech stack
 
