@@ -18,6 +18,10 @@ Many users are hoping for an Android app. We'd love to make it, but it would tak
 
 If you think that you can help in any way, please contact us!
 
+### How many users are using Openwhyd? (among other stats)
+
+You can find an infographic with a few facts and numbers [there](https://www.facebook.com/openwhyd/photos/a.1159960527358541.1073741828.1156477841040143/1218644401490153/?type=3).
+
 ### I'd love to contribute to Openwhyd, how can I help?
 
 Openwhyd is a collaborative project, so we welcome contributions of any kind!
@@ -46,6 +50,18 @@ Try to refresh the page and click again on the track to see if it plays.
     - If it does not play from its original location (e.g. Youtube page), there is nothing we can do, unfortunately...
     - If it does play from there but not from Openwhyd, it could be caused by geographical limitations (i.e. for technical reasons, the track must be allowed to be streamed in France), or that our player is broken. => Please let us know by sending us the Openwhyd URL of your track.
   - If it does play after refreshing the Openwhyd page, it could be that your web browser does not allow playback of streaming content in the background (i.e. while doing something else.) In that case, try installing [Openwhyd-electron](https://github.com/openwhyd/openwhyd-electron/releases/) on your computer, by selecting your operating system from the list.
+
+### How to export my tracks / comment exporter ma musique en CSV ou JSON ?
+
+🇬🇧🇧First off, don't worry! Like you, we really care about our 5+ years of music curated with love on Openwhyd! And, whatever happens, we would never let Openwhyd *die* without warning the community beforehand.
+
+That being said, it's very easy to download your data at any time: just add the `?format=json&limit=999999` suffix to your Openwhyd profile URL. E.g. `https://openwhyd.org/adrien?format=json&limit=999999`
+
+🇫🇷 Tu peux récupérer tes tracks à tout moment, en ajoutant le suffixe `?format=json&limit=999999` à l'URL de ton profil Openwhyd. Exemple: `https://openwhyd.org/adrien?format=json&limit=999999`
+
+### Do you have an API ?
+
+Yes, check [this](https://github.com/openwhyd/openwhyd/blob/master/docs/whydJS-json-api.md) out.
 
 ### The player says “Embed too small” or something like that, and wont play my music! 
  
