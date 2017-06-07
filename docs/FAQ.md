@@ -2,9 +2,50 @@
 
 ## General / non-technical questions
 
-TODO
+### What is Whyd / Openwhyd, what name means?
 
+If you're curious, read [our story](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
+
+### How to use Openwhyd on my mobile phone?
+
+So far, Openwhyd can be used from the following devices only:
+
+- use the [web version](https://openwhyd.org) on your computer.
+- use our [iOS app](https://openwhyd.org) on your iPhone or iPad.
+- if you have another kind of smartphone or tablet, you can only use our experimental [Mobile Track Finder](https://openwhyd.org/mobile/) in order to search and play individual tracks from your Openwhyd profile.
+
+Many users are hoping for an Android app. We'd love to make it, but it would take us a whole lot of time. So far, nobody from our community of users volunteered for this, unfortunately.
+
+If you think that you can help in any way, please contact us!
+
+### I'd love to contribute to Openwhyd, how can I help?
+
+Openwhyd is a collaborative project, so we welcome contributions of any kind!
+
+If you're a developer, check out:
+
+- our [open-source repositories on Github](https://github.com/openwhyd),
+- our [global roadmap](https://github.com/orgs/openwhyd/projects/1) and [development board on Github](https://github.com/openwhyd/openwhyd/projects/1),
+- our [current issues on Github](https://github.com/openwhyd/openwhyd/issues), (*help on fixing bugs is particularly appreciated!*)
+- and our [contribution guide](https://github.com/openwhyd/openwhyd/blob/master/CONTRIBUTING.md).
+
+If you have other skills that you would like to invest as a volunteer, please contact us!
+
+Or, if you want to keep Openwhyd afloat, you can [donate](https://opencollective.com/openwhyd) to help us cover Openwhyd's hosting costs.
+
+### How to contact Openwhyd's team?
+
+Contact us at contact@openwhyd.org, or through our [Openwhyd Music Lovers Club, on Facebook](https://www.facebook.com/groups/openwhyd/). Our community of volunteers and users will do their best to help!
+ 
 ## Technical questions / support
+
+### Track skipping problem / les morceaux sautent / ne s'enchainent pas ?
+
+Try to refresh the page and click again on the track to see if it plays.
+  - If it does not, try opening its source URL to another tab by right-clicking on it, and play it from there.
+    - If it does not play from its original location (e.g. Youtube page), there is nothing we can do, unfortunately...
+    - If it does play from there but not from Openwhyd, it could be caused by geographical limitations (i.e. for technical reasons, the track must be allowed to be streamed in France), or that our player is broken. => Please let us know by sending us the Openwhyd URL of your track.
+  - If it does play after refreshing the Openwhyd page, it could be that your web browser does not allow playback of streaming content in the background (i.e. while doing something else.) In that case, try installing [Openwhyd-electron](https://github.com/openwhyd/openwhyd-electron/releases/) on your computer, by selecting your operating system from the list.
 
 ### The player says “Embed too small” or something like that, and wont play my music! 
  
