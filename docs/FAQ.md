@@ -2,7 +2,7 @@
 
 ## General / non-technical questions
 
-### What is Whyd / Openwhyd, what name means?
+### What is Whyd / Openwhyd, what does this name mean?
 
 If you're curious, read [our story](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
 
@@ -53,7 +53,7 @@ Try to refresh the page and click again on the track to see if it plays.
 
 ### How to export my tracks / comment exporter ma musique en CSV ou JSON ?
 
-🇬🇧🇧First off, don't worry! Like you, we really care about our 5+ years of music curated with love on Openwhyd! And, whatever happens, we would never let Openwhyd *die* without warning the community beforehand.
+🇬🇧 First off, don't worry! Like you, we really care about our 5+ years of music curated with love on Openwhyd! And, whatever happens, we would never let Openwhyd *die* without warning the community beforehand.
 
 That being said, it's very easy to download your data at any time: just add the `?format=json&limit=999999` suffix to your Openwhyd profile URL. E.g. `https://openwhyd.org/adrien?format=json&limit=999999`
 
@@ -87,4 +87,4 @@ Yeah, that’s because of Flash. Please try again after activating the HTML5 mod
  
 Contact us at contact@openwhyd.org, or through our [Openwhyd Music Lovers Club, on Facebook](https://www.facebook.com/groups/openwhyd/). Our community of volunteers and users will do their best to help!
  
-Never stop jamming! 
+*Never stop jamming!*
