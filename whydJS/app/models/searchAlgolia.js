@@ -11,6 +11,7 @@ var ENGINE = new Algolia(process.env.ALGOLIA_APP_ID.substr(), process.env.ALGOLI
 
 var INDEX_NAME_BY_TYPE = {
 	user: 'users',
+	track: 'tracks',
 	post: 'posts',
 	playlist: 'playlists',
 };
@@ -217,6 +218,20 @@ exports.indexTyped = function(type, item, handler) {
 			handler && handler(); // TODO: check if parameters are required or not
 		});
 	}
+}
+
+exports.countDocs = function(type, callback) {
+	ENGINE.listIndexes(function(err, content) {
+		console.log('countDocs', type, err || content);
+		try {
+			callback(content.items.find(function(index) {
+				return index.name === INDEX_NAME_BY_TYPE[type];
+			}).entries);
+		} catch(e) {
+			console.error(err || e);
+			callback(null);
+		}
+	});
 }
 
 // INIT
