@@ -14,8 +14,8 @@ var indexCol = {
 
 var indexFields = { // different from the one from search.js model
 	user: {_id:1, name:1, email:1, handle:1},
-	post: {_id:1, name:1, text:1, uId:1},
-	playlist: {_id:1, name:1, pl:1}
+	post: {_id:1, name:1, text:1, uId:1, eId:1, pl:1},
+	playlist: {_id:1, name:1, pl:1, uId:1},
 };
 
 function deleteIndex(type, cb) {
