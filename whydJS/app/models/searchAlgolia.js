@@ -16,20 +16,38 @@ var INDEX_NAME_BY_TYPE = {
 	playlist: 'playlists',
 };
 
+var INDEX_TYPE_BY_NAME = {
+	users: 'user',
+	tracks: 'track',
+	posts: 'post',
+	playlists: 'playlist',
+};
+
+// fields that will be indexed for search and faceting (together with the `name` field)
+var INDEX_FIELDS_BY_TYPE = {
+	user: [ 'handle' ],
+	track: [ ],
+	post: [ 'text', 'uId' ],
+	playlist: [ ],
+};
+
+// fields that will be stored in the search index's documents
+var FIELDS_BY_TYPE = {
+	user: INDEX_FIELDS_BY_TYPE.user.concat([ 'name', /*'img',*/ 'nbPosts' ]),
+	track: INDEX_FIELDS_BY_TYPE.track.concat([ 'name', /*'img',*/ 'nbPosts', 'post' ]),
+	post: INDEX_FIELDS_BY_TYPE.post.concat([ 'name', /*'img',*/ 'eId', 'pl' ]),
+	playlist: INDEX_FIELDS_BY_TYPE.playlist.concat([ 'name', 'number', 'nbPosts' ]),
+};
+
 // lazy init and caching of indexes
 var getIndex = (function() {
 	var INDEX = {}; // cache of indexes
-	var INDEX_FIELDS = {
-		users: [ 'email', 'handle' ],
-		posts: [ 'text', 'uId' ],
-		playlists: [ ],
-	};
 	return function(indexName) {
 		var index = INDEX[indexName];
 		if (!index) {
 			index = INDEX[indexName] = ENGINE.initIndex(indexName);
 			// init field indexing settings
-			var fields = INDEX_FIELDS[indexName] || [];
+			var fields = INDEX_FIELDS_BY_TYPE[INDEX_TYPE_BY_NAME[indexName]] || [];
 			index.setSettings({
 				attributesForFaceting: [ 'name' ].concat(fields.map(function(field) {
 					return 'filterOnly(' + field + ')';
@@ -199,25 +217,52 @@ exports.query = function(q, cb) {
 	})();
 }
 
-exports.indexTyped = function(type, item, handler) {
-	//console.log("models.search.index(): ", item, "...");
-	if (!type || !INDEX_NAME_BY_TYPE[type])
-		handler || logToConsole({error: "indexTyped: unknown type"});
-	else if (!item || !item._id || !item.name)
-		handler || logToConsole({error: "indexTyped: missing parameters"});
-	else {
-		var doc = Object.assign({ objectID: item._id }, item);
-		delete doc._id;
-		getIndex(INDEX_NAME_BY_TYPE[type]).addObjects([ doc ], function(err, content) {
+function logToConsole (e) {
+	console.log("INDEX ERROR: " + (e || {}).error);
+}
+
+function indexTypedDocs(type, items, callback) {
+	console.log('indexTypedDocs', type, items.length);
+	console.log('FIELDS_BY_TYPE[type]:', FIELDS_BY_TYPE[type]);
+	if (!type || !INDEX_NAME_BY_TYPE[type]) {
+		callback && callback(new Error("indexTyped: unknown type"));
+	} else {
+		var docs = items.map(function(item) {
+			if (!item || !item._id || !item.name) {
+				logToConsole({error: "indexTypedDocs: missing parameters"});
+			}
+			// filter fields to be indexed
+			console.log('item:', item);
+			var doc = { objectID: item._id };
+			FIELDS_BY_TYPE[type].forEach(function(field) {
+				console.log('field', field, item[field])
+				doc[field] = item[field];
+			});
+			console.log('=> doc:', doc);
+			return doc;
+		});
+		console.log('indexing:', docs);
+		getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function(err, content) {
 			if (err) {
 				console.error("algolia error when indexing " + type + " " + JSON.stringify(item, null, 2)
 					+ " => " + JSON.stringify(err, null, 2))
 			} else {
 				console.log("algolia indexTyped " + type + " =>", content);
 			}
-			handler && handler(); // TODO: check if parameters are required or not
+			callback && callback(err, { items: items });
 		});
 	}
+}
+
+exports.indexTyped = function(type, item, handler) {
+	//console.log("models.search.index(): ", item, "...");
+	if (!item || !item._id || !item.name) {
+		logToConsole({error: "indexTyped: missing parameters"});
+		handler && handler(); // TODO: check if parameters are required or not
+	}
+	return indexTypedDocs(type, [ item ], function() {
+		handler && handler(); // TODO: check if parameters are required or not
+	});
 }
 
 exports.countDocs = function(type, callback) {
@@ -237,6 +282,25 @@ exports.deleteAllDocs = function(type, callback) {
 	getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function(err, content) {
 		console.log('algolia deleteAllDocs =>', err || content);
 		callback && callback(); // TODO: check if parameters are required or not
+	});
+}
+
+exports.indexBulk = function(docs, callback) {
+	console.log("indexBulk", docs.length, "...");
+	var docsPerType = {};
+	docs.forEach(function(doc) {
+		docsPerType[doc._type] = (docsPerType[doc._type] || []).concat([ doc ]);
+	});
+	var typeToBeIndexed = Object.keys(docsPerType).find(function (type) {
+		console.log('docsPerType', type, ':', docsPerType[type].length);
+		return docsPerType[type].length > 0;
+	});
+	// TODO: also index from other types
+	return indexTypedDocs(typeToBeIndexed, docsPerType[typeToBeIndexed], function(err, res) {
+		callback({
+			error: err,
+			items: (res || {}).items,
+		})
 	});
 }
 
