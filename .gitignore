@@ -1,16 +1,6 @@
 .DS_Store
-rollback.sh
-mongod-recom
-ssh_ovh
-dump
-prodLogs
 env-vars-local.sh
-
-whydDataTools/bin
-whydDataTools/nbproject/private/
-whydDataTools/.settings/
-whydDataTools/build/
-whydDataTools/dist/
+env-vars-test.sh
 
 whydJS/nbproject/private/
 whydJS/upload_data/
@@ -22,31 +12,17 @@ whydJS/config/apns/aps_dev.key.pem
 whydJS/config/apns/aps_prod.cert.pem
 whydJS/config/apns/aps_prod.key.pem
 whydJS/config/apns/Dev_Whyd.mobileprovision
-whydJS/start
+whydJS/*.log
 whydJS/*.out
 whydJS/*.pid
 whydJS/*.err
-whydJS/appd.out
-whydJS/appd.err
 whydJS/appd.dmn
-whydJS/prev.out
-whydJS/prev.err
-whydJS/v8.log
 
 !whydJS/node_modules
 whydJS/node_modules/*
-
 !whydJS/node_modules/get
 !whydJS/node_modules/my
 !whydJS/node_modules/hypem
 
-whydJS/access.log
-whydJS/npm-debug.log
-
 whydDB/db
-whydDB/db-recom
 whydDB/dump
-whydDB/log
-
-whydElastic/data
-whydElastic/logs

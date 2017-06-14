@@ -36,7 +36,7 @@
     "my": "./node_modules/my"
   },
   "dependencies": {
-    "algolia-search": "1.5.8",
+    "algoliasearch": "^3.23.0",
     "apn": "1.5.2",
     "async": "*",
     "colors": "*",

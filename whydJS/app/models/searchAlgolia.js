@@ -5,10 +5,39 @@
 
 var snip = require('../snip.js');
 var mongodb = require('./mongodb.js');
-var Algolia = require('algolia-search');
+var Algolia = require('algoliasearch');
 
 var ENGINE = new Algolia(process.env.ALGOLIA_APP_ID.substr(), process.env.ALGOLIA_API_KEY.substr());
-var INDEX = {};
+
+var INDEX_NAME_BY_TYPE = {
+	user: 'users',
+	post: 'posts',
+	playlist: 'playlists',
+};
+
+// lazy init and caching of indexes
+var getIndex = (function() {
+	var INDEX = {}; // cache of indexes
+	var INDEX_FIELDS = {
+		users: [ 'email', 'handle' ],
+		posts: [ 'text', 'uId' ],
+		playlists: [ ],
+	};
+	return function(indexName) {
+		var index = INDEX[indexName];
+		if (!index) {
+			index = INDEX[indexName] = ENGINE.initIndex(indexName);
+			// init field indexing settings
+			var fields = INDEX_FIELDS[indexName] || [];
+			index.setSettings({
+				attributesForFaceting: [ 'name' ].concat(fields.map(function(field) {
+					return 'filterOnly(' + field + ')';
+				}))
+			});
+		}
+		return index;
+	}
+})();
 
 function Search() {}
 
@@ -39,10 +68,8 @@ Search.prototype.search = function(index, query, options, cb) {
       options.query = q;  
       this.queries.push(options);
       ENGINE.multipleQueries(this.queries, 'index', cb);
-    } else if (INDEX[index]) {
-      INDEX[index].search(q, cb, options);
     } else {
-      (INDEX[index] = ENGINE.initIndex(index)).search(q, cb, options);
+      getIndex(index).search(q, options, cb);
     }
   } else {
     options.index = index;
@@ -151,7 +178,7 @@ exports.query = function(q, cb) {
 	else if (q.uId)
 		queue = ["post"];
 	else
-		queue = ["user", "track", "playlist"]; //Object.keys(searchByType);
+		queue = ["user", "track", "post", "playlist"]; //Object.keys(searchByType);
 	delete q._type;
 	(function next(){
 		var type = queue.pop();
@@ -162,14 +189,35 @@ exports.query = function(q, cb) {
 				if (res.hits) {
 					console.log("=>", res.hits.length, "hits")
 					hits = hits.concat(res.hits);
+				} else {
+					console.error("algolia error for " + JSON.stringify(q, null, 2)
+					  + " => " + JSON.stringify(res, null, 2));
 				}
-				else
-					console.error("missing algolia hits for " + JSON.stringify(q) + " => " + JSON.stringify(res));
 				next();
 			});
 	})();
 }
 
+exports.indexTyped = function(type, item, handler) {
+	//console.log("models.search.index(): ", item, "...");
+	if (!type || !INDEX_NAME_BY_TYPE[type])
+		handler || logToConsole({error: "indexTyped: unknown type"});
+	else if (!item || !item._id || !item.name)
+		handler || logToConsole({error: "indexTyped: missing parameters"});
+	else {
+		var doc = Object.assign({ objectID: item._id }, item);
+		delete doc._id;
+		getIndex(INDEX_NAME_BY_TYPE[type]).addObjects([ doc ], function(err, content) {
+			if (err) {
+				console.error("algolia error when indexing " + type + " " + JSON.stringify(item, null, 2)
+					+ " => " + JSON.stringify(err, null, 2))
+			} else {
+				console.log("algolia indexTyped " + type + " =>", content);
+			}
+			handler && handler(); // TODO: check if parameters are required or not
+		});
+	}
+}
 
 // INIT
 
