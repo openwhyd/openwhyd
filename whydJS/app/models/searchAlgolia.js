@@ -222,7 +222,6 @@ exports.indexTyped = function(type, item, handler) {
 
 exports.countDocs = function(type, callback) {
 	ENGINE.listIndexes(function(err, content) {
-		console.log('countDocs', type, err || content);
 		try {
 			callback(content.items.find(function(index) {
 				return index.name === INDEX_NAME_BY_TYPE[type];
@@ -231,6 +230,13 @@ exports.countDocs = function(type, callback) {
 			console.error(err || e);
 			callback(null);
 		}
+	});
+}
+
+exports.deleteAllDocs = function(type, callback) {
+	getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function(err, content) {
+		console.log('algolia deleteAllDocs =>', err || content);
+		callback && callback(); // TODO: check if parameters are required or not
 	});
 }
 
