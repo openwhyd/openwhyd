@@ -222,8 +222,7 @@ function logToConsole (e) {
 }
 
 function indexTypedDocs(type, items, callback) {
-	console.log('indexTypedDocs', type, items.length);
-	console.log('FIELDS_BY_TYPE[type]:', FIELDS_BY_TYPE[type]);
+	console.log('indexTypedDocs', type, items.length, '...');
 	if (!type || !INDEX_NAME_BY_TYPE[type]) {
 		callback && callback(new Error("indexTyped: unknown type"));
 	} else {
@@ -232,22 +231,18 @@ function indexTypedDocs(type, items, callback) {
 				logToConsole({error: "indexTypedDocs: missing parameters"});
 			}
 			// filter fields to be indexed
-			console.log('item:', item);
 			var doc = { objectID: item._id };
 			FIELDS_BY_TYPE[type].forEach(function(field) {
-				console.log('field', field, item[field])
 				doc[field] = item[field];
 			});
-			console.log('=> doc:', doc);
 			return doc;
 		});
-		console.log('indexing:', docs);
 		getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function(err, content) {
 			if (err) {
 				console.error("algolia error when indexing " + type + " " + JSON.stringify(item, null, 2)
 					+ " => " + JSON.stringify(err, null, 2))
 			} else {
-				console.log("algolia indexTyped " + type + " =>", content);
+				console.log("algolia indexTyped " + type + " => indexed", items.length, 'documents');
 			}
 			callback && callback(err, { items: items });
 		});
@@ -280,7 +275,7 @@ exports.countDocs = function(type, callback) {
 
 exports.deleteAllDocs = function(type, callback) {
 	getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function(err, content) {
-		console.log('algolia deleteAllDocs =>', err || content);
+		console.log('algolia deleteAllDocs =>', err || 'ok');
 		callback && callback(); // TODO: check if parameters are required or not
 	});
 }
