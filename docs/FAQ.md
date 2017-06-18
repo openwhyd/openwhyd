@@ -51,6 +51,18 @@ Try to refresh the page and click again on the track to see if it plays.
     - If it does play from there but not from Openwhyd, it could be caused by geographical limitations (i.e. for technical reasons, the track must be allowed to be streamed in France), or that our player is broken. => Please let us know by sending us the Openwhyd URL of your track.
   - If it does play after refreshing the Openwhyd page, it could be that your web browser does not allow playback of streaming content in the background (i.e. while doing something else.) In that case, try installing [Openwhyd-electron](https://github.com/openwhyd/openwhyd-electron/releases/) on your computer, by selecting your operating system from the list.
 
+### I can't add / bookmark a track from Youtube ...
+
+![screenshot](https://scontent-cdg2-1.xx.fbcdn.net/v/t31.0-0/p180x540/19243083_10213413094510997_2243898622608810090_o.jpg?oh=ec7af0fc25de2e7fc692d7ac575afb49&oe=59CCB0FB)
+
+Solutions:
+
+1. Try uninstalling and re-installing the extension;
+2. Empty your browser's cache;
+3. Or uninstall and reinstall your web browser.
+
+It could also be that this track is not accessible from France, as explained in the answer above.
+
 ### How to export my tracks / comment exporter ma musique en CSV ou JSON ?
 
 🇬🇧 First off, don't worry! Like you, we really care about our 5+ years of music curated with love on Openwhyd! And, whatever happens, we would never let Openwhyd *die* without warning the community beforehand.
