@@ -16,32 +16,6 @@ env:
     - CXX=g++-4.8
     - DISPLAY=:99.0
     - CHROME_BIN=/usr/bin/google-chrome
-    - WHYD_GENUINE_SIGNUP_SECRET="whatever"
-    - WHYD_SESSION_SECRET="whatever"
-    - WHYD_DEV_APNS_PASSPHRASE="whatever"
-    - WHYD_APNS_PASSPHRASE="whatever"
-    - WHYD_ADMIN_OBJECTID="4d94501d1f78ac091dbc9b4d"
-    - WHYD_ADMIN_NAME="admin"
-    - WHYD_ADMIN_EMAIL="test@openwhyd.org"
-    - WHYD_CONTACT_EMAIL="test@openwhyd.org"
-    - WHYD_CRASH_EMAIL="test@openwhyd.org"
-    - WHYD_URL_PREFIX="http://localhost:8080"
-    - WHYD_PORT="8080"
-    - WHYD_DEV="true"
-    - WHYD_USE_GRAPHICS_MAGICK="true"
-    - MONGODB_DATABASE="openwhyd_data"
-    - MONGODB_HOST="localhost"
-    - MONGODB_PORT="27017"
-    - MONGODB_USER=""
-    - MONGODB_PASS=""
-    - SENDGRID_API_USER=""
-    - SENDGRID_API_KEY=""
-    - SENDGRID_API_FROM_EMAIL="test@openwhyd.org"
-    - SENDGRID_API_FROM_NAME="test"
-    - LAST_FM_API_KEY=""
-    - LAST_FM_API_SECRET=""
-    - ALGOLIA_APP_ID="92V0H5YVG2"
-    - ALGOLIA_API_KEY="73a425b6febceeead7790841482574c9"
 
 addons:
   apt:
@@ -55,9 +29,10 @@ addons:
 
 # change directory before `npm install`
 before_install:
-  - mongo whydDB/initdb.js
-  - mongo whydDB/initdb_team.js
+  - mongo openwhyd_test whydDB/initdb.js
+  - mongo openwhyd_test whydDB/initdb_team.js
   - cd whydJS
+  - source env-vars-testing.sh
   
 before_script:
   - "sh -e /etc/init.d/xvfb start"
@@ -67,9 +42,8 @@ before_script:
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
   - npm install --dev
-  - npm run run &
+  - npm run run --mongoDbDatabase openwhyd_test &
   - sleep 5 # give whydJS some time to start
-#  - nohup node_modules/.bin/selenium-standalone start
 
 ## upload test coverage to codeclimate
 # after_script:
