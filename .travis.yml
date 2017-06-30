@@ -55,6 +55,7 @@ before_install:
   - cd whydJS
   - nohup npm run run
   - sleep 3 # give whydJS some time to start
+  - cat nohup.out
   - nohup selenium-standalone start
 
 ## upload test coverage to codeclimate
