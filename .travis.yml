@@ -57,8 +57,8 @@ before_install:
 before_script:
   - npm install --dev
   - npm run run &
-  - sleep 3 # give whydJS some time to start
-  - nohup node_modules/.bin/selenium-standalone start
+  - sleep 5 # give whydJS some time to start
+#  - nohup node_modules/.bin/selenium-standalone start
 
 ## upload test coverage to codeclimate
 # after_script:
