@@ -29,6 +29,7 @@ addons:
 
 # change directory before `npm install`
 before_install:
+  - mongo openwhyd_test --eval "db.dropDatabase();"
   - mongo openwhyd_test whydDB/initdb.js
   - mongo openwhyd_test whydDB/initdb_team.js
   - cd whydJS

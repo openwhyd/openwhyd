@@ -17,10 +17,12 @@ describe('landing page page', function() {
         browser.url(URL_PREFIX + '/admin/config/config.json');
         assert(!browser.isExisting('pre'));
     });
-    
+
     it('should have Openwhyd in its title', function () {
         browser.url(URL_PREFIX);
         var title = browser.getTitle();
         assert(/Openwhyd/.test(title));
     });
 });
+
+// Webdriver API documentation: http://webdriver.io/api.html
