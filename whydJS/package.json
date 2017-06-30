@@ -19,6 +19,7 @@
     "run-dev-local": "echo to test deezer connect, add local.whyd.com to /private/etc/hosts, then dscacheutil -flushcache; node app.js --color --fakeEmail --digestInterval -1 --dev --urlPrefix http://local.whyd.com:8080 $@",
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
     "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@",
+    "test": "wdio wdio.conf.js",
     "lint": "eslint app"
   },
   "engines": {
@@ -57,6 +58,10 @@
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.11.1",
     "eslint-plugin-jsx-a11y": "1.2.0",
-    "eslint-plugin-react": "^5.2.2"
+    "eslint-plugin-react": "^5.2.2",
+    "wdio-mocha-framework": "^0.5.10",
+    "wdio-selenium-standalone-service": "0.0.9",
+    "wdio-spec-reporter": "^0.1.0",
+    "webdriverio": "^4.8.0"
   }
 }
