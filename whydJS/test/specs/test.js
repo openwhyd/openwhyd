@@ -23,6 +23,11 @@ describe('landing page page', function() {
         var title = browser.getTitle();
         assert(/Openwhyd/.test(title));
     });
+
+    it('should not have changed from previous build', function() {
+        browser.url(URL_PREFIX);
+        browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
+    });
 });
 
 // Webdriver API documentation: http://webdriver.io/api.html
