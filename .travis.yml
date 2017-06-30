@@ -53,9 +53,8 @@ before_install:
   - mongo whydDB/initdb.js
   - mongo whydDB/initdb_team.js
   - cd whydJS
-  - nohup npm run run
+  - npm run run &
   - sleep 3 # give whydJS some time to start
-  - cat nohup.out
   - nohup selenium-standalone start
 
 ## upload test coverage to codeclimate
