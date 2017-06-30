@@ -1,13 +1,21 @@
+sudo: required  
+dist: trusty 
+
 language: node_js
 
 node_js:
   - "4.4"
-  - "6"
+#  - "6"
+
+services: mongodb
 
 # required for node v4 native module compilation
 # https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements
 env:
-  - CXX=g++-4.8
+  global:
+    - CXX=g++-4.8
+    - DISPLAY=:99.0
+    - CHROME_BIN=/usr/bin/google-chrome
 
 addons:
   apt:
@@ -21,7 +29,22 @@ addons:
 
 # change directory before `npm install`
 before_install:
+  - mongo openwhyd_test --eval "db.dropDatabase();"
+  - mongo openwhyd_test whydDB/initdb.js
+  - mongo openwhyd_test whydDB/initdb_team.js
   - cd whydJS
+  - source env-vars-testing.sh
+  
+before_script:
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+  - sudo apt-get update
+  - sudo apt-get install -y libappindicator1 fonts-liberation
+  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - sudo dpkg -i google-chrome*.deb
+  - npm install --dev
+  - npm run run --mongoDbDatabase openwhyd_test &
+  - sleep 5 # give whydJS some time to start
 
 ## upload test coverage to codeclimate
 # after_script:

@@ -53,7 +53,7 @@ var params = process.appParams = {
 	mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
 	mongoDbAuthUser: process.env['MONGODB_USER'],
 	mongoDbAuthPassword: process.env['MONGODB_PASS'],
-	mongoDbDatabase: process.env['MONGODB_DATABASE'] || "openwhyd_data",
+	mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
 
 	// secrets
 	genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),

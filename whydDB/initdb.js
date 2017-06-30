@@ -1,5 +1,8 @@
-print("connecting to openwhyd_data database...");
-db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
+// Usage: this file should be run by mongo's CLI:
+// $ mongo openwhyd_data whydDB/initdb.js
+
+//print("connecting to openwhyd_data database...");
+//db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
 
 print("creating openwhyd collections...");
 db.createCollection("config");

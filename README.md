@@ -57,12 +57,12 @@ Thank you for your understanding! ^^
 ## Setup
 * Make sure that MongoDB is running
 * Make sure that the necessary environment variables are defined (see below)
-* Make sure that the database is initialized (provided scripts: `initDB` and  `initTeam`, after updaing the `email` and `pwd` fields for the admin account)
+* Make sure that the database is initialized (by running `mongo openwhyd_data whydDB/initdb.js` and `mongo openwhyd_data initdb_team.js`, after updaing the `email` and `pwd` fields for the admin account)
 * Make sure that dependencies are installed (`npm install`)
 * Make sure that Apple Push Notification Service (APNS) certificates are copied in `/whydJS/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 
 ## Usage
-* `npm run run` or `npm start` (forever daemon)
+* `npm run run` (for development) or `npm start` (forever daemon)
 * Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 
 ## Environment variables
@@ -79,7 +79,7 @@ Thank you for your understanding! ^^
 * `WHYD_PORT` (default: `8080`)
 * `WHYD_DEV` (default: `false`)
 * `WHYD_USE_GRAPHICS_MAGICK` (if set to `false`, imagemagick will be used instead of image manipulation)
-* `MONGODB_DATABASE` (default: `openwhyd_data`)
+* `MONGODB_DATABASE` (example: `openwhyd_data`, or `openwhyd_test`)
 * `MONGODB_HOST` (default: `localhost`)
 * `MONGODB_PORT` (default: `27017`)
 * `MONGODB_USER` (default: none)
