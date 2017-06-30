@@ -1,8 +1,8 @@
 var assert = require('assert');
-describe('webdriver.io page', function() {
-    it('should have the right title - the fancy generator way', function () {
-        browser.url('http://webdriver.io');
+describe('landing page page', function() {
+    it('should have Openwhyd in its title', function () {
+        browser.url('http://localhost:8080');
         var title = browser.getTitle();
-        assert.equal(title, 'WebdriverIO - WebDriver bindings for Node.js');
+        assert(/Openwhyd/.test(title));
     });
 });
