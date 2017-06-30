@@ -26,7 +26,10 @@ describe('landing page page', function() {
 
     it('should not have changed from previous build', function() {
         browser.url(URL_PREFIX);
-        browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
+        var results = browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
+        results.forEach((result) => {
+            assert(result.isWithinMisMatchTolerance);
+        });
     });
 });
 
