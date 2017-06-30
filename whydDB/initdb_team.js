@@ -1,4 +1,7 @@
-db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
+// Usage: this file should be run by mongo's CLI:
+// $ mongo openwhyd_data whydDB/initdb_team.js
+
+//db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
 
 print("upserting openwhyd team users ...");
 
