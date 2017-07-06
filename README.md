@@ -1,4 +1,4 @@
-# Openwhyd.org (formerly whyd.com) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/openwhyd/sponsors/badge.svg)](#sponsors)
+# Openwhyd.org (formerly whyd.com) ![Travis-CI](https://travis-ci.org/openwhyd/openwhyd.svg?branch=master) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/openwhyd/sponsors/badge.svg)](#sponsors)
 
 > Collect, play and share music from various streaming platforms
 
