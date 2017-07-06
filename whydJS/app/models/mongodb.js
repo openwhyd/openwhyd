@@ -4,7 +4,7 @@
  * @author adrienjoly, whyd
  **/
 
-GLOBAL.DEBUG = false;
+// GLOBAL.DEBUG = false; // deprecated and not needed
 var mongodb = require('mongodb');
 var userModel = null; //require("./user.js");
 
