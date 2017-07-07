@@ -16,7 +16,7 @@ var CONN_OPTIONS = {
 	production: prod, // by default: false unless the NODE_ENV environment variable is set to "production"
 };
 
-console.log("[APNS] parameters:", CONN_OPTIONS);
+//console.log("[APNS] parameters:", CONN_OPTIONS);
 
 var FEEDBACK_OPTIONS = {
 	batchFeedback: true,
@@ -27,7 +27,7 @@ var DEFAULT_EXPIRY = 24 * 60 * 60; // 1 day
 var DEFAULT_BADGE = 0;
 var DEFAULT_SOUND = "ping.aiff";
 
-console.log("[APNS] Connecting...");
+//console.log("[APNS] Connecting...");
 var apnConnection = apn.Connection(CONN_OPTIONS);
 
 // listen to all events
