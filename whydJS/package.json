@@ -19,7 +19,9 @@
     "run-dev-local": "echo to test deezer connect, add local.whyd.com to /private/etc/hosts, then dscacheutil -flushcache; node app.js --color --fakeEmail --digestInterval -1 --dev --urlPrefix http://local.whyd.com:8080 $@",
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
     "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@",
-    "test": "wdio wdio.conf.js",
+    "test-unit": "node_modules/.bin/mocha test/specs/unit-tests.js",
+    "test-acceptance": "wdio wdio.conf.js",
+    "test": "npm run test-unit && npm run test-acceptance",
     "lint": "eslint app"
   },
   "engines": {
