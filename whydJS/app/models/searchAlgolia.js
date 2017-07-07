@@ -302,5 +302,5 @@ exports.indexBulk = function(docs, callback) {
 // INIT
 
 exports.init = function(){
-	console.log("models.search: using Algolia Search index");
+	//console.log("models.search: using Algolia Search index");
 }
