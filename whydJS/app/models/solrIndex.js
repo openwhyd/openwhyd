@@ -8,8 +8,6 @@ var http = require('http');
 var host = process.env['SOLR_HOST'] || 'localhost';
 var port = process.env['SOLR_PORT'] || 8983;
 
-console.log('SolrIndex client init:', host, port);
-
 var queryPath = "/solr/select/";
 var updatePath = "/solr/update/json?wt=json&commit=true";
 //var commitPath = "/solr/update/json?wt=json?commit=true";
@@ -121,3 +119,9 @@ exports.commit = function(callback) {
 	});
 }
 */
+
+// INIT
+
+exports.init = function(){
+	console.log('models.search: SolrIndex client on', host, port);
+}
