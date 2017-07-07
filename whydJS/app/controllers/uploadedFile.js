@@ -32,7 +32,7 @@ for (var i in dirsToCreate)
 		console.log("Created directory:", dirsToCreate[i]);
 	}
 	catch (e) {
-		console.log("Did not create directory:", dirsToCreate[i]);
+		//console.log("Did not create directory:", dirsToCreate[i]);
 	}
 
 // separate file prefix (path & name) and extension from file.path
