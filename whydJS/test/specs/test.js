@@ -31,6 +31,20 @@ describe('landing page page', function() {
             assert(result.isWithinMisMatchTolerance);
         });
     });
+
+    it('should allow user to login', function() {
+        browser
+            .url(URL_PREFIX)
+            .click('#signin')
+            .waitForVisible('input[name="email"]');
+        browser
+            .setValue('input[name="email"]', process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org')
+            .setValue('input[name="password"]', 'admin') // hash = 21232f297a57a5a743894a0e4a801fc3
+            .click('input[type="submit"]')
+            .waitForText('#loginDiv .username');
+        var loggedInUsername = browser.getText('#loginDiv .username');
+        assert.equal(loggedInUsername, 'admin');
+    });
 });
 
 // Webdriver API documentation: http://webdriver.io/api.html
