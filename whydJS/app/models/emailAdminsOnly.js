@@ -7,7 +7,7 @@
 var sendgrid = require('./emailSendgrid.js');
 var fake = require('./emailFake.js');
 
-console.log("EMAIL ADMINS ONLY");
+//console.log("EMAIL ADMINS ONLY");
 
 exports.email = function(emailAddr, subject, textContent, htmlContent, userName, callback) {
 	
@@ -21,3 +21,4 @@ exports.email = function(emailAddr, subject, textContent, htmlContent, userName,
 	
 	return emailImpl(emailAddr, subject, textContent, htmlContent, userName, callback);
 };
+// when config.emailModule is set, this method will be overidden (see at bottom)
