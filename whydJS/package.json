@@ -61,6 +61,7 @@
     "eslint-plugin-import": "^1.11.1",
     "eslint-plugin-jsx-a11y": "1.2.0",
     "eslint-plugin-react": "^5.2.2",
+    "mocha": "^3.4.2",
     "wdio-mocha-framework": "^0.5.10",
     "wdio-selenium-standalone-service": "0.0.9",
     "wdio-spec-reporter": "^0.1.0",
