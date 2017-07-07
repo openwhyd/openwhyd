@@ -51,13 +51,13 @@ function parseSignupToken(sTk) {
 // used directly by iOS app, indirectly by web ui (through request token validation)
 exports.makeSignupToken = function(request, date){
 	request = realIP(request);
-	console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
+	//console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
 	date = date ? new Date(date).getTime() : Date.now();
 	var requestHash = hashRequest(request, date);
 	var hash = date.toString(16) + requestHash;
 
-	console.log('date =>',  date.toString(16));
-	console.log('')
+	//console.log('date =>',  date.toString(16));
+	//console.log('')
 	var sign = signature(hash, GENUINE_SIGNUP_SECRET);
 	/*
 	console.log({
