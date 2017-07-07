@@ -15,10 +15,12 @@ exports.whydTeam = [ // for access to admin endpoints
 ];
 
 exports.autoSubscribeUsers = [
+	/*
 	{
 		id: process.env.WHYD_ADMIN_OBJECTID,
 		name: process.env.WHYD_ADMIN_NAME
 	},
+	*/
 ];
 
 exports.adminEmails = {};
