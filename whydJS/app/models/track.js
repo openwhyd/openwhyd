@@ -153,7 +153,7 @@ function fetchPostsByPid(pId, cb) {
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
 exports.fetchPosts = function (params, handler) {
 	params = params || {};
-	var firstIndex = parseInt(params.skip || 0);
+	var firstIndex = params.skip = parseInt(params.skip || 0);
 	exports.fetch(params, function(tracks){
 		var pidList = snip.objArrayToValueArray(tracks, "pId");
 		fetchPostsByPid(pidList, function(posts) {
@@ -181,7 +181,7 @@ exports.fetchPostsByGenres = function (genres, p, cb) {
 		return exports.fetchPosts(p, cb);
 	var genreSet = snip.arrayToSet(genres);
 	var posts = [];
-	var toSkip = parseInt(p.skip || 0); // TODO: find a more optimal solution (less db queries)
+	var toSkip = params.skip = parseInt(p.skip || 0); // TODO: find a more optimal solution (less db queries)
 	plTagsModel.getTagEngine(function(tagEngine){
 		mongodb.forEach2("track", {sort: [['score','desc']]}, function(track, next) {
 			if (!next || posts.length >= p.limit)
@@ -214,7 +214,7 @@ exports.fetchPostsFromSubscriptions = function (uidList, p, cb) {
 	var posts = [];
 	if (!uidList || !uidList.length)
 		return cb(posts);
-	var toSkip = parseInt(p.skip || 0); // TODO: find a more optimal solution (less db queries)
+	var toSkip = params.skip = parseInt(p.skip || 0); // TODO: find a more optimal solution (less db queries)
 	var ranking = 0;
 	plTagsModel.getTagEngine(function(tagEngine){
 		mongodb.forEach2("track", {sort: [['score','desc']]}, function(track, next) {
