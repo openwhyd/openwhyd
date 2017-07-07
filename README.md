@@ -65,6 +65,31 @@ Thank you for your understanding! ^^
 * `npm run run` (for development) or `npm start` (forever daemon)
 * Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 
+## Testing
+
+Run unit tests only:
+
+```bash
+npm run test-unit
+```
+
+Run all tests, including acceptance tests (webdriver.io-based):
+
+```bash
+# reset the test database
+mongo openwhyd_test --eval "db.dropDatabase();"
+mongo openwhyd_test whydDB/initdb.js
+mongo openwhyd_test whydDB/initdb_team.js
+# prepare the test environment
+cd whydJS
+source env-vars-testing.sh
+npm install --dev
+# run the "whydJS" application server
+npm run run --mongoDbDatabase openwhyd_test
+# then run the tests in a separate terminal session
+npm test
+```
+
 ## Environment variables
 * `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
 * `WHYD_SESSION_SECRET` (mandatory. a secret key used to sign session cookies)
