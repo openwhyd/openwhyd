@@ -19,21 +19,21 @@ var fbLikeUrl = 'http://www.facebook.com/openwhyd'; // 'http://openwhyd.org';
 var youtubeKeyApi, playemFile;
 var fbId;
 if (config.urlPrefix.indexOf("openwhyd.org") >0) {
-	console.log('- Production - ');
+	//console.log('- Production - ');
 	fbId = "169250156435902";
 	playemFile = "min";
 }else if(config.urlPrefix.indexOf("whyd.fr") >0){
-	console.log('- Test - ');
+	//console.log('- Test - ');
 	fbId = "1059973490696893";
 	playemFile = "all";
 }else{
-	console.log('- Local - ');
+	//console.log('- Local - ');
 	fbId = "118010211606360";
 	playemFile = "all";
 };
 
 
-console.log("[mainTemplate] today is week #", snip.getWeekNumber(new Date()));
+//console.log("[mainTemplate] today is week #", snip.getWeekNumber(new Date()));
 
 var playerHtmlCode = fs.readFileSync("app/templates/whydPlayer.html", "utf8");
 
