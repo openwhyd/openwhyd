@@ -129,8 +129,7 @@ exports.tagEngine = new (function TagEngine(){
 					}
 				}
 			}, function(){
-				console.log("plTags.tagEngine => extracted tags from", nbPlWithTags, "/", nbPl, "playlists, from", nbUsersWithPl, "users");
-				console.log("(i) elapsed time:", (new Date() - t0) / 1000, "seconds");
+				console.log("plTags.tagEngine => extracted tags from", nbPlWithTags, "/", nbPl, "playlists, from", nbUsersWithPl, "users, in", (new Date() - t0) / 1000, "seconds");
 				cb();
 			});
 		},
@@ -143,8 +142,7 @@ exports.tagEngine = new (function TagEngine(){
 				if (tags && tags.length)
 					eidToTags[post.eId] = (eidToTags[post.eId] || []).concat(tags);
 			}, function(){
-				console.log("plTags.tagEngine => indexed ", Object.keys(self.eidToTags).length, "eId-tags from playlist names");
-				console.log("(i) elapsed time:", (new Date() - t0) / 1000, "seconds");
+				console.log("plTags.tagEngine => indexed ", Object.keys(self.eidToTags).length, "eId-tags from playlist names, in", (new Date() - t0) / 1000, "seconds");
 				cb();
 			});
 		},
@@ -177,8 +175,7 @@ exports.tagEngine = new (function TagEngine(){
 					});
 				}
 			}, function() {
-				console.log("plTags.tagEngine => indexed", Object.keys(self.uidToTagSet).length, "users from", self.totalPosts, "posts");
-				console.log("(i) elapsed time:", (new Date() - t0) / 1000, "seconds");
+				console.log("plTags.tagEngine => indexed", Object.keys(self.uidToTagSet).length, "users from", self.totalPosts, "posts, in", (new Date() - t0) / 1000, "seconds");
 				cb();
 			});
 		}
