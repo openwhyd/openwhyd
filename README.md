@@ -78,7 +78,6 @@ Thank you for your understanding! ^^
 * `WHYD_URL_PREFIX` (default: `http://localhost:8080`)
 * `WHYD_PORT` (default: `8080`)
 * `WHYD_DEV` (default: `false`)
-* `WHYD_USE_GRAPHICS_MAGICK` (if set to `false`, imagemagick will be used instead of image manipulation)
 * `MONGODB_DATABASE` (example: `openwhyd_data`, or `openwhyd_test`)
 * `MONGODB_HOST` (default: `localhost`)
 * `MONGODB_PORT` (default: `27017`)
