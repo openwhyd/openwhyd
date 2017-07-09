@@ -39,7 +39,7 @@ before_script:
   - sudo apt-get install -y libappindicator1 fonts-liberation
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
-  - npm install --dev
+  - npm run test-reset # will initialize the openwhyd_test db
   - npm run run --mongoDbDatabase openwhyd_test &
   - sleep 5 # give whydJS some time to start
 
