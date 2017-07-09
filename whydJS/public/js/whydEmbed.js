@@ -4,6 +4,7 @@
  **/
 
 var DEBUG = false, // for soundmanager
+	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI",
 	SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad",
 	JAMENDO_CLIENT_ID = "2c9a11b9",
 	DEEZER_APP_ID = 190482,
