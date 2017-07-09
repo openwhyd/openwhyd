@@ -13,7 +13,9 @@ function loadTestFile(testName){
 	try {
 		return require(filePath);
 	}
-	catch(e) {}
+	catch(e) {
+		console.error(e);
+	}
 }
 
 var runTests = (function(){

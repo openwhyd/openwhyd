@@ -13,7 +13,9 @@ function makeResponseHandler(cb){
 			result.response = res;
 			try {
 				result.response = JSON.parse(res);
-			} catch (e) {}
+			} catch (e) {
+				console.error(e);
+			}
 		}
 		cb(result);
 	};
@@ -49,7 +51,9 @@ exports.makeTests = function(p){
 				var lastPl = {};
 				try {
 					lastPl = res.response.pl.shift();
-				} catch (e) {};
+				} catch (e) {
+					console.error(e);
+				};
 				cb(lastPl.id == testVars.pl.id && lastPl.name == testVars.pl.name);
 			});
 		}],
@@ -64,7 +68,9 @@ exports.makeTests = function(p){
 				var lastPl = {};
 				try {
 					lastPl = res.response.pl.shift();
-				} catch (e) {};
+				} catch (e) {
+					console.error(e);
+				};
 				cb(lastPl.id != testVars.pl.id);
 				delete testVars.pl;
 			});

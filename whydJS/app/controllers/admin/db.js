@@ -52,7 +52,9 @@ function cleanUidList(uidList) {
 			try {
 				uids.push(mongodb.ObjectId(""+uidList[i]));
 			}
-			catch (e) {}
+			catch (e) {
+				console.error(e);
+			}
 	//console.log(uids);
 	return uids;
 }
