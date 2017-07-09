@@ -239,7 +239,7 @@ function indexTypedDocs(type, items, callback) {
 		});
 		getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function(err, content) {
 			if (err) {
-				console.error("algolia error when indexing " + type + " " + JSON.stringify(item, null, 2)
+				console.error("algolia error when indexing " + type + " " + JSON.stringify(items, null, 2)
 					+ " => " + JSON.stringify(err, null, 2))
 			} else {
 				console.log("algolia indexTyped " + type + " => indexed", items.length, 'documents');
