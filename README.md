@@ -54,7 +54,16 @@ Thank you for your understanding! ^^
 * GraphicsMagick or ImageMagick
 * `make` and `g++` (for building npm binaries, *I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)*)
 
-## Setup
+## Setup (with Docker, for development environment)
+
+* Instal Docker Client via https://www.docker.com/
+* Build and Launch all processes `docker-compose build`
+* Initialize MongoDB database (do it one-time only) : `docker exec openwhyd_mongo_1 mongo openwhyd_data data/initdb.js && docker exec openwhyd_mongo_1 mongo openwhyd_data data/initdb_team.js`
+
+* Launch all processes `docker-compose up`
+* Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
+
+## Setup (manual)
 * Make sure that MongoDB is running
 * Make sure that the necessary environment variables are defined (see below)
 * Make sure that the database is initialized (by running `mongo openwhyd_data whydDB/initdb.js` and `mongo openwhyd_data initdb_team.js`, after updaing the `email` and `pwd` fields for the admin account)
