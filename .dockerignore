@@ -1,0 +1,4 @@
+whydJS/*.log
+whydJS/*.out
+whydJS/*.pid
+whydJS/*.err
