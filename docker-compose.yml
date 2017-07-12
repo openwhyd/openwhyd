@@ -2,7 +2,7 @@ version: '3'
 services:
 
   mongo:
-    image: mongo
+    image: mongo:3.2
     volumes:
       - ./whydDB:/data # Data Persistance and Inits
 
