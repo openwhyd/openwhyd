@@ -10,6 +10,7 @@ services:
     build: .
     volumes:
       - ./whydJS:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "8080:8080"
     depends_on:
@@ -29,7 +30,7 @@ services:
       - WHYD_URL_PREFIX=http://localhost:8080
       - WHYD_PORT=8080
       - WHYD_DEV=true
-      - MONGODB_DATABASE=openwhyd_test
+      - MONGODB_DATABASE=openwhyd_data
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
       - MONGODB_USER=

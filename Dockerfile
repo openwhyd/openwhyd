@@ -9,7 +9,9 @@ RUN npm install -g eslint \
 
 # Install app dependencies
 COPY ./whydJS/package.json /usr/src/app/
-RUN npm install
+RUN npm install && \
+    # Fix Error: Cannot find module '../build/Release/bson
+    sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js
 
 # Bundle app source
 COPY ./whydJS/ /usr/src/app

@@ -58,7 +58,7 @@ Thank you for your understanding! ^^
 
 * Instal Docker Client via https://www.docker.com/
 * Build and Launch all processes `docker-compose build`
-* Initialize MongoDB database (do it one-time only) : `docker exec openwhyd_mongo_1 mongo openwhyd_data data/initdb.js && docker exec openwhyd_mongo_1 mongo openwhyd_data data/initdb_team.js`
+* Initialize MongoDB database (do it one-time only) : `docker-compose exec mongo mongo openwhyd_data data/initdb.js data/initdb_team.js`
 
 * Launch all processes `docker-compose up`
 * Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
