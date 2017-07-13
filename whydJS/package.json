@@ -52,7 +52,7 @@
     "hogan.js": "2.0.0",
     "htmlparser": "*",
     "iconv": ">=2.0.6",
-    "mongodb": "^1.4.40",
+    "mongodb": "^2.2.29",
     "object-sizeof": "^0.1.2",
     "request": "2.x",
     "start-stop-daemon": "0.1.0"

@@ -610,7 +610,9 @@ exports.HttpRequestFileCache = function(fileName){
 	try {
 		// try to restore from file, if it exists
 		this.cache.restore(JSON.parse(fs.readFileSync(fileName, {encoding:"utf8"})));
-	} catch(e) { };
+	} catch(e) {
+		console.error(e);
+	};
 	this.save = function(){
 		fs.writeFileSync(fileName, JSON.stringify(this.cache.dump()), {encoding:"utf8"});
 	};
