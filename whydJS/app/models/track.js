@@ -181,7 +181,7 @@ exports.fetchPostsByGenres = function (genres, p, cb) {
 		return exports.fetchPosts(p, cb);
 	var genreSet = snip.arrayToSet(genres);
 	var posts = [];
-	var toSkip = params.skip = parseInt(p.skip || 0); // TODO: find a more optimal solution (less db queries)
+	var toSkip = p.skip = parseInt(p.skip || 0); // TODO: find a more optimal solution (less db queries)
 	plTagsModel.getTagEngine(function(tagEngine){
 		mongodb.forEach2("track", {sort: [['score','desc']]}, function(track, next) {
 			if (!next || posts.length >= p.limit)
