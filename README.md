@@ -71,8 +71,9 @@ Thank you for your understanding! ^^
 * Make sure that Apple Push Notification Service (APNS) certificates are copied in `/whydJS/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 
 ## Usage
-* `npm run run` (for development) or `npm start` (forever daemon)
+* `docker-compose up`, or `npm run run` (for development), or `npm start` (forever daemon)
 * Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
+* During development, you may have to restart the server to have your changes taken into account. To restart the Docker container, use `docker-compose restart web`.
 
 ## Testing
 
@@ -97,6 +98,12 @@ npm install --dev
 npm run run --mongoDbDatabase openwhyd_test
 # then run the tests in a separate terminal session
 npm test
+```
+
+Run all tests in Docker container:
+
+```bash
+docker-compose exec web npm test
 ```
 
 ## Environment variables
