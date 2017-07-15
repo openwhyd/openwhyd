@@ -36,7 +36,7 @@ Response: (HTML form or JSON, depends of the ajax parameter)
 
 **LOGIN WITH EMAIL**
 
-`html : (GET  /login/action=login&email&md5)`
+`html : (GET  /login?action=login&email&md5)`
 
 Initializes the user session and corresponding cookie, using provided credentials.
 
