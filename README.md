@@ -86,14 +86,11 @@ npm run test-unit
 Run all tests, including acceptance tests (webdriver.io-based):
 
 ```bash
-# reset the test database
-mongo openwhyd_test --eval "db.dropDatabase();"
-mongo openwhyd_test whydDB/initdb.js
-mongo openwhyd_test whydDB/initdb_team.js
 # prepare the test environment
 cd whydJS
 source env-vars-testing.sh
-npm install --dev
+# clear the test database
+npm run test-reset
 # run the "whydJS" application server
 npm run run --mongoDbDatabase openwhyd_test
 # then run the tests in a separate terminal session
@@ -104,6 +101,12 @@ Run all tests in Docker container:
 
 ```bash
 docker-compose exec web npm test
+```
+
+...or if you don't want to run acceptance-based tests (running on Google Chrome, thru webdriver.io):
+
+```bash
+docker-compose exec web npm run test-unit
 ```
 
 ## Environment variables
