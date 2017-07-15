@@ -3,13 +3,23 @@ var request = require('request');
 
 var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
 
+function loginAs(user, callback) {
+	const url = URL_PREFIX + `/login?action=login&ajax=1&email=${user.email}&md5=${user.md5}`;
+	request.get(url, function(error, response, body) {
+		assert.ifError(error);
+		assert.equal(response.statusCode, 200);
+		const jar = request.jar();
+		if (((response.headers || {})['set-cookie'] || []).length) {
+			jar.setCookie(request.cookie(response.headers['set-cookie'][0]), URL_PREFIX);
+		}
+		callback(error, { response, body, jar });
+	});
+}
+
 describe('auth api -- login with email', function() {
 
 	it('succeeds', function (done) {
-		const url = URL_PREFIX + `/login?action=login&ajax=1&email=${ADMIN_USER.email}&md5=${ADMIN_USER.md5}`;
-		request.get(url, function(error, response, body) {
-			assert.ifError(error);
-			assert.equal(response.statusCode, 200);
+		loginAs(ADMIN_USER, function(error, { response, body }) {
 			const cookies = ((response.headers || {})['set-cookie'] || []).join(' ');
 			assert(/whydSid\=/.test(cookies));
 			assert(JSON.parse(body).redirect);
@@ -18,14 +28,7 @@ describe('auth api -- login with email', function() {
 	});
 
 	it('gives access to personal /stream', function (done) {
-		const url = URL_PREFIX + `/login?action=login&ajax=1&email=${ADMIN_USER.email}&md5=${ADMIN_USER.md5}`;
-		request.get(url, function(error, response, body) {
-			assert.ifError(error);
-			assert.equal(response.statusCode, 200);
-
-			const cookie = request.cookie((response.headers || {})['set-cookie'][0]);
-			const jar = request.jar();
-			jar.setCookie(cookie, URL_PREFIX);
+		loginAs(ADMIN_USER, function(error, { response, body, jar }) {
 			request({ jar, url: URL_PREFIX + '/stream?format=json' }, function(error, response, body) {
 				assert.ifError(error);
 				assert.equal(response.statusCode, 200);
@@ -38,18 +41,14 @@ describe('auth api -- login with email', function() {
 	});
 
 	it('fails if wrong email', function (done) {
-		const url = URL_PREFIX + `/login?action=login&ajax=1&email=aa@aa.com&md5=${ADMIN_USER.md5}`;
-		request.get(url, function(error, response, body) {
-			assert.ifError(error);
+		loginAs(Object.assign({}, ADMIN_USER, { email: 'qq' }), function(error, { response, body }) {
 			assert(/email/.test(JSON.parse(body).error));
 			done();
 		});
 	});
 
 	it('fails if wrong password', function (done) {
-		const url = URL_PREFIX + `/login?action=login&ajax=1&email=${ADMIN_USER.email}&md5=aaa`;
-		request.get(url, function(error, response, body) {
-			assert.ifError(error);
+		loginAs(Object.assign({}, ADMIN_USER, { md5: 'qq' }), function(error, { response, body }) {
 			assert(JSON.parse(body).wrongPassword);
 			done();
 		});
