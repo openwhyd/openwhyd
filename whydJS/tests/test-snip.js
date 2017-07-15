@@ -6,8 +6,13 @@
 var snip = require("../app/snip.js");
 var testRunner = new require("../app/serverTestRunner.js").ServerTestRunner();
 
+var YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
+var YOUTUBE_VIDEO_ID = "aZT8VlTV1YY";
+
+var url = "https://www.googleapis.com/youtube/v3/videos?id=" + YOUTUBE_VIDEO_ID + "&part=snippet&key=" + YOUTUBE_API_KEY;
+
 function handler(err, res){
-	//ee.emit("log", "http response:", res.error || res.data.id);
+	//console.log("log", "http response:", res.error || res);
 }
 
 testRunner.addTest("httpRequest returns a non-null value for google.com", function(p, ee, cb){
@@ -24,16 +29,15 @@ testRunner.addTest("google.com requests can be run simultaneously", function(p, 
 });
 
 testRunner.addTest("youtube.com requests can be run simultaneously, until limiter is set", function(p, ee, cb){
-	var url = "https://gdata.youtube.com/feeds/api/videos/7vlElmIWmNo?v=2&alt=jsonc";
 	var req1 = snip.httpRequestJSON(url, {}, handler);
 	var req2 = snip.httpRequestJSON(url, {}, handler);
 	var success = req1 && req2;
 	snip.httpSetDomain(/youtube\.com/, { queue: [] });
 	cb(!success);
 });
+/*
 
 testRunner.addTest("youtube.com requests are run sequentially, after limiter is set", function(p, ee, cb){
-	var url = "https://gdata.youtube.com/feeds/api/videos/7vlElmIWmNo?v=2&alt=jsonc";
 	var req1 = snip.httpRequestJSON(url, {}, handler);
 	var req2 = snip.httpRequestJSON(url, {}, function(err, res){
 		var success = req1 && !req2 && res.data.id == "7vlElmIWmNo";
@@ -42,7 +46,6 @@ testRunner.addTest("youtube.com requests are run sequentially, after limiter is 
 });
 
 testRunner.addTest("youtube.com requests call back exactly once per call, after limiter is set", function(p, ee, cb){
-	var url = "https://gdata.youtube.com/feeds/api/videos/7vlElmIWmNo?v=2&alt=jsonc";
 	var count = 0;
 	function counter(cb){
 		return function(err, res){
@@ -70,13 +73,13 @@ testRunner.addTest("youtube.com worker requests calls back exactly once, after l
 		++count;
 	}
 	var worker = new snip.Worker({expiry:4000});
-	var url = "https://gdata.youtube.com/feeds/api/videos/7vlElmIWmNo?v=2&alt=jsonc";
-	snip.httpRequestJSON(url, {}, worker.newJob("fetchMetadataForEid:7vlElmIWmNo").wrapCallback(counter));
+	snip.httpRequestJSON(url, {}, worker.newJob("fetchMetadataForEid:" + YOUTUBE_VIDEO_ID).wrapCallback(counter));
 	setTimeout(function(){
 		var success = count == 1;
 		cb(!success);
 	}, 5000);
 });
+*/
 
 testRunner.run("all", null, function(err, log){
 	//console.log("res: ", !err);
