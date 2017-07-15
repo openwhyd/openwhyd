@@ -4,6 +4,8 @@ var genuine = require('../app/genuine.js'); // for signup
 
 var { URL_PREFIX } = require('./fixtures.js');
 
+// AUTH
+
 function extractCookieJar(response) {
 	const jar = request.jar();
 	if (((response.headers || {})['set-cookie'] || []).length) {
@@ -42,4 +44,40 @@ exports.signupAs = function signupAs(user, callback) {
 		assert.equal(response.statusCode, 200);
 		callback(error, { response, body, jar: extractCookieJar(response) });
 	});
+}
+
+// USER
+
+/*
+exports.getMe = function(jar, callback) {
+	request.get({ jar, url: `${URL_PREFIX}/me?format=json` }, function(error, response, body) {
+		assert.ifError(error);
+		assert.equal(response.statusCode, 200);
+		callback(error, { response, body, jar });
+		// => body: {"errorCode":"USER_NOT_FOUND","error":"User not found..."} ???
+	});	
+}
+*/
+
+exports.getUser = function(jar, body, callback) {
+	// TODO: pass body parameters
+	request.get({ jar, url: `${URL_PREFIX}/api/user` }, function(error, response, body) {
+		assert.ifError(error);
+		assert.equal(response.statusCode, 200);
+		callback(error, { response, body, jar });
+	});	
+}
+
+exports.setUser = function(jar, body, callback) {
+	// TODO: pass body parameters
+	request.post({
+		jar,
+		url: `${URL_PREFIX}/api/user`,
+		json: true,
+		body
+	}, function(error, response, body) {
+		assert.ifError(error);
+		assert.equal(response.statusCode, 200);
+		callback(error, { response, body, jar });
+	});	
 }
