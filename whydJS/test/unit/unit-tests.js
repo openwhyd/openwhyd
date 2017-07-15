@@ -42,7 +42,7 @@ describe('"get" package', function() {
 describe('"img" package', function() {
     it('should create a thumb from a downloaded image', function(done) {
         var fs = require('fs');
-        var img = require('../node_modules/my/img');
+        var img = require('../../node_modules/my/img');
 
         var imgUrl = 'http://www.azurs.net/photographies/laurier-rose-fleur-rebigue.jpg';
         var imgOutput = 'uniqueHash.jpg';
@@ -65,7 +65,7 @@ describe('"img" package', function() {
 
 describe('track matcher', function() {
 
-    var trackMatcher = require("../app/models/trackMatcher.js");
+    var trackMatcher = require("../../app/models/trackMatcher.js");
 
     it('should not match very different tracks', function() {
         var tm = trackMatcher.TrackMatcher({
