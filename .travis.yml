@@ -4,8 +4,7 @@ dist: trusty
 language: node_js
 
 node_js:
-  - "4.4"
-#  - "6"
+  - "6.6"
 
 services: mongodb
 
