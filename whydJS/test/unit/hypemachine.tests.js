@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-describe('hypemachine importer', function() {
+describe('hypemachine / mp3 detector', function() {
 
 	var hypem = require('hypem');
 
@@ -28,8 +28,6 @@ describe('hypemachine importer', function() {
 
 	// Tests
 
-	var detector = new ContentDetector();
-
 	function objToArray(results) {
 		var array = [];
 		for(var i in results)
@@ -38,39 +36,41 @@ describe('hypemachine importer', function() {
 	}
 
 	function genSearchTest(q) {
-		// TODO: translate to mocha unit test
-		return function(cb) {
-			console.log('(hypem.search) query:', q, '...');
+		it('finds a match on hypemachine from the title "' + q + '"', function(done) {
+			//console.log('(hypem.search) query:', q, '...');
 			hypem.search(q, function(err, results) {
-				cb(err ? {error:err} : {results:objToArray(results)});
+				assert.ifError(err);
+				assert(objToArray(results).length);
+				done();
 			});
-		}
+		});
 	}
 
 	function genSearchMp3Test(q) {
-		// TODO: translate to mocha unit test
-		return function(cb) {
-			console.log('(hypem.searchMp3s) query:', q, '...');
+		it('finds a mp3 file from the title "' + q + '"', function(done) {
+			//console.log('(hypem.searchMp3s) query:', q, '...');
 			hypem.searchMp3s(q, function(err, results) {
-				cb(err ? {error:err} : {results:objToArray(results)});
+				assert.ifError(err);
+				assert(objToArray(results).length);
+				done();
 			});
-		}
+		});
 	}
 
 	function genExtractMp3Test(url, title) {
-		// TODO: translate to mocha unit test
-		return function(cb) {
-			console.log('(hypem.getMp3FromPostUrl) ', {url:url, title:title}, '...');
+		it('extracts the mp3 file from ' + url, function(done) {
+			//console.log('(hypem.getMp3FromPostUrl) ', {url:url, title:title}, '...');
 			hypem.getMp3FromPostUrl(url, title, function(err, mp3) {
-				cb(err ? {error:err} : {results:[mp3]});
+				assert.ifError(err);
+				assert(mp3);
+				done();
 			});
-		}
+		});
 	}
 
 	function genDetectTracksTest(url, title) {
 		it('detects title of ' + url, function(done) {
-			//console.log('(contentDetector) ', {url:url, title:title}, '...');
-			detector.detect(url, title, function(r) {
+			new ContentDetector().detect(url, title, function(r) {
 				assert(r && r.embeds && r.embeds.join && r.embeds.length);
 				//console.log("First result: ", r.embeds[0]);
 				done();
@@ -80,15 +80,19 @@ describe('hypemachine importer', function() {
 
 	// run tests
 
-//	genSearchTest('metronomy'),
-//	genSearchMp3Test('metronomy'),
-//	genExtractMp3Test('http://8106.tv/blog/2012/04/06/elegancia-presentado-por-smirnoff/', 'The Bay'),
-//	genDetectTracksTest('http://8106.tv/blog/2012/04/06/elegancia-presentado-por-smirnoff/'),
-//	genDetectTracksTest('http://8106.tv/blog/2012/04/06/elegancia-presentado-por-smirnoff/', 'The Bay'),
-//	genDetectTracksTest('http://bib-on-the-sofa.blogspot.fr/2012/09/metronomy-tens-and-tens-theatre-of.html', 'Metronomy - Tens And Tens'), // one soundcloud embeds
-//	genDetectTracksTest('http://musicunderfire.com/2012/09/new-music-releases-for-tuesday-9252012.html', 'Metronomy - Corinne'), // multiple soundcloud embeds
-//	genDetectTracksTest('http://audioporncentral.com/2012/09/metronomy-hypnose-late-night-tales.html', 'Metronomy - Hypnose'), // one vimeo and 1 soundcloud embed
+	/*
+	genSearchTest('metronomy');
+	genSearchMp3Test('metronomy');
+	genExtractMp3Test('http://8106.tv/blog/2012/04/06/elegancia-presentado-por-smirnoff/', 'The Bay');
+	genDetectTracksTest('http://8106.tv/blog/2012/04/06/elegancia-presentado-por-smirnoff/');
+	genDetectTracksTest('http://8106.tv/blog/2012/04/06/elegancia-presentado-por-smirnoff/', 'The Bay');
+	genDetectTracksTest('http://bib-on-the-sofa.blogspot.fr/2012/09/metronomy-tens-and-tens-theatre-of.html', 'Metronomy - Tens And Tens'); // one soundcloud embeds
+	genDetectTracksTest('http://musicunderfire.com/2012/09/new-music-releases-for-tuesday-9252012.html', 'Metronomy - Corinne'); // multiple soundcloud embeds
+	genDetectTracksTest('http://audioporncentral.com/2012/09/metronomy-hypnose-late-night-tales.html', 'Metronomy - Hypnose'); // one vimeo and 1 soundcloud embed
+	*/
 	genDetectTracksTest('http://www.deadhorsemarch.com/video-metronomy-everything-goes-my-way-6-5-12/'/*, 'Metronomy – “Everything Goes My Way”'*/); // 1 youtube video embed
 	genDetectTracksTest('http://www.deadhorsemarch.com/video-metronomy-everything-goes-my-way-6-5-12/', 'Metronomy – “Everything Goes My Way”'); // 1 youtube video embed
+
+	// TODO: fix hypem module => re-enable all test cases
 
 });
