@@ -1,23 +1,8 @@
 var assert = require('assert');
-
-var URL_PREFIX = 'http://localhost:8080';
+var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
 
 // TODO: make sure that DB is clear
 // mongo openwhyd_test --eval "db.dropDatabase();"
-
-const ADMIN_USER = {
-    email: process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org',
-    username: 'admin',
-    pwd: 'admin',
-    md5: '21232f297a57a5a743894a0e4a801fc3',
-};
-
-const TEST_USER = {
-    email: 'test-user@openwhyd.org',
-    username: 'test-user',
-    pwd: 'test-user',
-    md5: '42b27efc1480b4fe6d7eaa5eec47424d',
-};
 
 function takeSnapshot() {
     var results = browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
