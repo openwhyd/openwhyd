@@ -9,7 +9,9 @@ exports.ADMIN_USER = {
 
 exports.TEST_USER = {
     email: 'test-user@openwhyd.org',
+    name: 'Test User',
     username: 'test-user',
     pwd: 'test-user',
+    password: 'test-user', // for the /register api endpoint
     md5: '42b27efc1480b4fe6d7eaa5eec47424d',
 };

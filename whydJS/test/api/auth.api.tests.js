@@ -1,5 +1,6 @@
 var assert = require('assert');
 var request = require('request');
+var genuine = require('../../app/genuine.js'); // for signup
 
 var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
 
@@ -22,6 +23,21 @@ function logout(jar, callback) {
 function loginAs(user, callback) {
 	const url = `${URL_PREFIX}/login?action=login&ajax=1&email=${user.email}&md5=${user.md5}`;
 	request.get(url, function(error, response, body) {
+		assert.ifError(error);
+		assert.equal(response.statusCode, 200);
+		callback(error, { response, body, jar: extractCookieJar(response) });
+	});
+}
+
+function signupAs(user, callback) {
+	request.post({
+		url: `${URL_PREFIX}/register`,
+		json: true,
+		body: Object.assign({
+			ajax: 1,
+			sTk: genuine.makeSignupToken({ connection: { remoteAddress: '::ffff:127.0.0.1' } }),
+		}, user),
+	}, function(error, response, body) {
 		assert.ifError(error);
 		assert.equal(response.statusCode, 200);
 		callback(error, { response, body, jar: extractCookieJar(response) });
@@ -84,3 +100,20 @@ describe('auth api -- logout', function() {
 
 //describe('auth api -- forgot password', function() {}); // TODO <= mock emails
 
+// Register / sign up a new user
+
+describe('auth api -- signup', function() {
+
+	it('gives access to personal /stream', function (done) {
+		signupAs(TEST_USER, function(error, { response, body, jar }) {
+			request({ jar, url: URL_PREFIX + '/stream?format=json' }, function(error, response, body) {
+				assert.ifError(error);
+				assert.equal(response.statusCode, 200);
+				var json = JSON.parse(body);
+				assert.ifError(json.error);
+				assert(json.join); // check that it's an array
+				done();
+			});
+		});
+	});
+});
