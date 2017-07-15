@@ -66,7 +66,7 @@ function genDetectTracksTest(url, title) {
 		detector.detect(url, title, function(r) {
 			if (r && r.embeds && r.embeds.join) {
 				if (r.embeds.length)
-					console.log("First result: ", r.embeds[0]);
+					//console.log("First result: ", r.embeds[0]);
 				cb({results: r.embeds})
 			}
 			else
