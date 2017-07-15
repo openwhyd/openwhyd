@@ -3,15 +3,19 @@ var request = require('request');
 
 var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
 
+function extractCookieJar(response) {
+	const jar = request.jar();
+	if (((response.headers || {})['set-cookie'] || []).length) {
+		jar.setCookie(request.cookie(response.headers['set-cookie'][0]), URL_PREFIX);
+	}
+	return jar;
+}
+
 function logout(jar, callback) {
 	request.get({ jar, url: `${URL_PREFIX}/login?action=logout&ajax=1` }, function(error, response, body) {
 		assert.ifError(error);
 		assert.equal(response.statusCode, 200);
-		const jar = request.jar();
-		if (((response.headers || {})['set-cookie'] || []).length) {
-			jar.setCookie(request.cookie(response.headers['set-cookie'][0]), URL_PREFIX);
-		}
-		callback(error, { response, body, jar });
+		callback(error, { response, body, jar: extractCookieJar(response) });
 	});	
 }
 
@@ -20,11 +24,7 @@ function loginAs(user, callback) {
 	request.get(url, function(error, response, body) {
 		assert.ifError(error);
 		assert.equal(response.statusCode, 200);
-		const jar = request.jar();
-		if (((response.headers || {})['set-cookie'] || []).length) {
-			jar.setCookie(request.cookie(response.headers['set-cookie'][0]), URL_PREFIX);
-		}
-		callback(error, { response, body, jar });
+		callback(error, { response, body, jar: extractCookieJar(response) });
 	});
 }
 
@@ -81,3 +81,6 @@ describe('auth api -- logout', function() {
 		});
 	});
 });
+
+//describe('auth api -- forgot password', function() {}); // TODO <= mock emails
+
