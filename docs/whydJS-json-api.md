@@ -4,7 +4,7 @@
 
 **LOGOUT**
 
-`GET  /login/action=logout`
+`GET  /login?action=logout`
 
 Clears openwhyd cookie (HTTP headers) and session (database)
 
