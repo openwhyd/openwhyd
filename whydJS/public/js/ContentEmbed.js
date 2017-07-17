@@ -246,9 +246,11 @@ function ContentEmbed () {
 		},
 		require: function(embedRef, callback) {
 			embedRef.img = 'https://i.ytimg.com/vi/' + embedRef.videoId + '/0.jpg';
-			$.getJSON("https://gdata.youtube.com/feeds/api/videos/"+embedRef.videoId+"?v=2&alt=jsonc&callback=?", function(data) {
-				if (data && data.data)
-					embedRef.name = data.data.title;
+			var YOUTUBE_API_KEY = YOUTUBE_API_KEY || "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
+			// TODO: use playemjs instead
+			$.getJSON("https://www.googleapis.com/youtube/v3/videos?id="+embedRef.videoId+"&part=snippet&key=" + YOUTUBE_API_KEY + "&callback=?", function(data) {
+				if (data && (data.items || []).length)
+					embedRef.name = (data.items[0].snippet || {}).title;
 				callback(embedRef);
 			});
 		},

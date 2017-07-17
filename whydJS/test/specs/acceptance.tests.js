@@ -1,23 +1,8 @@
 var assert = require('assert');
-
-var URL_PREFIX = 'http://localhost:8080';
+var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
 
 // TODO: make sure that DB is clear
 // mongo openwhyd_test --eval "db.dropDatabase();"
-
-const ADMIN_USER = {
-    email: process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org',
-    username: 'admin',
-    pwd: 'admin',
-    md5: '21232f297a57a5a743894a0e4a801fc3',
-};
-
-const TEST_USER = {
-    email: 'test-user@openwhyd.org',
-    username: 'test-user',
-    pwd: 'test-user',
-    md5: '42b27efc1480b4fe6d7eaa5eec47424d',
-};
 
 function takeSnapshot() {
     var results = browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
@@ -25,6 +10,10 @@ function takeSnapshot() {
         assert(result.isWithinMisMatchTolerance, 'a difference was find on a snapshot');
     });
 }
+
+browser.waitForContent = function(regex) {
+    return browser.waitUntil(() => regex.test(browser.getHTML('body')), 5000, `${regex} should be in the page within 5 seconds`);
+};
 
 before(function() {
     // make sure that openwhyd/whydjs server is tested against the test database
@@ -113,6 +102,7 @@ describe('onboarding', function() {
 
     it('should display user name after skipping the welcome tutorial', function() {
         // TODO: takeSnapshot();
+        browser.waitForContent(/Ok\, Got it/);
         $$('div').find(a => /Ok\, Got it/.test(a.getText())).click();
         var loggedInUsername = browser.getText('#loginDiv .username');
         assert.equal(loggedInUsername, TEST_USER.username);
@@ -163,6 +153,7 @@ describe('adding a track', function() {
     });
 
     it('should open a dialog after clicking on the "Add to" button', function() {
+        browser.waitForContent(/Add to/);
         $$('a').find(a => /Add to/.test(a.getText())).click();
         browser.waitForVisible('.dlgPostBox');
     });

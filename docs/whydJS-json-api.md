@@ -4,7 +4,7 @@
 
 **LOGOUT**
 
-`GET  /login/action=logout`
+`GET  /login?action=logout`
 
 Clears openwhyd cookie (HTTP headers) and session (database)
 
@@ -36,7 +36,7 @@ Response: (HTML form or JSON, depends of the ajax parameter)
 
 **LOGIN WITH EMAIL**
 
-`html : (GET  /login/action=login&email&md5)`
+`html : (GET  /login?action=login&email&md5)`
 
 Initializes the user session and corresponding cookie, using provided credentials.
 
