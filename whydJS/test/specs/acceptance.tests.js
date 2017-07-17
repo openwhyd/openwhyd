@@ -1,5 +1,6 @@
 var assert = require('assert');
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
+var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
+const webUI = require('../web-ui.js');
 
 // TODO: make sure that DB is clear
 // mongo openwhyd_test --eval "db.dropDatabase();"
@@ -122,21 +123,7 @@ describe('onboarding', function() {
 
 describe('adding a track', function() {
 
-    // TODO: replace following it() by loginAs(ADMIN_USER); -- for re-use
-
-    it('should allow user to login', function() {
-        browser
-            .url(URL_PREFIX)
-            .click('#signin')
-            .waitForVisible('input[name="email"]');
-        browser
-            .setValue('input[name="email"]', ADMIN_USER.email)
-            .setValue('input[name="password"]', ADMIN_USER.password)
-            .click('input[type="submit"]')
-            .waitForText('#loginDiv .username');
-        var loggedInUsername = browser.getText('#loginDiv .username');
-        assert.equal(loggedInUsername, ADMIN_USER.name);
-    });
+    webUI.loginAs(ADMIN_USER);
 
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
         $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
@@ -200,5 +187,9 @@ describe('adding a track', function() {
     });
 
 });
+/*
+describe('track comments', function() {
+});
+*/
 
 // Webdriver API documentation: http://webdriver.io/api.html
