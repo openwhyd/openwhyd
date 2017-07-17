@@ -13,13 +13,24 @@ The objectives of the guidelines are:
 
 These are just guidelines, not rules, use your best judgment and feel free to propose changes to this document in a pull request.
 
-## How to contribute
+## What to contribute
+
+You can contribute to Openwhyd in various ways:
+
+- Submit Github issues for bugs you (or other users) found on openwhyd.org ([good example](https://github.com/openwhyd/openwhyd/issues/65))
+- Give feedback and/or provide value in ongoing discussions in [issues](https://github.com/openwhyd/openwhyd/issues) and [pull requests](https://github.com/openwhyd/openwhyd/pulls)
+- Fix [existing bugs](https://github.com/openwhyd/openwhyd/projects/1?card_filter_query=label%3A%22help+wanted%22+bug)
+- [Become a backer / donate](https://opencollective.com/openwhyd#support) to help us cover openwhyd.org's hosting fees
+- Read more in the FAQ about [other ways to help the Openwhyd project](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help)
+
+## How to contribute to the code base
 
 0. Setup your environment to match prerequisites and nodejs/npm versions specified in package.json
 1. Clone openwhyd, and make sure it runs properly on your environment
-2. Make changes in the code, commit, send a Pull Request (PR)
-3. Wait for your PR to be reviewed and merged into the repository
-4. Be available to reply if a contributor gets involved in the reviewing process of your PR.
+2. Assign the Github issue you're working on (after creating it, if necessary) to yourself ([good example of Github issue for a bug](https://github.com/openwhyd/openwhyd/issues/65))
+3. Make changes in your local copy of the code, run [automated tests](https://github.com/openwhyd/openwhyd#testing), commit, then [submit a Pull Request](https://github.com/openwhyd/openwhyd/compare) ([good example of PR for fixing a bug, with automated tests](https://github.com/openwhyd/openwhyd/pull/68))
+4. Wait for your PR to be reviewed and merged into the `master` branch of Openwhyd's repository
+5. Be available to reply if a contributor gets involved in the reviewing process of your PR.
 
 ## Acceptance criteria for Pull Requests (PR)
 
