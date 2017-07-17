@@ -25,6 +25,12 @@ function combineResult(cb) {
 	};
 }
 
+function combineInsertedResult(cb) {
+	return function(err, res){
+		(cb || console.log)(err ? {error: err} : res.ops[0]);
+	};
+}
+
 function combineResultArray(cb) {
 	return function(err, res){
 		if (err)
@@ -117,7 +123,7 @@ exports.insert = function(p, cb) {
 		if (lastC && lastC.uId == comment.uId && new Date() - lastC._id.getTimestamp() < MIN_COMMENT_DELAY)
 			cb({error: "You're commenting too quickly! Please try again in a few seconds."});
 		else // actual insert
-			getCol().insert(comment, combineResult(function(res){
+			getCol().insertOne(comment, combineInsertedResult(function(res){
 				cb && cb(res);
 				if (res && !res.error)
 					notifyUsers(comment);
