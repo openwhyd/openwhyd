@@ -81,3 +81,31 @@ exports.setUser = function(jar, body, callback) {
 		callback(error, { response, body, jar });
 	});	
 }
+
+// /api/post
+
+exports.addPost = function(jar, body, callback) {
+	request.post({
+		jar,
+		url: `${URL_PREFIX}/api/post`,
+		json: true,
+		body: Object.assign({ action: 'insert' }, body),
+	}, function(error, response, body) {
+		assert.ifError(error);
+		assert.equal(response.statusCode, 200);
+		callback(error, { response, body, jar });
+	});	
+};
+
+exports.addComment = function(jar, body, callback) {
+	request.post({
+		jar,
+		url: `${URL_PREFIX}/api/post`,
+		json: true,
+		body: Object.assign({ action: 'addComment' }, body),
+	}, function(error, response, body) {
+		assert.ifError(error);
+		assert.equal(response.statusCode, 200);
+		callback(error, { response, body, jar });
+	});	
+};

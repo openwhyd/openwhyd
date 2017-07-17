@@ -2,7 +2,9 @@ exports.URL_PREFIX = 'http://localhost:8080';
 
 exports.ADMIN_USER = {
     email: process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org',
+    name: 'admin',
     username: 'admin',
+    password: 'admin',
     pwd: 'admin',
     md5: '21232f297a57a5a743894a0e4a801fc3',
 };

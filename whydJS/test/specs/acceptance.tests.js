@@ -1,5 +1,6 @@
 var assert = require('assert');
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
+var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
+const webUI = require('../web-ui.js');
 
 // TODO: make sure that DB is clear
 // mongo openwhyd_test --eval "db.dropDatabase();"
@@ -11,8 +12,12 @@ function takeSnapshot() {
     });
 }
 
-browser.waitForContent = function(regex) {
-    return browser.waitUntil(() => regex.test(browser.getHTML('body')), 5000, `${regex} should be in the page within 5 seconds`);
+browser.waitForContent = function(regex, context) {
+    return browser.waitUntil(() => regex.test(
+        browser.getHTML(context || 'body')),
+        5000,
+        `${regex.toString()} should be in the page within 5 seconds`
+    );
 };
 
 before(function() {
@@ -103,38 +108,17 @@ describe('onboarding', function() {
     it('should display user name after skipping the welcome tutorial', function() {
         // TODO: takeSnapshot();
         browser.waitForContent(/Ok\, Got it/);
-        $$('div').find(a => /Ok\, Got it/.test(a.getText())).click();
+        //$$('div').find(a => /Ok\, Got it/.test(a.getText())).click(); // does not trigger. not useful anyway.
         var loggedInUsername = browser.getText('#loginDiv .username');
         assert.equal(loggedInUsername, TEST_USER.username);
     });
 
-    it('should allow user to log off', function() {
-        browser.moveToObject('#settingsDiv');
-        $('#settingsDiv').click();
-        $$('a').find(a => a.getText() === 'Logout').click();
-        browser.waitUntil(
-            () => /\/login/.test(browser.getUrl()), 5000,
-            'expected to be on /login after 5s'
-        );
-    });
-
+    webUI.logout();
 });
 
 describe('adding a track', function() {
 
-    it('should allow user to login', function() {
-        browser
-            .url(URL_PREFIX)
-            .click('#signin')
-            .waitForVisible('input[name="email"]');
-        browser
-            .setValue('input[name="email"]', process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org')
-            .setValue('input[name="password"]', 'admin') // hash = 21232f297a57a5a743894a0e4a801fc3
-            .click('input[type="submit"]')
-            .waitForText('#loginDiv .username');
-        var loggedInUsername = browser.getText('#loginDiv .username');
-        assert.equal(loggedInUsername, 'admin');
-    });
+    webUI.loginAs(ADMIN_USER);
 
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
         $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
@@ -187,15 +171,30 @@ describe('adding a track', function() {
         assert(!/playing/.test($('#btnPlay').classname));
     });
 
-    it('should allow user to log off', function() {
-        browser.moveToObject('#settingsDiv');
-        $('#settingsDiv').click();
-        $$('a').find(a => a.getText() === 'Logout').click();
-        browser.waitUntil(
-            () => /\/login/.test(browser.getUrl()), 5000,
-            'expected to be on /login after 5s'
-        );
+    //webUI.logout();
+});
+
+describe('track comments', function() {
+
+    // requirement: at least one track should be accessible from the user's stream
+
+    // webUI.loginAs(ADMIN_USER);
+
+    it(`can be displayed from the user\'s stream`, function() {
+        browser.url(URL_PREFIX + '/stream');
+        $$('a').find(a => /Comment/.test(a.getText())).click();
+        browser.waitForContent(/You can mention people/);
     });
+
+    it(`should appear after being added`, function() {
+        browser.keys('hello world\n');
+        browser.waitForContent(new RegExp(ADMIN_USER.name), '.comments');
+        browser.waitForContent(/hello world/, '.comments');
+    });
+
+    // TODO: it(`should change after being updated`, function() {
+
+    // TODO: it(`should disappear after being deleted`, function() {
 
 });
 
