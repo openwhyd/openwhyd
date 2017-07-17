@@ -15,7 +15,6 @@ describe(`post api`, function() {
         name: 'Lullaby - Jack Johnson and Matt Costa',
       };
       api.addPost(jar, post, function(error, { response, body }) {
-        console.log('add post', error, body);
         assert.ifError(error);
         assert.equal(body.eId, post.eId);
         assert.equal(body.name, post.name);

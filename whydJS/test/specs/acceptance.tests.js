@@ -30,7 +30,7 @@ before(function() {
 });
 
 // reference scenario: https://www.youtube.com/watch?v=aZT8VlTV1YY
-/*
+
 describe('landing page page', function() {
 
     it('should not let visitors access admin endpoints', function () {
@@ -115,7 +115,7 @@ describe('onboarding', function() {
 
     webUI.logout();
 });
-*/
+
 describe('adding a track', function() {
 
     webUI.loginAs(ADMIN_USER);
@@ -191,6 +191,10 @@ describe('track comments', function() {
         browser.waitForContent(new RegExp(ADMIN_USER.name), '.comments');
         browser.waitForContent(/hello world/, '.comments');
     });
+
+    // TODO: it(`should change after being updated`, function() {
+
+    // TODO: it(`should disappear after being deleted`, function() {
 
 });
 
