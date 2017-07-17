@@ -176,16 +176,7 @@ describe('adding a track', function() {
         assert(!/playing/.test($('#btnPlay').classname));
     });
 
-    it('should allow user to log off', function() {
-        browser.moveToObject('#settingsDiv');
-        $('#settingsDiv').click();
-        $$('a').find(a => a.getText() === 'Logout').click();
-        browser.waitUntil(
-            () => /\/login/.test(browser.getUrl()), 5000,
-            'expected to be on /login after 5s'
-        );
-    });
-
+    webUI.logout();
 });
 /*
 describe('track comments', function() {

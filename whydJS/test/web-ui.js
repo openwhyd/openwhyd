@@ -16,3 +16,15 @@ exports.loginAs = function (user) {
 		assert.equal(loggedInUsername, user.name);
 	});
 };
+
+exports.logout = function (user) {
+	it('should allow user to log off', function () {
+		//browser.moveToObject('#settingsDiv');
+		$('#settingsDiv').click();
+		$$('a').find(a => a.getText() === 'Logout').click();
+		browser.waitUntil(
+			() => /\/login/.test(browser.getUrl()), 5000,
+			'expected to be on /login after 5s'
+		);
+	});
+};
