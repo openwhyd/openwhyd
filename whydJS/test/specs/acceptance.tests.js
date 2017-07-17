@@ -153,6 +153,7 @@ describe('adding a track', function() {
     });
 
     it('should open a dialog after clicking on the "Add to" button', function() {
+        browser.waitForContent(/Add to/);
         $$('a').find(a => /Add to/.test(a.getText())).click();
         browser.waitForVisible('.dlgPostBox');
     });
