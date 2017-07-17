@@ -12,8 +12,12 @@ function takeSnapshot() {
     });
 }
 
-browser.waitForContent = function(regex) {
-    return browser.waitUntil(() => regex.test(browser.getHTML('body')), 5000, `${regex} should be in the page within 5 seconds`);
+browser.waitForContent = function(regex, context) {
+    return browser.waitUntil(() => regex.test(
+        browser.getHTML(context || 'body')),
+        5000,
+        `${regex.toString()} should be in the page within 5 seconds`
+    );
 };
 
 before(function() {
@@ -26,7 +30,7 @@ before(function() {
 });
 
 // reference scenario: https://www.youtube.com/watch?v=aZT8VlTV1YY
-
+/*
 describe('landing page page', function() {
 
     it('should not let visitors access admin endpoints', function () {
@@ -111,7 +115,7 @@ describe('onboarding', function() {
 
     webUI.logout();
 });
-
+*/
 describe('adding a track', function() {
 
     webUI.loginAs(ADMIN_USER);
@@ -167,11 +171,27 @@ describe('adding a track', function() {
         assert(!/playing/.test($('#btnPlay').classname));
     });
 
-    webUI.logout();
+    //webUI.logout();
 });
-/*
+
 describe('track comments', function() {
+
+    // requirement: at least one track should be accessible from the user's stream
+
+    // webUI.loginAs(ADMIN_USER);
+
+    it(`can be displayed from the user\'s stream`, function() {
+        browser.url(URL_PREFIX + '/stream');
+        $$('a').find(a => /Comment/.test(a.getText())).click();
+        browser.waitForContent(/You can mention people/);
+    });
+
+    it(`should appear after being added`, function() {
+        browser.keys('hello world\n');
+        browser.waitForContent(new RegExp(ADMIN_USER.name), '.comments');
+        browser.waitForContent(/hello world/, '.comments');
+    });
+
 });
-*/
 
 // Webdriver API documentation: http://webdriver.io/api.html
