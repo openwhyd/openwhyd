@@ -122,18 +122,20 @@ describe('onboarding', function() {
 
 describe('adding a track', function() {
 
+    // TODO: replace following it() by loginAs(ADMIN_USER); -- for re-use
+
     it('should allow user to login', function() {
         browser
             .url(URL_PREFIX)
             .click('#signin')
             .waitForVisible('input[name="email"]');
         browser
-            .setValue('input[name="email"]', process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org')
-            .setValue('input[name="password"]', 'admin') // hash = 21232f297a57a5a743894a0e4a801fc3
+            .setValue('input[name="email"]', ADMIN_USER.email)
+            .setValue('input[name="password"]', ADMIN_USER.password)
             .click('input[type="submit"]')
             .waitForText('#loginDiv .username');
         var loggedInUsername = browser.getText('#loginDiv .username');
-        assert.equal(loggedInUsername, 'admin');
+        assert.equal(loggedInUsername, ADMIN_USER.name);
     });
 
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
