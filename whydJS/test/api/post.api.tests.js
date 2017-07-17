@@ -1,0 +1,49 @@
+var assert = require('assert');
+var request = require('request');
+
+var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
+var api = require('../api-client.js');
+
+describe(`post api`, function() {
+
+  var pId;
+
+  it(`should allow adding a track`, function (done) {
+		api.loginAs(TEST_USER, function(error, { response, body, jar }) {
+      const post = {
+        eId: '/yt/XdJVWSqb4Ck',
+        name: 'Lullaby - Jack Johnson and Matt Costa',
+      };
+      api.addPost(jar, post, function(error, { response, body }) {
+        console.log('add post', error, body);
+        assert.ifError(error);
+        assert.equal(body.eId, post.eId);
+        assert.equal(body.name, post.name);
+        assert(body._id);
+        pId = body._id;
+        done();
+      });
+		});
+  });
+  
+  // TODO: same for repost
+  // TODO: update post
+  // TODO: delete post
+
+  it(`should return the comment data after adding it`, function (done) {
+		api.loginAs(TEST_USER, function(error, { response, body, jar }) {
+      const comment = {
+        pId,
+        text: 'hello world',
+      };
+			api.addComment(jar, comment, function(error, { response, body }) {
+        assert.ifError(error);
+        assert.equal(body.pId, comment.pId);
+        assert.equal(body.text, comment.text);
+        assert(body._id);
+        done();
+			});
+		});
+	});
+
+});
