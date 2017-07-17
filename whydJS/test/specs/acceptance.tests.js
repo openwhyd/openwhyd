@@ -11,6 +11,10 @@ function takeSnapshot() {
     });
 }
 
+browser.waitForContent = function(regex) {
+    return browser.waitUntil(() => regex.test(browser.getHTML('body')), 5000, `${regex} should be in the page within 5 seconds`);
+};
+
 before(function() {
     // make sure that openwhyd/whydjs server is tested against the test database
     browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}`);
@@ -98,6 +102,7 @@ describe('onboarding', function() {
 
     it('should display user name after skipping the welcome tutorial', function() {
         // TODO: takeSnapshot();
+        browser.waitForContent(/Ok\, Got it/);
         $$('div').find(a => /Ok\, Got it/.test(a.getText())).click();
         var loggedInUsername = browser.getText('#loginDiv .username');
         assert.equal(loggedInUsername, TEST_USER.username);
