@@ -239,7 +239,7 @@ function countUserNotifs(notifs) {
 // generation notification method
 
 exports.html = function(uId, html, href, img) {
-	db["notif"].insert({
+	db["notif"].insertOne({
 		t:Math.round((new Date()).getTime()/1000),
 		uId:[uId],
 		html:html,

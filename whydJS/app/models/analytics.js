@@ -24,7 +24,7 @@ exports.addPlay = (function(){
 			var cleanObj = snip.checkParams(obj, MANDATORY, OPTIONAL);
 			cleanObj.eId = cleanObj.eId.split("#")[0];
 			//console.log(("addPlay: " + JSON.stringify(cleanObj)).cyan);
-			mongodb.collections["playlog"].insert(cleanObj, {w:0});
+			mongodb.collections["playlog"].insertOne(cleanObj, {w:0});
 		}
 		catch(e) {
 			console.error(e.stack);
@@ -73,5 +73,5 @@ exports.addVisit = function (uId, tId, request) {
 	var visit = {uId:uId, tId:tId};
 	if (orig) visit.orig = orig;
 	
-	mongodb.collections["visit"].insert(visit, {w:0}); // disabled write concern
+	mongodb.collections["visit"].insertOne(visit, {w:0}); // disabled write concern
 };
