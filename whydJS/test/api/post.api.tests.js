@@ -7,13 +7,13 @@ var api = require('../api-client.js');
 describe(`post api`, function() {
 
   var pId;
+  const post = {
+    eId: '/yt/XdJVWSqb4Ck',
+    name: 'Lullaby - Jack Johnson and Matt Costa',
+  };
 
   it(`should allow adding a track`, function (done) {
 		api.loginAs(TEST_USER, function(error, { response, body, jar }) {
-      const post = {
-        eId: '/yt/XdJVWSqb4Ck',
-        name: 'Lullaby - Jack Johnson and Matt Costa',
-      };
       api.addPost(jar, post, function(error, { response, body }) {
         assert.ifError(error);
         assert.equal(body.eId, post.eId);
@@ -31,8 +31,8 @@ describe(`post api`, function() {
         console.log('REPOST =>', error || body);
         assert.ifError(error);
         assert(body._id);
-        assert.notEqual(body._id, pid);
-        assert.equal(body.pId, pid);
+        assert.notEqual(body._id, pId);
+        assert.equal(body.repost.pId, pId);
         assert.equal(body.eId, post.eId);
         assert.equal(body.name, post.name);
         done();
