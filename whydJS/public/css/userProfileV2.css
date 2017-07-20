@@ -1025,3 +1025,22 @@ box-shadow:inset 0 1px 2px rgba(29,29,29,0.4),0px 1px 2px 0px rgba(0,0,0,0.25);
 .userProfileV2 .feedHeader #userSubscriptions span, .userProfileV2 .feedHeader #userSubscribers span {
 	color: #FFF;
 }
+
+#deezerProfile {
+	display: block;
+	color: white;
+	border-radius: 3px;
+	border: 1px black solid;
+	width: 354px;
+	text-align: right;
+	padding: 13px 60px 13px 0px;
+	font-size: 18px;
+	font-weight: bold;
+	box-sizing: border-box;
+	background: #404054 url("/images/ogdeezer.jpg") no-repeat left top;
+	background-size: contain;
+}
+
+#deezerProfile a {
+	color: inherit;
+}
