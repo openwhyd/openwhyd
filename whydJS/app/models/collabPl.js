@@ -27,6 +27,7 @@ exports.save = function(playlist, cb) {
 		cb();
 	}
 	else if (playlist._id)
+		// TODO: update() is deprecated => use updateOne() (new api)
 		db["collabPl"].update({_id: mongodb.ObjectId(""+playlist._id)}, {$set:playlist}, /*{upsert:true},*/ function(error, result) {
 			if (error)
 				console.error("collabPl.save() error: ", error, error.stack);
@@ -36,6 +37,7 @@ exports.save = function(playlist, cb) {
 				cb(result);
 		});
 	else
+		// TODO: insert() is deprecated => use insertOne() (new api)
 		db["collabPl"].insert(playlist, function(error, result) {
 			if (error)
 				console.error("collabPl.save() error: ", error, error.stack);
