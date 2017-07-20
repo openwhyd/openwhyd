@@ -174,6 +174,45 @@ describe('adding a track', function() {
     //webUI.logout();
 });
 
+describe('re-adding a track in a playlist', function() {
+
+    // requirement: one track should be accessible from the user's stream
+
+    // webUI.loginAs(ADMIN_USER);
+
+    it('will display a pop-in dialog when clicking the "Add to" button of that track', function() {
+        browser.waitForContent(/Add to/);
+        $$('a').find(a => /Add to/.test(a.getText())).click();
+        browser.waitForVisible('.dlgPostBox');
+    });
+
+    it('allows to create a new playlist', function() {
+        $('#selPlaylist').click();
+        browser.waitForContent(/Create/, '#selPlaylist');
+        $('#newPlaylistName').setValue('test playlist');
+        //browser.waitForVisible('input[type="submit"]');
+        $('input[value="Create"]').click();
+        browser.waitForContent(/test playlist/, '#selPlaylist');
+    });
+
+    it('should show a link to the post after re-adding the track', function() {
+        $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
+        browser.waitUntil(
+            () => $$('a').find(a => /test playlist/.test(a.getText())), 5000,
+            'expected to find a "test playlist" link after 5s');
+    });
+
+    it('should show the post on the user\'s new playlist after clicking the link', function() {
+        $$('a').find(a => /test playlist/.test(a.getText())).click();
+        browser.waitUntil(
+            () => /\/u\//.test(browser.getUrl()), 5000,
+            'expected to be on the user\'s playlist page after 5s');
+        browser.waitForVisible('.post a[data-eid="/yt/aZT8VlTV1YY"]');
+    });
+
+    //webUI.logout();
+});
+
 describe('track comments', function() {
 
     // requirement: at least one track should be accessible from the user's stream
