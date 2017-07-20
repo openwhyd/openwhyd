@@ -1,27 +1,5 @@
 # run source env-vars-testing.sh so that the following environment variables are usable in your current current shell session, before running tests
 
-export WHYD_GENUINE_SIGNUP_SECRET="whatever"
-export WHYD_SESSION_SECRET="whatever"
-export WHYD_DEV_APNS_PASSPHRASE="whatever"
-export WHYD_APNS_PASSPHRASE="whatever"
-export WHYD_ADMIN_OBJECTID="4d94501d1f78ac091dbc9b4d"
-export WHYD_ADMIN_NAME="admin"
-export WHYD_ADMIN_EMAIL="test@openwhyd.org"
-export WHYD_CONTACT_EMAIL="test@openwhyd.org"
-export WHYD_CRASH_EMAIL="test@openwhyd.org"
-export WHYD_URL_PREFIX="http://localhost:8080"
-export WHYD_PORT="8080"
-export WHYD_DEV="true"
-export MONGODB_DATABASE="openwhyd_test"
-export MONGODB_HOST="localhost"
-export MONGODB_PORT="27017"
-export MONGODB_USER=""
-export MONGODB_PASS=""
-export SENDGRID_API_USER=""
-export SENDGRID_API_KEY=""
-export SENDGRID_API_FROM_EMAIL="test@openwhyd.org"
-export SENDGRID_API_FROM_NAME="test"
-export LAST_FM_API_KEY=""
-export LAST_FM_API_SECRET=""
-export ALGOLIA_APP_ID="92V0H5YVG2"
-export ALGOLIA_API_KEY="73a425b6febceeead7790841482574c9"
+set -o allexport
+source env-vars-testing.conf # that file contains the actual configuration variables
+set +o allexport
