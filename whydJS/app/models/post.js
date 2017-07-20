@@ -297,9 +297,10 @@ exports.rePost = function (pId, repostObj, handler) {
 		delete repostObj._id;
 		if (repostObj.pl && typeof repostObj.pl.id !== "number")
 			repostObj.pl.id = parseInt(""+repostObj.pl.id);
-		collection.insert(repostObj, function(error, result) {
+		collection.insertOne(repostObj, function(error, result) {
 			//console.log("result", result);
 			if (error) console.error("post.rePost() error: ", (error));
+			result = result.ops[0];
 			if (repostObj.uId != repostObj.repost.uId) {
 				notif.repost(repostObj.uId, postObj);
 				notif.post(postObj);
@@ -320,7 +321,7 @@ exports.rePost = function (pId, repostObj, handler) {
 				});
 				notifyMentionedUsers(result);
 			}
-			handler(result); // TODO : response.ops[0] should be returned instead => failing API test
+			handler(result);
 		});
 	})
 }
