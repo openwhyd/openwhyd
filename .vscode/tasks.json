@@ -4,6 +4,18 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "taskName": "run-all-tests",
+      "type": "shell",
+      "suppressTaskName": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "new"
+      },
+      "command": "cd whydJS; source env-vars-testing.sh; npm run test-reset; npm run run --mongoDbDatabase openwhyd_test & sleep 2; npm test"
+    },
+    {
       "taskName": "run-api-tests",
       "type": "shell",
       "suppressTaskName": true,

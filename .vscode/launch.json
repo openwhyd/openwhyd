@@ -19,6 +19,19 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Run all tests",
+      "console": "internalConsole",
+      "restart": true,
+      "preLaunchTask": "run-all-tests",
+      "cwd": "${workspaceRoot}/whydJS",
+      "envFile": "${workspaceRoot}/whydJS/env-vars-testing.conf",
+      "program": "${workspaceRoot}/whydJS/app.js",
+      "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test" ]
+      // Notice: make sure that the mongodb server is listening on port 27017
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Run API tests",
       "console": "internalConsole",
       "restart": true,
