@@ -320,7 +320,7 @@ exports.rePost = function (pId, repostObj, handler) {
 				});
 				notifyMentionedUsers(result);
 			}
-			handler(result);
+			handler(result); // TODO : response.ops[0] should be returned instead => failing API test
 		});
 	})
 }

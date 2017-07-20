@@ -24,8 +24,22 @@ describe(`post api`, function() {
       });
 		});
   });
+
+  it(`should allow re-adding a track (aka "repost")`, function (done) {
+		api.loginAs(TEST_USER, function(error, { response, body, jar }) {
+      api.addPost(jar, { pId }, function(error, { response, body }) {
+        console.log('REPOST =>', error || body);
+        assert.ifError(error);
+        assert(body._id);
+        assert.notEqual(body._id, pid);
+        assert.equal(body.pId, pid);
+        assert.equal(body.eId, post.eId);
+        assert.equal(body.name, post.name);
+        done();
+      });
+		});
+  });
   
-  // TODO: same for repost
   // TODO: update post
   // TODO: delete post
 
