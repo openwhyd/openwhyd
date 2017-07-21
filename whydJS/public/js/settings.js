@@ -149,7 +149,7 @@ $(function() {
 				showMessage(allOk ? "Your changes were successfully applied" : "Please fix your settings and try again", !allOk);
 		})(true);
 	});
-	  
+
 	var $fbConn = $("#fbConn").addClass("loading");
 	whenFbReady(function() {
 		function toggleFbPrefs(connected) {
@@ -210,13 +210,70 @@ $(function() {
 		toggleLastFmConnection(window.user.lastFm && window.user.lastFm.name && window.user.lastFm.sk);
 	})();
 
+	// DEEZER CONNECTION
+	(function(){
+		$deezerConBtn = $("#deezerProfile");
+
+		var SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
+        IS_LOGGED = false,
+				IS_READY = false
+
+		// setup DOM unless existing
+		var dz;
+		if (!document.getElementById('dz-root')) {
+			dz = document.createElement('div');
+			dz.id = 'dz-root';
+			document.getElementsByTagName("body")[0].appendChild(dz);
+		}
+
+		// load DZ SDK INTO SCOPE
+		loader.includeJS(SDK_URL, function(){
+			IS_READY = true;
+		});
+
+		// initialize the oAuth client and triggers user's login popup
+		function initAuth() {
+			if ( !IS_READY )
+				return
+
+			DZ.init({
+				appId: DEEZER_APP_ID,
+				channelUrl: DEEZER_CHANNEL_URL
+			});
+
+			DZ.getLoginStatus(function(response) {
+				if (response.authResponse) {
+					IS_LOGGED = true;
+				}
+			});
+
+			if ( !IS_LOGGED ) {
+				DZ.login(function(response) {
+					if (response.userID) {
+						IS_LOGGED = true;
+						console.log('Login successful. Your Deezer tracks will be full length from now on!');
+					} else {
+						console.log('Deezer login unsuccesful.', true);
+					}
+				}, {perms: 'email'});
+			}
+		};
+
+		$deezerConBtn.click(function(event){
+			event.preventDefault();
+			initAuth();
+		});
+
+
+	})();
+
 	// == "password" tab ==
 
 	//var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/; // http://stackoverflow.com/questions/5822413/password-validation-javascript
 	var $old = $("input[name=old]");
 	var $new1 = $("input[name=new1]");
 	var $new2 = $("input[name=new2]");
-	
+
 	var $pwdForm = $("#tabPassword form").submit(function(e) {
 		e.preventDefault();
 		backtonormal();
@@ -328,4 +385,3 @@ $(function() {
 		});
 	});
 });
-	
