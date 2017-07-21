@@ -1,8 +1,8 @@
 
 {{#user}}
 <div id="settingsPanel" class="container">
-	
-	
+
+
 
 	<ul id="tabSelector">
 		<li><a href="javascript:{};//#tabAccount" class="selected">Account<div></div></a></li>
@@ -12,7 +12,7 @@
 	</ul>
 
 	<div class="sub-container">
-		
+
 		<h2 class="head-name-tab">Settings</h2>
 
 
@@ -64,6 +64,15 @@
 						<p class="msg"></p>
 					</div>
 				</fieldset>
+				<fieldset class="fld">
+					<legend>Deezer</legend>
+					<a id="deezerConn" href="https://www.last.fm/api/auth/?api_key=f623354f2157a4640e63eec23f8d91e5" target="_blank"></a>
+					<div id="deezerProfile">
+						<a href="#" target="_blank">Connect your Deezer</a>
+					</div>
+					<p class="msg"></p>
+				</fieldset>
+				<br />
 				<input type="submit" class="greenButton" value="Save changes" />
 			</form>
 			<a id="deleteAccount" href="javascript:deleteAccount();">Delete your account</a>
@@ -173,7 +182,7 @@
 				<div class="step">2</div>
 				<p>Copy this HTML embed code:</p>
 				<textarea readonly="readonly" onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand('Copy');"></textarea>
-			
+
 			</div>
 			<div class="disabled">
 				<div class="step">3</div>
