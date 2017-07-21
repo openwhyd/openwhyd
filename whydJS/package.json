@@ -18,7 +18,7 @@
     "restart": "npm run stop; npm run start $@;",
     "run": "node app.js --color --fakeEmail --digestInterval -1 $@",
     "run-dev": "node app.js --color --fakeEmail --digestInterval -1 --dev $@",
-    "run-dev-local": "echo to test deezer connect, add local.whyd.com to /private/etc/hosts, then dscacheutil -flushcache; node app.js --color --fakeEmail --digestInterval -1 --dev --urlPrefix http://local.whyd.com:8080 $@",
+    "run-dev-local": "echo \"to test deezer connect, add local.openwhyd.org to /private/etc/hosts, then dscacheutil -flushcache\"; npm run run-dev -- --urlPrefix http://local.openwhyd.org:8080 $@",
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
     "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@",
     "test-reset": "mongo openwhyd_test --eval \"db.dropDatabase();\" && mongo openwhyd_test ../whydDB/initdb.js && mongo openwhyd_test ../whydDB/initdb_team.js",

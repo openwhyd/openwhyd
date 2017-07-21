@@ -11,14 +11,17 @@ function YoutubeIframePlayer(){
 
 (function() {
 
-	var isLocal = window.location.href.indexOf("http://localhost:") == 0;
+	var isLocal = window.location.href.indexOf("http://localhost:") == 0
+		|| /^https?\:\/\/(\w+)\.openwhyd\.(\w+)(\:8080)?\//.test(window.location.href);
 	var isPreProd = window.location.href.indexOf("//whyd.fr") != -1;
 
-	var //IFRAME_HOST = "http://box.jie.fr", IFRAME_PATH = "/track.html",
-		//IFRAME_HOST = "http://bestofmusics.tumblr.com", IFRAME_PATH = "",
-		//IFRAME_HOST =  window.location.protocol + "//discman2k.appspot.com", IFRAME_PATH = "/prod.html",
-		IFRAME_HOST = isLocal ? "http://localhost:8080" : (window.location.protocol + (isPreProd ? "//whyd.fr" : "//d3qdgup1c3urcq.cloudfront.net")),
-		IFRAME_PATH = (isLocal || isPreProd) ? "/html/YoutubePlayerIframeLocal.html" : "/html/YoutubePlayerIframe.html";
+	var
+		IFRAME_HOST = isLocal
+			? window.location.href.substr(0, window.location.href.indexOf("/", 10))
+			: (window.location.protocol + (isPreProd ? "//whyd.fr" : "//d3qdgup1c3urcq.cloudfront.net")),
+		IFRAME_PATH = (isLocal || isPreProd)
+			? "/html/YoutubePlayerIframeLocal.html"
+			: "/html/YoutubePlayerIframe.html";
 
 
 	function Player(eventHandlers, embedVars) {

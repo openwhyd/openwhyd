@@ -1,9 +1,12 @@
-// this script is loaded by YoutubePlayerIframe*.html,
+// this script is loaded by YoutubePlayerIframe.html / YoutubePlayerIframeLocal.html,
 // which is loaded in an iframe by playem-youtube-iframe-patch.js
 // 
 (function(){
-  var ORIGIN = (window.location.href.indexOf("http://localhost:") == 0 || /^https?\:\/\/(\w+)\.openwhyd\.(\w+)\//.test(window.location.href))
-      ? window.location.href.substr(0, window.location.href.indexOf("/", 10))
+  var wlh = window.location.href;
+  // ORIGIN should match the domain on which openwhyd is running
+  var ORIGIN = (wlh.indexOf("http://localhost:") == 0
+      || /^https?\:\/\/(\w+)\.openwhyd\.(\w+)(\:8080)?\//.test(wlh))
+      ? wlh.substr(0, wlh.indexOf("/", 10))
       : (window.location.protocol + "//openwhyd.org"), // domain of the iframe's expected host
     EVENTS = [ "onApiReady", "onEmbedReady", "onBuffering", "onPlaying", "onTrackInfo", "onPaused", "onEnded", "onError" ],
     player, eventHandlers = {}, parameters = {};
