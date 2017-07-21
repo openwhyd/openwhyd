@@ -22,7 +22,7 @@ if (config.urlPrefix.indexOf("openwhyd.org") >0) {
 	//console.log('- Production - ');
 	fbId = "169250156435902";
 	playemFile = "min";
-}else if(config.urlPrefix.indexOf("whyd.fr") >0){
+}else if(config.urlPrefix.indexOf("whyd.fr") >0){ // pre-production
 	//console.log('- Test - ');
 	fbId = "1059973490696893";
 	playemFile = "all";

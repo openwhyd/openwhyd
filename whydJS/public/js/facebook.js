@@ -4,7 +4,7 @@ var namespace, fbId;
 if (href.indexOf("openwhyd.org/") >0) {
 	namespace = "whydapp";
 	fbId = "169250156435902";
-}else if(href.indexOf("whyd.fr/") >0){
+}else if(href.indexOf("whyd.fr/") >0){ // pre-production
 	namespace = "whyd-test";
 	fbId = "1059973490696893";
 }else{

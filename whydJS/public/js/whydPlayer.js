@@ -554,7 +554,7 @@ function WhydPlayer () {
 	};
 
 	var inProduction = window.location.href.indexOf("//openwhyd.org") > -1;
-	var inTest = window.location.href.indexOf("//whyd.fr") > -1;
+	var inTest = window.location.href.indexOf("//whyd.fr") > -1; // pre-production
 
 	var PLAYERS = {
 		// yt: inProduction ? 'YoutubeIframePlayer' : (inTest?'YoutubeIframePlayer':'YoutubeIframePlayer'),
