@@ -1,3 +1,6 @@
+// this script is loaded by YoutubePlayerIframe*.html,
+// which is loaded in an iframe by playem-youtube-iframe-patch.js
+// 
 (function(){
   var ORIGIN = (window.location.href.indexOf("http://localhost:") == 0 || /^https?\:\/\/(\w+)\.openwhyd\.(\w+)\//.test(window.location.href))
       ? window.location.href.substr(0, window.location.href.indexOf("/", 10))

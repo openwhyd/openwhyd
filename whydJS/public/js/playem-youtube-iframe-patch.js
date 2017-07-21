@@ -1,3 +1,10 @@
+// this file patches playemjs' Youtube player, so that it streams tracks from an
+// iframe hosted on a different domain name.
+//
+// it will load YoutubePlayerIframe.html or YoutubePlayerIframeLocal.html,
+// based on the domain name where openwhyd is running (local or production),
+// which will load whydRemotePlayer.js so that openwhyd can control the playback.
+//
 function YoutubeIframePlayer(){
 	return YoutubeIframePlayer.super_.apply(this, arguments);
 }
