@@ -211,60 +211,73 @@ $(function() {
 	})();
 
 	// DEEZER CONNECTION
-	(function(){
-		$deezerConBtn = $("#deezerProfile");
+	(function deezerConnect() {
 
-		var SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
-        IS_LOGGED = false,
-				IS_READY = false
+		self = this
 
-		// setup DOM unless existing
-		var dz;
-		if (!document.getElementById('dz-root')) {
-			dz = document.createElement('div');
-			dz.id = 'dz-root';
-			document.getElementsByTagName("body")[0].appendChild(dz);
+		function init() {
+			$deezerConBtn = $("#deezerProfile");
+
+			self.SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js'
+			self.IS_LOGGED = false
+			self.IS_READY = false
+
+			// setup DOM unless existing
+			var dz;
+			if (!document.getElementById('dz-root')) {
+				dz = document.createElement('div');
+				dz.id = 'dz-root';
+				document.getElementsByTagName("body")[0].appendChild(dz);
+			}
+
+			// load DZ SDK INTO SCOPE
+			loader.includeJS(SDK_URL, function(){
+				IS_READY = true;
+			});
 		}
 
-		// load DZ SDK INTO SCOPE
-		loader.includeJS(SDK_URL, function(){
-			IS_READY = true;
-		});
-
-		// initialize the oAuth client and triggers user's login popup
-		function initAuth() {
-			if ( !IS_READY )
-				return
-
-			DZ.init({
-				appId: DEEZER_APP_ID,
-				channelUrl: DEEZER_CHANNEL_URL
+		function setDeezerBtnListeners() {
+			$deezerConBtn.click(function(event){
+				event.preventDefault();
+				initAuth();
+				auth();
 			});
 
-			DZ.getLoginStatus(function(response) {
-				if (response.authResponse) {
-					IS_LOGGED = true;
-				}
-			});
+			// initialize the oAuth client and triggers user's login popup
+			function initAuth() {
+				if ( !IS_READY )
+					return
 
-			if ( !IS_LOGGED ) {
-				DZ.login(function(response) {
-					if (response.userID) {
+				DZ.init({
+					appId: DEEZER_APP_ID,
+					channelUrl: DEEZER_CHANNEL_URL
+				});
+
+				DZ.getLoginStatus(function(response) {
+					if (response.authResponse) {
 						IS_LOGGED = true;
-						console.log('Login successful. Your Deezer tracks will be full length from now on!');
-					} else {
-						console.log('Deezer login unsuccesful.', true);
 					}
-				}, {perms: 'email'});
+				});
 			}
-		};
 
-		$deezerConBtn.click(function(event){
-			event.preventDefault();
-			initAuth();
-		});
+			function auth() {
+				if ( !IS_LOGGED ) {
+					DZ.login(function(response) {
+						if (response.userID) {
+							IS_LOGGED = true;
+							showMessage("Login successful. Your Deezer tracks will be full length from now on!", !ok);
+						} else {
+							console.log('Deezer login unsuccesful.', true);
+							debugger
+							showMessage("We could not establish a connection to a Deezer Account, please try again.", !response.error);
+						}
+					}, {perms: 'email'});
+				}
+			}
+		}
 
-
+		init();
+		setDeezerBtnListeners();
 	})();
 
 	// == "password" tab ==
