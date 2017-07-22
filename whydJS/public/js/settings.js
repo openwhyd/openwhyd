@@ -211,43 +211,42 @@ $(function() {
 	})();
 
 	// DEEZER CONNECTION
-	(function deezerConnect() {
+	(function(){
+		$deezerConBtn = $("#deezerProfile");
 
-		self = this
+		var SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
+        IS_LOGGED = false,
+				IS_READY = false
 
-		function init() {
-			$deezerConBtn = $("#deezerProfile");
-
-			self.SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js'
-			self.IS_LOGGED = false
-			self.IS_READY = false
-
-			// setup DOM unless existing
-			var dz;
-			if (!document.getElementById('dz-root')) {
-				dz = document.createElement('div');
-				dz.id = 'dz-root';
-				document.getElementsByTagName("body")[0].appendChild(dz);
-			}
-
-			// load DZ SDK INTO SCOPE
-			loader.includeJS(SDK_URL, function(){
-				IS_READY = true;
-			});
+		// setup DOM unless existing
+		if (!document.getElementById('dz-root')) {
+			var dz = document.createElement('div');
+			dz.id = 'dz-root';
+			document.getElementsByTagName("body")[0].appendChild(dz);
 		}
 
-		function setDeezerBtnListeners() {
-			$deezerConBtn.click(function(event){
-				event.preventDefault();
-				initAuth();
-				auth();
-			});
+		// load DZ SDK INTO SCOPE
+		loader.includeJS(SDK_URL, function(){
+			IS_READY = true;
+		});
 
-			// initialize the oAuth client and triggers user's login popup
-			function initAuth() {
-				if ( !IS_READY )
-					return
+		function init() {
+			$deezerConBtn.unbind()
+			$deezerConBtn.on("click", loadPopup);
+		}
 
+		function loadPopup(event){
+			event.preventDefault();
+			initAuth();
+			auth();
+			IS_LOGGED = false // resets to original state
+		}
+
+		// initialize the oAuth client and triggers user's login popup
+		function initAuth() {
+			if ( IS_READY == false ) {
+				showMessage("Something went wrong.. Please try again, reload your page.", IS_LOGGED )
+			} else {
 				DZ.init({
 					appId: DEEZER_APP_ID,
 					channelUrl: DEEZER_CHANNEL_URL
@@ -256,28 +255,26 @@ $(function() {
 				DZ.getLoginStatus(function(response) {
 					if (response.authResponse) {
 						IS_LOGGED = true;
+						showMessage("You are already logged into your Deezer account.", !IS_LOGGED);
 					}
 				});
 			}
+		}
 
-			function auth() {
-				if ( !IS_LOGGED ) {
-					DZ.login(function(response) {
-						if (response.userID) {
-							IS_LOGGED = true;
-							showMessage("Login successful. Your Deezer tracks will be full length from now on!", !ok);
-						} else {
-							console.log('Deezer login unsuccesful.', true);
-							debugger
-							showMessage("We could not establish a connection to a Deezer Account, please try again.", !response.error);
-						}
-					}, {perms: 'email'});
-				}
+		function auth() {
+			if ( IS_LOGGED == false ) {
+				DZ.login(function(response) {
+					if (response.userID) {
+						IS_LOGGED = true;
+						showMessage("Login successful. Your Deezer tracks will be full length from now on!", !IS_LOGGED);
+					} else {
+						showMessage("We could not establish a connection to a Deezer Account, please try again.", IS_LOGGED);
+					}
+				}, {perms: 'email'});
 			}
 		}
 
 		init();
-		setDeezerBtnListeners();
 	})();
 
 	// == "password" tab ==
