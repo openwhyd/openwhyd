@@ -1,22 +1,34 @@
-# Openwhyd.org (formerly whyd.com) ![Travis-CI](https://travis-ci.org/openwhyd/openwhyd.svg?branch=master) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/openwhyd/sponsors/badge.svg)](#sponsors)
+# Openwhyd.org ![Travis-CI](https://travis-ci.org/openwhyd/openwhyd.svg?branch=master) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/openwhyd/sponsors/badge.svg)](#sponsors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-orange.svg)](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg)](https://facebook.com/groups/openwhyd/) [![Like Openwhyd on Facebook](https://img.shields.io/badge/%F0%9F%91%8D-facebook-blue.svg)](https://facebook.com/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=social&label=Follow)](https://twitter.com/open_whyd)
 
-> Collect, play and share music from various streaming platforms
+> Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
 
-Openwhyd's curating platform (website + iphone app) allows music lovers to find and play very specific versions of songs that their love, and are not available on major music platforms such as Spotify or iTunes. E.g. rare remixes, DJ sets, bootlegs and epic live performances.
+Music libraries like Spotify and Apple Music make it easy to play and collect music that is released officially by music labels.
 
-**You can use it on [openwhyd.org](https://openwhyd.org).**
+Openwhyd, on the other hand, allows music lovers to discover, play and collect *any* musical gem that is available on the most popular streaming platforms, including:
+
+- music videos, bootlegs and specific live performances,
+- fresh tracks from new and/or local artists,
+- DJ sets and rare remixes,
+- or any song that can be found and streamed online.
+
+**Free to use at [openwhyd.org](https://openwhyd.org), and [on your iPhone](https://openwhyd.org/iphone).**
+
+## Features
 
 [![Whyd Music Demo Video](./docs/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Whyd Music Demo Video")
 
 Features:
 
-- a bookmarklet / chrome extension for adding music tracks from the web (e.g. a Youtube page)
-- add tracks to playlists, from heterogeneous streaming platforms
-- social curation: users can subscribe/follow you, so that your latests tracks can be played from their stream
-- you can add a description to each track
-- supports music from youtube, soundcloud, vimeo, bandcamp, and MP3 files (as long as they are hosted on the web)
+- Playlists: made of tracks from **various sources**: Youtube, Soundcloud, Bandcamp, Deezer...
+- Button: Add a track from **any web page**, in a few clicks, using our Google Chrome extension and bookmarklet
+- Radio: **Subscribe** to music curators based on your musical taste, and listen to their latest discoveries
+- Fame: Get a following by creating awesome playlists, and being featured in the "**Hot Tracks**" ranking
+- Search: Add descriptions to your track, to make them **easier to find** when you need them
+- Integration: Embed your playlists on your blog or website, so your visitors can listen to it directly.
 
-## Status of the project
+## Development
+
+### Status of the project
 
 This product is the result of years of iterative development, by the start-up company [Whyd](https://whyd.com). Read [the full story from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
 
@@ -26,9 +38,8 @@ We welcome contributors, including beginners!
 
 - Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2016](https://infograph.venngage.com/p/160097/openwhyd-data-report-mid-october-2016)
 - A question / problem? --> Check out [our FAQ](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md)
-- ... and don't forget to [like us on Facebook](https://facebook.com/openwhyd/), and [follow us on Twitter](https://twitter.com/open_whyd).
 
-## Tech stack
+### Tech stack
 
 - Node.js
 - Express-like Web Server
@@ -36,7 +47,7 @@ We welcome contributors, including beginners!
 - HTML + CSS
 - [Playemjs](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
 
-## Contribute
+### Contribute
 
 If you want to contribute, please:
 
@@ -48,13 +59,7 @@ Also, be aware that this project has become open-source very recently, so please
 
 Thank you for your understanding! ^^
 
-## Prerequisites
-* Node.js
-* MongoDB
-* GraphicsMagick or ImageMagick
-* `make` and `g++` (for building npm binaries, *I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)*)
-
-## Setup (with Docker, for development environment)
+### Setup (simple)
 
 * Instal Docker Client via https://www.docker.com/community-edition and start it
 * Build and Launch all processes `docker-compose up` (ignore the error, keep the container running)
@@ -63,19 +68,23 @@ Thank you for your understanding! ^^
 
 * Then after first initialization, to launch all processes `docker-compose up`
 
-## Setup (manual)
-* Make sure that MongoDB is running
-* Make sure that the necessary environment variables are defined (see below)
-* Make sure that the database is initialized (by running `mongo openwhyd_data whydDB/initdb.js` and `mongo openwhyd_data initdb_team.js`, after updaing the `email` and `pwd` fields for the admin account)
-* Make sure that dependencies are installed (`npm install`)
-* Make sure that Apple Push Notification Service (APNS) certificates are copied in `/whydJS/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
+### Setup (manual)
 
-## Usage
+* Install Node.js, MongoDB, GraphicsMagick or ImageMagick
+* Make sure that `make` and `g++` are installed (required for building npm binaries, *I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)*)
+* Make sure that a MongoDB server is running
+* Make sure that the necessary environment variables are defined (see below)
+* Make sure that the database is initialized (by running `mongo openwhyd_data whydDB/initdb.js` and `mongo openwhyd_data initdb_team.js`)
+* Make sure that dependencies are installed (`npm install`)
+* If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/whydJS/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
+
+### Usage
+
 * `docker-compose up`, or `npm run run` (for development), or `npm start` (forever daemon)
 * Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 * During development, you may have to restart the server to have your changes taken into account. To restart the Docker container, use `docker-compose restart web`.
 
-## Testing
+### Testing
 
 Run unit tests only:
 
@@ -109,7 +118,8 @@ docker-compose exec web npm test
 docker-compose exec web npm run test-unit
 ```
 
-## Environment variables
+### Environment variables
+
 * `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
 * `WHYD_SESSION_SECRET` (mandatory. a secret key used to sign session cookies)
 * `WHYD_DEV_APNS_PASSPHRASE` (mandatory. the passphrase used to de-cypher APNS certificate and key, for iOS push notifications in DEV mode)
@@ -136,7 +146,10 @@ docker-compose exec web npm run test-unit
 * `ALGOLIA_APP_ID` (mandatory. for search index)
 * `ALGOLIA_API_KEY` (mandatory. for search index)
 
-## Backers
+## Support Openwhyd
+
+### Backers
+
 Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/openwhyd#backer)]
 
 <a href="https://opencollective.com/openwhyd/backer/0/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/0/avatar.svg"></a>
@@ -170,7 +183,7 @@ Support us with a monthly donation and help us continue our activities. [[Become
 <a href="https://opencollective.com/openwhyd/backer/28/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/openwhyd/backer/29/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/29/avatar.svg"></a>
 
-## Sponsors
+### Sponsors
 Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/openwhyd#sponsor)]
 
 <a href="https://opencollective.com/openwhyd/sponsor/0/website" target="_blank"><img src="https://opencollective.com/openwhyd/sponsor/0/avatar.svg"></a>
