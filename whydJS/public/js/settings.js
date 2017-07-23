@@ -219,9 +219,8 @@ $(function() {
 				IS_READY = false
 
 		// setup DOM unless existing
-		var dz;
 		if (!document.getElementById('dz-root')) {
-			dz = document.createElement('div');
+			var dz = document.createElement('div');
 			dz.id = 'dz-root';
 			document.getElementsByTagName("body")[0].appendChild(dz);
 		}
@@ -231,40 +230,51 @@ $(function() {
 			IS_READY = true;
 		});
 
+		function init() {
+			$deezerConBtn.unbind()
+			$deezerConBtn.on("click", loadPopup);
+		}
+
+		function loadPopup(event){
+			event.preventDefault();
+			initAuth();
+			auth();
+			IS_LOGGED = false // resets to original state
+		}
+
 		// initialize the oAuth client and triggers user's login popup
 		function initAuth() {
-			if ( !IS_READY )
-				return
+			if ( IS_READY == false ) {
+				showMessage("Something went wrong.. Please try again, reload your page.", IS_LOGGED )
+			} else {
+				DZ.init({
+					appId: DEEZER_APP_ID,
+					channelUrl: DEEZER_CHANNEL_URL
+				});
 
-			DZ.init({
-				appId: DEEZER_APP_ID,
-				channelUrl: DEEZER_CHANNEL_URL
-			});
+				DZ.getLoginStatus(function(response) {
+					if (response.authResponse) {
+						IS_LOGGED = true;
+						showMessage("You are already logged into your Deezer account.", !IS_LOGGED);
+					}
+				});
+			}
+		}
 
-			DZ.getLoginStatus(function(response) {
-				if (response.authResponse) {
-					IS_LOGGED = true;
-				}
-			});
-
-			if ( !IS_LOGGED ) {
+		function auth() {
+			if ( IS_LOGGED == false ) {
 				DZ.login(function(response) {
 					if (response.userID) {
 						IS_LOGGED = true;
-						console.log('Login successful. Your Deezer tracks will be full length from now on!');
+						showMessage("Login successful. Your Deezer tracks will be full length from now on!", !IS_LOGGED);
 					} else {
-						console.log('Deezer login unsuccesful.', true);
+						showMessage("We could not establish a connection to a Deezer Account, please try again.", IS_LOGGED);
 					}
 				}, {perms: 'email'});
 			}
-		};
+		}
 
-		$deezerConBtn.click(function(event){
-			event.preventDefault();
-			initAuth();
-		});
-
-
+		init();
 	})();
 
 	// == "password" tab ==
