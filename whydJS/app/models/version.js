@@ -2,8 +2,10 @@
 // cf: https://trello.com/c/wwQO0Xi3/458-api-envoyer-le-numero-de-version-actuel-dernier-en-date-afin-de-notifier-d-une-mise-a-jour
 
 var fs = require('fs');
+var config = require("../models/config.js");
 
 var VERSIONS_CACHE = {
+	openwhydServerVersion: config.version,
 	decodeVer: undefined,
 	iphoneAppVer: undefined, // LATEST IPHONE APP UPDATE NUMBER
 };

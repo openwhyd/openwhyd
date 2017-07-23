@@ -70,7 +70,7 @@ var params = process.appParams = {
 	feedbackEmail: process.env.WHYD_CONTACT_EMAIL.substr(), // mandatory
 
 	// rendering preferences
-	version: 25, // playemjs fix for deezer
+	version: require('./package.json').version,
 	startTime: new Date(),
 	// landingPage: "public/html/landingPhoto.html", //"public/html/landingPageLaunch.html",  //cf logging.js
 	nbPostsPerNewsfeedPage: 20,
