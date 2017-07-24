@@ -56,6 +56,8 @@ fi
 
 # Stop old server. Index 0 is always the oldest process.
 forever stop 0
+# TODO: only do this if there was an oldest process,
+# otherwise it will kill the server it just started!
 
 echo "NGINX restarted. Current app listening on port $port."
 echo "Deployment ended."
