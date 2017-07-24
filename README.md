@@ -61,6 +61,8 @@ Thank you for your understanding! ^^
 
 ### Setup (simple)
 
+Docker makes it easy and safe to install and start the two servers required for Openwhyd: the MongoDB database server, and the *whydJS* web/application server. All you need is access to the shell (a.k.a. *terminal*), and to have Docker and Git installed on your machine.
+
 1. Install [Docker Client](https://www.docker.com/community-edition) and start it
 2. [Install Git](https://www.atlassian.com/git/tutorials/install-git) if you don't have it already
 3. Clone openwhyd's repository: `git clone https://github.com/openwhyd/openwhyd.git`, then `cd openwhyd`
@@ -74,6 +76,8 @@ Whenever you want to update your local clone of Openwhyd's repository to the lat
 Whenever you want to start the Docker processes after shutting them down (step 7), run `docker-compose up` again from the `openwhyd` folder where you had cloned the repository (step 3).
 
 Whenever you just want to restart Openwhyd while the Docker processes are still running, run `docker-compose restart web` from a shell terminal.
+
+Whenever you want to know what Docker processes are currently running: run `docker-compose ps`.
 
 ### Setup (manual)
 
