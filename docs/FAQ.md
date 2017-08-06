@@ -6,6 +6,26 @@
 
 If you're curious, read [our story](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
 
+### 🇬🇧 How to add music tracks?
+
+Openwhyd offers several ways to add a music track:
+
+1. click on the "Add" link of a track added by someone else, e.g. from [the stream](https://openwhyd.org/stream) (followed users), or from the [hot tracks ranking](https://openwhyd.org/hot);
+2. type the title of the track or paste its YouTube URL in Openwhyd's search bar;
+3. or use the [Openwhyd➕ button](https://openwhyd.org/button) from a web page that contains a track (after installing our extension for Google Chrome, or bookmarklet).
+
+Demo: https://www.youtube.com/watch?v=aZT8VlTV1YY
+
+### 🇫🇷 Comment ajouter de la musique ?
+
+Pour ajouter un morceau de musique (appelé *track*), Openwhyd propose plusieurs moyens:
+
+1. cliquer sur le lien "Add" d'un morceau ajouté par quelqu'un d'autre, ex: depuis [le stream](https://openwhyd.org/stream) (utilisateurs suivis), ou depuis les [hot tracks](https://openwhyd.org/hot);
+2. taper le nom du morceau ou coller l'URL YouTube de ce morceau depuis la barre de recherche d'Openwhyd;
+3. ou utiliser le [bouton Openwhyd](https://openwhyd.org/button) depuis une page web contenant un morceau (après avoir installé l'extension pour Google Chrome ou le bookmarklet).
+
+Démo: https://www.youtube.com/watch?v=aZT8VlTV1YY
+
 ### How to use Openwhyd on my mobile phone?
 
 So far, Openwhyd can be used from the following devices only:
