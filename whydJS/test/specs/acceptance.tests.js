@@ -22,8 +22,7 @@ browser.waitForContent = function(regex, context) {
 
 before(function() {
     // make sure that openwhyd/whydjs server is tested against the test database
-    browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}`);
-    browser.url(URL_PREFIX + '/admin/config/config.json');
+    browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}&redirect=/admin/config/config.json`);
     var config = JSON.parse(browser.getText('pre')).json;
     assert.equal(config.mongoDbDatabase, 'openwhyd_test');
     browser.url(URL_PREFIX + '/login?action=logout');
