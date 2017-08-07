@@ -4,8 +4,7 @@ const webUI = require('../web-ui.js');
 
 const WAIT_DURATION = 10000;
 
-// TODO: make sure that DB is clear
-// mongo openwhyd_test --eval "db.dropDatabase();"
+// TODO: make sure that DB was reset before starting the whydJS app server
 
 function takeSnapshot() {
     var results = browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
@@ -14,20 +13,38 @@ function takeSnapshot() {
     });
 }
 
-browser.waitForContent = function(regex, context) {
-    return browser.waitUntil(() => regex.test(
-        browser.getHTML(context || 'body')),
-        WAIT_DURATION,
-        `${regex.toString()} should be in the page within 5 seconds`
+browser.addCommand('waitForContent', function async (regex, context) {
+    return browser.waitUntil(function async() {
+        return this.getHTML(context || 'body').then((content) => {
+            //console.log(content.length, content.substr(0, 10), regex.toString(), regex.test(content))
+            return regex.test(content);
+        })},
+        WAIT_DURATION, `${regex.toString()} should be in the page within 5 seconds`
     );
-};
+});
+
+// make sure that openwhyd/whydjs server is tested against the test database
+browser.addCommand('checkTestDb', function async (user, dbName) {
+    browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(user.email)}&md5=${user.md5}&redirect=/admin/config/config.json`);
+    return browser.getText('pre').then(function(content) {
+        var config = JSON.parse(content).json;
+        assert.equal(config.mongoDbDatabase, dbName);
+        return browser.url(URL_PREFIX + '/login?action=logout');
+    });
+    
+});
 
 before(function() {
     // make sure that openwhyd/whydjs server is tested against the test database
+    /*
     browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}&redirect=/admin/config/config.json`);
     var config = JSON.parse(browser.getText('pre')).json;
     assert.equal(config.mongoDbDatabase, 'openwhyd_test');
-    browser.url(URL_PREFIX + '/login?action=logout');
+    return new Promise(function (resolve, reject) {
+        browser.url(URL_PREFIX + '/login?action=logout').then(resolve, reject);
+    });
+    */
+    browser.checkTestDb(ADMIN_USER, 'openwhyd_test');
 });
 
 // reference scenario: https://www.youtube.com/watch?v=aZT8VlTV1YY
@@ -119,9 +136,10 @@ describe('onboarding', function() {
 
 describe('adding a track', function() {
 
-    webUI.loginAs(ADMIN_USER);
+    it('should allow user to login', webUI.loginAs(ADMIN_USER));
 
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
+        //browser.url(URL_PREFIX + '/all');
         $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
         browser.waitUntil(
             () => $$('#searchResults li a').find(a => /Demo/.test(a.getText())), WAIT_DURATION,
@@ -137,14 +155,31 @@ describe('adding a track', function() {
         );
     });
 
-    it('should open a dialog after clicking on the "Add to" button', function() {
+    it('should display the name of the track', function() {
+        /*
+        browser.waitForContent(/Openwhyd Demo/); // name of the track, fetched asynchronously from youtube
         browser.waitForContent(/Add to/);
-        $$('a').find(a => /Add to/.test(a.getText())).click();
+        */
+        const containsName = () => {
+            var crit = false;
+            try {
+                crit = /Openwhyd Demo \(formerly/.test(browser.getHTML('a.btnRepost'));
+            } catch (e) {}
+            return crit;
+        };
+        browser.waitUntil(containsName, WAIT_DURATION);
+        assert(true);
+    });
+
+    it('should open a dialog after clicking on the "Add to" button', function() {
+        //$$('a').find(a => /Add to/.test(a.getText())).click();
+        browser.click('a.btnRepost');
         browser.waitForVisible('.dlgPostBox');
+        browser.pause(1000);
+        assert(browser.element('.dlgPostBox').isVisible());
     });
 
     it('should show a link to the post after adding the track', function() {
-        browser.waitForContent(/Openwhyd Demo/); // name of the track, fetched asynchronously from youtube
         $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
         browser.waitUntil(
             () => $$('a').find(a => /your tracks/.test(a.getText())), WAIT_DURATION,
@@ -190,10 +225,10 @@ describe('re-adding a track in a playlist', function() {
 
     it('allows to create a new playlist', function() {
         browser.waitForVisible('#selPlaylist');
+        browser.pause(1000); // leave some time for onclick handler to be setup
         $('#selPlaylist').click();
-        browser.waitForContent(/Create/, '#selPlaylist');
+        browser.waitForVisible('#newPlaylistName');
         $('#newPlaylistName').setValue('test playlist');
-        //browser.waitForVisible('input[type="submit"]');
         $('input[value="Create"]').click();
         browser.waitForContent(/test playlist/, '#selPlaylist');
     });
