@@ -2,6 +2,8 @@ var assert = require('assert');
 var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
 const webUI = require('../web-ui.js');
 
+const WAIT_DURATION = 10000;
+
 // TODO: make sure that DB is clear
 // mongo openwhyd_test --eval "db.dropDatabase();"
 
@@ -15,7 +17,7 @@ function takeSnapshot() {
 browser.waitForContent = function(regex, context) {
     return browser.waitUntil(() => regex.test(
         browser.getHTML(context || 'body')),
-        5000,
+        WAIT_DURATION,
         `${regex.toString()} should be in the page within 5 seconds`
     );
 };
@@ -67,7 +69,7 @@ describe('onboarding', function() {
         browser
             .click('input[type="submit"]')
             .waitUntil(
-                () => /.*\/pick\/genres/.test(browser.getUrl()), 5000,
+                () => /.*\/pick\/genres/.test(browser.getUrl()), WAIT_DURATION,
                 'expected to be on /pick/genres after 5s'
             );
         // TODO: takeSnapshot();
@@ -81,7 +83,7 @@ describe('onboarding', function() {
         // TODO: takeSnapshot();
         $$('a').find(a => a.getText() === 'Next').click();
         browser.waitUntil(
-            () => /.*\/pick\/people/.test(browser.getUrl()), 5000,
+            () => /.*\/pick\/people/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /pick/people after 5s'
         );
     });
@@ -90,7 +92,7 @@ describe('onboarding', function() {
         // TODO: takeSnapshot();
         $$('a').find(a => a.getText() === 'Next').click();
         browser.waitUntil(
-            () => /.*\/pick\/button/.test(browser.getUrl()), 5000,
+            () => /.*\/pick\/button/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /pick/button after 5s'
         );
     });
@@ -99,7 +101,7 @@ describe('onboarding', function() {
         // TODO: takeSnapshot();
         $$('a').find(a => a.getText() === 'Next').click();
         browser.waitUntil(
-            () => /.*\/welcome/.test(browser.getUrl()), 5000,
+            () => /.*\/welcome/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /welcome after 5s'
         );
     });
@@ -122,7 +124,7 @@ describe('adding a track', function() {
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
         $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
         browser.waitUntil(
-            () => $$('#searchResults li a').find(a => /Demo/.test(a.getText())), 5000,
+            () => $$('#searchResults li a').find(a => /Demo/.test(a.getText())), WAIT_DURATION,
             'expected to find a search result after 5s'
         );
     });
@@ -130,7 +132,7 @@ describe('adding a track', function() {
     it('should lead to a track page when clicking on the Youtube search result', function() {
         browser.click('#searchResults li a');
         browser.waitUntil(
-            () => /\/yt\/aZT8VlTV1YY/.test(browser.getUrl()), 5000,
+            () => /\/yt\/aZT8VlTV1YY/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /yt/aZT8VlTV1YY after 5s'
         );
     });
@@ -142,16 +144,17 @@ describe('adding a track', function() {
     });
 
     it('should show a link to the post after adding the track', function() {
+        browser.waitForContent(/Openwhyd Demo/); // name of the track, fetched asynchronously from youtube
         $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
         browser.waitUntil(
-            () => $$('a').find(a => /your tracks/.test(a.getText())), 5000,
+            () => $$('a').find(a => /your tracks/.test(a.getText())), WAIT_DURATION,
             'expected to find a "your tracks" link after 5s');
     });
 
     it('should show the post on the user\'s profile after clicking the link', function() {
         $$('a').find(a => /your tracks/.test(a.getText())).click();
         browser.waitUntil(
-            () => /\/u\//.test(browser.getUrl()), 5000,
+            () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on the user\'s profile page after 5s');
         browser.waitForVisible('.post a[data-eid="/yt/aZT8VlTV1YY"]');
     });
@@ -186,6 +189,7 @@ describe('re-adding a track in a playlist', function() {
     });
 
     it('allows to create a new playlist', function() {
+        browser.waitForVisible('#selPlaylist');
         $('#selPlaylist').click();
         browser.waitForContent(/Create/, '#selPlaylist');
         $('#newPlaylistName').setValue('test playlist');
@@ -197,14 +201,14 @@ describe('re-adding a track in a playlist', function() {
     it('should show a link to the post after re-adding the track', function() {
         $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
         browser.waitUntil(
-            () => $$('a').find(a => /test playlist/.test(a.getText())), 5000,
+            () => $$('a').find(a => /test playlist/.test(a.getText())), WAIT_DURATION,
             'expected to find a "test playlist" link after 5s');
     });
 
     it('should show the post on the user\'s new playlist after clicking the link', function() {
         $$('a').find(a => /test playlist/.test(a.getText())).click();
         browser.waitUntil(
-            () => /\/u\//.test(browser.getUrl()), 5000,
+            () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on the user\'s playlist page after 5s');
         browser.waitForVisible('.post a[data-eid="/yt/aZT8VlTV1YY"]');
     });
