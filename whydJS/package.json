@@ -21,7 +21,7 @@
     "run-dev-local": "echo \"to test deezer connect, add local.openwhyd.org to /private/etc/hosts, then dscacheutil -flushcache\"; npm run run-dev -- --urlPrefix http://local.openwhyd.org:8080 $@",
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
     "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@",
-    "test-reset": "mongo openwhyd_test --eval \"db.dropDatabase();\" && mongo openwhyd_test ../whydDB/initdb.js && mongo openwhyd_test ../whydDB/initdb_team.js",
+    "test-reset": "mongo openwhyd_test --eval \"db.dropDatabase();\" && mongo openwhyd_test config/initdb.js && mongo openwhyd_test config/initdb_team.js",
     "test-api": "npm run test-reset && node_modules/.bin/mocha test/api/*.js",
     "test-unit": "node_modules/.bin/mocha test/unit/*.js && npm run test-api",
     "test-acceptance": "npm run test-reset && wdio wdio.conf.js $@",
