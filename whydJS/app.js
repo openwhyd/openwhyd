@@ -157,6 +157,7 @@ function init() {
 		}
 	console.log("Starting web server with params:", params);
 	require('./app/models/mongodb.js').init(function(err, db) {
+		if (err) throw err;
 		var mongodb = this;
 		async.eachSeries(DB_INIT_SCRIPTS, function(initScript, nextScript){
 			console.log('Applying db init script:', initScript, '...');
