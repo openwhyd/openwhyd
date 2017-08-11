@@ -45,6 +45,13 @@ exports.signupAs = function signupAs(user, callback) {
 		callback(error, { response, body, jar: extractCookieJar(response) });
 	});
 }
+// HTTP request wrappers
+
+exports.get = function(jar, url, callback) {
+	request.get({ jar, url: `${URL_PREFIX}${url}` }, function(error, response, body) {
+		callback(error, { response, body, jar });
+	});	
+};
 
 // USER
 
