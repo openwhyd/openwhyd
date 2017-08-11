@@ -329,7 +329,7 @@ exports.checkMistypedFields = function(obj, fieldTypeSet) {
 exports.translateFields = function(obj, mapping) {
 	if (obj && typeof obj === "object")
 		for (var f in mapping)
-			if (obj.hasOwnProperty(f)) {
+			if (Object.hasOwnProperty.call(obj, f)) {
 				obj[mapping[f]] = obj[f];
 				delete obj[f];
 			}
