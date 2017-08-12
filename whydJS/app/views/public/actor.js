@@ -1,4 +1,4 @@
-var my = require('my');
+var my = require('../../lib/my');
 
 exports.view = function(data) { return(
   my.page({title: 'Hello World', scripts:["http://code.jquery.com/jquery-latest.js"]},

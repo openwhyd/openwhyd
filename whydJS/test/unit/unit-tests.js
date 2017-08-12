@@ -25,7 +25,7 @@ describe('snip.js', function() {
 
 describe('"get" package', function() {
 
-    var get = require('get');
+    var get = require('../../app/lib/get');
 
     it('should provide the title of a web page', function (done) {
         get.Title('https://www.google.com/', function(err, title) {

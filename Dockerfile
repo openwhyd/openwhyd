@@ -9,11 +9,6 @@ RUN npm install -g eslint \
 
 # Install app dependencies
 
-# Custom packages
-COPY ./whydJS/node_modules/get /usr/src/app/node_modules/get
-COPY ./whydJS/node_modules/my /usr/src/app/node_modules/my
-COPY ./whydJS/node_modules/hypem /usr/src/app/node_modules/hypem
-
 COPY ./whydJS/package.json /usr/src/app/
 RUN npm install
 
