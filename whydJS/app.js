@@ -1,6 +1,13 @@
+var fs = require('fs');
 var util = require('util');
+var async = require('async');
 var colors = require('colors');
 var mongodb = require('mongodb');
+
+var DB_INIT_SCRIPTS = [
+	'./config/initdb.js',
+	//'./config/initdb_team.js', // creates an admin user => should not be run on production!
+];
 
 function makeColorConsole(fct, color){
 	return function(){
@@ -149,7 +156,24 @@ function init() {
 				params[flag.substr(2)] = process.argv[++i];
 		}
 	console.log("Starting web server with params:", params);
-	require('./app/models/mongodb.js').init(start);
+	require('./app/models/mongodb.js').init(function(err, db) {
+		if (err) throw err;
+		var mongodb = this;
+		async.eachSeries(DB_INIT_SCRIPTS, function(initScript, nextScript){
+			console.log('Applying db init script:', initScript, '...');
+			mongodb.runShellScript(fs.readFileSync(initScript), function(err) {
+				if (err) throw err;
+				nextScript();
+			});
+		}, function(err, res){
+			// all db init scripts were interpreted => continue app init
+			mongodb.cacheCollections(function() {
+				mongodb.cacheUsers(function() {
+					start();
+				});
+			});
+		});
+	});
 }
 
 init();

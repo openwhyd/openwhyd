@@ -66,8 +66,7 @@ Docker makes it easy and safe to install and start the two servers required for 
 1. Install [Docker Client](https://www.docker.com/community-edition) and start it
 2. [Install Git](https://www.atlassian.com/git/tutorials/install-git) if you don't have it already
 3. Clone openwhyd's repository: `git clone https://github.com/openwhyd/openwhyd.git`, then `cd openwhyd`
-4. Build and launch Docker processes: `docker-compose up` (ignore the error, keep the container running)
-5. In another shell instance, initialize the database: `docker-compose exec mongo mongo openwhyd_data data/initdb.js data/initdb_team.js && docker-compose restart web` (then, you can close that shell instance if you want)
+4. Build and launch Docker processes: `docker-compose up`
 6. Open [http://localhost:8080](http://localhost:8080) in your web browser => you should see Openwhyd's home page! 🎉
 7. When you're done, shutdown the Docker processes by pressing the `Ctrl-C` key combination in the shell instance where you had run `docker-compose up` (step 4).
 
@@ -85,7 +84,7 @@ Whenever you want to know what Docker processes are currently running: run `dock
 * Make sure that `make` and `g++` are installed (required for building npm binaries, *I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)*)
 * Make sure that a MongoDB server is running
 * Make sure that the necessary environment variables are defined (see below)
-* Make sure that the database is initialized (by running `mongo openwhyd_data whydDB/initdb.js` and `mongo openwhyd_data initdb_team.js`)
+* Make sure that the database is initialized (by running `mongo openwhyd_data whydJS/config/initdb.js` and `mongo openwhyd_data whydJS/config/initdb_team.js`)
 * Make sure that dependencies are installed (`npm install`)
 * If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/whydJS/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 
@@ -106,27 +105,20 @@ npm run test-unit
 Run all tests, including acceptance tests (webdriver.io-based):
 
 ```bash
-# prepare the test environment
+# run the "whydJS" application server in a terminal session
 cd whydJS
 source env-vars-testing.sh
-# clear the test database
-npm run test-reset
-# run the "whydJS" application server
-npm run run --mongoDbDatabase openwhyd_test
-# then run the tests in a separate terminal session
+npm run run
+# then run the tests in another terminal session
+cd whydJS
+source env-vars-testing.sh
 npm test
 ```
 
-Run all tests in Docker container:
+Run all tests against the Docker container:
 
 ```bash
-docker-compose exec web npm test
-```
-
-...or if you don't want to run acceptance-based tests (running on Google Chrome, thru webdriver.io):
-
-```bash
-docker-compose exec web npm run test-unit
+npm run test-docker
 ```
 
 ### Environment variables

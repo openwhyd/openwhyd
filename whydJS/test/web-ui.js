@@ -2,7 +2,7 @@ var assert = require('assert');
 var { URL_PREFIX } = require('./fixtures.js');
 
 exports.loginAs = function (user) {
-	it('should allow user to login', function () {
+	return function () {
 		browser
 			.url(URL_PREFIX)
 			.click('#signin')
@@ -14,7 +14,7 @@ exports.loginAs = function (user) {
 			.waitForText('#loginDiv .username');
 		var loggedInUsername = browser.getText('#loginDiv .username');
 		assert.equal(loggedInUsername, user.name);
-	});
+	};
 };
 
 exports.logout = function (user) {

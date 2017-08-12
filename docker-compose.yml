@@ -30,7 +30,7 @@ services:
       - WHYD_URL_PREFIX=http://localhost:8080
       - WHYD_PORT=8080
       - WHYD_DEV=true
-      - MONGODB_DATABASE=openwhyd_data
+      - MONGODB_DATABASE=openwhyd_test
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
       - MONGODB_USER=

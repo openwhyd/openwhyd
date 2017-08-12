@@ -2,8 +2,9 @@ var assert = require('assert');
 var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
 const webUI = require('../web-ui.js');
 
-// TODO: make sure that DB is clear
-// mongo openwhyd_test --eval "db.dropDatabase();"
+const WAIT_DURATION = 10000;
+
+// TODO: make sure that DB was reset before starting the whydJS app server
 
 function takeSnapshot() {
     var results = browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
@@ -12,21 +13,38 @@ function takeSnapshot() {
     });
 }
 
-browser.waitForContent = function(regex, context) {
-    return browser.waitUntil(() => regex.test(
-        browser.getHTML(context || 'body')),
-        5000,
-        `${regex.toString()} should be in the page within 5 seconds`
+browser.addCommand('waitForContent', function async (regex, context) {
+    return browser.waitUntil(function async() {
+        return this.getHTML(context || 'body').then((content) => {
+            //console.log(content.length, content.substr(0, 10), regex.toString(), regex.test(content))
+            return regex.test(content);
+        })},
+        WAIT_DURATION, `${regex.toString()} should be in the page within 5 seconds`
     );
-};
+});
+
+// make sure that openwhyd/whydjs server is tested against the test database
+browser.addCommand('checkTestDb', function async (user, dbName) {
+    browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(user.email)}&md5=${user.md5}&redirect=/admin/config/config.json`);
+    return browser.getText('pre').then(function(content) {
+        var config = JSON.parse(content).json;
+        assert.equal(config.mongoDbDatabase, dbName);
+        return browser.url(URL_PREFIX + '/login?action=logout');
+    });
+    
+});
 
 before(function() {
     // make sure that openwhyd/whydjs server is tested against the test database
-    browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}`);
-    browser.url(URL_PREFIX + '/admin/config/config.json');
+    /*
+    browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}&redirect=/admin/config/config.json`);
     var config = JSON.parse(browser.getText('pre')).json;
     assert.equal(config.mongoDbDatabase, 'openwhyd_test');
-    browser.url(URL_PREFIX + '/login?action=logout');
+    return new Promise(function (resolve, reject) {
+        browser.url(URL_PREFIX + '/login?action=logout').then(resolve, reject);
+    });
+    */
+    browser.checkTestDb(ADMIN_USER, 'openwhyd_test');
 });
 
 // reference scenario: https://www.youtube.com/watch?v=aZT8VlTV1YY
@@ -68,7 +86,7 @@ describe('onboarding', function() {
         browser
             .click('input[type="submit"]')
             .waitUntil(
-                () => /.*\/pick\/genres/.test(browser.getUrl()), 5000,
+                () => /.*\/pick\/genres/.test(browser.getUrl()), WAIT_DURATION,
                 'expected to be on /pick/genres after 5s'
             );
         // TODO: takeSnapshot();
@@ -82,7 +100,7 @@ describe('onboarding', function() {
         // TODO: takeSnapshot();
         $$('a').find(a => a.getText() === 'Next').click();
         browser.waitUntil(
-            () => /.*\/pick\/people/.test(browser.getUrl()), 5000,
+            () => /.*\/pick\/people/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /pick/people after 5s'
         );
     });
@@ -91,7 +109,7 @@ describe('onboarding', function() {
         // TODO: takeSnapshot();
         $$('a').find(a => a.getText() === 'Next').click();
         browser.waitUntil(
-            () => /.*\/pick\/button/.test(browser.getUrl()), 5000,
+            () => /.*\/pick\/button/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /pick/button after 5s'
         );
     });
@@ -100,7 +118,7 @@ describe('onboarding', function() {
         // TODO: takeSnapshot();
         $$('a').find(a => a.getText() === 'Next').click();
         browser.waitUntil(
-            () => /.*\/welcome/.test(browser.getUrl()), 5000,
+            () => /.*\/welcome/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /welcome after 5s'
         );
     });
@@ -118,12 +136,13 @@ describe('onboarding', function() {
 
 describe('adding a track', function() {
 
-    webUI.loginAs(ADMIN_USER);
+    it('should allow user to login', webUI.loginAs(ADMIN_USER));
 
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
+        //browser.url(URL_PREFIX + '/all');
         $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
         browser.waitUntil(
-            () => $$('#searchResults li a').find(a => /Demo/.test(a.getText())), 5000,
+            () => $$('#searchResults li a').find(a => /Demo/.test(a.getText())), WAIT_DURATION,
             'expected to find a search result after 5s'
         );
     });
@@ -131,28 +150,46 @@ describe('adding a track', function() {
     it('should lead to a track page when clicking on the Youtube search result', function() {
         browser.click('#searchResults li a');
         browser.waitUntil(
-            () => /\/yt\/aZT8VlTV1YY/.test(browser.getUrl()), 5000,
+            () => /\/yt\/aZT8VlTV1YY/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /yt/aZT8VlTV1YY after 5s'
         );
     });
 
-    it('should open a dialog after clicking on the "Add to" button', function() {
+    it('should display the name of the track', function() {
+        /*
+        browser.waitForContent(/Openwhyd Demo/); // name of the track, fetched asynchronously from youtube
         browser.waitForContent(/Add to/);
-        $$('a').find(a => /Add to/.test(a.getText())).click();
+        */
+        const containsName = () => {
+            var crit = false;
+            try {
+                crit = /Openwhyd Demo \(formerly/.test(browser.getHTML('a.btnRepost'));
+            } catch (e) {}
+            return crit;
+        };
+        browser.waitUntil(containsName, WAIT_DURATION);
+        assert(true);
+    });
+
+    it('should open a dialog after clicking on the "Add to" button', function() {
+        //$$('a').find(a => /Add to/.test(a.getText())).click();
+        browser.click('a.btnRepost');
         browser.waitForVisible('.dlgPostBox');
+        browser.pause(1000);
+        assert(browser.element('.dlgPostBox').isVisible());
     });
 
     it('should show a link to the post after adding the track', function() {
         $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
         browser.waitUntil(
-            () => $$('a').find(a => /your tracks/.test(a.getText())), 5000,
+            () => $$('a').find(a => /your tracks/.test(a.getText())), WAIT_DURATION,
             'expected to find a "your tracks" link after 5s');
     });
 
     it('should show the post on the user\'s profile after clicking the link', function() {
         $$('a').find(a => /your tracks/.test(a.getText())).click();
         browser.waitUntil(
-            () => /\/u\//.test(browser.getUrl()), 5000,
+            () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on the user\'s profile page after 5s');
         browser.waitForVisible('.post a[data-eid="/yt/aZT8VlTV1YY"]');
     });
@@ -187,10 +224,11 @@ describe('re-adding a track in a playlist', function() {
     });
 
     it('allows to create a new playlist', function() {
+        browser.waitForVisible('#selPlaylist');
+        browser.pause(1000); // leave some time for onclick handler to be setup
         $('#selPlaylist').click();
-        browser.waitForContent(/Create/, '#selPlaylist');
+        browser.waitForVisible('#newPlaylistName');
         $('#newPlaylistName').setValue('test playlist');
-        //browser.waitForVisible('input[type="submit"]');
         $('input[value="Create"]').click();
         browser.waitForContent(/test playlist/, '#selPlaylist');
     });
@@ -198,14 +236,14 @@ describe('re-adding a track in a playlist', function() {
     it('should show a link to the post after re-adding the track', function() {
         $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
         browser.waitUntil(
-            () => $$('a').find(a => /test playlist/.test(a.getText())), 5000,
+            () => $$('a').find(a => /test playlist/.test(a.getText())), WAIT_DURATION,
             'expected to find a "test playlist" link after 5s');
     });
 
     it('should show the post on the user\'s new playlist after clicking the link', function() {
         $$('a').find(a => /test playlist/.test(a.getText())).click();
         browser.waitUntil(
-            () => /\/u\//.test(browser.getUrl()), 5000,
+            () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on the user\'s playlist page after 5s');
         browser.waitForVisible('.post a[data-eid="/yt/aZT8VlTV1YY"]');
     });
