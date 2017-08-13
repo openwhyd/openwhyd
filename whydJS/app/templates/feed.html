@@ -290,8 +290,25 @@
 				<li><a target="_blank" href="http://twitter.com/open_whyd">Twitter</a></li>
 				<li><a target="_blank" href="https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md">FAQ</a></li>
 			</ul>
-			<p>Openwhyd is maintained collaboratively,<br/>under the MIT License</p>
+			<p>Openwhyd is maintained collaboratively,<br/>under the MIT License. <a id="barelog-trigger" href="#">What's new?</a><span id="headway-changelog-badge" /></p>
 		</div>
+
+		<!-- this script activates the "What's new?" link -->
+		<script>
+			(function(b,a,r,e,l,o,g){
+				o=a.createElement(r),
+				g=a.getElementsByTagName(r)[0];
+				o.async=1;o.src=e;g.parentNode.insertBefore(o,g);
+				o.onload=a.onreadystatechange=function(){
+					a.readyState==="complete"&&Barelog(options);}
+			})(window,document,'script','https://cdn.barelog.com/widget.js');
+		
+			var options = {
+				id: "t8nrxyyfogwt",
+				trigger: "#barelog-trigger"
+			}
+		</script>
+		<!-- end of "What's new?" link -->
 
 	</div> <!-- END RIGHT BAR-->
 	{{/user}}
