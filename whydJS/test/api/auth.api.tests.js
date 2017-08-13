@@ -66,6 +66,8 @@ describe('auth api -- signup', function() {
 
 	it('gives access to personal /stream', function (done) {
 		signupAs(TEST_USER, function(error, { response, body, jar }) {
+			assert.ifError(error);
+			try { assert.ifError(JSON.parse(body).error); } catch(e) {}
 			request({ jar, url: URL_PREFIX + '/stream?format=json' }, function(error, response, body) {
 				assert.ifError(error);
 				assert.equal(response.statusCode, 200);
