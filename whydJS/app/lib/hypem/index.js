@@ -1,4 +1,4 @@
-var get = require('get');
+var get = require('../get');
 
 var HYPEM_SEARCH_URL = 'http://hypem.com/playlist/search/QUERY/json/1/data.js';
 var NB_RESULTS_PER_PAGE = 20;

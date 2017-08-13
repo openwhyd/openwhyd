@@ -60,7 +60,7 @@ function ContentEmbedWrapper() {
     ajax: fakeRequest,
     getJSON: fakeRequest
   };
-  var ContentEmbed = require('./../../public/js/ContentEmbed.js');
+  var ContentEmbed = require('../../../public/js/ContentEmbed.js');
   this.embed = ContentEmbed();
   //return ContentEmbed();
 }

@@ -1,4 +1,4 @@
-var my = require('my');
+var my = require('../../lib/my');
 
 var maxHeight = 300, maxWidth = 300;
 

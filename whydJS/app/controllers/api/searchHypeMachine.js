@@ -6,7 +6,7 @@
 //var mainTemplate = require("../../templates/mainTemplate");
 //var render = require("../../templates/topicRendering");
 //var uiSnippets = require("../../templates/uiSnippets");
-var hypem = require("hypem");
+var hypem = require("../../lib/hypem");
 
 exports.controller = function(request, reqParams, response) {
    	// make sure a registered user is logged, or return an error page

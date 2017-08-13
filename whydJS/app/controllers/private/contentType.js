@@ -5,7 +5,7 @@
 var URL = require('url');
 var http = require('http');
 var https = require('https');
-var get = require('get');
+var get = require('../../lib/get');
 
 //var generalUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 	

@@ -3,7 +3,7 @@
  * @author adrienjoly, whyd
  */
 
-var get = require('get');
+var get = require('../lib/get');
 var snip = require("../snip.js");
 var config = require("../models/config.js");
 var mongodb = require("../models/mongodb.js");

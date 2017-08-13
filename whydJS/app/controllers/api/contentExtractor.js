@@ -2,7 +2,7 @@
  * contentExtractor controller (based on contentType controller)
  * Extracts the embedded content in a given http resource
  */
-var get = require('get');
+var get = require('../../lib/get');
 
 exports.controller = function(request, reqParams, response)
 {

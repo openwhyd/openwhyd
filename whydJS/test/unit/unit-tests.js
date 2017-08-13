@@ -25,7 +25,7 @@ describe('snip.js', function() {
 
 describe('"get" package', function() {
 
-    var get = require('get');
+    var get = require('../../app/lib/get');
 
     it('should provide the title of a web page', function (done) {
         get.Title('https://www.google.com/', function(err, title) {
@@ -92,7 +92,7 @@ describe('"img" package', function() {
         try { fs.unlinkSync(thumbOutput); } catch(e) {}
 
         console.log = function() {}; // prevent ContentEmbed from printing to the console
-        var img = require('../../node_modules/my/img');
+        var img = require('../../app/lib/my/img');
         img.makeThumb(imgOutput, thumbOutput, thumbWidth, thumbHeight, function () {
             console.log = log; // restore console.log
             assert(fs.existsSync(thumbOutput), thumbOutput + ' should be created by img.makeThumb()');

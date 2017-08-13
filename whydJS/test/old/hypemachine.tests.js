@@ -2,7 +2,7 @@ var assert = require('assert');
 
 describe('hypemachine / mp3 detector', function() {
 
-	var hypem = require('hypem');
+	var hypem = require('../../app/lib/hypem');
 
 	// Wrapper to a controller that detects embeds (youtube + soundcloud) and MP3 files from a HTML page
 

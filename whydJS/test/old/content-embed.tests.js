@@ -6,7 +6,7 @@ describe('Content Embed', function() {
 
     var log = console.log;
 
-    var ContentEmbedWrapper = require('get').ContentEmbedWrapper;
+    var ContentEmbedWrapper = require('../../app/lib/get').ContentEmbedWrapper;
     var embed = new ContentEmbedWrapper();
 
     // from https://github.com/whyd/whyd/wiki/Tests
