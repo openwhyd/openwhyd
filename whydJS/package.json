@@ -10,7 +10,7 @@
     "url": "https://github.com/openwhyd/openwhyd.git"
   },
   "scripts": {
-    "postinstall": "npm run -s donate; cd node_modules/playemjs/; npm i --only=dev; cp dist/playem-*.js ../../public/js/; cd ../..",
+    "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
     "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
     "stop": "forever stop app.js",
     "start": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
@@ -57,7 +57,7 @@
     "iconv": ">=2.0.6",
     "mongodb": "^2.2.29",
     "object-sizeof": "^0.1.2",
-    "playemjs": "0.1.6",
+    "playemjs": "0.1.7",
     "request": "2.x",
     "start-stop-daemon": "0.1.0"
   },

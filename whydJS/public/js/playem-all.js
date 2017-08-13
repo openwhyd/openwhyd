@@ -1,6 +1,4 @@
-var YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI"; // dirty hack, until https://d3qdgup1c3urcq.cloudfront.net/html/YoutubePlayerIframe.html is refreshed/invalidated
-
-/* playemjs commit: 2e5e26914fce638242de89479b7be48f412cc450 */
+/* playemjs 0.1.7, commit: 03734b9f4a4c25f2e1649311f574406bdbc585a4 */
 
 // configuration
 
