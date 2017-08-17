@@ -111,7 +111,6 @@ source env-vars-testing.sh
 npm run run
 # then run the tests in another terminal session
 cd whydJS
-source env-vars-testing.sh
 npm test
 ```
 
