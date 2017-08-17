@@ -120,3 +120,12 @@ exports.addComment = function(jar, body, callback) {
 		callback(error, { response, body, jar });
 	});	
 };
+
+exports.getPlaylist = function(jar, plId, callback) {
+	exports.get(jar, `/api/playlist?id=${plId}`, callback);
+};
+
+exports.getPlaylistTracks = function(jar, uId, plId, callback) {
+	// TODO: define a version that accepts parameters (limit, after, before...)
+	exports.get(jar, `/${uId}/playlist/${plId}?format=json`, callback);
+};
