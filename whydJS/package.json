@@ -17,6 +17,7 @@
     "start-preprod": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 --emailAdminsOnly start app.js $@",
     "restart": "npm run stop; npm run start $@;",
     "run": "node app.js --color --fakeEmail --digestInterval -1 $@",
+    "run-for-tests": "source env-vars-testing.sh && npm run run",
     "run-dev": "node app.js --color --fakeEmail --digestInterval -1 --dev $@",
     "run-dev-local": "echo \"to test deezer connect, add local.openwhyd.org to /private/etc/hosts, then dscacheutil -flushcache\"; npm run run-dev -- --urlPrefix http://local.openwhyd.org:8080 $@",
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",

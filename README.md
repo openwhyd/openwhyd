@@ -102,15 +102,12 @@ Run unit tests only:
 npm run test-unit
 ```
 
-Run all tests, including acceptance tests (webdriver.io-based):
+Run all tests, including acceptance tests (webdriver.io-based), from the `whydJS` folder:
 
 ```bash
-# run the "whydJS" application server in a terminal session
-cd whydJS
-source env-vars-testing.sh
-npm run run
-# then run the tests in another terminal session
-cd whydJS
+# in a terminal session, start the "whydJS" application server
+npm run run-for-tests
+# in another terminal session, run the tests
 npm test
 ```
 
