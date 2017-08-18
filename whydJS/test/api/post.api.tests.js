@@ -100,6 +100,33 @@ describe(`post api`, function () {
     });
   });
 
+  it(`should return 1 track in the playlist, with limit=1000`, function (done) {
+    api.loginAs(TEST_USER, function (error, { jar }) {
+      const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000`;
+      api.get(jar, url, function (error, { response, json }) {
+        assert.equal(json.length, 1);
+        assert.equal(json[0].pl.id, firstPlaylistIndex);
+        assert.equal(json[0].pl.name, postInPlaylist.pl.name);
+        done();
+      });
+    });
+  });
+
+  it(`should return 1 track in the playlist, with limit=1000 x2`, function (done) {
+    api.loginAs(TEST_USER, function (error, { jar }) {
+      const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
+      console.log('api request url:', url);
+      // note: the `limit` property should be parsed as ["1000","20"] => causing bug
+      api.get(jar, url, function (error, { response, json }) {
+        console.log('api request response:', json); // => empty array, because of bug
+        assert.equal(json.length, 1);
+        assert.equal(json[0].pl.id, firstPlaylistIndex);
+        assert.equal(json[0].pl.name, postInPlaylist.pl.name);
+        done();
+      });
+    });
+  });
+
   // TODO: update post
   // TODO: delete post
 
