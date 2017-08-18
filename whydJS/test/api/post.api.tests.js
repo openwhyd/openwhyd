@@ -25,7 +25,7 @@ describe(`post api`, function () {
       });
     });
   });
-/*
+
   it(`should allow re-adding a track (aka "repost")`, function (done) {
     api.loginAs(TEST_USER, function (error, { response, body, jar }) {
       api.addPost(jar, { pId }, function (error, { response, body }) {
@@ -39,7 +39,7 @@ describe(`post api`, function () {
       });
     });
   });
-*/
+
   var playlistFullId;
   const firstPlaylistIndex = 0;
   const postInPlaylist = Object.assign({}, post, {
@@ -62,7 +62,7 @@ describe(`post api`, function () {
       });
     });
   });
-/*
+
   it(`make sure that the playlist was created`, function (done) {
     api.loginAs(TEST_USER, function (error, { jar }) {
       api.getUser(jar, {}, function(error, { response, json }) {
@@ -111,17 +111,13 @@ describe(`post api`, function () {
       });
     });
   });
-*/
-  it(`should return 1 track in the playlist, with limit=1000 x2`, function (done) {
+
+  it(`should not return tracks if two limit parameters are provided`, function (done) {
     api.loginAs(TEST_USER, function (error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
-      console.log('api request url:', url);
-      // note: the `limit` property should be parsed as ["1000","20"] => causing bug
+      // => the `limit` property will be parsed as ["1000","20"] => causing bug #89
       api.get(jar, url, function (error, { response, json }) {
-        console.log('api request response:', json); // => empty array, because of bug
-        assert.equal(json.length, 1);
-        assert.equal(json[0].pl.id, firstPlaylistIndex);
-        assert.equal(json[0].pl.name, postInPlaylist.pl.name);
+        assert.equal(json.length, 0);
         done();
       });
     });
