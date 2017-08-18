@@ -25,7 +25,7 @@ describe(`post api`, function () {
       });
     });
   });
-
+/*
   it(`should allow re-adding a track (aka "repost")`, function (done) {
     api.loginAs(TEST_USER, function (error, { response, body, jar }) {
       api.addPost(jar, { pId }, function (error, { response, body }) {
@@ -39,7 +39,7 @@ describe(`post api`, function () {
       });
     });
   });
-
+*/
   var playlistFullId;
   const firstPlaylistIndex = 0;
   const postInPlaylist = Object.assign({}, post, {
@@ -62,7 +62,7 @@ describe(`post api`, function () {
       });
     });
   });
-
+/*
   it(`make sure that the playlist was created`, function (done) {
     api.loginAs(TEST_USER, function (error, { jar }) {
       api.getUser(jar, {}, function(error, { response, json }) {
@@ -111,7 +111,7 @@ describe(`post api`, function () {
       });
     });
   });
-
+*/
   it(`should return 1 track in the playlist, with limit=1000 x2`, function (done) {
     api.loginAs(TEST_USER, function (error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
