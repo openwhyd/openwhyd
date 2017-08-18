@@ -3,16 +3,18 @@ var querystring = require('querystring');
 var errorTemplate = require("../templates/error.js");
 
 http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-	var head = ("=== " + (new Date()).toUTCString()), path = this.url.split("?")[0];
+	var head = ("=== " + (new Date()).toUTCString()), path = this.url.split("?")/*[0]*/;
 	params = params ? JSON.stringify(params) : '';
 	suffix = suffix ? "(" + suffix + ")" : "";
 	// output with colors
-	console.log(head.grey, this.method.cyan, path.green, suffix.yellow, params.grey); // -> stdout
+	console.log(head.grey, this.method.cyan,
+		path[0].green + (path.length > 1 ? "?" + path.slice(1).join("?") : "").yellow,
+		suffix.white, params.grey); // -> stdout
 };
 
 if (!process.appParams.color)
 	http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-		var head = ("=== " + (new Date()).toUTCString()), path = this.url.split("?")[0];
+		var head = ("=== " + (new Date()).toUTCString()), path = this.url/*.split("?")[0]*/;
 		params = params ? JSON.stringify(params) : '';
 		suffix = suffix ? "(" + suffix + ")" : "";
 		// output without colors
