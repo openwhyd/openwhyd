@@ -17,7 +17,7 @@
     "start-preprod": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 --emailAdminsOnly start app.js $@",
     "restart": "npm run stop; npm run start $@;",
     "run": "node app.js --color --fakeEmail --digestInterval -1 $@",
-    "run-for-tests": "source env-vars-testing.sh && npm run run",
+    "run-for-tests": ". env-vars-testing.sh && npm run run",
     "run-dev": "node app.js --color --fakeEmail --digestInterval -1 --dev $@",
     "run-dev-local": "echo \"to test deezer connect, add local.openwhyd.org to /private/etc/hosts, then dscacheutil -flushcache\"; npm run run-dev -- --urlPrefix http://local.openwhyd.org:8080 $@",
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
@@ -27,7 +27,7 @@
     "test-unit": "node_modules/.bin/mocha test/unit/*.js",
     "test-acceptance": "npm run test-reset && wdio wdio.conf.js $@",
     "test-acceptance-dev": "npm run test-acceptance -- --spec ./test/specs/acceptance.tests.js --logLevel verbose",
-    "test": "source env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance",
+    "test": ". env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance",
     "test-docker": "docker-compose exec web npm run test-reset && docker-compose restart web && docker-compose exec web npm run test-unit && docker-compose exec web npm run test-api && docker-compose exec web npm run test-reset && docker-compose restart web && npm run test-acceptance",
     "lint": "eslint app"
   },
