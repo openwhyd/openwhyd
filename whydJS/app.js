@@ -1,3 +1,5 @@
+var /*consoleWarn = console.warn,*/ consoleError = console.error;
+
 var fs = require('fs');
 var util = require('util');
 var async = require('async');
@@ -18,16 +20,21 @@ function makeColorConsole(fct, color){
 	};
 }
 
-function makeErrorLog(fct){
+function conciseTrace() {
+	return new Error().stack.split("\n").filter(function(line) {
+		return /\/whydJS\/app\//.test(line);
+	}).join("\n");
+}
+
+function makeErrorLog(fct, type){
 	return function(){
-		fct("===\n" + (new Date()).toUTCString(), new Error().stack);
+		fct("===\n" + (new Date()).toUTCString() + ", " + type + " (concise trace)\n" + conciseTrace());
 		fct.apply(console, arguments);
 	}
 }
 
-var consoleWarn = console.warn, consoleError = console.error;
-console.warn = makeErrorLog(consoleWarn);
-console.error = makeErrorLog(consoleError);
+console.warn = makeErrorLog(consoleError, "Warning");
+console.error = makeErrorLog(consoleError, "Error");
 
 //==============================================================================
 // Extending String.prototype (only native prototype to be extended)
@@ -95,8 +102,8 @@ var params = process.appParams = {
 
 var FLAGS = {
 	"--color": function(){
-		console.warn = makeErrorLog(makeColorConsole(consoleWarn, "yellow"));
-		console.error = makeErrorLog(makeColorConsole(consoleError, "red"));
+		console.warn = makeErrorLog(makeColorConsole(consoleError, "yellow"), "Warning");
+		console.error = makeErrorLog(makeColorConsole(consoleError, "red"), "Error");
 		process.appParams.color = true;
 	},
 	"--dev": function(){ params.dev = true; },
