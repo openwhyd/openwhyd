@@ -230,5 +230,20 @@ exports.makeTests = function(p){
 			pollUntil(makeNotifChecker(0), cb, TIMEOUT);
 		}],
 
+		["gilles sends a track to me => res._id is populated", function(cb){
+			var p = {
+				uId: users[0].id,
+				uNm: users[0].name,
+				uidList:[uId],
+				pId: ""+fakePost._id
+			};
+			notifModel.sendTrackToUsers(p, function(res){
+				cb(!!res._id);
+			});
+		}],
+		["clear all notifications", function(cb) {
+			notifModel.clearUserNotifs(uId);
+			pollUntil(makeNotifChecker(0), cb, TIMEOUT);
+		}],
 	];
 }
