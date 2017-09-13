@@ -83,7 +83,7 @@ exports.makeTests = function(p){
 
 	function fetchNotifs(uId, cb){
 		notifModel.getUserNotifs(uId, function(notifs){
-			console.log("found", notifs.length, "notifs in db");
+			console.log("found", notifs.length, "notifs in db:", notifs);
 			cb(notifs);
 		});
 	}
@@ -220,7 +220,7 @@ exports.makeTests = function(p){
 						var n = notifs.length === 1 && notifs[0];
 						// warning: pId field is the _id of the notif, not the id of the post
 						cb(n.t && n.html && n.type === "Snp" && n.lastAuthor.id === p.uId &&
-							n.img === n.track.img && n.track.img.indexOf(plUri) > -1 && n.href.indexOf(plUri) > -1);
+							n.img === n.track.img && n.track.img.indexOf(p.plId) > -1 && n.href.indexOf(plUri) > -1);
 					});
 				}, TIMEOUT);
 			});
