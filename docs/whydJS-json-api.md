@@ -578,7 +578,8 @@ Return: (JSON)
 
 **LIST TRACKS POSTED BY USER**
 
-`GET /:uId/[playlist/:playlistId]` 
+`GET /:uHandle/[playlist/:playlistId]` 
+`GET /u/:uId/[playlist/:playlistId]` 
 
 _Parameters:_
 
@@ -595,6 +596,7 @@ Return:
 Examples:
 
 *   [/adrien?format=json](http://openwhyd.org/adrien?format=json) : returns the last 20 tracks I posted in JSON format
+*   [/u/4d94501d1f78ac091dbc9b4d/playlist/10?format=json](http://openwhyd.org/u/4d94501d1f78ac091dbc9b4d/playlist/10?format=json) : returns the last 20 tracks I posted in JSON format (using user id instead of handle/nickname)
 *   [/adrien/playlist/10?format=json&limit=10000](http://openwhyd.org/adrien/playlist/10?format=json&limit=10000) : returns the last 10000 tracks I posted in my "electronica" playlist
 
 **INCOMING STREAM (HOMEPAGE)**
