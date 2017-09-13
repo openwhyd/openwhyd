@@ -1,3 +1,6 @@
+// usage: run from http://localhost:8080/admin/test
+// TODO: turn this script into a proper integration test and move it outside of the app
+
 var postModel = require("../../../models/post.js");
 var followModel = require("../../../models/follow.js");
 
