@@ -34,6 +34,8 @@ exports.makeTests = function(p){
 		name: "Loick (test)"
 	}];
 
+	users.forEach(mongodb.cacheUser.bind(mongodb)); // populate mongodb.usernames for notif endpoints
+
 	var fakePost = {
 		_id: ObjectId("4fe3428e9f2ec28c92000024"), //ObjectId("4ed3de428fed15d73c00001f"),
 		uId: user.id,
