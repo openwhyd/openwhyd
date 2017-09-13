@@ -241,7 +241,7 @@ describe('re-adding a track in a playlist', function() {
     });
 
     it('should show the post on the user\'s new playlist after clicking the link', function() {
-        $$('a').find(a => /test playlist/.test(a.getText())).click();
+        $$('a').find(a => /test playlist/.test(a.getText())).click(); // TODO: make this test less fragile on travis-ci
         browser.waitUntil(
             () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on the user\'s playlist page after 5s');

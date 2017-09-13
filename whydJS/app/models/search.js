@@ -45,4 +45,4 @@ for (var methodName in FCTS_REQUIRED) {
 for (var methodName in FCTS_OPTIONAL)
 	exports[methodName] = searchImpl[methodName] || makeNoImplHandler(methodName, FCTS_OPTIONAL[methodName]);
 
-searchImpl.init();
+exports.init();

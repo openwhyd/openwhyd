@@ -126,9 +126,9 @@ function insertNotif(to, p, cb) {
 	p = p || {};
 	p.t = Math.round((new Date()).getTime()/1000);
 	p.uId = to.splice ? to : [""+to];
-	db["notif"].insert(p, {/*w:0*/safe:true}, logErrors(function(res){
+	db["notif"].insertOne(p, {/*w:0*/safe:true}, logErrors(function(res){
 		invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
-		cb && cb(res);
+		cb && cb(res && res.ops[0]);
 	}));
 }
 
