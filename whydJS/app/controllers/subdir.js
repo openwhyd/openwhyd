@@ -16,7 +16,7 @@ exports.controller = function(request, reqParams, response) {
 	var ctrName = splitted[2];
 	//console.log("=> branching to /" + subDir + "/" + ctrName);
 
-	if (this.controllers[subDir] && this.controllers[subDir][ctrName])
+	if (this.controllers[subDir] && typeof this.controllers[subDir][ctrName] === 'function')
 		this.controllers[subDir][ctrName](request, reqParams, response);
 	else {
 		console.error("[subdir] no controller found at " + request.url);
