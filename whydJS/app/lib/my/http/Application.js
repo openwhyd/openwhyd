@@ -4,6 +4,8 @@ var url = require('url');
 var http = require('http');
 var querystring = require('querystring');
 
+var formidable = require('formidable');
+
 var my = require('../');
 var extendResponse = require('./Response').extend;
 var AppendBuffer = require('../util').Buffer;
@@ -94,11 +96,24 @@ var aa = exports.Application = my.Class(http.Server, {
     this._readBufferMaxSize = null;
     this._writeBuffer = null;
 
-    this.sessionMiddleware = sessionMiddleware;    
+    this.sessionMiddleware = sessionMiddleware;
+    /*
     this.bodyParser = require('connect').bodyParser({
       uploadDir: options.uploadDir,
       keepExtensions: options.keepExtensions
     });
+    */
+    this.bodyParser = function(request, response, callback) {
+      var form = new formidable.IncomingForm();
+      form.uploadDir = options.uploadDir;
+      form.keepExtensions = options.keepExtensions;
+      form.parse(request, function(err, postParams, files) {
+        if (err) console.error('bodyParser error', err);
+        request.body = postParams;
+        request.files = files;
+        callback(request, response);
+      });
+    };
 
     _configure(this);
     _updateModules(this);
@@ -284,7 +299,7 @@ function _checkPublicControllers(self, request, requestParams, response) {
   if (controller) {
     extendResponse(response, self._writeBuffer);   
     self.bodyParser(request, response, function() {
-    if (self.sessionMiddleware) {
+      if (self.sessionMiddleware) {
         self.sessionMiddleware(request, response, function(request, response) {
           controller.call(self, request, requestParams, response);        
         });

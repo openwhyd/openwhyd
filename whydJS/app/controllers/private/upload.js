@@ -24,17 +24,17 @@ var thumbWidths = [180/*, 50*/]; // optimized for profile pictures
 var thumbHeight = null; // auto-scaling
 
 function processFile(file, options, callback) {
-	//console.log("processFile", file, options);
+	console.log("processFile", file, options);
 	if (!file || !file.path)
 		return callback({error:"Error during file upload, please try again."});
-	else if (!file.mime || file.mime.indexOf("image/") != 0) {
+	else if (!file.type || file.type.indexOf("image/") != 0) {
 		console.log("uploaded a file that is not an image => deleting file");
 		uploadCtr.deleteFile(file.path);
 		return callback({error:"Only images are supported for upload, for now."});
 	} else {
 		var result = {
 			name: file.name,
-			mime: file.mime,
+			mime: file.type,
 			path: uploadCtr.cleanFilePath(file.path),
 			thumbs: {}
 		};
@@ -105,7 +105,7 @@ exports.controller = function(req, requestParams, res) {
 		if (postParams && postParams.id && postParams.action == "delete")
 			return uploadCtr.deleteFile(settings.uploadDir + "/" + postParams.id);
 	
-		//console.log("upload.controller completed", files);
+		console.log("upload.controller completed", files);
 		var results = {}, remaining = 0;
 		
 		for (var i in files)

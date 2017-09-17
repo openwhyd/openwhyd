@@ -14,6 +14,8 @@ request(`${URL_PREFIX}/images/blank_user.gif`, function (error, response, body) 
 require('../acceptance-cmds.js'); // also checks that openwhyd/whydjs server is tested against the test database
 // TODO: make sure that DB was reset before starting the whydJS app server
 
+// ... AND that the user cache was reset as well. (e.g. by restarting whydJS)
+
 describe('upload user profile images', function() {
 
   it(`user login`, webUI.loginAs(ADMIN_USER));
@@ -42,7 +44,7 @@ describe('upload user profile images', function() {
     */
     return new Promise(function (resolve, reject) {
       //assert.ok(!/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
-      request(`${URL_PREFIX}/img/u/${ADMIN_USER.id}`, function (error, response, body) {
+      request(`${URL_PREFIX}/img/u/${ADMIN_USER.id}?_t=${new Date().getTime()}`, function (error, response, body) {
         console.log('defaultAvatarLen', defaultAvatarLen);
         console.log('current avatar length', body.length);
         assert.equal(defaultAvatarLen, body.length);
@@ -57,13 +59,19 @@ describe('upload user profile images', function() {
     browser.execute(function(path) {
       $('#avatarDrop')[0].ondrop({ preventDefault: function(){}, dataTransfer: { files: [ path ] } });
     }, path);
+    // test in browser: $('#avatarDrop')[0].ondrop({ preventDefault: function(){}, dataTransfer: { files: [ '/Users/adrienjoly/dev/openwhyd/openwhyd/whydJS/test/specs/upload-resources/sample-avatar.jpg'] } });
   });
 
+  it(`save profile changes`, function() {
+    browser.pause(1000)
+    browser.clickOnContent('Save');
+  });
+    
   it(`has new avatar"`, function async() {
     return new Promise(function (resolve, reject) {
       browser.pause(1000).then(function() {
         //assert.ok(!/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
-        request(`${URL_PREFIX}/img/u/${ADMIN_USER.id}`, function (error, response, body) {
+        request(`${URL_PREFIX}/img/u/${ADMIN_USER.id}?_t=${new Date().getTime()}`, function (error, response, body) {
           console.log('defaultAvatarLen', defaultAvatarLen);
           console.log('current avatar length', body.length);
           assert.notEqual(defaultAvatarLen, body.length);
