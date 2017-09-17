@@ -25,6 +25,10 @@ browser.addCommand('waitForContent', function async (regex, context) {
   );
 });
 
+browser.addCommand('clickOnContent', function (text) {
+  return browser.element(`//*[contains(text(), '${text.replace(/'/g, '\\\'')}')]`).click();
+});
+
 // make sure that openwhyd/whydjs server is tested against the test database
 browser.addCommand('checkTestDb', function async (user, dbName) {
   browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(user.email)}&md5=${user.md5}&redirect=/admin/config/config.json`);
