@@ -1,5 +1,5 @@
 /**
- * openwhyd bookmarklet v2.2
+ * openwhyd bookmarklet
  * @author adrienjoly, whyd
  **/
 
@@ -271,16 +271,16 @@ var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
 		window.SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad";
 		window.DEEZER_APP_ID = 190482;
 		window.DEEZER_CHANNEL_URL = urlPrefix + "/html/deezer.channel.html";
-		window.JAMENDO_CLIENT_ID = "c9cb2a0a";	
-		var players = { // playem-all.js must be loaded at that point
-				yt: new YoutubePlayer({}, {playerContainer: document.getElementById("videocontainer")}),
-				sc: new SoundCloudPlayer({}),
-				vi: new VimeoPlayer({}),
-				dm: new DailymotionPlayer({}),
-				dz: new DeezerPlayer({}),
-				bc: new BandcampPlayer({}),
-				ja: new JamendoPlayer({}),
-			}, eidSet = {}; // to prevent duplicates
+		window.JAMENDO_CLIENT_ID = "c9cb2a0a";
+		var players = (window._whydPlayers = window._whydPlayers || { // playem-all.js must be loaded at that point
+			yt: new YoutubePlayer({}, {playerContainer: document.getElementById("videocontainer")}),
+			sc: new SoundCloudPlayer({}),
+			vi: new VimeoPlayer({}),
+			dm: new DailymotionPlayer({}),
+			dz: new DeezerPlayer({}),
+			bc: new BandcampPlayer({}),
+			ja: new JamendoPlayer({}),
+		}), eidSet = {}; // to prevent duplicates
 		function getPlayerId(url){
 			for (var i in players) {
 				var player = players[i];
@@ -351,8 +351,7 @@ var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
 				var bcPrefix = "/bc/" + bc.url.split("//")[1].split(".")[0] + "/";
 				toDetect = bc.trackinfo.map(function(tr){
 					if(tr.file){
-						console.log("-------------FILE! =>", tr.file);
-
+						//console.log("-------------FILE! =>", tr.file);
 						var streamUrl = tr.file[Object.keys(tr.file)[0]];
 						return {
 							href: streamUrl,
@@ -410,9 +409,9 @@ var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
 				if (!urlDetectors.length){
 					cb();
 				}else{
-
+					//console.log('- trying detector ' + (urlDetectors.length-1));
 					urlDetectors.shift()(url, function(track){
-
+						//console.log(' => ' + typeof track + ' ' + JSON.stringify(track))
 						if (track && track.id)
 							cb(track);
 						else
@@ -424,6 +423,7 @@ var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
 
 		function detectEmbed(e, cb){
 			var url = e.eId || unwrapFacebookLink(e.href || e.src || e.data || "");
+			//console.log(url);
 			if (!url)
 				return cb && cb();
 			detectTrack(url, function(track){
