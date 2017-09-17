@@ -6,6 +6,15 @@ const WAIT_DURATION = 10000;
 
 // custom wdio / webdriver.io commands
 
+browser.addCommand('injectJS', function async (scriptUrl) {
+  return browser.execute(function(scriptUrl) {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = scriptUrl;
+    document.body.appendChild(script);
+  }, scriptUrl);
+});
+
 browser.addCommand('waitForContent', function async (regex, context) {
   return browser.waitUntil(function async() {
     return this.getHTML(context || 'body').then((content) => {

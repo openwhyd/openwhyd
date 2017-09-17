@@ -17,13 +17,7 @@ describe('bookmarklet - adding from a youtube track', function() {
   });
 
   it('should load the bookmarklet', function () {
-    browser.execute(function(scriptUrl) {
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = scriptUrl;
-      document.body.appendChild(script);
-    }, `${URL_PREFIX}/js/bookmarklet.js`);
-    // TODO: create a re-usable injectJS() wdio command
+    browser.injectJS(`${URL_PREFIX}/js/bookmarklet.js`);
   });
 
   it(`should have the bookmarklet loaded`, function() {
