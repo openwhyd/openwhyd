@@ -451,9 +451,12 @@ var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
 			// this class holds a collections of elements that potentially reference streamable tracks
 			var set = {};
 			this.push = function(elt){
-				var url = elt && (elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || "")).split("#")[0];
-				if (url && url.indexOf("javascript:") != 0)
-					set[url] = elt;
+				var url = elt && (elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || ""));
+				if (url && typeof url === 'string') {
+					url = url.split("#")[0];
+					if (url && url.indexOf("javascript:") != 0)
+						set[url] = elt;
+				}
 			};
 			this.getSortedArray = function(){
 				var eIds = [], urls = [], keys = Object.keys(set);
