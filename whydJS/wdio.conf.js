@@ -58,7 +58,15 @@ exports.config = {
         // 5 instances get started at a time.
         maxInstances: 1,
         //
-        browserName: 'chrome'
+        browserName: 'chrome',
+        // allow loading local bookmarklet.js (http) from https pages (e.g. youtube.com)
+        acceptSslCerts: true,
+        chromeOptions: {
+            args: [
+                'disable-web-security',
+                'allow-running-insecure-content'
+            ]
+        }
     }],
     //
     // ===================
