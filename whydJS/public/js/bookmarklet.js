@@ -65,7 +65,7 @@ var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
 
 	function unwrapFacebookLink(src) {
 		// e.g. http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DKhXn0anD1lE&h=AAQFjMJBoAQFTPOP4HzFCv0agQUHB6Un31ArdmwvxzZxofA
-		var fbLink = src.split("facebook.com/l.php?u=");
+		var fbLink = src && typeof src.split === 'function' ? src.split("facebook.com/l.php?u=") : [];
 		if (fbLink.length>1) {
 			fbLink = decodeURIComponent(fbLink.pop().split("&").shift());
 			var result = fbLink.indexOf("//www.facebook.com/") == -1 ? fbLink : src;
