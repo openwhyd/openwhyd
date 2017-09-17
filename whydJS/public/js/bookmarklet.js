@@ -7,7 +7,7 @@
 if (undefined == window.console) 
 	console = {log:function(){}, info:function(){}, error:function(){}, warn:function(){}};
 
-console.log("-= openwhyd bookmarklet v2.2 =-");
+console.log("-= openwhyd bookmarklet v2.3 =-");
 var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI"; 
 
 (window._initWhydBk = function(){
@@ -224,7 +224,7 @@ var	YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
 	function imageToHD(track){
 		if(track.img){
 			if(track.eId.substr(1, 2) == "yt"){
-				var img = "http://img.youtube.com/vi/"+ track.eId.substr(4).split('?')[0] + "/hqdefault.jpg";
+				var img = "https://img.youtube.com/vi/"+ track.eId.substr(4).split('?')[0] + "/hqdefault.jpg";
 				var i = new Image();
 				i.onload = function(){
 					if (i.height >= 120) {	
