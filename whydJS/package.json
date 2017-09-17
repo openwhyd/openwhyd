@@ -26,7 +26,6 @@
     "test-api": "npm run test-reset && node_modules/.bin/mocha test/api/*.js",
     "test-unit": "node_modules/.bin/mocha test/unit/*.js",
     "test-acceptance": "npm run test-reset && wdio wdio.conf.js $@",
-    "test-bookmarklet-only": "npm run test-acceptance -- --spec ./test/specs/bookmarklet.tests.js",
     "test-acceptance-dev": "npm run test-acceptance -- --spec ./test/specs/*.tests.js --logLevel verbose",
     "test": ". ./env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance",
     "test-docker": "docker-compose exec web npm run test-reset && docker-compose restart web && docker-compose exec web npm run test-unit && docker-compose exec web npm run test-api && docker-compose exec web npm run test-reset && docker-compose restart web && npm run test-acceptance",
