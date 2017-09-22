@@ -13,7 +13,8 @@ console.log("loading EMAIL module: " + emailModule + "...");
 var emailImpl = require("./" + emailModule);
 
 // http://www.regular-expressions.info/email.html
-var emailCheck = /^[\w\.\+\-]+@[a-z0-9\.\-]+\.[a-z]{2,4}$/i; // /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i;
+var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
+
 
 exports.validate = function(email) {
 	if (!email) return email;
