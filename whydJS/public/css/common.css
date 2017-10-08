@@ -1069,7 +1069,7 @@ top: 21px;
 #loginDiv > a {
 	float: left;
 	position: relative;
-	border-top:1px solid #e6e8e9; 
+	border-top:1px solid #e6e8e9;
 	border-left:1px solid #e6e8e9;
 	border-bottom: 1px solid #e6e8e9;
 }
@@ -1079,7 +1079,7 @@ top: 21px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	color: white;
-	border-top:1px solid #3177AF; 
+	border-top:1px solid #3177AF;
 	border-left:1px solid #3177AF;
 	border-bottom: 1px solid #3177AF;
 }
@@ -1114,7 +1114,7 @@ top: 21px;
 }
 
 #loginDiv .puce {
-	border:1px solid #e6e8e9; 
+	border:1px solid #e6e8e9;
 
 	width: 25px;
 	height: 32px;
@@ -1671,7 +1671,7 @@ body.help .helpOverlay div.content:before{
 
 
 body.help .helpOverlay h3{
-	color:#181B1F;	
+	color:#181B1F;
 	font-size:16px;
 	margin-top:5px;
 }
@@ -1877,7 +1877,7 @@ body.pgPost .background-header > div{
 	height: 130%;
 	opacity: 0.85;
 
-	filter: blur(25px); 
+	filter: blur(25px);
 	-webkit-filter: blur(25px);
 	-moz-filter: blur(25px);
 	-o-filter: blur(25px);
@@ -1906,7 +1906,7 @@ body.pgPost h2 a{
 	display: block;
 	max-height: 47px;
 	max-width: 540px;
-	
+
 }
 body.pgPost .btns{
 	margin-left: 15px;
@@ -2054,7 +2054,7 @@ body.pgPost .powered{
 
 
 #settingsPanel  .sub-container{
-	float: left;	
+	float: left;
 	margin-left: 10px;
 }
 
@@ -2893,6 +2893,18 @@ body.pgWithSideBar #contentPane > #mainPanel > .posts {
 	color: #5F5F5F;
 }
 
+.rightBar > .sidebox--important > .head {
+    box-sizing: border-box;
+    border: 2px solid #3177AF;
+    border-bottom: 0;
+}
+
+.rightBar > .sidebox--important > .body {
+    box-sizing: border-box;
+    border: 2px solid #3177AF;
+    border-top: 0;
+}
+
 .rightBar > .sideBox ul {
 	list-style: none;
 	margin: 0;
@@ -3113,7 +3125,7 @@ body.pgWithSideBar #contentPane > #mainPanel > .posts {
 	font-size: 13px;
 	padding: 5px 15px 15px 15px;
 /*	background: url('/images/footer-separ.png') no-repeat top center;
-*/	
+*/
 }
 
 #sideFooter ul {
@@ -3122,7 +3134,7 @@ body.pgWithSideBar #contentPane > #mainPanel > .posts {
 	margin: 15px 0 14px 0;
 	font-family: 'AvenirNext-Medium', Helvetica, Arial, Sans-serif;
 	color: #C6C6C6;
-}	
+}
 
 #sideFooter li {
 	display: inline;
