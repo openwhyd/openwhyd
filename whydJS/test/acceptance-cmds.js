@@ -41,7 +41,8 @@ browser.addCommand('checkTestDb', function async (user, dbName) {
 
 // before running tests: make sure that openwhyd/whydjs server is tested against the test database
 
-before(function() {
+before(function async () {
+  console.log(`checking that openwhyd/whydjs server is tested against the test database...`);
   /*
   browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}&redirect=/admin/config/config.json`);
   var config = JSON.parse(browser.getText('pre')).json;
@@ -50,7 +51,13 @@ before(function() {
     browser.url(URL_PREFIX + '/login?action=logout').then(resolve, reject);
   });
   */
-  browser.checkTestDb(ADMIN_USER, EXPECTED_DB_NAME);
+  return browser.checkTestDb(ADMIN_USER, EXPECTED_DB_NAME).then(function() {
+    console.log('OK');
+  }).catch(function(err) {
+    console.error(err);
+    console.log(`ERROR => make sure that the openwhyd/whydJS server is running on ${URL_PREFIX} before running tests`);
+    process.exit(1);
+  });
 });
 
 // other helpers
