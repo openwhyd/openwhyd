@@ -91,7 +91,7 @@ ul.menu {
 
 .menu li:first-child {
 /*  border-right: 2px solid #363636;
-*/} 
+*/}
 
 .menu li span {
   color: #B8B9BB;
@@ -152,7 +152,7 @@ ul.menu {
 }
 
 .tabContent form {
-	padding: 0 0 70px;	
+	padding: 0 0 70px;
 }
 
 .tabContent .fldEmail > input {
@@ -324,7 +324,7 @@ ul.menu {
   padding: 10px 20px;
   width: 320px;
   font-size: 14px;
-  background: url(/images/icon-search-general.png) no-repeat 330px center;  
+  background: url(/images/icon-search-general.png) no-repeat 330px center;
 }
 
 #fbFriends .q:focus {
@@ -342,7 +342,7 @@ ul.menu {
 #inviteForm{
   width: 460px;
 }
- 
+
 /*]]>*/
 </style>
 
@@ -351,7 +351,7 @@ ul.menu {
 
   <div class="header">
     <h1>Music is better shared</h1>
-    <p class="legend">So get your friends on Whyd!</p>
+    <p class="legend">So get your friends on Openwhyd!</p>
   </div>
   <ul class="menu">
     <li class="inviteFacebook selected"><span>With Facebook</span></li>
@@ -364,7 +364,7 @@ ul.menu {
 
     <div class="fbStep" id="needFbConnect">
       <div class="image"></div>
-      <p>Click below to find and invite your Facebook friends on Whyd.</p>
+      <p>Click below to find and invite your Facebook friends on Openwhyd.</p>
       <a id="fbConnect" href="javascript:fbConnect();"></a>
       <p class="notice">We will only send messages to friends you explicitely selected.</p>
     </div>
@@ -376,7 +376,7 @@ ul.menu {
 
     <div class="fbStep" id="fbFriends" style="display:none;">
       <div class="blueBox alreadyOnWhyd">
-        <h2>Friends already on Whyd</h2>
+        <h2>Friends already on Openwhyd</h2>
         <ul></ul>
       </div>
       <h2>Invite your friends</h2>
@@ -401,7 +401,7 @@ ul.menu {
         {{{emailTemplate}}}
       </div>
     </div>
-    <h2>Invite your friends to Whyd</h2>
+    <h2>Invite your friends to Openwhyd</h2>
     <form method="POST" id="inviteForm">
       {{#fields}}
       <div class="fldEmail">
@@ -538,7 +538,7 @@ ul.menu {
         if (json.notOnWhyd.length)
           $("ul.notOnWhyd").append(_renderUserList(json.notOnWhyd, createInviteButton));
         else
-          $("ul.notOnWhyd").text("Apparently you have no friends ... or they are all on whyd!");
+          $("ul.notOnWhyd").text("Apparently you have no friends ... or they are all on Openwhyd!");
         if (json.whydFriends.length)
           $(".alreadyOnWhyd ul").append(_renderUserList(json.whydFriends));
         else
@@ -617,7 +617,7 @@ ul.menu {
   }
 
   email.find("input").click(backtonormal).keydown(backtonormal).blur(validateEmail);
-  
+
   $("#inviteForm").submit( function(event) {
     event.preventDefault();
     submit.hide();
