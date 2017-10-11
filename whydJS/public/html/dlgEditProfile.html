@@ -27,7 +27,7 @@
 				</div>
 			</div><!-- /avatarUploading -->
 		</div> <!-- /wrapUploadBox -->
-		<p class="legend">This photo is your OpenWhyd identity, and will appear with your account.</p>
+		<p class="legend">This photo is your Openwhyd identity, and will appear with your account.</p>
 	</div><!-- /avatar-box -->
 	
 	<form id="profileForm" action="/api/user" method="get">
@@ -111,7 +111,7 @@ $(function() {
 
 	function closeAndRefresh(changedAvatar) {
 		var needsReload = $.browser.mozilla || $.browser.safari;
-		if (changedAvatar && needsReload && confirm("Please reload OpenWhyd to see your new avatar now."))
+		if (changedAvatar && needsReload && confirm("Please reload Openwhyd to see your new avatar now."))
 			window.location.reload(true);
 		else
 			goToPage(window.location.href); //window.location.reload(false);
