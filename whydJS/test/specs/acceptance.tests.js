@@ -235,4 +235,17 @@ describe('track comments', function() {
 
 });
 
+describe('searching external tracks', function() {
+    it(`can find a youtube track with id that starts with underscore`, function() {
+        browser.url(URL_PREFIX);
+        $('#q').click();
+        browser.keys('http://www.youtube.com/watch?v=_BU841qpQsI');
+        const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
+        browser.waitForVisible(searchResult);
+        const trimmed = $(searchResult).getText().trim();
+        console.log('text: ', trimmed);
+        assert.notEqual(trimmed, ''); // empty string => no metadata was fetched, caused to https://github.com/openwhyd/openwhyd/issues/102
+    });
+});
+
 // Webdriver API documentation: http://webdriver.io/api.html
