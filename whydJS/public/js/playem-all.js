@@ -1,4 +1,4 @@
-/* playemjs 0.1.7, commit: 03734b9f4a4c25f2e1649311f574406bdbc585a4 */
+/* playemjs 0.1.7, commit: 5746dfd6bc3f12a4411f924f19808122284d918f */
 
 // configuration
 
@@ -2148,27 +2148,38 @@ function YoutubePlayer(){
 
   function searchTracks(query, limit, cb){
     function translateResult(r){
-      var id = r.id.videoId;
+      var id = (typeof(r.id) !== 'string') ? r.id.videoId : r.id;
       return {
         id : id,
         eId: "/yt/" + id,
         img: r.snippet.thumbnails["default"].url,
-        url: YOUTUBE_VIDEO_URL + r.id.videoId,
+        url: YOUTUBE_VIDEO_URL + id,
         title: r.snippet.title,
         playerLabel: 'Youtube'
       };
     }
     if (!cb) return;
     whenApiReady(function(){
-      gapi.client.youtube.search.list({
-        part: 'snippet',
-        q: YOUTUBE_VIDEO_URL + query,
-        type : "video",
-        maxResults : limit,
-      }).execute(function(res){
-        results = res.items.map(translateResult);
-        cb(results);
-      });
+      if (limit !== 1) {
+        gapi.client.youtube.search.list({
+          part: 'snippet',
+          q: YOUTUBE_VIDEO_URL + query,
+          type : "video",
+          maxResults : limit,
+        }).execute(function(res){
+          results = res.items.map(translateResult);
+          cb(results);
+        });
+      }
+      else {
+        gapi.client.youtube.videos.list({
+          'id': query,
+          'part': 'snippet,contentDetails,statistics'
+        }).execute(function(res){
+          results = res.items.map(translateResult);
+          cb(results);
+        });
+      }
     });
   }
 
