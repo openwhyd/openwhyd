@@ -248,7 +248,7 @@
 		
 		var email = $("#fldEmail").placeholder();
 		var defVal = email.attr("placeholder");
-		var emailCheck = /^[\w\.\+\-]+@[a-z0-9\.\-]+\.[a-z]{2,4}$/i;
+		var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
 
 		var backtonormal = function() {
 			email.unbind().removeClass("error");

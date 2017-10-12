@@ -101,7 +101,7 @@ function adaptToWindowSize(){
 
 function WhydLogging() {
 
-	var emailCheck = /^[\w\.\+\-]+@[a-z0-9\.\-]+\.[a-z]{2,4}$/i;
+	var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
 	//var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/;
 
 	this.validateField = {

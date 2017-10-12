@@ -54,8 +54,7 @@
 		
 		<script>
 			//<![CDATA[
-			var emailCheck = /^[\w\.\+\-]+@[a-z0-9\.\-]+\.[a-z]{2,4}$/i; // /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i;
-			//var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/;
+			var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
 			
 			var $name = $("input[name=name]").placeholder();
 			var $password = $("input[name=password]").placeholder();
