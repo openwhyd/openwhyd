@@ -26,7 +26,7 @@
       value="Send Request to Many Users"
     />
     </p>
-    
+
     <script>
 	  //<![CDATA[
     var fbId;
@@ -39,7 +39,7 @@
     };
 
 	  window.user = {id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly"};
-  
+
       FB.init({
         appId  : fbId,
         version : "v2.3",
@@ -51,26 +51,26 @@
       function sendRequestToOneRecipient() {
         var user_id = document.getElementsByName("user_id")[0].value;
         FB.ui({method: 'apprequests',
-          message: 'Show me your interests on whyd!',
+          message: 'Show me your interests on Openwhyd!',
           to: user_id
         }, requestCallback);
       }
 
       function sendRequestToManyRecipients() {
         FB.ui({method: 'apprequests',
-          message: 'Show me your interests on whyd!'
+          message: 'Show me your interests on Openwhyd!'
         }, requestCallback);
       }
-      
+
       function requestCallback(response) {
         console.log(response);
 		// old requests 1.0 format
 		if (response && response.request_ids)
-			invitedToConversation(null, {fbRequestIds:response.request_ids}, window.user.name + " invited you to join whyd", function(params) {
+			invitedToConversation(null, {fbRequestIds:response.request_ids}, window.user.name + " invited you to join Openwhyd", function(params) {
 				console.log("sent!");
 			});
 		else if (response && response.request && response.to)
-			invitedToConversation(null, {fbRequestIds:response.request, fbTo:response.to}, window.user.name + " invited you to join whyd", function(params) {
+			invitedToConversation(null, {fbRequestIds:response.request, fbTo:response.to}, window.user.name + " invited you to join Openwhyd", function(params) {
 				console.log("sent!");
 			});
 		else
