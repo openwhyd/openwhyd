@@ -60,18 +60,18 @@
 	</div>
 	<div id="appBody">
 	{{^done1}}
-		<p>OpenWhyd is a place to collect and share your favorite tracks from Youtube, Soundcloud, and Vimeo.</p>
-		<p>Hear I Am suggests relevant Music Lovers (i.e. OpenWhyd users), based on the venues where you check-in.</p>
+		<p>Openwhyd is a place to collect and share your favorite tracks from Youtube, Soundcloud, and Vimeo.</p>
+		<p>Hear I Am suggests relevant Music Lovers (i.e. Openwhyd users), based on the venues where you check-in.</p>
 		<p>In order to subscribe to these suggestions:</p>
 		<ol>
-			<li>Connect to your OpenWhyd account
+			<li>Connect to your Openwhyd account
 				<span>(<a href="/login?redirect=/app/heariam">log in</a>
 				or <a href="/app/heariam/signup">sign up</a>)</span></li>
 			<li>Connect to your Hear I Am account (via Foursquare)</li>
 		</ol>
 	{{/done1}}
 	{{#done1}}
-		<p>You're one step away from linking your <b>OpenWhyd</b> and <b>Hear I Am</b> accounts!</p>
+		<p>You're one step away from linking your <b>Openwhyd</b> and <b>Hear I Am</b> accounts!</p>
 		<p><a class="foursquarebtn" href="https://foursquare.com/oauth2/authenticate?client_id=CXU1TGVX5T2E0YOMR5KHMI4VLH53ZNR1CVL12IHKQE1KWRSU&amp;response_type=code&amp;redirect_uri=http://www.hearim.net/4sqCallback/whyd/{{#loggedUser}}{{id}}{{/loggedUser}}"></a></p>
 	{{/done1}}
 	</div>
