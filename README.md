@@ -33,16 +33,15 @@ Features:
 
 This product is the result of years of iterative development, by the start-up company [Whyd](https://whyd.com). Read [the full story from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
 
-Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the-music-streaming-social-network-becomes-openwhyd-and-gives-keys-to-the-community-18067/), [Adrien Joly](https://github.com/adrienjoly) (ex-lead developer at Whyd) has been maintaining it on his spare time (i.e. replying to user feedback on twitter and facebook, maintaing issues based on user feedback, backing up openwhyd's database, updating SSL certificates...), and coordinating [contributors](https://github.com/openwhyd/openwhyd/network/members).
+Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the-music-streaming-social-network-becomes-openwhyd-and-gives-keys-to-the-community-18067/), [Adrien Joly](https://github.com/adrienjoly) (ex-lead developer at Whyd) has been maintaining it and coordinating [contributors](https://github.com/openwhyd/openwhyd/network/members) on his spare time.
 
-Here's what we have in mind for the future: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3).
-
-We welcome contributors, including beginners!
-
+- Vision and roadmap: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3) + [development backlog](https://github.com/openwhyd/openwhyd/projects/1).
 - Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2017](https://infograph.venngage.com/publish/c74df49b-2d2f-48bc-b9cb-5bc1f5908c37) 🔥
 - A question / problem? --> Check out [our FAQ](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md)
 
-### Tech stack
+🤗 We welcome [backers](#support-openwhyd) and [contributors](#contributors), even beginners!
+
+### Current tech stack
 
 - Node.js
 - Express-like Web Server
@@ -50,109 +49,29 @@ We welcome contributors, including beginners!
 - HTML + CSS
 - [Playemjs](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
 
-### Contribute
+### Setup and usage
 
-If you want to contribute, please:
+Developers, feel free to clone this repo and make it run on your own machine! 💪
 
-- read the contribution guidelines: [CONTRIBUTING.md](https://github.com/openwhyd/openwhyd/blob/master/CONTRIBUTING.md);
-- pick an issue from [our roadmap](https://github.com/openwhyd/openwhyd/projects/1), work on it, then propose a Pull-Request;
-- if you need help, [ask us on Slack](https://openwhyd-slack.herokuapp.com/).
-
-Also, be aware that this project has become open-source very recently, so please be kind and constructive about code quality, and about the management of this project.
-
-Thank you for your understanding! ^^
-
-### Setup (simple)
-
-Docker makes it easy and safe to install and start the two servers required for Openwhyd: the MongoDB database server, and the *whydJS* web/application server. All you need is access to the shell (a.k.a. *terminal*), and to have Docker and Git installed on your machine.
-
-1. Install [Docker Client](https://www.docker.com/community-edition) and start it
-2. [Install Git](https://www.atlassian.com/git/tutorials/install-git) if you don't have it already
-3. Clone openwhyd's repository: `git clone https://github.com/openwhyd/openwhyd.git`, then `cd openwhyd`
-4. Build and launch Docker processes: `docker-compose up`
-6. Open [http://localhost:8080](http://localhost:8080) in your web browser => you should see Openwhyd's home page! 🎉
-7. When you're done, shutdown the Docker processes by pressing the `Ctrl-C` key combination in the shell instance where you had run `docker-compose up` (step 4).
-
-Whenever you want to update your local clone of Openwhyd's repository to the latest version, run `git pull` from the `openwhyd` folder where you had cloned the repository (step 3).
-
-Whenever you want to start the Docker processes after shutting them down (step 7), run `docker-compose up` again from the `openwhyd` folder where you had cloned the repository (step 3).
-
-Whenever you just want to restart Openwhyd while the Docker processes are still running, run `docker-compose restart web` from a shell terminal.
-
-Whenever you want to know what Docker processes are currently running: run `docker-compose ps`.
-
-### Setup (manual)
-
-* Install Node.js, MongoDB, GraphicsMagick or ImageMagick
-* Make sure that `make` and `g++` are installed (required for building npm binaries, *I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)*)
-* Make sure that a MongoDB server is running
-* Make sure that the necessary environment variables are defined (see below)
-* Make sure that the database is initialized (by running `mongo openwhyd_data whydJS/config/initdb.js` and `mongo openwhyd_data whydJS/config/initdb_team.js`)
-* Make sure that dependencies are installed (`npm install`)
-* If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/whydJS/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
-
-### Usage
-
-* `docker-compose up`, or `npm run run` (for development), or `npm start` (forever daemon)
-* Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
-* During development, you may have to restart the server to have your changes taken into account. To restart the Docker container, use `docker-compose restart web`.
-
-### Testing
-
-Run unit tests only:
-
-```bash
-npm run test-unit
-```
-
-Run all tests, including acceptance tests (webdriver.io-based), from the `whydJS` folder:
-
-```bash
-# in a terminal session, start the "whydJS" application server
-npm run run-for-tests
-# in another terminal session, run the tests
-npm test
-```
-
-Run all tests against the Docker container:
-
-```bash
-npm run test-docker
-```
-
-### Environment variables
-
-* `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
-* `WHYD_SESSION_SECRET` (mandatory. a secret key used to sign session cookies)
-* `WHYD_DEV_APNS_PASSPHRASE` (mandatory. the passphrase used to de-cypher APNS certificate and key, for iOS push notifications in DEV mode)
-* `WHYD_APNS_PASSPHRASE` (mandatory. the passphrase used to de-cypher APNS certificate and key, for iOS push notifications in PRODUCTION mode)
-* `WHYD_ADMIN_OBJECTID` (ObjectId of the user that can access to admin endpoints)
-* `WHYD_ADMIN_NAME` (Full-text name of the user that can access to admin endpoints)
-* `WHYD_ADMIN_EMAIL` (mandatory. Email address of the user that can access to admin endpoints)
-* `WHYD_CONTACT_EMAIL` (mandatory. email for users to contact the site's team)
-* `WHYD_CRASH_EMAIL` (mandatory when running with forever. email address of the site's administrator)
-* `WHYD_URL_PREFIX` (default: `http://localhost:8080`)
-* `WHYD_PORT` (default: `8080`)
-* `WHYD_DEV` (default: `false`)
-* `MONGODB_DATABASE` (example: `openwhyd_data`, or `openwhyd_test`)
-* `MONGODB_HOST` (default: `localhost`)
-* `MONGODB_PORT` (default: `27017`)
-* `MONGODB_USER` (default: none)
-* `MONGODB_PASS` (default: none)
-* `SENDGRID_API_USER` (mandatory. email address of sendgrid account to be used for sending emails)
-* `SENDGRID_API_KEY` (mandatory. key / password of sendgrid account)
-* `SENDGRID_API_FROM_EMAIL` (mandatory. email address of email sender)
-* `SENDGRID_API_FROM_NAME` (mandatory. name of email sender)
-* `LAST_FM_API_KEY` (mandatory. for lastfm scrobbling)
-* `LAST_FM_API_SECRET` (mandatory. for lastfm scrobbling)
-* `ALGOLIA_APP_ID` (mandatory. for search index)
-* `ALGOLIA_API_KEY` (mandatory. for search index)
+You'll find **setup and usage instructions** in [INSTALL.md](INSTALL.md).
 
 ## Support Openwhyd
 
+There are several way you can help Openwhyd! 💓
+
+- The **most needed** right now is financial support, in order to pay for server/hosting bills. You can help Openwhyd sustain by [becoming a backer](https://opencollective.com/openwhyd/order/313) (*starting at $1/month, can be interrupted anytime*), or giving a [one-off donation](https://opencollective.com/openwhyd/donate). You'll find our expenses and current backers on our [Open Collective page](https://opencollective.com/openwhyd).
+
+- If you're a **developer**, you can help us reply to our users' problems and questions from the [Music Lovers Club](https://www.facebook.com/groups/openwhyd/), maintain [issues](https://github.com/openwhyd/openwhyd/issues), or even better: [contribute to the codebase](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help). (beginners are welcome too!)
+
+- If you have **other skills** you'd like to contribute to Openwhyd, please [tell us](https://github.com/openwhyd/openwhyd/issues/new?title=Hi,+I+want+to+help!).
+
+- If you're out of time and money, you can still **spread the word** about openwhyd.org, e.g. by showing it to your friends or sharing your playlists on social networks.
+
+Thank you in advance for your kindness! 🤗
+
 ### Backers
 
-Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/openwhyd#backer)]
+Support us with a monthly donation and help us keep Openwhyd alive. [[Become a backer](https://opencollective.com/openwhyd#backer)]
 
 <a href="https://opencollective.com/openwhyd/backer/0/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/0/avatar.svg"></a>
 <a href="https://opencollective.com/openwhyd/backer/1/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/1/avatar.svg"></a>
@@ -221,7 +140,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 
 ### Contributors
 
-Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+These are the wonderful people whose time and sweat have made Openwhyd's heart beat since 2012! 💓 ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 | [<img src="https://d1qb2nb5cznatu.cloudfront.net/users/56004-large?1405472476" width="98px;"/><br /><sub>Gilles Poupardin</sub>](https://twitter.com/gillespoupardin)<br />[📢](#talk-undefined "Talks") [🤔](#ideas-undefined "Ideas, Planning, & Feedback") [💵](#financial-undefined "Financial") | [<img src="https://avatars0.githubusercontent.com/u/764618?v=4" width="98px;"/><br /><sub>Jie Meng-Gérard</sub>](https://github.com/jiem)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=jiem "Code") [🚇](#infra-jiem "Infrastructure (Hosting, Build-Tools, etc)") [💵](#financial-jiem "Financial") | [<img src="https://avatars3.githubusercontent.com/u/531781?v=4" width="98px;"/><br /><sub>Adrien Joly</sub>](https://adrienjoly.com/now)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=adrienjoly "Code") [📖](https://github.com/openwhyd/openwhyd/commits?author=adrienjoly "Documentation") [⚠️](https://github.com/openwhyd/openwhyd/commits?author=adrienjoly "Tests") [💬](#question-adrienjoly "Answering Questions") | [<img src="https://avatars3.githubusercontent.com/u/910269?v=4" width="98px;"/><br /><sub>loickm</sub>](https://github.com/loickm)<br />[🎨](#design-loickm "Design") [💻](https://github.com/openwhyd/openwhyd/commits?author=loickm "Code") | [<img src="https://pbs.twimg.com/profile_images/708991890046246912/TrUSqpzo_400x400.jpg" width="98px;"/><br /><sub>Tony Hymes</sub>](https://twitter.com/tonyhymes)<br />[📢](#talk-undefined "Talks") [📝](#blog-undefined "Blogposts") [📋](#eventOrganizing-undefined "Event Organizing") [💬](#question-undefined "Answering Questions") | [<img src="https://avatars1.githubusercontent.com/u/603808?v=4" width="98px;"/><br /><sub>Damien Romito</sub>](http://www.choses.fr)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=damienromito "Code") [🔌](#plugin-damienromito "Plugin/utility libraries") | [<img src="https://s-media-cache-ak0.pinimg.com/avatars/alifecurated_1455886409_280.jpg" width="98px;"/><br /><sub>Claire Marion</sub>](https://github.com/cmdcmdcmd)<br />[🎨](#design-cmdcmdcmd "Design") [📝](#blog-cmdcmdcmd "Blogposts") [🤔](#ideas-cmdcmdcmd "Ideas, Planning, & Feedback") |
