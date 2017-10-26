@@ -20,6 +20,169 @@
         "test",
         "talk"
       ]
+    },
+    {
+      "login": "loickm",
+      "name": "loickm",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/910269?v=4",
+      "profile": "https://github.com/loickm",
+      "contributions": [
+        "design",
+        "code"
+      ]
+    },
+    {
+      "login": "damienromito",
+      "name": "Damien Romito",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/603808?v=4",
+      "profile": "http://www.choses.fr",
+      "contributions": [
+        "code",
+        "plugin"
+      ]
+    },
+    {
+      "login": "jiem",
+      "name": "Jie Meng-Gérard",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/764618?v=4",
+      "profile": "https://github.com/jiem",
+      "contributions": [
+        "code",
+        "infra",
+        "financial"
+      ]
+    },
+    {
+      "login": "cmdcmdcmd",
+      "name": "cmdcmdcmd",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/28144993?v=4",
+      "profile": "https://github.com/cmdcmdcmd",
+      "contributions": [
+        "design",
+        "blog",
+        "ideas"
+      ]
+    },
+    {
+      "login": "Djiit",
+      "name": "Julien Tanay",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1169844?v=4",
+      "profile": "http://julientanay.com",
+      "contributions": [
+        "infra",
+        "tool",
+        "code"
+      ]
+    },
+    {
+      "login": "SkinyMonkey",
+      "name": "Adrien Candiotti",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/243268?v=4",
+      "profile": "https://github.com/SkinyMonkey",
+      "contributions": [
+        "infra",
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "ElBurritoPodrido",
+      "name": "ElBurritoPodrido",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/22731646?v=4",
+      "profile": "https://github.com/ElBurritoPodrido",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "FrancoisBurra",
+      "name": "François Burra",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8008820?v=4",
+      "profile": "https://github.com/FrancoisBurra",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "greyvugrin",
+      "name": "Grey Vugrin",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3294460?v=4",
+      "profile": "http://greyvugrin@github.io",
+      "contributions": [
+        "code",
+        "bug",
+        "tool"
+      ]
+    },
+    {
+      "login": "Marinlemaignan",
+      "name": "Marin le Maignan",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5300654?v=4",
+      "profile": "https://github.com/Marinlemaignan",
+      "contributions": [
+        "code",
+        "bug",
+        "ideas"
+      ]
+    },
+    {
+      "login": "nicolasleger",
+      "name": "Nicolas Leger",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/570901?v=4",
+      "profile": "https://github.com/nicolasleger",
+      "contributions": [
+        "infra",
+        "code"
+      ]
+    },
+    {
+      "login": "znk",
+      "name": "Serdar Sever",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1911478?v=4",
+      "profile": "https://znk.github.io",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "Selbahc",
+      "name": "Stanislas Châble",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/19236802?v=4",
+      "profile": "https://www.linkedin.com/in/stanislas-chable/",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "piamancini",
+      "name": "Pia Mancini",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3671070?v=4",
+      "profile": "http://piamancini.com",
+      "contributions": [
+        "fundingFinding"
+      ]
+    },
+    {
+      "login": "mauricesvay",
+      "name": "Maurice Svay",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/265349?v=4",
+      "profile": "http://svay.com/",
+      "contributions": [
+        "code",
+        "bug",
+        "design"
+      ]
+    },
+    {
+      "login": "kadiks",
+      "name": "Jénaïc Cambré",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/526294?v=4",
+      "profile": "http://www.kadiks.net",
+      "contributions": [
+        "question"
+      ]
     }
   ]
 }
