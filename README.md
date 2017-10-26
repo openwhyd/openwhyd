@@ -232,3 +232,5 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
+
+Sorry if we forgot anyone... If you would like to appear on that list (or ask for an update), please [let us know](https://github.com/openwhyd/openwhyd/issues/new?title=Please+add+me+as+a+contributor), or propose a PR after running `npm run add-contrib` (as explained [there](https://www.npmjs.com/package/all-contributors-cli)).
