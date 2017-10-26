@@ -8,6 +8,27 @@
   "commit": false,
   "contributors": [
     {
+      "name": "Gilles Poupardin",
+      "avatar_url": "https://d1qb2nb5cznatu.cloudfront.net/users/56004-large?1405472476",
+      "profile": "https://twitter.com/gillespoupardin",
+      "contributions": [
+        "talk",
+        "ideas",
+        "financial"
+      ]
+    },
+    {
+      "login": "jiem",
+      "name": "Jie Meng-Gérard",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/764618?v=4",
+      "profile": "https://github.com/jiem",
+      "contributions": [
+        "code",
+        "infra",
+        "financial"
+      ]
+    },
+    {
       "login": "adrienjoly",
       "name": "Adrien Joly",
       "avatar_url": "https://avatars3.githubusercontent.com/u/531781?v=4",
@@ -18,7 +39,8 @@
         "bug",
         "review",
         "test",
-        "talk"
+        "talk",
+        "question"
       ]
     },
     {
@@ -32,6 +54,17 @@
       ]
     },
     {
+      "name": "Tony Hymes",
+      "avatar_url": "https://pbs.twimg.com/profile_images/708991890046246912/TrUSqpzo_400x400.jpg",
+      "profile": "https://twitter.com/tonyhymes",
+      "contributions": [
+        "talk",
+        "blog",
+        "eventOrganizing",
+        "question"
+      ]
+    },
+    {
       "login": "damienromito",
       "name": "Damien Romito",
       "avatar_url": "https://avatars1.githubusercontent.com/u/603808?v=4",
@@ -39,17 +72,6 @@
       "contributions": [
         "code",
         "plugin"
-      ]
-    },
-    {
-      "login": "jiem",
-      "name": "Jie Meng-Gérard",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/764618?v=4",
-      "profile": "https://github.com/jiem",
-      "contributions": [
-        "code",
-        "infra",
-        "financial"
       ]
     },
     {
