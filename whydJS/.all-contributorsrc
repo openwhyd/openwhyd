@@ -1,0 +1,10 @@
+{
+  "projectName": "openwhyd",
+  "projectOwner": "openwhyd",
+  "files": [
+    "../README.md"
+  ],
+  "imageSize": 98,
+  "commit": false,
+  "contributors": []
+}
