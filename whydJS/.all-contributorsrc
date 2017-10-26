@@ -6,5 +6,20 @@
   ],
   "imageSize": 98,
   "commit": false,
-  "contributors": []
+  "contributors": [
+    {
+      "login": "adrienjoly",
+      "name": "Adrien Joly",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/531781?v=4",
+      "profile": "https://adrienjoly.com/now",
+      "contributions": [
+        "code",
+        "doc",
+        "bug",
+        "review",
+        "test",
+        "talk"
+      ]
+    }
+  ]
 }
