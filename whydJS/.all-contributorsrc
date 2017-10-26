@@ -76,8 +76,8 @@
     },
     {
       "login": "cmdcmdcmd",
-      "name": "cmdcmdcmd",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/28144993?v=4",
+      "name": "Claire Marion",
+      "avatar_url": "https://s-media-cache-ak0.pinimg.com/avatars/alifecurated_1455886409_280.jpg",
       "profile": "https://github.com/cmdcmdcmd",
       "contributions": [
         "design",
@@ -108,9 +108,36 @@
       ]
     },
     {
+      "name": "Constance Betinyani",
+      "avatar_url": "https://media.licdn.com/media/p/3/000/272/357/1d22cf8.jpg",
+      "profile": "https://www.linkedin.com/in/constance-betinyani-30b8b95a/",
+      "contributions": [
+        "blog",
+        "fundingFinding"
+      ]
+    },
+    {
+      "name": "Alberto Fantappie",
+      "avatar_url": "https://d1qb2nb5cznatu.cloudfront.net/users/28089-large?1489180378",
+      "profile": "https://angel.co/alberto-fantappie",
+      "contributions": [
+        "fundingFinding",
+        "eventOrganizing"
+      ]
+    },
+    {
+      "name": "Mathilde Vercelletto",
+      "avatar_url": "https://media.licdn.com/media/AAEAAQAAAAAAAAe9AAAAJDBjMTM3ZjI2LTkyM2MtNGFiMS04ZDJhLTVkYmYxMjdhNWFiZA.jpg",
+      "profile": "https://www.linkedin.com/in/mathildevercelletto/",
+      "contributions": [
+        "doc",
+        "financial"
+      ]
+    },
+    {
       "login": "ElBurritoPodrido",
-      "name": "ElBurritoPodrido",
-      "avatar_url": "https://avatars0.githubusercontent.com/u/22731646?v=4",
+      "name": "Henri Lieutaud",
+      "avatar_url": "https://media.licdn.com/media/p/2/005/05c/069/29be303.jpg",
       "profile": "https://github.com/ElBurritoPodrido",
       "contributions": [
         "ideas"
@@ -150,7 +177,7 @@
     {
       "login": "nicolasleger",
       "name": "Nicolas Leger",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/570901?v=4",
+      "avatar_url": "https://pbs.twimg.com/profile_images/760481572923531264/4th1HNIe.jpg",
       "profile": "https://github.com/nicolasleger",
       "contributions": [
         "infra",
