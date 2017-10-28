@@ -7,8 +7,7 @@ NB_COLUMNS=2
 echo "generate data from mongodb data ... (⚠️ may take several minutes)"
 echo $COLUMNS >$NAME.temp.csv
 SECONDS=0
-# mongo --quiet $DB ./$NAME.mongo.js >>$NAME.temp.csv # runs in 4 seconds
-mongo --quiet $DB ./$NAME.mongo-test.js >>$NAME.temp.csv # runs in 15 seconds
+mongo --quiet $DB ./$NAME.mongo.js >>$NAME.temp.csv # runs in 4 seconds
 echo ⏲ $SECONDS seconds.
 
 echo "plot data to ../plots/$NAME.png ..."
