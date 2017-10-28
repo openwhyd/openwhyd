@@ -9,6 +9,6 @@ user-growth: ## Generate the "user growth" plot
 	@cd src && ./plot-user-growth.sh
 
 nb-posts-per-day: ## Generate the "number of posts per day" plot
-	@cd src && ./nb-posts-per-day.sh
+	@cd src && ./plot-nb-posts-per-day.sh
 
 plots: user-growth nb-posts-per-day ## Generate all plots

@@ -2,15 +2,17 @@ DB=openwhyd_dump
 COL=post
 NAME=plot-nb-posts-per-day
 
-# echo "1. import post collection dump into mongodb ..."
-# mongorestore  --db $DB --collection $COL --drop $COL.bson
+# echo "import $COL collection dump into mongodb ..."
+# ../../mongodb-scripts/restore.sh $COL # will restore collection from $COL.bson.gz (compressed dump)
 
-echo "2. generate data from post collection ..."
-echo date,posts >$NAME.output.csv
-mongo --quiet $DB ./$NAME.mongo.js >>$NAME.output.csv
+echo "generate data from $COL collection ..."
+echo date,posts >$NAME.temp.csv
+mongo --quiet $DB ./$NAME.mongo.js >>$NAME.temp.csv
 
-echo "3. plot data to output.png ..."
-gnuplot -c $NAME.gp $NAME.output.csv >$NAME.output.png
+echo "plot data to ../plots/$NAME.png ..."
+mkdir ../plots &>/dev/null
+gnuplot -c $NAME.gp $NAME.temp.csv >../plots/$NAME.png
 
 echo "4. open output.png ..."
-open $NAME.output.png
+open ../plots/$NAME.png
+rm $NAME.temp.csv
