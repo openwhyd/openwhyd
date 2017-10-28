@@ -1,5 +1,8 @@
 function map() {
-  emit(new Date(1000 * 60 * 60 * 24 * Math.floor(this._id.getTimestamp() / (1000 * 60 * 60 * 24))).toISOString().split('T')[0], 1);
+  var DAY_MS = 1000 * 60 * 60 * 24;
+  var renderDate = t =>
+    new Date(DAY_MS * Math.floor(t / DAY_MS)).toISOString().split('T')[0];
+  emit(renderDate(this._id.getTimestamp()), 1);
 }
 
 function reduce(day, n) {
