@@ -14,4 +14,7 @@ nb-posts-per-day: ## Generate the "number of posts per day" plot
 nb-users-posting-per-day: ## Generate the "number of users posting per day" plot
 	@cd src && ./plot-nb-users-posting-per-day.sh
 
-plots: user-growth nb-posts-per-day ## Generate all plots
+nb-users-listening-per-day: ## Generate the "number of users listening per day" plot
+	@cd src && ./plot-nb-users-listening-per-day.sh
+
+plots: user-growth nb-posts-per-day nb-users-posting-per-day nb-users-listening-per-day ## Generate all plots
