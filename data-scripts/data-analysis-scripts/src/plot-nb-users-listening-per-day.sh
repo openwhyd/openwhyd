@@ -10,6 +10,7 @@ SECONDS=0
 mongo --quiet $DB ./$NAME.mongo.js # took 10 minutes to run
 echo ⏲ $SECONDS seconds.
 mongoexport -d "$DB" -c "$NAME" --type=csv --fields "_id,value" | tail -n+2  >>$NAME.temp.csv
+sed -i '' -e '$ d' $NAME.temp.csv # remove last line
 
 echo "plot data to ../plots/$NAME.png ..."
 mkdir ../plots &>/dev/null
@@ -17,4 +18,4 @@ gnuplot -c plot-csv-data.gp $NAME.temp.csv $NB_COLUMNS "$TITLE" >../plots/$NAME.
 
 echo "open ../plots/$NAME.png ..."
 open ../plots/$NAME.png
-# rm $NAME.temp.csv
+rm $NAME.temp.csv
