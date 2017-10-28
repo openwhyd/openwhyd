@@ -1,3 +1,5 @@
+const OUTPUT_COLLECTION = 'plot-nb-users-listening-per-day';
+
 function map() {
   var DAY_MS = 1000 * 60 * 60 * 24;
   var renderDate = t =>
@@ -19,9 +21,16 @@ function reduce(day, vals) {
 }
 
 var opts = {
-  out: { inline: 1 },
-  limit: 100000 // => runs in 4 seconds
+  finalize: function(key, reducedValue) {
+    return reducedValue.users.length;
+  },
+  out: {
+    //inline: 1, // => causes `too much data for in memory map/reduce` error
+    'replace': OUTPUT_COLLECTION, // will store results in that collection
+    // => took 10 minutes to run
+  },
+  //limit: 100000 // => runs in 4 seconds
 };
 
 var results = db.playlog.mapReduce(map, reduce, opts).results;
-print(results.map(res => [ res._id, res.value.users.length ]).join('\n'));
+//print(results.map(res => [ res._id, res.value.users.length ]).join('\n'));
