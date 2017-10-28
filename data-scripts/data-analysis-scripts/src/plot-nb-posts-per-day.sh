@@ -14,4 +14,3 @@ gnuplot -c $NAME.gp $NAME.output.csv >$NAME.output.png
 
 echo "4. open output.png ..."
 open $NAME.output.png
-

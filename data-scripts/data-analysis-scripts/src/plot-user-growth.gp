@@ -1,6 +1,6 @@
 #! /usr/bin/gnuplot
 
-set datafile separator " "
+set datafile separator ","
 set terminal png size 2048,1600
 set key autotitle columnheader
 set title "Number of Openwhyd signups per day"
