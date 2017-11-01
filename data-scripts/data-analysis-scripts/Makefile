@@ -23,4 +23,7 @@ nb-plays-per-day: ## Generate the "number of plays per day" plot
 nb-play-errors-per-day: ## Generate the "number of plays per day" plot
 	@cd src && ./plot-nb-play-errors-per-day.sh
 
+list-error-types-per-player: ## List playback errors and their distribution per player
+	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log; cat list-error-types-per-player.log
+
 plots: user-growth nb-posts-per-day nb-users-posting-per-day nb-users-listening-per-day nb-plays-per-day nb-play-errors-per-day ## Generate all plots
