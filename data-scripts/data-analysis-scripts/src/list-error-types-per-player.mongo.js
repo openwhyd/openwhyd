@@ -7,7 +7,8 @@ function map() {
   // => emit same kind of output as reduce()'s
   if (!this.err) return;
   var val = { total: 1 };
-  var playerId = this.eId.substr(1, 2);
+  // consider URLs (starting with http or //) as `fi` (source: file)
+  var playerId = this.eId[0] === '/' && this.eId[1] !== '/' ? this.eId.substr(1, 2) : 'fi';
   val[playerId] = 1;
   delete this.err.track; // in order to prevent `key too large to index`
   emit(JSON.stringify(this.err), val); // group by error object (contains source, code and message)
@@ -32,7 +33,7 @@ var opts = {
   },
   out: {
     'replace': OUTPUT_COLLECTION, // will store results in that collection
-    // => took XXXXX minutes to run
+    // => took 7 minutes to run
   },
   //limit: 1000000 // => runs in 5 seconds
 };
