@@ -26,4 +26,10 @@ nb-play-errors-per-day: ## Generate the "number of plays per day" plot
 list-error-types-per-player: ## List playback errors and their distribution per player
 	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log; cat list-error-types-per-player.log
 
-plots: user-growth nb-posts-per-day nb-users-posting-per-day nb-users-listening-per-day nb-plays-per-day nb-play-errors-per-day ## Generate all plots
+list-error-codes-per-week: ## List playback error codes per week
+	@cd src && mongo openwhyd_dump list-error-codes-per-week.mongo.js >list-error-codes-per-week.log; cat list-error-codes-per-week.log
+
+plot-error-codes-per-week: ## Generate the "distribution of playback error codes per week" plot
+	@cd src && ./plot-error-codes-per-week.sh
+
+plots: user-growth nb-posts-per-day nb-users-posting-per-day nb-users-listening-per-day nb-plays-per-day nb-play-errors-per-day plot-error-codes-per-week ## Generate all plots
