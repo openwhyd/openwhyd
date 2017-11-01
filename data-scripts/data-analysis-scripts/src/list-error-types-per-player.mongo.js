@@ -39,4 +39,4 @@ var opts = {
 
 var result = db.playlog.mapReduce(map, reduce, opts);
 print('⏲  ' + Math.round(result.timeMillis / 1000) + ' seconds');
-printjson(db[OUTPUT_COLLECTION].find().toArray());
+printjson(db[OUTPUT_COLLECTION].find().sort({ 'value.total': -1 }).toArray());
