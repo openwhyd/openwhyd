@@ -1,4 +1,4 @@
-.PHONY: help list-error-types-per-player list-error-codes-per-week
+.PHONY: help list-error-types-per-player
 
 plots: plots/plot-user-growth.png plots/plot-nb-posts-per-day.png plots/plot-nb-users-posting-per-day.png plots/plot-nb-users-listening-per-day.png plots/plot-nb-plays-per-day.png plots/plot-nb-play-errors-per-day.png plots/plot-error-codes-per-week.png ## Generate all plots (default target)
 
@@ -33,9 +33,10 @@ plots/plot-nb-play-errors-per-day.png: ## Generate the "number of plays per day"
 list-error-types-per-player: ## List playback errors and their distribution per player
 	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log; cat list-error-types-per-player.log
 
-list-error-codes-per-week: ## List playback error codes per week
-	@cd src && mongo openwhyd_dump list-error-codes-per-week.mongo.js >list-error-codes-per-week.log; cat list-error-codes-per-week.log
+logs/list-error-codes-per-week.log: ## List playback error codes per week
+	@mkdir logs &>/dev/null
+	@mongo openwhyd_dump src/list-error-codes-per-week.mongo.js >logs/list-error-codes-per-week.log # -> db collection: list-error-codes-per-week
 
-plots/plot-error-codes-per-week.png: ## Generate the "distribution of playback error codes per week" plot
+plots/plot-error-codes-per-week.png: logs/list-error-codes-per-week.log ## Generate the "distribution of playback error codes per week" plot
 	@echo 'Plotting error codes per week...'
 	@cd src && ./plot-error-codes-per-week.sh
