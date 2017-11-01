@@ -18,4 +18,4 @@ gnuplot -c plot-csv-data.gp $NAME.temp.csv $NB_COLUMNS "$TITLE" >../plots/$NAME.
 
 echo "4. open output.png ..."
 open ../plots/$NAME.png
-rm $NAME.temp.csv
+# rm $NAME.temp.csv
