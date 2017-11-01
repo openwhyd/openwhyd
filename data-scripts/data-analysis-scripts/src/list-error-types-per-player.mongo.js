@@ -11,6 +11,8 @@ function map() {
   var playerId = this.eId[0] === '/' && this.eId[1] !== '/' ? this.eId.substr(1, 2) : 'fi';
   val[playerId] = 1;
   delete this.err.track; // in order to prevent `key too large to index`
+  delete this.err.pId;
+  delete this.err.trackUrl;
   emit(JSON.stringify(this.err), val); // group by error object (contains source, code and message)
 }
 
