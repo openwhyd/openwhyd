@@ -89,6 +89,8 @@ It could also be that this track is not accessible from France, as explained in 
 
 That being said, it's very easy to download your data at any time: just add the `?format=json&limit=999999` suffix to your Openwhyd profile URL. E.g. `https://openwhyd.org/adrien?format=json&limit=999999`
 
+*More info: read [how to download Openwhyd track listings in JSON format](howto-backup-openwhyd-tracks.md).*
+
 🇫🇷 Tu peux récupérer tes tracks à tout moment, en ajoutant le suffixe `?format=json&limit=999999` à l'URL de ton profil Openwhyd. Exemple: `https://openwhyd.org/adrien?format=json&limit=999999`
 
 ### Do you have an API ?
