@@ -147,6 +147,9 @@ describe('adding a track', function() {
     });
 
     it('should show the post on the user\'s profile after clicking the link', function() {
+        browser.waitUntil(
+            () => $$('a').find(a => /your tracks/.test(a.getText())), WAIT_DURATION,
+            'expected to find a "your tracks" link after 5s');
         $$('a').find(a => /your tracks/.test(a.getText())).click();
         browser.waitUntil(
             () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
