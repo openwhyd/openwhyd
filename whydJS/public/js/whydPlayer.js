@@ -355,6 +355,9 @@ function WhydPlayer () {
 			};
 			if (currentTrack.metadata.logData) { // error and fallback data
 				data.logData = currentTrack.metadata.logData;
+				if (typeof document.hasFocus === 'function') {
+					data.logData.foc = document.hasFocus();
+				}
 				delete currentTrack.metadata.logData;
 			}
 			$.ajax({

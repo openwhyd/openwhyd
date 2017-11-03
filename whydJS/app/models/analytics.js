@@ -18,7 +18,7 @@ var snip = require("../snip.js");
 **/
 exports.addPlay = (function(){
 	var MANDATORY = {"eId":"string", "pId":"string", "uId":"string"},
-		OPTIONAL = {"own":"boolean", "err":"object", "fbk":"object"};
+		OPTIONAL = {"own":"boolean", "err":"object", "fbk":"object", "ua":"object", "foc": "boolean"};
 	return function (obj) {
 		try {
 			var cleanObj = snip.checkParams(obj, MANDATORY, OPTIONAL);

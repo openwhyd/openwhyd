@@ -18,6 +18,8 @@ Proposed list of fields, for each log entry:
 - `own`: (boolean, optional) existing and set to true only if this track being played is one of his own posts
 - `err`: (object, optional) player-dependant error structure. may contain an error code and/or message. 
 - `fbk`: (object, optional) structure provided by the fallback mechanism, in case of error while trying to play the track. may contain the status of connection with Deezer (not connected /  connected / premium), a Deezer track id (in case of lookup success), an error code and/or message. 
+- `ua`: (array of two strings, optional) name and version of the web browser, as detected from user agent.
+- `foc`: (boolean, optional) `true` if the openwhyd page was focused / active / in the foreground while playing the track (except for `openwhyd-electron`)
 
 For each played track, the log entry is submitted once:
 - Upon reception of the onPlay event => `err` and `fbk` are not set,

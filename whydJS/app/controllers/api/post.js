@@ -15,6 +15,25 @@ var lastFm = require("./lastFm.js").lastFm;
 
 var sequencedParameters = {_1: "pId", _2: "action"}; //[null, "pId", "action"];
 
+function getBrowserVersionFromUserAgent(ua) {
+	// reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#Browser_Name
+	var BROWSER_UA_REGEX = [
+		/(openwhyd-electron)\/([^ $]+)/,
+		/(Chrome)\/([^ $]+)/,
+		/(Chromium)\/([^ $]+)/,
+		/(Seamonkey)\/([^ $]+)/,
+		/(OPR)\/([^ $]+)/,
+		/; (MSIE) ([^ ;$]+);/,
+		/(Opera)\/([^ $]+)/,
+		/(Safari)\/([^ $]+)/,
+		/(Firefox)\/([^ $]+)/,
+	];
+	for (var i = 0; i < BROWSER_UA_REGEX.length; ++i) {
+		var match = ua.match(BROWSER_UA_REGEX[i]);
+		if (match) return match.slice(1, 3); // => [ browser_name, version ]
+	}
+}
+
 function fetchSubscribedUsers(uidList, uid, cb) {
 	followModel.fetch({uId:uid, tId:{$in:uidList}}, null, function(results) {
 		var uidSet = {};
@@ -177,7 +196,7 @@ exports.actions = {
 				});
 		});
 	},
-	incrPlayCounter: function(p, cb) {
+	incrPlayCounter: function(p, cb, request) {
 		// TODO: prevent a user from sending many calls in a row
 		if (!p.uId)
 			return cb && cb({error:"not logged in"});
@@ -187,10 +206,16 @@ exports.actions = {
 			return cb && cb({error:"invalid pId"});
 		}
 		p.logData = p.logData || {};
+		function getShortUserAgent() {
+			var userAgent = request && request.headers && request.headers["user-agent"];
+			return userAgent ? getBrowserVersionFromUserAgent(userAgent) : undefined;
+		}
 		function callbackAndLogPlay(post){
 			cb && cb({result: post});
 			if (!post || !post.name)
 				return;
+			var ua = getShortUserAgent();
+			var anyBrowserExceptElectron = !ua || !/openwhyd-electron/.test(ua);
 			analytics.addPlay({
 				eId: post.eId,
 				pId: ""+post._id,
@@ -198,6 +223,8 @@ exports.actions = {
 				own: p.uId == post.uId,
 				err: p.logData.err,
 				fbk: p.logData.fbk,
+				ua:  ua,
+				foc: anyBrowserExceptElectron ? p.logData.foc : undefined, // result of document.hasFocus(), for https://github.com/openwhyd/openwhyd/issues/88#issuecomment-341404204
 			});
 			if (p.duration > 0)
 				post.duration = p.duration;
@@ -246,7 +273,7 @@ exports.handleRequest = function(request, reqParams, response) {
 	if (!user || !user.id) return response.badRequest();
 	
 	if (reqParams.action && exports.actions[reqParams.action])
-		exports.actions[reqParams.action](reqParams, resultHandler);
+		exports.actions[reqParams.action](reqParams, resultHandler, request);
 	else
 		response.badRequest();
 };
