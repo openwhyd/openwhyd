@@ -221,6 +221,30 @@ function WhydPlayer () {
 		$("#playBtnOverlay").removeClass("loading").removeClass("playing").removeClass("paused").addClass(state);
 	}
 
+	if (typeof document.hasFocus === 'function') {
+		var hadFocus = true, wasPlaying = false;
+		function updateFocusState(){
+			var hasFocus = document.hasFocus();
+			//console.log('updateFocusState', hadFocus, '->', hasFocus);
+			if (hasFocus !== hadFocus) {
+				if (!hasFocus) { // user just left Openwhyd => page lost focus
+					wasPlaying = isPlaying;
+					if (isPlaying) playem.pause();
+				} else if (hasFocus) { // user just came back to Openwhyd
+					if (wasPlaying) {
+						playem.resume();
+						window.showMessage && showMessage('Want to play music in the background?'
+							+ ' Please use <a href="https://github.com/openwhyd/openwhyd-electron/releases/"'
+							+ ' target="_blank">openwhyd-electron</a> 👌', true);
+					}
+				}
+				hadFocus = hasFocus;
+			}
+		}
+		updateFocusState();
+		setInterval(updateFocusState, 500);
+	}
+
 	var $progressTimer = $("#progressTimer"), $trackDragPos = $("#trackDragPos");
 	
 	var progressBar = new ProgressBar({
