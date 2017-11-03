@@ -14,6 +14,7 @@ window.showMessage = window.showMessage || function(msg) {
 // configuration
 
 var USING_IOS = navigator.userAgent.match(/(iPod|iPhone|iPad)/i);
+var USING_ELECTRON = /openwhyd-electron/.test(navigator.userAgent);
 var MAX_POSTS_TO_SHUFFLE = 200;
 
 // utility functions
@@ -221,7 +222,7 @@ function WhydPlayer () {
 		$("#playBtnOverlay").removeClass("loading").removeClass("playing").removeClass("paused").addClass(state);
 	}
 
-	if (typeof document.hasFocus === 'function') {
+	if (typeof document.hasFocus === 'function' && !USING_ELECTRON) {
 		var hadFocus = true, wasPlaying = false;
 		function updateFocusState(){
 			var hasFocus = document.hasFocus();
