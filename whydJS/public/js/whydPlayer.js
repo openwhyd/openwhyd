@@ -357,9 +357,15 @@ function WhydPlayer () {
 				data.logData = currentTrack.metadata.logData;
 				delete currentTrack.metadata.logData;
 			}
-			$.post("/api/post", data, function() {
-				var $nbPlays = $post.find(".nbPlays");
-				$nbPlays.text((parseInt($nbPlays.text()) || 0) + 1).show();
+			$.ajax({
+				type: "POST",
+				url: "/api/post",
+				contentType: "application/json; charset=utf-8", // otherwise, jquery sends `prop[prop]` url-encoded entries that are not recognized by openwhyd's server
+				data: JSON.stringify(data),
+				success: function() {
+					var $nbPlays = $post.find(".nbPlays");
+					$nbPlays.text((parseInt($nbPlays.text()) || 0) + 1).show();
+				}
 			});
 			//fbAction("listen", "/c/" + currentTrack.metadata.pid, "track");
 			currentTrack.metadata.tStart = new Date();
