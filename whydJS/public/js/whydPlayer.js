@@ -235,8 +235,8 @@ function WhydPlayer () {
 					if (wasPlaying) {
 						playem.resume();
 						window.showMessage && showMessage('Want to play music in the background?'
-							+ ' Please use <a href="https://github.com/openwhyd/openwhyd-electron/releases/"'
-							+ ' target="_blank">openwhyd-electron</a> 👌', true);
+							+ ' Please use <a href="https://openwhyd.org/download"'
+							+ ' target="_blank">Openwhyd Desktop App</a> 👌', true);
 					}
 				}
 				hadFocus = hasFocus;
