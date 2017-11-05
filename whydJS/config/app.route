@@ -6,6 +6,7 @@ GET		/now							-> controllers.now
 
 GET		/favicon.ico					-> controllers.static
 GET		/favicon.png					-> controllers.static
+GET		/download							-> controllers.static
 GET		/about							-> controllers.static
 GET		/press							-> controllers.static
 GET		/privacy						-> controllers.static
