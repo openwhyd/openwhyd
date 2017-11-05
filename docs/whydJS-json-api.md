@@ -1,5 +1,55 @@
 # JSON API Documentation
 
+* [User session / logging](#user-session--logging)
+  * LOGOUT
+  * FORGOT PASSWORD
+  * LOGIN WITH EMAIL
+  * LOGIN WITH FACEBOOK
+  * CONNECT FACEBOOK ACCOUNT TO WHYD ACCOUNT
+  * Register / sign up a new user
+  * Onboarding process
+  * Get user data
+  * Set user data
+* [Search](#search)
+  * SEARCH TRACKS POSTED BY OTHER USERS
+  * SEARCH TRACKS POSTED BY ME + OTHER USERS
+* [Subscriptions](#subscriptions)
+  * List subscribers of a user
+  * List subscriptions of a user
+  * Get subscription status of a user
+  * (Un)subscribe to a user
+* [Tracks](#tracks)
+  * POST TRACK / Edit a Post
+  * Delete post
+  * Like / unlike a post
+  * Likes Tracks by User
+  * Fetch list of users who liked a post
+  * Fetch list of users who re-added a post
+  * Log a play
+  * Scrobble a play to Last.fm
+  * Add a comment to a post
+  * Delete a comment from a post
+  * LIST TRACKS POSTED BY USER
+  * INCOMING STREAM (HOMEPAGE)
+  * HOT TRACKS
+  * Detailed track info
+  * Share a post to OpenWhyd users (notification)
+* [Playlists](#playlists)
+  * Get playlist data
+  * Create a playlist
+  * Rename a playlist
+  * Delete a playlist
+  * Set track order of a playlist
+  * Update the image of a playlist
+  * Share a playlist to OpenWhyd users (notification)
+* [Upload](#upload)
+  * Upload a file to Whyd's file server
+  * Delete an uploaded file
+* [Formats and appendix](#formats-and-appendix)
+  * Syntax of "eId" identifiers
+  * Syntax of a mention (in comment text)
+  * URLs for fetching images
+
 ## User session / logging
 
 **LOGOUT**
