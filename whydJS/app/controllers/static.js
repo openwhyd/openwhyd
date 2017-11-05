@@ -12,9 +12,20 @@
 var config = require("../models/config.js");
 var runsLocally = config.urlPrefix.indexOf("localhost") != -1;
 
+var SUPPORT_PAGE = "https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#how-to-contact-openwhyds-team";
+var DONATE_PAGE = "https://opencollective.com/openwhyd";
+
 var STATIC_FILES = {
 	"/favicon.ico": "/images/favicon"+(runsLocally ? "_orange" : "")+".ico",
-	"/favicon.png": "/images/favicon"+(runsLocally ? "_orange" : "")+".png"
+	"/favicon.png": "/images/favicon"+(runsLocally ? "_orange" : "")+".png",
+	"/faq": "https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md",
+	"/help": SUPPORT_PAGE,
+	"/team": SUPPORT_PAGE,
+	"/support": SUPPORT_PAGE,
+	"/contact": SUPPORT_PAGE,
+	"/community": "https://github.com/openwhyd/openwhyd",
+	"/sponsor": DONATE_PAGE,
+	"/donate": DONATE_PAGE
 };
 
 exports.controller = function(request, reqParams, response) {

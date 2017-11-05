@@ -21,6 +21,15 @@ GET		/mobile							-> controllers.static
 GET		/iphone							-> controllers.static
 POST  /fbcanvas/          -> controllers.static
 
+GET		/faq									-> controllers.static
+GET		/help									-> controllers.static
+GET		/team									-> controllers.static
+GET		/contact							-> controllers.static
+GET		/support							-> controllers.static
+GET		/sponsor							-> controllers.static
+GET		/donate							  -> controllers.static
+GET		/community						-> controllers.static
+
 GET		/paris							-> controllers.api.city
 GET		/paris/							-> controllers.api.city
 GET		/madrid							-> controllers.api.city
