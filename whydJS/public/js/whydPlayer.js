@@ -14,6 +14,7 @@ window.showMessage = window.showMessage || function(msg) {
 // configuration
 
 var USING_IOS = navigator.userAgent.match(/(iPod|iPhone|iPad)/i);
+var USING_ELECTRON = /openwhyd-electron/.test(navigator.userAgent);
 var MAX_POSTS_TO_SHUFFLE = 200;
 
 // utility functions
@@ -219,6 +220,30 @@ function WhydPlayer () {
 
 		// for visible embeds (e.g. youtube)
 		$("#playBtnOverlay").removeClass("loading").removeClass("playing").removeClass("paused").addClass(state);
+	}
+
+	if (typeof document.hasFocus === 'function' && !USING_ELECTRON) {
+		var hadFocus = true, wasPlaying = false;
+		function updateFocusState(){
+			var hasFocus = document.hasFocus();
+			//console.log('updateFocusState', hadFocus, '->', hasFocus);
+			if (hasFocus !== hadFocus) {
+				if (!hasFocus) { // user just left Openwhyd => page lost focus
+					wasPlaying = isPlaying;
+					if (isPlaying) playem.pause();
+				} else if (hasFocus) { // user just came back to Openwhyd
+					if (wasPlaying) {
+						playem.resume();
+						window.showMessage && showMessage('Want to play music in the background?'
+							+ ' Please use <a href="https://openwhyd.org/download"'
+							+ ' target="_blank">Openwhyd Desktop App</a> 👌', true);
+					}
+				}
+				hadFocus = hasFocus;
+			}
+		}
+		updateFocusState();
+		setInterval(updateFocusState, 500);
 	}
 
 	var $progressTimer = $("#progressTimer"), $trackDragPos = $("#trackDragPos");
