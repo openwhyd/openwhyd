@@ -30,7 +30,7 @@ plots/plot-nb-plays-per-day.png: ## Generate the "number of plays per day" plot
 	@echo 'Plotting nb plays per day...'
 	@cd src && ./plot-nb-plays-per-day.sh
 
-plots/plot-nb-play-errors-per-day.png: ## Generate the "number of plays per day" plot
+plots/plot-nb-play-errors-per-day.png: ## Generate the "number of play errors per day" plot
 	@echo 'Plotting nb play errors per day...'
 	@cd src && ./plot-nb-play-errors-per-day.sh
 
