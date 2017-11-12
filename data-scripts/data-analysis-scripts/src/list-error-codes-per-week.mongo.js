@@ -1,29 +1,19 @@
 // usage: $ mongo openwhyd_dump list-error-codes-per-week.mongo.js
 
-print(pwd());
 load('./mongo-helpers/date-range.mongo.js'); // exports makeDateRangeQuery()
+load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
 
 const OUTPUT_COLLECTION = 'list-error-codes-per-week';
 const FROM_DATE = new Date(today - YEAR); // last 365 days
 
-function map() {
-  var DAY_MS = 1000 * 60 * 60 * 24;
-  var renderWeek = t => {
-    var onejan = new Date(t.getFullYear(), 0, 1);
-    var week = '' + (Math.ceil( (((t - onejan) / DAY_MS) + onejan.getDay() + 1) / 7 ));
-    return [
-      t.getFullYear(),
-      week.length === 2 ? week : '0' + week // pad with leading 0 if necessary, for final sorting
-    ].join('.');
-  };
-  // notice: MongoDB will not call the reduce function for a key that has only a single value
-  // => emit same kind of output as reduce()'s
+// notice: MongoDB will not call the reduce function for a key that has only a single value
+const map = makeMapWith(renderWeek, function mapTemplate() {
   //var failed = this.err ? 1 : 0;
   var val = { total: 1 }; //, total_err: failed
   var error = this.err ? this.err.code || this.err.error || this.err.data : undefined;
   if (error !== undefined) val[error] = 1;
   emit(renderWeek(this._id.getTimestamp()), val); // group error counts by week
-}
+});
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
@@ -49,7 +39,7 @@ var opts = {
     // => took 8 minutes to run
   },
   query: makeDateRangeQuery(FROM_DATE)
-  //limit: 1000000 // => runs in 14 seconds
+  ,limit: 100000 // => runs in 14 seconds
 };
 
 print('generating data, date:' + new Date());
