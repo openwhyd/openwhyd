@@ -10,6 +10,29 @@ backup: ## Suffixes ".prev" to all existing png files (generated plots)
 	@cd plots && ./backup-prev-plots.sh
 	@echo 'Done. You can run make to generate fresh png files in plots/'
 
+## targets to import collection dumps into local mongodb database
+
+logs/collection-playlog.log: collection-dumps/playlog.bson.gz
+	@echo 'Importing collection-dumps/playlog.bson.gz into local openwhyd_dump database...'
+	@gunzip -c collection-dumps/playlog.bson.gz | mongorestore --collection playlog --db openwhyd_dump --drop - &>logs/collection-playlog.log
+
+## intermediate targets, to generate aggregated mongodb collections
+
+logs/list-error-codes-per-week.log: logs/collection-playlog.log ## List playback error codes per week
+	@echo 'Aggregating playback error codes per week into intermediate db collection...'
+	@mongo openwhyd_dump src/list-error-codes-per-week.mongo.js >logs/list-error-codes-per-week.log 
+	@echo 'Done. Created db collection: list-error-codes-per-week'
+
+src/list-error-types-per-player.log: ## List playback errors and their distribution per player
+	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log
+
+## targets to generate textual reports
+
+list-error-types-per-player: src/list-error-types-per-player.log ## List playback errors and their distribution per player
+	@cat src/list-error-types-per-player.log
+
+## final targets, to generate plots (png files)
+
 plots/plot-user-growth.png: ## Generate the "user growth" plot
 	@echo 'Plotting user growth...'
 	@cd src && ./plot-user-growth.sh
@@ -33,13 +56,6 @@ plots/plot-nb-plays-per-day.png: ## Generate the "number of plays per day" plot
 plots/plot-nb-play-errors-per-day.png: ## Generate the "number of play errors per day" plot
 	@echo 'Plotting nb play errors per day...'
 	@cd src && ./plot-nb-play-errors-per-day.sh
-
-list-error-types-per-player: ## List playback errors and their distribution per player
-	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log; cat list-error-types-per-player.log
-
-logs/list-error-codes-per-week.log: ## List playback error codes per week
-	@mkdir logs &>/dev/null
-	@mongo openwhyd_dump src/list-error-codes-per-week.mongo.js >logs/list-error-codes-per-week.log # -> db collection: list-error-codes-per-week
 
 plots/plot-error-codes-per-week.png: logs/list-error-codes-per-week.log ## Generate the "distribution of playback error codes per week" plot
 	@echo 'Plotting error codes per week...'
