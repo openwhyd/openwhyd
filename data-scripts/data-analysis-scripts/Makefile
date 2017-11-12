@@ -23,7 +23,7 @@ logs/list-error-codes-per-week.log: logs/collection-playlog.log ## List playback
 	@cd src && mongo openwhyd_dump list-error-codes-per-week.mongo.js >../logs/list-error-codes-per-week.log 
 	@echo 'Done. Created db collection: list-error-codes-per-week'
 
-src/list-error-types-per-player.log: ## List playback errors and their distribution per player
+src/list-error-types-per-player.log: logs/collection-playlog.log ## List playback errors and their distribution per player
 	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log
 
 ## targets to generate textual reports
@@ -45,15 +45,15 @@ plots/plot-nb-users-posting-per-day.png: ## Generate the "number of users postin
 	@echo 'Plotting nb users posting per day...'
 	@cd src && ./plot-nb-users-posting-per-day.sh
 
-plots/plot-nb-users-listening-per-day.png: ## Generate the "number of users listening per day" plot
+plots/plot-nb-users-listening-per-day.png: logs/collection-playlog.log ## Generate the "number of users listening per day" plot
 	@echo 'Plotting nb users listening per day...'
 	@cd src && ./plot-nb-users-listening-per-day.sh
 
-plots/plot-nb-plays-per-day.png: ## Generate the "number of plays per day" plot
+plots/plot-nb-plays-per-day.png: logs/collection-playlog.log ## Generate the "number of plays per day" plot
 	@echo 'Plotting nb plays per day...'
 	@cd src && ./plot-nb-plays-per-day.sh
 
-plots/plot-nb-play-errors-per-day.png: ## Generate the "number of play errors per day" plot
+plots/plot-nb-play-errors-per-day.png: logs/collection-playlog.log ## Generate the "number of play errors per day" plot
 	@echo 'Plotting nb play errors per day...'
 	@cd src && ./plot-nb-play-errors-per-day.sh
 

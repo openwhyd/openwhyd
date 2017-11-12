@@ -1,15 +1,13 @@
+load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
+
 const OUTPUT_COLLECTION = 'plot-nb-plays-per-day';
 
-function map() {
-  var DAY_MS = 1000 * 60 * 60 * 24;
-  var renderDate = t =>
-    new Date(DAY_MS * Math.floor(t / DAY_MS)).toISOString().split('T')[0];
-  // notice: MongoDB will not call the reduce function for a key that has only a single value
-  // => emit same kind of output as reduce()'s
+// notice: MongoDB will not call the reduce function for a key that has only a single value
+const map = makeMapWith(renderDate, function mapTemplate() {
   var val = { total: 1 };
   val[this.eId.substr(1, 2)] = 1;
   emit(renderDate(this._id.getTimestamp()), val);
-}
+});
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key

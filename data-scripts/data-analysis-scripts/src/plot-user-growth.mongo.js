@@ -1,14 +1,13 @@
-function map() {
-  var DAY_MS = 1000 * 60 * 60 * 24;
-  var renderDate = t =>
-    new Date(DAY_MS * Math.floor(t / DAY_MS)).toISOString().split('T')[0];
-  // notice: MongoDB will not call the reduce function for a key that has only a single value
+load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
+
+// notice: MongoDB will not call the reduce function for a key that has only a single value
+const map = makeMapWith(renderDate, function mapTemplate() {
   // => emit same kind of output as reduce()'s
   emit(renderDate(this._id.getTimestamp()), {
     total: 1,
     iPhoneApp: this.iRf === 'iPhoneApp' ? 1 : 0
   });
-}
+});
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key

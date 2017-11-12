@@ -1,6 +1,13 @@
 // re-useable helpers to generate mongodb map functions
 // (mongoshell-compatible dependency injection)
 
+// creates a renderDate() function to be used from map() functions
+function renderDate() {
+  var DAY_MS = 1000 * 60 * 60 * 24;
+  var renderDate = t =>
+    new Date(DAY_MS * Math.floor(t / DAY_MS)).toISOString().split('T')[0];
+}
+
 // creates a renderWeek() function to be used from map() functions
 function renderWeek() {
   var DAY_MS = 1000 * 60 * 60 * 24;

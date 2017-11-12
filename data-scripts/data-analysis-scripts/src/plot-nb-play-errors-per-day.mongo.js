@@ -1,10 +1,9 @@
+load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
+
 const OUTPUT_COLLECTION = 'plot-nb-play-errors-per-day';
 
-function map() {
-  var DAY_MS = 1000 * 60 * 60 * 24;
-  var renderDate = t =>
-    new Date(DAY_MS * Math.floor(t / DAY_MS)).toISOString().split('T')[0];
-  // notice: MongoDB will not call the reduce function for a key that has only a single value
+// notice: MongoDB will not call the reduce function for a key that has only a single value
+const map = makeMapWith(renderDate, function mapTemplate() {
   // => emit same kind of output as reduce()'s
   var failed = this.err ? 1 : 0;
   var val = { total: 1, total_err: failed };
@@ -12,7 +11,7 @@ function map() {
   val[playerId] = 1;
   val[playerId + '_err'] = failed;
   emit(renderDate(this._id.getTimestamp()), val);
-}
+});
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
