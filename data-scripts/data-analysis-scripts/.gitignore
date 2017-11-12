@@ -1,4 +1,4 @@
 logs
-plots
+plots/*.png
 src/*.csv
 src/*.log

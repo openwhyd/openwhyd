@@ -6,6 +6,10 @@ help: ## This help
 	@echo 'Available targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
+backup: ## Suffixes ".prev" to all existing png files (generated plots)
+	@cd plots && ./backup-prev-plots.sh
+	@echo 'Done. You can run make to generate fresh png files in plots/'
+
 plots/plot-user-growth.png: ## Generate the "user growth" plot
 	@echo 'Plotting user growth...'
 	@cd src && ./plot-user-growth.sh
