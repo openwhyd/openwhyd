@@ -38,8 +38,8 @@ var opts = {
     'replace': OUTPUT_COLLECTION, // will store results in that collection
     // => took 8 minutes to run
   },
-  query: makeDateRangeQuery(FROM_DATE)
-  ,limit: 100000 // => runs in 14 seconds
+  query: makeDateRangeQuery(FROM_DATE),
+  //limit: 100000 // => runs in less time
 };
 
 print('generating data, date:' + new Date());
