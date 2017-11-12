@@ -6,7 +6,13 @@ load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
 // symbols that should be provided at runtime:
 // - OUTPUT_COLLECTION: name of the mongodb collection to store the results
 // - RENDER_FCT: function that will be used to aggregate _ids, e.g. 'renderDate'
-const PERIOD = YEAR; // last 365 days
+// - PERIOD: (optional) range in milliseconds from today, e.g. 'YEAR', 'MONTH'
+
+try {
+  PERIOD = eval(PERIOD);
+} catch (e) {
+  PERIOD = WEEK; // default value: 7 days
+}
 
 var renderFct = eval(RENDER_FCT); // => e.g. renderDate() or renderWeek()
 

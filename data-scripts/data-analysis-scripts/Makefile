@@ -25,8 +25,18 @@ logs/list-error-codes-per-week.log: logs/collection-playlog.log ## List playback
 
 logs/list-error-codes-per-day.log: logs/collection-playlog.log ## List playback error codes per day
 	@echo 'Aggregating playback error codes per day into intermediate db collection...'
-	@cd src && mongo openwhyd_dump --eval "const RENDER_FCT = 'renderDate', OUTPUT_COLLECTION = 'list-error-codes-per-day';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-day.log
+	@cd src && mongo openwhyd_dump --eval "var PERIOD = 'YEAR', RENDER_FCT = 'renderDate', OUTPUT_COLLECTION = 'list-error-codes-per-day';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-day.log
 	@echo 'Done. Created db collection: list-error-codes-per-day'
+
+logs/list-error-codes-per-day-30.log: logs/collection-playlog.log ## List playback error codes per day, over the last 30 days
+	@echo 'Aggregating playback error codes per day into intermediate db collection...'
+	@cd src && mongo openwhyd_dump --eval "var PERIOD = 'MONTH', RENDER_FCT = 'renderDate', OUTPUT_COLLECTION = 'list-error-codes-per-day-30';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-day-30.log
+	@echo 'Done. Created db collection: list-error-codes-per-day-30'
+
+logs/list-error-codes-per-day-7.log: logs/collection-playlog.log ## List playback error codes per day, over the last 7 days
+	@echo 'Aggregating playback error codes per day into intermediate db collection...'
+	@cd src && mongo openwhyd_dump --eval "var PERIOD = 'WEEK', RENDER_FCT = 'renderDate', OUTPUT_COLLECTION = 'list-error-codes-per-day-7';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-day-7.log
+	@echo 'Done. Created db collection: list-error-codes-per-day-7'
 
 src/list-error-types-per-player.log: logs/collection-playlog.log ## List playback errors and their distribution per player
 	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log
@@ -69,3 +79,11 @@ plots/plot-error-codes-per-week.png: logs/list-error-codes-per-week.log ## Gener
 plots/plot-error-codes-per-day.png: logs/list-error-codes-per-day.log ## Generate the "distribution of playback error codes per day" plot
 	@echo 'Plotting error codes per day...'
 	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-day" "plot-error-codes-per-day" "Distribution of errors codes per day, normalised by number of plays"
+
+plots/plot-error-codes-per-day-30.png: logs/list-error-codes-per-day-30.log ## Generate the "distribution of playback error codes per day, over the last 30 days" plot
+	@echo 'Plotting error codes per day...'
+	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-day-30" "plot-error-codes-per-day-30" "Distribution of errors codes per day, normalised by number of plays, over the last 30 days"
+
+plots/plot-error-codes-per-day-7.png: logs/list-error-codes-per-day-7.log ## Generate the "distribution of playback error codes per day, over the last 7 days" plot
+	@echo 'Plotting error codes per day...'
+	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-day-7" "plot-error-codes-per-day-7" "Distribution of errors codes per day, normalised by number of plays, over the last 7 days"
