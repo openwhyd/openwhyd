@@ -20,8 +20,13 @@ logs/collection-playlog.log: collection-dumps/playlog.bson.gz
 
 logs/list-error-codes-per-week.log: logs/collection-playlog.log ## List playback error codes per week
 	@echo 'Aggregating playback error codes per week into intermediate db collection...'
-	@cd src && mongo openwhyd_dump list-error-codes-per-week.mongo.js >../logs/list-error-codes-per-week.log 
+	@cd src && mongo openwhyd_dump --eval "const RENDER_FCT = 'renderWeek', OUTPUT_COLLECTION = 'list-error-codes-per-week';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-week.log
 	@echo 'Done. Created db collection: list-error-codes-per-week'
+
+logs/list-error-codes-per-day.log: logs/collection-playlog.log ## List playback error codes per day
+	@echo 'Aggregating playback error codes per day into intermediate db collection...'
+	@cd src && mongo openwhyd_dump --eval "const RENDER_FCT = 'renderDate', OUTPUT_COLLECTION = 'list-error-codes-per-day';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-day.log
+	@echo 'Done. Created db collection: list-error-codes-per-day'
 
 src/list-error-types-per-player.log: logs/collection-playlog.log ## List playback errors and their distribution per player
 	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log
@@ -59,4 +64,8 @@ plots/plot-nb-play-errors-per-day.png: logs/collection-playlog.log ## Generate t
 
 plots/plot-error-codes-per-week.png: logs/list-error-codes-per-week.log ## Generate the "distribution of playback error codes per week" plot
 	@echo 'Plotting error codes per week...'
-	@cd src && ./plot-error-codes-per-week.sh
+	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-week" "plot-error-codes-per-week" "Distribution of errors codes per week, normalised by number of plays"
+
+plots/plot-error-codes-per-day.png: logs/list-error-codes-per-day.log ## Generate the "distribution of playback error codes per day" plot
+	@echo 'Plotting error codes per day...'
+	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-day" "plot-error-codes-per-day" "Distribution of errors codes per day, normalised by number of plays"
