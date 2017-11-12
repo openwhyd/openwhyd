@@ -20,7 +20,7 @@ logs/collection-playlog.log: collection-dumps/playlog.bson.gz
 
 logs/list-error-codes-per-week.log: logs/collection-playlog.log ## List playback error codes per week
 	@echo 'Aggregating playback error codes per week into intermediate db collection...'
-	@mongo openwhyd_dump src/list-error-codes-per-week.mongo.js >logs/list-error-codes-per-week.log 
+	@cd src && mongo openwhyd_dump list-error-codes-per-week.mongo.js >../logs/list-error-codes-per-week.log 
 	@echo 'Done. Created db collection: list-error-codes-per-week'
 
 src/list-error-types-per-player.log: ## List playback errors and their distribution per player

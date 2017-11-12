@@ -1,6 +1,10 @@
 // usage: $ mongo openwhyd_dump list-error-codes-per-week.mongo.js
 
+print(pwd());
+load('./mongo-helpers/date-range.mongo.js'); // exports makeDateRangeQuery()
+
 const OUTPUT_COLLECTION = 'list-error-codes-per-week';
+const FROM_DATE = new Date(today - YEAR); // last 365 days
 
 function map() {
   var DAY_MS = 1000 * 60 * 60 * 24;
@@ -44,6 +48,7 @@ var opts = {
     'replace': OUTPUT_COLLECTION, // will store results in that collection
     // => took 8 minutes to run
   },
+  query: makeDateRangeQuery(FROM_DATE)
   //limit: 1000000 // => runs in 14 seconds
 };
 

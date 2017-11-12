@@ -10,7 +10,7 @@ echo "exporting $LISTNAME mongodb collection to $OUT.temp.csv ..."
 # write resulting collection into output csv file, with custom header row
 echo $COLUMNS >$OUT.temp.csv
 mongoexport -d $DB -c "$LISTNAME" --type=csv --fields "$FIELDS" | tail -n+2 >>$OUT.temp.csv
-sed -i '' -e '$ d' $OUT.temp.csv # remove last line
+./csv-helpers/fill-empty-values.sh $OUT.temp.csv 0
 
 echo "plot data to ../plots/$OUT.png ..."
 mkdir ../plots &>/dev/null
