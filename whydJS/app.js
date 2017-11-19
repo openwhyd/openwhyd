@@ -6,6 +6,17 @@ var async = require('async');
 var colors = require('colors');
 var mongodb = require('mongodb');
 
+var openwhydVersion = require('./package.json').version;
+
+// initialize error monitoring
+var Rollbar = require("rollbar");
+var rollbar = new Rollbar({
+	accessToken: "655e72dc704f43c78f9c1e06b8b45ab0",
+	captureUncaught: true,
+	captureUnhandledRejections: true
+});
+rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
+
 var DB_INIT_SCRIPTS = [
 	'./config/initdb.js',
 	//'./config/initdb_team.js', // creates an admin user => should not be run on production!
@@ -84,7 +95,7 @@ var params = process.appParams = {
 	feedbackEmail: process.env.WHYD_CONTACT_EMAIL.substr(), // mandatory
 
 	// rendering preferences
-	version: require('./package.json').version,
+	version: openwhydVersion,
 	startTime: new Date(),
 	// landingPage: "public/html/landingPhoto.html", //"public/html/landingPageLaunch.html",  //cf logging.js
 	nbPostsPerNewsfeedPage: 20,
