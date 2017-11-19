@@ -41,6 +41,9 @@ function makeErrorLog(fct, type){
 	return function(){
 		fct("===\n" + (new Date()).toUTCString() + ", " + type + " (concise trace)\n" + conciseTrace());
 		fct.apply(console, arguments);
+		if (type === 'Warning' || type === 'Error') {
+			rollbar[type.toLowerCase()](Array.prototype.join.call(arguments, " "));
+		}
 	}
 }
 
