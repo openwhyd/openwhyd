@@ -59,9 +59,9 @@ You'll find **setup and usage instructions** in [INSTALL.md](INSTALL.md).
 
 There are several way you can help Openwhyd! 💓
 
-- The **most needed** right now is financial support, in order to pay for server/hosting bills. You can help Openwhyd sustain by [becoming a backer](https://opencollective.com/openwhyd/order/313) (*starting at $1/month, can be interrupted anytime*), or giving a [one-off donation](https://opencollective.com/openwhyd/donate). You'll find our expenses and current backers on our [Open Collective page](https://opencollective.com/openwhyd).
-
 - If you're a **developer**, you can help us reply to our users' problems and questions from the [Music Lovers Club](https://www.facebook.com/groups/openwhyd/), maintain [issues](https://github.com/openwhyd/openwhyd/issues), or even better: [contribute to the codebase](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help). (beginners are welcome too!)
+
+- You can help Openwhyd sustain by [becoming a backer](https://opencollective.com/openwhyd/order/313) (*starting at $1/month, can be interrupted anytime*), or giving a [one-off donation](https://opencollective.com/openwhyd/donate). We publish our expenses transparently on [Open Collective](https://opencollective.com/openwhyd).
 
 - If you have **other skills** you'd like to contribute to Openwhyd, please [tell us](https://github.com/openwhyd/openwhyd/issues/new?title=Hi,+I+want+to+help!).
 
