@@ -88,11 +88,11 @@ function renderEmailTemplate(title, body) {
 // REGISTRATION RELATED
 
 exports.generateWaitingList = function () { // called from models/notifEmails.js wrappers
-	var subject = "Whyd registration";
+	var subject = "Openwhyd registration";
 	return {
 		subject: subject,
 		bodyText: [
-			'Hey! Thank you for your interest in Whyd! '
+			'Hey! Thank you for your interest in Openwhyd! '
 			+ 'Our community of music lovers is growing by the minute. '
 			+ 'We can\'t wait to see how you make it an even better place for music lovers. We will send your invitation very soon.',
 			'In the meantime, follow us on Twitter (http://twitter.com/open_whyd) '
@@ -127,10 +127,10 @@ exports.generateWaitingList = function () { // called from models/notifEmails.js
 exports.generateAcceptedInvite = function(user) { // called from controllers/admin/invites.js
 	var inviteUrl = urlPrefix + "/invite/" + user._id;
 	//var body = acceptedInviteText.replace("{{inviteUrl}}", inviteUrl).replace("{{whydUrl}}", urlPrefix);
-	return renderEmailTemplate("Your invitation to Whyd", [
+	return renderEmailTemplate("Your invitation to Openwhyd", [
 		"Hey,",
-		"Welcome to Whyd! We're excited to invite you into our community of music lovers in the one place to keep, play and share all the internet's music.",
-		"To create your page on Whyd, click the link below:",
+		"Welcome to Openwhyd! We're excited to invite you into our community of music lovers in the one place to keep, play and share all the internet's music.",
+		"To create your page on Openwhyd, click the link below:",
 		renderLink(inviteUrl, inviteUrl),
 		"Never stop jamming!",
 		"the Openwhyd team",
@@ -140,9 +140,9 @@ exports.generateAcceptedInvite = function(user) { // called from controllers/adm
 }
 
 exports.generateRegWelcome = function (user, inviteSender) {
-	return renderEmailTemplate("Welcome to Whyd, "+user.name+"!", [
+	return renderEmailTemplate("Welcome to Openwhyd, "+user.name+"!", [
 		"Hi, " + user.name,
-		"My name is Tony, Whyd's Chief BBQ Officer, and I'd like to personally welcome you to our community"
+		"My name is Tony, Openwhyd's Chief BBQ Officer, and I'd like to personally welcome you to our community"
 		+ " of music lovers. Now that you’re in, we can’t wait to hear the music that makes you rock!",
 		"Here are some tips to get started:",
 		"- Add, collect and share great tracks to your profile by clicking on the green [+ Add track] button on the top right of the screen;",
@@ -233,33 +233,33 @@ exports.generatePasswordReset = function (user, options) {
 		href += "&redirect=" + encodeURIComponent(options.redirect);
 	return {
 		subject: "Openwhyd password",
-		bodyText: "If you want to set a new password to your openwhyd account, open this link:\n\n"
+		bodyText: "If you want to set a new password to your Openwhyd account, open this link:\n\n"
 			+ href + "\n\n"
-			+ "Greetings from the openwhyd team!\n\n"
+			+ "Greetings from the Openwhyd team!\n\n"
 			+ FEEDBACK_FOOTER
 	}
 };
 
 exports.generatePasswordUpdated = function (user) {
 	return {
-		subject: "your openwhyd password was successfully updated!",
+		subject: "your Openwhyd password was successfully updated!",
 		bodyText: "As you requested, we updated your password on Openwhyd.\n\n"
 			+ "In order to login, open this URL: "+urlPrefix+"\n"
 			+ "Then, enter your email ("+user.email+") and your new password.\n\n"
 			+ "We're eager to hearing your feedback about Openwhyd!\n\n"
-			+ "Greetings from the openwhyd team!\n\n"
+			+ "Greetings from the Openwhyd team!\n\n"
 			+ FEEDBACK_FOOTER
 	}
 };
 
 exports.generateEmailUpdated = function (user) {
 	return {
-		subject: "your openwhyd email address was successfully updated!",
+		subject: "your Openwhyd email address was successfully updated!",
 		bodyText: [
 			"As you requested, we updated your email address on Openwhyd.",
 			"From now on, you must use your new email address in order to log in: "+urlPrefix,
 			"We're eager to hearing your feedback about Openwhyd!",
-			"Greetings from the openwhyd team!",
+			"Greetings from the Openwhyd team!",
 			FEEDBACK_FOOTER
 		].join("\n\n")
 	}
@@ -342,7 +342,7 @@ exports.generateFbFriendJoinedWhyd = function(newUser) {
 		subject: "Your friend " + newUser.name + " just joined Openwhyd",
 		bodyText: [
 			"Hooray!",
-			"Your friend " + newUser.name + " just joined openwhyd !",
+			"Your friend " + newUser.name + " just joined Openwhyd !",
 			"You should subscribe to their tracks: "+urlPrefix+"/u/"+newUser.id,
 			"Never stop jamming!",
 			" -- the Openwhyd team",
