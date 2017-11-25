@@ -42,7 +42,7 @@
 
 
   facebookButton : function(){
-    fbLogin('email', function(res) {
+    fbRegister('email', function(res) {
       if (!res){
         console.log("no fb login");
       }
@@ -51,10 +51,17 @@
         window.location.href = signup.redirect || res.redirect;
       }
       else if (res.fbUser) { // new user
+        const accessToken = res.fbAuthResponse.accessToken
+
         signup.fields["name"].val(res.fbUser.name);
         signup.fields["email"].val(res.fbUser.email);
+        
+        // Mandatory for signup but will never be used by 
+        // user to login so we setup a password that is impossible
+        // to guess
+        signup.fields["password"].val(accessToken.slice(0, 31));
         $("input[name=fbUid]").val(res.fbUser.id);
-        $("input[name=fbTok]").val((res.fbAuthResponse || {}).accessToken);
+        $("input[name=fbTok]").val(accessToken);
         $('#btnSignUp').click();
       };
     });

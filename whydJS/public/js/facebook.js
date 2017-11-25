@@ -157,6 +157,31 @@ function fbLogin (perms, cb) {
 	}, true);
 }
 
+function fbRegister (perms, cb) {
+  fbAuth(perms, function (fbId, fbAuthResponse) {
+		if (!fbId) {
+			return console.log("no fb login");
+			cb({error:"no fb login"});
+		}
+
+    const options = {
+      fields: 'last_name, first_name, email',
+      access_token: fbAuthResponse.authResponse.accessToken,
+    }
+
+    FB.api('/me', options, (response) => {
+      cb({
+        fbAuthResponse: fbAuthResponse.authResponse, // fbTok
+        fbUser: {
+          name: response.first_name + ' ' + response.last_name,
+          email: response.email,
+          id: fbId, // fbUid
+        }
+      })
+    })
+  }, true);
+}
+
 // request-based invite
 function fbInvite(fbUser) {
 	// if coming from fbLogin, update the fbId of logged in user
