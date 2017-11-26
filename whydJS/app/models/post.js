@@ -49,7 +49,7 @@ function processAdvQuery(query, params, options) {
 	query = query || {};
 	params = params || {};
 	options = options || {};
-	params.limit = (options.limit || NB_POSTS) + 1;
+	params.limit = (parseInt(options.limit) || NB_POSTS) + 1;
 	if (options.before != null) {
 		if (mongodb.isObjectId(options.before))
 			query._id = {$gt: ObjectId(""+options.before)};
