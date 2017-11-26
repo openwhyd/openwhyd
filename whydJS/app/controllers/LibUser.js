@@ -435,9 +435,7 @@ function fetchAndRender (options, callback) {
 		options.fetchParams.limit = parseInt(options.limit);
 
 	//console.time("LibFriends.fetchAndRender");
-	(options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(options, callback, function() {
-		process
-	});
+	(options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(options, callback, process);
 }
 
 // MAIN FUNCTION
