@@ -85,7 +85,7 @@ function renderEmailTemplate(title, body) {
 	};
 }
 
-// REGISTRATION RELATED
+// RELATED TO WAITING LIST (USED DURING WHYD BETA TESTING PERIOD)
 
 exports.generateWaitingList = function () { // called from models/notifEmails.js wrappers
 	var subject = "Openwhyd registration";
@@ -138,6 +138,8 @@ exports.generateAcceptedInvite = function(user) { // called from controllers/adm
 		"PS: We'd love your feedback! In fact we need it to continue to develop Openwhyd to be the simplest and most enjoyable way for music lovers to access the wealth of music available online. We're all ears (or, eyes, actually) at " + FEEDBACK_EMAIL,
 	]);
 }
+
+// RELATED TO USER REGISTRATION / SIGN-UP
 
 exports.generateRegWelcome = function (user, inviteSender) {
 	return renderEmailTemplate("Welcome to Openwhyd, "+user.name+"!", [
@@ -204,7 +206,7 @@ exports.generateInviteBy = function (senderName, inviteId, message) {
 		bodyText: (message ? message + "\n\n--\n\n" : "") + [
 			"Hey, I wanted to invite you to join our community of music lovers at Openwhyd. It's a social network designed exclusively for music.",
 			"Openwhyd is the place to keep, play, and share all of the internet's music from sites like Soundcloud, Vimeo, and YouTube.",
-			"Openwhyd is invite only, so here is your personal invite: " + inviteUrl,
+			"Here is your personal invite: " + inviteUrl,
 			"Never stop jamming,",
  			senderName
 			//FEEDBACK_FOOTER
@@ -216,7 +218,7 @@ exports.generateInviteAccepted = function (user) {
 	return {
 		subject: "Your friend "+user.name+" accepted your invite to Openwhyd",
 		bodyText: "Great news! Your friend "+user.name+" just accepted your invitation to Openwhyd!\n\n"
-			+ "Check out his/her library: "+urlPrefix+"/u/"+user.id+"\n\n"
+			+ "Check out their library: "+urlPrefix+"/u/"+user.id+"\n\n"
 			+ "Thanks for adding interesting people to the Openwhyd community!\n\n"
 			+ "We look forward to listening to your next amazing tracks on Openwhyd: "+urlPrefix+"\n\n"
 			+ "Greetings from the Openwhyd team!\n\n"
