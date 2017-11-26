@@ -16,21 +16,21 @@ exports.makeTests = function(p){
 
 	return [
 		["fetchUserSubscriptions", function fetchSubscriptions(cb) {
-			console.time("fetchUserSubscriptions");
+			//console.time("fetchUserSubscriptions");
 			followModel.fetchUserSubscriptions(p.loggedUser.id, function(subscriptions) {
 				testVars.uidList = [p.loggedUser.id];
 				for (var i in subscriptions.subscriptions)
 					if (subscriptions.subscriptions[i].id)
 						testVars.uidList.push((""+subscriptions.subscriptions[i].id).replace("/u/", ""));
-				console.timeEnd("fetchUserSubscriptions");
+				//console.timeEnd("fetchUserSubscriptions");
 				cb(true);
 			});
 		}],
 		["fetchSubscriptionArray == fetchUserSubscriptions", function fetchSubscriptions(cb) {
-			console.time("fetchSubscriptionArray");
+			//console.time("fetchSubscriptionArray");
 			followModel.fetchSubscriptionArray(p.loggedUser.id, function(subscriptions) {
 				subscriptions.push(p.loggedUser.id);
-				console.timeEnd("fetchSubscriptionArray");
+				//console.timeEnd("fetchSubscriptionArray");
 				cb(subscriptions.sort().join() === testVars.uidList.sort().join());
 			});
 		}],

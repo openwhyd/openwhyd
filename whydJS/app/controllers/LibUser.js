@@ -377,9 +377,9 @@ function fetchAndRenderProfile (options, callback, process) {
 		if (options.after || options.before) // no page rendering required
 			proceed();
 		else { // SIDEBAR
-			console.time("LibUser.fetchActivity");
+			//console.time("LibUser.fetchActivity");
 			fetchActivity(options, function(){ // => populates options.activity
-				console.timeEnd("LibUser.fetchActivity");
+				//console.timeEnd("LibUser.fetchActivity");
 				var ownProfile = options.user.id == (options.loggedUser || {}).id;
 				// render playlists
 				if ((options.user.pl || []).length || ownProfile)
@@ -424,7 +424,7 @@ function fetchAndRender (options, callback) {
 				options.pageImage = config.urlPrefix + "/img/playlist/" + options.user.id + "_" + options.playlistId;
 			options.customFeedTemplate = options.playlistId ? playlistTemplateV2 : profileTemplateV2;
 		}
-		console.timeEnd("LibFriends.fetchAndRender");
+		//console.timeEnd("LibFriends.fetchAndRender");
 		feedTemplate.renderFeedAsync(posts, options, callback);
 	};
 
@@ -434,8 +434,10 @@ function fetchAndRender (options, callback) {
 	else if (options.limit && !isNaN(options.limit))
 		options.fetchParams.limit = parseInt(options.limit);
 
-	console.time("LibFriends.fetchAndRender");
-	(options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(options, callback, process);
+	//console.time("LibFriends.fetchAndRender");
+	(options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(options, callback, function() {
+		process
+	});
 }
 
 // MAIN FUNCTION
@@ -532,9 +534,9 @@ function renderUserLibrary (lib, user) {
 	// run the call chain
 	(function next(res){
 		var fct = fcts.shift();
-		console.time(fct.name);
+		//console.time(fct.name);
 		fct(res || options, function(res){
-			console.timeEnd(fct.name);
+			//console.timeEnd(fct.name);
 			next(res || options);
 		});
 	})();

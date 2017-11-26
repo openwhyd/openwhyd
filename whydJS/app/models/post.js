@@ -106,7 +106,7 @@ exports.fetchByAuthorsOld  = function (uidList, options, handler) {
 };
 
 exports.fetchByAuthors  = function (uidList, options, cb) {
-	console.time("post.fetchByAuthors2...");
+	//console.time("post.fetchByAuthors2...");
 	var posts = [],
 		query = {uId: uidList.length > 1 ? {"$in":uidList} : uidList[0]},
 		uidSet = snip.arrayToSet(uidList);
@@ -119,7 +119,7 @@ exports.fetchByAuthors  = function (uidList, options, cb) {
 		if (post && !uidSet[(post.repost || {}).uId])
 			posts.push(post);
 		if (!post || !next || posts.length == limit) {
-			console.timeEnd("post.fetchByAuthors2...");
+			//console.timeEnd("post.fetchByAuthors2...");
 			cb(processPosts(posts)); // TODO: close cursor
 		}
 		else
@@ -130,13 +130,13 @@ exports.fetchByAuthors  = function (uidList, options, cb) {
 var MAX_OTHER_AUTHORS = 3;
 
 exports.fetchByOtherAuthors  = function (uidList, options, cb) {
-	console.time("post.fetchByOtherAuthors...");
+	//console.time("post.fetchByOtherAuthors...");
 	var posts = [], query = {}, uidSet = snip.arrayToSet(uidList);
 	mongodb.forEach2("post", {q:{}, sort:[['_id','desc']]}, function(post, next){
 		if (post && !uidSet[post.uId])
 			posts.push(post);
 		if (!post || !next || posts.length == MAX_OTHER_AUTHORS) {
-			console.timeEnd("post.fetchByOtherAuthors...");
+			//console.timeEnd("post.fetchByOtherAuthors...");
 			cb(processPosts(posts)); // TODO: close cursor
 		}
 		else
@@ -376,10 +376,10 @@ exports.fetchPlaylistPosts = function (uId, plId, options, handler) {
 		after: options.after,
 		before: options.before
 	};
-	//console.time("fetchPlaylistPosts");
+	////console.time("fetchPlaylistPosts");
 	if (uId)
 		exports.fetchPosts({uId:uId, "pl.id": parseInt(plId)/*{$in:[parseInt(plId), ""+plId]}*/}, playlistSort, options, handler/*function(){
-			console.timeEnd("fetchPlaylistPosts");
+			//console.timeEnd("fetchPlaylistPosts");
 			handler.apply(null, arguments);
 		}*/);
 	else

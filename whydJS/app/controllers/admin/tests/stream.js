@@ -18,26 +18,26 @@ exports.makeTests = function(p){
 	};
 	return [
 		["fetchSubscriptionArray", function fetchSubscriptions(cb) {
-			console.time("fetchSubscriptionArray");
+			//console.time("fetchSubscriptionArray");
 			followModel.fetchSubscriptionArray(p.loggedUser.id, function(subscriptions) {
 				testVars.uidList = subscriptions.concat([p.loggedUser.id]);
-				console.timeEnd("fetchSubscriptionArray");
+				//console.timeEnd("fetchSubscriptionArray");
 				cb(true);
 			});
 		}],
 		["fetchByAuthorsOld", function(cb){
-			console.time("fetchByAuthors_v1");
+			//console.time("fetchByAuthors_v1");
 			postModel.fetchByAuthorsOld(testVars.uidList, OPTIONS, function(res){
-				console.timeEnd("fetchByAuthors_v1");
+				//console.timeEnd("fetchByAuthors_v1");
 				console.log("=> fetched", res.length, "posts");
 				testVars.hashedResult = hashPosts(res);
 				cb(true);
 			});
 		}],
 		["fetchByAuthors", function(cb){
-			console.time("fetchByAuthors_v2");
+			//console.time("fetchByAuthors_v2");
 			postModel.fetchByAuthors(testVars.uidList, OPTIONS, function(res){
-				console.timeEnd("fetchByAuthors_v2");
+				//console.timeEnd("fetchByAuthors_v2");
 				console.log("=> fetched", res.length, "posts");
 				cb(testVars.hashedResult === hashPosts(res));
 			});

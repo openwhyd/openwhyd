@@ -16,9 +16,9 @@ var HISTORY_LIMIT = 3;
 var RECOM_PEOPLE_LIMIT = 3;
 
 function fetchSubscriptions(uid, callback) {
-	console.time("LibFriends.fetchSubscriptions");
+	//console.time("LibFriends.fetchSubscriptions");
 	followModel.fetchSubscriptionArray(uid, function(subscriptions) {
-		console.timeEnd("LibFriends.fetchSubscriptions");
+		//console.timeEnd("LibFriends.fetchSubscriptions");
 		callback(subscriptions.concat([uid]));
 	});
 }
@@ -72,14 +72,14 @@ function prepareSidebar(uidList, options, cb) {
 			if (userList && userList.length)
 				options.suggestedUsers = { items: userList };
 		*/
-			console.time("fetchRecentActivity");
+			//console.time("fetchRecentActivity");
 			fetchRecentActivity(uidList, options.loggedUser.id, function(activities) {
-				console.timeEnd("fetchRecentActivity");
+				//console.timeEnd("fetchRecentActivity");
 				if (activities && activities.length)
 					options.recentActivity = { items: activities };
-				console.time("fetchLast");
+				//console.time("fetchLast");
 				contestModel.fetchLast(function(contest){
-					console.timeEnd("fetchLast");
+					//console.timeEnd("fetchLast");
 					if (config.advertisePlaylistContestOnHome && contest && contest.title)
 						options.playlistContest = contest;
 					cb();
