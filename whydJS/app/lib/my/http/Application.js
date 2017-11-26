@@ -5,6 +5,7 @@ var http = require('http');
 var querystring = require('querystring');
 
 var formidable = require('formidable');
+var qset = require('q-set'); // instead of body-parser, for form fields with brackets
 
 var my = require('../');
 var extendResponse = require('./Response').extend;
@@ -97,19 +98,20 @@ var aa = exports.Application = my.Class(http.Server, {
     this._writeBuffer = null;
 
     this.sessionMiddleware = sessionMiddleware;
-    /*
-    this.bodyParser = require('connect').bodyParser({
-      uploadDir: options.uploadDir,
-      keepExtensions: options.keepExtensions
-    });
-    */
+    
     this.bodyParser = function(request, response, callback) {
       var form = new formidable.IncomingForm();
       form.uploadDir = options.uploadDir;
       form.keepExtensions = options.keepExtensions;
       form.parse(request, function(err, postParams, files) {
-        if (err) console.error('bodyParser error', err);
-        request.body = postParams;
+        if (err) console.error('formidable parsing error:', err);
+        // using qset to parse fields with brackets [] for url-encoded form data:
+        // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
+        var parsedParams = {};
+        for (var key in postParams) {
+          qset.deep(parsedParams, key, postParams[key]);
+        }
+        request.body = Object.assign({}, postParams, parsedParams);
         request.files = files;
         callback(request, response);
       });
