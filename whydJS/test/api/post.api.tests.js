@@ -112,12 +112,12 @@ describe(`post api`, function () {
     });
   });
 
-  it(`should not return tracks if two limit parameters are provided`, function (done) {
+  it(`should return tracks if two limit parameters are provided`, function (done) {
     api.loginAs(TEST_USER, function (error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
       // => the `limit` property will be parsed as ["1000","20"] => causing bug #89
       api.get(jar, url, function (error, { response, json }) {
-        assert.equal(json.length, 0);
+        assert.notEqual(json.length, 0);
         done();
       });
     });
