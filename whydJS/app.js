@@ -9,13 +9,16 @@ var mongodb = require('mongodb');
 var openwhydVersion = require('./package.json').version;
 
 // initialize error monitoring
-var Rollbar = require("rollbar");
-var rollbar = new Rollbar({
-	accessToken: "655e72dc704f43c78f9c1e06b8b45ab0",
-	captureUncaught: true,
-	captureUnhandledRejections: true
-});
-rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
+var rollbar;
+if (process.env.NODE_ENV === "production") {
+	var Rollbar = require("rollbar");
+	rollbar = new Rollbar({
+		accessToken: "655e72dc704f43c78f9c1e06b8b45ab0",
+		captureUncaught: true,
+		captureUnhandledRejections: true
+	});
+	rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
+}
 
 var DB_INIT_SCRIPTS = [
 	'./config/initdb.js',
@@ -41,7 +44,7 @@ function makeErrorLog(fct, type){
 	return function(){
 		fct("===\n" + (new Date()).toUTCString() + ", " + type + " (concise trace)\n" + conciseTrace());
 		fct.apply(console, arguments);
-		if (type === 'Warning' || type === 'Error') {
+		if (rollbar && (type === 'Warning' || type === 'Error')) {
 			rollbar[type.toLowerCase()](Array.prototype.join.call(arguments, " "));
 		}
 	}
