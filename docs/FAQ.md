@@ -108,9 +108,10 @@ We also thought of [other ways to generate revenue](https://github.com/openwhyd/
 
 Now, here are reasons why I believe that it’s better for Openwhyd to rely on donations and sponsoring:
 
-It gives users (especially non-developers) an opportunity to contribute to sustaining Openwhyd. I.e. show actively that they care about the platform.
-Seeing that users still donate to sustain the project, developers are more motivated to contribute, because they know that at least these users will really care about these contributions. In other words, the presence of donations indirectly increase the value and impact of contributions.
-Also, I’m not a lawyer, but remaining a human-sized and non-profit project makes us less of a threat to music right-holders and streaming platforms. Complaints are easier to deal with when you don’t make money.
+- It gives users (especially non-developers) an opportunity to contribute to sustaining Openwhyd. I.e. show actively that they care about the platform.
+- Seeing that users still donate to sustain the project, developers are more motivated to contribute, because they know that at least these users will really care about these contributions. In other words, the presence of donations indirectly increase the value and impact of contributions.
+- Also, I’m not a lawyer, but remaining a human-sized and non-profit project makes us less of a threat to music right-holders and streaming platforms. Complaints are easier to deal with when you don’t make money.
+
 For all these reasons, I prefer to stick to donations and partnerships to support the costs of Openwhyd’s technical infrastructure, and rely on intrinsic motivation of developers who want to get involved in evolving the project. ✊
 
 ### Why don’t we host Openwhyd on a cheaper hosting server, to reduce costs?
