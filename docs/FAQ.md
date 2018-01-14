@@ -76,6 +76,30 @@ Secondly, I’ve spent weeks trying to find matches of tracks automatically from
 
 If you really want to have a more bandwidth-efficient way to listen to music, I invite you to try a “legal streaming” music platform like Spotify instead. Because Openwhyd was not designed for that.
 
+### 🇫🇷 Pourquoi faut-il installer Openwhyd pour écouter la musique en arrière plan ?
+
+En Novembre 2017, j'ai décidé de désactiver la lecture en arrière plan car je recevais de plus en plus de messages d'utilisateurs qui se plaignaient que le service ne fonctionnait pas, était buggé, car certains morceaux ne se jouaient pas. Je me suis rendu compte que c'était du au fait que les navigateurs modernes empêchaient les sites comme Openwhyd de démarrer la lecture de vidéos tant qu'ils étaient en arrière plan. Cette décision de la part de Chrome et autres navigateurs qui ont suivi a causé la perte de milliers d'utilisateurs sur Openwhyd. Vu le temps que j'avais investi sur le développement et maintenance d'Openwhyd, j'ai fini par avoir du mal à supporter ces critiques remettant en question la qualité de son fonctionnement.
+
+Sachant que j'avais peu de temps à accorder à résoudre ce problème, la solution la plus rapide que j'ai trouvée était de proposer une version installable d'Openwhyd ne souffrant pas de ces limitations imposées par les navigateurs web. Afin de mettre fin aux critiques tout en garantissant un bon fonctionnement du service pour ses utilisateurs les plus fidèles, j'ai alors décidé de limiter la lecture en arrière plan sur la seule version qui supportait pleinement cette fonctionnalité: la version installable.
+
+J'ai conscience qu'il est impossible pour certains d'utilisateurs d'installer des logiciels sur leur ordinateur, et j'en suis navré. J'ai trois solutions à proposer:
+
+1. trouver un développeur qui accepterait de régler le [problème de lecture en arrière plan](https://github.com/openwhyd/openwhyd/issues/132) sur Openwhyd,
+2. utiliser [sound-nuggets](https://sound-nuggets.xyz) pour écouter la musique de ton compte Openwhyd (c'est encore en cours de développement, mais la lecture en arrière plan fonctionne),
+3. utiliser un service commercial comme Deezer ou Spotify.
+
+### 🇬🇧 Why should I download Openwhyd to play music in the background?
+
+In November 2017, I decided to disable background playback of tracks on Openwhyd.org, because a growing number of users were complaining that Openwhyd was not working properly, that some Youtube tracks were skipped. I realised that this problem was caused by Chrome and other web browsers preventing media playback from starting while the page was in the background. This problem had caused thousands of users to stop using Openwhyd already. At that point, I had been investing a lot of time maintaining Openwhyd on my spare time, so receiving complaints because of that issue was quite upsetting for me.
+
+Having not much time to invest on solving this problem, the quickest solution I found was to offer a downloadable version of Openwhyd that would not be affected by limitations of mainstream web browsers. In order to be able to maintain a good quality of service for our most loyal users, I decided to disable background playback of tracks from openwhyd.org, and invite users to install the downloadable version instead.
+
+I know that it's impossible for some users to install software on their computer, sorry about that. I can offer 3 solutions:
+
+1. find a developer willing to solve the [background playback issue](https://github.com/openwhyd/openwhyd/issues/132) on Openwhyd,
+2. use [sound-nuggets](https://sound-nuggets.xyz) to listen to tracks from your Openwhyd account (it's still work in progress, but background playback does work already some some streaming sources including Youtube),
+3. use a commercial service like Deezer or Spotify.
+
 ### Is it possible to follow playlists rather than users?
 
 I agree that some of the music lovers you follow may share a wide range of genres on Openwhyd, and that you might be interested in following just one or two of their playlists. That’s a feature that I’ve wanted badly to have too!
