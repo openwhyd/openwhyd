@@ -43,7 +43,7 @@ function initOnbGenres() {
 	$("#btnNext").click(function(e){
 		e.preventDefault();
 		var tags = $("#genreGallery li.selected").map(function(){
-			return $(this).find("p").text();
+			return $(this).find("p").text().replace('Electronic', 'Electro');
 		}).get();
 		$("input[name=genres]").val(tags.join(",")).parent().submit();
 		return false;
@@ -58,7 +58,7 @@ function initOnbPeople(genres) {
 	function renderUserInList (user) {
 		var tags = (user.tags || []).map(function(tag){
 			//return $("<a class='tag'>").attr("href", tag.url).text(tag.id + " (" + tag.c + ")");
-			return $('<li class="tag" class="user">').text(tag.id);
+			return $('<li class="tag" class="user">').text(tag.id.replace('Electro', 'Electronic'));
 		});
 		if (tags.length)
 			tags = tags.reduce(function($tags, $nextTag){
