@@ -35,6 +35,8 @@ This product is the result of years of iterative development, by the start-up co
 
 Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the-music-streaming-social-network-becomes-openwhyd-and-gives-keys-to-the-community-18067/), [Adrien Joly](https://github.com/adrienjoly) (ex-lead developer at Whyd) has been maintaining it and coordinating [contributors](https://github.com/openwhyd/openwhyd/network/members) on his spare time.
 
+⚠️ On January 21th of 2018, Adrien Joly announced that he's retiring from the maintainance of Openwhyd's codebase => **this repository now open to new maintainers**! (for more information, [read the announcement](https://medium.com/openwhyd/openwhyd-is-open-to-new-maintainers-94d55050adb4))
+
 - Vision and roadmap: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3) + [development backlog](https://github.com/openwhyd/openwhyd/projects/1).
 - Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2017](https://infograph.venngage.com/publish/c74df49b-2d2f-48bc-b9cb-5bc1f5908c37) 🔥
 - A question / problem? --> Check out [our FAQ](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md)
