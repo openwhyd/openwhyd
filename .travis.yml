@@ -1,5 +1,5 @@
-sudo: required  
-dist: trusty 
+sudo: required
+dist: trusty
 
 language: node_js
 
@@ -28,7 +28,6 @@ addons:
 
 # change directory before `npm install`
 before_install:
-  - sudo rm /etc/apt/sources.list.d/mongodb-3.2.list # Remove the MongoDB repo as their GPG key has expired.
   - cd whydJS
   - source env-vars-testing.sh
   
