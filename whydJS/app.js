@@ -10,6 +10,7 @@ var openwhydVersion = require('./package.json').version;
 
 // initialize error monitoring
 var rollbar;
+/*
 if (process.env.NODE_ENV === "production") {
 	var Rollbar = require("rollbar");
 	rollbar = new Rollbar({
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV === "production") {
 	});
 	rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
 }
+*/
 
 var DB_INIT_SCRIPTS = [
 	'./config/initdb.js',
