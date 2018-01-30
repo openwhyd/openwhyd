@@ -120,6 +120,8 @@ var fetchDataByType = {
 					playlists[i]._id = pl.idParts[1];
 					playlists[i].nbTracks = c;
 					playlists[i].author = mongodb.usernames[pl.idParts[0]];
+					playlists[i].author.email;
+
 					postModel.fetchPlaylistPosts(pl.idParts[0], pl.idParts[1], {limit:MAX_PLAYLIST_THUMBS-1}, function(posts) {
 						for (var j in posts)
 							if (posts[j].img)
