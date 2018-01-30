@@ -62,6 +62,14 @@ exports.getUserNameFromId = function(uid) {
 	return (exports.usernames[""+uid] || {}).name;
 };
 
+exports.getPublicProfileFromId = function(uid) {
+	var user = exports.usernames[""+uid];
+	return !user ? undefined : {
+		_id: user._id,
+		name: user.name
+	};
+};
+
 exports.cacheUser = function(user) {
 	if (!user)
 		return console.log("WARNING: trying to cache a null user!");
