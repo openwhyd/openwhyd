@@ -3,9 +3,16 @@
  * @author adrienjoly, whyd
  **/
 
+var fs = require("fs");
 var mongodb = require("./mongodb.js");
 var ObjectId = mongodb.ObjectId;
 var snip = require("../snip.js");
+
+var playlogStream = fs.createWriteStream("./playlog.json.log", {
+	flags: 'a',
+  encoding: 'utf8',
+  autoClose: true
+});
 
 /**
  * obj fields parameters:
@@ -24,7 +31,8 @@ exports.addPlay = (function(){
 			var cleanObj = snip.checkParams(obj, MANDATORY, OPTIONAL);
 			cleanObj.eId = cleanObj.eId.split("#")[0];
 			//console.log(("addPlay: " + JSON.stringify(cleanObj)).cyan);
-			mongodb.collections["playlog"].insertOne(cleanObj, {w:0});
+			//mongodb.collections["playlog"].insertOne(cleanObj, {w:0});
+			playlogStream.write(JSON.stringify(cleanObj) + "\n");
 		}
 		catch(e) {
 			console.error(e.stack);

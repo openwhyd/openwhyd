@@ -19,7 +19,6 @@ db.createCollection("collabPl");
 db.createCollection("featured");
 db.createCollection("plContest");
 db.createCollection("comment");
-db.createCollection("playlog");
 
 print("indexing post collection...");
 db.post.ensureIndex({"uId": 1});
