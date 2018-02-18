@@ -37,6 +37,7 @@ exports.addPlay = (function(){
 			cleanObj.eId = cleanObj.eId.split("#")[0];
 			//console.log(("addPlay: " + JSON.stringify(cleanObj)).cyan);
 			//mongodb.collections["playlog"].insertOne(cleanObj, {w:0});
+			cleanObj._t = new Date().getTime();
 			playlogStream.write(JSON.stringify(cleanObj) + "\n");
 		}
 		catch(e) {
@@ -87,5 +88,6 @@ exports.addVisit = function (uId, tId, request) {
 	if (orig) visit.orig = orig;
 	
 	//mongodb.collections["visit"].insertOne(visit, {w:0}); // disabled write concern
+	visit._t = new Date().getTime();
 	visitStream.write(JSON.stringify(visit) + "\n");
 };
