@@ -4,11 +4,16 @@
  **/
 
 var fs = require("fs");
-var mongodb = require("./mongodb.js");
-var ObjectId = mongodb.ObjectId;
+//var mongodb = require("./mongodb.js");
 var snip = require("../snip.js");
 
 var playlogStream = fs.createWriteStream("./playlog.json.log", {
+	flags: 'a',
+  encoding: 'utf8',
+  autoClose: true
+});
+
+var visitStream = fs.createWriteStream("./visits.json.log", {
 	flags: 'a',
   encoding: 'utf8',
   autoClose: true
@@ -81,5 +86,6 @@ exports.addVisit = function (uId, tId, request) {
 	var visit = {uId:uId, tId:tId};
 	if (orig) visit.orig = orig;
 	
-	mongodb.collections["visit"].insertOne(visit, {w:0}); // disabled write concern
+	//mongodb.collections["visit"].insertOne(visit, {w:0}); // disabled write concern
+	visitStream.write(JSON.stringify(visit) + "\n");
 };

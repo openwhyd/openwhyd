@@ -9,7 +9,6 @@ db.createCollection("config");
 db.createCollection("email");
 db.createCollection("invite");
 db.createCollection("notif");
-db.createCollection("visit");
 db.createCollection("user");
 db.createCollection("follow");
 db.createCollection("post");
