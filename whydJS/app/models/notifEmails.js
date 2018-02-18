@@ -172,21 +172,3 @@ exports.sendCommentReply = function (post, comment, repliedUid, cb) {
 	else
 		sendEmail(repliedUid, notifTemplate.generateCommentReply(post, comment, repliedUid), cb);
 };
-
-// DISCOVERY / RECOMMENDATION PINGS
-
-// 1) your facebook friend just joined whyd
-exports.sendFbFriendsJoinedWhyd = function(newUser, whydFriends, callback) {
-	var toList = whydFriends.slice(0, whydFriends.length);
-	(function sendNext() {
-		var to = toList.pop();
-		var toId = to.id || "" + to._id;
-		if (!to)
-			callback && callback({nbProcessed:whydFriends.length});
-		else if (to.email && (getUserPrefs(toId) || {})["emFrd"] != -1) {
-			var temp = notifTemplate.generateFbFriendJoinedWhyd(newUser, toId);
-			emailModel.email(to.email, temp.subject, temp.bodyText, temp.bodyHtml, to.name, sendNext);
-		} else
-			sendNext();
-	})();
-};

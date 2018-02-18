@@ -335,21 +335,3 @@ exports.generateCommentReply = function (post, comment, repliedUid) {
 		})
 	]);
 };
-
-// DISCOVERY / RECOMMENDATION PINGS
-
-// 1) your facebook friend just joined whyd
-exports.generateFbFriendJoinedWhyd = function(newUser, toId) {
-	return {
-		subject: "Your friend " + newUser.name + " just joined Openwhyd",
-		bodyText: [
-			"Hooray!",
-			"Your friend " + newUser.name + " just joined Openwhyd !",
-			"You should subscribe to their tracks: "+urlPrefix+"/u/"+newUser.id,
-			"Never stop jamming!",
-			" -- the Openwhyd team",
-			"Unsubscribe: " + config.urlPrefix + "/api/unsubscribe?type=emFrd&uId=" + toId,
-			FEEDBACK_FOOTER
-		].join('\n\n')
-	};
-}

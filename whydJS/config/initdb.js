@@ -14,7 +14,6 @@ db.createCollection("user");
 db.createCollection("follow");
 db.createCollection("post");
 db.createCollection("activity");
-db.createCollection("fbfriends");
 db.createCollection("track");
 db.createCollection("collabPl");
 db.createCollection("featured");

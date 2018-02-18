@@ -176,20 +176,6 @@ exports.registerInvitedUser = function(request, user, response) {
 		else {
 			loginAndRedirectTo(onboardingUrl || "/");
 		}
-
-		if (storedUser.fbTok) {
-			console.log("register: notify fb friends that user has just joined whyd...");
-			facebookModel.fetchFbFriendsWithSub(storedUser, storedUser.fbTok, function(res) {
-				var fbFriends = (res || {}).whydFriends || [];
-				if (fbFriends.length)
-					userModel.fetchUserFields(fbFriends, ["email"], function() {
-						console.log("register: added emails to fb friends", fbFriends.length);
-						notifModel.fbFriendsJoinedWhyd(storedUser, fbFriends, function(result) {
-							console.log("register, result of facebook friends notif:", result);
-						});
-					});
-			});
-		}
 	}
 
 	if (user.iBy || checkInvites)

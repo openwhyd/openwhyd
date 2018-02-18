@@ -105,10 +105,6 @@ ul.menu {
   background-repeat: no-repeat;
 }
 
-.menu li.inviteFacebook span {
-  background-image: url("/images/icon-invite-facebook.png");
-}
-
 .menu li.inviteEmail span {
   background-image: url("/images/icon-invite-email.png");
 }
@@ -304,37 +300,6 @@ ul.menu {
   background-position: 50% 50%;
 }
 
-#fbFriends {
-  padding: 30px;
-}
-
-#fbFriends ul {
-  list-style: none;
-  padding: 0;
-}
-
-#fbFriends ul li {
-  margin: 0;
-  width: 360px;
-}
-
-#fbFriends .q {
-  border-radius: 20px;
-  border: 1px solid #AAA;
-  padding: 10px 20px;
-  width: 320px;
-  font-size: 14px;
-  background: url(/images/icon-search-general.png) no-repeat 330px center;
-}
-
-#fbFriends .q:focus {
-  outline: none;
-  border: 1px solid #2577bc;
-  box-shadow: 0 0 5px rgba(37,119,188,1);
-  -webkit-box-shadow: 0 0 5px rgba(37,119,188,1);
-  -moz-box-shadow: 0 0 5px rgba(37,119,188,1);
-}
-
 .alreadyOnWhyd ul li small { /* bio */
   width: 190px;
 }
@@ -354,39 +319,8 @@ ul.menu {
     <p class="legend">So get your friends on Openwhyd!</p>
   </div>
   <ul class="menu">
-    <li class="inviteFacebook selected"><span>With Facebook</span></li>
     <li class="inviteEmail"><span>With Email</span></li>
   </ul>
-
-  <!-- FACEBOOK TAB -->
-
-  <div class="tabContent inviteFacebook">
-
-    <div class="fbStep" id="needFbConnect">
-      <div class="image"></div>
-      <p>Click below to find and invite your Facebook friends on Openwhyd.</p>
-      <a id="fbConnect" href="javascript:fbConnect();"></a>
-      <p class="notice">We will only send messages to friends you explicitely selected.</p>
-    </div>
-
-    <div class="fbStep" id="noFriends" style="display:none;">
-      <p>Sorry, we could not gather your friends from Facebook...</p>
-      <p>Please try again later!</p>
-    </div>
-
-    <div class="fbStep" id="fbFriends" style="display:none;">
-      <div class="blueBox alreadyOnWhyd">
-        <h2>Friends already on Openwhyd</h2>
-        <ul></ul>
-      </div>
-      <h2>Invite your friends</h2>
-      <div class="filter">
-        <input name="q" class="q" type="text" value="" placeholder="Search people" autocomplete="off">
-      </div>
-      <ul class="notOnWhyd"></ul>
-    </div>
-
-  </div>
 
   <!-- EMAIL TAB -->
 
@@ -427,156 +361,6 @@ ul.menu {
     $('.tabContent').hide();
     $('.tabContent.'+tabClass).show();
     $(this).addClass("selected");
-  });
-
-  $("li.inviteFacebook").click();
-
-  // "WITH FACEBOOK" TAB
-
-  var friendSet = {};
-
-  function getFriends(fbId, fbAccessToken, cb) {
-    var data = {ajax: "fbfriends"};
-    if (fbId) data.fbUserId = fbId;//res.authResponse.userID
-    if (fbAccessToken) data.fbAccessToken = fbAccessToken;
-    $.ajax({
-      type: "POST",
-      url: "/api/fbfriends",
-      data: data,
-      complete: function(res, status) {
-        try {
-          if (status != "success" || !res.responseText) throw 0;
-          var json = JSON.parse(""+res.responseText) || {};
-          console.log("success", json);
-          cb && cb(json);
-        }
-        catch(e) {
-          cb && cb({error:e || "An error occured. Please try again."});
-          console.log(e, e.stack);
-        }
-      }
-    });
-  }
-
-  function sendFbInvite(fbId, inviteCode, cb) {
-    fbSendMessage({
-      to: fbId,
-    //  name: 'People Argue Just to Win',
-      link: '/invite/' + inviteCode
-    }, cb);
-  }
-
-  function requestInviteCode(fbId, name, cb) {
-    $.ajax({
-      type: "POST",
-      url: "/invite",
-      data: {fbId: fbId},
-      success: function(res) {
-        console.log("invite code", typeof res, res);
-        cb((res || {}).inviteCode);
-      },
-      error: function(e) {
-        cb();
-      }
-    });
-  }
-
-  function deleteInviteCode(inviteCode) {
-    $.ajax({
-      type: "DELETE",
-      url: "/invite/" + inviteCode,
-      success: function(res) {
-        console.log("deleted invite code", res);
-      },
-      error: function(e) {
-        console.log("error while trying to deleted invite code", e);
-      }
-    });
-  }
-
-  function onInviteClick() {
-    var $btn = $(this);
-    var fbId = $btn.attr("data-fbid");
-    var name = $btn.find("a").text();
-    if (!$btn.hasClass("invited"))
-      requestInviteCode(fbId, name, function(inviteCode) {
-        if (inviteCode)
-          sendFbInvite(fbId, inviteCode, function(sent) {
-            if (sent) {
-              $btn.addClass("invited");
-              $btn.text("Invited");
-            }
-            else
-              //showMessage("Failed to send the invite to Facebook... Please try again later!");
-              deleteInviteCode(inviteCode);
-          });
-        else
-          showMessage("Failed to generate an invite code... Please try again later!");
-      });
-  }
-
-  function createInviteButton(user, $li){
-    friendSet[user.name.toLowerCase()] = $li[0];
-    var $btn = $(document.createElement('span'));
-    $btn.addClass("userSubscribe");
-    $btn.attr("data-fbid", user.fbId);
-    $btn.toggleClass("invited", !!user.invited);
-    $btn.text(user.invited ? 'Invited' : 'Invite');
-    $btn.click(onInviteClick);
-    $btn.appendTo($li);
-  }
-
-  function updateUi(json) {
-    $("#fbConnect").removeClass("loading").unbind()/*.click(fbConnect)*/;
-    $(".loading").removeClass("loading");
-    if (json && !json.error && json.whydFriends && json.notOnWhyd) {
-      $("#needFbConnect").hide();
-      if (!json.whydFriends.length && !json.notOnWhyd.length)
-        $('#noFriends').show();
-      else {
-        $("#fbFriends").show();
-        if (json.notOnWhyd.length)
-          $("ul.notOnWhyd").append(_renderUserList(json.notOnWhyd, createInviteButton));
-        else
-          $("ul.notOnWhyd").text("Apparently you have no friends ... or they are all on Openwhyd!");
-        if (json.whydFriends.length)
-          $(".alreadyOnWhyd ul").append(_renderUserList(json.whydFriends));
-        else
-          $(".alreadyOnWhyd").hide();
-      }
-    }
-    else {
-      json.error ? showMessage(json.error) : console.log("error", json);
-    }
-  }
-
-  function fbConnect() {
-    $("#fbConnect").addClass("loading").unbind().click(function(e){
-      e.preventDefault();
-      showMessage("Still loading, please wait...");
-    });
-    fbAuth("", function(fbId, res) {
-      if (!fbId)
-        updateUi({error:"no fb login"});
-      else
-        getFriends(fbId, res.authResponse.accessToken, updateUi);
-    });
-  }
-
-  var filterTimeout = null, lastFilter = null;
-  var $filter = $(".inviteFacebook .filter .q").bind("keyup input onpaste", function() {
-    if (filterTimeout) {
-      clearTimeout(filterTimeout);
-      filterTimeout = null;
-    }
-    setTimeout(function () {
-      filterTimeout = null;
-      var filter = $filter.val().toLowerCase();
-      if (lastFilter == filter) return;
-      lastFilter = filter;
-      for (var i in friendSet)
-        friendSet[i].style.display = i.indexOf(filter) == -1 ? "none" : "block";
-    }, 200);
   });
 
   // "WITH EMAIL" TAB

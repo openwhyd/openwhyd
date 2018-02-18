@@ -159,68 +159,6 @@ var sections = {
 				(json || {}).error ? showMessage(json.error) : console.log("recomUsers error", json);
 		});
 	},
-	"fbfriends": function($content) {
-		function getFriends(fbId, fbAccessToken, cb) {
-			var data = {ajax: "fbfriends"};
-			if (fbId) data.fbUserId = fbId;//res.authResponse.userID
-			if (fbAccessToken) data.fbAccessToken = fbAccessToken;
-			$.ajax({
-				type: "POST",
-				url: "/api/fbfriends",
-				data: data,
-				complete: function(res, status) {
-					try {
-						if (status != "success" || !res.responseText) throw 0;
-						var json = JSON.parse(""+res.responseText) || {};
-						console.log("received", json);
-						cb && cb(json);
-					}
-					catch(e) {
-						cb && cb({error:e || "An error occured. Please try again."});
-					}
-				}
-			});
-		}
-		function updateUi(json) {
-			$("#fbConnect").removeClass("loading").unbind().click(fbConnect);
-			$(".loading").removeClass("loading");
-			if (json && !json.error && json.whydFriends) {
-				$("#needFbConnect").hide();
-				if (json.whydFriends.length) {
-					$content
-						.html("<h1>Facebook friends</h1>")
-						.append(_renderUserList(json.whydFriends));
-						//.append("Friends that are not yet on Whyd:")
-						//.append(_renderUserList(json.notOnWhyd));
-				}
-				else
-					$('#noFriends').show();
-			}
-			else {
-				// prevents "[Object object]" error on "Error validating access token: Session has expired at unix time 1351612800. The current unix time is 1352105312.
-				if (json && json.error && json.error.code != 190 && json.error.error_subcode != 463) {
-					showMessage(json.error.message);
-				}
-				console.log("updateUi error", JSON.stringify((json || {}).error || json));
-			}
-		}
-		function fbConnect() {
-			console.log("fb connect...")
-			$("#fbConnect").addClass("loading").unbind().click(function(e){
-				e.preventDefault();
-				showMessage("Still loading, please wait...");
-			});
-			fbAuth("", function(fbId, res) {
-				if (!fbId)
-					updateUi({error:"no fb login"});
-				else
-					getFriends(fbId, res.authResponse.accessToken, updateUi);
-			});
-			return false;
-		}
-		$("#fbConnect").click(fbConnect);
-		getFriends(null, null, updateUi);
-	}
 };
 
 $(function() {

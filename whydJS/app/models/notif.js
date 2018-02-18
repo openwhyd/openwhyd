@@ -427,32 +427,6 @@ exports.commentReply = function (post, comment, repliedUid, cb) {
 	}
 };
 
-function notifFriendJoinedWhyd(fbFriendId, newUser, cb){
-	insertNotif(fbFriendId, {
-		html: "Your friend " + makeLink(newUser.name, "/u/" + newUser.id) + " joined Whyd",
-		img: "/img/u/" + newUser.id,
-		href: "/u/" + newUser.id,
-	}, function(res){
-		pushToMobile("Frd", {id: fbFriendId}, "Your friend " + newUser.name + " joined Whyd", {
-			href: "/u/" + newUser.id
-		});
-		cb && cb(res);
-	});
-}
-
-exports.fbFriendsJoinedWhyd = function(newUser, fbFriends, cb){
-	console.log("fbFriendsJoinedWhyd", /*newUser,*/ fbFriends.length);
-	if (!newUser || !fbFriends)
-		return cb && cb({error:"invalid parameters"});
-	var toList = fbFriends.slice();
-	(function next(){
-		var to = toList.pop();
-		if (to)
-			notifFriendJoinedWhyd(to.id || ""+to._id, newUser, next);
-	})();
-	notifEmails.sendFbFriendsJoinedWhyd(newUser, fbFriends, cb);
-};
-
 exports.inviteAccepted = function(inviterId, newUser){
 	if (!inviterId || !newUser || !newUser.name || !newUser.id)
 		return; // cb && cb({error:"invalid parameters"});

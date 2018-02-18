@@ -38,23 +38,7 @@ function makeTemplateRenderer(cb) {
 		});
 	}
 }
-/*
-function sortUsersByRelevance(users, tags) {
-	var tagSet = snip.arrayToSet(tags);
-	var users = users.slice();
-	for(var i in users) {
-		//console.log("sorting", i, users[i].tags)
-		users[i].score = 0;
-		var userTags = users[i].tags;
-		for(var j in userTags)
-			if (tagSet[userTags[j].id])
-				users[i].score += userTags[j].c;
-	}
-	return users.sort(function(a,b){
-		return b.score - a.score;
-	});
-}
-*/
+
 function fetchUserData(recomUsers, pickedTags, cb) {
 	var pickedTagSet = snip.arrayToSet(pickedTags || []);
 	plTagsModel.getTagEngine(function(tagEngine){
@@ -98,17 +82,11 @@ function fetchUsersByTags(tags, cb) {
 
 var processAjax = {
 	"fbFriends": function(p, cb) {
+		// DEPRECATED => will return dummy data
 		facebookModel.fetchAccessToken(p.loggedUser.id, function(fbTok) {
 			facebookModel.fetchFbFriendsWithSub(p.loggedUser, p.fbTok || fbTok, function(res) {
 				var fbFriends = (res||{}).whydFriends || [];
-				//console.log("fbfriends", fbFriends);
-				if (fbFriends.length) {
-					// TODO: ranking and stuff...
-					//fbFriends = sortUsersByRelevance(fbFriends, (p.genres || "").split(","));
-					fetchUserData(fbFriends, (p.genres || "").split(","), cb);
-				}
-				else
-					cb(fbFriends);
+				cb(fbFriends);
 			});
 		});
 	},

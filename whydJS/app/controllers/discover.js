@@ -21,12 +21,7 @@ var TAB_CLASSES = {
 //	"users": "pgDiscoverUsers",
 	"featured": "pgDiscoverFeatured",
 	"ranking": "pgDiscoverRankings", // "rankings"
-	"fbfriends": "pgDiscoverFriends"
-}
-
-var TAB_AUTH = {
-//	"users": "pgDiscoverUsers",
-	"fbfriends": "pgDiscoverFriends"
+	//"fbfriends": "pgDiscoverFriends" // DEPRECATED
 }
 
 var MAX_TRENDING = 10;
@@ -348,10 +343,7 @@ exports.handleRequest = function(request, reqParams, response) {
 			console.log("unknown tab => redirecting")
 			response.temporaryRedirect("/discover/featured"); // before: /users
 		}
-		//else if (!reqParams.loggedUser)
-		//	response.redirect("/");
-		else if (!reqParams.loggedUser && TAB_AUTH[reqParams.tab]) {
-			console.log("resticted tab => redirecting")
+		else if (!reqParams.loggedUser) {
 			response.temporaryRedirect("/discover/featured");
 		}
 		else {

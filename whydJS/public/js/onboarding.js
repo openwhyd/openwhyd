@@ -94,18 +94,6 @@ function initOnbPeople(genres) {
 		return $li;
 	};
 
-	/*function fetchFacebookFriends(cb) {
-		ajaxQuery({ ajax: "fbFriends", genres: genres }, function(fbFriends) {
-			//console.log("fbFriends", fbFriends);
-			if (fbFriends && fbFriends.length) {
-				for (var i in fbFriends) {
-					fbFriends[i].subscribed = true;
-					fbFriends[i].cssClasses = (fbFriends[i].cssClasses || "") + " fbFriend";
-					$userList.append(renderUserInList(fbFriends[i]));
-				}
-			}
-		});
-	}*/
 	function fetchRecomUsers(cb) {
 		ajaxQuery({ ajax: "people", genres: genres }, function(recomUsers) {
 			//console.log("recomUsers", recomUsers);
@@ -123,7 +111,6 @@ function initOnbPeople(genres) {
 	//$(".userList a, .userList div[style], .homeLink").each();
 	fetchRecomUsers(function(){
 		$("#btnNext").show();
-		//fetchFacebookFriends();
 	});
 	$("#btnNext").click(function(e){
 		e.preventDefault();

@@ -140,9 +140,6 @@ Response: (JSON)
 Enables:
 
 *   Possibility to log in to OpenWhyd using Facebook connect
-*   Find Facebook friends that have an account on Whyd
-*   Recommendation of friends to invite
-*   Receive a notification when a Facebook friend signs up to Whyd
 
 This endpoint is called when a OpenWhyd user (that is already logged in) clicks on a Facebook Connect button, and this Facebook account is not yet connected to another OpenWhyd account.
 
@@ -176,7 +173,7 @@ Parameters:
 *   **redirect**: (string, optional) URL to be redirected to, if sign up succeeds
 *   **ajax**: (string ,optional) set to "true" if response is to be given in JSON format, instead of redirects
 *   **fbUid**: (string, optional) Facebook user id (if using FB connect)
-*   **fbTok**: (string, optional) Facebook access token (if using FB connect) => Facebook friends that are already on openwhyd will be notified by email.
+*   **fbTok**: (string, optional) Facebook access token (if using FB connect)
 *   **<s>fbRequest</s>**<s>: (string, deprecated) Facebook request id. Used when the visitor was invited through a Facebook request, so that the request could be cleared after the visitor successfully signed up.</s>
 *   **<s>inviteCode</s>**<s>: (string, deprecated) code given by another user who invited the current visitor to signup. can be the user id of that user. this code was used for validation, when openwhyd was still in closed beta.</s>
 *   **iBy**: (string, optional) id of the user who invited the visitor to sign up to whyd. the invited visitor will be automatically subscribed to the inviter, and the inviter will be notified upon his friend's sign up.
@@ -217,7 +214,7 @@ Response: (JSON)
 
 *   **error**: (string, optional) error message, if any
 
-<undefined><li>**Action 2: fetch Facebook friends that have a openwhyd account**</li></undefined>
+<undefined><li>**Action 2: fetch Facebook friends that have a openwhyd account (DEPRECATED)**</li></undefined>
 
 Parameters:
 
