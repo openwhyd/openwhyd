@@ -13,6 +13,9 @@ const apiKey = process.env.ALGOLIA_API_KEY.substr();
 
 // misc. helpers
 
+// to run a list of functions (promise factories) one after another
+const runSeq = functions => functions.reduce((p, fct) => p.then(fct), Promise.resolve());
+
 const getCounts = ({ name, coll, indexName }) => new Promise((resolve, reject) =>
   coll.count((err, count) => err ? reject(err) : resolve({ name, count })));
 
@@ -80,7 +83,7 @@ const steps = [
   // step 3: dry run
   () => {
     console.log('___\ndry run:');
-    return cols.reduce((p, coll) => p.then(makeReindexPromise(coll)), Promise.resolve());
+    return runSeq(cols.map(coll => makeReindexPromise(coll)));
   },
 
   // step 4: ask for confirmation
@@ -95,4 +98,4 @@ const steps = [
 ];
 
 // run steps in sequence
-steps.reduce((p, step) => p.then(step), Promise.resolve());
+runSeq(steps);
