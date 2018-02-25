@@ -10,6 +10,18 @@ const mongo = require('./mongodb-wrapper.js');
 const appId = process.env.ALGOLIA_APP_ID.substr();
 const apiKey = process.env.ALGOLIA_API_KEY.substr();
 
+// misc. helpers
+
+const getCounts = ({ name, coll, indexName }) => new Promise((resolve, reject) =>
+  coll.count((err, count) => err ? reject(err) : resolve({ name, count })));
+
+const renderResults = diffIndexer =>
+`skipped ${diffIndexer.nbSkipped} / ${diffIndexer.nbConsidered} objects`;
+
+// dry run
+
+const dryRunIndexer = obj => console.log(`  would index ${obj._id}`);
+
 // diff logic
 
 class DiffIndexer {
@@ -38,23 +50,12 @@ const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
     });
   });
 
-// misc. db helpers
-
-const getCounts = ({ name, coll, indexName }) => new Promise((resolve, reject) =>
-  coll.count((err, count) => err ? reject(err) : resolve({ name, count })));
-
-// dry run
-
-const renderResults = diffIndexer =>
-`skipped ${diffIndexer.nbSkipped} / ${diffIndexer.nbConsidered} objects`;
-
-const makeDryRunPromise = (collection) => () => {
+const makeReindexPromise = (collection, indexer = dryRunIndexer) => () => {
   console.log(`- collection: ${collection.name} ...`);
-  const indexer = obj => console.log(`  would index ${obj._id}`);
   return indexMissingObjects(Object.assign({ missingObjectHandler: indexer }, collection))
     .then(diffIndexer => console.log('  =>', renderResults(diffIndexer)))
 };
-
+  
 // main script
 
 mongo.init({ mongoDbPort: 27117 }).then(db => {
@@ -70,7 +71,7 @@ mongo.init({ mongoDbPort: 27117 }).then(db => {
     results.forEach(result => console.log(`- ${result.name} (${result.count} objects)`));
 
     console.log('___\ndry run:');
-    cols.reduce((p, coll) => p.then(makeDryRunPromise(coll)), Promise.resolve())
+    cols.reduce((p, coll) => p.then(makeReindexPromise(coll)), Promise.resolve())
       .then(() => console.log('\ndone.'));
 
   });
