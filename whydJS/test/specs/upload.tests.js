@@ -45,8 +45,6 @@ describe('upload user profile images', function() {
     return new Promise(function (resolve, reject) {
       //assert.ok(!/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
       request(`${URL_PREFIX}/img/u/${ADMIN_USER.id}?_t=${new Date().getTime()}`, function (error, response, body) {
-        console.log('defaultAvatarLen', defaultAvatarLen);
-        console.log('current avatar length', body.length);
         assert.equal(defaultAvatarLen, body.length);
         resolve();
       });
