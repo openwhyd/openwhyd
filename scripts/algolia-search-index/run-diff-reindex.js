@@ -4,6 +4,7 @@
  */
 
 require('dotenv').config({path: '../../whydJS/env-vars-perso.sh'});
+const confirm = require('node-ask').confirm;
 const algoliaUtils = require('./algolia-utils.js');
 const mongo = require('./mongodb-wrapper.js');
 
@@ -58,21 +59,40 @@ const makeReindexPromise = (collection, indexer = dryRunIndexer) => () => {
   
 // main script
 
-mongo.init({ mongoDbPort: 27117 }).then(db => {
+let cols;
 
-  const cols = [
-    { name: 'user', coll: db.collections.user, indexName: 'users' },
-    { name: 'post', coll: db.collections.post, indexName: 'posts' },
-  ];
+const steps = [
 
-  Promise.all(cols.map(getCounts)).then(results => {
+  // step 1: init mongodb
+  () => mongo.init({ mongoDbPort: 27117 }).then(db =>
+    cols = [
+      { name: 'user', coll: db.collections.user, indexName: 'users' },
+      { name: 'post', coll: db.collections.post, indexName: 'posts' },
+    ]
+  ),
 
+  // step 2: display counts
+  () => Promise.all(cols.map(getCounts)).then(results => {
     console.log('___\nindexable collections:');
     results.forEach(result => console.log(`- ${result.name} (${result.count} objects)`));
+  }),
 
+  // step 3: dry run
+  () => {
     console.log('___\ndry run:');
-    cols.reduce((p, coll) => p.then(makeReindexPromise(coll)), Promise.resolve())
-      .then(() => console.log('\ndone.'));
+    return cols.reduce((p, coll) => p.then(makeReindexPromise(coll)), Promise.resolve());
+  },
 
-  });
-});
+  // step 4: ask for confirmation
+  () => confirm('___\nstart the actual reindexing of this collection now? [y|N] ')
+    .then(res => !res && process.exit(0)),
+
+  // step 5: proceed with reindexing
+  () => {
+    console.log('___\nreindexing:');
+    // TODO
+  },
+];
+
+// run steps in sequence
+steps.reduce((p, step) => p.then(step), Promise.resolve());
