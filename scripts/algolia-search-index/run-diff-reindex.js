@@ -20,8 +20,11 @@ const COLLECTIONS = [
     objTransform: (dbObj) => ({
       objectID: dbObj._id.toString(),
       name: dbObj.name,
+      username: dbObj.username,
+      img: dbObj.img,
     }),
   },
+  /*
   {
     name: 'post',
     indexName: 'posts',
@@ -34,6 +37,8 @@ const COLLECTIONS = [
       text: dbObj.text,
     }),
   },
+  */
+  // TODO: also add "playlists"
 ]
 
 // misc. helpers
@@ -130,9 +135,10 @@ const steps = [
   // step 6: end
   () => {
     console.log('\nend.');
+    process.exit(0);
     // TODO: display index counts
   },
-  
+
 ];
 
 // run steps in sequence
