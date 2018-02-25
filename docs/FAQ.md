@@ -249,7 +249,7 @@ Please use these URLs gently to prevent openwhyd.org from slowing down => add so
 
 ### Do you have an API ?
 
-Yes, check [this](https://github.com/openwhyd/openwhyd/blob/master/docs/whydJS-json-api.md) out.
+Yes, check [our API documentation](API.md).
 
 ### The player says “Embed too small” or something like that, and wont play my music! 
  
