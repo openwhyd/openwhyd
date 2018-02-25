@@ -63,6 +63,9 @@ exports.config = {
         acceptSslCerts: true,
         chromeOptions: {
             args: [
+                '--headless',
+                '--disable-gpu',
+                '--window-size=1280,800',
                 'disable-web-security',
                 'allow-running-insecure-content'
             ]
