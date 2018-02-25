@@ -179,7 +179,7 @@ If you're a developer, check out:
 - our [open-source repositories on Github](https://github.com/openwhyd),
 - our [global roadmap](https://github.com/orgs/openwhyd/projects/1) and [development board on Github](https://github.com/openwhyd/openwhyd/projects/1),
 - our [current issues on Github](https://github.com/openwhyd/openwhyd/issues), (*help on fixing bugs is particularly appreciated!*)
-- and our [contribution guide](https://github.com/openwhyd/openwhyd/blob/master/CONTRIBUTING.md).
+- and our [contribution guide](CONTRIBUTING.md).
 
 If you have other skills that you would like to invest as a volunteer, please contact us!
 

@@ -1,5 +1,5 @@
 # Openwhyd.org
-[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors) ![Travis-CI](https://travis-ci.org/openwhyd/openwhyd.svg?branch=master) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/openwhyd/sponsors/badge.svg)](#sponsors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-orange.svg)](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg)](https://facebook.com/groups/openwhyd/) [![Like Openwhyd on Facebook](https://img.shields.io/badge/%F0%9F%91%8D-facebook-blue.svg)](https://facebook.com/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=social&label=Follow)](https://twitter.com/open_whyd)
+[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors) ![Travis-CI](https://travis-ci.org/openwhyd/openwhyd.svg?branch=master) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg)](#backers) [![OpenCollective](https://opencollective.com/openwhyd/sponsors/badge.svg)](#sponsors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-orange.svg)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg)](https://facebook.com/groups/openwhyd/) [![Like Openwhyd on Facebook](https://img.shields.io/badge/%F0%9F%91%8D-facebook-blue.svg)](https://facebook.com/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=social&label=Follow)](https://twitter.com/open_whyd)
 
 > Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
 
@@ -39,7 +39,7 @@ Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the
 
 - Vision and roadmap: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3) + [development backlog](https://github.com/openwhyd/openwhyd/projects/1).
 - Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2017](https://infograph.venngage.com/publish/c74df49b-2d2f-48bc-b9cb-5bc1f5908c37) 🔥
-- A question / problem? --> Check out [our FAQ](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md)
+- A question / problem? --> Check out [our FAQ](docs/FAQ.md)
 
 🤗 We welcome [backers](#support-openwhyd) and [contributors](#contributors), even beginners!
 
@@ -55,13 +55,13 @@ Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the
 
 Developers, feel free to clone this repo and make it run on your own machine! 💪
 
-You'll find **setup and usage instructions** in [INSTALL.md](INSTALL.md).
+You'll find **setup and usage instructions** in [INSTALL.md](docs/INSTALL.md).
 
 ## Support Openwhyd
 
 There are several way you can help Openwhyd! 💓
 
-- If you're a **developer**, you can help us reply to our users' problems and questions from the [Music Lovers Club](https://www.facebook.com/groups/openwhyd/), maintain [issues](https://github.com/openwhyd/openwhyd/issues), or even better: [contribute to the codebase](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help). (beginners are welcome too!)
+- If you're a **developer**, you can help us reply to our users' problems and questions from the [Music Lovers Club](https://www.facebook.com/groups/openwhyd/), maintain [issues](https://github.com/openwhyd/openwhyd/issues), or even better: [contribute to the codebase](docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help). (beginners are welcome too!)
 
 - You can help Openwhyd sustain by [becoming a backer](https://opencollective.com/openwhyd/order/313) (*starting at $1/month, can be interrupted anytime*), or giving a [one-off donation](https://opencollective.com/openwhyd/donate). We publish our expenses transparently on [Open Collective](https://opencollective.com/openwhyd).
 
