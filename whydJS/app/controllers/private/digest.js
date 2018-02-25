@@ -148,7 +148,13 @@ function fetchSameTrackSet(uid, options, cb) {
 
 function fetchData(uid, options, cb) {
 	options.data = {};
-	var fcts = [fetchLikedPostSet, fetchRepostedTrackSet, fetchSubscribers, fetchSubscriptionSet, fetchSameTrackSet];
+	var fcts = [
+		fetchLikedPostSet,
+		fetchRepostedTrackSet,
+		fetchSubscribers,
+		fetchSubscriptionSet,
+		// fetchSameTrackSet // disabled because too DB and memory intensive => suspected to crash whydJS since on openwhyd-2gb instance
+	];
 	(function next(){
 		var fct = fcts.shift();
 		if (fct)
