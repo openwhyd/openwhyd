@@ -4,7 +4,7 @@
 PORT_A=1094
 PORT_B=1095
 MAX_RETRY=50
-CURR_DIR=`pwd`
+CURR_DIR="`pwd`/.."
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
 
@@ -15,7 +15,7 @@ port=`cat $CURR_DIR/.port` || port=$PORT_A
 
 # Start new server
 echo "Starting OpenWhyd with WHYD_PORT=$port."
-cd whydJS && source env-vars-local.sh && WHYD_PORT=$port npm start &
+cd $CURR_DIR/whydJS && source env-vars-local.sh && WHYD_PORT=$port npm start &
 
 # Wait for it to be fully running
 i=0

@@ -1,6 +1,6 @@
 .PHONY: help list-error-types-per-player
 
-plots: plots/plot-user-growth.png plots/plot-nb-posts-per-day.png plots/plot-nb-users-posting-per-day.png plots/plot-nb-users-listening-per-day.png plots/plot-nb-plays-per-day.png plots/plot-nb-play-errors-per-day.png plots/plot-error-codes-per-week.png ## Generate all plots (default target)
+plots: plots/plot-user-growth.png plots/plot-nb-posts-per-day.png plots/plot-nb-users-posting-per-day.png plots/plot-nb-users-listening-per-day.png plots/plot-nb-plays-per-day.png plots/plot-nb-play-errors-per-day.png plots/plot-error-codes-per-week.png plots/plot-error-codes-per-day.png plots/plot-error-codes-per-day-30.png plots/plot-error-codes-per-day-7.png ## Generate all plots (default target)
 
 help: ## This help
 	@echo 'Available targets:'
