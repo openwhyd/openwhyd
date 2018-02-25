@@ -18,6 +18,3 @@ whydJS/*.err
 whydJS/appd.dmn
 
 whydJS/node_modules
-
-whydDB/db
-whydDB/dump
