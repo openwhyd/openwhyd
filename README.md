@@ -16,7 +16,7 @@ Openwhyd, on the other hand, allows music lovers to discover, play and collect *
 
 ## Features
 
-[![Whyd Music Demo Video](./docs/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Whyd Music Demo Video")
+[![Whyd Music Demo Video](./docs/img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Whyd Music Demo Video")
 
 Features:
 

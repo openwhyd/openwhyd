@@ -51,11 +51,11 @@ Here's list of proposed directions to modernise Openwhyd's technical architectur
 
 Here's an overview of the resulting architecture:
 
-![openwhyd v2.0 architecture diagram](openwhyd-v2-architecture.png)
+![openwhyd v2.0 architecture diagram](img/openwhyd-v2-architecture.png)
 
 And here's a diagram showing a wider range of projects to be worked on towards Openwhyd version 2.0:
 
-![openwhyd v2.0 projects](openwhyd-v2-projects.png)
+![openwhyd v2.0 projects](img/openwhyd-v2-projects.png)
 
 You'll find information on how to contribute / support this effort, in [the corresponding section of README](https://github.com/openwhyd/openwhyd#support-openwhyd).
 
@@ -77,6 +77,6 @@ To reach version 1.0, contributors have given dozens of hours of their spare tim
 
 Here's the resulting architecture:
 
-![openwhyd v1.0 architecture diagram](openwhyd-v1-architecture.png)
+![openwhyd v1.0 architecture diagram](img/openwhyd-v1-architecture.png)
 
 Read more on the [version release](https://github.com/openwhyd/openwhyd/releases/tag/v1.0).
