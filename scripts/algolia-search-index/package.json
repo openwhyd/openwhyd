@@ -1,0 +1,12 @@
+{
+  "name": "openwhyd-algolia-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "node run-diff-reindex.js"
+  },
+  "dependencies": {
+    "algoliasearch": "^3.24.11",
+    "dotenv": "^5.0.0"
+  }
+}
