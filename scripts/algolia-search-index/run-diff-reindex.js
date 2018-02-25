@@ -8,10 +8,39 @@ const confirm = require('node-ask').confirm;
 const algoliaUtils = require('./algolia-utils.js');
 const mongo = require('./mongodb-wrapper.js');
 
+// constants
+
 const appId = process.env.ALGOLIA_APP_ID.substr();
 const apiKey = process.env.ALGOLIA_API_KEY.substr();
 
+const COLLECTIONS = [
+  {
+    name: 'user',
+    indexName: 'users',
+    objTransform: (dbObj) => ({
+      objectID: dbObj._id.toString(),
+      name: dbObj.name,
+    }),
+  },
+  {
+    name: 'post',
+    indexName: 'posts',
+    objTransform: (dbObj) => ({
+      objectID: dbObj._id.toString(),
+      name: dbObj.name,
+      uId: dbObj.uId,
+      eId: dbObj.eId,
+      pl: dbObj.pl,
+      text: dbObj.text,
+    }),
+  },
+]
+
 // misc. helpers
+
+const bindCollectionToDB = db => coll => Object.assign({}, coll, {
+  coll: db.collections[coll.name]
+});
 
 // to run a list of functions (promise factories) one after another
 const runSeq = functions => functions.reduce((p, fct) => p.then(fct), Promise.resolve());
@@ -54,7 +83,7 @@ const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
     });
   });
 
-const makeReindexPromise = (collection, indexer = dryRunIndexer) => () => {
+const reindexAndDisplay = (collection, indexer = dryRunIndexer) => {
   console.log(`- collection: ${collection.name} ...`);
   return indexMissingObjects(Object.assign({ missingObjectHandler: indexer }, collection))
     .then(diffIndexer => console.log('  =>', renderResults(diffIndexer)))
@@ -68,10 +97,7 @@ const steps = [
 
   // step 1: init mongodb
   () => mongo.init({ mongoDbPort: 27117 }).then(db =>
-    cols = [
-      { name: 'user', coll: db.collections.user, indexName: 'users' },
-      { name: 'post', coll: db.collections.post, indexName: 'posts' },
-    ]
+    cols = COLLECTIONS.map(bindCollectionToDB(db))
   ),
 
   // step 2: display counts
@@ -83,7 +109,7 @@ const steps = [
   // step 3: dry run
   () => {
     console.log('___\ndry run:');
-    return runSeq(cols.map(coll => makeReindexPromise(coll)));
+    return runSeq(cols.map(coll => () => reindexAndDisplay(coll)));
   },
 
   // step 4: ask for confirmation
@@ -93,8 +119,20 @@ const steps = [
   // step 5: proceed with reindexing
   () => {
     console.log('___\nreindexing:');
-    // TODO
+    return runSeq(cols.map(coll => {
+      const index = algoliaUtils.getIndex({ appId, apiKey, indexName: coll.indexName });
+      const batcher = new algoliaUtils.BatchedAlgoliaIndexer({ index });
+      const processObject = dbObj => batcher.addObject(coll.objTransform(dbObj))
+      return () => reindexAndDisplay(coll, processObject).then(() => batcher.flush());
+    }));
   },
+
+  // step 6: end
+  () => {
+    console.log('\nend.');
+    // TODO: display index counts
+  },
+  
 ];
 
 // run steps in sequence
