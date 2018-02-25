@@ -10,6 +10,8 @@ const mongo = require('./mongodb-wrapper.js');
 
 // constants
 
+const MONGODB_PARAMS = {}; //{ mongoDbPort: 27117 }; // can be used to override environment variables
+
 const appId = process.env.ALGOLIA_APP_ID.substr();
 const apiKey = process.env.ALGOLIA_API_KEY.substr();
 
@@ -24,7 +26,6 @@ const COLLECTIONS = [
       img: dbObj.img,
     }),
   },
-  /*
   {
     name: 'post',
     indexName: 'posts',
@@ -37,7 +38,6 @@ const COLLECTIONS = [
       text: dbObj.text,
     }),
   },
-  */
   // TODO: also add "playlists"
 ]
 
@@ -101,7 +101,7 @@ let cols;
 const steps = [
 
   // step 1: init mongodb
-  () => mongo.init({ mongoDbPort: 27117 }).then(db =>
+  () => mongo.init(MONGODB_PARAMS).then(db =>
     cols = COLLECTIONS.map(bindCollectionToDB(db))
   ),
 
