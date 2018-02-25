@@ -22,7 +22,10 @@ const forEachRecord = ({ indexName, appId, apiKey }, recordHandler) =>
 const makeSetFromIndex = ({ indexName, appId, apiKey }) => new Promise((resolve) => {
   const set = new Set();
   forEachRecord({ indexName, appId, apiKey }, hit => set.add(hit.objectID))
-    .then(() => resolve(set));
+    .then(
+      () => resolve(set),
+      (err) => /does not exist/.test(err.message) ? resolve(set) : reject(err)
+    );
 });
 
 class BatchedAlgoliaIndexer {
