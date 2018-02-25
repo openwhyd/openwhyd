@@ -3,8 +3,11 @@ services:
 
   mongo:
     image: mongo:3.2
+    command: mongod --port 27117
     volumes:
-      - ./whydDB:/data # Data Persistance and Inits
+      - /data # Data Persistance
+    ports:
+      - "27117:27117"
 
   web:
     build: .
@@ -32,7 +35,7 @@ services:
       - WHYD_DEV=true
       - MONGODB_DATABASE=openwhyd_test
       - MONGODB_HOST=mongo
-      - MONGODB_PORT=27017
+      - MONGODB_PORT=27117
       - MONGODB_USER=
       - MONGODB_PASS=
       - SENDGRID_API_USER=
