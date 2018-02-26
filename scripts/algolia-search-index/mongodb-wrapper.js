@@ -21,14 +21,19 @@ const init = (params) => new Promise((resolve, reject) => {
 });
 
 const forEachObject = (coll, handler, options = {}) => new Promise((resolve, reject) => {
+  let count = 0;
+  const interval = setInterval(() => console.log('fetching...', count), 1000);
   coll.find({}, options, function(err, cursor) {
     const onObject = (err, obj) => {
       if (err) {
+        clearInterval(interval);
         reject(err);
       } else if (obj) {
-        handler(obj)
-        cursor.nextObject(onObject);
+        ++count;
+        handler(obj);
+        setTimeout(() => cursor.nextObject(onObject), 0);
       } else {
+        clearInterval(interval);
         resolve();
       }
     };
