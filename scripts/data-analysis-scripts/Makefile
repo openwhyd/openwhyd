@@ -1,4 +1,4 @@
-.PHONY: help list-error-types-per-player
+.PHONY: help
 
 plots: plots/plot-user-growth.png plots/plot-nb-posts-per-day.png plots/plot-nb-users-posting-per-day.png plots/plot-nb-users-listening-per-day.png plots/plot-nb-plays-per-day.png plots/plot-nb-play-errors-per-day.png plots/plot-error-codes-per-week.png plots/plot-error-codes-per-day.png plots/plot-error-codes-per-day-30.png plots/plot-error-codes-per-day-7.png ## Generate all plots (default target)
 
@@ -9,12 +9,6 @@ help: ## This help
 backup: ## Suffixes ".prev" to all existing png files (generated plots)
 	@cd plots && ./backup-prev-plots.sh
 	@echo 'Done. You can run make to generate fresh png files in plots/'
-
-## targets to import collection dumps into local mongodb database
-
-logs/collection-playlog.log: collection-dumps/playlog.bson.gz
-	@echo 'Importing collection-dumps/playlog.bson.gz into local openwhyd_dump database...'
-	@gunzip -c collection-dumps/playlog.bson.gz | mongorestore --collection playlog --db openwhyd_dump --drop - &>logs/collection-playlog.log
 
 ## intermediate targets, to generate aggregated mongodb collections
 
@@ -38,13 +32,8 @@ logs/list-error-codes-per-day-7.log: logs/collection-playlog.log ## List playbac
 	@cd src && mongo openwhyd_dump --eval "var PERIOD = 'WEEK', RENDER_FCT = 'renderDate', OUTPUT_COLLECTION = 'list-error-codes-per-day-7';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-day-7.log
 	@echo 'Done. Created db collection: list-error-codes-per-day-7'
 
-src/list-error-types-per-player.log: logs/collection-playlog.log ## List playback errors and their distribution per player
-	@cd src && mongo openwhyd_dump list-error-types-per-player.mongo.js >list-error-types-per-player.log
-
-## targets to generate textual reports
-
-list-error-types-per-player: src/list-error-types-per-player.log ## List playback errors and their distribution per player
-	@cat src/list-error-types-per-player.log
+logs/list-error-types-per-player.json.log: ./playlog.json.log ## List playback errors and their distribution per player
+	node src/list-error-types-per-player.js >./logs/list-error-types-per-player.txt
 
 ## final targets, to generate plots (png files)
 
