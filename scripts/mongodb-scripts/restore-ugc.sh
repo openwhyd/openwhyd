@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Restore user-generated content tables from production mongodb dump to local db
 
 DATABASE="openwhyd_dump"
