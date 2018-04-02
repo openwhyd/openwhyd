@@ -34,3 +34,10 @@ function makeMapWith(mapHelpers, mapTemplate) {
 }
 
 // const map = makeMapWith(mapHelpers, mapTemplate);
+
+// to make this module loadable from node.js
+module.exports = {
+  renderDate,
+  renderWeek,
+  makeMapWith,
+};
