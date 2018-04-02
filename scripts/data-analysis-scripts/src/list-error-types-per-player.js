@@ -1,10 +1,8 @@
-// usage: $ node list-error-types-per-player.js <playlog.json.log
+// usage: $ node list-error-types-per-player.js playlog.json.log
 
-const snip = require('../../../whydJS/app/snip.js')
+const { emit, mapReduceFromJsonLines } = require('./json-helpers/map-reduce-over-json-lines');
 
 const INPUT_FILE = 'playlog.json.log'; // TODO: also support stdin (for shell-piping)
-
-const emit = (key, value) => ({ key, value });
 
 function map() {
   // notice: MongoDB will not call the reduce function for a key that has only a single value
@@ -39,37 +37,17 @@ var opts = {
   },
 };
 
-// equivalent to db.playlog.mapReduce(map, reduce, opts);
-const process = () => new Promise((resolve, reject) => {
-  let reduced = {};
-  snip.forEachFileLine(INPUT_FILE, function lineHandler(line) {
-    if (typeof line === 'undefined') {
-      // no more lines => finalize and output results
-      Object.keys(reduced).forEach(key => reduced[key] = opts.finalize(key, reduced[key]));
-      resolve(reduced);
-    } else if (line) {
-      const processed = map.call(JSON.parse(line));
-      if (processed) {
-        const vals = []
-          .concat(reduced[processed.key] ? [ reduced[processed.key] ] : [])
-          .concat(processed.value);
-        reduced[processed.key] = reduce(processed.key, vals);
-      }
-    }
-  });
-});
-
 (async () => {
 
-  console.time('process');
-  const reduced = await process();
-  console.timeEnd('process'); // => runs in 145 659 ms (~ 2 minutes, instead of 7 from db)
+  const startDate = new Date();
+  console.warn(`Map-reducing ${INPUT_FILE} --> /dev/out ...`);
+  const reduced = await mapReduceFromJsonLines(INPUT_FILE, map, reduce, opts);
+  console.warn(`⏲  Duration: ${(new Date() - startDate) / 1000} seconds`); // => ~2 mn (instead of 7 from db)
 
   // equivalent to printjson(db[OUTPUT_COLLECTION].find().sort({ 'value.total': -1 }).toArray());
   var sorted = Object.keys(reduced)
     .map(_id => ({ _id, value: reduced[_id] }))
     .sort((a, b) => b.value.total - a.value.total);
-  //sorted.forEach(({key, value}) => console.log(key, value));
   console.log(sorted);
 
 })();
