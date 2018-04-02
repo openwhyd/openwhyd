@@ -63,6 +63,6 @@ var opts = {
   const results = await mapReduceFromJsonLines(INPUT_FILE, map, reduce, opts);
   console.warn(`⏲  Duration: ${(new Date() - startDate) / 1000} seconds`); // => ~3 mn (instead of 8 from db)
 
-  console.log(results);
+  console.log(JSON.stringify(results, null, 2));
 
 })();
