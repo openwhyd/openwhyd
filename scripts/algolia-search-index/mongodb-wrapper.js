@@ -23,6 +23,8 @@ const init = (params) => new Promise((resolve, reject) => {
 const forEachObject = (coll, handler, options = {}) => new Promise((resolve, reject) => {
   let count = 0;
   const interval = setInterval(() => console.log('fetching...', count), 1000);
+  // options.batchSize = options.batchSize || 100;
+  // options.cursorDelay = options.cursorDelay || 0;
   coll.find({}, options, function(err, cursor) {
     const onObject = (err, obj) => {
       if (err) {
