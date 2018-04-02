@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DB_NAME="openwhyd_dump"
-COLLECTION_NAME="$1"
+DB_NAME="$1"
+COLLECTION_NAME="$2"
 
 # Exports collection $COLLECTION_NAME from the $DB_NAME database, to a csv file.
 # Auto-extracts columns by fetching fields from the last record.

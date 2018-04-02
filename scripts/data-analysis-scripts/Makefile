@@ -1,5 +1,15 @@
 .PHONY: help
 
+# Before running these scripts:
+# 1. run /scripts/backup-remote.sh to download gzipped collections from production server
+# 2. run /scripts/mongodb-scripts/start-local-db.sh to create and run a local database
+# 3. run /scripts/mongodb-scripts/restore-ugc.sh to restore collections to local database
+# 4. run /scripts/mongodb-scripts/export-ugc-to-json-lines.sh to generate JSON dumps
+# 5. copy or move the JSON dumps into this directory
+# 6. stop the local database and delete the /scripts/mongodb-scripts/db folder
+# 7. (optional) run `make backup` to make a backup of previous plots
+# 8. run `make` to generate plots from fresh JSON dumps
+
 plots: plots/plot-user-growth.png plots/plot-nb-posts-per-day.png plots/plot-nb-users-posting-per-day.png plots/plot-nb-users-listening-per-day.png plots/plot-nb-plays-per-day.png plots/plot-nb-play-errors-per-day.png plots/plot-error-codes-per-week.png plots/plot-error-codes-per-day.png plots/plot-error-codes-per-day-30.png plots/plot-error-codes-per-day-7.png ## Generate all plots (default target)
 
 help: ## This help
