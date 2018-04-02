@@ -48,6 +48,9 @@ var opts = {
   var sorted = Object.keys(reduced)
     .map(_id => ({ _id, value: reduced[_id] }))
     .sort((a, b) => b.value.total - a.value.total);
-  console.log(sorted);
+
+  var keyVals = sorted.reduce((results, {_id, value}) => ({ ...results, [_id]: value }), {});
+
+  console.log(JSON.stringify(keyVals, null, 2));
 
 })();

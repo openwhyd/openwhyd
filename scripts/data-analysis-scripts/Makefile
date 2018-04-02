@@ -10,7 +10,7 @@ backup: ## Suffixes ".prev" to all existing png files (generated plots)
 	@cd plots && ./backup-prev-plots.sh
 	@echo 'Done. You can run make to generate fresh png files in plots/'
 
-## intermediate targets, to generate aggregated mongodb collections
+## intermediate targets, to pre-process usage logs
 
 logs/list-error-codes-per-week.log: logs/collection-playlog.log ## List playback error codes per week
 	@echo 'Aggregating playback error codes per week into intermediate db collection...'
@@ -32,8 +32,9 @@ logs/list-error-codes-per-day-7.log: logs/collection-playlog.log ## List playbac
 	@cd src && mongo openwhyd_dump --eval "var PERIOD = 'WEEK', RENDER_FCT = 'renderDate', OUTPUT_COLLECTION = 'list-error-codes-per-day-7';" list-error-codes-per-period.mongo.js >../logs/list-error-codes-per-day-7.log
 	@echo 'Done. Created db collection: list-error-codes-per-day-7'
 
-logs/list-error-types-per-player.json.log: ./playlog.json.log ## List playback errors and their distribution per player
-	node src/list-error-types-per-player.js >./logs/list-error-types-per-player.txt
+logs/list-error-types-per-player.csv: ./playlog.json.log ## List playback errors and their distribution per player
+	node src/list-error-types-per-player.js >./logs/list-error-types-per-player.json
+	node src/convert-json-to-csv.js ../logs/list-error-types-per-player.json >logs/list-error-types-per-player.csv
 
 ## final targets, to generate plots (png files)
 
