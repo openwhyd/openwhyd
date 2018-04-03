@@ -22,16 +22,28 @@ const promoteObject = (object) => ({
 
 // equivalent to db.<collection>.mapReduce(map, reduce, opts);
 const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) => new Promise((resolve, reject) => {
+  let ignoreTheRest = false;
   let reduced = {};
+  const limitReached = !opts.limit ? () => false : ((remaining = opts.limit) => () => remaining-- <= 0)();
   const inTimeRange = !opts.query ? () => true : object => {
     const date = dateFromObject(object);
     return date && date > opts.query._id.$gt && date < opts.query._id.$lt;
   };
+  function finalizeAndResolve() {
+    Object.keys(reduced).forEach(key => reduced[key] = opts.finalize(key, reduced[key]));
+    if ((opts.out || {}).replace) {
+      console.error('ℹ️  opts.out.replace is not supported => printing resulting collection to stdout');
+      console.log(JSON.stringify(reduced, null, 2));
+    }
+    resolve(reduced);
+  }
   snip.forEachFileLine(filePath, function lineHandler(line) {
-    if (typeof line === 'undefined') {
-      // no more lines => finalize and output results
-      Object.keys(reduced).forEach(key => reduced[key] = opts.finalize(key, reduced[key]));
-      resolve(reduced);
+    if (ignoreTheRest) {
+      // do nothing
+    } else if (line === undefined || limitReached()) {
+      // no more lines
+      ignoreTheRest = true;
+      finalizeAndResolve();
     } else if (line) {
       const json = JSON.parse(line);
       const processed = inTimeRange(json) && map.call(promoteObject(json));

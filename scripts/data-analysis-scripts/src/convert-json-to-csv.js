@@ -3,7 +3,7 @@
 const snip = require('../../../whydJS/app/snip.js');
 
 const INPUT_FILE = process.argv[2];
-const object = require(INPUT_FILE);
+const object = require('./' + INPUT_FILE);
 
 /**
  * Equivalent of:

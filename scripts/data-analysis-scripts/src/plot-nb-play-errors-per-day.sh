@@ -6,14 +6,23 @@ COLUMNS="Date,% of play errors,Youtube errors,SoundCloud errors,Dailymotion erro
 # from https://github.com/openwhyd/openwhyd/blob/d27fb71220cbd29e9e418bd767426e3b4a2187f3/whydJS/public/js/whydPlayer.js#L559
 NB_COLUMNS=`echo $COLUMNS | sed 's/[^,]//g' | wc -c` # count COLUMNS
 
-echo "generate data from mongodb data ... (⚠️ may take several minutes)"
+# echo "generate data from mongodb data ... (⚠️ may take several minutes)"
+# SECONDS=0
+# mongo --quiet $DB ./$NAME.mongo.js
+# echo ⏲ $SECONDS seconds.
+
+echo "process map-reduce on json dump of the mongodb collection ... (⚠️  may take several minutes)"
 SECONDS=0
-mongo --quiet $DB ./$NAME.mongo.js
-echo ⏲ $SECONDS seconds.
-# write resulting collection into output csv file, with custom header row
-echo $COLUMNS >$NAME.temp.csv
-mongoexport -d $DB -c "$NAME" --type=csv --fields "$FIELDS" | tail -n+2 >>$NAME.temp.csv
-sed -i '' -e '$ d' $NAME.temp.csv # remove last line
+node json-helpers/run-mongo-script-from-json-dump.js $NAME.mongo.js ../playlog.json.log >$NAME.temp.json
+echo ⏲  $SECONDS seconds. # took ~6 mn, instead of 11 when map-reducing on mongodb collection
+
+# # write resulting collection into output csv file, with custom header row
+# echo $COLUMNS >$NAME.temp.csv
+# mongoexport -d $DB -c "$NAME" --type=csv --fields "$FIELDS" | tail -n+2 >>$NAME.temp.csv
+# sed -i '' -e '$ d' $NAME.temp.csv # remove last line
+
+echo "convert data to csv ..."
+node convert-json-to-csv.js $NAME.temp.json >$NAME.temp.csv
 
 echo "plot data to ../plots/$NAME.png ..."
 mkdir ../plots &>/dev/null
