@@ -30,7 +30,9 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) => new Promise
     return date && date > opts.query._id.$gt && date < opts.query._id.$lt;
   };
   function finalizeAndResolve() {
-    Object.keys(reduced).forEach(key => reduced[key] = opts.finalize(key, reduced[key]));
+    if (opts.finalize) {
+      Object.keys(reduced).forEach(key => reduced[key] = opts.finalize(key, reduced[key]));
+    }
     if ((opts.out || {}).replace) {
       console.error('ℹ️  opts.out.replace is not supported => printing resulting collection to stdout');
       console.log(JSON.stringify(reduced, null, 2));
