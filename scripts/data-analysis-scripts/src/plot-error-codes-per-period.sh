@@ -14,7 +14,7 @@ TITLE=$3
 # ./csv-helpers/fill-empty-values.sh $OUT.temp.csv 0
 
 # rename csv headers
-sed -i '' 's/_id/Week/; s/value.0/Code 0/g; s/value.100/Code 100/g; s/value.150/Code 150/g; s/value.//g; s/_/ /g' logs/list-error-codes-per-week.csv
+sed -i '' 's/_id/Week/; s/value.0/Code 0/g; s/value.100/Code 100/g; s/value.150/Code 150/g; s/value.//g; s/_/ /g' ../logs/$LISTNAME.csv
 
 echo "plot data to ../plots/$OUT.png ..."
 mkdir ../plots &>/dev/null
