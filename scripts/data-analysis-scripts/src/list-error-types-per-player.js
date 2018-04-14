@@ -41,7 +41,7 @@ var opts = {
 
   const startDate = new Date();
   console.warn(`Map-reducing ${INPUT_FILE} --> /dev/out ...`);
-  const reduced = await mapReduceFromJsonLines(INPUT_FILE, map, reduce, opts);
+  const reduced = (await mapReduceFromJsonLines(INPUT_FILE, map, reduce, opts)).results;
   console.warn(`⏲  Duration: ${(new Date() - startDate) / 1000} seconds`); // => ~2 mn (instead of 7 from db)
 
   // equivalent to printjson(db[OUTPUT_COLLECTION].find().sort({ 'value.total': -1 }).toArray());

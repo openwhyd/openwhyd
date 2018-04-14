@@ -60,7 +60,7 @@ var opts = {
   const startDate = new Date();
   console.warn(`Map-reducing ${INPUT_FILE} --> /dev/out ...`);
   // var result = db.playlog.mapReduce(map, reduce, opts);
-  const results = await mapReduceFromJsonLines(INPUT_FILE, map, reduce, opts);
+  const { results } = await mapReduceFromJsonLines(INPUT_FILE, map, reduce, opts);
   console.warn(`⏲  Duration: ${(new Date() - startDate) / 1000} seconds`); // => ~3 mn (instead of 8 from db)
 
   console.log(JSON.stringify(results, null, 2));

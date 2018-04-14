@@ -59,6 +59,7 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) => new Promise
         return;
       }
       const processed = inTimeRange(json) && map.call(promoteObject(json));
+      //console.error(line.substr(0, 50), '=>', JSON.stringify(processed).substr(0, 50));
       if (processed) {
         const vals = []
           .concat(reduced[processed.key] ? [ reduced[processed.key] ] : [])
