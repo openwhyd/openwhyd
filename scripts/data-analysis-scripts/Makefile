@@ -32,7 +32,7 @@ plots/plot-user-growth.png: ## Generate the "user growth" plot
 	@echo 'Plotting user growth...'
 	@cd src && ./plot-user-growth.sh
 
-plots/plot-nb-posts-per-day.png: ## Generate the "number of posts per day" plot
+plots/plot-nb-posts-per-day.png: ./post.json.log ## Generate the "number of posts per day" plot
 	@echo 'Plotting nb posts per day...'
 	@cd src && ./plot-nb-posts-per-day.sh
 

@@ -18,4 +18,4 @@ var opts = {
 };
 
 var results = db.post.mapReduce(map, reduce, opts).results;
-print(results.map(res => [ res._id, res.value ]).join('\n'));
+//print(results.map(res => [ res._id, res.value ]).join('\n'));
