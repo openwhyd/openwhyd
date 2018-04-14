@@ -5,7 +5,10 @@ const OUTPUT_COLLECTION = 'plot-nb-plays-per-day';
 // notice: MongoDB will not call the reduce function for a key that has only a single value
 const map = makeMapWith(renderDate, function mapTemplate() {
   var val = { total: 1 };
-  val[this.eId.substr(1, 2)] = 1;
+  var getPlayerId = eId => (/^\/(\w\w)\//.exec(this.eId) || [])[1];
+  var isUrl = eId => eId.substr(0, 8).indexOf('//') !== -1;
+  var playerId = getPlayerId(this.eId) || (isUrl(this.eId) ? 'fi' : 'xx');
+  val[playerId] = 1;
   emit(renderDate(this._id.getTimestamp()), val);
 });
 
