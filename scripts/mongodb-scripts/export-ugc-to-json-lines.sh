@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Restore user-generated content tables from production mongodb dump to local db
+# Export user-generated content tables from local db
+# to files with 1 json document per line.
 
 DATABASE="openwhyd_dump"
 COLLECTIONS="user follow track post"
