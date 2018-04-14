@@ -18,12 +18,12 @@ echo ⏲  $SECONDS seconds. # took ~6 mn, instead of 11 when map-reducing on mon
 # NB_COLUMNS=`echo $COLUMNS | sed 's/[^,]//g' | wc -c` # count COLUMNS
 # echo $COLUMNS >$NAME.temp.csv
 # mongoexport -d $DB -c "$NAME" --type=csv --fields "$FIELDS" | tail -n+2 >>$NAME.temp.csv
-# sed -i '' -e '$ d' $NAME.temp.csv # remove last line
 
 echo "convert data to csv ..."
 node convert-json-to-csv.js $NAME.temp.json >$NAME.temp.csv
 # rename csv headers
 sed -i '' 's/value./ /g; s/_err/ (error)/g; s/yt/Youtube/; s/sc/Soundcloud/; s/dm/Dailymotion/; s/vi/Vimeo/; s/dz/Deezer/; s/ja/Jamendo/; s/bc/Bandcamp/; s/fi/File/; s/sp/Spotify/; s/xx/(unknown)/;' $NAME.temp.csv
+sed -i '' -e '$ d' $NAME.temp.csv # remove last line
 
 echo "plot data to ../plots/$NAME.png ..."
 mkdir ../plots &>/dev/null

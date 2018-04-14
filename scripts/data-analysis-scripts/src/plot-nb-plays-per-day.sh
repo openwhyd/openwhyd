@@ -15,12 +15,12 @@ echo ⏲  $SECONDS seconds.
 # write resulting collection into output csv file, with custom header row
 # echo $COLUMNS >$NAME.temp.csv
 # mongoexport -d $DB -c "$NAME" --type=csv --fields "$FIELDS" | tail -n+2 >>$NAME.temp.csv
-# sed -i '' -e '$ d' $NAME.temp.csv # remove last line
 
 echo "convert data to csv ..."
 node convert-json-to-csv.js ../logs/$NAME.temp.json >../logs/$NAME.temp.csv
 # rename csv headers
 sed -i '' 's/_id/Date/; s/value.//g; s/total/Total plays/g; s/yt/Youtube/g; s/sc/Soundcloud/g; s/dm/Dailymotion/g; s/vi/Vimeo/g; s/dz/Deezer/g; s/ja/Jamendo/g; s/bc/Bandcamp/g; s/fi/Audio file/g; s/sp/Spotify/g' ../logs/$NAME.temp.csv
+sed -i '' -e '$ d' ../logs/$NAME.temp.csv # remove last line
 
 echo "plot data to ../plots/$NAME.png ..."
 mkdir ../plots &>/dev/null
