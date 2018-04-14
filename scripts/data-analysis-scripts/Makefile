@@ -40,7 +40,7 @@ plots/plot-nb-users-posting-per-day.png: ## Generate the "number of users postin
 	@echo 'Plotting nb users posting per day...'
 	@cd src && ./plot-nb-users-posting-per-day.sh
 
-plots/plot-nb-users-listening-per-day.png: logs/collection-playlog.log ## Generate the "number of users listening per day" plot
+plots/plot-nb-users-listening-per-day.png: ./playlog.json.log ## Generate the "number of users listening per day" plot
 	@echo 'Plotting nb users listening per day...'
 	@cd src && ./plot-nb-users-listening-per-day.sh
 
