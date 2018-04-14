@@ -28,7 +28,7 @@ logs/list-error-types-per-player.csv: ./playlog.json.log ## List playback errors
 
 ## final targets, to generate plots (png files)
 
-plots/plot-user-growth.png: ## Generate the "user growth" plot
+plots/plot-user-growth.png: ./user.json.log ## Generate the "user growth" plot
 	@echo 'Plotting user growth...'
 	@cd src && ./plot-user-growth.sh
 

@@ -19,9 +19,12 @@ function reduce(day, vals) {
 }
 
 var opts = {
+  finalize: function(key, value) {
+    return [ key, value.total || 0, value.iPhoneApp || 0 ];
+  },
   out: { inline: 1 },
   //limit: 1000
 };
 
 var results = db.user.mapReduce(map, reduce, opts).results;
-print(results.map(res => [ res._id, res.value.total || 0, res.value.iPhoneApp || 0 ]).join('\n'));
+//print(results.map(res => [ res._id, res.value.total || 0, res.value.iPhoneApp || 0 ]).join('\n'));
