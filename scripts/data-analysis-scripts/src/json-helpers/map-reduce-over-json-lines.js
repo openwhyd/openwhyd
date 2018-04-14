@@ -47,7 +47,13 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) => new Promise
       ignoreTheRest = true;
       finalizeAndResolve();
     } else if (line) {
-      const json = JSON.parse(line);
+      let json;
+      try {
+        json = JSON.parse(line);
+      } catch(err) {
+        console.error('Parse Error:', err.message, 'at', line, '=> skipping line');
+        return;
+      }
       const processed = inTimeRange(json) && map.call(promoteObject(json));
       if (processed) {
         const vals = []
