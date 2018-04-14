@@ -20,23 +20,7 @@ backup: ## Suffixes ".prev" to all existing png files (generated plots)
 	@cd plots && ./backup-prev-plots.sh
 	@echo 'Done. You can run make to generate fresh png files in plots/'
 
-## intermediate targets, to pre-process usage logs
-
-logs/list-error-codes-per-week.csv: ./playlog.json.log ## List playback error codes per week
-	RENDER_FCT=renderWeek PERIOD=YEAR node src/list-error-codes-per-period.js >./logs/list-error-codes-per-week.json
-	node src/convert-json-to-csv.js ../logs/list-error-codes-per-week.json >logs/list-error-codes-per-week.csv
-
-logs/list-error-codes-per-day-365.csv: ./playlog.json.log ## List playback error codes per day, over the last year
-	RENDER_FCT=renderDate PERIOD=YEAR node src/list-error-codes-per-period.js >./logs/list-error-codes-per-day-365.json
-	node src/convert-json-to-csv.js ../logs/list-error-codes-per-day-365.json >logs/list-error-codes-per-day-365.csv
-
-logs/list-error-codes-per-day-30.csv: ./playlog.json.log ## List playback error codes per day, over the last 30 days
-	RENDER_FCT=renderDate PERIOD=MONTH node src/list-error-codes-per-period.js >./logs/list-error-codes-per-day-30.json
-	node src/convert-json-to-csv.js ../logs/list-error-codes-per-day-30.json >logs/list-error-codes-per-day-30.csv
-
-logs/list-error-codes-per-day-7.csv: ./playlog.json.log ## List playback error codes per day, over the last 7 days
-	RENDER_FCT=renderDate PERIOD=WEEK node src/list-error-codes-per-period.js >./logs/list-error-codes-per-day-7.json
-	node src/convert-json-to-csv.js ../logs/list-error-codes-per-day-7.json >logs/list-error-codes-per-day-7.csv
+## final targets, to generate textual reports
 
 logs/list-error-types-per-player.csv: ./playlog.json.log ## List playback errors and their distribution per player
 	node src/list-error-types-per-player.js >./logs/list-error-types-per-player.json
@@ -68,18 +52,14 @@ plots/plot-nb-play-errors-per-day.png: ./playlog.json.log ## Generate the "numbe
 	@echo 'Plotting nb play errors per day...'
 	@cd src && ./plot-nb-play-errors-per-day.sh
 
-plots/plot-error-codes-per-week.png: logs/list-error-codes-per-week.csv ## Generate the "distribution of playback error codes per week" plot
+plots/play-error-codes-per-week.png: ./playlog.json.log ## Generate the "distribution of playback error codes per week" plot
 	@echo 'Plotting error codes per week...'
+	RENDER_FCT=renderWeek PERIOD=YEAR node src/list-error-codes-per-period.js >./logs/list-error-codes-per-week.json
+	node src/convert-json-to-csv.js ../logs/list-error-codes-per-week.json >logs/list-error-codes-per-week.csv
 	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-week" "plot-error-codes-per-week" "Distribution of errors codes per week, normalised by number of plays"
 
-plots/plot-error-codes-per-day-365.png: logs/list-error-codes-per-day-365.csv ## Generate the "distribution of playback error codes per day, over the last 365 days" plot
+plots/play-error-codes-per-day.png: ./playlog.json.log ## Generate the "distribution of playback error codes per day, over the last 30 days" plot
 	@echo 'Plotting error codes per day...'
-	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-day-365" "plot-error-codes-per-day" "Distribution of errors codes per day, normalised by number of plays, over the last 365 days"
-
-plots/plot-error-codes-per-day-30.png: logs/list-error-codes-per-day-30.csv ## Generate the "distribution of playback error codes per day, over the last 30 days" plot
-	@echo 'Plotting error codes per day...'
+	RENDER_FCT=renderDate PERIOD=MONTH node src/list-error-codes-per-period.js >./logs/list-error-codes-per-day-30.json
+	node src/convert-json-to-csv.js ../logs/list-error-codes-per-day-30.json >logs/list-error-codes-per-day-30.csv
 	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-day-30" "plot-error-codes-per-day-30" "Distribution of errors codes per day, normalised by number of plays, over the last 30 days"
-
-plots/plot-error-codes-per-day-7.png: logs/list-error-codes-per-day-7.csv ## Generate the "distribution of playback error codes per day, over the last 7 days" plot
-	@echo 'Plotting error codes per day...'
-	@cd src && ./plot-error-codes-per-period.sh "list-error-codes-per-day-7" "plot-error-codes-per-day-7" "Distribution of errors codes per day, normalised by number of plays, over the last 7 days"
