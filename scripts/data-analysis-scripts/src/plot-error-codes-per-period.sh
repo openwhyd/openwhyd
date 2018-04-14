@@ -22,4 +22,4 @@ gnuplot -c plot-row-stacked-histogram.gp ../logs/$LISTNAME.csv "$TITLE" >../plot
 
 echo "open ../plots/$OUT.png ..."
 open ../plots/$OUT.png
-# rm $OUT.temp.csv
+rm ../logs/$LISTNAME.*

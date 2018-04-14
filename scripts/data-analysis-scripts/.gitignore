@@ -1,6 +1,3 @@
-logs
 collection-dumps/*.gz
-plots/*.png
-src/*.csv
-src/*.log
-*.json.log
+*.png
+*.log

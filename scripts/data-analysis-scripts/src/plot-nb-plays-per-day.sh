@@ -29,4 +29,4 @@ gnuplot -c plot-csv-data.gp ../logs/$NAME.temp.csv $NB_COLUMNS "$TITLE" >../plot
 
 echo "open ../plots/$NAME.png ..."
 open ../plots/$NAME.png
-# rm $NAME.temp.csv
+rm ../logs/$NAME.temp.*
