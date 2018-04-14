@@ -33,11 +33,15 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) => new Promise
     if (opts.finalize) {
       Object.keys(reduced).forEach(key => reduced[key] = opts.finalize(key, reduced[key]));
     }
-    if ((opts.out || {}).replace) {
+    opts.out = opts.out || {};
+    if (opts.out.replace) {
       console.error('ℹ️  opts.out.replace is not supported => printing resulting collection to stdout');
+      opts.out.inline = 1;
+    }
+    if (opts.out.inline) {
       console.log(JSON.stringify(reduced, null, 2));
     }
-    resolve(reduced);
+    resolve({ results: reduced });
   }
   snip.forEachFileLine(filePath, function lineHandler(line) {
     if (ignoreTheRest) {

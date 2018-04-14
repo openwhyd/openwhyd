@@ -36,7 +36,7 @@ plots/plot-nb-posts-per-day.png: ## Generate the "number of posts per day" plot
 	@echo 'Plotting nb posts per day...'
 	@cd src && ./plot-nb-posts-per-day.sh
 
-plots/plot-nb-users-posting-per-day.png: ## Generate the "number of users posting per day" plot
+plots/plot-nb-users-posting-per-day.png: ./post.json.log ## Generate the "number of users posting per day" plot
 	@echo 'Plotting nb users posting per day...'
 	@cd src && ./plot-nb-users-posting-per-day.sh
 

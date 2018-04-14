@@ -1,12 +1,23 @@
 TITLE="Number of Users posting per day"
-DB=openwhyd_dump
-NAME=plot-nb-users-posting-per-day
-COLUMNS=date,users
+NAME="plot-nb-users-posting-per-day"
+COLUMNS="date,users"
 NB_COLUMNS=2
 
-echo "generate data from mongodb data ..."
-echo $COLUMNS >$NAME.temp.csv
-mongo --quiet $DB ./$NAME.mongo.js >>$NAME.temp.csv
+# DB=openwhyd_dump
+# echo "generate data from mongodb data ..."
+# echo $COLUMNS >$NAME.temp.csv
+# mongo --quiet $DB ./$NAME.mongo.js >>$NAME.temp.csv
+
+echo "map-reducing data from post.json.log ... (⚠️  may take several minutes)"
+SECONDS=0
+node json-helpers/run-mongo-script-from-json-dump.js $NAME.mongo.js ../post.json.log >$NAME.temp.json
+echo ⏲  $SECONDS seconds.
+
+echo "convert data to csv ..."
+node convert-json-to-csv.js $NAME.temp.json >$NAME.temp.csv
+# rename csv headers
+sed -i '' "1s/.*/$COLUMNS/" $NAME.temp.csv
+sed -i '' -e '$ d' $NAME.temp.csv # remove last line
 
 echo "plot data to ../plots/$NAME.png ..."
 mkdir ../plots &>/dev/null

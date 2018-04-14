@@ -21,9 +21,12 @@ function reduce(day, vals) {
 }
 
 var opts = {
+  finalize: function(key, reducedValue) {
+    return reducedValue.count;
+  },
   out: { inline: 1 },
-  //limit: 1000
+  // limit: 1000
 };
 
 var results = db.post.mapReduce(map, reduce, opts).results;
-print(results.map(res => [ res._id, res.value.count ]).join('\n'));
+//print(results.map(res => [ res._id, res.value.count ]).join('\n'));
