@@ -20,7 +20,7 @@ function reduce(day, vals) {
 
 var opts = {
   finalize: function(key, value) {
-    return [ key, value.total || 0, value.iPhoneApp || 0 ];
+    return [ value.total || 0, value.iPhoneApp || 0 ];
   },
   out: { inline: 1 },
   //limit: 1000
