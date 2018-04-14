@@ -29,9 +29,9 @@ var opts = {
   out: {
     //inline: 1,
     'replace': OUTPUT_COLLECTION, // will store results in that collection
-    // => took 9 minutes to run
+    // => took 9 minutes to run from db
   },
-  //limit: 100000 // => runs in 2 seconds
+  //limit: 100000 // => runs in 2 seconds from db
 };
 
 var results = db.playlog.mapReduce(map, reduce, opts).results;
