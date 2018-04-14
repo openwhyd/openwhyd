@@ -18,10 +18,7 @@ const script = [
 const context = {
   module: {}, // to tolerate mentions to module.exports
   mapReduceFromJsonLines: mapReduceFromJsonLines.bind(null, JSON_DUMP_FILE),
-  print: function() {
-    console.log.apply(console, [LOG_PREFIX].concat(Array.prototype.slice.call(arguments)));
-    nextCommand();
-  },
+  print: console.log,
 };
 
 new vm.Script(script).runInContext(vm.createContext(context));

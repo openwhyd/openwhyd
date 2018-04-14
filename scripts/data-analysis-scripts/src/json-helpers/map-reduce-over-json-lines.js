@@ -34,14 +34,15 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) => new Promise
       Object.keys(reduced).forEach(key => reduced[key] = opts.finalize(key, reduced[key]));
     }
     opts.out = opts.out || {};
-    if (opts.out.replace) {
-      console.error('ℹ️  opts.out.replace is not supported => printing resulting collection to stdout');
-      opts.out.inline = 1;
-    }
+    // cf https://docs.mongodb.com/manual/reference/command/mapReduce/#output
     if (opts.out.inline) {
+      resolve({
+        results: Object.keys(reduced).map(_id => ({ _id, value: reduced[_id] }))
+      });
+    } else {
+      console.error('ℹ️  opts.out.inline == false => printing resulting collection to stdout');
       console.log(JSON.stringify(reduced, null, 2));
     }
-    resolve({ results: reduced });
   }
   snip.forEachFileLine(filePath, function lineHandler(line) {
     if (ignoreTheRest) {

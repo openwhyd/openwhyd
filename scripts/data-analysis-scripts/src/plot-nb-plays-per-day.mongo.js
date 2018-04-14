@@ -21,11 +21,6 @@ function reduce(day, vals) {
 }
 
 var opts = {
-  /*
-  finalize: function(key, reducedValue) {
-    return reducedValue.users.length;
-  },
-  */
   out: {
     //inline: 1,
     'replace': OUTPUT_COLLECTION, // will store results in that collection

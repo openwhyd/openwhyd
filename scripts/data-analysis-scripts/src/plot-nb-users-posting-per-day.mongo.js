@@ -21,12 +21,13 @@ function reduce(day, vals) {
 }
 
 var opts = {
-  finalize: function(key, reducedValue) {
-    return reducedValue.count;
-  },
   out: { inline: 1 },
   // limit: 1000
 };
 
-var results = db.post.mapReduce(map, reduce, opts).results;
-//print(results.map(res => [ res._id, res.value.count ]).join('\n'));
+var res = db.post.mapReduce(map, reduce, opts);
+//print(res.results.map(res => [ res._id, res.value.count ]).join('\n'));
+print(res.results
+  .sort((a, b) => new Date(a._id) - new Date(b._id))
+  .map(res => [ res._id, res.value.count ]).join('\n')
+);

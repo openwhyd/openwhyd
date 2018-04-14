@@ -13,14 +13,10 @@ NB_COLUMNS=3
 
 echo "map-reducing data from user.json.log ... (⚠️  may take several minutes)"
 SECONDS=0
-node json-helpers/run-mongo-script-from-json-dump.js $NAME.mongo.js ../user.json.log >$NAME.temp.json
-echo ⏲  $SECONDS seconds.
-
-echo "convert data to csv ..."
-node convert-json-to-csv.js $NAME.temp.json >$NAME.temp.csv
-# rename csv headers
-sed -i '' "1s/.*/$COLUMNS/" $NAME.temp.csv
+echo $COLUMNS >$NAME.temp.csv
+node json-helpers/run-mongo-script-from-json-dump.js $NAME.mongo.js ../user.json.log >>$NAME.temp.csv
 sed -i '' -e '$ d' $NAME.temp.csv # remove last line
+echo ⏲  $SECONDS seconds.
 
 echo "plot user signups chart to ../plots/$NAME.png ..."
 mkdir ../plots &>/dev/null
