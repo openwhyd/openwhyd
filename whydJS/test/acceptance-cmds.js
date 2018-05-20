@@ -15,6 +15,35 @@ browser.addCommand('injectJS', function async (scriptUrl) {
   }, scriptUrl);
 });
 
+browser.addCommand('waitForReady', function async() {
+  return browser.waitUntil(function () {
+      return browser.execute(function () {
+        return document.readyState;
+      }).value === 'complete';
+    },
+    WAIT_DURATION, `page should be ready within 5 seconds`, 500 // => will check every 500 milliseconds
+  );
+});
+
+browser.addCommand('waitForLinkWithText', function async (text) {
+  return browser.waitUntil(
+    function () {
+      return browser.execute(function (text) {
+        return !!$("a:contains('" + text + "')")[0];
+      }, text).value;
+    },
+    WAIT_DURATION,
+    `a "${text}" link should be in the page within ${WAIT_DURATION / 1000} seconds`,
+    500 // => will check every 500 milliseconds
+  );
+});
+
+browser.addCommand('clickOnLinkWithText', function async (text) {
+  return browser.execute(function (text) {
+    return $("a:contains('" + text + "')")[0].click();
+  }, text);
+});
+
 browser.addCommand('waitForContent', function async (regex, context) {
   return browser.waitUntil(function async() {
     return this.getHTML(context || 'body').then((content) => {

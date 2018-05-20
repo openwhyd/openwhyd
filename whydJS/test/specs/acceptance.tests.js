@@ -100,6 +100,7 @@ describe('adding a track', function() {
 
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
         //browser.url(URL_PREFIX + '/all');
+        browser.waitForReady();
         $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
         browser.waitUntil(
             () => $$('#searchResults li a').find(a => /Demo/.test(a.getText())), WAIT_DURATION,
@@ -141,16 +142,11 @@ describe('adding a track', function() {
 
     it('should show a link to the post after adding the track', function() {
         $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
-        browser.waitUntil(
-            () => $$('a').find(a => /your tracks/.test(a.getText())), WAIT_DURATION,
-            'expected to find a "your tracks" link after 5s');
+        browser.waitForLinkWithText('your tracks');
     });
 
     it('should show the post on the user\'s profile after clicking the link', function() {
-        browser.waitUntil(
-            () => $$('a').find(a => /your tracks/.test(a.getText())), WAIT_DURATION,
-            'expected to find a "your tracks" link after 5s');
-        $$('a').find(a => /your tracks/.test(a.getText())).click();
+        browser.clickOnLinkWithText('your tracks');
         browser.waitUntil(
             () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on the user\'s profile page after 5s');
@@ -198,13 +194,11 @@ describe('re-adding a track in a playlist', function() {
 
     it('should show a link to the post after re-adding the track', function() {
         $$('.dlgPostBox span').find(a => /Add/.test(a.getText())).click();
-        browser.waitUntil(
-            () => $$('a').find(a => /test playlist/.test(a.getText())), WAIT_DURATION,
-            'expected to find a "test playlist" link after 5s');
+        browser.waitForLinkWithText('test playlist');
     });
 
     it('should show the post on the user\'s new playlist after clicking the link', function() {
-        $$('a').find(a => /test playlist/.test(a.getText())).click(); // TODO: make this test less fragile on travis-ci
+        browser.clickOnLinkWithText('test playlist');
         browser.waitUntil(
             () => /\/u\//.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on the user\'s playlist page after 5s');
