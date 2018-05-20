@@ -58,7 +58,7 @@ describe('onboarding', function() {
         genres.find(genre => /ROCK/.test(genre.getText())).click();
         genres.find(genre => /PUNK/.test(genre.getText())).click();
         // TODO: takeSnapshot();
-        $$('a').find(a => a.getText() === 'Next').click();
+        browser.clickOnLinkWithText('Next');
         browser.waitUntil(
             () => /.*\/pick\/people/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /pick/people after 5s'
@@ -67,7 +67,7 @@ describe('onboarding', function() {
 
     it('should suggest to install the extension after picking people', function() {
         // TODO: takeSnapshot();
-        $$('a').find(a => a.getText() === 'Next').click();
+        browser.clickOnLinkWithText('Next');
         browser.waitUntil(
             () => /.*\/pick\/button/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /pick/button after 5s'
@@ -76,7 +76,7 @@ describe('onboarding', function() {
 
     it('should lead new user to the welcome page, after installing extension', function() {
         // TODO: takeSnapshot();
-        $$('a').find(a => a.getText() === 'Next').click();
+        browser.clickOnLinkWithText('Next');
         browser.waitUntil(
             () => /.*\/welcome/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /welcome after 5s'
@@ -86,7 +86,6 @@ describe('onboarding', function() {
     it('should display user name after skipping the welcome tutorial', function() {
         // TODO: takeSnapshot();
         browser.waitForContent(/Ok\, Got it/);
-        //$$('div').find(a => /Ok\, Got it/.test(a.getText())).click(); // does not trigger. not useful anyway.
         var loggedInUsername = browser.getText('#loginDiv .username');
         assert.equal(loggedInUsername, TEST_USER.username);
     });
@@ -133,8 +132,8 @@ describe('adding a track', function() {
     });
 
     it('should open a dialog after clicking on the "Add to" button', function() {
-        //$$('a').find(a => /Add to/.test(a.getText())).click();
-        browser.click('a.btnRepost');
+        //browser.click('a.btnRepost');
+        browser.clickOnLinkWithText('Add to');
         browser.waitForVisible('.dlgPostBox');
         browser.pause(1000);
         assert(browser.element('.dlgPostBox').isVisible());
@@ -178,7 +177,7 @@ describe('re-adding a track in a playlist', function() {
 
     it('will display a pop-in dialog when clicking the "Add to" button of that track', function() {
         browser.waitForContent(/Add to/);
-        $$('a').find(a => /Add to/.test(a.getText())).click();
+        browser.clickOnLinkWithText('Add to');
         browser.waitForVisible('.dlgPostBox');
     });
 
@@ -216,7 +215,7 @@ describe('track comments', function() {
 
     it(`can be displayed from the user\'s stream`, function() {
         browser.url(URL_PREFIX + '/stream');
-        $$('a').find(a => /Comment/.test(a.getText())).click();
+        browser.clickOnLinkWithText('Comment');
         browser.waitForContent(/You can mention people/);
     });
 
