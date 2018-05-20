@@ -94,7 +94,18 @@ exports.makeAnalyticsHeading = function(user) {
 			})) + ';',
 		'  window.playTrack = window.playTrack || function(){};', // prevent videos from playing in another tab, until whydPlayer is loaded
 		'</script>',
-		'<script src="/js/whydtr.js' + includeSuffix + '"></script>'
+		'<script src="/js/whydtr.js' + includeSuffix + '"></script>',
+		'<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />',
+		'<script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>',
+		'<script>',
+		'  /* generated from https://cookieconsent.insites.com/download/ */',
+		'  window.addEventListener("load", function(){',
+		'    window.cookieconsent.initialise({',
+		'	     "palette": { "popup": { "background": "#000" }, "button": { "background": "#f1d600" } },',
+		'	     "type": "opt-in"',
+		'    })',
+	  '  });',
+		'</script>',
 	];
 }
 
