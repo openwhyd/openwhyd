@@ -777,6 +777,9 @@ function WhydPlayer () {
 	console.log("Playem is ready!");
 
 	// enable media keys for controlling the player, using sway.fm chrome extension
+	/*
+	// disabled this code, as the URL does not exist anymore and the chrome extension
+	// does not seem to work either: https://chrome.google.com/webstore/detail/media-keys-by-swayfm/icckhjgjjompfgoiidainoapgjepncej/reviews
 	loader.includeJS("https://s3.amazonaws.com/SwayFM/UnityShim.js", function() {
 		console.log("Loading sway.fm...")
 		var unity = UnityMusicShim();
@@ -808,4 +811,5 @@ function WhydPlayer () {
 		window.whydPlayer.on("play", makeStateProxy({playing: true}));
 		window.whydPlayer.on("pause", makeStateProxy({playing: false}));
 	});
+	*/
 })();
