@@ -25,7 +25,7 @@ function renderMarkdownLine(mdLine) {
 		.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>')
 		.replace(/\*([^\*]+)\*/g, '<i>$1</i>')
 		.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
-		.replace(/^<p>- \[ \] /g, '<p class="consent-checkbox"><input type="checkbox">')
+		.replace(/^<p>- \[ \] (.*)/g, '<div class="consent-box"><input class="checkbox" type="checkbox"><p>$1</div>')
 		.replace(/^<p>- (.*)/g, '<li>$1</li>')
 		.replace(/^<p>#+ (.*)/g, '<h1>$1</h1>')
 		.replace(/<\/(li|h1)><\/p>$/, '</$1>');
@@ -44,6 +44,7 @@ var templatePerLang = Object.keys(filePerLang).reduce(function(templatePerLang, 
 }, {});
 
 function renderPageContent(params) {
+	var safeRedirect = snip.sanitizeJsStringInHtml(params.redirect || '/');
 	// credits: flag icons by Freepik, https://www.flaticon.com/packs/countrys-flags
 	return [
 		'<div class="container" id="consent-container" data-lang="lang-en">',
@@ -51,12 +52,16 @@ function renderPageContent(params) {
 		'    <img alt="English / Anglais" id="lang-en" src="/images/lang-en.svg">',
 		'    <img alt="French / Français" id="lang-fr" src="/images/lang-fr.svg">',
 		'  </div>',
-		'  <div class="whitePanel lang-en">',
-		     templatePerLang.en,
-		'  </div>',
-		'  <div class="whitePanel lang-fr">',
-		     templatePerLang.fr,
-		'  </div>',
+		'  <form class="whitePanel lang-en" action="/consent" method="POST">',
+		templatePerLang.en,
+		'    <input type="hidden" name="redirect" value="' + safeRedirect + '">',
+		'    <input disabled class="consent-submit" type="submit">',
+		'  </form>',
+		'  <form class="whitePanel lang-fr" action="/consent" method="POST">',
+		templatePerLang.fr,
+		'    <input type="hidden" name="redirect" value="' + safeRedirect + '">',
+		'    <input disabled class="consent-submit" type="submit">',
+		'  </form>',
 		'</div>',
 		'<script>',
 		'  function changeLang(event) {',
@@ -64,6 +69,16 @@ function renderPageContent(params) {
 		'  }',
 		'  document.getElementById("lang-en").onclick = changeLang;',
 		'  document.getElementById("lang-fr").onclick = changeLang;',
+		'  function toggleConsent(event) {',
+		'    var checked = event.currentTarget.checked;',
+		'    document.getElementById("consent-container").setAttribute("data-checked", checked);',
+		'    document.getElementsByClassName("consent-submit")[0].disabled = !checked;',
+		'    document.getElementsByClassName("consent-submit")[1].disabled = !checked;',
+		'    document.getElementsByClassName("checkbox")[0].checked = checked;',
+		'    document.getElementsByClassName("checkbox")[1].checked = checked;',
+		'  }',
+		'  document.getElementsByClassName("checkbox")[0].onchange = toggleConsent;',
+		'  document.getElementsByClassName("checkbox")[1].onchange = toggleConsent;',
 		'</script>',
 	].join('\n');
 }
