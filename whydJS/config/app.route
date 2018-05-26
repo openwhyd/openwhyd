@@ -82,6 +82,7 @@ POST	/onboarding						-> controllers.onboarding
 POST	/pick/{step}					-> controllers.onboarding
 GET		/pick/{step}					-> controllers.onboarding
 GET		/pick/{step}/					-> controllers.onboarding
+GET		/consent							-> controllers.consent
 
 GET		/discover						-> controllers.discover
 POST	/discover						-> controllers.discover
