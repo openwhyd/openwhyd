@@ -54,11 +54,13 @@ function renderPageContent(params) {
 		'  </div>',
 		'  <form class="whitePanel lang-en" action="/consent" method="POST">',
 		templatePerLang.en,
+		'    <input type="hidden" name="lang" value="en">',
 		'    <input type="hidden" name="redirect" value="' + safeRedirect + '">',
 		'    <input disabled class="consent-submit" type="submit">',
 		'  </form>',
 		'  <form class="whitePanel lang-fr" action="/consent" method="POST">',
 		templatePerLang.fr,
+		'    <input type="hidden" name="lang" value="fr">',
 		'    <input type="hidden" name="redirect" value="' + safeRedirect + '">',
 		'    <input disabled class="consent-submit" type="submit">',
 		'  </form>',
@@ -84,7 +86,8 @@ function renderPageContent(params) {
 }
 
 exports.controller = function(request, getParams, response) {
-	var p = (request.method.toLowerCase() === 'post' ? request.body : getParams) || {};
+	var isPost = request.method.toLowerCase() === 'post';
+	var p = (isPost ? request.body : getParams) || {};
 	request.logToConsole("consent.controller " + request.method, p);
 	// make sure user is logged in
 	if (!(p.loggedUser = request.checkLogin(response))) return;
@@ -100,7 +103,7 @@ exports.controller = function(request, getParams, response) {
 		}
 		// call the adequate renderer
 		if (r.redirect)
-			response.temporaryRedirect(r.redirect);
+			response.redirect(r.redirect);
 		else if (r.html)
 			response.renderHTML(r.html);
 		else
@@ -109,8 +112,26 @@ exports.controller = function(request, getParams, response) {
 		analytics.addVisit(p.loggedUser, request.url);
 	}
 
-	(p.css = p.css || []).push("consent.css");
-	p.bodyClass = "pgConsent";
-	p.content = renderPageContent(p);
-	render(p);
+	if (isPost) {
+		userModel.updateAndFetch({ "_id": mongodb.ObjectId(""+p.loggedUser.id) }, {
+			$set: {
+				'consent.lang': p.lang,
+			},
+			$currentDate: {
+				'consent.date': true, // => mongodb will store a ISODate in consent.date
+			},
+		},
+		null,
+		function onDone(err, user) {
+			if (user && user.consent)
+				console.log('user id', p.loggedUser.id, 'consented to gdpr notice =>', user.consent);
+			render(err ? { error: err } : p); // should redirect to p.redirect, or display error
+		});
+	} else {
+		(p.css = p.css || []).push("consent.css");
+		p.bodyClass = "pgConsent";
+		p.content = renderPageContent(p);
+		p.redirect = ''; // to avoid redirection loops
+		render(p);
+	}
 }
