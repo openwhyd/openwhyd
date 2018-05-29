@@ -94,7 +94,7 @@ describe('upload user profile images', function() {
     browser.pause(5000)
     browser.clickOnContent('Save');
   });
-    
+
   it(`has new avatar"`, function async() {
     return new Promise(function (resolve, reject) {
       browser.pause(1000).then(function() {
