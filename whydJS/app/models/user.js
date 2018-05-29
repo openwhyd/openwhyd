@@ -47,6 +47,7 @@ var USER_FIELDS = {
 	pref: true,
 	pub: 1,
 	pwd: true,
+	consent: true, // gdpr consent (boolean set to true when consent is given by user)
 	lastFm: true
 };
 // fields that should not be stored: id, mid, n

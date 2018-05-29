@@ -44,14 +44,26 @@ function LibraryController (reqParams, render) {
 }
 
 LibraryController.prototype.renderPage = function(user, sidebarHtml, feedHtml) {
-	var html = "";
+	var self = this;
 	if (!this.options.embedW) {
 		this.options.content = feedHtml;
-		html = feedTemplate.renderFeedPage(user, this.options);
+		var html = feedTemplate.renderFeedPage(user, this.options);
+		var loggedUserId = (this.options.loggedUser || {}).id;
+		if (loggedUserId) {
+			userModel.fetchByUid(loggedUserId, function(user) {
+				if (user && !user.consent) {
+					var thisUrl = encodeURIComponent(self.options.pageUrl || '/');
+					html = loggingTemplate.htmlRedirect('/consent?redirect=' + thisUrl);
+				}
+				self.render({ html: html });
+			});
+		} else
+			this.render({ html: html });
 	}
-	else
-		html = feedTemplate.renderFeedEmbed(feedHtml, this.options);
-	this.render({html:html});
+	else {
+		var html = feedTemplate.renderFeedEmbed(feedHtml, this.options);
+		this.render({ html: html });
+	}
 };
 
 LibraryController.prototype.renderJson = function(json) {

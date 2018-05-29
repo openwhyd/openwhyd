@@ -74,9 +74,21 @@ describe('onboarding', function() {
         );
     });
 
-    it('should lead new user to the welcome page, after installing extension', function() {
+    it('should lead new user to the gdpr consent page, after installing extension', function() {
         // TODO: takeSnapshot();
         browser.clickOnLinkWithText('Next');
+        browser.waitUntil(
+            () => /.*\/consent/.test(browser.getUrl()), WAIT_DURATION,
+            'expected to be on /consent after 5s'
+        );
+    });
+
+    it('should lead to the welcome page, after giving consent', function() {
+        // TODO: takeSnapshot();
+        browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
+        browser.scroll('input[type="checkbox"]');
+        browser.click('input[type="checkbox"]');
+        browser.click('input[type="submit"]');
         browser.waitUntil(
             () => /.*\/welcome/.test(browser.getUrl()), WAIT_DURATION,
             'expected to be on /welcome after 5s'
@@ -96,6 +108,18 @@ describe('onboarding', function() {
 describe('adding a track', function() {
 
     it('should allow user to login', webUI.loginAs(ADMIN_USER));
+
+    it('should lead user to the gdpr consent page', function() {
+        browser.waitUntil(
+            () => /.*\/consent/.test(browser.getUrl()), WAIT_DURATION,
+            'expected to be on /consent after 5s'
+        );
+        // now, let's give consent
+        browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
+        browser.scroll('input[type="checkbox"]');
+        browser.click('input[type="checkbox"]');
+        browser.click('input[type="submit"]');
+    });
 
     it('should recognize a track when pasting a Youtube URL in the search box', function() {
         //browser.url(URL_PREFIX + '/all');

@@ -3,7 +3,7 @@
 ## Projet
 
 - Openwhyd est un projet *open source* et à but non lucratif.
-- Le [code source](https://github.com/openwhyd/openwhyd) est maintenu par des volontaires. Les contributions sont coordonnées et contrôlées par Adrien Joly, sur son temps libre.
+- Le [code source](https://github.com/openwhyd/openwhyd) est maintenu par des volontaires. Les contributions sont coordonnées et contrôlées par Adrien Joly (administrateur de la plateforme openwhyd.org depuis Août 2016), sur son temps libre.
 - Le nom de domaine `openwhyd.org`, l'hébergement du serveur applicatif et des données associées sont également gérés par Adrien Joly.
 - Les charges techniques nécessaires au maintien d'openwhyd.org sont couvertes par des sponsors et des donations d'utilisateurs du service. Les factures correspondantes sont diffusées publiquement sur [notre page Opencollective](https://opencollective.com/openwhyd).
 
