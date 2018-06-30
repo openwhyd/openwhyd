@@ -235,9 +235,8 @@ function WhydPlayer () {
 					if (wasPlaying) {
 						playem.resume();
 						window.showMessage && showMessage('Want to play music in the background?'
-							+ ' Please use <a href="https://openwhyd.org/download"'
-							+ ' target="_blank">Openwhyd Desktop App</a>'
-              + ' or try the new frontend beta : <a href="https://sound-nuggets.xyz">sound-nuggets</a> 👌', true);
+							+ ' Please install <a href="https://openwhyd.org/download"'
+							+ ' target="_blank">Openwhyd Desktop App</a> 👌', true);
 					}
 				}
 				hadFocus = hasFocus;
@@ -458,7 +457,10 @@ function WhydPlayer () {
 
 			// will try to fallback failing tracks to deezer player
 
-			window.showMessage && showMessage('We\'re unable to play <a href="'+currentTrack.metadata.url+' target="_blank">that track</a>, sorry...', true);
+			window.showMessage && showMessage('Oops, we could not play'
+			+ ' <a href="'+currentTrack.metadata.url+' target="_blank">this track</a>...'
+			+ ' Please try with <a href="https://openwhyd.org/download"'
+			+ ' target="_blank">Openwhyd Desktop App</a> 👌', true);
 			if (e && e.track) {
 				console.log("cleaning track metadata before logging", e.track)
 				// to prevent circular object
