@@ -29,6 +29,7 @@ GET		/support							-> controllers.static
 GET		/sponsor							-> controllers.static
 GET		/donate							  -> controllers.static
 GET		/community						-> controllers.static
+GET		/contribute						-> controllers.static
 
 GET		/paris							-> controllers.api.city
 GET		/paris/							-> controllers.api.city
