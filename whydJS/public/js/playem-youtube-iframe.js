@@ -1,3 +1,6 @@
+// NOTE: this file in not used anymore
+// --> see playem-youtube-iframe-patch.js instead
+
 function YoutubeIframePlayer(){
 	return YoutubeIframePlayer.super_.apply(this, arguments);
 }
