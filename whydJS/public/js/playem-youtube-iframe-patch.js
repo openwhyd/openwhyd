@@ -30,8 +30,14 @@ function YoutubeIframePlayer(){
 		this.label = "Youtube";
 		window.addEventListener('message', function(e) {
 			if (e.origin === IFRAME_HOST) {
-				var message = JSON.parse(e.data);
-				var param = message.data[0];
+				var message, param;
+				try {
+					message = JSON.parse(e.data);
+					param = message.data[0];
+				} catch (err) {
+					console.warn('skipping invalid message:', message);
+					return;
+				}
 				that.iframeReady = true;
 		        //for (var i in message.data)
 		        //	if (message.data[i] == "(object)")
