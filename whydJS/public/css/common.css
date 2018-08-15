@@ -1877,13 +1877,13 @@ body.pgPost .background-header > div{
 	height: 130%;
 	opacity: 0.85;
 
+	filter: url("data:image/svg+xml;utf8,<svg xmlns=\'https://www.w3.org/2000/svg\'><filter id=\'effect-blur-1\'><feGaussianBlur stdDeviation=\'15\' /></filter></svg>#effect-blur-1");
 	filter: blur(25px);
 	-webkit-filter: blur(25px);
 	-moz-filter: blur(25px);
 	-o-filter: blur(25px);
 	-ms-filter: blur(25px);
-filter: url(#effect-blur-1);
-filter: url("data:image/svg+xml;utf8,<svg xmlns=\'https://www.w3.org/2000/svg\'><filter id=\'effect-blur-1\'><feGaussianBlur stdDeviation=\'15\' /></filter></svg>#effect-blur-1");
+	filter: url(#effect-blur-1);
 }
 
 body.pgPost .posts{
