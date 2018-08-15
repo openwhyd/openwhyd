@@ -52,7 +52,7 @@ var postPage = {
 	imagesResolver:function(img){
 		if(img){
 			if(this.eId.substr(1, 2) == "yt"){
-				img = "http://img.youtube.com/vi/"+ this.eId.substr(4).split('?')[0] + "/sddefault.jpg";
+				img = "https://img.youtube.com/vi/"+ this.eId.substr(4).split('?')[0] + "/sddefault.jpg";
 			}else if(this.eId.substr(1, 2) == "sc"){
 				img = img.replace('-large','-t500x500');
 			}

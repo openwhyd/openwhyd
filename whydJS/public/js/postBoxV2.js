@@ -365,7 +365,7 @@ function initPostBox(params){
 	function imageToHD(track){
 		if(track.img){
 			if(track.eId.substr(1, 2) == "yt"){
-				var img = "http://img.youtube.com/vi/"+ track.eId.substr(4).split('?')[0] + "/hqdefault.jpg";
+				var img = "https://img.youtube.com/vi/"+ track.eId.substr(4).split('?')[0] + "/hqdefault.jpg";
 				var i = new Image();
 				i.onload = function(){
 					if (i.height >= 120) {
