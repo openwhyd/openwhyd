@@ -1,6 +1,9 @@
 // this script is loaded by YoutubePlayerIframe.html / YoutubePlayerIframeLocal.html,
 // which is loaded in an iframe by playem-youtube-iframe-patch.js
-// 
+
+// => when openwhyd is running in production (i.e. from openwhyd.org),
+// this script will be running from a different domain name (i.e. a CDN).
+
 (function(){
   var wlh = window.location.href;
   // ORIGIN should match the domain on which openwhyd is running
