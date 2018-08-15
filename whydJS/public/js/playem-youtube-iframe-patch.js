@@ -106,6 +106,7 @@ function YoutubeIframePlayer(){
 		this.iframe.onload = function(){
 			that.iframeReady = true;
 		};
+		this.iframe.setAttribute("allow", "autoplay"); // required by chrome, see https://stackoverflow.com/a/48747474/592254
 		this.iframe.setAttribute("src", IFRAME_HOST + IFRAME_PATH + "?" + Object.keys(settings).map(function(p){
 			return p + "=" + encodeURIComponent(settings[p]);
 		}).join("&"));
