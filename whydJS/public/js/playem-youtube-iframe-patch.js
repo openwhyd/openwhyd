@@ -13,16 +13,14 @@ function YoutubeIframePlayer(){
 
 	var isLocal = window.location.href.indexOf("http://localhost:") == 0
 		|| /^https?\:\/\/(\w+)\.openwhyd\.(\w+)(\:8080)?\//.test(window.location.href);
-	var isPreProd = window.location.href.indexOf("//whyd.fr") != -1;
 
 	var
 		IFRAME_HOST = isLocal
 			? window.location.href.substr(0, window.location.href.indexOf("/", 10))
-			: (window.location.protocol + (isPreProd ? "//whyd.fr" : "//d3qdgup1c3urcq.cloudfront.net")),
-		IFRAME_PATH = (isLocal || isPreProd)
+			: (window.location.protocol + "//d3qdgup1c3urcq.cloudfront.net"), // CDN cached of Openwhyd's static resources (html and js files), available through a different domain name.
+		IFRAME_PATH = isLocal
 			? "/html/YoutubePlayerIframeLocal.html"
-			: "/html/YoutubePlayerIframe.html";
-
+			: "/html/YoutubePlayerIframe.html"; // same file, except it explicitly loads playem-all.js and whydRemotePlayer.js from the openwhyd.org domain
 
 	function Player(eventHandlers, embedVars) {
 		var that = this;
