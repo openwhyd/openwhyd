@@ -35,7 +35,7 @@ function YoutubeIframePlayer(){
 					message = JSON.parse(e.data);
 					param = message.data[0];
 				} catch (err) {
-					console.warn('skipping invalid message:', message);
+					console.warn('skipping message with invalid data:', e);
 					return;
 				}
 				that.iframeReady = true;
