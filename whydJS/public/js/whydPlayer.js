@@ -142,7 +142,10 @@ function ProgressBar(p) {
 
 function WhydPlayer () {
 
-	window.playem = new Playem();
+	window.playem = new Playem({
+		loop: true,
+		playTimeoutMs: 12 * 1000, // give 12 seconds for tracks to (try to) start playing
+	});
 	var currentTrack = null;
 	var isPlaying = false;
 	var isShuffle = false;
