@@ -90,10 +90,11 @@ before(function async () {
 });
 
 // other helpers
-
+/*
 exports.takeSnapshot = function takeSnapshot() {
   var results = browser.checkDocument(); // http://webdriver.io/guide/services/visual-regression.html
   results.forEach((result) => {
     assert(result.isWithinMisMatchTolerance, 'a difference was find on a snapshot');
   });
 };
+*/
