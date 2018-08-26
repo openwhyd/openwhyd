@@ -8,7 +8,8 @@ function map() {
   if (!this.err) return;
   var val = { total: 1 };
   // consider URLs (starting with http or //) as `fi` (source: file)
-  var playerId = this.eId[0] === '/' && this.eId[1] !== '/' ? this.eId.substr(1, 2) : 'fi';
+  var playerId =
+    this.eId[0] === '/' && this.eId[1] !== '/' ? this.eId.substr(1, 2) : 'fi';
   val[playerId] = 1;
   delete this.err.track; // in order to prevent `key too large to index`
   delete this.err.pId;
@@ -20,7 +21,11 @@ function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
   var finalVal = {};
   // sum counts for each player (and total)
-  vals.forEach(val => Object.keys(val).forEach(key => finalVal[key] = (finalVal[key] || 0) + val[key]));
+  vals.forEach(val =>
+    Object.keys(val).forEach(
+      key => (finalVal[key] = (finalVal[key] || 0) + val[key])
+    )
+  );
   return finalVal;
 }
 
@@ -34,12 +39,16 @@ var opts = {
     return reduced;
   },
   out: {
-    'replace': OUTPUT_COLLECTION, // will store results in that collection
+    replace: OUTPUT_COLLECTION // will store results in that collection
     // => took 7 minutes to run
-  },
+  }
   //limit: 1000000 // => runs in 5 seconds
 };
 
 var result = db.playlog.mapReduce(map, reduce, opts);
 print('⏲  ' + Math.round(result.timeMillis / 1000) + ' seconds');
-printjson(db[OUTPUT_COLLECTION].find().sort({ 'value.total': -1 }).toArray());
+printjson(
+  db[OUTPUT_COLLECTION].find()
+    .sort({ 'value.total': -1 })
+    .toArray()
+);

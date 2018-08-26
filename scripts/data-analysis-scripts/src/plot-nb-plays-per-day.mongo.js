@@ -16,16 +16,20 @@ function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
   var sum = (a, b) => a + b;
   var finalVal = { total: 0 };
-  vals.forEach(val => Object.keys(val).forEach(key => finalVal[key] = (finalVal[key] || 0) + val[key]));
+  vals.forEach(val =>
+    Object.keys(val).forEach(
+      key => (finalVal[key] = (finalVal[key] || 0) + val[key])
+    )
+  );
   return finalVal;
 }
 
 var opts = {
   out: {
     //inline: 1,
-    'replace': OUTPUT_COLLECTION, // will store results in that collection
+    replace: OUTPUT_COLLECTION // will store results in that collection
     // => took 9 minutes to run from db
-  },
+  }
   //limit: 100000 // => runs in 2 seconds from db
 };
 

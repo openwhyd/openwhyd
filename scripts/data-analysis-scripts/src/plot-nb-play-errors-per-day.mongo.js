@@ -18,7 +18,11 @@ const map = makeMapWith(renderDate, function mapTemplate() {
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
   var finalVal = {};
-  vals.forEach(val => Object.keys(val).forEach(key => finalVal[key] = (finalVal[key] || 0) + val[key]));
+  vals.forEach(val =>
+    Object.keys(val).forEach(
+      key => (finalVal[key] = (finalVal[key] || 0) + val[key])
+    )
+  );
   return finalVal;
 }
 
@@ -33,9 +37,9 @@ var opts = {
     return reduced;
   },
   out: {
-    'replace': OUTPUT_COLLECTION, // will store results in that collection
+    replace: OUTPUT_COLLECTION // will store results in that collection
     // => took 11 minutes to run from db
-  },
+  }
   //limit: 100000 // => runs in 2 seconds from db
   //limit: 1000000 // => runs in 25 seconds from db
 };
