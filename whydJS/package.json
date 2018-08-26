@@ -33,7 +33,7 @@
     "docker-restart": "docker-compose exec web npm run test-reset && docker-compose restart web && ./wait-for-http-server.sh 8080",
     "docker-run": "npm run docker-restart && docker-compose exec web npm run $@",
     "test-docker": "npm run docker-run test-unit && npm run docker-run test-api && npm run docker-restart && wdio wdio.conf.js $@",
-    "lint": "eslint app"
+    "lint": "standard --fix"
   },
   "engines": {
     "node": ">= 6.11.1",
@@ -70,11 +70,6 @@
   },
   "devDependencies": {
     "all-contributors-cli": "^4.5.1",
-    "eslint": "2.9.0",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-import": "^1.11.1",
-    "eslint-plugin-jsx-a11y": "1.2.0",
-    "eslint-plugin-react": "^5.2.2",
     "mocha": "^3.4.2",
     "standard": "11.0.1",
     "wdio-dot-reporter": "0.0.8",
