@@ -3,7 +3,7 @@
  * WIP: Just able to dry-run the diff on the "posts" and "users" collections.
  */
 
-require('dotenv').config({ path: '../../whydJS/env-vars-perso.sh' });
+require('dotenv').config();
 const confirm = require('node-ask').confirm;
 const algoliaUtils = require('./algolia-utils.js');
 const mongo = require('./mongodb-wrapper.js');
