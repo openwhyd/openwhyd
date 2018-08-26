@@ -82,9 +82,9 @@ exports.extractGenreTags = function (plName) {
         for (var synonym in tagSynonyms) {
           if (phrase.indexOf(synonym) > -1) {
             tags.push(tagSynonyms[synonym])
-            break;
-          } 
-}
+            break
+          }
+        }
       }
     })
   }
