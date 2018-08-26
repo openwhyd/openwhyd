@@ -1,7 +1,6 @@
 var my = require('../');
 
 exports.Buffer = my.Class(Buffer, {
-
   constructor: function(arg) {
     Buffer.call(this, arg);
     this.position = 0;
@@ -9,13 +8,12 @@ exports.Buffer = my.Class(Buffer, {
 
   append: function(data) {
     var nbWritten;
-    if (typeof data === 'string')
-      nbWritten = this.write(data, this.position);
-    else if (Buffer.isBuffer(data))
-      nbWritten = data.copy(this, this.position);
+    if (typeof data === 'string') nbWritten = this.write(data, this.position);
+    else if (Buffer.isBuffer(data)) nbWritten = data.copy(this, this.position);
     else
       throw new TyperError(
-        'my.util.AppendBuffer.append: <data> must be a string or buffer');
+        'my.util.AppendBuffer.append: <data> must be a string or buffer'
+      );
     this.position += nbWritten;
   },
 
@@ -34,5 +32,4 @@ exports.Buffer = my.Class(Buffer, {
   toString: function() {
     return this.sliceData().toString();
   }
-
 });

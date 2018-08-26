@@ -8,7 +8,6 @@ require('../acceptance-cmds.js'); // also checks that openwhyd/whydjs server is 
 // TODO: make sure that DB was reset before starting the whydJS app server
 
 describe('bookmarklet - adding from a youtube track', function() {
-
   it(`user login`, webUI.loginAs(ADMIN_USER));
 
   it(`should load a youtube page`, function() {
@@ -16,7 +15,7 @@ describe('bookmarklet - adding from a youtube track', function() {
     browser.waitForContent(/1sec/);
   });
 
-  it('should load the bookmarklet', function () {
+  it('should load the bookmarklet', function() {
     browser.injectJS(`${URL_PREFIX}/js/bookmarklet.js`);
   });
 
@@ -42,16 +41,14 @@ describe('bookmarklet - adding from a youtube track', function() {
     // TODO: create a re-usable displayLogs() wdio command
   });
   */
-
 });
 
 describe('bookmarklet - adding a second time from same youtube page', function() {
-
   it('should close the bookmarklet', function() {
     $('#whydHeader div').click();
   });
-  
-  it('should load the bookmarklet', function () {
+
+  it('should load the bookmarklet', function() {
     browser.injectJS(`${URL_PREFIX}/js/bookmarklet.js`);
   });
 
@@ -59,7 +56,7 @@ describe('bookmarklet - adding a second time from same youtube page', function()
     browser.waitForExist('.whydThumb');
   });
 
-  it(`should output browser log`, function () {
+  it(`should output browser log`, function() {
     console.log('browser log:', browser.log('browser').value.slice(-30));
     // TODO: create a re-usable displayLogs() wdio command
   });
@@ -67,7 +64,6 @@ describe('bookmarklet - adding a second time from same youtube page', function()
   // TODO: check that adding the track works
 
   //webUI.logout();
-
 });
 
 // Webdriver API documentation: http://webdriver.io/api.html

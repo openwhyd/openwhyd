@@ -7,41 +7,41 @@
 var crypto = require('crypto');
 
 var GENUINE_SIGNUP_SECRET = process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(), // secret key (only known by secure openwhyd clients), used to hash sTk
-	TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
-
+  TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
 
 // hack caused by proxy on openwhyd server
-function realIP(request){
-	var realIP = (request.headers || {})['x-real-ip'];
-	return realIP ? { connection: { remoteAddress: realIP } } : request;
+function realIP(request) {
+  var realIP = (request.headers || {})['x-real-ip'];
+  return realIP ? { connection: { remoteAddress: realIP } } : request;
 }
 
 function signature(str, secret) {
-	return crypto
-		.createHmac('sha256', secret)
-		.update(str)
-		.digest('base64')
-		.replace(/=$/, '');
+  return crypto
+    .createHmac('sha256', secret)
+    .update(str)
+    .digest('base64')
+    .replace(/=$/, '');
 }
 
 function hashRequest(req, date) {
-
-
-	return crypto
-		.createHash('md5')
-		.update(/*crypto.randomBytes(4).toString('hex') +*/ req.connection.remoteAddress + date) // remoteAddress: '74.125.127.100' or '2001:4860:a005::68'
-		.digest('base64')
-		.replace(/==$/, '');
+  return crypto
+    .createHash('md5')
+    .update(
+      /*crypto.randomBytes(4).toString('hex') +*/ req.connection.remoteAddress +
+        date
+    ) // remoteAddress: '74.125.127.100' or '2001:4860:a005::68'
+    .digest('base64')
+    .replace(/==$/, '');
 }
 
 function parseSignupToken(sTk) {
-	// WARNING: magic numbers everywhere!
-	return {
-		hash: sTk.substr(0, 11 + 22),
-		date: new Date(parseInt(sTk.substr(0, 11), 16)),
-		requestHash: sTk.substr(11, 22),
-		signature: sTk.substr(11 + 22, 11 + 22 + 21),
-	};
+  // WARNING: magic numbers everywhere!
+  return {
+    hash: sTk.substr(0, 11 + 22),
+    date: new Date(parseInt(sTk.substr(0, 11), 16)),
+    requestHash: sTk.substr(11, 22),
+    signature: sTk.substr(11 + 22, 11 + 22 + 21)
+  };
 }
 
 //var date = Date.now() => 1419430780993; // 13 digits
@@ -49,17 +49,17 @@ function parseSignupToken(sTk) {
 //parseInt(hexDate, 16)
 
 // used directly by iOS app, indirectly by web ui (through request token validation)
-exports.makeSignupToken = function(request, date){
-	request = realIP(request);
-	//console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
-	date = date ? new Date(date).getTime() : Date.now();
-	var requestHash = hashRequest(request, date);
-	var hash = date.toString(16) + requestHash;
+exports.makeSignupToken = function(request, date) {
+  request = realIP(request);
+  //console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
+  date = date ? new Date(date).getTime() : Date.now();
+  var requestHash = hashRequest(request, date);
+  var hash = date.toString(16) + requestHash;
 
-	//console.log('date =>',  date.toString(16));
-	//console.log('')
-	var sign = signature(hash, GENUINE_SIGNUP_SECRET);
-	/*
+  //console.log('date =>',  date.toString(16));
+  //console.log('')
+  var sign = signature(hash, GENUINE_SIGNUP_SECRET);
+  /*
 	console.log({
 		hash: hash,
 		date: new Date(date),
@@ -67,43 +67,52 @@ exports.makeSignupToken = function(request, date){
 		signature: sign,
 	});
 	*/
-	return hash + sign;
-}
+  return hash + sign;
+};
 
-exports.validateSignupToken = function(sTk, request){
-	request = realIP(request);
-	console.log("[genuine.validateSignupToken] request IP:", request.connection.remoteAddress);
-	var token = parseSignupToken(sTk);
-		console.log("!!!! hash", token.hash);
-		console.log("!!!! date", token.date);
-		console.log("!!!! requestHash", token.requestHash);
-		console.log("!!!! signature", token.signature);
+exports.validateSignupToken = function(sTk, request) {
+  request = realIP(request);
+  console.log(
+    '[genuine.validateSignupToken] request IP:',
+    request.connection.remoteAddress
+  );
+  var token = parseSignupToken(sTk);
+  console.log('!!!! hash', token.hash);
+  console.log('!!!! date', token.date);
+  console.log('!!!! requestHash', token.requestHash);
+  console.log('!!!! signature', token.signature);
 
-	console.log("requestHash", token.requestHash, hashRequest(request, token.date.getTime()))
+  console.log(
+    'requestHash',
+    token.requestHash,
+    hashRequest(request, token.date.getTime())
+  );
 
-
-	return {
-		authentic: token.signature === signature(token.hash, GENUINE_SIGNUP_SECRET),
-		notExpired: Date.now() - token.date < TOKEN_EXPIRY,
-		sameAddr: token.requestHash === hashRequest(request, token.date.getTime()),
-	};
-	// TODO: check request's referer
-}
+  return {
+    authentic: token.signature === signature(token.hash, GENUINE_SIGNUP_SECRET),
+    notExpired: Date.now() - token.date < TOKEN_EXPIRY,
+    sameAddr: token.requestHash === hashRequest(request, token.date.getTime())
+  };
+  // TODO: check request's referer
+};
 
 // used by iOS app and backend of web ui
-exports.checkSignupToken = function(sTk, request){
-	request = realIP(request);
+exports.checkSignupToken = function(sTk, request) {
+  request = realIP(request);
 
-	console.log("[genuine.checkSignupToken] request IP:", request.connection.remoteAddress);
-	var valid = exports.validateSignupToken(sTk, request);
-	for (var i in valid){
-		console.log('!!!! VALID =>',i ,  valid[i]);
-		if (!valid[i]){
-			return false;
-		}
-	}
-	return true
-}
+  console.log(
+    '[genuine.checkSignupToken] request IP:',
+    request.connection.remoteAddress
+  );
+  var valid = exports.validateSignupToken(sTk, request);
+  for (var i in valid) {
+    console.log('!!!! VALID =>', i, valid[i]);
+    if (!valid[i]) {
+      return false;
+    }
+  }
+  return true;
+};
 
 /*
 function test(){

@@ -33,6 +33,7 @@
     "docker-restart": "docker-compose exec web npm run test-reset && docker-compose restart web && ./wait-for-http-server.sh 8080",
     "docker-run": "npm run docker-restart && docker-compose exec web npm run $@",
     "test-docker": "npm run docker-run test-unit && npm run docker-run test-api && npm run docker-restart && wdio wdio.conf.js $@",
+    "prettify": "node_modules/.bin/prettier \"./**/*.js\" --single-quote --write",
     "lint": "eslint app"
   },
   "engines": {
@@ -76,6 +77,7 @@
     "eslint-plugin-jsx-a11y": "1.2.0",
     "eslint-plugin-react": "^5.2.2",
     "mocha": "^3.4.2",
+    "prettier": "^1.14.2",
     "wdio-dot-reporter": "0.0.8",
     "wdio-mocha-framework": "^0.5.10",
     "wdio-selenium-standalone-service": "0.0.10",
