@@ -25,7 +25,9 @@ const COLLECTIONS = [
       username: dbObj.username,
       img: dbObj.img
     })
-  },
+  }
+  // TODO: run on the "post" collection next
+  /*
   {
     name: 'post',
     indexName: 'posts',
@@ -38,6 +40,7 @@ const COLLECTIONS = [
       text: dbObj.text
     })
   }
+  */
   // TODO: also add "playlists"
 ];
 
@@ -93,7 +96,7 @@ const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
           missingObjectHandler
         });
         mongo
-          .forEachObject(coll, obj => diffIndexer.consider(obj))
+          .forEachObject(coll, obj => diffIndexer.consider(obj), { _id: 1 })
           .then(() => resolve(diffIndexer));
       });
   });
