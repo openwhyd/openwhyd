@@ -60,7 +60,7 @@ const getCollCounts = ({ name, coll }) =>
     coll.count((err, count) => (err ? reject(err) : resolve({ name, count })))
   );
 
-const getIndexCounts = async ({ indexName }) =>
+const getIndexCounts = ({ indexName }) =>
   algoliaUtils
     .getIndex({ appId, apiKey, indexName })
     .search('')
