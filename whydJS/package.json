@@ -76,6 +76,7 @@
     "eslint-plugin-jsx-a11y": "1.2.0",
     "eslint-plugin-react": "^5.2.2",
     "mocha": "^3.4.2",
+    "standard": "11.0.1",
     "wdio-dot-reporter": "0.0.8",
     "wdio-mocha-framework": "^0.5.10",
     "wdio-selenium-standalone-service": "0.0.10",

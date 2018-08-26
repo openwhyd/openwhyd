@@ -2,79 +2,78 @@
  * apple push notification system (APNS)
  **/
 
-var apn = require("apn");
+var apn = require('apn')
 
-var prod = !process.appParams.dev && process.appParams.urlPrefix.indexOf("openwhyd.org") > 1;
+var prod = !process.appParams.dev && process.appParams.urlPrefix.indexOf('openwhyd.org') > 1
 
 // cf https://github.com/argon/node-apn/blob/master/doc/apn.markdown
 var CONN_OPTIONS = {
-	cert: __dirname + "/../../config/apns/aps_" + (prod ? "prod" : "dev") + ".cert.pem",
-	key: __dirname + "/../../config/apns/aps_" + (prod ? "prod" : "dev") + ".key.pem",
-	passphrase: prod ? process.env.WHYD_APNS_PASSPHRASE.substr() : process.env.WHYD_DEV_APNS_PASSPHRASE.substr(),
-	gateway: prod ? 'gateway.push.apple.com' : 'gateway.sandbox.push.apple.com',
-	port: 2195,
-	production: prod, // by default: false unless the NODE_ENV environment variable is set to "production"
-};
+  cert: __dirname + '/../../config/apns/aps_' + (prod ? 'prod' : 'dev') + '.cert.pem',
+  key: __dirname + '/../../config/apns/aps_' + (prod ? 'prod' : 'dev') + '.key.pem',
+  passphrase: prod ? process.env.WHYD_APNS_PASSPHRASE.substr() : process.env.WHYD_DEV_APNS_PASSPHRASE.substr(),
+  gateway: prod ? 'gateway.push.apple.com' : 'gateway.sandbox.push.apple.com',
+  port: 2195,
+  production: prod // by default: false unless the NODE_ENV environment variable is set to "production"
+}
 
-//console.log("[APNS] parameters:", CONN_OPTIONS);
+// console.log("[APNS] parameters:", CONN_OPTIONS);
 
 var FEEDBACK_OPTIONS = {
-	batchFeedback: true,
-	interval: 300,
-};
+  batchFeedback: true,
+  interval: 300
+}
 
-var DEFAULT_EXPIRY = 24 * 60 * 60; // 1 day
-var DEFAULT_BADGE = 0;
-var DEFAULT_SOUND = "ping.aiff";
+var DEFAULT_EXPIRY = 24 * 60 * 60 // 1 day
+var DEFAULT_BADGE = 0
+var DEFAULT_SOUND = 'ping.aiff'
 
-//console.log("[APNS] Connecting...");
-var apnConnection = apn.Connection(CONN_OPTIONS);
+// console.log("[APNS] Connecting...");
+var apnConnection = apn.Connection(CONN_OPTIONS)
 
 // listen to all events
 
-apnConnection.on("connected", function(){
-	console.log("[APNS] is connected");
+apnConnection.on('connected', function () {
+  console.log('[APNS] is connected')
+})
+
+apnConnection.on('transmitted', function (data, dest) {
+  console.log('[APNS] transmitted:', (data || {}).compiledPayload, 'to', (dest || {}).token || '(unknown)')
 });
 
-apnConnection.on("transmitted", function(data, dest){
-	console.log("[APNS] transmitted:", (data || {}).compiledPayload, "to", (dest || {}).token || "(unknown)");
+[ 'transmissionError', 'disconnected' ].map(function (evt) {
+  apnConnection.on(evt, function () {
+    console.log('[APNS]', evt, 'event:', arguments)
+  })
 });
 
-[ "transmissionError", "disconnected" ].map(function(evt){
-	apnConnection.on(evt, function(){
-		console.log("[APNS]", evt, "event:", arguments);
-	});
-});
+[ 'error', 'socketError', 'timeout', 'cacheTooSmall' ].map(function (evt) {
+  apnConnection.on(evt, function () {
+    console.error('[APNS]', evt, 'event:', arguments)
+  })
+})
 
-[ "error", "socketError", "timeout", "cacheTooSmall" ].map(function(evt){
-	apnConnection.on(evt, function(){
-		console.error("[APNS]", evt, "event:", arguments);
-	});
-});
+exports.sendApplePushNotification = function (device, data) {
+  console.log('[APNS] Sending notif:', data)
+  var note = new apn.Notification()
+  for (var i in data) { note[i] = data[i] }
+  return apnConnection.pushNotification(note, device)
+}
 
-exports.sendApplePushNotification = function(device, data){
-	console.log("[APNS] Sending notif:", data);
-	var note = new apn.Notification();
-	for (var i in data)
-		note[i] = data[i];
-	return apnConnection.pushNotification(note, device);
-};
-
-exports.pushToDevice = function(token, text, payload){
-	payload = payload || {};
-	var badge = DEFAULT_BADGE;
-	if (payload.badge) {
-		badge = payload.badge;
-		delete payload.badge;
-	}
-	exports.sendApplePushNotification(new apn.Device(token), {
-		expiry: Math.floor(Date.now() / 1000) + DEFAULT_EXPIRY,
-		badge: badge,
-		sound: DEFAULT_SOUND,
-		alert: text,
-		payload: payload,
-	});
-};
+exports.pushToDevice = function (token, text, payload) {
+  payload = payload || {}
+  var badge = DEFAULT_BADGE
+  if (payload.badge) {
+    badge = payload.badge
+    delete payload.badge
+  }
+  exports.sendApplePushNotification(new apn.Device(token), {
+    expiry: Math.floor(Date.now() / 1000) + DEFAULT_EXPIRY,
+    badge: badge,
+    sound: DEFAULT_SOUND,
+    alert: text,
+    payload: payload
+  })
+}
 /*
 (function ApnsFeedbackMonitor(){
 	for (var i in CONN_OPTIONS)

@@ -4,192 +4,177 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require("../snip.js");
-var analytics = require("../models/analytics.js");
-var ObjectId = require("../models/mongodb.js").ObjectId;
-var followModel = require("../models/follow.js");
-var activityModel = require("../models/activity.js");
-var postModel = require("../models/post.js");
-var userModel = require("../models/user.js");
-var postsTemplate = require("../templates/posts.js");
-var templateLoader = require("../templates/templateLoader.js");
-var mainTemplate = require("../templates/mainTemplate.js");
+var snip = require('../snip.js')
+var analytics = require('../models/analytics.js')
+var ObjectId = require('../models/mongodb.js').ObjectId
+var followModel = require('../models/follow.js')
+var activityModel = require('../models/activity.js')
+var postModel = require('../models/post.js')
+var userModel = require('../models/user.js')
+var postsTemplate = require('../templates/posts.js')
+var templateLoader = require('../templates/templateLoader.js')
+var mainTemplate = require('../templates/mainTemplate.js')
 
-var template;
-function loadTemplates(callback) {
-	template = templateLoader.loadTemplate("app/templates/recentActivity.html", function(){
-		if (callback)
-			callback();
-	});
+var template
+function loadTemplates (callback) {
+  template = templateLoader.loadTemplate('app/templates/recentActivity.html', function () {
+    if (callback) { callback() }
+  })
 }
-loadTemplates();
+loadTemplates()
 
-var fetchSubscriptions = function(uid, callback) {
-	var uidList = [];
-	//console.log("recentActivity.fetchSubscriptions", uid);
-	followModel.fetchUserSubscriptions(uid, function(subscriptions) {
-		for (var i in subscriptions.subscriptions)
-			if (subscriptions.subscriptions[i].id && subscriptions.subscriptions[i].id != uid)
-				uidList.push((""+subscriptions.subscriptions[i].id).replace("/u/", ""));
-		//console.log("LibFriends.fetchSubscriptions => ", uidList ? uidList.length : null);
-		callback(uidList, subscriptions);
-	});
-};
+var fetchSubscriptions = function (uid, callback) {
+  var uidList = []
+  // console.log("recentActivity.fetchSubscriptions", uid);
+  followModel.fetchUserSubscriptions(uid, function (subscriptions) {
+    for (var i in subscriptions.subscriptions) {
+      if (subscriptions.subscriptions[i].id && subscriptions.subscriptions[i].id != uid) { uidList.push(('' + subscriptions.subscriptions[i].id).replace('/u/', '')) }
+    }
+    // console.log("LibFriends.fetchSubscriptions => ", uidList ? uidList.length : null);
+    callback(uidList, subscriptions)
+  })
+}
 
-function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
-	/*  // test case
+function fetchRecentActivity (uidList, mySubscriptionsUidList, options, cb) {
+  /*  // test case
 	return cb([
 		{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly", subscription: {
 			id:"4fb118c368b1a410ecdc0058", name:"Tony Hymes", subscribed: true
 		}}
 	]); */
-	var uidSet = {};
-	for (var i in mySubscriptionsUidList)
-		uidSet[mySubscriptionsUidList[i]] = true;
-	//options = options || {};
-	//uidList.push("4d94501d1f78ac091dbc9b4d"); // adrien (for tests)
+  var uidSet = {}
+  for (var i in mySubscriptionsUidList) { uidSet[mySubscriptionsUidList[i]] = true }
+  // options = options || {};
+  // uidList.push("4d94501d1f78ac091dbc9b4d"); // adrien (for tests)
 
-	//console.log("uidList:", uidList);
+  // console.log("uidList:", uidList);
 
-	activityModel.fetchHistoryFromUidList(uidList, options, function(activities, hasMore) {
+  activityModel.fetchHistoryFromUidList(uidList, options, function (activities, hasMore) {
+    // extract users and posts to fetch from DB
 
-		// extract users and posts to fetch from DB
+    var usersToPopulate = [], postsToPopulate = []
+    for (var i in activities) {
+      if ((activities[i] || {}).subscription) {
+        activities[i].subscription.subscribed = uidSet[activities[i].subscription.id]
+        usersToPopulate.push(activities[i].subscription)
+      } else if ((activities[i] || {}).like) { postsToPopulate.push(ObjectId('' + activities[i].like.pId)) }
+    }
 
-		var usersToPopulate = [], postsToPopulate = [];
-		for (var i in activities)
-			if ((activities[i] || {}).subscription) {
-				activities[i].subscription.subscribed = uidSet[activities[i].subscription.id];
-				usersToPopulate.push(activities[i].subscription);
-			}
-			else if ((activities[i] || {}).like)
-				postsToPopulate.push(ObjectId(""+activities[i].like.pId));
+    // fetch users and posts from DB
 
-		// fetch users and posts from DB
-
-		userModel.fetchUserBios(usersToPopulate, function() {
-			postModel.fetchPosts({_id:{$in:postsToPopulate}}, /*params*/ null, /*options*/ null, function(posts){
-				// apply fetched data (when not null) to liked posts
-				var postSet = {}, finalActivities = [];
-				for (var i in posts)
-					postSet[""+posts[i]._id] = posts[i];
-				for (var i in activities) {
-					if ((activities[i] || {}).like) {
-						if (postSet[""+activities[i].like.pId])
-							activities[i].like.post = postSet[""+activities[i].like.pId];
-						else
-							continue; // do not keep null posts
-					}
-					finalActivities.push(activities[i]);
-				}
-				cb(finalActivities, hasMore);
-			});
-		});
-	});
+    userModel.fetchUserBios(usersToPopulate, function () {
+      postModel.fetchPosts({_id: {$in: postsToPopulate}}, /* params */ null, /* options */ null, function (posts) {
+        // apply fetched data (when not null) to liked posts
+        var postSet = {}, finalActivities = []
+        for (var i in posts) { postSet['' + posts[i]._id] = posts[i] }
+        for (var i in activities) {
+          if ((activities[i] || {}).like) {
+            if (postSet['' + activities[i].like.pId]) { activities[i].like.post = postSet['' + activities[i].like.pId] } else { continue } // do not keep null posts
+          }
+          finalActivities.push(activities[i])
+        }
+        cb(finalActivities, hasMore)
+      })
+    })
+  })
 }
 
-function fetchSuggestedPeople(uidList, cb) {
-	//return cb([{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly"}]); // test case
-	postModel.fetchPosts({uId:{$nin:uidList}}, null, null, function(allPosts) {
-		var userSet = {}, userList = [];
-		for (var i in allPosts)
-			if (!userSet[allPosts[i].uId])
-				userSet[allPosts[i].uId] = {
-					id: allPosts[i].uId,
-					name: allPosts[i].uNm,
-					track: allPosts[i].name,
-					trackUrl: "/c/" + allPosts[i]._id
-				};
-		for (var i in userSet)
-			userList.push(userSet[i]);
-		cb(userList);
-	});
+function fetchSuggestedPeople (uidList, cb) {
+  // return cb([{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly"}]); // test case
+  postModel.fetchPosts({uId: {$nin: uidList}}, null, null, function (allPosts) {
+    var userSet = {}, userList = []
+    for (var i in allPosts) {
+      if (!userSet[allPosts[i].uId]) {
+        userSet[allPosts[i].uId] = {
+          id: allPosts[i].uId,
+          name: allPosts[i].uNm,
+          track: allPosts[i].name,
+          trackUrl: '/c/' + allPosts[i]._id
+        }
+      }
+    }
+    for (var i in userSet) { userList.push(userSet[i]) }
+    cb(userList)
+  })
 }
 
 function aggregateActivities (acts) {
-	//console.log("acts", acts);
-	var aggrs = [], aggr = {};
-	for (var i in acts) {
-		var attrName = acts[i].type = acts[i].like ? "like" : "subscription",
-			sameAuthor = (aggr.id == acts[i].id),
-			sameActType = (aggr.type == acts[i].type);
-		if (sameAuthor && sameActType)
-			aggr[attrName+"s"].aggregatedItems.push(acts[i][attrName]);
-		else { // acts[i] is the first activity of this type / author => to be aggregated
-			acts[i][attrName+"s"] = {aggregatedItems:[acts[i][attrName]]};
-			aggrs.push(aggr = acts[i]);
-		}
-	}
-	//console.log("aggrs", aggrs);
-	return aggrs;
+  // console.log("acts", acts);
+  var aggrs = [], aggr = {}
+  for (var i in acts) {
+    var attrName = acts[i].type = acts[i].like ? 'like' : 'subscription',
+      sameAuthor = (aggr.id == acts[i].id),
+      sameActType = (aggr.type == acts[i].type)
+    if (sameAuthor && sameActType) { aggr[attrName + 's'].aggregatedItems.push(acts[i][attrName]) } else { // acts[i] is the first activity of this type / author => to be aggregated
+      acts[i][attrName + 's'] = {aggregatedItems: [acts[i][attrName]]}
+      aggrs.push(aggr = acts[i])
+    }
+  }
+  // console.log("aggrs", aggrs);
+  return aggrs
 }
 
 function renderLikedPosts (activity, cb) {
-	if (activity.type == "like") {
-		var posts = activity.likes.aggregatedItems.map(function(aggr){
-			return postsTemplate.preparePost(aggr.post);
-		});
-		//if (!posts.length) continue;
-		activity.likes.nbTracks = posts.length > 1 ? posts.length + " tracks" : "one track";
-		postsTemplate.renderPostsAsync(posts, {}, function(postsHtml){
-			activity.likes.posts = postsHtml;
-			cb();
-		});
-	}
-	else
-		cb();
+  if (activity.type == 'like') {
+    var posts = activity.likes.aggregatedItems.map(function (aggr) {
+      return postsTemplate.preparePost(aggr.post)
+    })
+    // if (!posts.length) continue;
+    activity.likes.nbTracks = posts.length > 1 ? posts.length + ' tracks' : 'one track'
+    postsTemplate.renderPostsAsync(posts, {}, function (postsHtml) {
+      activity.likes.posts = postsHtml
+      cb()
+    })
+  } else { cb() }
 }
 
-exports.generateActivityFeed = function(uidList, mySubscriptionsUidList, reqParams, cb) {
-	fetchRecentActivity(uidList, mySubscriptionsUidList, {after:reqParams.after}, function(rawActivities, hasMore) {
-		var activities = aggregateActivities(rawActivities);
+exports.generateActivityFeed = function (uidList, mySubscriptionsUidList, reqParams, cb) {
+  fetchRecentActivity(uidList, mySubscriptionsUidList, {after: reqParams.after}, function (rawActivities, hasMore) {
+    var activities = aggregateActivities(rawActivities)
 
-		snip.forEachArrayItem(activities, renderLikedPosts, function(){
-			cb({
-				recentActivity: {items: activities},
-				rawFeed: reqParams.after || reqParams.before,
-				hasMore: hasMore ? { last_id: (rawActivities[rawActivities.length-1] || {})._id } : null,
-			});
-		});
-	});
+    snip.forEachArrayItem(activities, renderLikedPosts, function () {
+      cb({
+        recentActivity: {items: activities},
+        rawFeed: reqParams.after || reqParams.before,
+        hasMore: hasMore ? { last_id: (rawActivities[rawActivities.length - 1] || {})._id } : null
+      })
+    })
+  })
 }
 
-exports.controller = function(request, reqParams, response) {
-	request.logToConsole("recentActivity.controller", reqParams);
-	reqParams = reqParams || {};
-	var loggedInUser = request.getUser() || {};
-	if (!loggedInUser.id)
-		return response.temporaryRedirect("/");
+exports.controller = function (request, reqParams, response) {
+  request.logToConsole('recentActivity.controller', reqParams)
+  reqParams = reqParams || {}
+  var loggedInUser = request.getUser() || {}
+  if (!loggedInUser.id) { return response.temporaryRedirect('/') }
 
-	//reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
+  // reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
 
-	function render(html) {
-		response.render(html, null, {'content-type': 'text/html'});
-		console.log("rendering done!");
-		if (loggedInUser && loggedInUser.id && !reqParams.after && !reqParams.before)
-			analytics.addVisit(loggedInUser, request.url/*"/u/"+uid*/);
-	}
+  function render (html) {
+    response.render(html, null, {'content-type': 'text/html'})
+    console.log('rendering done!')
+    if (loggedInUser && loggedInUser.id && !reqParams.after && !reqParams.before) { analytics.addVisit(loggedInUser, request.url/* "/u/"+uid */) }
+  }
 
-	fetchSubscriptions(loggedInUser.id, function(uidList, subscriptions) {
-		exports.generateActivityFeed(uidList, uidList, reqParams, function(pageVars){
-			if (!pageVars.rawFeed) {
-				var fullUidList = uidList.slice(0, uidList.length);
-				fullUidList.push(loggedInUser.id);
-				fetchSuggestedPeople(fullUidList, function(userList) {
-					if (userList && userList.length)
-						pageVars.suggestedUsers = { items: userList };
-					var html = template.render(pageVars);
-					html = mainTemplate.renderWhydPage({
-						bodyClass: "pgRecentActivity pgWithSideBar",
-						loggedUser: loggedInUser,
-						content: html
-					});
-					render(html);
-				});
-			}
-			else {
-				var html = template.render(pageVars);
-				render(html);
-			}
-		});
-	});
+  fetchSubscriptions(loggedInUser.id, function (uidList, subscriptions) {
+    exports.generateActivityFeed(uidList, uidList, reqParams, function (pageVars) {
+      if (!pageVars.rawFeed) {
+        var fullUidList = uidList.slice(0, uidList.length)
+        fullUidList.push(loggedInUser.id)
+        fetchSuggestedPeople(fullUidList, function (userList) {
+          if (userList && userList.length) { pageVars.suggestedUsers = { items: userList } }
+          var html = template.render(pageVars)
+          html = mainTemplate.renderWhydPage({
+            bodyClass: 'pgRecentActivity pgWithSideBar',
+            loggedUser: loggedInUser,
+            content: html
+          })
+          render(html)
+        })
+      } else {
+        var html = template.render(pageVars)
+        render(html)
+      }
+    })
+  })
 }

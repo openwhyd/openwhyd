@@ -1,49 +1,49 @@
-var childProcess = require('child_process');
+var childProcess = require('child_process')
 
-exports.createCommand = function(input) { 
-  return magickCommand({input: input}); 
-};
+exports.createCommand = function (input) {
+  return magickCommand({input: input})
+}
 
-var magickCommand = function(obj) {
-  obj.inArgs = [];
-  obj.outArgs = [];
-  obj.cropResized = function(width, height, gravity) {
+var magickCommand = function (obj) {
+  obj.inArgs = []
+  obj.outArgs = []
+  obj.cropResized = function (width, height, gravity) {
     return obj.resize(width, height).crop(width, height)
-  };
-  obj.resize = function(width, height) {
-    var wh = width + "x" + height;
-    return obj.makeArgs(["-resize", wh]);
-  };
-  obj.crop = function(width, height) {
-    var wh = width + "x" + height;
-    return obj.makeArgs(["-crop", wh]);
-  };
-  obj.makeArgs = function(inargs, outargs) {
+  }
+  obj.resize = function (width, height) {
+    var wh = width + 'x' + height
+    return obj.makeArgs(['-resize', wh])
+  }
+  obj.crop = function (width, height) {
+    var wh = width + 'x' + height
+    return obj.makeArgs(['-crop', wh])
+  }
+  obj.makeArgs = function (inargs, outargs) {
     if (arguments.length == 1) {
-      outargs = inargs;
-      inargs = null;
+      outargs = inargs
+      inargs = null
     }
     if (inargs) {
-      obj.inArgs = obj.inArgs.concat(inargs);
+      obj.inArgs = obj.inArgs.concat(inargs)
     }
     if (outargs) {
-      obj.outArgs = obj.outArgs.concat(outargs);
+      obj.outArgs = obj.outArgs.concat(outargs)
     }
-    return obj;
-  };
-  obj.write = function(out, callback) {
-    obj.inArgs.push(obj.input); 
-    obj.outArgs.push(out);
-    var args = obj.inArgs.concat(obj.outArgs);
-    obj.__run("convert", args, callback);
-  };
+    return obj
+  }
+  obj.write = function (out, callback) {
+    obj.inArgs.push(obj.input)
+    obj.outArgs.push(out)
+    var args = obj.inArgs.concat(obj.outArgs)
+    obj.__run('convert', args, callback)
+  }
   obj.__run = function (cmd, args, callback) {
-    args.unshift(cmd);
-    cmd = "gm";
-    console.log("running command: " + cmd + " " + args.join(" "));
-    var p = childProcess.exec((cmd + " " + args.join(" ")), function(error, stdout, stderr) {
-      callback();
-    });
-  };
-  return obj;
+    args.unshift(cmd)
+    cmd = 'gm'
+    console.log('running command: ' + cmd + ' ' + args.join(' '))
+    var p = childProcess.exec((cmd + ' ' + args.join(' ')), function (error, stdout, stderr) {
+      callback()
+    })
+  }
+  return obj
 }
