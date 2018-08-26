@@ -1,6 +1,7 @@
 // inspired by https://www.algolia.com/doc/tutorials/indexing/exporting/how-to-export-data-of-an-index-to-a-file/
 
 const algoliasearch = require('algoliasearch');
+const Progress = require('./Progress');
 
 const getIndex = ({ indexName, appId, apiKey }) =>
   algoliasearch(appId, apiKey).initIndex(indexName);
@@ -22,12 +23,19 @@ const forEachRecord = ({ indexName, appId, apiKey }, recordHandler) =>
 const makeSetFromIndex = ({ indexName, appId, apiKey }) =>
   new Promise((resolve, reject) => {
     const set = new Set();
-    forEachRecord({ indexName, appId, apiKey }, hit =>
-      set.add(hit.objectID)
-    ).then(
-      () => resolve(set),
-      err => (/does not exist/.test(err.message) ? resolve(set) : reject(err))
-    );
+    const progress = new Progress({ label: 'fetching from algolia...' });
+    forEachRecord({ indexName, appId, apiKey }, hit => {
+      set.add(hit.objectID);
+      progress.incr();
+    })
+      .then(() => {
+        progress.done();
+        resolve(set);
+      })
+      .catch(err => {
+        progress.done();
+        /does not exist/.test(err.message) ? resolve(set) : reject(err);
+      });
   });
 
 class BatchedAlgoliaIndexer {

@@ -1,4 +1,5 @@
 const mongodb = require('mongodb');
+const Progress = require('./Progress');
 
 var MONGO_OPTIONS = {
   native_parser: true,
@@ -72,21 +73,20 @@ const init = params =>
 
 const forEachObject = (coll, handler, options = {}) =>
   new Promise((resolve, reject) => {
-    let count = 0;
-    const interval = setInterval(() => console.log('fetching...', count), 1000);
+    const progress = new Progress({ label: 'fetching from mongodb...' });
     // options.batchSize = options.batchSize || 100;
     // options.cursorDelay = options.cursorDelay || 0;
     coll.find({}, options, function(err, cursor) {
       const onObject = (err, obj) => {
         if (err) {
-          clearInterval(interval);
+          progress.done();
           reject(err);
         } else if (obj) {
-          ++count;
+          progress.incr();
           handler(obj);
           setTimeout(() => cursor.nextObject(onObject), 0);
         } else {
-          clearInterval(interval);
+          progress.done();
           resolve();
         }
       };

@@ -55,10 +55,16 @@ const bindCollectionToDB = db => coll =>
 const runSeq = functions =>
   functions.reduce((p, fct) => p.then(fct), Promise.resolve());
 
-const getCounts = ({ name, coll, indexName }) =>
+const getCollCounts = ({ name, coll }) =>
   new Promise((resolve, reject) =>
     coll.count((err, count) => (err ? reject(err) : resolve({ name, count })))
   );
+
+const getIndexCounts = async ({ indexName }) =>
+  algoliaUtils
+    .getIndex({ appId, apiKey, indexName })
+    .search('')
+    .then(({ nbHits }) => ({ name: indexName, count: nbHits }));
 
 const renderResults = diffIndexer =>
   `skipped ${diffIndexer.nbSkipped} / ${diffIndexer.nbConsidered} objects`;
@@ -78,6 +84,7 @@ class DiffIndexer {
   }
   consider(obj) {
     ++this.nbConsidered;
+    console.log('consider', obj, this.alreadyIndexed.has(obj._id.toString()));
     if (!this.alreadyIndexed.has(obj._id.toString())) {
       this.missingObjectHandler(obj);
     } else {
@@ -120,8 +127,16 @@ const init = () =>
     .then(db => (cols = COLLECTIONS.map(bindCollectionToDB(db))));
 
 const displayCounts = () =>
-  Promise.all(cols.map(getCounts)).then(results => {
+  Promise.all(cols.map(getCollCounts)).then(results => {
     console.log('___\nindexable collections:');
+    results.forEach(result =>
+      console.log(`- ${result.name} (${result.count} objects)`)
+    );
+  });
+
+const displayIndexCounts = () =>
+  Promise.all(cols.map(getIndexCounts)).then(results => {
+    console.log('___\ncurrent indexes:');
     results.forEach(result =>
       console.log(`- ${result.name} (${result.count} objects)`)
     );
@@ -163,7 +178,7 @@ const end = () => {
 
 const syncNowSteps = [init, reindex];
 
-const dryRunSteps = [init, displayCounts, dryRun];
+const dryRunSteps = [init, displayIndexCounts, displayCounts, dryRun];
 
 const defaultSteps = dryRunSteps.concat([askConfirmation, reindex]);
 
