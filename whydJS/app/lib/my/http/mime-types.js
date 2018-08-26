@@ -57,4 +57,4 @@ module.exports = {
   'default': {
     'content-type': 'application/octet-stream'
   }
-};
+}

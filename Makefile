@@ -6,7 +6,7 @@ fetch-deps: ## Fetch JS dependencies.
 dev: fetch-deps ## Start a local dev server.
 	@cd whydJS && npm run run-dev
 
-lint: fetch-deps ## Run ESLint
+lint: fetch-deps ## Run standard-js linter
 	@cd whydJS && npm run lint 
 
 test: fetch-deps lint ## Run the tests.

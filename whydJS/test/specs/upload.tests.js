@@ -1,38 +1,37 @@
-var assert = require('assert');
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
-const webUI = require('../web-ui.js');
+var assert = require('assert')
+var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js')
+const webUI = require('../web-ui.js')
 
-const request = require('request');
+const request = require('request')
 
-const WAIT_DURATION = 10000;
+const WAIT_DURATION = 10000
 
-var defaultAvatarLen;
+var defaultAvatarLen
 request(`${URL_PREFIX}/images/blank_user.gif`, function (error, response, body) {
-  defaultAvatarLen = body.length;
-});
+  defaultAvatarLen = body.length
+})
 
-require('../acceptance-cmds.js'); // also checks that openwhyd/whydjs server is tested against the test database
+require('../acceptance-cmds.js') // also checks that openwhyd/whydjs server is tested against the test database
 // TODO: make sure that DB was reset before starting the whydJS app server
 
 // ... AND that the user cache was reset as well. (e.g. by restarting whydJS)
 
-describe('upload user profile images', function() {
+describe('upload user profile images', function () {
+  it(`user login`, webUI.loginAs(ADMIN_USER))
 
-  it(`user login`, webUI.loginAs(ADMIN_USER));
+  it(`go to user profile`, function () {
+    browser.url(`${URL_PREFIX}/u/${ADMIN_USER.id}`)
+  })
 
-  it(`go to user profile`, function() {
-    browser.url(`${URL_PREFIX}/u/${ADMIN_USER.id}`);
-  });
+  it(`click on "Edit profile"`, function () {
+    browser.clickOnContent('Edit profile')
+  })
 
-  it(`click on "Edit profile"`, function() {
-    browser.clickOnContent('Edit profile');
-  });
+  it(`click on "Edit Profile Info"`, function () {
+    browser.clickOnContent('Edit Profile Info')
+  })
 
-  it(`click on "Edit Profile Info"`, function() {
-    browser.clickOnContent('Edit Profile Info');
-  });
-
-  it(`has default avatar"`, function async() {
+  it(`has default avatar"`, function async () {
     /*
     console.log($('.avatar-box img').getAttribute('src'));
     assert.ok(/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
@@ -43,13 +42,13 @@ describe('upload user profile images', function() {
     });
     */
     return new Promise(function (resolve, reject) {
-      //assert.ok(!/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
+      // assert.ok(!/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
       request(`${URL_PREFIX}/img/u/${ADMIN_USER.id}?_t=${new Date().getTime()}`, function (error, response, body) {
-        assert.equal(defaultAvatarLen, body.length);
-        resolve();
-      });
-    });
-  });
+        assert.equal(defaultAvatarLen, body.length)
+        resolve()
+      })
+    })
+  })
 
   // TODO: make the following tests work:
   /*
@@ -94,7 +93,7 @@ describe('upload user profile images', function() {
     browser.pause(5000)
     browser.clickOnContent('Save');
   });
-    
+
   it(`has new avatar"`, function async() {
     return new Promise(function (resolve, reject) {
       browser.pause(1000).then(function() {
@@ -113,8 +112,7 @@ describe('upload user profile images', function() {
     console.log('browser log:', browser.log('browser').value.slice(-10));
   });
   */
-  //webUI.logout();
-
-});
+  // webUI.logout();
+})
 
 // Webdriver API documentation: http://webdriver.io/api.html

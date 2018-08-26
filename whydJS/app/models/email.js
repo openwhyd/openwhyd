@@ -4,51 +4,50 @@
  * @author adrienjoly, whyd
  **/
 
-//var https = require('https');
-var config = require("./config");
-var users = require("./user");
+// var https = require('https');
+var config = require('./config')
+var users = require('./user')
 
-var emailModule = (config.emailModule || "emailFake.js")
-console.log("loading EMAIL module: " + emailModule + "...");
-var emailImpl = require("./" + emailModule);
+var emailModule = (config.emailModule || 'emailFake.js')
+console.log('loading EMAIL module: ' + emailModule + '...')
+var emailImpl = require('./' + emailModule)
 
 // http://www.regular-expressions.info/email.html
-var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
+var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i
 
-exports.validate = function(email) {
-	if (!email) return email;
-	if (typeof email != "string") {
-		console.error("(malicious?) non-string email:", email, new Error().stack);
-		return "";
-	}
-	return emailCheck.test(email);
-};
+exports.validate = function (email) {
+  if (!email) return email
+  if (typeof email !== 'string') {
+    console.error('(malicious?) non-string email:', email, new Error().stack)
+    return ''
+  }
+  return emailCheck.test(email)
+}
 
-exports.normalize = function(email) {
-	if (!email) return email;
-	if (typeof email != "string") {
-		console.error("(malicious?) non-string email:", email, new Error().stack);
-		return "";
-	}
-	return email.trim().toLowerCase();
-};
+exports.normalize = function (email) {
+  if (!email) return email
+  if (typeof email !== 'string') {
+    console.error('(malicious?) non-string email:', email, new Error().stack)
+    return ''
+  }
+  return email.trim().toLowerCase()
+}
 
 exports.email = function (emailAddr, subject, textContent, htmlContent, userName, callback) {
-	return emailImpl.email(emailAddr, subject, textContent, htmlContent, userName, callback);
-};
+  return emailImpl.email(emailAddr, subject, textContent, htmlContent, userName, callback)
+}
 
-exports.notif = function(toUid, subject, text/*, fbAccessToken*/) {
-	if (!toUid) {
-		console.log("ERROR: unable to send email to user " + toUid);
-		return;
-	}
-	
-	users.fetchByUid(toUid, function (user) {
-		if (!user || !user.email) {
-			console.log("ERROR: found no email address for user " + toUid + " : ", user);
-			return;
-		}
-	/*
+exports.notif = function (toUid, subject, text/*, fbAccessToken */) {
+  if (!toUid) {
+    console.log('ERROR: unable to send email to user ' + toUid)
+    return
+  }
+
+  users.fetchByUid(toUid, function (user) {
+    if (!user || !user.email) {
+      console.log('ERROR: found no email address for user ' + toUid + ' : ', user)
+    }
+    /*
 		if (!user.email || user.email.endsWith("proxymail.facebook.com")) {
 			var params = [
 				"recipients=" + toUid,
@@ -62,13 +61,11 @@ exports.notif = function(toUid, subject, text/*, fbAccessToken*/) {
 			//console.log("requesting: "+host+path+"...");
 			https.get({ host: host, path: path }, logResponse);
 		} */
-		else
-		{
-			var to = user.email;
-			//var to = user.name + " <" + user.email + ">";
-			//console.log("sending email to " + to);
-			exports.email(to, subject, text, null, user.name);
-		}
-	});
-};
-
+    else {
+      var to = user.email
+      // var to = user.name + " <" + user.email + ">";
+      // console.log("sending email to " + to);
+      exports.email(to, subject, text, null, user.name)
+    }
+  })
+}

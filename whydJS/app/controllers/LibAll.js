@@ -4,44 +4,43 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require("../models/mongodb.js");
-var postModel = require("../models/post.js");
-var feedTemplate = require("../templates/feed.js");
+var mongodb = require('../models/mongodb.js')
+var postModel = require('../models/post.js')
+var feedTemplate = require('../templates/feed.js')
 
-function makeUserList() {
-	var userList = [];
-	for (var i in mongodb.usernames/*.slice(0,9)*/)
-		userList.push(mongodb.usernames[i]);
-	return userList;
+function makeUserList () {
+  var userList = []
+  for (var i in mongodb.usernames/* .slice(0,9) */) { userList.push(mongodb.usernames[i]) }
+  return userList
 }
 
 function renderAllLibrary (lib) {
+  var options = lib.options
+  // options.displayAuthors = true;
+  options.displayPlaylistName = true
+  options.follows = {people: makeUserList(), followers: []}
+  options.bodyClass = 'pgStream pgFullStream pgWithSideBar'
+  options.globalFeed = true
 
-	var options = lib.options;
-	//options.displayAuthors = true;
-	options.displayPlaylistName = true;
-	options.follows = {people: makeUserList(), followers: []};
-	options.bodyClass = "pgStream pgFullStream pgWithSideBar";
-	options.globalFeed = true;
-	
-	function renderFeed (callback) {
-		function process (posts) {
-			feedTemplate.renderFeedAsync(posts, options, callback);
-		}
+  function renderFeed (callback) {
+    function process (posts) {
+      feedTemplate.renderFeedAsync(posts, options, callback)
+    }
 
-		postModel.fetchPosts({repost: {$exists: false}}, null, {after: options.after, before: options.before}, process);
-	}
+    postModel.fetchPosts({repost: {$exists: false}}, null, {after: options.after, before: options.before}, process)
+  }
 
-	if (options.after || options.before)
-		renderFeed(function(feedHtml){
-			lib.render({html:feedHtml});
-		});
-	else
-		renderFeed(function(feedHtml){
-			//lib.renderSidebar(/*uidList*/ null, null/*user*/, options, function(sidebarHtml){
-				lib.renderPage({/*name:"Whyd"*/}, null/*sidebarHtml*/, feedHtml);
-			//});
-		});
+  if (options.after || options.before) {
+    renderFeed(function (feedHtml) {
+      lib.render({html: feedHtml})
+    })
+  } else {
+    renderFeed(function (feedHtml) {
+    // lib.renderSidebar(/*uidList*/ null, null/*user*/, options, function(sidebarHtml){
+      lib.renderPage({/* name:"Whyd" */}, null/* sidebarHtml */, feedHtml)
+    // });
+    })
+  }
 }
 
-exports.render = renderAllLibrary;
+exports.render = renderAllLibrary
