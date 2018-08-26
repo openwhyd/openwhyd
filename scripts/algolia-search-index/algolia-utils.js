@@ -20,7 +20,7 @@ const forEachRecord = ({ indexName, appId, apiKey }, recordHandler) =>
   });
 
 const makeSetFromIndex = ({ indexName, appId, apiKey }) =>
-  new Promise(resolve => {
+  new Promise((resolve, reject) => {
     const set = new Set();
     forEachRecord({ indexName, appId, apiKey }, hit =>
       set.add(hit.objectID)
