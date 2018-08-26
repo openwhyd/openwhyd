@@ -33,6 +33,15 @@ window.Whyd.tracking = window.Whyd.tracking || (function(options){
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		ga('create', 'UA-83857066-1', /*'auto',*/ {'alwaysSendReferrer': true});
+		var electron = navigator.userAgent.match(/openwhyd-electron\/[^ ]*/);
+		if (electron) {
+			var electronVer = electron[0];
+			console.log('running on', electronVer);
+			ga('set', 'dataSource', electronVer);
+			ga('set', 'appId', 'org.openwhyd.electron');
+			ga('set', 'appName', 'Openwhyd Electron');
+			ga('set', 'appVersion', electronVer.split('/')[1]);
+		}
 	}
 
 	function gaSet(dim, val){
