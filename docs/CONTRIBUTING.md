@@ -23,6 +23,8 @@ You can contribute to Openwhyd in various ways:
 - [Become a backer / donate](https://opencollective.com/openwhyd#support) to help us cover openwhyd.org's hosting fees
 - Read more in the FAQ about [other ways to help the Openwhyd project](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help)
 
+> **Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github)
+
 ## How to contribute to the code base
 
 0. Setup your environment to match prerequisites and nodejs/npm versions specified in package.json

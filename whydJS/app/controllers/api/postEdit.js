@@ -4,23 +4,27 @@
  * @author adrienjoly, whyd
  */
 
-var config = require("../../models/config.js");
-var userModel = require("../../models/user.js");
-var postModel = require("../../models/post.js");
-var templateLoader = require("../../templates/templateLoader.js");
-var mainTemplate = require("../../templates/mainTemplate.js");
-var snip = require("../../snip.js");
+var config = require('../../models/config.js');
+var userModel = require('../../models/user.js');
+var postModel = require('../../models/post.js');
+var templateLoader = require('../../templates/templateLoader.js');
+var mainTemplate = require('../../templates/mainTemplate.js');
+var snip = require('../../snip.js');
 
 function renderLoginForm(form) {
-	return mainTemplate.renderWhydFrame([
-		'<p style="text-align:center;margin-top:140px;">',
-		'  Please <a href="'+config.urlPrefix+'/login?redirect=closeWindow" target="_blank">login to Whyd</a> first.',
-		'</p>',
-		'<script>',
-		'  setTimeout(function(){ window.location.reload(); }, 1000);',
-		'</script>'
-	].join('\n'));
-	/* other way (ajax) of doing this:
+  return mainTemplate.renderWhydFrame(
+    [
+      '<p style="text-align:center;margin-top:140px;">',
+      '  Please <a href="' +
+        config.urlPrefix +
+        '/login?redirect=closeWindow" target="_blank">login to Whyd</a> first.',
+      '</p>',
+      '<script>',
+      '  setTimeout(function(){ window.location.reload(); }, 1000);',
+      '</script>'
+    ].join('\n')
+  );
+  /* other way (ajax) of doing this:
 		var loginDiv = document.getElementById("whydLogin");
 		function checkUserLogin(){
 			console.log("checking openwhyd user login...");
@@ -43,55 +47,53 @@ function renderLoginForm(form) {
 }
 
 function makePostEditDlg(action, reqParams, playlists, cb) {
-	postModel.fetchPostById(reqParams.pId, function(post) {
-		if (!post)
-			return cb("Sorry, we can't find that post... Maybe was it deleted?"); // TODO: replace by standard error page
-		var p = {
-			embed: config.translateEidToUrl(post.eId),
-			title: post.name,
-			text: post.text || "",
-			img: post.img,
-			playlists: playlists, //user.pl,
-			embedded: true
-		};
-		if (reqParams.ctx)
-			p.ctx = reqParams.ctx;
-		if (action == "edit") {
-			p.editPost = true;
-			p.pId = reqParams.pId;
-			if (post.pl) {
-				post.pl._js_name = snip.sanitizeJsStringInHtml(post.pl.name);
-				p.pl = post.pl;
-			}
-		}
-		else {
-			p.repost = true;
-			p.pId = reqParams.pId;
-			// bug fix: avoid re-mentionning users mentionned in the original post
-			p.text = p.text.replace(snip.RE_MENTION, function(str, name, id){
-				return name;
-			});
-		}
-		cb(null, p);
-	});
+  postModel.fetchPostById(reqParams.pId, function(post) {
+    if (!post)
+      return cb("Sorry, we can't find that post... Maybe was it deleted?"); // TODO: replace by standard error page
+    var p = {
+      embed: config.translateEidToUrl(post.eId),
+      title: post.name,
+      text: post.text || '',
+      img: post.img,
+      playlists: playlists, //user.pl,
+      embedded: true
+    };
+    if (reqParams.ctx) p.ctx = reqParams.ctx;
+    if (action == 'edit') {
+      p.editPost = true;
+      p.pId = reqParams.pId;
+      if (post.pl) {
+        post.pl._js_name = snip.sanitizeJsStringInHtml(post.pl.name);
+        p.pl = post.pl;
+      }
+    } else {
+      p.repost = true;
+      p.pId = reqParams.pId;
+      // bug fix: avoid re-mentionning users mentionned in the original post
+      p.text = p.text.replace(snip.RE_MENTION, function(str, name, id) {
+        return name;
+      });
+    }
+    cb(null, p);
+  });
 }
 
-function makeAddDlg(reqParams, playlists, user, cb){
-	var p = {
-		urlPrefix: config.urlPrefix,
-		uId: user.id || (""+user._id),
-		embedded: !reqParams.embed, // !!reqParams.eId,
-		embed: snip.htmlEntities(reqParams.eId || reqParams.embed), // sanitized
-		title: reqParams.title || "",
-		refUrl: snip.htmlEntities(reqParams.refUrl || ""), // sanitized
-		refTtl: reqParams.refTtl || "",
-		text: (reqParams.text || ""),
-		playlists: playlists, //user.pl,
-		head: mainTemplate.makeAnalyticsHeading(user).join("\n"),
-		ctx: reqParams.ctx || "bk" // bookmarklet
-	};
-	var eId = reqParams.eId || config.translateUrlToEid(reqParams.embed);
-	/*
+function makeAddDlg(reqParams, playlists, user, cb) {
+  var p = {
+    urlPrefix: config.urlPrefix,
+    uId: user.id || '' + user._id,
+    embedded: !reqParams.embed, // !!reqParams.eId,
+    embed: snip.htmlEntities(reqParams.eId || reqParams.embed), // sanitized
+    title: reqParams.title || '',
+    refUrl: snip.htmlEntities(reqParams.refUrl || ''), // sanitized
+    refTtl: reqParams.refTtl || '',
+    text: reqParams.text || '',
+    playlists: playlists, //user.pl,
+    head: mainTemplate.makeAnalyticsHeading(user).join('\n'),
+    ctx: reqParams.ctx || 'bk' // bookmarklet
+  };
+  var eId = reqParams.eId || config.translateUrlToEid(reqParams.embed);
+  /*
 	postModel.fetchPosts({eId:eId}, {sort:['_id','asc']}, {limit:1}, function(posts) {
 		if (posts && posts.length && posts[0]) {
 			p.repost = { pId: posts[0]._id };
@@ -104,48 +106,56 @@ function makeAddDlg(reqParams, playlists, user, cb){
 		render(p);
 	});
 	*/
-	postModel.fetchPosts({eId:eId, uId:user.id}, {}, {limit:1}, function(posts) {
-		if (posts && posts.length && posts[0])
-			p.trackPresenceMsg = "You already added this track, "
-				+ snip.renderTimestamp(new Date() - posts[0]._id.getTimestamp()) + " ago.";
-		cb(null, p);
-	});
+  postModel.fetchPosts({ eId: eId, uId: user.id }, {}, { limit: 1 }, function(
+    posts
+  ) {
+    if (posts && posts.length && posts[0])
+      p.trackPresenceMsg =
+        'You already added this track, ' +
+        snip.renderTimestamp(new Date() - posts[0]._id.getTimestamp()) +
+        ' ago.';
+    cb(null, p);
+  });
 }
 
 /**
  * called by bookmarklet, when user selects a resource to share from an external web page
  */
 exports.controller = function(request, reqParams, response, error) {
-	request.logToConsole("bookmarklet.controller", reqParams);
-	if (!reqParams) reqParams = {};
-	
-	var user = request.checkLogin();
-	if (!user) {
-		var html = renderLoginForm({ redirect: request.url });
-		return response.renderHTML(html);
-	}
+  request.logToConsole('bookmarklet.controller', reqParams);
+  if (!reqParams) reqParams = {};
 
-	function render(error, params) {
-		if (error)
-			return response.renderHTML(error);
-		templateLoader.loadTemplate(reqParams.v == 2 ? "app/templates/postEditV2.html" : "app/templates/postEdit.html", function(template) {
-			response.renderHTML(template.render(params));
-		});
-	}
+  var user = request.checkLogin();
+  if (!user) {
+    var html = renderLoginForm({ redirect: request.url });
+    return response.renderHTML(html);
+  }
 
-	userModel.fetchByUid(user.id, function(user) {
-		userModel.fetchPlaylists(user, {}, function(playlists){
-			if (reqParams.pId) {
-				// repost or edit from openwhyd ui
-				var action = request.url.split("?")[0].split("/").pop();
-				makePostEditDlg(action, reqParams, playlists, render);
-			}
-			else if (reqParams.embed || reqParams.eId) {
-				// adding new track from bookmarklet or external search results on openwhyd.org
-				makeAddDlg(reqParams, playlists, user, render);
-			}
-			else
-				response.badRequest();
-		});
-	});
-};	
+  function render(error, params) {
+    if (error) return response.renderHTML(error);
+    templateLoader.loadTemplate(
+      reqParams.v == 2
+        ? 'app/templates/postEditV2.html'
+        : 'app/templates/postEdit.html',
+      function(template) {
+        response.renderHTML(template.render(params));
+      }
+    );
+  }
+
+  userModel.fetchByUid(user.id, function(user) {
+    userModel.fetchPlaylists(user, {}, function(playlists) {
+      if (reqParams.pId) {
+        // repost or edit from openwhyd ui
+        var action = request.url
+          .split('?')[0]
+          .split('/')
+          .pop();
+        makePostEditDlg(action, reqParams, playlists, render);
+      } else if (reqParams.embed || reqParams.eId) {
+        // adding new track from bookmarklet or external search results on openwhyd.org
+        makeAddDlg(reqParams, playlists, user, render);
+      } else response.badRequest();
+    });
+  });
+};

@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.0.19",
+  "version": "1.1.7",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -33,6 +33,7 @@
     "docker-restart": "docker-compose exec web npm run test-reset && docker-compose restart web && ./wait-for-http-server.sh 8080",
     "docker-run": "npm run docker-restart && docker-compose exec web npm run $@",
     "test-docker": "npm run docker-run test-unit && npm run docker-run test-api && npm run docker-restart && wdio wdio.conf.js $@",
+    "prettify": "node_modules/.bin/prettier \"./**/*.js\" --single-quote --write",
     "lint": "eslint app"
   },
   "engines": {
@@ -62,7 +63,7 @@
     "iconv": ">=2.0.6",
     "mongodb": "^2.2.29",
     "object-sizeof": "^0.1.2",
-    "playemjs": "0.1.8",
+    "playemjs": "0.2.0",
     "q-set": "^2.0.8",
     "request": "2.x",
     "rollbar": "^2.3.1",
@@ -76,11 +77,12 @@
     "eslint-plugin-jsx-a11y": "1.2.0",
     "eslint-plugin-react": "^5.2.2",
     "mocha": "^3.4.2",
+    "prettier": "^1.14.2",
     "wdio-dot-reporter": "0.0.8",
     "wdio-mocha-framework": "^0.5.10",
-    "wdio-selenium-standalone-service": "0.0.9",
+    "wdio-selenium-standalone-service": "0.0.10",
     "wdio-spec-reporter": "^0.1.0",
     "wdio-visual-regression-service": "^0.8.0",
-    "webdriverio": "^4.8.0"
+    "webdriverio": "4.12.0"
   }
 }
