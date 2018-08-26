@@ -1,5 +1,4 @@
-
-  /*
+/*
   if (u != null) {
     ++fetched;
     process(u, function(){

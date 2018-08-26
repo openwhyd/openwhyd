@@ -3,7 +3,7 @@
  * WIP: Just able to dry-run the diff on the "posts" and "users" collections.
  */
 
-require('dotenv').config({path: '../../whydJS/env-vars-perso.sh'});
+require('dotenv').config({ path: '../../whydJS/env-vars-perso.sh' });
 const confirm = require('node-ask').confirm;
 const algoliaUtils = require('./algolia-utils.js');
 const mongo = require('./mongodb-wrapper.js');
@@ -19,42 +19,46 @@ const COLLECTIONS = [
   {
     name: 'user',
     indexName: 'users',
-    objTransform: (dbObj) => ({
+    objTransform: dbObj => ({
       objectID: dbObj._id.toString(),
       name: dbObj.name,
       username: dbObj.username,
-      img: dbObj.img,
-    }),
+      img: dbObj.img
+    })
   },
   {
     name: 'post',
     indexName: 'posts',
-    objTransform: (dbObj) => ({
+    objTransform: dbObj => ({
       objectID: dbObj._id.toString(),
       name: dbObj.name,
       uId: dbObj.uId,
       eId: dbObj.eId,
       pl: dbObj.pl,
-      text: dbObj.text,
-    }),
-  },
+      text: dbObj.text
+    })
+  }
   // TODO: also add "playlists"
-]
+];
 
 // misc. helpers
 
-const bindCollectionToDB = db => coll => Object.assign({}, coll, {
-  coll: db.collections[coll.name]
-});
+const bindCollectionToDB = db => coll =>
+  Object.assign({}, coll, {
+    coll: db.collections[coll.name]
+  });
 
 // to run a list of functions (promise factories) one after another
-const runSeq = functions => functions.reduce((p, fct) => p.then(fct), Promise.resolve());
+const runSeq = functions =>
+  functions.reduce((p, fct) => p.then(fct), Promise.resolve());
 
-const getCounts = ({ name, coll, indexName }) => new Promise((resolve, reject) =>
-  coll.count((err, count) => err ? reject(err) : resolve({ name, count })));
+const getCounts = ({ name, coll, indexName }) =>
+  new Promise((resolve, reject) =>
+    coll.count((err, count) => (err ? reject(err) : resolve({ name, count })))
+  );
 
 const renderResults = diffIndexer =>
-`skipped ${diffIndexer.nbSkipped} / ${diffIndexer.nbConsidered} objects`;
+  `skipped ${diffIndexer.nbSkipped} / ${diffIndexer.nbConsidered} objects`;
 
 // dry run
 
@@ -81,35 +85,45 @@ class DiffIndexer {
 
 const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
   new Promise((resolve, reject) => {
-    algoliaUtils.makeSetFromIndex({ appId, apiKey, indexName }).then(alreadyIndexed => {
-      const diffIndexer = new DiffIndexer({ alreadyIndexed, missingObjectHandler });
-      mongo.forEachObject(coll, obj => diffIndexer.consider(obj))
-        .then(() => resolve(diffIndexer));
-    });
+    algoliaUtils
+      .makeSetFromIndex({ appId, apiKey, indexName })
+      .then(alreadyIndexed => {
+        const diffIndexer = new DiffIndexer({
+          alreadyIndexed,
+          missingObjectHandler
+        });
+        mongo
+          .forEachObject(coll, obj => diffIndexer.consider(obj))
+          .then(() => resolve(diffIndexer));
+      });
   });
 
 const reindexAndDisplay = (collection, indexer = dryRunIndexer) => {
   console.log(`- collection: ${collection.name} ...`);
-  return indexMissingObjects(Object.assign({ missingObjectHandler: indexer }, collection))
-    .then(diffIndexer => console.log('  =>', renderResults(diffIndexer)))
+  return indexMissingObjects(
+    Object.assign({ missingObjectHandler: indexer }, collection)
+  ).then(diffIndexer => console.log('  =>', renderResults(diffIndexer)));
 };
-  
+
 // main script
 
 let cols;
 
 const steps = [
-
   // step 1: init mongodb
-  () => mongo.init(MONGODB_PARAMS).then(db =>
-    cols = COLLECTIONS.map(bindCollectionToDB(db))
-  ),
+  () =>
+    mongo
+      .init(MONGODB_PARAMS)
+      .then(db => (cols = COLLECTIONS.map(bindCollectionToDB(db)))),
 
   // step 2: display counts
-  () => Promise.all(cols.map(getCounts)).then(results => {
-    console.log('___\nindexable collections:');
-    results.forEach(result => console.log(`- ${result.name} (${result.count} objects)`));
-  }),
+  () =>
+    Promise.all(cols.map(getCounts)).then(results => {
+      console.log('___\nindexable collections:');
+      results.forEach(result =>
+        console.log(`- ${result.name} (${result.count} objects)`)
+      );
+    }),
 
   // step 3: dry run
   () => {
@@ -118,18 +132,28 @@ const steps = [
   },
 
   // step 4: ask for confirmation
-  () => confirm('___\nstart the actual reindexing of this collection now? [y|N] ')
-    .then(res => !res && process.exit(0)),
+  () =>
+    confirm(
+      '___\nstart the actual reindexing of this collection now? [y|N] '
+    ).then(res => !res && process.exit(0)),
 
   // step 5: proceed with reindexing
   () => {
     console.log('___\nreindexing:');
-    return runSeq(cols.map(coll => {
-      const index = algoliaUtils.getIndex({ appId, apiKey, indexName: coll.indexName });
-      const batcher = new algoliaUtils.BatchedAlgoliaIndexer({ index });
-      const processObject = dbObj => batcher.addObject(coll.objTransform(dbObj))
-      return () => reindexAndDisplay(coll, processObject).then(() => batcher.flush());
-    }));
+    return runSeq(
+      cols.map(coll => {
+        const index = algoliaUtils.getIndex({
+          appId,
+          apiKey,
+          indexName: coll.indexName
+        });
+        const batcher = new algoliaUtils.BatchedAlgoliaIndexer({ index });
+        const processObject = dbObj =>
+          batcher.addObject(coll.objTransform(dbObj));
+        return () =>
+          reindexAndDisplay(coll, processObject).then(() => batcher.flush());
+      })
+    );
   },
 
   // step 6: end
@@ -137,8 +161,7 @@ const steps = [
     console.log('\nend.');
     process.exit(0);
     // TODO: display index counts
-  },
-
+  }
 ];
 
 // run steps in sequence

@@ -13,13 +13,15 @@ function reduce(day, count) {
 }
 
 var opts = {
-  out: { inline: 1 },
+  out: { inline: 1 }
   //limit: 1000
 };
 
 var res = db.post.mapReduce(map, reduce, opts);
 //print(res.results.map(res => [ res._id, res.value ]).join('\n'));
-print(res.results
-  .sort((a, b) => new Date(a._id) - new Date(b._id))
-  .map(res => [ res._id, res.value ]).join('\n')
+print(
+  res.results
+    .sort((a, b) => new Date(a._id) - new Date(b._id))
+    .map(res => [res._id, res.value])
+    .join('\n')
 );
