@@ -10,8 +10,8 @@ describe('email validation', function() {
 
     it('should not allow a non-string value', function() {
         var backup = console.error;
-        console.error = function(){};
-        assert(!email.validate(function(){}));
+        console.error = function() {};
+        assert(!email.validate(function() {}));
         console.error = backup;
     });
 
@@ -19,7 +19,6 @@ describe('email validation', function() {
     it('should allow tools@symbol.agency (new tld)', function() {
         assert(email.validate('tools@symbol.agency'));
     });
-
 });
 
 // Webdriver API documentation: http://webdriver.io/api.html

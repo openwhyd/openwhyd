@@ -8,7 +8,7 @@ var https = require('https');
 var get = require('../../lib/get');
 
 //var generalUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-	
+
 /*
 var getContentType = function(url, handler)
 {
@@ -46,54 +46,56 @@ var getContentType = function(url, handler)
 	req.end();
 }
 */
-exports.controller = function(request, reqParams, response)
-{
-	request.logToConsole("contentType.controller", reqParams);
-	
-	if (!reqParams) {
-		console.log("contentType: no url provided => returning null");
-		response.render(null);
-		return;
-	}
-	
-	function handleError(err) {
-		console.log("contentType error:", err);
-		response.render({error: err});
-	}
-	
-	function renderResult(contentType, title, images) {
-		var result = {
-			statusCode: 200,
-			contentType: contentType,
-			title: title,
-			images: images
-		};
-		console.log("contentType result:", result);
-		response.render(result);
-	}
-	
-	var url = reqParams.url;
-	
-	if (url.indexOf("openwhyd.org") > -1 || url.indexOf("localhost:") > -1) {
-		if (url.contains("/upload_data/") || url.contains("/uPostedImg/") || url.contains("/uAvatarImg/") || url.contains("/ugTopicImg/"))
-			return renderResult("image/unknown");
-	}
-	
-	try {
-		get.ContentType(url, function(err, contentType) {
-			if (contentType === 'text/html')
-				get(url, function(err, page) {
-					if (page && !err)
-						renderResult(contentType, page.getTitle(), page.getImages());
-					else
-						handleError(err);
-				});
-			else if (contentType && contentType != "noContentType")
-				renderResult(contentType);
-			else
-				handleError(err);
-		});
-	} catch (err) {
-		handleError(err);
-	}
-}
+exports.controller = function(request, reqParams, response) {
+  request.logToConsole('contentType.controller', reqParams);
+
+  if (!reqParams) {
+    console.log('contentType: no url provided => returning null');
+    response.render(null);
+    return;
+  }
+
+  function handleError(err) {
+    console.log('contentType error:', err);
+    response.render({ error: err });
+  }
+
+  function renderResult(contentType, title, images) {
+    var result = {
+      statusCode: 200,
+      contentType: contentType,
+      title: title,
+      images: images
+    };
+    console.log('contentType result:', result);
+    response.render(result);
+  }
+
+  var url = reqParams.url;
+
+  if (url.indexOf('openwhyd.org') > -1 || url.indexOf('localhost:') > -1) {
+    if (
+      url.contains('/upload_data/') ||
+      url.contains('/uPostedImg/') ||
+      url.contains('/uAvatarImg/') ||
+      url.contains('/ugTopicImg/')
+    )
+      return renderResult('image/unknown');
+  }
+
+  try {
+    get.ContentType(url, function(err, contentType) {
+      if (contentType === 'text/html')
+        get(url, function(err, page) {
+          if (page && !err)
+            renderResult(contentType, page.getTitle(), page.getImages());
+          else handleError(err);
+        });
+      else if (contentType && contentType != 'noContentType')
+        renderResult(contentType);
+      else handleError(err);
+    });
+  } catch (err) {
+    handleError(err);
+  }
+};

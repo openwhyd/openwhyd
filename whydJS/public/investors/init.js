@@ -1,26 +1,28 @@
 //==============================================================================
 function initMenuScrollAnimation(menuId, options) {
-    
-  options || (options = {}); 
+  options || (options = {});
 
-  var scrollTime = options.scrollTime || 1000;  
+  var scrollTime = options.scrollTime || 1000;
   var menuActiveClass = options.menuActiveClass || 'active';
   var anchors = $('#' + menuId + ' a');
   var sections = [];
-  
-  anchors.each(function(i) {    
+
+  anchors.each(function(i) {
     sections.push($($(anchors[i]).attr('href')));
   });
- 
+
   anchors.click(function() {
-    var anchor = $(this);    
+    var anchor = $(this);
     $('#' + menuId + ' a.' + menuActiveClass).removeClass(menuActiveClass);
     anchor.addClass(menuActiveClass);
-    $('html, body').animate({        
-      scrollTop: $(anchor.attr('href')).offset().top
-    }, scrollTime);      
-  });  
-  
+    $('html, body').animate(
+      {
+        scrollTop: $(anchor.attr('href')).offset().top
+      },
+      scrollTime
+    );
+  });
+
   $(window).scroll(function() {
     var scrollTop = $(this).scrollTop();
     var i, section;
@@ -28,10 +30,11 @@ function initMenuScrollAnimation(menuId, options) {
       section = sections[i];
       if (scrollTop >= section.offset().top) {
         $('#' + menuId + ' a.' + menuActiveClass).removeClass(menuActiveClass);
-        $('#' + menuId + ' a[href="#' + section.attr('id') + '"]').addClass(menuActiveClass);
+        $('#' + menuId + ' a[href="#' + section.attr('id') + '"]').addClass(
+          menuActiveClass
+        );
         return;
       }
-    }        
+    }
   });
-  
 }

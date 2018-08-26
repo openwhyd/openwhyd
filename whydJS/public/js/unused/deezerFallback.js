@@ -1,93 +1,110 @@
-var deezerFallback = (function(){
+var deezerFallback = (function() {
+  if (!String.prototype.trim) {
+    String.prototype.trim = function() {
+      return this.replace(/^\s+|\s+$/gm, '');
+    };
+  }
 
-	if (!String.prototype.trim) {
-		String.prototype.trim = function () {
-			return this.replace(/^\s+|\s+$/gm, '');
-		};
-	}
+  function normalize(str) {
+    return !str
+      ? ''
+      : str
+          .toLowerCase()
+          .replace(/[àâä]/gi, 'a')
+          .replace(/[éèêë]/gi, 'e')
+          .replace(/[îï]/gi, 'i')
+          .replace(/[ôö]/gi, 'o')
+          .replace(/[ùûü]/gi, 'u')
+          .split(/[\s\+]+/g);
+  }
 
-	function normalize(str) {
-		return !str ? "" : str
-		.toLowerCase()
-		.replace(/[àâä]/gi, "a")
-		.replace(/[éèêë]/gi, "e")
-		.replace(/[îï]/gi, "i")
-		.replace(/[ôö]/gi, "o")
-		.replace(/[ùûü]/gi, "u")            
-		.split(/[\s\+]+/g);
-	}  
+  function parseTrack(track) {
+    if (/(.+)\-(.+)/.test(track)) {
+      var artist = RegExp.$1,
+        title = RegExp.$2;
+      return {
+        artist: normalize(artist.trim()),
+        title: normalize(title.trim())
+      };
+    }
+  }
 
-	function parseTrack(track) {
-		if (/(.+)\-(.+)/.test(track)) {
-			var artist = RegExp.$1, title = RegExp.$2;
-			return {
-				artist: normalize(artist.trim()),
-				title: normalize(title.trim())
-			};
-		}
-	}
+  // by http://andrew.hedges.name
+  var levenshteinenator = (function() {
+    function minimator(x, y, z) {
+      if (x < y && x < z) return x;
+      if (y < x && y < z) return y;
+      return z;
+    }
+    return function(a, b) {
+      var cost,
+        m = a.length,
+        n = b.length;
+      if (m < n) {
+        var c = a;
+        a = b;
+        b = c;
+        var o = m;
+        m = n;
+        n = o;
+      }
+      var r = new Array();
+      r[0] = new Array();
+      for (var c = 0; c < n + 1; c++) r[0][c] = c;
+      for (var i = 1; i < m + 1; i++) {
+        r[i] = new Array();
+        r[i][0] = i;
+        for (var j = 1; j < n + 1; j++) {
+          cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
+          r[i][j] = minimator(
+            r[i - 1][j] + 1,
+            r[i][j - 1] + 1,
+            r[i - 1][j - 1] + cost
+          );
+        }
+      }
+      return r[m][n];
+    };
+  })();
 
-	// by http://andrew.hedges.name
-	var levenshteinenator = (function(){
-		function minimator(x,y,z) {
-			if (x < y && x < z) return x;
-			if (y < x && y < z) return y;
-			return z;
-		}
-		return function(a, b) {
-			var cost, m = a.length, n = b.length;
-			if (m < n) {
-				var c=a;a=b;b=c;
-				var o=m;m=n;n=o;
-			}
-			var r = new Array(); r[0] = new Array();
-			for (var c = 0; c < n+1; c++) r[0][c] = c;
-				for (var i = 1; i < m+1; i++) {
-					r[i] = new Array(); r[i][0] = i;
-					for (var j = 1; j < n+1; j++) {
-						cost = (a.charAt(i-1) == b.charAt(j-1))? 0: 1;
-						r[i][j] = minimator(r[i-1][j]+1,r[i][j-1]+1,r[i-1][j-1]+cost);
-					}
-				}
-				return r[m][n];
-		}
-	})();
+  function matcher(track) {
+    var artist = track.artist.join('+'),
+      title = track.title.join('+');
+    return function(dzTrack) {
+      var dzArtist = normalize(dzTrack.artist.name).join('+'),
+        dzTitle = normalize(dzTrack.title).join('+');
+      return {
+        track: dzTrack,
+        rank: dzArtist == artist ? levenshteinenator(title, dzTitle) : 99999
+      };
+    };
+  }
 
-	function matcher(track){
-		var artist = track.artist.join("+"), title = track.title.join("+");
-		return function(dzTrack){
-			var dzArtist = normalize(dzTrack.artist.name).join("+"),
-			dzTitle = normalize(dzTrack.title).join("+");
-			return {
-				track: dzTrack,
-				rank: dzArtist == artist ? levenshteinenator(title, dzTitle) : 99999
-			};
-		}
-	}
+  function rankSort(a, b) {
+    return a.rank - b.rank;
+  }
 
-	function rankSort(a,b){
-		return a.rank - b.rank;
-	}
+  function deezerSearch(track, cb) {
+    track = parseTrack(track);
+    if (track) {
+      var rank = matcher(track);
+      DZ.api('/search?q=' + track.title.join('+'), function(response) {
+        var results = (response.data || []).map(rank).sort(rankSort);
+        cb(
+          results.length && results[0].rank < 5 ? results.shift() : null,
+          results
+        );
+      });
+    } else {
+      cb(null);
+    }
+  }
 
-	function deezerSearch(track, cb) {    
-		track = parseTrack(track);
-		if (track) {
-			var rank = matcher(track);
-			DZ.api('/search?q=' + track.title.join('+'), function(response) {
-				var results = (response.data || []).map(rank).sort(rankSort);
-				cb(results.length && results[0].rank < 5 ? results.shift() : null, results);
-			});  
-		} else {
-			cb(null);
-		}        
-	};  
-
-	return function(track, cb) {
-		setTimeout(function(track, cb) {
-			deezerSearch(track, cb);
-		}, 1000);
-	};
-
+  return function(track, cb) {
+    setTimeout(function(track, cb) {
+      deezerSearch(track, cb);
+    }, 1000);
+  };
 })();
 
 /* how to use in whydplayer:

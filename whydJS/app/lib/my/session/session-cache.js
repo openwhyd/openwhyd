@@ -10,21 +10,20 @@ function SessionCache(options) {
 //==============================================================================
 SessionCache.prototype.get = function(id) {
   return this.map[id];
-}
+};
 
 //==============================================================================
 SessionCache.prototype.set = function(id, session) {
   if (id) {
     if (this.map[id]) {
-      this.map[id] = session;  
+      this.map[id] = session;
     } else {
-      if (this.size >= this.maxSize)     
-        resize(this);    
+      if (this.size >= this.maxSize) resize(this);
       this.map[id] = session;
       this.size++;
     }
-  }      
-}
+  }
+};
 
 //==============================================================================
 SessionCache.prototype.remove = function(id) {
@@ -34,17 +33,16 @@ SessionCache.prototype.remove = function(id) {
     if (session) {
       delete this.map[id];
       this.size--;
-    } 
-  }  
-}
+    }
+  }
+};
 
 //==============================================================================
 function resize(cache) {
   var refactorSize = Math.floor(cache.maxSize * cache.resizeFactor);
   var array = [];
   var now = Date.now();
-  for (var i in cache.map)
-    array.push(cache.map[i]);
+  for (var i in cache.map) array.push(cache.map[i]);
   array.sort(compareSessions);
   cache.map = {};
   cache.size = 0;

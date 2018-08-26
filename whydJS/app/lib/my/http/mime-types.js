@@ -54,7 +54,7 @@ module.exports = {
     'content-type': 'application/x-shockwave-flash',
     'transfer-encoding': 'chunked'
   },
-  'default': {
+  default: {
     'content-type': 'application/octet-stream'
   }
 };
