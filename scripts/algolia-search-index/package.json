@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "node run-diff-reindex.js"
+    "prettier": "node_modules/.bin/prettier *.js --single-quote --write --parser=typescript",
+    "test": "node run-diff-reindex.js dry-run # will not update algolia index",
+    "sync": "node run-diff-reindex.js # will ask for confirmation before updating algolia index",
+    "sync:now": "node run-diff-reindex.js sync-now # will go straight to updating algolia index"
   },
   "dependencies": {
     "algoliasearch": "^3.24.11",
     "dotenv": "^5.0.0",
     "node-ask": "^1.0.1"
+  },
+  "devDependencies": {
+    "prettier": "1.14.2"
   }
 }

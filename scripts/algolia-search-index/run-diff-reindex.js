@@ -109,60 +109,87 @@ const reindexAndDisplay = (collection, indexer = dryRunIndexer) => {
 
 let cols;
 
-const steps = [
-  // step 1: init mongodb
-  () =>
-    mongo
-      .init(MONGODB_PARAMS)
-      .then(db => (cols = COLLECTIONS.map(bindCollectionToDB(db)))),
+// steps
 
-  // step 2: display counts
-  () =>
-    Promise.all(cols.map(getCounts)).then(results => {
-      console.log('___\nindexable collections:');
-      results.forEach(result =>
-        console.log(`- ${result.name} (${result.count} objects)`)
-      );
-    }),
+const init = () =>
+  mongo
+    .init(MONGODB_PARAMS)
+    .then(db => (cols = COLLECTIONS.map(bindCollectionToDB(db))));
 
-  // step 3: dry run
-  () => {
-    console.log('___\ndry run:');
-    return runSeq(cols.map(coll => () => reindexAndDisplay(coll)));
-  },
-
-  // step 4: ask for confirmation
-  () =>
-    confirm(
-      '___\nstart the actual reindexing of this collection now? [y|N] '
-    ).then(res => !res && process.exit(0)),
-
-  // step 5: proceed with reindexing
-  () => {
-    console.log('___\nreindexing:');
-    return runSeq(
-      cols.map(coll => {
-        const index = algoliaUtils.getIndex({
-          appId,
-          apiKey,
-          indexName: coll.indexName
-        });
-        const batcher = new algoliaUtils.BatchedAlgoliaIndexer({ index });
-        const processObject = dbObj =>
-          batcher.addObject(coll.objTransform(dbObj));
-        return () =>
-          reindexAndDisplay(coll, processObject).then(() => batcher.flush());
-      })
+const displayCounts = () =>
+  Promise.all(cols.map(getCounts)).then(results => {
+    console.log('___\nindexable collections:');
+    results.forEach(result =>
+      console.log(`- ${result.name} (${result.count} objects)`)
     );
-  },
+  });
 
-  // step 6: end
-  () => {
-    console.log('\nend.');
-    process.exit(0);
-    // TODO: display index counts
-  }
-];
+const dryRun = () => {
+  console.log('___\ndry run:');
+  return runSeq(cols.map(coll => () => reindexAndDisplay(coll)));
+};
 
-// run steps in sequence
-runSeq(steps);
+const askConfirmation = () =>
+  confirm(
+    '___\nstart the actual reindexing of this collection now? [y|N] '
+  ).then(res => !res && process.exit(0));
+
+const reindex = () => {
+  console.log('___\nreindexing:');
+  return runSeq(
+    cols.map(coll => {
+      const index = algoliaUtils.getIndex({
+        appId,
+        apiKey,
+        indexName: coll.indexName
+      });
+      const batcher = new algoliaUtils.BatchedAlgoliaIndexer({ index });
+      const processObject = dbObj =>
+        batcher.addObject(coll.objTransform(dbObj));
+      return () =>
+        reindexAndDisplay(coll, processObject).then(() => batcher.flush());
+    })
+  );
+};
+
+const end = () => {
+  console.log('\nend.');
+  process.exit(0);
+  // TODO: display index counts
+};
+
+const syncNowSteps = [init, reindex];
+
+const dryRunSteps = [init, displayCounts, dryRun];
+
+const defaultSteps = dryRunSteps.concat([askConfirmation, reindex]);
+
+let steps = defaultSteps;
+
+switch (process.argv[2]) {
+  case null:
+    console.warn(
+      'no parameter => will dry run and ask for confirmation before reindexing'
+    );
+  case 'dry-run':
+    console.warn(
+      'dry-run mode => will dry run and exit without updating indexes'
+    );
+    steps = dryRunSteps;
+    break;
+  case 'sync-now':
+    console.warn(
+      'sync-now mode => will update algolia index without asking for confirmation'
+    );
+    steps = syncNowSteps;
+    break;
+  default:
+    console.warn('invalid parameter');
+    console.warn('usage:');
+    console.warn('  node run-diff-reindex.js');
+    console.warn('  node run-diff-reindex.js dry-run');
+    console.warn('  node run-diff-reindex.js sync-now');
+    process.exit(1);
+}
+
+runSeq(steps.concat([end]));
