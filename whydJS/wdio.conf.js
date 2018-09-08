@@ -92,7 +92,7 @@ exports.config = {
   //
   // If you only want to run your tests until a specific amount of tests have failed use
   // bail (default is 0 - don't bail, run all tests).
-  bail: 0,
+  bail: 1,
   //
   // Saves a screenshot to a given path if a command fails.
   screenshotPath: './errorShots/',
@@ -168,7 +168,7 @@ exports.config = {
   mochaOpts: {
     timeout: 20000,
     ui: 'bdd'
-  }
+  },
   //
   // =====
   // Hooks
@@ -182,8 +182,26 @@ exports.config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
+  onPrepare: function async(config, capabilities) {
+    var request = require('request');
+    var { URL_PREFIX } = require('./test/fixtures.js');
+    const EXPECTED_DB_NAME = 'openwhyd_test';
+    console.warn(
+      `👂 checking that openwhyd/whydjs server is tested against the test database...`
+    );
+    return new Promise((resolve, reject) => {
+      request(`${URL_PREFIX}/config.json`, { json: true }, (err, res, body) => {
+        var db = (body || {}).db;
+        if (err || db !== EXPECTED_DB_NAME) {
+          reject(err || new Error(`❌ Unexpected db value: ${db}`));
+          //process.exit(1);
+        } else {
+          console.warn('✅ OK');
+          resolve();
+        }
+      });
+    });
+  },
   /**
    * Gets executed just before initialising the webdriver session and test framework. It allows you
    * to manipulate configurations depending on the capability or spec.
@@ -206,8 +224,9 @@ exports.config = {
    * Hook that gets executed before the suite starts
    * @param {Object} suite suite details
    */
-  // beforeSuite: function (suite) {
-  // },
+  beforeSuite: function(suite) {
+    console.log('👋 TEST SUITE:', suite.file.split('/').pop());
+  }
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
    * beforeEach in Mocha)
