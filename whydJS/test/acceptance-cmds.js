@@ -121,3 +121,7 @@ exports.takeSnapshot = function takeSnapshot() {
   });
 };
 */
+
+after(function() {
+  browser.close();
+});
