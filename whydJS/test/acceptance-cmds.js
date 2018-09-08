@@ -1,8 +1,6 @@
 var assert = require('assert');
-var request = require('request');
 var { URL_PREFIX } = require('./fixtures.js');
 
-const EXPECTED_DB_NAME = 'openwhyd_test';
 const WAIT_DURATION = 10000;
 
 // custom wdio / webdriver.io commands
@@ -68,22 +66,6 @@ browser.addCommand('clickOnContent', function(text) {
   return browser
     .element(`//*[contains(text(), '${text.replace(/'/g, "\\'")}')]`)
     .click();
-});
-
-// make sure that openwhyd/whydjs server is tested against the test database
-browser.addCommand('checkTestDb', function async() {
-  return new Promise((resolve, reject) => {
-    request(`${URL_PREFIX}/config.json`, { json: true }, (err, res, body) => {
-      var db = (body || {}).db;
-      if (err) {
-        reject(err);
-      } else if (db !== EXPECTED_DB_NAME) {
-        reject(new Error(`unexpected db value: ${db}`));
-      } else {
-        resolve();
-      }
-    });
-  });
 });
 
 // other helpers

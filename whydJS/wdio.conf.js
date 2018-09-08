@@ -191,27 +191,34 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  // beforeSession: function (config, capabilities, specs) {
-  // },
+  beforeSession: function async(config, capabilities, specs) {
+    var request = require('request');
+    var { URL_PREFIX } = require('./test/fixtures.js');
+    const EXPECTED_DB_NAME = 'openwhyd_test';
+    console.warn(
+      `👂 checking that openwhyd/whydjs server is tested against the test database...`
+    );
+    return new Promise((resolve, reject) => {
+      request(`${URL_PREFIX}/config.json`, { json: true }, (err, res, body) => {
+        var db = (body || {}).db;
+        if (err || db !== EXPECTED_DB_NAME) {
+          reject(err || new Error(`❌ Unexpected db value: ${db}`));
+          //process.exit(1);
+        } else {
+          console.warn('✅ OK');
+          resolve();
+        }
+      });
+    });
+  },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  before: function(capabilities, specs) {
-    console.warn(
-      `👂 checking that openwhyd/whydjs server is tested against the test database...`
-    );
-    try {
-      require('./test/acceptance-cmds.js');
-      browser.checkTestDb();
-      console.warn('✅ OK');
-    } catch (err) {
-      console.error('❌ Error while running pre-test-suite checks:', err);
-      process.exit(1);
-    }
-  },
+  // before: function (capabilities, specs) {
+  // },
   //
   /**
    * Hook that gets executed before the suite starts
