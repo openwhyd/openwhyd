@@ -92,7 +92,7 @@ exports.config = {
   //
   // If you only want to run your tests until a specific amount of tests have failed use
   // bail (default is 0 - don't bail, run all tests).
-  bail: 0,
+  bail: 1,
   //
   // Saves a screenshot to a given path if a command fails.
   screenshotPath: './errorShots/',
@@ -168,7 +168,7 @@ exports.config = {
   mochaOpts: {
     timeout: 20000,
     ui: 'bdd'
-  }
+  },
   //
   // =====
   // Hooks
@@ -199,15 +199,27 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  // before: function (capabilities, specs) {
-  // },
+  before: function(capabilities, specs) {
+    console.warn(
+      `👂 checking that openwhyd/whydjs server is tested against the test database...`
+    );
+    try {
+      require('./test/acceptance-cmds.js');
+      browser.checkTestDb();
+      console.warn('✅ OK');
+    } catch (err) {
+      console.error('❌ Error while running pre-test-suite checks:', err);
+      process.exit(1);
+    }
+  },
   //
   /**
    * Hook that gets executed before the suite starts
    * @param {Object} suite suite details
    */
-  // beforeSuite: function (suite) {
-  // },
+  beforeSuite: function(suite) {
+    console.log('👋 TEST SUITE:', suite.file.split('/').pop());
+  }
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
    * beforeEach in Mocha)

@@ -1,6 +1,6 @@
 var assert = require('assert');
 var request = require('request');
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('./fixtures.js');
+var { URL_PREFIX } = require('./fixtures.js');
 
 const EXPECTED_DB_NAME = 'openwhyd_test';
 const WAIT_DURATION = 10000;
@@ -71,47 +71,19 @@ browser.addCommand('clickOnContent', function(text) {
 });
 
 // make sure that openwhyd/whydjs server is tested against the test database
-browser.addCommand('checkTestDb', function async(user, dbName) {
+browser.addCommand('checkTestDb', function async() {
   return new Promise((resolve, reject) => {
     request(`${URL_PREFIX}/config.json`, { json: true }, (err, res, body) => {
       var db = (body || {}).db;
       if (err) {
         reject(err);
-      } else if (db !== dbName) {
+      } else if (db !== EXPECTED_DB_NAME) {
         reject(new Error(`unexpected db value: ${db}`));
       } else {
         resolve();
       }
     });
   });
-});
-
-// before running tests: make sure that openwhyd/whydjs server is tested against the test database
-
-before(function async() {
-  console.log(
-    `[checkTestDb] checking that openwhyd/whydjs server is tested against the test database...`
-  );
-  /*
-  browser.url(URL_PREFIX + `/login?action=login&email=${encodeURIComponent(ADMIN_USER.email)}&md5=${ADMIN_USER.md5}&redirect=/admin/config/config.json`);
-  var config = JSON.parse(browser.getText('pre')).json;
-  assert.equal(config.mongoDbDatabase, 'openwhyd_test');
-  return new Promise(function (resolve, reject) {
-    browser.url(URL_PREFIX + '/login?action=logout').then(resolve, reject);
-  });
-  */
-  return browser
-    .checkTestDb(ADMIN_USER, EXPECTED_DB_NAME)
-    .then(function() {
-      console.log('[checkTestDb] OK');
-    })
-    .catch(function(err) {
-      console.error('[checkTestDb]', err);
-      throw new Error(
-        `[checkTestDb] make sure that the openwhyd/whydJS server is running on ${URL_PREFIX} before running tests`
-      );
-      // process.exit(1);
-    });
 });
 
 // other helpers
