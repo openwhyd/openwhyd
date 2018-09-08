@@ -202,7 +202,7 @@ exports.config = {
   before: function(capabilities, specs) {
     console.log(`[checkTestDb] wait 1 second, for selenium to wake up...`);
     browser.pause(1000);
-  }
+  },
   //
   /**
    * Hook that gets executed before the suite starts
@@ -263,8 +263,10 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  // after: function (result, capabilities, specs) {
-  // },
+  after: function(result, capabilities, specs) {
+    console.warn('✨ Closing the browser...');
+    browser.close();
+  }
   /**
    * Gets executed right after terminating the webdriver session.
    * @param {Object} config wdio configuration object
