@@ -74,7 +74,6 @@ browser.addCommand('clickOnContent', function(text) {
 browser.addCommand('checkTestDb', function async(user, dbName) {
   return new Promise((resolve, reject) => {
     request(`${URL_PREFIX}/config.json`, { json: true }, (err, res, body) => {
-      console.warn('=>', err, typeof body, body);
       var db = (body || {}).db;
       if (err) {
         reject(err);
