@@ -66,8 +66,7 @@
     "playemjs": "0.2.0",
     "q-set": "^2.0.8",
     "request": "2.88.0",
-    "rollbar": "^2.3.1",
-    "start-stop-daemon": "0.1.0"
+    "rollbar": "^2.3.1"
   },
   "devDependencies": {
     "all-contributors-cli": "5.4.0",
