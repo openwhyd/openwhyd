@@ -168,7 +168,7 @@ exports.config = {
   mochaOpts: {
     timeout: 20000,
     ui: 'bdd'
-  },
+  }
   //
   // =====
   // Hooks
@@ -199,10 +199,8 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  before: function(capabilities, specs) {
-    console.log(`[checkTestDb] wait 1 second, for selenium to wake up...`);
-    browser.pause(1000);
-  }
+  // before: function (capabilities, specs) {
+  // },
   //
   /**
    * Hook that gets executed before the suite starts

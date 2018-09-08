@@ -1,4 +1,5 @@
 var assert = require('assert');
+var request = require('request');
 var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('./fixtures.js');
 
 const EXPECTED_DB_NAME = 'openwhyd_test';
@@ -71,9 +72,17 @@ browser.addCommand('clickOnContent', function(text) {
 
 // make sure that openwhyd/whydjs server is tested against the test database
 browser.addCommand('checkTestDb', function async(user, dbName) {
-  browser.url(`${URL_PREFIX}/config.json`);
-  return browser.getText('pre').then(function(content) {
-    assert.equal(JSON.parse(content).db, dbName);
+  return new Promise((resolve, reject) => {
+    request(`${URL_PREFIX}/config.json`, { json: true }, (err, res, body) => {
+      var db = (body || {}).db;
+      if (err) {
+        reject(err);
+      } else if (db !== dbName) {
+        reject(new Error(`unexpected db value: ${db}`));
+      } else {
+        resolve();
+      }
+    });
   });
 });
 
