@@ -150,7 +150,7 @@ var FLAGS = {
     params.emailModule = 'emailAdminsOnly';
   },
   '--runner': function() {
-    /* ignore this parameter from start-stop-daemon */
+    /* ignore this parameter from start-stop-daemon -- note: still required? */
   }
 };
 
