@@ -182,16 +182,7 @@ exports.config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  // },
-  /**
-   * Gets executed just before initialising the webdriver session and test framework. It allows you
-   * to manipulate configurations depending on the capability or spec.
-   * @param {Object} config wdio configuration object
-   * @param {Array.<Object>} capabilities list of capabilities details
-   * @param {Array.<String>} specs List of spec file paths that are to be run
-   */
-  beforeSession: function async(config, capabilities, specs) {
+  onPrepare: function async(config, capabilities) {
     var request = require('request');
     var { URL_PREFIX } = require('./test/fixtures.js');
     const EXPECTED_DB_NAME = 'openwhyd_test';
@@ -211,6 +202,15 @@ exports.config = {
       });
     });
   },
+  /**
+   * Gets executed just before initialising the webdriver session and test framework. It allows you
+   * to manipulate configurations depending on the capability or spec.
+   * @param {Object} config wdio configuration object
+   * @param {Array.<Object>} capabilities list of capabilities details
+   * @param {Array.<String>} specs List of spec file paths that are to be run
+   */
+  // beforeSession: function (config, capabilities, specs) {
+  // },
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.
