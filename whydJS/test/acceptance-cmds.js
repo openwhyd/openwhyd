@@ -71,16 +71,9 @@ browser.addCommand('clickOnContent', function(text) {
 
 // make sure that openwhyd/whydjs server is tested against the test database
 browser.addCommand('checkTestDb', function async(user, dbName) {
-  browser.url(
-    URL_PREFIX +
-      `/login?action=login&email=${encodeURIComponent(user.email)}&md5=${
-        user.md5
-      }&redirect=/admin/config/config.json`
-  );
+  browser.url(`${URL_PREFIX}/config.json`);
   return browser.getText('pre').then(function(content) {
-    var config = JSON.parse(content).json;
-    assert.equal(config.mongoDbDatabase, dbName);
-    return browser.url(URL_PREFIX + '/login?action=logout');
+    assert.equal(JSON.parse(content).db, dbName);
   });
 });
 
