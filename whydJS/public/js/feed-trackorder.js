@@ -11,11 +11,13 @@ var init = function() {
     $.ajax({
       type: 'POST',
       url: '/api/playlist',
-      data: {
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: JSON.stringify({
         action: 'setOrder',
         id: plId,
         order: order
-      },
+      }),
       success: function(res) {
         cb(res);
       },
