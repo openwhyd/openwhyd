@@ -13,27 +13,37 @@ const makeRowRenderer = separator => array => array.map(render).join(separator);
  * $ mongoexport -d $DB -c "$LISTNAME" --type=csv --fields "$FIELDS" | tail -n+2 >>$OUT.temp.csv
  * $ ./csv-helpers/fill-empty-values.sh $OUT.temp.csv 0
  */
-function * generateCsvLines (object, opts = {}) {
+function* generateCsvLines(object, opts = {}) {
   const defaultValue = opts.defaultValue !== undefined ? opts.defaultValue : '';
   const renderRow = makeRowRenderer(opts.separator || ',');
-  const fields = Array.from(Object.keys(object).reduce((fieldSet, _id) => {
-    Object.keys(object[_id]).forEach(field => fieldSet.add(field))
-    return fieldSet;
-  }, new Set()));
+  const fields = Array.from(
+    Object.keys(object).reduce((fieldSet, _id) => {
+      Object.keys(object[_id]).forEach(field => fieldSet.add(field));
+      return fieldSet;
+    }, new Set())
+  );
   if (fields.length === 0) {
     const header = ['_id', 'value'];
     yield renderRow(header);
     for (var _id in object) {
-      yield renderRow([ _id, object[_id] ]);
+      yield renderRow([_id, object[_id]]);
     }
   } else {
-    const header = [].concat.apply(['_id'], fields.map(field => `value.${field}`))
+    const header = [].concat.apply(
+      ['_id'],
+      fields.map(field => `value.${field}`)
+    );
     yield renderRow(header);
     for (var _id in object) {
-      yield renderRow([].concat.apply([ _id ], fields.map(field => {
-        const value = object[_id][field];
-        return (value === undefined || value === null) ? defaultValue : value;
-      })))
+      yield renderRow(
+        [].concat.apply(
+          [_id],
+          fields.map(field => {
+            const value = object[_id][field];
+            return value === undefined || value === null ? defaultValue : value;
+          })
+        )
+      );
     }
   }
 }

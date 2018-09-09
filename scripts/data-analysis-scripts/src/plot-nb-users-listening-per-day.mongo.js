@@ -6,14 +6,14 @@ const OUTPUT_COLLECTION = 'plot-nb-users-listening-per-day';
 const map = makeMapWith(renderDate, function mapTemplate() {
   // => emit same kind of output as reduce()'s
   emit(renderDate(this._id.getTimestamp()), {
-    users: [ this.uId ]
+    users: [this.uId]
   });
 });
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
   var userSet = {};
-  vals.forEach(val => val.users.forEach(uId => userSet[uId] = true));
+  vals.forEach(val => val.users.forEach(uId => (userSet[uId] = true)));
   return {
     users: Object.keys(userSet)
   };
@@ -25,9 +25,9 @@ var opts = {
   },
   out: {
     //inline: 1, // => causes `too much data for in memory map/reduce` error
-    'replace': OUTPUT_COLLECTION, // will store results in that collection
+    replace: OUTPUT_COLLECTION // will store results in that collection
     // => took 10 minutes to run
-  },
+  }
   //limit: 100000 // => runs in 4 seconds
 };
 

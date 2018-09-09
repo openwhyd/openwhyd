@@ -20,18 +20,27 @@ var renderFct = eval(RENDER_FCT); // => e.g. renderDate() or renderWeek()
 function mapTemplate() {
   //var failed = this.err ? 1 : 0;
   var val = { total: 1 }; //, total_err: failed
-  var error = this.err ? this.err.code || this.err.error || this.err.data : undefined;
+  var error = this.err
+    ? this.err.code || this.err.error || this.err.data
+    : undefined;
   if (error !== undefined) val[error] = 1;
   emit(renderFct(this._id.getTimestamp()), val); // group error counts by week
 }
 
-const map = makeMapWith(renderFct, mapTemplate.toString().replace('renderFct', RENDER_FCT));
+const map = makeMapWith(
+  renderFct,
+  mapTemplate.toString().replace('renderFct', RENDER_FCT)
+);
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
   var finalVal = {};
   // sum counts for each period
-  vals.forEach(val => Object.keys(val).forEach(key => finalVal[key] = (finalVal[key] || 0) + val[key]));
+  vals.forEach(val =>
+    Object.keys(val).forEach(
+      key => (finalVal[key] = (finalVal[key] || 0) + val[key])
+    )
+  );
   return finalVal;
 }
 
@@ -43,18 +52,18 @@ var opts = {
       .forEach(error => {
         reduced[error] = reduced[error] / reduced.total; // compute % of errors againt plays
       });
-      delete reduced.total;
+    delete reduced.total;
     return reduced;
   },
   out: {
-    'replace': OUTPUT_COLLECTION, // will store results in that collection
+    replace: OUTPUT_COLLECTION // will store results in that collection
     // => took 8 minutes to run
   },
-  query: makeDateRangeQuery(new Date(today - PERIOD)),
+  query: makeDateRangeQuery(new Date(today - PERIOD))
   //limit: 100000 // => runs in less time
 };
 
-print('PERIOD: ' + PERIOD / (24 * 60 * 60 * 1000) + ' days')
+print('PERIOD: ' + PERIOD / (24 * 60 * 60 * 1000) + ' days');
 print('RENDER_FCT: ' + RENDER_FCT);
 print('generating data, date: ' + new Date());
 var result = db.playlog.mapReduce(map, reduce, opts);
