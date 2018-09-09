@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ROOT_DIR="`pwd`/.."
 PORT="$1"
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Based on https://gist.github.com/Djiit/222205480fd5f6f5eed3f7c0aef33c6a
 
 # Constants
