@@ -20,7 +20,7 @@ fi
 # Start Openwhyd's whydJS server
 NEW_UID="whydjs_$NEW_PORT"
 PREV_UID="whydjs_$PREV_PORT"
-./start.sh $NEW_PORT # will start app.js using forever
+$ROOT_DIR/scripts/start.sh $NEW_PORT # will start app.js using forever
 
 echo "⏲ Waiting for Openwhyd..."
 retries=0
