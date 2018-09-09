@@ -4,11 +4,11 @@ engines:
     config:
       languages:
       - javascript
-  # eslint:
-  #   enabled: true
-  #   channel: "eslint-2"
-  #   config:
-  #     config: whydJS/.eslintrc
+  eslint:
+    enabled: true
+    channel: "eslint-2"
+    config:
+      config: whydJS/.eslintrc
 
 ratings:
   paths:

@@ -22,9 +22,9 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-  # code_climate:
-  #   repo_token:
-  #     secure: "FIXME"
+  code_climate:
+    repo_token:
+      secure: "5f697b5b9d0e7716bdd431448ec1daa9e1184a134c0bdc36375d88263428aa61"
 
 # change directory before `npm install`
 before_install:
