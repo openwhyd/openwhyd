@@ -4,18 +4,18 @@
 PORT_A=1094
 PORT_B=1095
 MAX_RETRY=50
-CURR_DIR="`pwd`/.."
+ROOT_DIR="`pwd`/.."
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
 
 echo "Deployment started..."
 
 # Read port file or set port to PORT_A if no port file found.
-port=`cat $CURR_DIR/.port` || port=$PORT_A
+port=`cat $ROOT_DIR/.port` || port=$PORT_A
 
 # Start new server
 echo "Starting OpenWhyd with WHYD_PORT=$port."
-cd $CURR_DIR/whydJS && source env-vars-local.sh && WHYD_PORT=$port npm start &
+cd $ROOT_DIR/whydJS && source env-vars-local.sh && WHYD_PORT=$port npm start &
 
 # Wait for it to be fully running
 i=0
@@ -40,7 +40,7 @@ do
     i=$((i+1))
 done
 
-# Re-link NGINX configuration (assuming /etc/nginx/conf.d/whyd.conf links to $CURR_DIR/nginx.conf)
+# Re-link NGINX configuration (assuming /etc/nginx/conf.d/whyd.conf links to $ROOT_DIR/nginx.conf)
 sudo unlink $NGINX_ENBLD/openwhyd.org
 sudo ln -s $NGINX_AVAIL/openwhyd.org_$port $NGINX_ENBLD/openwhyd.org
 
@@ -49,9 +49,9 @@ sudo service nginx restart
 
 # Finally, Save new port.
 if [ $port -eq $PORT_A ]; then
-    echo $PORT_B > $CURR_DIR/.port
+    echo $PORT_B > $ROOT_DIR/.port
 else
-    echo $PORT_A > $CURR_DIR/.port
+    echo $PORT_A > $ROOT_DIR/.port
 fi
 
 # Stop old server. Index 0 is always the oldest process.
