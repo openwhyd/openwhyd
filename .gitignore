@@ -1,4 +1,5 @@
 .env
+.port
 .DS_Store
 node_modules
 
@@ -17,7 +18,6 @@ whydJS/*.out
 whydJS/*.pid
 whydJS/*.err
 whydJS/appd.dmn
-whydJS/.port
 whydJS/env-vars-local.sh
 whydJS/env-vars-perso.sh
 /scripts/mongodb-scripts/db
