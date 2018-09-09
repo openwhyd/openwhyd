@@ -10,7 +10,7 @@ restart: ## Restart the production server without downtime.
 	@cd scripts && ./restart.sh
 
 restart-to-latest: ## Restart the production server to its latest version, without downtime.
-	@cd openwhyd/whydJS && git checkout -- package-lock.json && git pull && npm i && cd ../scripts && ./restart.sh
+	@cd whydJS && git checkout -- package-lock.json && git pull && npm i && ../scripts/restart.sh
 
 lint: fetch-deps ## Run ESLint
 	@cd whydJS && npm run lint 
