@@ -11,7 +11,7 @@ NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
 NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
 
-echo "👋 Deployment starting on port $NEW_PORT..."
+echo "👋  Deployment starting on port $NEW_PORT..."
 
 if [ $NEW_PORT -eq $PORT_A ]; then
     PREV_PORT=$PORT_B
@@ -24,14 +24,14 @@ NEW_UID="whydjs_$NEW_PORT"
 PREV_UID="whydjs_$PREV_PORT"
 $ROOT_DIR/scripts/start.sh $NEW_PORT # will start app.js using forever
 
-echo "⏲ Waiting for Openwhyd..."
+echo "⏲  Waiting for Openwhyd..."
 retries=0
 while :
 do
     sleep 1
     res="`curl -sL -w "%{http_code}" "localhost:$NEW_PORT" -o /dev/null`"
     if [ $res -eq 200 ]; then
-        echo "✅ Openwhyd ($(grep version $ROOT_DIR/whydJS/package.json)) now listening on port $NEW_PORT."
+        echo "✅  Openwhyd ($(grep version $ROOT_DIR/whydJS/package.json)) now listening on port $NEW_PORT."
         break
     fi
 
@@ -39,21 +39,21 @@ do
     echo "($retries)"
 
     if [ $retries -ge $MAX_RETRY ]; then
-        echo "⚠️ App is not responding. Killing it..."
+        echo "⚠️  App is not responding. Killing it..."
         $ROOT_DIR/whydJS/node_modules/.bin/forever stop 0
         # [TODO] Something like this would be better:
         # cd $ROOT_DIR/whydJS && npm stop -- $NEW_UID
-        echo "❌ Deployment failed."
+        echo "❌  Deployment failed."
         exit 1
     fi
 done
 
-echo "🔧 Applying nginx configuration..."
+echo "🔧  Applying nginx configuration..."
 sudo unlink $NGINX_ENBLD/openwhyd.org
 sudo ln -s $NGINX_AVAIL/openwhyd.org_$NEW_PORT $NGINX_ENBLD/openwhyd.org
 sudo service nginx restart
 
-echo "🌇 Stopping previous instance of Openwhyd..."
+echo "🌇  Stopping previous instance of Openwhyd..."
 # Stop old server. Index 0 is always the oldest process.
 $ROOT_DIR/whydJS/node_modules/.bin/forever stop 0
 
@@ -63,6 +63,6 @@ $ROOT_DIR/whydJS/node_modules/.bin/forever stop 0
 # cd $ROOT_DIR/whydJS && npm stop -- $PREV_UID
 
 echo $PREV_PORT > $ROOT_DIR/.port
-echo "🗳 Saved next port to $ROOT_DIR/.port."
+echo "🗳  Saved next port to $ROOT_DIR/.port."
 
-echo "✨ Deployment ended."
+echo "✨  Deployment ended."

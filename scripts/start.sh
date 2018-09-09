@@ -11,7 +11,7 @@ then
 fi
 
 # Start new server
-echo "🌄 Starting Openwhyd with WHYD_PORT=$PORT..."
+echo "🌄  Starting Openwhyd with WHYD_PORT=$PORT..."
 cd $ROOT_DIR/whydJS && source env-vars-local.sh && WHYD_PORT=$PORT npm start &
 
 # TODO: find a way to identify that instance, e.g. -- "--uid whydjs_$PORT"
