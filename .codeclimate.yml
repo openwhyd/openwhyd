@@ -13,3 +13,21 @@ engines:
 ratings:
   paths:
     - "whydJS/app/**.js"
+
+exclude_patterns:
+  - "whydJS/config/"
+  - "whydJS/public/js/jquery*.js"
+  - "whydJS/public/js/swfobject.js"
+  - "whydJS/public/js/soundmanager2.js"
+  - "whydJS/public/js/*-all.js"
+  - "whydJS/public/js/*-min.js"
+  - "whydJS/public/js/*.min.js"
+  - "features/"
+  - "**/node_modules/"
+  - "**/unused/"
+  - "**/unused/"
+  - "**/spec/"
+  - "**/test/"
+  - "**/tests/"
+  - "**/vendor/"
+  - "**/*.d.ts"
