@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.0.18",
+  "version": "1.1.9",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -25,12 +25,15 @@
     "run-dev-digest": "node app.js --dev --color --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
     "run-dev-search": "node app.js --dev --color --fakeEmail --digestInterval -1 --enableSearchIndex true $@",
     "test-reset": "node test/reset-test-db.js",
-    "test-api": "npm run test-reset && node_modules/.bin/mocha test/api/*.js",
-    "test-unit": "node_modules/.bin/mocha test/unit/*.js",
+    "test-api": "npm run test-reset && node_modules/.bin/mocha test/api/*.js --exit",
+    "test-unit": "node_modules/.bin/mocha test/unit/*.js --exit",
     "test-acceptance": "npm run test-reset && wdio wdio.conf.js $@",
     "test-acceptance-dev": "npm run test-acceptance -- --spec ./test/specs/*.tests.js --logLevel verbose",
     "test": ". ./env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance",
-    "test-docker": "docker-compose exec web npm run test-reset && docker-compose restart web && docker-compose exec web npm run test-unit && docker-compose exec web npm run test-api && docker-compose exec web npm run test-reset && docker-compose restart web && npm run test-acceptance",
+    "docker-restart": "docker-compose exec web npm run test-reset && docker-compose restart web && ./wait-for-http-server.sh 8080",
+    "docker-run": "npm run docker-restart && docker-compose exec web npm run $@",
+    "test-docker": "npm run docker-run test-unit && npm run docker-run test-api && npm run docker-restart && wdio wdio.conf.js $@",
+    "prettify": "node_modules/.bin/prettier \"./**/*.js\" \"../scripts/**/*.js\" --single-quote --write",
     "lint": "eslint app"
   },
   "engines": {
@@ -53,32 +56,32 @@
     "colors": "*",
     "emailjs": "0.3.3",
     "ent": "2.0.0",
-    "forever": "^0.15.3",
+    "forever": "0.15.3",
     "formidable": "^1.1.1",
     "hogan.js": "2.0.0",
     "htmlparser": "*",
     "iconv": ">=2.0.6",
     "mongodb": "^2.2.29",
     "object-sizeof": "^0.1.2",
-    "playemjs": "0.1.8",
+    "playemjs": "0.2.0",
     "q-set": "^2.0.8",
-    "request": "2.x",
-    "rollbar": "^2.3.1",
-    "start-stop-daemon": "0.1.0"
+    "request": "2.88.0",
+    "rollbar": "^2.3.1"
   },
   "devDependencies": {
-    "all-contributors-cli": "^4.5.1",
+    "all-contributors-cli": "5.4.0",
     "eslint": "2.9.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.11.1",
     "eslint-plugin-jsx-a11y": "1.2.0",
     "eslint-plugin-react": "^5.2.2",
-    "mocha": "^3.4.2",
+    "mocha": "5.2.0",
+    "prettier": "^1.14.2",
     "wdio-dot-reporter": "0.0.8",
     "wdio-mocha-framework": "^0.5.10",
-    "wdio-selenium-standalone-service": "0.0.9",
+    "wdio-selenium-standalone-service": "0.0.10",
     "wdio-spec-reporter": "^0.1.0",
     "wdio-visual-regression-service": "^0.8.0",
-    "webdriverio": "^4.8.0"
+    "webdriverio": "4.12.0"
   }
 }

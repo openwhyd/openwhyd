@@ -179,7 +179,7 @@ If you're a developer, check out:
 - our [open-source repositories on Github](https://github.com/openwhyd),
 - our [global roadmap](https://github.com/orgs/openwhyd/projects/1) and [development board on Github](https://github.com/openwhyd/openwhyd/projects/1),
 - our [current issues on Github](https://github.com/openwhyd/openwhyd/issues), (*help on fixing bugs is particularly appreciated!*)
-- and our [contribution guide](https://github.com/openwhyd/openwhyd/blob/master/CONTRIBUTING.md).
+- and our [contribution guide](CONTRIBUTING.md).
 
 If you have other skills that you would like to invest as a volunteer, please contact us!
 
@@ -225,13 +225,31 @@ It could also be that this track is not accessible from France, as explained in 
 
 That being said, it's very easy to download your data at any time: just add the `?format=json&limit=999999` suffix to your Openwhyd profile URL. E.g. `https://openwhyd.org/adrien?format=json&limit=999999`
 
-*More info: read [how to download Openwhyd track listings in JSON format](howto-backup-openwhyd-tracks.md).*
+#### More info: backup / download Openwhyd track listings in JSON format
+
+*exported from https://whyd.hackpad.com/Early-API-Download-Whyd-track-listings-in-JSON-format-CTMZ8XxzRuB*
+
+GET parameters for most playlist pages:
+- `format`: "`json`" or "`html`" (default)
+- `after`: post id (optional)
+- `limit`: number of posts to return (default=`20`)
+
+Examples:
+- https://openwhyd.org/adrien?format=json returns the last `20` tracks I posted in `JSON` format
+- https://openwhyd.org/adrien/playlist/10?format=json&limit=10000 returns the last `10000` tracks I posted in my "electronica" playlist
+
+The `eId` field contains the unique identifier of the track/video on its hosting source. (e.g. youtube/soundcloud/vimeo):
+- `/yt/xxx` is a youtube identifier
+- `/sc/xxx#http://yyy` is the soundcloud URI of a track, followed by the URL of the audio stream
+- `/vi/xxx` is a vimeo identifier
+
+Please use these URLs gently to prevent openwhyd.org from slowing down => add some delay between requests :-)
 
 🇫🇷 Tu peux récupérer tes tracks à tout moment, en ajoutant le suffixe `?format=json&limit=999999` à l'URL de ton profil Openwhyd. Exemple: `https://openwhyd.org/adrien?format=json&limit=999999`
 
 ### Do you have an API ?
 
-Yes, check [this](https://github.com/openwhyd/openwhyd/blob/master/docs/whydJS-json-api.md) out.
+Yes, check [our API documentation](API.md).
 
 ### The player says “Embed too small” or something like that, and wont play my music! 
  

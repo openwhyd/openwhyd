@@ -7,7 +7,7 @@ const request = require('request');
 const WAIT_DURATION = 10000;
 
 var defaultAvatarLen;
-request(`${URL_PREFIX}/images/blank_user.gif`, function (error, response, body) {
+request(`${URL_PREFIX}/images/blank_user.gif`, function(error, response, body) {
   defaultAvatarLen = body.length;
 });
 
@@ -17,7 +17,6 @@ require('../acceptance-cmds.js'); // also checks that openwhyd/whydjs server is 
 // ... AND that the user cache was reset as well. (e.g. by restarting whydJS)
 
 describe('upload user profile images', function() {
-
   it(`user login`, webUI.loginAs(ADMIN_USER));
 
   it(`go to user profile`, function() {
@@ -42,14 +41,15 @@ describe('upload user profile images', function() {
       assert.equal(defaultAvatarLen, response.headers['content-length']);
     });
     */
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       //assert.ok(!/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
-      request(`${URL_PREFIX}/img/u/${ADMIN_USER.id}?_t=${new Date().getTime()}`, function (error, response, body) {
-        console.log('defaultAvatarLen', defaultAvatarLen);
-        console.log('current avatar length', body.length);
-        assert.equal(defaultAvatarLen, body.length);
-        resolve();
-      });
+      request(
+        `${URL_PREFIX}/img/u/${ADMIN_USER.id}?_t=${new Date().getTime()}`,
+        function(error, response, body) {
+          assert.equal(defaultAvatarLen, body.length);
+          resolve();
+        }
+      );
     });
   });
 
@@ -116,7 +116,6 @@ describe('upload user profile images', function() {
   });
   */
   //webUI.logout();
-
 });
 
 // Webdriver API documentation: http://webdriver.io/api.html

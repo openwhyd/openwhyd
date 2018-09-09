@@ -7,10 +7,10 @@ var lastError = '';
 // TODO: find another way to notify of crashes
 
 var smtpServerOptions = {
-	user: 'whyd.crash', 
-	password: 'TODO_SET_PASSWORD_HERE', 
-	host: 'smtp.gmail.com', 
-	ssl: true 
+  user: 'whyd.crash',
+  password: 'TODO_SET_PASSWORD_HERE',
+  host: 'smtp.gmail.com',
+  ssl: true
 };
 
 var emailOptions = {
@@ -25,21 +25,21 @@ var nbMails = 0;
 //==============================================================================
 exports.stderr = function(errorChunk) {
   lastError += errorChunk;
-}
+};
 
 //==============================================================================
 exports.restart = function() {
   if (nbMails++ < maxEmails) {
-    email.server.connect(smtpServerOptions).send({			
-			from: emailOptions.from,
-			to: emailOptions.to,
-			cc: emailOptions.cc,
-			subject: 'CRASH',
+    email.server.connect(smtpServerOptions).send({
+      from: emailOptions.from,
+      to: emailOptions.to,
+      cc: emailOptions.cc,
+      subject: 'CRASH',
       text: getLastLines(lastError, 40)
-		});
+    });
   }
-  lastError = '';  
-}
+  lastError = '';
+};
 
 //==============================================================================
 function getLastLines(str, n) {

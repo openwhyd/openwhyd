@@ -1,5 +1,0 @@
-logs
-collection-dumps/*.gz
-plots/*.png
-src/*.csv
-src/*.log

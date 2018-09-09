@@ -2,151 +2,145 @@
  * Script qui affiche une popup contenant du HTML
  * @author: guillaumegaubert, whyd
  **/
- 
 
 var GGPopup = {
+  // Default id for CSS
+  id: 'ggpopup',
 
-	// Default id for CSS
-	id: 'ggpopup',
+  // Default CSS class name for blurred elements
+  blurredClass: 'ggpopup-blurred',
 
-	// Default CSS class name for blurred elements
-	blurredClass : 'ggpopup-blurred',
+  // If we blur background content
+  blur: true,
 
-	// If we blur background content
-	blur: true,
+  blurElements: [],
 
-	blurElements : [],
+  // Init
+  init: function() {
+    var self = this;
 
+    // Listen for ESC key
+    document.addEventListener('keyup', function(e) {
+      // If press ESC
+      if (e.keyCode == 27) {
+        // Check if the popup if already opened
+        if (self.me()) {
+          // Close popup
+          self.close();
+        }
+      }
+    });
+  },
 
-	// Init
-	init: function(){
-		var self = this;
+  // Create the popup HTML layout
+  createDOM: function(id) {
+    var self = this;
 
-		// Listen for ESC key
-		document.addEventListener("keyup", function(e){
-			// If press ESC
-			if(e.keyCode == 27) {
-				// Check if the popup if already opened
-				if(self.me()) {
-					// Close popup
-					self.close();
-				}
-			}
-		});
-	},
+    this.id = id;
 
-	// Create the popup HTML layout
-	createDOM: function(id) {
+    var wrapper = document.createElement('div');
+    wrapper.id = id;
+    wrapper.style.display = 'table';
 
-		var self = this;
+    var global = document.createElement('div');
+    global.id = 'global';
+    global.onclick = function(e) {
+      if (e.toElement == this) {
+        self.close();
+      }
+    };
 
-		this.id = id;
+    var content = document.createElement('div');
+    content.id = 'container';
 
-		var wrapper = document.createElement("div");
-		wrapper.id = id;
-		wrapper.style.display = "table";
+    var close = document.createElement('a');
+    close.href = 'javascript:GGPopup.close();';
+    close.className = 'close';
+    close.innerHTML = 'Close';
 
-		var global = document.createElement("div");
-		global.id = "global";
-		global.onclick = function(e){
-			if(e.toElement == this) {
-				self.close();
-			}
-		};
+    global.appendChild(content);
+    global.appendChild(close);
+    wrapper.appendChild(global);
 
-		var content = document.createElement("div");
-		content.id = "container";
+    document.body.appendChild(wrapper);
 
-		var close = document.createElement("a");
-		close.href = "javascript:GGPopup.close();";
-		close.className = "close";
-		close.innerHTML = "Close";
+    return content;
+  },
 
-		global.appendChild(content);
-		global.appendChild(close);
-		wrapper.appendChild(global);
+  // Display the popup with the HTML in parameter
+  show: function(id, html) {
+    // Init
+    this.init();
 
-		document.body.appendChild(wrapper);
+    // Check if we want to blur background
+    if (this.blur) {
+      this.blurBackground();
+    }
 
-		return content;
-	},
+    // Insert content
+    var content = this.createDOM(id);
+    content.innerHTML += html;
 
-	// Display the popup with the HTML in parameter
-	show: function(id, html) {
+    // Block page scrolling
+    document.body.style.overflow = 'hidden';
+  },
 
-		// Init
-		this.init();
+  // Update the html content of the popup
+  update: function(html) {
+    var content = this.me().children[0].children[0];
+    content.innerHTML = html;
+  },
 
-		// Check if we want to blur background
-		if(this.blur) {
-			this.blurBackground();
-		}
+  // Close the popup
+  close: function() {
+    // Unblur background
+    if (this.blur) {
+      this.unblurBackground();
+    }
 
-		// Insert content
-		var content = this.createDOM(id);
-		content.innerHTML += html;
+    // Remove elements
+    this.blurElements = [];
 
-		// Block page scrolling
-		document.body.style.overflow = "hidden";
-	},
+    // Reset page scrolling
+    document.body.style.overflow = 'auto';
 
-	// Update the html content of the popup
-	update: function(html) {
-		var content = this.me().children[0].children[0];
-		content.innerHTML = html;
-	},
+    // Remove popup
+    document.body.removeChild(this.me());
+  },
 
-	// Close the popup
-	close: function(){
-		// Unblur background
-		if(this.blur) {
-			this.unblurBackground();
-		}
+  // Returns the popup element
+  me: function() {
+    return document.getElementById(this.id);
+  },
 
-		// Remove elements
-		this.blurElements = [];
+  // Set the elements to be blurred
+  setBlurred: function(els) {
+    for (var i = 0; i < els.length; i++) {
+      this.blurElements.push(els[i]);
+    }
+  },
 
-		// Reset page scrolling
-		document.body.style.overflow = "auto";
+  // Blur the background elements
+  blurBackground: function() {
+    for (var i = 0; i < this.blurElements.length; i++) {
+      var el = this.blurElements[i];
+      var classe = this.blurredClass;
+      if (el.className.length > 0) {
+        classe = el.className + ' ' + this.blurredClass;
+      }
+      el.className += classe;
+    }
+  },
 
-		// Remove popup
-		document.body.removeChild(this.me());
-	},
+  unblurBackground: function() {
+    for (var i = 0; i < this.blurElements.length; i++) {
+      var el = this.blurElements[i];
 
-	// Returns the popup element
-	me: function(){
-		return document.getElementById(this.id);
-	},
+      // Remove blurred class
+      var classe = el.className;
+      classe = classe.replace(this.blurredClass, '');
 
-	// Set the elements to be blurred
-	setBlurred: function(els){
-		for(var i = 0; i < els.length; i++) {
-			this.blurElements.push(els[i]);
-		}
-	},
-
-	// Blur the background elements
-	blurBackground: function(){
-		for(var i = 0; i < this.blurElements.length; i++) {
-			var el = this.blurElements[i];
-			var classe = this.blurredClass;
-			if(el.className.length > 0) {
-				classe = el.className+" "+this.blurredClass;
-			}
-			el.className += classe;
-		}
-	},
-
-	unblurBackground: function(){
-		for(var i = 0; i < this.blurElements.length; i++) {
-			var el = this.blurElements[i];
-
-			// Remove blurred class
-			var classe = el.className;
-			classe = classe.replace(this.blurredClass, '');
-
-			el.className = classe;
-		}
-	}
-	
+      el.className = classe;
+    }
+  }
 };

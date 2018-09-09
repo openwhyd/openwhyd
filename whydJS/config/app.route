@@ -29,6 +29,7 @@ GET		/support							-> controllers.static
 GET		/sponsor							-> controllers.static
 GET		/donate							  -> controllers.static
 GET		/community						-> controllers.static
+GET		/contribute						-> controllers.static
 
 GET		/paris							-> controllers.api.city
 GET		/paris/							-> controllers.api.city
@@ -53,6 +54,7 @@ GET		/img/{type}/{id}				-> controllers.uploadedFile
 GET		/btn							-> controllers.btn
 GET		/btn/{type}						-> controllers.btn
 
+GET		/config.json				-> controllers.public.config
 GET		/search							-> controllers.public.search
 POST	/search							-> controllers.public.search
 
@@ -82,6 +84,8 @@ POST	/onboarding						-> controllers.onboarding
 POST	/pick/{step}					-> controllers.onboarding
 GET		/pick/{step}					-> controllers.onboarding
 GET		/pick/{step}/					-> controllers.onboarding
+GET		/consent							-> controllers.consent
+POST	/consent							-> controllers.consent
 
 GET		/discover						-> controllers.discover
 POST	/discover						-> controllers.discover

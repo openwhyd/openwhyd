@@ -1,5 +1,6 @@
+.env
 .DS_Store
-env-vars-local.sh
+node_modules
 
 whydJS/nbproject/private/
 whydJS/upload_data/
@@ -16,8 +17,8 @@ whydJS/*.out
 whydJS/*.pid
 whydJS/*.err
 whydJS/appd.dmn
-
-whydJS/node_modules
-
-whydDB/db
-whydDB/dump
+whydJS/.port
+whydJS/env-vars-local.sh
+whydJS/env-vars-perso.sh
+/scripts/mongodb-scripts/db
+/scripts/mongodb-scripts/*.gz

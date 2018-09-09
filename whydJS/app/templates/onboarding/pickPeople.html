@@ -63,7 +63,6 @@ try {
 <h1>Looking for relevant music lovers...</h1>
 <div class="loading">Please wait...</div>
 
-<div class="whitePanel" id="whydFriends" style="display:none;"></div>
 <div class="whitePanel" id="whydTeam" style="display:none;">
 	<h2>To get you started, we have subscribed you automatically to a selection of top music lovers.</h2>
 	<p>Feel free to unsubscribe from anyone if you don't like their music.</p>
@@ -101,12 +100,7 @@ try {
 			$(".loading").hide();
 			$("#btnNext").show();
 			if (json && !json.error) {
-				if ((json.fbFriends || []).length) {
-					$("h1").text("We've found "+json.fbFriends.length+" of your friends. Hooray!");
-					$("#whydFriends").append(_renderUserList(json.fbFriends)).show();
-				}
-				else
-					$("h1").text("Top music lovers to follow");
+				$("h1").text("Top music lovers to follow");
 				for (var i in json.autoSubscribeUsers)
 					json.autoSubscribeUsers[i].subscribed = true;
 				$("#whydTeam").append(_renderUserList(json.autoSubscribeUsers)).show();

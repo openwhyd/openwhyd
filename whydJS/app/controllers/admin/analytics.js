@@ -3,59 +3,63 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require("../../models/mongodb");
-var userModel = require("../../models/user");
+var mongodb = require('../../models/mongodb');
+var userModel = require('../../models/user');
 //var followModel = require("../../models/follow");
-var mainTemplate = require("../../templates/mainTemplate");
+var mainTemplate = require('../../templates/mainTemplate');
 
-function renderTemplate (report)
-{
-	var params = { title: 'whyd analytics', css: [], js: [] };
-	
-	var out = [
-		'<h1>whyd analytics console</h1>',
-		'► <a href="/">home</a>'
-		].join('\n');
-		
-	out += "<table>";
-	
-	var p = 0;
-	var color = ["lightgray","white"];
-		
-	for (var i in report)
-		out += "<tr  style='background:"+ color[(p++) % 2] +"'><td>" + i + "</td><td>" + report[i] + "</td></tr>";
-	
-	out += "</table>";
-	
-	return mainTemplate.renderWhydFrame(out, params);
+function renderTemplate(report) {
+  var params = { title: 'whyd analytics', css: [], js: [] };
+
+  var out = ['<h1>whyd analytics console</h1>', '► <a href="/">home</a>'].join(
+    '\n'
+  );
+
+  out += '<table>';
+
+  var p = 0;
+  var color = ['lightgray', 'white'];
+
+  for (var i in report)
+    out +=
+      "<tr  style='background:" +
+      color[p++ % 2] +
+      "'><td>" +
+      i +
+      '</td><td>' +
+      report[i] +
+      '</td></tr>';
+
+  out += '</table>';
+
+  return mainTemplate.renderWhydFrame(out, params);
 }
 
-exports.controller = function(request, reqParams, response)
-{
-	request.logToConsole("analytics.controller", reqParams);
-	
-	if (!request.checkAdmin(response))
-		return;
-	
-	var users, userIndex = {};
-	
-	var t0 = new Date();
-	var report = { "Report date": t0 };
-	//t0 = t0.getTime();
-	
-	var populateUsers = function(callback) {
-		userModel.fetchAll(function(usersP) {
-			users = usersP;
-			for (var i in users) {
-				users[i].firstDate = users[i]._id.getTimestamp();
-				userIndex[""+users[i]._id] = users[i];
-			}
-			report["Number of users"] = users.length;
-			callback();
-		});
-	};
+exports.controller = function(request, reqParams, response) {
+  request.logToConsole('analytics.controller', reqParams);
 
-	/*	
+  if (!request.checkAdmin(response)) return;
+
+  var users,
+    userIndex = {};
+
+  var t0 = new Date();
+  var report = { 'Report date': t0 };
+  //t0 = t0.getTime();
+
+  var populateUsers = function(callback) {
+    userModel.fetchAll(function(usersP) {
+      users = usersP;
+      for (var i in users) {
+        users[i].firstDate = users[i]._id.getTimestamp();
+        userIndex['' + users[i]._id] = users[i];
+      }
+      report['Number of users'] = users.length;
+      callback();
+    });
+  };
+
+  /*	
 	var countRecomFollows = function (callback) {
 		mongodb.collections['follow'].count({recom:true}, function(err,count) {
 			report["Number of recommended topics followed"] = count;
@@ -101,7 +105,7 @@ exports.controller = function(request, reqParams, response)
 	var countFirstMonthFollows = countPeriodFollows(0, 30*24*60*60*1000, "on their first month");
 	*/
 
-	/*
+  /*
 	var posts = null;
 	
 	var fetchPosts = function (callback) {
@@ -161,84 +165,89 @@ exports.controller = function(request, reqParams, response)
 	var countMonthPosts = countPeriodPosts(30*24*60*60*1000, 0, "in the last 30 days");
 	*/
 
-	// recent users
+  // recent users
 
-	var recentUserIds = {};
+  var recentUserIds = {};
 
-	function findUsersRegisteredAfter(date) {
-		return function(cb) {
-			for (var i in users)
-				if (new Date(users[i].firstDate) >= date)
-					recentUserIds[users[i]._id] = users[i];
-			cb("Number of users who registered after " + date.toString(), Object.keys(recentUserIds).length);
-		};
-	}
+  function findUsersRegisteredAfter(date) {
+    return function(cb) {
+      for (var i in users)
+        if (new Date(users[i].firstDate) >= date)
+          recentUserIds[users[i]._id] = users[i];
+      cb(
+        'Number of users who registered after ' + date.toString(),
+        Object.keys(recentUserIds).length
+      );
+    };
+  }
 
-	// "invite" analytics
+  // "invite" analytics
 
-	var pendingInvites = null;
-	
-	var fetchPendingInvites = function (callback) {
-		console.log("fetching invite collection...");		
-		mongodb.collections['invite'].find({}, {limit:999999}, function(err, cursor) {
-			console.log("done fetching invite collection.");
-			cursor.toArray( function(err, items) {
-				callback("Number of pending invites", (pendingInvites = items).length);
-			});
-		});
-	}
+  var pendingInvites = null;
 
-	function countRecentInvites(cb) {
-		var nb = 0;
-		for (var i in users)
-			if (users[i].lastFm)
-				++nb;
-		cb("Number of lastfm users", nb);
-	}
+  var fetchPendingInvites = function(callback) {
+    console.log('fetching invite collection...');
+    mongodb.collections['invite'].find({}, { limit: 999999 }, function(
+      err,
+      cursor
+    ) {
+      console.log('done fetching invite collection.');
+      cursor.toArray(function(err, items) {
+        callback('Number of pending invites', (pendingInvites = items).length);
+      });
+    });
+  };
 
-	function countLastfmUsers(cb) {
-		var nbAccepted = 0, nbPending = 0;
-		for (var uid in recentUserIds)
-			if (recentUserIds[uid].iBy && recentUserIds[recentUserIds[uid].iBy])
-				++nbAccepted;
-		for (var i in pendingInvites)
-			if (pendingInvites[i].iBy &&  recentUserIds[pendingInvites[i].iBy])
-				++nbPending;
-		report["Number of recent pending invites"] = nbPending;
-		report["Number of recent accepted invites"] = nbAccepted;
-		cb(/*"Number of recent invites (accepted + pending)", nbAccepted + nbPending*/);
-	}
+  function countRecentInvites(cb) {
+    var nb = 0;
+    for (var i in users) if (users[i].lastFm) ++nb;
+    cb('Number of lastfm users', nb);
+  }
 
-	// sequence of asynchronous calls to make
-	
-	var seq = [
-		populateUsers,
-		countLastfmUsers,
-		/*
+  function countLastfmUsers(cb) {
+    var nbAccepted = 0,
+      nbPending = 0;
+    for (var uid in recentUserIds)
+      if (recentUserIds[uid].iBy && recentUserIds[recentUserIds[uid].iBy])
+        ++nbAccepted;
+    for (var i in pendingInvites)
+      if (pendingInvites[i].iBy && recentUserIds[pendingInvites[i].iBy])
+        ++nbPending;
+    report['Number of recent pending invites'] = nbPending;
+    report['Number of recent accepted invites'] = nbAccepted;
+    cb(/*"Number of recent invites (accepted + pending)", nbAccepted + nbPending*/);
+  }
+
+  // sequence of asynchronous calls to make
+
+  var seq = [
+    populateUsers,
+    countLastfmUsers,
+    /*
 		countRecomFollows,
 		fetchFollows,
 		countFirstDayFollows,
 		countFirstWeekFollows,
 		countFirstMonthFollows,
 		*/
-		/*
+    /*
 		fetchPosts,
 		countFirstDayPosts,
 		countTodayPosts,
 		countWeekPosts,
 		countMonthPosts,
 		*/
-		fetchPendingInvites,
-		findUsersRegisteredAfter(new Date("December 1, 2012 00:01")),
-		countRecentInvites
-	];
-	
-	(function runNext(reportLabel, reportValue) {
-		if (reportLabel && reportValue != null)
-			report[reportLabel] = reportValue;
-		if (seq.length > 0)
-			seq.shift()(runNext);
-		else
-			response.render(renderTemplate(report), null, {'content-type': 'text/html'});
-	})();
-}
+    fetchPendingInvites,
+    findUsersRegisteredAfter(new Date('December 1, 2012 00:01')),
+    countRecentInvites
+  ];
+
+  (function runNext(reportLabel, reportValue) {
+    if (reportLabel && reportValue != null) report[reportLabel] = reportValue;
+    if (seq.length > 0) seq.shift()(runNext);
+    else
+      response.render(renderTemplate(report), null, {
+        'content-type': 'text/html'
+      });
+  })();
+};
