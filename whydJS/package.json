@@ -40,13 +40,10 @@
     "npm": "5.6.0"
   },
   "directories": {
-    "app": "./app",
+    "src": "./app",
     "config": "./config",
-    "public": "./public",
-    "tests": "./test",
-    "get": "./node_modules/get",
-    "hypem": "./node_modules/hypem",
-    "my": "./node_modules/my"
+    "doc": "../docs",
+    "test": "./test"
   },
   "dependencies": {
     "algoliasearch": "^3.23.0",
