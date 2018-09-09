@@ -9,6 +9,9 @@ dev: fetch-deps ## Start a local dev server.
 restart: ## Restart the production server without downtime.
 	@cd scripts && ./restart.sh
 
+restart-to-latest: ## Restart the production server to its latest version, without downtime.
+	@cd whydJS && git checkout -- package-lock.json && git pull && npm i && ../scripts/restart.sh
+
 lint: fetch-deps ## Run ESLint
 	@cd whydJS && npm run lint 
 
