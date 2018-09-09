@@ -7,58 +7,60 @@ MAX_RETRY=50
 ROOT_DIR="`pwd`/.."
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
+NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
 
-echo "Deployment started..."
+echo "👋 Deployment starting on port $NEW_PORT..."
 
-# Read port file or set port to PORT_A if no port file found.
-port=`cat $ROOT_DIR/.port` || port=$PORT_A
+if [ $NEW_PORT -eq $PORT_A ]; then
+    PREV_PORT=$PORT_B
+else
+    PREV_PORT=$PORT_A
+fi
 
-# Start new server
-echo "Starting OpenWhyd with WHYD_PORT=$port."
-cd $ROOT_DIR/whydJS && source env-vars-local.sh && WHYD_PORT=$port npm start &
+# Start Openwhyd's whydJS server
+NEW_UID="whydjs_$NEW_PORT"
+PREV_UID="whydjs_$PREV_PORT"
+./start.sh $NEW_PORT # will start app.js using forever
 
-# Wait for it to be fully running
-i=0
+echo "⏲ Waiting for Openwhyd..."
+retries=0
 while :
 do
-    echo $i
     sleep 1
-
-    if [ $i -ge $MAX_RETRY ]; then
-        echo "App not responding."
-        $ROOT_DIR/whydJS/node_modules/.bin/forever stop 1
-        echo "Deployment failed."
-        exit
-    fi
-
-    res="`curl -sL -w "%{http_code}" "localhost:$port" -o /dev/null`"
+    res="`curl -sL -w "%{http_code}" "localhost:$NEW_PORT" -o /dev/null`"
     if [ $res -eq 200 ]; then
-        echo "App up and running."
+        echo "✅ Openwhyd ($(grep version $ROOT_DIR/whydJS/package.json)) now listening on port $NEW_PORT."
         break
     fi
 
-    i=$((i+1))
+    retries=$((retries+1))
+    echo "($retries)"
+
+    if [ $retries -ge $MAX_RETRY ]; then
+        echo "⚠️ App is not responding. Killing it..."
+        $ROOT_DIR/whydJS/node_modules/.bin/forever stop 0
+        # [TODO] Something like this would be better:
+        # cd $ROOT_DIR/whydJS && npm stop -- $NEW_UID
+        echo "❌ Deployment failed."
+        exit 1
+    fi
 done
 
-# Re-link NGINX configuration (assuming /etc/nginx/conf.d/whyd.conf links to $ROOT_DIR/nginx.conf)
+echo "🔧 Applying nginx configuration..."
 sudo unlink $NGINX_ENBLD/openwhyd.org
-sudo ln -s $NGINX_AVAIL/openwhyd.org_$port $NGINX_ENBLD/openwhyd.org
-
-# Restart NGINX
+sudo ln -s $NGINX_AVAIL/openwhyd.org_$NEW_PORT $NGINX_ENBLD/openwhyd.org
 sudo service nginx restart
 
-# Finally, Save new port.
-if [ $port -eq $PORT_A ]; then
-    echo $PORT_B > $ROOT_DIR/.port
-else
-    echo $PORT_A > $ROOT_DIR/.port
-fi
-
+echo "🌇 Stopping previous instance of Openwhyd..."
 # Stop old server. Index 0 is always the oldest process.
 $ROOT_DIR/whydJS/node_modules/.bin/forever stop 0
+
 # TODO: only do this if there was an oldest process,
 # otherwise it will kill the server it just started!
+# Something like this would be better:
+# cd $ROOT_DIR/whydJS && npm stop -- $PREV_UID
 
-echo "NGINX restarted. Current app listening on port $port."
-echo "Deployment ended."
+echo $PREV_PORT > $ROOT_DIR/.port
+echo "🗳 Saved next port to $ROOT_DIR/.port."
 
+echo "✨ Deployment ended."
