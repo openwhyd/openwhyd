@@ -8,23 +8,13 @@ node_js:
 
 services: mongodb
 
-# required for node v4 native module compilation
-# https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements
 env:
   global:
-    - CXX=g++-4.8
     - DISPLAY=:99.0
-    - CHROME_BIN=/usr/bin/google-chrome
+    - CC_TEST_REPORTER_ID=5f697b5b9d0e7716bdd431448ec1daa9e1184a134c0bdc36375d88263428aa61
 
 addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-  # code_climate:
-  #   repo_token:
-  #     secure: "FIXME"
+  chrome: stable
 
 # change directory before `npm install`
 before_install:
@@ -32,16 +22,20 @@ before_install:
   - source env-vars-testing.sh
   
 before_script:
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
-  - sudo apt-get update
-  - sudo apt-get install -y libappindicator1 fonts-liberation
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
+  - npm i nyc --global
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
   - npm run test-reset # will initialize the openwhyd_test db
   - npm run run --mongoDbDatabase openwhyd_test &
-  - sleep 5 # give whydJS some time to start
+  - ./wait-for-http-server.sh 8080 # give whydJS some time to start
 
-## upload test coverage to codeclimate
-# after_script:
-#   - codeclimate-test-reporter < lcov.info
+script:
+  - nyc --reporter=lcov npm test
+
+# upload test coverage to codeclimate
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+notifications:
+  email: false

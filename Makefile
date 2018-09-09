@@ -6,6 +6,9 @@ fetch-deps: ## Fetch JS dependencies.
 dev: fetch-deps ## Start a local dev server.
 	@cd whydJS && npm run run-dev
 
+restart: ## Restart the production server without downtime.
+	@cd scripts && ./restart.sh
+
 lint: fetch-deps ## Run ESLint
 	@cd whydJS && npm run lint 
 

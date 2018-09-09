@@ -68,7 +68,6 @@ npm run test-docker
 * `WHYD_ADMIN_NAME` (Full-text name of the user that can access to admin endpoints)
 * `WHYD_ADMIN_EMAIL` (mandatory. Email address of the user that can access to admin endpoints)
 * `WHYD_CONTACT_EMAIL` (mandatory. email for users to contact the site's team)
-* `WHYD_CRASH_EMAIL` (mandatory when running with forever. email address of the site's administrator)
 * `WHYD_URL_PREFIX` (default: `http://localhost:8080`)
 * `WHYD_PORT` (default: `8080`)
 * `WHYD_DEV` (default: `false`)

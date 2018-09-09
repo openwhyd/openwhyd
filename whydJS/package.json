@@ -15,8 +15,7 @@
     "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
     "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
     "stop": "forever stop app.js",
-    "start": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
-    "start-preprod": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 --emailAdminsOnly start app.js $@",
+    "start": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
     "restart": "npm run stop; npm run start $@;",
     "run": "node app.js --color --fakeEmail --digestInterval -1 $@",
     "run-for-tests": ". ./env-vars-testing.sh && npm run run",
@@ -41,13 +40,10 @@
     "npm": "5.6.0"
   },
   "directories": {
-    "app": "./app",
+    "src": "./app",
     "config": "./config",
-    "public": "./public",
-    "tests": "./test",
-    "get": "./node_modules/get",
-    "hypem": "./node_modules/hypem",
-    "my": "./node_modules/my"
+    "doc": "../docs",
+    "test": "./test"
   },
   "dependencies": {
     "algoliasearch": "^3.23.0",
@@ -65,8 +61,7 @@
     "object-sizeof": "^0.1.2",
     "playemjs": "0.2.0",
     "q-set": "^2.0.8",
-    "request": "2.88.0",
-    "rollbar": "^2.3.1"
+    "request": "2.88.0"
   },
   "devDependencies": {
     "all-contributors-cli": "5.4.0",
