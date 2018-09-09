@@ -15,7 +15,6 @@
     "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
     "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
     "stop": "forever stop app.js",
-    "start-preprod": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --eventFile app.events.js --minUptime 1000 --spinSleepTime 500 --number 100000 --emailAdminsOnly start app.js $@",
     "start": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
     "restart": "npm run stop; npm run start $@;",
     "run": "node app.js --color --fakeEmail --digestInterval -1 $@",
