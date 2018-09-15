@@ -26,7 +26,7 @@ ssh $REMOTE "tar -czf /tmp/usage-logs.tar.gz $JSDIR/*.json.log"
 scp -r $USERNAME@$REMOTE:/tmp/usage-logs.tar.gz .
 
 echo "gzip and download remote uploads..."
-ssh $REMOTE "tar -czf /tmp/uploads-backup.tar.gz $JSDIR/uAvatarImg $JSDIR/uCoverImg $JSDIR/uPlaylistImg"
+ssh $REMOTE "tar -czf /tmp/uploads-backup.tar.gz $JSDIR/uploads"
 scp -r $USERNAME@$REMOTE:/tmp/uploads-backup.tar.gz .
 
 echo "done. :-)"

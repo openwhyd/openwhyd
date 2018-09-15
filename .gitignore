@@ -4,10 +4,7 @@
 node_modules
 
 /nbproject/private/
-/upload_data/
-/uAvatarImg/
-/uCoverImg/
-/uPlaylistImg/
+/uploads/
 /config/apns/aps_dev.cert.pem
 /config/apns/aps_dev.key.pem
 /config/apns/aps_prod.cert.pem
