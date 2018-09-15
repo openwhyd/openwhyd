@@ -65,6 +65,8 @@
     "request": "2.88.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^3.0.0",
+    "@semantic-release/git": "^7.0.4",
     "all-contributors-cli": "5.4.0",
     "eslint": "2.9.0",
     "eslint-config-airbnb": "^9.0.1",
