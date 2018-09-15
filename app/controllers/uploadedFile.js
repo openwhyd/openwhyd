@@ -6,22 +6,19 @@ var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
 var userModel = require('../models/user.js');
 
+var uploadRoot = config.paths.uploadRoot; // "./uploads"
+
 exports.config = {
-  whydPath: config.paths.whydPath, // "../"
   uploadSubDir: '/' + config.paths.uploadDirName, // "/upload_data"
   uAvatarImgDir: '/' + config.paths.uAvatarImgDirName, // "/uAvatarImg"
   uCoverImgDir: '/' + config.paths.uCoverImgDirName,
   uPlaylistDir: '/' + config.paths.uPlaylistDirName
 };
 
-exports.config.uploadPath =
-  exports.config.whydPath + exports.config.uploadSubDir;
-exports.config.uAvatarImgPath =
-  exports.config.whydPath + exports.config.uAvatarImgDir;
-exports.config.uCoverImgPath =
-  exports.config.whydPath + exports.config.uCoverImgDir;
-exports.config.uPlaylistPath =
-  exports.config.whydPath + exports.config.uPlaylistDir;
+exports.config.uploadPath = uploadRoot + exports.config.uploadSubDir;
+exports.config.uAvatarImgPath = uploadRoot + exports.config.uAvatarImgDir;
+exports.config.uCoverImgPath = uploadRoot + exports.config.uCoverImgDir;
+exports.config.uPlaylistPath = uploadRoot + exports.config.uPlaylistDir;
 
 // create upload dirs
 var dirMode = 0755;
@@ -56,16 +53,45 @@ exports.splitFilePath = function(filepath) {
   };
 };
 
+// transforms a fs filepath into a web/url path
 exports.cleanFilePath = function(filepath) {
-  return filepath.replace(exports.config.whydPath, '');
+  console.log('[cleanFilePath] from:', filepath);
+  var res = filepath.replace(uploadRoot, '');
+  /*
+    .replace(config.paths.uploadDirName, 'upload_data')
+    .replace(config.paths.uAvatarImgDirName, 'uAvatarImg')
+    .replace(config.paths.uCoverImgDirName, 'uCoverImg')
+    .replace(config.paths.uPlaylistDirName, 'uPlaylistImg');
+    */
+  console.log('[cleanFilePath] to:', res);
+  return res;
 };
 
+// transforms a web/url path into a fs filepath
 exports.actualFilePath = function(filepath) {
-  if (!filepath || filepath.indexOf(exports.config.whydPath) == 0)
+  if (
+    !filepath ||
+    filepath.indexOf(uploadRoot) ==
+      0 /*||
+    filepath.indexOf(config.paths.uploadDirName) == 0 ||
+    filepath.indexOf(config.paths.uAvatarImgDirName) == 0 ||
+    filepath.indexOf(config.paths.uCoverImgDirName) == 0 ||
+    filepath.indexOf(config.paths.uPlaylistDirName) == 0*/
+  ) {
     return filepath;
-  else
-    return (filepath =
-      exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath);
+  } else {
+    console.log('[actualFilePath] from:', filepath);
+    /*
+    filepath = filepath
+      .replace('upload_data', config.paths.uploadDirName)
+      .replace('uAvatarImg', config.paths.uAvatarImgDirName)
+      .replace('uCoverImg', config.paths.uCoverImgDirName)
+      .replace('uPlaylistImg', config.paths.uPlaylistDirName);
+      */
+    filepath = uploadRoot + (filepath[0] != '/' ? '/' : '') + filepath;
+    console.log('[actualFilePath] to:', filepath);
+    return filepath;
+  }
 };
 
 exports.deleteFile = function(filepath) {
@@ -126,18 +152,18 @@ exports.moveTo = function(filename, toPath, callback) {
 
 exports.controller = function(request, reqParams, response) {
   function renderNoImage() {
-    response.renderFile(
-      exports.config.whydPath + '/public/images/no_image.png'
-    );
+    response.renderFile(config.paths.whydPath + '/public/images/no_image.png');
   }
 
   function renderFile(path, defaultImg) {
-    //console.log("uploadedFile Path:", path);
-    response.renderFile('' + path, null, null, function(error) {
-      //console.log("uploadedFile error: ", error, exports.config.whydPath + "/public" + defaultImg);
+    console.log('uploadedFile Path:', path);
+    var filepath = exports.actualFilePath('' + path);
+    console.log('actualFilePath Path:', filepath);
+    response.renderFile(filepath, null, null, function(error) {
+      //console.log("uploadedFile error: ", error, config.paths.whydPath + "/public" + defaultImg);
       if (defaultImg)
         response.renderFile(
-          exports.config.whydPath + '/public' + defaultImg,
+          config.paths.whydPath + '/public' + defaultImg,
           null,
           null,
           renderNoImage

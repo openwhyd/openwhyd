@@ -121,10 +121,11 @@ var params = (process.appParams = {
 
   paths: {
     whydPath: './',
-    uploadDirName: 'uploads/upload_data',
-    uAvatarImgDirName: 'uploads/uAvatarImg',
-    uCoverImgDirName: 'uploads/uCoverImg',
-    uPlaylistDirName: 'uploads/uPlaylistImg'
+    uploadRoot: './uploads',
+    uploadDirName: 'upload_data',
+    uAvatarImgDirName: 'uAvatarImg',
+    uCoverImgDirName: 'uCoverImg',
+    uPlaylistDirName: 'uPlaylistImg'
   }
 });
 
