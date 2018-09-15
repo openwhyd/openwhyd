@@ -1,4 +1,5 @@
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 //var util = require('util');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
@@ -32,10 +33,10 @@ var dirsToCreate = [
 ];
 for (var i in dirsToCreate)
   try {
-    fs.mkdirSync(dirsToCreate[i], dirMode);
+    mkdirp.sync(dirsToCreate[i]);
     console.log('Created directory:', dirsToCreate[i]);
   } catch (e) {
-    //console.log("Did not create directory:", dirsToCreate[i]);
+    console.error('Did not create directory:', dirsToCreate[i], 'cause:', e);
   }
 
 // separate file prefix (path & name) and extension from file.path
