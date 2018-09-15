@@ -32,6 +32,7 @@ before_script:
 
 script:
   - nyc --reporter=lcov npm test
+  - npm run semantic-release
 
 # upload test coverage to codeclimate
 after_script:
