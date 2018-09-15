@@ -19,9 +19,9 @@ else
     PREV_PORT=$PORT_A
 fi
 
-# Start Openwhyd's whydJS server
-NEW_UID="whydjs_$NEW_PORT"
-PREV_UID="whydjs_$PREV_PORT"
+# Start Openwhyd's server
+NEW_UID="openwhyd_$NEW_PORT"
+PREV_UID="openwhyd_$PREV_PORT"
 $ROOT_DIR/scripts/start.sh $NEW_PORT # will start app.js using forever
 
 echo "⏲  Waiting for Openwhyd..."
@@ -31,7 +31,7 @@ do
     sleep 1
     res="`curl -sL -w "%{http_code}" "localhost:$NEW_PORT" -o /dev/null`"
     if [ $res -eq 200 ]; then
-        echo "✅  Openwhyd ($(grep version $ROOT_DIR/whydJS/package.json)) now listening on port $NEW_PORT."
+        echo "✅  Openwhyd ($(grep version $ROOT_DIR/package.json)) now listening on port $NEW_PORT."
         break
     fi
 
@@ -40,9 +40,9 @@ do
 
     if [ $retries -ge $MAX_RETRY ]; then
         echo "⚠️  App is not responding. Killing it..."
-        $ROOT_DIR/whydJS/node_modules/.bin/forever stop 0
+        $ROOT_DIR/node_modules/.bin/forever stop 0
         # [TODO] Something like this would be better:
-        # cd $ROOT_DIR/whydJS && npm stop -- $NEW_UID
+        # cd $ROOT_DIR && npm stop -- $NEW_UID
         echo "❌  Deployment failed."
         exit 1
     fi
@@ -55,12 +55,12 @@ sudo service nginx restart
 
 echo "🌇  Stopping previous instance of Openwhyd..."
 # Stop old server. Index 0 is always the oldest process.
-$ROOT_DIR/whydJS/node_modules/.bin/forever stop 0
+$ROOT_DIR/node_modules/.bin/forever stop 0
 
 # TODO: only do this if there was an oldest process,
 # otherwise it will kill the server it just started!
 # Something like this would be better:
-# cd $ROOT_DIR/whydJS && npm stop -- $PREV_UID
+# cd $ROOT_DIR && npm stop -- $PREV_UID
 
 echo $PREV_PORT > $ROOT_DIR/.port
 echo "🗳  Saved next port to $ROOT_DIR/.port."

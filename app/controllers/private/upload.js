@@ -10,7 +10,7 @@ var uploadCtr = require('../uploadedFile.js');
 
 // hosting settings
 var settings = {
-  uploadDir: uploadCtr.config.uploadPath, //'../whydJS/upload_data',
+  uploadDir: uploadCtr.config.uploadPath, //'../upload_data',
   keepExtensions: true
 };
 

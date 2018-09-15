@@ -1,5 +1,5 @@
 // various tools by Adrien Joly
-// tests: whydJS/tests/tess-snips.js
+// tests: tests/tess-snips.js
 
 var fs = require('fs');
 var urlModule = require('url');

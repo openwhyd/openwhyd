@@ -62,7 +62,7 @@ function reduce(day, vals) {
 
 var opts = {
   finalize: function(key, reduced) {
-    // list of player ids from https://github.com/openwhyd/openwhyd/blob/d27fb71220cbd29e9e418bd767426e3b4a2187f3/whydJS/public/js/whydPlayer.js#L559
+    // list of player ids from https://github.com/openwhyd/openwhyd/blob/d27fb71220cbd29e9e418bd767426e3b4a2187f3/public/js/whydPlayer.js#L559
     Object.keys(reduced)
       .filter(key => key !== 'total')
       .forEach(error => {

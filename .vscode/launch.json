@@ -7,12 +7,12 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Run whydJS server",
+      "name": "Run Openwhyd server",
       "console": "internalConsole",
       "restart": true,
-      "cwd": "${workspaceRoot}/whydJS",
-      "envFile": "${workspaceRoot}/whydJS/env-vars-testing.conf",
-      "program": "${workspaceRoot}/whydJS/app.js",
+      "cwd": "${workspaceRoot}",
+      "envFile": "${workspaceRoot}/env-vars-testing.conf",
+      "program": "${workspaceRoot}/app.js",
       "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test" ]
       // Notice: make sure that the mongodb server is listening on port 27017
     },
@@ -23,9 +23,9 @@
       "console": "internalConsole",
       "restart": true,
       "preLaunchTask": "run-all-tests",
-      "cwd": "${workspaceRoot}/whydJS",
-      "envFile": "${workspaceRoot}/whydJS/env-vars-testing.conf",
-      "program": "${workspaceRoot}/whydJS/app.js",
+      "cwd": "${workspaceRoot}",
+      "envFile": "${workspaceRoot}/env-vars-testing.conf",
+      "program": "${workspaceRoot}/app.js",
       "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test" ]
       // Notice: make sure that the mongodb server is listening on port 27017
     },
@@ -36,9 +36,9 @@
       "console": "internalConsole",
       "restart": true,
       "preLaunchTask": "run-api-tests",
-      "cwd": "${workspaceRoot}/whydJS",
-      "envFile": "${workspaceRoot}/whydJS/env-vars-testing.conf",
-      "program": "${workspaceRoot}/whydJS/app.js",
+      "cwd": "${workspaceRoot}",
+      "envFile": "${workspaceRoot}/env-vars-testing.conf",
+      "program": "${workspaceRoot}/app.js",
       "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test" ]
       // Notice: make sure that the mongodb server is listening on port 27017
     },

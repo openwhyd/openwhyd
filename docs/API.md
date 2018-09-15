@@ -842,8 +842,8 @@ Uploading a file is necessary before changing any image associated (directly or 
 
 Example of use:
 
-*   [](https://github.com/whyd/whyd/blob/master/whydJS/public/js/dndUpload.js)https://github.com/whyd/whyd/blob/master/whydJS/public/js/dndUpload.js
-*   [](https://github.com/whyd/whyd/blob/master/whydJS/public/js/WhydImgUpload.js)https://github.com/whyd/whyd/blob/master/whydJS/public/js/WhydImgUpload.js
+*   [](https://github.com/whyd/whyd/blob/master/public/js/dndUpload.js)https://github.com/whyd/whyd/blob/master/public/js/dndUpload.js
+*   [](https://github.com/whyd/whyd/blob/master/public/js/WhydImgUpload.js)https://github.com/whyd/whyd/blob/master/public/js/WhydImgUpload.js
 
 Parameters:
 

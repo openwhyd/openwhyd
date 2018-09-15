@@ -11,10 +11,10 @@ request(`${URL_PREFIX}/images/blank_user.gif`, function(error, response, body) {
   defaultAvatarLen = body.length;
 });
 
-require('../acceptance-cmds.js'); // also checks that openwhyd/whydjs server is tested against the test database
-// TODO: make sure that DB was reset before starting the whydJS app server
+require('../acceptance-cmds.js'); // also checks that openwhyd's server is tested against the test database
+// TODO: make sure that DB was reset before starting Openwhyd's app server
 
-// ... AND that the user cache was reset as well. (e.g. by restarting whydJS)
+// ... AND that the user cache was reset as well. (e.g. by restarting Openwhyd's server)
 
 describe('upload user profile images', function() {
   it(`user login`, webUI.loginAs(ADMIN_USER));
@@ -87,7 +87,7 @@ describe('upload user profile images', function() {
     }, path);
     * /
     // test in browser:
-    // var path = '/Users/adrienjoly/dev/openwhyd/openwhyd/whydJS/test/specs/upload-resources/sample-avatar.jpg';
+    // var path = '/Users/adrienjoly/dev/openwhyd/openwhyd/test/specs/upload-resources/sample-avatar.jpg';
     // $('input[type="file"]').val(path); // does not work, for security reasons
     // $('#avatarDrop')[0].ondrop({ preventDefault: function(){}, dataTransfer: { files: [ path ] } });
   });

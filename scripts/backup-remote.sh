@@ -1,5 +1,5 @@
 if [ "$#" -ne 3 ]; then
-  echo "Usage: $0 <SSH_REMOTE> <SSH_USERNAME> <REMOTE_WHYDJS_DIR>" >&2
+  echo "Usage: $0 <SSH_REMOTE> <SSH_USERNAME> <REMOTE_OPENWHYD_DIR>" >&2
   exit 1
 fi
 

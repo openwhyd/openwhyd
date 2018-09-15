@@ -1,22 +1,22 @@
 .DEFAULT_GOAL := help
 
 fetch-deps: ## Fetch JS dependencies.
-	@cd whydJS && npm install
+	@npm install
 
 dev: fetch-deps ## Start a local dev server.
-	@cd whydJS && npm run run-dev
+	@npm run run-dev
 
 restart: ## Restart the production server without downtime.
 	@cd scripts && ./restart.sh
 
 restart-to-latest: ## Restart the production server to its latest version, without downtime.
-	@cd whydJS && git checkout -- package-lock.json && git pull && npm i && ../scripts/restart.sh
+	@git checkout -- package-lock.json && git pull && npm i && ./scripts/restart.sh
 
 lint: fetch-deps ## Run ESLint
-	@cd whydJS && npm run lint 
+	@npm run lint 
 
 test: fetch-deps lint ## Run the tests.
-	@cd whydJS && npm test
+	@npm test
 
 help: ## This help.
 	@echo 'Available targets:'
