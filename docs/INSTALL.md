@@ -2,7 +2,7 @@
 
 ### Setup (simple)
 
-Docker makes it easy and safe to install and start the two servers required for Openwhyd: the MongoDB database server, and the *whydJS* web/application server. All you need is access to the shell (a.k.a. *terminal*), and to have Docker and Git installed on your machine.
+Docker makes it easy and safe to install and start the two servers required for Openwhyd: the MongoDB database server, and the web/application server (formerly called *whydJS*). All you need is access to the shell (a.k.a. *terminal*), and to have Docker and Git installed on your machine.
 
 1. Install [Docker Client](https://www.docker.com/community-edition) and start it
 2. [Install Git](https://www.atlassian.com/git/tutorials/install-git) if you don't have it already
@@ -25,9 +25,9 @@ Whenever you want to know what Docker processes are currently running: run `dock
 * Make sure that `make` and `g++` are installed (required for building npm binaries, *I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)*)
 * Make sure that a MongoDB server is running
 * Make sure that the necessary environment variables are defined (see below)
-* Make sure that the database is initialized (by running `mongo openwhyd_data whydJS/config/initdb.js` and `mongo openwhyd_data whydJS/config/initdb_team.js`)
+* Make sure that the database is initialized (by running `mongo openwhyd_data config/initdb.js` and `mongo openwhyd_data config/initdb_team.js`)
 * Make sure that dependencies are installed (`npm install`)
-* If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/whydJS/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
+* If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 
 ### Usage
 
@@ -43,10 +43,10 @@ Run unit tests only:
 npm run test-unit
 ```
 
-Run all tests, including acceptance tests (webdriver.io-based), from the `whydJS` folder:
+Run all tests, including acceptance tests (webdriver.io-based):
 
 ```bash
-# in a terminal session, start the "whydJS" application server
+# in a terminal session, start Openwhyd's application server
 npm run run-for-tests
 # in another terminal session, run the tests
 npm test

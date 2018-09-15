@@ -18,7 +18,6 @@ addons:
 
 # change directory before `npm install`
 before_install:
-  - cd whydJS
   - source env-vars-testing.sh
   
 before_script:
@@ -28,7 +27,7 @@ before_script:
   - ./cc-test-reporter before-build
   - npm run test-reset # will initialize the openwhyd_test db
   - npm run run --mongoDbDatabase openwhyd_test &
-  - ./wait-for-http-server.sh 8080 # give whydJS some time to start
+  - ./wait-for-http-server.sh 8080 # give openwhyd's server some time to start
 
 script:
   - nyc --reporter=lcov npm test

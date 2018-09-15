@@ -187,7 +187,7 @@ exports.config = {
     var { URL_PREFIX } = require('./test/fixtures.js');
     const EXPECTED_DB_NAME = 'openwhyd_test';
     console.warn(
-      `👂 checking that openwhyd/whydjs server is tested against the test database...`
+      `👂 checking that openwhyd's server is tested against the test database...`
     );
     return new Promise((resolve, reject) => {
       request(`${URL_PREFIX}/config.json`, { json: true }, (err, res, body) => {

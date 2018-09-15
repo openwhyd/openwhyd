@@ -4,8 +4,8 @@ const webUI = require('../web-ui.js');
 
 const WAIT_DURATION = 10000;
 
-require('../acceptance-cmds.js'); // also checks that openwhyd/whydjs server is tested against the test database
-// TODO: make sure that DB was reset before starting the whydJS app server
+require('../acceptance-cmds.js'); // also checks that openwhyd's server is tested against the test database
+// TODO: make sure that DB was reset before starting Openwhyd's app server
 
 // reference scenario: https://www.youtube.com/watch?v=aZT8VlTV1YY
 

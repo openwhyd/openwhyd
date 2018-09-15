@@ -1,5 +1,10 @@
-whydJS/node_modules
-whydJS/*.log
-whydJS/*.out
-whydJS/*.pid
-whydJS/*.err
+/node_modules
+/*.log
+/*.out
+/*.pid
+/*.err
+/errorShots
+/uAvatarImg
+/uCoverImg
+/uPlaylistImg
+/upload_data

@@ -40,7 +40,7 @@ function conciseTrace() {
   return new Error().stack
     .split('\n')
     .filter(function(line) {
-      return /\/whydJS\/app\//.test(line);
+      return /\/app\//.test(line);
     })
     .join('\n');
 }
@@ -120,7 +120,7 @@ var params = (process.appParams = {
   nbTracksPerPlaylistEmbed: 100,
 
   paths: {
-    whydPath: '../whydJS',
+    whydPath: './',
     uploadDirName: 'upload_data',
     uAvatarImgDirName: 'uAvatarImg',
     uCoverImgDirName: 'uCoverImg',

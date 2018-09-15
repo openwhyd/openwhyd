@@ -2,7 +2,7 @@
   "projectName": "openwhyd",
   "projectOwner": "openwhyd",
   "files": [
-    "../README.md"
+    "README.md"
   ],
   "imageSize": 98,
   "commit": false,

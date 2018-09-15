@@ -8,20 +8,20 @@ engines:
     enabled: true
     channel: "eslint-2"
     config:
-      config: whydJS/.eslintrc
+      config: ./.eslintrc
 
 ratings:
   paths:
-    - "whydJS/app/**.js"
+    - "./app/**.js"
 
 exclude_patterns:
-  - "whydJS/config/"
-  - "whydJS/public/js/jquery*.js"
-  - "whydJS/public/js/swfobject.js"
-  - "whydJS/public/js/soundmanager2.js"
-  - "whydJS/public/js/*-all.js"
-  - "whydJS/public/js/*-min.js"
-  - "whydJS/public/js/*.min.js"
+  - "./config/"
+  - "./public/js/jquery*.js"
+  - "./public/js/swfobject.js"
+  - "./public/js/soundmanager2.js"
+  - "./public/js/*-all.js"
+  - "./public/js/*-min.js"
+  - "./public/js/*.min.js"
   - "features/"
   - "**/node_modules/"
   - "**/unused/"

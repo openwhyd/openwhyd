@@ -6,7 +6,7 @@ var postModel = require('../models/post.js');
 var userModel = require('../models/user.js');
 
 exports.config = {
-  whydPath: config.paths.whydPath, // "../whydJS"
+  whydPath: config.paths.whydPath, // "../"
   uploadSubDir: '/' + config.paths.uploadDirName, // "/upload_data"
   uAvatarImgDir: '/' + config.paths.uAvatarImgDirName, // "/uAvatarImg"
   uCoverImgDir: '/' + config.paths.uCoverImgDirName,

@@ -1,4 +1,4 @@
-const snip = require('../../../../whydJS/app/snip.js');
+const snip = require('../../../../app/snip.js');
 
 const emit = (key, value) => ({ key, value });
 

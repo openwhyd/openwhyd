@@ -13,7 +13,7 @@
         "focus": true,
         "panel": "new"
       },
-      "command": "cd whydJS; source env-vars-testing.sh; npm run test-reset; npm run run --mongoDbDatabase openwhyd_test & sleep 2; npm test"
+      "command": "source env-vars-testing.sh; npm run test-reset; npm run run --mongoDbDatabase openwhyd_test & sleep 2; npm test"
     },
     {
       "taskName": "run-api-tests",
@@ -25,7 +25,7 @@
         "focus": true,
         "panel": "new"
       },
-      "command": "cd whydJS; source env-vars-testing.sh; npm run test-reset; npm run run --mongoDbDatabase openwhyd_test & sleep 2; node_modules/.bin/mocha test/api/*.js"
+      "command": "source env-vars-testing.sh; npm run test-reset; npm run run --mongoDbDatabase openwhyd_test & sleep 2; node_modules/.bin/mocha test/api/*.js"
     }
   ]
 }

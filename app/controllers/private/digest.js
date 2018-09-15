@@ -172,7 +172,7 @@ function fetchData(uid, options, cb) {
     fetchRepostedTrackSet,
     fetchSubscribers,
     fetchSubscriptionSet
-    // fetchSameTrackSet // disabled because too DB and memory intensive => suspected to crash whydJS since on openwhyd-2gb instance
+    // fetchSameTrackSet // disabled because too DB and memory intensive => suspected to crash Openwhyd since on openwhyd-2gb instance
   ];
   (function next() {
     var fct = fcts.shift();

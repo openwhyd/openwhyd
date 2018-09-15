@@ -12,14 +12,14 @@ services:
   web:
     build: .
     volumes:
-      - ./whydJS:/usr/src/app
+      - ./:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - "8080:8080"
     depends_on:
       - mongo
     environment:
-      # From whydJS/env-vars-testing.sh not working in Dockerfile
+      # From env-vars-testing.sh not working in Dockerfile
       # And with Docker mongo link
       - WHYD_GENUINE_SIGNUP_SECRET=whatever
       - WHYD_SESSION_SECRET=whatever

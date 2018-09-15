@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Wait for whydJS (app server) to be fully running
+# Wait for Openwhyd's app server to be fully running
 
 PORT=$1
 
