@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT_DIR="`pwd`/.."
+ROOT_DIR="`pwd`" # openwhyd's directory
 PORT="$1"
 
 if [ -z "$PORT" ]
