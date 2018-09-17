@@ -6,7 +6,7 @@
 PORT_A=1094
 PORT_B=1095
 MAX_RETRY=50
-ROOT_DIR="`pwd`" # openwhyd's directory
+ROOT_DIR="`pwd`/.."
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
 NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
