@@ -1,13 +1,13 @@
 {
   "name": "openwhyd",
   "version": "1.4.2",
-  "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
+  "description": "web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openwhyd/openwhyd.git"
+    "url": "https://github.com/Brawrdon/openwhyd"
   },
   "scripts": {
     "semantic-release": "semantic-release",
@@ -88,6 +88,13 @@
     "verifyConditions": [
       "@semantic-release/github"
     ],
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "chore", "release": "patch"},
+        {"type": "refactor", "release": "patch"}
+      ]
+    },
     "prepare": [
       {
         "path": "@semantic-release/changelog",
