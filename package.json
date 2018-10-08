@@ -88,6 +88,13 @@
     "verifyConditions": [
       "@semantic-release/github"
     ],
+    "analyzeCommits": {
+      "preset": "angular",
+      "releaseRules": [
+        {"type": "chore", "release": "patch"},
+        {"type": "refactor", "release": "patch"}
+      ]
+    },
     "prepare": [
       {
         "path": "@semantic-release/changelog",
