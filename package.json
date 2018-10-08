@@ -7,7 +7,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openwhyd/openwhyd.git"
+    "url": "https://github.com/Brawrdon/openwhyd"
   },
   "scripts": {
     "semantic-release": "semantic-release",
