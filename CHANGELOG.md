@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/openwhyd/openwhyd/compare/v1.4.2...v1.4.3) (2018-10-14)
+
+
+### Bug Fixes
+
+* **vimeo:** fix auto-playback of vimeo tracks, thanks to [@mauricesvay](https://github.com/mauricesvay) ([#175](https://github.com/openwhyd/openwhyd/issues/175)) ([adf5e52](https://github.com/openwhyd/openwhyd/commit/adf5e52))
+
 ## [1.4.2](https://github.com/openwhyd/openwhyd/compare/v1.4.1...v1.4.2) (2018-09-17)
 
 
