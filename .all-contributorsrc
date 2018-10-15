@@ -237,6 +237,18 @@
       "contributions": [
         "question"
       ]
+    },
+    {
+      "login": "uLan08",
+      "name": "Patrick Rainier Juen",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/14162336?v=4",
+      "profile": "https://github.com/uLan08",
+      "contributions": [
+        "code",
+        "infra",
+        "tutorial"
+      ]
     }
-  ]
+  ],
+  "repoType": "github"
 }
