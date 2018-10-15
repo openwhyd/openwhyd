@@ -55,7 +55,11 @@ Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the
 
 Developers, feel free to clone this repo and make it run on your own machine! 💪
 
+You just need Docker, `docker-compose` and `git` installed on your computer. Node.js, `npm` and MongoDB will be automatically downloaded and installed in the Docker containers when you run `docker-compose up`.
+
 You'll find **setup and usage instructions** in [INSTALL.md](docs/INSTALL.md).
+
+If you want to deploy Openwhyd to a server, you can follow our guide: [How to deploy on DigitalOcean](docs/howto-deploy-on-digitalocean.md).
 
 ## Support Openwhyd
 
