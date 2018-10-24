@@ -15,9 +15,6 @@
     "generate-contrib": "all-contributors generate",
     "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
     "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
-    "forever:stop": "forever stop app.js",
-    "forever:start": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
-    "forever:restart": "npm run forever:stop; npm run forever:start $@;",
     "run": "node app.js --color --fakeEmail --digestInterval -1 $@",
     "run-for-tests": ". ./env-vars-testing.sh && npm run run",
     "run-dev": "node app.js --color --fakeEmail --digestInterval -1 --dev $@",
@@ -53,7 +50,6 @@
     "colors": "*",
     "emailjs": "0.3.3",
     "ent": "2.0.0",
-    "forever": "0.15.3",
     "formidable": "^1.1.1",
     "hogan.js": "2.0.0",
     "htmlparser": "*",
@@ -88,8 +84,7 @@
     "verifyConditions": [
       "@semantic-release/github"
     ],
-    "prepare": [
-      {
+    "prepare": [{
         "path": "@semantic-release/changelog",
         "changelogFile": "CHANGELOG.md"
       },
