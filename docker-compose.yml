@@ -10,6 +10,7 @@ services:
       - "27117:27117"
 
   web:
+    restart: "always"
     build: .
     volumes:
       - ./:/usr/src/app
