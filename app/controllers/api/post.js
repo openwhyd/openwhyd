@@ -204,6 +204,7 @@ exports.actions = {
         typeof p.pId,
         p.pId
       );
+      console.log('from user agent: ', getShortUserAgent());
       return cb && cb({ error: 'invalid pId' });
     }
     p.logData = p.logData || {};
