@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/openwhyd/openwhyd/compare/v1.4.3...v1.4.4) (2018-10-27)
+
+
+### Bug Fixes
+
+* **security:** disable email invites ([#180](https://github.com/openwhyd/openwhyd/issues/180)) ([26effca](https://github.com/openwhyd/openwhyd/commit/26effca)), closes [#178](https://github.com/openwhyd/openwhyd/issues/178)
+
 ## [1.4.3](https://github.com/openwhyd/openwhyd/compare/v1.4.2...v1.4.3) (2018-10-14)
 
 
