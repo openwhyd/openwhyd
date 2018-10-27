@@ -197,9 +197,13 @@ exports.actions = {
   incrPlayCounter: function(p, cb, request) {
     // TODO: prevent a user from sending many calls in a row
     if (!p.uId) return cb && cb({ error: 'not logged in' });
-    // erroneous call made by an old iOS version
-    if (p.pId == '(null)') {
-      console.log('warning: (null) pId');
+    if (mongodb.ObjectId('' + p.pId) === 'invalid_id') {
+      // FYI: an old iOS version was sending a "(null)" value
+      console.log(
+        'warning: skipping invalid pId value in incrPlayCounter:',
+        typeof p.pId,
+        p.pId
+      );
       return cb && cb({ error: 'invalid pId' });
     }
     p.logData = p.logData || {};
