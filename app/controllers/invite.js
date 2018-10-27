@@ -127,6 +127,7 @@ var submitInvites = function(request, reqParams, response) {
   if (!loggedUser || !reqParams) response.badRequest();
   else if (reqParams.email && reqParams.email.join && reqParams.email.length) {
     // === invite by email
+    /*
     var successEmails = [];
     var message =
       reqParams.message && reqParams.message != '' ? reqParams.message : null;
@@ -146,8 +147,14 @@ var submitInvites = function(request, reqParams, response) {
           }
         });
     response.render({ ok: 1, email: successEmails });
+    */
+    response.render({
+      ok: false,
+      error: 'email invites were disabled (#178)'
+    });
   } else if (reqParams.email && typeof reqParams.email == 'string') {
     // === invite by email (1)
+    /*
     users.inviteUserBy(reqParams.email, '' + loggedUser._id, function(invite) {
       if (invite)
         notifEmails.sendInviteBy(
@@ -160,6 +167,11 @@ var submitInvites = function(request, reqParams, response) {
         ok: !!invite,
         email: invite ? invite.email : undefined
       });
+    });
+    */
+    response.render({
+      ok: false,
+      error: 'email invites were disabled (#178)'
     });
   } else if (reqParams.fbId)
     // === invite facebook friend

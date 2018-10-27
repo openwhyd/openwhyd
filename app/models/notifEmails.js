@@ -77,10 +77,13 @@ exports.sendRegWelcomeAsync = function(storedUser, inviteSender, cb) {
 };
 
 // 4) when a user invites a friends => "your friend invited you to join openwhyd => register"
+// -- disabled (see #178)
+/*
 exports.sendInviteBy = function(senderName, inviteId, email, message) {
   var temp = notifTemplate.generateInviteBy(senderName, inviteId, message);
   emailModel.email(email, temp.subject, temp.bodyText, temp.bodyHtml);
 };
+*/
 
 // 5) when the friend registered => "Your friend just accepted your invitation to whyd"
 exports.sendInviteAccepted = function(senderId, storedUser, cb) {
