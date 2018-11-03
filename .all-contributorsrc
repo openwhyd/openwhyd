@@ -72,6 +72,14 @@
       ]
     },
     {
+      "name": "Camille Betinyani",
+      "avatar_url": "https://www.nikonclub.fr/sites/default/files/styles/dashboard_avatar/public/users/avatars/2018-08/0036_Camille-Betinyani-2_0.jpg?itok=cceSKmUx",
+      "profile": "http://www.camillebetinyani.com",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
       "login": "cmdcmdcmd",
       "name": "Claire Marion",
       "avatar_url": "https://media.licdn.com/dms/image/C4D03AQHhQfJMOkbB4A/profile-displayphoto-shrink_800_800/0?e=1542844800&v=beta&t=jIxggiv9of6kQYWWidTtfepaJk2dzqQZKXuKiIY1t6E",
@@ -174,7 +182,7 @@
     {
       "login": "nicolasleger",
       "name": "Nicolas Leger",
-      "avatar_url": "https://media.licdn.com/dms/image/C5603AQF8pyASvkn20w/profile-displayphoto-shrink_800_800/0?e=1542844800&v=beta&t=mSLPs8BN82H3CAyPEKA6aUBxTuXdS5UjV1XAJvORaf4",
+      "avatar_url": "https://media.licdn.com/dms/image/C5603AQFMhpwwbDWWzQ/profile-displayphoto-shrink_800_800/0?e=1546473600&v=beta&t=bijrXeAQKSJoCRybxCoyVgkS0GF_h3GucQVLXu5TKik",
       "profile": "https://github.com/nicolasleger",
       "contributions": [
         "infra",
@@ -241,7 +249,7 @@
     {
       "login": "uLan08",
       "name": "Patrick Rainier Juen",
-      "avatar_url": "https://avatars3.githubusercontent.com/u/14162336?v=4",
+      "avatar_url": "https://media.licdn.com/dms/image/C4D03AQH19-cggJnutA/profile-displayphoto-shrink_800_800/0?e=1546473600&v=beta&t=fHtEddqYGfuvvn7x4gKeSeLaot89o6OYFn5FFF54cIw",
       "profile": "https://github.com/uLan08",
       "contributions": [
         "code",
