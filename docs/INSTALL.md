@@ -31,7 +31,7 @@ Whenever you want to know what Docker processes are currently running: run `dock
 
 ### Usage
 
-* `docker-compose up` (auto-restart daemon), or `npm run run`
+* `docker-compose up`, or `npm run run`, or `npm forever:start` (auto-restart daemon)
 * Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 * During development, you may have to restart the server to have your changes taken into account. To restart the Docker container, use `docker-compose restart web`.
 
