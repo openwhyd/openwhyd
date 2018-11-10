@@ -3,8 +3,6 @@ FROM node:6.11.1
 # Create app directory
 WORKDIR /usr/src/app
 
-RUN npm install -g forever
-
 # Install app dependencies
 
 COPY ./package.json /usr/src/app/

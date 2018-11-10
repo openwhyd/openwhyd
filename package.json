@@ -88,8 +88,7 @@
     "verifyConditions": [
       "@semantic-release/github"
     ],
-    "prepare": [
-      {
+    "prepare": [{
         "path": "@semantic-release/changelog",
         "changelogFile": "CHANGELOG.md"
       },
