@@ -17,7 +17,7 @@ These are just guidelines, not rules, use your best judgment and feel free to pr
 
 You can contribute to Openwhyd in various ways:
 
-- Fix bugs or contribute to the development of features on which help is wanted: [see our To Do list](https://github.com/openwhyd/openwhyd/projects/1?card_filter_query=label%3A%22help+wanted)
+- Fix bugs or contribute to the development of features on which help is wanted: [see our To Do list](https://github.com/openwhyd/openwhyd/projects/1?card_filter_query=label%3A%22help+wanted%22)
 - Submit Github issues for bugs you (or other users) found on openwhyd.org ([good example](https://github.com/openwhyd/openwhyd/issues/65))
 - Give feedback and/or provide value in ongoing discussions in [issues](https://github.com/openwhyd/openwhyd/issues) and [pull requests](https://github.com/openwhyd/openwhyd/pulls)
 - [Become a backer / donate](https://opencollective.com/openwhyd#support) to help us cover openwhyd.org's hosting fees
@@ -49,7 +49,7 @@ More generally, make sure to follow these three principles:
 
 ## Code guidelines
 
-- Optimize for search: [Like in the React.js project](https://facebook.github.io/react/contributing/design-principles.html), we want to make it easy for contributors to search for symbols (constants, variables and function names. So don't hesitate to give them verbose/specific names.
+- Optimize for search: [Like in the React.js project](https://facebook.github.io/react/contributing/design-principles.html), we want to make it easy for contributors to search for symbols (constants, variables and function names). So don't hesitate to give them verbose/specific names.
 
 ## Contact information
 
