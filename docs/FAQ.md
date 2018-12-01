@@ -227,7 +227,7 @@ That being said, it's very easy to download your data at any time: just add the 
 
 #### More info: backup / download Openwhyd track listings in JSON format
 
-*exported from https://whyd.hackpad.com/Early-API-Download-Whyd-track-listings-in-JSON-format-CTMZ8XxzRuB*
+<!-- exported from https://whyd.hackpad.com/Early-API-Download-Whyd-track-listings-in-JSON-format-CTMZ8XxzRuB -->
 
 GET parameters for most playlist pages:
 - `format`: "`json`" or "`html`" (default)
