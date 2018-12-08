@@ -1,6 +1,8 @@
 # Openwhyd API
 
-Openwhyd is a free and open-source music curation service that allows users to create playlists of music tracks from various streaming platforms (YouTube, SoundCloud, Vimeo, Deezer...) and to discover the music posted by other users.
+[Openwhyd](https://openwhyd.org) is a free and open-source music curation service that allows users to create playlists of music tracks from various streaming platforms (YouTube, SoundCloud, Vimeo, Deezer...) and to discover the music posted by other users.
+
+[![Openwhyd Demo Video](./img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Openwhyd Demo Video")
 
 It's important for us that:
 - users can access and download data that they contributed to Openwhyd;
