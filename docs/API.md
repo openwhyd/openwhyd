@@ -1,58 +1,131 @@
-# JSON API Documentation
+# Openwhyd API
+
+Openwhyd is a free and open-source music curation service that allows users to create playlists of music tracks from various streaming platforms (YouTube, SoundCloud, Vimeo, Deezer...) and to discover the music posted by other users.
+
+It's important for us that:
+- users can access and download data that they contributed to Openwhyd;
+- users can even use their Openwhyd account from 3rd-party software.
+
+In order to satisfy these scenarios, we provide two APIs:
+- the **Data Export API** can be used to download the list of tracks of any user profile or playlist posted publicly on Openwhyd;
+- the **User API** can be used to read and update lists of tracks associated to the authenticated user.
+
+## Openwhyd Data Export API
+
+The goal of the Data Export API is to give free access to data that users publicly posted on Openwhyd.
+
+This API can be used by anyone, without authentication, to download the list of tracks of:
+- a user profile; (e.g. https://openwhyd.org/adrien)
+- a playlist; (e.g. https://openwhyd.org/adrien/playlist/61)
+- or "hot tracks". (e.g. https://openwhyd.org/hot/electro)
+
+The list of tracks can be downloaded in several formats:
+- [JSON](https://fr.wikipedia.org/wiki/JavaScript_Object_Notation);
+- or as a list of URLs.
+
+Please use these URLs responsibly: add a reasonable delay between requests, in order to not put too much pressure on our server. Thank you!
+
+### GET Parameters
+
+<!-- exported from https://whyd.hackpad.com/Early-API-Download-Whyd-track-listings-in-JSON-format-CTMZ8XxzRuB -->
+
+A list of tracks can be downloaded by appending the following HTTP GET parameters to Openwhyd URLs:
+
+- `format`: "`json`" or "`links`"
+- `limit`: number of posts to return (optional, default=`20`)
+- `after`: identifier of the post (a.k.a. `pId`) from which entries must be returned (optional, for pagination)
+
+### Examples
+
+Examples:
+- https://openwhyd.org/adrien?format=json returns the last `20` tracks Adrien posted on his Openwhyd profile, in `JSON` format.
+- https://openwhyd.org/adrien/playlist/10?format=links&limit=10000 returns the last `10000` tracks Adrien posted in his "electronica" playlist, as a list of URLs.
+
+### Response format: `links`
+
+If the `links` format was selected, Openwhyd will return a text document with one URL per posted track.
+
+Example:
+
+```
+//soundcloud.com/deadoceans/mitski-your-best-american-girl-3#https://api.soundcloud.com/tracks/249475048
+//youtube.com/watch?v=If8ChYjdFdE
+//alexanderbrandon.bandcamp.com/track/sunrise-on-vanaar
+```
+
+These URLs are direct links to the track's content, on their source platform. (e.g. YouTube, SoundCloud, etc...)
+
+URLs are provided without protocol, but can be safely prefixed with `https:`.
+
+### Response format: `json`
+
+If the `json` format was selected, Openwhyd will return a JSON array containing one object per posted track.
+
+Example:
+
+```json
+[
+  {
+    _id: "5c05b9675b1d901f32b6fe4b",
+    uId: "4d94501d1f78ac091dbc9b4d",
+    uNm: "Adrien Joly",
+    text: "",
+    name: "Mitski - Your Best American Girl",
+    eId: "/sc/deadoceans/mitski-your-best-american-girl-3#https://api.soundcloud.com/tracks/249475048",
+    img: "https://i1.sndcdn.com/artworks-000149087394-z2wpob-t500x500.jpg",
+    nbP: 6,
+    nbR: 1,
+    lov: [ ]
+  },
+  {
+    _id: "5c0561f65b1d901f32b6fdf4",
+    uId: "4d94501d1f78ac091dbc9b4d",
+    uNm: "Adrien Joly",
+    text: "merci @[Camille B](user:51483cad7e91c862b2ab6dc2) <3",
+    name: "The Posies, Burn & Shine",
+    eId: "/yt/If8ChYjdFdE",
+    ctx: "bk",
+    img: "https://i.ytimg.com/vi/If8ChYjdFdE/default.jpg",
+    src: {
+      id: "https://www.youtube.com/watch?v=If8ChYjdFdE",
+      name: "The Posies, Burn &amp; Shine - YouTube"
+    },
+    nbP: 8,
+    lov: [ ]
+  }
+]
+```
+
+The `eId` property contains the unique identifier of the track/video on its source platform:
+- `/yt/xxx` is a YouTube identifier that can be translated to `https://youtube.com/watch?v=xxx`
+- `/sc/xxx#http://yyy` is the SoundCloud URI of a track, followed by the URL of its audio stream
+- `/vi/xxx` is a Vimeo identifier
+
+You will find a full list of supported source platforms with their identifier prefix in the [Formats](#formats-and-appendix) section of this document.
+
+## Openwhyd User API
+
+The goal of the User API is to allow users to interact with their Openwhyd account from a 3rd-party software.
+
+It can be used to read and update lists of tracks associated to the authenticated user.
+
+In order to allow this, a session must be initiated on Openwhyd's API, by providing the user's email and password. When a session is initiated properly, a cookie will be returned. This cookie will be required for the following API requests. If you want to know more about the authentication flow, read [login-flow.md](./login-flow.md).
+
+In this section, we will document all the API endpoints supported by Openwhyd.
+
+Table of contents:
 
 * [User session / logging](#user-session--logging)
-  * LOGOUT
-  * FORGOT PASSWORD
-  * LOGIN WITH EMAIL
-  * LOGIN WITH FACEBOOK
-  * CONNECT FACEBOOK ACCOUNT TO WHYD ACCOUNT
-  * Register / sign up a new user
-  * Onboarding process
-  * Get user data
-  * Set user data
 * [Search](#search)
-  * SEARCH TRACKS POSTED BY OTHER USERS
-  * SEARCH TRACKS POSTED BY ME + OTHER USERS
 * [Subscriptions](#subscriptions)
-  * List subscribers of a user
-  * List subscriptions of a user
-  * Get subscription status of a user
-  * (Un)subscribe to a user
 * [Tracks](#tracks)
-  * POST TRACK / Edit a Post
-  * Delete post
-  * Like / unlike a post
-  * Likes Tracks by User
-  * Fetch list of users who liked a post
-  * Fetch list of users who re-added a post
-  * Log a play
-  * Scrobble a play to Last.fm
-  * Add a comment to a post
-  * Delete a comment from a post
-  * LIST TRACKS POSTED BY USER
-  * INCOMING STREAM (HOMEPAGE)
-  * HOT TRACKS
-  * Detailed track info
-  * Share a post to OpenWhyd users (notification)
 * [Playlists](#playlists)
-  * Get playlist data
-  * Create a playlist
-  * Rename a playlist
-  * Delete a playlist
-  * Set track order of a playlist
-  * Update the image of a playlist
-  * Share a playlist to OpenWhyd users (notification)
 * [Upload](#upload)
-  * Upload a file to Whyd's file server
-  * Delete an uploaded file
 * [Formats and appendix](#formats-and-appendix)
-  * Syntax of "eId" identifiers
-  * Syntax of a mention (in comment text)
-  * URLs for fetching images
 
-## User session / logging
+### User session / logging
 
-### LOGOUT
+#### LOGOUT
 
 `GET  /login?action=logout`
 
@@ -67,7 +140,7 @@ Returns:
 
 *   HTML login page or form data in JSON (depends of the ajax parameter)
 
-### FORGOT PASSWORD
+#### FORGOT PASSWORD
 
 `GET  /login?action=forgot&email`
 
@@ -84,7 +157,7 @@ Response: (HTML form or JSON, depends of the ajax parameter)
 *   ok: (optional) "We just sent you an email to reset your password, wait for it!"
 *   error: (optional) "Are you sure? We don't recognize your email address!"
 
-### LOGIN WITH EMAIL
+#### LOGIN WITH EMAIL
 
 `html : (GET  /login?action=login&email&md5)`
 
@@ -109,7 +182,7 @@ Response: (HTML form or JSON, depends of the ajax parameter)
 *   **redirect** (optional): URL to redirect the user to, if login succeeded
 *   **user**: (object, if `includeUser` is set to true): complete db object about the logged in user, containing following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions` 
 
-### LOGIN WITH FACEBOOK
+#### LOGIN WITH FACEBOOK
 
 Initializes the user session and corresponding cookie (via Login API), using provided FB authorization.
 
@@ -135,7 +208,7 @@ Response: (JSON)
 *   **fbUser**: (object, optional) contains Facebook user data {id, name, email}, if this Facebook user is not connected to a OpenWhyd account
 *   **user**: (object, if `includeUser` is set to true): complete db object about the logged in user, containing following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions` 
 
-### CONNECT FACEBOOK ACCOUNT TO WHYD ACCOUNT
+#### CONNECT FACEBOOK ACCOUNT TO WHYD ACCOUNT
 
 Enables:
 
@@ -157,7 +230,7 @@ Cookies: (initialized by facebook SDK, one of these must be set in the headers o
 
 Response: (None)
 
-### Register / sign up a new user
+#### Register / sign up a new user
 
 This endpoint is called from a sign up form (e.g. landingPhoto.html).
 
@@ -188,7 +261,7 @@ Response: (JSON, _if ajax parameter was set to true_)
 *   **uId**: (string, optional) id of the new user, if sign up succeeded
 *   **redirect**: (string, optional) URL to redirect to, if sign up succeeded
 
-### Onboarding process
+#### Onboarding process
 
 This endpoint is called between the sign up of the new user ("register" endpoint) and the first visit to the new user's stream with help overlay (/welcome url).
 
@@ -237,7 +310,7 @@ Response: (JSON)
 *   **error**: (string, optional) error message, if any
 *   **ok**: (boolean, optional) set to true, if the call has succeeded
 
-### Get user data
+#### Get user data
 
 GET /api/user
 
@@ -304,7 +377,7 @@ Response: (JSON)
 *   1: in a daily digest
 *   7: in a weekly digest
 
-### Set user data
+#### Set user data
 
 POST /api/user
 
@@ -339,9 +412,9 @@ Response: (JSON)
 *   **error**: (optional, string) error message
 *   (or updated user data)
 
-## Search
+### Search
 
-### SEARCH TRACKS POSTED BY OTHER USERS
+#### SEARCH TRACKS POSTED BY OTHER USERS
 
 Returns a list of 5 tracks posted by other users, matching the given full-text search query.
 
@@ -358,7 +431,7 @@ Response:
 
 *   a JSON array of Post objects: [{id, eId, url, img, name, uId, uNm, score}]
 
-### SEARCH TRACKS POSTED BY ME + OTHER USERS
+#### SEARCH TRACKS POSTED BY ME + OTHER USERS
 
 Returns a list of tracks posted the logged in user, and by other users, matching the given full-text search query.
 
@@ -375,7 +448,7 @@ Response: (JSON hierarchy)
 
 *   **q**: (string) search query
 
-### Combined search page: posts + users + playlists
+#### Combined search page: posts + users + playlists
 
 Returns a list of matching:
 
@@ -401,9 +474,9 @@ Response: (JSON)
 
 *   **q**: (string) search query
 
-## Subscriptions
+### Subscriptions
 
-### List subscribers of a user
+#### List subscribers of a user
 
 `GET /api/follow/fetchFollowers/<id>`
 
@@ -420,7 +493,7 @@ Response: JSON array of objects with the following fields:
 *   **uNm**: name of the subscriber
 *   **isSubscribing**: (boolean, if the `isSubscr` parameter is set to true) set to true if the subscriber is also followed by the logged in user
 
-### List subscriptions of a user
+#### List subscriptions of a user
 
 `GET /api/follow/fetchFollowing/<id>`
 
@@ -437,7 +510,7 @@ Response: JSON array of objects with the following fields:
 *   **tNm**: name of the subscribed user
 *   **isSubscribing**: (boolean, if the `isSubscr` parameter is set to true) set to true if the subscriber is also followed by the logged in user
 
-### Get subscription status of a user
+#### Get subscription status of a user
 
 Subscribes or unsubscribes to a user. (must be logged in)
 
@@ -453,7 +526,7 @@ Response: (two cases)
 *   an empty JSON object if the logged in user has not subscribed to that user
 *   or a non-empty JSON object otherwise
 
-### (Un)subscribe to a user
+#### (Un)subscribe to a user
 
 Subscribes or unsubscribes to a user. (must be logged in)
 
@@ -468,9 +541,9 @@ Response:
 
 *   (a JSON object with an optional **_id** field => to be ignored)
 
-## TRACKS
+### TRACKS
 
-### POST TRACK / Edit a Post
+#### POST TRACK / Edit a Post
 
 `GET  /api/post?action=insert&...`
 
@@ -502,7 +575,7 @@ Examples:
 *   **/api/post/action=insert&pId=52f4ebe53fe09fa854000043 : **Repost a track 
 *   **/api/post/action=insert&text=your%20comment&eId=/yt/XdJVWSqb4Ck&name=Jack%Johnson%20-%20-Lullaby : **Add a track 
 
-### Delete post
+#### Delete post
 
 `GET  /api/post?action=delete&...`
 
@@ -515,7 +588,7 @@ Return:
 
 *   **track object**
 
-### Like / unlike a post
+#### Like / unlike a post
 
 `GET  /api/post?action=toggleLovePost&...`
 
@@ -530,7 +603,7 @@ Return:
 *   **lovers**: (int) number of user who likes this post
 *   **post**: (object, optional) post object
 
-### Likes Tracks by User
+#### Likes Tracks by User
 
 [GET /[uId]/likes?format=json](http://openwhyd.org/adrien/likes?format=json)
 
@@ -539,7 +612,7 @@ Parameters:
 *   **after**: (string, optional) id of the last post of the previous page (for pagination)
 *   **before**: (string, optional) id of the first post currently 
 
-### Fetch list of users who liked a post
+#### Fetch list of users who liked a post
 
 `GET  /api/post?action=lovers&...`
 
@@ -550,7 +623,7 @@ _Parameters:_
 
 Return: (JSON)
 
-### Fetch list of users who re-added a post
+#### Fetch list of users who re-added a post
 
 `GET  /api/post?action=reposts&...`
 
@@ -561,7 +634,7 @@ _Parameters:_
 
 Return: (JSON)
 
-### Log a play
+#### Log a play
 
 To be called whenever a track effectively started or failed playing, for analytics and diagnosis.
 
@@ -577,7 +650,7 @@ Return:
 
 *   **result**: (object) the post object
 
-### Scrobble a play to Last.fm
+#### Scrobble a play to Last.fm
 
 To be called whenever a track ends playing, for users who connected their last.fm account.
 
@@ -595,7 +668,7 @@ Return: (JSON)
 *   **error**: (string, optional) error message, if any
 *   ...or last.fm's response object
 
-### Add a comment to a post
+#### Add a comment to a post
 
 `GET  /api/post?action=addComment&...`
 
@@ -610,7 +683,7 @@ Return: (JSON)
 *   **error**: (string, optional) error message, if any
 *   or the comment object
 
-### Delete a comment from a post
+#### Delete a comment from a post
 
 `GET  /api/post?action=deleteComment&...`
 
@@ -623,7 +696,7 @@ Return: (JSON)
 
 *   **error**: (string, optional) error message, if any
 
-### LIST TRACKS POSTED BY USER
+#### LIST TRACKS POSTED BY USER
 
 `GET /:uHandle/[playlist/:playlistId]` 
 `GET /u/:uId/[playlist/:playlistId]` 
@@ -646,7 +719,7 @@ Examples:
 *   [/u/4d94501d1f78ac091dbc9b4d/playlist/10?format=json](http://openwhyd.org/u/4d94501d1f78ac091dbc9b4d/playlist/10?format=json) : returns the last 20 tracks I posted in JSON format (using user id instead of handle/nickname)
 *   [/adrien/playlist/10?format=json&limit=10000](http://openwhyd.org/adrien/playlist/10?format=json&limit=10000) : returns the last 10000 tracks I posted in my "electronica" playlist
 
-### INCOMING STREAM (HOMEPAGE)
+#### INCOMING STREAM (HOMEPAGE)
 
 `GET /[stream]`
 
@@ -661,7 +734,7 @@ Return:
 
 *   **list of track objects**
 
-### HOT TRACKS
+#### HOT TRACKS
 
 `GET /hot/[:genre]`
 
@@ -677,7 +750,7 @@ Notes:
 
 *   when reposting for the hot tracks page, don't forget to add a `ctx:"hot"` value to the post object, so that this repost will not influence the hot tracks (to prevent too much virality)
 
-### Detailed track info
+#### Detailed track info
 
 `GET /c/[postId]?format=json` 
 
@@ -687,7 +760,7 @@ _Parameters:_
 
 Return:
 
-### Share a post to OpenWhyd users (notification)
+#### Share a post to OpenWhyd users (notification)
 
 `POST /api/post/<pId>/sendToUsers`
 
@@ -703,9 +776,9 @@ Return (JSON):
 *   **ok:** set positive if the request succeeded
 *   **error:** string or JSON object containing a description of the error
 
-## Playlists
+### Playlists
 
-### Get playlist data
+#### Get playlist data
 
 `GET /api/playlist/<id>`
 
@@ -726,7 +799,7 @@ Returns: a JSON array of playlists containing the following fields:
 *   **tags**: (if `includeTags` set to true) an array of tag objects associated to the user, based on the first tracks of the playlist
 *   **lastArtists**: (if `includeTags` set to true) an array of artist names, extracted from the first tracks of the playlist
 
-### Create a playlist
+#### Create a playlist
 
 `POST /api/playlist`
 
@@ -744,7 +817,7 @@ Returns: (JSON)
 *   **id**: the id of the newly created playlist (0 being the id of the user's first playlist)
 *   **name**: the name of the newly created playlist (as provided in the call)
 
-### Rename a playlist
+#### Rename a playlist
 
 `POST /api/playlist`
 
@@ -761,7 +834,7 @@ Returns: (JSON)
 *   **id**: the id of updated playlist (as provided in the call)
 *   **name**: the new name of the playlist (also as provided in the call)
 
-### Delete a playlist
+#### Delete a playlist
 
 `POST /api/playlist`
 
@@ -776,7 +849,7 @@ _Parameters:_
 
 Returns: (int) the number of the deleted playlist (as provided in the call)
 
-### Set track order of a playlist
+#### Set track order of a playlist
 
 `POST /api/playlist`
 
@@ -795,7 +868,7 @@ Returns: (JSON)
 *   **error**: (string, optional) contains an error message, if any... or:
 *   **ok**: (int) set to 1 if command was successful
 
-### Update the image of a playlist
+#### Update the image of a playlist
 
 `POST /api/playlist`
 
@@ -815,7 +888,7 @@ Returns: (JSON)
 *   **id**: the id of updated playlist (as provided in the call)
 *   **name**: the name of the updated playlist
 
-### Share a playlist to OpenWhyd users (notification)
+#### Share a playlist to OpenWhyd users (notification)
 
 `POST /api/playlist`
 
@@ -832,9 +905,9 @@ Return (JSON):
 *   **ok:** set positive if the request succeeded
 *   **error:** string or JSON object containing a description of the error
 
-## Upload
+### Upload
 
-### Upload a file to Whyd's file server
+#### Upload a file to Whyd's file server
 
 Uploading a file is necessary before changing any image associated (directly or not) to user-generated data (ex: user avatar, user profile banner, playlist cover, etc...). User must be logged in (based on attached cookie).
 
@@ -858,7 +931,7 @@ Triggers the following standard events:
 
 Response: (JSON)
 
-### Delete an uploaded file
+#### Delete an uploaded file
 
 `POST  /upload`
 
@@ -867,9 +940,9 @@ Parameters:
 *   **action=delete**
 *   **id**: (string) identifier / filename of the uploaded file to delete from whyd's server
 
-## Formats and Appendix
+### Formats and Appendix
 
-### Syntax of "eId" identifiers
+#### Syntax of "eId" identifiers
 
 The "eId" field contains the unique identifier of the track/video on its hosting source. (e.g. youtube/soundcloud/vimeo):
 
@@ -880,7 +953,7 @@ The "eId" field contains the unique identifier of the track/video on its hosting
 *   **/dm/**xxx -> dailymotion video
 *   **/fi/**http... -> mp3 / audio file
 
-### Syntax of a mention (in comment text)
+#### Syntax of a mention (in comment text)
 
 sample comment: `blah blah **@[Camille B](user:51483cad7e91c862b2ab6dc2)** blah blah...`
 
@@ -890,7 +963,7 @@ syntax:
 *   user's name, in brackets
 *   `user:[uId]`, in parenthesis
 
-### URLs for fetching images
+#### URLs for fetching images
 
 Images can be fetched for any OpenWhyd resource (tracks, user, playlists...) from a unified URL scheme, provided the id of this ressource.
 
