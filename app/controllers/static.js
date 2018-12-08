@@ -22,6 +22,7 @@ var STATIC_FILES = {
   '/favicon.ico': '/images/favicon' + (runsLocally ? '_orange' : '') + '.ico',
   '/favicon.png': '/images/favicon' + (runsLocally ? '_orange' : '') + '.png',
   '/community': GITHUB_URL,
+  '/api': GITHUB_URL + '/blob/master/docs/API.md',
   '/faq': GITHUB_URL + '/blob/master/docs/FAQ.md',
   '/contribute':
     GITHUB_URL +

@@ -22,6 +22,7 @@ GET		/iphone							-> controllers.static
 POST  /fbcanvas/          -> controllers.static
 
 GET		/faq									-> controllers.static
+GET		/api									-> controllers.static
 GET		/help									-> controllers.static
 GET		/team									-> controllers.static
 GET		/contact							-> controllers.static
