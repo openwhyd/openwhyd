@@ -946,12 +946,13 @@ Parameters:
 
 The "eId" field contains the unique identifier of the track/video on its hosting source. (e.g. youtube/soundcloud/vimeo):
 
-*   **/yt/**xxx is a youtube identifier
-*   **/sc/**xxx**#**[](http://yyy)[http://yyy](http://yyy/) is the soundcloud URI of a track, followed by the URL of the audio stream
-*   **/vi/**xxx is a vimeo identifier
-*   **/dz/**xxx -> deezer track
-*   **/dm/**xxx -> dailymotion video
-*   **/fi/**http... -> mp3 / audio file
+*   `/yt/xxx` is a YouTube identifier (i.e. it translates to `https://youtube.com/watch?v=xxx`)
+*   `/sc/xxx#http://yyy` is the SoundCloud URI of a track, followed by the URL of its audio stream
+*   `/bc/xxx#http://yyy` is the BandCamp identifier of a track, followed by the URL of its audio stream
+*   `/vi/xxx` is a Vimeo track identifier
+*   `/dz/xxx` is a Deezer track identifier
+*   `/dm/xxx` is a Dailymotion video identifier
+*   `/fi/http...` is the URL of a MP3 / audio file
 
 #### Syntax of a mention (in comment text)
 
