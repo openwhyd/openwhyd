@@ -63,7 +63,7 @@ If the `json` format was selected, Openwhyd will return a JSON array containing 
 
 Example:
 
-```json
+```js
 [
   {
     _id: "5c05b9675b1d901f32b6fe4b",
