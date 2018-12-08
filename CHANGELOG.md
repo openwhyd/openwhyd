@@ -1,3 +1,12 @@
+## [1.4.5](https://github.com/openwhyd/openwhyd/compare/v1.4.4...v1.4.5) (2018-12-08)
+
+
+### Bug Fixes
+
+* **deps:** upgrade cryptiles dependency, thanks to `npm audit fix` ([63899ff](https://github.com/openwhyd/openwhyd/commit/63899ff))
+* **deps:** upgrade object-sizeof dependency, thanks to `npm audit fix —force` ([ad0ab70](https://github.com/openwhyd/openwhyd/commit/ad0ab70))
+* **docker:** also use node 8 in dockerfile ([f59efe7](https://github.com/openwhyd/openwhyd/commit/f59efe7))
+
 ## [1.4.4](https://github.com/openwhyd/openwhyd/compare/v1.4.3...v1.4.4) (2018-10-27)
 
 
