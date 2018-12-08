@@ -59,7 +59,7 @@
     "htmlparser": "*",
     "iconv": ">=2.0.6",
     "mongodb": "^2.2.29",
-    "object-sizeof": "^0.1.2",
+    "object-sizeof": "^1.3.0",
     "playemjs": "0.3.0",
     "q-set": "^2.0.8",
     "request": "2.88.0"
