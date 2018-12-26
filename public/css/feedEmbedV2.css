@@ -251,9 +251,9 @@ body.playing_Vimeo:hover #headingBox #trackSrc {
 	position: absolute;
 	top: 15px;
 	right: 10px;
-	width: 42px;
+	width: 84px;
 	height: 18px;
-	background: url('/images/logo-verysmall.png') no-repeat;
+	background: url('/images/logo-white.png') no-repeat;
 }
 /*
 .progressPanel {
