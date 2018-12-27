@@ -249,11 +249,12 @@ body.playing_Vimeo:hover #headingBox #trackSrc {
 
 #whydPlayer > #whydLogo {
 	position: absolute;
-	top: 10px;
-	right: 8px;
-	width: 45px;
-	height: 39px;
-	background: url('/images/logo-white.png') no-repeat;
+	top: 12px;
+	right: 12px;
+	width: 24px;
+	height: 24px;
+	background: url(/images/logo-white.png) no-repeat;
+	background-size: contain;
 }
 /*
 .progressPanel {
