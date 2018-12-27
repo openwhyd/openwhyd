@@ -1,3 +1,10 @@
+## [1.4.7](https://github.com/openwhyd/openwhyd/compare/v1.4.6...v1.4.7) (2018-12-27)
+
+
+### Bug Fixes
+
+* **embed:** change logo and adjust css attributes ([#185](https://github.com/openwhyd/openwhyd/issues/185)) ([fcbede5](https://github.com/openwhyd/openwhyd/commit/fcbede5))
+
 ## [1.4.6](https://github.com/openwhyd/openwhyd/compare/v1.4.5...v1.4.6) (2018-12-27)
 
 
