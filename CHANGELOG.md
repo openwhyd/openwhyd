@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/openwhyd/openwhyd/compare/v1.4.5...v1.4.6) (2018-12-27)
+
+
+### Bug Fixes
+
+* **embed:** replace old logo and adjust css styling ([c3865ce](https://github.com/openwhyd/openwhyd/commit/c3865ce)), closes [#183](https://github.com/openwhyd/openwhyd/issues/183) [#184](https://github.com/openwhyd/openwhyd/issues/184) [#185](https://github.com/openwhyd/openwhyd/issues/185)
+
 ## [1.4.5](https://github.com/openwhyd/openwhyd/compare/v1.4.4...v1.4.5) (2018-12-08)
 
 
