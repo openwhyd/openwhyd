@@ -9,8 +9,8 @@ It's important for us that:
 - users can even use their Openwhyd account from 3rd-party software.
 
 In order to satisfy these scenarios, we provide two APIs:
-- the **Data Export API** can be used to download the list of tracks of any user profile or playlist posted publicly on Openwhyd;
-- the **User API** can be used to read and update lists of tracks associated to the authenticated user.
+- the [**Data Export API**](#openwhyd-data-export-api) can be used to download the list of tracks of any user profile or playlist posted publicly on Openwhyd;
+- the [**User API**](#openwhyd-user-api) can be used to read and update lists of tracks associated to the authenticated user.
 
 ## Openwhyd Data Export API
 
