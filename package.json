@@ -11,8 +11,8 @@
   },
   "scripts": {
     "semantic-release": "semantic-release",
-    "add-contrib": "all-contributors add $@",
-    "generate-contrib": "all-contributors generate",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate",
     "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
     "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
     "forever:stop": "forever stop app.js",
