@@ -59,3 +59,5 @@ exports.logout = function(user) {
     );
   });
 };
+
+exports.clearSession = () => browser.url(`${URL_PREFIX}/login?action=logout`);
