@@ -68,6 +68,13 @@ browser.addCommand('clickOnContent', function(text) {
     .click();
 });
 
+browser.addCommand('clickOnVisibleSelector', function(selector) {
+  $$(selector)
+    .filter(node => node.isVisible())[0]
+    .click();
+  return browser;
+});
+
 // other helpers
 /*
 exports.takeSnapshot = function takeSnapshot() {
