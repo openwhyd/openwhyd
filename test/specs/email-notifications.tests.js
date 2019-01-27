@@ -57,7 +57,7 @@ describe('reduce frequency of email notifications', function() {
 
   it(`user sees switch to weekly notifications emails`, function() {
     const response = browser.getText('body');
-    console.log({ response });
+    // console.log({ response });
     assert(/weekly/.test(response), 'response should contain "weekly"');
   });
 
@@ -95,7 +95,7 @@ describe(`unsubscribe from email notifications`, function() {
 
   it(`user sees unsubscription message`, function() {
     const response = browser.getText('body');
-    console.log({ response });
+    // console.log({ response });
     assert(
       /unsubscribed/.test(response),
       'response should contain "unsubscribed"'

@@ -55,11 +55,14 @@ exports.controller = function(request, reqParams, response) {
       return;
     }
     if (r.pwd) delete r.pwd;
-    console.error('UNSUB RENDER', r);
     // updated email notif frequency
     if (r.pref && reqParams.action == 'reduce') {
       var newFreqlabel =
-        userModel.EM_FREQ_LABEL['' + userModel.getEmailNotifsFreq(r)];
+        userModel.EM_FREQ_LABEL[
+          reqParams.type
+            ? r.pref[reqParams.type]
+            : '' + userModel.getEmailNotifsFreq(r)
+        ];
       var html =
         'Starting now, the frequency of email notifications you will receive is set to: ' +
         newFreqlabel;
@@ -94,18 +97,23 @@ exports.controller = function(request, reqParams, response) {
     return render({ error: 'user not found' });
   }
 
+  var type =
+    userModel.DEFAULT_PREF[reqParams.type] != undefined ? reqParams.type : null;
+
+  var reduce = reqParams.action && reqParams.action == 'reduce';
+
+  var newFreq = reduce
+    ? getNextFreq(type ? user.pref[type] : userModel.getEmailNotifsFreq(user))
+    : -1; // unsubscribe by default
+
   // if `type` parameter is provided, the user will be unsubscribed from that type of notification
-  if (reqParams.type && userModel.DEFAULT_PREF[reqParams.type] != undefined) {
+  if (type) {
     var prefModif = {};
-    prefModif['pref.' + reqParams.type] = -1;
+    prefModif['pref.' + reqParams.type] = newFreq;
     //userModel.setPref(user._id || user.id, prefModif, render);
     userModel.update(user.id, { $set: prefModif }, render);
   } else {
     // missing `type` parameter => change settings for all notifications emails
-    var newFreq = -1; // "never send notification emails", by default (real "unsubscribe")
-    if (reqParams.action && reqParams.action == 'reduce') {
-      newFreq = getNextFreq(userModel.getEmailNotifsFreq(user));
-    }
     setNotifFreq(user, newFreq, render);
   }
 };
