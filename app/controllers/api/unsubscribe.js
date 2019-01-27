@@ -42,6 +42,10 @@ function setNotifFreq(user, freq, cb) {
   userModel.setPref(user._id || user.id, pref, cb);
 }
 
+function withLink(html) {
+  return '<p>' + html + "</p><p><a href='/settings'>Edit your settings</a></p>";
+}
+
 exports.controller = function(request, reqParams, response) {
   request.logToConsole('unsubscribe.controller', reqParams);
 
@@ -52,16 +56,26 @@ exports.controller = function(request, reqParams, response) {
     }
     if (r.pwd) delete r.pwd;
     // updated email notif frequency
-    if (r.pref) {
+    if (r.pref && reqParams.action == 'reduce') {
       var newFreqlabel =
-        userModel.EM_FREQ_LABEL['' + userModel.getEmailNotifsFreq(r)];
+        userModel.EM_FREQ_LABEL[
+          reqParams.type
+            ? r.pref[reqParams.type]
+            : '' + userModel.getEmailNotifsFreq(r)
+        ];
       var html =
         'Starting now, the frequency of email notifications you will receive is set to: ' +
         newFreqlabel;
-      html =
-        '<p>' + html + "</p><p><a href='/settings'>Edit your settings</a></p>";
-      response.render(html, null, { 'content-type': 'text/html' });
-    } else response.render(r);
+      response.render(withLink(html), null, { 'content-type': 'text/html' });
+    } else if (r.pref) {
+      // user unsubscribed
+      var type = userModel.EM_LABEL[reqParams.type] || 'all';
+      var html =
+        'You successfully unsubscribed from email notifications: ' + type;
+      response.render(withLink(html), null, { 'content-type': 'text/html' });
+    } else {
+      response.render(r);
+    }
     /*
 		if (r && r.html)
 			response.render(r.html, null, {'content-type': 'text/html'});
@@ -73,23 +87,33 @@ exports.controller = function(request, reqParams, response) {
 		*/
   }
 
-  if (reqParams && reqParams.uId) {
-    var user = request.getUserFromId(reqParams.uId);
-    if (!user) {
-      console.log({ error: 'user not found' });
-      return render({ error: 'user not found' });
-    }
-    if (reqParams.type && userModel.DEFAULT_PREF[reqParams.type] != undefined) {
-      var prefModif = {};
-      prefModif['pref.' + reqParams.type] = -1;
-      //userModel.setPref(user._id || user.id, prefModif, render);
-      userModel.update(user.id, { $set: prefModif }, render);
-      return;
-    }
+  if (!reqParams || !reqParams.uId) {
+    return render(); // missing uId parameter => let's redirect to /settings
+  }
 
-    var newFreq = -1; // "never send notification emails", by default (real "unsubscribe")
-    if (reqParams.action && reqParams.action == 'reduce')
-      newFreq = getNextFreq(userModel.getEmailNotifsFreq(user));
+  var user = request.getUserFromId(reqParams.uId);
+  if (!user) {
+    console.log({ error: 'user not found' });
+    return render({ error: 'user not found' });
+  }
+
+  var type =
+    userModel.DEFAULT_PREF[reqParams.type] != undefined ? reqParams.type : null;
+
+  var reduce = reqParams.action && reqParams.action == 'reduce';
+
+  var newFreq = reduce
+    ? getNextFreq(type ? user.pref[type] : userModel.getEmailNotifsFreq(user))
+    : -1; // unsubscribe by default
+
+  // if `type` parameter is provided, the user will be unsubscribed from that type of notification
+  if (type) {
+    var prefModif = {};
+    prefModif['pref.' + reqParams.type] = newFreq;
+    //userModel.setPref(user._id || user.id, prefModif, render);
+    userModel.update(user.id, { $set: prefModif }, render);
+  } else {
+    // missing `type` parameter => change settings for all notifications emails
     setNotifFreq(user, newFreq, render);
-  } else render();
+  }
 };
