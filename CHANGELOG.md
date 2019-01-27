@@ -1,3 +1,10 @@
+## [1.4.8](https://github.com/openwhyd/openwhyd/compare/v1.4.7...v1.4.8) (2019-01-27)
+
+
+### Bug Fixes
+
+* **email-notif:** ability to unsubscribe from notification emails ([#186](https://github.com/openwhyd/openwhyd/issues/186)) ([#187](https://github.com/openwhyd/openwhyd/issues/187)) ([12af968](https://github.com/openwhyd/openwhyd/commit/12af968))
+
 ## [1.4.7](https://github.com/openwhyd/openwhyd/compare/v1.4.6...v1.4.7) (2018-12-27)
 
 
