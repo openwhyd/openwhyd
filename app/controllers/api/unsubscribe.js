@@ -73,23 +73,28 @@ exports.controller = function(request, reqParams, response) {
 		*/
   }
 
-  if (reqParams && reqParams.uId) {
-    var user = request.getUserFromId(reqParams.uId);
-    if (!user) {
-      console.log({ error: 'user not found' });
-      return render({ error: 'user not found' });
-    }
-    if (reqParams.type && userModel.DEFAULT_PREF[reqParams.type] != undefined) {
-      var prefModif = {};
-      prefModif['pref.' + reqParams.type] = -1;
-      //userModel.setPref(user._id || user.id, prefModif, render);
-      userModel.update(user.id, { $set: prefModif }, render);
-      return;
-    }
+  if (!reqParams || !reqParams.uId) {
+    return render(); // missing uId parameter => let's redirect to /settings
+  }
 
+  var user = request.getUserFromId(reqParams.uId);
+  if (!user) {
+    console.log({ error: 'user not found' });
+    return render({ error: 'user not found' });
+  }
+
+  // if `type` parameter is provided, the user will be unsubscribed from that type of notification
+  if (reqParams.type && userModel.DEFAULT_PREF[reqParams.type] != undefined) {
+    var prefModif = {};
+    prefModif['pref.' + reqParams.type] = -1;
+    //userModel.setPref(user._id || user.id, prefModif, render);
+    userModel.update(user.id, { $set: prefModif }, render);
+  } else {
+    // missing `type` parameter => change settings for all notifications emails
     var newFreq = -1; // "never send notification emails", by default (real "unsubscribe")
-    if (reqParams.action && reqParams.action == 'reduce')
+    if (reqParams.action && reqParams.action == 'reduce') {
       newFreq = getNextFreq(userModel.getEmailNotifsFreq(user));
+    }
     setNotifFreq(user, newFreq, render);
-  } else render();
+  }
 };
