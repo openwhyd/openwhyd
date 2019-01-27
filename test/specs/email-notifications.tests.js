@@ -96,7 +96,10 @@ describe(`unsubscribe from email notifications`, function() {
   it(`user sees unsubscription message`, function() {
     const response = browser.getText('body');
     console.log({ response });
-    assert(/never/.test(response), 'response should contain "never"');
+    assert(
+      /unsubscribed/.test(response),
+      'response should contain "unsubscribed"'
+    );
     // messages are defined in app/controllers/api/unsubscribe.js
   });
 

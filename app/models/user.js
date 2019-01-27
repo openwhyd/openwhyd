@@ -98,6 +98,18 @@ exports.EM_FREQ_LABEL = {
   '7': 'weekly'
 };
 
+exports.EM_LABEL = {
+  emLik: 'likes',
+  emAdd: 're-posts',
+  emSub: 'subscriptions',
+  emSam: 'same tracks',
+  emCom: 'comments',
+  emMen: 'mentions',
+  emRep: 'replies',
+  emFrd: 'friends',
+  emAcc: 'accepted invites'
+};
+
 var TESTING_DIGEST = config.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {

@@ -42,6 +42,10 @@ function setNotifFreq(user, freq, cb) {
   userModel.setPref(user._id || user.id, pref, cb);
 }
 
+function withLink(html) {
+  return '<p>' + html + "</p><p><a href='/settings'>Edit your settings</a></p>";
+}
+
 exports.controller = function(request, reqParams, response) {
   request.logToConsole('unsubscribe.controller', reqParams);
 
@@ -51,17 +55,24 @@ exports.controller = function(request, reqParams, response) {
       return;
     }
     if (r.pwd) delete r.pwd;
+    console.error('UNSUB RENDER', r);
     // updated email notif frequency
-    if (r.pref) {
+    if (r.pref && reqParams.action == 'reduce') {
       var newFreqlabel =
         userModel.EM_FREQ_LABEL['' + userModel.getEmailNotifsFreq(r)];
       var html =
         'Starting now, the frequency of email notifications you will receive is set to: ' +
         newFreqlabel;
-      html =
-        '<p>' + html + "</p><p><a href='/settings'>Edit your settings</a></p>";
-      response.render(html, null, { 'content-type': 'text/html' });
-    } else response.render(r);
+      response.render(withLink(html), null, { 'content-type': 'text/html' });
+    } else if (r.pref) {
+      // user unsubscribed
+      var type = userModel.EM_LABEL[reqParams.type] || 'all';
+      var html =
+        'You successfully unsubscribed from email notifications: ' + type;
+      response.render(withLink(html), null, { 'content-type': 'text/html' });
+    } else {
+      response.render(r);
+    }
     /*
 		if (r && r.html)
 			response.render(r.html, null, {'content-type': 'text/html'});
