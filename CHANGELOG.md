@@ -1,3 +1,10 @@
+## [1.4.9](https://github.com/openwhyd/openwhyd/compare/v1.4.8...v1.4.9) (2019-03-03)
+
+
+### Bug Fixes
+
+* **routing:** add redirection routes with tracking ([71a6b58](https://github.com/openwhyd/openwhyd/commit/71a6b58))
+
 ## [1.4.8](https://github.com/openwhyd/openwhyd/compare/v1.4.7...v1.4.8) (2019-01-27)
 
 
