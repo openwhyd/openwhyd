@@ -23,17 +23,6 @@
         margin: 0 20px;
     }
 
-    .play {
-        position: absolute;
-        width: 41px;
-        height: 41px;
-        background: url({{imgPath}}/emailWelcome/play.png) no-repeat;
-        top: 50%;
-        left: 50%;
-        margin-top: -20px;
-        margin-left: -20px;
-    }
-
     .title {
         display: block;
         width: 380px;
@@ -101,25 +90,6 @@
                     <table  cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px;">
                         <tbody>
 
-                        <!-- Logo -->
-                            <tr class="logo">
-                                <td class="w628"  width="628">
-                                    <table  class="w628"  width="628" cellpadding="0" cellspacing="0" border="0">
-                                        <tbody>
-                                            <tr>
-                                                <td class="w30"  width="30"></td>
-                                                <td class="w628" width="628" valign="middle" align="left">
-                                                    <div class="logo-content" style="margin-top: 30px; margin-bottom: 30px; text-align: center;">
-                                                        <a href="{{urlPrefix}}"><img style="" src="{{imgPath}}/emailWelcome/logo.png" alt="Openwhyd" width="101" height="41"/></a>
-                                                    </div>
-                                                </td>
-                                                <td class="w30"  width="30"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
                             <!-- entete -->
                             <tr class="pagetoplogo">
                                 <td class="w628"  width="628">
@@ -156,8 +126,7 @@
                                                                     <div align="left" class="article-content" style="padding: 0 40px;">
                                                                         <p class="w628" style="text-align: center; font-size:14px; color:#5e5e5e;line-height: 20px;">Collect and share all of the tracks you love, and follow other similar music lovers to power a stream of endless music discovery.</p>
                                                                         <p style="text-align: center;">
-                                                                            <a href="{{urlPrefix}}"><img src="{{imgPath}}/emailWelcome/visit.png" alt="Visit Openwhyd" class="visit" style="margin-left: 20px; margin-right: 20px;" /></a>
-                                                                            <a href="{{urlPrefix}}/iphone" style=""><img src="{{imgPath}}/emailWelcome/download.png" alt="Download app" class="download" style="margin-left: 20px; margin-right: 20px;" /></a>
+                                                                            <a href="{{urlPrefix}}/download" style=""><img src="{{imgPath}}/emailWelcome/download.png" alt="Download app" class="download" style="margin-left: 20px; margin-right: 20px;" /></a>
                                                                         </p>
 
                                                                         <p style="margin: 20px 0; padding: 0;"><img class="w628" src="{{imgPath}}/emailWelcome/sep.png" alt="" /></p>
@@ -169,7 +138,6 @@
                                                                         <div class="track w628" style="height: 120px;margin-bottom: 50px;">
                                                                             <a href="{{urlPrefix}}/c/{{_id}}"><div class="artwork" style="position: relative;float: left;width: 120px;height: 120px;margin: 0 20px;">
                                                                                 <img src="{{img}}" alt="" width="120" height="120" />
-                                                                                <div class="play"></div>
                                                                             </div></a>
                                                                             <p class="title" style="display:block;padding-top: 22px;font-size: 18px;font-weight: 500;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color: #3177af;"><a href="{{urlPrefix}}/c/{{_id}}" style="color: #3177af;text-decoration: none;">{{name}}</a></p>
                                                                             <p class="w628 user" style="color: #404040;text-decoration: none;"><a href="{{urlPrefix}}/u/{{uId}}" style="color: #404040;text-decoration: none;"><img src="{{urlPrefix}}/img/u/{{uId}}" alt="" style="float: left;width: 32px;height: 32px;margin-right: 10px;border-radius: 16px;" /> added by <strong>{{uNm}}</strong></a></p>
@@ -210,7 +178,7 @@
                                                                     <p class="links" style="color: #C0C0C0;text-align: center;">
                                                                         <a href="{{urlPrefix}}/about" style="margin: 0 10px;color: #878787;font-size: 12px;text-decoration: none;">About</a>
                                                                         •
-                                                                        <a href="{{urlPrefix}}/press" style="margin: 0 10px;color: #878787;font-size: 12px;text-decoration: none;">Press</a>
+                                                                        <a href="https://www.facebook.com/groups/openwhyd/" style="margin: 0 10px;color: #878787;font-size: 12px;text-decoration: none;">Music Lovers Club</a>
                                                                     </p>
                                                                     <p style="text-align: center;font-size: 12px;color: #878787;">
                                                                         Whyd, Inc. 80 rue des haies, Paris, France 75020<br />
