@@ -108,7 +108,7 @@ exports.htmlRedirect = function(url) {
         '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">',
         '<html>',
         '<head>',
-        '<title>whyd is redirecting...</title>',
+        '<title>Openwhyd is redirecting...</title>',
         '<meta http-equiv="REFRESH" content="3;url=' + url + '"></HEAD>',
         '<BODY>',
         'You are being redirected to: <a href="' + url + '">' + url + '</a>...',
@@ -116,4 +116,35 @@ exports.htmlRedirect = function(url) {
         '</BODY>',
         '</HTML>'
       ].join('\n');
+};
+
+exports.renderRedirectPageWithTracking = function(url, title) {
+  return `<!DOCTYPE html>
+  <html>
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta property="og:image" content="${mainTemplate.defaultPageMeta.img}">
+    <meta property="og:description" content="${
+      mainTemplate.defaultPageMeta.desc
+    }">
+    <meta property="fb:app_id" content="169250156435902">
+    <meta property="fb:admins" content="510739408">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="${config.urlPrefix}">
+    <meta http-equiv="REFRESH" content="3;url=${url}">
+    <title>${title || 'Openwhyd'} - redirecting...</title>
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/favicon.png" rel="icon" type="image/png">
+    <link rel="image_src" href="${mainTemplate.defaultPageMeta.img}">
+    <script src="/js/whydtr.js"></script>
+  </head>
+  <body class="pgRedirect">
+    <p>Redirecting to <a href="${url}">${title || url}</a>...</p>
+    <script>
+    setTimeout(function(){ window.location.href = "${url}"; }, 2000);
+    </script>
+  </body>
+  </html>
+  `;
 };

@@ -263,6 +263,12 @@ http.ServerResponse.prototype.redirect = function(url) {
   return this.renderHTML(loggingTemplate.htmlRedirect(url));
 };
 
+http.ServerResponse.prototype.redirectWithTracking = function(url, title) {
+  return this.renderHTML(
+    loggingTemplate.renderRedirectPageWithTracking(url, title)
+  );
+};
+
 http.ServerResponse.prototype.status = function(code, head, body) {
   this.writeHead(code, head || undefined);
   body ? this.end(body) : this.end();
