@@ -1,6 +1,7 @@
 /**
  * iframe controller
  * renders an HTML iframe to another page
+ * note: destination pages must contain <base target="_parent"> to open links properly from the iframe
  */
 
 var DESTINATIONS = {
