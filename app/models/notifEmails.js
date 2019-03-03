@@ -185,7 +185,7 @@ exports.sendRepost = function(reposter, post, postAuthor /*Email*/) {
   });
 };
 
-// 2) when subscriber subscribes to selectedUser => "XXX has subscribed to you on Whyd!"
+// 2) when subscriber subscribes to selectedUser => "XXX has subscribed to you on Openwhyd!"
 exports.sendSubscribedToUser = function(subscriber, selectedUser, cb) {
   submitNotif(
     selectedUser,

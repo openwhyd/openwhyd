@@ -41,7 +41,7 @@ function genButton(p) {
     '<a href="/u/' +
       p.uId +
       '" target="_blank">' +
-      (btnSize ? '' : '<div>Subscribe to me on Whyd</div>') +
+      (btnSize ? '' : '<div>Subscribe to me on Openwhyd</div>') +
       '</a>',
     '</body>',
     '</html>'

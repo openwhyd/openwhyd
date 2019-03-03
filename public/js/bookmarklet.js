@@ -251,7 +251,7 @@ var YOUTUBE_API_KEY = 'AIzaSyAoOEeY3-9BvPV-t6GSck2NXR0Ay-4Xm24';
     this.addSearchThumb = function(track) {
       var searchQuery = track.searchQuery || track.name || track.title;
       this.addThumb({
-        title: searchQuery || 'Search Whyd',
+        title: searchQuery || 'Search Openwhyd',
         sourceLogo: urlPrefix + '/images/icon-search-from-bk.png',
         onclick: showSearch.bind(searchQuery)
       });

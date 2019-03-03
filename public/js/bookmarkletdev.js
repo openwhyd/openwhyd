@@ -204,7 +204,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
       img.src = urlPrefix + '/images/cover-track.png';
       var divThumb = renderThumb({
           id: 'whydThumb' + this.nbTracks++,
-          title: track.name || track.title || 'Search Whyd',
+          title: track.name || track.title || 'Search Openwhyd',
           element: img
         }),
         href = 'http://openwhyd.org/search?q=' + encodeURIComponent(track.name);

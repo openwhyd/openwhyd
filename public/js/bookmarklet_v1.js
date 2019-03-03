@@ -207,7 +207,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
       var searchQuery = track.searchQuery || track.name || track.title;
       var div = renderThumb({
           id: 'whydThumb' + this.nbTracks++,
-          title: searchQuery || 'Search Whyd',
+          title: searchQuery || 'Search Openwhyd',
           element: img
         }),
         href =

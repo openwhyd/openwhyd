@@ -17,7 +17,7 @@ function renderLoginForm(form) {
       '<p style="text-align:center;margin-top:140px;">',
       '  Please <a href="' +
         config.urlPrefix +
-        '/login?redirect=closeWindow" target="_blank">login to Whyd</a> first.',
+        '/login?redirect=closeWindow" target="_blank">login to Openwhyd</a> first.',
       '</p>',
       '<script>',
       '  setTimeout(function(){ window.location.reload(); }, 1000);',
@@ -102,7 +102,7 @@ function makeAddDlg(reqParams, playlists, user, cb) {
 				+ snip.renderTimestamp(new Date() - posts[0]._id.getTimestamp()) + " ago.";
 		}
 		else
-			p.trackPresenceMsg = "Congrats! You're the first to add this track on Whyd!";
+			p.trackPresenceMsg = "Congrats! You're the first to add this track on Openwhyd!";
 		render(p);
 	});
 	*/

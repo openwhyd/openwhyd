@@ -876,7 +876,7 @@ Returns: (JSON)
 
 `POST /api/playlist`
 
-To be called after the image was uploaded to Whyd. Upon success, this uploaded image file will be moved to Whyd's playlist images directory.
+To be called after the image was uploaded to Openwhyd. Upon success, this uploaded image file will be moved to Openwhyd's playlist images directory.
 
 The user who created the provided playlist must be logged in (based on cookie) before using this endpoint
 
@@ -911,7 +911,7 @@ Return (JSON):
 
 ### Upload
 
-#### Upload a file to Whyd's file server
+#### Upload a file to Openwhyd's file server
 
 Uploading a file is necessary before changing any image associated (directly or not) to user-generated data (ex: user avatar, user profile banner, playlist cover, etc...). User must be logged in (based on attached cookie).
 

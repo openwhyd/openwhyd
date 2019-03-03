@@ -617,7 +617,7 @@ console.log('-= openwhyd bookmarklet =-');
         encodeURIComponent(title) +
         '" target="_blank">' +
         title +
-        '</a> on Whyd</p>'
+        '</a> on Openwhyd</p>'
       );
     }
 

@@ -33,7 +33,7 @@ var FIELDS = [
 exports.renderSignupPage = function(p) {
   p = p || {}; // FIELDS + loggedUser
   var params = {
-    title: 'Join Whyd',
+    title: 'Join Openwhyd',
     pageDesc: !p.sender
       ? mainTemplate.defaultPageMeta.desc
       : p.sender.name +
@@ -77,8 +77,8 @@ exports.renderInvitePage = function(
 ) {
   var params = {};
   params.title = /*config.landingStream &&*/ !inviteCode
-    ? 'Join Whyd'
-    : 'Your invitation to Whyd';
+    ? 'Join Openwhyd'
+    : 'Your invitation to Openwhyd';
   params.pageDesc = !sender
     ? mainTemplate.defaultPageMeta.desc
     : sender.name +
