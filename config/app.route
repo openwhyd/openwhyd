@@ -12,9 +12,6 @@ GET		/press							-> controllers.static
 GET		/privacy						-> controllers.static
 GET		/investors						-> controllers.static
 GET		/concertvenue					-> controllers.static
-GET		/artist							-> controllers.static
-GET		/DJ								-> controllers.static
-GET		/blogger						-> controllers.static
 GET		/label							-> controllers.static
 GET		/tos							-> controllers.static
 GET		/mobile							-> controllers.static
