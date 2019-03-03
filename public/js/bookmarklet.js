@@ -13,7 +13,7 @@ if (undefined == window.console)
   };
 
 console.log('-= openwhyd bookmarklet v2.3 =-');
-var YOUTUBE_API_KEY = 'AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI';
+var YOUTUBE_API_KEY = 'AIzaSyAoOEeY3-9BvPV-t6GSck2NXR0Ay-4Xm24';
 
 (window._initWhydBk = function() {
   var FILENAME = '/js/bookmarklet.js';
