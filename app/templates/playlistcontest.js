@@ -25,7 +25,7 @@ var i18n = {
     h1: 'Create a playlist contest',
     /*t1: "Overview",*/
     c1:
-      'Playlist contests engage your community and helps you grow your fans by engaging the OpenWhyd community too.',
+      'Playlist contests engage your community and helps you grow your fans by engaging the Openwhyd community too.',
     t2: 'Engage and reward your community',
     c2: [
       {
@@ -38,7 +38,7 @@ var i18n = {
           'Reward your community by featuring their playlists or with other prizes!'
       }
     ],
-    t3: 'Engage the OpenWhyd community and grow your audience',
+    t3: 'Engage the Openwhyd community and grow your audience',
     c3: [
       {
         li:
@@ -50,7 +50,7 @@ var i18n = {
 		c4: [
 			{li: "You create a playlist contest with the name of your site/brand/project/event, giving people a starting point to build a playlist, and choose dates that you’d like the contest to begin and end (optimal time is two weeks)."},
 			{li: "You copy and paste the rules (see below) into a post on your site, or other announcements via social media."},
-			{li: "Participants go to OpenWhyd to create a playlist with the title you select."},
+			{li: "Participants go to Openwhyd to create a playlist with the title you select."},
 			{li: "Whyd will feature the contest and push it out to all users across the site, plus provide support on social media and individual invitations to key users."},
 			{li: "Participants then share their playlists as much as possible. Every time a playlist is shared it is shared with your name (because it’s the title)."},
 			{li: "Listeners can find the playlists by searching for the title, and then vote by sharing it to their networks via FB and Twitter. But most people will be driven to listen to the playlists by the participant themselves!"},
@@ -84,7 +84,7 @@ var i18n = {
         ul: [
           {
             li:
-              'Participants go to OpenWhyd to create a playlist with the title you select.'
+              'Participants go to Openwhyd to create a playlist with the title you select.'
           },
           {
             li:
@@ -112,7 +112,7 @@ var i18n = {
     c7: [
       {
         p:
-          'Make a playlist titled [[YOURNAME]] on OpenWhyd (use this invite link to sign up if you are not already a member)'
+          'Make a playlist titled [[YOURNAME]] on Openwhyd (use this invite link to sign up if you are not already a member)'
       },
       {
         p:
@@ -142,7 +142,7 @@ var i18n = {
   FR: {
     h1: 'Créer une compétition de playlists',
     c1:
-      'Les concours de playlist engagent votre communauté et aident à monter votre fan base avec les music lovers de OpenWhyd aussi!',
+      'Les concours de playlist engagent votre communauté et aident à monter votre fan base avec les music lovers de Openwhyd aussi!',
     t2: 'Engagez et Récompensez votre communauté',
     c2: [
       { li: 'Encouragez votre audience à mieux connaître votre identité' },
@@ -155,11 +155,11 @@ var i18n = {
           "Récompensez votre communauté en relayant leurs playlists ou avec d'autres prix!"
       }
     ],
-    t3: 'Engagez la communauté OpenWhyd et montez votre audience',
+    t3: 'Engagez la communauté Openwhyd et montez votre audience',
     c3: [
       {
         li:
-          'Les membres de OpenWhyd sont des diggers de sons, engagez avec eux et mettez en avant votre site.'
+          'Les membres de Openwhyd sont des diggers de sons, engagez avec eux et mettez en avant votre site.'
       }
     ],
     t5: 'BREAKDOWN: Qui fait quoi ?',
@@ -187,7 +187,7 @@ var i18n = {
         ul: [
           {
             li:
-              'Les participants vont sur OpenWhyd pour créer leurs playlists avec le nom de votre site/marque/projet/évènement que vous avez sélectionné.'
+              'Les participants vont sur Openwhyd pour créer leurs playlists avec le nom de votre site/marque/projet/évènement que vous avez sélectionné.'
           },
           {
             li:
@@ -216,7 +216,7 @@ var i18n = {
     c7: [
       {
         p:
-          "Créez une playlist avec le titre {{VOTRE NOM DE SITE}} sur OpenWhyd (utilisez ce lien d'invite si vous n'êtes pas encore un membre)"
+          "Créez une playlist avec le titre {{VOTRE NOM DE SITE}} sur Openwhyd (utilisez ce lien d'invite si vous n'êtes pas encore un membre)"
       },
       { p: 'Ajoutez {{NUMÉRO MINIMUM}} des tracks qui reflètent votre style.' },
       {
@@ -253,7 +253,7 @@ exports.renderInfoPage = function(plC) {
       uiSnippets.htmlEntities((mongodb.usernames[plC.uId] || {}).name) +
       '</p>',
     '<p>URL: ' + renderLink(safe.url) + '</p>',
-    '<p>OpenWhyd URL (redirection): ' +
+    '<p>Openwhyd URL (redirection): ' +
       renderLink(config.urlPrefix + '/playlistcontest/' + safe.uri) +
       '</p>',
     '<p>=> JOIN URL: ' +

@@ -8,7 +8,7 @@ Now set your desired droplet size, region, and other additional settings. Don't 
 
 Next step is to setup a [new user in your droplet](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04). The new user is for you to have lesser privileges in accessing your droplet, as the root user has very broad privileges and it could be potentially dangerous.
 
-Now that you have another user, proceed to setting up OpenWhyd. Open the `docker-compose-deploy.yml` file and set the necessary environment variables. After this, you now need to copy this file to your droplet. You will be using [scp](https://linux.die.net/man/1/scp). Change the current directory into the project directory and then run.
+Now that you have another user, proceed to setting up Openwhyd. Open the `docker-compose-deploy.yml` file and set the necessary environment variables. After this, you now need to copy this file to your droplet. You will be using [scp](https://linux.die.net/man/1/scp). Change the current directory into the project directory and then run.
 
 ```
 $ scp ./docker-compose-deploy.yml username@your-droplet-ip:~/docker-compose.yml
@@ -42,6 +42,6 @@ $ sudo docker-compose up -d
 
 This command will first pull the images from the registry and then run the containers in the background.
 
-If everything goes smoothly, you should now see OpenWhyd up and running by visiting `your-droplet-ip:8080` in your browser. 
+If everything goes smoothly, you should now see Openwhyd up and running by visiting `your-droplet-ip:8080` in your browser. 
 
-You now have successfully deployed OpenWhyd into your droplet. 
+You now have successfully deployed Openwhyd into your droplet. 

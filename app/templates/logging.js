@@ -52,7 +52,7 @@ exports.renderLandingPage = function(loggedUser, form, callback) {
   var whydPageParams = {
     //request: request, // => pageUrl => meta og:url element (useless)
     loggedUser: loggedUser,
-    //pageTitle: "OpenWhyd",
+    //pageTitle: "Openwhyd",
     js: [],
     css: [],
     endOfBody: [].join('\n'),

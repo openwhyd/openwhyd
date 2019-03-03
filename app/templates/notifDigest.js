@@ -178,7 +178,7 @@ exports.NotifDigest.prototype.renderText = function() {
     ''
   ]);
   if (p.linkUnsubscribeNotifs) {
-    text.push('You receive too many OpenWhyd notifications? You can: ');
+    text.push('You receive too many Openwhyd notifications? You can: ');
     text.push(
       '- ' +
         p.linkUnsubscribeNotifs.text +

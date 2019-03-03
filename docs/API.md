@@ -209,16 +209,16 @@ Response: (JSON)
 
 *   **error**: (string, optional) error message, if any
 *   **redirect**: (string, optional) url to redirect to, if login succeeded
-*   **fbUser**: (object, optional) contains Facebook user data {id, name, email}, if this Facebook user is not connected to a OpenWhyd account
+*   **fbUser**: (object, optional) contains Facebook user data {id, name, email}, if this Facebook user is not connected to a Openwhyd account
 *   **user**: (object, if `includeUser` is set to true): complete db object about the logged in user, containing following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions` 
 
 #### CONNECT FACEBOOK ACCOUNT TO WHYD ACCOUNT
 
 Enables:
 
-*   Possibility to log in to OpenWhyd using Facebook connect
+*   Possibility to log in to Openwhyd using Facebook connect
 
-This endpoint is called when a OpenWhyd user (that is already logged in) clicks on a Facebook Connect button, and this Facebook account is not yet connected to another OpenWhyd account.
+This endpoint is called when a Openwhyd user (that is already logged in) clicks on a Facebook Connect button, and this Facebook account is not yet connected to another Openwhyd account.
 
 `html : (GET  /facebookLogin/action=link&fbUid&fbAccessToken)`
 
@@ -764,7 +764,7 @@ _Parameters:_
 
 Return:
 
-#### Share a post to OpenWhyd users (notification)
+#### Share a post to Openwhyd users (notification)
 
 `POST /api/post/<pId>/sendToUsers`
 
@@ -884,7 +884,7 @@ _Parameters:_
 
 *   **action**: "update"
 *   **id**: (int) number of the playlist (0 being the id of the user's first playlist)
-*   **img**: (string) path of the uploaded image, in OpenWhyd upload directory.
+*   **img**: (string) path of the uploaded image, in Openwhyd upload directory.
 
 Returns: (JSON)
 
@@ -892,7 +892,7 @@ Returns: (JSON)
 *   **id**: the id of updated playlist (as provided in the call)
 *   **name**: the name of the updated playlist
 
-#### Share a playlist to OpenWhyd users (notification)
+#### Share a playlist to Openwhyd users (notification)
 
 `POST /api/playlist`
 
@@ -970,7 +970,7 @@ syntax:
 
 #### URLs for fetching images
 
-Images can be fetched for any OpenWhyd resource (tracks, user, playlists...) from a unified URL scheme, provided the id of this ressource.
+Images can be fetched for any Openwhyd resource (tracks, user, playlists...) from a unified URL scheme, provided the id of this ressource.
 
 The controller will either redirect to the external ressource (e.g. facebook avatars, hosted by facebook) or return the image directly. In the first case, HTTP GET parameters are passed through to the redirect URL.
 

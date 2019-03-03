@@ -37,7 +37,7 @@ exports.renderSignupPage = function(p) {
     pageDesc: !p.sender
       ? mainTemplate.defaultPageMeta.desc
       : p.sender.name +
-        ' uses OpenWhyd to access the billions of tracks available on the web today. ' +
+        ' uses Openwhyd to access the billions of tracks available on the web today. ' +
         'Join our community to listen to ' +
         p.sender.name +
         "'s music and add your favorite tracks!",
@@ -82,7 +82,7 @@ exports.renderInvitePage = function(
   params.pageDesc = !sender
     ? mainTemplate.defaultPageMeta.desc
     : sender.name +
-      ' uses OpenWhyd to access the billions of tracks available on the web today. ' +
+      ' uses Openwhyd to access the billions of tracks available on the web today. ' +
       'Join our community to listen to ' +
       sender.name +
       "'s music and add your favorite tracks!";

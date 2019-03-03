@@ -1,5 +1,5 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"> 
-    <ShortName>OpenWhyd</ShortName> 
+    <ShortName>Openwhyd</ShortName> 
     <Description>Search music tracks, playlists and users on Whyd</Description> 
     <InputEncoding>UTF-8</InputEncoding> 
     <Image width="16" height="16" type="image/x-icon">http://openwhyd.org/images/favicon.ico</Image> 

@@ -110,7 +110,7 @@ var publicActions = {
       cb({
         ok: 1,
         message:
-          'We are deleting your OpenWhyd account. Sorry to see you leave...'
+          'We are deleting your Openwhyd account. Sorry to see you leave...'
       });
     }
   },

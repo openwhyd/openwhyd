@@ -253,7 +253,7 @@ exports.renderHeader = function(user, content, params) {
     content ||
     [
       '  <div id="headCenter">',
-      '   <a id="logo" title="OpenWhyd" target="_top" class="homeLink" href="/">',
+      '   <a id="logo" title="Openwhyd" target="_top" class="homeLink" href="/">',
       // '     <img id="logo" src="'+render.urlPrefix+'/images/logo-s.png" />',
       '   </a>',
       uid ? '<div id="notifIcon">0</div><div id="notifPanel"></div>' : '',
@@ -395,7 +395,7 @@ exports.renderWhydPage = function(params) {
   var out = [
     //'<div class="topWarning">🚧 We\'re moving! => Openwhyd will be unavailable on Sunday 21th of May.</div>',
     '<!--[if lt IE 8]>',
-    '<div class="topWarning">Warning: your web browser is not supported by OpenWhyd. Please upgrade to a modern browser.</div>',
+    '<div class="topWarning">Warning: your web browser is not supported by Openwhyd. Please upgrade to a modern browser.</div>',
     '<![endif]-->',
     //	'<a id="feedbackLink" href="mailto:contact@openwhyd.org?subject=[proto-support]&body=Please%20enter%20your%20feedback%20here">Send feedback</a>',
     //	'<a id="feedbackLink" href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;">&nbsp;</a>',

@@ -2,7 +2,7 @@
 
 :+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
-This document proposes guidelines for contributing to the OpenWhyd repository.
+This document proposes guidelines for contributing to the Openwhyd repository.
 
 The objectives of the guidelines are:
 

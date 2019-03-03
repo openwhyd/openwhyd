@@ -51,7 +51,7 @@ exports.controller = function(request, reqParams, response) {
                 'whyd registration',
                 'Thank you for your interest in whyd!\n\n' +
                   'We will let you know when we launch the service.\n\n' +
-                  'Greetings from the OpenWhyd team! :-) \n' +
+                  'Greetings from the Openwhyd team! :-) \n' +
                   process.appParams.urlPrefix
               );
 

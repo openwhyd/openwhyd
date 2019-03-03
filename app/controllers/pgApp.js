@@ -73,7 +73,7 @@ function sendHeariamEmail(p) {
       return console.error('ERROR: user not found in sendHeariamEmail');
     emailModel.email(
       user.email,
-      'Thank you for connecting OpenWhyd to Hear I Am',
+      'Thank you for connecting Openwhyd to Hear I Am',
       [
         'Hey ' + user.name + '!',
         "Welcome to Hear I Am, we can't wait to introduce you to relevant music lovers near you!",

@@ -95,7 +95,7 @@ var sections = {
         var $li = $content
           .html(renderUserRanking(json))
           .prepend(
-            '<p>The World OpenWhyd Ranking reflects the most influential people sharing music on OpenWhyd this week</p>'
+            '<p>The World Openwhyd Ranking reflects the most influential people sharing music on Openwhyd this week</p>'
           )
           .find('li');
         $li.eq(0).append("<div class='rankMedal rank1'>1</div>");
