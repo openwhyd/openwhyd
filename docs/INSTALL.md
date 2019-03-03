@@ -84,3 +84,12 @@ npm run test-docker
 * `LAST_FM_API_SECRET` (mandatory. for lastfm scrobbling)
 * `ALGOLIA_APP_ID` (mandatory. for search index)
 * `ALGOLIA_API_KEY` (mandatory. for search index)
+
+### Other variables to update
+
+The value of following constants is required to connect to the corresponding APIs:
+
+* `YOUTUBE_API_KEY`
+* `SOUNDCLOUD_CLIENT_ID`
+* `JAMENDO_CLIENT_ID`
+* `DEEZER_APP_ID`
