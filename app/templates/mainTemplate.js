@@ -39,7 +39,8 @@ var playerHtmlCode = fs.readFileSync('app/templates/whydPlayer.html', 'utf8');
 
 exports.defaultPageMeta = {
   img: config.urlPrefix + '/images/logo-black-square-smaller.png',
-  desc: 'The place for music lovers. Collect and share the tracks you love.'
+  desc:
+    'Discover and collect music gems from Youtube, Soundcloud, Deezer and more'
 };
 
 function makeMetaHead(options) {
@@ -307,8 +308,8 @@ exports.renderHeader = function(user, content, params) {
           ]
         : [
             '  <div id="searchBar">',
-            '  <h1>The community of music lovers</h1>',
-            '	 <p>Collect and share the best music in the world</p>',
+            '  <h1>Openwhyd: The community of music lovers</h1>',
+            '	 <p>Discover and collect music gems from Youtube, Soundcloud, Deezer and more</p>',
             '   <div class="searchForm" id="searchForm">', //<form id="searchForm" method="get" action="'+render.urlPrefix+'/search">',
             '    <input name="q" class="q search-input" id="q" type="text" value="' +
               uiSnippets.htmlEntities(params.q) +
