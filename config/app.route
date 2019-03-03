@@ -6,7 +6,6 @@ GET		/now							-> controllers.now
 
 GET		/favicon.ico					-> controllers.static
 GET		/favicon.png					-> controllers.static
-GET		/download							-> controllers.static
 GET		/press							-> controllers.static
 GET		/privacy						-> controllers.static
 GET		/investors						-> controllers.static
@@ -14,6 +13,8 @@ GET		/concertvenue					-> controllers.static
 GET		/mobile							-> controllers.static
 GET		/iphone							-> controllers.static
 POST  /fbcanvas/          -> controllers.static
+
+GET		/download							-> controllers.iframe
 
 GET		/about							-> controllers.redir
 GET		/api									-> controllers.redir

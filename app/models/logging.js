@@ -269,6 +269,10 @@ http.ServerResponse.prototype.redirectWithTracking = function(url, title) {
   );
 };
 
+http.ServerResponse.prototype.renderIframe = function(url, metaOverrides) {
+  return this.renderHTML(loggingTemplate.renderIframe(url, metaOverrides));
+};
+
 http.ServerResponse.prototype.status = function(code, head, body) {
   this.writeHead(code, head || undefined);
   body ? this.end(body) : this.end();
