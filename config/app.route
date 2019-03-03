@@ -12,8 +12,6 @@ GET		/press							-> controllers.static
 GET		/privacy						-> controllers.static
 GET		/investors						-> controllers.static
 GET		/concertvenue					-> controllers.static
-GET		/label							-> controllers.static
-GET		/tos							-> controllers.static
 GET		/mobile							-> controllers.static
 GET		/iphone							-> controllers.static
 POST  /fbcanvas/          -> controllers.static
