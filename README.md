@@ -56,9 +56,7 @@ Initially known as [whyd.com](https://whyd.com), the development of this product
 
 Since 2016, Adrien Joly has been taking care of Openwhyd's domain name, infrastructure and data on his spare time.
 
-- Vision and roadmap: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3)
-- Tasks that are open to contributions: [GitHub Project](https://github.com/openwhyd/openwhyd/projects/1)
-- How to contribute? Check out our [Support Openwhyd](#support-openwhyd) section for more info. Beginners are welcome too! 🤗
+The project is **open to contributions**. Check out our [Support Openwhyd](#support-openwhyd) section for more info. Beginners are welcome too! 🤗
 <!--
 - Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2017](https://infograph.venngage.com/publish/c74df49b-2d2f-48bc-b9cb-5bc1f5908c37) 🔥
 -->
@@ -88,15 +86,13 @@ If you want to deploy Openwhyd to a server, you can follow our guide: [How to de
 
 ## Support Openwhyd
 
-There are several way you can help Openwhyd! 💓
+There are several ways you can help Openwhyd! 💓
 
-- If you're a **developer**, you can help us reply to our users' problems and questions from the [Music Lovers Club](https://www.facebook.com/groups/openwhyd/), maintain [issues](https://github.com/openwhyd/openwhyd/issues), or even better: [contribute to the codebase](docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help). (beginners are welcome too!)
+- If you're a **developer**, you can [contribute to our current challenges](docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help). (beginners are welcome too!)
 
-- You can help Openwhyd sustain by [becoming a backer](https://opencollective.com/openwhyd/order/313) (*starting at $1/month, can be interrupted anytime*), or giving a [one-off donation](https://opencollective.com/openwhyd/donate). We publish our expenses transparently on [Open Collective](https://opencollective.com/openwhyd).
+- If you're a **user**, you can join and start discussions in [our Facebook group](https://www.facebook.com/groups/openwhyd/), [donate](https://opencollective.com/openwhyd/donate), and/or show Openwhyd to your friends.
 
-- If you have **other skills** you'd like to contribute to Openwhyd, please [tell us](https://github.com/openwhyd/openwhyd/issues/new?title=Hi,+I+want+to+help!).
-
-- If you're out of time and money, you can still **spread the word** about openwhyd.org, e.g. by showing it to your friends or sharing your playlists on social networks.
+- If you have **other skills** you'd like to contribute to Openwhyd, come [say hi](https://github.com/openwhyd/openwhyd/issues/new?title=Hi,+I+want+to+help!)!
 
 Thank you in advance for your kindness! 🤗
 

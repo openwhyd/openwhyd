@@ -172,18 +172,22 @@ Last but not least, I backup all Openwhyd’s data every week. So, if something 
 
 ### I'd love to contribute to Openwhyd, how can I help?
 
-Openwhyd is a collaborative project, so we welcome contributions of any kind!
+Openwhyd is a collaborative / open-source project. Contributions of many kinds are welcome! 🤗
 
-If you're a developer, check out:
+If you're a **developer**:
 
-- our [open-source repositories on Github](https://github.com/openwhyd),
-- our [global roadmap](https://github.com/orgs/openwhyd/projects/1) and [development board on Github](https://github.com/openwhyd/openwhyd/projects/1),
-- our [current issues on Github](https://github.com/openwhyd/openwhyd/issues), (*help on fixing bugs is particularly appreciated!*)
-- and our [contribution guide](CONTRIBUTING.md).
+- Feel free to say *hi!* on any issue or task listed in our [GitHub Project](https://github.com/openwhyd/openwhyd/projects/1);
+- Help on replicating, investigating and fixing bugs is particularly appreciated. And beginners are welcome too!
+- Here's some useful documentation for contributors: our [roadmap](ROADMAP.md) and [contribution guide](CONTRIBUTING.md);
+- Also, you can bring your laptop to the next [Hackergarten meetup](https://www.meetup.com/fr-FR/Paris-Hackergarten) (happening in Paris every month), if you want to meet [Adrien](https://github.com/adrienjoly) and contribute on Openwhyd with him.
 
-If you have other skills that you would like to invest as a volunteer, please contact us!
+Otherwise, you can:
 
-Or, if you want to keep Openwhyd afloat, you can [donate](https://opencollective.com/openwhyd) to help us cover Openwhyd's hosting costs.
+- join and start discussions in [our Facebook group](https://www.facebook.com/groups/openwhyd/),
+- [donate](https://opencollective.com/openwhyd/donate) to help us cover Openwhyd's maintenance costs,
+- and/or show Openwhyd to your friends, because it's so much cooler than Spotify! 😎
+
+If you would rather talk to us privately, please come [say *hi*](mailto:contact@openwhyd.org)!
 
 ### Can we organise a party with fellow Openwhyd users?
 
