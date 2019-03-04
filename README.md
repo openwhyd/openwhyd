@@ -36,6 +36,18 @@ Demo video:
 
 👋 A question, a problem? Check out [our Roadmap](docs/ROADMAP.md) and [our FAQ](docs/FAQ.md).
 
+### Communication
+
+We strive to keep Openwhyd up and running for [our community of music lovers](https://www.facebook.com/groups/openwhyd/). We occasionally feature tasty playlists on [@open_whyd](https://twitter.com/open_whyd) (Twitter) and on [our Facebook page](https://facebook.com/openwhyd).
+
+In order to attract users and contributors, [Adrien Joly](https://github.com/adrienjoly) regularly promotes the project and helps developers who want to get involved. Here is a list of talks he gave to present Openwhyd:
+
+- [Le développement durable appliqué au code, de Whyd à Openwhyd](https://www.youtube.com/watch?v=MA5weD7giNU) (Nov 15, 2018, CTO Pizza Live)
+- [Openwhyd, a startup product given to its community of users](https://docs.google.com/presentation/d/1bahmSwu9P5vhcTanWEmQ72OXD5_xqcxwQY4MvWnJlXU) (Oct 16, 2018, GitHub Universe Meetup @ Algolia)
+- [Présentation d'Openwhyd, app web de curation musicale ouverte aux contributeurs](https://adrienjoly.com/slides/openwhyd-2017) (Oct 25, 2017, Meetup Node.js Paris)
+
+💪 You want to get involved? Check out our [Support Openwhyd](#support-openwhyd) section for more info.
+
 ## Development
 
 ### Status
@@ -87,16 +99,6 @@ There are several way you can help Openwhyd! 💓
 - If you're out of time and money, you can still **spread the word** about openwhyd.org, e.g. by showing it to your friends or sharing your playlists on social networks.
 
 Thank you in advance for your kindness! 🤗
-
-### Promotion
-
-We strive to keep Openwhyd up and running for our community of music lovers. In order to attract users and contributors, [Adrien Joly](https://github.com/adrienjoly) regularly promotes the project and helps developers who want to get involved:
-
-- [Le développement durable appliqué au code, de Whyd à Openwhyd](https://www.youtube.com/watch?v=MA5weD7giNU) (Nov 15, 2018, CTO Pizza Live)
-- [Openwhyd, a startup product given to its community of users](https://docs.google.com/presentation/d/1bahmSwu9P5vhcTanWEmQ72OXD5_xqcxwQY4MvWnJlXU) (Oct 16, 2018, GitHub Universe Meetup @ Algolia)
-- [Présentation d'Openwhyd, app web de curation musicale ouverte aux contributeurs](https://adrienjoly.com/slides/openwhyd-2017) (Oct 25, 2017, Meetup Node.js Paris)
-
-If you you want to contribute, you can get help from Adrien by bringing your laptop to [Hackergarten meetups](https://www.meetup.com/fr-FR/Paris-Hackergarten), happening in Paris every month. Otherwise, check out our recommendations listed in the *Support Openwhyd* section, above.
 
 ### Contributors
 
