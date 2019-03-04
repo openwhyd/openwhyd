@@ -1,11 +1,18 @@
 [![Build Status](https://img.shields.io/travis/openwhyd/openwhyd/master.svg?style=flat-square)](https://travis-ci.org/openwhyd/openwhyd) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=flat-square&label=Follow)](https://twitter.com/open_whyd)
-# Openwhyd.org
+# Openwhyd
 
 > Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
 
+Openwhyd is:
+- an independent music curation service freely available at [openwhyd.org](https://openwhyd.org);
+- a community of music lovers who enjoy taking their time to find the best tracks and videos for their collection;
+- a collaborative / open-source project maintained by passionate volunteers. You too can contribute!
+
+## Openwhyd.org
+
 Music libraries like Spotify and Apple Music make it easy to play and collect music that is released officially by music labels.
 
-Openwhyd, on the other hand, allows music lovers to discover, play and collect *any* musical gem that is available on the most popular streaming platforms, including:
+**Openwhyd**, on the other hand, allows music lovers to discover, play and collect *any* musical gem that is available on the most popular streaming platforms, including:
 
 - music videos, bootlegs and specific live performances,
 - fresh tracks from new and/or local artists,
@@ -14,11 +21,9 @@ Openwhyd, on the other hand, allows music lovers to discover, play and collect *
 
 **Free to use at [openwhyd.org](https://openwhyd.org), and [on your iPhone](https://openwhyd.org/iphone).**
 
-## Features
+### Features
 
 [![Openwhyd Demo Video](./docs/img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Openwhyd Demo Video")
-
-Features:
 
 - Playlists: made of tracks from **various sources**: Youtube, Soundcloud, Bandcamp, Deezer...
 - Button: Add a track from **any web page**, in a few clicks, using our Google Chrome extension and bookmarklet
@@ -27,23 +32,24 @@ Features:
 - Search: Add descriptions to your track, to make them **easier to find** when you need them
 - Integration: Embed your playlists on your blog or website, so your visitors can listen to it directly.
 
+👋 A question, a problem? Check out [our FAQ](docs/FAQ.md).
+
 ## Development
 
-### Status of the project
+### Status
 
-This product is the result of years of iterative development, by the start-up company [Whyd](https://whyd.com). Read [the full story from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
+Initially known as [whyd.com](https://whyd.com), the development of this product started in 2012, and was lead by [Adrien Joly](https://github.com/adrienjoly). It became open-source in 2016. Read the full story [from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
 
-Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the-music-streaming-social-network-becomes-openwhyd-and-gives-keys-to-the-community-18067/), [Adrien Joly](https://github.com/adrienjoly) (ex-lead developer at Whyd) has been maintaining it and coordinating [contributors](https://github.com/openwhyd/openwhyd/network/members) on his spare time.
+Since 2016, Adrien Joly has been taking care of Openwhyd's domain name, infrastructure and data on his spare time.
 
-⚠️ On January 21th of 2018, Adrien Joly announced that he's retiring from the maintainance of Openwhyd's codebase => **this repository now open to new maintainers**! (for more information, [read the announcement](https://medium.com/openwhyd/openwhyd-is-open-to-new-maintainers-94d55050adb4))
-
-- Vision and roadmap: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3) + [development backlog](https://github.com/openwhyd/openwhyd/projects/1).
+- Vision and roadmap: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3)
+- Tasks that are open to contributions: [GitHub Project](https://github.com/openwhyd/openwhyd/projects/1)
+- How to contribute? Check out our [Support Openwhyd](#support-openwhyd) section for more info. Beginners are welcome too! 🤗
+<!--
 - Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2017](https://infograph.venngage.com/publish/c74df49b-2d2f-48bc-b9cb-5bc1f5908c37) 🔥
-- A question / problem? --> Check out [our FAQ](docs/FAQ.md)
+-->
 
-🤗 We welcome [backers](#support-openwhyd) and [contributors](#contributors), even beginners!
-
-### Current tech stack
+### Tech stack
 
 - Node.js
 - Express-like Web Server
@@ -53,11 +59,16 @@ Since [its code was generously open-sourced by Whyd](http://eprnews.com/whyd-the
 
 ### Setup and usage
 
-Developers, feel free to clone this repo and make it run on your own machine! 💪
+You just need Docker and `git` installed on your computer:
 
-You just need Docker, `docker-compose` and `git` installed on your computer. Node.js, `npm` and MongoDB will be automatically downloaded and installed in the Docker containers when you run `docker-compose up`.
+```sh
+$ git clone https://github.com/openwhyd/openwhyd.git
+$ cd openwhyd
+$ docker-compose up
+$ open localhost:8080
+```
 
-You'll find **setup and usage instructions** in [INSTALL.md](docs/INSTALL.md).
+More info about **Setup and Usage**: [INSTALL.md](docs/INSTALL.md).
 
 If you want to deploy Openwhyd to a server, you can follow our guide: [How to deploy on DigitalOcean](docs/howto-deploy-on-digitalocean.md).
 
@@ -74,6 +85,16 @@ There are several way you can help Openwhyd! 💓
 - If you're out of time and money, you can still **spread the word** about openwhyd.org, e.g. by showing it to your friends or sharing your playlists on social networks.
 
 Thank you in advance for your kindness! 🤗
+
+### Promotion
+
+We strive to keep Openwhyd up and running for our community of music lovers. In order to attract users and contributors, [Adrien Joly](https://github.com/adrienjoly) regularly promotes the project and helps developers who want to get involved:
+
+- [Le développement durable appliqué au code, de Whyd à Openwhyd](https://www.youtube.com/watch?v=MA5weD7giNU) (Nov 15, 2018, CTO Pizza Live)
+- [Openwhyd, a startup product given to its community of users](https://docs.google.com/presentation/d/1bahmSwu9P5vhcTanWEmQ72OXD5_xqcxwQY4MvWnJlXU) (Oct 16, 2018, GitHub Universe Meetup @ Algolia)
+- [Présentation d'Openwhyd, app web de curation musicale ouverte aux contributeurs](https://adrienjoly.com/slides/openwhyd-2017) (Oct 25, 2017, Meetup Node.js Paris)
+
+If you you want to contribute, you can get help from Adrien by bringing your laptop to [Hackergarten meetups](https://www.meetup.com/fr-FR/Paris-Hackergarten), happening in Paris every month. Otherwise, check out our recommendations listed in the *Support Openwhyd* section, above.
 
 ### Contributors
 
