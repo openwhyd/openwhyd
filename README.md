@@ -21,9 +21,11 @@ Music libraries like Spotify and Apple Music make it easy to play and collect mu
 
 **Free to use at [openwhyd.org](https://openwhyd.org), and [on your iPhone](https://openwhyd.org/iphone).**
 
-### Features
+Demo video:
 
 [![Openwhyd Demo Video](./docs/img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Openwhyd Demo Video")
+
+### Features
 
 - Playlists: made of tracks from **various sources**: Youtube, Soundcloud, Bandcamp, Deezer...
 - Button: Add a track from **any web page**, in a few clicks, using our Google Chrome extension and bookmarklet
@@ -32,7 +34,7 @@ Music libraries like Spotify and Apple Music make it easy to play and collect mu
 - Search: Add descriptions to your track, to make them **easier to find** when you need them
 - Integration: Embed your playlists on your blog or website, so your visitors can listen to it directly.
 
-👋 A question, a problem? Check out [our FAQ](docs/FAQ.md).
+👋 A question, a problem? Check out [our Roadmap](docs/ROADMAP.md) and [our FAQ](docs/FAQ.md).
 
 ## Development
 
