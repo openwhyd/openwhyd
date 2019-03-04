@@ -130,6 +130,7 @@ Support us with a monthly donation and help us keep Openwhyd alive. [[Become a b
 ### Sponsors
 Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/openwhyd#sponsor)]
 
+<a href="https://whyd.com/" target="_blank"><img alt="Whyd is the company that founded this service, donated the source code and still pays for distribution on Apple's App Store" src="docs/img/sponsor-whyd-smaller.png"></a>
 <a href="https://www.digitalocean.com/" target="_blank"><img alt="DigitalOcean has kindly offered us one year worth of hosting, to help us maintain our open-source development effort" src="docs/img/sponsor-digitalocean.png"></a>
 <a href="https://www.algolia.com/" target="_blank"><img alt="Algolia has been kindly providing our users with blazing-fast track search for years" src="docs/img/sponsor-algolia.png"></a>
 <a href="https://opencollective.com/openwhyd/sponsor/0/website" target="_blank"><img src="https://opencollective.com/openwhyd/sponsor/0/avatar.svg"></a>
