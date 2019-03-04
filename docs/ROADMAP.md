@@ -1,3 +1,5 @@
+<!-- from [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3) -->
+
 # Openwhyd Roadmap
 
 This document outlines the development plan from a high level and will be updated as progress is made towards Openwhyd version 2.0.
