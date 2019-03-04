@@ -30,14 +30,15 @@ Features:
 ## Documentation
 
 - Background: [Whyd Music becomes Openwhyd](http://eprnews.com/whyd-the-music-streaming-social-network-becomes-openwhyd-and-gives-keys-to-the-community-18067/) + [The Story of Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d)
-- Vision and roadmap: [The Future of Openwhyd](https://medium.com/openwhyd/the-future-of-openwhyd-9a39e0839ac3) + [development backlog](https://github.com/openwhyd/openwhyd/projects/1)
-- Developers:
+- Development:
   - [API.md](./API.md)
   - [INSTALL.md](./INSTALL.md), [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md)
   - [CONTRIBUTING.md](./CONTRIBUTING.md)
+  - [ROADMAP.md](./ROADMAP.md)
+  - Issues and tasks: [GitHub Project](https://github.com/openwhyd/openwhyd/projects/1)
 - A question / problem? --> Check out [our FAQ](./FAQ.md)
 
-🤗 We welcome [backers](https://github.com/openwhyd/openwhyd#support-openwhyd) and [contributors](https://github.com/openwhyd/openwhyd#contributors), even beginners!
+The project is **open to contributions**. Check out our [Support Openwhyd](#support-openwhyd) section for more info. Beginners are welcome too! 🤗
 
 ## Backers
 
