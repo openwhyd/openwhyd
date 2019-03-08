@@ -212,7 +212,7 @@ Response: (JSON)
 *   **fbUser**: (object, optional) contains Facebook user data {id, name, email}, if this Facebook user is not connected to a Openwhyd account
 *   **user**: (object, if `includeUser` is set to true): complete db object about the logged in user, containing following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions` 
 
-#### CONNECT FACEBOOK ACCOUNT TO WHYD ACCOUNT
+#### CONNECT FACEBOOK ACCOUNT TO OPENWHYD ACCOUNT
 
 Enables:
 
@@ -253,10 +253,10 @@ Parameters:
 *   **fbTok**: (string, optional) Facebook access token (if using FB connect)
 *   **<s>fbRequest</s>**<s>: (string, deprecated) Facebook request id. Used when the visitor was invited through a Facebook request, so that the request could be cleared after the visitor successfully signed up.</s>
 *   **<s>inviteCode</s>**<s>: (string, deprecated) code given by another user who invited the current visitor to signup. can be the user id of that user. this code was used for validation, when openwhyd was still in closed beta.</s>
-*   **iBy**: (string, optional) id of the user who invited the visitor to sign up to whyd. the invited visitor will be automatically subscribed to the inviter, and the inviter will be notified upon his friend's sign up.
+*   **iBy**: (string, optional) id of the user who invited the visitor to sign up to Openwhyd. the invited visitor will be automatically subscribed to the inviter, and the inviter will be notified upon his friend's sign up.
 *   **iPg:** (string, optional) URL of the page from which the sign up was initiated (for analytics)
 *   **iRf**: (string, optional) referrer of the sign up page (origin of the visitor, for analytics)
-*   **plC**: (string, optional) id of the playlist contest that brought the visitor to sign up whyd, for participating to the contest. => a playlist is created, to participate to this contest.
+*   **plC**: (string, optional) id of the playlist contest that brought the visitor to sign up to Openwhyd, for participating to the contest. => a playlist is created, to participate to this contest.
 *   **<s>iPo</s>**<s>: (string, deprecated) id of the post from which the visitor was invited => was used to redirect to that post upon successful sign up.</s>
 
 Response: (JSON, _if ajax parameter was set to true_)
@@ -389,7 +389,7 @@ Updates one or more fields of the logged in user.
 
 Allowed Parameters (one or many can be passed):
 
-*   **name:** (string) full user name, to be displayed publicly on whyd
+*   **name:** (string) full user name, to be displayed publicly on Openwhyd
 *   **img**: (string) user's avatar, must be the url of a file that was just uploaded to openwhyd (**cf upload API**)
 *   **cvrImg:** (string) user's profile banner, must be the url of a file that was just uploaded to openwhyd (**cf upload API**)
 *   **pwd:** (string) new password (plain, no md5), `oldPwd` must also be set
@@ -402,7 +402,7 @@ Allowed Parameters (one or many can be passed):
 *   **twTok**: (string) last session token received from connecting to Twitter (to send with **twId**)
 *   **twSec**: (string) last session secret received from connecting to Twitter (to send with **twId**)
 *   **apTok**: (string) user's Apple Push Notification token (string of 64 hexadecimal chars)
-*   **bio**: (string) user's biography / description, to be displayed publicly on whyd
+*   **bio**: (string) user's biography / description, to be displayed publicly on Openwhyd
 *   **loc**: (string) user's location. freeform, no format restrictions apply.
 *   **lnk_home**: (string) url of user's homepage, to be displayed as is on his profile
 *   **lnk_fb**: (string) url of user's facebook profile, to be displayed as an icon on his profile
@@ -942,7 +942,7 @@ Response: (JSON)
 Parameters:
 
 *   **action=delete**
-*   **id**: (string) identifier / filename of the uploaded file to delete from whyd's server
+*   **id**: (string) identifier / filename of the uploaded file to delete from Openwhyd's server
 
 ### Formats and Appendix
 
