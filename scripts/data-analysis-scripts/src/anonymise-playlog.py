@@ -4,7 +4,9 @@
 #
 # It was written by Mihangy, Damien and Adrien, during Hackergarten
 
+import time
 import json
+from bson import ObjectId  # To install it: `$ pip3 install pymongo`
 
 users = dict() # uId (input) -> user number (output)
 songs = dict() # eId (input), just to count unique youtube tracks
@@ -13,7 +15,7 @@ counter = 0
 
 print('timestamp,user,song') # header of the csv file
 
-with open("./playlog.json.log", "r") as f:
+with open("./fullplaylog.json.log", "r") as f:
   for line in f:
     counter = counter + 1
     # if counter == 10:
@@ -26,6 +28,12 @@ with open("./playlog.json.log", "r") as f:
     # identify users
     if row['uId'] not in users:
       users[row['uId']] = len(users)
-    print ','.join([ str(row['_t'] / 1000), str(users[row['uId']]), eId ])
+
+    if '_t' in row:
+      timestamp = row['_t'] // 1000
+    elif '_id' in row:
+      timestamp = int(time.mktime(ObjectId(row['_id']['$oid']).generation_time.timetuple()))
+    
+    print (','.join([ str(timestamp), str(users[row['uId']]), eId ]))
 
 # print 'found', len(songs), 'youtube tracks'
