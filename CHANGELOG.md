@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/openwhyd/openwhyd/compare/v1.4.9...v1.5.0) (2019-04-03)
+
+
+### Features
+
+* add timestamp to anonymised playlog entries ([45caf45](https://github.com/openwhyd/openwhyd/commit/45caf45)), closes [#83](https://github.com/openwhyd/openwhyd/issues/83)
+* can anonymise playlog with timestamps or ObjectIDs ([461623b](https://github.com/openwhyd/openwhyd/commit/461623b)), closes [#83](https://github.com/openwhyd/openwhyd/issues/83)
+
 ## [1.4.9](https://github.com/openwhyd/openwhyd/compare/v1.4.8...v1.4.9) (2019-03-03)
 
 
