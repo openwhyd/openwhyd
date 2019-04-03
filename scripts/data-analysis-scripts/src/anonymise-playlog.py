@@ -11,7 +11,7 @@ songs = dict() # eId (input), just to count unique youtube tracks
 
 counter = 0
 
-print('user,song') # header of the csv file
+print('timestamp,user,song') # header of the csv file
 
 with open("./playlog.json.log", "r") as f:
   for line in f:
@@ -26,6 +26,6 @@ with open("./playlog.json.log", "r") as f:
     # identify users
     if row['uId'] not in users:
       users[row['uId']] = len(users)
-    print users[row['uId']], ',', eId
+    print ','.join([ str(row['_t'] / 1000), str(users[row['uId']]), eId ])
 
 # print 'found', len(songs), 'youtube tracks'
