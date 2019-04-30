@@ -89,9 +89,8 @@ var params = (process.appParams = {
   dev: process.env['WHYD_DEV'] || false, // hot re-loading of node controllers, models and views
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
   urlPrefix:
-    process.env['WHYD_URL_PREFIX'] ||
-    'http://localhost:' + process.env['WHYD_PORT'] ||
-    8080, // base URL of the app
+    (process.env['WHYD_URL_PREFIX'] || 'http://localhost:') +
+    (process.env['WHYD_PORT'] || 8080), // base URL of the app
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
   mongoDbAuthUser: process.env['MONGODB_USER'],
