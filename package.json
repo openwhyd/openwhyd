@@ -68,6 +68,7 @@
     "@semantic-release/changelog": "^3.0.0",
     "@semantic-release/git": "^7.0.4",
     "all-contributors-cli": "5.4.0",
+    "cypress": "^3.2.0",
     "eslint": "2.9.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.11.1",
