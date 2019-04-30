@@ -1,3 +1,15 @@
+# [1.6.0](https://github.com/openwhyd/openwhyd/compare/v1.5.0...v1.6.0) (2019-04-30)
+
+
+### Bug Fixes
+
+* clarify use of environment variables in app.js ([cc3af51](https://github.com/openwhyd/openwhyd/commit/cc3af51))
+
+
+### Features
+
+* add script to print dates of playlog files ([68c2114](https://github.com/openwhyd/openwhyd/commit/68c2114))
+
 # [1.5.0](https://github.com/openwhyd/openwhyd/compare/v1.4.9...v1.5.0) (2019-04-03)
 
 
