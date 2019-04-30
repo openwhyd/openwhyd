@@ -1,41 +1,17 @@
-sudo: required
-dist: trusty
-
 language: node_js
-
 node_js:
-  - "8"
-
-services: mongodb
-
-env:
-  global:
-    - DISPLAY=:99.0
-    - CC_TEST_REPORTER_ID=5f697b5b9d0e7716bdd431448ec1daa9e1184a134c0bdc36375d88263428aa61
-
-addons:
-  chrome: stable
-
-# change directory before `npm install`
-before_install:
-  - source env-vars-testing.sh
-  
-before_script:
-  - npm i nyc --global
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
-  - npm run test-reset # will initialize the openwhyd_test db
-  - npm run run --mongoDbDatabase openwhyd_test &
-  - ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-
+  - 10
+branches:
+  only:
+  - cypress-on-circleci
+cache:
+  # Caches $HOME/.npm when npm ci is default script command
+  # Caches node_modules in all other cases
+  npm: true
+  directories:
+    # we also need to cache folder with Cypress binary
+    - ~/.cache
+install:
+  - npm ci
 script:
-  - nyc --reporter=lcov npm test
-  - npm run semantic-release
-
-# upload test coverage to codeclimate
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-
-notifications:
-  email: false
+  - $(npm bin)/cypress run --record
