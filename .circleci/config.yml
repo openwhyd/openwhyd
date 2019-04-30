@@ -9,6 +9,7 @@ jobs:
           TERM: xterm
     working_directory: ~/app
     steps:
+      - run: echo coucou
       - checkout
       - restore_cache:
           keys:
