@@ -25,4 +25,4 @@ jobs:
           paths:
             - ~/.npm
             - ~/.cache
-      - run: $(npm bin)/cypress run --record --key <record_key>
+      - run: $(npm bin)/cypress run --record # --key <record_key>
