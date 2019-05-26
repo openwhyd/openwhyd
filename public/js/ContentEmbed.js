@@ -286,7 +286,7 @@ function ContentEmbed() {
     require: function(embedRef, callback) {
       embedRef.img = 'https://i.ytimg.com/vi/' + embedRef.videoId + '/0.jpg';
       var YOUTUBE_API_KEY =
-        YOUTUBE_API_KEY || 'AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI';
+        YOUTUBE_API_KEY || 'AIzaSyAoOEeY3-9BvPV-t6GSck2NXR0Ay-4Xm24';
       // TODO: use playemjs instead
       $.getJSON(
         'https://www.googleapis.com/youtube/v3/videos?id=' +
