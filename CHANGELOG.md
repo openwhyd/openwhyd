@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/openwhyd/openwhyd/compare/v1.6.0...v1.6.1) (2019-05-26)
+
+
+### Bug Fixes
+
+* **youtube:** switch to new YouTube account, for [#190](https://github.com/openwhyd/openwhyd/issues/190) ([8c8802b](https://github.com/openwhyd/openwhyd/commit/8c8802b))
+
 # [1.6.0](https://github.com/openwhyd/openwhyd/compare/v1.5.0...v1.6.0) (2019-04-30)
 
 
