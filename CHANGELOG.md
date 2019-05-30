@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/openwhyd/openwhyd/compare/v1.6.1...v1.6.2) (2019-05-30)
+
+
+### Bug Fixes
+
+* **youtube:** revert to previous YouTube account, for [#190](https://github.com/openwhyd/openwhyd/issues/190) ([32446c9](https://github.com/openwhyd/openwhyd/commit/32446c9))
+
 ## [1.6.1](https://github.com/openwhyd/openwhyd/compare/v1.6.0...v1.6.1) (2019-05-26)
 
 
