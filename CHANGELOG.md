@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/openwhyd/openwhyd/compare/v1.6.2...v1.7.0) (2019-06-04)
+
+
+### Features
+
+* **admin:** add scripts to backup and delete a user ([382e562](https://github.com/openwhyd/openwhyd/commit/382e562))
+
 ## [1.6.2](https://github.com/openwhyd/openwhyd/compare/v1.6.1...v1.6.2) (2019-05-30)
 
 
