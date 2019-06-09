@@ -3,6 +3,8 @@
 .DS_Store
 node_modules
 
+/docs/.jekyll-metadata
+/docs/_site
 /nbproject/private/
 /upload_data/
 /uAvatarImg/

@@ -10,6 +10,7 @@
     "url": "https://github.com/openwhyd/openwhyd.git"
   },
   "scripts": {
+    "doc:serve": "cd docs && gem install bundler && bundle install && bundle exec jekyll serve --incremental",
     "semantic-release": "semantic-release",
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
