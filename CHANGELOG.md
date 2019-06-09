@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/openwhyd/openwhyd/compare/v1.7.0...v1.7.1) (2019-06-09)
+
+
+### Bug Fixes
+
+* append PORT to URL_PREFIX only if WHYD_URL_PREFIX is not provided ([#198](https://github.com/openwhyd/openwhyd/issues/198)) ([e63ee79](https://github.com/openwhyd/openwhyd/commit/e63ee79)), closes [/github.com/openwhyd/openwhyd/commit/cc3af51b2d24e98d24e10583add56ab83bd535de#commitcomment-33865126](https://github.com//github.com/openwhyd/openwhyd/commit/cc3af51b2d24e98d24e10583add56ab83bd535de/issues/commitcomment-33865126)
+
 # [1.7.0](https://github.com/openwhyd/openwhyd/compare/v1.6.2...v1.7.0) (2019-06-04)
 
 
