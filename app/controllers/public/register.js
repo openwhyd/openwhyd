@@ -171,7 +171,7 @@ exports.registerInvitedUser = function(request, user, response) {
     else userModel.removeInvite(user.inviteCode);
 
     function loginAndRedirectTo(url) {
-      request.session = { whydUid: storedUser.id || storedUser._id }; // CREATING SESSION
+      request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       if (user.ajax) {
         var json = { redirect: url, uId: '' + storedUser._id };
         function renderJSON() {

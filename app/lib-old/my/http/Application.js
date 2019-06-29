@@ -80,7 +80,6 @@ var aa = (exports.Application = my.Class(http.Server, {
     this._errorHandler = options.errorHandler;
 
     this._modelsDir = appDir + '/app/models';
-    this._viewsDir = appDir + '/app/views';
     this._controllersDir = appDir + '/app/controllers';
     this._publicDir = appDir + '/public';
 
@@ -106,7 +105,17 @@ var aa = (exports.Application = my.Class(http.Server, {
     this._readBufferMaxSize = null;
     this._writeBuffer = null;
 
-    this.sessionMiddleware = sessionMiddleware;
+    this.sessionMiddleware = !sessionMiddleware
+      ? undefined
+      : function(req, res, next) {
+          console.log('sessionMiddleware in'); // TODO: remove
+          return sessionMiddleware(req, res, function(err) {
+            if (err) {
+              console.error('error from sessionMiddleware:', err);
+            }
+            return next(req, res);
+          });
+        };
 
     this.bodyParser = function(request, response, callback) {
       var form = new formidable.IncomingForm();
@@ -146,7 +155,7 @@ var aa = (exports.Application = my.Class(http.Server, {
 
   route: function(request, controller) {
     var routes = this._routes.GET;
-    var route = { controller: controller, hasQuery: request.contains('?') };
+    var route = { controller: controller, hasQuery: request.includes('?') };
     var regexp = /(GET|POST|HEAD|OPTIONS|CONNECT|TRACE|PUT|DELETE)\s*(\/\S+)/;
     var requestParams, requestParam, requestParamSplit;
 
@@ -218,7 +227,6 @@ function _configure(self) {
 function _updateModules(self) {
   var modifyDates = self._modulesModifyDates;
   loadModules(self._modelsDir, self.models, modifyDates, 'm');
-  loadModules(self._viewsDir, self.views, modifyDates, 'v');
   loadModules(self._controllersDir, self.controllers, modifyDates, 'c');
 }
 

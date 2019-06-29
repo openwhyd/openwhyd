@@ -95,7 +95,7 @@ describe('"img" package', function() {
     } catch (e) {}
 
     console.log = function() {}; // prevent ContentEmbed from printing to the console
-    var img = require('../../app/lib/my/img');
+    var img = require('../../app/lib/my-img');
     img.makeThumb(imgOutput, thumbOutput, thumbWidth, thumbHeight, function() {
       console.log = log; // restore console.log
       assert(

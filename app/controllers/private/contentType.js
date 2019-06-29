@@ -75,10 +75,10 @@ exports.controller = function(request, reqParams, response) {
 
   if (url.indexOf('openwhyd.org') > -1 || url.indexOf('localhost:') > -1) {
     if (
-      url.contains('/upload_data/') ||
-      url.contains('/uPostedImg/') ||
-      url.contains('/uAvatarImg/') ||
-      url.contains('/ugTopicImg/')
+      url.includes('/upload_data/') ||
+      url.includes('/uPostedImg/') ||
+      url.includes('/uAvatarImg/') ||
+      url.includes('/ugTopicImg/')
     )
       return renderResult('image/unknown');
   }
