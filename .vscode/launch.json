@@ -7,6 +7,19 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Run Openwhyd server with mongo:27117",
+      "console": "internalConsole",
+      "restart": true,
+      "cwd": "${workspaceRoot}",
+      "envFile": "${workspaceRoot}/env-vars-testing.conf",
+      "program": "${workspaceRoot}/app.js",
+      "runtimeVersion": "8.11.4", // to keep in sync with .nvmrc
+      "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test", "--mongoDbPort", "27117" ]
+      // Notice: make sure that the mongodb server is listening on port 27117
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Run Openwhyd server",
       "console": "internalConsole",
       "restart": true,
