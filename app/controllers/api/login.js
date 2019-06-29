@@ -47,7 +47,17 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
     else response.renderHTML(loggingTemplate.renderLoginPage(form));
   }
 
-  if (form.mail) {
+  if (form.action === 'logout') {
+    request.session.destroy(function(err) {
+      if (err) {
+        console.error('error from request.session.destroy()', err);
+        form.error = err;
+      }
+      console.log('logout result', form.error);
+      renderForm(form);
+    });
+    return;
+  } else if (form.mail) {
     // new email given on landing page
     form.mail = emailModel.normalize(form.mail);
     if (!emailModel.validate(form.mail))
