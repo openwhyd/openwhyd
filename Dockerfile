@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 
-COPY ./package.json /usr/src/app/
+COPY ./package*.json /usr/src/app/
 RUN npm install
 
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
