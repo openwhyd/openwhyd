@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/openwhyd/openwhyd/compare/v1.7.2...v1.8.0) (2019-06-29)
+
+
+### Features
+
+* **api:** migrate from my/session to express-session and connect-mongo ([#200](https://github.com/openwhyd/openwhyd/issues/200)) ([0a18c5b](https://github.com/openwhyd/openwhyd/commit/0a18c5b)), closes [#122](https://github.com/openwhyd/openwhyd/issues/122) [#55](https://github.com/openwhyd/openwhyd/issues/55)
+
 ## [1.7.2](https://github.com/openwhyd/openwhyd/compare/v1.7.1...v1.7.2) (2019-06-09)
 
 
