@@ -157,9 +157,9 @@ function start() {
       url: makeMongoUrl(params),
       ttl: 60 * 60 * 24 * 365 // 1 year
     }),
+    name: 'whydSid',
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
-    // TODO: set key = 'whydSid'
   });
   var serverOptions = {
     errorHandler: function(request, params, response, statusCode) {
