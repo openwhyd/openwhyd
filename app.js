@@ -65,19 +65,6 @@ function makeErrorLog(fct, type) {
 console.warn = makeErrorLog(consoleError, 'Warning');
 console.error = makeErrorLog(consoleError, 'Error');
 
-//==============================================================================
-// Extending String.prototype (only native prototype to be extended)
-
-String.prototype.startsWith = function(str) {
-  if (str && str.length > this.length) return false;
-  return this.substring(0, str.length) === str;
-};
-
-String.prototype.endsWith = function(str) {
-  var len = this.length;
-  if (str && str.length > len) return false;
-  return this.substring(len - str.length, len) === str;
-};
 // app configuration
 
 var params = (process.appParams = {
