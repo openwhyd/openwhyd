@@ -1,13 +1,7 @@
 var fs = require('fs');
 var path = require('path');
-var extend = require('../util/index').extend;
 
 var Headers = require('./mime-types.js');
-
-exports.extend = function(response, buffer) {
-  response.buffer = buffer;
-  extend(response, ResponseExtension);
-};
 
 var ResponseExtension = {
   render: function(view, data, headers, statusCode) {
@@ -59,25 +53,6 @@ var ResponseExtension = {
           self.end();
         });
     });
-  },
-
-  bufferedWrite: function(data) {
-    var nbWritten;
-    if (typeof data === 'string') {
-      nbWritten = this.buffer.append(data);
-      if (nbWritten < Buffer.byteLength(data)) {
-        this.flush();
-        this.bufferedWrite(new Buffer(data).slice(nbWritten));
-      }
-    } else if (Buffer.isBuffer(data)) {
-      nbWritten = this.buffer.append(data);
-      if (nbWritten < data.length) {
-        this.flush();
-        this.bufferedWrite(data.slice(nbWritten));
-      }
-    } else {
-      throw new Error('Response.bufferedWrite: invalid data');
-    }
   },
 
   flush: function() {
