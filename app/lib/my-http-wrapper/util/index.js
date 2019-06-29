@@ -32,4 +32,3 @@ function extendClass(Class, extension, override) {
 exports.extend = extend;
 exports.extendClass = extendClass;
 exports.Buffer = require('./Buffer').Buffer;
-//exports.EventManager = require('./EventManager').EventManager;
