@@ -5,7 +5,7 @@
  */
 
 //var formidable = require('formidable');
-var img = require('../../lib/my/img');
+var img = require('../../lib/my-img');
 var uploadCtr = require('../uploadedFile.js');
 
 // hosting settings

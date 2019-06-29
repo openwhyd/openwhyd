@@ -156,8 +156,8 @@ var FLAGS = {
 // when db is read
 
 function start() {
-  var session = require('./app/lib/my/session'); // TODO
-  var myHttp = require('./app/lib/my/http'); // TODO
+  var session = require('./app/lib-old/my/session'); // TODO
+  var myHttp = require('./app/lib-old/my/http'); // TODO
   var sessionParams = {
     secret: process.env.WHYD_SESSION_SECRET.substr(),
     key: 'whydSid',
