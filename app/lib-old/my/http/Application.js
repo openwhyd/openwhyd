@@ -80,7 +80,6 @@ var aa = (exports.Application = my.Class(http.Server, {
     this._errorHandler = options.errorHandler;
 
     this._modelsDir = appDir + '/app/models';
-    this._viewsDir = appDir + '/app/views';
     this._controllersDir = appDir + '/app/controllers';
     this._publicDir = appDir + '/public';
 
@@ -218,7 +217,6 @@ function _configure(self) {
 function _updateModules(self) {
   var modifyDates = self._modulesModifyDates;
   loadModules(self._modelsDir, self.models, modifyDates, 'm');
-  loadModules(self._viewsDir, self.views, modifyDates, 'v');
   loadModules(self._controllersDir, self.controllers, modifyDates, 'c');
 }
 
