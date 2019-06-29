@@ -108,7 +108,7 @@ var aa = (exports.Application = my.Class(http.Server, {
     this.sessionMiddleware = !sessionMiddleware
       ? undefined
       : function(req, res, next) {
-          console.warn('sessionMiddleware in');
+          console.log('sessionMiddleware in'); // TODO: remove
           return sessionMiddleware(req, res, function(err) {
             if (err) {
               console.error('error from sessionMiddleware:', err);
