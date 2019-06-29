@@ -138,21 +138,29 @@ var FLAGS = {
 
 // when db is read
 
+function makeMongoUrl(params) {
+  const host = params.mongoDbHost;
+  const port = parseInt(params.mongoDbPort);
+  const user = params.mongoDbAuthUser;
+  const password = params.mongoDbAuthPassword;
+  const db = params.mongoDbDatabase; // ?w=0
+  return `mongodb://${user}:${password}@${host}:${port}/${db}`;
+}
+
 function start() {
-  var session = require('./app/lib-old/my/session'); // TODO
   var myHttp = require('./app/lib-old/my/http'); // TODO
-  var sessionParams = {
+  const session = require('express-session');
+  const MongoStore = require('connect-mongo')(session);
+  const sessionStore = session({
     secret: process.env.WHYD_SESSION_SECRET.substr(),
-    key: 'whydSid',
-    mongo: {
-      host: params.mongoDbHost,
-      port: parseInt(params.mongoDbPort),
-      user: params.mongoDbAuthUser,
-      password: params.mongoDbAuthPassword,
-      db: params.mongoDbDatabase // ?w=0
-    },
-    maxAge: 60 * 60 * 24 * 365
-  };
+    store: new MongoStore({
+      url: makeMongoUrl(params),
+      ttl: 60 * 60 * 24 * 365 // 1 year
+    }),
+    resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
+    saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
+    // TODO: set key = 'whydSid'
+  });
   var serverOptions = {
     errorHandler: function(request, params, response, statusCode) {
       // to render 404 and 401 error pages from server/router
@@ -171,7 +179,7 @@ function start() {
   new myHttp.Application(
     __dirname,
     params.dev,
-    session(sessionParams),
+    sessionStore,
     serverOptions
   ).start();
   require('./app/workers/notifEmails.js'); // start digest worker

@@ -28,7 +28,7 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
 
   // in case of successful login
   function renderRedirect(url, user) {
-    request.session = { whydUid: (user || {}).id };
+    request.session.whydUid = (user || {}).id;
     if (!form.ajax) response.renderHTML(loggingTemplate.htmlRedirect(url));
     else {
       var json = { redirect: url };

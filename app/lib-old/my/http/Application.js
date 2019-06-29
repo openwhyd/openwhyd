@@ -105,7 +105,17 @@ var aa = (exports.Application = my.Class(http.Server, {
     this._readBufferMaxSize = null;
     this._writeBuffer = null;
 
-    this.sessionMiddleware = sessionMiddleware;
+    this.sessionMiddleware = !sessionMiddleware
+      ? undefined
+      : function(req, res, next) {
+          console.warn('sessionMiddleware in');
+          return sessionMiddleware(req, res, function(err) {
+            if (err) {
+              console.error('error from sessionMiddleware:', err);
+            }
+            return next(req, res);
+          });
+        };
 
     this.bodyParser = function(request, response, callback) {
       var form = new formidable.IncomingForm();
