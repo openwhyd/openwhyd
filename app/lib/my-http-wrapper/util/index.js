@@ -19,16 +19,6 @@ function extend(obj, extension, override, filter) {
   }
 }
 
-// @method my.util.extendClass(!Class:Class, !extension:Object, ?override:boolean)
-function extendClass(Class, extension, override) {
-  if (extension.Static) {
-    extend(Class, extension.Static, override);
-    delete extension.Static;
-  }
-  extend(Class.prototype, extension, override);
-}
-
 //==============================================================================
 exports.extend = extend;
-exports.extendClass = extendClass;
 exports.Buffer = require('./Buffer').Buffer;

@@ -7,7 +7,6 @@ var querystring = require('querystring');
 var formidable = require('formidable');
 var qset = require('q-set'); // instead of body-parser, for form fields with brackets
 
-var my = require('../');
 var extendResponse = require('./Response').extend;
 var AppendBuffer = require('../util').Buffer;
 
@@ -21,56 +20,10 @@ var lastAccessPerUA = (process.lastAccessPerUA = {}); // { user-agent -> { uid -
 
 //============================================================================
 // Class Application
-var aa = (exports.Application = my.Class(http.Server, {
-  constructor: function(appDir, devMode, sessionMiddleware, options) {
+exports.Application = class Application extends http.Server {
+  constructor(appDir, devMode, sessionMiddleware, options = {}) {
+    super();
     var self = this;
-
-    options || (options = {});
-
-    //console.log("appDir", appDir); // AJ
-
-    http.Server.call(this, function(request, response) {
-      // called on each request
-
-      // AJ: logging of requests (for performance diagnosis)
-      var startDate = new Date(),
-        path = request.url.split('?')[0];
-      //var timeout = setTimeout(makeResponseLogger("TIMEOUT"), LOG_TIMEOUT);
-      function makeResponseLogger(suffix) {
-        return function(response) {
-          //clearTimeout(timeout);
-          var fields = {
-            uid: (request.session || {}).whydUid,
-            ua: (request.headers['user-agent'] || '').substr(0, MAX_LEN_UA)
-          };
-          if (fields.ua && fields.uid)
-            (lastAccessPerUA[fields.ua] = lastAccessPerUA[fields.ua] || {})[
-              fields.uid
-            ] = startDate;
-          var duration = Date.now() - startDate;
-          if (duration < LOG_THRESHOLD) return;
-          var logLine = [
-            startDate.toUTCString(),
-            request.method,
-            path,
-            '(' + duration + 'ms)'
-          ];
-          if (suffix) logLine.push(suffix);
-          for (var i in fields)
-            if (fields[i]) logLine.push(i + '=' + fields[i]);
-          logLine = logLine.join(' ');
-          fs.appendFile(self._accessLogFile, logLine + '\n');
-        };
-      }
-
-      try {
-        response.logRequest = makeResponseLogger(); // AJ
-        _checkRoutes(self, request, response);
-      } catch (e) {
-        response.logRequest = makeResponseLogger('FAIL'); // AJ
-        _processError(self, e, response);
-      }
-    });
 
     this.models = {};
     this.views = {};
@@ -138,22 +91,65 @@ var aa = (exports.Application = my.Class(http.Server, {
     _configure(this);
     _updateModules(this);
     _updateRoutes(this);
-  },
 
-  start: function() {
+    http.Server.call(this, function(request, response) {
+      // called on each request
+
+      // AJ: logging of requests (for performance diagnosis)
+      var startDate = new Date(),
+        path = request.url.split('?')[0];
+      //var timeout = setTimeout(makeResponseLogger("TIMEOUT"), LOG_TIMEOUT);
+      function makeResponseLogger(suffix) {
+        return function(response) {
+          //clearTimeout(timeout);
+          var fields = {
+            uid: (request.session || {}).whydUid,
+            ua: (request.headers['user-agent'] || '').substr(0, MAX_LEN_UA)
+          };
+          if (fields.ua && fields.uid)
+            (lastAccessPerUA[fields.ua] = lastAccessPerUA[fields.ua] || {})[
+              fields.uid
+            ] = startDate;
+          var duration = Date.now() - startDate;
+          if (duration < LOG_THRESHOLD) return;
+          var logLine = [
+            startDate.toUTCString(),
+            request.method,
+            path,
+            '(' + duration + 'ms)'
+          ];
+          if (suffix) logLine.push(suffix);
+          for (var i in fields)
+            if (fields[i]) logLine.push(i + '=' + fields[i]);
+          logLine = logLine.join(' ');
+          fs.appendFile(self._accessLogFile, logLine + '\n');
+        };
+      }
+
+      try {
+        response.logRequest = makeResponseLogger(); // AJ
+        _checkRoutes(self, request, response);
+      } catch (e) {
+        response.logRequest = makeResponseLogger('FAIL'); // AJ
+        _processError(self, e, response);
+      }
+    });
+  }
+
+  start() {
     this._isRunning = true;
     this.listen(this._port);
     console.log('Server running at http://127.0.0.1:' + this._port + '/');
-  },
+  }
 
-  stop: function() {
+  stop() {
     if (this._isRunning) {
       this.close();
       this._isRunning = false;
     }
-  },
+  }
 
-  route: function(request, controller) {
+  route(request, controller) {
     var routes = this._routes.GET;
     var route = { controller: controller, hasQuery: request.includes('?') };
     var regexp = /(GET|POST|HEAD|OPTIONS|CONNECT|TRACE|PUT|DELETE)\s*(\/\S+)/;
@@ -197,7 +193,7 @@ var aa = (exports.Application = my.Class(http.Server, {
 
     return this;
   }
-}));
+};
 
 //==============================================================================
 // private methods
