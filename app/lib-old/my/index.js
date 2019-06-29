@@ -1,10 +1,6 @@
 //==============================================================================
 // Extending String.prototype (only native prototype to be extended)
 
-String.prototype.contains = function(str) {
-  return this.indexOf(str) !== -1;
-};
-
 String.prototype.startsWith = function(str) {
   if (str && str.length > this.length) return false;
   return this.substring(0, str.length) === str;

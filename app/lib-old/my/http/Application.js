@@ -146,7 +146,7 @@ var aa = (exports.Application = my.Class(http.Server, {
 
   route: function(request, controller) {
     var routes = this._routes.GET;
-    var route = { controller: controller, hasQuery: request.contains('?') };
+    var route = { controller: controller, hasQuery: request.includes('?') };
     var regexp = /(GET|POST|HEAD|OPTIONS|CONNECT|TRACE|PUT|DELETE)\s*(\/\S+)/;
     var requestParams, requestParam, requestParamSplit;
 

@@ -85,9 +85,9 @@ exports.addVisit = function(uId, tId, request) {
     orig = request.headers.referer;
 
   if (orig) {
-    if (orig.contains('facebook.com')) orig = 'fb';
-    else if (orig.contains('twitter.com')) orig = 'tw';
-    else if (orig.contains('http')) orig = null;
+    if (orig.includes('facebook.com')) orig = 'fb';
+    else if (orig.includes('twitter.com')) orig = 'tw';
+    else if (orig.includes('http')) orig = null;
   }
 
   console.log('analytics.addVisit ', uId, tId, orig);
