@@ -45,9 +45,12 @@ describe('"get" package', function() {
   this.afterAll(() => expressServer.close());
 
   it('should provide the title of a web page', function(done) {
-    get.Title('https://www.google.com/', function(err, title) {
+    expressApp.get('/title.html', function(req, res) {
+      res.send(HTML_PAGE_WITH_TITLE_AND_IMAGES);
+    });
+    get.Title('http://localhost:3000/title.html', function(err, title) {
       assert.ifError(err);
-      assert.equal(title, 'Google');
+      assert.equal(title, 'foo');
       done();
     });
   });
