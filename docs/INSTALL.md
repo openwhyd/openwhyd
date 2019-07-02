@@ -19,6 +19,8 @@ Whenever you just want to restart Openwhyd while the Docker processes are still 
 
 Whenever you want to know what Docker processes are currently running: run `docker-compose ps`.
 
+If you want to rebuild the Docker image and run it in the background, use `docker-compose up -d --build --force-recreate`.
+
 ### Setup (manual)
 
 * Install Node.js, MongoDB, GraphicsMagick or ImageMagick
