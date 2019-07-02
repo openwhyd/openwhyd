@@ -1,3 +1,5 @@
+const express = require('express');
+
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
@@ -7,13 +9,10 @@ var querystring = require('querystring');
 var formidable = require('formidable');
 var qset = require('q-set'); // instead of body-parser, for form fields with brackets
 
-var AppendBuffer = require('../util').Buffer;
-
 var Headers = require('./mime-types.js');
 
-var LOG_TIMEOUT = 30000,
-  LOG_THRESHOLD = 500,
-  MAX_LEN_UA = 12;
+const LOG_THRESHOLD = 500;
+const MAX_LEN_UA = 12;
 
 var lastAccessPerUA = (process.lastAccessPerUA = {}); // { user-agent -> { uid -> timestamp } }
 
@@ -26,13 +25,7 @@ var ResponseExtension = {
     headers = headers || {};
     headers['Cache-Control'] =
       'max-age=0,no-cache,no-store,post-check=0,pre-check=0';
-    if (typeof view === 'function') {
-      if (!headers['content-type']) headers['content-type'] = 'text/html';
-      this.writeHead(statusCode || 200, headers);
-      view(data).writeIn(this);
-      this.flush();
-      this.end();
-    } else if (typeof view === 'string') {
+    if (typeof view === 'string') {
       if (!headers['content-type']) headers['content-type'] = 'text/plain';
       this.writeHead(statusCode || 200, headers);
       this.end(view);
@@ -46,6 +39,8 @@ var ResponseExtension = {
   },
 
   renderFile: function(file, bufferSize, headers, errorHandler) {
+    // TODO
+    /*
     var self = this;
     if (typeof headers === 'function') {
       errorHandler = headers;
@@ -71,16 +66,19 @@ var ResponseExtension = {
           self.end();
         });
     });
+    */
   },
 
   flush: function() {
+    // TODO
+    /*
     this.write(this.buffer.sliceData());
     this.buffer.position = 0;
+    */
   }
 };
 
-const extendResponse = function(response, buffer) {
-  response.buffer = buffer;
+const extendResponse = function(response) {
   for (let method in ResponseExtension) {
     response[method] = ResponseExtension[method];
   }
@@ -93,18 +91,11 @@ exports.Application = class Application extends http.Server {
     super();
     var self = this;
 
-    this.models = {};
-    this.views = {};
-    this.controllers = {};
-
-    this._devMode = devMode;
     this._errorHandler = options.errorHandler;
 
-    this._modelsDir = appDir + '/app/models';
-    this._controllersDir = appDir + '/app/controllers';
+    this._appDir = appDir + '/app';
     this._publicDir = appDir + '/public';
 
-    this._configFile = appDir + '/config/app.conf';
     this._routeFile = appDir + '/config/app.route';
     this._accessLogFile = appDir + '/access.log';
 
@@ -120,11 +111,9 @@ exports.Application = class Application extends http.Server {
       DELETE: []
     };
 
-    this._port = null;
+    this._port = (process.appParams || {}).port;
     this._queryStringInJSON = null;
     this._maxCacheSize = null;
-    this._readBufferMaxSize = null;
-    this._writeBuffer = null;
 
     this.sessionMiddleware = !sessionMiddleware
       ? undefined
@@ -156,17 +145,12 @@ exports.Application = class Application extends http.Server {
       });
     };
 
-    _configure(this);
-    _updateModules(this);
     _updateRoutes(this);
 
-    http.Server.call(this, function(request, response) {
       // called on each request
-
-      // AJ: logging of requests (for performance diagnosis)
+    this.call = (request, response) => {
       var startDate = new Date(),
         path = request.url.split('?')[0];
-      //var timeout = setTimeout(makeResponseLogger("TIMEOUT"), LOG_TIMEOUT);
       function makeResponseLogger(suffix) {
         return function(response) {
           //clearTimeout(timeout);
@@ -201,18 +185,27 @@ exports.Application = class Application extends http.Server {
         response.logRequest = makeResponseLogger('FAIL'); // AJ
         _processError(self, e, response);
       }
+    };
+
+    this.expressApp = express();
+    this.expressApp.use(express.static(this._publicDir));
+    this.expressApp.use(function(req, res, next) {
+      self.call(req, res);
     });
   }
 
   start() {
     this._isRunning = true;
-    this.listen(this._port);
-    console.log('Server running at http://127.0.0.1:' + this._port + '/');
+    // this.listen(this._port);
+    this.expressApp.listen(this._port, () =>
+      console.log('Server running at http://127.0.0.1:' + this._port + '/')
+    );
   }
 
   stop() {
     if (this._isRunning) {
-      this.close();
+      //this.close();
+      this.expressApp.close();
       this._isRunning = false;
     }
   }
@@ -265,58 +258,25 @@ exports.Application = class Application extends http.Server {
 
 //==============================================================================
 // private methods
-function _configure(self) {
-  var config = getConfigObject(self._configFile, '=');
-
-  self._jsonFormatQueryString = config.jsonFormatQueryString === 'true';
-  self._maxCacheSize = parseInt(config.maxCacheSize);
-  self._readBufferMaxSize = parseInt(config.readBufferMaxSize);
-
-  var port = (process.appParams || {}).port || parseInt(config.port);
-  if (port !== self._port) {
-    self._port = port;
-    if (self._isRunning) {
-      self.stop();
-      self.start();
-    }
-  }
-
-  var writeBufferSize = parseInt(config.writeBufferSize);
-  if (!self._writeBuffer || writeBufferSize !== self._writeBuffer.length)
-    self._writeBuffer = new AppendBuffer(writeBufferSize);
-
-  self.config = config;
-}
-
-function _updateModules(self) {
-  var modifyDates = self._modulesModifyDates;
-  loadModules(self._modelsDir, self.models, modifyDates, 'm');
-  loadModules(self._controllersDir, self.controllers, modifyDates, 'c');
-}
 
 function _updateRoutes(self) {
   for (var r in self._routes) self._routes[r].length = 0;
   var routes = getRouteArray(self._routeFile);
+
   for (var i = 0, route; (route = routes[i]); i++) {
-    self.route(route.pattern, getObjectFromPath(route.controller, self, '.'));
+    const controllerPath =
+      self._appDir + '/' + route.controller.replace(/\./g, '/');
+    const { controller } = require(controllerPath);
+    self.route(route.pattern, controller);
   }
 }
 
 function _renderFile(self, file, fileSize, response) {
-  var fileExtension = path.extname(file);
-  var bufferSize = Math.min(fileSize, self._readBufferMaxSize);
-  response.writeHead(200, Headers[fileExtension] || Headers['default']);
-  fs.createReadStream(file, { bufferSize: bufferSize })
-    .on('data', function(data) {
-      response.write(data);
-    })
-    .on('end', function() {
-      response.end();
-    });
+  // TODO
 }
 
 function prepareResponse(self, request, response, callback) {
-  extendResponse(response, self._writeBuffer);
+  extendResponse(response);
   self.bodyParser(request, response, function() {
     if (self.sessionMiddleware) {
       self.sessionMiddleware(request, response, callback);
@@ -329,11 +289,6 @@ function prepareResponse(self, request, response, callback) {
 //==============================================================================
 // process request
 function _checkRoutes(self, request, response) {
-  if (self._devMode) {
-    _updateModules(self);
-    _updateRoutes(self);
-  }
-
   var routes = self._routes[request.method];
   var urlObj = url.parse(request.url);
   var path = urlObj.pathname;
@@ -379,9 +334,9 @@ function _checkRoutes(self, request, response) {
 
 function _checkPublicControllers(self, request, requestParams, response) {
   var pathname = 'public' + url.parse(request.url).pathname;
-  var controller = getObjectFromPath(pathname, self.controllers, '/');
-  if (controller) {
-    extendResponse(response, self._writeBuffer);
+  try {
+    const { controller } = require(self._appDir + '/' + pathname);
+    extendResponse(response);
     self.bodyParser(request, response, function() {
       if (self.sessionMiddleware) {
         self.sessionMiddleware(request, response, function(request, response) {
@@ -391,27 +346,7 @@ function _checkPublicControllers(self, request, requestParams, response) {
         controller.call(self, request, requestParams, response);
       }
     });
-  } else {
-    _checkPublicViews(self, request, requestParams, response);
-  }
-}
-
-function _checkPublicViews(self, request, requestParams, response) {
-  var pathname = 'public' + url.parse(request.url).pathname;
-  var view = getObjectFromPath(pathname, self.views, '/');
-  if (view) {
-    var model = getObjectFromPath(pathname, self.models, '/');
-    var data =
-      typeof model === 'function' ? model(requestParams) : requestParams;
-    extendResponse(response, self._writeBuffer);
-    response.render(view, data);
-  } else _checkPublicFiles(self, request, requestParams, response);
-}
-
-function _checkPublicFiles(self, request, requestParams, response) {
-  var urlObj = url.parse(request.url);
-  var pathname = self._publicDir + urlObj.pathname;
-  function renderErrorPage(statusCode) {
+  } catch (err) {
     if (self._errorHandler) {
       prepareResponse(self, request, response, function(request, response) {
         self._errorHandler(request, requestParams, response, statusCode);
@@ -423,43 +358,11 @@ function _checkPublicFiles(self, request, requestParams, response) {
       response.end('error 401 unauthorized');
     }
   }
-  if (path.relative(self._publicDir, pathname).substr(0, 3) === '../') {
-    return renderErrorPage(401);
-  }
-  fs.stat(pathname, function(error, stats) {
-    if (error) {
-      renderErrorPage(404);
-    } else if (!stats.isFile()) {
-      if (!pathname.endsWith('/index.html')) {
-        request.url =
-          urlObj.pathname + 'index.html' + (urlObj.search ? urlObj.search : '');
-        _checkRoutes(self, request, response);
-      } else {
-        renderErrorPage(404);
-      }
-    } else {
-      _renderFile(self, pathname, stats.size, response);
-    }
-  });
 }
 
 function _processError(self, e, response) {
   console.log('error', e.stack); // AJ
   response.end(e.stack);
-}
-
-//==============================================================================
-// inner functions
-function getConfigObject(file) {
-  var fileText = fs.readFileSync(file, 'utf8');
-  var lines = fileText.split('\n');
-  var configObject = {};
-  var line;
-  for (var i = 0, len = lines.length; i < len; i++) {
-    line = lines[i].split('=');
-    if (line.length >= 2) configObject[line[0].trim()] = line[1].trim();
-  }
-  return configObject;
 }
 
 function getRouteArray(file) {
@@ -473,14 +376,6 @@ function getRouteArray(file) {
       routeArray.push({ pattern: line[0].trim(), controller: line[1].trim() });
   }
   return routeArray;
-}
-
-function getObjectFromPath(path, root, separator) {
-  if (!path) return null;
-  var obj = root;
-  path = path.split(separator);
-  for (var i = 0; i < path.length && obj !== undefined; i++) obj = obj[path[i]];
-  return obj;
 }
 
 function getRequestParams(route, routeMatch) {
@@ -501,39 +396,4 @@ function getRequestParams(route, routeMatch) {
     }
   }
   return requestParams;
-}
-
-function loadModules(dir, modulesObj, lastModifyDates, type) {
-  var files = fs.readdirSync(dir);
-  var file, stats, name, modulePath, modifyDate;
-  for (var i = 0; (file = files[i]); i++) {
-    modulePath = dir + '/' + file;
-    stats = fs.statSync(modulePath);
-    if (stats.isFile()) {
-      if (file.endsWith('.js')) {
-        name = path.basename(file, '.js');
-        modifyDate = new Date(stats.mtime);
-
-        //console.log("loading module", file); // AJ
-
-        try {
-          if (!modulesObj[name] || modifyDate > lastModifyDates[file]) {
-            if (modulesObj[name]) require.cache[modulePath] = null;
-            if (type === 'm') modulesObj[name] = require(modulePath).model;
-            else if (type === 'v') modulesObj[name] = require(modulePath).view;
-            else if (type === 'c')
-              modulesObj[name] = require(modulePath).controller;
-            lastModifyDates[file] = modifyDate;
-          }
-        } catch (e) {
-          console.log(e);
-          console.log(e.stack);
-        }
-      }
-    } else {
-      modulesObj[file] = modulesObj[file] || {};
-      lastModifyDates[file] = lastModifyDates[file] || {};
-      loadModules(modulePath, modulesObj[file], lastModifyDates[file], type);
-    }
-  }
 }
