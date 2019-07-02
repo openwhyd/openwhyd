@@ -1,4 +1,13 @@
 var assert = require('assert');
+const express = require('express');
+
+const HTML_PAGE_WITH_TITLE_AND_IMAGES = [
+  '<!DOCTYPE html>',
+  '<html>',
+  '<head><title>foo</title></head>',
+  '<body><img src="1.jpg"></body>',
+  '</html>'
+].join('\n');
 
 describe('snip.js', function() {
   var snip = require('../../app/snip.js');
@@ -55,11 +64,18 @@ describe('"get" package', function() {
     });
     */
   it('should provide the images of a web page', function(done) {
-    get('https://openwhyd.org', function(err, page) {
-      assert.ifError(err);
-      assert(page.getTitle());
-      assert(page.getImages().length);
-      done();
+    const expressApp = express();
+    expressApp.get('/images.html', function(req, res) {
+      res.send(HTML_PAGE_WITH_TITLE_AND_IMAGES);
+    });
+    expressApp.listen(3000, err => {
+      if (err) return done(err);
+      get('http://localhost:3000/images.html', function(err, page) {
+        assert.ifError(err);
+        assert(page.getTitle());
+        assert(page.getImages().length);
+        done();
+      });
     });
   });
 });
