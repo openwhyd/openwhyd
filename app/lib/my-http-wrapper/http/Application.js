@@ -334,7 +334,7 @@ function _checkPublicControllers(self, request, requestParams, response) {
   } catch (err) {
     if (self._errorHandler) {
       prepareResponse(self, request, response, function(request, response) {
-        self._errorHandler(request, requestParams, response, statusCode);
+        self._errorHandler(request, requestParams, response, 404);
       });
     } else if (statusCode == 404) {
       response.end('error 404 not found');
