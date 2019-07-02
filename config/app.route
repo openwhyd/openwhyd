@@ -53,7 +53,7 @@ GET    /img/{type}/{id}                -> controllers.uploadedFile
 GET    /btn                            -> controllers.btn
 GET    /btn/{type}                     -> controllers.btn
 
-GET    /config.json                    -> controllers.public.config
+GET    /config.json                    -> controllers.private.config
 GET    /search                         -> controllers.public.search
 POST   /search                         -> controllers.public.search
 
