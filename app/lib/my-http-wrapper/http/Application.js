@@ -39,13 +39,7 @@ var ResponseExtension = {
   },
 
   renderFile: function(file, bufferSize, headers, errorHandler) {
-    // TODO
-    /*
     var self = this;
-    if (typeof headers === 'function') {
-      errorHandler = headers;
-      headers = null;
-    }
     fs.stat(file, function(error, stats) {
       if (error || !stats.isFile()) {
         errorHandler
@@ -66,15 +60,11 @@ var ResponseExtension = {
           self.end();
         });
     });
-    */
   },
 
   flush: function() {
-    // TODO
-    /*
     this.write(this.buffer.sliceData());
     this.buffer.position = 0;
-    */
   }
 };
 
@@ -118,7 +108,6 @@ exports.Application = class Application extends http.Server {
     this.sessionMiddleware = !sessionMiddleware
       ? undefined
       : function(req, res, next) {
-          console.log('sessionMiddleware in'); // TODO: remove
           return sessionMiddleware(req, res, function(err) {
             if (err) {
               console.error('error from sessionMiddleware:', err);
@@ -269,10 +258,6 @@ function _updateRoutes(self) {
     const { controller } = require(controllerPath);
     self.route(route.pattern, controller);
   }
-}
-
-function _renderFile(self, file, fileSize, response) {
-  // TODO
 }
 
 function prepareResponse(self, request, response, callback) {
