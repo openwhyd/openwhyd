@@ -3,7 +3,6 @@ const express = require('express');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
-var http = require('http');
 var querystring = require('querystring');
 
 var formidable = require('formidable');
@@ -76,9 +75,8 @@ const extendResponse = function(response) {
 
 //============================================================================
 // Class Application
-exports.Application = class Application extends http.Server {
+exports.Application = class Application {
   constructor(appDir, devMode, sessionMiddleware, options = {}) {
-    super();
     var self = this;
 
     this._errorHandler = options.errorHandler;
@@ -185,7 +183,6 @@ exports.Application = class Application extends http.Server {
 
   start() {
     this._isRunning = true;
-    // this.listen(this._port);
     this.expressApp.listen(this._port, () =>
       console.log('Server running at http://127.0.0.1:' + this._port + '/')
     );
@@ -193,7 +190,6 @@ exports.Application = class Application extends http.Server {
 
   stop() {
     if (this._isRunning) {
-      //this.close();
       this.expressApp.close();
       this._isRunning = false;
     }
