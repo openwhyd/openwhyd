@@ -14,6 +14,9 @@ GET    /mobile                         -> controllers.static
 GET    /iphone                         -> controllers.static
 POST   /fbcanvas/                      -> controllers.static
 
+GET    /fbCanvas                       -> controllers.private.fbCanvas
+POST   /fbCanvas                       -> controllers.private.fbCanvas
+
 GET    /download                       -> controllers.iframe
 
 GET    /about                          -> controllers.redir
@@ -29,14 +32,15 @@ GET    /support                        -> controllers.redir
 GET    /team                           -> controllers.redir
 GET    /tos                            -> controllers.redir
 
+GET    /register                       -> controllers.private.register
+POST   /register                       -> controllers.private.register
+
 GET    /paris                          -> controllers.api.city
 GET    /paris/                         -> controllers.api.city
 GET    /madrid                         -> controllers.api.city
 GET    /madrid/                        -> controllers.api.city
 GET    /london                         -> controllers.api.city
 GET    /london/                        -> controllers.api.city
-
-GET    /crashme                        -> controllers.crashme
 
 GET    /playlistcontest                -> controllers.playlistcontest
 POST   /playlistcontest                -> controllers.playlistcontest
@@ -52,9 +56,12 @@ GET    /img/{type}/{id}                -> controllers.uploadedFile
 GET    /btn                            -> controllers.btn
 GET    /btn/{type}                     -> controllers.btn
 
-GET    /config.json                    -> controllers.public.config
-GET    /search                         -> controllers.public.search
-POST   /search                         -> controllers.public.search
+GET    /config.json                    -> controllers.private.config
+GET    /search                         -> controllers.private.search
+POST   /search                         -> controllers.private.search
+
+GET    /wsYoutube                      -> controllers.private.wsYoutube
+POST   /wsYoutube                      -> controllers.private.wsYoutube
 
 GET    /welcome                        -> controllers.userLibrary
 GET    /all                            -> controllers.userLibrary
@@ -63,8 +70,6 @@ GET    /recent                         -> controllers.recentActivity
 GET    /hot                            -> controllers.hotTracks
 GET    /hot/                           -> controllers.hotTracks
 GET    /hot/{genre}                    -> controllers.hotTracks
-GET    /fbconvert                      -> controllers.fbConvert
-POST   /fbconvert                      -> controllers.fbConvert
 
 GET    /settings                       -> controllers.settings
 POST   /settings                       -> controllers.settings
