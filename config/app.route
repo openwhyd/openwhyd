@@ -14,6 +14,9 @@ GET    /mobile                         -> controllers.static
 GET    /iphone                         -> controllers.static
 POST   /fbcanvas/                      -> controllers.static
 
+GET    /fbCanvas                       -> controllers.private.fbCanvas
+POST   /fbCanvas                       -> controllers.private.fbCanvas
+
 GET    /download                       -> controllers.iframe
 
 GET    /about                          -> controllers.redir
@@ -54,8 +57,11 @@ GET    /btn                            -> controllers.btn
 GET    /btn/{type}                     -> controllers.btn
 
 GET    /config.json                    -> controllers.private.config
-GET    /search                         -> controllers.public.search
-POST   /search                         -> controllers.public.search
+GET    /search                         -> controllers.private.search
+POST   /search                         -> controllers.private.search
+
+GET    /wsYoutube                      -> controllers.private.wsYoutube
+POST   /wsYoutube                      -> controllers.private.wsYoutube
 
 GET    /welcome                        -> controllers.userLibrary
 GET    /all                            -> controllers.userLibrary

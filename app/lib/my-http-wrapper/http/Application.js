@@ -310,24 +310,6 @@ function _checkRoutes(self, request, response) {
     }
   }
 
-  _checkPublicControllers(self, request, requestParams, response);
-}
-
-function _checkPublicControllers(self, request, requestParams, response) {
-  var pathname = 'public' + url.parse(request.url).pathname;
-  try {
-    const { controller } = require(self._appDir + '/' + pathname);
-    extendResponse(response);
-    self.bodyParser(request, response, function() {
-      if (self.sessionMiddleware) {
-        self.sessionMiddleware(request, response, function(request, response) {
-          controller.call(self, request, requestParams, response);
-        });
-      } else {
-        controller.call(self, request, requestParams, response);
-      }
-    });
-  } catch (err) {
     if (self._errorHandler) {
       prepareResponse(self, request, response, function(request, response) {
         self._errorHandler(request, requestParams, response, 404);
@@ -337,7 +319,9 @@ function _checkPublicControllers(self, request, requestParams, response) {
     } else if (statusCode == 401) {
       response.writeHead(401, { 'Content-Type': 'text/plain' });
       response.end('error 401 unauthorized');
-    }
+  } else {
+    response.writeHead(statusCode, { 'Content-Type': 'text/plain' });
+    response.end(`error ${statusCode}`);
   }
 }
 
