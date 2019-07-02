@@ -35,6 +35,15 @@ describe('snip.js', function() {
 describe('"get" package', function() {
   var get = require('../../app/lib/get');
 
+  const expressApp = express();
+  let expressServer;
+
+  this.beforeAll(done => {
+    expressServer = expressApp.listen(3000, done);
+  });
+
+  this.afterAll(() => expressServer.close());
+
   it('should provide the title of a web page', function(done) {
     get.Title('https://www.google.com/', function(err, title) {
       assert.ifError(err);
@@ -64,18 +73,14 @@ describe('"get" package', function() {
     });
     */
   it('should provide the images of a web page', function(done) {
-    const expressApp = express();
     expressApp.get('/images.html', function(req, res) {
       res.send(HTML_PAGE_WITH_TITLE_AND_IMAGES);
     });
-    expressApp.listen(3000, err => {
-      if (err) return done(err);
-      get('http://localhost:3000/images.html', function(err, page) {
-        assert.ifError(err);
-        assert(page.getTitle());
-        assert(page.getImages().length);
-        done();
-      });
+    get('http://localhost:3000/images.html', function(err, page) {
+      assert.ifError(err);
+      assert(page.getTitle());
+      assert(page.getImages().length);
+      done();
     });
   });
 });
