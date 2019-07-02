@@ -36,8 +36,6 @@ GET    /madrid/                        -> controllers.api.city
 GET    /london                         -> controllers.api.city
 GET    /london/                        -> controllers.api.city
 
-GET    /crashme                        -> controllers.crashme
-
 GET    /playlistcontest                -> controllers.playlistcontest
 POST   /playlistcontest                -> controllers.playlistcontest
 GET    /playlistcontest/{uri}          -> controllers.playlistcontest
