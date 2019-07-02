@@ -1,3 +1,16 @@
+# [1.9.0](https://github.com/openwhyd/openwhyd/compare/v1.8.0...v1.9.0) (2019-07-02)
+
+
+### Bug Fixes
+
+* add express dependency, so tests can run ([3bdf6bf](https://github.com/openwhyd/openwhyd/commit/3bdf6bf))
+
+
+### Features
+
+* use local version of cookieconsent plug-in, instead of cdn ([c856972](https://github.com/openwhyd/openwhyd/commit/c856972))
+* **tests:** run « get » tests against local web server instead of openwhyd.org and google.com ([653415b](https://github.com/openwhyd/openwhyd/commit/653415b))
+
 # [1.8.0](https://github.com/openwhyd/openwhyd/compare/v1.7.2...v1.8.0) (2019-06-29)
 
 
