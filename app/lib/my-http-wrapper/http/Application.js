@@ -1,23 +1,27 @@
+const fs = require('fs');
+const http = require('http');
 const express = require('express');
-var fs = require('fs');
-var formidable = require('formidable'); // TODO: remove ?
-var qset = require('q-set'); // instead of body-parser, for form fields with brackets
+const formidable = require('formidable'); // TODO: remove ?
+const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
 
 const LOG_THRESHOLD = 500;
 
 // From Response.js
 
-const ResponseExtension = {
-  legacyRender: function(view, data, headers = {}, statusCode) {
-    const isString = typeof view === 'string';
-    if (!headers['content-type']) {
-      headers['content-type'] = isString ? 'text/plain' : 'application/json';
-    }
-    this.set(headers)
-      .status(statusCode || 200)
-      .send(isString ? view : JSON.stringify(view));
+http.ServerResponse.prototype.legacyRender = function(
+  view,
+  data,
+  headers = {},
+  statusCode
+) {
+  const isString = typeof view === 'string';
+  if (!headers['content-type']) {
+    headers['content-type'] = isString ? 'text/plain' : 'application/json';
   }
+  this.set(headers)
+    .status(statusCode || 200)
+    .send(isString ? view : JSON.stringify(view));
 };
 
 // Middlewares
@@ -73,11 +77,6 @@ const makeStatsUpdater = ({ accessLogFile }) =>
     next();
   };
 
-function injectLegacyFields(req, res, next) {
-  res.legacyRender = ResponseExtension.legacyRender; // TODO: get rid of that legacy method
-  next();
-}
-
 function defaultErrorHandler(req, reqParams, res, statusCode) {
   res.sendStatus(statusCode);
 }
@@ -108,7 +107,6 @@ exports.Application = class Application {
     app.use(noCache); // called on all requests
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._options)); // parse uploads and arrays from query params
-    app.use(injectLegacyFields);
     this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater({ accessLogFile: this._accessLogFile }));
     attachLegacyRoutesFromFile(app, this._appDir, this._routeFile);
