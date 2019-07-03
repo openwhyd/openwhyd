@@ -88,7 +88,7 @@ exports.Application = class Application {
         }
         request.body = Object.assign({}, postParams, parsedParams);
         request.files = files;
-        callback(request, response);
+        callback();
       });
     };
 
@@ -106,6 +106,8 @@ exports.Application = class Application {
     });
 
     this.expressApp.use(express.static(this._publicDir));
+
+    this.expressApp.use(this.bodyParser);
 
     if (sessionMiddleware) {
       this.expressApp.use(sessionMiddleware);
@@ -209,11 +211,6 @@ function _updateRoutes(self) {
   }
 }
 
-function prepareResponse(self, request, response, callback) {
-  extendResponse(response);
-  self.bodyParser(request, response, callback);
-}
-
 //==============================================================================
 // process request
 function _checkRoutes(self, request, response) {
@@ -243,24 +240,22 @@ function _checkRoutes(self, request, response) {
           requestParams = requestParams || {};
           for (var j in routeParams) requestParams[j] = routeParams[j];
         }
-        prepareResponse(self, request, response, function(request, response) {
-          if (!route.controller)
-            console.error(
-              'controller not found',
-              route.hasQuery ? request.url : path,
-              route.pattern
-            );
-          else route.controller.call(self, request, requestParams, response);
-        });
+        extendResponse(response);
+        if (!route.controller)
+          console.error(
+            'controller not found',
+            route.hasQuery ? request.url : path,
+            route.pattern
+          );
+        else route.controller.call(self, request, requestParams, response);
         return;
       }
     }
   }
 
   if (self._errorHandler) {
-    prepareResponse(self, request, response, function(request, response) {
-      self._errorHandler(request, requestParams, response, 404);
-    });
+    extendResponse(response);
+    self._errorHandler(request, requestParams, response, 404);
   } else {
     response.res.sendStatus(statusCode);
   }
