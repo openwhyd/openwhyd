@@ -5,7 +5,19 @@
 
 var MyController = require('../../MyController.js');
 
-var lastAccessPerUA = process.lastAccessPerUA;
+const MAX_LEN_UA = 12;
+
+const lastAccessPerUA = {}; // { user-agent -> { uid -> timestamp } }
+
+const stripUserAgent = userAgent => userAgent.substr(0, MAX_LEN_UA);
+
+exports.stripUserAgent = stripUserAgent;
+
+exports.logResponse = function({ userId, userAgent, startDate }) {
+  if (!userId || !userAgent || !startDate) return;
+  const ua = stripUserAgent(userAgent);
+  (lastAccessPerUA[ua] = lastAccessPerUA[ua] || {})[userId] = startDate;
+};
 
 function filterByFreshness(d) {
   var now = Date.now();

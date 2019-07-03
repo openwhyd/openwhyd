@@ -11,9 +11,8 @@ var qset = require('q-set'); // instead of body-parser, for form fields with bra
 var Headers = require('./mime-types.js');
 
 const LOG_THRESHOLD = 500;
-const MAX_LEN_UA = 12;
 
-var lastAccessPerUA = (process.lastAccessPerUA = {}); // { user-agent -> { uid -> timestamp } }
+const sessionTracker = require('../../../controllers/admin/session.js');
 
 // From Response.js
 
@@ -22,8 +21,6 @@ var DEFAULT_BUFFER_SIZE = 4096;
 var ResponseExtension = {
   render: function(view, data, headers, statusCode) {
     headers = headers || {};
-    headers['Cache-Control'] =
-      'max-age=0,no-cache,no-store,post-check=0,pre-check=0';
     if (typeof view === 'string') {
       if (!headers['content-type']) headers['content-type'] = 'text/plain';
       this.writeHead(statusCode || 200, headers);
@@ -110,50 +107,42 @@ exports.Application = class Application {
 
     _updateRoutes(this);
 
-      // called on each request
-    this.call = (request, response) => {
-      var startDate = new Date(),
-        path = request.url.split('?')[0];
+    this.expressApp = express();
+
+
+    this.expressApp.use(express.static(this._publicDir));
+
+    // called on non-static requests
+    this.expressApp.use(function(request, response, next) {
+      const startDate = new Date();
+      const path = request.url.split('?')[0];
       function makeResponseLogger(suffix) {
         return function(response) {
-          //clearTimeout(timeout);
-          var fields = {
-            uid: (request.session || {}).whydUid,
-            ua: (request.headers['user-agent'] || '').substr(0, MAX_LEN_UA)
-          };
-          if (fields.ua && fields.uid)
-            (lastAccessPerUA[fields.ua] = lastAccessPerUA[fields.ua] || {})[
-              fields.uid
-            ] = startDate;
-          var duration = Date.now() - startDate;
-          if (duration < LOG_THRESHOLD) return;
-          var logLine = [
-            startDate.toUTCString(),
-            request.method,
+          const userId = (request.session || {}).whydUid;
+          const userAgent = request.headers['user-agent'];
+          // maintain lastAccessPerUA
+          sessionTracker.logResponse({ startDate, userId, userAgent });
+          // in case of slow query, append log entry to _accessLogFile
+          appendSlowQueryToAccessLog({
+            accessLogFile: self._accessLogFile,
+            startDate,
+            method: request.method,
             path,
-            '(' + duration + 'ms)'
-          ];
-          if (suffix) logLine.push(suffix);
-          for (var i in fields)
-            if (fields[i]) logLine.push(i + '=' + fields[i]);
-          logLine = logLine.join(' ');
-          fs.appendFile(self._accessLogFile, logLine + '\n');
+            suffix,
+            userId,
+            userAgent
+          });
         };
       }
 
       try {
-        response.logRequest = makeResponseLogger(); // AJ
+        response.logRequest = makeResponseLogger();
         _checkRoutes(self, request, response);
       } catch (e) {
-        response.logRequest = makeResponseLogger('FAIL'); // AJ
-        _processError(self, e, response);
+        response.logRequest = makeResponseLogger('FAIL');
+        console.log('error', e.stack);
+        response.end(e.stack);
       }
-    };
-
-    this.expressApp = express();
-    this.expressApp.use(express.static(this._publicDir));
-    this.expressApp.use(function(req, res, next) {
-      self.call(req, res);
     });
   }
 
@@ -337,4 +326,27 @@ function getRequestParams(route, routeMatch) {
     }
   }
   return requestParams;
+}
+
+function appendSlowQueryToAccessLog({
+  accessLogFile,
+  startDate,
+  method,
+  path,
+  suffix,
+  userId,
+  userAgent
+}) {
+  const duration = Date.now() - startDate;
+  if (duration < LOG_THRESHOLD) return;
+  const logLine = [
+    startDate.toUTCString(),
+    method,
+    path,
+    '(' + duration + 'ms)'
+  ];
+  if (suffix) logLine.push(suffix);
+  if (userId) logLine.push('uid=' + userId);
+  if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
+  fs.appendFile(accessLogFile, logLine.join(' ') + '\n');
 }
