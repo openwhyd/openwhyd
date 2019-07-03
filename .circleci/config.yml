@@ -24,10 +24,8 @@ jobs:
           command: npm ci
       - save_cache:
           key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
-          # cache NPM modules and the folder with the Cypress binary
           paths:
             - ~/.npm
-            - ~/.cache
       - run:
           name: Database init.
           command: npm run test-reset
