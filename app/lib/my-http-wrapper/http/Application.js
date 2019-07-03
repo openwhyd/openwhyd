@@ -109,6 +109,14 @@ exports.Application = class Application {
 
     this.expressApp = express();
 
+    // called on all requests
+    this.expressApp.use(function(req, res, next) {
+      res.set(
+        'Cache-Control',
+        'max-age=0,no-cache,no-store,post-check=0,pre-check=0'
+      );
+      next();
+    });
 
     this.expressApp.use(express.static(this._publicDir));
 
