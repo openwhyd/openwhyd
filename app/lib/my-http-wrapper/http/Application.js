@@ -298,11 +298,6 @@ function _checkRoutes(self, request, response) {
   }
 }
 
-function _processError(self, e, response) {
-  console.log('error', e.stack); // AJ
-  response.end(e.stack);
-}
-
 function getRouteArray(file) {
   var fileText = fs.readFileSync(file, 'utf8');
   var lines = fileText.split('\n');
