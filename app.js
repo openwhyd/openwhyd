@@ -172,12 +172,7 @@ function start() {
     keepExtensions: true
   };
   require('./app/models/logging.js'); // init logging methods (IncomingMessage extensions)
-  new myHttp.Application(
-    __dirname,
-    params.dev,
-    sessionMiddleware,
-    serverOptions
-  ).start();
+  new myHttp.Application(__dirname, sessionMiddleware, serverOptions).start();
   require('./app/workers/notifEmails.js'); // start digest worker
   require('./app/workers/hotSnapshot.js'); // start hot tracks snapshot worker
   require('./app/models/plTags.js').getTagEngine(); // index tags for tracks and users
