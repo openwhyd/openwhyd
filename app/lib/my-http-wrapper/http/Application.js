@@ -287,14 +287,8 @@ function _checkRoutes(self, request, response) {
       prepareResponse(self, request, response, function(request, response) {
         self._errorHandler(request, requestParams, response, 404);
       });
-    } else if (statusCode == 404) {
-      response.end('error 404 not found');
-    } else if (statusCode == 401) {
-      response.writeHead(401, { 'Content-Type': 'text/plain' });
-      response.end('error 401 unauthorized');
   } else {
-    response.writeHead(statusCode, { 'Content-Type': 'text/plain' });
-    response.end(`error ${statusCode}`);
+    response.res.sendStatus(statusCode);
   }
 }
 
