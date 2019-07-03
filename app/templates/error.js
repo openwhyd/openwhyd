@@ -52,7 +52,7 @@ exports.renderErrorResponse = function(errorObj, response, format, loggedUser) {
     errorObj.errorCode == 404 ||
     errorObj.errorCode == 'USER_NOT_FOUND'
   )
-    //response.renderFile("public/html/404.html");
+    //response.sendFile("public/html/404.html");
     response.renderHTML(
       renderPage404({
         pageTitle: 'Oops...',

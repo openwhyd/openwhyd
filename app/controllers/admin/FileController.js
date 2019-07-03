@@ -10,11 +10,11 @@ exports.buildController = function(params) {
     function render(res) {
       if (!res) response.badRequest();
       else if (res.tsv)
-        response.render(res.tsv, null, { 'content-type': 'text/tsv' });
+        response.legacyRender(res.tsv, null, { 'content-type': 'text/tsv' });
       else if (res.csv)
-        response.render(res.csv, null, { 'content-type': 'text/csv' });
+        response.legacyRender(res.csv, null, { 'content-type': 'text/csv' });
       else if (res.html) response.renderHTML(res.html);
-      else response.render(res);
+      else response.legacyRender(res);
     }
 
     var processor = params.fileGenerators[reqParams.action];

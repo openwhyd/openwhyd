@@ -237,7 +237,7 @@ exports.controller = function(request, reqParams, response) {
 
   exports.fetchAndGenerateNotifDigest(user, options, function(email) {
     if (email) {
-      response.render(email.bodyHtml || email.bodyText, null, {
+      response.legacyRender(email.bodyHtml || email.bodyText, null, {
         'content-type': 'text/html'
       });
       if (reqParams && reqParams.send)
@@ -247,6 +247,6 @@ exports.controller = function(request, reqParams, response) {
           email.bodyText,
           email.bodyHtml
         );
-    } else response.render('no notifications since last digest');
+    } else response.legacyRender('no notifications since last digest');
   });
 };

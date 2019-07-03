@@ -246,7 +246,7 @@ exports.controller = function(request, reqParams, response) {
     if (reportLabel && reportValue != null) report[reportLabel] = reportValue;
     if (seq.length > 0) seq.shift()(runNext);
     else
-      response.render(renderTemplate(report), null, {
+      response.legacyRender(renderTemplate(report), null, {
         'content-type': 'text/html'
       });
   })();

@@ -11,7 +11,7 @@ var hypem = require('../../lib/hypem');
 exports.controller = function(request, reqParams, response) {
   // make sure a registered user is logged, or return an error page
   var loggedInUser = request.checkLogin(/*response*/);
-  if (!loggedInUser) return response.render({});
+  if (!loggedInUser) return response.legacyRender({});
 
   request.logToConsole('searchHypeMachine.controller', reqParams);
 
@@ -26,6 +26,6 @@ exports.controller = function(request, reqParams, response) {
     }
     var result = err ? { error: err } : { q: q, results: list };
     console.log('searchHypeMachine => ', err || list.length);
-    response.render(result);
+    response.legacyRender(result);
   });
 };

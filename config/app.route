@@ -1,4 +1,4 @@
-       /                               -> controllers.userLibrary
+ALL    /                               -> controllers.userLibrary
 GET    /home                           -> controllers.userLibrary
 POST   /home                           -> controllers.userLibrary
 

@@ -35,10 +35,10 @@ exports.controller = function(request, reqParams, response) {
           reqParams.userName = user.name;
           var html = templateHtml.render(reqParams);
           console.log('\n' + html /*.replace(/\n/g, " ")*/ + '\n');
-          response.render(html, null, { 'content-type': 'text/html' });
+          response.legacyRender(html, null, { 'content-type': 'text/html' });
         }
       );
   } catch (e) {
-    response.render(e);
+    response.legacyRender(e);
   }
 };

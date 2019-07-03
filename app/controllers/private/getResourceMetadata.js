@@ -25,7 +25,7 @@ exports.handleRequest = function(request, reqParams, response) {
 
     if (url.startsWith('/u/')) {
       userModel.fetchByUid(url.substr(3), function(user) {
-        response.render(
+        response.legacyRender(
           !user
             ? { error: 'not found' }
             : {
@@ -41,7 +41,7 @@ exports.handleRequest = function(request, reqParams, response) {
       });
     } else if (url.startsWith('/user/')) {
       userModel.fetchByHandle(url.substr(6), function(user) {
-        response.render(
+        response.legacyRender(
           !user
             ? { error: 'not found' }
             : {
@@ -59,7 +59,7 @@ exports.handleRequest = function(request, reqParams, response) {
 		else if (url.startsWith('/m/') || url.startsWith('/k/')) {
 			topicModel.fetchQuick(url, function (topic){
 				console.log(topic);
-				response.render(!topic ? {error:"not found"} : {
+				response.legacyRender(!topic ? {error:"not found"} : {
 					id: topic._id,
 					mid: topic.mid,
 					name: topic.name,
@@ -76,10 +76,10 @@ exports.handleRequest = function(request, reqParams, response) {
 
     // TODO: public post page, conversation page
 
-    //getContentType(url, function(type) { response.render(type) });
+    //getContentType(url, function(type) { response.legacyRender(type) });
   } catch (e) {
     console.log('getResourceMetadata error:', e);
-    response.render(null);
+    response.legacyRender(null);
   }
 };
 

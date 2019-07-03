@@ -104,7 +104,7 @@ exports.controller = function(req, requestParams, res) {
   console.log('postParams', postParams);
   //if (err) {
   //	console.log("upload.controller error", err.stack);
-  //	return res.render({error:err});
+  //	return res.legacyRender({error:err});
   //}
 
   if (postParams && postParams.id && postParams.action == 'delete')
@@ -126,7 +126,7 @@ exports.controller = function(req, requestParams, res) {
       results[i] = result;
       if (--remaining == 0) {
         console.log('upload.controller completed', result);
-        res.render(results, null, { 'content-type': 'text/plain' });
+        res.legacyRender(results, null, { 'content-type': 'text/plain' });
         /*
 					res.writeHead(200, {'content-type': 'text/plain'});
 					res.end('received upload\nreceived\n');*/

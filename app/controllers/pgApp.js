@@ -169,7 +169,7 @@ exports.controller = function(request, reqParams, response) {
       console.log('rendering done!');
       //if (loggedInUser && loggedInUser.id && !reqParams.after && !reqParams.before)
       //	analytics.addVisit(loggedInUser, request.url/*"/u/"+uid*/);
-    } else response.render(data.text || data.json || data.error);
+    } else response.legacyRender(data.text || data.json || data.error);
   }
 
   handleRequest(p, render);

@@ -47,7 +47,7 @@ exports.controller = function(request, reqParams, response) {
   //	return response.temporaryRedirect("/");
 
   function render(html) {
-    response.render(html, null, { 'content-type': 'text/html' });
+    response.legacyRender(html, null, { 'content-type': 'text/html' });
 
     if (
       loggedInUser &&
@@ -70,7 +70,7 @@ exports.controller = function(request, reqParams, response) {
       for (var i in posts)
         posts[i].isLoved = snip.arrayHas(posts[i].lov, '' + loggedInUser.id);
     if (reqParams.format == 'json')
-      response.render({
+      response.legacyRender({
         hasMore: hasMore ? { skip: firstIndex + reqParams.limit } : false,
         genre: genre || 'All',
         tracks: posts

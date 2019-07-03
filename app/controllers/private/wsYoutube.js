@@ -62,6 +62,6 @@ exports.render = function(q, callback) {
 
 exports.controller = function(request, reqParams, response) {
   exports.render(reqParams.q, function(html) {
-    response.render(html, null, { 'content-type': 'text/html' });
+    response.legacyRender(html, null, { 'content-type': 'text/html' });
   });
 };

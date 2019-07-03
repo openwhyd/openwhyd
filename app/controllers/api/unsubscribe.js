@@ -66,23 +66,23 @@ exports.controller = function(request, reqParams, response) {
       var html =
         'Starting now, the frequency of email notifications you will receive is set to: ' +
         newFreqlabel;
-      response.render(withLink(html), null, { 'content-type': 'text/html' });
+      response.legacyRender(withLink(html), null, { 'content-type': 'text/html' });
     } else if (r.pref) {
       // user unsubscribed
       var type = userModel.EM_LABEL[reqParams.type] || 'all';
       var html =
         'You successfully unsubscribed from email notifications: ' + type;
-      response.render(withLink(html), null, { 'content-type': 'text/html' });
+      response.legacyRender(withLink(html), null, { 'content-type': 'text/html' });
     } else {
-      response.render(r);
+      response.legacyRender(r);
     }
     /*
 		if (r && r.html)
-			response.render(r.html, null, {'content-type': 'text/html'});
+			response.legacyRender(r.html, null, {'content-type': 'text/html'});
 		else {
 			if (!r || r.error) {
 				console.log("unsubscribe.controller ERROR:", (r || {}).error || r);
-			response.render(r);
+			response.legacyRender(r);
 		}
 		*/
   }

@@ -63,11 +63,9 @@ The project is **open to contributions**. Check out our [Support Openwhyd](#supp
 
 ### Tech stack
 
-- Node.js
-- Express-like Web Server
-- jQuery
-- HTML + CSS
-- [Playemjs](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
+- [Node.js](https://nodejs.org/) + [Express](https://expressjs.com/) + [MongoDB](https://www.mongodb.com/)
+- HTML + CSS + jQuery
+- [PlayemJS](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
 
 ### Setup and usage
 

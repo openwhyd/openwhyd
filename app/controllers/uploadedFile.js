@@ -125,21 +125,18 @@ exports.moveTo = function(filename, toPath, callback) {
 
 exports.controller = function(request, reqParams, response) {
   function renderNoImage() {
-    response.renderFile(
-      exports.config.whydPath + '/public/images/no_image.png'
-    );
+    response.sendFile(exports.config.whydPath + '/public/images/no_image.png');
   }
 
   function renderFile(path, defaultImg) {
     //console.log("uploadedFile Path:", path);
-    response.renderFile('' + path, null, null, function(error) {
+    response.sendFile('' + path, function(error) {
+      if (!error) return;
       //console.log("uploadedFile error: ", error, exports.config.whydPath + "/public" + defaultImg);
       if (defaultImg)
-        response.renderFile(
+        response.sendFile(
           exports.config.whydPath + '/public' + defaultImg,
-          null,
-          null,
-          renderNoImage
+          err => err && renderNoImage()
         );
       else renderNoImage();
     });
@@ -218,7 +215,8 @@ exports.controller = function(request, reqParams, response) {
           else renderImg(config.urlPrefix + '/images/1x1-pixel.png'); // transparent image
         });
       else
-        response.renderFile(filePath, null, null, function(error) {
+        response.sendFile(filePath, function(error) {
+          if (!error) return;
           if (reqParams.localOnly)
             renderImg(config.urlPrefix + '/images/1x1-pixel.png');
           // transparent image
