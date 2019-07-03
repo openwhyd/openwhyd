@@ -73,11 +73,25 @@ const makeStatsUpdater = ({ accessLogFile }) =>
     next();
   };
 
+function injectLegacyFields(req, res, next) {
+  res.legacyRender = ResponseExtension.legacyRender; // TODO: get rid of that legacy method
+  next();
+}
+
+function defaultErrorHandler(req, reqParams, res, statusCode) {
+  res.sendStatus(statusCode);
+}
+
+const makeNotFound = errorHandler =>
+  function notFound(req, res, next) {
+    errorHandler(req, req.mergedParams, res, 404);
+  };
+
 // Web Application class
 
 exports.Application = class Application {
   constructor(appDir, sessionMiddleware, options = {}) {
-    this._errorHandler = options.errorHandler; // TODO
+    this._errorHandler = options.errorHandler || defaultErrorHandler;
     this._sessionMiddleware = sessionMiddleware;
     this._appDir = appDir + '/app';
     this._publicDir = appDir + '/public';
@@ -89,22 +103,16 @@ exports.Application = class Application {
   }
 
   getExpressApp() {
+    if (this._expressApp) return this._expressApp;
     const app = express();
     app.use(noCache); // called on all requests
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._options)); // parse uploads and arrays from query params
+    app.use(injectLegacyFields);
     this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater({ accessLogFile: this._accessLogFile }));
-
-    loadRoutesFromFile(this._routeFile).forEach(({ pattern, name }) => {
-      const { method, path } = parseExpressRoute({ pattern, name });
-      attachLegacyRoute({
-        expressApp: app,
-        method,
-        path,
-        controllerFile: loadControllerFile({ name, appDir: this._appDir })
-      });
-    });
+    attachLegacyRoutesFromFile(app, this._appDir, this._routeFile);
+    app.use(makeNotFound(this._errorHandler));
 
     return (this._expressApp = app);
   }
@@ -159,18 +167,21 @@ function loadControllerFile({ name, appDir }) {
 
 // attaches a legacy controller to an Express app
 function attachLegacyRoute({ expressApp, method, path, controllerFile }) {
-  expressApp[method](path, async function endpointHandler(req, res) {
-    const reqParams = { ...req.params, ...req.query };
-    res.legacyRender = ResponseExtension.legacyRender; // TODO: get rid of that legacy method
-    try {
-      await controllerFile.controller(req, reqParams, res);
-    } catch (err) {
-      if (self._errorHandler) {
-        self._errorHandler(req, reqParams, res, 404);
-      } else {
-        res.sendStatus(statusCode);
-      }
-    }
+  expressApp[method](path, function endpointHandler(req, res) {
+    req.mergedParams = { ...req.params, ...req.query };
+    return controllerFile.controller(req, req.mergedParams, res);
+  });
+}
+
+function attachLegacyRoutesFromFile(expressApp, appDir, routeFile) {
+  loadRoutesFromFile(routeFile).forEach(({ pattern, name }) => {
+    const { method, path } = parseExpressRoute({ pattern, name });
+    attachLegacyRoute({
+      expressApp,
+      method,
+      path,
+      controllerFile: loadControllerFile({ name, appDir })
+    });
   });
 }
 
