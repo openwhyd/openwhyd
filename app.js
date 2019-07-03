@@ -148,7 +148,7 @@ function makeMongoUrl(params) {
 }
 
 function start() {
-  var myHttp = require('./app/lib-old/my/http'); // TODO
+  var myHttp = require('./app/lib/my-http-wrapper/http');
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
   const sessionStore = session({

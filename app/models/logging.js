@@ -273,28 +273,19 @@ http.ServerResponse.prototype.renderIframe = function(url, metaOverrides) {
   return this.renderHTML(loggingTemplate.renderIframe(url, metaOverrides));
 };
 
-http.ServerResponse.prototype.status = function(code, head, body) {
-  this.writeHead(code, head || undefined);
-  body ? this.end(body) : this.end();
-};
-
 http.ServerResponse.prototype.temporaryRedirect = function(url, reqParams) {
   var url = '' + url;
   if (reqParams /*request.method.toLowerCase() == "get"*/) {
     var reqParams = querystring.stringify(reqParams);
     if (reqParams.length) url += '?' + reqParams;
   }
-  this.status(307, { Location: url }, 'redirecting to ' + url);
-  //this.writeHead(307, {Location: url});
-  //this.end("redirecting to "+url);
+  this.redirect(307, url); // see https://expressjs.com/fr/4x/api.html#res.redirect
 };
 
 http.ServerResponse.prototype.badRequest = function(error) {
-  this.status(400, null, error ? '' + error : 'BAD REQUEST');
-  //this.writeHead(400);
-  //this.end(error ? ""+error : "BAD REQUEST");
+  this.status(400).send(error ? '' + error : 'BAD REQUEST');
 };
 
 http.ServerResponse.prototype.notFound = function() {
-  this.status(404);
+  this.status(404).send();
 };
