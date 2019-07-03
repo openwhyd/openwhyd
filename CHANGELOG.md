@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/openwhyd/openwhyd/compare/v1.9.0...v1.10.0) (2019-07-03)
+
+
+### Features
+
+* **back-end:** migrate from "my/http" to Express.js ([#201](https://github.com/openwhyd/openwhyd/issues/201)) ([41559fd](https://github.com/openwhyd/openwhyd/commit/41559fd)), closes [#122](https://github.com/openwhyd/openwhyd/issues/122) [#122](https://github.com/openwhyd/openwhyd/issues/122)
+
 # [1.9.0](https://github.com/openwhyd/openwhyd/compare/v1.8.0...v1.9.0) (2019-07-02)
 
 
