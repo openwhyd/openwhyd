@@ -33,7 +33,7 @@ jobs:
           name: Run Openwhyd server
           command: npm run run --mongoDbDatabase openwhyd_test &
           background: true
-      - run
+      - run:
           name: Wait for server up
           command: ./scripts/wait-for-http-server.sh 8080
       - run:
