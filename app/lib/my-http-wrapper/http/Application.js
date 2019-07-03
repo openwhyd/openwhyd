@@ -169,35 +169,24 @@ exports.Application = class Application {
   }
 
   route(request, controller) {
-    var routes = this._routes.GET;
-    var route = { controller: controller, hasQuery: request.includes('?') };
-    var regexp = /(GET|POST|HEAD|OPTIONS|CONNECT|TRACE|PUT|DELETE)\s*(\/\S+)/;
-    var requestParams, requestParam, requestParamSplit;
+    let routes = this._routes.GET;
+    const route = { controller: controller, hasQuery: request.includes('?') };
+    const regexp = /(GET|POST|HEAD|OPTIONS|CONNECT|TRACE|PUT|DELETE)\s*(\/\S+)/;
 
     if (regexp.test(request)) {
       routes = this._routes[RegExp.$1];
       request = RegExp.$2;
     }
 
-    requestParams = request.match(/\{[\w\$]+(\:\w+)?\}/g);
+    const requestParams = request.match(/\{[\w\$]+(\:\w+)?\}/g);
     if (requestParams) {
       route.requestParamNames = [];
-      route.requestParamTypes = [];
       for (var i = 0; i < requestParams.length; i++) {
-        requestParam = requestParams[i];
-        requestParamSplit = requestParam.substring(1, requestParam.length - 1);
-        requestParamSplit = requestParamSplit.split(':');
-        if (requestParamSplit.length > 1) {
-          if (requestParamSplit[1] === 'int')
-            request = request.replace(requestParam, '(\\d+)');
-          else if (requestParamSplit[1] === 'boolean')
-            request = request.replace(requestParam, '(true|false)');
-          else request = request.replace(requestParam, '([\\w\\-\\.]+)');
-        } else {
+        const requestParam = requestParams[i];
           request = request.replace(requestParam, '([\\w\\-\\.\\%]+)');
-        }
-        route.requestParamNames.push(requestParamSplit[0]);
-        route.requestParamTypes.push(requestParamSplit[1] || 'string');
+        route.requestParamNames.push(
+          requestParam.substring(1, requestParam.length - 1)
+        );
       }
     }
 
@@ -307,19 +296,11 @@ function getRouteArray(file) {
 
 function getRequestParams(route, routeMatch) {
   var names = route.requestParamNames;
-  var types = route.requestParamTypes;
-  var name, type, requestParams;
+  const requestParams = {};
   if (names) {
-    requestParams = {};
     for (var j = 0; j < names.length; j++) {
-      name = names[j];
-      type = types[j];
-      if (type === 'int') requestParams[name] = parseInt(routeMatch[j + 1]);
-      else if (type === 'boolean')
-        requestParams[name] = routeMatch[j + 1] === 'true';
-      else if (type === 'string') requestParams[name] = routeMatch[j + 1];
-      else if (type === 'Object')
-        requestParams[name] = JSON.parse(routeMatch[j + 1]);
+      const name = names[j];
+      requestParams[name] = routeMatch[j + 1];
     }
   }
   return requestParams;
