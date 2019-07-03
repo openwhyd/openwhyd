@@ -13,7 +13,7 @@ const stripUserAgent = userAgent => userAgent.substr(0, MAX_LEN_UA);
 
 exports.stripUserAgent = stripUserAgent;
 
-exports.logResponse = function({ userId, userAgent, startDate }) {
+exports.notifyUserActivity = function({ userId, userAgent, startDate }) {
   if (!userId || !userAgent || !startDate) return;
   const ua = stripUserAgent(userAgent);
   (lastAccessPerUA[ua] = lastAccessPerUA[ua] || {})[userId] = startDate;

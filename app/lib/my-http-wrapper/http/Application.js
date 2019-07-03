@@ -23,7 +23,6 @@ const ResponseExtension = {
     this.set(headers)
       .status(statusCode || 200)
       .send(isString ? view : JSON.stringify(view));
-    this.logRequest && this.logRequest(this);
   }
 };
 
@@ -41,20 +40,7 @@ exports.Application = class Application {
     this._routeFile = appDir + '/config/app.route';
     this._accessLogFile = appDir + '/access.log';
 
-    this._routes = {
-      GET: [],
-      POST: [],
-      HEAD: [],
-      OPTIONS: [],
-      CONNECT: [],
-      TRACE: [],
-      PUT: [],
-      DELETE: []
-    };
-
     this._port = (process.appParams || {}).port;
-
-    _updateRoutes(this);
 
     this.expressApp = express();
 
@@ -95,34 +81,38 @@ exports.Application = class Application {
     this.expressApp.use(function(request, response, next) {
       const startDate = new Date();
       const path = request.url.split('?')[0];
-      function makeResponseLogger(suffix) {
-        return function(response) {
-          const userId = (request.session || {}).whydUid;
-          const userAgent = request.headers['user-agent'];
-          // maintain lastAccessPerUA
-          sessionTracker.logResponse({ startDate, userId, userAgent });
-          // in case of slow query, append log entry to _accessLogFile
-          appendSlowQueryToAccessLog({
-            accessLogFile: self._accessLogFile,
-            startDate,
-            method: request.method,
-            path,
-            suffix,
-            userId,
-            userAgent
-          });
-        };
-      }
+      const userId = (request.session || {}).whydUid;
+      const userAgent = request.headers['user-agent'];
 
-      try {
-        response.logRequest = makeResponseLogger();
-        _checkRoutes(self, request, response);
-      } catch (e) {
-        response.logRequest = makeResponseLogger('FAIL');
-        console.log('error', e.stack);
-        response.send(e.stack);
-      }
+      sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
+
+      // whenever a request is slow to respond, append log entry to _accessLogFile
+      response.on('finish', () => {
+        appendSlowQueryToAccessLog({
+          accessLogFile: self._accessLogFile,
+          startDate,
+          method: request.method,
+          path,
+          userId,
+          userAgent
+        });
+      });
+
+      //_checkRoutes(self, request, response);
+      next();
     });
+
+    loadRoutesFromFile(this._routeFile).forEach(
+      ({ pattern, controller: name }) => {
+        const { method, path } = parseExpressRoute({ pattern, name });
+        attachLegacyRoute({
+          expressApp: this.expressApp,
+          method,
+          path,
+          controllerFile: loadControllerFile({ name, appDir: this._appDir })
+        });
+      }
+    );
   }
 
   start() {
@@ -138,59 +128,12 @@ exports.Application = class Application {
       this._isRunning = false;
     }
   }
-
-  route(request, controller) {
-    let routes = this._routes.GET;
-    const route = { controller: controller, hasQuery: request.includes('?') };
-    const regexp = /(GET|POST|HEAD|OPTIONS|CONNECT|TRACE|PUT|DELETE)\s*(\/\S+)/;
-
-    if (regexp.test(request)) {
-      routes = this._routes[RegExp.$1];
-      request = RegExp.$2;
-    }
-
-    const requestParams = request.match(/\{[\w\$]+(\:\w+)?\}/g);
-    if (requestParams) {
-      route.requestParamNames = [];
-      for (var i = 0; i < requestParams.length; i++) {
-        const requestParam = requestParams[i];
-        request = request.replace(requestParam, '([\\w\\-\\.\\%]+)');
-        route.requestParamNames.push(
-          requestParam.substring(1, requestParam.length - 1)
-        );
-      }
-    }
-
-    route.pattern = new RegExp(
-      '^' +
-        request.replace(/[\/\.\?]/g, function(s) {
-          return '\\' + s;
-        }) +
-        '$'
-    );
-    routes.push(route);
-
-    return this;
-  }
 };
 
 //==============================================================================
 // private methods
 
-function _updateRoutes(self) {
-  for (var r in self._routes) self._routes[r].length = 0;
-  var routes = getRouteArray(self._routeFile);
-
-  for (var i = 0, route; (route = routes[i]); i++) {
-    const controllerPath =
-      self._appDir + '/' + route.controller.replace(/\./g, '/');
-    const { controller } = require(controllerPath);
-    self.route(route.pattern, controller);
-  }
-}
-
-//==============================================================================
-// process request
+/*
 function _checkRoutes(self, request, response) {
   var routes = self._routes[request.method];
   var urlObj = url.parse(request.url);
@@ -202,7 +145,7 @@ function _checkRoutes(self, request, response) {
     for (var i = 0; (route = routes[i]); i++) {
       routeMatch = (route.hasQuery ? request.url : path).match(route.pattern);
       if (routeMatch) {
-        var routeParams = getRequestParams(route, routeMatch);
+        var routeParams = getRequestParams(route, routeMatch); // from path (e.g. `/{varName}`)
         if (routeParams) {
           requestParams = requestParams || {};
           for (var j in routeParams) requestParams[j] = routeParams[j];
@@ -227,10 +170,11 @@ function _checkRoutes(self, request, response) {
     response.res.sendStatus(statusCode);
   }
 }
+*/
 
-function getRouteArray(file) {
-  var fileText = fs.readFileSync(file, 'utf8');
-  var lines = fileText.split('\n');
+// returns a list of { pattern, controller } from the provided file (e.g. app.route)
+function loadRoutesFromFile(file) {
+  const lines = fs.readFileSync(file, 'utf8').split('\n');
   var routeArray = [];
   var line;
   for (var i = 0, len = lines.length; i < len; i++) {
@@ -241,16 +185,31 @@ function getRouteArray(file) {
   return routeArray;
 }
 
-function getRequestParams(route, routeMatch) {
-  var names = route.requestParamNames;
-  const requestParams = {};
-  if (names) {
-    for (var j = 0; j < names.length; j++) {
-      const name = names[j];
-      requestParams[name] = routeMatch[j + 1];
-    }
-  }
-  return requestParams;
+// for a given app.route entry, returns { method, path } to define an Express endpoint
+function parseExpressRoute({ pattern, name }) {
+  const [upperCaseMethod, legacyPath] = pattern.split('?')[0].split(/\s+/);
+  const method = upperCaseMethod.toLowerCase();
+  const pathParams = legacyPath.match(/\{[\w\$]+\}/g);
+  const path = (pathParams || []).reduce(
+    (path, param) =>
+      path.replace(param, `:${param.substring(1, param.length - 1)}`),
+    legacyPath
+  );
+  return { method, path };
+}
+
+// loads and returns the exports of a js controller file, given its name
+function loadControllerFile({ name, appDir }) {
+  return require(`${appDir}/${name.replace(/\./g, '/')}.js`);
+}
+
+// attaches a legacy controller to an Express app
+function attachLegacyRoute({ expressApp, method, path, controllerFile }) {
+  expressApp[method](path, function endpointHandler(req, res) {
+    const reqParams = { ...req.params, ...req.query };
+    res.legacyRender = ResponseExtension.legacyRender; // TODO: get rid of that legacy method
+    controllerFile.controller(req, reqParams, res);
+  });
 }
 
 function appendSlowQueryToAccessLog({
