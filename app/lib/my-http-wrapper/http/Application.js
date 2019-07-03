@@ -200,19 +200,8 @@ function _checkRoutes(self, request, response) {
   var routes = self._routes[request.method];
   var urlObj = url.parse(request.url);
   var path = urlObj.pathname;
-  var query = urlObj.query;
-  var route, routeMatch, requestParams;
-
-  // AJ: moved up, so that route-based controllers could leverage requestParams
-  if (query) {
-    try {
-      requestParams = self._jsonFormatQueryString
-        ? JSON.parse(decodeURI(query))
-        : querystring.parse(query);
-    } catch (e) {
-      console.log('error', e); // AJ
-    }
-  }
+  var route, routeMatch;
+  let requestParams = querystring.parse(urlObj.query);
 
   if (routes) {
     for (var i = 0; (route = routes[i]); i++) {
