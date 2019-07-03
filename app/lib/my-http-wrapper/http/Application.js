@@ -174,7 +174,7 @@ exports.Application = class Application {
       route.requestParamNames = [];
       for (var i = 0; i < requestParams.length; i++) {
         const requestParam = requestParams[i];
-          request = request.replace(requestParam, '([\\w\\-\\.\\%]+)');
+        request = request.replace(requestParam, '([\\w\\-\\.\\%]+)');
         route.requestParamNames.push(
           requestParam.substring(1, requestParam.length - 1)
         );
@@ -211,13 +211,7 @@ function _updateRoutes(self) {
 
 function prepareResponse(self, request, response, callback) {
   extendResponse(response);
-  self.bodyParser(request, response, function() {
-    if (self.sessionMiddleware) {
-      self.sessionMiddleware(request, response, callback);
-    } else {
-      callback(request, response);
-    }
-  });
+  self.bodyParser(request, response, callback);
 }
 
 //==============================================================================
@@ -263,10 +257,10 @@ function _checkRoutes(self, request, response) {
     }
   }
 
-    if (self._errorHandler) {
-      prepareResponse(self, request, response, function(request, response) {
-        self._errorHandler(request, requestParams, response, 404);
-      });
+  if (self._errorHandler) {
+    prepareResponse(self, request, response, function(request, response) {
+      self._errorHandler(request, requestParams, response, 404);
+    });
   } else {
     response.res.sendStatus(statusCode);
   }
