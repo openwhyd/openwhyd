@@ -132,14 +132,14 @@ exports.Application = class Application {
 
   start() {
     this._isRunning = true;
-    this.expressApp.listen(this._port, () =>
+    this.expressServer = this.expressApp.listen(this._port, () =>
       console.log('Server running at http://127.0.0.1:' + this._port + '/')
     );
   }
 
   stop() {
     if (this._isRunning) {
-      this.expressApp.close();
+      this.expressServer.close();
       this._isRunning = false;
     }
   }
