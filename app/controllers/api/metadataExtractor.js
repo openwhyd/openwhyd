@@ -75,7 +75,7 @@ exports.controller = function(request, reqParams, response) {
   function render(err, result) {
     result = result || {};
     if (err) result.error = err.message || err;
-    response.render(
+    response.legacyRender(
       reqParams.format == 'text' ? JSON.stringify(result, null, 2) : result
     );
   }

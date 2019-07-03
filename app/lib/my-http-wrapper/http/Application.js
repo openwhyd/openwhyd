@@ -18,8 +18,8 @@ const sessionTracker = require('../../../controllers/admin/session.js');
 
 var DEFAULT_BUFFER_SIZE = 4096;
 
-var ResponseExtension = {
-  render: function(view, data, headers, statusCode) {
+const ResponseExtension = {
+  legacyRender: function(view, data, headers, statusCode) {
     headers = headers || {};
     if (typeof view === 'string') {
       if (!headers['content-type']) headers['content-type'] = 'text/plain';

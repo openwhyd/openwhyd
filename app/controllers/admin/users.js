@@ -119,7 +119,7 @@ exports.handleRequest = function(request, reqParams, response) {
         ? '<h1>error</h1><p>' + result.error + '</p>'
         : '<h1>success</h1><p>' + result.message + '</p>') +
         'Go <a href="/admin/users">back to user management console</a>';
-    response.render(html, null, { 'content-type': 'text/html' });
+    response.legacyRender(html, null, { 'content-type': 'text/html' });
   }
 
   reqParams = reqParams || {};

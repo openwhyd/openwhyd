@@ -46,5 +46,5 @@ exports.controller = function(request, reqParams, response) {
   notifModel.mention(fakePost, fakeComment, user.id);
   notifModel.commentReply(fakePost, fakeComment, user.id);
 
-  response.render('done');
+  response.legacyRender('done');
 };

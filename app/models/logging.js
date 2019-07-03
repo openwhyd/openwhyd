@@ -215,7 +215,7 @@ http.IncomingMessage.prototype.checkAdmin = function(response, format) {
       'access restricted, user is not an admin: ',
       user._id || user.id
     );
-    response && response.render('nice try! ;-)');
+    response && response.legacyRender('nice try! ;-)');
     return false;
   }
   return user;
@@ -224,7 +224,7 @@ http.IncomingMessage.prototype.checkAdmin = function(response, format) {
 // ========= HTTP RESPONSE SNIPPETS
 
 http.ServerResponse.prototype.renderHTML = function(html, statusCode) {
-  return this.render(
+  return this.legacyRender(
     html,
     null,
     { 'content-type': 'text/html; charset=utf-8' },
@@ -233,7 +233,7 @@ http.ServerResponse.prototype.renderHTML = function(html, statusCode) {
 };
 
 http.ServerResponse.prototype.renderJSON = function(json, statusCode) {
-  return this.render(
+  return this.legacyRender(
     json,
     null,
     { 'content-type': 'application/json; charset=utf-8' },
@@ -251,7 +251,7 @@ http.ServerResponse.prototype.renderWrappedJSON = function(json, statusCode) {
 };
 
 http.ServerResponse.prototype.renderText = function(json, statusCode) {
-  return this.render(
+  return this.legacyRender(
     json,
     null,
     { 'content-type': 'text/text; charset=utf-8' },

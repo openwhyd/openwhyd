@@ -35,7 +35,7 @@ exports.controller = function(request, reqParams, response) {
       );
     } else if (p && p.data) response.renderJSON(p);
     // TODO: or p.data?
-    else response.render(p);
+    else response.legacyRender(p);
   }
 
   function renderPost(post, isDynamic) {

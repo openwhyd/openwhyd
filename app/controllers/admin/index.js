@@ -212,7 +212,7 @@ exports.controller = function(request, reqParams, response, error) {
     for (var i in indexFcts)
       if (request.body[i])
         return indexFcts[i](function(r) {
-          response.render(r || { ok: 'done' });
+          response.legacyRender(r || { ok: 'done' });
         });
     response.badRequest();
   } else

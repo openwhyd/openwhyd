@@ -355,8 +355,8 @@ exports.handleRequest = function(request, reqParams, response) {
       //response.redirect("/");
     }
     /*else*/ if (result.html)
-      response.render(result.html, null, { 'content-type': 'text/html' });
-    else response.render(result);
+      response.legacyRender(result.html, null, { 'content-type': 'text/html' });
+    else response.legacyRender(result);
   }
 
   if (reqParams.ajax) {

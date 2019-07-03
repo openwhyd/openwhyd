@@ -151,11 +151,11 @@ exports.topicNameSearch = function(
           if (results.length == 0) {
             console.log('search: no results so far...');
             if (cycles-- == 0) resultHandler([], q);
-            //response.render("");
+            //response.legacyRender("");
             else timeout = setTimeout(renderer, timeoutDuration);
           } else {
             //console.log(renderTemplate(q,results));
-            //response.render(util.inspect(results));
+            //response.legacyRender(util.inspect(results));
             resultHandler(results, q);
             console.log('search: rendering done!');
           }

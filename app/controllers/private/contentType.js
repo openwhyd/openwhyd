@@ -51,13 +51,13 @@ exports.controller = function(request, reqParams, response) {
 
   if (!reqParams) {
     console.log('contentType: no url provided => returning null');
-    response.render(null);
+    response.legacyRender(null);
     return;
   }
 
   function handleError(err) {
     console.log('contentType error:', err);
-    response.render({ error: err });
+    response.legacyRender({ error: err });
   }
 
   function renderResult(contentType, title, images) {
@@ -68,7 +68,7 @@ exports.controller = function(request, reqParams, response) {
       images: images
     };
     console.log('contentType result:', result);
-    response.render(result);
+    response.legacyRender(result);
   }
 
   var url = reqParams.url;

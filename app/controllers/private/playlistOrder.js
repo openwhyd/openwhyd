@@ -34,7 +34,7 @@ exports.controller = function(request, getParams, response) {
   }
 
   function render(html) {
-    response.render(renderWhydPage(html), null, {
+    response.legacyRender(renderWhydPage(html), null, {
       'content-type': 'text/html'
     });
   }

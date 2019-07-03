@@ -192,7 +192,7 @@ exports.handleRequest = function(request, reqParams, response) {
   // make sure an admin is logged, or return an error page
   var user = request.checkAdmin(response);
   if (!user /*|| !(user.fbId == "510739408" || user.fbId == "577922742")*/)
-    return /*response.render("you're not an admin!")*/;
+    return /*response.legacyRender("you're not an admin!")*/;
 
   var fetchAndRender = function() {
     fetchUsers(
@@ -211,7 +211,7 @@ exports.handleRequest = function(request, reqParams, response) {
                     date: requests[i].date
                   };
 
-                response.render(
+                response.legacyRender(
                   renderTemplate(requests, invites, users, reqParams),
                   null,
                   { 'content-type': 'text/html' }

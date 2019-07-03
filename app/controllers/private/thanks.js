@@ -12,7 +12,7 @@ exports.controller = function(request, reqParams, response) {
   request.logToConsole('thanks.controller', reqParams);
 
   if (!reqParams || !reqParams.mail)
-    return response.render(
+    return response.legacyRender(
       'You must provide a valid email address.' +
         "<script>window.location.href='/';</script>",
       null,
@@ -21,7 +21,7 @@ exports.controller = function(request, reqParams, response) {
 
   user.fetchByEmail(reqParams.mail, function(u) {
     if (u)
-      response.render(
+      response.legacyRender(
         "You've already registered, please log in using the link below:" +
           "<script>window.location.href='" +
           config.urlPrefix +
@@ -32,7 +32,7 @@ exports.controller = function(request, reqParams, response) {
     else {
       user.fetchInviteByEmail(reqParams.mail, function(u) {
         if (u)
-          response.render(
+          response.legacyRender(
             'Please follow the link of the invite email we sent you' +
               "<script>window.location.href='" +
               config.urlPrefix +
@@ -55,8 +55,8 @@ exports.controller = function(request, reqParams, response) {
                   process.appParams.urlPrefix
               );
 
-              response.render('Thank you! Invite your friends to join!');
-            } else response.render("Don't forget to check your spam folder!");
+              response.legacyRender('Thank you! Invite your friends to join!');
+            } else response.legacyRender("Don't forget to check your spam folder!");
           });
         }
       });

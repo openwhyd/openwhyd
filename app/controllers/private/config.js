@@ -1,5 +1,5 @@
 exports.controller = function(request, reqParams, response) {
-  response.render({
+  response.legacyRender({
     db: process.appParams.mongoDbDatabase
   });
 };
