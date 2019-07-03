@@ -8,8 +8,6 @@ var querystring = require('querystring');
 var formidable = require('formidable'); // TODO: remove ?
 var qset = require('q-set'); // instead of body-parser, for form fields with brackets
 
-var Headers = require('./mime-types.js');
-
 const LOG_THRESHOLD = 500;
 
 const sessionTracker = require('../../../controllers/admin/session.js');
