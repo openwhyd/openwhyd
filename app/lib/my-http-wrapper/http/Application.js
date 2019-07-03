@@ -54,24 +54,6 @@ exports.Application = class Application {
 
     this._port = (process.appParams || {}).port;
 
-    this.bodyParser = function(request, response, callback) {
-      var form = new formidable.IncomingForm();
-      form.uploadDir = options.uploadDir;
-      form.keepExtensions = options.keepExtensions;
-      form.parse(request, function(err, postParams, files) {
-        if (err) console.error('formidable parsing error:', err);
-        // using qset to parse fields with brackets [] for url-encoded form data:
-        // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
-        var parsedParams = {};
-        for (var key in postParams) {
-          qset.deep(parsedParams, key, postParams[key]);
-        }
-        request.body = Object.assign({}, postParams, parsedParams);
-        request.files = files;
-        callback();
-      });
-    };
-
     _updateRoutes(this);
 
     this.expressApp = express();
@@ -87,7 +69,23 @@ exports.Application = class Application {
 
     this.expressApp.use(express.static(this._publicDir));
 
-    this.expressApp.use(this.bodyParser);
+    this.expressApp.use(function bodyParser(request, response, callback) {
+      var form = new formidable.IncomingForm();
+      form.uploadDir = options.uploadDir;
+      form.keepExtensions = options.keepExtensions;
+      form.parse(request, function(err, postParams, files) {
+        if (err) console.error('formidable parsing error:', err);
+        // using qset to parse fields with brackets [] for url-encoded form data:
+        // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
+        var parsedParams = {};
+        for (var key in postParams) {
+          qset.deep(parsedParams, key, postParams[key]);
+        }
+        request.body = Object.assign({}, postParams, parsedParams);
+        request.files = files;
+        callback();
+      });
+    });
 
     if (sessionMiddleware) {
       this.expressApp.use(sessionMiddleware);
