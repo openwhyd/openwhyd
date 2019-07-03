@@ -30,6 +30,9 @@ jobs:
           paths:
             - ~/.npm
       - run:
+          name: Env vars init.
+          command: source env-vars-testing.sh
+      - run:
           name: Database init.
           command: npm run test-reset
       - run:
