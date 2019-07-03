@@ -17,30 +17,15 @@ const sessionTracker = require('../../../controllers/admin/session.js');
 // From Response.js
 
 const ResponseExtension = {
-  legacyRender: function(view, data, headers, statusCode) {
-    headers = headers || {};
-    if (typeof view === 'string') {
-      if (!headers['content-type']) headers['content-type'] = 'text/plain';
-      this.writeHead(statusCode || 200, headers);
-      this.end(view);
-    } else {
-      if (!headers['content-type'])
-        headers['content-type'] = 'application/json';
-      this.writeHead(statusCode || 200, headers);
-      this.end(JSON.stringify(view));
+  legacyRender: function(view, data, headers = {}, statusCode) {
+    const isString = typeof view === 'string';
+    if (!headers['content-type']) {
+      headers['content-type'] = isString ? 'text/plain' : 'application/json';
     }
-    this.logRequest && this.logRequest(this); // AJ
-  },
-
-  flush: function() {
-    this.write(this.buffer.sliceData());
-    this.buffer.position = 0;
-  }
-};
-
-const extendResponse = function(response) {
-  for (let method in ResponseExtension) {
-    response[method] = ResponseExtension[method];
+    this.set(headers)
+      .status(statusCode || 200)
+      .send(isString ? view : JSON.stringify(view));
+    this.logRequest && this.logRequest(this);
   }
 };
 
@@ -240,7 +225,7 @@ function _checkRoutes(self, request, response) {
           requestParams = requestParams || {};
           for (var j in routeParams) requestParams[j] = routeParams[j];
         }
-        extendResponse(response);
+        response.legacyRender = ResponseExtension.legacyRender;
         if (!route.controller)
           console.error(
             'controller not found',
@@ -254,7 +239,7 @@ function _checkRoutes(self, request, response) {
   }
 
   if (self._errorHandler) {
-    extendResponse(response);
+    response.legacyRender = ResponseExtension.legacyRender;
     self._errorHandler(request, requestParams, response, 404);
   } else {
     response.res.sendStatus(statusCode);
