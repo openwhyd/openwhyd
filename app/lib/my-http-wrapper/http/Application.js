@@ -41,7 +41,6 @@ exports.Application = class Application {
     this._routeFile = appDir + '/config/app.route';
     this._accessLogFile = appDir + '/access.log';
 
-    this._modulesModifyDates = {};
     this._routes = {
       GET: [],
       POST: [],
@@ -54,8 +53,6 @@ exports.Application = class Application {
     };
 
     this._port = (process.appParams || {}).port;
-    this._queryStringInJSON = null;
-    this._maxCacheSize = null;
 
     this.bodyParser = function(request, response, callback) {
       var form = new formidable.IncomingForm();
