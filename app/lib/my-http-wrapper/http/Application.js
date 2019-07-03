@@ -125,7 +125,7 @@ exports.Application = class Application {
       } catch (e) {
         response.logRequest = makeResponseLogger('FAIL');
         console.log('error', e.stack);
-        response.end(e.stack);
+        response.send(e.stack);
       }
     });
   }
