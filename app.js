@@ -147,7 +147,7 @@ function start() {
   var myHttp = require('./app/lib/my-http-wrapper/http');
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
-  const sessionStore = session({
+  const sessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET.substr(),
     store: new MongoStore({
       url: makeMongoUrl(params),
@@ -175,7 +175,7 @@ function start() {
   new myHttp.Application(
     __dirname,
     params.dev,
-    sessionStore,
+    sessionMiddleware,
     serverOptions
   ).start();
   require('./app/workers/notifEmails.js'); // start digest worker

@@ -5,7 +5,7 @@ var path = require('path');
 var url = require('url');
 var querystring = require('querystring');
 
-var formidable = require('formidable');
+var formidable = require('formidable'); // TODO: remove ?
 var qset = require('q-set'); // instead of body-parser, for form fields with brackets
 
 var Headers = require('./mime-types.js');
@@ -15,8 +15,6 @@ const LOG_THRESHOLD = 500;
 const sessionTracker = require('../../../controllers/admin/session.js');
 
 // From Response.js
-
-var DEFAULT_BUFFER_SIZE = 4096;
 
 const ResponseExtension = {
   legacyRender: function(view, data, headers, statusCode) {
@@ -76,17 +74,6 @@ exports.Application = class Application {
     this._queryStringInJSON = null;
     this._maxCacheSize = null;
 
-    this.sessionMiddleware = !sessionMiddleware
-      ? undefined
-      : function(req, res, next) {
-          return sessionMiddleware(req, res, function(err) {
-            if (err) {
-              console.error('error from sessionMiddleware:', err);
-            }
-            return next(req, res);
-          });
-        };
-
     this.bodyParser = function(request, response, callback) {
       var form = new formidable.IncomingForm();
       form.uploadDir = options.uploadDir;
@@ -119,6 +106,10 @@ exports.Application = class Application {
     });
 
     this.expressApp.use(express.static(this._publicDir));
+
+    if (sessionMiddleware) {
+      this.expressApp.use(sessionMiddleware);
+    }
 
     // called on non-static requests
     this.expressApp.use(function(request, response, next) {
