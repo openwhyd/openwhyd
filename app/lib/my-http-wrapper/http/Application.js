@@ -1,7 +1,7 @@
 const fs = require('fs');
 const http = require('http');
 const express = require('express');
-const formidable = require('formidable'); // TODO: remove ?
+const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
 

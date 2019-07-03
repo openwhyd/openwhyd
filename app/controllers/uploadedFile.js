@@ -131,11 +131,12 @@ exports.controller = function(request, reqParams, response) {
   function renderFile(path, defaultImg) {
     //console.log("uploadedFile Path:", path);
     response.sendFile('' + path, function(error) {
+      if (!error) return;
       //console.log("uploadedFile error: ", error, exports.config.whydPath + "/public" + defaultImg);
       if (defaultImg)
         response.sendFile(
           exports.config.whydPath + '/public' + defaultImg,
-          renderNoImage
+          err => err && renderNoImage()
         );
       else renderNoImage();
     });
@@ -214,7 +215,8 @@ exports.controller = function(request, reqParams, response) {
           else renderImg(config.urlPrefix + '/images/1x1-pixel.png'); // transparent image
         });
       else
-        response.sendFile(filePath, null, null, function(error) {
+        response.sendFile(filePath, function(error) {
+          if (!error) return;
           if (reqParams.localOnly)
             renderImg(config.urlPrefix + '/images/1x1-pixel.png');
           // transparent image
