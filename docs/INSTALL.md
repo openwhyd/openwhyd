@@ -72,7 +72,6 @@ npm run test-docker
 * `WHYD_CONTACT_EMAIL` (mandatory. email for users to contact the site's team)
 * `WHYD_URL_PREFIX` (default: `http://localhost:8080`)
 * `WHYD_PORT` (default: `8080`)
-* `WHYD_DEV` (default: `false`)
 * `MONGODB_DATABASE` (example: `openwhyd_data`, or `openwhyd_test`)
 * `MONGODB_HOST` (default: `localhost`)
 * `MONGODB_PORT` (default: `27017`)
