@@ -42,4 +42,7 @@ jobs:
       - run:
           name: Run tests
           command: source env-vars-testing.sh && npm test
-      # TODO: semantic release
+      - run:
+          name: Semantic Release
+          command: npm run semantic-release
+
