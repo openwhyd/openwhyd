@@ -37,30 +37,6 @@ var ResponseExtension = {
     this.logRequest && this.logRequest(this); // AJ
   },
 
-  renderFile: function(file, bufferSize, headers, errorHandler) {
-    var self = this;
-    fs.stat(file, function(error, stats) {
-      if (error || !stats.isFile()) {
-        errorHandler
-          ? errorHandler.call(self, error)
-          : self.render('invalid file');
-        return;
-      }
-      var fileExtension = path.extname(file);
-      var headers = headers || Headers[fileExtension] || Headers['default'];
-      self.writeHead(200, headers);
-      fs.createReadStream(file, {
-        bufferSize: bufferSize || DEFAULT_BUFFER_SIZE
-      })
-        .on('data', function(data) {
-          self.write(data);
-        })
-        .on('end', function() {
-          self.end();
-        });
-    });
-  },
-
   flush: function() {
     this.write(this.buffer.sliceData());
     this.buffer.position = 0;

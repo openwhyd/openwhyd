@@ -63,5 +63,5 @@ exports.controller = function(request, reqParams, response) {
     }
   });
 
-  //response.renderFile(this._publicDir + '/landingDone.html');
+  //response.sendFile(this._publicDir + '/landingDone.html');
 };
