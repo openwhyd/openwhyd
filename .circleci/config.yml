@@ -1,0 +1,45 @@
+# from https://docs.cypress.io/guides/guides/continuous-integration.html#CircleCI
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.11.4-browsers
+        environment:
+          ## this enables colors in the output
+          TERM: xterm
+      - image: mongo:3.4
+        environment:
+          ## this enables colors in the output
+          TERM: xterm
+    working_directory: ~/app
+    steps:
+      - checkout
+      - run:
+          name: Update npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          keys:
+            - v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            - v1-deps-{{ .Branch }}
+            - v1-deps
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - save_cache:
+          key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - ~/.npm
+      - run:
+          name: Database init.
+          command: source env-vars-testing.sh && npm run test-reset
+      - run:
+          name: Run Openwhyd server
+          command: source env-vars-testing.sh && npm run run --mongoDbDatabase openwhyd_test
+          background: true
+      - run:
+          name: Wait for server up
+          command: ./scripts/wait-for-http-server.sh 8080
+      - run:
+          name: Run tests
+          command: source env-vars-testing.sh && npm test
+      # TODO: semantic release
