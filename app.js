@@ -158,6 +158,9 @@ function start() {
     saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
   var serverOptions = {
+    port: params.port,
+    appDir: __dirname,
+    sessionMiddleware,
     errorHandler: function(request, params, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       console.log('rendering server error page', statusCode);
@@ -168,11 +171,13 @@ function start() {
         request.getUser()
       );
     },
-    uploadDir: params.paths.uploadDirName, // 'upload_data'
-    keepExtensions: true
+    uploadSettings: {
+      uploadDir: params.paths.uploadDirName, // 'upload_data'
+      keepExtensions: true
+    }
   };
   require('./app/models/logging.js'); // init logging methods (IncomingMessage extensions)
-  new myHttp.Application(__dirname, sessionMiddleware, serverOptions).start();
+  new myHttp.Application(serverOptions).start();
   require('./app/workers/notifEmails.js'); // start digest worker
   require('./app/workers/hotSnapshot.js'); // start hot tracks snapshot worker
   require('./app/models/plTags.js').getTagEngine(); // index tags for tracks and users

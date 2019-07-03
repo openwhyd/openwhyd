@@ -34,11 +34,11 @@ function noCache(req, res, next) {
   next();
 }
 
-const makeBodyParser = options =>
+const makeBodyParser = uploadSettings =>
   function bodyParser(req, res, callback) {
     var form = new formidable.IncomingForm();
-    form.uploadDir = options.uploadDir;
-    form.keepExtensions = options.keepExtensions;
+    form.uploadDir = uploadSettings.uploadDir;
+    form.keepExtensions = uploadSettings.keepExtensions;
     form.parse(req, function(err, postParams, files) {
       if (err) console.error('formidable parsing error:', err);
       // using qset to parse fields with brackets [] for url-encoded form data:
@@ -87,16 +87,16 @@ const makeNotFound = errorHandler =>
 // Web Application class
 
 exports.Application = class Application {
-  constructor(appDir, sessionMiddleware, options = {}) {
+  constructor(options = {}) {
     this._errorHandler = options.errorHandler || defaultErrorHandler;
-    this._sessionMiddleware = sessionMiddleware;
-    this._appDir = appDir + '/app';
-    this._publicDir = appDir + '/public';
-    this._routeFile = appDir + '/config/app.route';
-    this._accessLogFile = appDir + '/access.log';
-    this._port = (process.appParams || {}).port;
+    this._sessionMiddleware = options.sessionMiddleware;
+    this._appDir = options.appDir + '/app';
+    this._publicDir = options.appDir + '/public';
+    this._routeFile = options.appDir + '/config/app.route';
+    this._accessLogFile = options.appDir + '/access.log';
+    this._port = options.port;
     this._expressApp = null; // will be lazy-loaded by getExpressApp()
-    this._options = options;
+    this._uploadSettings = options.uploadSettings;
   }
 
   getExpressApp() {
@@ -104,7 +104,7 @@ exports.Application = class Application {
     const app = express();
     app.use(noCache); // called on all requests
     app.use(express.static(this._publicDir));
-    app.use(makeBodyParser(this._options)); // parse uploads and arrays from query params
+    app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater({ accessLogFile: this._accessLogFile }));
     attachLegacyRoutesFromFile(app, this._appDir, this._routeFile);
