@@ -56,7 +56,6 @@ const makeBodyParser = options =>
 const makeStatsUpdater = ({ accessLogFile }) =>
   function statsUpdater(req, res, next) {
     const startDate = new Date();
-    const path = req.url.split('?')[0]; // TODO: use req.path instead?
     const userId = (req.session || {}).whydUid;
     const userAgent = req.headers['user-agent'];
 
@@ -67,8 +66,7 @@ const makeStatsUpdater = ({ accessLogFile }) =>
       appendSlowQueryToAccessLog({
         accessLogFile,
         startDate,
-        method: req.method,
-        path,
+        req,
         userId,
         userAgent
       });
@@ -111,7 +109,6 @@ exports.Application = class Application {
     app.use(makeStatsUpdater({ accessLogFile: this._accessLogFile }));
     attachLegacyRoutesFromFile(app, this._appDir, this._routeFile);
     app.use(makeNotFound(this._errorHandler));
-
     return (this._expressApp = app);
   }
 
@@ -186,9 +183,7 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile) {
 function appendSlowQueryToAccessLog({
   accessLogFile,
   startDate,
-  method,
-  path,
-  suffix,
+  req,
   userId,
   userAgent
 }) {
@@ -196,11 +191,10 @@ function appendSlowQueryToAccessLog({
   if (duration < LOG_THRESHOLD) return;
   const logLine = [
     startDate.toUTCString(),
-    method,
-    path,
+    req.method,
+    req.path,
     '(' + duration + 'ms)'
   ];
-  if (suffix) logLine.push(suffix);
   if (userId) logLine.push('uid=' + userId);
   if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
   fs.appendFile(accessLogFile, logLine.join(' ') + '\n');
