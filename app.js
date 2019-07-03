@@ -101,7 +101,7 @@ var params = (process.appParams = {
   nbTracksPerPlaylistEmbed: 100,
 
   paths: {
-    whydPath: './',
+    whydPath: __dirname,
     uploadDirName: 'upload_data',
     uAvatarImgDirName: 'uAvatarImg',
     uCoverImgDirName: 'uCoverImg',
