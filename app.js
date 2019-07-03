@@ -69,7 +69,6 @@ console.error = makeErrorLog(consoleError, 'Error');
 
 var params = (process.appParams = {
   // server level
-  dev: process.env['WHYD_DEV'] || false, // hot re-loading of node controllers, models and views
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
   urlPrefix:
     process.env['WHYD_URL_PREFIX'] ||
@@ -121,9 +120,6 @@ var FLAGS = {
       'Error'
     );
     process.appParams.color = true;
-  },
-  '--dev': function() {
-    params.dev = true;
   },
   '--fakeEmail': function() {
     params.emailModule = '';
