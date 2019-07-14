@@ -153,7 +153,7 @@ function start() {
       url: makeMongoUrl(params)
     }),
     name: 'whydSid',
-    ttl: 60 * 60 * 24 * 365, // 1 year
+    maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
