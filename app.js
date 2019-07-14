@@ -152,8 +152,10 @@ function start() {
     store: new MongoStore({
       url: makeMongoUrl(params)
     }),
+    cookie: {
+      maxAge: 365 * 24 * 60 * 60 * 1000 // cookies expire in 1 year (provided in milliseconds)
+    },
     name: 'whydSid',
-    maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
