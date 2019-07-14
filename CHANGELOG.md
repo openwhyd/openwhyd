@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/openwhyd/openwhyd/compare/v1.11.1...v1.11.2) (2019-07-14)
+
+
+### Bug Fixes
+
+* **sessions:** define maxAge in the cookie property ([#210](https://github.com/openwhyd/openwhyd/issues/210)) ([6d3ffbb](https://github.com/openwhyd/openwhyd/commit/6d3ffbb)), closes [#209](https://github.com/openwhyd/openwhyd/issues/209)
+
 ## [1.11.1](https://github.com/openwhyd/openwhyd/compare/v1.11.0...v1.11.1) (2019-07-14)
 
 
