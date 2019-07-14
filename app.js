@@ -144,16 +144,16 @@ function makeMongoUrl(params) {
 }
 
 function start() {
-  var myHttp = require('./app/lib/my-http-wrapper/http');
+  const myHttp = require('./app/lib/my-http-wrapper/http');
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
   const sessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET.substr(),
     store: new MongoStore({
-      url: makeMongoUrl(params),
-      ttl: 60 * 60 * 24 * 365 // 1 year
+      url: makeMongoUrl(params)
     }),
     name: 'whydSid',
+    ttl: 60 * 60 * 24 * 365, // 1 year
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
