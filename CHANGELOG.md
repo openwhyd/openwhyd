@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/openwhyd/openwhyd/compare/v1.11.0...v1.11.1) (2019-07-14)
+
+
+### Bug Fixes
+
+* **sessions:** make user cookie persistant ([#209](https://github.com/openwhyd/openwhyd/issues/209)) ([bba528d](https://github.com/openwhyd/openwhyd/commit/bba528d))
+
 # [1.11.0](https://github.com/openwhyd/openwhyd/compare/v1.10.0...v1.11.0) (2019-07-03)
 
 
