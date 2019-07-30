@@ -14,16 +14,16 @@ var db = mongodb.collections;
 var ObjectId = mongodb.ObjectId;
 
 function initDb(cb) {
-  mongodb.init(function(err, db) {
+  mongodb.init(function (err, db) {
     if (err) throw err;
     var mongodbInstance = this;
     var initScript = './config/initdb.js';
     console.log('Applying db init script:', initScript, '...');
     mongodbInstance.runShellScript(
       require('fs').readFileSync(initScript),
-      function(err) {
+      function (err) {
         if (err) throw err;
-        mongodbInstance.cacheCollections(function() {
+        mongodbInstance.cacheCollections(function () {
           mongodb.cacheUsers(cb);
         });
       }
@@ -31,7 +31,7 @@ function initDb(cb) {
   });
 }
 
-describe('notif', function() {
+describe('notif', function () {
   this.timeout(5000);
 
   it('initiatialises db', function async(done) {
@@ -51,6 +51,7 @@ describe('notif', function() {
   var testVars = {};
 
   var users = [
+    user,
     {
       id: '4d7fc1969aa9db130e000003',
       _id: ObjectId('4d7fc1969aa9db130e000003'),
@@ -63,7 +64,10 @@ describe('notif', function() {
     }
   ];
 
-  users.forEach(mongodb.cacheUser.bind(mongodb)); // populate mongodb.usernames for notif endpoints
+  users.forEach(user => {
+    console.warn('caching', user);
+    mongodb.cacheUser(user)
+  }); // populate mongodb.usernames for notif endpoints
 
   var fakePost = {
     _id: ObjectId('4fe3428e9f2ec28c92000024'), //ObjectId("4ed3de428fed15d73c00001f"),
@@ -72,7 +76,7 @@ describe('notif', function() {
     eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590'
   };
 
-  var comments = users.map(function(u) {
+  var comments = users.map(function (u) {
     return {
       _id: ObjectId('4ed3de428fed15d73c00001f'),
       pId: '' + fakePost._id,
@@ -89,23 +93,25 @@ describe('notif', function() {
     notifModel.subscribedToUser(users[u].id, user.id);
     notifModel.html(
       user.id,
-      'coucou <small>html</small>',
+      'coucou <small>html</small>', //ok (x2)
       'http://www.facebook.com',
       '/images/logo-s.png'
     );
-    notifModel.mention(fakePost, comments[u], user.id);
+    notifModel.mention(fakePost, comments[u], user.id); //ok (x2)
 
     // 1 common record
+    console.warn('PARAMS', u, users[u].id, fakePost);
+
     notifModel.love(users[u].id, fakePost);
-    notifModel.comment(fakePost, comments[u]);
-    notifModel.commentReply(fakePost, comments[u], user.id);
+    notifModel.comment(fakePost, comments[u]);  //ok
+    notifModel.commentReply(fakePost, comments[u], user.id); //ok
     notifModel.repost(users[u].id, fakePost);
   }
 
   function pollUntil(fct, cb, timeout) {
     var t0 = Date.now();
-    var interv = setInterval(function() {
-      fct(function(ok) {
+    var interv = setInterval(function () {
+      fct(function (ok) {
         var inTime = Date.now() - t0 <= timeout;
         if (ok || !inTime) {
           clearInterval(interv);
@@ -116,7 +122,7 @@ describe('notif', function() {
   }
 
   function fetchNotifs(uId, cb) {
-    notifModel.getUserNotifs(uId, function(notifs) {
+    notifModel.getUserNotifs(uId, function (notifs) {
       console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
       cb(notifs);
     });
@@ -124,71 +130,74 @@ describe('notif', function() {
 
   function makeNotifChecker(expectedCount) {
     return function checkNotifs(ok) {
-      fetchNotifs(uId, function(notifs) {
+      fetchNotifs(uId, function (notifs) {
         ok(notifs.length == expectedCount);
       });
     };
   }
 
   function countEmptyNotifs(cb) {
-    db['notif'].count({ uId: { $size: 0 } }, function(err, count) {
+    db['notif'].count({ uId: { $size: 0 } }, function (err, count) {
       console.log('found', count, 'empty notifs in db');
       cb(count);
     });
   }
 
-  [
-    [
-      'clean notifications db',
-      function(cb) {
-        countEmptyNotifs(function(count) {
-          if (count === 0) {
-            cb(true);
-            return;
-          }
-          console.time('clean');
-          // remove documents with empty uid
-          db['notif'].remove(
-            { uId: { $size: 0 } },
-            { multi: true },
-            function() {
-              console.timeEnd('clean');
-              countEmptyNotifs(function(count) {
-                cb(count === 0);
-              });
-            }
-          );
+  function cleanNotificationsDb(done) {
+    // remove documents with empty uid
+    db['notif'].remove(
+      { uId: { $size: 0 } },
+      { multi: true },
+      function () {
+        countEmptyNotifs(function (count) {
+          done(count > 0 && new Error('failed to remove notifs with empty uid'));
         });
       }
-    ],
-    [
-      'clear all notifications',
-      function(cb) {
-        notifModel.clearUserNotifs(uId);
-        pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
-    ],
+    );
+  }
+
+  function clearAllNotifsLegacy(cb) {
+    notifModel.clearUserNotifs(uId);
+    pollUntil(makeNotifChecker(0), cb, TIMEOUT);
+  }
+
+  const clearAllNotifs = done => clearAllNotifsLegacy(succeded => done(!succeded && new Error('failed to clear all notifs')))
+
+  it('clean notifications db', cleanNotificationsDb);
+
+  it('clear all notifications', clearAllNotifs);
+
+  it('add a love notif', (done) => {
+    notifModel.love(users[0].id, fakePost, () => {
+      fetchNotifs(uId, function (notifs) {
+        done(notifs.length !== 1 && new Error('there should be one notif'))
+      });
+    });
+  });
+
+  it('clear all notifications', clearAllNotifs);
+
+  [
 
     // ---
 
     [
       'add sample notifications',
-      function(cb) {
+      function (cb) {
         for (var u in users) nbNotifs = testAllNotifs(u);
+        fetchNotifs(uId, function (notifs) {
+          console.warn('nb notifs:', notifs);
+        });
         pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
       }
     ],
     [
-      'clear all notifications',
-      function(cb) {
-        notifModel.clearUserNotifs(uId);
-        pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      'clear all notifications', clearAllNotifsLegacy,
     ],
     [
       'check that db is clean',
-      function(cb) {
-        countEmptyNotifs(function(count) {
+      function (cb) {
+        countEmptyNotifs(function (count) {
           cb(count === 0);
         });
       }
@@ -198,15 +207,15 @@ describe('notif', function() {
 
     [
       'add sample notifications (again)',
-      function(cb) {
+      function (cb) {
         for (var u in users) nbNotifs = testAllNotifs(u);
         pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
       }
     ],
     [
       'clear individual notifications',
-      function(cb) {
-        fetchNotifs(uId, function(notifs) {
+      function (cb) {
+        fetchNotifs(uId, function (notifs) {
           for (var i in notifs)
             notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
           pollUntil(makeNotifChecker(0), cb, TIMEOUT);
@@ -215,8 +224,8 @@ describe('notif', function() {
     ],
     [
       'check that db is clean',
-      function(cb) {
-        countEmptyNotifs(function(count) {
+      function (cb) {
+        countEmptyNotifs(function (count) {
           cb(count === 0);
         });
       }
@@ -226,18 +235,18 @@ describe('notif', function() {
 
     [
       'call notif.sendTrackToUsers() with no parameters [should fail]',
-      function(cb) {
-        notifModel.sendTrackToUsers(null, function(res) {
+      function (cb) {
+        notifModel.sendTrackToUsers(null, function (res) {
           cb(res.error);
         });
       }
     ],
     [
       'call notif.sendTrackToUsers() without pId parameter [should fail]',
-      function(cb) {
+      function (cb) {
         notifModel.sendTrackToUsers(
           { uId: users[0].id, uNm: users[0].name, uidList: [uId] },
-          function(res) {
+          function (res) {
             cb(res.error);
           }
         );
@@ -245,7 +254,7 @@ describe('notif', function() {
     ],
     [
       'call notif.sendTrackToUsers() with a object-typed pId parameter [should fail]',
-      function(cb) {
+      function (cb) {
         notifModel.sendTrackToUsers(
           {
             uId: users[0].id,
@@ -253,7 +262,7 @@ describe('notif', function() {
             uidList: [uId],
             pId: fakePost
           },
-          function(res) {
+          function (res) {
             cb(res.error);
           }
         );
@@ -261,28 +270,28 @@ describe('notif', function() {
     ],
     [
       'gilles sends a track to me',
-      function(cb) {
+      function (cb) {
         var p = {
           uId: users[0].id,
           uNm: users[0].name,
           uidList: [uId],
           pId: '' + fakePost._id
         };
-        notifModel.sendTrackToUsers(p, function(res) {
+        notifModel.sendTrackToUsers(p, function (res) {
           pollUntil(
             makeNotifChecker(1),
-            function(inTime) {
-              fetchNotifs(user.id, function(notifs) {
+            function (inTime) {
+              fetchNotifs(user.id, function (notifs) {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
                   n.t &&
-                    n.html &&
-                    n.type === 'Snt' &&
-                    n.lastAuthor.id === p.uId &&
-                    n.img === n.track.img &&
-                    n.track.img.indexOf(p.pId) > -1 &&
-                    n.href.indexOf(p.pId) > -1
+                  n.html &&
+                  n.type === 'Snt' &&
+                  n.lastAuthor.id === p.uId &&
+                  n.img === n.track.img &&
+                  n.track.img.indexOf(p.pId) > -1 &&
+                  n.href.indexOf(p.pId) > -1
                 );
               });
             },
@@ -292,11 +301,7 @@ describe('notif', function() {
       }
     ],
     [
-      'clear all notifications',
-      function(cb) {
-        notifModel.clearUserNotifs(uId);
-        pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      'clear all notifications', clearAllNotifsLegacy,
     ],
 
     // TODO: send to several users at once
@@ -305,7 +310,7 @@ describe('notif', function() {
 
     [
       'gilles sends a playlist to me',
-      function(cb) {
+      function (cb) {
         var p = {
           uId: users[0].id,
           uNm: users[0].name,
@@ -313,21 +318,21 @@ describe('notif', function() {
           plId: users[0].id + '_' + 0 // gilles' 1st playlist
         };
         var plUri = p.plId.replace('_', '/playlist/');
-        notifModel.sendPlaylistToUsers(p, function(res) {
+        notifModel.sendPlaylistToUsers(p, function (res) {
           pollUntil(
             makeNotifChecker(1),
-            function(inTime) {
-              fetchNotifs(user.id, function(notifs) {
+            function (inTime) {
+              fetchNotifs(user.id, function (notifs) {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
                   n.t &&
-                    n.html &&
-                    n.type === 'Snp' &&
-                    n.lastAuthor.id === p.uId &&
-                    n.img === n.track.img &&
-                    n.track.img.indexOf(p.plId) > -1 &&
-                    n.href.indexOf(plUri) > -1
+                  n.html &&
+                  n.type === 'Snp' &&
+                  n.lastAuthor.id === p.uId &&
+                  n.img === n.track.img &&
+                  n.track.img.indexOf(p.plId) > -1 &&
+                  n.href.indexOf(plUri) > -1
                 );
               });
             },
@@ -337,35 +342,27 @@ describe('notif', function() {
       }
     ],
     [
-      'clear all notifications',
-      function(cb) {
-        notifModel.clearUserNotifs(uId);
-        pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      'clear all notifications', clearAllNotifsLegacy,
     ],
 
     [
       'gilles sends a track to me => res._id is populated',
-      function(cb) {
+      function (cb) {
         var p = {
           uId: users[0].id,
           uNm: users[0].name,
           uidList: [uId],
           pId: '' + fakePost._id
         };
-        notifModel.sendTrackToUsers(p, function(res) {
+        notifModel.sendTrackToUsers(p, function (res) {
           cb(!!res._id);
         });
       }
     ],
     [
-      'clear all notifications',
-      function(cb) {
-        notifModel.clearUserNotifs(uId);
-        pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      'clear all notifications', clearAllNotifsLegacy,
     ]
-  ].forEach(function(test) {
+  ].forEach(function (test) {
     it(test[0], function async(done) {
       test[1](function cb(res) {
         if (!!res) {
