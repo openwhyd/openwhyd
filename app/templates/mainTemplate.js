@@ -308,7 +308,7 @@ exports.renderHeader = function(user, content, params) {
           ]
         : [
             '  <div id="searchBar">',
-            '  <h1>Openwhyd: The community of music lovers</h1>',
+            '  <h1>toto is kind</h1>',
             '	 <p>Discover and collect music gems from Youtube, Soundcloud, Deezer and more</p>',
             '   <div class="searchForm" id="searchForm">', //<form id="searchForm" method="get" action="'+render.urlPrefix+'/search">',
             '    <input name="q" class="q search-input" id="q" type="text" value="' +
