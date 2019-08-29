@@ -1,4 +1,4 @@
-**Before using Openwhyd, and in compliance with [RGPD](https://www.eugdpr.org/), please read the conditions below and give your consent if you are comfortable with them.**
+**Before using Openwhyd, and in compliance with [GDPR](https://www.eugdpr.org/), please read the conditions below and give your consent if you are comfortable with them.**
 
 ## Project
 
