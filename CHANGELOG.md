@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/openwhyd/openwhyd/compare/v1.11.2...v1.11.3) (2019-08-29)
+
+
+### Bug Fixes
+
+* typo on gdpr consent screen ([#214](https://github.com/openwhyd/openwhyd/issues/214)) ([978b5f8](https://github.com/openwhyd/openwhyd/commit/978b5f8))
+
 ## [1.11.2](https://github.com/openwhyd/openwhyd/compare/v1.11.1...v1.11.2) (2019-07-14)
 
 
