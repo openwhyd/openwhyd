@@ -1,0 +1,35 @@
+name: Node CI
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      run: |
+        npm install
+        source env-vars-testing.sh
+        npm run test-reset
+        npm run run --mongoDbDatabase openwhyd_test &
+        ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+        npm test
+      env:
+        CI: true
