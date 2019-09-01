@@ -1,3 +1,17 @@
+# [1.12.0](https://github.com/openwhyd/openwhyd/compare/v1.11.3...v1.12.0) (2019-09-01)
+
+
+### Features
+
+* **ci:** run CI/tests on GitHub Actions ([#215](https://github.com/openwhyd/openwhyd/issues/215)) ([8886a82](https://github.com/openwhyd/openwhyd/commit/8886a82)), closes [#205](https://github.com/openwhyd/openwhyd/issues/205)
+
+## [1.11.3](https://github.com/openwhyd/openwhyd/compare/v1.11.2...v1.11.3) (2019-08-29)
+
+
+### Bug Fixes
+
+* typo on gdpr consent screen ([#214](https://github.com/openwhyd/openwhyd/issues/214)) ([978b5f8](https://github.com/openwhyd/openwhyd/commit/978b5f8))
+
 ## [1.11.2](https://github.com/openwhyd/openwhyd/compare/v1.11.1...v1.11.2) (2019-07-14)
 
 
