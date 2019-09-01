@@ -15,10 +15,10 @@ jobs:
     - name: start db
       uses: docker://mongo:3.4
   build:
-   runs-on: ubuntu-latest
-   strategy:
-     matrix:
-       node-version: [8.x]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [8.x]
     # needs: mongodb
     steps:
     - uses: actions/checkout@v1
