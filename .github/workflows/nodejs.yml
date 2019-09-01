@@ -15,7 +15,7 @@ jobs:
       mongodb:
         image: docker://mongo:3.4
         ports:
-        - 27117:27017
+        - 27017:27017
     strategy:
       matrix:
         node-version: [8.x]
