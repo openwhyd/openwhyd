@@ -9,13 +9,13 @@ on:
     - master
 
 jobs:
-  mongodb:
-    runs-on: ubuntu-latest
-    steps:
-    - name: start db
-      uses: docker://mongo:3.4
   build:
     runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+        - 27117:27017
     strategy:
       matrix:
         node-version: [8.x]
