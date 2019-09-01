@@ -16,7 +16,7 @@ jobs:
       uses: docker://mongo:3.4
   build:
     runs-on: ubuntu-latest
-    needs: mongodb
+    # needs: mongodb
     steps:
     - name: npm install, build, and test
       run: |
