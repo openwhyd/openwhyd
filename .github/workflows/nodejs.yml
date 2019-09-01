@@ -10,13 +10,16 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+        - 27017:27017
     strategy:
       matrix:
         node-version: [8.x]
-
+    # needs: mongodb
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
