@@ -30,8 +30,8 @@ jobs:
       env:
         CI: true
       run: |
-        npm install
-    - name: Prepare testing environment
+        npm ci
+    - name: Initialize database
       env:
         CI: true
       run: |
