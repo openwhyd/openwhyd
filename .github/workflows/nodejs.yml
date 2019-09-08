@@ -19,7 +19,6 @@ jobs:
     strategy:
       matrix:
         node-version: [8.x]
-    # needs: mongodb
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -29,10 +28,18 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm install
-        source env-vars-testing.sh
-        npm run test-reset
-        npm run run --mongoDbDatabase openwhyd_test &
-        ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-        npm test
       env:
         CI: true
+    - name: Prepare testing environment
+      run: |
+        source env-vars-testing.sh
+        npm run test-reset
+    - name: Start Openwhyd server
+      run: |
+        npm run run --mongoDbDatabase openwhyd_test &
+        ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+    - name: npm test
+      run: |
+        npm test
+    - name: Semantic Release
+      run: npm run semantic-release
