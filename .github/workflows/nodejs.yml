@@ -53,4 +53,4 @@ jobs:
         CI: true
         GIT_BRANCH: ${{ github.ref }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run semantic-release
+      run: npm run semantic-release --branch ${GIT_BRANCH}
