@@ -1,4 +1,4 @@
-name: Openwhyd CI
+name: GitHub Actions Workflow
 
 on:
   push:
@@ -9,7 +9,8 @@ on:
     - master
 
 jobs:
-  build:
+  ci:
+    name: Openwhyd CI
     runs-on: ubuntu-latest
     services:
       mongodb:
