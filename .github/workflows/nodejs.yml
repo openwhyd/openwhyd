@@ -54,5 +54,8 @@ jobs:
         GIT_BRANCH_NOT_WORKING: ${{ github.ref }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        apt-get update && apt-get install -y --no-install-recommends git
+        echo GIT_BRANCH_NOT_WORKING = ${GIT_BRANCH_NOT_WORKING}
+        echo GITHUB_REF = ${GITHUB_REF}
+        echo GITHUB_HEAD_REF = ${GITHUB_HEAD_REF}
+        echo GITHUB_BASE_REF = ${GITHUB_BASE_REF}
         npm run semantic-release
