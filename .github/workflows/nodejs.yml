@@ -50,6 +50,6 @@ jobs:
         npm test
     - name: Semantic Release
       env:
-        GIT_BRANCH: ${{ GITHUB_REF }}
+        GIT_BRANCH: ${{ github.ref }}
         CI: true
       run: npm run semantic-release
