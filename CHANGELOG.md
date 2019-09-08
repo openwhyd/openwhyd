@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/openwhyd/openwhyd/compare/v1.13.0...v1.14.0) (2019-09-08)
+
+
+### Features
+
+* **ci:** add badge to GitHub Actions CI Workflow ([#219](https://github.com/openwhyd/openwhyd/issues/219)) ([3bfa059](https://github.com/openwhyd/openwhyd/commit/3bfa059)), closes [#217](https://github.com/openwhyd/openwhyd/issues/217)
+
 # [1.13.0](https://github.com/openwhyd/openwhyd/compare/v1.12.0...v1.13.0) (2019-09-08)
 
 
