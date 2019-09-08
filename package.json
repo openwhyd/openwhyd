@@ -79,7 +79,7 @@
     "eslint-plugin-react": "^5.2.2",
     "mocha": "5.2.0",
     "prettier": "^1.14.2",
-    "semantic-release": "^15.9.15",
+    "semantic-release": "^15.13.24",
     "wdio-dot-reporter": "0.0.8",
     "wdio-mocha-framework": "^0.5.10",
     "wdio-selenium-standalone-service": "0.0.10",

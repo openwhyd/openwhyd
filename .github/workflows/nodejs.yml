@@ -1,4 +1,4 @@
-name: Node CI
+name: GitHub Actions Workflow
 
 on:
   push:
@@ -9,7 +9,8 @@ on:
     - master
 
 jobs:
-  build:
+  ci:
+    name: Openwhyd CI
     runs-on: ubuntu-latest
     services:
       mongodb:
@@ -19,20 +20,37 @@ jobs:
     strategy:
       matrix:
         node-version: [8.x]
-    # needs: mongodb
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm install
-        source env-vars-testing.sh
-        npm run test-reset
-        npm run run --mongoDbDatabase openwhyd_test &
-        ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-        npm test
+    - name: npm install
       env:
         CI: true
+      run: |
+        npm ci
+    - name: Initialize database
+      env:
+        CI: true
+      run: |
+        source env-vars-testing.sh
+        npm run test-reset
+    - name: Start Openwhyd server
+      run: |
+        source env-vars-testing.sh
+        npm run run --mongoDbDatabase openwhyd_test &
+        ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+    - name: npm test
+      env:
+        CI: true
+      run: |
+        source env-vars-testing.sh
+        npm test
+    - name: Semantic Release
+      env:
+        CI: true
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        npm run semantic-release
