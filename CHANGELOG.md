@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/openwhyd/openwhyd/compare/v1.12.0...v1.13.0) (2019-09-08)
+
+
+### Features
+
+* **ci:** move semantic-release to github-actions workflow ([#216](https://github.com/openwhyd/openwhyd/issues/216)) ([53387e7](https://github.com/openwhyd/openwhyd/commit/53387e7)), closes [#205](https://github.com/openwhyd/openwhyd/issues/205) [#215](https://github.com/openwhyd/openwhyd/issues/215)
+
 # [1.12.0](https://github.com/openwhyd/openwhyd/compare/v1.11.3...v1.12.0) (2019-09-01)
 
 
