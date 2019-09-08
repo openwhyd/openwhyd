@@ -51,6 +51,8 @@ jobs:
     - name: Semantic Release
       env:
         CI: true
-        GIT_BRANCH: ${{ github.ref }}
+        GIT_BRANCH_NOT_WORKING: ${{ github.ref }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run semantic-release --branch ${GIT_BRANCH}
+      run: |
+        apt-get update && apt-get install -y --no-install-recommends git
+        npm run semantic-release
