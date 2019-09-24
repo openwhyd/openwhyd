@@ -22,6 +22,8 @@ exports.config.uCoverImgPath =
 exports.config.uPlaylistPath =
   exports.config.whydPath + exports.config.uPlaylistDir;
 
+const NO_IMAGE_PATH = exports.config.whydPath + '/public/images/no_image.png';
+
 // create upload dirs
 var dirMode = 0755;
 var dirsToCreate = [
@@ -125,7 +127,7 @@ exports.moveTo = function(filename, toPath, callback) {
 
 exports.controller = function(request, reqParams, response) {
   function renderNoImage() {
-    response.sendFile(exports.config.whydPath + '/public/images/no_image.png');
+    response.sendFile(NO_IMAGE_PATH);
   }
 
   function renderFile(path, defaultImg) {
@@ -189,7 +191,7 @@ exports.controller = function(request, reqParams, response) {
     },
     post: function(id) {
       postModel.fetchPostById(id, function(post) {
-        renderImg((post || {}).img);
+        renderImg((post || {}).img || NO_IMAGE_PATH);
       });
     },
     playlist: function(id, reqParams) {
