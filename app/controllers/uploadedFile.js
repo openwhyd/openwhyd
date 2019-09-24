@@ -208,7 +208,7 @@ exports.controller = function(request, reqParams, response) {
               return;
             }
           }
-          renderImg();
+          response.notFound();
         });
       }
       if (reqParams.remoteOnly)
