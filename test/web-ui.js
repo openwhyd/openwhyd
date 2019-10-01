@@ -8,10 +8,9 @@ exports.signup = function ({ email, password, username }) {
     .url(URL_PREFIX);
   $('#signup').click();
   $('input[name="email"]').waitForDisplayed();
-  browser
-    .setValue('input[name="name"]', username)
-    .setValue('input[name="email"]', email)
-    .setValue('input[name="password"]', password);
+  $('input[name="name"]').setValue(username);
+  $('input[name="email"]').setValue(email);
+  $('input[name="password"]').setValue(password);
   $('input[type="submit"]').click();
   console.log('[signup] consent');
   browser
@@ -35,9 +34,8 @@ exports.loginAs = function (user) {
       .url(URL_PREFIX);
     $('#signin').click();
     $('input[name="email"]').waitForDisplayed();
-    browser
-      .setValue('input[name="email"]', user.email)
-      .setValue('input[name="password"]', user.password);
+    $('input[name="email"]').setValue(user.email);
+    $('input[name="password"]').setValue(user.password);
     $('input[type="submit"]').click();
     browser.waitForText('#loginDiv .username');
     var loggedInUsername = browser.getText('#loginDiv .username');

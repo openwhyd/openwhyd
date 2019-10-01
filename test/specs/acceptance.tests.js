@@ -38,10 +38,9 @@ describe('onboarding', function () {
       .url(URL_PREFIX);
     $('#signup').click();
     $('input[name="email"]').waitForDisplayed();
-    browser
-      .setValue('input[name="name"]', TEST_USER.username)
-      .setValue('input[name="email"]', TEST_USER.email)
-      .setValue('input[name="password"]', TEST_USER.pwd);
+    $('input[name="name"]').setValue(TEST_USER.username);
+    $('input[name="email"]').setValue(TEST_USER.email);
+    $('input[name="password"]').setValue(TEST_USER.pwd);
     // TODO: takeSnapshot();
     $('input[type="submit"]').click();
     browser.waitUntil(
