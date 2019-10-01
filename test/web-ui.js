@@ -36,7 +36,7 @@ exports.loginAs = function (user) {
     $('input[name="email"]').setValue(user.email);
     $('input[name="password"]').setValue(user.password);
     $('input[type="submit"]').click();
-    browser.waitForText('#loginDiv .username');
+    $('#loginDiv .username').waitForDisplayed();
     var loggedInUsername = $('#loginDiv .username').getText();
     assert.equal(loggedInUsername, user.name);
   };
