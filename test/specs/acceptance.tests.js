@@ -12,7 +12,7 @@ require('../acceptance-cmds.js'); // also checks that openwhyd's server is teste
 describe('landing page page', function () {
   it('should not let visitors access admin endpoints', function () {
     browser.url(URL_PREFIX + '/admin/config/config.json');
-    assert(!browser.isExisting('pre'));
+    assert(!$('pre').isExisting());
   });
 
   it('should have Openwhyd in its title', function () {
