@@ -35,21 +35,20 @@ describe('landing page page', function () {
 describe('onboarding', function () {
   it('should lead new user to genre selection page', function () {
     browser
-      .url(URL_PREFIX)
-      .click('#signup');
+      .url(URL_PREFIX);
+    $('#signup').click();
     $('input[name="email"]').waitForDisplayed();
     browser
       .setValue('input[name="name"]', TEST_USER.username)
       .setValue('input[name="email"]', TEST_USER.email)
       .setValue('input[name="password"]', TEST_USER.pwd);
     // TODO: takeSnapshot();
-    browser
-      .click('input[type="submit"]')
-      .waitUntil(
-        () => /.*\/pick\/genres/.test(browser.getUrl()),
-        WAIT_DURATION,
-        'expected to be on /pick/genres after 5s'
-      );
+    $('input[type="submit"]').click();
+    browser.waitUntil(
+      () => /.*\/pick\/genres/.test(browser.getUrl()),
+      WAIT_DURATION,
+      'expected to be on /pick/genres after 5s'
+    );
     // TODO: takeSnapshot();
   });
 
@@ -91,8 +90,8 @@ describe('onboarding', function () {
     // TODO: takeSnapshot();
     browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
     browser.scroll('input[type="checkbox"]');
-    browser.click('input[type="checkbox"]');
-    browser.click('input[type="submit"]');
+    $('input[type="checkbox"]').click();
+    $('input[type="submit"]').click();
     browser.waitUntil(
       () => /.*\/welcome/.test(browser.getUrl()),
       WAIT_DURATION,
@@ -122,8 +121,8 @@ describe('adding a track', function () {
     // now, let's give consent
     browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
     browser.scroll('input[type="checkbox"]');
-    browser.click('input[type="checkbox"]');
-    browser.click('input[type="submit"]');
+    $('input[type="checkbox"]').click();
+    $('input[type="submit"]').click();
   });
 
   it('should recognize a track when pasting a Youtube URL in the search box', function () {
@@ -138,7 +137,7 @@ describe('adding a track', function () {
   });
 
   it('should lead to a track page when clicking on the Youtube search result', function () {
-    browser.click('#searchResults li a');
+    $('#searchResults li a').click();
     browser.waitUntil(
       () => /\/yt\/aZT8VlTV1YY/.test(browser.getUrl()),
       WAIT_DURATION,
@@ -163,7 +162,7 @@ describe('adding a track', function () {
   });
 
   it('should open a dialog after clicking on the "Add to" button', function () {
-    //browser.click('a.btnRepost');
+    //$('a.btnRepost').click();
     browser.clickOnLinkWithText('Add to');
     $('.dlgPostBox').waitForDisplayed();
     browser.pause(1000);
@@ -188,7 +187,7 @@ describe('adding a track', function () {
   });
 
   it('should open the playbar after the user clicks on the post', function () {
-    browser.click('.post a[data-eid="/yt/aZT8VlTV1YY"]');
+    $('.post a[data-eid="/yt/aZT8VlTV1YY"]').click();
     $('#btnPlay').waitForDisplayed();
   });
 
@@ -197,7 +196,7 @@ describe('adding a track', function () {
   });
 
   it('should pause the track when the user clicks on the play/pause button', function () {
-    browser.click('#btnPlay.playing');
+    $('#btnPlay.playing').click();
     assert(!/playing/.test($('#btnPlay').classname));
   });
 
