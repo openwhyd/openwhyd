@@ -48,9 +48,7 @@ browser.addCommand('waitForContent', function async(regex, context) {
 });
 
 browser.addCommand('clickOnContent', function (text) {
-  return browser
-    .element(`//*[contains(text(), '${text.replace(/'/g, "\\'")}')]`)
-    .click();
+  return $(`//*[contains(text(), '${text.replace(/'/g, "\\'")}')]`).click();
 });
 
 browser.addCommand('clickOnVisibleSelector', function (selector) {
