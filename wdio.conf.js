@@ -8,9 +8,6 @@ exports.config = {
   // on a remote machine).
   runner: 'local',
   //
-  // Override default path ('/wd/hub') for chromedriver service.
-  path: '/',
-  //
   // ==================
   // Specify Test Files
   // ==================
@@ -122,7 +119,8 @@ exports.config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: ['chromedriver'],
+  services: ['selenium-standalone'],
+
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: https://webdriver.io/docs/frameworks.html
@@ -208,7 +206,7 @@ exports.config = {
    * @param {Object} suite suite details
    */
   beforeSuite: function (suite) {
-    // console.log('👋 TEST SUITE:', suite.file.split('/').pop()); // TODO
+    console.log('👋 TEST SUITE:', suite.file.split('/').pop()); // TODO
   },
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
