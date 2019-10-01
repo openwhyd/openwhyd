@@ -16,10 +16,10 @@ browser.addCommand('injectJS', function async(scriptUrl) {
 
 browser.addCommand('waitForLinkWithText', function async(text) {
   return browser.waitUntil(
-    function () {
-      return browser.execute(function (text) {
-        return !!$("a:contains('" + text + "')")[0];
-      }, text).value;
+    function async() {
+      return browser.executeAsync(function (text, done) {
+        done(!!$("a:contains('" + text + "')")[0]);
+      }, text);
     },
     WAIT_DURATION,
     `a "${text}" link should be in the page within ${WAIT_DURATION /
