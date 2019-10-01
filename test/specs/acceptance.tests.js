@@ -125,7 +125,7 @@ describe('adding a track', function () {
 
   it('should recognize a track when pasting a Youtube URL in the search box', function () {
     //browser.url(URL_PREFIX + '/all');
-    browser.waitForReady();
+    $('#q').waitForExist();
     $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
     browser.waitUntil(
       () => $$('#searchResults li a').find(a => /Demo/.test(a.getText())),
