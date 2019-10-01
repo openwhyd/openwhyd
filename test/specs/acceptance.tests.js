@@ -274,7 +274,7 @@ describe('searching external tracks', function () {
     const trimmed = $(searchResult)
       .getText()
       .trim();
-    console.log('text: ', trimmed);
+    //console.log('text: ', trimmed);
     assert.notEqual(trimmed, ''); // empty string => no metadata was fetched, caused to https://github.com/openwhyd/openwhyd/issues/102
   });
 });
