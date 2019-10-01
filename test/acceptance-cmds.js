@@ -55,7 +55,7 @@ browser.addCommand('clickOnContent', function (text) {
 
 browser.addCommand('clickOnVisibleSelector', function (selector) {
   $$(selector)
-    .filter(node => node.isVisible())[0]
+    .filter(node => node.isDisplayedInViewport())[0]
     .click();
   return browser;
 });

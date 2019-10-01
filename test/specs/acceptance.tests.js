@@ -164,7 +164,7 @@ describe('adding a track', function () {
     browser.clickOnLinkWithText('Add to');
     $('.dlgPostBox').waitForDisplayed();
     browser.pause(1000);
-    assert(browser.element('.dlgPostBox').isVisible());
+    assert($('.dlgPostBox').isDisplayedInViewport());
   });
 
   it('should show a link to the post after adding the track', function () {
