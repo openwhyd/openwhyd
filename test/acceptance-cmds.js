@@ -6,7 +6,7 @@ const WAIT_DURATION = 10000;
 // custom wdio / webdriver.io commands
 
 browser.addCommand('injectJS', function async(scriptUrl) {
-  return browser.execute(function(scriptUrl) {
+  return browser.execute(function (scriptUrl) {
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = scriptUrl;
@@ -16,9 +16,9 @@ browser.addCommand('injectJS', function async(scriptUrl) {
 
 browser.addCommand('waitForReady', function async() {
   return browser.waitUntil(
-    function() {
+    function () {
       return (
-        browser.execute(function() {
+        browser.execute(function () {
           return document.readyState;
         }).value === 'complete'
       );
@@ -31,20 +31,20 @@ browser.addCommand('waitForReady', function async() {
 
 browser.addCommand('waitForLinkWithText', function async(text) {
   return browser.waitUntil(
-    function() {
-      return browser.execute(function(text) {
+    function () {
+      return browser.execute(function (text) {
         return !!$("a:contains('" + text + "')")[0];
       }, text).value;
     },
     WAIT_DURATION,
     `a "${text}" link should be in the page within ${WAIT_DURATION /
-      1000} seconds`,
+    1000} seconds`,
     500 // => will check every 500 milliseconds
   );
 });
 
 browser.addCommand('clickOnLinkWithText', function async(text) {
-  return browser.execute(function(text) {
+  return browser.execute(function (text) {
     return $("a:contains('" + text + "')")[0].click();
   }, text);
 });
@@ -62,13 +62,13 @@ browser.addCommand('waitForContent', function async(regex, context) {
   );
 });
 
-browser.addCommand('clickOnContent', function(text) {
+browser.addCommand('clickOnContent', function (text) {
   return browser
     .element(`//*[contains(text(), '${text.replace(/'/g, "\\'")}')]`)
     .click();
 });
 
-browser.addCommand('clickOnVisibleSelector', function(selector) {
+browser.addCommand('clickOnVisibleSelector', function (selector) {
   $$(selector)
     .filter(node => node.isVisible())[0]
     .click();

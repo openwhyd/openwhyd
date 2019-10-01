@@ -34,8 +34,7 @@ describe('landing page page', function () {
 
 describe('onboarding', function () {
   it('should lead new user to genre selection page', function () {
-    browser
-      .url(URL_PREFIX);
+    browser.url(URL_PREFIX);
     $('#signup').click();
     $('input[name="email"]').waitForDisplayed();
     $('input[name="name"]').setValue(TEST_USER.username);
