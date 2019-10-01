@@ -32,12 +32,12 @@ describe('landing page page', function () {
     */
 });
 
-describe('onboarding', function() {
-  it('should lead new user to genre selection page', function() {
+describe('onboarding', function () {
+  it('should lead new user to genre selection page', function () {
     browser
       .url(URL_PREFIX)
-      .click('#signup')
-      .waitForVisible('input[name="email"]');
+      .click('#signup');
+    $('input[name="email"]').waitForDisplayed();
     browser
       .setValue('input[name="name"]', TEST_USER.username)
       .setValue('input[name="email"]', TEST_USER.email)
@@ -165,7 +165,7 @@ describe('adding a track', function () {
   it('should open a dialog after clicking on the "Add to" button', function () {
     //browser.click('a.btnRepost');
     browser.clickOnLinkWithText('Add to');
-    browser.waitForVisible('.dlgPostBox');
+    $('.dlgPostBox').waitForDisplayed();
     browser.pause(1000);
     assert(browser.element('.dlgPostBox').isVisible());
   });
@@ -184,16 +184,16 @@ describe('adding a track', function () {
       WAIT_DURATION,
       "expected to be on the user's profile page after 5s"
     );
-    browser.waitForVisible('.post a[data-eid="/yt/aZT8VlTV1YY"]');
+    $('.post a[data-eid="/yt/aZT8VlTV1YY"]').waitForDisplayed();
   });
 
   it('should open the playbar after the user clicks on the post', function () {
     browser.click('.post a[data-eid="/yt/aZT8VlTV1YY"]');
-    browser.waitForVisible('#btnPlay');
+    $('#btnPlay').waitForDisplayed();
   });
 
-  it('should play the track', function() {
-    browser.waitForVisible('#btnPlay.playing');
+  it('should play the track', function () {
+    $('#btnPlay.playing').waitForDisplayed();
   });
 
   it('should pause the track when the user clicks on the play/pause button', function () {
@@ -212,14 +212,14 @@ describe('re-adding a track in a playlist', function () {
   it('will display a pop-in dialog when clicking the "Add to" button of that track', function () {
     browser.waitForContent(/Add to/);
     browser.clickOnLinkWithText('Add to');
-    browser.waitForVisible('.dlgPostBox');
+    $('.dlgPostBox').waitForDisplayed();
   });
 
-  it('allows to create a new playlist', function() {
-    browser.waitForVisible('#selPlaylist');
+  it('allows to create a new playlist', function () {
+    $('#selPlaylist').waitForDisplayed();
     browser.pause(1000); // leave some time for onclick handler to be setup
     $('#selPlaylist').click();
-    browser.waitForVisible('#newPlaylistName');
+    $('#newPlaylistName').waitForDisplayed();
     $('#newPlaylistName').setValue('test playlist');
     $('input[value="Create"]').click();
     browser.waitForContent(/test playlist/, '#selPlaylist');
@@ -239,7 +239,7 @@ describe('re-adding a track in a playlist', function () {
       WAIT_DURATION,
       "expected to be on the user's playlist page after 5s"
     );
-    browser.waitForVisible('.post a[data-eid="/yt/aZT8VlTV1YY"]');
+    $('.post a[data-eid="/yt/aZT8VlTV1YY"]').waitForDisplayed();
   });
 
   //webUI.logout();
@@ -273,7 +273,7 @@ describe('searching external tracks', function () {
     $('#q').click();
     browser.keys('http://www.youtube.com/watch?v=_BU841qpQsI');
     const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
-    browser.waitForVisible(searchResult);
+    $(searchResult).waitForDisplayed();
     const trimmed = $(searchResult)
       .getText()
       .trim();

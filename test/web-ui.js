@@ -6,8 +6,8 @@ exports.signup = function ({ email, password, username }) {
   console.log('[signup] create user', { email });
   browser
     .url(URL_PREFIX)
-    .click('#signup')
-    .waitForVisible('input[name="email"]');
+    .click('#signup');
+  $('input[name="email"]').waitForDisplayed();
   browser
     .setValue('input[name="name"]', username)
     .setValue('input[name="email"]', email)
@@ -33,8 +33,8 @@ exports.loginAs = function (user) {
   return function () {
     browser
       .url(URL_PREFIX)
-      .click('#signin')
-      .waitForVisible('input[name="email"]');
+      .click('#signin');
+    $('input[name="email"]').waitForDisplayed();
     browser
       .setValue('input[name="email"]', user.email)
       .setValue('input[name="password"]', user.password)
