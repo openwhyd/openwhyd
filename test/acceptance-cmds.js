@@ -52,7 +52,7 @@ browser.addCommand('clickOnLinkWithText', function async(text) {
 browser.addCommand('waitForContent', function async(regex, context) {
   return browser.waitUntil(
     function async() {
-      return this.getHTML(context || 'body').then(content => {
+      return $(context || 'body').then(elem => elem.getHTML()).then(content => {
         //console.log(content.length, content.substr(0, 10), regex.toString(), regex.test(content))
         return regex.test(content);
       });
