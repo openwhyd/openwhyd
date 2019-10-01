@@ -27,7 +27,8 @@ describe('reduce frequency of email notifications', function () {
   });
 
   it(`user activates daily email notifications`, function () {
-    browser.url(`${URL_PREFIX}/settings`).waitForContent(/Notifications/);
+    browser.url(`${URL_PREFIX}/settings`);
+    browser.waitForContent(/Notifications/);
     browser.clickOnContent('Notifications');
     browser.waitForContent(/Daily/);
     browser.clickOnContent('Daily');
