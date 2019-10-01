@@ -23,7 +23,7 @@ describe('bookmarklet - adding from a youtube track', function () {
     function getBookmarklet() {
       return window._initWhydBk;
     }
-    return !!browser.execute(getBookmarklet).value;
+    return !!browser.execute(getBookmarklet);
     // TODO: create a re-usable waitForSymbol() wdio command
   });
 
