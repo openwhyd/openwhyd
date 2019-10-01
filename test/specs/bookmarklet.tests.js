@@ -56,10 +56,12 @@ describe('bookmarklet - adding a second time from same youtube page', function (
     $('.whydThumb').waitForExist();
   });
 
+  /*
   it(`should output browser log`, function () {
     console.log('browser log:', browser.log('browser').value.slice(-30));
     // TODO: create a re-usable displayLogs() wdio command
   });
+  */
 
   // TODO: check that adding the track works
 
