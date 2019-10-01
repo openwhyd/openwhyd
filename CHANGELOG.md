@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/openwhyd/openwhyd/compare/v1.14.1...v1.14.2) (2019-10-01)
+
+
+### Bug Fixes
+
+* **deps:** update to wdio 5 (webdriver.io) ([#229](https://github.com/openwhyd/openwhyd/issues/229)) ([de28437](https://github.com/openwhyd/openwhyd/commit/de28437))
+
 ## [1.14.1](https://github.com/openwhyd/openwhyd/compare/v1.14.0...v1.14.1) (2019-09-24)
 
 

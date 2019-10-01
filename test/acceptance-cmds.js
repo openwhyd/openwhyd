@@ -6,7 +6,7 @@ const WAIT_DURATION = 10000;
 // custom wdio / webdriver.io commands
 
 browser.addCommand('injectJS', function async(scriptUrl) {
-  return browser.execute(function(scriptUrl) {
+  return browser.execute(function (scriptUrl) {
     var script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = scriptUrl;
@@ -14,37 +14,22 @@ browser.addCommand('injectJS', function async(scriptUrl) {
   }, scriptUrl);
 });
 
-browser.addCommand('waitForReady', function async() {
-  return browser.waitUntil(
-    function() {
-      return (
-        browser.execute(function() {
-          return document.readyState;
-        }).value === 'complete'
-      );
-    },
-    WAIT_DURATION,
-    `page should be ready within 5 seconds`,
-    500 // => will check every 500 milliseconds
-  );
-});
-
 browser.addCommand('waitForLinkWithText', function async(text) {
   return browser.waitUntil(
-    function() {
-      return browser.execute(function(text) {
-        return !!$("a:contains('" + text + "')")[0];
-      }, text).value;
+    function async() {
+      return browser.executeAsync(function (text, done) {
+        done(!!$("a:contains('" + text + "')")[0]);
+      }, text);
     },
     WAIT_DURATION,
     `a "${text}" link should be in the page within ${WAIT_DURATION /
-      1000} seconds`,
+    1000} seconds`,
     500 // => will check every 500 milliseconds
   );
 });
 
 browser.addCommand('clickOnLinkWithText', function async(text) {
-  return browser.execute(function(text) {
+  return browser.execute(function (text) {
     return $("a:contains('" + text + "')")[0].click();
   }, text);
 });
@@ -52,7 +37,7 @@ browser.addCommand('clickOnLinkWithText', function async(text) {
 browser.addCommand('waitForContent', function async(regex, context) {
   return browser.waitUntil(
     function async() {
-      return this.getHTML(context || 'body').then(content => {
+      return $(context || 'body').then(elem => elem.getHTML()).then(content => {
         //console.log(content.length, content.substr(0, 10), regex.toString(), regex.test(content))
         return regex.test(content);
       });
@@ -62,15 +47,13 @@ browser.addCommand('waitForContent', function async(regex, context) {
   );
 });
 
-browser.addCommand('clickOnContent', function(text) {
-  return browser
-    .element(`//*[contains(text(), '${text.replace(/'/g, "\\'")}')]`)
-    .click();
+browser.addCommand('clickOnContent', function (text) {
+  return $(`//*[contains(text(), '${text.replace(/'/g, "\\'")}')]`).click();
 });
 
-browser.addCommand('clickOnVisibleSelector', function(selector) {
+browser.addCommand('clickOnVisibleSelector', function (selector) {
   $$(selector)
-    .filter(node => node.isVisible())[0]
+    .filter(node => node.isDisplayedInViewport())[0]
     .click();
   return browser;
 });
