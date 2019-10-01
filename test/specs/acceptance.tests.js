@@ -87,7 +87,7 @@ describe('onboarding', function () {
   it('should lead to the welcome page, after giving consent', function () {
     // TODO: takeSnapshot();
     browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
-    browser.scroll('input[type="checkbox"]');
+    $('input[type="checkbox"]').scrollIntoView();
     $('input[type="checkbox"]').click();
     $('input[type="submit"]').click();
     browser.waitUntil(
@@ -118,7 +118,7 @@ describe('adding a track', function () {
     );
     // now, let's give consent
     browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
-    browser.scroll('input[type="checkbox"]');
+    $('input[type="checkbox"]').scrollIntoView();
     $('input[type="checkbox"]').click();
     $('input[type="submit"]').click();
   });
@@ -151,7 +151,7 @@ describe('adding a track', function () {
     const containsName = () => {
       var crit = false;
       try {
-        crit = /Openwhyd Demo \(formerly/.test(browser.getHTML('a.btnRepost'));
+        crit = /Openwhyd Demo \(formerly/.test($('a.btnRepost').getHTML());
       } catch (e) { }
       return crit;
     };

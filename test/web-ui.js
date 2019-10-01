@@ -13,9 +13,8 @@ exports.signup = function ({ email, password, username }) {
   $('input[name="password"]').setValue(password);
   $('input[type="submit"]').click();
   console.log('[signup] consent');
-  browser
-    .url(`${URL_PREFIX}/consent`)
-    .scroll('input[type="checkbox"]');
+  browser.url(`${URL_PREFIX}/consent`);
+  $('input[type="checkbox"]').scrollIntoView();
   $('input[type="checkbox"]').click();
   $('input[type="submit"]').click();
   browser.waitUntil(
