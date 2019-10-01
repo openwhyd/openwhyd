@@ -100,7 +100,7 @@ describe('onboarding', function () {
   it('should display user name after skipping the welcome tutorial', function () {
     // TODO: takeSnapshot();
     browser.waitForContent(/Ok\, Got it/);
-    var loggedInUsername = browser.getText('#loginDiv .username');
+    var loggedInUsername = $('#loginDiv .username').getText();
     assert.equal(loggedInUsername, TEST_USER.username);
   });
 

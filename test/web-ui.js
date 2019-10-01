@@ -24,7 +24,7 @@ exports.signup = function ({ email, password, username }) {
   );
   console.log('[signup] fetch user data');
   browser.url(`${URL_PREFIX}/api/user`);
-  return JSON.parse(browser.getText('pre'));
+  return JSON.parse($('pre').getText());
 };
 
 exports.loginAs = function (user) {
@@ -37,7 +37,7 @@ exports.loginAs = function (user) {
     $('input[name="password"]').setValue(user.password);
     $('input[type="submit"]').click();
     browser.waitForText('#loginDiv .username');
-    var loggedInUsername = browser.getText('#loginDiv .username');
+    var loggedInUsername = $('#loginDiv .username').getText();
     assert.equal(loggedInUsername, user.name);
   };
 };
