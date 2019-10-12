@@ -38,8 +38,7 @@
     "lint": "eslint app"
   },
   "engines": {
-    "node": "8.16.1",
-    "npm": "5.6.0"
+    "node": "10.16.3"
   },
   "directories": {
     "src": "./app",
