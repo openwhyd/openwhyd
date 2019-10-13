@@ -10,10 +10,10 @@ require('../acceptance-cmds.js'); // also checks that openwhyd's server is teste
 // TODO: make sure that DB was reset before starting Openwhyd's app server
 // ... AND that the user cache was reset as well. (e.g. by restarting Openwhyd's server)
 
-describe('reduce frequency of email notifications', function () {
+describe('reduce frequency of email notifications', function() {
   let user;
 
-  it('create a test user', function () {
+  it('create a test user', function() {
     const username = 'test-email-notif-user-' + new Date().getTime();
     user = webUI.signup({
       username,
@@ -22,11 +22,11 @@ describe('reduce frequency of email notifications', function () {
     });
   });
 
-  it(`user has instant email notifications"`, function () {
+  it(`user has instant email notifications"`, function() {
     assert.equal(user.pref.emSub, 0);
   });
 
-  it(`user activates daily email notifications`, function () {
+  it(`user activates daily email notifications`, function() {
     browser.url(`${URL_PREFIX}/settings`);
     browser.waitForContent(/Notifications/);
     browser.clickOnContent('Notifications');
@@ -35,7 +35,7 @@ describe('reduce frequency of email notifications', function () {
     browser.clickOnVisibleSelector('input[type="submit"]');
   });
 
-  it(`user now has daily email notifications"`, function () {
+  it(`user now has daily email notifications"`, function() {
     browser.url(`${URL_PREFIX}/api/user`);
     const { pref } = JSON.parse($('pre').getText());
     assert.equal(pref.emSub, 1);
@@ -51,32 +51,32 @@ describe('reduce frequency of email notifications', function () {
     });
     */
 
-  it(`user reduces frequency of notifications from email`, function () {
+  it(`user reduces frequency of notifications from email`, function() {
     browser.url(`${URL_UNSUB}?uId=${user.id}&type=emSub&action=reduce`);
     // URL is generated in app/templates/notifDigest.js
   });
 
-  it(`user sees switch to weekly notifications emails`, function () {
+  it(`user sees switch to weekly notifications emails`, function() {
     const response = $('body').getText();
     // console.log({ response });
     assert(/weekly/.test(response), 'response should contain "weekly"');
   });
 
-  it(`user now has weekly email notifications"`, function () {
+  it(`user now has weekly email notifications"`, function() {
     browser.url(`${URL_PREFIX}/api/user`);
     const { pref } = JSON.parse($('pre').getText());
     assert.equal(pref.emSub, 7);
   });
 
-  it(`user logs out`, function () {
+  it(`user logs out`, function() {
     webUI.clearSession();
   });
 });
 
-describe(`unsubscribe from email notifications`, function () {
+describe(`unsubscribe from email notifications`, function() {
   let user;
 
-  it('create a test user', function () {
+  it('create a test user', function() {
     const username = 'test-email-notif-user-' + new Date().getTime();
     user = webUI.signup({
       username,
@@ -85,16 +85,16 @@ describe(`unsubscribe from email notifications`, function () {
     });
   });
 
-  it(`user has instant email notifications"`, function () {
+  it(`user has instant email notifications"`, function() {
     assert.equal(user.pref.emSub, 0);
   });
 
-  it(`user unsubscribes from email`, function () {
+  it(`user unsubscribes from email`, function() {
     browser.url(`${URL_UNSUB}?uId=${user.id}&type=emSub`);
     // URL is generated in app/templates/notifDigest.js
   });
 
-  it(`user sees unsubscription message`, function () {
+  it(`user sees unsubscription message`, function() {
     const response = $('body').getText();
     // console.log({ response });
     assert(
@@ -104,13 +104,13 @@ describe(`unsubscribe from email notifications`, function () {
     // messages are defined in app/controllers/api/unsubscribe.js
   });
 
-  it(`user was effectively unsubscribed from email notifications"`, function () {
+  it(`user was effectively unsubscribed from email notifications"`, function() {
     browser.url(`${URL_PREFIX}/api/user`);
     const { pref } = JSON.parse($('pre').getText());
     assert.equal(pref.emSub, -1);
   });
 
-  it(`user logs out`, function () {
+  it(`user logs out`, function() {
     webUI.clearSession();
   });
 });

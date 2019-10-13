@@ -83,7 +83,9 @@ exports.renderRegisterPage = function(request, reqParams, response, error) {
       reqParams.plC,
       reqParams.redirect
     );
-    response.legacyRender(registrationPage, null, { 'content-type': 'text/html' });
+    response.legacyRender(registrationPage, null, {
+      'content-type': 'text/html'
+    });
     //});
   }
 

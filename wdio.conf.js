@@ -16,9 +16,7 @@ exports.config = {
   // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
   // directory is where your package.json resides, so `wdio` will be called from there.
   //
-  specs: [
-    './test/specs/*.tests.js'
-  ],
+  specs: ['./test/specs/*.tests.js'],
   sync: true,
   // Patterns to exclude.
   exclude: [
@@ -46,30 +44,32 @@ exports.config = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://docs.saucelabs.com/reference/platforms-configurator
   //
-  capabilities: [{
-    // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-    // grid with only 5 firefox instances available you can make sure that not more than
-    // 5 instances get started at a time.
-    maxInstances: 1,
-    //
-    browserName: 'chrome',
-    // If outputDir is provided WebdriverIO can capture driver session logs
-    // it is possible to configure which logTypes to include/exclude.
-    // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
-    // excludeDriverLogs: ['bugreport', 'server'],
+  capabilities: [
+    {
+      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+      // grid with only 5 firefox instances available you can make sure that not more than
+      // 5 instances get started at a time.
+      maxInstances: 1,
+      //
+      browserName: 'chrome',
+      // If outputDir is provided WebdriverIO can capture driver session logs
+      // it is possible to configure which logTypes to include/exclude.
+      // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
+      // excludeDriverLogs: ['bugreport', 'server'],
 
-    'goog:chromeOptions': {
-      // to run chrome headless the following flags are required
-      // (see https://developers.google.com/web/updates/2017/04/headless-chrome)
-      args: [
-        '--headless',
-        '--disable-gpu',
-        '--window-size=1280,800',
-        'disable-web-security',
-        'allow-running-insecure-content'
-      ],
+      'goog:chromeOptions': {
+        // to run chrome headless the following flags are required
+        // (see https://developers.google.com/web/updates/2017/04/headless-chrome)
+        args: [
+          '--headless',
+          '--disable-gpu',
+          '--window-size=1280,800',
+          'disable-web-security',
+          'allow-running-insecure-content'
+        ]
+      }
     }
-  }],
+  ],
   //
   // ===================
   // Test Configurations
@@ -205,9 +205,9 @@ exports.config = {
    * Hook that gets executed before the suite starts
    * @param {Object} suite suite details
    */
-  beforeSuite: function (suite) {
+  beforeSuite: function(suite) {
     console.log('👋 TEST SUITE:', suite.file.split('/').pop()); // TODO
-  },
+  }
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
    */
@@ -230,7 +230,6 @@ exports.config = {
    */
   // afterTest: function(test, context, { error, result, duration, passed }) {
   // },
-
 
   /**
    * Hook that gets executed after the suite has ended
@@ -275,10 +274,10 @@ exports.config = {
   // onComplete: function(exitCode, config, capabilities, results) {
   // },
   /**
-  * Gets executed when a refresh happens.
-  * @param {String} oldSessionId session ID of the old session
-  * @param {String} newSessionId session ID of the new session
-  */
+   * Gets executed when a refresh happens.
+   * @param {String} oldSessionId session ID of the old session
+   * @param {String} newSessionId session ID of the new session
+   */
   //onReload: function(oldSessionId, newSessionId) {
   //}
-}
+};

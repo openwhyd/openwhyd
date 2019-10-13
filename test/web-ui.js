@@ -1,11 +1,10 @@
 var assert = require('assert');
 var { URL_PREFIX } = require('./fixtures.js');
 
-exports.signup = function ({ email, password, username }) {
+exports.signup = function({ email, password, username }) {
   const WAIT_DURATION = 5000;
   console.log('[signup] create user', { email });
-  browser
-    .url(URL_PREFIX);
+  browser.url(URL_PREFIX);
   $('#signup').click();
   $('input[name="email"]').waitForDisplayed();
   $('input[name="name"]').setValue(username);
@@ -27,10 +26,9 @@ exports.signup = function ({ email, password, username }) {
   return JSON.parse($('pre').getText());
 };
 
-exports.loginAs = function (user) {
-  return function () {
-    browser
-      .url(URL_PREFIX);
+exports.loginAs = function(user) {
+  return function() {
+    browser.url(URL_PREFIX);
     $('#signin').click();
     $('input[name="email"]').waitForDisplayed();
     $('input[name="email"]').setValue(user.email);
@@ -42,8 +40,8 @@ exports.loginAs = function (user) {
   };
 };
 
-exports.logout = function (user) {
-  it('should allow user to log off', function () {
+exports.logout = function(user) {
+  it('should allow user to log off', function() {
     //browser.moveToObject('#settingsDiv');
     $('#settingsDiv').click();
     $$('a')

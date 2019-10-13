@@ -9,13 +9,13 @@ require('../acceptance-cmds.js'); // also checks that openwhyd's server is teste
 
 // reference scenario: https://www.youtube.com/watch?v=aZT8VlTV1YY
 
-describe('landing page page', function () {
-  it('should not let visitors access admin endpoints', function () {
+describe('landing page page', function() {
+  it('should not let visitors access admin endpoints', function() {
     browser.url(URL_PREFIX + '/admin/config/config.json');
     assert(!$('pre').isExisting());
   });
 
-  it('should have Openwhyd in its title', function () {
+  it('should have Openwhyd in its title', function() {
     browser.url(URL_PREFIX);
     var title = browser.getTitle();
     assert(/Openwhyd/.test(title));
@@ -32,8 +32,8 @@ describe('landing page page', function () {
     */
 });
 
-describe('onboarding', function () {
-  it('should lead new user to genre selection page', function () {
+describe('onboarding', function() {
+  it('should lead new user to genre selection page', function() {
     browser.url(URL_PREFIX);
     $('#signup').click();
     $('input[name="email"]').waitForDisplayed();
@@ -50,7 +50,7 @@ describe('onboarding', function () {
     // TODO: takeSnapshot();
   });
 
-  it('should suggest people to follow after picking genres', function () {
+  it('should suggest people to follow after picking genres', function() {
     const genres = $$('#genreGallery li');
     genres.find(genre => /INDIE/.test(genre.getText())).click();
     genres.find(genre => /ROCK/.test(genre.getText())).click();
@@ -64,7 +64,7 @@ describe('onboarding', function () {
     );
   });
 
-  it('should suggest to install the extension after picking people', function () {
+  it('should suggest to install the extension after picking people', function() {
     // TODO: takeSnapshot();
     browser.clickOnLinkWithText('Next');
     browser.waitUntil(
@@ -74,7 +74,7 @@ describe('onboarding', function () {
     );
   });
 
-  it('should lead new user to the gdpr consent page, after installing extension', function () {
+  it('should lead new user to the gdpr consent page, after installing extension', function() {
     // TODO: takeSnapshot();
     browser.clickOnLinkWithText('Next');
     browser.waitUntil(
@@ -84,7 +84,7 @@ describe('onboarding', function () {
     );
   });
 
-  it('should lead to the welcome page, after giving consent', function () {
+  it('should lead to the welcome page, after giving consent', function() {
     // TODO: takeSnapshot();
     browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
     $('input[type="checkbox"]').scrollIntoView();
@@ -97,7 +97,7 @@ describe('onboarding', function () {
     );
   });
 
-  it('should display user name after skipping the welcome tutorial', function () {
+  it('should display user name after skipping the welcome tutorial', function() {
     // TODO: takeSnapshot();
     browser.waitForContent(/Ok\, Got it/);
     var loggedInUsername = $('#loginDiv .username').getText();
@@ -107,10 +107,10 @@ describe('onboarding', function () {
   webUI.logout();
 });
 
-describe('adding a track', function () {
+describe('adding a track', function() {
   it('should allow user to login', webUI.loginAs(ADMIN_USER));
 
-  it('should lead user to the gdpr consent page', function () {
+  it('should lead user to the gdpr consent page', function() {
     browser.waitUntil(
       () => /.*\/consent/.test(browser.getUrl()),
       WAIT_DURATION,
@@ -123,7 +123,7 @@ describe('adding a track', function () {
     $('input[type="submit"]').click();
   });
 
-  it('should recognize a track when pasting a Youtube URL in the search box', function () {
+  it('should recognize a track when pasting a Youtube URL in the search box', function() {
     //browser.url(URL_PREFIX + '/all');
     $('#q').waitForExist();
     $('#q').setValue('https://www.youtube.com/watch?v=aZT8VlTV1YY');
@@ -134,7 +134,7 @@ describe('adding a track', function () {
     );
   });
 
-  it('should lead to a track page when clicking on the Youtube search result', function () {
+  it('should lead to a track page when clicking on the Youtube search result', function() {
     $('#searchResults li a').click();
     browser.waitUntil(
       () => /\/yt\/aZT8VlTV1YY/.test(browser.getUrl()),
@@ -143,7 +143,7 @@ describe('adding a track', function () {
     );
   });
 
-  it('should display the name of the track', function () {
+  it('should display the name of the track', function() {
     /*
         browser.waitForContent(/Openwhyd Demo/); // name of the track, fetched asynchronously from youtube
         browser.waitForContent(/Add to/);
@@ -152,14 +152,14 @@ describe('adding a track', function () {
       var crit = false;
       try {
         crit = /Openwhyd Demo \(formerly/.test($('a.btnRepost').getHTML());
-      } catch (e) { }
+      } catch (e) {}
       return crit;
     };
     browser.waitUntil(containsName, WAIT_DURATION);
     assert(true);
   });
 
-  it('should open a dialog after clicking on the "Add to" button', function () {
+  it('should open a dialog after clicking on the "Add to" button', function() {
     //$('a.btnRepost').click();
     browser.clickOnLinkWithText('Add to');
     $('.dlgPostBox').waitForDisplayed();
@@ -167,14 +167,14 @@ describe('adding a track', function () {
     assert($('.dlgPostBox').isDisplayedInViewport());
   });
 
-  it('should show a link to the post after adding the track', function () {
+  it('should show a link to the post after adding the track', function() {
     $$('.dlgPostBox span')
       .find(a => /Add/.test(a.getText()))
       .click();
     browser.waitForLinkWithText('your tracks');
   });
 
-  it("should show the post on the user's profile after clicking the link", function () {
+  it("should show the post on the user's profile after clicking the link", function() {
     browser.clickOnLinkWithText('your tracks');
     browser.waitUntil(
       () => /\/u\//.test(browser.getUrl()),
@@ -184,16 +184,16 @@ describe('adding a track', function () {
     $('.post a[data-eid="/yt/aZT8VlTV1YY"]').waitForDisplayed();
   });
 
-  it('should open the playbar after the user clicks on the post', function () {
+  it('should open the playbar after the user clicks on the post', function() {
     $('.post a[data-eid="/yt/aZT8VlTV1YY"]').click();
     $('#btnPlay').waitForDisplayed();
   });
 
-  it('should play the track', function () {
+  it('should play the track', function() {
     $('#btnPlay.playing').waitForDisplayed();
   });
 
-  it('should pause the track when the user clicks on the play/pause button', function () {
+  it('should pause the track when the user clicks on the play/pause button', function() {
     $('#btnPlay.playing').click();
     assert(!/playing/.test($('#btnPlay').classname));
   });
@@ -201,18 +201,18 @@ describe('adding a track', function () {
   //webUI.logout();
 });
 
-describe('re-adding a track in a playlist', function () {
+describe('re-adding a track in a playlist', function() {
   // requirement: one track should be accessible from the user's stream
 
   // webUI.loginAs(ADMIN_USER);
 
-  it('will display a pop-in dialog when clicking the "Add to" button of that track', function () {
+  it('will display a pop-in dialog when clicking the "Add to" button of that track', function() {
     browser.waitForContent(/Add to/);
     browser.clickOnLinkWithText('Add to');
     $('.dlgPostBox').waitForDisplayed();
   });
 
-  it('allows to create a new playlist', function () {
+  it('allows to create a new playlist', function() {
     $('#selPlaylist').waitForDisplayed();
     browser.pause(1000); // leave some time for onclick handler to be setup
     $('#selPlaylist').click();
@@ -222,14 +222,14 @@ describe('re-adding a track in a playlist', function () {
     browser.waitForContent(/test playlist/, '#selPlaylist');
   });
 
-  it('should show a link to the post after re-adding the track', function () {
+  it('should show a link to the post after re-adding the track', function() {
     $$('.dlgPostBox span')
       .find(a => /Add/.test(a.getText()))
       .click();
     browser.waitForLinkWithText('test playlist');
   });
 
-  it("should show the post on the user's new playlist after clicking the link", function () {
+  it("should show the post on the user's new playlist after clicking the link", function() {
     browser.clickOnLinkWithText('test playlist');
     browser.waitUntil(
       () => /\/u\//.test(browser.getUrl()),
@@ -242,18 +242,18 @@ describe('re-adding a track in a playlist', function () {
   //webUI.logout();
 });
 
-describe('track comments', function () {
+describe('track comments', function() {
   // requirement: at least one track should be accessible from the user's stream
 
   // webUI.loginAs(ADMIN_USER);
 
-  it(`can be displayed from the user\'s stream`, function () {
+  it(`can be displayed from the user\'s stream`, function() {
     browser.url(URL_PREFIX + '/stream');
     browser.clickOnLinkWithText('Comment');
     browser.waitForContent(/You can mention people/);
   });
 
-  it(`should appear after being added`, function () {
+  it(`should appear after being added`, function() {
     browser.keys('hello world\n');
     browser.waitForContent(new RegExp(ADMIN_USER.name), '.comments');
     browser.waitForContent(/hello world/, '.comments');
@@ -264,8 +264,8 @@ describe('track comments', function () {
   // TODO: it(`should disappear after being deleted`, function() {
 });
 
-describe('searching external tracks', function () {
-  it(`can find a youtube track with id that starts with underscore`, function () {
+describe('searching external tracks', function() {
+  it(`can find a youtube track with id that starts with underscore`, function() {
     browser.url(URL_PREFIX);
     $('#q').click();
     browser.keys('http://www.youtube.com/watch?v=_BU841qpQsI');

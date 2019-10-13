@@ -4,7 +4,7 @@ var errorTemplate = require('../templates/error.js');
 
 http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
   var head = '=== ' + new Date().toUTCString(),
-    path = this.url.split('?') /*[0]*/;
+    path = this.url.split('?'); /*[0]*/
   params = params ? JSON.stringify(params) : '';
   suffix = suffix ? '(' + suffix + ')' : '';
   // output with colors
@@ -21,7 +21,7 @@ http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
 if (!process.appParams.color)
   http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
     var head = '=== ' + new Date().toUTCString(),
-      path = this.url /*.split("?")[0]*/;
+      path = this.url; /*.split("?")[0]*/
     params = params ? JSON.stringify(params) : '';
     suffix = suffix ? '(' + suffix + ')' : '';
     // output without colors

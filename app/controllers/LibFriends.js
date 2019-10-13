@@ -125,12 +125,12 @@ function renderFriendsLibrary(lib) {
     else if (options.after || options.before) lib.render({ html: res });
     else {
       var /*options.mixpanelCode*/ feedHtml =
-        [
-          '<script>',
-          ' window.Whyd.tracking.log("Visit home");',
-          '</script>',
-          ''
-        ].join('\n') + res;
+          [
+            '<script>',
+            ' window.Whyd.tracking.log("Visit home");',
+            '</script>',
+            ''
+          ].join('\n') + res;
       lib.renderPage({ name: 'Dashboard' }, /*sidebarHtml*/ null, feedHtml);
     }
   });

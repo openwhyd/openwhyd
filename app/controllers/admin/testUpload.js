@@ -40,5 +40,7 @@ exports.controller = function(request, reqParams, response) {
   request.logToConsole('testUpload.controller', reqParams);
   var user = request.checkLogin(response);
   if (!user) return;
-  response.legacyRender(renderTemplate(), null, { 'content-type': 'text/html' });
+  response.legacyRender(renderTemplate(), null, {
+    'content-type': 'text/html'
+  });
 };

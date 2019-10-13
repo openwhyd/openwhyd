@@ -69,7 +69,11 @@ exports.handlePostRequest = function(request, reqParams, response) {
 
   exports.actions[reqParams.action](reqParams, function(res, args) {
     console.log(reqParams, '=>', res);
-    response.legacyRender(res, null, args || { 'content-type': 'application/json' });
+    response.legacyRender(
+      res,
+      null,
+      args || { 'content-type': 'application/json' }
+    );
   });
 };
 
