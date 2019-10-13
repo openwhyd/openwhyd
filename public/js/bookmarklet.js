@@ -519,7 +519,7 @@ var YOUTUBE_API_KEY = 'AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI';
       ui.finish();
     }
 
-    var toDetect = new function ElementStack() {
+    var toDetect = new (function ElementStack() {
       // this class holds a collections of elements that potentially reference streamable tracks
       var set = {};
       this.push = function(elt) {
@@ -540,7 +540,7 @@ var YOUTUBE_API_KEY = 'AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI';
           (/\/..\//.test(keys[i]) ? eIds : urls).push(set[keys[i]]);
         return eIds.concat(urls);
       };
-    }();
+    })();
 
     console.info('1/2 parse page...');
     toDetect.push({ src: window.location.href });

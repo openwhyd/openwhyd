@@ -126,7 +126,7 @@ exports.extractGenreTags = function(plName) {
  * maintains and checks against an associative array of tags.
  * strings are turned into tags by following formatting/normalization rules. synonyms are supported.
  **/
-exports.tagEngine = new function TagEngine() {
+exports.tagEngine = new (function TagEngine() {
   var self = this;
   self.tags = {}; // tag -> {c:int}
   self.plIdToTags = {}; // plId -> [tag]
@@ -479,7 +479,7 @@ exports.tagEngine = new function TagEngine() {
     if (!self.eidToTags) cb();
     else cb(self.getBestTagsByUid(uId));
   };
-}();
+})();
 
 //exports.tagEngine.init();
 

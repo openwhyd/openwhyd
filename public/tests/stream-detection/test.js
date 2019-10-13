@@ -5,7 +5,7 @@
 
 // DEPRECATED => TEST SUITE HAS MOVED AND IS MAINTAINED BY PLAYEMJS PROJECT
 
-var PlayemWrapper = new function() {
+var PlayemWrapper = new (function() {
   window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
   var PLAY_TIMEOUT = 6000,
     timeout,
@@ -69,7 +69,7 @@ var PlayemWrapper = new function() {
       player.play(id);
     });
   };
-}();
+})();
 
 var parseDetectors = function(jsCode) {
   var FCT_DETECTOR = /function\s+(\w+)\s*\([^\)]*\)/g,

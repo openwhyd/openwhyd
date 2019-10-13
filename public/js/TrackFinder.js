@@ -2,7 +2,7 @@
 
 window.$ =
   window.$ ||
-  new function FakeJquery() {
+  new (function FakeJquery() {
     function loadJS(src, cb) {
       var inc = document.createElement('script');
       if (cb)
@@ -50,7 +50,7 @@ window.$ =
       },
       getScript: loadJS
     };
-  }();
+  })();
 
 // search engines
 
