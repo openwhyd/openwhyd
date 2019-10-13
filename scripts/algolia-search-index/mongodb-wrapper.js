@@ -42,21 +42,17 @@ const cacheCollections = function(db, callback) {
 const initMongo = (params, callback) => {
   var url = makeConnUrl(params);
   console.log('Connecting to ' + url + '...');
-  mongodb.MongoClient.connect(
-    url,
-    MONGO_OPTIONS,
-    (err, db) => {
-      if (err) {
-        callback(err);
-      } else {
-        db.addListener('error', function(err) {
-          console.log('MongoDB model async error: ', err);
-          throw err;
-        });
-        cacheCollections(db, callback); // will mutate db and callback
-      }
+  mongodb.MongoClient.connect(url, MONGO_OPTIONS, (err, db) => {
+    if (err) {
+      callback(err);
+    } else {
+      db.addListener('error', function(err) {
+        console.log('MongoDB model async error: ', err);
+        throw err;
+      });
+      cacheCollections(db, callback); // will mutate db and callback
     }
-  );
+  });
 };
 
 const init = params =>

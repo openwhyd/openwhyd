@@ -9,7 +9,7 @@ const LOG_THRESHOLD = 500;
 
 // From Response.js
 
-http.ServerResponse.prototype.legacyRender = function (
+http.ServerResponse.prototype.legacyRender = function(
   view,
   data,
   headers = {},
@@ -39,7 +39,7 @@ const makeBodyParser = uploadSettings =>
     var form = new formidable.IncomingForm();
     form.uploadDir = uploadSettings.uploadDir;
     form.keepExtensions = uploadSettings.keepExtensions;
-    form.parse(req, function (err, postParams, files) {
+    form.parse(req, function(err, postParams, files) {
       if (err) console.error('formidable parsing error:', err);
       // using qset to parse fields with brackets [] for url-encoded form data:
       // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370

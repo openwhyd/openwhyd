@@ -34,7 +34,7 @@
     "docker-seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
     "docker-run": "npm run docker-seed && docker-compose exec web npm run $@",
     "test-docker": "npm run docker-run test-unit && npm run docker-run test-api && npm run docker-seed && wdio wdio.conf.js $@",
-    "prettify": "node_modules/.bin/prettier \"./**/*.js\" \"scripts/**/*.js\" --single-quote --write",
+    "lint:fix": "node_modules/.bin/prettier \"./**/*.js\" \"scripts/**/*.js\" --single-quote --write",
     "lint": "eslint app"
   },
   "engines": {
@@ -79,13 +79,11 @@
     "@wdio/sync": "^5.14.0",
     "all-contributors-cli": "5.4.0",
     "chromedriver": "^77.0.0",
-    "eslint": "2.9.0",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-import": "^1.11.1",
-    "eslint-plugin-jsx-a11y": "1.2.0",
-    "eslint-plugin-react": "^5.2.2",
+    "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-prettier": "^3.1.1",
     "mocha": "5.2.0",
-    "prettier": "^1.14.2",
+    "prettier": "^1.18.2",
     "semantic-release": "^15.13.24",
     "wdio-chromedriver-service": "^5.0.2"
   },
