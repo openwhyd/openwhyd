@@ -1,3 +1,10 @@
+## [1.14.3](https://github.com/openwhyd/openwhyd/compare/v1.14.2...v1.14.3) (2019-10-13)
+
+
+### Bug Fixes
+
+* **lint:** use prettier config in ESLint + apply fixes ([#230](https://github.com/openwhyd/openwhyd/issues/230)) ([12ba8ca](https://github.com/openwhyd/openwhyd/commit/12ba8ca))
+
 ## [1.14.2](https://github.com/openwhyd/openwhyd/compare/v1.14.1...v1.14.2) (2019-10-01)
 
 
