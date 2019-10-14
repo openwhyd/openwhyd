@@ -1,3 +1,10 @@
+## [1.14.4](https://github.com/openwhyd/openwhyd/compare/v1.14.3...v1.14.4) (2019-10-14)
+
+
+### Bug Fixes
+
+* **eslint:** support ES6 and ES2017 syntax ([#231](https://github.com/openwhyd/openwhyd/issues/231)) ([04f270f](https://github.com/openwhyd/openwhyd/commit/04f270f))
+
 ## [1.14.3](https://github.com/openwhyd/openwhyd/compare/v1.14.2...v1.14.3) (2019-10-13)
 
 
