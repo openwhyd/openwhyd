@@ -94,7 +94,8 @@ exports.checkSignupToken = function(sTk, request) {
     request.connection.remoteAddress
   );
   var valid = exports.validateSignupToken(sTk, request);
-  for (var i in valid) { // valid contains the following keys: authentic, notExpired, sameAddr
+  for (var i in valid) {
+    // valid contains the following keys: authentic, notExpired, sameAddr
     if (!valid[i]) {
       return false;
     }
