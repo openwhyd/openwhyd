@@ -150,8 +150,6 @@ exports.init = async function() {
 
   var options = {
     native_parser: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     //strict: false,
     //safe: false,
     w: 'majority' // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
