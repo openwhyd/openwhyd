@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/openwhyd/openwhyd/compare/v1.14.5...v1.15.0) (2019-10-26)
+
+
+### Features
+
+* **dev:** script to import a user's posts from production, for [#220](https://github.com/openwhyd/openwhyd/issues/220) ([#235](https://github.com/openwhyd/openwhyd/issues/235)) ([9c6164f](https://github.com/openwhyd/openwhyd/commit/9c6164f))
+
 ## [1.14.5](https://github.com/openwhyd/openwhyd/compare/v1.14.4...v1.14.5) (2019-10-26)
 
 
