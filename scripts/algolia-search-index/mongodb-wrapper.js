@@ -41,7 +41,6 @@ const cacheCollections = function(db, callback) {
 const initMongo = async (params, callback) => {
   var url = makeConnUrl(params);
   console.log('Connecting to ' + url + '...');
-  /*
   const client = new mongodb.MongoClient(url, {
     useUnifiedTopology: true
   });
@@ -56,7 +55,6 @@ const initMongo = async (params, callback) => {
     console.log('MongoDB-wrapper model async error: ', err);
   });
   cacheCollections(db, callback); // will mutate db and callback
-  */
 };
 
 const init = params =>
