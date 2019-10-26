@@ -40,21 +40,25 @@ const cacheCollections = function(db, callback) {
   });
 };
 
-const initMongo = (params, callback) => {
+const initMongo = async (params, callback) => {
   var url = makeConnUrl(params);
-  var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
-  console.log('Connecting to ' + url + '/' + dbName + '...');
-  mongodb.MongoClient.connect(url, MONGO_OPTIONS, (err, client) => {
-    if (err) {
-      callback(err);
-    } else {
-      const db = client.db(dbName);
-      db.addListener('error', function(err) {
-        console.log('MongoDB model async error: ', err);
-      });
-      cacheCollections(db, callback); // will mutate db and callback
-    }
+  console.log('Connecting to ' + url + '...');
+  /*
+  const client = new mongodb.MongoClient(url, {
+    useUnifiedTopology: true
   });
+  let db;
+  try {
+    db = await client.connect(url, MONGO_OPTIONS);
+  } catch (err) {
+    callback(err);
+    return;
+  }
+  db.addListener('error', function(err) {
+    console.log('MongoDB-wrapper model async error: ', err);
+  });
+  cacheCollections(db, callback); // will mutate db and callback
+  */
 };
 
 const init = params =>

@@ -4,7 +4,7 @@ var fs = require('fs');
 var util = require('util');
 var async = require('async');
 var colors = require('colors');
-var mongodb = require('mongodb');
+var mongodbLib = require('mongodb');
 
 var openwhydVersion = require('./package.json').version;
 
@@ -74,7 +74,8 @@ var params = (process.appParams = {
     process.env['WHYD_URL_PREFIX'] ||
     `http://localhost:${process.env['WHYD_PORT'] || 8080}`, // base URL of the app
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
+  mongoDbPort:
+    process.env['MONGODB_PORT'] || mongodbLib.Connection.DEFAULT_PORT, // 27017
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
@@ -187,7 +188,7 @@ function start() {
 
 // startup
 
-function init() {
+async function init() {
   if (process.argv.length > 2)
     // ignore "node" and the filepath of this script
     for (var i = 2; i < process.argv.length; ++i) {
@@ -198,28 +199,29 @@ function init() {
         params[flag.substr(2)] = process.argv[++i];
     }
   console.log('Starting web server with params:', params);
-  require('./app/models/mongodb.js').init(function(err, db) {
-    if (err) throw err;
-    var mongodb = this;
-    async.eachSeries(
-      DB_INIT_SCRIPTS,
-      function(initScript, nextScript) {
-        console.log('Applying db init script:', initScript, '...');
-        mongodb.runShellScript(fs.readFileSync(initScript), function(err) {
-          if (err) throw err;
-          nextScript();
+  const mongodb = require('./app/models/mongodb.js');
+  const db = await mongodb.init();
+  async.eachSeries(
+    DB_INIT_SCRIPTS,
+    function(initScript, nextScript) {
+      console.log('Applying db init script:', initScript, '...');
+      mongodb.runShellScript(fs.readFileSync(initScript), function(err) {
+        if (err) throw err;
+        nextScript();
+      });
+    },
+    function(err, res) {
+      // all db init scripts were interpreted => continue app init
+      mongodb.cacheCollections(function() {
+        mongodb.cacheUsers(function() {
+          start();
         });
-      },
-      function(err, res) {
-        // all db init scripts were interpreted => continue app init
-        mongodb.cacheCollections(function() {
-          mongodb.cacheUsers(function() {
-            start();
-          });
-        });
-      }
-    );
-  });
+      });
+    }
+  );
 }
 
-init();
+init().catch(err => {
+  console.error('[app.js] error caught at top level:', err);
+  setTimeout(() => process.exit(1), 1000);
+});
