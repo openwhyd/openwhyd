@@ -1,6 +1,6 @@
 var fs = require('fs');
 var async = require('async');
-var mongodbWrapper = require('../app/models/mongodb.js');
+var mongodb = require('../app/models/mongodb.js');
 
 //var DB_INIT_SCRIPT = './config/initdb_team.js'; // creates an admin user => should not be run on production!
 
@@ -18,7 +18,7 @@ var params = (process.appParams = {
 });
 
 console.log('[test-db-init.js] Connecting to db ...');
-mongodbWrapper.init().then(db => {
+mongodb.init().then(db => {
   console.log('[test-db-init.js] Clearing test database ...');
   db.dropDatabase(function(err) {
     if (err) throw err;
@@ -38,7 +38,7 @@ mongodbWrapper.init().then(db => {
           initScript,
           '...'
         );
-        mongodbWrapper.runShellScript(fs.readFileSync(initScript), nextScript);
+        mongodb.runShellScript(fs.readFileSync(initScript), nextScript);
       },
       function(err, res) {
         if (err) throw err;
