@@ -1,3 +1,6 @@
+// You may want to clear the test database with `$ npm run docker-seed`
+// before running this script.
+
 const request = require('request');
 const mongodb = require('mongodb');
 
@@ -67,8 +70,8 @@ const insertPosts = ({ db, posts }) =>
   const { posts } = await fetchUserData({ username }); // or require(`./../${username}.json`);
   console.log(`imported ${posts.length} posts`);
   const user = genUserFromPost({ post: posts[0] });
-  console.log('genUserFromPost =>', user);
-  await insertUser({ db, user });
+  // console.log('genUserFromPost =>', user);
+  // await insertUser({ db, user }); // may cause E11000 duplicate key error collection: openwhyd_test.user, after seeding the db
   console.log('inserted user');
   await insertPosts({ db, posts });
   client.close();
