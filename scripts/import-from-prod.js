@@ -1,5 +1,7 @@
 const request = require('request');
-const MongoClient = require('mongodb').MongoClient;
+const mongodb = require('mongodb');
+
+const ObjectID = id => mongodb.ObjectID.createFromHexString(id);
 
 // Parameters // TODO: get from command line arguments and/or env vars
 const url = 'mongodb://localhost:27117';
@@ -32,7 +34,7 @@ const fetchUserData = ({ username }) =>
 
 function genUserFromPost({ post }) {
   return {
-    _id: post.uId,
+    _id: ObjectID(post.uId),
     id: post.uId,
     name: post.uNm
   };
