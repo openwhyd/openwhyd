@@ -13,13 +13,10 @@ const username = 'adrien';
 
 const connectToDb = ({ url, dbName }) =>
   new Promise((resolve, reject) =>
-    MongoClient.connect(
-      url,
-      (err, client) => {
-        if (err) reject(err);
-        else resolve({ db: client.db(dbName), client });
-      }
-    )
+    mongodb.MongoClient.connect(url, (err, client) => {
+      if (err) reject(err);
+      else resolve({ db: client.db(dbName), client });
+    })
   );
 
 const fetchUserData = ({ username }) =>
