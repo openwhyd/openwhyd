@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/openwhyd/openwhyd/compare/v1.15.0...v1.15.1) (2019-10-26)
+
+
+### Bug Fixes
+
+* **deps:** fix bundle gemfile for docs ([#238](https://github.com/openwhyd/openwhyd/issues/238)) ([036037f](https://github.com/openwhyd/openwhyd/commit/036037f))
+
 # [1.15.0](https://github.com/openwhyd/openwhyd/compare/v1.14.5...v1.15.0) (2019-10-26)
 
 
