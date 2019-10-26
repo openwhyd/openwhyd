@@ -60,6 +60,15 @@ Run all tests against the Docker container:
 npm run test-docker
 ```
 
+### Sample data
+
+If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
+
+```sh
+$ npm run docker-seed               # will clear the database
+$ node scripts/import-from-prod.js  # will import 21 posts from https://openwhyd.org/adrien
+```
+
 ### Environment variables
 
 * `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
