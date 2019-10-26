@@ -1,7 +1,5 @@
 /**
- * login controller
- * authentify users, with IE support
- * @author adrienjoly, whyd
+ * login controller, to authenticate users
  */
 var config = require('../../models/config.js');
 var emailModel = require('../../models/email.js');
@@ -118,11 +116,11 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
             userModel.update(dbUser._id, {
               $set: {
                 fbId: form.fbUid,
-                fbTok: form.fbTok // accesstoken provided on last facebook login
+                fbTok: form.fbTok // access token provided on last facebook login
               }
             });
           renderRedirect(form.redirect || '/', dbUser);
-          return; // prevent default reponse (renderForm)
+          return; // prevent default response (renderForm)
         } else if (form.action != 'logout') {
           form.wrongPassword = 1;
           form.error = 'Your password seems wrong... Try again!';
