@@ -1,3 +1,10 @@
+## [1.14.5](https://github.com/openwhyd/openwhyd/compare/v1.14.4...v1.14.5) (2019-10-26)
+
+
+### Bug Fixes
+
+* **mongodb:** prevent "db.collections is not a function" error ([#232](https://github.com/openwhyd/openwhyd/issues/232)) ([2c353ca](https://github.com/openwhyd/openwhyd/commit/2c353ca))
+
 ## [1.14.4](https://github.com/openwhyd/openwhyd/compare/v1.14.3...v1.14.4) (2019-10-14)
 
 
