@@ -144,12 +144,14 @@ exports.init = function(readyCallback) {
   var authStr = '';
   if (authUser && authPassword) authStr = authUser + ':' + authPassword + '@';
 
-  var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
+  var url = 'mongodb://' + authStr + host + ':' + port; // + "?w=1";
 
-  console.log('Connecting to ' + url + '...');
+  console.log('Connecting to ' + url + '/' + dbName + '...');
 
   var options = {
     native_parser: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     //strict: false,
     //safe: false,
     w: 'majority' // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
@@ -158,8 +160,10 @@ exports.init = function(readyCallback) {
   //var dbserver = new mongodb.Server(host, port, {auto_reconnect:true});
   //var db = new mongodb.Db(dbName, dbserver, options);
 
-  mongodb.MongoClient.connect(url, options, function(err, db) {
+  mongodb.MongoClient.connect(url, options, function(err, client) {
     if (err) throw err;
+
+    const db = client.db(dbName);
 
     db.addListener('error', function(e) {
       console.log('MongoDB model async error: ', e);
