@@ -14,8 +14,7 @@ var db = mongodb.collections;
 var ObjectId = mongodb.ObjectId;
 
 function initDb(cb) {
-  mongodb.init(function(err, db) {
-    if (err) throw err;
+  mongodb.init().then(function(db) {
     var mongodbInstance = this;
     var initScript = './config/initdb.js';
     console.log('Applying db init script:', initScript, '...');
