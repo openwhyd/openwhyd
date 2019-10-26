@@ -2,7 +2,7 @@ const request = require('request');
 const MongoClient = require('mongodb').MongoClient;
 
 // Parameters // TODO: get from command line arguments and/or env vars
-const url = 'mongodb://localhost:27017';
+const url = 'mongodb://localhost:27117';
 const dbName = 'openwhyd_test';
 const username = 'adrien';
 
