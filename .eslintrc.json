@@ -2,7 +2,8 @@
   "extends": ["plugin:prettier/recommended"],
   "plugins": [],
   "parserOptions": {
-    "ecmaVersion": 2017
+    "experimentalObjectRestSpread": true,
+    "ecmaVersion": 2018
   },
   "env": {
     "es6": true
