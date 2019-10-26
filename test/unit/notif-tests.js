@@ -18,15 +18,12 @@ function initDb(cb) {
     var mongodbInstance = this;
     var initScript = './config/initdb.js';
     console.log('Applying db init script:', initScript, '...');
-    mongodbInstance.runShellScript(
-      require('fs').readFileSync(initScript),
-      function(err) {
-        if (err) throw err;
-        mongodbInstance.cacheCollections(function() {
-          mongodb.cacheUsers(cb);
-        });
-      }
-    );
+    mongodb.runShellScript(require('fs').readFileSync(initScript), err => {
+      if (err) throw err;
+      mongodb.cacheCollections(function() {
+        mongodb.cacheUsers(cb);
+      });
+    });
   });
 }
 
