@@ -27,7 +27,12 @@ const fetchUserData = ({ username }) =>
       if (error) {
         reject(error);
       } else {
-        resolve({ posts: JSON.parse(body) }); // Print the HTML for the Google homepage.
+        resolve({
+          posts: JSON.parse(body).map(post => ({
+            ...post,
+            _id: ObjectID(post._id)
+          }))
+        });
       }
     });
   });
