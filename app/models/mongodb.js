@@ -149,16 +149,14 @@ exports.init = async function() {
   console.log('Connecting to ' + url + '/' + dbName + '...');
 
   var options = {
+    useUnifiedTopology: true,
     native_parser: true,
     //strict: false,
     //safe: false,
     w: 'majority' // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
   };
 
-  const client = new mongodb.MongoClient(url, {
-    useUnifiedTopology: true
-  });
-  const db = await client.connect(url, options);
+  const db = await mongodb.MongoClient.connect(url, options);
 
   db.addListener('error', function(e) {
     console.log('MongoDB model async error: ', e);
