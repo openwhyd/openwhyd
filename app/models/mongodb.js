@@ -149,6 +149,7 @@ exports.init = async function() {
   console.log('Connecting to ' + url + '/' + dbName + '...');
 
   var options = {
+    useNewUrlParser: true,
     useUnifiedTopology: true,
     native_parser: true,
     //strict: false,
