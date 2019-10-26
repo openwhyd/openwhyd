@@ -57,7 +57,7 @@ const insertPosts = ({ db, posts }) =>
 (async () => {
   console.log(`connecting to ${url}/${dbName} ...`);
   const { db, client } = await connectToDb({ url, dbName });
-  const posts = await fetchUserData({ username }); // or require(`./../${username}.json`);
+  const { posts } = await fetchUserData({ username }); // or require(`./../${username}.json`);
   console.log(`imported ${posts.length} posts`);
   const user = genUserFromPost({ post: posts[0] });
   console.log('genUserFromPost =>', user);
