@@ -401,24 +401,6 @@ exports.renderWhydPage = function(params) {
     //	'<a id="feedbackLink" href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;">&nbsp;</a>',
     exports.renderHeader(user, params.whydHeaderContent, params),
     '<div id="contentPane">',
-    /*
-!uid ?	'  <div id="inviteBanner">' : '',
-!uid ?	'   <p>Keep, Play & Share every track in one place</p>' : '',
-			// Collect and share tracks you love
-			// Collect music you love from all over the web
-			// Add your tracks into the stream, for the world to hear
-			// Collect and share every track in one place
-			// Collect and share tracks you love
-			// Keep, Play and Share every track in one place
-!uid ?	(
-			config.landingStream ?
-			'   <a id="askInviteLink" class="btnAdd" href="/signup">Sign up</a>' :
-			'   <a id="askInviteLink" class="btnAdd" href="/">Ask for an invite</a>'
-		) : '',
-!uid ?	'   <a id="loginBtn" class="grayButton" href="/login">Log In</a>' : '',
-!uid ?	'   <img src="/images/landing/note-illu.png">' : '',
-!uid ?	'  </div>' : '',
-*/
     '  <div id="mainPanel">',
     params.content || '',
     '  </div>',

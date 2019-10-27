@@ -76,9 +76,7 @@ exports.renderInvitePage = function(
   redirect
 ) {
   var params = {};
-  params.title = /*config.landingStream &&*/ !inviteCode
-    ? 'Join Openwhyd'
-    : 'Your invitation to Openwhyd';
+  params.title = !inviteCode ? 'Join Openwhyd' : 'Your invitation to Openwhyd';
   params.pageDesc = !sender
     ? mainTemplate.defaultPageMeta.desc
     : sender.name +

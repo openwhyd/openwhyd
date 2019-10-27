@@ -96,7 +96,6 @@ var params = (process.appParams = {
   // rendering preferences
   version: openwhydVersion,
   startTime: new Date(),
-  // landingPage: "public/html/landingPhoto.html", //"public/html/landingPageLaunch.html",  //cf logging.js
   nbPostsPerNewsfeedPage: 20,
   nbTracksPerPlaylistEmbed: 100,
 
