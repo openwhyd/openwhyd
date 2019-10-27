@@ -2,31 +2,35 @@ var http = require('http');
 var querystring = require('querystring');
 var errorTemplate = require('../templates/error.js');
 
-http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-  var head = '=== ' + new Date().toUTCString(),
-    path = this.url.split('?'); /*[0]*/
-  params = params ? JSON.stringify(params) : '';
-  suffix = suffix ? '(' + suffix + ')' : '';
-  // output with colors
-  console.log(
-    head.grey,
-    this.method.cyan,
-    path[0].green +
-      (path.length > 1 ? '?' + path.slice(1).join('?') : '').yellow,
-    suffix.white,
-    params.grey
-  ); // -> stdout
-};
+const genReqLogLine = ({ head, method, path, params, suffix }) =>
+  !process.appParams.color
+    ? [
+        head,
+        method,
+        path[0] + (path.length > 1 ? '?' + path.slice(1).join('?') : ''),
+        suffix,
+        params
+      ]
+    : [
+        head.grey,
+        method.cyan,
+        path[0].green +
+          (path.length > 1 ? '?' + path.slice(1).join('?') : '').yellow,
+        suffix.white,
+        params.grey
+      ];
 
-if (!process.appParams.color)
-  http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-    var head = '=== ' + new Date().toUTCString(),
-      path = this.url; /*.split("?")[0]*/
-    params = params ? JSON.stringify(params) : '';
-    suffix = suffix ? '(' + suffix + ')' : '';
-    // output without colors
-    console.log(head, this.method, path, suffix, params);
-  };
+http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
+  console.log(
+    ...genReqLogLine({
+      head: '=== ' + new Date().toUTCString(),
+      method: this.method,
+      path: this.url.split('?'),
+      params: params ? JSON.stringify(params) : '',
+      suffix: suffix ? '(' + suffix + ')' : ''
+    })
+  );
+};
 
 var config = require('./config.js');
 var mongodb = require('./mongodb.js');
