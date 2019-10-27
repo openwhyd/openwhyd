@@ -89,7 +89,6 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
       }
     });
   } else if (form.email) {
-    console.log('email=', form.email);
     form.email = emailModel.normalize(form.email);
 
     userModel[form.email.indexOf('@') > -1 ? 'fetchByEmail' : 'fetchByHandle'](
