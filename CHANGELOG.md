@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/openwhyd/openwhyd/compare/v1.15.4...v1.16.0) (2019-10-27)
+
+
+### Features
+
+* **scripts:** use "npm start" instead of "npm run run" to start the server ([#245](https://github.com/openwhyd/openwhyd/issues/245)) ([1540581](https://github.com/openwhyd/openwhyd/commit/1540581))
+
 ## [1.15.4](https://github.com/openwhyd/openwhyd/compare/v1.15.3...v1.15.4) (2019-10-27)
 
 
