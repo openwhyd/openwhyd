@@ -5,6 +5,7 @@
  **/
 
 var https = require('https');
+var snip = require('./../snip.js');
 //var email = require("emailjs/email");
 
 var querystring = require('querystring');
@@ -30,7 +31,7 @@ exports.email = function(
   userName,
   callback
 ) {
-  console.log('email', emailAddr, subject);
+  console.log('email', snip.formatEmail(emailAddr), subject);
   /*
 	var message = email.message.create({
 		text: textContent, 
