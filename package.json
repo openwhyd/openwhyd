@@ -20,7 +20,6 @@
     "forever:start": "mv appd.out prev.out; mv appd.err prev.err; forever --outFile appd.out --errFile appd.err --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
     "forever:restart": "npm run forever:stop; npm run forever:start $@;",
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
-    "run-dev-local": "echo \"to test deezer connect, add local.openwhyd.org to /private/etc/hosts, then dscacheutil -flushcache\"; npm run run-dev -- --urlPrefix http://local.openwhyd.org:8080 $@",
     "run-dev-digest": "node app.js --emailAdminsOnly --digestInterval 5000 --digestImmediate true $@",
     "run-dev-search": "node app.js --fakeEmail --digestInterval -1 --enableSearchIndex true $@",
     "test-reset": "node test/reset-test-db.js",

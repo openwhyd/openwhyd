@@ -107,6 +107,22 @@ $ npm test
 
 ## Configuration (advanced)
 
+#### Command-line arguments
+
+Openwhyd's entry point (`app.js`) accepts two kinds of command-line arguments:
+
+- toggles: `--no-color`, `--fakeEmail` and `--emailAdminsOnly`; (see `FLAGS` from `app.js` for an up-to-date list)
+- overrides: any app-level configuration parameter can be set, e.g. `urlPrefix` can be set as `--urlPrefix <value>`. (see `process.appParams` from `app.js` for an up-to-date list)
+
+### Advanced use cases
+
+If you want to test Deezer Connect, you will need your server to be reachable through a domain name. Here's a way to achieve that:
+
+1. Configure your Deezer app to allow connections from `http://local.openwhyd.org:8080`;
+2. Add `local.openwhyd.org` to your `/private/etc/hosts` file;
+3. Flush the corresponding cache: `$ dscacheutil -flushcache`;
+4. Start Openwhyd with `npm start -- --urlPrefix http://local.openwhyd.org:8080`.
+
 ### Environment variables
 
 - `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
