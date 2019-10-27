@@ -102,7 +102,6 @@ POST   /login                          -> controllers.api.login
 GET    /facebookLogin                  -> controllers.api.facebookLogin
 POST   /facebookLogin                  -> controllers.api.facebookLogin
 
-GET    /dlBetaApp/{file}               -> controllers.private.dlBetaApp
 GET    /digest                         -> controllers.private.digest
 GET    /contentType                    -> controllers.private.contentType
 POST   /contentType                    -> controllers.private.contentType
