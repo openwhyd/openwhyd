@@ -41,35 +41,10 @@ function fetch(url, cb) {
   include(url + (url.indexOf('?') == -1 ? '?' : '&') + 'callback=' + cbName);
 }
 
-function initAnalytics(loggedUser) {
-  window._gaq = (window._gaq || []).concat([
-    ['_setAccount', 'UA-83857066-1'],
-    ['_setDomainName', 'openwhyd.org'],
-    ['_setAllowHash', 'false'],
-    ['_trackPageview'],
-    ['_setCustomVar', 1, 'loggedIn', !!loggedUser, 2]
-  ]);
-  if (loggedUser)
-    window._gaq = window._gaq.concat([
-      ['_setCustomVar', 2, 'userId', loggedUser._id, 1],
-      ['_setCustomVar', 3, 'hasFb', !!loggedUser.fbId, 1],
-      ['_setCustomVar', 5, 'userName', loggedUser.name, 1]
-    ]);
-  var ga = document.createElement('script');
-  ga.type = 'text/javascript';
-  ga.async = true;
-  ga.src =
-    ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') +
-    '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(ga, s);
-}
-
 fetch('/api/user', function(res) {
   var loggedUser = !!(res || {})._id && res;
   if (loggedUser) {
     document.body.className = (document.body.className || '') + 'loggedIn';
     document.body.innerHTML = 'logged in';
   }
-  //initAnalytics(loggedUser);
 });
