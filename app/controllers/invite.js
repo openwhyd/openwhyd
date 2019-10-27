@@ -91,10 +91,6 @@ exports.renderRegisterPage = function(request, reqParams, response, error) {
 
   if (reqParams.inviteCode)
     exports.checkInviteCode({ url: request.url }, reqParams, response, render);
-  /*
-	else if (config.landingStream && request.url.startsWith("/signup"))
-		render();
-	*/
   // signup pop-in
   else if (reqParams.popin) {
     templateLoader.loadTemplate('app/templates/popinSignup.html', function(
@@ -210,10 +206,7 @@ exports.controller = function(request, reqParams, response, error) {
       sTk +
       '" />\').appendTo("form");';
     response.legacyRender(js, null, { 'content-type': 'text/javascript' });
-  } else if (
-    reqParams.inviteCode ||
-    /*config.landingStream &&*/ request.url.startsWith('/signup')
-  )
+  } else if (reqParams.inviteCode || request.url.startsWith('/signup'))
     exports.renderRegisterPage(request, reqParams, response, error);
   else renderInviteForm(request, reqParams, response);
 };

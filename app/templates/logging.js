@@ -9,7 +9,6 @@ var users = require('../models/user.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
 var templateLoader = require('../templates/templateLoader.js');
-var landingTemplate = null;
 var loginTemplate = null;
 
 exports.refreshTemplates = function(callback) {
@@ -22,32 +21,13 @@ exports.refreshTemplates = function(callback) {
 exports.refreshTemplates();
 
 exports.renderLandingPage = function(loggedUser, form, callback) {
-  // var params = {
-  // 	// pageThumb: mainTemplate.defaultPageMeta.img,
-  // 	// pageDesc: mainTemplate.defaultPageMeta.desc,
-  // 	// head: mainTemplate.analyticsHeading,
-  //
-  // 	// for old landing pages
-  // 	email:"",
-  // 	password:""
-  // };
-  // if (form) {
-  // 	for (var i in form) // [error, email, password]
-  // 		params[i] = form[i];
-  // 	if (form.error)
-  // 		params.message = [{text:form.error}];
-  // }
-  // return landingTemplate.render(params);
-
   var templateParams = {
     urlPrefix: config.urlPrefix,
     loggedUser: loggedUser
   };
 
   var whydPageParams = {
-    //request: request, // => pageUrl => meta og:url element (useless)
     loggedUser: loggedUser,
-    //pageTitle: "Openwhyd",
     js: [],
     css: [],
     endOfBody: [].join('\n'),
@@ -69,7 +49,6 @@ exports.renderLoginPage = function(form) {
     title: 'openwhyd',
     email: '',
     password: '',
-    //		landingStream: config.landingStream,
     pageThumb: mainTemplate.defaultPageMeta.img,
     pageDesc: mainTemplate.defaultPageMeta.desc,
     head: mainTemplate.analyticsHeading
@@ -84,7 +63,7 @@ exports.renderLoginPage = function(form) {
   return loginTemplate.render(params);
 };
 
-exports.renderUnauthorizedPage = exports.renderLoginPage; //config.landingStream ? exports.renderLoginPage : exports.renderLandingPage;
+exports.renderUnauthorizedPage = exports.renderLoginPage;
 
 exports.htmlCloseWindow = function() {
   return [
