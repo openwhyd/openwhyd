@@ -92,7 +92,7 @@ describe('"img" package', function() {
   var fs = require('fs');
 
   //var imgUrl = 'http://www.azurs.net/photographies/laurier-rose-fleur-rebigue.jpg';
-  var imgOutput = 'public/images/landingPhoto-0.jpg';
+  var imgOutput = 'public/images/logo-s.png';
   assert(fs.existsSync(imgOutput), imgOutput + ' should exist');
   var log = console.log;
 
