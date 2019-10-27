@@ -21,6 +21,8 @@ Whenever you want to know what Docker processes are currently running: run `dock
 
 If you want to rebuild the Docker image and run it in the background, use `docker-compose up -d --build --force-recreate`.
 
+If you want to connect to the MongoDB database with the `mongo` shell using `docker-compose` container: run `docker-compose exec mongo mongo mongodb://localhost:27117/openwhyd_test`.
+
 ### Setup (manual)
 
 - Install Node.js, MongoDB, GraphicsMagick or ImageMagick
