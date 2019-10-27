@@ -4,7 +4,7 @@ fetch-deps: ## Fetch JS dependencies.
 	@npm install
 
 dev: fetch-deps ## Start a local dev server.
-	@npm run run-dev
+	@npm start
 
 restart: ## Restart the production server without downtime.
 	@cd scripts && ./restart.sh
