@@ -6,7 +6,7 @@
 print('upserting openwhyd team users ...');
 
 db.user.update(
-  { _id: ObjectId('4d94501d1f78ac091dbc9b4d') },
+  { _id: ObjectId('000000000000000000000001') },
   {
     $set: {
       email: 'test@openwhyd.org',
