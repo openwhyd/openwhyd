@@ -78,6 +78,7 @@ var params = (process.appParams = {
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
+  color: true,
 
   // secrets
   genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
@@ -109,16 +110,8 @@ var params = (process.appParams = {
 });
 
 var FLAGS = {
-  '--color': function() {
-    console.warn = makeErrorLog(
-      makeColorConsole(consoleError, 'yellow'),
-      'Warning'
-    );
-    console.error = makeErrorLog(
-      makeColorConsole(consoleError, 'red'),
-      'Error'
-    );
-    process.appParams.color = true;
+  '--no-color': function() {
+    process.appParams.color = false;
   },
   '--fakeEmail': function() {
     params.emailModule = '';
@@ -187,7 +180,8 @@ function start() {
 // startup
 
 function init() {
-  if (process.argv.length > 2)
+  // apply command-line arguments
+  if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
     for (var i = 2; i < process.argv.length; ++i) {
       var flag = process.argv[i];
@@ -196,6 +190,19 @@ function init() {
       else if (flag.indexOf('--') == 0)
         params[flag.substr(2)] = process.argv[++i];
     }
+  }
+  if (params.color == true) {
+    console.warn = makeErrorLog(
+      makeColorConsole(consoleError, 'yellow'),
+      'Warning'
+    );
+    console.error = makeErrorLog(
+      makeColorConsole(consoleError, 'red'),
+      'Error'
+    );
+  } else {
+    process.appParams.color = false;
+  }
   console.log('Starting web server with params:', params);
   require('./app/models/mongodb.js').init(function(err, db) {
     if (err) throw err;
