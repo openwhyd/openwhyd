@@ -1,29 +1,76 @@
 # Install instructions
 
-### Setup (simple)
+## Run with Docker (simple)
 
-Docker makes it easy and safe to install and start the two servers required for Openwhyd: the MongoDB database server, and the web/application server (formerly called _whydJS_). All you need is access to the shell (a.k.a. _terminal_), and to have Docker and Git installed on your machine.
+Docker makes it easy and safe to install and start the two servers required for Openwhyd: the MongoDB database server, and the web/application server (formerly called _whydJS_).
 
-1. Install [Docker Client](https://www.docker.com/community-edition) and start it
-2. [Install Git](https://www.atlassian.com/git/tutorials/install-git) if you don't have it already
-3. Clone openwhyd's repository: `git clone https://github.com/openwhyd/openwhyd.git`, then `cd openwhyd`
-4. Build and launch Docker processes: `docker-compose up --build`
-5. Open [http://localhost:8080](http://localhost:8080) in your web browser => you should see Openwhyd's home page! 🎉
-6. When you're done, shutdown the Docker processes by pressing the `Ctrl-C` key combination in the shell instance where you had run `docker-compose up` (step 4).
+### Prerequisites
 
-Whenever you want to update your local clone of Openwhyd's repository to the latest version, run `git pull` from the `openwhyd` folder where you had cloned the repository (step 3).
+All you need is:
 
-Whenever you want to start the Docker processes after shutting them down (step 7), run `docker-compose up --build` again from the `openwhyd` folder where you had cloned the repository (step 3).
+- access to the shell (a.k.a. _terminal_);
+- to have [Docker](https://www.docker.com/products/docker-desktop);
+- and to have [Git](https://www.atlassian.com/git/tutorials/install-git) installed on your machine.
 
-Whenever you just want to restart Openwhyd while the Docker processes are still running, run `docker-compose restart web` from a shell terminal.
+### Clone and run
 
-Whenever you want to know what Docker processes are currently running: run `docker-compose ps`.
+Commands to type in your shell:
 
-If you want to rebuild the Docker image and run it in the background, use `docker-compose up -d --build --force-recreate`.
+```sh
+$ git clone https://github.com/openwhyd/openwhyd.git
+$ cd openwhyd
+$ docker-compose up --build --detach  # will start openwhyd's web server and database in the background
+$ open http://localhost:8080          # ... in your web browser => you should see Openwhyd's home page! 🎉
+$ docker-compose down                 # when you're done: will stop openwhyd's web server and database
+```
 
-If you want to connect to the MongoDB database with the `mongo` shell using `docker-compose` container: run `docker-compose exec mongo mongo mongodb://localhost:27117/openwhyd_test`.
+After making changes to the source code, don't forget to stop and re-start it using `docker-compose`.
 
-### Setup (manual)
+### Run automated tests
+
+Commands to run all automated tests against the Docker container:
+
+```sh
+$ docker-compose up --build --detach  # to have openwhyd's web server and database running in the background
+$ npm install                         # will install the necessary test runners (webdriver/selenium)
+$ npm run docker:test                 # will run the automated tests: unit and end-to-end
+```
+
+### Sample data
+
+If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
+
+```sh
+$ npm run docker:seed               # will clear the database and create the admin user
+$ node scripts/import-from-prod.js  # will import 21 posts from https://openwhyd.org/adrien
+```
+
+After that, you will be able to sign in as an administrator using the following credentials:
+
+- username: `admin`
+- password: `admin`
+
+### Connect to the database
+
+If you want to connect to the MongoDB database with the `mongo` shell using `docker-compose` container:
+
+```sh
+$ docker-compose exec mongo mongo mongodb://localhost:27117/openwhyd_test
+```
+
+---
+
+## Deploy to a DigitalOcean instance
+
+Read [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md).
+
+---
+
+## Install and run manually (advanced)
+
+If you don't want to use Docker (or can't), you can follow these instructions.
+
+### Setup (advanced)
 
 - Install Node.js, MongoDB, GraphicsMagick or ImageMagick
 - Make sure that `make` and `g++` are installed (required for building npm binaries, _I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)_)
@@ -33,43 +80,32 @@ If you want to connect to the MongoDB database with the `mongo` shell using `doc
 - Make sure that dependencies are installed (`npm install`)
 - If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 
-### Usage
+### Usage (advanced)
 
-- `docker-compose up`, or `npm run run`, or `npm forever:start` (auto-restart daemon)
+- Run `npm run run`, or `npm forever:start` (auto-restart daemon)
 - Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
-- During development, you may have to restart the server to have your changes taken into account. To restart the Docker container, use `docker-compose restart web`.
+- During development, you may have to restart the server to have your changes taken into account.
 
-### Testing
+### Testing (advanced)
 
 Run unit tests only:
 
-```bash
-npm run test-unit
+```sh
+$ npm run test-unit
 ```
 
 Run all tests, including acceptance tests (webdriver.io-based):
 
-```bash
-# in a terminal session, start Openwhyd's application server
-npm run run-for-tests
-# in another terminal session, run the tests
-npm test
-```
-
-Run all tests against the Docker container:
-
-```bash
-npm run test-docker
-```
-
-### Sample data
-
-If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
-
 ```sh
-$ npm run docker-seed               # will clear the database
-$ node scripts/import-from-prod.js  # will import 21 posts from https://openwhyd.org/adrien
+# in a terminal session, start Openwhyd's application server
+$ npm run run-for-tests
+# in another terminal session, run the tests
+$ npm test
 ```
+
+---
+
+## Configuration (advanced)
 
 ### Environment variables
 
