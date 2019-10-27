@@ -98,7 +98,7 @@ Run all tests, including acceptance tests (webdriver.io-based):
 
 ```sh
 # in a terminal session, start Openwhyd's application server
-$ npm run run-for-tests
+$ . ./env-vars-testing.sh && npm start
 # in another terminal session, run the tests
 $ npm test
 ```
