@@ -59,7 +59,7 @@ npm test
 Run all tests against the Docker container:
 
 ```bash
-npm run test-docker
+npm run docker:test
 ```
 
 ### Sample data
