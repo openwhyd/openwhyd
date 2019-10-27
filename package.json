@@ -31,9 +31,9 @@
     "test-acceptance": "npm run test-reset && wdio wdio.conf.js $@",
     "test-acceptance-dev": "npm run test-acceptance -- --spec ./test/specs/*.tests.js --logLevel verbose",
     "test": ". ./env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance",
-    "docker-seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
-    "docker-run": "npm run docker-seed && docker-compose exec web npm run $@",
-    "test-docker": "npm run docker-run test-unit && npm run docker-run test-api && npm run docker-seed && wdio wdio.conf.js $@",
+    "docker:seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
+    "docker-run": "npm run docker:seed && docker-compose exec web npm run $@",
+    "test-docker": "npm run docker-run test-unit && npm run docker-run test-api && npm run docker:seed && wdio wdio.conf.js $@",
     "lint:fix": "node_modules/.bin/prettier \"./**/*.js\" \"scripts/**/*.js\" --write",
     "lint": "eslint app"
   },

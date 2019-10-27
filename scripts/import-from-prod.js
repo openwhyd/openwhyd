@@ -1,4 +1,4 @@
-// You may want to clear the test database with `$ npm run docker-seed`
+// You may want to clear the test database with `$ npm run docker:seed`
 // before running this script.
 
 const request = require('request');

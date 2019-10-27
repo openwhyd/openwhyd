@@ -67,7 +67,7 @@ npm run test-docker
 If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
 
 ```sh
-$ npm run docker-seed               # will clear the database
+$ npm run docker:seed               # will clear the database and create the admin user
 $ node scripts/import-from-prod.js  # will import 21 posts from https://openwhyd.org/adrien
 ```
 
