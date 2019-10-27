@@ -236,7 +236,7 @@ Response: (None)
 
 #### Register / sign up a new user
 
-This endpoint is called from a sign up form (e.g. landingPhoto.html).
+This endpoint is called from a sign up form.
 
 If sign up succeeds, the user is logged in similarly to the /login endpoint: a session is set up in DB, and a cookie is returned in the HTTP header of the response.
 

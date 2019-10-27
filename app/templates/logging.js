@@ -21,16 +21,11 @@ exports.refreshTemplates = function(callback) {
 
 exports.refreshTemplates();
 
-var NB_BACKGROUND_IMAGES = 4;
-
 exports.renderLandingPage = function(loggedUser, form, callback) {
   // var params = {
   // 	// pageThumb: mainTemplate.defaultPageMeta.img,
   // 	// pageDesc: mainTemplate.defaultPageMeta.desc,
   // 	// head: mainTemplate.analyticsHeading,
-  //
-  // 	// for new landing page
-  // 	// bgImg: "/images/landingPhoto-"+Math.floor(Math.random()*NB_BACKGROUND_IMAGES)+".jpg",
   //
   // 	// for old landing pages
   // 	email:"",
