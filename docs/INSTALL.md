@@ -7,13 +7,13 @@ Docker makes it easy and safe to install and start the two servers required for 
 1. Install [Docker Client](https://www.docker.com/community-edition) and start it
 2. [Install Git](https://www.atlassian.com/git/tutorials/install-git) if you don't have it already
 3. Clone openwhyd's repository: `git clone https://github.com/openwhyd/openwhyd.git`, then `cd openwhyd`
-4. Build and launch Docker processes: `docker-compose up`
+4. Build and launch Docker processes: `docker-compose up --build`
 5. Open [http://localhost:8080](http://localhost:8080) in your web browser => you should see Openwhyd's home page! 🎉
 6. When you're done, shutdown the Docker processes by pressing the `Ctrl-C` key combination in the shell instance where you had run `docker-compose up` (step 4).
 
 Whenever you want to update your local clone of Openwhyd's repository to the latest version, run `git pull` from the `openwhyd` folder where you had cloned the repository (step 3).
 
-Whenever you want to start the Docker processes after shutting them down (step 7), run `docker-compose up` again from the `openwhyd` folder where you had cloned the repository (step 3).
+Whenever you want to start the Docker processes after shutting them down (step 7), run `docker-compose up --build` again from the `openwhyd` folder where you had cloned the repository (step 3).
 
 Whenever you just want to restart Openwhyd while the Docker processes are still running, run `docker-compose restart web` from a shell terminal.
 
