@@ -20,16 +20,18 @@ exports.formatEmail = function(emailAddr) {
     .concat(domain);
 };
 
+exports.formatPrivateFields = obj => {
+  if (typeof obj !== 'object') return obj;
+  const res = { ...obj };
+  if (typeof obj.email === 'string') res.email = exports.formatEmail(obj.email);
+  if (typeof obj.md5 === 'string') res.md5 = '<MD5_HASH>';
+  return res;
+};
+
 // privacy-enforcing console.log helper
 exports.console = {
   log(...args) {
-    const filteredArgs = args.map(arg => {
-      if (typeof arg === 'object' && typeof arg.email === 'string') {
-        return { ...arg, email: exports.formatEmail(arg.email) };
-      } else {
-        return arg;
-      }
-    });
+    const filteredArgs = args.map(exports.formatPrivateFields);
     console.log(...filteredArgs);
   }
 };
