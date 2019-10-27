@@ -14,7 +14,15 @@
       "envFile": "${workspaceRoot}/env-vars-testing.conf",
       "program": "${workspaceRoot}/app.js",
       "runtimeVersion": "10.16.3", // to keep in sync with .nvmrc
-      "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test", "--mongoDbPort", "27117" ]
+      "args": [
+        "--fakeEmail",
+        "--digestInterval",
+        "-1",
+        "--mongoDbDatabase",
+        "openwhyd_test",
+        "--mongoDbPort",
+        "27117"
+      ]
       // Notice: make sure that the mongodb server is listening on port 27117
     },
     {
@@ -26,7 +34,13 @@
       "cwd": "${workspaceRoot}",
       "envFile": "${workspaceRoot}/env-vars-testing.conf",
       "program": "${workspaceRoot}/app.js",
-      "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test" ]
+      "args": [
+        "--fakeEmail",
+        "--digestInterval",
+        "-1",
+        "--mongoDbDatabase",
+        "openwhyd_test"
+      ]
       // Notice: make sure that the mongodb server is listening on port 27017
     },
     {
@@ -39,7 +53,13 @@
       "cwd": "${workspaceRoot}",
       "envFile": "${workspaceRoot}/env-vars-testing.conf",
       "program": "${workspaceRoot}/app.js",
-      "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test" ]
+      "args": [
+        "--fakeEmail",
+        "--digestInterval",
+        "-1",
+        "--mongoDbDatabase",
+        "openwhyd_test"
+      ]
       // Notice: make sure that the mongodb server is listening on port 27017
     },
     {
@@ -52,7 +72,13 @@
       "cwd": "${workspaceRoot}",
       "envFile": "${workspaceRoot}/env-vars-testing.conf",
       "program": "${workspaceRoot}/app.js",
-      "args": [ "--color", "--fakeEmail", "--digestInterval", "-1", "--mongoDbDatabase", "openwhyd_test" ]
+      "args": [
+        "--fakeEmail",
+        "--digestInterval",
+        "-1",
+        "--mongoDbDatabase",
+        "openwhyd_test"
+      ]
       // Notice: make sure that the mongodb server is listening on port 27017
     },
     {

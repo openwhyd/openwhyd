@@ -34,7 +34,7 @@ jobs:
           command: source env-vars-testing.sh && npm run test-reset
       - run:
           name: Run Openwhyd server
-          command: source env-vars-testing.sh && npm run run --mongoDbDatabase openwhyd_test
+          command: source env-vars-testing.sh && npm start --mongoDbDatabase openwhyd_test
           background: true
       - run:
           name: Wait for server up
@@ -45,4 +45,3 @@ jobs:
       # - run:
       #     name: Semantic Release
       #     command: npm run semantic-release
-

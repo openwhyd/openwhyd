@@ -82,7 +82,7 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 
 ### Usage (advanced)
 
-- Run `npm run run`, or `npm forever:start` (auto-restart daemon)
+- Run `npm start`, or `npm forever:start` (auto-restart daemon)
 - Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 - During development, you may have to restart the server to have your changes taken into account.
 
@@ -98,7 +98,7 @@ Run all tests, including acceptance tests (webdriver.io-based):
 
 ```sh
 # in a terminal session, start Openwhyd's application server
-$ npm run run-for-tests
+$ . ./env-vars-testing.sh && npm start
 # in another terminal session, run the tests
 $ npm test
 ```
@@ -106,6 +106,32 @@ $ npm test
 ---
 
 ## Configuration (advanced)
+
+### Command-line arguments
+
+Openwhyd's entry point (`app.js`) accepts two kinds of command-line arguments:
+
+- toggles: `--no-color`, `--fakeEmail` and `--emailAdminsOnly`; (see `FLAGS` from `app.js` for an up-to-date list)
+- overrides: any app-level configuration parameter can be set, e.g. `urlPrefix` can be set as `--urlPrefix <value>`. (see `process.appParams` from `app.js` for an up-to-date list)
+
+### Advanced use cases
+
+#### Test email digests
+
+If you want to test email digests locally:
+
+```sh
+$ node app.js --emailAdminsOnly --digestInterval 5000 --digestImmediate true
+```
+
+#### Map localhost to a domain name
+
+If you want to test Deezer Connect, you will need your server to be reachable through a domain name. Here's a way to achieve that:
+
+1. Configure your Deezer app to allow connections from `http://local.openwhyd.org:8080`;
+2. Add `local.openwhyd.org` to your `/private/etc/hosts` file;
+3. Flush the corresponding cache: `$ dscacheutil -flushcache`;
+4. Start Openwhyd with `$ npm start -- --urlPrefix http://local.openwhyd.org:8080`.
 
 ### Environment variables
 

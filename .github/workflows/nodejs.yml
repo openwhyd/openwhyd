@@ -40,7 +40,7 @@ jobs:
     - name: Start Openwhyd server
       run: |
         source env-vars-testing.sh
-        npm run run --mongoDbDatabase openwhyd_test &
+        npm start --mongoDbDatabase openwhyd_test &
         ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
     - name: npm test
       env:
