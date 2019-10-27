@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   mongo:
     image: mongo:3.4
     command: mongod --port 27117
@@ -10,7 +9,7 @@ services:
   web:
     image: openwhyd/openwhyd
     ports:
-      - "8080:8080"
+      - '8080:8080'
     restart: always
     depends_on:
       - mongo

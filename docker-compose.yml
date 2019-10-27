@@ -1,22 +1,21 @@
 version: '3'
 services:
-
   mongo:
     image: mongo:3.4
     command: mongod --port 27117
     volumes:
       - /data # Data Persistance
     ports:
-      - "27117:27117"
+      - '27117:27117'
 
   web:
-    restart: "always"
+    restart: 'always'
     build: .
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - "8080:8080"
+      - '8080:8080'
     depends_on:
       - mongo
     environment:
