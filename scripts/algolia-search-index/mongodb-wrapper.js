@@ -41,9 +41,9 @@ const cacheCollections = function(db, callback) {
 };
 
 const initMongo = (params, callback) => {
-  var url = makeConnUrl(params);
+  var url = makeConnUrl(params) + '/' + dbName;
   var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
-  console.log('Connecting to ' + url + '/' + dbName + '...');
+  console.log('Connecting to ' + url + '...');
   mongodb.MongoClient.connect(url, MONGO_OPTIONS, (err, client) => {
     if (err) {
       callback(err);

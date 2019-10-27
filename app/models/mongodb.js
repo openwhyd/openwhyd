@@ -144,9 +144,9 @@ exports.init = function(readyCallback) {
   var authStr = '';
   if (authUser && authPassword) authStr = authUser + ':' + authPassword + '@';
 
-  var url = 'mongodb://' + authStr + host + ':' + port; // + "?w=1";
+  var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
-  console.log('Connecting to ' + url + '/' + dbName + '...');
+  console.log('Connecting to ' + url + '...');
 
   var options = {
     native_parser: true,
