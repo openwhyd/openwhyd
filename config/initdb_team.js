@@ -10,6 +10,7 @@ db.user.update(
   {
     $set: {
       email: 'test@openwhyd.org',
+      handle: 'admin',
       name: 'admin',
       img:
         '/images/blank_user.gif' /* needed for "has default avatar" e2e test */,
