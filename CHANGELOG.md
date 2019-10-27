@@ -1,3 +1,10 @@
+## [1.15.4](https://github.com/openwhyd/openwhyd/compare/v1.15.3...v1.15.4) (2019-10-27)
+
+
+### Bug Fixes
+
+* **doc:** simplify INSTALL instructions + rename npm scripts for docker ([#244](https://github.com/openwhyd/openwhyd/issues/244)) ([61c9e48](https://github.com/openwhyd/openwhyd/commit/61c9e48))
+
 ## [1.15.3](https://github.com/openwhyd/openwhyd/compare/v1.15.2...v1.15.3) (2019-10-27)
 
 
