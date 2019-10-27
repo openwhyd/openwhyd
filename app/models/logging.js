@@ -1,6 +1,7 @@
 var http = require('http');
 var querystring = require('querystring');
 var errorTemplate = require('../templates/error.js');
+const snip = require('../snip.js');
 
 const genReqLogLine = ({ head, method, path, params, suffix }) =>
   !process.appParams.color
@@ -26,7 +27,10 @@ http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
       head: '=== ' + new Date().toUTCString(),
       method: this.method,
       path: this.url.split('?'),
-      params: params ? JSON.stringify(params) : '',
+      params:
+        typeof params === 'object'
+          ? JSON.stringify(snip.formatPrivateFields(params))
+          : '',
       suffix: suffix ? '(' + suffix + ')' : ''
     })
   );
