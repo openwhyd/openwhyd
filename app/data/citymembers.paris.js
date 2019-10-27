@@ -1,12 +1,4 @@
 exports.members = [
-  /*
-	"4d94501d1f78ac091dbc9b4d", // adrien
-	"4d7fc1969aa9db130e000003", // gilles
-	"4dd4060ddb28e240e8508c28", // loick
-	"4fb118c368b1a410ecdc0058" // tony
-*/
-  // members listed here: https://docs.google.com/spreadsheet/ccc?key=0AlIzr-lWYe-bdGhVdXJOR09SdHRvRWxGRkJZbWR4bEE&usp=sharing#gid=0
-  // cf trello card: https://trello.com/c/sOCdb4Ek/35-liste-des-membres-de-la-page-paris-incl-user-ids
   '533a8d1f71eaec19b56f7d72', // 9eme
   '4d94501d1f78ac091dbc9b4d', // adrien
   '52cec50b7e91c862b2b29c3c', // Adrien Galibert
