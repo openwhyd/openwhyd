@@ -107,7 +107,7 @@ $ npm test
 
 ## Configuration (advanced)
 
-#### Command-line arguments
+### Command-line arguments
 
 Openwhyd's entry point (`app.js`) accepts two kinds of command-line arguments:
 
@@ -116,12 +116,22 @@ Openwhyd's entry point (`app.js`) accepts two kinds of command-line arguments:
 
 ### Advanced use cases
 
+#### Test email digests
+
+If you want to test email digests locally:
+
+```sh
+$ node app.js --emailAdminsOnly --digestInterval 5000 --digestImmediate true
+```
+
+#### Map localhost to a domain name
+
 If you want to test Deezer Connect, you will need your server to be reachable through a domain name. Here's a way to achieve that:
 
 1. Configure your Deezer app to allow connections from `http://local.openwhyd.org:8080`;
 2. Add `local.openwhyd.org` to your `/private/etc/hosts` file;
 3. Flush the corresponding cache: `$ dscacheutil -flushcache`;
-4. Start Openwhyd with `npm start -- --urlPrefix http://local.openwhyd.org:8080`.
+4. Start Openwhyd with `$ npm start -- --urlPrefix http://local.openwhyd.org:8080`.
 
 ### Environment variables
 
