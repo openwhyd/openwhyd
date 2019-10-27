@@ -1,3 +1,4 @@
+var { promisify } = require('util');
 var assert = require('assert');
 var request = require('request');
 
@@ -5,13 +6,11 @@ var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
 var { logout, loginAs, signupAs } = require('../api-client.js');
 
 describe('auth api -- login with email', function() {
-  it('succeeds', function(done) {
-    loginAs(ADMIN_USER, function(error, { response, body }) {
-      const cookies = ((response.headers || {})['set-cookie'] || []).join(' ');
-      assert(/whydSid\=/.test(cookies));
-      assert(JSON.parse(body).redirect);
-      done();
-    });
+  it('succeeds', async () => {
+    const { response, body } = await promisify(loginAs)(ADMIN_USER);
+    const cookies = ((response.headers || {})['set-cookie'] || []).join(' ');
+    assert(/whydSid\=/.test(cookies));
+    assert(JSON.parse(body).redirect);
   });
 
   it('gives access to personal /stream', function(done) {
