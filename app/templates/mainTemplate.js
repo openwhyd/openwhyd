@@ -384,10 +384,6 @@ exports.renderWhydPage = function(params) {
   var user = params.loggedUser || {};
   console.log('connected user:', user.name, user.id);
 
-  if (user && user.id == '4d94501d1f78ac091dbc9b4d')
-    // adrien
-    params.js.push('adrien.js');
-
   // other recognized params: bodyClass, head, content, sidebar
 
   var uid = (user || {}).id;

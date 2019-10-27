@@ -1,6 +1,5 @@
 version: '3'
 services:
-
   mongo:
     image: mongo:3.4
     command: mongod --port 27117
@@ -10,7 +9,7 @@ services:
   web:
     image: openwhyd/openwhyd
     ports:
-      - "8080:8080"
+      - '8080:8080'
     restart: always
     depends_on:
       - mongo
@@ -21,7 +20,7 @@ services:
       - WHYD_SESSION_SECRET=whatever
       - WHYD_DEV_APNS_PASSPHRASE=whatever
       - WHYD_APNS_PASSPHRASE=whatever
-      - WHYD_ADMIN_OBJECTID=4d94501d1f78ac091dbc9b4d
+      - WHYD_ADMIN_OBJECTID=000000000000000000000001
       - WHYD_ADMIN_NAME=admin
       - WHYD_ADMIN_EMAIL=test@openwhyd.org
       - WHYD_CONTACT_EMAIL=test@openwhyd.org
