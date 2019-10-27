@@ -110,8 +110,6 @@ GET    /getResourceMetadata            -> controllers.private.getResourceMetadat
 POST   /getResourceMetadata            -> controllers.private.getResourceMetadata
 GET    /password                       -> controllers.private.password
 POST   /password                       -> controllers.private.password
-GET    /thanks                         -> controllers.private.thanks
-POST   /thanks                         -> controllers.private.thanks
 GET    /upload                         -> controllers.private.upload
 POST   /upload                         -> controllers.private.upload
 GET    /visit                          -> controllers.private.visit
