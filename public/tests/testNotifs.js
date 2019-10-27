@@ -65,7 +65,6 @@
         jsonPost('/api/notif', { action: 'deleteAll' }, function() {
           //setTimeout(function(){
           jsonGet('/api/notif', {}, function(notifs) {
-            console.log({ notifs });
             log('found', countNotifs(notifs), 'notifs');
             cb(!notifs.length);
           });
