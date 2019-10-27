@@ -1,3 +1,10 @@
+## [1.15.3](https://github.com/openwhyd/openwhyd/compare/v1.15.2...v1.15.3) (2019-10-27)
+
+
+### Bug Fixes
+
+* **db:** fix db auth problem in production ([#240](https://github.com/openwhyd/openwhyd/issues/240)) ([6353b52](https://github.com/openwhyd/openwhyd/commit/6353b52))
+
 ## [1.15.2](https://github.com/openwhyd/openwhyd/compare/v1.15.1...v1.15.2) (2019-10-27)
 
 
