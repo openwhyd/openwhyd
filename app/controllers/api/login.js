@@ -55,39 +55,6 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
       renderForm(form);
     });
     return;
-  } else if (form.mail) {
-    // new email given on landing page
-    form.mail = emailModel.normalize(form.mail);
-    if (!emailModel.validate(form.mail))
-      return renderJSON({ error: 'Please enter a valid email address' });
-    userModel.fetchByEmail(form.mail, function(u) {
-      if (u)
-        renderJSON({
-          result: "You've already registered, please log in.",
-          redirect: 'javascript:login();'
-        });
-      else {
-        userModel.fetchInviteByEmail(form.mail, function(u) {
-          if (u)
-            renderJSON({
-              result: 'Please follow the link of the invite email we sent you.',
-              redirect: config.urlPrefix + '/invite/' + u._id
-            });
-          else {
-            userModel.fetchEmail(form.mail, function(err, email) {
-              if (!email) {
-                userModel.storeEmail(form.mail);
-                notifEmails.sendWaitingList(form.mail);
-                renderJSON({
-                  result:
-                    "Awesome, we just sent you an email! Please check your spam folder if you don't receive it."
-                }); //Thank you! Invite your friends to join!
-              } else renderJSON({ result: "Don't forget to check your spam folder!" });
-            });
-          }
-        });
-      }
-    });
   } else if (form.email) {
     form.email = emailModel.normalize(form.email);
 

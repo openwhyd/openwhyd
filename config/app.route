@@ -102,7 +102,6 @@ POST   /login                          -> controllers.api.login
 GET    /facebookLogin                  -> controllers.api.facebookLogin
 POST   /facebookLogin                  -> controllers.api.facebookLogin
 
-GET    /dlBetaApp/{file}               -> controllers.private.dlBetaApp
 GET    /digest                         -> controllers.private.digest
 GET    /contentType                    -> controllers.private.contentType
 POST   /contentType                    -> controllers.private.contentType
@@ -110,8 +109,6 @@ GET    /getResourceMetadata            -> controllers.private.getResourceMetadat
 POST   /getResourceMetadata            -> controllers.private.getResourceMetadata
 GET    /password                       -> controllers.private.password
 POST   /password                       -> controllers.private.password
-GET    /thanks                         -> controllers.private.thanks
-POST   /thanks                         -> controllers.private.thanks
 GET    /upload                         -> controllers.private.upload
 POST   /upload                         -> controllers.private.upload
 GET    /visit                          -> controllers.private.visit
