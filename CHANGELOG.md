@@ -1,3 +1,10 @@
+## [1.15.2](https://github.com/openwhyd/openwhyd/compare/v1.15.1...v1.15.2) (2019-10-27)
+
+
+### Bug Fixes
+
+* **privacy:** don't log email addresses and password hashes ([#239](https://github.com/openwhyd/openwhyd/issues/239)) ([aa187e0](https://github.com/openwhyd/openwhyd/commit/aa187e0))
+
 ## [1.15.1](https://github.com/openwhyd/openwhyd/compare/v1.15.0...v1.15.1) (2019-10-26)
 
 
