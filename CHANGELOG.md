@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/openwhyd/openwhyd/compare/v1.17.3...v1.18.0) (2019-11-23)
+
+
+### Features
+
+* **security:** add rate limiting to POST requests ([#249](https://github.com/openwhyd/openwhyd/issues/249)) ([eedb462](https://github.com/openwhyd/openwhyd/commit/eedb462))
+
 ## [1.17.3](https://github.com/openwhyd/openwhyd/compare/v1.17.2...v1.17.3) (2019-11-23)
 
 
