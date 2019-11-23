@@ -9,11 +9,12 @@ MAX_RETRY=50
 ROOT_DIR="`pwd`/.."
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
+NGINX_TEMPLATE=$ROOT_DIR/config/nginx-site-template
 NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
 
 echo "🤖  Generate nginx configuration files based on template..."
-sudo sed -E "s/{{PORT}}/$PORT_A/g;" $ROOT_DIR/config/nginx-site-template > $NGINX_AVAIL/openwhyd.org_$PORT_A
-sudo sed -E "s/{{PORT}}/$PORT_B/g;" $ROOT_DIR/config/nginx-site-template > $NGINX_AVAIL/openwhyd.org_$PORT_B
+sed -E "s/{{PORT}}/$PORT_A/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_A > /dev/null
+sed -E "s/{{PORT}}/$PORT_B/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_B > /dev/null
 
 echo "👋  Deployment starting on port $NEW_PORT..."
 
