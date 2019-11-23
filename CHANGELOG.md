@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/openwhyd/openwhyd/compare/v1.17.2...v1.17.3) (2019-11-23)
+
+
+### Bug Fixes
+
+* **maintenance:** syntax error on sed regex, in production ([db5ab93](https://github.com/openwhyd/openwhyd/commit/db5ab93))
+
 ## [1.17.2](https://github.com/openwhyd/openwhyd/compare/v1.17.1...v1.17.2) (2019-11-23)
 
 
