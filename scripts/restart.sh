@@ -54,8 +54,10 @@ do
 done
 
 echo "🔧  Applying nginx configuration..."
+set -e # starting now, any error will interrupt the execution of the script
 sudo unlink $NGINX_ENBLD/openwhyd.org
 sudo ln -s $NGINX_AVAIL/openwhyd.org_$NEW_PORT $NGINX_ENBLD/openwhyd.org
+sudo nginx -t # make sure that the configuration is valid
 sudo service nginx restart
 
 echo "🌇  Stopping previous instance of Openwhyd..."
