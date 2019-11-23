@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/openwhyd/openwhyd/compare/v1.17.1...v1.17.2) (2019-11-23)
+
+
+### Bug Fixes
+
+* **maintenance:** use sudo to store nginx config ([9d9283e](https://github.com/openwhyd/openwhyd/commit/9d9283e))
+
 ## [1.17.1](https://github.com/openwhyd/openwhyd/compare/v1.17.0...v1.17.1) (2019-11-23)
 
 
