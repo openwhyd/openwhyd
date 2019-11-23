@@ -6,9 +6,10 @@ fi
 REMOTE=$1
 USERNAME=$2
 JSDIR=$3
+DEST_PATH="_latest_backup"
 
-mkdir _latest_backup
-cd _latest_backup
+mkdir $DEST_PATH
+cd $DEST_PATH
 
 echo "download configuration locally..."
 # ssh root@$REMOTE "sudo tar zcvf /tmp/letsencrypt_backup.tar.gz /etc/letsencrypt &>/dev/null"
