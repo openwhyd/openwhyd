@@ -9,7 +9,12 @@ MAX_RETRY=50
 ROOT_DIR="`pwd`/.."
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
+NGINX_TEMPLATE=$ROOT_DIR/config/nginx-site-template
 NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
+
+echo "🤖  Generate nginx configuration files based on template..."
+sed "s/{{PORT}}/$PORT_A/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_A > /dev/null
+sed "s/{{PORT}}/$PORT_B/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_B > /dev/null
 
 echo "👋  Deployment starting on port $NEW_PORT..."
 
@@ -49,8 +54,10 @@ do
 done
 
 echo "🔧  Applying nginx configuration..."
+set -e # starting now, any error will interrupt the execution of the script
 sudo unlink $NGINX_ENBLD/openwhyd.org
 sudo ln -s $NGINX_AVAIL/openwhyd.org_$NEW_PORT $NGINX_ENBLD/openwhyd.org
+sudo nginx -t # make sure that the configuration is valid
 sudo service nginx restart
 
 echo "🌇  Stopping previous instance of Openwhyd..."

@@ -1,3 +1,38 @@
+# [1.18.0](https://github.com/openwhyd/openwhyd/compare/v1.17.3...v1.18.0) (2019-11-23)
+
+
+### Features
+
+* **security:** add rate limiting to POST requests ([#249](https://github.com/openwhyd/openwhyd/issues/249)) ([eedb462](https://github.com/openwhyd/openwhyd/commit/eedb462))
+
+## [1.17.3](https://github.com/openwhyd/openwhyd/compare/v1.17.2...v1.17.3) (2019-11-23)
+
+
+### Bug Fixes
+
+* **maintenance:** syntax error on sed regex, in production ([db5ab93](https://github.com/openwhyd/openwhyd/commit/db5ab93))
+
+## [1.17.2](https://github.com/openwhyd/openwhyd/compare/v1.17.1...v1.17.2) (2019-11-23)
+
+
+### Bug Fixes
+
+* **maintenance:** use sudo to store nginx config ([9d9283e](https://github.com/openwhyd/openwhyd/commit/9d9283e))
+
+## [1.17.1](https://github.com/openwhyd/openwhyd/compare/v1.17.0...v1.17.1) (2019-11-23)
+
+
+### Bug Fixes
+
+* **maintenance:** sudo the nginx config generation ([38ebe59](https://github.com/openwhyd/openwhyd/commit/38ebe59))
+
+# [1.17.0](https://github.com/openwhyd/openwhyd/compare/v1.16.0...v1.17.0) (2019-11-23)
+
+
+### Features
+
+* **maintenance:** restart script generates nginx config from template ([#248](https://github.com/openwhyd/openwhyd/issues/248)) ([efa8296](https://github.com/openwhyd/openwhyd/commit/efa8296))
+
 # [1.16.0](https://github.com/openwhyd/openwhyd/compare/v1.15.4...v1.16.0) (2019-10-27)
 
 
