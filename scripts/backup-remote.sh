@@ -11,8 +11,8 @@ mkdir _latest_backup
 cd _latest_backup
 
 echo "download configuration locally..."
-ssh root@$REMOTE "sudo tar zcvf /tmp/letsencrypt_backup.tar.gz /etc/letsencrypt &>/dev/null"
-scp -r $USERNAME@$REMOTE:/tmp/letsencrypt_backup.tar.gz .
+# ssh root@$REMOTE "sudo tar zcvf /tmp/letsencrypt_backup.tar.gz /etc/letsencrypt &>/dev/null"
+# scp -r $USERNAME@$REMOTE:/tmp/letsencrypt_backup.tar.gz .
 scp -r $USERNAME@$REMOTE:/etc/nginx/sites-available .
 scp -r $USERNAME@$REMOTE:/home/$USERNAME/$JSDIR/env-vars-local.sh .
 source ./env-vars-local.sh
