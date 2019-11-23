@@ -11,6 +11,10 @@ NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
 NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
 
+# Generate nginx configuration files based on template
+sed -E "s/{{PORT}}/$PORT_A/g;" $ROOT_DIR/config/nginx-site-template > $NGINX_AVAIL/openwhyd.org_$PORT_A
+sed -E "s/{{PORT}}/$PORT_B/g;" $ROOT_DIR/config/nginx-site-template > $NGINX_AVAIL/openwhyd.org_$PORT_B
+
 echo "👋  Deployment starting on port $NEW_PORT..."
 
 if [ $NEW_PORT -eq $PORT_A ]; then
