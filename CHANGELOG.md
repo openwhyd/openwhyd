@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/openwhyd/openwhyd/compare/v1.16.0...v1.17.0) (2019-11-23)
+
+
+### Features
+
+* **maintenance:** restart script generates nginx config from template ([#248](https://github.com/openwhyd/openwhyd/issues/248)) ([efa8296](https://github.com/openwhyd/openwhyd/commit/efa8296))
+
 # [1.16.0](https://github.com/openwhyd/openwhyd/compare/v1.15.4...v1.16.0) (2019-10-27)
 
 
