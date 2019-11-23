@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/openwhyd/openwhyd/compare/v1.17.0...v1.17.1) (2019-11-23)
+
+
+### Bug Fixes
+
+* **maintenance:** sudo the nginx config generation ([38ebe59](https://github.com/openwhyd/openwhyd/commit/38ebe59))
+
 # [1.17.0](https://github.com/openwhyd/openwhyd/compare/v1.16.0...v1.17.0) (2019-11-23)
 
 
