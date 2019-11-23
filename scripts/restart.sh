@@ -13,8 +13,8 @@ NGINX_TEMPLATE=$ROOT_DIR/config/nginx-site-template
 NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
 
 echo "🤖  Generate nginx configuration files based on template..."
-sed -E "s/{{PORT}}/$PORT_A/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_A > /dev/null
-sed -E "s/{{PORT}}/$PORT_B/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_B > /dev/null
+sed "s/{{PORT}}/$PORT_A/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_A > /dev/null
+sed "s/{{PORT}}/$PORT_B/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_B > /dev/null
 
 echo "👋  Deployment starting on port $NEW_PORT..."
 
