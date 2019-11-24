@@ -62,7 +62,7 @@ describe('auth api', () => {
     });
   });
 
-  describe.skip('with secure hash', () => {
+  describe('with secure hash', () => {
     const secureUser = {
       name: 'secure user',
       email: 'secure-user@openwhyd.org',
@@ -84,7 +84,7 @@ describe('auth api', () => {
       const { jar } = await loginAs(secureUser);
       const { body } = await getUser(jar, {});
       assert.ifError(body.error);
-      assert.ifError(body.sha1);
+      assert.assert(body.sha1);
     });
   });
 });
