@@ -1,5 +1,5 @@
 var assert = require('assert');
-var request = require('request');
+var request = require('request'); // TODO: promisify it
 var genuine = require('../app/genuine.js'); // for signup
 
 var { URL_PREFIX } = require('./fixtures.js');
@@ -74,11 +74,10 @@ exports.get = function(jar, url, callback) {
     response,
     body
   ) {
-    var json = undefined;
     try {
-      json = JSON.parse(body);
+      body = JSON.parse(body);
     } catch (e) {}
-    callback(error, { response, body, json, jar });
+    callback(error, { response, body, jar });
   });
 };
 
@@ -105,7 +104,6 @@ exports.getUser = function(jar, body, callback) {
 };
 
 exports.setUser = function(jar, body, callback) {
-  // TODO: pass body parameters
   request.post(
     {
       jar,
