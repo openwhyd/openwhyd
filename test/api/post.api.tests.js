@@ -64,12 +64,12 @@ describe(`post api`, function() {
 
   it(`make sure that the playlist was created`, function(done) {
     api.loginAs(TEST_USER, function(error, { jar }) {
-      api.getUser(jar, {}, function(error, { response, json }) {
-        assert.equal(json.pl.length, 1);
-        assert.equal(json.pl[0].id, firstPlaylistIndex);
-        assert.equal(json.pl[0].name, postInPlaylist.pl.name);
-        assert.equal(json.pl[0].nbTracks, 1);
-        playlistFullId = [json.id, firstPlaylistIndex].join('_');
+      api.getUser(jar, {}, function(error, { response, body }) {
+        assert.equal(body.pl.length, 1);
+        assert.equal(body.pl[0].id, firstPlaylistIndex);
+        assert.equal(body.pl[0].name, postInPlaylist.pl.name);
+        assert.equal(body.pl[0].nbTracks, 1);
+        playlistFullId = [body.id, firstPlaylistIndex].join('_');
         done();
       });
     });
@@ -77,12 +77,12 @@ describe(`post api`, function() {
 
   it(`should find 1 track in the playlist`, function(done) {
     api.loginAs(TEST_USER, function(error, { jar }) {
-      api.getPlaylist(jar, playlistFullId, function(error, { response, json }) {
+      api.getPlaylist(jar, playlistFullId, function(error, { response, body }) {
         assert.ifError(error);
-        assert.equal(json.length, 1);
-        assert.equal(json[0].id, playlistFullId);
-        assert.equal(json[0].plId, firstPlaylistIndex);
-        assert.equal(json[0].nbTracks, 1);
+        assert.equal(body.length, 1);
+        assert.equal(body[0].id, playlistFullId);
+        assert.equal(body[0].plId, firstPlaylistIndex);
+        assert.equal(body[0].nbTracks, 1);
         done();
       });
     });
@@ -92,11 +92,11 @@ describe(`post api`, function() {
     api.loginAs(TEST_USER, function(error, { jar }) {
       api.getPlaylistTracks(jar, `u/${uId}`, firstPlaylistIndex, function(
         error,
-        { response, json }
+        { response, body }
       ) {
-        assert.equal(json.length, 1);
-        assert.equal(json[0].pl.id, firstPlaylistIndex);
-        assert.equal(json[0].pl.name, postInPlaylist.pl.name);
+        assert.equal(body.length, 1);
+        assert.equal(body[0].pl.id, firstPlaylistIndex);
+        assert.equal(body[0].pl.name, postInPlaylist.pl.name);
         done();
       });
     });
@@ -105,10 +105,10 @@ describe(`post api`, function() {
   it(`should return 1 track in the playlist, with limit=1000`, function(done) {
     api.loginAs(TEST_USER, function(error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000`;
-      api.get(jar, url, function(error, { response, json }) {
-        assert.equal(json.length, 1);
-        assert.equal(json[0].pl.id, firstPlaylistIndex);
-        assert.equal(json[0].pl.name, postInPlaylist.pl.name);
+      api.get(jar, url, function(error, { response, body }) {
+        assert.equal(body.length, 1);
+        assert.equal(body[0].pl.id, firstPlaylistIndex);
+        assert.equal(body[0].pl.name, postInPlaylist.pl.name);
         done();
       });
     });
@@ -118,8 +118,8 @@ describe(`post api`, function() {
     api.loginAs(TEST_USER, function(error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
       // => the `limit` property will be parsed as ["1000","20"] => causing bug #89
-      api.get(jar, url, function(error, { response, json }) {
-        assert.notEqual(json.length, 0);
+      api.get(jar, url, function(error, { response, body }) {
+        assert.notEqual(body.length, 0);
         done();
       });
     });
