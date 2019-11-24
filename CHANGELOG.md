@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/openwhyd/openwhyd/compare/v1.18.0...v1.18.1) (2019-11-24)
+
+
+### Bug Fixes
+
+* **tests:** homogenize returns of api client ([#251](https://github.com/openwhyd/openwhyd/issues/251)) ([a746b51](https://github.com/openwhyd/openwhyd/commit/a746b51))
+
 # [1.18.0](https://github.com/openwhyd/openwhyd/compare/v1.17.3...v1.18.0) (2019-11-23)
 
 
