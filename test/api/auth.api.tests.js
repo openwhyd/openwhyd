@@ -8,6 +8,7 @@ const apiClient = require('../api-client.js');
 const logout = promisify(apiClient.logout);
 const loginAs = promisify(apiClient.loginAs);
 const signupAs = promisify(apiClient.signupAs);
+const getUser = promisify(apiClient.getUser);
 
 describe('auth api', () => {
   describe('login with email', () => {
@@ -69,6 +70,32 @@ describe('auth api', () => {
       const json = JSON.parse(response.body);
       assert.ifError(json.error);
       assert(json.join); // check that it's an array
+    });
+  });
+
+  describe('with secure hash', () => {
+    const secureUser = {
+      name: 'secure user',
+      email: 'secure-user@openwhyd.org',
+      password: 'mySecurePassword'
+    };
+
+    it('can create account', async () => {
+      const { jar, body } = await signupAs(secureUser);
+      assert.ifError(body.error);
+    });
+
+    it('can login', async () => {
+      const { jar, body } = await loginAs(secureUser);
+      assert.ifError(JSON.parse(body).error);
+      assert(jar);
+    });
+
+    it('holds secure hash', async () => {
+      const { jar } = await loginAs(secureUser);
+      const { body } = await getUser(jar);
+      assert.ifError(body.error);
+      assert.ifError(body.sha1);
     });
   });
 });
