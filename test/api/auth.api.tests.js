@@ -61,4 +61,42 @@ describe('auth api', () => {
       assert(body.join); // check that it's an array
     });
   });
+
+  describe('with secure hash', () => {
+    const secureUser = {
+      name: 'secure user',
+      email: 'secure-user@openwhyd.org',
+      password: 'mySecurePassword'
+    };
+
+    it('can create account', async () => {
+      const { jar, body } = await signupAs(secureUser);
+      assert.ifError(body.error);
+    });
+
+    it.skip('actually logged in', async () => {
+      const { jar } = await signupAs(TEST_USER);
+      const { body } = await getUser(jar, {});
+      assert.ifError(body.error);
+    });
+
+    it.skip('actually create an account and logged in', async () => {
+      const { jar } = await signupAs(secureUser);
+      const { body } = await getUser(jar, {});
+      assert.ifError(body.error);
+    });
+
+    it.skip('can login', async () => {
+      const { jar, body } = await loginAs(secureUser); // no md5 is provided
+      assert.ifError(body.error);
+      assert(jar);
+    });
+
+    it.skip('holds secure hash', async () => {
+      const { jar } = await loginAs(secureUser);
+      const { body } = await getUser(jar, {});
+      assert.ifError(body.error);
+      assert.assert(body.sha1);
+    });
+  });
 });
