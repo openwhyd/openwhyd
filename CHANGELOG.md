@@ -1,3 +1,10 @@
+## [1.19.2](https://github.com/openwhyd/openwhyd/compare/v1.19.1...v1.19.2) (2019-12-01)
+
+
+### Bug Fixes
+
+* **ci:** use node version 10 on github actions ([#254](https://github.com/openwhyd/openwhyd/issues/254)) ([9caed80](https://github.com/openwhyd/openwhyd/commit/9caed80))
+
 ## [1.19.1](https://github.com/openwhyd/openwhyd/compare/v1.19.0...v1.19.1) (2019-12-01)
 
 
