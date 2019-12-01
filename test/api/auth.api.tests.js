@@ -10,6 +10,15 @@ const loginAs = promisify(apiClient.loginAs);
 const signupAs = promisify(apiClient.signupAs);
 const getUser = promisify(apiClient.getUser);
 
+const genSecureUser = (() => {
+  let globalNumber = 0;
+  return (number = ++globalNumber) => ({
+    name: `secure user ${number}`,
+    email: `secure-user-${number}@openwhyd.org`,
+    password: `mySecurePassword${number}`
+  });
+})();
+
 describe('auth api', () => {
   describe('login with email', () => {
     it('succeeds', async () => {
@@ -81,15 +90,6 @@ describe('auth api', () => {
   });
 
   describe('signup with secure hash', () => {
-    const genSecureUser = (() => {
-      let globalNumber = 0;
-      return (number = ++globalNumber) => ({
-        name: `secure user ${number}`,
-        email: `secure-user-${number}@openwhyd.org`,
-        password: `mySecurePassword${number}`
-      });
-    })();
-
     it('can create account', async () => {
       const { jar, body } = await signupAs(genSecureUser());
       assert.ifError(body.error);
