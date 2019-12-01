@@ -51,13 +51,13 @@ exports.controller = function(request, reqParams, response) {
 
   if (!reqParams) {
     console.log('contentType: no url provided => returning null');
-    response.render(null);
+    response.legacyRender(null);
     return;
   }
 
   function handleError(err) {
     console.log('contentType error:', err);
-    response.render({ error: err });
+    response.legacyRender({ error: err });
   }
 
   function renderResult(contentType, title, images) {
@@ -68,17 +68,17 @@ exports.controller = function(request, reqParams, response) {
       images: images
     };
     console.log('contentType result:', result);
-    response.render(result);
+    response.legacyRender(result);
   }
 
   var url = reqParams.url;
 
   if (url.indexOf('openwhyd.org') > -1 || url.indexOf('localhost:') > -1) {
     if (
-      url.contains('/upload_data/') ||
-      url.contains('/uPostedImg/') ||
-      url.contains('/uAvatarImg/') ||
-      url.contains('/ugTopicImg/')
+      url.includes('/upload_data/') ||
+      url.includes('/uPostedImg/') ||
+      url.includes('/uAvatarImg/') ||
+      url.includes('/ugTopicImg/')
     )
       return renderResult('image/unknown');
   }

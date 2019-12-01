@@ -23,12 +23,12 @@ describe('bookmarklet - adding from a youtube track', function() {
     function getBookmarklet() {
       return window._initWhydBk;
     }
-    return !!browser.execute(getBookmarklet).value;
+    return !!browser.execute(getBookmarklet);
     // TODO: create a re-usable waitForSymbol() wdio command
   });
 
   it(`should find the page's track in the list`, function() {
-    browser.waitForExist('.whydThumb');
+    $('.whydThumb').waitForExist();
   });
 
   /*
@@ -53,13 +53,15 @@ describe('bookmarklet - adding a second time from same youtube page', function()
   });
 
   it(`should find the page's track in the list`, function() {
-    browser.waitForExist('.whydThumb');
+    $('.whydThumb').waitForExist();
   });
 
-  it(`should output browser log`, function() {
+  /*
+  it(`should output browser log`, function () {
     console.log('browser log:', browser.log('browser').value.slice(-30));
     // TODO: create a re-usable displayLogs() wdio command
   });
+  */
 
   // TODO: check that adding the track works
 

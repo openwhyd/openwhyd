@@ -23,7 +23,7 @@ exports.controller = function(request, getParams, response) {
       //response.redirect("/");
     }
     if (result && result.html) response.renderHTML(result.html);
-    else response.render(result);
+    else response.legacyRender(result);
   }
 
   function wrap(html) {

@@ -22,6 +22,8 @@ exports.config.uCoverImgPath =
 exports.config.uPlaylistPath =
   exports.config.whydPath + exports.config.uPlaylistDir;
 
+const NO_IMAGE_PATH = exports.config.whydPath + '/public/images/no_image.png';
+
 // create upload dirs
 var dirMode = 0755;
 var dirsToCreate = [
@@ -125,21 +127,18 @@ exports.moveTo = function(filename, toPath, callback) {
 
 exports.controller = function(request, reqParams, response) {
   function renderNoImage() {
-    response.renderFile(
-      exports.config.whydPath + '/public/images/no_image.png'
-    );
+    response.sendFile(NO_IMAGE_PATH);
   }
 
   function renderFile(path, defaultImg) {
     //console.log("uploadedFile Path:", path);
-    response.renderFile('' + path, null, null, function(error) {
+    response.sendFile('' + path, function(error) {
+      if (!error) return;
       //console.log("uploadedFile error: ", error, exports.config.whydPath + "/public" + defaultImg);
       if (defaultImg)
-        response.renderFile(
+        response.sendFile(
           exports.config.whydPath + '/public' + defaultImg,
-          null,
-          null,
-          renderNoImage
+          err => err && renderNoImage()
         );
       else renderNoImage();
     });
@@ -192,7 +191,7 @@ exports.controller = function(request, reqParams, response) {
     },
     post: function(id) {
       postModel.fetchPostById(id, function(post) {
-        renderImg((post || {}).img);
+        renderImg((post || {}).img || NO_IMAGE_PATH);
       });
     },
     playlist: function(id, reqParams) {
@@ -209,7 +208,7 @@ exports.controller = function(request, reqParams, response) {
               return;
             }
           }
-          renderImg();
+          response.notFound();
         });
       }
       if (reqParams.remoteOnly)
@@ -218,7 +217,8 @@ exports.controller = function(request, reqParams, response) {
           else renderImg(config.urlPrefix + '/images/1x1-pixel.png'); // transparent image
         });
       else
-        response.renderFile(filePath, null, null, function(error) {
+        response.sendFile(filePath, function(error) {
+          if (!error) return;
           if (reqParams.localOnly)
             renderImg(config.urlPrefix + '/images/1x1-pixel.png');
           // transparent image

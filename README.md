@@ -1,4 +1,4 @@
-[![Build Status](https://img.shields.io/travis/openwhyd/openwhyd/master.svg?style=flat-square)](https://travis-ci.org/openwhyd/openwhyd) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=flat-square&label=Follow)](https://twitter.com/open_whyd)
+[![Build Status](https://github.com/openwhyd/openwhyd/workflows/GitHub%20Actions%20Workflow/badge.svg)](https://github.com/openwhyd/openwhyd/actions) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=flat-square&label=Follow)](https://twitter.com/open_whyd)
 # Openwhyd
 
 > Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
@@ -63,11 +63,9 @@ The project is **open to contributions**. Check out our [Support Openwhyd](#supp
 
 ### Tech stack
 
-- Node.js
-- Express-like Web Server
-- jQuery
-- HTML + CSS
-- [Playemjs](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
+- [Node.js](https://nodejs.org/) + [Express](https://expressjs.com/) + [MongoDB](https://www.mongodb.com/)
+- HTML + CSS + jQuery
+- [PlayemJS](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
 
 ### Setup and usage
 

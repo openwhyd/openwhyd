@@ -17,24 +17,24 @@ exports.buildController = function(params) {
         response.badRequest();
         console.log(logPrefix, '=> bad request');
       } else if (res.tsv) {
-        response.render(res.tsv, null, { 'content-type': 'text/tsv' });
+        response.legacyRender(res.tsv, null, { 'content-type': 'text/tsv' });
         console.log(logPrefix, '=> returned TSV');
       } else if (res.csv) {
-        response.render(res.csv, null, { 'content-type': 'text/csv' });
+        response.legacyRender(res.csv, null, { 'content-type': 'text/csv' });
         console.log(logPrefix, '=> returned CSV');
       } else if (res.html) {
         response.renderHTML(res.html);
         console.log(logPrefix, '=> returned HTML');
       } else if (res.json) {
         if (request.headers['user-agent']) {
-          response.render(JSON.stringify(res.json, null, 2));
+          response.legacyRender(JSON.stringify(res.json, null, 2));
           console.log(logPrefix, '=> returned stringified JSON');
         } else {
           response.renderJSON(res.json);
           console.log(logPrefix, '=> returned JSON');
         }
       } else {
-        response.render(res);
+        response.legacyRender(res);
         console.log(logPrefix, '=> returned plain text');
       }
     }

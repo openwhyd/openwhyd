@@ -108,7 +108,7 @@ exports.controller = function(request, reqParams, response) {
 
   function render(data, mimeType) {
     if (mimeType)
-      return response.render(data, null, { 'content-type': mimeType });
+      return response.legacyRender(data, null, { 'content-type': mimeType });
     data = data || {
       error:
         'Nothing to render! Please send the URL of this page to ' +
@@ -142,7 +142,7 @@ exports.controller = function(request, reqParams, response) {
       )
         analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
     } else if (typeof data == 'object') response.renderJSON(data.json || data);
-    else response.render(data.error);
+    else response.legacyRender(data.error);
   }
 
   var lib = new LibraryController(reqParams, render);

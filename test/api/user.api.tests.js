@@ -10,11 +10,10 @@ describe(`user api -- getting user data`, function() {
   it(`gets user profile data`, function(done) {
     const url =
       '/api/user?includeSubscr=true&isSubscr=true&countPosts=true&countLikes=true&getVersion=1';
-    api.loginAs(TEST_USER, function(error, { response, body, jar }) {
-      api.get(jar, url, function(err, res) {
+    api.loginAs(TEST_USER, function(error, { jar }) {
+      api.get(jar, url, function(err, { body, ...res }) {
         assert.ifError(err);
         assert.equal(res.response.statusCode, 200);
-        var body = JSON.parse(res.body);
         assert(!body.error);
         assert.equal(body.email, TEST_USER.email);
         assert(body.openwhydServerVersion);
@@ -27,10 +26,10 @@ describe(`user api -- getting user data`, function() {
 describe(`user api -- setting user data`, function() {
   it(`updates the user's name`, function(done) {
     api.loginAs(TEST_USER, function(error, { response, body, jar }) {
-      assert.ifError(JSON.parse(body).error);
-      assert(JSON.parse(body).redirect);
+      assert.ifError(body.error);
+      assert(body.redirect);
       api.getUser(jar, {}, function(error, { response, body }) {
-        assert.equal(JSON.parse(body).name, TEST_USER.name);
+        assert.equal(body.name, TEST_USER.name);
         const newName = 'renamed user';
         api.setUser(jar, { name: newName }, function(
           error,

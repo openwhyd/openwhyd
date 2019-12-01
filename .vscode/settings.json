@@ -1,7 +1,4 @@
 {
-  "editor.formatOnSave": false,
-  "prettier.singleQuote": true,
-  "[javascript]": {
-    "editor.formatOnSave": true
-  }
+  "editor.formatOnSave": true,
+  "eslint.autoFixOnSave": true
 }

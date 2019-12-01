@@ -4,9 +4,9 @@ Here's the login flow:
 - when the user submits the form with their email and password, that password is turned into a md5 hash, and the whole form is submitted through a HTTP POST request to the `/login` API endpoint
 - as defined in [`/config/app.route`](../config/app.route), this endpoint leads to [`app/controllers/api/login.js`](/app/controllers/api/login.js)
 - in the case of a successfull login, `renderRedirect()` will indirectly initiate a cookie session, by storing the user id in `request.session`
-- the cookie will be created by the `writeSessionCookie()` function of [`/app/lib/my/session/index.js`](/app/lib/my/session/index.js), which is the  `sessionMiddleware` that is attached to the web framework in the `start()` function of [`/app.js`](/app.js) (main entry point of the web app)
-- the session is stored in the mongodb database by [`session-mongo.js`](/app/lib/my/session/session-mongo.js), and optionally in a in-memory cache by [`session-cache.js`](/app/lib/my/session/session-cache.js)
-- the session will be checked in all following HTTP requests received by openwhyd's web app, if they contain the `whydUid` cookie in their headers, still by the `sessionMiddleware`
+- the cookie will be created by `express-session` which is attached to the web framework in the `start()` function of [`/app.js`](/app.js) (main entry point of the web app)
+- the session is stored in the mongodb database by `connect-mongo`
+- the session will be checked in all following HTTP requests received by openwhyd's web app, if they contain the `whydUid` cookie in their headers
 
 Notes:
 - You can find the documentation of API endpoints in [`API.md`](API.md).

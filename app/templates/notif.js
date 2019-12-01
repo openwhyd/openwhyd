@@ -97,46 +97,6 @@ function renderEmailTemplate(title, body) {
   };
 }
 
-// RELATED TO WAITING LIST (USED DURING WHYD BETA TESTING PERIOD)
-
-exports.generateWaitingList = function() {
-  // called from models/notifEmails.js wrappers
-  var subject = 'Openwhyd registration';
-  return {
-    subject: subject,
-    bodyText: [
-      'Hey! Thank you for your interest in Openwhyd! ' +
-        'Our community of music lovers is growing by the minute. ' +
-        "We can't wait to see how you make it an even better place for music lovers. We will send your invitation very soon.",
-      'In the meantime, follow us on Twitter (http://twitter.com/open_whyd) ' +
-        'and like us on Facebook (http://facebook.com/openwhyd) so you can read interviews ' +
-        'with music curators, listen to cool playlists, and travel to far away lands.',
-      'Never stop jamming - the Openwhyd team',
-      urlPrefix
-    ].join('\n\n'),
-    bodyHtml: [
-      '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-      '<html xmlns="http://www.w3.org/1999/xhtml">',
-      '<head>',
-      '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />',
-      '<title>' + subject + '</title>',
-      '</head>',
-      '<body>',
-      '<p>Hey! Thank you for your interest in <a href="http://openwhyd.org/">Openwhyd</a>!',
-      '	Our community of music lovers is growing by the minute. ',
-      "	We can't wait to see how you make it an even better place to keep, play, and share all your",
-      '	streaming music in one place. We will send your invitation very soon.</p>',
-      '<p>In the meantime, follow us on <a href="http://twitter.com/open_whyd">Twitter</a>',
-      '	and like us on <a href="http://facebook.com/openwhyd">Facebook</a>',
-      '	so you can read interviews with music curators, listen to cool playlists, and travel',
-      '	to far away lands.</p>',
-      '<p>Never stop jamming - the Openwhyd team</p>',
-      '</body>',
-      '</html>'
-    ].join('\n')
-  };
-};
-
 exports.generateAcceptedInvite = function(user) {
   // called from controllers/admin/invites.js
   var inviteUrl = urlPrefix + '/invite/' + user._id;

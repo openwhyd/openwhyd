@@ -270,7 +270,11 @@ exports.handleRequest = function(request, reqParams, response) {
         ' RESULT =>',
         res
       );
-    response.render(res, null, args || { 'content-type': 'application/json' });
+    response.legacyRender(
+      res,
+      null,
+      args || { 'content-type': 'application/json' }
+    );
   }
 
   var user = request.getUser() || {}; //checkLogin(response);

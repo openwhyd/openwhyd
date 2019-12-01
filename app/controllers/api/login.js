@@ -1,7 +1,5 @@
 /**
- * login controller
- * authentify users, with IE support
- * @author adrienjoly, whyd
+ * login controller, to authenticate users
  */
 var config = require('../../models/config.js');
 var emailModel = require('../../models/email.js');
@@ -28,7 +26,7 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
 
   // in case of successful login
   function renderRedirect(url, user) {
-    request.session = { whydUid: (user || {}).id };
+    request.session.whydUid = (user || {}).id;
     if (!form.ajax) response.renderHTML(loggingTemplate.htmlRedirect(url));
     else {
       var json = { redirect: url };
@@ -47,41 +45,17 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
     else response.renderHTML(loggingTemplate.renderLoginPage(form));
   }
 
-  if (form.mail) {
-    // new email given on landing page
-    form.mail = emailModel.normalize(form.mail);
-    if (!emailModel.validate(form.mail))
-      return renderJSON({ error: 'Please enter a valid email address' });
-    userModel.fetchByEmail(form.mail, function(u) {
-      if (u)
-        renderJSON({
-          result: "You've already registered, please log in.",
-          redirect: 'javascript:login();'
-        });
-      else {
-        userModel.fetchInviteByEmail(form.mail, function(u) {
-          if (u)
-            renderJSON({
-              result: 'Please follow the link of the invite email we sent you.',
-              redirect: config.urlPrefix + '/invite/' + u._id
-            });
-          else {
-            userModel.fetchEmail(form.mail, function(err, email) {
-              if (!email) {
-                userModel.storeEmail(form.mail);
-                notifEmails.sendWaitingList(form.mail);
-                renderJSON({
-                  result:
-                    "Awesome, we just sent you an email! Please check your spam folder if you don't receive it."
-                }); //Thank you! Invite your friends to join!
-              } else renderJSON({ result: "Don't forget to check your spam folder!" });
-            });
-          }
-        });
+  if (form.action === 'logout') {
+    request.session.destroy(function(err) {
+      if (err) {
+        console.error('error from request.session.destroy()', err);
+        form.error = err;
       }
+      console.log('logout result', form.error);
+      renderForm(form);
     });
+    return;
   } else if (form.email) {
-    console.log('email=', form.email);
     form.email = emailModel.normalize(form.email);
 
     userModel[form.email.indexOf('@') > -1 ? 'fetchByEmail' : 'fetchByHandle'](
@@ -108,11 +82,11 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
             userModel.update(dbUser._id, {
               $set: {
                 fbId: form.fbUid,
-                fbTok: form.fbTok // accesstoken provided on last facebook login
+                fbTok: form.fbTok // access token provided on last facebook login
               }
             });
           renderRedirect(form.redirect || '/', dbUser);
-          return; // prevent default reponse (renderForm)
+          return; // prevent default response (renderForm)
         } else if (form.action != 'logout') {
           form.wrongPassword = 1;
           form.error = 'Your password seems wrong... Try again!';

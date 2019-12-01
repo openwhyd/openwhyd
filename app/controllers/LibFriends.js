@@ -38,16 +38,6 @@ function renderSuggestedPeople(allPosts) {
   return userList.slice(0, RECOM_PEOPLE_LIMIT);
 }
 
-/*
-function fetchSuggestedPeople(uidList, cb) {
-	//cb([{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly"}]); // test case
-	//postModel.fetchPosts({uId:{$nin:uidList}}, null, null, ...
-	postModel.fetchByOtherAuthors(uidList, null, function(suggestedPosts) {
-		cb(renderSuggestedPeople(suggestedPosts));
-	});
-}
-*/
-
 function fetchRecentActivity(uidList, loggedUid, cb) {
   /* // test case
 	cb([
@@ -125,12 +115,12 @@ function renderFriendsLibrary(lib) {
     else if (options.after || options.before) lib.render({ html: res });
     else {
       var /*options.mixpanelCode*/ feedHtml =
-        [
-          '<script>',
-          ' window.Whyd.tracking.log("Visit home");',
-          '</script>',
-          ''
-        ].join('\n') + res;
+          [
+            '<script>',
+            ' window.Whyd.tracking.log("Visit home");',
+            '</script>',
+            ''
+          ].join('\n') + res;
       lib.renderPage({ name: 'Dashboard' }, /*sidebarHtml*/ null, feedHtml);
     }
   });

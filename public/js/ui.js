@@ -131,7 +131,7 @@ function WhydLogging() {
       else return null; //$name.each(ok);
     },
     password: function($password) {
-      var pwd = $password.val() /*.trim()*/;
+      var pwd = $password.val(); /*.trim()*/
       if (pwd.length < 4 || pwd.length > 32)
         return /*! $password.each(error(*/ 'Please enter a password between 4 and 32 characters' /*))*/;
       //else if (!pwdRegex.test(pwd))

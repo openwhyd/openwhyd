@@ -150,6 +150,8 @@ exports.init = function(readyCallback) {
 
   var options = {
     native_parser: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     //strict: false,
     //safe: false,
     w: 'majority' // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
@@ -158,56 +160,54 @@ exports.init = function(readyCallback) {
   //var dbserver = new mongodb.Server(host, port, {auto_reconnect:true});
   //var db = new mongodb.Db(dbName, dbserver, options);
 
-  mongodb.MongoClient.connect(
-    url,
-    options,
-    function(err, db) {
-      if (err) throw err;
+  mongodb.MongoClient.connect(url, options, function(err, client) {
+    if (err) throw err;
 
-      db.addListener('error', function(e) {
-        console.log('MongoDB model async error: ', e);
-      });
+    const db = client.db(dbName);
 
-      //db.open(function(err, db) {
-      if (err) throw err;
+    db.addListener('error', function(e) {
+      console.log('MongoDB model async error: ', e);
+    });
 
-      exports.cacheCollections = function(callback) {
-        function finishInit() {
-          console.log('MongoDB model is now ready for queries!');
-          callback.call(module.exports, null, db);
-        }
-        // diagnostics and collection caching
-        db.collections(function(err, collections) {
-          if (err) console.log('MongoDB Error : ' + err);
-          else {
-            if (0 == collections.length) finishInit();
-            var remaining = collections.length;
-            for (var i in collections) {
-              var queryHandler = (function() {
-                var table = collections[i].collectionName;
-                return function(err, result) {
-                  console.log(
-                    ' - found table: ' + table + ' : ' + result + ' rows'
-                  );
-                  db.collection(table, function(err, col) {
-                    exports.collections[table] = col;
-                    if (0 == --remaining) finishInit();
-                  });
-                };
-              })();
-              collections[i].count(queryHandler);
-            }
+    //db.open(function(err, db) {
+    if (err) throw err;
+
+    exports.cacheCollections = function(callback) {
+      function finishInit() {
+        console.log('MongoDB model is now ready for queries!');
+        callback.call(module.exports, null, db);
+      }
+      // diagnostics and collection caching
+      db.collections(function(err, collections) {
+        if (err) console.log('MongoDB Error : ' + err);
+        else {
+          if (0 == collections.length) finishInit();
+          var remaining = collections.length;
+          for (var i in collections) {
+            var queryHandler = (function() {
+              var table = collections[i].collectionName;
+              return function(err, result) {
+                console.log(
+                  ' - found table: ' + table + ' : ' + result + ' rows'
+                );
+                db.collection(table, function(err, col) {
+                  exports.collections[table] = col;
+                  if (0 == --remaining) finishInit();
+                });
+              };
+            })();
+            collections[i].count(queryHandler);
           }
-        });
-      };
+        }
+      });
+    };
 
-      // this method runs the commands of a mongo shell script (e.g. initdb.js)
-      exports.runShellScript = function(script, callback) {
-        return shellRunner.runScriptOnDatabase(script, db, callback);
-      };
+    // this method runs the commands of a mongo shell script (e.g. initdb.js)
+    exports.runShellScript = function(script, callback) {
+      return shellRunner.runScriptOnDatabase(script, db, callback);
+    };
 
-      console.log('Successfully connected to ' + url);
-      readyCallback.call(module.exports, null, db);
-    }
-  );
+    console.log('Successfully connected to ' + url);
+    readyCallback.call(module.exports, null, db);
+  });
 };

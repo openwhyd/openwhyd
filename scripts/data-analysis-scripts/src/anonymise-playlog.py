@@ -13,8 +13,8 @@ songs = dict() # eId (input), just to count unique youtube tracks
 
 counter = 0
 
+# == Print anonymised playlog to stdout
 print('timestamp,user,song') # header of the csv file
-
 with open("./fullplaylog.json.log", "r") as f:
   for line in f:
     counter = counter + 1
@@ -35,5 +35,10 @@ with open("./fullplaylog.json.log", "r") as f:
       timestamp = int(time.mktime(ObjectId(row['_id']['$oid']).generation_time.timetuple()))
     
     print (','.join([ str(timestamp), str(users[row['uId']]), eId ]))
+
+# == Print anonymised playlog to stdout
+# print (','.join([ 'openwhyd_user_id', 'anonymous_user_id' ]))
+# for user in users:
+#   print (','.join([ user, str(users[user]) ]))
 
 # print 'found', len(songs), 'youtube tracks'

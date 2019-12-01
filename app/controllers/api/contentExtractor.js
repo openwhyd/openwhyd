@@ -9,16 +9,16 @@ exports.controller = function(request, reqParams, response) {
 
   // make sure a registered user is logged, or return an error page
   var loggedInUser = request.checkLogin(/*response*/);
-  if (!loggedInUser) return response.render({});
+  if (!loggedInUser) return response.legacyRender({});
 
   if (!reqParams || !reqParams.url) {
     console.log('contentExtractor: no url provided => returning null');
-    return response.render(null);
+    return response.legacyRender(null);
   }
 
   function handleError(err) {
     console.log('contentExtractor error:', err);
-    response.render({ error: err });
+    response.legacyRender({ error: err });
   }
 
   function renderResult(embeds, allEmbeds) {
@@ -41,7 +41,7 @@ exports.controller = function(request, reqParams, response) {
     }
 
     //console.log("contentExtractor embeds:", embeds);
-    response.render({ embeds: embeds, allEmbed: allEmbeds });
+    response.legacyRender({ embeds: embeds, allEmbed: allEmbeds });
   }
 
   var url = reqParams.url;

@@ -26,7 +26,7 @@ function renderTemplate2(params, callback) {}
 exports.checkResetCode = function(request, reqParams, response, okCallback) {
   if (!reqParams.resetCode || !reqParams.uid) {
     console.log('resetCode and uid parameters are required');
-    response.render(
+    response.legacyRender(
       'Your password reset request is invalid. Please try to login on ' +
         process.appParams.urlPrefix
     );
@@ -38,7 +38,7 @@ exports.checkResetCode = function(request, reqParams, response, okCallback) {
       if (okCallback) okCallback(user);
     } else {
       console.log('invalid password reset request');
-      response.render(
+      response.legacyRender(
         'Your password reset request is invalid or expired. Please try to login on ' +
           process.appParams.urlPrefix
       );
@@ -67,7 +67,7 @@ exports.renderForgotPage = function(request, reqParams, response, error) {
   templateLoader.loadTemplate('app/templates/passwordForgot.html', function(
     template
   ) {
-    response.render(template.render(vars), null, {
+    response.legacyRender(template.render(vars), null, {
       'content-type': 'text/html'
     });
   });
@@ -99,11 +99,11 @@ exports.renderPasswordPage = function(request, reqParams, response, error) {
     };
 
     //var html = Mustache.to_html(htmlTemplate, vars);
-    //response.render(html, null, {'content-type': 'text/html'});
+    //response.legacyRender(html, null, {'content-type': 'text/html'});
     templateLoader.loadTemplate('app/templates/passwordSet.html', function(
       template
     ) {
-      response.render(template.render(vars), null, {
+      response.legacyRender(template.render(vars), null, {
         'content-type': 'text/html'
       });
     });
@@ -170,7 +170,7 @@ exports.resetPassword = function(request, reqParams, response) {
 
       if (reqParams.redirect) return response.redirect(reqParams.redirect);
       else
-        return response.render(
+        return response.legacyRender(
           'Your password was successfully updated! You can now login there: ' +
             config.urlPrefix
         );

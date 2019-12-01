@@ -195,7 +195,11 @@ Page.prototype.extractEmbeds = function(cb) {
 //==============================================================================
 function getPage(address, callback) {
   var urlObj = url.parse(address);
-  var options = { host: urlObj.host, path: urlObj.pathname, port: 80 };
+  var options = {
+    host: urlObj.hostname,
+    path: urlObj.pathname,
+    port: urlObj.port || 80
+  };
   var chunks = [];
   var length = 0;
   return http

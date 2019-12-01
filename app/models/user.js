@@ -223,8 +223,8 @@ function processUserPref(user) {
       user.pref[i] === undefined || user.pref[i] === null
         ? defaultPref[i] // default is better than null/undefined value
         : typeof defaultPref[i] == 'boolean'
-          ? !!user.pref[i]
-          : user.pref[i]; // type existing values accordingly to defaults
+        ? !!user.pref[i]
+        : user.pref[i]; // type existing values accordingly to defaults
   return user;
 }
 
@@ -235,7 +235,7 @@ function processUsers(list) {
 }
 
 function fetch(q, handler) {
-  console.log('fetching user ', q, '...');
+  snip.console.log('fetching user ', q, '...');
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   mongodb.collections['user'].findOne(q, function(err, user) {
     if (user) {

@@ -33,12 +33,6 @@ function sendEmail(toUid, emailObj, cb) {
 
 // REGISTRATION RELATED
 
-// 1) when a visitor gives his email address on the landing page => "we'll let you register soon"
-exports.sendWaitingList = function(emailAddr) {
-  var temp = notifTemplate.generateWaitingList();
-  emailModel.email(emailAddr, temp.subject, temp.bodyText, temp.bodyHtml);
-};
-
 // 2) when a openwhyd admin accepted a visitor to register => "The team is glad to invite you to join whyd"
 exports.sendAcceptedInvite = function(storedUser) {
   var temp = notifTemplate.generateAcceptedInvite(storedUser);

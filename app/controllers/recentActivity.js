@@ -191,7 +191,7 @@ exports.controller = function(request, reqParams, response) {
   //reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
 
   function render(html) {
-    response.render(html, null, { 'content-type': 'text/html' });
+    response.legacyRender(html, null, { 'content-type': 'text/html' });
     console.log('rendering done!');
     if (
       loggedInUser &&

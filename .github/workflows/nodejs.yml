@@ -1,0 +1,57 @@
+name: GitHub Actions Workflow
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  ci:
+    name: Openwhyd CI
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+        - 27017:27017
+    strategy:
+      matrix:
+        node-version: [8.x]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install
+      env:
+        CI: true
+      run: |
+        npm ci
+    - name: Initialize database
+      env:
+        CI: true
+      run: |
+        source env-vars-testing.sh
+        npm run test-reset
+    - name: Start Openwhyd server
+      run: |
+        source env-vars-testing.sh
+        npm start --mongoDbDatabase openwhyd_test &
+        ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+    - name: npm test
+      env:
+        CI: true
+      run: |
+        source env-vars-testing.sh
+        npm test
+    - name: Semantic Release
+      env:
+        CI: true
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        npm run semantic-release

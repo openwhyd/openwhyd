@@ -1,11 +1,11 @@
-FROM node:8.11.4
+FROM node:10.16.3
 
 # Create app directory
 WORKDIR /usr/src/app
 
 # Install app dependencies
 
-COPY ./package.json /usr/src/app/
+COPY ./package*.json /usr/src/app/
 RUN npm install
 
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
@@ -16,4 +16,4 @@ COPY ./ /usr/src/app
 
 EXPOSE 8080
 
-CMD [ "npm", "run", "run" ]
+CMD [ "npm", "start" ]

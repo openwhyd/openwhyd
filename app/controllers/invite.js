@@ -83,16 +83,14 @@ exports.renderRegisterPage = function(request, reqParams, response, error) {
       reqParams.plC,
       reqParams.redirect
     );
-    response.render(registrationPage, null, { 'content-type': 'text/html' });
+    response.legacyRender(registrationPage, null, {
+      'content-type': 'text/html'
+    });
     //});
   }
 
   if (reqParams.inviteCode)
     exports.checkInviteCode({ url: request.url }, reqParams, response, render);
-  /*
-	else if (config.landingStream && request.url.startsWith("/signup"))
-		render();
-	*/
   // signup pop-in
   else if (reqParams.popin) {
     templateLoader.loadTemplate('app/templates/popinSignup.html', function(
@@ -116,7 +114,7 @@ var renderInviteForm = function(request, reqParams, response) {
   if (!reqParams.loggedUser) return;
 
   var html = inviteFormTemplate.renderInviteFormPage(reqParams);
-  response.render(html, null, { 'content-type': 'text/html' });
+  response.legacyRender(html, null, { 'content-type': 'text/html' });
 
   analytics.addVisit(reqParams.loggedUser, request.url /*"/u/"+uid*/);
 };
@@ -146,9 +144,9 @@ var submitInvites = function(request, reqParams, response) {
             successEmails.push(invite.email);
           }
         });
-    response.render({ ok: 1, email: successEmails });
+    response.legacyRender({ ok: 1, email: successEmails });
     */
-    response.render({
+    response.legacyRender({
       ok: false,
       error: 'email invites were disabled (#178)'
     });
@@ -163,20 +161,20 @@ var submitInvites = function(request, reqParams, response) {
           invite.email,
           message
         );
-      response.render({
+      response.legacyRender({
         ok: !!invite,
         email: invite ? invite.email : undefined
       });
     });
     */
-    response.render({
+    response.legacyRender({
       ok: false,
       error: 'email invites were disabled (#178)'
     });
   } else if (reqParams.fbId)
     // === invite facebook friend
     users.inviteFbUserBy(reqParams.fbId, '' + loggedUser._id, function(invite) {
-      response.render(
+      response.legacyRender(
         !invite ? null : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id }
       );
     });
@@ -195,7 +193,7 @@ exports.controller = function(request, reqParams, response, error) {
   )
     users.removeInvite(reqParams.inviteCode, function(i) {
       console.log('deleted invite', i);
-      response.render(i);
+      response.legacyRender(i);
     });
   else if (reqParams.rTk) {
     // GET /api/signup/rTk/{rTk}
@@ -207,11 +205,8 @@ exports.controller = function(request, reqParams, response, error) {
       '$(\'<input type="hidden" name="sTk" value="' +
       sTk +
       '" />\').appendTo("form");';
-    response.render(js, null, { 'content-type': 'text/javascript' });
-  } else if (
-    reqParams.inviteCode ||
-    /*config.landingStream &&*/ request.url.startsWith('/signup')
-  )
+    response.legacyRender(js, null, { 'content-type': 'text/javascript' });
+  } else if (reqParams.inviteCode || request.url.startsWith('/signup'))
     exports.renderRegisterPage(request, reqParams, response, error);
   else renderInviteForm(request, reqParams, response);
 };

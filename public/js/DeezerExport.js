@@ -89,7 +89,7 @@ DeezerExport = (function() {
     }
   };
 
-  return new function DeezerExport() {
+  return new (function DeezerExport() {
     return methods;
-  }();
+  })();
 })();

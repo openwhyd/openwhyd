@@ -16,7 +16,7 @@ exports.handleRequest = function(request, reqParams, response) {
   reqParams = reqParams || {};
 
   var loggedUser = request.checkLogin();
-  if (!loggedUser) return response.render({ error: 'must be logged in' });
+  if (!loggedUser) return response.legacyRender({ error: 'must be logged in' });
 
   facebookModel.fetchAccessToken(loggedUser.id, function(fbTok) {
     console.log('fbTok in db + param', fbTok, reqParams.fbAccessToken);
@@ -26,14 +26,14 @@ exports.handleRequest = function(request, reqParams, response) {
         fbfriends
       ) {
         var list = (fbfriends || {}).notOnWhyd || [];
-        response.render({ fbfriends: list });
+        response.legacyRender({ fbfriends: list });
       });
     } else
       facebookModel.fetchFbFriendsWithSub(
         loggedUser,
         reqParams.fbAccessToken || fbTok,
         function(result) {
-          response.render(result);
+          response.legacyRender(result);
         }
       );
   });

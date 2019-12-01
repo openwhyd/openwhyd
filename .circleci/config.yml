@@ -3,14 +3,18 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cypress/base:8
+      - image: cypress/base:10
         environment:
           ## this enables colors in the output
           TERM: xterm
+      - image: mongo:3.4
     working_directory: ~/app
     steps:
       - run: echo coucou
       - checkout
+      - run:
+          name: Update npm
+          command: "sudo npm install -g npm@latest"
       - restore_cache:
           keys:
             - v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
@@ -25,4 +29,20 @@ jobs:
           paths:
             - ~/.npm
             - ~/.cache
+      - run:
+          name: Database init.
+          command: source env-vars-testing.sh && npm run test-reset
+      - run:
+          name: Run Openwhyd server
+          command: source env-vars-testing.sh && npm start --mongoDbDatabase openwhyd_test
+          background: true
+      - run:
+          name: Wait for server up
+          command: ./scripts/wait-for-http-server.sh 8080
+      #   - run:
+      #       name: Run tests
+      #       command: source env-vars-testing.sh && npm test
       - run: $(npm bin)/cypress run # --record --key <record_key>
+      # - run:
+      #     name: Semantic Release
+      #     command: npm run semantic-release

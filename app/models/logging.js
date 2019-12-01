@@ -1,32 +1,40 @@
 var http = require('http');
 var querystring = require('querystring');
 var errorTemplate = require('../templates/error.js');
+const snip = require('../snip.js');
+
+const genReqLogLine = ({ head, method, path, params, suffix }) =>
+  !process.appParams.color
+    ? [
+        head,
+        method,
+        path[0] + (path.length > 1 ? '?' + path.slice(1).join('?') : ''),
+        suffix,
+        params
+      ]
+    : [
+        head.grey,
+        method.cyan,
+        path[0].green +
+          (path.length > 1 ? '?' + path.slice(1).join('?') : '').yellow,
+        suffix.white,
+        params.grey
+      ];
 
 http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-  var head = '=== ' + new Date().toUTCString(),
-    path = this.url.split('?') /*[0]*/;
-  params = params ? JSON.stringify(params) : '';
-  suffix = suffix ? '(' + suffix + ')' : '';
-  // output with colors
   console.log(
-    head.grey,
-    this.method.cyan,
-    path[0].green +
-      (path.length > 1 ? '?' + path.slice(1).join('?') : '').yellow,
-    suffix.white,
-    params.grey
-  ); // -> stdout
+    ...genReqLogLine({
+      head: '=== ' + new Date().toUTCString(),
+      method: this.method,
+      path: this.url.split('?'),
+      params:
+        typeof params === 'object'
+          ? JSON.stringify(snip.formatPrivateFields(params))
+          : '',
+      suffix: suffix ? '(' + suffix + ')' : ''
+    })
+  );
 };
-
-if (!process.appParams.color)
-  http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-    var head = '=== ' + new Date().toUTCString(),
-      path = this.url /*.split("?")[0]*/;
-    params = params ? JSON.stringify(params) : '';
-    suffix = suffix ? '(' + suffix + ')' : '';
-    // output without colors
-    console.log(head, this.method, path, suffix, params);
-  };
 
 var config = require('./config.js');
 var mongodb = require('./mongodb.js');
@@ -215,7 +223,7 @@ http.IncomingMessage.prototype.checkAdmin = function(response, format) {
       'access restricted, user is not an admin: ',
       user._id || user.id
     );
-    response && response.render('nice try! ;-)');
+    response && response.legacyRender('nice try! ;-)');
     return false;
   }
   return user;
@@ -224,7 +232,7 @@ http.IncomingMessage.prototype.checkAdmin = function(response, format) {
 // ========= HTTP RESPONSE SNIPPETS
 
 http.ServerResponse.prototype.renderHTML = function(html, statusCode) {
-  return this.render(
+  return this.legacyRender(
     html,
     null,
     { 'content-type': 'text/html; charset=utf-8' },
@@ -233,7 +241,7 @@ http.ServerResponse.prototype.renderHTML = function(html, statusCode) {
 };
 
 http.ServerResponse.prototype.renderJSON = function(json, statusCode) {
-  return this.render(
+  return this.legacyRender(
     json,
     null,
     { 'content-type': 'application/json; charset=utf-8' },
@@ -251,7 +259,7 @@ http.ServerResponse.prototype.renderWrappedJSON = function(json, statusCode) {
 };
 
 http.ServerResponse.prototype.renderText = function(json, statusCode) {
-  return this.render(
+  return this.legacyRender(
     json,
     null,
     { 'content-type': 'text/text; charset=utf-8' },
@@ -273,28 +281,19 @@ http.ServerResponse.prototype.renderIframe = function(url, metaOverrides) {
   return this.renderHTML(loggingTemplate.renderIframe(url, metaOverrides));
 };
 
-http.ServerResponse.prototype.status = function(code, head, body) {
-  this.writeHead(code, head || undefined);
-  body ? this.end(body) : this.end();
-};
-
 http.ServerResponse.prototype.temporaryRedirect = function(url, reqParams) {
   var url = '' + url;
   if (reqParams /*request.method.toLowerCase() == "get"*/) {
     var reqParams = querystring.stringify(reqParams);
     if (reqParams.length) url += '?' + reqParams;
   }
-  this.status(307, { Location: url }, 'redirecting to ' + url);
-  //this.writeHead(307, {Location: url});
-  //this.end("redirecting to "+url);
+  this.redirect(307, url); // see https://expressjs.com/fr/4x/api.html#res.redirect
 };
 
 http.ServerResponse.prototype.badRequest = function(error) {
-  this.status(400, null, error ? '' + error : 'BAD REQUEST');
-  //this.writeHead(400);
-  //this.end(error ? ""+error : "BAD REQUEST");
+  this.status(400).send(error ? '' + error : 'BAD REQUEST');
 };
 
 http.ServerResponse.prototype.notFound = function() {
-  this.status(404);
+  this.status(404).send();
 };

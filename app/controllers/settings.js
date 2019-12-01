@@ -35,7 +35,7 @@ exports.controller = function(request, reqParams, response, error) {
   if (!reqParams.loggedUser) return;
 
   exports.renderSettingsForm(reqParams, function(res) {
-    response.render(res.html, null, { 'content-type': 'text/html' });
+    response.legacyRender(res.html, null, { 'content-type': 'text/html' });
   });
   analytics.addVisit(reqParams.loggedUser, request.url /*"/u/"+uid*/);
 };
@@ -44,7 +44,7 @@ exports.controller = function(request, reqParams, response, error) {
 /*
 	if (reqParams.confirm) {
 		users.update(loggedInUser.id, {$set:{digest:false}}, function(user) {
-			response.render("You are now unsubscribed from your personalized Topic Summary. Thanks for your feedback!");
+			response.legacyRender("You are now unsubscribed from your personalized Topic Summary. Thanks for your feedback!");
 			var text = reqParams.feedback;
 			if (text && text != defaultFeedback)
 				feedback.add(loggedInUser.id, "digest", text);

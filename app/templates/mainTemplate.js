@@ -119,8 +119,8 @@ exports.makeAnalyticsHeading = function(user) {
     '  window.playTrack = window.playTrack || function(){};', // prevent videos from playing in another tab, until whydPlayer is loaded
     '</script>',
     '<script src="/js/whydtr.js' + includeSuffix + '"></script>',
-    '<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />',
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>',
+    '<link rel="stylesheet" type="text/css" href="/css/cookieconsent2-3.0.3.min.css" />',
+    '<script src="/js/cookieconsent2-3.0.3.min.js"></script>',
     '<script>',
     '  /* generated from https://cookieconsent.insites.com/download/ */',
     '  window.addEventListener("load", function(){',
@@ -384,10 +384,6 @@ exports.renderWhydPage = function(params) {
   var user = params.loggedUser || {};
   console.log('connected user:', user.name, user.id);
 
-  if (user && user.id == '4d94501d1f78ac091dbc9b4d')
-    // adrien
-    params.js.push('adrien.js');
-
   // other recognized params: bodyClass, head, content, sidebar
 
   var uid = (user || {}).id;
@@ -401,24 +397,6 @@ exports.renderWhydPage = function(params) {
     //	'<a id="feedbackLink" href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;">&nbsp;</a>',
     exports.renderHeader(user, params.whydHeaderContent, params),
     '<div id="contentPane">',
-    /*
-!uid ?	'  <div id="inviteBanner">' : '',
-!uid ?	'   <p>Keep, Play & Share every track in one place</p>' : '',
-			// Collect and share tracks you love
-			// Collect music you love from all over the web
-			// Add your tracks into the stream, for the world to hear
-			// Collect and share every track in one place
-			// Collect and share tracks you love
-			// Keep, Play and Share every track in one place
-!uid ?	(
-			config.landingStream ?
-			'   <a id="askInviteLink" class="btnAdd" href="/signup">Sign up</a>' :
-			'   <a id="askInviteLink" class="btnAdd" href="/">Ask for an invite</a>'
-		) : '',
-!uid ?	'   <a id="loginBtn" class="grayButton" href="/login">Log In</a>' : '',
-!uid ?	'   <img src="/images/landing/note-illu.png">' : '',
-!uid ?	'  </div>' : '',
-*/
     '  <div id="mainPanel">',
     params.content || '',
     '  </div>',

@@ -77,17 +77,6 @@ exports.validateSignupToken = function(sTk, request) {
     request.connection.remoteAddress
   );
   var token = parseSignupToken(sTk);
-  console.log('!!!! hash', token.hash);
-  console.log('!!!! date', token.date);
-  console.log('!!!! requestHash', token.requestHash);
-  console.log('!!!! signature', token.signature);
-
-  console.log(
-    'requestHash',
-    token.requestHash,
-    hashRequest(request, token.date.getTime())
-  );
-
   return {
     authentic: token.signature === signature(token.hash, GENUINE_SIGNUP_SECRET),
     notExpired: Date.now() - token.date < TOKEN_EXPIRY,
@@ -106,7 +95,7 @@ exports.checkSignupToken = function(sTk, request) {
   );
   var valid = exports.validateSignupToken(sTk, request);
   for (var i in valid) {
-    console.log('!!!! VALID =>', i, valid[i]);
+    // valid contains the following keys: authentic, notExpired, sameAddr
     if (!valid[i]) {
       return false;
     }

@@ -27,7 +27,8 @@ describe('reduce frequency of email notifications', function() {
   });
 
   it(`user activates daily email notifications`, function() {
-    browser.url(`${URL_PREFIX}/settings`).waitForContent(/Notifications/);
+    browser.url(`${URL_PREFIX}/settings`);
+    browser.waitForContent(/Notifications/);
     browser.clickOnContent('Notifications');
     browser.waitForContent(/Daily/);
     browser.clickOnContent('Daily');
@@ -36,7 +37,7 @@ describe('reduce frequency of email notifications', function() {
 
   it(`user now has daily email notifications"`, function() {
     browser.url(`${URL_PREFIX}/api/user`);
-    const { pref } = JSON.parse(browser.getText('pre'));
+    const { pref } = JSON.parse($('pre').getText());
     assert.equal(pref.emSub, 1);
   });
 
@@ -56,14 +57,14 @@ describe('reduce frequency of email notifications', function() {
   });
 
   it(`user sees switch to weekly notifications emails`, function() {
-    const response = browser.getText('body');
+    const response = $('body').getText();
     // console.log({ response });
     assert(/weekly/.test(response), 'response should contain "weekly"');
   });
 
   it(`user now has weekly email notifications"`, function() {
     browser.url(`${URL_PREFIX}/api/user`);
-    const { pref } = JSON.parse(browser.getText('pre'));
+    const { pref } = JSON.parse($('pre').getText());
     assert.equal(pref.emSub, 7);
   });
 
@@ -94,7 +95,7 @@ describe(`unsubscribe from email notifications`, function() {
   });
 
   it(`user sees unsubscription message`, function() {
-    const response = browser.getText('body');
+    const response = $('body').getText();
     // console.log({ response });
     assert(
       /unsubscribed/.test(response),
@@ -105,7 +106,7 @@ describe(`unsubscribe from email notifications`, function() {
 
   it(`user was effectively unsubscribed from email notifications"`, function() {
     browser.url(`${URL_PREFIX}/api/user`);
-    const { pref } = JSON.parse(browser.getText('pre'));
+    const { pref } = JSON.parse($('pre').getText());
     assert.equal(pref.emSub, -1);
   });
 

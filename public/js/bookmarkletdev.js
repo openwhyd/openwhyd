@@ -407,7 +407,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
       ui.finish();
     }
 
-    var toDetect = new function ElementStack() {
+    var toDetect = new (function ElementStack() {
       // this class holds a collections of elements that potentially reference streamable tracks
       var set = {};
       this.push = function(elt) {
@@ -435,7 +435,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
         }
         return val;
       };
-    }();
+    })();
 
     console.info('detecting tracks from page...');
     toDetect.push({ src: window.location.href });

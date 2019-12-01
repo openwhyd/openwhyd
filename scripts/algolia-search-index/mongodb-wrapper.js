@@ -3,20 +3,21 @@ const Progress = require('./Progress');
 
 var MONGO_OPTIONS = {
   native_parser: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
   //strict: false,
   //safe: false,
   w: 'majority' // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
 };
 
 const makeConnUrl = params => {
-  var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
   var host = params.mongoDbHost || process.env.MONGODB_HOST;
   var port = params.mongoDbPort || process.env.MONGODB_PORT;
   var authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
   var authPassword = params.mongoDbAuthPassword || process.env.MONGODB_PASS;
   var authStr =
     authUser && authPassword ? authUser + ':' + authPassword + '@' : '';
-  return 'mongodb://' + authStr + host + ':' + port + '/' + dbName;
+  return 'mongodb://' + authStr + host + ':' + port;
 };
 
 // populates db.<collection_name>, for each collection
@@ -40,23 +41,20 @@ const cacheCollections = function(db, callback) {
 };
 
 const initMongo = (params, callback) => {
-  var url = makeConnUrl(params);
+  var url = makeConnUrl(params) + '/' + dbName;
+  var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
   console.log('Connecting to ' + url + '...');
-  mongodb.MongoClient.connect(
-    url,
-    MONGO_OPTIONS,
-    (err, db) => {
-      if (err) {
-        callback(err);
-      } else {
-        db.addListener('error', function(err) {
-          console.log('MongoDB model async error: ', err);
-          throw err;
-        });
-        cacheCollections(db, callback); // will mutate db and callback
-      }
+  mongodb.MongoClient.connect(url, MONGO_OPTIONS, (err, client) => {
+    if (err) {
+      callback(err);
+    } else {
+      const db = client.db(dbName);
+      db.addListener('error', function(err) {
+        console.log('MongoDB model async error: ', err);
+      });
+      cacheCollections(db, callback); // will mutate db and callback
     }
-  );
+  });
 };
 
 const init = params =>

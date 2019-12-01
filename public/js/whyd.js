@@ -1085,10 +1085,10 @@ $(document).ready(function() {
               track.eId
                 ? prependExternalTracks([track])
                 : '<div class="noResults">' +
-                  "<p>Sorry, we don't recognize this URL...</p>" +
-                  '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
-                  '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
-                  '</div>',
+                    "<p>Sorry, we don't recognize this URL...</p>" +
+                    '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
+                    '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
+                    '</div>',
               false
             );
             // TODO: send this URL back to whyd/playemJS team

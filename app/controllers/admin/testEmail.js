@@ -44,7 +44,7 @@ exports.controller = function(request, reqParams, response) {
 
   function send(email) {
     sendEmails(user, email, function(res) {
-      response.render(res);
+      response.legacyRender(res);
     });
   }
 

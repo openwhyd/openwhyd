@@ -65,7 +65,7 @@ exports.controller = function(request, reqParams, response) {
     if (d && d.html) response.renderHTML(d.html);
     else {
       console.log('invalid btn output:', d);
-      response.render(d);
+      response.legacyRender(d);
     }
   }
 

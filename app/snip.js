@@ -9,6 +9,33 @@ var querystring = require('querystring');
 
 var firstWeek = new Date('Monday January 3, 2011 08:00'); // week #1 = 1st of january 2010
 
+// privacy helper: anonymise email address
+exports.formatEmail = function(emailAddr) {
+  if (typeof emailAddr !== 'string' || emailAddr.length < 1)
+    return '<invalid_email>';
+  const [name, domain] = emailAddr.split('@');
+  return name
+    .substring(0, 1)
+    .concat('*********@')
+    .concat(domain);
+};
+
+exports.formatPrivateFields = obj => {
+  if (typeof obj !== 'object') return obj;
+  const res = { ...obj };
+  if (typeof obj.email === 'string') res.email = exports.formatEmail(obj.email);
+  if (typeof obj.md5 === 'string') res.md5 = '<MD5_HASH>';
+  return res;
+};
+
+// privacy-enforcing console.log helper
+exports.console = {
+  log(...args) {
+    const filteredArgs = args.map(exports.formatPrivateFields);
+    console.log(...filteredArgs);
+  }
+};
+
 exports.getWeekNumber = function(date) {
   return date && Math.floor(1 + (date - firstWeek) / 1000 / 60 / 60 / 24 / 7);
 };
