@@ -14,7 +14,7 @@ var inviteController = require('../invite.js');
 var userApi = require('../../controllers/api/user.js');
 var htmlRedirect = require('../../templates/logging.js').htmlRedirect;
 var genuine = require('../../genuine.js');
-// const argon2 = require('argon2');
+const argon2 = require('argon2');
 
 var ENFORCE_GENUINE_SIGNUP_FROM_IOS = false; // TODO: set to true, after x-real-ip header is set by the nginx proxy
 var onboardingUrl = '/pick/genres';
@@ -137,7 +137,7 @@ exports.registerInvitedUser = function(request, user, response) {
         name: user.name,
         email: user.email,
         pwd: userModel.md5(user.password),
-        // arPwd: argon2.hash(user.password),
+        arPwd: argon2.hash(user.password).toString('hex'),
         img: '/images/blank_user.gif' //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
       };
 
