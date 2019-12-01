@@ -44,6 +44,7 @@
   "dependencies": {
     "algoliasearch": "^3.23.0",
     "apn": "1.5.2",
+    "argon2": "^0.25.1",
     "async": "*",
     "colors": "*",
     "connect-mongo": "^3.0.0",
