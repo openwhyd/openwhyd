@@ -72,16 +72,6 @@ jobs:
     steps:
       - uses: docker://cypress/base:10
       - uses: actions/checkout@v1
-      - name: check cypress cache
-        uses: actions/cache@v1
-        with:
-          path: /home/runner/.cache/Cypress
-          key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
-            ${{ runner.OS }}-cypress-cache-
-      - name: install cypress
-        run: node_modules/.bin/cypress install
       - name: check npm cache
         uses: actions/cache@v1
         with:
@@ -94,6 +84,16 @@ jobs:
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
+      - name: check cypress cache
+        uses: actions/cache@v1
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
+            ${{ runner.OS }}-cypress-cache-
+      - name: install cypress
+        run: node_modules/.bin/cypress install
       - name: Initialize database
         env:
           CI: true
