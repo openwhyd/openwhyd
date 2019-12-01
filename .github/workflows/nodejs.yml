@@ -61,9 +61,8 @@ jobs:
           npm run semantic-release
       - name: Publish to Docker Hub registry
         if: github.event_name == 'push'
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: jerray/publish-docker-action@v1.0.3
         with:
-          name: myDocker/repository
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
