@@ -31,7 +31,7 @@ jobs:
       - name: npm install
         env:
           CI: true
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
 
   ci:
     name: Tests
@@ -57,6 +57,10 @@ jobs:
             ${{ runner.OS }}-build-${{ env.cache-name }}-
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
+      - name: npm install
+        env:
+          CI: true
+        run: npm ci --prefer-offline --no-audit
       - name: Initialize database
         env:
           CI: true
@@ -99,13 +103,13 @@ jobs:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
+            ${{ runner.OS }}-cypress-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-cypress-build-
+            ${{ runner.OS }}-cypress-
       - name: npm install
         env:
           CI: true
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
       - name: Initialize database
         env:
           CI: true
