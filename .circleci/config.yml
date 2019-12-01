@@ -3,18 +3,20 @@ version: 2
 jobs:
   build:
     docker:
-      - image: cypress/base:10
+      - image: circleci/node:10.16.3
         environment:
           ## this enables colors in the output
           TERM: xterm
       - image: mongo:3.4
+        environment:
+          ## this enables colors in the output
+          TERM: xterm
     working_directory: ~/app
     steps:
-      - run: echo coucou
       - checkout
       - run:
           name: Update npm
-          command: "sudo npm install -g npm@latest"
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           keys:
             - v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
@@ -23,6 +25,11 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm ci
+
+      # Install Cypress and its dependencies
+      - run: sudo apt install xvfb libgtk-3-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 fonts-liberation libappindicator3-1 lsb-release xdg-utils
+      - run: npx cypress install
+
       - save_cache:
           key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
           # cache NPM modules and the folder with the Cypress binary
