@@ -1,7 +1,7 @@
 var { promisify } = require('util');
 var assert = require('assert');
 
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
+var { ADMIN_USER, TEST_USER } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
 const get = promisify(apiClient.get);
@@ -20,7 +20,7 @@ describe('auth api', () => {
     });
 
     it('access to personal /stream requires login', async () => {
-      const { response, body } = await get({}, '/stream?format=json');
+      const { body } = await get({}, '/stream?format=json');
       assert.equal(body.error, 'Please login first');
     });
 
