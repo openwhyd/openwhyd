@@ -109,11 +109,12 @@ describe('auth api', () => {
       assert(jar);
     });
 
-    it.skip('holds secure hash', async () => {
-      const { jar } = await loginAs(secureUser);
+    it('stores secure hash in db', async function() {
+      const { jar } = await signupAs(genSecureUser());
       const { body } = await getUser(jar, {});
       assert.ifError(body.error);
-      assert.assert(body.sha1);
+      assert.equal(typeof body.arPwd, 'string');
+      assert.notEqual(body.arPwd.length, 0);
     });
   });
 });
