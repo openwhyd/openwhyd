@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/openwhyd/openwhyd/compare/v1.19.2...v1.20.0) (2019-12-01)
+
+
+### Features
+
+* **ci:** add a first Cypress.js test ([#197](https://github.com/openwhyd/openwhyd/issues/197)) ([9c4bd77](https://github.com/openwhyd/openwhyd/commit/9c4bd77)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.19.2](https://github.com/openwhyd/openwhyd/compare/v1.19.1...v1.19.2) (2019-12-01)
 
 
