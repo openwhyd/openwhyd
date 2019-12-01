@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
-      - name: check cache
+      - name: check npm cache
         uses: actions/cache@v1
         with:
           path: node_modules
@@ -73,7 +73,16 @@ jobs:
     steps:
       - uses: docker://cypress/base:10
       - uses: actions/checkout@v1
-      - name: check cache
+      - name: check cypress cache
+        uses: actions/cache@v1
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
+            ${{ runner.OS }}-cypress-cache-
+            ${{ runner.OS }}-cypress-
+      - name: check npm cache
         uses: actions/cache@v1
         with:
           path: node_modules
