@@ -81,20 +81,23 @@ describe('auth api', () => {
   });
 
   describe('signup with secure hash', () => {
-    const secureUser = {
-      name: 'secure user',
-      email: 'secure-user@openwhyd.org',
-      password: 'mySecurePassword'
-    };
+    const genSecureUser = (() => {
+      let globalNumber = 0;
+      return (number = ++globalNumber) => ({
+        name: `secure user ${number}`,
+        email: `secure-user-${number}@openwhyd.org`,
+        password: `mySecurePassword${number}`
+      });
+    })();
 
     it('can create account', async () => {
-      const { jar, body } = await signupAs(secureUser);
+      const { jar, body } = await signupAs(genSecureUser());
       assert.ifError(body.error);
     });
 
-    it.skip('actually create an account and logged in', async () => {
-      const { jar } = await signupAs(secureUser);
-      const { body } = await getUser(jar, {});
+    it('gives access to personal /stream', async () => {
+      const { jar } = await signupAs(genSecureUser());
+      const { body } = await get(jar, '/stream?format=json');
       assert.ifError(body.error);
     });
 
