@@ -65,6 +65,19 @@ describe('auth api', () => {
       assert.ifError(body.error);
       assert(body.join); // check that it's an array
     });
+
+    it('fails if password is missing', async () => {
+      const userWithMissingPwd = {
+        ...TEST_USER,
+        pwd: '',
+        password: '',
+        md5: ''
+      };
+      const { jar, body: signupBody } = await signupAs(userWithMissingPwd);
+      assert.equal(signupBody.error, 'Please enter a password');
+      const { body } = await get(jar, '/stream?format=json');
+      assert.equal(body.error, 'Please login first');
+    });
   });
 
   describe('signup with secure hash', () => {
