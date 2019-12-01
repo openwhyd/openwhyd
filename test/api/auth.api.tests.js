@@ -90,8 +90,8 @@ describe('auth api', () => {
   });
 
   describe('signup with secure hash', () => {
-    it('can create account', async () => {
-      const { jar, body } = await signupAs(genSecureUser());
+    it('succeeds', async () => {
+      const { body } = await signupAs(genSecureUser());
       assert.ifError(body.error);
     });
 
