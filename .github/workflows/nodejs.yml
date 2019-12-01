@@ -32,7 +32,6 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-build-${{ env.cache-name }}-
             ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
       - name: npm install
         env:
           CI: true
@@ -81,7 +80,6 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
             ${{ runner.OS }}-cypress-cache-
-            ${{ runner.OS }}-cypress-
       - name: check npm cache
         uses: actions/cache@v1
         with:
@@ -90,7 +88,6 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-cypress-build-${{ env.cache-name }}-
             ${{ runner.OS }}-cypress-build-
-            ${{ runner.OS }}-cypress-
       - name: npm install
         env:
           CI: true
