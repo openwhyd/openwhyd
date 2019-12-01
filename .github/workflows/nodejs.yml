@@ -80,6 +80,8 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
             ${{ runner.OS }}-cypress-cache-
+      - name: install cypress
+        run: node_modules/.bin/cypress install
       - name: check npm cache
         uses: actions/cache@v1
         with:
