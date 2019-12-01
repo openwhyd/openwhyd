@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
-      - name: Cache node modules
+      - name: Setup caching for node modules
         uses: actions/cache@v1
         with:
           path: node_modules
@@ -102,6 +102,10 @@ jobs:
             ${{ runner.OS }}-build-${{ env.cache-name }}-
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
+      - name: npm install
+        env:
+          CI: true
+        run: npm ci
       - name: Initialize database
         env:
           CI: true
