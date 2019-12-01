@@ -32,6 +32,7 @@ jobs:
         env:
           CI: true
         run: npm ci
+
   ci:
     name: Tests
     runs-on: ubuntu-latest
@@ -79,3 +80,42 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           npm run semantic-release
+
+  cypress:
+    name: Cypress
+    runs-on: ubuntu-latest
+    needs: checkout
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27017:27017
+    steps:
+      - uses: cypress/base:10
+      - uses: actions/checkout@v1
+      - name: Restore cached node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - name: Initialize database
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-reset
+      - name: Start Openwhyd server
+        run: |
+          source env-vars-testing.sh
+          npm start --mongoDbDatabase openwhyd_test &
+          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+      - name: Run Cypress tests
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          node_modules/.bin/cypress run
