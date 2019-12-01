@@ -1,3 +1,16 @@
+# [1.19.0](https://github.com/openwhyd/openwhyd/compare/v1.18.1...v1.19.0) (2019-12-01)
+
+
+### Bug Fixes
+
+* generate separate user credentials for each test ([bfd06b3](https://github.com/openwhyd/openwhyd/commit/bfd06b3))
+* use hex representation of argon2 pwd, when storing in db ([4a15ac7](https://github.com/openwhyd/openwhyd/commit/4a15ac7))
+
+
+### Features
+
+* **security:** use argon2 to hash user password on sign up ([6978a3e](https://github.com/openwhyd/openwhyd/commit/6978a3e))
+
 ## [1.18.1](https://github.com/openwhyd/openwhyd/compare/v1.18.0...v1.18.1) (2019-11-24)
 
 
