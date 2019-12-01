@@ -29,11 +29,20 @@ jobs:
           CI: true
         run: |
           npm ci
+      - name: Upload state for other jobs
+        uses: actions/upload-artifact@v1
+        with:
+          name: checked_out
+          path: .
   ci:
-    name: Openwhyd CI
+    name: Tests
     runs-on: ubuntu-latest
     needs: checkout
     steps:
+      - name: Download state from checkout
+        uses: actions/download-artifact@v1
+        with:
+          name: checked_out
       - name: Initialize database
         env:
           CI: true
