@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/openwhyd/openwhyd/compare/v1.20.0...v1.21.0) (2019-12-01)
+
+
+### Features
+
+* **ci:** auto publish to docker hub, for [#233](https://github.com/openwhyd/openwhyd/issues/233) ([342b7af](https://github.com/openwhyd/openwhyd/commit/342b7af))
+
 # [1.20.0](https://github.com/openwhyd/openwhyd/compare/v1.19.2...v1.20.0) (2019-12-01)
 
 
