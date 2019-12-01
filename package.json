@@ -25,6 +25,8 @@
     "test-unit": "node_modules/.bin/mocha test/unit/*.js --exit",
     "test-acceptance": "npm run test-reset && wdio wdio.conf.js $@",
     "test-acceptance-dev": "npm run test-acceptance -- --spec ./test/specs/*.tests.js --logLevel verbose",
+    "test:cypress:dev": "npm run docker:seed && . ./.env-docker && node_modules/.bin/cypress open",
+    "test:cypress": "npm run docker:seed && . ./.env-docker && node_modules/.bin/cypress run",
     "test": ". ./env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance",
     "docker:seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
     "docker:run": "npm run docker:seed && docker-compose exec web npm run $@",
