@@ -18,15 +18,12 @@ jobs:
         image: docker://mongo:3.4
         ports:
           - 27017:27017
-    strategy:
-      matrix:
-        node-version: [10.x]
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 10
       - name: npm install
         env:
           CI: true
@@ -34,6 +31,7 @@ jobs:
           npm ci
   ci:
     name: Openwhyd CI
+    runs-on: ubuntu-latest
     needs: checkout
     steps:
       - name: Initialize database
