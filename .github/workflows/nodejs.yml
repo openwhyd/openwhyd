@@ -36,7 +36,7 @@ jobs:
       - name: npm install
         env:
           CI: true
-        run: npm ci --prefer-offline --no-audit
+        run: npm install --prefer-offline --no-audit
       - name: Initialize database
         env:
           CI: true
@@ -85,7 +85,7 @@ jobs:
       - name: npm install
         env:
           CI: true
-        run: npm ci --prefer-offline --no-audit
+        run: npm install --prefer-offline --no-audit
       - name: Initialize database
         env:
           CI: true
