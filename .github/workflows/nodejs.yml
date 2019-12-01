@@ -59,6 +59,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           npm run semantic-release
+      - name: Publish to Docker Hub registry
+        if: github.event_name == 'push'
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: myDocker/repository
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
   cypress:
     name: Cypress E2E (experimental)
