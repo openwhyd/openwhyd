@@ -79,12 +79,6 @@ describe('auth api', () => {
       assert.ifError(body.error);
     });
 
-    it.skip('actually logged in', async () => {
-      const { jar } = await signupAs(TEST_USER);
-      const { body } = await getUser(jar, {});
-      assert.ifError(body.error);
-    });
-
     it.skip('actually create an account and logged in', async () => {
       const { jar } = await signupAs(secureUser);
       const { body } = await getUser(jar, {});
