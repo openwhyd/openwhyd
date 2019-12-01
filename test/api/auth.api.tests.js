@@ -56,7 +56,7 @@ describe('auth api', () => {
 
   // Register / sign up a new user
 
-  describe('signup', () => {
+  describe('signup with md5', () => {
     it('gives access to personal /stream', async () => {
       const { jar, body: signupBody } = await signupAs(TEST_USER);
       assert.ifError(signupBody.error);
@@ -67,7 +67,7 @@ describe('auth api', () => {
     });
   });
 
-  describe('with secure hash', () => {
+  describe('signup with secure hash', () => {
     const secureUser = {
       name: 'secure user',
       email: 'secure-user@openwhyd.org',
