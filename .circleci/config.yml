@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/app
   docker:
-    - image: circleci/node:10.16.3
+    - image: circleci/node:10.16.3-browsers
       environment:
         ## this enables colors in the output
         TERM: xterm
@@ -82,13 +82,6 @@ jobs:
           name: Wait for server up
           command: ./scripts/wait-for-http-server.sh 8080
       - run: $(npm bin)/cypress run # --record --key <record_key>
-
-  release:
-    <<: *defaults
-    steps:
-      - run:
-          name: Semantic Release
-          command: npm run semantic-release
 
 workflows:
   version: 2
