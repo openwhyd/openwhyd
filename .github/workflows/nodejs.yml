@@ -91,7 +91,7 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      - uses: cypress/base:10
+      - uses: docker://cypress/base:10
       - uses: actions/checkout@v1
       - name: Restore cached node modules
         uses: actions/cache@v1
