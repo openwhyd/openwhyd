@@ -101,8 +101,10 @@ describe('auth api', () => {
       assert.ifError(body.error);
     });
 
-    it.skip('can login', async () => {
-      const { jar, body } = await loginAs(secureUser); // no md5 is provided
+    it.skip('login with secure hash', async () => {
+      const secureUser = genSecureUser();
+      await signupAs(secureUser);
+      const { jar, body } = await loginAs(secureUser);
       assert.ifError(body.error);
       assert(jar);
     });
