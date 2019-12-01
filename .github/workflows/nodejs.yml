@@ -9,29 +9,33 @@ on:
       - master
 
 jobs:
-  ci:
-    name: Openwhyd CI
-    runs-on: ubuntu-latest
+  tests:
+    name: CI Test Suite
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
     services:
       mongodb:
         image: docker://mongo:3.4
         ports:
           - 27017:27017
-    strategy:
-      matrix:
-        node-version: [10.x]
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 10
+      - name: check npm cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
       - name: npm install
         env:
           CI: true
-        run: |
-          npm ci
+        run: npm install --prefer-offline --no-audit
       - name: Initialize database
         env:
           CI: true
@@ -55,3 +59,55 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           npm run semantic-release
+
+  cypress:
+    name: Cypress E2E (experimental)
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27017:27017
+    steps:
+      - uses: docker://cypress/base:10
+      - uses: actions/checkout@v1
+      - name: check npm cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-cypress-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-cypress-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-cypress-build-
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: check cypress cache
+        uses: actions/cache@v1
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
+            ${{ runner.OS }}-cypress-cache-
+      - name: install cypress
+        run: node_modules/.bin/cypress install
+      - name: Initialize database
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-reset
+      - name: Start Openwhyd server
+        run: |
+          source env-vars-testing.sh
+          npm start --mongoDbDatabase openwhyd_test &
+          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+      - name: Run Cypress tests
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          node_modules/.bin/cypress run
