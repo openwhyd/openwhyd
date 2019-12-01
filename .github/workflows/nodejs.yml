@@ -10,7 +10,7 @@ on:
 
 jobs:
   tests:
-    name: Tests
+    name: CI Test Suite
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     services:
@@ -61,7 +61,7 @@ jobs:
           npm run semantic-release
 
   cypress:
-    name: Cypress
+    name: Cypress E2E (experimental)
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     services:
