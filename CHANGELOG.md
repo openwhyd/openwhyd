@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/openwhyd/openwhyd/compare/v1.19.0...v1.19.1) (2019-12-01)
+
+
+### Bug Fixes
+
+* **github:** make GitHub actions workflow support "skip ci" ([e77fe32](https://github.com/openwhyd/openwhyd/commit/e77fe32))
+
 # [1.19.0](https://github.com/openwhyd/openwhyd/compare/v1.18.1...v1.19.0) (2019-12-01)
 
 
