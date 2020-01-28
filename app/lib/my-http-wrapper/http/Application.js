@@ -9,7 +9,7 @@ const LOG_THRESHOLD = 500;
 
 // From Response.js
 
-http.ServerResponse.prototype.legacyRender = function(
+http.ServerResponse.prototype.legacyRender = function (
   view,
   data,
   headers = {},
@@ -39,7 +39,7 @@ const makeBodyParser = uploadSettings =>
     var form = new formidable.IncomingForm();
     form.uploadDir = uploadSettings.uploadDir;
     form.keepExtensions = uploadSettings.keepExtensions;
-    form.parse(req, function(err, postParams, files) {
+    form.parse(req, function (err, postParams, files) {
       if (err) console.error('formidable parsing error:', err);
       // using qset to parse fields with brackets [] for url-encoded form data:
       // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
@@ -105,7 +105,16 @@ exports.Application = class Application {
     app.use(noCache); // called on all requests
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
-    this._sessionMiddleware && app.use(this._sessionMiddleware);
+    if (this._sessionMiddleware) {
+      app.use((req, res, next) => {
+        console.warn('NOTRE MIDDLEWARE START');
+        const ret = this._sessionMiddleware(req, res, () => {
+          console.warn('NOTRE MIDDLEWARE END');
+          next(req, res);
+        });
+        return ret;
+      });
+    }
     app.use(makeStatsUpdater({ accessLogFile: this._accessLogFile }));
     attachLegacyRoutesFromFile(app, this._appDir, this._routeFile);
     app.use(makeNotFound(this._errorHandler));

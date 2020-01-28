@@ -95,6 +95,11 @@ describe('auth api', () => {
       assert.ifError(body.error);
     });
 
+    it.only('return the cookie in the body', async () => {
+      const { body } = await signupAs(genSecureUser());
+      assert.equal(typeof body.cookie, 'string');
+    });
+
     it('gives access to personal /stream', async () => {
       const { jar } = await signupAs(genSecureUser());
       const { body } = await get(jar, '/stream?format=json');
@@ -109,7 +114,7 @@ describe('auth api', () => {
       assert(jar);
     });
 
-    it('stores secure hash in db', async function() {
+    it('stores secure hash in db', async function () {
       const { jar } = await signupAs(genSecureUser());
       const { body } = await getUser(jar, {});
       assert.ifError(body.error);

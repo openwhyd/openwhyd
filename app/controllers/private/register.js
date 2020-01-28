@@ -29,7 +29,7 @@ function follow(user, userToFollow, ctx) {
       tNm: userToFollow.name,
       ctx: ctx
     },
-    function() {
+    function () {
       console.log('auto follow: ', user.name, userToFollow.name);
     }
   );
@@ -45,25 +45,25 @@ function renderError(request, getParams, response, errorMsg) {
 /**
  * called when user submits the form from register.html
  */
-exports.registerInvitedUser = function(request, user, response) {
+exports.registerInvitedUser = function (request, user, response) {
   request.logToConsole(
     'register.registerInvitedUser',
     user
       ? {
-          inviteCode: user.inviteCode,
-          email: user.email,
-          name: user.name,
-          fbUid: user.fbUid,
-          fbTok: user.fbTok,
-          iBy: user.iBy,
-          iPo: user.iPo,
-          iRf: user.iRf,
-          iPg: user.iPg,
-          plC: user.plC, // playlist contest id
-          sTk: user.sTk || '', // signup token (genuine client check)
-          ajax: user.ajax,
-          fbRequest: user.fbRequest
-        }
+        inviteCode: user.inviteCode,
+        email: user.email,
+        name: user.name,
+        fbUid: user.fbUid,
+        fbTok: user.fbTok,
+        iBy: user.iBy,
+        iPo: user.iPo,
+        iRf: user.iRf,
+        iPg: user.iPg,
+        plC: user.plC, // playlist contest id
+        sTk: user.sTk || '', // signup token (genuine client check)
+        ajax: user.ajax,
+        fbRequest: user.fbRequest
+      }
       : null
   );
 
@@ -124,7 +124,7 @@ exports.registerInvitedUser = function(request, user, response) {
   //	return error(request, user, response, "Your password contains invalid characters");
 
   function registerUser() {
-    userModel.fetchByEmail(user.email, function(item) {
+    userModel.fetchByEmail(user.email, function (item) {
       if (item)
         return error(
           request,
@@ -174,15 +174,16 @@ exports.registerInvitedUser = function(request, user, response) {
 
     function loginAndRedirectTo(url) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
+      console.log("==============>>>>>>>>>>>", request.session.cookie);
       if (user.ajax) {
-        var json = { redirect: url, uId: '' + storedUser._id };
+        var json = { redirect: url, uId: '' + storedUser._id, cookie: request.session.cookie.data };
         function renderJSON() {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
             json
           );
         }
         if (user.includeUser) {
-          userApi.fetchUserData(storedUser, function(user) {
+          userApi.fetchUserData(storedUser, function (user) {
             json.user = user;
             renderJSON(json);
           });
@@ -202,7 +203,7 @@ exports.registerInvitedUser = function(request, user, response) {
     }
 
     if (user.plContest)
-      userModel.createPlaylist(storedUser._id, user.plContest.title, function(
+      userModel.createPlaylist(storedUser._id, user.plContest.title, function (
         playlist
       ) {
         loginAndRedirectTo('/u/' + storedUser._id + '/playlist/' + playlist.id);
@@ -213,9 +214,9 @@ exports.registerInvitedUser = function(request, user, response) {
   }
 
   if (user.iBy || checkInvites)
-    inviteController.checkInviteCode(request, user, response, function() {
+    inviteController.checkInviteCode(request, user, response, function () {
       if (user.plC)
-        contestModel.fetchById(user.plC, function(plContest) {
+        contestModel.fetchById(user.plC, function (plContest) {
           if (!plContest)
             console.error('plcontest not found when trying to signup');
           else user.plContest = plContest;
@@ -226,7 +227,7 @@ exports.registerInvitedUser = function(request, user, response) {
   else registerUser();
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   request.logToConsole('register.controller', request.method);
   if (request.method.toLowerCase() === 'post')
     // sent by (new) register form
