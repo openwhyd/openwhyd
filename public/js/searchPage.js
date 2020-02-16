@@ -1,4 +1,4 @@
-if (document.getElementById('q').value) {
+if(document.getElementById('q').value.replace(/ /g, '')) {
   function selectTab() {
     $('#tabSelector a.selected').removeClass('selected');
     $(this).addClass('selected');
