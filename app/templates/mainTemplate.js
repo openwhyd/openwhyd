@@ -234,7 +234,7 @@ exports.renderWhydFrame = function(html, params) {
     'var DEEZER_APP_ID = 190482;',
     'var DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf("/", 10)) + "/html/channel.html";',
     'var SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad";',
-    'var YOUTUBE_API_KEY = "AIzaSyBcv9w8c8DVkP_lv7_QAiUlLaY0IbtIQ-M";',
+    'var YOUTUBE_API_KEY = "AIzaSyCRQTfnJJqpruNQk5aySJPX65NXBk8ATdk";',
     'var JAMENDO_CLIENT_ID = "2c9a11b9";',
     '</script>',
     // TODO: move credentials to makeAnalyticsHeading()
