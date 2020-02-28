@@ -10,13 +10,11 @@ var snip = require('../snip.js');
 var uiSnippets = snip;
 var templateLoader = require('../templates/templateLoader.js');
 var config = require('../models/config.js');
-var mongodb = require('../models/mongodb.js');
 var render = { urlPrefix: '' };
 
 var includeSuffix = '?' + config.version;
-var fbLikeUrl = 'http://www.facebook.com/openwhyd'; // 'http://openwhyd.org';
 
-var youtubeKeyApi, playemFile;
+var playemFile;
 var fbId;
 if (config.urlPrefix.indexOf('openwhyd.org') > 0) {
   //console.log('- Production - ');
@@ -236,7 +234,7 @@ exports.renderWhydFrame = function(html, params) {
     'var DEEZER_APP_ID = 190482;',
     'var DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf("/", 10)) + "/html/channel.html";',
     'var SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad";',
-    'var YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";',
+    'var YOUTUBE_API_KEY = "AIzaSyCRQTfnJJqpruNQk5aySJPX65NXBk8ATdk";',
     'var JAMENDO_CLIENT_ID = "2c9a11b9";',
     '</script>',
     // TODO: move credentials to makeAnalyticsHeading()
