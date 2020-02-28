@@ -9,7 +9,7 @@ describe('snip.httpRequest', function() {
   var snip = require('../../app/snip.js');
   //var testRunner = new require("../app/serverTestRunner.js").ServerTestRunner();
 
-  var YOUTUBE_API_KEY = 'AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI';
+  var YOUTUBE_API_KEY = 'AIzaSyD6N68vL5x5lKeFakJNn4wN4Y3oXJ7V8lI';
   var YOUTUBE_VIDEO_ID = 'aZT8VlTV1YY';
 
   var url =
