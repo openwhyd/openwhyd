@@ -1,3 +1,11 @@
+## [1.21.1](https://github.com/openwhyd/openwhyd/compare/v1.21.0...v1.21.1) (2020-02-28)
+
+
+### Bug Fixes
+
+* **#212:** user can add tracks thanks to new google api account for youtube ([#264](https://github.com/openwhyd/openwhyd/issues/264)) ([6da7db7](https://github.com/openwhyd/openwhyd/commit/6da7db7)), closes [#212](https://github.com/openwhyd/openwhyd/issues/212) [#262](https://github.com/openwhyd/openwhyd/issues/262) [#263](https://github.com/openwhyd/openwhyd/issues/263)
+* **#262:** user can add YouTube tracks (when new keys are active) ([c1d7a85](https://github.com/openwhyd/openwhyd/commit/c1d7a85)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
 # [1.21.0](https://github.com/openwhyd/openwhyd/compare/v1.20.0...v1.21.0) (2019-12-01)
 
 
