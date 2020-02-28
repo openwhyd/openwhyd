@@ -36,7 +36,8 @@ do
     sleep 1
     res="`curl -sL -w "%{http_code}" "localhost:$NEW_PORT" -o /dev/null`"
     if [ $res -eq 200 ]; then
-        echo "✅  Openwhyd ($(grep version $ROOT_DIR/package.json)) now listening on port $NEW_PORT."
+        VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
+        echo "✅  Openwhyd ($VERSION) now listening on port $NEW_PORT."
         break
     fi
 
