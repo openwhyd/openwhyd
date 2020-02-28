@@ -10,13 +10,11 @@ var snip = require('../snip.js');
 var uiSnippets = snip;
 var templateLoader = require('../templates/templateLoader.js');
 var config = require('../models/config.js');
-var mongodb = require('../models/mongodb.js');
 var render = { urlPrefix: '' };
 
 var includeSuffix = '?' + config.version;
-var fbLikeUrl = 'http://www.facebook.com/openwhyd'; // 'http://openwhyd.org';
 
-var youtubeKeyApi, playemFile;
+var playemFile;
 var fbId;
 if (config.urlPrefix.indexOf('openwhyd.org') > 0) {
   //console.log('- Production - ');
