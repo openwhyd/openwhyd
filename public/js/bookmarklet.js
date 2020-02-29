@@ -13,7 +13,7 @@ if (undefined == window.console)
   };
 
 console.log('-= openwhyd bookmarklet v2.3 =-');
-var YOUTUBE_API_KEY = 'AIzaSyCIPAYYlBBKqUhl7YdyeCrSXvLFnmDObK8';
+var YOUTUBE_API_KEY = 'AIzaSyDtDC8PG4axglrMpi-mowvgjedTFfuYCs8'; // associated to dedicated google project "openwhyd-3", because of its high consumption of quota
 
 (window._initWhydBk = function() {
   var FILENAME = '/js/bookmarklet.js';
