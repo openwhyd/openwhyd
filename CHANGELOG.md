@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/openwhyd/openwhyd/compare/v1.23.0...v1.24.0) (2020-03-01)
+
+
+### Features
+
+* **ui:** restore the default sidebox announcement ([c4812de](https://github.com/openwhyd/openwhyd/commit/c4812de))
+
 # [1.23.0](https://github.com/openwhyd/openwhyd/compare/v1.22.1...v1.23.0) (2020-03-01)
 
 
