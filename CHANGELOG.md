@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/openwhyd/openwhyd/compare/v1.21.4...v1.22.0) (2020-03-01)
+
+
+### Features
+
+* **sideBox:** inform about YouTube issues ([#272](https://github.com/openwhyd/openwhyd/issues/272)) ([0341ea0](https://github.com/openwhyd/openwhyd/commit/0341ea0)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#266](https://github.com/openwhyd/openwhyd/issues/266)
+
 ## [1.21.4](https://github.com/openwhyd/openwhyd/compare/v1.21.3...v1.21.4) (2020-03-01)
 
 
