@@ -1,3 +1,10 @@
+## [1.21.3](https://github.com/openwhyd/openwhyd/compare/v1.21.2...v1.21.3) (2020-03-01)
+
+
+### Bug Fixes
+
+* **#269:** invalid template caused crash when adding from bookmarklet ([#270](https://github.com/openwhyd/openwhyd/issues/270)) ([b8a6bb3](https://github.com/openwhyd/openwhyd/commit/b8a6bb3)), closes [#269](https://github.com/openwhyd/openwhyd/issues/269) [#269](https://github.com/openwhyd/openwhyd/issues/269) [/github.com/openwhyd/openwhyd/pull/263/files#diff-d04a3fa73a7dd2a179772cc75555275eR109](https://github.com//github.com/openwhyd/openwhyd/pull/263/files/issues/diff-d04a3fa73a7dd2a179772cc75555275eR109)
+
 ## [1.21.2](https://github.com/openwhyd/openwhyd/compare/v1.21.1...v1.21.2) (2020-03-01)
 
 
