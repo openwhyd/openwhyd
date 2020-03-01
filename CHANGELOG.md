@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/openwhyd/openwhyd/compare/v1.22.1...v1.23.0) (2020-03-01)
+
+
+### Features
+
+* **ci:** speed up docker image creation ([#275](https://github.com/openwhyd/openwhyd/issues/275)) ([80e7056](https://github.com/openwhyd/openwhyd/commit/80e7056))
+
 ## [1.22.1](https://github.com/openwhyd/openwhyd/compare/v1.22.0...v1.22.1) (2020-03-01)
 
 
