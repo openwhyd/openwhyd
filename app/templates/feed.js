@@ -37,23 +37,16 @@ var FUNNY_EMAILS = [
 
 var templates = {};
 
-function loadTemplates(callback) {
-  templates['html'] = templateLoader.loadTemplate(
-    'app/templates/feed.html',
-    function() {
-      templates['embed'] = templateLoader.loadTemplate(
-        'app/templates/feedEmbed.html',
-        function() {
-          templates['embedv2'] = templateLoader.loadTemplate(
-            'app/templates/feedEmbedV2.html',
-            function() {
-              if (callback) callback();
-            }
-          );
-        }
-      );
-    }
-  );
+const loadTemplate = path =>
+  new Promise(resolve => templateLoader.loadTemplate(path, resolve));
+
+async function loadTemplates(callback) {
+  templates = {
+    html: await loadTemplate('app/templates/feed.html'),
+    embed: await loadTemplate('app/templates/feedEmbed.html'),
+    embedv2: await loadTemplate('app/templates/feedEmbedV2.html'),
+    sideBox: await loadTemplate('app/templates/sideBox.html')
+  };
 }
 
 loadTemplates();
@@ -63,6 +56,7 @@ function prepareFeedVars(posts, options) {
     (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : '');
 
   var feedVars = {
+    sideBox: templates['sideBox'].render(),
     user: options.user,
     userPrefs: (options.loggedUser || {}).pref || {},
     loggedUser: options.loggedUser,
