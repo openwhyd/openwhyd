@@ -47,7 +47,12 @@ function loadTemplates(callback) {
           templates['embedv2'] = templateLoader.loadTemplate(
             'app/templates/feedEmbedV2.html',
             function() {
-              if (callback) callback();
+              templates['sideBox'] = templateLoader.loadTemplate(
+                'app/templates/sideBox.html',
+                function() {
+                  if (callback) callback();
+                }
+              );
             }
           );
         }
@@ -63,6 +68,7 @@ function prepareFeedVars(posts, options) {
     (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : '');
 
   var feedVars = {
+    sideBox: templates['sideBox'].render(),
     user: options.user,
     userPrefs: (options.loggedUser || {}).pref || {},
     loggedUser: options.loggedUser,
