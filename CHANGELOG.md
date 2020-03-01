@@ -1,3 +1,10 @@
+## [1.21.4](https://github.com/openwhyd/openwhyd/compare/v1.21.3...v1.21.4) (2020-03-01)
+
+
+### Bug Fixes
+
+* **refact:** extract "sidebox" announcements into dedicated template ([#269](https://github.com/openwhyd/openwhyd/issues/269)) ([9dc5f33](https://github.com/openwhyd/openwhyd/commit/9dc5f33))
+
 ## [1.21.3](https://github.com/openwhyd/openwhyd/compare/v1.21.2...v1.21.3) (2020-03-01)
 
 
