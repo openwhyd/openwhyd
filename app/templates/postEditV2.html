@@ -106,8 +106,8 @@
 			, title: "{{title}}"
 			, img: "{{img}}"
 			, src: { id: "{{{refUrl}}}".replace(/\&amp\;/g, "&"), name: "{{refTtl}}" }
-{{ #pl }} , pl: { id: "{{id}}", name: "{{{_js_name}}}".replace(/\&amp\;/g, "&") }{{/ pl}}
-	});
+			/*{{#pl}}*/, pl: { id: "{{id}}", name: "{{{_js_name}}}".replace(/\&amp\;/g, "&") }/*{{/pl}}*/
+		});
 	/*]]>*/
 	</script>
 	{{^embedded}}
