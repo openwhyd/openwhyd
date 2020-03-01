@@ -1,3 +1,12 @@
+## [1.21.2](https://github.com/openwhyd/openwhyd/compare/v1.21.1...v1.21.2) (2020-03-01)
+
+
+### Bug Fixes
+
+* **#262:** specify dedicated YouTube API key for bookmarklet ([#267](https://github.com/openwhyd/openwhyd/issues/267)) ([ea87101](https://github.com/openwhyd/openwhyd/commit/ea87101)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [/github.com/openwhyd/openwhyd/issues/262#issuecomment-592952454](https://github.com//github.com/openwhyd/openwhyd/issues/262/issues/issuecomment-592952454)
+* **#262:** specify dedicated YouTube API key for mainTemplate ([#271](https://github.com/openwhyd/openwhyd/issues/271)) ([2197d7f](https://github.com/openwhyd/openwhyd/commit/2197d7f)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** specify dedicated YouTube API key for postEditV2 ([#268](https://github.com/openwhyd/openwhyd/issues/268)) ([7e88c95](https://github.com/openwhyd/openwhyd/commit/7e88c95)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
 ## [1.21.1](https://github.com/openwhyd/openwhyd/compare/v1.21.0...v1.21.1) (2020-02-28)
 
 
