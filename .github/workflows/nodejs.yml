@@ -65,6 +65,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          auto_tag: true
 
   cypress:
     name: Cypress E2E (experimental)
