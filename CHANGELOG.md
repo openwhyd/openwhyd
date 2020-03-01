@@ -1,3 +1,10 @@
+## [1.22.1](https://github.com/openwhyd/openwhyd/compare/v1.22.0...v1.22.1) (2020-03-01)
+
+
+### Bug Fixes
+
+* **ci:** execution of Cypress test on GitHub Actions workflow ([#274](https://github.com/openwhyd/openwhyd/issues/274)) ([dc73eb2](https://github.com/openwhyd/openwhyd/commit/dc73eb2))
+
 # [1.22.0](https://github.com/openwhyd/openwhyd/compare/v1.21.4...v1.22.0) (2020-03-01)
 
 
