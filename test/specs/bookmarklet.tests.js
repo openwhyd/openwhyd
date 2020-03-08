@@ -37,6 +37,24 @@ describe('bookmarklet - adding from a youtube track', function() {
     }, 10000);
   });
 
+  it(`should list no more than 10 tracks`, function() {
+    const timeoutMs = 10 * 1000;
+    const tStart = Date.now();
+    return new Promise((resolve, reject) => {
+      const interval = setInterval(async () => {
+        const nbThumbs = (await $$('.whydThumb')).length;
+        console.log('number of .whydThumb elements', nbThumbs);
+        if (nbThumbs > 10) {
+          clearInterval(interval);
+          reject(new Error('expected 10 tracks or less. got ' + nbThumbs));
+        } else if (Date.now() - tStart >= timeoutMs) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 1000);
+    });
+  });
+
   /*
   // this code was useful to detect that chrome was not loading insecure/mixed content
   it(`should output browser log`, function() {
