@@ -28,14 +28,24 @@ describe('bookmarklet - adding from a youtube track', function() {
     $('.whydThumb').waitForExist();
   });
 
+  it(`should list more than 1 track`, function() {
+    browser.waitUntil(() => {
+      const nbThumbs = $$('.whydThumb').length;
+      console.log('number of .whydThumb elements', nbThumbs);
+      // Note: nbThumbs is sometimes stuck to 1, when running Chrome with --headless
+      return nbThumbs > 1;
+    }, 10000);
+  });
+
   /*
   // this code was useful to detect that chrome was not loading insecure/mixed content
-  it(`should output browser log`, function () {
+  it(`should output browser log`, function() {
     console.log('browser log:', browser.log('browser').value.filter(i => i.level === 'SEVERE'));
     //console.log('driver log:', browser.log('driver').value.slice(-10));
     //console.log('client log:', browser.log('client').value.slice(-10));
     //console.log('server log:', browser.log('server').value.slice(-10));
     // TODO: create a re-usable displayLogs() wdio command
+    // Note: browser.log() was renamed as browser.getLogs() in wdio v5
   });
   */
 });
