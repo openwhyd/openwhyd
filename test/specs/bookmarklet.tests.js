@@ -45,6 +45,7 @@ describe('bookmarklet - adding from a youtube track', function() {
     //console.log('client log:', browser.log('client').value.slice(-10));
     //console.log('server log:', browser.log('server').value.slice(-10));
     // TODO: create a re-usable displayLogs() wdio command
+    // Note: browser.log() was renamed as browser.getLogs() in wdio v5
   });
   */
 });
