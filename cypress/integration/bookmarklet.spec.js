@@ -19,7 +19,8 @@ context('Openwhyd', () => {
   });
 
   it('can add a track from a youtube page', () => {
-    const youtubeURL = 'https://www.youtube.com/watch?v=-F9vo4Z5lO4';
+    const youtubeId = '-F9vo4Z5lO4';
+    const youtubeURL = `https://www.youtube.com/watch?v=${youtubeId}`;
     const bkURL = `${Cypress.config().baseUrl}/js/bookmarklet.js?${Date.now()}`;
 
     cy.visit('http://localhost:8080/html/test-resources/youtube-videos.html');
@@ -33,28 +34,39 @@ context('Openwhyd', () => {
       ).src = bkURL;
     });
 
-    // TODO:
+    // check that bookmarklet is loaded
+    cy.window().should('have.property', '_initWhydBk');
 
+    // should list more than 1 track
+    cy.get('.whydThumb').should('have.length.above', 1);
+
+    // TODO:
     /*
-    it(`should have the bookmarklet loaded`, function() {
-      function getBookmarklet() {
-        return window._initWhydBk;
+    // should list the main track of the page
+    cy.get('.whydThumb', { timeout: 10000 }).should(function($thumbs) {
+      //expect($thumbs).to.have.length.above(1);
+      //if (!$thumbs) return; //throw new Error('we expect thumbs');
+      // cy.log($thumbs);
+      // cy.log($thumbs.length);
+      if ($thumbs.length < 1) {
+        throw new Error('we expect at least one thumb');
       }
-      return !!browser.execute(getBookmarklet);
-      // TODO: create a re-usable waitForSymbol() wdio command
-    });
-  
-    it(`should find the page's track in the list`, function() {
-      $('.whydThumb').waitForExist();
-    });
-  
-    it(`should list more than 1 track`, function() {
-      browser.waitUntil(() => {
-        const nbThumbs = $$('.whydThumb').length;
-        console.log('number of .whydThumb elements', nbThumbs);
-        // Note: nbThumbs is sometimes stuck to 1, when running Chrome with --headless
-        return nbThumbs > 1;
-      }, 10000);
+      for (const i = 0; i < $thumbs.length; i++) {
+        if ($thumbs[i].style.includes(youtubeId)) return;
+      }
+      throw new Error('we expect one thumb to match the video');
+      // const className = $div[0].className;
+
+      // if (!className.match(/heading-/)) {
+      //   throw new Error(`No class "heading-" in ${className}`);
+      // }
+      // //.should('contain', youtubeId)
+      // cy.log(typeof $thumbs, $thumbs, $thumbs.toString());
+      // const styles = $thumbs.map((i, el) => {
+      //   cy.log({ i, style: Cypress.$(el).attr('style') });
+      //   //return Cypress.$(el).attr('style');
+      // });
+      // //return styles.find(style => style.includes(youtubeId));
     });
   
     it(`should list no more than 10 tracks`, function() {
