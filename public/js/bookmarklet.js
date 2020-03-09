@@ -13,7 +13,11 @@ if (undefined == window.console)
   };
 
 console.log('-= openwhyd bookmarklet v2.3 =-');
-var YOUTUBE_API_KEY = 'AIzaSyDtDC8PG4axglrMpi-mowvgjedTFfuYCs8'; // associated to dedicated google project "openwhyd-3", because of its high consumption of quota
+var YT_KEYS = [
+  'AIzaSyDtDC8PG4axglrMpi-mowvgjedTFfuYCs8', // associated to google project "openwhyd-3"
+  'AIzaSyC8FHehlusUWsbgBV_kE3JSrrNscoAl324' // associated to google project "openwhyd-5"
+];
+var YOUTUBE_API_KEY = YT_KEYS[Math.floor(Math.random() * YT_KEYS.length)];
 
 (window._initWhydBk = function() {
   var FILENAME = '/js/bookmarklet.js';
