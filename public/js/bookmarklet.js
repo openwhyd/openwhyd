@@ -359,15 +359,19 @@ console.log('-= openwhyd bookmarklet v2.3 =-');
         eidSet[parts[0]] = true;
         eidSet[eid] = true;
         if (!player || !player.fetchMetadata) return cb({ eId: eid });
-        else if (player instanceof YoutubePlayer)
+        else if (player instanceof YoutubePlayer) {
           // we don't fetch metadata from youtube, to save quota (see see https://github.com/openwhyd/openwhyd/issues/262)
+          var id = parts[0].replace('/yt/', '');
           cb({
-            name: '(YouTube track)',
-            eId: track.eId || eid.substr(0, 4) + track.id,
+            id: id,
+            eId: '/yt/' + id,
+            img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
+            url: 'https://www.youtube.com/watch?v=' + id,
+            title: '(YouTube track)',
             sourceId: playerId,
             sourceLabel: player.label
           });
-        else
+        } else
           player.fetchMetadata(url, function(track) {
             if (track) {
               track = track || {};
