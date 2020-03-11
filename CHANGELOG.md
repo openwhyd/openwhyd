@@ -1,3 +1,13 @@
+## [1.24.1](https://github.com/openwhyd/openwhyd/compare/v1.24.0...v1.24.1) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** dedicated yt api key for remote player iframe ([683a1c0](https://github.com/openwhyd/openwhyd/commit/683a1c0)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** dedicated yt api key to test local iframe ([ac807ec](https://github.com/openwhyd/openwhyd/commit/ac807ec)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** extend youtube api quota from bookmarklet ([#277](https://github.com/openwhyd/openwhyd/issues/277)) ([6668102](https://github.com/openwhyd/openwhyd/commit/6668102)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **ci:** disable bookmarklet that fails in headless mode ([436525e](https://github.com/openwhyd/openwhyd/commit/436525e))
+
 # [1.24.0](https://github.com/openwhyd/openwhyd/compare/v1.23.0...v1.24.0) (2020-03-01)
 
 
