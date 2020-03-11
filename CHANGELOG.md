@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/openwhyd/openwhyd/compare/v1.24.1...v1.25.0) (2020-03-11)
+
+
+### Features
+
+* **ui:** announcing issues with youtube api ([9327ecb](https://github.com/openwhyd/openwhyd/commit/9327ecb))
+
 ## [1.24.1](https://github.com/openwhyd/openwhyd/compare/v1.24.0...v1.24.1) (2020-03-11)
 
 
