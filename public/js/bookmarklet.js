@@ -359,7 +359,7 @@ console.log('-= openwhyd bookmarklet v2.3 =-');
         eidSet[parts[0]] = true;
         eidSet[eid] = true;
         if (!player || !player.fetchMetadata) return cb({ eId: eid });
-        else if (player instanceof YoutubePlayer) {
+        else if (playerId === 'yt') {
           // we don't fetch metadata from youtube, to save quota (see see https://github.com/openwhyd/openwhyd/issues/262)
           var id = parts[0].replace('/yt/', '');
           cb({
