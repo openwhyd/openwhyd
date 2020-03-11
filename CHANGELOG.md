@@ -1,3 +1,10 @@
+## [1.25.1](https://github.com/openwhyd/openwhyd/compare/v1.25.0...v1.25.1) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** disable external track search and filters (incl. YouTube) ([#278](https://github.com/openwhyd/openwhyd/issues/278)) ([e4c5472](https://github.com/openwhyd/openwhyd/commit/e4c5472)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
 # [1.25.0](https://github.com/openwhyd/openwhyd/compare/v1.24.1...v1.25.0) (2020-03-11)
 
 
