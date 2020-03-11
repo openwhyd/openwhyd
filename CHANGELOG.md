@@ -1,3 +1,10 @@
+## [1.25.2](https://github.com/openwhyd/openwhyd/compare/v1.25.1...v1.25.2) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** bookmarklet to not fetch youtube metadata ([#279](https://github.com/openwhyd/openwhyd/issues/279)) ([6b11549](https://github.com/openwhyd/openwhyd/commit/6b11549)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
 ## [1.25.1](https://github.com/openwhyd/openwhyd/compare/v1.25.0...v1.25.1) (2020-03-11)
 
 
