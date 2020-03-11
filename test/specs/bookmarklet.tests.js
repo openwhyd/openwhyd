@@ -28,6 +28,7 @@ describe('bookmarklet - adding from a youtube track', function() {
     $('.whydThumb').waitForExist();
   });
 
+  /*
   it(`should list more than 1 track`, function() {
     browser.waitUntil(() => {
       const nbThumbs = $$('.whydThumb').length;
@@ -36,6 +37,7 @@ describe('bookmarklet - adding from a youtube track', function() {
       return nbThumbs > 1;
     }, 10000);
   });
+  */
 
   /*
   // this code was useful to detect that chrome was not loading insecure/mixed content
