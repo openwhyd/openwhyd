@@ -13,11 +13,6 @@ if (undefined == window.console)
   };
 
 console.log('-= openwhyd bookmarklet v2.3 =-');
-var YT_KEYS = [
-  'AIzaSyDtDC8PG4axglrMpi-mowvgjedTFfuYCs8', // associated to google project "openwhyd-3"
-  'AIzaSyC8FHehlusUWsbgBV_kE3JSrrNscoAl324' // associated to google project "openwhyd-5"
-];
-var YOUTUBE_API_KEY = YT_KEYS[Math.floor(Math.random() * YT_KEYS.length)];
 
 (window._initWhydBk = function() {
   var FILENAME = '/js/bookmarklet.js';
@@ -326,6 +321,7 @@ var YOUTUBE_API_KEY = YT_KEYS[Math.floor(Math.random() * YT_KEYS.length)];
     window.DEEZER_APP_ID = 190482;
     window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
     window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
+    window.YOUTUBE_API_KEY = ''; // see https://github.com/openwhyd/openwhyd/issues/262
     var players = (window._whydPlayers = window._whydPlayers || {
         // playem-all.js must be loaded at that point
         yt: new YoutubePlayer(
@@ -363,6 +359,14 @@ var YOUTUBE_API_KEY = YT_KEYS[Math.floor(Math.random() * YT_KEYS.length)];
         eidSet[parts[0]] = true;
         eidSet[eid] = true;
         if (!player || !player.fetchMetadata) return cb({ eId: eid });
+        else if (player instanceof YoutubePlayer)
+          // we don't fetch metadata from youtube, to save quota (see see https://github.com/openwhyd/openwhyd/issues/262)
+          cb({
+            name: '(YouTube track)',
+            eId: track.eId || eid.substr(0, 4) + track.id,
+            sourceId: playerId,
+            sourceLabel: player.label
+          });
         else
           player.fetchMetadata(url, function(track) {
             if (track) {
