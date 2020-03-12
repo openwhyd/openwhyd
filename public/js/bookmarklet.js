@@ -348,6 +348,8 @@ function bookmarklet(window) {
     });
   }
 
+  // players = { playerId -> { getEid(), fetchMetadata() } }
+  // returns detectPlayemStreams(url, cb)
   function makeStreamDetector(players) {
     var eidSet = {}; // to prevent duplicates
     function getPlayerId(url) {
@@ -401,8 +403,10 @@ function bookmarklet(window) {
     };
   }
 
-  // each detector is called once, without parameters, and returns a list of element objects
-  // (with fields {searchQuery:}, {href:} or {src:}) to extract streams from.
+  // Each detector is called once per web page and returns a list of Query, DomElement and/or Track objects.
+  // - Query objects must have a searchQuery field. They will be passed as-is to ui.addSearchThumb()
+  // - DomElement objects must have a href or src field.
+  // - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
   var DETECTORS = [
     function detectPandoraTrack(window) {
       if (window.location.href.indexOf('pandora.com') == -1) return null;
