@@ -14,7 +14,7 @@ function bookmarklet(window) {
         warn: function() {}
       };
 
-    console.log('-= openwhyd bookmarklet v2.4 =-');
+    console.log('-= openwhyd bookmarklet v2.5 =-');
 
     var FILENAME = '/js/bookmarklet.js';
     var CSS_FILEPATH = '/css/bookmarklet.css';
@@ -348,6 +348,8 @@ function bookmarklet(window) {
     });
   }
 
+  // players = { playerId -> { getEid(), fetchMetadata() } }
+  // returns detectPlayemStreams(url, cb)
   function makeStreamDetector(players) {
     var eidSet = {}; // to prevent duplicates
     function getPlayerId(url) {
@@ -401,9 +403,27 @@ function bookmarklet(window) {
     };
   }
 
-  // each detector is called once, without parameters, and returns a list of element objects
-  // (with fields {searchQuery:}, {href:} or {src:}) to extract streams from.
+  // Each detector is called once per web page and returns a list of Query, DomElement and/or Track objects.
+  // - Query objects must have a searchQuery field. They will be passed as-is to ui.addSearchThumb()
+  // - DomElement objects must have a href or src field.
+  // - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
   var DETECTORS = [
+    function detectYouTubePageTrack(window) {
+      if (/ - YouTube$/.test(window.document.title) === false) return null;
+      var videoElement = window.document.getElementsByTagName(
+        'ytd-watch-flexy'
+      )[0];
+      if (!videoElement) return null;
+      var videoId = videoElement.getAttribute('video-id');
+      if (!videoId || window.location.href.indexOf(videoId) == -1) return null;
+      return [
+        {
+          id: videoId,
+          src: window.location.href,
+          name: window.document.title.replace(/ - YouTube$/, '')
+        }
+      ];
+    },
     function detectPandoraTrack(window) {
       if (window.location.href.indexOf('pandora.com') == -1) return null;
       var artist = getNodeText(
@@ -412,7 +432,9 @@ function bookmarklet(window) {
         title = getNodeText(
           window.document.getElementsByClassName('playerBarSong')[0] || {}
         );
-      return artist && title ? [{ searchQuery: artist + ' - ' + title }] : [];
+      return artist && title
+        ? [{ src: window.location.href, searchQuery: artist + ' - ' + title }]
+        : [];
     },
     function detectDeezerTrack(window) {
       var dzTrackId = window.dzPlayer && window.dzPlayer.getSongId();
@@ -432,7 +454,12 @@ function bookmarklet(window) {
       ];
       for (var i = 0; i < titleParts.length; ++i)
         if (title.indexOf(titleParts[i]) > -1)
-          return [{ searchQuery: title.replace(titleParts[i], '') }];
+          return [
+            {
+              src: window.location.href,
+              searchQuery: title.replace(titleParts[i], '')
+            }
+          ];
     },
     function extractBandcampTracks(window) {
       var toDetect = [];
@@ -521,8 +548,7 @@ function bookmarklet(window) {
       detectTrack(
         url,
         function(track) {
-          track = track || {};
-          if (track.title) {
+          if (track && track.title) {
             track.url = url;
             //track.title = track.title || e.textNode || e.title || e.alt || track.eId || url; // || p.label;
             if (track.sourceLabel)
@@ -531,10 +557,8 @@ function bookmarklet(window) {
                 '/images/icon-' +
                 track.sourceLabel.split(' ')[0].toLowerCase() +
                 '.png';
-
-            ui.addThumb(track);
           }
-          cb();
+          cb(track);
         },
         e
       );
@@ -542,22 +566,32 @@ function bookmarklet(window) {
 
     function whenDone() {
       console.info('finished detecting tracks!');
-      if (!ui.nbTracks) ui.addSearchThumb({ name: window.document.title });
+      if (!ui.nbTracks)
+        ui.addSearchThumb({ searchQuery: window.document.title });
       ui.finish();
     }
 
     var toDetect = new (function ElementStack() {
       // this class holds a collections of elements that potentially reference streamable tracks
       var set = {};
+      function normalize(url) {
+        if (typeof url === 'string' && !/^javascript\:/.test(url)) {
+          return url.split('#')[0];
+        } else {
+          return undefined;
+        }
+      }
+      this.has = function(url) {
+        var normalized = normalize(url);
+        return normalized && !!set[normalized];
+      };
       this.push = function(elt) {
         var url =
           elt &&
-          (elt.eId ||
-            unwrapFacebookLink(elt.href || elt.src || elt.data || ''));
-        if (url && typeof url === 'string') {
-          url = url.split('#')[0];
-          if (url && url.indexOf('javascript:') != 0) set[url] = elt;
-        }
+          normalize(
+            elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || '')
+          );
+        if (url) set[url] = elt;
       };
       this.getSortedArray = function() {
         var eIds = [],
@@ -570,23 +604,32 @@ function bookmarklet(window) {
     })();
 
     console.info('1/2 parse page...');
-    toDetect.push({ src: window.location.href });
 
     DETECTORS.map(function(detectFct) {
       var results = detectFct(window) || [];
       console.info('-----' + detectFct.name, '=>', results);
       results.map(function(result) {
-        if ((result || {}).searchQuery) ui.addSearchThumb(result);
-        else toDetect.push(result);
+        toDetect.push(result);
       });
     });
+
+    if (!toDetect.has(window.location.href))
+      toDetect.push({
+        src: window.location.href,
+        searchQuery: window.document.title
+      });
 
     console.info('2/2 list streamable tracks...');
     var eltArray = toDetect.getSortedArray();
     (function processNext() {
       var elt = eltArray.shift();
       if (!elt) whenDone();
-      else detectEmbed(elt, processNext);
+      else
+        detectEmbed(elt, function(track) {
+          if (track) ui.addThumb(track);
+          else ui.addSearchThumb(elt);
+          processNext();
+        });
     })();
   }
 
