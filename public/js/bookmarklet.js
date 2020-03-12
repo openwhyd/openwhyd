@@ -370,7 +370,7 @@ function bookmarklet(window) {
   }
 
   // players = { playerId -> { getEid(), fetchMetadata() } }
-  // returns detectPlayemStreams(url, cb)
+  // returns detectPlayableStreams(url, callback, element)
   function makeStreamDetector(players) {
     var eidSet = {}; // to prevent duplicates
     function getPlayerId(url) {
@@ -380,46 +380,32 @@ function bookmarklet(window) {
         if (eId) return i;
       }
     }
-    function detect(url, cb) {
+
+    // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
+    return function detectPlayableStreams(url, cb, element) {
+      // 1. find the matching player and track identifier
       var playerId = getPlayerId(url);
       var player = playerId && players[playerId];
-      cb(player && '/' + playerId + '/' + player.getEid(url), player, playerId);
-    }
-    return function detectPlayemStreams(url, cb) {
-      detect(url, function(eid, player, playerId) {
-        if (!eid || eidSet[eid]) return cb();
-        var parts = eid.split('#');
-        var streamUrl = /^https?\:\/\//.test(parts[1] || '') && parts[1];
-        if (eidSet[parts[0]] && !streamUrl)
-          // i.e. store if new, overwrite if new occurence contains a streamUrl
-          return cb();
-        eidSet[parts[0]] = true;
-        eidSet[eid] = true;
-        if (!player || !player.fetchMetadata) return cb({ eId: eid });
-        else if (playerId === 'yt') {
-          // we don't fetch metadata from youtube, to save quota (see see https://github.com/openwhyd/openwhyd/issues/262)
-          var id = parts[0].replace('/yt/', '');
-          cb({
-            id: id,
-            eId: '/yt/' + id,
-            img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
-            url: 'https://www.youtube.com/watch?v=' + id,
-            title: '(YouTube track)',
-            sourceId: playerId,
-            sourceLabel: player.label
-          });
-        } else
-          player.fetchMetadata(url, function(track) {
-            if (track) {
-              track = track || {};
-              track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
-              track.sourceId = playerId;
-              track.sourceLabel = player.label;
-              cb(track);
-            } else {
-              cb();
-            }
-          });
+      var eid = player && '/' + playerId + '/' + player.getEid(url);
+      if (!eid || eidSet[eid]) return cb();
+
+      // 2. extract the (optional) stream URL from the identifier
+      var parts = eid.split('#');
+      var streamUrl = /^https?\:\/\//.test(parts[1] || '') && parts[1];
+      if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
+
+      // 3. store the identifier, with and without stream URL, to prevent duplicates
+      eidSet[parts[0]] = true;
+      eidSet[eid] = true;
+      if (!player || !player.fetchMetadata) return cb({ eId: eid }); // quit if we can't enrich the metadata
+
+      // 4. try to return the track with enriched metadata
+      player.fetchMetadata(url, function(track) {
+        if (!track) return cb();
+        track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
+        track.sourceId = playerId;
+        track.sourceLabel = player.label;
+        cb(track);
       });
     };
   }
@@ -545,14 +531,14 @@ function bookmarklet(window) {
       var remainingUrlDetectors = urlDetectors.slice();
       (function processNext() {
         if (!remainingUrlDetectors.length) return cb();
-          remainingUrlDetectors.shift()(
-            url,
-            function(track) {
-              if (track && track.id) cb(track);
-              else processNext();
-            },
-            element
-          );
+        remainingUrlDetectors.shift()(
+          url,
+          function(track) {
+            if (track && track.id) cb(track);
+            else processNext();
+          },
+          element
+        );
       })();
     }
 
@@ -562,17 +548,17 @@ function bookmarklet(window) {
         unwrapFacebookLink(element.href || element.src || element.data || '');
       if (!url) return cb();
       detectTrack(url, element, function(track) {
-          if (track && track.title) {
-            track.url = url;
-            //track.title = track.title || e.textNode || e.title || e.alt || track.eId || url; // || p.label;
-            if (track.sourceLabel)
-              track.sourceLogo =
-                urlPrefix +
-                '/images/icon-' +
-                track.sourceLabel.split(' ')[0].toLowerCase() +
-                '.png';
-          }
-          cb(track);
+        if (track && track.title) {
+          track.url = url;
+          //track.title = track.title || e.textNode || e.title || e.alt || track.eId || url; // || p.label;
+          if (track.sourceLabel)
+            track.sourceLogo =
+              urlPrefix +
+              '/images/icon-' +
+              track.sourceLabel.split(' ')[0].toLowerCase() +
+              '.png';
+        }
+        cb(track);
       });
     }
 
