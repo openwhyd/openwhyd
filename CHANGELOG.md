@@ -1,3 +1,10 @@
+## [1.26.3](https://github.com/openwhyd/openwhyd/compare/v1.26.2...v1.26.3) (2020-03-12)
+
+
+### Bug Fixes
+
+* **youtube:** regroup api keys in same project, for [#262](https://github.com/openwhyd/openwhyd/issues/262) ([#283](https://github.com/openwhyd/openwhyd/issues/283)) ([f401617](https://github.com/openwhyd/openwhyd/commit/f401617))
+
 ## [1.26.2](https://github.com/openwhyd/openwhyd/compare/v1.26.1...v1.26.2) (2020-03-12)
 
 
