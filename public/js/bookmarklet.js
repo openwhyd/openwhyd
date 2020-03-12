@@ -327,18 +327,39 @@ function bookmarklet(window) {
     };
   }
 
+  var YOUTUBE_PLAYER = {
+    getEid: function(url) {
+      // code imported from playem-all
+      if (
+        /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
+          url
+        ) ||
+        /^\/yt\/([a-zA-Z0-9_\-]+)/.test(url) ||
+        /youtube\.com\/attribution_link\?.*v\%3D([^ \%]+)/.test(url) ||
+        /youtube.googleapis.com\/v\/([a-zA-Z0-9_\-]+)/.test(url)
+      )
+        return RegExp.lastParen;
+    },
+    fetchMetadata: function(url, callback) {
+      var id = this.getEid(url);
+      callback({
+        id: id,
+        eId: '/yt/' + id,
+        img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
+        url: 'https://www.youtube.com/watch?v=' + id,
+        playerLabel: 'Youtube'
+      });
+    }
+  };
+
   function initPlayemPlayers() {
     window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
     window.DEEZER_APP_ID = 190482;
     window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
     window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
-    window.YOUTUBE_API_KEY = ''; // see https://github.com/openwhyd/openwhyd/issues/262
     return (window._whydPlayers = window._whydPlayers || {
+      yt: YOUTUBE_PLAYER, // instead of new YoutubePlayer(...), to save API quota (see #262)
       // playem-all.js must be loaded at that point
-      yt: new YoutubePlayer(
-        {},
-        { playerContainer: window.document.getElementById('videocontainer') }
-      ),
       sc: new SoundCloudPlayer({}),
       vi: new VimeoPlayer({}),
       dm: new DailymotionPlayer({}),
