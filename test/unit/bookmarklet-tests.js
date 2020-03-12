@@ -48,6 +48,7 @@ const detectTracksAsPromise = ({ window, urlDetectors = [] }) =>
         get nbTracks() {
           return tracks.length;
         },
+        addThumb: track => tracks.push(track),
         addSearchThumb: track => tracks.push(track),
         finish: () => resolve(tracks)
       },
@@ -86,7 +87,29 @@ describe('bookmarklet', () => {
     const results = await detectTracksAsPromise({ window });
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
-    assert.equal(results[0].searchQuery, YOUTUBE_VIDEO.title);
+    assert.equal(results[0].name, YOUTUBE_VIDEO.title);
+  });
+
+  it('should return the track metadata from a YouTube page when its detector is provided', async () => {
+    const window = makeWindow({
+      url: YOUTUBE_VIDEO.url,
+      title: `${YOUTUBE_VIDEO.title} - YouTube`,
+      elementsByTagName: YOUTUBE_VIDEO.elementsByTagName
+    });
+    const playerId = 'yt';
+    const detectors = { [playerId]: YOUTUBE_VIDEO.detector };
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [bookmarklet.makeStreamDetector(detectors)]
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    const track = results[0];
+    assert.equal(track.id, YOUTUBE_VIDEO.id);
+    assert.equal(track.title, '(YouTube track)'); // TODO: should be YOUTUBE_VIDEO.title instead, see #262
+    assert.equal(track.img, YOUTUBE_VIDEO.img);
+    assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
+    assert.equal(track.sourceId, playerId);
   });
 
   describe('makeStreamDetector()', () => {
