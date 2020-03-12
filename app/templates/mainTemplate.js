@@ -234,7 +234,7 @@ exports.renderWhydFrame = function(html, params) {
     'var DEEZER_APP_ID = 190482;',
     'var DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf("/", 10)) + "/html/channel.html";',
     'var SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad";',
-    'var YOUTUBE_API_KEY = "AIzaSyBNEoOD3NTfPSCgHlUvaVHUOl62rzaOf-E";', // associated to google api project "openwhyd-4", see https://github.com/openwhyd/openwhyd/issues/262
+    'var YOUTUBE_API_KEY = "AIzaSyBAJTMmfL1dcLWil8l-rAQgpENVQ_bZ54Q";', // associated to google project "openwhyd-2", see https://github.com/openwhyd/openwhyd/issues/262
     'var JAMENDO_CLIENT_ID = "2c9a11b9";',
     '</script>',
     // TODO: move credentials to makeAnalyticsHeading()
