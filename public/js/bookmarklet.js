@@ -675,6 +675,7 @@ function bookmarklet(window) {
     });
   } else {
     return {
+      YOUTUBE_PLAYER,
       detectTracks,
       makeFileDetector,
       makeStreamDetector
