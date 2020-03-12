@@ -98,7 +98,7 @@ describe('bookmarklet', () => {
     assert.equal(results.length, 1);
     const track = results[0];
     assert.equal(track.id, YOUTUBE_VIDEO.id);
-    assert.equal(track.title, '(YouTube track)'); // TODO: should be YOUTUBE_VIDEO.title instead, see #262
+    assert.equal(track.title, YOUTUBE_VIDEO.title);
     assert.equal(track.img, YOUTUBE_VIDEO.img);
     assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
     assert.equal(track.sourceId, playerId);
@@ -149,7 +149,7 @@ describe('bookmarklet', () => {
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
         assert.equal(typeof track, 'object');
         assert.equal(track.id, YOUTUBE_VIDEO.id);
-        assert.equal(track.title, '(YouTube track)'); // TODO: should be YOUTUBE_VIDEO.title instead, see #262
+        assert.equal(track.title, YOUTUBE_VIDEO.title);
         assert.equal(track.img, YOUTUBE_VIDEO.img);
         assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
         assert.equal(track.sourceId, playerId);
