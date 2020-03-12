@@ -5,7 +5,15 @@ const YOUTUBE_VIDEO = {
   id: 'uWB8plk9sXk',
   title: 'Harissa - Tierra',
   img: `https://i.ytimg.com/vi/uWB8plk9sXk/default.jpg`,
-  url: `https://www.youtube.com/watch?v=uWB8plk9sXk`
+  url: `https://www.youtube.com/watch?v=uWB8plk9sXk`,
+  elementsByTagName: {
+    'ytd-watch-flexy': [
+      {
+        role: 'main',
+        'video-id': 'uWB8plk9sXk'
+      }
+    ]
+  }
 };
 
 const makeWindow = ({ url = '', title = '' }) => ({
@@ -48,6 +56,20 @@ describe('bookmarklet', () => {
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
     assert.equal(results[0].searchQuery, songTitle);
+  });
+
+  it('should return the track url and title from a YouTube page', async () => {
+    const window = makeWindow({
+      url: YOUTUBE_VIDEO.url,
+      title: `${YOUTUBE_VIDEO.title} - YouTube`,
+      elementsByTagName: YOUTUBE_VIDEO.elementsByTagName
+    });
+    const results = await detectTracksAsPromise({ window });
+    console.log(results);
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    assert.equal(results[0].src, YOUTUBE_VIDEO.url);
+    assert.equal(results[0].searchQuery, YOUTUBE_VIDEO.title);
   });
 
   describe('makeStreamDetector()', () => {
