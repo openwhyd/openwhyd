@@ -539,9 +539,9 @@ function bookmarklet(window) {
   ];
 
   function detectTracks({ window, ui, urlDetectors }) {
-    // an url-based detector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
+    // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
 
-    function detectTrack(url, cb, element) {
+    function detectTrack(url, element, cb) {
       var remainingUrlDetectors = urlDetectors.slice();
       (function processNext() {
         if (!remainingUrlDetectors.length) {
@@ -560,13 +560,12 @@ function bookmarklet(window) {
       })();
     }
 
-    function detectEmbed(e, cb) {
-      var url = e.eId || unwrapFacebookLink(e.href || e.src || e.data || '');
-      //console.log(url);
-      if (!url) return cb && cb();
-      detectTrack(
-        url,
-        function(track) {
+    function detectEmbed(element, cb) {
+      var url =
+        element.eId ||
+        unwrapFacebookLink(element.href || element.src || element.data || '');
+      if (!url) return cb();
+      detectTrack(url, element, function(track) {
           if (track && track.title) {
             track.url = url;
             //track.title = track.title || e.textNode || e.title || e.alt || track.eId || url; // || p.label;
@@ -578,9 +577,7 @@ function bookmarklet(window) {
                 '.png';
           }
           cb(track);
-        },
-        e
-      );
+      });
     }
 
     function whenDone(searchThumbs) {
