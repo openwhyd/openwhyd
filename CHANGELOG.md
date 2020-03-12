@@ -1,3 +1,10 @@
+## [1.26.1](https://github.com/openwhyd/openwhyd/compare/v1.26.0...v1.26.1) (2020-03-12)
+
+
+### Bug Fixes
+
+* **bookmarklet:** refactor bookmarklet and add tests for [#262](https://github.com/openwhyd/openwhyd/issues/262) ([#281](https://github.com/openwhyd/openwhyd/issues/281)) ([957afec](https://github.com/openwhyd/openwhyd/commit/957afec)), closes [#280](https://github.com/openwhyd/openwhyd/issues/280)
+
 # [1.26.0](https://github.com/openwhyd/openwhyd/compare/v1.25.2...v1.26.0) (2020-03-12)
 
 
