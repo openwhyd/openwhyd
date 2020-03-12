@@ -568,15 +568,20 @@ function bookmarklet(window) {
     var toDetect = new (function ElementStack() {
       // this class holds a collections of elements that potentially reference streamable tracks
       var set = {};
+      function normalize(url) {
+        if (typeof url === 'string' && !/^javascript\:/.test(url)) {
+          return url.split('#')[0];
+        } else {
+          return undefined;
+        }
+      }
       this.push = function(elt) {
         var url =
           elt &&
-          (elt.eId ||
-            unwrapFacebookLink(elt.href || elt.src || elt.data || ''));
-        if (url && typeof url === 'string') {
-          url = url.split('#')[0];
-          if (url && url.indexOf('javascript:') != 0) set[url] = elt;
-        }
+          normalize(
+            elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || '')
+          );
+        if (url) set[url] = elt;
       };
       this.getSortedArray = function() {
         var eIds = [],
