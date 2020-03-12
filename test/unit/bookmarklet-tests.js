@@ -1,19 +1,19 @@
 const assert = require('assert');
-const { detectTracks } = require('./../../public/js/bookmarklet.js');
+const bookmarklet = require('./../../public/js/bookmarklet.js');
 
-const makeWindow = ({ title = '' }) => ({
-  location: { href: '' },
+const makeWindow = ({ url = '', title = '' }) => ({
+  location: { href: url },
   document: {
     title,
     getElementsByTagName: () => []
   }
 });
 
-const detectTracksAsPromise = ({ title }) =>
+const detectTracksAsPromise = ({ window, urlDetectors = [] }) =>
   new Promise(resolve => {
     const tracks = [];
-    detectTracks({
-      window: makeWindow({ title }),
+    bookmarklet.detectTracks({
+      window,
       ui: {
         get nbTracks() {
           return tracks.length;
@@ -21,27 +21,82 @@ const detectTracksAsPromise = ({ title }) =>
         addSearchThumb: track => tracks.push(track),
         finish: () => resolve(tracks)
       },
-      urlDetectors: []
+      urlDetectors
     });
   });
 
 describe('bookmarklet', () => {
   it('should return a search link when no tracks were found on the page', async () => {
-    const title = 'dummy title';
-    const results = await detectTracksAsPromise({ title });
+    const window = makeWindow({ title: 'dummy title' });
+    const results = await detectTracksAsPromise({ window });
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
-    assert.equal(results[0].name, title);
+    assert.equal(results[0].name, window.document.title);
   });
 
   it('should return the track title from a Spotify page', async () => {
     const songTitle = 'Dummy Song';
-    const title = `${songTitle} - Spotify`;
-    const results = await detectTracksAsPromise({ title });
-    console.log(results);
+    const window = makeWindow({ title: `${songTitle} - Spotify` });
+    const results = await detectTracksAsPromise({ window });
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
     assert.equal(results[0].searchQuery, songTitle);
+  });
+
+  describe('makeStreamDetector()', () => {
+    it('should return a function', () => {
+      const detectPlayemStreams = bookmarklet.makeStreamDetector();
+      assert.equal(typeof detectPlayemStreams, 'function');
+    });
+
+    describe('detectPlayemStreams()', () => {
+      it('should return nothing when no players were provided', async () => {
+        const url = 'https://www.youtube.com/watch?v=uWB8plk9sXk';
+        const players = {};
+        const detectPlayemStreams = bookmarklet.makeStreamDetector(players);
+        const track = await new Promise(cb => detectPlayemStreams(url, cb));
+        assert.equal(typeof track, 'undefined');
+      });
+
+      it('should return a track from its URL when a simple detector was provided', async () => {
+        const playerId = 'yt';
+        const videoId = 'uWB8plk9sXk';
+        const url = `https://www.youtube.com/watch?v=${videoId}`;
+        const detectors = {
+          [playerId]: { getEid: () => videoId }
+        };
+        const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
+        const track = await new Promise(cb => detectPlayemStreams(url, cb));
+        assert.equal(typeof track, 'object');
+        assert.equal(track.eId, `/${playerId}/${videoId}`);
+      });
+
+      it('should return a track from its URL when a complete detector was provided', async () => {
+        const playerId = 'yt';
+        const videoId = 'uWB8plk9sXk';
+        const videoTitle = 'Harissa - Tierra';
+        const videoImg = `https://i.ytimg.com/vi/${videoId}/default.jpg`;
+        const url = `https://www.youtube.com/watch?v=${videoId}`;
+        const detectors = {
+          [playerId]: {
+            getEid: () => videoId,
+            fetchMetadata: () => ({
+              id: videoId,
+              title: videoTitle,
+              img: videoImg
+            })
+          }
+        };
+        const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
+        const track = await new Promise(cb => detectPlayemStreams(url, cb));
+        assert.equal(typeof track, 'object');
+        assert.equal(track.id, videoId);
+        assert.equal(track.title, '(YouTube track)'); // TODO: should be videoTitle instead, see #262
+        assert.equal(track.img, videoImg);
+        assert.equal(track.eId, `/${playerId}/${videoId}`);
+        assert.equal(track.sourceId, playerId);
+      });
+    });
   });
 });
 
