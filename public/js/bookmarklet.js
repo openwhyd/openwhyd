@@ -402,6 +402,8 @@ function bookmarklet(window) {
       // 4. try to return the track with enriched metadata
       player.fetchMetadata(url, function(track) {
         if (!track) return cb();
+        element = element || {};
+        track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of the DETECTORS
         track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
         track.sourceId = playerId;
         track.sourceLabel = player.label;
