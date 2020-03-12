@@ -1,3 +1,10 @@
+## [1.26.4](https://github.com/openwhyd/openwhyd/compare/v1.26.3...v1.26.4) (2020-03-12)
+
+
+### Bug Fixes
+
+* **youtube:** dedicated api key for development ([#284](https://github.com/openwhyd/openwhyd/issues/284)) ([b5e5b0f](https://github.com/openwhyd/openwhyd/commit/b5e5b0f))
+
 ## [1.26.3](https://github.com/openwhyd/openwhyd/compare/v1.26.2...v1.26.3) (2020-03-12)
 
 
