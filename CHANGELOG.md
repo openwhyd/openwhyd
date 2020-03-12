@@ -1,3 +1,10 @@
+## [1.26.2](https://github.com/openwhyd/openwhyd/compare/v1.26.1...v1.26.2) (2020-03-12)
+
+
+### Bug Fixes
+
+* display playable bookmarklet hits first ([#282](https://github.com/openwhyd/openwhyd/issues/282)) ([4518d11](https://github.com/openwhyd/openwhyd/commit/4518d11))
+
 ## [1.26.1](https://github.com/openwhyd/openwhyd/compare/v1.26.0...v1.26.1) (2020-03-12)
 
 
