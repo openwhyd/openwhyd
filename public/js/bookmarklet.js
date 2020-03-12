@@ -418,7 +418,9 @@ function bookmarklet(window) {
       if (!videoId || window.location.href.indexOf(videoId) == -1) return null;
       return [
         {
-          searchQuery: window.document.title.replace(/ - YouTube$/, '')
+          id: videoId,
+          src: window.location.href,
+          name: window.document.title.replace(/ - YouTube$/, '')
         }
       ];
     },
@@ -430,7 +432,9 @@ function bookmarklet(window) {
         title = getNodeText(
           window.document.getElementsByClassName('playerBarSong')[0] || {}
         );
-      return artist && title ? [{ searchQuery: artist + ' - ' + title }] : [];
+      return artist && title
+        ? [{ src: window.location.href, searchQuery: artist + ' - ' + title }]
+        : [];
     },
     function detectDeezerTrack(window) {
       var dzTrackId = window.dzPlayer && window.dzPlayer.getSongId();
@@ -450,7 +454,12 @@ function bookmarklet(window) {
       ];
       for (var i = 0; i < titleParts.length; ++i)
         if (title.indexOf(titleParts[i]) > -1)
-          return [{ searchQuery: title.replace(titleParts[i], '') }];
+          return [
+            {
+              src: window.location.href,
+              searchQuery: title.replace(titleParts[i], '')
+            }
+          ];
     },
     function extractBandcampTracks(window) {
       var toDetect = [];
@@ -539,8 +548,7 @@ function bookmarklet(window) {
       detectTrack(
         url,
         function(track) {
-          track = track || {};
-          if (track.title) {
+          if (track && track.title) {
             track.url = url;
             //track.title = track.title || e.textNode || e.title || e.alt || track.eId || url; // || p.label;
             if (track.sourceLabel)
@@ -549,10 +557,8 @@ function bookmarklet(window) {
                 '/images/icon-' +
                 track.sourceLabel.split(' ')[0].toLowerCase() +
                 '.png';
-
-            ui.addThumb(track);
           }
-          cb();
+          cb(track);
         },
         e
       );
@@ -575,6 +581,10 @@ function bookmarklet(window) {
           return undefined;
         }
       }
+      this.has = function(url) {
+        var normalized = normalize(url);
+        return normalized && !!set[normalized];
+      };
       this.push = function(elt) {
         var url =
           elt &&
@@ -594,23 +604,32 @@ function bookmarklet(window) {
     })();
 
     console.info('1/2 parse page...');
-    toDetect.push({ src: window.location.href });
 
     DETECTORS.map(function(detectFct) {
       var results = detectFct(window) || [];
       console.info('-----' + detectFct.name, '=>', results);
       results.map(function(result) {
-        if ((result || {}).searchQuery) ui.addSearchThumb(result);
-        else toDetect.push(result);
+        toDetect.push(result);
       });
     });
+
+    if (!toDetect.has(window.location.href))
+      toDetect.push({
+        src: window.location.href,
+        searchQuery: window.document.title
+      });
 
     console.info('2/2 list streamable tracks...');
     var eltArray = toDetect.getSortedArray();
     (function processNext() {
       var elt = eltArray.shift();
       if (!elt) whenDone();
-      else detectEmbed(elt, processNext);
+      else
+        detectEmbed(elt, function(track) {
+          if (track) ui.addThumb(track);
+          else ui.addSearchThumb(elt);
+          processNext();
+        });
     })();
   }
 
