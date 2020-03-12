@@ -14,7 +14,7 @@ function bookmarklet(window) {
         warn: function() {}
       };
 
-    console.log('-= openwhyd bookmarklet v2.4 =-');
+    console.log('-= openwhyd bookmarklet v2.5 =-');
 
     var FILENAME = '/js/bookmarklet.js';
     var CSS_FILEPATH = '/css/bookmarklet.css';
