@@ -544,10 +544,7 @@ function bookmarklet(window) {
     function detectTrack(url, element, cb) {
       var remainingUrlDetectors = urlDetectors.slice();
       (function processNext() {
-        if (!remainingUrlDetectors.length) {
-          cb();
-        } else {
-          //console.log('- trying detector ' + (urlDetectors.length-1));
+        if (!remainingUrlDetectors.length) return cb();
           remainingUrlDetectors.shift()(
             url,
             function(track) {
@@ -556,7 +553,6 @@ function bookmarklet(window) {
             },
             element
           );
-        }
       })();
     }
 
