@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/openwhyd/openwhyd/compare/v1.25.2...v1.26.0) (2020-03-12)
+
+
+### Features
+
+* **tests:** add unit tests for bookmarklet ([a75e84e](https://github.com/openwhyd/openwhyd/commit/a75e84e))
+
 ## [1.25.2](https://github.com/openwhyd/openwhyd/compare/v1.25.1...v1.25.2) (2020-03-11)
 
 
