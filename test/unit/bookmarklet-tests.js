@@ -1,6 +1,13 @@
 const assert = require('assert');
 const bookmarklet = require('./../../public/js/bookmarklet.js');
 
+const YOUTUBE_VIDEO = {
+  id: 'uWB8plk9sXk',
+  title: 'Harissa - Tierra',
+  img: `https://i.ytimg.com/vi/uWB8plk9sXk/default.jpg`,
+  url: `https://www.youtube.com/watch?v=uWB8plk9sXk`
+};
+
 const makeWindow = ({ url = '', title = '' }) => ({
   location: { href: url },
   document: {
@@ -51,7 +58,7 @@ describe('bookmarklet', () => {
 
     describe('detectPlayemStreams()', () => {
       it('should return nothing when no players were provided', async () => {
-        const url = 'https://www.youtube.com/watch?v=uWB8plk9sXk';
+        const { url } = YOUTUBE_VIDEO;
         const players = {};
         const detectPlayemStreams = bookmarklet.makeStreamDetector(players);
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
@@ -59,41 +66,37 @@ describe('bookmarklet', () => {
       });
 
       it('should return a track from its URL when a simple detector was provided', async () => {
+        const { url } = YOUTUBE_VIDEO;
         const playerId = 'yt';
-        const videoId = 'uWB8plk9sXk';
-        const url = `https://www.youtube.com/watch?v=${videoId}`;
         const detectors = {
-          [playerId]: { getEid: () => videoId }
+          [playerId]: { getEid: () => YOUTUBE_VIDEO.id }
         };
         const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
         assert.equal(typeof track, 'object');
-        assert.equal(track.eId, `/${playerId}/${videoId}`);
+        assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
       });
 
       it('should return a track from its URL when a complete detector was provided', async () => {
+        const { url } = YOUTUBE_VIDEO;
         const playerId = 'yt';
-        const videoId = 'uWB8plk9sXk';
-        const videoTitle = 'Harissa - Tierra';
-        const videoImg = `https://i.ytimg.com/vi/${videoId}/default.jpg`;
-        const url = `https://www.youtube.com/watch?v=${videoId}`;
         const detectors = {
           [playerId]: {
-            getEid: () => videoId,
+            getEid: () => YOUTUBE_VIDEO.id,
             fetchMetadata: () => ({
-              id: videoId,
-              title: videoTitle,
-              img: videoImg
+              id: YOUTUBE_VIDEO.id,
+              title: YOUTUBE_VIDEO.title,
+              img: YOUTUBE_VIDEO.img
             })
           }
         };
         const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
         assert.equal(typeof track, 'object');
-        assert.equal(track.id, videoId);
-        assert.equal(track.title, '(YouTube track)'); // TODO: should be videoTitle instead, see #262
-        assert.equal(track.img, videoImg);
-        assert.equal(track.eId, `/${playerId}/${videoId}`);
+        assert.equal(track.id, YOUTUBE_VIDEO.id);
+        assert.equal(track.title, '(YouTube track)'); // TODO: should be YOUTUBE_VIDEO.title instead, see #262
+        assert.equal(track.img, YOUTUBE_VIDEO.img);
+        assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
         assert.equal(track.sourceId, playerId);
       });
     });
