@@ -564,7 +564,10 @@ function bookmarklet(window) {
       );
     }
 
-    function whenDone() {
+    function whenDone(searchThumbs) {
+      searchThumbs.map(function(searchThumb) {
+        ui.addSearchThumb(searchThumb);
+      });
       console.info('finished detecting tracks!');
       if (!ui.nbTracks)
         ui.addSearchThumb({ searchQuery: window.document.title });
@@ -621,13 +624,14 @@ function bookmarklet(window) {
 
     console.info('2/2 list streamable tracks...');
     var eltArray = toDetect.getSortedArray();
+    var searchThumbs = [];
     (function processNext() {
       var elt = eltArray.shift();
-      if (!elt) whenDone();
+      if (!elt) whenDone(searchThumbs);
       else
         detectEmbed(elt, function(track) {
           if (track) ui.addThumb(track);
-          else ui.addSearchThumb(elt);
+          else searchThumbs.push(elt);
           processNext();
         });
     })();
