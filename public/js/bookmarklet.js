@@ -489,7 +489,6 @@ function bookmarklet(window) {
         var bcPrefix = '/bc/' + bc.url.split('//')[1].split('.')[0] + '/';
         toDetect = bc.trackinfo.map(function(tr) {
           if (tr.file) {
-            //console.log("-------------FILE! =>", tr.file);
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
             return {
               href: streamUrl,
@@ -552,7 +551,6 @@ function bookmarklet(window) {
           remainingUrlDetectors.shift()(
             url,
             function(track) {
-              //console.log(' => ' + typeof track + ' ' + JSON.stringify(track))
               if (track && track.id) cb(track);
               else processNext();
             },
@@ -631,7 +629,7 @@ function bookmarklet(window) {
 
     DETECTORS.map(function(detectFct) {
       var results = detectFct(window) || [];
-      console.info('-----' + detectFct.name, '=>', results);
+      console.info('-----' + detectFct.name, '=>', results.length);
       results.map(function(result) {
         toDetect.push(result);
       });
