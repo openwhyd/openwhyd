@@ -542,7 +542,8 @@ function bookmarklet(window) {
 
     function whenDone() {
       console.info('finished detecting tracks!');
-      if (!ui.nbTracks) ui.addSearchThumb({ name: window.document.title });
+      if (!ui.nbTracks)
+        ui.addSearchThumb({ searchQuery: window.document.title });
       ui.finish();
     }
 

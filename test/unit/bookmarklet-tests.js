@@ -61,7 +61,7 @@ describe('bookmarklet', () => {
     const results = await detectTracksAsPromise({ window });
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
-    assert.equal(results[0].name, window.document.title);
+    assert.equal(results[0].searchQuery, window.document.title);
   });
 
   it('should return the track title from a Spotify page', async () => {
