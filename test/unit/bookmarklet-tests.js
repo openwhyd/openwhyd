@@ -19,3 +19,16 @@ describe('bookmarklet', function() {
     });
   });
 });
+
+/**
+ * How to manually test the bookmarklet, in a web browser
+ * 
+   // 1. Go to the /all page (because it always shows at least one video)
+   window.location.href = 'http://localhost:8080/all';
+   
+   // 2. Load the local bookmarket, using the JavaScript console:
+   window.document.body.appendChild(
+     window.document.createElement('script')
+   ).src = `http://localhost:8080/js/bookmarklet.js?${Date.now()}`;
+ *
+ **/
