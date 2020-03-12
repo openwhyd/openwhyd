@@ -159,12 +159,14 @@ describe('bookmarklet', () => {
 });
 
 /**
- * How to manually test the bookmarklet, in a web browser
+ * How to manually test the bookmarklet
  * 
-   // 1. Go to the /all page (because it always shows at least one video)
-   window.location.href = 'http://localhost:8080/all';
+   // 1. Make sure that openwhyd is running locally
+
+   // 2. In your web browser, open a web page that contains videos
    
-   // 2. Load the local bookmarket, using the JavaScript console:
+   // 3. In the page's JavaScript console, Load the local bookmarket:
+   
    window.document.body.appendChild(
      window.document.createElement('script')
    ).src = `http://localhost:8080/js/bookmarklet.js?${Date.now()}`;
