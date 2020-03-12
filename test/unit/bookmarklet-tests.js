@@ -1,22 +1,47 @@
-// const assert = require('assert');
+const assert = require('assert');
 const { detectTracks } = require('./../../public/js/bookmarklet.js');
 
-describe('bookmarklet', function() {
-  it('should initialize without error', async () => {
+const makeWindow = ({ title = '' }) => ({
+  location: { href: '' },
+  document: {
+    title,
+    getElementsByTagName: () => []
+  }
+});
+
+const detectTracksAsPromise = ({ title }) =>
+  new Promise(resolve => {
+    const tracks = [];
     detectTracks({
-      window: {
-        location: { href: '' },
-        document: {
-          title: '',
-          getElementsByTagName: () => []
-        }
-      },
+      window: makeWindow({ title }),
       ui: {
-        addSearchThumb: () => {},
-        finish: () => {}
+        get nbTracks() {
+          return tracks.length;
+        },
+        addSearchThumb: track => tracks.push(track),
+        finish: () => resolve(tracks)
       },
       urlDetectors: []
     });
+  });
+
+describe('bookmarklet', () => {
+  it('should return a search link when no tracks were found on the page', async () => {
+    const title = 'dummy title';
+    const results = await detectTracksAsPromise({ title });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    assert.equal(results[0].name, title);
+  });
+
+  it('should return the track title from a Spotify page', async () => {
+    const songTitle = 'Dummy Song';
+    const title = `${songTitle} - Spotify`;
+    const results = await detectTracksAsPromise({ title });
+    console.log(results);
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    assert.equal(results[0].searchQuery, songTitle);
   });
 });
 
