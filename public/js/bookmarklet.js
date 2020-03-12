@@ -408,6 +408,20 @@ function bookmarklet(window) {
   // - DomElement objects must have a href or src field.
   // - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
   var DETECTORS = [
+    function detectYouTubePageTrack(window) {
+      if (/ - YouTube$/.test(window.document.title) === false) return null;
+      var videoElement = window.document.getElementsByTagName(
+        'ytd-watch-flexy'
+      )[0];
+      if (!videoElement) return null;
+      var videoId = videoElement.getAttribute('video-id');
+      if (!videoId || window.location.href.indexOf(videoId) == -1) return null;
+      return [
+        {
+          searchQuery: window.document.title.replace(/ - YouTube$/, '')
+        }
+      ];
+    },
     function detectPandoraTrack(window) {
       if (window.location.href.indexOf('pandora.com') == -1) return null;
       var artist = getNodeText(

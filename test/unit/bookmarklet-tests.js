@@ -80,10 +80,8 @@ describe('bookmarklet', () => {
       elementsByTagName: YOUTUBE_VIDEO.elementsByTagName
     });
     const results = await detectTracksAsPromise({ window });
-    console.log(results);
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
-    assert.equal(results[0].src, YOUTUBE_VIDEO.url);
     assert.equal(results[0].searchQuery, YOUTUBE_VIDEO.title);
   });
 
