@@ -6,6 +6,14 @@ const YOUTUBE_VIDEO = {
   title: 'Harissa - Tierra',
   img: `https://i.ytimg.com/vi/uWB8plk9sXk/default.jpg`,
   url: `https://www.youtube.com/watch?v=uWB8plk9sXk`,
+  detector: {
+    getEid: () => YOUTUBE_VIDEO.id,
+    fetchMetadata: () => ({
+      id: YOUTUBE_VIDEO.id,
+      title: YOUTUBE_VIDEO.title,
+      img: YOUTUBE_VIDEO.img
+    })
+  },
   elementsByTagName: {
     'ytd-watch-flexy': [
       {
@@ -16,11 +24,18 @@ const YOUTUBE_VIDEO = {
   }
 };
 
-const makeWindow = ({ url = '', title = '' }) => ({
+const makeElement = attributes => ({
+  ...attributes,
+  getAttribute: attr => attributes[attr]
+});
+
+const makeWindow = ({ url = '', title = '', elementsByTagName = {} }) => ({
   location: { href: url },
   document: {
     title,
-    getElementsByTagName: () => []
+    getElementsByTagName: tagName =>
+      (elementsByTagName[tagName] || []).map(makeElement)
+    // TODO: getElementsByClassName()
   }
 });
 
@@ -91,7 +106,7 @@ describe('bookmarklet', () => {
         const { url } = YOUTUBE_VIDEO;
         const playerId = 'yt';
         const detectors = {
-          [playerId]: { getEid: () => YOUTUBE_VIDEO.id }
+          [playerId]: { getEid: YOUTUBE_VIDEO.detector.getEid }
         };
         const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
@@ -103,14 +118,7 @@ describe('bookmarklet', () => {
         const { url } = YOUTUBE_VIDEO;
         const playerId = 'yt';
         const detectors = {
-          [playerId]: {
-            getEid: () => YOUTUBE_VIDEO.id,
-            fetchMetadata: () => ({
-              id: YOUTUBE_VIDEO.id,
-              title: YOUTUBE_VIDEO.title,
-              img: YOUTUBE_VIDEO.img
-            })
-          }
+          [playerId]: YOUTUBE_VIDEO.detector
         };
         const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
