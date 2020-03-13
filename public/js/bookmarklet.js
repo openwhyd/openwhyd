@@ -4,252 +4,11 @@
  * https://github.com/openwhyd/openwhyd
  **/
 
-function bookmarklet(window) {
-  if (window) {
-    // prevents bug in firefox 3
-    if (undefined == window.console)
-      console = {
-        log: function() {},
-        info: function() {},
-        error: function() {},
-        warn: function() {}
-      };
+function makeBookmarklet(window, urlPrefix, urlSuffix) {
+  urlPrefix = urlPrefix || '';
+  urlSuffix = urlSuffix || '';
 
-    console.log('-= openwhyd bookmarklet v2.6 =-');
-
-    var FILENAME = '/js/bookmarklet.js';
-    var CSS_FILEPATH = '/css/bookmarklet.css';
-
-    // close the bookmarklet by pressing ESC
-
-    window.onkeydownBackup =
-      window.onkeydownBackup || window.document.onkeydown;
-
-    var overflowBackup = window.document.body.style.overflow;
-    window.document.body.style.overflow = 'hidden';
-
-    window.closeWhydBk = function() {
-      window.document.body.removeChild(
-        window.document.getElementById('whydBookmarklet')
-      );
-      window.document.onkeydown = window.onkeydownBackup;
-      window.document.body.style.overflow = overflowBackup;
-      delete window.onkeydownBackup;
-      delete window.closeWhydBk;
-    };
-
-    window.document.onkeydown = function(e) {
-      if ((e || event).keyCode == 27) closeWhydBk();
-    };
-
-    // utility functions
-
-    function findScriptHost(scriptPathName) {
-      // TODO: use window.document.currentScript.src when IE becomes completely forgotten by humans
-      var els = window.document.getElementsByTagName('script');
-      for (var i = els.length - 1; i > -1; --i) {
-        var whydPathPos = els[i].src.indexOf(scriptPathName);
-        if (whydPathPos > -1) return els[i].src.substr(0, whydPathPos);
-      }
-    }
-
-    function getSelText() {
-      var SelText = '';
-      if (window.getSelection) {
-        SelText = window.getSelection();
-      } else if (window.document.getSelection) {
-        SelText = window.document.getSelection();
-      } else if (window.document.selection) {
-        SelText = window.document.selection.createRange().text;
-      }
-      return SelText;
-    }
-
-    function include(src, cb) {
-      var inc, timer;
-      if (
-        src
-          .split(/[\#\?]/)[0]
-          .split('.')
-          .pop()
-          .toLowerCase() == 'css'
-      ) {
-        inc = window.document.createElement('link');
-        inc.rel = 'stylesheet';
-        inc.type = 'text/css';
-        inc.media = 'screen';
-        inc.href = src;
-      } else {
-        inc = window.document.createElement('script');
-        inc.onload = function(loaded) {
-          timer = timer ? clearInterval(timer) : null;
-          cb && cb();
-        };
-        function check() {
-          if (
-            inc.readyState &&
-            (inc.readyState == 'loaded' ||
-              inc.readyState == 'complete' ||
-              inc.readyState == 4)
-          )
-            inc.onload();
-        }
-        timer = cb ? setInterval(check, 500) : undefined;
-        inc.onreadystatechange = check;
-        inc.type = 'text/javascript';
-        inc.src = src;
-      }
-      window.document.getElementsByTagName('head')[0].appendChild(inc);
-    }
-
-    // user interface
-
-    function BkUi() {
-      this.nbTracks = 0;
-
-      var div = window.document.getElementById('whydBookmarklet');
-      if (!div) {
-        window.document.body.appendChild(
-          window.document.createElement('div')
-        ).id = 'whydBookmarklet';
-        div = window.document.getElementById('whydBookmarklet');
-      }
-
-      div.innerHTML = [
-        '<div id="whydOverlay"></div>',
-        '<div id="whydHeader">',
-        '<a target="_blank" href="' +
-          urlPrefix +
-          '"><img src="' +
-          urlPrefix +
-          '/images/logo-s.png"></a>',
-        '<div onclick="closeWhydBk();" style="background-image:url(' +
-          urlPrefix +
-          '/images/bookmarklet_ic_close_Normal.png)"></div>',
-        '</div>',
-        '<div id="whydContent">',
-        '<div id="whydLoading"></div>',
-        '</div>'
-      ].join('\n');
-
-      function showForm() {
-        var thumb = this;
-        var text = getSelText();
-        var href =
-          urlPrefix +
-          '/post?v=2&' +
-          'embed=' +
-          (thumb.eId
-            ? '1&eId=' + encodeURIComponent(thumb.eId)
-            : encodeURIComponent(thumb.url)) +
-          (thumb.title ? '&title=' + encodeURIComponent(thumb.title) : '') +
-          '&refUrl=' +
-          encodeURIComponent(window.location.href) +
-          '&refTtl=' +
-          encodeURIComponent(window.document.title) +
-          (text ? '&text=' + encodeURIComponent(text) : '');
-        var whydPop = window.open(
-          href,
-          'whydPop',
-          'height=460,width=780,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
-        );
-        whydPop.focus();
-        window.closeWhydBk();
-      }
-
-      function showSearch() {
-        var searchQuery = this;
-        var whydPop = window.open(
-          urlPrefix + '/search?q=' + encodeURIComponent(searchQuery),
-          'whydSearch'
-        );
-        whydPop.focus();
-        window.closeWhydBk();
-      }
-
-      function elt(attrs, children) {
-        var div = window.document.createElement(attrs.tagName || 'div');
-        if (attrs.tagName) delete attrs.tagName;
-        if (attrs.img) {
-          div.style.backgroundImage = 'url(' + attrs.img + ')';
-          delete attrs.img;
-        }
-        for (var i in attrs) div.setAttribute(i, attrs[i]);
-        for (var i = 0; i < (children || []).length; ++i)
-          div.appendChild(children[i]);
-        return div;
-      }
-
-      function selectThumb(e) {
-        var tpn = this.parentNode;
-        var selected = tpn.className.indexOf(' selected') > -1;
-        tpn.className =
-          tpn.className.replace(' selected', '') +
-          (selected ? '' : ' selected');
-        e.preventDefault();
-      }
-
-      function renderThumb(thumb) {
-        var addBtn = elt({ class: 'whydCont' }, [
-          elt({ class: 'whydContOvr' }),
-          elt({
-            class: 'whydAdd',
-            img: urlPrefix + '/images/bookmarklet_ic_add_normal.png'
-          })
-        ]);
-        addBtn.onclick = thumb.onclick;
-        var checkBox = elt({ class: 'whydSelect' }); //onclick: "var tpn=this.parentNode;tpn.className=tpn.className.replace(' selected','')+(tpn.className.indexOf(' selected')>-1?'':' selected');e.preventDefault();"
-        checkBox.onclick = selectThumb;
-        return elt(
-          {
-            id: thumb.id,
-            class: 'whydThumb',
-            img: thumb.img || urlPrefix + '/images/cover-track.png'
-          },
-          [
-            elt({ class: 'whydGrad' }),
-            elt({ tagName: 'p' }, [document.createTextNode(thumb.title)]),
-            elt({ class: 'whydSrcLogo', img: thumb.sourceLogo }),
-            addBtn,
-            checkBox
-          ]
-        );
-        return div;
-      }
-
-      var contentDiv = window.document.getElementById('whydContent');
-
-      this.addThumb = function(thumb) {
-        thumb.id = 'whydThumb' + this.nbTracks++;
-        thumb = imageToHD(thumb);
-        thumb.onclick = thumb.onclick || showForm.bind(thumb);
-        contentDiv.appendChild(renderThumb(thumb));
-      };
-
-      this.addSearchThumb = function(track) {
-        var searchQuery = track.searchQuery || track.name || track.title;
-        this.addThumb({
-          title: searchQuery || 'Search Openwhyd',
-          sourceLogo: urlPrefix + '/images/icon-search-from-bk.png',
-          onclick: showSearch.bind(searchQuery)
-        });
-      };
-
-      this.finish = function(html) {
-        window.document.getElementById('whydLoading').style.display = 'none';
-      };
-
-      return this;
-    }
-
-    var urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
-      urlSuffix = '?' + new Date().getTime();
-  } else {
-    // runnning from Node.js (i.e. not from web browser)
-
-    const urlPrefix = '';
-    const urlSuffix = '';
-  }
+  // Helpers
 
   function getNodeText(node) {
     return (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
@@ -272,34 +31,6 @@ function bookmarklet(window) {
       return result;
     }
     return src;
-  }
-
-  function imageToHD(track) {
-    if (track.img) {
-      if (track.eId.substr(1, 2) == 'yt') {
-        var img =
-          'https://img.youtube.com/vi/' +
-          track.eId.substr(4).split('?')[0] +
-          '/hqdefault.jpg';
-        var i = new Image();
-        i.onload = function() {
-          if (i.height >= 120) {
-            window.document.getElementById(track.id).style.backgroundImage =
-              'url(' + img + ')';
-          }
-        };
-        i.src = img;
-      } else if (track.eId.substr(1, 2) == 'sc')
-        track.img = track.img.replace('-large', '-t300x300');
-      else if (track.eId.indexOf('/dz/') == 0)
-        track.img = track.img.replace(/\/image$/, '/image?size=480x640');
-      else if (track.eId.indexOf('/ja/') == 0)
-        track.img = track.img.replace(
-          /\/covers\/1\.200\.jpg$/,
-          '/covers/1.600.jpg'
-        );
-    }
-    return track;
   }
 
   // Track detectors
@@ -352,23 +83,6 @@ function bookmarklet(window) {
       });
     }
   };
-
-  function initPlayemPlayers() {
-    window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
-    window.DEEZER_APP_ID = 190482;
-    window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
-    window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
-    return (window._whydPlayers = window._whydPlayers || {
-      yt: YOUTUBE_PLAYER, // instead of new YoutubePlayer(...), to save API quota (see #262)
-      // playem-all.js must be loaded at that point
-      sc: new SoundCloudPlayer({}),
-      vi: new VimeoPlayer({}),
-      dm: new DailymotionPlayer({}),
-      dz: new DeezerPlayer({}),
-      bc: new BandcampPlayer({}),
-      ja: new JamendoPlayer({})
-    });
-  }
 
   // players = { playerId -> { getEid(), fetchMetadata() } }
   // returns detectPlayableStreams(url, callback, element)
@@ -646,7 +360,309 @@ function bookmarklet(window) {
     })();
   }
 
-  if (window) {
+  return {
+    YOUTUBE_PLAYER,
+    detectTracks,
+    makeFileDetector,
+    makeStreamDetector
+  };
+}
+
+if (typeof exports !== 'undefined') {
+  // loading from node.js
+  module.exports = makeBookmarklet(); // will return detectTracks() and other functions
+} else {
+  // running from web browser
+  (window._initWhydBk = function() {
+    // prevents bug in firefox 3
+    if (undefined == window.console)
+      console = {
+        log: function() {},
+        info: function() {},
+        error: function() {},
+        warn: function() {}
+      };
+
+    console.log('-= openwhyd bookmarklet v2.6 =-');
+
+    var FILENAME = '/js/bookmarklet.js';
+    var CSS_FILEPATH = '/css/bookmarklet.css';
+
+    // close the bookmarklet by pressing ESC
+
+    window.onkeydownBackup =
+      window.onkeydownBackup || window.document.onkeydown;
+
+    var overflowBackup = window.document.body.style.overflow;
+    window.document.body.style.overflow = 'hidden';
+
+    window.closeWhydBk = function() {
+      window.document.body.removeChild(
+        window.document.getElementById('whydBookmarklet')
+      );
+      window.document.onkeydown = window.onkeydownBackup;
+      window.document.body.style.overflow = overflowBackup;
+      delete window.onkeydownBackup;
+      delete window.closeWhydBk;
+    };
+
+    window.document.onkeydown = function(e) {
+      if ((e || event).keyCode == 27) closeWhydBk();
+    };
+
+    // utility functions
+
+    function findScriptHost(scriptPathName) {
+      // TODO: use window.document.currentScript.src when IE becomes completely forgotten by humans
+      var els = window.document.getElementsByTagName('script');
+      for (var i = els.length - 1; i > -1; --i) {
+        var whydPathPos = els[i].src.indexOf(scriptPathName);
+        if (whydPathPos > -1) return els[i].src.substr(0, whydPathPos);
+      }
+    }
+
+    function getSelText() {
+      var SelText = '';
+      if (window.getSelection) {
+        SelText = window.getSelection();
+      } else if (window.document.getSelection) {
+        SelText = window.document.getSelection();
+      } else if (window.document.selection) {
+        SelText = window.document.selection.createRange().text;
+      }
+      return SelText;
+    }
+
+    function include(src, cb) {
+      var inc, timer;
+      if (
+        src
+          .split(/[\#\?]/)[0]
+          .split('.')
+          .pop()
+          .toLowerCase() == 'css'
+      ) {
+        inc = window.document.createElement('link');
+        inc.rel = 'stylesheet';
+        inc.type = 'text/css';
+        inc.media = 'screen';
+        inc.href = src;
+      } else {
+        inc = window.document.createElement('script');
+        inc.onload = function(loaded) {
+          timer = timer ? clearInterval(timer) : null;
+          cb && cb();
+        };
+        function check() {
+          if (
+            inc.readyState &&
+            (inc.readyState == 'loaded' ||
+              inc.readyState == 'complete' ||
+              inc.readyState == 4)
+          )
+            inc.onload();
+        }
+        timer = cb ? setInterval(check, 500) : undefined;
+        inc.onreadystatechange = check;
+        inc.type = 'text/javascript';
+        inc.src = src;
+      }
+      window.document.getElementsByTagName('head')[0].appendChild(inc);
+    }
+
+    function imageToHD(track) {
+      if (track.img) {
+        if (track.eId.substr(1, 2) == 'yt') {
+          var img =
+            'https://img.youtube.com/vi/' +
+            track.eId.substr(4).split('?')[0] +
+            '/hqdefault.jpg';
+          var i = new Image();
+          i.onload = function() {
+            if (i.height >= 120) {
+              window.document.getElementById(track.id).style.backgroundImage =
+                'url(' + img + ')';
+            }
+          };
+          i.src = img;
+        } else if (track.eId.substr(1, 2) == 'sc')
+          track.img = track.img.replace('-large', '-t300x300');
+        else if (track.eId.indexOf('/dz/') == 0)
+          track.img = track.img.replace(/\/image$/, '/image?size=480x640');
+        else if (track.eId.indexOf('/ja/') == 0)
+          track.img = track.img.replace(
+            /\/covers\/1\.200\.jpg$/,
+            '/covers/1.600.jpg'
+          );
+      }
+      return track;
+    }
+
+    // user interface
+
+    function BkUi() {
+      this.nbTracks = 0;
+
+      var div = window.document.getElementById('whydBookmarklet');
+      if (!div) {
+        window.document.body.appendChild(
+          window.document.createElement('div')
+        ).id = 'whydBookmarklet';
+        div = window.document.getElementById('whydBookmarklet');
+      }
+
+      div.innerHTML = [
+        '<div id="whydOverlay"></div>',
+        '<div id="whydHeader">',
+        '<a target="_blank" href="' +
+          urlPrefix +
+          '"><img src="' +
+          urlPrefix +
+          '/images/logo-s.png"></a>',
+        '<div onclick="closeWhydBk();" style="background-image:url(' +
+          urlPrefix +
+          '/images/bookmarklet_ic_close_Normal.png)"></div>',
+        '</div>',
+        '<div id="whydContent">',
+        '<div id="whydLoading"></div>',
+        '</div>'
+      ].join('\n');
+
+      function showForm() {
+        var thumb = this;
+        var text = getSelText();
+        var href =
+          urlPrefix +
+          '/post?v=2&' +
+          'embed=' +
+          (thumb.eId
+            ? '1&eId=' + encodeURIComponent(thumb.eId)
+            : encodeURIComponent(thumb.url)) +
+          (thumb.title ? '&title=' + encodeURIComponent(thumb.title) : '') +
+          '&refUrl=' +
+          encodeURIComponent(window.location.href) +
+          '&refTtl=' +
+          encodeURIComponent(window.document.title) +
+          (text ? '&text=' + encodeURIComponent(text) : '');
+        var whydPop = window.open(
+          href,
+          'whydPop',
+          'height=460,width=780,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
+        );
+        whydPop.focus();
+        window.closeWhydBk();
+      }
+
+      function showSearch() {
+        var searchQuery = this;
+        var whydPop = window.open(
+          urlPrefix + '/search?q=' + encodeURIComponent(searchQuery),
+          'whydSearch'
+        );
+        whydPop.focus();
+        window.closeWhydBk();
+      }
+
+      function elt(attrs, children) {
+        var div = window.document.createElement(attrs.tagName || 'div');
+        if (attrs.tagName) delete attrs.tagName;
+        if (attrs.img) {
+          div.style.backgroundImage = 'url(' + attrs.img + ')';
+          delete attrs.img;
+        }
+        for (var i in attrs) div.setAttribute(i, attrs[i]);
+        for (var i = 0; i < (children || []).length; ++i)
+          div.appendChild(children[i]);
+        return div;
+      }
+
+      function selectThumb(e) {
+        var tpn = this.parentNode;
+        var selected = tpn.className.indexOf(' selected') > -1;
+        tpn.className =
+          tpn.className.replace(' selected', '') +
+          (selected ? '' : ' selected');
+        e.preventDefault();
+      }
+
+      function renderThumb(thumb) {
+        var addBtn = elt({ class: 'whydCont' }, [
+          elt({ class: 'whydContOvr' }),
+          elt({
+            class: 'whydAdd',
+            img: urlPrefix + '/images/bookmarklet_ic_add_normal.png'
+          })
+        ]);
+        addBtn.onclick = thumb.onclick;
+        var checkBox = elt({ class: 'whydSelect' }); //onclick: "var tpn=this.parentNode;tpn.className=tpn.className.replace(' selected','')+(tpn.className.indexOf(' selected')>-1?'':' selected');e.preventDefault();"
+        checkBox.onclick = selectThumb;
+        return elt(
+          {
+            id: thumb.id,
+            class: 'whydThumb',
+            img: thumb.img || urlPrefix + '/images/cover-track.png'
+          },
+          [
+            elt({ class: 'whydGrad' }),
+            elt({ tagName: 'p' }, [document.createTextNode(thumb.title)]),
+            elt({ class: 'whydSrcLogo', img: thumb.sourceLogo }),
+            addBtn,
+            checkBox
+          ]
+        );
+        return div;
+      }
+
+      var contentDiv = window.document.getElementById('whydContent');
+
+      this.addThumb = function(thumb) {
+        thumb.id = 'whydThumb' + this.nbTracks++;
+        thumb = imageToHD(thumb);
+        thumb.onclick = thumb.onclick || showForm.bind(thumb);
+        contentDiv.appendChild(renderThumb(thumb));
+      };
+
+      this.addSearchThumb = function(track) {
+        var searchQuery = track.searchQuery || track.name || track.title;
+        this.addThumb({
+          title: searchQuery || 'Search Openwhyd',
+          sourceLogo: urlPrefix + '/images/icon-search-from-bk.png',
+          onclick: showSearch.bind(searchQuery)
+        });
+      };
+
+      this.finish = function(html) {
+        window.document.getElementById('whydLoading').style.display = 'none';
+      };
+
+      return this;
+    }
+
+    // Additional detectors
+
+    function initPlayemPlayers() {
+      window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
+      window.DEEZER_APP_ID = 190482;
+      window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
+      window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
+      return (window._whydPlayers = window._whydPlayers || {
+        yt: YOUTUBE_PLAYER, // instead of new YoutubePlayer(...), to save API quota (see #262)
+        // playem-all.js must be loaded at that point
+        sc: new SoundCloudPlayer({}),
+        vi: new VimeoPlayer({}),
+        dm: new DailymotionPlayer({}),
+        dz: new DeezerPlayer({}),
+        bc: new BandcampPlayer({}),
+        ja: new JamendoPlayer({})
+      });
+    }
+
+    // Start up
+
+    var urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
+      urlSuffix = '?' + new Date().getTime();
+
+    makeBookmarklet(window, urlPrefix, urlSuffix);
     console.info('initWhydBookmarklet...');
     include(urlPrefix + CSS_FILEPATH + urlSuffix);
     var ui = new BkUi();
@@ -661,18 +677,5 @@ function bookmarklet(window) {
         urlDetectors: [makeFileDetector(), makeStreamDetector(players)]
       });
     });
-  } else {
-    return {
-      YOUTUBE_PLAYER,
-      detectTracks,
-      makeFileDetector,
-      makeStreamDetector
-    };
-  }
-}
-
-if (typeof exports !== 'undefined') {
-  module.exports = bookmarklet(); // will return detectTracks() and other functions
-} else {
-  window._initWhydBk = bookmarklet(window);
+  })();
 }
