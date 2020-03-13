@@ -248,16 +248,10 @@
 	<script>
 		/*<![CDATA[*/
 		$(document).ready(function () {
-			{ {#stepGenres } } initOnbGenres(); {
-				{
-					/stepGenres}}
-					{ {#stepPeople } } initOnbPeople("{{{genres}}}"); {
-						{
-							/stepPeople}}
-							{ {#stepButton } } initOnbButton(); {
-								{
-									/stepButton}}
-								});
+			/*{{#stepGenres}}*/ initOnbGenres(); /*{{/stepGenres}}*/
+			/*{{#stepPeople}}*/ initOnbPeople("{{{genres}}}"); /*{{/stepPeople}}*/
+			/*{{#stepButton}}*/ initOnbButton(); /*{{/stepButton}}*/
+		});
 	/*]]>*/
 	</script>
 </div>
