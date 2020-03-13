@@ -110,7 +110,7 @@ describe('bookmarklet', () => {
         a: [
           {
             href: YOUTUBE_VIDEO.url,
-            text: YOUTUBE_VIDEO.title
+            textContent: YOUTUBE_VIDEO.title
           }
         ]
       }
@@ -131,13 +131,13 @@ describe('bookmarklet', () => {
     assert.equal(track.sourceId, playerId);
   });
 
-  it(`should return a track without the expected name when that track was found as a link from a YouTube page`, async () => {
+  it(`should return a track with the expected name when that track was found as a link from a YouTube page`, async () => {
     const window = makeWindow({
       elementsByTagName: {
         a: [
           {
             href: YOUTUBE_VIDEO.url,
-            text: `\n${YOUTUBE_VIDEO.title}\nHarissa Quartet\nVerified\n•287K views\n`
+            textContent: `\n${YOUTUBE_VIDEO.title}\nHarissa Quartet\nVerified\n•287K views\n`
           }
         ]
       }

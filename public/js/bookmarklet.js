@@ -251,7 +251,7 @@ function bookmarklet(window) {
   }
 
   function getNodeText(node) {
-    return node.innerText || node.textContent;
+    return (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
   }
 
   function unwrapFacebookLink(src) {
@@ -553,11 +553,7 @@ function bookmarklet(window) {
         if (track) {
           track.url = url;
           track.title =
-            track.title ||
-            element.text ||
-            element.textNode ||
-            element.title ||
-            element.alt; // || track.eId || url || p.label;
+            track.title || getNodeText(element) || element.title || element.alt; // || track.eId || url || p.label;
           if (track.sourceLabel)
             track.sourceLogo =
               urlPrefix +
@@ -590,7 +586,7 @@ function bookmarklet(window) {
         }
       }
       function size(elt) {
-        return (elt.name || elt.text || '').length;
+        return (elt.name || getNodeText(elt) || '').length;
       }
       this.has = function(url) {
         var normalized = normalize(url);
