@@ -1,3 +1,10 @@
+## [1.27.3](https://github.com/openwhyd/openwhyd/compare/v1.27.2...v1.27.3) (2020-03-13)
+
+
+### Bug Fixes
+
+* **ui:** simplify bookmarklet page and homogenize wording ([#289](https://github.com/openwhyd/openwhyd/issues/289)) ([c8b13f5](https://github.com/openwhyd/openwhyd/commit/c8b13f5))
+
 ## [1.27.2](https://github.com/openwhyd/openwhyd/compare/v1.27.1...v1.27.2) (2020-03-13)
 
 
