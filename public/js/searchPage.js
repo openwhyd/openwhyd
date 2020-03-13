@@ -7,32 +7,7 @@ function selectTab() {
     .split('#')
     .pop();
   $('.resultPage#' + current).show();
-
-  if (current == 'tracks') {
-    $('#search-filters').show();
-  } else {
-    $('#search-filters').hide();
-  }
 }
-
-/** FILTER **/
-$('#search-filters li').on('click', function() {
-  $('.posts .post').show();
-
-  if (!$(this).hasClass('active')) {
-    $('#search-filters li').removeClass('active');
-    $(this).addClass('active');
-    if ($(this).hasClass('soundcloud')) {
-      $('.posts .post:not(.sc)').hide();
-    } else if ($(this).hasClass('youtube')) {
-      $('.posts .post:not(.yt)').hide();
-    } else {
-      $('.posts .post.sc, .posts .post.yt').hide();
-    }
-  } else {
-    $(this).removeClass('active');
-  }
-});
 
 $('#tabSelector a').click(selectTab);
 if (window.location.href.indexOf('tab=') != -1) {

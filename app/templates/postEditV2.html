@@ -15,7 +15,9 @@
 		window.DEEZER_APP_ID = 190482;
 		window.DEEZER_CHANNEL_URL = "{{urlPrefix}}/html/deezer.channel.html".replace(/^http\:/, "https:");
 		window.JAMENDO_CLIENT_ID = "c9cb2a0a";
-		window.YOUTUBE_API_KEY = "AIzaSyCfAzpyy1L0qSAV8qn75gf2U7RkfAAksYE"; // associated to google api project "openwhyd-1", see https://github.com/openwhyd/openwhyd/issues/262
+		window.YOUTUBE_API_KEY = /openwhyd\.org/.test("{{urlPrefix}}")
+			? "AIzaSyBPFDetynnoI-Lw_8oQ3urekTo_w-edJPQ" // associated to google project "openwhyd-2", see https://github.com/openwhyd/openwhyd/issues/262
+			: "AIzaSyBK7zhvfYax7xU-TO9IX6F3DgSTau5eqM8";  // associated to google project "openwhyd-dev"
 
 	</script>
 </head>
