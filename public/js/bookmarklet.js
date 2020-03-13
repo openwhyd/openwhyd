@@ -35,25 +35,17 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
   // Track detectors
 
-  function makeFileDetector(eidSet) {
+  function makeFileDetector() {
     var eidSet = {}; // to prevent duplicates
-    return function detectMusicFiles(url, cb, e) {
-      var title = decodeURIComponent(
-          (url.match(/([^\/]+)\.(?:mp3|ogg)$/) || []).pop() || ''
-        ),
-        alt = [e.title, e.innerText, e.textContent];
-      if (eidSet[url] || !title) return cb();
-      for (var i = 0; i < alt.length; ++i) {
-        var trimmed = e.title.replace(/^\s+|\s+$/g, '');
-        if (trimmed) {
-          title = trimmed;
-          break;
-        }
-      }
+    return function detectMusicFiles(url, cb, element) {
+      var fileName = (url.match(/([^\/]+)\.(?:mp3|ogg)$/) || []).pop();
+      if (eidSet[url] || !fileName) return cb();
+      var title =
+        element.title || getNodeText(element) || decodeURIComponent(fileName);
       eidSet[url] = true;
       cb({
         id: url,
-        title: title,
+        title: title.replace(/^\s+|\s+$/g, ''),
         img: urlPrefix + '/images/cover-audiofile.png'
       });
     };
