@@ -1,3 +1,184 @@
+## [1.27.7](https://github.com/openwhyd/openwhyd/compare/v1.27.6...v1.27.7) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** refactor makeFileDetector() and make it more robust ([#287](https://github.com/openwhyd/openwhyd/issues/287)) ([c48c283](https://github.com/openwhyd/openwhyd/commit/c48c283))
+
+## [1.27.6](https://github.com/openwhyd/openwhyd/compare/v1.27.5...v1.27.6) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** make "install" button more visible during onboarding ([#291](https://github.com/openwhyd/openwhyd/issues/291)) ([9a0c96d](https://github.com/openwhyd/openwhyd/commit/9a0c96d))
+
+## [1.27.5](https://github.com/openwhyd/openwhyd/compare/v1.27.4...v1.27.5) (2020-03-13)
+
+
+### Bug Fixes
+
+* **#262:** announce improvements on home page ([#288](https://github.com/openwhyd/openwhyd/issues/288)) ([6eca49f](https://github.com/openwhyd/openwhyd/commit/6eca49f)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.27.4](https://github.com/openwhyd/openwhyd/compare/v1.27.3...v1.27.4) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** fix and homogenize wording, second pass ([#290](https://github.com/openwhyd/openwhyd/issues/290)) ([7895946](https://github.com/openwhyd/openwhyd/commit/7895946)), closes [#289](https://github.com/openwhyd/openwhyd/issues/289)
+
+## [1.27.3](https://github.com/openwhyd/openwhyd/compare/v1.27.2...v1.27.3) (2020-03-13)
+
+
+### Bug Fixes
+
+* **ui:** simplify bookmarklet page and homogenize wording ([#289](https://github.com/openwhyd/openwhyd/issues/289)) ([c8b13f5](https://github.com/openwhyd/openwhyd/commit/c8b13f5))
+
+## [1.27.2](https://github.com/openwhyd/openwhyd/compare/v1.27.1...v1.27.2) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** [refactor] move browser-only code to end ([#286](https://github.com/openwhyd/openwhyd/issues/286)) ([dd1c58b](https://github.com/openwhyd/openwhyd/commit/dd1c58b)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.27.1](https://github.com/openwhyd/openwhyd/compare/v1.27.0...v1.27.1) (2020-03-13)
+
+
+### Bug Fixes
+
+* **version:** bump bookmarklet version ([65eb02e](https://github.com/openwhyd/openwhyd/commit/65eb02e))
+
+# [1.27.0](https://github.com/openwhyd/openwhyd/compare/v1.26.4...v1.27.0) (2020-03-13)
+
+
+### Features
+
+* **bookmarklet:** extract youtube track names from page ([#285](https://github.com/openwhyd/openwhyd/issues/285)) ([9493f06](https://github.com/openwhyd/openwhyd/commit/9493f06)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#281](https://github.com/openwhyd/openwhyd/issues/281) [#282](https://github.com/openwhyd/openwhyd/issues/282)
+
+## [1.26.4](https://github.com/openwhyd/openwhyd/compare/v1.26.3...v1.26.4) (2020-03-12)
+
+
+### Bug Fixes
+
+* **youtube:** dedicated api key for development ([#284](https://github.com/openwhyd/openwhyd/issues/284)) ([b5e5b0f](https://github.com/openwhyd/openwhyd/commit/b5e5b0f))
+
+## [1.26.3](https://github.com/openwhyd/openwhyd/compare/v1.26.2...v1.26.3) (2020-03-12)
+
+
+### Bug Fixes
+
+* **youtube:** regroup api keys in same project, for [#262](https://github.com/openwhyd/openwhyd/issues/262) ([#283](https://github.com/openwhyd/openwhyd/issues/283)) ([f401617](https://github.com/openwhyd/openwhyd/commit/f401617))
+
+## [1.26.2](https://github.com/openwhyd/openwhyd/compare/v1.26.1...v1.26.2) (2020-03-12)
+
+
+### Bug Fixes
+
+* display playable bookmarklet hits first ([#282](https://github.com/openwhyd/openwhyd/issues/282)) ([4518d11](https://github.com/openwhyd/openwhyd/commit/4518d11))
+
+## [1.26.1](https://github.com/openwhyd/openwhyd/compare/v1.26.0...v1.26.1) (2020-03-12)
+
+
+### Bug Fixes
+
+* **bookmarklet:** refactor bookmarklet and add tests for [#262](https://github.com/openwhyd/openwhyd/issues/262) ([#281](https://github.com/openwhyd/openwhyd/issues/281)) ([957afec](https://github.com/openwhyd/openwhyd/commit/957afec)), closes [#280](https://github.com/openwhyd/openwhyd/issues/280)
+
+# [1.26.0](https://github.com/openwhyd/openwhyd/compare/v1.25.2...v1.26.0) (2020-03-12)
+
+
+### Features
+
+* **tests:** add unit tests for bookmarklet ([a75e84e](https://github.com/openwhyd/openwhyd/commit/a75e84e))
+
+## [1.25.2](https://github.com/openwhyd/openwhyd/compare/v1.25.1...v1.25.2) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** bookmarklet to not fetch youtube metadata ([#279](https://github.com/openwhyd/openwhyd/issues/279)) ([6b11549](https://github.com/openwhyd/openwhyd/commit/6b11549)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.25.1](https://github.com/openwhyd/openwhyd/compare/v1.25.0...v1.25.1) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** disable external track search and filters (incl. YouTube) ([#278](https://github.com/openwhyd/openwhyd/issues/278)) ([e4c5472](https://github.com/openwhyd/openwhyd/commit/e4c5472)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+# [1.25.0](https://github.com/openwhyd/openwhyd/compare/v1.24.1...v1.25.0) (2020-03-11)
+
+
+### Features
+
+* **ui:** announcing issues with youtube api ([9327ecb](https://github.com/openwhyd/openwhyd/commit/9327ecb))
+
+## [1.24.1](https://github.com/openwhyd/openwhyd/compare/v1.24.0...v1.24.1) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** dedicated yt api key for remote player iframe ([683a1c0](https://github.com/openwhyd/openwhyd/commit/683a1c0)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** dedicated yt api key to test local iframe ([ac807ec](https://github.com/openwhyd/openwhyd/commit/ac807ec)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** extend youtube api quota from bookmarklet ([#277](https://github.com/openwhyd/openwhyd/issues/277)) ([6668102](https://github.com/openwhyd/openwhyd/commit/6668102)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **ci:** disable bookmarklet that fails in headless mode ([436525e](https://github.com/openwhyd/openwhyd/commit/436525e))
+
+# [1.24.0](https://github.com/openwhyd/openwhyd/compare/v1.23.0...v1.24.0) (2020-03-01)
+
+
+### Features
+
+* **ui:** restore the default sidebox announcement ([c4812de](https://github.com/openwhyd/openwhyd/commit/c4812de))
+
+# [1.23.0](https://github.com/openwhyd/openwhyd/compare/v1.22.1...v1.23.0) (2020-03-01)
+
+
+### Features
+
+* **ci:** speed up docker image creation ([#275](https://github.com/openwhyd/openwhyd/issues/275)) ([80e7056](https://github.com/openwhyd/openwhyd/commit/80e7056))
+
+## [1.22.1](https://github.com/openwhyd/openwhyd/compare/v1.22.0...v1.22.1) (2020-03-01)
+
+
+### Bug Fixes
+
+* **ci:** execution of Cypress test on GitHub Actions workflow ([#274](https://github.com/openwhyd/openwhyd/issues/274)) ([dc73eb2](https://github.com/openwhyd/openwhyd/commit/dc73eb2))
+
+# [1.22.0](https://github.com/openwhyd/openwhyd/compare/v1.21.4...v1.22.0) (2020-03-01)
+
+
+### Features
+
+* **sideBox:** inform about YouTube issues ([#272](https://github.com/openwhyd/openwhyd/issues/272)) ([0341ea0](https://github.com/openwhyd/openwhyd/commit/0341ea0)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#266](https://github.com/openwhyd/openwhyd/issues/266)
+
+## [1.21.4](https://github.com/openwhyd/openwhyd/compare/v1.21.3...v1.21.4) (2020-03-01)
+
+
+### Bug Fixes
+
+* **refact:** extract "sidebox" announcements into dedicated template ([#269](https://github.com/openwhyd/openwhyd/issues/269)) ([9dc5f33](https://github.com/openwhyd/openwhyd/commit/9dc5f33))
+
+## [1.21.3](https://github.com/openwhyd/openwhyd/compare/v1.21.2...v1.21.3) (2020-03-01)
+
+
+### Bug Fixes
+
+* **#269:** invalid template caused crash when adding from bookmarklet ([#270](https://github.com/openwhyd/openwhyd/issues/270)) ([b8a6bb3](https://github.com/openwhyd/openwhyd/commit/b8a6bb3)), closes [#269](https://github.com/openwhyd/openwhyd/issues/269) [#269](https://github.com/openwhyd/openwhyd/issues/269) [/github.com/openwhyd/openwhyd/pull/263/files#diff-d04a3fa73a7dd2a179772cc75555275eR109](https://github.com//github.com/openwhyd/openwhyd/pull/263/files/issues/diff-d04a3fa73a7dd2a179772cc75555275eR109)
+
+## [1.21.2](https://github.com/openwhyd/openwhyd/compare/v1.21.1...v1.21.2) (2020-03-01)
+
+
+### Bug Fixes
+
+* **#262:** specify dedicated YouTube API key for bookmarklet ([#267](https://github.com/openwhyd/openwhyd/issues/267)) ([ea87101](https://github.com/openwhyd/openwhyd/commit/ea87101)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [/github.com/openwhyd/openwhyd/issues/262#issuecomment-592952454](https://github.com//github.com/openwhyd/openwhyd/issues/262/issues/issuecomment-592952454)
+* **#262:** specify dedicated YouTube API key for mainTemplate ([#271](https://github.com/openwhyd/openwhyd/issues/271)) ([2197d7f](https://github.com/openwhyd/openwhyd/commit/2197d7f)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** specify dedicated YouTube API key for postEditV2 ([#268](https://github.com/openwhyd/openwhyd/issues/268)) ([7e88c95](https://github.com/openwhyd/openwhyd/commit/7e88c95)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.21.1](https://github.com/openwhyd/openwhyd/compare/v1.21.0...v1.21.1) (2020-02-28)
+
+
+### Bug Fixes
+
+* **#212:** user can add tracks thanks to new google api account for youtube ([#264](https://github.com/openwhyd/openwhyd/issues/264)) ([6da7db7](https://github.com/openwhyd/openwhyd/commit/6da7db7)), closes [#212](https://github.com/openwhyd/openwhyd/issues/212) [#262](https://github.com/openwhyd/openwhyd/issues/262) [#263](https://github.com/openwhyd/openwhyd/issues/263)
+* **#262:** user can add YouTube tracks (when new keys are active) ([c1d7a85](https://github.com/openwhyd/openwhyd/commit/c1d7a85)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
 # [1.21.0](https://github.com/openwhyd/openwhyd/compare/v1.20.0...v1.21.0) (2019-12-01)
 
 

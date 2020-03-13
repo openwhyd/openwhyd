@@ -10,15 +10,14 @@ var snip = require('../snip.js');
 var uiSnippets = snip;
 var templateLoader = require('../templates/templateLoader.js');
 var config = require('../models/config.js');
-var mongodb = require('../models/mongodb.js');
 var render = { urlPrefix: '' };
 
 var includeSuffix = '?' + config.version;
-var fbLikeUrl = 'http://www.facebook.com/openwhyd'; // 'http://openwhyd.org';
 
-var youtubeKeyApi, playemFile;
+var playemFile;
 var fbId;
-if (config.urlPrefix.indexOf('openwhyd.org') > 0) {
+const isProduction = config.urlPrefix.indexOf('openwhyd.org') > 0;
+if (isProduction) {
   //console.log('- Production - ');
   fbId = '169250156435902';
   playemFile = 'min';
@@ -226,6 +225,10 @@ exports.renderWhydFrame = function(html, params) {
   if (!params.loggedUser || !params.loggedUser.id)
     params.bodyClass = (params.bodyClass || '') + ' visitor';
 
+  const YOUTUBE_API_KEY = isProduction
+    ? 'AIzaSyBAJTMmfL1dcLWil8l-rAQgpENVQ_bZ54Q' // associated to google project "openwhyd-2", see https://github.com/openwhyd/openwhyd/issues/262
+    : 'AIzaSyBzqb519R--gKZ9cXgbqE5bMM85yNTXJfo'; // associated to google project "openwhyd-dev"
+
   out = out.concat([
     '  </head>',
     '  <body class="' + (params.bodyClass || '') + '">',
@@ -236,7 +239,7 @@ exports.renderWhydFrame = function(html, params) {
     'var DEEZER_APP_ID = 190482;',
     'var DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf("/", 10)) + "/html/channel.html";',
     'var SOUNDCLOUD_CLIENT_ID = "eb257e698774349c22b0b727df0238ad";',
-    'var YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";',
+    'var YOUTUBE_API_KEY = "' + YOUTUBE_API_KEY + '";',
     'var JAMENDO_CLIENT_ID = "2c9a11b9";',
     '</script>',
     // TODO: move credentials to makeAnalyticsHeading()

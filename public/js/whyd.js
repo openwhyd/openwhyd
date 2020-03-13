@@ -217,7 +217,11 @@ function _fetchPostInfo(pid, action, callback) {
 
 window.searchExternalTracks = (function() {
   return function(query, handleResult) {
-    playem.searchTracks(query, handleResult);
+    // playem.searchTracks(query, handleResult);
+    console.info(
+      'ignoring external search, see https://github.com/openwhyd/openwhyd/issues/262'
+    );
+    handleResult(); // callback to signal that no more results are going to be returned
   };
 })();
 

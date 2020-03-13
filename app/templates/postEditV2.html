@@ -1,8 +1,9 @@
 {{^embedded}}
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="expires" content="0" />
@@ -14,12 +15,15 @@
 		window.DEEZER_APP_ID = 190482;
 		window.DEEZER_CHANNEL_URL = "{{urlPrefix}}/html/deezer.channel.html".replace(/^http\:/, "https:");
 		window.JAMENDO_CLIENT_ID = "c9cb2a0a";
-		window.YOUTUBE_API_KEY = "AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI";
+		window.YOUTUBE_API_KEY = /openwhyd\.org/.test("{{urlPrefix}}")
+			? "AIzaSyBPFDetynnoI-Lw_8oQ3urekTo_w-edJPQ" // associated to google project "openwhyd-2", see https://github.com/openwhyd/openwhyd/issues/262
+			: "AIzaSyBK7zhvfYax7xU-TO9IX6F3DgSTau5eqM8";  // associated to google project "openwhyd-dev"
 
 	</script>
 </head>
+
 <body class="dlgPostEdit {{^embedded}}dlgRepostBox{{/embedded}} loading">
-{{/embedded}}
+	{{/embedded}}
 	<link rel="stylesheet" type="text/css" media="screen" href="/css/postBoxV2.css" />
 	<div id="contentThumb">
 		<div class="whydGrad"></div>
@@ -49,12 +53,12 @@
 		<div id="descForm">
 			<textarea name="text" id="text" class="shareField" placeholder="Add a comment">{{text}}</textarea>
 		</div>
-{{#trackPresenceMsg}}
+		{{#trackPresenceMsg}}
 		<div class="note">
 			NOTE
 			<p id="trackPresenceMsg">{{trackPresenceMsg}}</p>
 		</div>
-{{/trackPresenceMsg}}
+		{{/trackPresenceMsg}}
 	</div>
 	<div id="confirmationScreen" class="postPanel success">
 		<h1>Yay, you added a new track!</h1>
@@ -79,12 +83,12 @@
 			{{^editPost}}Add{{/editPost}}
 			{{#editPost}}Save{{/editPost}}
 		</span>
-	{{#editPost}}
+		{{#editPost}}
 		<div id="lnkDeletePost">Delete this track</div>
-	{{/editPost}}
+		{{/editPost}}
 	</div>
 	<div id='pageLoader'></div>
-{{^embedded}}
+	{{^embedded}}
 	<!--<script src="/js/jquery-1.8.2.min.js"></script>-->
 	<script src="/js/jquery-1.10.2.min.js"></script>
 	<script src="/js/jquery-migrate-1.2.1.js"></script>
@@ -92,23 +96,24 @@
 	<script src="/js/jquery.mentionsInput.js"></script>
 	<script src="/js/playem-min.js"></script>
 	<script src="/js/facebook.js"></script>
-{{/embedded}}
+	{{/embedded}}
 	<script src="/js/postBoxV2.js"></script>
 	<script>
-	/*<![CDATA[*/
-	initPostBox({
-		mode: "{{^embedded}}addFromBookmarklet{{/embedded}}{{#editPost}}editPost{{/editPost}}{{#repost}}repost{{/repost}}"
-		, ctx: "{{ctx}}"
-		, pId: "{{pId}}"
-		, embed: "{{{embed}}}"
-		, title: "{{title}}"
-		, img: "{{img}}"
-		, src: { id: "{{{refUrl}}}".replace(/\&amp\;/g, "&"), name: "{{refTtl}}" }
-{{#pl}} , pl: { id: "{{id}}", name: "{{{_js_name}}}".replace(/\&amp\;/g, "&") }{{/pl}}
-	});
+		/*<![CDATA[*/
+		initPostBox({
+			mode: "{{^embedded}}addFromBookmarklet{{/embedded}}{{#editPost}}editPost{{/editPost}}{{#repost}}repost{{/repost}}"
+			, ctx: "{{ctx}}"
+			, pId: "{{pId}}"
+			, embed: "{{{embed}}}"
+			, title: "{{title}}"
+			, img: "{{img}}"
+			, src: { id: "{{{refUrl}}}".replace(/\&amp\;/g, "&"), name: "{{refTtl}}" }
+			/*{{#pl}}*/, pl: { id: "{{id}}", name: "{{{_js_name}}}".replace(/\&amp\;/g, "&") }/*{{/pl}}*/
+		});
 	/*]]>*/
 	</script>
-{{^embedded}}
+	{{^embedded}}
 </body>
+
 </html>
 {{/embedded}}
