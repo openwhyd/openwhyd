@@ -1,3 +1,10 @@
+## [1.27.7](https://github.com/openwhyd/openwhyd/compare/v1.27.6...v1.27.7) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** refactor makeFileDetector() and make it more robust ([#287](https://github.com/openwhyd/openwhyd/issues/287)) ([c48c283](https://github.com/openwhyd/openwhyd/commit/c48c283))
+
 ## [1.27.6](https://github.com/openwhyd/openwhyd/compare/v1.27.5...v1.27.6) (2020-03-13)
 
 
