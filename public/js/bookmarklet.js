@@ -584,6 +584,9 @@ function bookmarklet(window) {
           return undefined;
         }
       }
+      function size(elt) {
+        return (elt.name || elt.text || '').length;
+      }
       this.has = function(url) {
         var normalized = normalize(url);
         return normalized && !!set[normalized];
@@ -594,7 +597,11 @@ function bookmarklet(window) {
           normalize(
             elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || '')
           );
-        if (url) set[url] = elt;
+        if (!url) return;
+        var existingElt = set[url];
+        if (!existingElt || size(elt) > size(existingElt)) {
+          set[url] = elt;
+        }
       };
       this.getSortedArray = function() {
         var eIds = [],
