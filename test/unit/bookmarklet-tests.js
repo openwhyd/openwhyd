@@ -6,14 +6,6 @@ const YOUTUBE_VIDEO = {
   title: 'Harissa - Tierra',
   img: `https://i.ytimg.com/vi/uWB8plk9sXk/default.jpg`,
   url: `https://www.youtube.com/watch?v=uWB8plk9sXk`,
-  detector: {
-    getEid: () => YOUTUBE_VIDEO.id,
-    fetchMetadata: () => ({
-      id: YOUTUBE_VIDEO.id,
-      title: YOUTUBE_VIDEO.title,
-      img: YOUTUBE_VIDEO.img
-    })
-  },
   elementsByTagName: {
     'ytd-watch-flexy': [
       {
@@ -97,7 +89,7 @@ describe('bookmarklet', () => {
       elementsByTagName: YOUTUBE_VIDEO.elementsByTagName
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: YOUTUBE_VIDEO.detector };
+    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)]
@@ -106,7 +98,83 @@ describe('bookmarklet', () => {
     assert.equal(results.length, 1);
     const track = results[0];
     assert.equal(track.id, YOUTUBE_VIDEO.id);
-    assert.equal(track.title, '(YouTube track)'); // TODO: should be YOUTUBE_VIDEO.title instead, see #262
+    assert.equal(track.title, YOUTUBE_VIDEO.title);
+    assert.equal(track.img, YOUTUBE_VIDEO.img);
+    assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
+    assert.equal(track.sourceId, playerId);
+  });
+
+  it(`should return a track with metadata from a YouTube page that lists that track as a link`, async () => {
+    const window = makeWindow({
+      elementsByTagName: {
+        a: [
+          {
+            href: YOUTUBE_VIDEO.url,
+            textContent: YOUTUBE_VIDEO.title
+          }
+        ]
+      }
+    });
+    const playerId = 'yt';
+    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [bookmarklet.makeStreamDetector(detectors)]
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    const track = results[0];
+    assert.equal(track.id, YOUTUBE_VIDEO.id);
+    assert.equal(track.title, YOUTUBE_VIDEO.title);
+    assert.equal(track.img, YOUTUBE_VIDEO.img);
+    assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
+    assert.equal(track.sourceId, playerId);
+  });
+
+  it(`should return a track with the expected name when that track was found as a link from a YouTube page`, async () => {
+    const window = makeWindow({
+      elementsByTagName: {
+        a: [
+          {
+            href: YOUTUBE_VIDEO.url,
+            textContent: `\n${YOUTUBE_VIDEO.title}\nHarissa Quartet\nVerified\n•287K views\n`
+          }
+        ]
+      }
+    });
+    const playerId = 'yt';
+    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [bookmarklet.makeStreamDetector(detectors)]
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    const track = results[0];
+    assert.equal(track.id, YOUTUBE_VIDEO.id);
+    assert.equal(track.title, YOUTUBE_VIDEO.title);
+    assert.equal(track.img, YOUTUBE_VIDEO.img);
+    assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
+    assert.equal(track.sourceId, playerId);
+  });
+
+  it(`should return the page's track with metadata from a YouTube page when the same track is also listed in the page with less metadata`, async () => {
+    const window = makeWindow({
+      url: YOUTUBE_VIDEO.url,
+      title: `${YOUTUBE_VIDEO.title} - YouTube`,
+      elementsByTagName: YOUTUBE_VIDEO.elementsByTagName
+    });
+    const playerId = 'yt';
+    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [bookmarklet.makeStreamDetector(detectors)]
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    const track = results[0];
+    assert.equal(track.id, YOUTUBE_VIDEO.id);
+    assert.equal(track.title, YOUTUBE_VIDEO.title);
     assert.equal(track.img, YOUTUBE_VIDEO.img);
     assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
     assert.equal(track.sourceId, playerId);
@@ -131,7 +199,7 @@ describe('bookmarklet', () => {
         const { url } = YOUTUBE_VIDEO;
         const playerId = 'yt';
         const detectors = {
-          [playerId]: { getEid: YOUTUBE_VIDEO.detector.getEid }
+          [playerId]: { getEid: bookmarklet.YOUTUBE_PLAYER.getEid }
         };
         const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
@@ -143,13 +211,21 @@ describe('bookmarklet', () => {
         const { url } = YOUTUBE_VIDEO;
         const playerId = 'yt';
         const detectors = {
-          [playerId]: YOUTUBE_VIDEO.detector
+          [playerId]: {
+            getEid: () => YOUTUBE_VIDEO.id,
+            fetchMetadata: (url, callback) =>
+              callback({
+                id: YOUTUBE_VIDEO.id,
+                title: YOUTUBE_VIDEO.title,
+                img: YOUTUBE_VIDEO.img
+              })
+          }
         };
         const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
         const track = await new Promise(cb => detectPlayemStreams(url, cb));
         assert.equal(typeof track, 'object');
         assert.equal(track.id, YOUTUBE_VIDEO.id);
-        assert.equal(track.title, '(YouTube track)'); // TODO: should be YOUTUBE_VIDEO.title instead, see #262
+        assert.equal(track.title, YOUTUBE_VIDEO.title);
         assert.equal(track.img, YOUTUBE_VIDEO.img);
         assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
         assert.equal(track.sourceId, playerId);

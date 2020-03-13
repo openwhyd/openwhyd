@@ -251,7 +251,7 @@ function bookmarklet(window) {
   }
 
   function getNodeText(node) {
-    return node.innerText || node.textContent;
+    return (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
   }
 
   function unwrapFacebookLink(src) {
@@ -327,18 +327,39 @@ function bookmarklet(window) {
     };
   }
 
+  var YOUTUBE_PLAYER = {
+    getEid: function(url) {
+      // code imported from playem-all
+      if (
+        /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
+          url
+        ) ||
+        /^\/yt\/([a-zA-Z0-9_\-]+)/.test(url) ||
+        /youtube\.com\/attribution_link\?.*v\%3D([^ \%]+)/.test(url) ||
+        /youtube.googleapis.com\/v\/([a-zA-Z0-9_\-]+)/.test(url)
+      )
+        return RegExp.lastParen;
+    },
+    fetchMetadata: function(url, callback) {
+      var id = this.getEid(url);
+      callback({
+        id: id,
+        eId: '/yt/' + id,
+        img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
+        url: 'https://www.youtube.com/watch?v=' + id,
+        playerLabel: 'Youtube'
+      });
+    }
+  };
+
   function initPlayemPlayers() {
     window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
     window.DEEZER_APP_ID = 190482;
     window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
     window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
-    window.YOUTUBE_API_KEY = ''; // see https://github.com/openwhyd/openwhyd/issues/262
     return (window._whydPlayers = window._whydPlayers || {
+      yt: YOUTUBE_PLAYER, // instead of new YoutubePlayer(...), to save API quota (see #262)
       // playem-all.js must be loaded at that point
-      yt: new YoutubePlayer(
-        {},
-        { playerContainer: window.document.getElementById('videocontainer') }
-      ),
       sc: new SoundCloudPlayer({}),
       vi: new VimeoPlayer({}),
       dm: new DailymotionPlayer({}),
@@ -349,7 +370,7 @@ function bookmarklet(window) {
   }
 
   // players = { playerId -> { getEid(), fetchMetadata() } }
-  // returns detectPlayemStreams(url, cb)
+  // returns detectPlayableStreams(url, callback, element)
   function makeStreamDetector(players) {
     var eidSet = {}; // to prevent duplicates
     function getPlayerId(url) {
@@ -359,46 +380,34 @@ function bookmarklet(window) {
         if (eId) return i;
       }
     }
-    function detect(url, cb) {
+
+    // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
+    return function detectPlayableStreams(url, cb, element) {
+      // 1. find the matching player and track identifier
       var playerId = getPlayerId(url);
       var player = playerId && players[playerId];
-      cb(player && '/' + playerId + '/' + player.getEid(url), player, playerId);
-    }
-    return function detectPlayemStreams(url, cb) {
-      detect(url, function(eid, player, playerId) {
-        if (!eid || eidSet[eid]) return cb();
-        var parts = eid.split('#');
-        var streamUrl = /^https?\:\/\//.test(parts[1] || '') && parts[1];
-        if (eidSet[parts[0]] && !streamUrl)
-          // i.e. store if new, overwrite if new occurence contains a streamUrl
-          return cb();
-        eidSet[parts[0]] = true;
-        eidSet[eid] = true;
-        if (!player || !player.fetchMetadata) return cb({ eId: eid });
-        else if (playerId === 'yt') {
-          // we don't fetch metadata from youtube, to save quota (see see https://github.com/openwhyd/openwhyd/issues/262)
-          var id = parts[0].replace('/yt/', '');
-          cb({
-            id: id,
-            eId: '/yt/' + id,
-            img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
-            url: 'https://www.youtube.com/watch?v=' + id,
-            title: '(YouTube track)',
-            sourceId: playerId,
-            sourceLabel: player.label
-          });
-        } else
-          player.fetchMetadata(url, function(track) {
-            if (track) {
-              track = track || {};
-              track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
-              track.sourceId = playerId;
-              track.sourceLabel = player.label;
-              cb(track);
-            } else {
-              cb();
-            }
-          });
+      var eid = player && '/' + playerId + '/' + player.getEid(url);
+      if (!eid || eidSet[eid]) return cb();
+
+      // 2. extract the (optional) stream URL from the identifier
+      var parts = eid.split('#');
+      var streamUrl = /^https?\:\/\//.test(parts[1] || '') && parts[1];
+      if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
+
+      // 3. store the identifier, with and without stream URL, to prevent duplicates
+      eidSet[parts[0]] = true;
+      eidSet[eid] = true;
+      if (!player || !player.fetchMetadata) return cb({ eId: eid }); // quit if we can't enrich the metadata
+
+      // 4. try to return the track with enriched metadata
+      player.fetchMetadata(url, function(track) {
+        if (!track) return cb();
+        element = element || {};
+        track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of the DETECTORS
+        track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
+        track.sourceId = playerId;
+        track.sourceLabel = player.label;
+        cb(track);
       });
     };
   }
@@ -468,7 +477,6 @@ function bookmarklet(window) {
         var bcPrefix = '/bc/' + bc.url.split('//')[1].split('.')[0] + '/';
         toDetect = bc.trackinfo.map(function(tr) {
           if (tr.file) {
-            //console.log("-------------FILE! =>", tr.file);
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
             return {
               href: streamUrl,
@@ -519,49 +527,42 @@ function bookmarklet(window) {
   ];
 
   function detectTracks({ window, ui, urlDetectors }) {
-    // an url-based detector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
+    // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
 
-    function detectTrack(url, cb, element) {
+    function detectTrack(url, element, cb) {
       var remainingUrlDetectors = urlDetectors.slice();
       (function processNext() {
-        if (!remainingUrlDetectors.length) {
-          cb();
-        } else {
-          //console.log('- trying detector ' + (urlDetectors.length-1));
-          remainingUrlDetectors.shift()(
-            url,
-            function(track) {
-              //console.log(' => ' + typeof track + ' ' + JSON.stringify(track))
-              if (track && track.id) cb(track);
-              else processNext();
-            },
-            element
-          );
-        }
+        if (!remainingUrlDetectors.length) return cb();
+        remainingUrlDetectors.shift()(
+          url,
+          function(track) {
+            if (track && track.id) cb(track);
+            else processNext();
+          },
+          element
+        );
       })();
     }
 
-    function detectEmbed(e, cb) {
-      var url = e.eId || unwrapFacebookLink(e.href || e.src || e.data || '');
-      //console.log(url);
-      if (!url) return cb && cb();
-      detectTrack(
-        url,
-        function(track) {
-          if (track && track.title) {
-            track.url = url;
-            //track.title = track.title || e.textNode || e.title || e.alt || track.eId || url; // || p.label;
-            if (track.sourceLabel)
-              track.sourceLogo =
-                urlPrefix +
-                '/images/icon-' +
-                track.sourceLabel.split(' ')[0].toLowerCase() +
-                '.png';
-          }
-          cb(track);
-        },
-        e
-      );
+    function detectEmbed(element, cb) {
+      var url =
+        element.eId ||
+        unwrapFacebookLink(element.href || element.src || element.data || '');
+      if (!url) return cb();
+      detectTrack(url, element, function(track) {
+        if (track) {
+          track.url = url;
+          track.title =
+            track.title || getNodeText(element) || element.title || element.alt; // || track.eId || url || p.label;
+          if (track.sourceLabel)
+            track.sourceLogo =
+              urlPrefix +
+              '/images/icon-' +
+              track.sourceLabel.split(' ')[0].toLowerCase() +
+              '.png';
+        }
+        cb(track);
+      });
     }
 
     function whenDone(searchThumbs) {
@@ -584,6 +585,9 @@ function bookmarklet(window) {
           return undefined;
         }
       }
+      function size(elt) {
+        return (elt.name || getNodeText(elt) || '').length;
+      }
       this.has = function(url) {
         var normalized = normalize(url);
         return normalized && !!set[normalized];
@@ -594,7 +598,11 @@ function bookmarklet(window) {
           normalize(
             elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || '')
           );
-        if (url) set[url] = elt;
+        if (!url) return;
+        var existingElt = set[url];
+        if (!existingElt || size(elt) > size(existingElt)) {
+          set[url] = elt;
+        }
       };
       this.getSortedArray = function() {
         var eIds = [],
@@ -610,7 +618,7 @@ function bookmarklet(window) {
 
     DETECTORS.map(function(detectFct) {
       var results = detectFct(window) || [];
-      console.info('-----' + detectFct.name, '=>', results);
+      console.info('-----' + detectFct.name, '=>', results.length);
       results.map(function(result) {
         toDetect.push(result);
       });
@@ -654,6 +662,7 @@ function bookmarklet(window) {
     });
   } else {
     return {
+      YOUTUBE_PLAYER,
       detectTracks,
       makeFileDetector,
       makeStreamDetector
