@@ -181,6 +181,15 @@ describe('bookmarklet', () => {
   });
 
   describe('makeFileDetector()', () => {
+    it('should not require an element', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const url = `http://myblog/myfile.mp3`;
+      const element = undefined;
+      const track = await new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.id, url);
+    });
+
     it('should return a mp3 file from a URL', async () => {
       const detectFile = bookmarklet.makeFileDetector();
       const url = `http://myblog/myfile.mp3`;
