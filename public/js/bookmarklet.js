@@ -1,6 +1,7 @@
 /**
  * openwhyd bookmarklet
- * @author adrienjoly, whyd
+ * @author adrienjoly
+ * https://github.com/openwhyd/openwhyd
  **/
 
 function bookmarklet(window) {
@@ -14,7 +15,7 @@ function bookmarklet(window) {
         warn: function() {}
       };
 
-    console.log('-= openwhyd bookmarklet v2.5 =-');
+    console.log('-= openwhyd bookmarklet v2.6 =-');
 
     var FILENAME = '/js/bookmarklet.js';
     var CSS_FILEPATH = '/css/bookmarklet.css';
