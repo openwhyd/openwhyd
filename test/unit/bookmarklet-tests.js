@@ -131,6 +131,33 @@ describe('bookmarklet', () => {
     assert.equal(track.sourceId, playerId);
   });
 
+  it(`should return a track without the expected name when that track was found as a link from a YouTube page`, async () => {
+    const window = makeWindow({
+      elementsByTagName: {
+        a: [
+          {
+            href: YOUTUBE_VIDEO.url,
+            text: `\n${YOUTUBE_VIDEO.title}\nHarissa Quartet\nVerified\n•287K views\n`
+          }
+        ]
+      }
+    });
+    const playerId = 'yt';
+    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [bookmarklet.makeStreamDetector(detectors)]
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    const track = results[0];
+    assert.equal(track.id, YOUTUBE_VIDEO.id);
+    assert.equal(track.title, YOUTUBE_VIDEO.title);
+    assert.equal(track.img, YOUTUBE_VIDEO.img);
+    assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
+    assert.equal(track.sourceId, playerId);
+  });
+
   it(`should return the page's track with metadata from a YouTube page when the same track is also listed in the page with less metadata`, async () => {
     const window = makeWindow({
       url: YOUTUBE_VIDEO.url,
