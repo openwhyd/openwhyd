@@ -207,6 +207,46 @@ describe('bookmarklet', () => {
       assert.equal(typeof (await detect()), 'object');
       assert.equal(typeof (await detect()), 'undefined');
     });
+
+    it('should return the name of the file as name of the track', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const fileName = 'myfile';
+      const url = `http://myblog/${fileName}.mp3`;
+      const element = { title: '' };
+      const track = await new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.title, fileName);
+    });
+
+    it('should return the title of the link as name of the track', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const url = `http://myblog/myfile.mp3`;
+      const title = 'my track';
+      const element = { title };
+      const track = await new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.title, title);
+    });
+
+    it('should return the cleaned-up inner text of the link as name of the track', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const url = `http://myblog/myfile.mp3`;
+      const title = 'my track';
+      const element = { innerText: ` \n ${title}\n ` };
+      const track = await new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.title, title);
+    });
+
+    it('should return the cleaned-up text content of the link as name of the track', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const url = `http://myblog/myfile.mp3`;
+      const title = 'my track';
+      const element = { textContent: ` \n ${title}\n ` };
+      const track = await new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.title, title);
+    });
   });
 
   describe('makeStreamDetector()', () => {
