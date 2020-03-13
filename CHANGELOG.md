@@ -1,3 +1,10 @@
+## [1.27.6](https://github.com/openwhyd/openwhyd/compare/v1.27.5...v1.27.6) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** make "install" button more visible during onboarding ([#291](https://github.com/openwhyd/openwhyd/issues/291)) ([9a0c96d](https://github.com/openwhyd/openwhyd/commit/9a0c96d))
+
 ## [1.27.5](https://github.com/openwhyd/openwhyd/compare/v1.27.4...v1.27.5) (2020-03-13)
 
 
