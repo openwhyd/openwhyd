@@ -12,6 +12,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
   function getNodeText(node) {
     return (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
+    // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
   }
 
   function unwrapFacebookLink(src) {
@@ -35,25 +36,18 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
   // Track detectors
 
-  function makeFileDetector(eidSet) {
-    var eidSet = {}; // to prevent duplicates
-    return function detectMusicFiles(url, cb, e) {
-      var title = decodeURIComponent(
-          (url.match(/([^\/]+)\.(?:mp3|ogg)$/) || []).pop() || ''
-        ),
-        alt = [e.title, e.innerText, e.textContent];
-      if (eidSet[url] || !title) return cb();
-      for (var i = 0; i < alt.length; ++i) {
-        var trimmed = e.title.replace(/^\s+|\s+$/g, '');
-        if (trimmed) {
-          title = trimmed;
-          break;
-        }
-      }
+  function makeFileDetector() {
+    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
+    return function detectMusicFiles(url, cb, element) {
+      var fileName = (url.match(/([^\/]+)\.(?:mp3|ogg)$/) || []).pop();
+      if (eidSet[url] || !fileName) return cb();
+      var title =
+        (element ? element.title || getNodeText(element) : null) ||
+        decodeURIComponent(fileName);
       eidSet[url] = true;
       cb({
         id: url,
-        title: title,
+        title: title.replace(/^\s+|\s+$/g, ''),
         img: urlPrefix + '/images/cover-audiofile.png'
       });
     };
@@ -87,7 +81,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
   // players = { playerId -> { getEid(), fetchMetadata() } }
   // returns detectPlayableStreams(url, callback, element)
   function makeStreamDetector(players) {
-    var eidSet = {}; // to prevent duplicates
+    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
     function getPlayerId(url) {
       for (var i in players) {
         var player = players[i];
@@ -131,6 +125,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
   // - Query objects must have a searchQuery field. They will be passed as-is to ui.addSearchThumb()
   // - DomElement objects must have a href or src field.
   // - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
+  // TODO: simplify/homogenize return types
   var DETECTORS = [
     function detectYouTubePageTrack(window) {
       if (/ - YouTube$/.test(window.document.title) === false) return null;
@@ -243,6 +238,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
   function detectTracks({ window, ui, urlDetectors }) {
     // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
+    // TODO: decouple from ui <= let caller provide one handler to be called for each detected track
 
     function detectTrack(url, element, cb) {
       var remainingUrlDetectors = urlDetectors.slice();
@@ -254,7 +250,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
             if (track && track.id) cb(track);
             else processNext();
           },
-          element
+          element // TODO: refactor makeFileDetector() and makeStreamDetector() to pass element param before callback
         );
       })();
     }

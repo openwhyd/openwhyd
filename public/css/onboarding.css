@@ -1,98 +1,96 @@
-
-
 .pgOnboarding #header {
-	text-align:center;
+  text-align: center;
 }
 
-.pgOnboarding #headCenter{
-	display:inline-block!important;
-	float:none!important;
+.pgOnboarding #headCenter {
+  display: inline-block !important;
+  float: none !important;
 }
 
 .pgOnboarding .loading {
-	width: 200px;
-	height: 100px;
-	margin: 0 auto;
-	text-align: center;
+  width: 200px;
+  height: 100px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .pgOnboarding #progress {
-	width: 180px;
-	margin: 40px auto;
-	overflow: auto;
-	color: #CBCED2;
+  width: 180px;
+  margin: 40px auto;
+  overflow: auto;
+  color: #cbced2;
 }
 
 .pgOnboarding #progress > div {
-	float: left;
+  float: left;
 }
 
 .pgOnboarding #progress > div > div {
-	float: left;
-	width: 17px;
-	height: 17px;
-	border: 1px solid #CBCED2;
-	margin-right: 8px;
-	border-radius: 9px;
-	-webkit-border-radius: 9px;
-	-moz-border-radius: 9px;
+  float: left;
+  width: 17px;
+  height: 17px;
+  border: 1px solid #cbced2;
+  margin-right: 8px;
+  border-radius: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
 }
 
 .pgOnboarding #progress > div > div > span {
-	display: block;
-	width: 100%;
-	height: 100%;
-	text-align: center;
-	line-height: 18px;
-	font-size:10px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  line-height: 18px;
+  font-size: 10px;
 }
 
 .pgOnboarding #progress p {
-	display: none;
-	white-space: nowrap;
-	float: left;
-	line-height: 22px;
-	margin-right: 8px;
+  display: none;
+  white-space: nowrap;
+  float: left;
+  line-height: 22px;
+  margin-right: 8px;
 }
 
 .pgOnboarding.stepPeople #progress #progress1 > div,
 .pgOnboarding.stepButton #progress #progress1 > div,
 .pgOnboarding.stepButton #progress #progress2 > div {
-	border-color: transparent;
-	background: url('/images/OnboardingIconStepValidate.png') no-repeat 
+  border-color: transparent;
+  background: url('/images/OnboardingIconStepValidate.png') no-repeat;
 }
 
 .pgOnboarding.stepPeople #progress #progress1 span,
 .pgOnboarding.stepButton #progress #progress1 span,
 .pgOnboarding.stepButton #progress #progress2 span {
-	display: none;
+  display: none;
 }
 
 .pgOnboarding.stepGenres #progress #progress1 p,
 .pgOnboarding.stepPeople #progress #progress2 p,
 .pgOnboarding.stepButton #progress #progress3 p {
-	display: block;
+  display: block;
 }
 
 .pgOnboarding #btnNext {
-	position:absolute;
-	top: 86px;
-	right: 0;
-	width: 71px;
-	background:#3177AF;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	height: 32px;
-	font-size:13px;
-	font-weight: bold;
-	text-align: center;
-	color:white;
-	line-height: 35px;
+  position: absolute;
+  top: 86px;
+  right: 0;
+  width: 71px;
+  background: #3177af;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  height: 32px;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  line-height: 35px;
 }
 
 .pgOnboarding #btnNext:hover {
-	background-color:#62A1D3;
+  background-color: #62a1d3;
 }
 
 /*.pgOnboarding.stepButton #btnNext {
@@ -102,153 +100,151 @@
 }*/
 
 .pgOnboarding #btnNext:hover {
-	background-position: 0 -46px;
+  background-position: 0 -46px;
 }
 
 .pgOnboarding #btnNext:active {
-	background-position: 0 -92px;
+  background-position: 0 -92px;
 }
 
 .pgOnboarding h1 {
-	margin-top: 60px;
-	margin-bottom: 40px;
-	color: #181B1F;
-	font-size: 18px;
+  margin-top: 60px;
+  margin-bottom: 40px;
+  color: #181b1f;
+  font-size: 18px;
 }
 
 .pgOnboarding h2 {
-	color: #535559;
-	font-weight: normal;
-	font-size: 16px;
-	font-weight: bold;
+  color: #535559;
+  font-weight: normal;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .pgOnboarding p {
-	color: #CBCED2;
-	margin-bottom: 15px;
+  color: #cbced2;
+  margin-bottom: 15px;
 }
 
 .pgOnboarding #contentPane #mainPanel .modeExt p,
-.pgOnboarding #contentPane #mainPanel .modeBk p  {
-	color: #4F4F4F;
-	font-size: 14px;
-	line-height: 20px;
+.pgOnboarding #contentPane #mainPanel .modeBk p {
+  color: #4f4f4f;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .pgOnboarding #contentPane #mainPanel .modeBk p {
-	margin-bottom:24px;
+  margin-bottom: 24px;
 }
 
 .pgOnboarding #contentPane #mainPanel .topBkPanel > p {
-	color: #357ED6;
-	font-size: 12px;
-	margin-bottom: 0;
+  color: #357ed6;
+  font-size: 12px;
+  margin-bottom: 0;
 }
 
 .pgOnboarding .whitePanel {
-	padding: 20px;
+  padding: 20px;
 }
 
 .pgOnboarding .whitePanel {
-	padding: 20px;
+  padding: 20px;
 }
 
 .pgOnboarding.stepGenres .whitePanel {
-	padding: 20px 15px 5px 15px;
-	padding-right: 0;
+  padding: 20px 15px 5px 15px;
+  padding-right: 0;
 }
 
 /*.pgOnboarding.stepPeople .whitePanel {
 	padding: 20px;
 }*/
 
-
 /* step 1 */
 
 .pgOnboarding #genreGallery {
-	list-style: none;
+  list-style: none;
 }
 
 .pgOnboarding #genreGallery li {
-	position: relative;
-	float: left;
-	width: 226px;
-	height: 158px;
-	text-align: center;
-	margin-right: 15px;
-	margin-bottom: 20px;
-	cursor: pointer;
-	background-size: cover;
+  position: relative;
+  float: left;
+  width: 226px;
+  height: 158px;
+  text-align: center;
+  margin-right: 15px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  background-size: cover;
 }
 
-.pgOnboarding #genreGallery li:nth-child(4n){
-	margin-right: 0px;
+.pgOnboarding #genreGallery li:nth-child(4n) {
+  margin-right: 0px;
 }
 
-.pgOnboarding #genreGallery li:nth-child(4n){
-	margin-right: 0px;
+.pgOnboarding #genreGallery li:nth-child(4n) {
+  margin-right: 0px;
 }
 
 .pgOnboarding #genreGallery li p {
-	margin-top: 120px;
-	width: 100%;
+  margin-top: 120px;
+  width: 100%;
 }
 
 .pgOnboarding #genreGallery li p span {
-	padding: 8px 12px;
-	font-size: 16px;
-	text-transform:uppercase;
-	font-weight: bold;
-	color: white;
-	letter-spacing: 1px;
+  padding: 8px 12px;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 1px;
 }
 
 .pgOnboarding #genreGallery li div {
-	display: none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(49,119,175,0.8);
-	background-repeat: no-repeat;
-	background-position: 50% 50%;
-	-webkit-transition: background-color 2s;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(49, 119, 175, 0.8);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  -webkit-transition: background-color 2s;
 }
 
 .pgOnboarding #genreGallery li:hover div {
-	display: block;
-	background-image: url("/images/OnboardingIconGenreValidateHover.png");
-	-webkit-transition: background-color 2s;
+  display: block;
+  background-image: url('/images/OnboardingIconGenreValidateHover.png');
+  -webkit-transition: background-color 2s;
 }
 
 .pgOnboarding #genreGallery li.selected div {
-	display: block;
-	background-color: rgba(49,119,175,0.7);
-	background-image: url("/images/OnboardingIconGenreValidate.png");
-
+  display: block;
+  background-color: rgba(49, 119, 175, 0.7);
+  background-image: url('/images/OnboardingIconGenreValidate.png');
 }
 
 /* step 2 */
 
 .pgOnboarding.stepPeople .whitePanel {
-	padding: 0;
+  padding: 0;
 }
 
 .pgOnboarding .userList .user {
-	float: left;
-	position: relative;
-	margin: 0 90px 0 15px;
-	margin-bottom: 20px;
-	padding: 0;
-	width: 430px;
-	padding-top: 20px;
-	border-top: 1px dotted #ccc;
-	border-bottom:0;
+  float: left;
+  position: relative;
+  margin: 0 90px 0 15px;
+  margin-bottom: 20px;
+  padding: 0;
+  width: 430px;
+  padding-top: 20px;
+  border-top: 1px dotted #ccc;
+  border-bottom: 0;
 }
 
 .pgOnboarding .userList .user:nth-child(2n) {
-	margin: 0;
+  margin: 0;
 }
 /*
 .pgOnboarding .userList > li .userSubscribe {
@@ -288,7 +284,7 @@
 
 .pgOnboarding .userList > li:nth-child(1),
 .pgOnboarding .userList > li:nth-child(2) {
-	border-top: none;
+  border-top: none;
 }
 
 /*.pgOnboarding .userList > li .thumb {
@@ -314,27 +310,27 @@
 	-moz-border-radius: 3px;
 }*/
 .pgOnboarding .userList > li p {
-	width: 310px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  width: 310px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .pgOnboarding .userList > li p.username {
-	width: 220px;
-	font-weight: bold;
-	margin-top: 10px;
-	font-size: 14px;
-	color: #4A4A4A;
+  width: 220px;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #4a4a4a;
 }
 .pgOnboarding .userList > li .stats {
-	color: #999;
-	font-size: 10px;
+  color: #999;
+  font-size: 10px;
 }
 .pgOnboarding .userList > li p.userbio {
-	font-size: 12px;
-	margin-top: 10px;
-	color: #333;
-	color: #4A4A4A;
+  font-size: 12px;
+  margin-top: 10px;
+  color: #333;
+  color: #4a4a4a;
 }
 /*.pgOnboarding .userList > li .tags {
 	margin-top: 10px;
@@ -359,406 +355,478 @@
 
 .pgOnboarding.stepButton .modeExt,
 .pgOnboarding.stepButton .modeBk {
-	display: none;
+  display: none;
 }
 
 .pgOnboarding.stepButton .whitePanel {
-	margin-top: 0;
-	background: url('/images/backgroundBookmarklet.jpg')no-repeat;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
-	text-align: center;
-	font-size: 14px;
+  margin-top: 0;
+  background: url('/images/backgroundBookmarklet.jpg') no-repeat;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  text-align: center;
+  font-size: 14px;
 }
 
 .pgOnboarding.stepButton .modeBk {
 }
 
 .pgOnboarding.stepButton .whitePanel.topBkPanel.modeExt {
-	padding: 20px 20px 20px 386px !important;
-	background: url('/images/screenfast-extension.png')no-repeat bottom left;
-	background-color: #FFF;
-	height: 220px;
-	/*background-color: #E6EDF5;*/
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-	text-align: left;
+  padding: 20px 20px 20px 386px !important;
+  background: url('/images/screenfast-extension.png') no-repeat bottom left;
+  background-color: #fff;
+  height: 220px;
+  /*background-color: #E6EDF5;*/
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  text-align: left;
 }
 
 /* BOOKMARKLET TOP */
 .pgOnboarding.stepButton .whitePanel.topBkPanel.modeBk {
-	padding: 20px 20px 20px 20px !important;
-	background: #FFF url('/images/screenfast-bookmarklet.jpg')no-repeat bottom right !important;
-	background-color: #FFF;
-	height: 286px;
-	background-color: #E6EDF5;
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-	text-align: left;
+  padding: 20px 20px 20px 20px !important;
+  background: #fff url('/images/screenfast-bookmarklet.jpg') no-repeat bottom
+    right !important;
+  background-color: #fff;
+  height: 286px;
+  background-color: #e6edf5;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  text-align: left;
 }
 
-
-.pgOnboarding.stepButton .whitePanel.topBkPanel.modeBk  > .installbookmarkletBlock {
-	padding-top: 44px;
-	width: 500px;
-	background: url('/images/smallArrowBookmarklet.png')no-repeat 1px 146px;
+.pgOnboarding.stepButton
+  .whitePanel.topBkPanel.modeBk
+  > .installbookmarkletBlock {
+  padding-top: 44px;
+  width: 500px;
+  background: url('/images/smallArrowBookmarklet.png') no-repeat 1px 146px;
 }
 
-.pgOnboarding.stepButton .whitePanel.topBkPanel.modeBk  > .installbookmarkletBlock > .btnBookmarklet {
-	background: url(/images/backgroundDotted.png)no-repeat;
-	padding: 40px 0 66px 30px;
-	margin: 0 0 10px 6px;
+.pgOnboarding.stepButton
+  .whitePanel.topBkPanel.modeBk
+  > .installbookmarkletBlock
+  > .btnBookmarklet {
+  background: url(/images/backgroundDotted.png) no-repeat;
+  padding: 40px 0 66px 30px;
+  margin: 0 0 10px 6px;
 }
 
-.pgOnboarding.stepButton .whitePanel.topBkPanel.modeBk  > .installbookmarkletBlock > .btnBookmarklet > #bookmarklet {
-	position: relative;
-	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-	cursor: pointer;
-	font-size: 14px;
-	font-weight: bold;
-	padding: 10px;
-	text-align: center;
-	color: white;
-	border: 1px solid #869374;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	background: #3177AF;
-	background-image: linear-gradient(bottom, rgb(155,200,64) 24%, rgb(169,208,90) 81%);
-	background-image: -o-linear-gradient(bottom, rgb(155,200,64) 24%, rgb(169,208,90) 81%);
-	background-image: -moz-linear-gradient(bottom, rgb(155,200,64) 24%, rgb(169,208,90) 81%);
-	background-image: -webkit-linear-gradient(bottom, rgb(155,200,64) 24%, rgb(169,208,90) 81%);
-	background-image: -ms-linear-gradient(bottom, rgb(155,200,64) 24%, rgb(169,208,90) 81%);
-	background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.24, rgb(155,200,64)),color-stop(0.81, rgb(169,208,90)));
-	box-shadow: inset 0 -1px 2px rgba(0,0,0,0.2);
-	-webkit-box-shadow: inset 0 -1px 2px rgba(0,0,0,0.18);
-	-moz-box-shadow: inset 0 -1px 2px rgba(0,0,0,0.18);
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding-box;
-	-background-clip: padding-box;
-	padding: 20px 26px 20px 52px;
-	margin-right: 10px;
+.pgOnboarding.stepButton
+  .whitePanel.topBkPanel.modeBk
+  > .installbookmarkletBlock
+  > .btnBookmarklet
+  > #bookmarklet {
+  position: relative;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  text-align: center;
+  color: white;
+  border: 1px solid #869374;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  background: #3177af;
+  background-image: linear-gradient(
+    bottom,
+    rgb(155, 200, 64) 24%,
+    rgb(169, 208, 90) 81%
+  );
+  background-image: -o-linear-gradient(
+    bottom,
+    rgb(155, 200, 64) 24%,
+    rgb(169, 208, 90) 81%
+  );
+  background-image: -moz-linear-gradient(
+    bottom,
+    rgb(155, 200, 64) 24%,
+    rgb(169, 208, 90) 81%
+  );
+  background-image: -webkit-linear-gradient(
+    bottom,
+    rgb(155, 200, 64) 24%,
+    rgb(169, 208, 90) 81%
+  );
+  background-image: -ms-linear-gradient(
+    bottom,
+    rgb(155, 200, 64) 24%,
+    rgb(169, 208, 90) 81%
+  );
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.24, rgb(155, 200, 64)),
+    color-stop(0.81, rgb(169, 208, 90))
+  );
+  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.18);
+  -moz-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.18);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  -background-clip: padding-box;
+  padding: 20px 26px 20px 52px;
+  margin-right: 10px;
 }
 
-
-.pgOnboarding.stepButton .whitePanel.topBkPanel.modeBk  > .installbookmarkletBlock > p {
-	font-size: 14px;
-	line-height: 21px;
-	color: #4f4f4f;
+.pgOnboarding.stepButton
+  .whitePanel.topBkPanel.modeBk
+  > .installbookmarkletBlock
+  > p {
+  font-size: 14px;
+  line-height: 21px;
+  color: #4f4f4f;
 }
 
-.pgOnboarding.stepButton .whitePanel.topBkPanel.modeBk  > .installbookmarkletBlock > p > a {
-	font-weight: bold;
+.pgOnboarding.stepButton
+  .whitePanel.topBkPanel.modeBk
+  > .installbookmarkletBlock
+  > p
+  > a {
+  font-weight: bold;
 }
 
 .pgOnboarding #bookmarklet:hover {
-	color: #FFF;
-	border: 1px solid #384B11;
-	box-shadow: 0px 0px 10px #222222;
-	-webkit-box-shadow: 0px 0px 10px #222222;
-	-moz-box-shadow: 0px 0px 10px #222222;
+  color: #fff;
+  border: 1px solid #384b11;
+  box-shadow: 0px 0px 10px #222222;
+  -webkit-box-shadow: 0px 0px 10px #222222;
+  -moz-box-shadow: 0px 0px 10px #222222;
 }
 
 .pgOnboarding #bookmarklet > span {
-	background: url(/images/drag-icon-onboarding.png) no-repeat;
-	display: block;
-	width: 34px;
-	height: 34px;
-	position: absolute;
-	top: 17px;
-	left: 16px;
+  background: url(/images/drag-icon-onboarding.png) no-repeat;
+  display: block;
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  top: 17px;
+  left: 16px;
 }
 
-
-
 .pgOnboarding.stepButton .whitePanel.modeExt {
-	padding: 20px 20px 0 20px !important;
-	overflow: hidden;
+  padding: 20px 20px 0 20px !important;
+  overflow: hidden;
 }
 
 .pgOnboarding.stepButton .whitePanel {
-	padding: 20px 20px 0 20px !important
+  padding: 20px 20px 0 20px !important;
 }
 
 .pgOnboarding.stepButton .topBkPanel > .installExtensionBlock {
-	padding-top: 50px;
-	padding-left: 56px;
+  padding-top: 50px;
+  padding-left: 56px;
 }
 
 .pgOnboarding.stepButton .modeExt {
-	display: none;
+  display: none;
 }
 
 .pgOnboarding.stepButton .topBkPanel > * {
-	display: inline-block;
-	vertical-align: middle;
-	margin: 0;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
 }
 
-
-
-
 .pgOnboarding.stepButton .whitePanel > h2 {
-	color: #FFF;
-	font-size: 20px;
-	padding: 20px 0 20px 0;
+  color: #fff;
+  font-size: 20px;
+  padding: 20px 0 20px 0;
 }
 
 .pgOnboarding.stepButton .whitePanel > p {
-	color: #b6c2d4 !important;
-	line-height: 21px !important;
-	padding-bottom: 20px;
+  color: #b6c2d4 !important;
+  line-height: 21px !important;
+  padding-bottom: 20px;
 }
 
 .pgOnboarding.stepButton .whitePanel > .work {
-	margin: 0 auto 50px auto;
-	width: 400px;
-	padding: 10px 0 10px 20px;
-	border: 1px solid #5280AD;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
+  margin: 0 auto 50px auto;
+  width: 400px;
+  padding: 10px 0 10px 20px;
+  border: 1px solid #5280ad;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
 }
 
 .pgOnboarding.stepButton .whitePanel > .work > p {
-	display: inline-block;
-	float: left;
-	margin-top: 16px;
-	font-weight: bold;
-	color: #b6c2d4 !important;
-	margin-right: 10px;
-	line-height: 12px !important;
+  display: inline-block;
+  float: left;
+  margin-top: 16px;
+  font-weight: bold;
+  color: #b6c2d4 !important;
+  margin-right: 10px;
+  line-height: 12px !important;
 }
 
 .pgOnboarding.stepButton .whitePanel > .work > ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .pgOnboarding.stepButton .whitePanel > .work > ul > li {
-	float: left;
-	margin-right: 10px;
+  float: left;
+  margin-right: 10px;
 }
 
 .pgOnboarding.stepButton .whitePanel > .work > ul > li.special {
-	margin-right: 0px;
+  margin-right: 0px;
 }
 
 /* CLEAR FLOAT */
 
 .clear {
-	clear: both;
+  clear: both;
 }
 
 /* BIG SCREEN INSTRUCTION */
 
 /* NORMAL */
 .pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal {
-	position: relative;
-	width:928px;
-	height:542px;
-	overflow:hidden;
-	border-top-right-radius: 3px;
-	border-top-left-radius: 3px;
-	-webkit-border-top-left-radius: 3px;
-	-webkit-border-top-right-radius: 3px;
-	-moz-border-radius-topleft: 3px;
-	-moz-border-radius-topright: 3px;
+  position: relative;
+  width: 928px;
+  height: 542px;
+  overflow: hidden;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-topright: 3px;
 }
 .pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > div.step1 {
-	border: none;
-	text-align: center;
-	position:absolute;
-	left:0;
-	top:0;
-	width: 100%;
-	height: 100%;
-	cursor: pointer;
+  border: none;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 .pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > div.step1 > img {
-	border: none;
-	position:absolute;
-	left:0;
-	top:0;
-	z-index:1;
+  border: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
 }
 
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > div.step1 > span {
-	display: block;
-	padding: 20px 10px 20px 52px;
-	background: #4082B6 url('/images/iconSeeHowToUse.png') no-repeat 21px 22px;
-	color: #FFF;
-	width: 176px;
-	font-weight: bold;
-	font-size: 18px;
-	position: absolute;
-	top: 50%;
-	left:50%;
-	border-radius: 60px;
-	-moz-border-radius: 60px;
-	-webkit-border-radius: 60px;
-	margin-top: -31px;
-	margin-left:-114px;
-	z-index:2
+.pgOnboarding.stepButton
+  .whitePanel
+  > .howToUseButtonNormal
+  > div.step1
+  > span {
+  display: block;
+  padding: 20px 10px 20px 52px;
+  background: #4082b6 url('/images/iconSeeHowToUse.png') no-repeat 21px 22px;
+  color: #fff;
+  width: 176px;
+  font-weight: bold;
+  font-size: 18px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 60px;
+  -moz-border-radius: 60px;
+  -webkit-border-radius: 60px;
+  margin-top: -31px;
+  margin-left: -114px;
+  z-index: 2;
 }
 
 .pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 {
-	height: 542px;
+  height: 542px;
 }
 
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 > p.indication1, .pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 > p.indication2 {
-	color: #FFFFFF !important;
+.pgOnboarding.stepButton
+  .whitePanel
+  > .howToUseButtonNormal
+  > .step2
+  > p.indication1,
+.pgOnboarding.stepButton
+  .whitePanel
+  > .howToUseButtonNormal
+  > .step2
+  > p.indication2 {
+  color: #ffffff !important;
 }
 
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 > p.indication1 {
-	position: absolute;
-	top: 72px;
-	right: 10px;
-	width: 220px;
-	display: none;
-	background: url("/images/iconIndication1.png")no-repeat 134px 0;
-	padding-top: 52px;
+.pgOnboarding.stepButton
+  .whitePanel
+  > .howToUseButtonNormal
+  > .step2
+  > p.indication1 {
+  position: absolute;
+  top: 72px;
+  right: 10px;
+  width: 220px;
+  display: none;
+  background: url('/images/iconIndication1.png') no-repeat 134px 0;
+  padding-top: 52px;
 }
 
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 > p.indicBookmarklet1 {
-	top: 112px;
-	left: 10px;
-	width: 220px;
-	display: none;
-	background: url("/images/iconIndicationBookmarklet1.png")no-repeat 64px 0;
-	padding-top: 52px;
+.pgOnboarding.stepButton
+  .whitePanel
+  > .howToUseButtonNormal
+  > .step2
+  > p.indicBookmarklet1 {
+  top: 112px;
+  left: 10px;
+  width: 220px;
+  display: none;
+  background: url('/images/iconIndicationBookmarklet1.png') no-repeat 64px 0;
+  padding-top: 52px;
 }
 
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 > p.indication2 {
-	position: absolute;
-	top: 280px;
-	right: 88px;
-	width: 220px;
-	display: none;
-	padding-top: 92px;
-	background: url('/images/iconIndication2.png')no-repeat;
+.pgOnboarding.stepButton
+  .whitePanel
+  > .howToUseButtonNormal
+  > .step2
+  > p.indication2 {
+  position: absolute;
+  top: 280px;
+  right: 88px;
+  width: 220px;
+  display: none;
+  padding-top: 92px;
+  background: url('/images/iconIndication2.png') no-repeat;
 }
 
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 > p.indicBookmarklet2 {
-	top: 280px;
-	left: 94px;
-	width: 220px;
-	display: none;
-	padding-top: 92px;
-	background: url('/images/iconIndicationBookmarklet2.png')no-repeat 135px 0;
+.pgOnboarding.stepButton
+  .whitePanel
+  > .howToUseButtonNormal
+  > .step2
+  > p.indicBookmarklet2 {
+  top: 280px;
+  left: 94px;
+  width: 220px;
+  display: none;
+  padding-top: 92px;
+  background: url('/images/iconIndicationBookmarklet2.png') no-repeat 135px 0;
 }
 
 .pgOnboarding.stepButton .topBkPanel > .installExtensionBlock > p {
-	color: #357ED6;
-	line-height: 21px;
+  color: #357ed6;
+  line-height: 21px;
 }
 
 .pgOnboarding.stepButton .topBkPanel > .installExtensionBlock > p a {
-	color: #357ED6;
-	font-weight: bold;
+  color: #357ed6;
+  font-weight: bold;
 }
 
-.pgOnboarding.stepButton .topBkPanel > .installExtensionBlock > #btnInstallChromeExt {
-	padding: 20px 40px;
-	/*margin-right: 10px;*/
-	margin: 0;
-	display: inline-block;
-	border: none;
-	margin-bottom: 18px;
+.pgOnboarding.stepButton
+  .topBkPanel
+  > .installExtensionBlock
+  > #btnInstallChromeExt {
+  padding: 20px 40px;
+  /*margin-right: 10px;*/
+  margin: 0;
+  display: inline-block;
+  border: 1px solid #62a1d3;
+  margin-bottom: 18px;
 }
 
 /* sectionHowToInstall */
 .pgOnboarding.stepButton .sectionHowToInstall {
-	background: #FFFFFF !important;
+  background: #ffffff !important;
 }
 
 .pgOnboarding.stepButton .sectionHowToInstall h2 {
-	color: #535559;
+  color: #535559;
 }
 
 .pgOnboarding .howtoinstall {
-	padding: 0 0 28px 0;
-	list-style: none;
-	width: 766px;
-	margin: 0 auto;
-	text-align: left;
+  padding: 0 0 28px 0;
+  list-style: none;
+  width: 766px;
+  margin: 0 auto;
+  text-align: left;
 }
 
 .pgOnboarding .howtoinstall li {
-	margin: 0 0 10px 0;
-	line-height: 36px;
-	color: #4F4F4F;
-	font-size: 14px;
-	border-bottom: 1px solid #E3E3E3;
-	font-size: 14px;
-	font-weight: normal;
-	color: #414141;
-	padding: 20px 0;
+  margin: 0 0 10px 0;
+  line-height: 36px;
+  color: #4f4f4f;
+  font-size: 14px;
+  border-bottom: 1px solid #e3e3e3;
+  font-size: 14px;
+  font-weight: normal;
+  color: #414141;
+  padding: 20px 0;
 }
 
 .pgOnboarding .howtoinstall li > .puce {
-	font-size: 20px;
-	background-color: #4382B6;
-	float: left;
-	width: 50px;
-	height: 50px;
-	line-height: 50px;
-	color: #FFF;
-	font-weight: bold;
-	text-align: center;
-	margin-right: 30px;
-	border-radius: 45px;
-	-webkit-border-radius: 45px;
-	-moz-border-radius: 45px;
+  font-size: 20px;
+  background-color: #4382b6;
+  float: left;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  margin-right: 30px;
+  border-radius: 45px;
+  -webkit-border-radius: 45px;
+  -moz-border-radius: 45px;
 }
 
 .pgOnboarding .howtoinstall li > h6 {
-	font-size: 14px;
-	font-weight: bold;
-	line-height: 22px;
-	padding: 0;
-	margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 22px;
+  padding: 0;
+  margin: 0;
 }
 
 .pgOnboarding .howtoinstall li.first {
-	padding-top: 0;
+  padding-top: 0;
 }
 
 .pgOnboarding .howtoinstall li.last {
-	border: none;
-	padding-bottom: 0;
+  border: none;
+  padding-bottom: 0;
 }
 
 .pgOnboarding .howtoinstall li > p {
-	color: #4f4f4f;
-	line-height: 21px;
+  color: #4f4f4f;
+  line-height: 21px;
 }
 
 .pgOnboarding .howtoinstall li > .bookmarkletHowToInstall {
-	padding-top: 14px;
+  padding-top: 14px;
 }
 
 .pgOnboarding .howtoinstall li > .bookmarkletHowToInstall > #bookmarklet {
-	position: relative;
-	border: none;
-	font-size: 14px;
-
+  position: relative;
+  border: none;
+  font-size: 14px;
 }
 
 .pgOnboarding .howtoinstall li > .bookmarkletHowToInstall > #bookmarklet:hover {
-	box-shadow: none;
-	border: none;
+  box-shadow: none;
+  border: none;
 }
 
-.pgOnboarding .howtoinstall li > .bookmarkletHowToInstall > #bookmarklet > span {
-	display: none;
+.pgOnboarding
+  .howtoinstall
+  li
+  > .bookmarkletHowToInstall
+  > #bookmarklet
+  > span {
+  display: none;
 }
 
-
+/*
 .pgOnboarding .howtoinstall li
 
-/*.pgOnboarding .howtoinstall li > .puce1 {
+.pgOnboarding .howtoinstall li > .puce1 {
 	background: url(/images/pickBookmarklet/icon-puce.png)no-repeat;
 	display: inline-block;
 	width: 34px;
@@ -793,33 +861,33 @@
 	float: left;
 	margin-right: 12px;
 }*/
-
 .pgOnboarding.stepButton .video {
-	display: block;
-	width: 468px;
-	height: 263px;
-	background: #CCC url(/images/pickBookmarklet/video-thumb.jpg) no-repeat;
-	margin: 40px auto;
-	clear: both;
-	box-shadow: 0 0 3px rgba(0,0,0,0.43);
-	-webkit-box-shadow: 0 0 3px rgba(0,0,0,0.43);
-	-moz-box-shadow: 0 0 3px rgba(0,0,0,0.43);
+  display: block;
+  width: 468px;
+  height: 263px;
+  background: #ccc url(/images/pickBookmarklet/video-thumb.jpg) no-repeat;
+  margin: 40px auto;
+  clear: both;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
 }
 
 .pgOnboarding.stepButton .video > a {
-	display: block;
-	width: 468px;
-	height: 263px;
-	background: url(/images/pickBookmarklet/video-play-big.png) no-repeat center center;
-	opacity: 0.6;
+  display: block;
+  width: 468px;
+  height: 263px;
+  background: url(/images/pickBookmarklet/video-play-big.png) no-repeat center
+    center;
+  opacity: 0.6;
 }
 
 .pgOnboarding.stepButton .video > a:hover {
-	opacity: 0.9;
+  opacity: 0.9;
 }
 
 .pgOnboarding .reassure-txt {
-	font-style: italic;
-	color: #535559 !important;
-	margin-top: 10px;
+  font-style: italic;
+  color: #535559 !important;
+  margin-top: 10px;
 }
