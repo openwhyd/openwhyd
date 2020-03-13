@@ -1,3 +1,10 @@
+## [1.27.4](https://github.com/openwhyd/openwhyd/compare/v1.27.3...v1.27.4) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** fix and homogenize wording, second pass ([#290](https://github.com/openwhyd/openwhyd/issues/290)) ([7895946](https://github.com/openwhyd/openwhyd/commit/7895946)), closes [#289](https://github.com/openwhyd/openwhyd/issues/289)
+
 ## [1.27.3](https://github.com/openwhyd/openwhyd/compare/v1.27.2...v1.27.3) (2020-03-13)
 
 
