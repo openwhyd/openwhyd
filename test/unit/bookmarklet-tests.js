@@ -180,7 +180,7 @@ describe('bookmarklet', () => {
     assert.equal(track.sourceId, playerId);
   });
 
-  describe('makeFileDetector()', () => {
+  describe('File Detector', () => {
     it('should not require an element', async () => {
       const detectFile = bookmarklet.makeFileDetector();
       const url = `http://myblog/myfile.mp3`;
@@ -254,56 +254,49 @@ describe('bookmarklet', () => {
     });
   });
 
-  describe('makeStreamDetector()', () => {
-    it('should return a function', () => {
-      const detectPlayemStreams = bookmarklet.makeStreamDetector();
-      assert.equal(typeof detectPlayemStreams, 'function');
+  describe('Stream Detector', () => {
+    it('should return nothing when no players were provided', async () => {
+      const { url } = YOUTUBE_VIDEO;
+      const players = {};
+      const detectStreams = bookmarklet.makeStreamDetector(players);
+      const track = await new Promise(cb => detectStreams(url, cb));
+      assert.equal(typeof track, 'undefined');
     });
 
-    describe('detectPlayemStreams()', () => {
-      it('should return nothing when no players were provided', async () => {
-        const { url } = YOUTUBE_VIDEO;
-        const players = {};
-        const detectPlayemStreams = bookmarklet.makeStreamDetector(players);
-        const track = await new Promise(cb => detectPlayemStreams(url, cb));
-        assert.equal(typeof track, 'undefined');
-      });
+    it('should return a track from its URL when a simple detector was provided', async () => {
+      const { url } = YOUTUBE_VIDEO;
+      const playerId = 'yt';
+      const detectors = {
+        [playerId]: { getEid: bookmarklet.YOUTUBE_PLAYER.getEid }
+      };
+      const detectStreams = bookmarklet.makeStreamDetector(detectors);
+      const track = await new Promise(cb => detectStreams(url, cb));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
+    });
 
-      it('should return a track from its URL when a simple detector was provided', async () => {
-        const { url } = YOUTUBE_VIDEO;
-        const playerId = 'yt';
-        const detectors = {
-          [playerId]: { getEid: bookmarklet.YOUTUBE_PLAYER.getEid }
-        };
-        const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
-        const track = await new Promise(cb => detectPlayemStreams(url, cb));
-        assert.equal(typeof track, 'object');
-        assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
-      });
-
-      it('should return a track from its URL when a complete detector was provided', async () => {
-        const { url } = YOUTUBE_VIDEO;
-        const playerId = 'yt';
-        const detectors = {
-          [playerId]: {
-            getEid: () => YOUTUBE_VIDEO.id,
-            fetchMetadata: (url, callback) =>
-              callback({
-                id: YOUTUBE_VIDEO.id,
-                title: YOUTUBE_VIDEO.title,
-                img: YOUTUBE_VIDEO.img
-              })
-          }
-        };
-        const detectPlayemStreams = bookmarklet.makeStreamDetector(detectors);
-        const track = await new Promise(cb => detectPlayemStreams(url, cb));
-        assert.equal(typeof track, 'object');
-        assert.equal(track.id, YOUTUBE_VIDEO.id);
-        assert.equal(track.title, YOUTUBE_VIDEO.title);
-        assert.equal(track.img, YOUTUBE_VIDEO.img);
-        assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
-        assert.equal(track.sourceId, playerId);
-      });
+    it('should return a track from its URL when a complete detector was provided', async () => {
+      const { url } = YOUTUBE_VIDEO;
+      const playerId = 'yt';
+      const detectors = {
+        [playerId]: {
+          getEid: () => YOUTUBE_VIDEO.id,
+          fetchMetadata: (url, callback) =>
+            callback({
+              id: YOUTUBE_VIDEO.id,
+              title: YOUTUBE_VIDEO.title,
+              img: YOUTUBE_VIDEO.img
+            })
+        }
+      };
+      const detectStreams = bookmarklet.makeStreamDetector(detectors);
+      const track = await new Promise(cb => detectStreams(url, cb));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.id, YOUTUBE_VIDEO.id);
+      assert.equal(track.title, YOUTUBE_VIDEO.title);
+      assert.equal(track.img, YOUTUBE_VIDEO.img);
+      assert.equal(track.eId, `/${playerId}/${YOUTUBE_VIDEO.id}`);
+      assert.equal(track.sourceId, playerId);
     });
   });
 });
