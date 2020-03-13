@@ -41,7 +41,8 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       var fileName = (url.match(/([^\/]+)\.(?:mp3|ogg)$/) || []).pop();
       if (eidSet[url] || !fileName) return cb();
       var title =
-        element.title || getNodeText(element) || decodeURIComponent(fileName);
+        (element ? element.title || getNodeText(element) : null) ||
+        decodeURIComponent(fileName);
       eidSet[url] = true;
       cb({
         id: url,
