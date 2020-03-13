@@ -550,9 +550,14 @@ function bookmarklet(window) {
         unwrapFacebookLink(element.href || element.src || element.data || '');
       if (!url) return cb();
       detectTrack(url, element, function(track) {
-        if (track && track.title) {
+        if (track) {
           track.url = url;
-          //track.title = track.title || e.textNode || e.title || e.alt || track.eId || url; // || p.label;
+          track.title =
+            track.title ||
+            element.text ||
+            element.textNode ||
+            element.title ||
+            element.alt; // || track.eId || url || p.label;
           if (track.sourceLabel)
             track.sourceLogo =
               urlPrefix +
