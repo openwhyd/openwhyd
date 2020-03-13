@@ -640,20 +640,22 @@ if (typeof exports !== 'undefined') {
 
     // Additional detectors
 
-    function initPlayemPlayers() {
+    function initPlayemPlayers(playemUrl, callback) {
       window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
       window.DEEZER_APP_ID = 190482;
       window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
       window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
-      return (window._whydPlayers = window._whydPlayers || {
-        yt: YOUTUBE_PLAYER, // instead of new YoutubePlayer(...), to save API quota (see #262)
+      include(playemUrl, function() {
         // playem-all.js must be loaded at that point
-        sc: new SoundCloudPlayer({}),
-        vi: new VimeoPlayer({}),
-        dm: new DailymotionPlayer({}),
-        dz: new DeezerPlayer({}),
-        bc: new BandcampPlayer({}),
-        ja: new JamendoPlayer({})
+        callback({
+          // yt: new YoutubePlayer(...) should be replaced by bookmarklet.YOUTUBE_PLAYER, to save API quota (see #262)
+          sc: new SoundCloudPlayer({}),
+          vi: new VimeoPlayer({}),
+          dm: new DailymotionPlayer({}),
+          dz: new DeezerPlayer({}),
+          bc: new BandcampPlayer({}),
+          ja: new JamendoPlayer({})
+        });
       });
     }
 
@@ -662,19 +664,28 @@ if (typeof exports !== 'undefined') {
     var urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
       urlSuffix = '?' + new Date().getTime();
 
-    makeBookmarklet(window, urlPrefix, urlSuffix);
-    console.info('initWhydBookmarklet...');
+    console.info('loading bookmarklet stylesheet...');
     include(urlPrefix + CSS_FILEPATH + urlSuffix);
-    var ui = new BkUi();
     console.info('loading PlayemJS...');
-    var playemFile =
-      urlPrefix.indexOf('openwhyd.org') > 0 ? 'playem-min.js' : 'playem-all.js';
-    include(urlPrefix + '/js/' + playemFile + urlSuffix, function() {
-      var players = initPlayemPlayers();
-      detectTracks({
+    var playemFile = /openwhyd\.org/.test(urlPrefix)
+      ? 'playem-min.js'
+      : 'playem-all.js';
+    var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
+    initPlayemPlayers(playemUrl, function(players) {
+      var bookmarklet = makeBookmarklet(window, urlPrefix, urlSuffix);
+      var allPlayers = Object.assign(
+        {
+          yt: bookmarklet.YOUTUBE_PLAYER // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
+        },
+        players
+      );
+      bookmarklet.detectTracks({
         window,
-        ui,
-        urlDetectors: [makeFileDetector(), makeStreamDetector(players)]
+        ui: new BkUi(),
+        urlDetectors: [
+          bookmarklet.makeFileDetector(),
+          bookmarklet.makeStreamDetector(allPlayers)
+        ]
       });
     });
   })();
