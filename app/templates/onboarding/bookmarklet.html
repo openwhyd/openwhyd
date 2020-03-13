@@ -66,6 +66,7 @@
 		-webkit-background-clip: padding-box;
 		-moz-background-clip: padding-box;
 		-background-clip: padding-box;
+		background-clip: padding-box;
 	}
 
 	.header>a:hover {
@@ -104,15 +105,6 @@
 		margin: 0;
 	}
 
-	.services li {
-		float: left;
-		margin: 0 20px 0 0;
-	}
-
-	.services li.last {
-		margin-right: 0;
-	}
-
 	.content h3 {
 		font-size: 18px;
 		line-height: 32px;
@@ -122,40 +114,29 @@
 		margin-bottom: 6px;
 	}
 
-	.content p {
-		color: #7a7979;
-		margin: 0;
-	}
-
 	.content>div {
 		padding: 56px 0;
+		position: relative;
 	}
 
-
-	/* FIRST */
-	.first {
-		position: relative;
-		height: 180px;
+	.content>div.introduction,
+	.content>div.howtoinstall {
+		overflow: auto;
 		background: url(/images/pickBookmarklet/separation.png) no-repeat bottom center;
 	}
 
-	.first p {
+	.content p {
+		color: #7a7979;
+		margin: 0;
 		display: inline-block;
 		width: 620px;
-		float: left;
 		line-height: 20px;
 	}
 
-	.first p a {
-		font-weight: bold;
-	}
-
-	.first .video {
-		position: absolute;
+	.video {
+		float: right;
 		height: 192px;
 		width: 298px;
-		top: 32px;
-		right: 0;
 		box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
 		-webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
 		-moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
@@ -163,7 +144,7 @@
 		background-size: cover;
 	}
 
-	.first>.video>a {
+	.video>a {
 		display: block;
 		width: 298px;
 		height: 192px;
@@ -171,16 +152,14 @@
 		opacity: 0.6;
 	}
 
-	.first>.video>a:hover {
+	.video>a:hover {
 		opacity: 0.9;
 	}
 
-	/* services */
+	/* SERVICES */
+
 	.services {
-		clear: both;
-		margin-top: 10px;
-		height: 140px;
-		background: url(/images/pickBookmarklet/separation.png) no-repeat bottom center;
+		margin-bottom: 40px;
 	}
 
 	.services li {
@@ -190,7 +169,6 @@
 		line-height: 78px;
 	}
 
-	/* LOGO MARQUE */
 	.services li a {
 		display: block;
 		width: 140px;
@@ -233,15 +211,10 @@
 
 	/* HOW TO INSTALL */
 
-	.howtoinstall {
-		padding: 34px 14px;
-	}
-
 	.howtoinstall h3 {
 		position: relative;
 	}
 
-	/* ICON NAVIGATEUR */
 	.howtoinstall h3>span.msie8,
 	.howtoinstall h3>span.msie {
 		position: absolute;
@@ -283,10 +256,6 @@
 		top: -3px;
 	}
 
-	.howtoinstall ul {
-		padding: 0 0 28px 0;
-	}
-
 	.howtoinstall li {
 		margin: 0 0 10px 0;
 		line-height: 36px;
@@ -298,7 +267,6 @@
 		display: inline-block;
 		width: 34px;
 		height: 34px;
-		float: left;
 		margin-right: 12px;
 	}
 
@@ -344,18 +312,18 @@
 	</div>
 
 	<div class="content">
-		<div class="first explication">
+		<div class="introduction">
+			<div class="video">
+				<a href="javascript:openVideo()" alt="Watch the video tutorial" title="Watch the video tutorial"></a>
+			</div>
 			<h3>The fastest way to add and share</h3>
 			<p>To instantly add tracks to your Openwhyd stream that you find across the web, from any website, we built the
 				Openwhyd "add track" button. Drag the button to your bookmarks bar to install it, and then you can save the new
 				tracks you find and share immediately from sites like Facebook and music blogs. It's super fast and super
 				simple.</p>
-			<div class="video">
-				<a href="javascript:openVideo()" alt="Watch the video tutorial" title="Watch the video tutorial"></a>
-			</div>
 		</div>
 
-		<div class="first howtoinstall">
+		<div class="howtoinstall">
 			<h3>Instructions:<span class="browserIcon"></span></h3>
 			<ul>
 				<!-- CONDITIONAL PART: depends on the user's web browser -->
