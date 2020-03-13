@@ -1,3 +1,10 @@
+## [1.27.1](https://github.com/openwhyd/openwhyd/compare/v1.27.0...v1.27.1) (2020-03-13)
+
+
+### Bug Fixes
+
+* **version:** bump bookmarklet version ([65eb02e](https://github.com/openwhyd/openwhyd/commit/65eb02e))
+
 # [1.27.0](https://github.com/openwhyd/openwhyd/compare/v1.26.4...v1.27.0) (2020-03-13)
 
 
