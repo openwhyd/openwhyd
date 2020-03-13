@@ -1,3 +1,10 @@
+## [1.27.5](https://github.com/openwhyd/openwhyd/compare/v1.27.4...v1.27.5) (2020-03-13)
+
+
+### Bug Fixes
+
+* **#262:** announce improvements on home page ([#288](https://github.com/openwhyd/openwhyd/issues/288)) ([6eca49f](https://github.com/openwhyd/openwhyd/commit/6eca49f)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
 ## [1.27.4](https://github.com/openwhyd/openwhyd/compare/v1.27.3...v1.27.4) (2020-03-13)
 
 
