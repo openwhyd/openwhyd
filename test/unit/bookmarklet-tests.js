@@ -180,6 +180,35 @@ describe('bookmarklet', () => {
     assert.equal(track.sourceId, playerId);
   });
 
+  describe('makeFileDetector()', () => {
+    it('should return a mp3 file from a URL', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const url = `http://myblog/myfile.mp3`;
+      const element = { title: '' };
+      const track = await new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.id, url);
+    });
+
+    it('should return a ogg file from a URL', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const url = `http://myblog/myfile.ogg`;
+      const element = { title: '' };
+      const track = await new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof track, 'object');
+      assert.equal(track.id, url);
+    });
+
+    it('should not return duplicates', async () => {
+      const detectFile = bookmarklet.makeFileDetector();
+      const url = `http://myblog/myfile.ogg`;
+      const element = { title: '' };
+      const detect = () => new Promise(cb => detectFile(url, cb, element));
+      assert.equal(typeof (await detect()), 'object');
+      assert.equal(typeof (await detect()), 'undefined');
+    });
+  });
+
   describe('makeStreamDetector()', () => {
     it('should return a function', () => {
       const detectPlayemStreams = bookmarklet.makeStreamDetector();
