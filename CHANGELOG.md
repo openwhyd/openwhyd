@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/openwhyd/openwhyd/compare/v1.26.4...v1.27.0) (2020-03-13)
+
+
+### Features
+
+* **bookmarklet:** extract youtube track names from page ([#285](https://github.com/openwhyd/openwhyd/issues/285)) ([9493f06](https://github.com/openwhyd/openwhyd/commit/9493f06)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#281](https://github.com/openwhyd/openwhyd/issues/281) [#282](https://github.com/openwhyd/openwhyd/issues/282)
+
 ## [1.26.4](https://github.com/openwhyd/openwhyd/compare/v1.26.3...v1.26.4) (2020-03-12)
 
 
