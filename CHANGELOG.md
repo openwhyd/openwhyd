@@ -1,3 +1,10 @@
+## [1.27.2](https://github.com/openwhyd/openwhyd/compare/v1.27.1...v1.27.2) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** [refactor] move browser-only code to end ([#286](https://github.com/openwhyd/openwhyd/issues/286)) ([dd1c58b](https://github.com/openwhyd/openwhyd/commit/dd1c58b)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
 ## [1.27.1](https://github.com/openwhyd/openwhyd/compare/v1.27.0...v1.27.1) (2020-03-13)
 
 
