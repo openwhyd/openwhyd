@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/openwhyd/openwhyd/compare/v1.27.7...v1.28.0) (2020-03-13)
+
+
+### Features
+
+* **tests:** migrate bookmarklet e2e test to Cypress ([#276](https://github.com/openwhyd/openwhyd/issues/276)) ([38fd0f6](https://github.com/openwhyd/openwhyd/commit/38fd0f6)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.27.7](https://github.com/openwhyd/openwhyd/compare/v1.27.6...v1.27.7) (2020-03-13)
 
 
