@@ -1,3 +1,31 @@
+## [1.27.6](https://github.com/openwhyd/openwhyd/compare/v1.27.5...v1.27.6) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** make "install" button more visible during onboarding ([#291](https://github.com/openwhyd/openwhyd/issues/291)) ([9a0c96d](https://github.com/openwhyd/openwhyd/commit/9a0c96d))
+
+## [1.27.5](https://github.com/openwhyd/openwhyd/compare/v1.27.4...v1.27.5) (2020-03-13)
+
+
+### Bug Fixes
+
+* **#262:** announce improvements on home page ([#288](https://github.com/openwhyd/openwhyd/issues/288)) ([6eca49f](https://github.com/openwhyd/openwhyd/commit/6eca49f)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.27.4](https://github.com/openwhyd/openwhyd/compare/v1.27.3...v1.27.4) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** fix and homogenize wording, second pass ([#290](https://github.com/openwhyd/openwhyd/issues/290)) ([7895946](https://github.com/openwhyd/openwhyd/commit/7895946)), closes [#289](https://github.com/openwhyd/openwhyd/issues/289)
+
+## [1.27.3](https://github.com/openwhyd/openwhyd/compare/v1.27.2...v1.27.3) (2020-03-13)
+
+
+### Bug Fixes
+
+* **ui:** simplify bookmarklet page and homogenize wording ([#289](https://github.com/openwhyd/openwhyd/issues/289)) ([c8b13f5](https://github.com/openwhyd/openwhyd/commit/c8b13f5))
+
 ## [1.27.2](https://github.com/openwhyd/openwhyd/compare/v1.27.1...v1.27.2) (2020-03-13)
 
 
