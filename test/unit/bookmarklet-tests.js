@@ -49,6 +49,17 @@ const detectTracksAsPromise = ({ window, urlDetectors = [] }) =>
   });
 
 describe('bookmarklet', () => {
+  before(() => {
+    // disable console.info() calls from bookmarklet, to reduce noise in tests output
+    this.consoleBackup = console;
+    console = { ...console, info() {} };
+  });
+
+  after(() => {
+    // restore console
+    console = this.consoleBackup;
+  });
+
   it('should return a search link when no tracks were found on the page', async () => {
     const window = makeWindow({ title: 'dummy title' });
     const results = await detectTracksAsPromise({ window });
