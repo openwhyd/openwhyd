@@ -1,5 +1,5 @@
 <style type="text/css">
-/*<![CDATA[*/
+	/*<![CDATA[*/
 
 	body {
 		background: #F4F4F4;
@@ -13,7 +13,7 @@
 
 	#btnNext {
 		float: right;
-		position:relative;
+		position: relative;
 		top: -5px;
 		background: url('/images/btn-jumpin.png') no-repeat;
 		width: 112px;
@@ -32,14 +32,14 @@
 		font-size: 20px;
 		font-weight: bold;
 		color: #2f2f2f;
-		text-shadow: 0 1px 0 rgba(255,255,255,1);
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
 		line-height: 70px;
 	}
 
 	/* main box */
 
 	#mainBox {
-		clear:both;
+		clear: both;
 		position: relative;
 		width: 100%;
 		/*height: 390px;*/
@@ -50,9 +50,9 @@
 		border-radius: 5px;
 		-webkit-border-radius: 5px;
 		-moz-border-radius: 5px;
-		box-shadow: inset 0 0 1px rgba(255,255,255,1), 0 0 1px rgba(0,0,0,0.18);
-		-webkit-box-shadow: inset 0 0 1px rgba(255,255,255,1), 0 0 1px rgba(0,0,0,0.18);
-		-moz-box-shadow: inset 0 0 1px rgba(255,255,255,1), 0 0 1px rgba(0,0,0,0.18);
+		box-shadow: inset 0 0 1px rgba(255, 255, 255, 1), 0 0 1px rgba(0, 0, 0, 0.18);
+		-webkit-box-shadow: inset 0 0 1px rgba(255, 255, 255, 1), 0 0 1px rgba(0, 0, 0, 0.18);
+		-moz-box-shadow: inset 0 0 1px rgba(255, 255, 255, 1), 0 0 1px rgba(0, 0, 0, 0.18);
 		margin-bottom: 40px;
 	}
 
@@ -62,11 +62,11 @@
 	}
 
 	#bookmarklet {
-		float:left;
+		float: left;
 		background: url("/images/btn-add-to-my-library.png");
 		width: 236px;
 		height: 66px;
-		
+
 		text-align: center;
 		line-height: 66px;
 		font-size: 28px;
@@ -75,23 +75,23 @@
 	}
 
 	#bookmarklet span {
-		display:none;
+		display: none;
 	}
 
-	.bookmarkletBox > h2 {
+	.bookmarkletBox>h2 {
 		clear: both;
 		padding-top: 50px;
 		color: #414141;
-		text-shadow: 0 1px 0 rgba(255,255,255,1);
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
 	}
 
-	.bookmarkletBox > ol {
+	.bookmarkletBox>ol {
 		color: #414141;
 		line-height: 16px;
 		font-size: 14px;
 	}
 
-	.bookmarkletBox > ol > li {
+	.bookmarkletBox>ol>li {
 		margin-top: 10px;
 	}
 
@@ -100,23 +100,24 @@
 		border: 1px solid #CCC;
 		padding: 2px;
 	}
-/*]]>*/
+
+	/*]]>*/
 </style>
 
 <!--<body class="step4">-->
-	
+
 <a href="/" id="btnNext"></a>
 <h1>Complete your library with tracks from any website</h1>
 
 <div id="mainBox">
-	
+
 	<div class="bookmarkletBox">
-	
+
 		<a id="bookmarklet"
-		   onclick="setTimeout(function(){alert('Please drag & drop this button to your browser\'s bookmarks bar')},50); return false;"
-		   title="Drop this bookmarklet to the bookmarks bar of your web browser"
-		   href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();">
-			whyd ✚ track
+			onclick="setTimeout(function(){alert('Please drag & drop this button to your browser\'s bookmarks bar')},50); return false;"
+			title="Drop this bookmarklet to the bookmarks bar of your web browser"
+			href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();">
+			Openwhyd ✚ Track
 		</a>
 
 		<h2>To install the bookmarklet in your browser:</h2>
@@ -143,13 +144,14 @@
 			<li>While browsing the web, click the bookmarklet whenever you see some music you want to add to your library</li>
 		</ol>
 
-		<iframe class="youtubeVid" width="560" height="315" src="//www.youtube.com/embed/qHkJcp-yucE" frameborder="0" allowfullscreen></iframe>
+		<iframe class="youtubeVid" width="560" height="315" src="//www.youtube.com/embed/qHkJcp-yucE" frameborder="0"
+			allowfullscreen></iframe>
 
 	</div>
 </div>
 
 <script>
-/*<![CDATA[*/
+	/*<![CDATA[*/
 	$("li.instr").hide();
 	var b = ["Opera", "MSIE", "Chrome", "Safari", "Firefox"];
 	for (var i in b)
@@ -159,4 +161,3 @@
 		}
 /*]]>*/
 </script>
-
