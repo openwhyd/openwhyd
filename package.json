@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.27.7",
+  "version": "1.28.1",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -76,8 +76,8 @@
     "@wdio/spec-reporter": "^5.13.2",
     "@wdio/sync": "^5.14.0",
     "all-contributors-cli": "5.4.0",
-    "cypress": "^3.2.0",
     "chromedriver": "^77.0.0",
+    "cypress": "^3.8.3",
     "eslint": "^6.5.1",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
