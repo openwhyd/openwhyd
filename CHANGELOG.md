@@ -1,3 +1,10 @@
+## [1.28.1](https://github.com/openwhyd/openwhyd/compare/v1.28.0...v1.28.1) (2020-03-14)
+
+
+### Bug Fixes
+
+* **deps:** bump acorn from 7.1.0 to 7.1.1 ([#292](https://github.com/openwhyd/openwhyd/issues/292)) ([2db3617](https://github.com/openwhyd/openwhyd/commit/2db3617))
+
 # [1.28.0](https://github.com/openwhyd/openwhyd/compare/v1.27.7...v1.28.0) (2020-03-13)
 
 
