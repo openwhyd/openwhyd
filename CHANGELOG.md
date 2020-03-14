@@ -1,3 +1,10 @@
+## [1.28.2](https://github.com/openwhyd/openwhyd/compare/v1.28.1...v1.28.2) (2020-03-14)
+
+
+### Bug Fixes
+
+* **ui:** never-ending loading animation on empty search ([#260](https://github.com/openwhyd/openwhyd/issues/260)) ([3c4cc85](https://github.com/openwhyd/openwhyd/commit/3c4cc85)), closes [#226](https://github.com/openwhyd/openwhyd/issues/226)
+
 ## [1.28.1](https://github.com/openwhyd/openwhyd/compare/v1.28.0...v1.28.1) (2020-03-14)
 
 
