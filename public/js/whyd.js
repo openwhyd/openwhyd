@@ -9,16 +9,16 @@ var wlh = window.location.href;
 var urlPrefix = wlh.substr(0, wlh.indexOf('/', 8));
 var urlDomain = urlPrefix.split('//').pop();
 
-window.goToPage = function(url) {
+window.goToPage = function (url) {
   console.log('goToPage (no history)', url);
   window.location.href = url || window.location.href;
 };
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function() {} };
+if (undefined == window.console) console = { log: function () { } };
 
 /* Design */
-$(window).resize(function() {
+$(window).resize(function () {
   resizeWindow();
 });
 
@@ -70,13 +70,13 @@ function extractPostData($post, defaults) {
     .find('.text')
     .first()
     .contents()
-    .filter(function() {
+    .filter(function () {
       return this.nodeType == 3;
     })
     .text();
   try {
     text = text.trim(); // trim() not supported on IE8
-  } catch (e) {}
+  } catch (e) { }
   return {
     id: $post.attr('data-pid'), // for askPostShareFB
     pId: $post.attr('data-pid'),
@@ -105,7 +105,7 @@ function submitSearchQuery(q, cb) {
     type: 'GET',
     url: '/search',
     data: q,
-    complete: function(res, status) {
+    complete: function (res, status) {
       try {
         if (status != 'success' || !res.responseText) throw 0;
         cb && cb(res.responseText);
@@ -125,7 +125,7 @@ function removePost(pId) {
       action: 'delete',
       _id: pId
     },
-    complete: function() {
+    complete: function () {
       //refreshFeed
       $('.post[data-pid=' + pId + ']').remove();
       whydPlayer.populateTracks();
@@ -141,7 +141,7 @@ function deleteComment(cId, cb) {
       action: 'deleteComment',
       _id: cId
     },
-    complete: function() {
+    complete: function () {
       //refreshFeed
       $('.post div[data-cid=' + cId + ']').remove();
       cb && cb();
@@ -168,7 +168,7 @@ function subscribeToUser(uId, cb) {
     type: 'GET',
     url: '/api/follow',
     data: { action: 'insert', tId: uId },
-    success: function(r) {
+    success: function (r) {
       cb && cb(r);
       window.Whyd.tracking.log('Followed', uId);
     }
@@ -185,7 +185,7 @@ function switchSubscription() {
     type: 'GET',
     url: '/api/follow',
     data: { action: subscribing ? 'insert' : 'delete', tId: uid /*, tNm:unm*/ },
-    success: function() {
+    success: function () {
       $button
         .toggleClass('subscribed')
         .text(subscribing ? 'Following' : 'Follow');
@@ -215,8 +215,8 @@ function _fetchPostInfo(pid, action, callback) {
 
 /* external API wrappers */
 
-window.searchExternalTracks = (function() {
-  return function(query, handleResult) {
+window.searchExternalTracks = (function () {
+  return function (query, handleResult) {
     // playem.searchTracks(query, handleResult);
     console.info(
       'ignoring external search, see https://github.com/openwhyd/openwhyd/issues/262'
@@ -232,7 +232,7 @@ function toggleLovePost(pId) {
     //return window.location.href = "/";
     //return alert("Please sign in first!")
     return login();
-  getPostById(pId, function($post) {
+  getPostById(pId, function ($post) {
     var $button = $post.find('.btnLike').first();
     $button = $button.add('#postViewer .btnLike');
     function updateButton(result) {
@@ -273,13 +273,13 @@ function loadMore(params, cb) {
   var $button = $('.btnLoadMore').last();
   $button.addClass('loading');
   var $frame = $button.parent();
-  $frame.ready(function() {
+  $frame.ready(function () {
     params = params || {};
     if (params.limit)
       params.urlSuffix = (params.urlSuffix || '') + '&limit=' + params.limit;
-    $.get(window.nextPageUrl + (params.urlSuffix || ''), function(data) {
+    $.get(window.nextPageUrl + (params.urlSuffix || ''), function (data) {
       $button.remove();
-      $frame.append(data).ready(function() {
+      $frame.append(data).ready(function () {
         window.whydPlayer.updateTracks();
         $(this).ajaxify();
         cb && cb();
@@ -292,10 +292,10 @@ function loadMore(params, cb) {
 function loadTop() {
   var $firstPost = $('.posts > .post').first();
   if (window.prevPageUrl && window.prevPageUrl.split('before=')[1])
-    $.get(window.prevPageUrl, function(data) {
+    $.get(window.prevPageUrl, function (data) {
       $firstPost.before(data);
       $('.emptyFeed').remove();
-      setTimeout(function() {
+      setTimeout(function () {
         console.log('refreshing...');
         window.whydPlayer.updateTracks();
         window.whydPlayer.refresh(); // in order to re-position the video currently being played
@@ -315,12 +315,12 @@ function onNewPost(whydPost) {
 
   showMessage(
     "Successfully added track to <a target='_blank' href='" +
-      '/u/' +
-      p.uId +
-      (p.pl ? '/playlist/' + p.pl.id : '') +
-      "'>" +
-      encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
-      '</a>'
+    '/u/' +
+    p.uId +
+    (p.pl ? '/playlist/' + p.pl.id : '') +
+    "'>" +
+    encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
+    '</a>'
   );
 
   try {
@@ -339,10 +339,10 @@ function onNewPost(whydPost) {
 function activateSubscribeButton($btn) {
   $btn
     .click(switchSubscription)
-    .mouseenter(function() {
+    .mouseenter(function () {
       if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';
     })
-    .mouseleave(function() {
+    .mouseleave(function () {
       if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';
     });
 }
@@ -369,22 +369,22 @@ function _renderUserInList(user, liHandler) {
         .css(
           'background-image',
           "url('" +
-            (user.img || '/img/u/' + user.id) +
-            "?width=100&amp;height=100')"
+          (user.img || '/img/u/' + user.id) +
+          "?width=100&amp;height=100')"
         )
         .click(
           user.thumbClickHandler ||
-            function() {
-              $(this)
-                .parent()
-                .find('a.userLink')
-                .click();
-            }
+          function () {
+            $(this)
+              .parent()
+              .find('a.userLink')
+              .click();
+          }
         )
     )
     .append(
       $("<a class='userLink'>")
-        .click(function() {
+        .click(function () {
           $.modal.close();
         })
         .attr('href', user.url || '/u/' + user.id)
@@ -426,7 +426,7 @@ function _renderCommentText(str) {
   return replaceURLWithHTMLLinks(htmlEntities(str || ''))
     .replace(/\n\n/g, '\n')
     .replace(/\n/g, '<br/>')
-    .replace(RE_MENTION, function(match, uNm, uId) {
+    .replace(RE_MENTION, function (match, uNm, uId) {
       return '<a href="/u/' + uId + '">' + htmlEntities(uNm) + '</a>';
     });
 }
@@ -436,12 +436,12 @@ function _commentDeleteHandler() {
   var $post = $comment.closest('.post');
   var $html = $(
     '<div><p>Do you want to permanently delete this comment?</p></div>' +
-      '<span class="btnDelete greenButton">Delete</span>'
+    '<span class="btnDelete greenButton">Delete</span>'
   );
   openJqueryDialog($html, 'dlgDeleteComment');
-  $('.dlgDeleteComment .btnDelete').click(function() {
+  $('.dlgDeleteComment .btnDelete').click(function () {
     avgrundClose();
-    deleteComment($comment.attr('data-cid'), function() {
+    deleteComment($comment.attr('data-cid'), function () {
       updatePostStats($post);
     });
   });
@@ -486,7 +486,7 @@ function updatePostStats($post, $ext) {
 }
 
 function toggleComments(pId, toggle) {
-  getPostById(pId, function($post) {
+  getPostById(pId, function ($post) {
     var $ext = $post
       .find('.ext')
       .toggleClass('hidden', toggle != undefined ? !toggle : undefined);
@@ -496,10 +496,10 @@ function toggleComments(pId, toggle) {
     var $btn = $ext.find('input[type=submit]');
     var $textField = $ext.find('textarea').mentionsInput({
       maxMentions: MAX_NB_MENTIONS,
-      onDataRequest: function(mode, query, callback) {
-        submitSearchQuery({ q: query, context: 'mention' }, function(res) {
+      onDataRequest: function (mode, query, callback) {
+        submitSearchQuery({ q: query, context: 'mention' }, function (res) {
           res = JSON.parse(res);
-          var hits = (res.hits || []).map(function(r) {
+          var hits = (res.hits || []).map(function (r) {
             return {
               id: r._id,
               name: r.name,
@@ -510,7 +510,7 @@ function toggleComments(pId, toggle) {
           callback.call(this, hits);
         });
       },
-      onValueChange: function(text) {
+      onValueChange: function (text) {
         if ((text.trim ? text.trim() : text).length == 0)
           $btn.attr('disabled', 'disabled');
         else $btn.removeAttr('disabled');
@@ -520,11 +520,11 @@ function toggleComments(pId, toggle) {
     $ext
       .find('form')
       .unbind('submit')
-      .submit(function(e) {
+      .submit(function (e) {
         e.preventDefault();
-        $textField.mentionsInput('val', function(text) {
+        $textField.mentionsInput('val', function (text) {
           if ((text.trim ? text.trim() : text).length == 0) return false;
-          addComment(pId, text, function(c) {
+          addComment(pId, text, function (c) {
             console.log('response', c);
             c = (c || {}).responseJSON || { error: 'null response' };
             if (c.error) showMessage('Error: ' + c.error, true);
@@ -545,7 +545,7 @@ function toggleComments(pId, toggle) {
       if ($hidden.length)
         $("<p class='showMore'>Show more comments</p>")
           .insertBefore($hidden.first())
-          .click(function() {
+          .click(function () {
             $hidden.removeClass('hidden');
             $(this).remove();
           })
@@ -565,25 +565,25 @@ function toggleComments(pId, toggle) {
 }
 
 function showPostLovers(pId) {
-  _fetchPostInfo(pId, 'lovers', function(users) {
+  _fetchPostInfo(pId, 'lovers', function (users) {
     _showUserListDlg(users, 'People loved this track');
   });
 }
 
 function showReposts(pId) {
-  _fetchPostInfo(pId, 'reposts', function(users) {
+  _fetchPostInfo(pId, 'reposts', function (users) {
     _showUserListDlg(users, 'People also added this track');
   });
 }
 
 function showSubscribers(uid) {
-  _fetchUserInfo(uid || window.pageUser.id, 'followers', function(users) {
+  _fetchUserInfo(uid || window.pageUser.id, 'followers', function (users) {
     _showUserListDlg(users, 'Follower(s)');
   });
 }
 
 function showSubscriptions(uid) {
-  _fetchUserInfo(uid || window.pageUser.id, 'following', function(users) {
+  _fetchUserInfo(uid || window.pageUser.id, 'following', function (users) {
     _showUserListDlg(users, 'Following(s)');
   });
 }
@@ -610,7 +610,7 @@ function dlgCreatePlaylist() {
 }
 
 function dlgEditPlaylist() {
-  openRemoteDialog('/html/dlgEditPlaylist.html', 'dlgEditPlaylist', function(
+  openRemoteDialog('/html/dlgEditPlaylist.html', 'dlgEditPlaylist', function (
     $dlg
   ) {
     //console.log("window.pagePlaylist", window.pagePlaylist);
@@ -628,13 +628,13 @@ function modalRepostBox(trackOrPid, onPosted) {
   if (typeof trackOrPid == 'string') url += '/' + trackOrPid /*+'/add'*/;
   // ?pid='+pId; //postData.pId+'&embed='+postData.eId+'&text='+postData.text;
   else if (trackOrPid.eId)
-    ['eId', 'title', 'img'].map(function(field) {
+    ['eId', 'title', 'img'].map(function (field) {
       params.push(field + '=' + encodeURIComponent(trackOrPid[field]));
     });
   openRemoteDialog(
     url + (params.length ? '?' + params.join('&') : ''),
     'dlgPostBox dlgRepostBox',
-    function($box) {
+    function ($box) {
       $box.prepend('<h1>Add this track to your page</h1>');
       $box.find('#contentThumb').addClass('loading');
     }
@@ -643,7 +643,7 @@ function modalRepostBox(trackOrPid, onPosted) {
 
 function modalPostEditBox(pId, onPosted) {
   var url = '/post/' + pId + '/edit';
-  openRemoteDialog(url, 'dlgPostBox dlgRepostBox', function($box) {
+  openRemoteDialog(url, 'dlgPostBox dlgRepostBox', function ($box) {
     $box.prepend('<h1>Edit this track</h1>');
     $box.find('#contentThumb').addClass('loading');
   });
@@ -655,7 +655,7 @@ var lastNotifData = null;
 var $notifPanel = $('#notifPanel');
 var $notifIcon = $('#notifIcon');
 
-var refreshNotifCounter = function() {
+var refreshNotifCounter = function () {
   var notifs = lastNotifData;
   var total = 0;
   for (var i in notifs) total += notifs[i].n || 1;
@@ -665,19 +665,19 @@ var refreshNotifCounter = function() {
   else $notifIcon.addClass('someNotif');
 };
 
-var fetchNotifs = function() {
+var fetchNotifs = function () {
   $.ajax({
     type: 'GET',
     url: '/api/notif',
     cache: false,
-    success: function(notifs) {
+    success: function (notifs) {
       lastNotifData = notifs;
       refreshNotifCounter();
     }
   });
 };
 
-var renderNotif = function(notif) {
+var renderNotif = function (notif) {
   var content, href;
   if (notif.pId.indexOf('/reposts') > -1) {
     href = '/c/' + notif.pId.replace('/reposts', '');
@@ -731,7 +731,7 @@ var renderNotif = function(notif) {
   );
 };
 
-var refreshNotifPanel = function() {
+var refreshNotifPanel = function () {
   var content =
     '<div onclick="clearNotifs();">Clear all</div>' +
     '<p>Your notifications</p><ul>';
@@ -747,7 +747,7 @@ function clearNotif(pId) {
     data: { action: 'delete', pId: pId },
     complete: fetchNotifs
   });
-  $('#notifPanel li').each(function() {
+  $('#notifPanel li').each(function () {
     if ($(this).attr('data-pid') == pId) $(this).remove();
   });
 }
@@ -776,8 +776,8 @@ function submitBio() {
     type: 'GET',
     url: '/api/user',
     data: { bio: bio.val() },
-    complete: function(data) {
-      setTimeout(function() {
+    complete: function (data) {
+      setTimeout(function () {
         bio.parent().removeClass('submitting');
       }, 500);
     }
@@ -789,7 +789,7 @@ function submitBio() {
 function hideHelpOverlay() {
   console.log('hide overlay');
   $('.posts a').unbind('click', hideHelpOverlay);
-  $('.helpOverlay').animate({ opacity: 0 }, function() {
+  $('.helpOverlay').animate({ opacity: 0 }, function () {
     $(this).remove();
     $('body').removeClass('help');
   });
@@ -802,13 +802,13 @@ function showHelpOverlay() {
     .addClass('help')
     .append(
       '<div class="helpOverlay">' +
-        '<div class="overlay"></div>' +
-        '<div class="container">' +
-        '<div class="content">' +
-        '<h3>Welcome</h3>' +
-        '<p >Here is the Incoming tracks from people you follow to</p>' +
-        '<div class="btnCloseHelp" onclick="hideHelpOverlay()">Ok, Got it</div>' +
-        '</div></div></div>'
+      '<div class="overlay"></div>' +
+      '<div class="container">' +
+      '<div class="content">' +
+      '<h3>Welcome</h3>' +
+      '<p >Here is the Incoming tracks from people you follow to</p>' +
+      '<div class="btnCloseHelp" onclick="hideHelpOverlay()">Ok, Got it</div>' +
+      '</div></div></div>'
     );
   $('.posts a').bind('click', hideHelpOverlay);
 }
@@ -816,7 +816,7 @@ function showHelpOverlay() {
 /* share dialog */
 
 function sharePost(pId) {
-  getPostById(pId, function($post) {
+  getPostById(pId, function ($post) {
     var post = extractPostData(
       $post /*, {uId:window.pageTopic.mid, uNm:window.pageTopic.name}*/
     );
@@ -829,7 +829,7 @@ function sharePost(pId) {
       window.location.href.substr(0, window.location.href.indexOf('/', 10)) +
       '/c/' +
       post.id;
-    window.onDialogClose = function() {
+    window.onDialogClose = function () {
       $btn.removeClass('active');
       delete window.onDialogClose;
     };
@@ -839,20 +839,20 @@ function sharePost(pId) {
       '<div class="pointe"></div>',
       '<div class="sharing">',
       '<iframe class="twitter-share-button twitter-count-horizontal" src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;text=' +
-        encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/) +
-        '&amp;url=' +
-        encodeURIComponent(postUrl) +
-        '&amp;via=open_whyd&amp;original_referer=' +
-        encodeURIComponent(window.location.href) +
-        '" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
+      encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/) +
+      '&amp;url=' +
+      encodeURIComponent(postUrl) +
+      '&amp;via=open_whyd&amp;original_referer=' +
+      encodeURIComponent(window.location.href) +
+      '" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
       '<iframe class="fblikeBtn" src="//www.facebook.com/plugins/like.php?href=' +
-        encodeURIComponent(postUrl) +
-        '&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;font&amp;colorscheme=light&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>',
+      encodeURIComponent(postUrl) +
+      '&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;font&amp;colorscheme=light&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>',
       '</div>',
       '<p>Permalink</p>',
       '<input type="text" value="' +
-        postUrl +
-        '" readonly="readonly" onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand(\'Copy\');"></input>',
+      postUrl +
+      '" readonly="readonly" onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand(\'Copy\');"></input>',
       '</div>'
     ].join('\n');
 
@@ -870,7 +870,7 @@ function sharePost(pId) {
       $('#sharePopin').offset(offset);
       $('#sharepopin-overlay').width($('body').width());
       $('#sharepopin-overlay').height($('body').height());
-      $('#sharepopin-overlay').bind('click', function() {
+      $('#sharepopin-overlay').bind('click', function () {
         $('#sharePopin').remove();
         $('#sharepopin-overlay').remove();
       });
@@ -932,7 +932,7 @@ function onPageLoad() {
     );
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   var $body = $('body');
 
   // open first comments of the stream
@@ -941,40 +941,40 @@ $(document).ready(function() {
 		toggleComments($(".post").first().attr("data-pid"), true);
 	*/
   var keyShortcuts = {
-    32: function() {
+    32: function () {
       // space: play/pause
       window.whydPlayer.playPause();
     },
-    102: function() {
+    102: function () {
       // F: toggle fullscreen for videos
       window.whydPlayer.toggleFullscreen();
     },
-    110: function() {
+    110: function () {
       // N: switch to next track
       window.whydPlayer.next();
     },
-    112: function() {
+    112: function () {
       // P: switch to prev track
       window.whydPlayer.prev();
     }
   };
 
   var keyUpShortcuts = {
-    27: function() {
+    27: function () {
       // escape: disable fullscreen mode
       window.whydPlayer.toggleFullscreen(false);
     },
-    37: function() {
+    37: function () {
       // left arrow => previous (playlist) page
       if (window.prevPageInList) goToPage(window.prevPageInList);
     },
-    39: function() {
+    39: function () {
       // right arrow => next (playlist) page
       if (window.nextPageInList) goToPage(window.nextPageInList);
     }
   };
 
-  $(document).keypress(function(e) {
+  $(document).keypress(function (e) {
     if (
       e.target &&
       e.target.tagName != 'INPUT' &&
@@ -989,7 +989,7 @@ $(document).ready(function() {
     }
   });
 
-  $(document).keyup(function(e) {
+  $(document).keyup(function (e) {
     if (
       e.target &&
       e.target.tagName != 'INPUT' &&
@@ -1014,7 +1014,7 @@ $(document).ready(function() {
   var notifInterval = window.setInterval(fetchNotifs, notifUpdateInterval);
   fetchNotifs();
 
-  $notifIcon.click(function() {
+  $notifIcon.click(function () {
     if ($(this).text() == 0) return $notifPanel.hide();
     refreshNotifPanel();
     $notifPanel.toggle();
@@ -1033,12 +1033,12 @@ $(document).ready(function() {
 
   // init search bar
 
-  var noResultsYet = function(q) {
-    return /*$(*/ [
+  var noResultsYet = function (q) {
+    return /*$(*/[
       '<ul class="showAllResults loading">',
       '<li><a href="/search?q=' +
-        encodeURIComponent(q) +
-        '" target="_blank">Show all results...</a></li>',
+      encodeURIComponent(q) +
+      '" target="_blank">Show all results...</a></li>',
       '</ul>'
     ].join('\n') /*).ajaxify()[0]*/;
   };
@@ -1047,7 +1047,7 @@ $(document).ready(function() {
     window.quickSearch ||
     new QuickSearch($('#searchBar'), {
       noMoreResultsOnEnter: true,
-      submitQuery: function(query, display) {
+      submitQuery: function (query, display) {
         // called a short delay after when a query was entered
         // display(htmlResults, stillSearch) is to be called when new results are found
         display(noResultsYet(query), true); // clear the result list and keep the searching animation rolling
@@ -1072,16 +1072,16 @@ $(document).ready(function() {
           return !tracks.length
             ? resultsHtml || ''
             : (resultsHtml || '</ul>').replace(
-                '</ul>',
-                '</ul>' +
-                  "<ul class='resultCategory'>" +
-                  '<div>Tracks</div>' +
-                  tracks.map(renderTrack).join('\n') +
-                  '</ul>'
-              );
+              '</ul>',
+              '</ul>' +
+              "<ul class='resultCategory'>" +
+              '<div>Tracks</div>' +
+              tracks.map(renderTrack).join('\n') +
+              '</ul>'
+            );
         }
         if (/^https?\:\/\//.test(query))
-          whydPlayer.fetchTrackByUrl(query, function(track) {
+          whydPlayer.fetchTrackByUrl(query, function (track) {
             console.log('detected track by url:', track);
             track = track || {};
             track.name = track.name || track.title;
@@ -1089,10 +1089,10 @@ $(document).ready(function() {
               track.eId
                 ? prependExternalTracks([track])
                 : '<div class="noResults">' +
-                    "<p>Sorry, we don't recognize this URL...</p>" +
-                    '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
-                    '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
-                    '</div>',
+                "<p>Sorry, we don't recognize this URL...</p>" +
+                '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
+                '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
+                '</div>',
               false
             );
             // TODO: send this URL back to whyd/playemJS team
@@ -1100,7 +1100,7 @@ $(document).ready(function() {
         else {
           submitSearchQuery(
             { q: query, format: 'html', context: 'header' },
-            function(resultsHtml) {
+            function (resultsHtml) {
               resultsHtml =
                 (resultsHtml &&
                   typeof resultsHtml === 'string' &&
@@ -1110,7 +1110,7 @@ $(document).ready(function() {
               display(resultsHtml, !foundTracks); // stop the searching animation only if tracks were found
               if (!foundTracks) {
                 var externalTracks = [];
-                window.searchExternalTracks(query, function(track) {
+                window.searchExternalTracks(query, function (track) {
                   if (track) {
                     track.name = track.title;
                     externalTracks.push(track);
@@ -1121,7 +1121,7 @@ $(document).ready(function() {
           );
         }
       },
-      onResultClick: function(href, a) {
+      onResultClick: function (href, a) {
         if (!a.onclick) window.goToPage(href);
         return false;
       }
@@ -1133,7 +1133,7 @@ $(document).ready(function() {
 });
 
 // AJAXIFY https://gist.github.com/854622
-(function(window, undefined) {
+(function (window, undefined) {
   // Prepare our Variables
   var History = window.History,
     $ = window.jQuery,
@@ -1145,7 +1145,7 @@ $(document).ready(function() {
   }
 
   // Wait for Document
-  $(function() {
+  $(function () {
     // Prepare Variables
     var /* Application Specific Variables */
       contentSelector = /*#contentPane*/ '#mainPanel', //'#content,article:first,.article:first,.post:first',
@@ -1166,7 +1166,7 @@ $(document).ready(function() {
     }
 
     // Internal Helper
-    $.expr[':'].internal = function(obj, index, meta, stack) {
+    $.expr[':'].internal = function (obj, index, meta, stack) {
       // Prepare
       var $this = $(obj),
         url = $this.attr('href') || '',
@@ -1181,7 +1181,7 @@ $(document).ready(function() {
     };
 
     // HTML Helper
-    var documentHtml = function(html) {
+    var documentHtml = function (html) {
       // Prepare
       var result = String(html)
         .replace(/<\!DOCTYPE[^>]*>/i, '')
@@ -1196,12 +1196,12 @@ $(document).ready(function() {
     };
 
     // Ajaxify Helper
-    $.fn.ajaxify = function() {
+    $.fn.ajaxify = function () {
       // Prepare
       var $this = $(this);
 
       // Ajaxify
-      $this.find('a:internal:not(.no-ajaxy)').click(function(event) {
+      $this.find('a:internal:not(.no-ajaxy)').click(function (event) {
         // Prepare
         var $this = $(this),
           url = $this.attr('href'),
@@ -1238,7 +1238,7 @@ $(document).ready(function() {
         url = State.url,
         relativeUrl = url.replace(rootUrl, '');
 
-      window.getCurrentUrl = function() {
+      window.getCurrentUrl = function () {
         return url;
       };
 
@@ -1259,7 +1259,7 @@ $(document).ready(function() {
       // Ajax Request the Traditional Page
       $.ajax({
         url: url,
-        success: function(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
           // Prepare
           var $data = $(documentHtml(data)),
             $dataHead = $data.find('.document-head:first'),
@@ -1287,12 +1287,12 @@ $(document).ready(function() {
           $menuChildren.filter(activeSelector).removeClass(activeClass);
           $menuChildren = $menuChildren.has(
             'a[href^="' +
-              relativeUrl +
-              '"],a[href^="/' +
-              relativeUrl +
-              '"],a[href^="' +
-              url +
-              '"]'
+            relativeUrl +
+            '"],a[href^="/' +
+            relativeUrl +
+            '"],a[href^="' +
+            url +
+            '"]'
           );
           if ($menuChildren.length === 1) {
             $menuChildren.addClass(activeClass);
@@ -1313,10 +1313,10 @@ $(document).ready(function() {
               .replace('<', '&lt;')
               .replace('>', '&gt;')
               .replace(' & ', ' &amp; ');
-          } catch (Exception) {}
+          } catch (Exception) { }
 
           // Add the scripts
-          $scripts.each(function() {
+          $scripts.each(function () {
             var $script = $(this),
               src = $script.attr('src'),
               scriptNode = document.createElement('script');
@@ -1334,12 +1334,12 @@ $(document).ready(function() {
           // Update CSS code
           var currentLinks = {},
             anonCounter = 0;
-          $('link').each(function() {
+          $('link').each(function () {
             var src = $(this).attr('href');
             if (src.indexOf('static.olark.com/css') == -1)
               currentLinks[src || anonCounter++] = $(this);
           });
-          $dataHead.find('link').each(function() {
+          $dataHead.find('link').each(function () {
             var src = $(this).attr('href');
             if (currentLinks[src]) {
               //console.log("skip link: ", src, $(this));
@@ -1384,9 +1384,9 @@ $(document).ready(function() {
             newState = false;
           }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
           console.error(errorThrown /*.stack*/);
-          setTimeout(function() {
+          setTimeout(function () {
             document.location.href = url;
           }, 300);
           return false;
@@ -1398,7 +1398,7 @@ $(document).ready(function() {
     $(window).bind('statechange', loadPage); // end onStateChange
 
     if (History.enabled) {
-      window.goToPage = function(url, title) {
+      window.goToPage = function (url, title) {
         console.log('goToPage (history)', url, !!window.onPageLeave);
         if (window.location.href == url) loadPage({});
         else {
@@ -1421,7 +1421,7 @@ $.ajaxSetup({
   cache: false
 });
 
-var initWhydTooltips = (function() {
+var initWhydTooltips = (function () {
   function showTip() {
     $(this).tipsy('show');
   }
@@ -1430,7 +1430,7 @@ var initWhydTooltips = (function() {
     //$.fn.tipsy.revalidate();
     $(this).tipsy('hide');
   }
-  return function(selector, p) {
+  return function (selector, p) {
     $(selector)
       .tipsy({ trigger: 'manual', gravity: (p || {}).gravity })
       .on('mouseenter', showTip)
@@ -1442,17 +1442,3 @@ initWhydTooltips('#whydPlayer *[title]', { gravity: 's' });
 initWhydTooltips('#contentPane *[title]');
 
 $("<div id='pageLoader'></div>").appendTo('body');
-
-// browser cache hack to make sure that the new logo is loaded from the server
-(function() {
-  var $logo = $('#logo');
-  var suffix =
-    '?' +
-    $('script[src]')[0]
-      .src.split('?')
-      .pop();
-  $logo.css(
-    'background',
-    $logo.css('background').replace('logo-s.png', 'logo-s.png' + suffix)
-  );
-})();
