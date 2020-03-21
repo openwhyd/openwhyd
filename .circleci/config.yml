@@ -61,7 +61,7 @@ jobs:
           command: ./scripts/wait-for-http-server.sh 8080
       - run:
           name: Run tests
-          command: source env-vars-testing.sh && npm test-unit
+          command: source env-vars-testing.sh && npm run test-unit
 
   api-tests:
     <<: *defaults
@@ -80,7 +80,7 @@ jobs:
           command: ./scripts/wait-for-http-server.sh 8080
       - run:
           name: Run tests
-          command: source env-vars-testing.sh && npm test-api
+          command: source env-vars-testing.sh && npm run test-api
 
   webdriver-tests:
     <<: *defaults
@@ -99,7 +99,7 @@ jobs:
           command: ./scripts/wait-for-http-server.sh 8080
       - run:
           name: Run tests
-          command: source env-vars-testing.sh && npm test-acceptance
+          command: source env-vars-testing.sh && npm run test-acceptance
 
   cypress-tests:
     <<: *defaults
