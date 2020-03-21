@@ -47,12 +47,24 @@ jobs:
           source env-vars-testing.sh
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: npm test
+      - name: Unit tests
         env:
           CI: true
         run: |
           source env-vars-testing.sh
-          npm test
+          npm run test-unit
+      - name: API tests
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-api
+      - name: E2E / Acceptance tests (Webdriver.io)
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-acceptance
 
   cypress:
     name: Cypress E2E tests
