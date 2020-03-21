@@ -9,8 +9,8 @@ on:
       - master
 
 jobs:
-  setup:
-    name: CI Setup
+  tests:
+    name: CI Test Suite
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     services:
@@ -42,17 +42,6 @@ jobs:
         run: |
           source env-vars-testing.sh
           npm run test-reset
-
-  tests:
-    name: CI Test Suite
-    needs: setup
-    runs-on: ubuntu-latest
-    services:
-      mongodb:
-        image: docker://mongo:3.4
-        ports:
-          - 27017:27017
-    steps:
       - name: Start Openwhyd server
         run: |
           source env-vars-testing.sh
@@ -65,26 +54,8 @@ jobs:
           source env-vars-testing.sh
           npm test
 
-  release:
-    name: Release
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Semantic Release
-        env:
-          CI: true
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          npm run semantic-release
-      - name: Publish to Docker Hub registry
-        if: github.event_name == 'push'
-        uses: jerray/publish-docker-action@v1.0.3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
   cypress:
-    name: Cypress E2E (experimental)
+    name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-16.04
     services:
@@ -134,3 +105,25 @@ jobs:
         run: |
           source env-vars-testing.sh
           node_modules/.bin/cypress run
+
+  release:
+    name: Release
+    needs:
+      - tests
+      - cypress
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Semantic Release
+        env:
+          CI: true
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          npm run semantic-release
+      - name: Publish to Docker Hub registry
+        if: github.event_name == 'push'
+        uses: jerray/publish-docker-action@v1.0.3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
