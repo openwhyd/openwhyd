@@ -56,7 +56,8 @@
 			</div>
 			<div class="body">
 				<div class="video">
-					<a href="javascript:openVideo()" alt="Watch the video tutorial" title="Watch the video tutorial"></a>
+					<a href="javascript:openVideo()" alt="Watch the video tutorial"
+						title="Watch the video tutorial"></a>
 				</div>
 			</div>
 		</div>
@@ -123,7 +124,8 @@
 				<ul>
 					{{#items}}
 					<li data-uid="{{id}}">
-						<div style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();">
+						<div style="background-image:url('/img/u/{{id}}');"
+							onclick="$(this).parent().find('a.userName').click();">
 						</div>
 						<a class="userName" href="/u/{{id}}">{{name}}</a>
 						<span class="subscribe" onclick="subscribeToUserAndClear(this.parentNode)">Subscribe</span>
@@ -147,7 +149,8 @@
 				<ul>
 					{{#items}}
 					<li data-uid="{{id}}">
-						<div style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();">
+						<div style="background-image:url('/img/u/{{id}}');"
+							onclick="$(this).parent().find('a.userName').click();">
 						</div>
 						<a class="userName" href="/u/{{id}}">{{name}}</a>
 						{{#subscription}}
@@ -173,7 +176,8 @@
 				<li><a target="_blank" href="https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md">FAQ</a></li>
 			</ul>
 			<p>Openwhyd is maintained collaboratively,<br />under the MIT License. <a id="barelog-trigger" href="#"
-					style="position: relative;padding-right: 22px;">What's new?</a><span id="headway-changelog-badge" /></p>
+					style="position: relative;padding-right: 22px;">What's new?</a><span id="headway-changelog-badge" />
+			</p>
 		</div>
 
 		<!-- this script activates the "What's new?" link -->
@@ -410,23 +414,20 @@
 
 			<script>
 				$(function () {
-					{ { #hasMore } }
-					window.nextPageUrl = makeUrl({ after: "{{lastPid}}" }); //window.location.href + "?after=" + "{{lastPid}}";
-					{
-						{
-							/hasMore}}
-							{ { #hasLess } }
-							window.prevPageUrl = makeUrl({ before: "{{firstPid}}" }); //window.location.href + "?before=" + "{{firstPid}}";
-							{
-								{
-									/hasLess}}
-									{ { #playlist } }
-									window.pagePlaylist = { id: "{{id}}", name: "{{{_js_name}}}" };
-									{
-										{
-											/playlist}}
-										});
+					/*{{#hasMore}}*/
+					window.nextPageUrl = makeUrl({ after: "{{lastPid}}" }); /*window.location.href + "?after=" + "{{lastPid}}";*/
+					/*{{/hasMore}}*/
+
+					/*{{#hasLess}}*/
+					window.prevPageUrl = makeUrl({ before: "{{firstPid}}" }); //window.location.href + "?before=" + "{{firstPid}}";
+					/*{{/hasLess}}*/
+
+					/*{{#playlist}}*/
+					window.pagePlaylist = { id: "{{id}}", name: "{{{_js_name}}}" };
+					/*{{/playlist}}*/
+				});
 			</script>
+
 			{{/showPlaylists}}
 
 			{{#user}}

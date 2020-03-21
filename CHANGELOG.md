@@ -1,3 +1,24 @@
+## [1.30.1](https://github.com/openwhyd/openwhyd/compare/v1.30.0...v1.30.1) (2020-03-21)
+
+
+### Bug Fixes
+
+* **error:** 404 redirect when clicking load more on account stream ([#296](https://github.com/openwhyd/openwhyd/issues/296)) ([f6dfefe](https://github.com/openwhyd/openwhyd/commit/f6dfefe)), closes [#295](https://github.com/openwhyd/openwhyd/issues/295) [#299](https://github.com/openwhyd/openwhyd/issues/299)
+
+# [1.30.0](https://github.com/openwhyd/openwhyd/compare/v1.29.0...v1.30.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** separate ci tasks for each type of tests ([#298](https://github.com/openwhyd/openwhyd/issues/298)) ([d87ec4a](https://github.com/openwhyd/openwhyd/commit/d87ec4a)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+# [1.29.0](https://github.com/openwhyd/openwhyd/compare/v1.28.2...v1.29.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** enable TypeScript in Cypress tests ([#297](https://github.com/openwhyd/openwhyd/issues/297)) ([929fc79](https://github.com/openwhyd/openwhyd/commit/929fc79)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.28.2](https://github.com/openwhyd/openwhyd/compare/v1.28.1...v1.28.2) (2020-03-14)
 
 

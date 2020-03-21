@@ -8,10 +8,18 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-//
-// -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
-//
+
+Cypress.Commands.add('login', ({ email, md5 }) => {
+  cy.request('GET', `/login?action=login&ajax=1&email=${email}&md5=${md5}`);
+  cy.request('POST', `/consent`);
+});
+
+Cypress.Commands.add('loginAsAdmin', () => {
+  cy.fixture('users.js').then(({ admin }) => {
+    cy.login(admin);
+  });
+});
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
