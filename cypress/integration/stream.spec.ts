@@ -2,7 +2,6 @@
 
 context('Openwhyd stream', () => {
   // TODO: can load next page of the global stream
-  // TODO: can load next page of tracks when user is logged in
   it('can load next page of tracks when user not logged in', () => {
     cy.visit('/u/000000000000000000000002'); // will show profile page of user 'dummy' defined in initdb_testing.js
 
@@ -30,5 +29,24 @@ context('Openwhyd stream', () => {
       }
     });
     */
+  });
+
+  it('can load next page of tracks when user is logged in', () => {
+    cy.loginAsAdmin();
+
+    cy.visit('/u/000000000000000000000002'); // will show profile page of user 'dummy' defined in initdb_testing.js
+
+    cy.get('.post h2')
+      .should('have.length', 20)
+      .should('include.text', 'Fake track #20')
+      .should('include.text', 'Fake track #1')
+      .should('not.include.text', 'Fake track #0');
+
+    cy.get('.btnLoadMore').click();
+
+    cy.get('.post h2')
+      .should('have.length', 21)
+      .should('include.text', 'Fake track #20')
+      .should('include.text', 'Fake track #0');
   });
 });
