@@ -12,6 +12,7 @@ jobs:
   setup:
     name: CI Setup
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
     services:
       mongodb:
         image: docker://mongo:3.4
