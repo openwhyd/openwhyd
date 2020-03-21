@@ -76,7 +76,7 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 - Make sure that `make` and `g++` are installed (required for building npm binaries, _I had to do [this](https://github.com/fedwiki/wiki/issues/46) and [this](https://www.digitalocean.com/community/questions/node-gyp-rebuild-fails-on-install)_)
 - Make sure that a MongoDB server is running
 - Make sure that the necessary environment variables are defined (see below)
-- Make sure that the database is initialized (by running `mongo openwhyd_data config/initdb.js` and `mongo openwhyd_data config/initdb_team.js`)
+- Make sure that the database is initialized (by running `mongo openwhyd_data config/initdb.js` and `mongo openwhyd_data config/initdb_testing.js`)
 - Make sure that dependencies are installed (`npm install`)
 - If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 

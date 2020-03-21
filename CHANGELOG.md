@@ -1,3 +1,17 @@
+# [1.30.0](https://github.com/openwhyd/openwhyd/compare/v1.29.0...v1.30.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** separate ci tasks for each type of tests ([#298](https://github.com/openwhyd/openwhyd/issues/298)) ([d87ec4a](https://github.com/openwhyd/openwhyd/commit/d87ec4a)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+# [1.29.0](https://github.com/openwhyd/openwhyd/compare/v1.28.2...v1.29.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** enable TypeScript in Cypress tests ([#297](https://github.com/openwhyd/openwhyd/issues/297)) ([929fc79](https://github.com/openwhyd/openwhyd/commit/929fc79)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.28.2](https://github.com/openwhyd/openwhyd/compare/v1.28.1...v1.28.2) (2020-03-14)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.28.2",
+  "version": "1.30.0",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -25,12 +25,14 @@
     "test-unit": "npx mocha test/unit/*.js --exit",
     "test-acceptance": "npm run test-reset && wdio wdio.conf.js $@",
     "test-acceptance-dev": "npm run test-acceptance -- --spec ./test/specs/*.tests.js --logLevel verbose",
-    "test:cypress:dev": "npm run docker:seed && . ./.env-docker && node_modules/.bin/cypress open",
-    "test:cypress": "npm run docker:seed && . ./.env-docker && node_modules/.bin/cypress run",
-    "test": ". ./env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance",
+    "test:cypress:dev": "node_modules/.bin/cypress open",
+    "test:cypress": "node_modules/.bin/cypress run",
+    "test": ". ./env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test-acceptance && npm run test:cypress",
     "docker:seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
     "docker:run": "npm run docker:seed && docker-compose exec web npm run $@",
-    "docker:test": "npm run docker:run test-unit && npm run docker:run test-api && npm run docker:seed && wdio wdio.conf.js $@",
+    "docker:test:cypress:dev": "npm run docker:seed && . ./.env-docker && npm run test:cypress:dev",
+    "docker:test:cypress": "npm run docker:seed && . ./.env-docker && npm run test:cypress",
+    "docker:test": "npm run docker:run test-unit && npm run docker:run test-api && npm run docker:seed && wdio wdio.conf.js && npm run docker:test:cypress",
     "lint:fix": "node_modules/.bin/prettier \"./**/*.js\" \"scripts/**/*.js\" --write",
     "lint": "eslint app"
   },
@@ -66,6 +68,7 @@
     "request": "2.88.0"
   },
   "devDependencies": {
+    "@bahmutov/add-typescript-to-cypress": "^2.1.2",
     "@semantic-release/changelog": "^3.0.0",
     "@semantic-release/git": "^7.0.4",
     "@wdio/cli": "5.14.1",
@@ -84,7 +87,9 @@
     "mocha": "5.2.0",
     "prettier": "^1.18.2",
     "semantic-release": "^15.13.24",
-    "wdio-chromedriver-service": "^5.0.2"
+    "typescript": "^3.8.3",
+    "wdio-chromedriver-service": "^5.0.2",
+    "webpack": "^4.42.0"
   },
   "release": {
     "branch": "master",
