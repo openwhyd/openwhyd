@@ -1,9 +1,9 @@
-// Usage: this file should be run by mongo's CLI:
-// $ mongo openwhyd_data whydDB/initdb_team.js
+// Usage: this file should be run by runShellScript() or by mongo's CLI:
+// $ mongo openwhyd_data initdb_testing.js
 
 //db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
 
-print('upserting openwhyd team users ...');
+print('upserting openwhyd testing users ...');
 
 db.user.update(
   { _id: ObjectId('000000000000000000000001') },
