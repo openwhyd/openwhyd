@@ -66,6 +66,7 @@
     "request": "2.88.0"
   },
   "devDependencies": {
+    "@bahmutov/add-typescript-to-cypress": "^2.1.2",
     "@semantic-release/changelog": "^3.0.0",
     "@semantic-release/git": "^7.0.4",
     "@wdio/cli": "5.14.1",
@@ -84,7 +85,9 @@
     "mocha": "5.2.0",
     "prettier": "^1.18.2",
     "semantic-release": "^15.13.24",
-    "wdio-chromedriver-service": "^5.0.2"
+    "typescript": "^3.8.3",
+    "wdio-chromedriver-service": "^5.0.2",
+    "webpack": "^4.42.0"
   },
   "release": {
     "branch": "master",
