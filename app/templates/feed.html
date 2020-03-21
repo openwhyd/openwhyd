@@ -412,29 +412,21 @@
 			</div>
 			{{/hasMore}}
 
-			{{#hasMore}}
 			<script>
 				$(function () {
-					window.nextPageUrl = makeUrl({ after: "{{lastPid}}" }); //window.location.href + "?after=" + "{{ lastPid }}";
-				});
-			</script>
-			{{/hasMore}}
+					/*{{#hasMore}}*/
+					window.nextPageUrl = makeUrl({ after: "{{lastPid}}" }); /*window.location.href + "?after=" + "{{lastPid}}";*/
+					/*{{/hasMore}}*/
 
-			{{#hasLess}}
-			<script>
-				$(function () {
-					window.prevPageUrl = makeUrl({ before: "{{firstPid}}" }); //window.location.href + "?before=" + "{{ firstPid }}";
-				});
-			</script>
-			{{/hasLess}}
+					/*{{#hasLess}}*/
+					window.prevPageUrl = makeUrl({ before: "{{firstPid}}" }); //window.location.href + "?before=" + "{{firstPid}}";
+					/*{{/hasLess}}*/
 
-			{{#playlist}}
-			<script>
-				$(function () {
+					/*{{#playlist}}*/
 					window.pagePlaylist = { id: "{{id}}", name: "{{{_js_name}}}" };
+					/*{{/playlist}}*/
 				});
 			</script>
-			{{/playlist}}
 
 			{{/showPlaylists}}
 
