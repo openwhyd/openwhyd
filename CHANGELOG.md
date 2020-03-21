@@ -1,3 +1,10 @@
+## [1.30.1](https://github.com/openwhyd/openwhyd/compare/v1.30.0...v1.30.1) (2020-03-21)
+
+
+### Bug Fixes
+
+* **error:** 404 redirect when clicking load more on account stream ([#296](https://github.com/openwhyd/openwhyd/issues/296)) ([f6dfefe](https://github.com/openwhyd/openwhyd/commit/f6dfefe)), closes [#295](https://github.com/openwhyd/openwhyd/issues/295) [#299](https://github.com/openwhyd/openwhyd/issues/299)
+
 # [1.30.0](https://github.com/openwhyd/openwhyd/compare/v1.29.0...v1.30.0) (2020-03-21)
 
 
