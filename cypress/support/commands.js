@@ -8,17 +8,16 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 //
-//
-// -- This is a parent command --
+
+Cypress.Commands.add('login', ({ email, md5 }) => {
+  cy.request('GET', `/login?action=login&ajax=1&email=${email}&md5=${md5}`);
+  cy.request('POST', `/consent`);
+});
+
 Cypress.Commands.add('loginAsAdmin', () => {
   cy.fixture('users.js').then(({ admin }) => {
-    cy.request(
-      'GET',
-      `/login?action=login&ajax=1&email=${admin.email}&md5=${admin.md5}`
-    );
-    cy.request('POST', `/consent`);
+    cy.login(admin);
   });
-  // ... or send the login request directly to the API, as in https://youtu.be/5XQOK0v_YRE?t=1430
 });
 
 //
