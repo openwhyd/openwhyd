@@ -12,7 +12,7 @@
 // Note: please document these commands in index.d.ts.
 
 Cypress.Commands.add('resetDb', () => {
-  cy.request('POST', `/testing/reset/db`);
+  cy.request('POST', `/testing/reset/db`, { timeout: 10000 });
 });
 
 Cypress.Commands.add('login', ({ email, md5 }) => {
