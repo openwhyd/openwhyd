@@ -140,15 +140,18 @@ exports.forEach2 = function(colName, params, handler) {
 };
 
 exports.resetDb = function({ addTestData } = {}) {
-  const dbInitScripts = [DB_INIT_SCRIPT];
-  if (addTestData) {
-    if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
-      return Promise.reject(new Error('allowed on test database only'));
-    } else {
-      dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
+  return new Promise(async (resolve, reject) => {
+    const dbInitScripts = [DB_INIT_SCRIPT];
+    if (addTestData) {
+      if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+        return reject(new Error('allowed on test database only'));
+      } else {
+        dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
+        for (const name in exports.collections) {
+          await exports.collections[name].drop();
+        }
+      }
     }
-  }
-  return new Promise((resolve, reject) => {
     const mongodb = exports;
     async.eachSeries(
       dbInitScripts,
