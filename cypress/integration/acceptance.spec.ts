@@ -57,7 +57,7 @@ context('Openwhyd', () => {
     cy.contains('You can mention people');
 
     // comment should appear after being added
-    cy.type('hello world\n');
+    cy.get('textarea').type('hello world\n');
     cy.fixture('users.js').then(({ dummy }) => {
       cy.get('.comments').contains(dummy.name);
     });
