@@ -9,6 +9,8 @@
 // ***********************************************
 //
 
+// Note: please document these commands in index.d.ts.
+
 Cypress.Commands.add('resetDb', () => {
   cy.request('POST', `/testing/reset/db`);
 });

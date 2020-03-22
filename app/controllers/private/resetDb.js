@@ -8,7 +8,7 @@ exports.controller = async function(request, getParams, response) {
     return response.badRequest();
   }
   if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
-    return response.forbidden();
+    return response.forbidden(new Error('allowed on test database only'));
   }
   await mongodb.resetDb({ addTestData: true });
   response.renderJSON({ ok: true });
