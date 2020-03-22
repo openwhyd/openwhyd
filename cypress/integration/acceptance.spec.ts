@@ -67,22 +67,25 @@ context('Openwhyd', () => {
 
     // TODO: it(`should disappear after being deleted`, function() {
   });
-  /*
-  describe('searching external tracks', function() {
-    it(`can find a youtube track with id that starts with underscore`, function() {
-      browser.url(URL_PREFIX);
-      $('#q').click();
-      browser.keys('http://www.youtube.com/watch?v=_BU841qpQsI');
-      const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
-      $(searchResult).waitForDisplayed();
+
+  it('should allow users to search external tracks', function() {
+    // should find a youtube track with id that starts with underscore
+    cy.visit('/');
+    cy.get('#q')
+      .click()
+      .type('http://www.youtube.com/watch?v=_BU841qpQsI');
+    const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
+    cy.get(searchResult)
+      .should('be.visible')
+      .should('have.text');
+    /*
       const trimmed = $(searchResult)
         .getText()
         .trim();
       //console.log('text: ', trimmed);
       assert.notEqual(trimmed, ''); // empty string => no metadata was fetched, caused to https://github.com/openwhyd/openwhyd/issues/102
-    });
+      */
   });
-  */
 
   // ===
 
