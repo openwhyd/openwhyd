@@ -6,6 +6,11 @@
 declare namespace Cypress {
   interface Chainable<Subject> {
     /**
+     * Ask Openwhyd to reset the database to its initial state.
+     */
+    resetDb(): Chainable<any>;
+
+    /**
      * Login, given an email address and md5 password hash
      * @example
      * cy.login({ email: admin.email, md5: admin.md5 })

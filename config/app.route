@@ -149,6 +149,7 @@ POST   /api/{_subCtr}/{_1}/{_2}/{_3}   -> controllers.subdir
 GET    /admin/{_subCtr}                -> controllers.subdir
 POST   /admin/{_subCtr}                -> controllers.subdir
 GET    /admin/{_subCtr}/{action}       -> controllers.subdir
+POST   /testing/reset/db               -> controllers.private.resetDb
 
 GET    /style/{style}                  -> controllers.userLibrary
 GET    /genre/{genre}                  -> controllers.pgGenre
