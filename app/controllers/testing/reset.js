@@ -3,7 +3,7 @@
 const mongodb = require('../../models/mongodb.js');
 
 exports.controller = async function(request, getParams, response) {
-  request.logToConsole('resetDb.controller', request.method);
+  request.logToConsole('reset.controller', request.method);
   if (request.method.toLowerCase() !== 'post') {
     return response.badRequest();
   }
@@ -11,7 +11,8 @@ exports.controller = async function(request, getParams, response) {
     return response.forbidden(new Error('allowed on test database only'));
   }
   try {
-    await mongodb.resetDb({ addTestData: true });
+    await mongodb.clearCollections();
+    await mongodb.initCollections({ addTestData: true });
     response.renderJSON({ ok: true });
   } catch (err) {
     response.renderJSON({ error: err.message });
