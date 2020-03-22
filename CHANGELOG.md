@@ -1,3 +1,10 @@
+## [1.30.2](https://github.com/openwhyd/openwhyd/compare/v1.30.1...v1.30.2) (2020-03-22)
+
+
+### Bug Fixes
+
+* **ui:** Display correct track error message when using electron app ([#294](https://github.com/openwhyd/openwhyd/issues/294)) ([4f97ccd](https://github.com/openwhyd/openwhyd/commit/4f97ccd)), closes [#224](https://github.com/openwhyd/openwhyd/issues/224) [/github.com/electron/electron/issues/2288#issuecomment-337858978](https://github.com//github.com/electron/electron/issues/2288/issues/issuecomment-337858978) [/github.com/openwhyd/openwhyd/issues/224#issuecomment-601430390](https://github.com//github.com/openwhyd/openwhyd/issues/224/issues/issuecomment-601430390)
+
 ## [1.30.1](https://github.com/openwhyd/openwhyd/compare/v1.30.0...v1.30.1) (2020-03-21)
 
 
