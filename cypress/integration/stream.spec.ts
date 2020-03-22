@@ -33,6 +33,7 @@ context('Openwhyd stream', () => {
 
   it('can load next page of profile when user is logged in', () => {
     cy.loginAsAdmin();
+    cy.request('POST', '/consent?lang=en');
 
     cy.visit('/u/000000000000000000000002'); // will show profile page of user 'dummy' defined in initdb_testing.js
 
@@ -55,6 +56,7 @@ context('Openwhyd stream', () => {
 
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
+      cy.request('POST', '/consent?lang=en');
     });
 
     cy.visit('/'); // will show the home/stream of the user 'dummy' defined in initdb_testing.js
