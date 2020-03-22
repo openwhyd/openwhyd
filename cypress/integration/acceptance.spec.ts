@@ -23,6 +23,7 @@ context('Openwhyd', () => {
   it('should allow a user to add a track', function() {
     // should allow user to login
     cy.loginAsAdmin();
+    cy.visit('/');
 
     // should recognize a track when pasting a Youtube URL in the search box
     cy.get('#q').type('https://www.youtube.com/watch?v=aZT8VlTV1YY');
