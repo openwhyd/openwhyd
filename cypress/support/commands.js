@@ -29,6 +29,24 @@ Cypress.Commands.add('loginAsAdmin', () => {
   });
 });
 
+Cypress.Commands.add('postDummyTracks', count => {
+  const makeTrack = i => ({
+    name: `Fake track #${i}`,
+    eId: '/yt/Wch3gJG2GJ4', //1-second video, from YouTube
+    img: '/images/cover-track.png'
+  });
+  for (let i = 0; i < count; ++i) {
+    const params = { action: 'insert', ...makeTrack(i) };
+    const querystring = Object.keys(params)
+      .map(
+        param =>
+          `${encodeURIComponent(param)}=${encodeURIComponent(params[param])}`
+      )
+      .join('&');
+    cy.request('GET', `/api/post?${querystring}`);
+  }
+});
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
