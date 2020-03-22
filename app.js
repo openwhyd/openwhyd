@@ -199,7 +199,7 @@ async function main() {
   console.log('Starting web server with params:', params);
   const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
   await util.promisify(mongodb.init)();
-  await mongodb.resetDb();
+  await mongodb.initCollections();
   start();
 }
 
