@@ -18,7 +18,6 @@ require('./commands');
 beforeEach(function() {
   // reset the db before each it() test, across all files no matter what,
   // as recommended in https://docs.cypress.io/guides/references/best-practices.html#State-reset-should-go-before-each-test
-  cy.visit('about:blank');
   cy.resetDb();
   // Safety: this function will work only against the "openwhyd_test" database.
   // => otherwise, it fail throw and prevent tests from running.

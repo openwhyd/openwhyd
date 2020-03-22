@@ -21,7 +21,6 @@ Cypress.Commands.add('logout', () => {
 
 Cypress.Commands.add('login', ({ email, md5 }) => {
   cy.request('GET', `/login?action=login&ajax=1&email=${email}&md5=${md5}`);
-  cy.request('POST', `/consent`);
 });
 
 Cypress.Commands.add('loginAsAdmin', () => {
