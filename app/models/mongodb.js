@@ -172,18 +172,19 @@ exports.runShellScript = function(script, callback) {
   return shellRunner.runScriptOnDatabase(script, exports._db, callback);
 };
 
-exports.resetDb = function({ addTestData } = {}) {
+exports.initCollections = function({ addTestData } = {}) {
   return new Promise(async (resolve, reject) => {
     const dbInitScripts = [DB_INIT_SCRIPT];
     if (addTestData) {
       if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
         return reject(new Error('allowed on test database only'));
       } else {
-        // TODO: close and reconnect to db
         dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
+        /*
         for (const name in exports.collections) {
           await exports.collections[name].drop();
         }
+        */
       }
     }
     async.eachSeries(

@@ -12,7 +12,13 @@
 // Note: please document these commands in index.d.ts.
 
 Cypress.Commands.add('resetDb', () => {
-  cy.request('POST', `/testing/reset/db`, { timeout: 10000 });
+  cy.visit('about:blank'); // go to a page that does not send API requests to Openwhyd
+  // cy.request('POST', `/testing/reset/db`, { timeout: 10000 });
+  cy.request('POST', `/testing/cleardb`, { timeout: 10000 });
+  cy.request('POST', `/testing/restart`);
+  cy.exec('./scripts/wait-for-http-server.sh 8080');
+  cy.request('POST', `/testing/populatedb`, { timeout: 10000 });
+  // TODO: make this process faster, e.g. by clearing collections thru the API, without restarting
 });
 
 Cypress.Commands.add('login', ({ email, md5 }) => {
