@@ -32,7 +32,11 @@ db.user.update(
       handle: 'dummy',
       name: 'dummy',
       img: '/images/blank_user.gif',
-      pwd: '21232f297a57a5a743894a0e4a801fc3' /* password = "admin" */
+      pwd: '21232f297a57a5a743894a0e4a801fc3' /* password = "admin" */,
+      'consent.lang': 'en'
+    },
+    $currentDate: {
+      'consent.date': true // => mongodb will store a ISODate in consent.date
     }
   },
   { upsert: true }
