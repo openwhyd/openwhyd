@@ -150,6 +150,8 @@ GET    /admin/{_subCtr}                -> controllers.subdir
 POST   /admin/{_subCtr}                -> controllers.subdir
 GET    /admin/{_subCtr}/{action}       -> controllers.subdir
 
+POST   /testing/{_subCtr}              -> controllers.subdir
+
 GET    /style/{style}                  -> controllers.userLibrary
 GET    /genre/{genre}                  -> controllers.pgGenre
 GET    /genre/{genre}/{tab}            -> controllers.pgGenre
