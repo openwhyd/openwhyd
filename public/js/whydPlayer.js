@@ -499,13 +499,9 @@ function WhydPlayer() {
     onError: function (e) {
       if (currentTrack.metadata.logData) logTrackPlay();
 
-      // will try to fallback failing tracks to deezer player
       //Detect user agent for electron specific message
-      var userAgent = navigator.userAgent.toLowerCase();
-      var isElectronApp = false;
       var failedTrackMessage;
-      if (userAgent.indexOf(' electron/') > -1) {
-        isElectronApp = true;
+      if (USING_ELECTRON) {
         failedTrackMessage = 'Oops, we could not play this track...'
       } else {
         failedTrackMessage = 'Oops, we could not play' +
@@ -515,8 +511,6 @@ function WhydPlayer() {
           ' Please try with <a href="https://openwhyd.org/download"' +
           ' target="_blank">Openwhyd Desktop App</a> 👌'
       }
-
-      // will try to fallback failing tracks to deezer player
 
       window.showMessage &&
         showMessage(
