@@ -172,7 +172,7 @@ function start() {
 
 // startup
 
-function init() {
+async function main() {
   // apply command-line arguments
   if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
@@ -197,12 +197,15 @@ function init() {
     process.appParams.color = false;
   }
   console.log('Starting web server with params:', params);
-  require('./app/models/mongodb.js').init(async function(err, db) {
-    if (err) throw err;
-    const mongodb = this;
-    await mongodb.resetDb();
-    start();
-  });
+  const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
+  await util.promisify(mongodb.init)();
+  await mongodb.resetDb();
+  start();
 }
 
-init();
+main().catch(err => {
+  // in order to prevent UnhandledPromiseRejections, let's catch errors and exit as we should
+  console.log('error from main():', err);
+  console.error('error from main():', err);
+  process.exit(1);
+});
