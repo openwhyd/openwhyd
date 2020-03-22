@@ -15,6 +15,10 @@ Cypress.Commands.add('resetDb', () => {
   cy.request('POST', `/testing/reset`, { timeout: 10000 });
 });
 
+Cypress.Commands.add('logout', () => {
+  cy.request('GET', `/login?action=logout`);
+});
+
 Cypress.Commands.add('login', ({ email, md5 }) => {
   cy.request('GET', `/login?action=login&ajax=1&email=${email}&md5=${md5}`);
 });

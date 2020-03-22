@@ -31,52 +31,32 @@ context('Openwhyd', () => {
     cy.contains('Punk').click();
     cy.contains('Next').click();
     cy.url().should('include', '/pick/people');
-  });
-  /*
-    it('should suggest to install the extension after picking people', function() {
-      // TODO: takeSnapshot();
-      browser.clickOnLinkWithText('Next');
-      browser.waitUntil(
-        () => /.*\/pick\/button/.test(browser.getUrl()),
-        WAIT_DURATION,
-        'expected to be on /pick/button after 5s'
-      );
-    });
-  
-    it('should lead new user to the gdpr consent page, after installing extension', function() {
-      // TODO: takeSnapshot();
-      browser.clickOnLinkWithText('Next');
-      browser.waitUntil(
-        () => /.*\/consent/.test(browser.getUrl()),
-        WAIT_DURATION,
-        'expected to be on /consent after 5s'
-      );
-    });
-  
-    it('should lead to the welcome page, after giving consent', function() {
-      // TODO: takeSnapshot();
-      browser.waitForContent(/consent to let Openwhyd collect/); // text of the consent checkbox
-      cy.get('input[type="checkbox"]').scrollIntoView();
-      cy.get('input[type="checkbox"]').click();
-      cy.get('input[type="submit"]').click();
-      browser.waitUntil(
-        () => /.*\/welcome/.test(browser.getUrl()),
-        WAIT_DURATION,
-        'expected to be on /welcome after 5s'
-      );
-    });
-  
-    it('should display user name after skipping the welcome tutorial', function() {
-      // TODO: takeSnapshot();
-      browser.waitForContent(/Ok\, Got it/);
-      var loggedInUsername = cy.get('#loginDiv .username').getText();
-      assert.equal(loggedInUsername, TEST_USER.username);
-    });
-  
-    webUI.logout();
-  });
 
-  */
+    // should suggest to install the extension after picking people
+    cy.contains('Next').click();
+    cy.url().should('include', '/pick/button');
+
+    // should lead new user to the gdpr consent page, after installing extension
+    cy.contains('Next').click();
+    cy.url().should('include', '/consent');
+
+    // should lead to the welcome page, after giving consent
+    cy.get('input[type="checkbox"]')
+      .first()
+      .click();
+    cy.get('form')
+      .first()
+      .submit();
+    cy.url().should('include', '/welcome');
+
+    // should display user name after skipping the welcome tutorial
+    cy.contains(`Ok, Got it`);
+    cy.fixture('users.js').then(({ testUser }) => {
+      cy.get('#loginDiv .username').should('have.text', testUser.username);
+    });
+
+    cy.logout();
+  });
 
   it('should allow user to login', () => {
     cy.visit('/');
