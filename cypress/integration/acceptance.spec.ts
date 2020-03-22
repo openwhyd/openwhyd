@@ -9,6 +9,7 @@ context('Openwhyd', () => {
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
     });
+    cy.postDummyTracks(1);
     cy.visit('/');
 
     // should display a pop-in dialog when clicking the "Add to" button of that track
@@ -48,6 +49,7 @@ context('Openwhyd', () => {
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
     });
+    cy.postDummyTracks(1);
 
     // comments should be visible from the user's stream
     cy.visit('/stream');
