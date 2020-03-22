@@ -1,3 +1,10 @@
+## [1.30.5](https://github.com/openwhyd/openwhyd/compare/v1.30.4...v1.30.5) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** Migrate acceptance tests from Webdriver to Cypress ([#301](https://github.com/openwhyd/openwhyd/issues/301)) ([2f6de36](https://github.com/openwhyd/openwhyd/commit/2f6de36)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.30.4](https://github.com/openwhyd/openwhyd/compare/v1.30.3...v1.30.4) (2020-03-22)
 
 
