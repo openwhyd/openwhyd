@@ -1,3 +1,10 @@
+## [1.30.3](https://github.com/openwhyd/openwhyd/compare/v1.30.2...v1.30.3) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** Reset database between each Cypress tests ([#302](https://github.com/openwhyd/openwhyd/issues/302)) ([ced6038](https://github.com/openwhyd/openwhyd/commit/ced6038)), closes [#301](https://github.com/openwhyd/openwhyd/issues/301) [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.30.2](https://github.com/openwhyd/openwhyd/compare/v1.30.1...v1.30.2) (2020-03-22)
 
 
