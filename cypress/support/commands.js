@@ -12,7 +12,6 @@
 // Note: please document these commands in index.d.ts.
 
 Cypress.Commands.add('resetDb', () => {
-  cy.visit('about:blank'); // go to a page that does not send API requests to Openwhyd
   cy.request('POST', `/testing/reset`, { timeout: 10000 });
 });
 

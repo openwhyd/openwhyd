@@ -1,8 +1,10 @@
 /// <reference types="Cypress" />
 
-context('Openwhyd', () => {
+context('Openwhyd bookmarklet', () => {
   beforeEach('login', () => {
-    cy.loginAsAdmin();
+    cy.fixture('users.js').then(({ dummy }) => {
+      cy.login(dummy);
+    });
   });
 
   it('can add a track from a youtube page', () => {
