@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 
 context('Openwhyd', () => {
-  before('login', () => {
+  beforeEach('login', () => {
     cy.loginAsAdmin();
   });
 
