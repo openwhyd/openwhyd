@@ -28,15 +28,9 @@ context('Openwhyd', () => {
 
     // should suggest people to follow after picking genres
     cy.get('#genreGallery li').as('genres');
-    cy.get('@genres')
-      .contains('INDIE')
-      .click();
-    cy.get('@genres')
-      .contains('ROCK')
-      .click();
-    cy.get('@genres')
-      .contains('PUNK')
-      .click();
+    cy.contains('Indie').click();
+    cy.contains('Rock').click();
+    cy.contains('Punk').click();
     cy.contains('Next').click();
     cy.url().should('include', '/pick/people');
   });
