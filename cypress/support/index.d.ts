@@ -6,16 +6,25 @@
 declare namespace Cypress {
   interface Chainable<Subject> {
     /**
+     * Logout the user
+     */
+    logout(): Chainable<any>;
+
+    /**
      * Login, given an email address and md5 password hash
      * @example
-     * cy.loginAsAdmin()
+     * cy.login({ email: admin.email, md5: admin.md5 })
      */
     login({ email, md5 }: { email: string; md5: string }): Chainable<any>;
+
     /**
      * Login as the admin user defined in initdb_testing.js
-     * @example
-     * cy.loginAsAdmin()
      */
     loginAsAdmin(): Chainable<any>;
+
+    /**
+     * Login as the admin user defined in initdb_testing.js
+     */
+    postDummyTracks(count: number): Chainable<any>;
   }
 }
