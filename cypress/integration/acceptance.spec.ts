@@ -4,92 +4,6 @@
 // as inspired by https://www.youtube.com/watch?v=aZT8VlTV1YY
 
 context('Openwhyd', () => {
-  it('should allow user to re-add a track into a playlist', function() {
-    // requirement: one track should be accessible from the user's stream
-    cy.fixture('users.js').then(({ dummy }) => {
-      cy.login(dummy);
-    });
-    cy.postDummyTracks(1);
-    cy.visit('/');
-
-    // should display a pop-in dialog when clicking the "Add to" button of that track
-    cy.scrollTo('bottom');
-    cy.get('.post')
-      .last() // because Cypress is scrolling down for some reason, making the first one unreachable. see https://github.com/cypress-io/cypress/issues/2353
-      .contains('Add to')
-      .click();
-    cy.get('.dlgPostBox').should('be.visible');
-
-    // should allow to create a new playlist
-    cy.get('#selPlaylist').should('be.visible');
-    cy.wait(1000); // leave some time for onclick handler to be setup => TODO: get rid of this!
-    cy.get('#selPlaylist').click();
-    cy.get('#newPlaylistName').type('test playlist');
-    cy.get('input[value="Create"]').click();
-    cy.get('#selPlaylist').contains('test playlist');
-
-    // should show a link to the post after re-adding the track
-    cy.get('.dlgPostBox span')
-      .contains('Add')
-      .click();
-    cy.get('.dlgPostBox').should('not.be.visible');
-    cy.contains('test playlist'); // notification bar with link
-
-    // should show the post on the user's new playlist after clicking the link
-    cy.get('a')
-      .contains('test playlist')
-      .click();
-    cy.url().should('include', '/u/');
-    cy.get('.post').should('have.length', 1);
-    cy.get('.post a[data-eid]').should('be.visible');
-  });
-
-  it('should allow user to manipulate comments', function() {
-    // requirement: at least one track should be accessible from the user's stream
-    cy.fixture('users.js').then(({ dummy }) => {
-      cy.login(dummy);
-    });
-    cy.postDummyTracks(1);
-
-    // comments should be visible from the user's stream
-    cy.visit('/stream');
-    cy.contains('Comment').click();
-    cy.contains('You can mention people');
-
-    // comment should appear after being added
-    cy.get('textarea').type('hello world\n');
-    cy.fixture('users.js').then(({ dummy }) => {
-      cy.get('.comments').contains(dummy.name);
-    });
-    cy.get('.comments').contains('hello world');
-
-    // TODO: it(`should change after being updated`, function() {
-
-    // TODO: it(`should disappear after being deleted`, function() {
-  });
-
-  it('should allow users to search external tracks', function() {
-    // should find a youtube track with id that starts with underscore
-    cy.visit('/');
-    cy.get('#q')
-      .click()
-      .type('http://www.youtube.com/watch?v=_BU841qpQsI');
-    const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
-    cy.get(searchResult)
-      .should('be.visible')
-      .should('have.text');
-    /*
-      const trimmed = $(searchResult)
-        .getText()
-        .trim();
-      //console.log('text: ', trimmed);
-      assert.notEqual(trimmed, ''); // empty string => no metadata was fetched, caused to https://github.com/openwhyd/openwhyd/issues/102
-      */
-  });
-
-  // ===
-
-  /*
   it('should allow user to login', () => {
     cy.visit('/');
 
@@ -206,5 +120,80 @@ context('Openwhyd', () => {
 
     cy.logout();
   });
-  */
+
+  it('should allow user to re-add a track into a playlist', function() {
+    // requirement: one track should be accessible from the user's stream
+    cy.fixture('users.js').then(({ dummy }) => {
+      cy.login(dummy);
+    });
+    cy.postDummyTracks(1);
+    cy.visit('/');
+
+    // should display a pop-in dialog when clicking the "Add to" button of that track
+    cy.scrollTo('bottom');
+    cy.get('.post')
+      .last() // because Cypress is scrolling down for some reason, making the first one unreachable. see https://github.com/cypress-io/cypress/issues/2353
+      .contains('Add to')
+      .click();
+    cy.get('.dlgPostBox').should('be.visible');
+
+    // should allow to create a new playlist
+    cy.get('#selPlaylist').should('be.visible');
+    cy.wait(1000); // leave some time for onclick handler to be setup => TODO: get rid of this!
+    cy.get('#selPlaylist').click();
+    cy.get('#newPlaylistName').type('test playlist');
+    cy.get('input[value="Create"]').click();
+    cy.get('#selPlaylist').contains('test playlist');
+
+    // should show a link to the post after re-adding the track
+    cy.get('.dlgPostBox span')
+      .contains('Add')
+      .click();
+    cy.get('.dlgPostBox').should('not.be.visible');
+    cy.contains('test playlist'); // notification bar with link
+
+    // should show the post on the user's new playlist after clicking the link
+    cy.get('a')
+      .contains('test playlist')
+      .click();
+    cy.url().should('include', '/u/');
+    cy.get('.post').should('have.length', 1);
+    cy.get('.post a[data-eid]').should('be.visible');
+  });
+
+  it('should allow user to manipulate comments', function() {
+    // requirement: at least one track should be accessible from the user's stream
+    cy.fixture('users.js').then(({ dummy }) => {
+      cy.login(dummy);
+    });
+    cy.postDummyTracks(1);
+
+    // comments should be visible from the user's stream
+    cy.visit('/stream');
+    cy.contains('Comment').click();
+    cy.contains('You can mention people');
+
+    // comment should appear after being added
+    cy.get('textarea').type('hello world\n');
+    cy.fixture('users.js').then(({ dummy }) => {
+      cy.get('.comments').contains(dummy.name);
+    });
+    cy.get('.comments').contains('hello world');
+
+    // TODO: it(`should change after being updated`, function() {
+
+    // TODO: it(`should disappear after being deleted`, function() {
+  });
+
+  it('should allow users to search external tracks', function() {
+    // should find a youtube track with id that starts with underscore
+    cy.visit('/');
+    cy.get('#q')
+      .click()
+      .type('http://www.youtube.com/watch?v=_BU841qpQsI');
+    const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
+    cy.get(searchResult)
+      .should('be.visible')
+      .should('have.text', 'Los Van Van - Llegada'); // an empty string would mean that no metadata was fetched, caused to https://github.com/openwhyd/openwhyd/issues/102
+  });
 });
