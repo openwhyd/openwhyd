@@ -5,9 +5,14 @@
  **/
 
 // GLOBAL.DEBUG = false; // deprecated and not needed
+var fs = require('fs');
 var mongodb = require('mongodb');
+var async = require('async');
 var shellRunner = require('./mongodb-shell-runner.js');
 var userModel = null; //require("./user.js");
+
+const DB_INIT_SCRIPT = './config/initdb.js';
+const DB_TEST_SCRIPT = './config/initdb_testing.js';
 
 exports.isObjectId = function(i) {
   //return isNaN(i);
@@ -131,6 +136,38 @@ exports.forEach2 = function(colName, params, handler) {
         } else handler(item, item ? next : undefined);
       });
     })();
+  });
+};
+
+exports.resetDb = function({ addTestData } = {}) {
+  const dbInitScripts = [DB_INIT_SCRIPT];
+  if (addTestData) {
+    if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+      return Promise.reject(new Error('allowed on test database only'));
+    } else {
+      dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
+    }
+  }
+  return new Promise((resolve, reject) => {
+    const mongodb = exports;
+    async.eachSeries(
+      dbInitScripts,
+      function(initScript, nextScript) {
+        console.log('Applying db init script:', initScript, '...');
+        mongodb.runShellScript(fs.readFileSync(initScript), function(err) {
+          if (err) throw err;
+          nextScript();
+        });
+      },
+      function(err, res) {
+        // all db init scripts were interpreted => continue app init
+        mongodb.cacheCollections(function() {
+          mongodb.cacheUsers(function() {
+            resolve();
+          });
+        });
+      }
+    );
   });
 };
 

@@ -1,8 +1,6 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
-var fs = require('fs');
 var util = require('util');
-var async = require('async');
 var colors = require('colors');
 var mongodb = require('mongodb');
 
@@ -21,11 +19,6 @@ if (process.env.NODE_ENV === "production") {
 	rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
 }
 */
-
-var DB_INIT_SCRIPTS = [
-  './config/initdb.js'
-  //'./config/initdb_testing.js', // creates an admin user => should not be run on production!
-];
 
 function makeColorConsole(fct, color) {
   return function() {
@@ -204,27 +197,11 @@ function init() {
     process.appParams.color = false;
   }
   console.log('Starting web server with params:', params);
-  require('./app/models/mongodb.js').init(function(err, db) {
+  require('./app/models/mongodb.js').init(async function(err, db) {
     if (err) throw err;
-    var mongodb = this;
-    async.eachSeries(
-      DB_INIT_SCRIPTS,
-      function(initScript, nextScript) {
-        console.log('Applying db init script:', initScript, '...');
-        mongodb.runShellScript(fs.readFileSync(initScript), function(err) {
-          if (err) throw err;
-          nextScript();
-        });
-      },
-      function(err, res) {
-        // all db init scripts were interpreted => continue app init
-        mongodb.cacheCollections(function() {
-          mongodb.cacheUsers(function() {
-            start();
-          });
-        });
-      }
-    );
+    const mongodb = this;
+    await mongodb.resetDb();
+    start();
   });
 }
 
