@@ -27,5 +27,10 @@ declare namespace Cypress {
      * Login as the admin user defined in initdb_testing.js
      */
     loginAsAdmin(): Chainable<any>;
+
+    /**
+     * Login as the admin user defined in initdb_testing.js
+     */
+    postDummyTracks(count: number): Chainable<any>;
   }
 }
