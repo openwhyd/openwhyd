@@ -51,6 +51,8 @@ context('Openwhyd stream', () => {
   });
 
   it('can load next page of stream when user is logged in', () => {
+    // this is non-regression test for https://github.com/openwhyd/openwhyd/pull/296
+
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
     });

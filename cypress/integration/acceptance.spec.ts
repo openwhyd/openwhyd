@@ -100,7 +100,5 @@ context('Openwhyd', () => {
       cy.get('form').submit();
       cy.get('#loginDiv .username').should('have.text', admin.name); // https://youtu.be/5XQOK0v_YRE?t=1430
     });
-
-    cy.wait(3000); // to check that we don't get any runtime javascript error
   });
 });
