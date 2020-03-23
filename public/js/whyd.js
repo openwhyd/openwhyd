@@ -17,24 +17,6 @@ window.goToPage = function (url) {
 // prevents bug in firefox 3
 if (undefined == window.console) console = { log: function () { } };
 
-/* Design */
-$(window).resize(function () {
-  resizeWindow();
-});
-
-function resizeWindow() {
-  margin = (window.innerWidth - $('.container').width()) / 2;
-  divWidth = $('#settingsDiv .submenu').width() - 20;
-  if (margin < divWidth) {
-    $('#settingsDiv .submenu').addClass('fixToBorder');
-  } else {
-    $('#settingsDiv .submenu').removeClass('fixToBorder');
-  }
-  document.body.scrollTop = document.documentElement.scrollTop = 0;
-}
-
-resizeWindow();
-
 /* utility functions */
 
 function login() {
