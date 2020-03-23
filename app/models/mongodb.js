@@ -5,9 +5,14 @@
  **/
 
 // GLOBAL.DEBUG = false; // deprecated and not needed
+var fs = require('fs');
 var mongodb = require('mongodb');
+var async = require('async');
 var shellRunner = require('./mongodb-shell-runner.js');
 var userModel = null; //require("./user.js");
+
+const DB_INIT_SCRIPT = './config/initdb.js';
+const DB_TEST_SCRIPT = './config/initdb_testing.js';
 
 exports.isObjectId = function(i) {
   //return isNaN(i);
@@ -134,6 +139,80 @@ exports.forEach2 = function(colName, params, handler) {
   });
 };
 
+exports.cacheCollections = function(callback) {
+  function finishInit() {
+    console.log('MongoDB model is now ready for queries!');
+    callback.call(module.exports, null, exports._db);
+  }
+  // diagnostics and collection caching
+  exports._db.collections(function(err, collections) {
+    if (err) console.log('MongoDB Error : ' + err);
+    else {
+      if (0 == collections.length) finishInit();
+      var remaining = collections.length;
+      for (var i in collections) {
+        var queryHandler = (function() {
+          var table = collections[i].collectionName;
+          return function(err, result) {
+            console.log(' - found table: ' + table + ' : ' + result + ' rows');
+            exports._db.collection(table, function(err, col) {
+              exports.collections[table] = col;
+              if (0 == --remaining) finishInit();
+            });
+          };
+        })();
+        collections[i].count(queryHandler);
+      }
+    }
+  });
+};
+
+// this method runs the commands of a mongo shell script (e.g. initdb.js)
+exports.runShellScript = function(script, callback) {
+  return shellRunner.runScriptOnDatabase(script, exports._db, callback);
+};
+
+exports.clearCollections = async function() {
+  if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+    return reject(new Error('allowed on test database only'));
+  } else {
+    for (const name in exports.collections) {
+      await exports.collections[name].remove({}, { multi: true });
+    }
+  }
+};
+
+exports.initCollections = function({ addTestData } = {}) {
+  return new Promise(async (resolve, reject) => {
+    const dbInitScripts = [DB_INIT_SCRIPT];
+    if (addTestData) {
+      if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+        return reject(new Error('allowed on test database only'));
+      } else {
+        dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
+      }
+    }
+    async.eachSeries(
+      dbInitScripts,
+      function(initScript, nextScript) {
+        console.log('Applying db init script:', initScript, '...');
+        exports.runShellScript(fs.readFileSync(initScript), function(err) {
+          if (err) throw err;
+          nextScript();
+        });
+      },
+      function(err, res) {
+        // all db init scripts were interpreted => continue app init
+        exports.cacheCollections(function() {
+          exports.cacheUsers(function() {
+            resolve();
+          });
+        });
+      }
+    );
+  });
+};
+
 exports.init = function(readyCallback) {
   var dbName = process.appParams.mongoDbDatabase;
   var host = process.appParams.mongoDbHost;
@@ -163,51 +242,13 @@ exports.init = function(readyCallback) {
   mongodb.MongoClient.connect(url, options, function(err, client) {
     if (err) throw err;
 
-    const db = client.db(dbName);
+    exports._db = client.db(dbName);
 
-    db.addListener('error', function(e) {
+    exports._db.addListener('error', function(e) {
       console.log('MongoDB model async error: ', e);
     });
 
-    //db.open(function(err, db) {
-    if (err) throw err;
-
-    exports.cacheCollections = function(callback) {
-      function finishInit() {
-        console.log('MongoDB model is now ready for queries!');
-        callback.call(module.exports, null, db);
-      }
-      // diagnostics and collection caching
-      db.collections(function(err, collections) {
-        if (err) console.log('MongoDB Error : ' + err);
-        else {
-          if (0 == collections.length) finishInit();
-          var remaining = collections.length;
-          for (var i in collections) {
-            var queryHandler = (function() {
-              var table = collections[i].collectionName;
-              return function(err, result) {
-                console.log(
-                  ' - found table: ' + table + ' : ' + result + ' rows'
-                );
-                db.collection(table, function(err, col) {
-                  exports.collections[table] = col;
-                  if (0 == --remaining) finishInit();
-                });
-              };
-            })();
-            collections[i].count(queryHandler);
-          }
-        }
-      });
-    };
-
-    // this method runs the commands of a mongo shell script (e.g. initdb.js)
-    exports.runShellScript = function(script, callback) {
-      return shellRunner.runScriptOnDatabase(script, db, callback);
-    };
-
     console.log('Successfully connected to ' + url);
-    readyCallback.call(module.exports, null, db);
+    readyCallback.call(module.exports, null, exports._db);
   });
 };

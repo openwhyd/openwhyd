@@ -3,6 +3,13 @@
 context('Openwhyd stream', () => {
   // TODO: can load next page of the global stream
   it('can load next page of profile when user not logged in', () => {
+    // setup / requirement: we need at least 21 tracks to test pagination
+    cy.fixture('users.js').then(({ dummy }) => {
+      cy.login(dummy);
+      cy.postDummyTracks(21);
+      cy.logout();
+    });
+
     cy.visit('/u/000000000000000000000002'); // will show profile page of user 'dummy' defined in initdb_testing.js
 
     cy.get('.post h2')
@@ -32,7 +39,15 @@ context('Openwhyd stream', () => {
   });
 
   it('can load next page of profile when user is logged in', () => {
+    // setup / requirement: we need at least 21 tracks to test pagination
+    cy.fixture('users.js').then(({ dummy }) => {
+      cy.login(dummy);
+      cy.postDummyTracks(21);
+      cy.logout();
+    });
+
     cy.loginAsAdmin();
+    cy.request('POST', '/consent?lang=en');
 
     cy.visit('/u/000000000000000000000002'); // will show profile page of user 'dummy' defined in initdb_testing.js
 
@@ -51,9 +66,15 @@ context('Openwhyd stream', () => {
   });
 
   it('can load next page of stream when user is logged in', () => {
+    // this is non-regression test for https://github.com/openwhyd/openwhyd/pull/296
+
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
+      cy.request('POST', '/consent?lang=en');
     });
+
+    // setup / requirement: we need at least 21 tracks to test pagination
+    cy.postDummyTracks(21);
 
     cy.visit('/'); // will show the home/stream of the user 'dummy' defined in initdb_testing.js
 

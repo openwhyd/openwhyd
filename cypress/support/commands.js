@@ -9,15 +9,42 @@
 // ***********************************************
 //
 
+// Note: please document these commands in index.d.ts.
+
+Cypress.Commands.add('resetDb', () => {
+  cy.request('POST', `/testing/reset`, { timeout: 10000 });
+});
+
+Cypress.Commands.add('logout', () => {
+  cy.request('GET', `/login?action=logout`);
+});
+
 Cypress.Commands.add('login', ({ email, md5 }) => {
   cy.request('GET', `/login?action=login&ajax=1&email=${email}&md5=${md5}`);
-  cy.request('POST', `/consent`);
 });
 
 Cypress.Commands.add('loginAsAdmin', () => {
   cy.fixture('users.js').then(({ admin }) => {
     cy.login(admin);
   });
+});
+
+Cypress.Commands.add('postDummyTracks', count => {
+  const makeTrack = i => ({
+    name: `Fake track #${i}`,
+    eId: '/yt/Wch3gJG2GJ4', //1-second video, from YouTube
+    img: '/images/cover-track.png'
+  });
+  for (let i = 0; i < count; ++i) {
+    const params = { action: 'insert', ...makeTrack(i) };
+    const querystring = Object.keys(params)
+      .map(
+        param =>
+          `${encodeURIComponent(param)}=${encodeURIComponent(params[param])}`
+      )
+      .join('&');
+    cy.request('GET', `/api/post?${querystring}`);
+  }
 });
 
 //
