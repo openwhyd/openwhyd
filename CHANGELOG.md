@@ -1,3 +1,209 @@
+## [1.30.6](https://github.com/openwhyd/openwhyd/compare/v1.30.5...v1.30.6) (2020-03-23)
+
+
+### Bug Fixes
+
+* **ui:** Resizing the page should not scroll to the top ([#303](https://github.com/openwhyd/openwhyd/issues/303)) ([1e43e68](https://github.com/openwhyd/openwhyd/commit/1e43e68)), closes [#20](https://github.com/openwhyd/openwhyd/issues/20)
+
+## [1.30.5](https://github.com/openwhyd/openwhyd/compare/v1.30.4...v1.30.5) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** Migrate acceptance tests from Webdriver to Cypress ([#301](https://github.com/openwhyd/openwhyd/issues/301)) ([2f6de36](https://github.com/openwhyd/openwhyd/commit/2f6de36)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.30.4](https://github.com/openwhyd/openwhyd/compare/v1.30.3...v1.30.4) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** create dummy posts from cypress tests instead of from initdb_testing ([#304](https://github.com/openwhyd/openwhyd/issues/304)) ([e37a0d0](https://github.com/openwhyd/openwhyd/commit/e37a0d0)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.30.3](https://github.com/openwhyd/openwhyd/compare/v1.30.2...v1.30.3) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** Reset database between each Cypress tests ([#302](https://github.com/openwhyd/openwhyd/issues/302)) ([ced6038](https://github.com/openwhyd/openwhyd/commit/ced6038)), closes [#301](https://github.com/openwhyd/openwhyd/issues/301) [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.30.2](https://github.com/openwhyd/openwhyd/compare/v1.30.1...v1.30.2) (2020-03-22)
+
+
+### Bug Fixes
+
+* **ui:** Display correct track error message when using electron app ([#294](https://github.com/openwhyd/openwhyd/issues/294)) ([4f97ccd](https://github.com/openwhyd/openwhyd/commit/4f97ccd)), closes [#224](https://github.com/openwhyd/openwhyd/issues/224) [/github.com/electron/electron/issues/2288#issuecomment-337858978](https://github.com//github.com/electron/electron/issues/2288/issues/issuecomment-337858978) [/github.com/openwhyd/openwhyd/issues/224#issuecomment-601430390](https://github.com//github.com/openwhyd/openwhyd/issues/224/issues/issuecomment-601430390)
+
+## [1.30.1](https://github.com/openwhyd/openwhyd/compare/v1.30.0...v1.30.1) (2020-03-21)
+
+
+### Bug Fixes
+
+* **error:** 404 redirect when clicking load more on account stream ([#296](https://github.com/openwhyd/openwhyd/issues/296)) ([f6dfefe](https://github.com/openwhyd/openwhyd/commit/f6dfefe)), closes [#295](https://github.com/openwhyd/openwhyd/issues/295) [#299](https://github.com/openwhyd/openwhyd/issues/299)
+
+# [1.30.0](https://github.com/openwhyd/openwhyd/compare/v1.29.0...v1.30.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** separate ci tasks for each type of tests ([#298](https://github.com/openwhyd/openwhyd/issues/298)) ([d87ec4a](https://github.com/openwhyd/openwhyd/commit/d87ec4a)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+# [1.29.0](https://github.com/openwhyd/openwhyd/compare/v1.28.2...v1.29.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** enable TypeScript in Cypress tests ([#297](https://github.com/openwhyd/openwhyd/issues/297)) ([929fc79](https://github.com/openwhyd/openwhyd/commit/929fc79)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.28.2](https://github.com/openwhyd/openwhyd/compare/v1.28.1...v1.28.2) (2020-03-14)
+
+
+### Bug Fixes
+
+* **ui:** never-ending loading animation on empty search ([#260](https://github.com/openwhyd/openwhyd/issues/260)) ([3c4cc85](https://github.com/openwhyd/openwhyd/commit/3c4cc85)), closes [#226](https://github.com/openwhyd/openwhyd/issues/226)
+
+## [1.28.1](https://github.com/openwhyd/openwhyd/compare/v1.28.0...v1.28.1) (2020-03-14)
+
+
+### Bug Fixes
+
+* **deps:** bump acorn from 7.1.0 to 7.1.1 ([#292](https://github.com/openwhyd/openwhyd/issues/292)) ([2db3617](https://github.com/openwhyd/openwhyd/commit/2db3617))
+
+# [1.28.0](https://github.com/openwhyd/openwhyd/compare/v1.27.7...v1.28.0) (2020-03-13)
+
+
+### Features
+
+* **tests:** migrate bookmarklet e2e test to Cypress ([#276](https://github.com/openwhyd/openwhyd/issues/276)) ([38fd0f6](https://github.com/openwhyd/openwhyd/commit/38fd0f6)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.27.7](https://github.com/openwhyd/openwhyd/compare/v1.27.6...v1.27.7) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** refactor makeFileDetector() and make it more robust ([#287](https://github.com/openwhyd/openwhyd/issues/287)) ([c48c283](https://github.com/openwhyd/openwhyd/commit/c48c283))
+
+## [1.27.6](https://github.com/openwhyd/openwhyd/compare/v1.27.5...v1.27.6) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** make "install" button more visible during onboarding ([#291](https://github.com/openwhyd/openwhyd/issues/291)) ([9a0c96d](https://github.com/openwhyd/openwhyd/commit/9a0c96d))
+
+## [1.27.5](https://github.com/openwhyd/openwhyd/compare/v1.27.4...v1.27.5) (2020-03-13)
+
+
+### Bug Fixes
+
+* **#262:** announce improvements on home page ([#288](https://github.com/openwhyd/openwhyd/issues/288)) ([6eca49f](https://github.com/openwhyd/openwhyd/commit/6eca49f)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.27.4](https://github.com/openwhyd/openwhyd/compare/v1.27.3...v1.27.4) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** fix and homogenize wording, second pass ([#290](https://github.com/openwhyd/openwhyd/issues/290)) ([7895946](https://github.com/openwhyd/openwhyd/commit/7895946)), closes [#289](https://github.com/openwhyd/openwhyd/issues/289)
+
+## [1.27.3](https://github.com/openwhyd/openwhyd/compare/v1.27.2...v1.27.3) (2020-03-13)
+
+
+### Bug Fixes
+
+* **ui:** simplify bookmarklet page and homogenize wording ([#289](https://github.com/openwhyd/openwhyd/issues/289)) ([c8b13f5](https://github.com/openwhyd/openwhyd/commit/c8b13f5))
+
+## [1.27.2](https://github.com/openwhyd/openwhyd/compare/v1.27.1...v1.27.2) (2020-03-13)
+
+
+### Bug Fixes
+
+* **bookmarklet:** [refactor] move browser-only code to end ([#286](https://github.com/openwhyd/openwhyd/issues/286)) ([dd1c58b](https://github.com/openwhyd/openwhyd/commit/dd1c58b)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.27.1](https://github.com/openwhyd/openwhyd/compare/v1.27.0...v1.27.1) (2020-03-13)
+
+
+### Bug Fixes
+
+* **version:** bump bookmarklet version ([65eb02e](https://github.com/openwhyd/openwhyd/commit/65eb02e))
+
+# [1.27.0](https://github.com/openwhyd/openwhyd/compare/v1.26.4...v1.27.0) (2020-03-13)
+
+
+### Features
+
+* **bookmarklet:** extract youtube track names from page ([#285](https://github.com/openwhyd/openwhyd/issues/285)) ([9493f06](https://github.com/openwhyd/openwhyd/commit/9493f06)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#281](https://github.com/openwhyd/openwhyd/issues/281) [#282](https://github.com/openwhyd/openwhyd/issues/282)
+
+## [1.26.4](https://github.com/openwhyd/openwhyd/compare/v1.26.3...v1.26.4) (2020-03-12)
+
+
+### Bug Fixes
+
+* **youtube:** dedicated api key for development ([#284](https://github.com/openwhyd/openwhyd/issues/284)) ([b5e5b0f](https://github.com/openwhyd/openwhyd/commit/b5e5b0f))
+
+## [1.26.3](https://github.com/openwhyd/openwhyd/compare/v1.26.2...v1.26.3) (2020-03-12)
+
+
+### Bug Fixes
+
+* **youtube:** regroup api keys in same project, for [#262](https://github.com/openwhyd/openwhyd/issues/262) ([#283](https://github.com/openwhyd/openwhyd/issues/283)) ([f401617](https://github.com/openwhyd/openwhyd/commit/f401617))
+
+## [1.26.2](https://github.com/openwhyd/openwhyd/compare/v1.26.1...v1.26.2) (2020-03-12)
+
+
+### Bug Fixes
+
+* display playable bookmarklet hits first ([#282](https://github.com/openwhyd/openwhyd/issues/282)) ([4518d11](https://github.com/openwhyd/openwhyd/commit/4518d11))
+
+## [1.26.1](https://github.com/openwhyd/openwhyd/compare/v1.26.0...v1.26.1) (2020-03-12)
+
+
+### Bug Fixes
+
+* **bookmarklet:** refactor bookmarklet and add tests for [#262](https://github.com/openwhyd/openwhyd/issues/262) ([#281](https://github.com/openwhyd/openwhyd/issues/281)) ([957afec](https://github.com/openwhyd/openwhyd/commit/957afec)), closes [#280](https://github.com/openwhyd/openwhyd/issues/280)
+
+# [1.26.0](https://github.com/openwhyd/openwhyd/compare/v1.25.2...v1.26.0) (2020-03-12)
+
+
+### Features
+
+* **tests:** add unit tests for bookmarklet ([a75e84e](https://github.com/openwhyd/openwhyd/commit/a75e84e))
+
+## [1.25.2](https://github.com/openwhyd/openwhyd/compare/v1.25.1...v1.25.2) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** bookmarklet to not fetch youtube metadata ([#279](https://github.com/openwhyd/openwhyd/issues/279)) ([6b11549](https://github.com/openwhyd/openwhyd/commit/6b11549)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+## [1.25.1](https://github.com/openwhyd/openwhyd/compare/v1.25.0...v1.25.1) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** disable external track search and filters (incl. YouTube) ([#278](https://github.com/openwhyd/openwhyd/issues/278)) ([e4c5472](https://github.com/openwhyd/openwhyd/commit/e4c5472)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+
+# [1.25.0](https://github.com/openwhyd/openwhyd/compare/v1.24.1...v1.25.0) (2020-03-11)
+
+
+### Features
+
+* **ui:** announcing issues with youtube api ([9327ecb](https://github.com/openwhyd/openwhyd/commit/9327ecb))
+
+## [1.24.1](https://github.com/openwhyd/openwhyd/compare/v1.24.0...v1.24.1) (2020-03-11)
+
+
+### Bug Fixes
+
+* **#262:** dedicated yt api key for remote player iframe ([683a1c0](https://github.com/openwhyd/openwhyd/commit/683a1c0)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** dedicated yt api key to test local iframe ([ac807ec](https://github.com/openwhyd/openwhyd/commit/ac807ec)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **#262:** extend youtube api quota from bookmarklet ([#277](https://github.com/openwhyd/openwhyd/issues/277)) ([6668102](https://github.com/openwhyd/openwhyd/commit/6668102)), closes [#262](https://github.com/openwhyd/openwhyd/issues/262) [#262](https://github.com/openwhyd/openwhyd/issues/262)
+* **ci:** disable bookmarklet that fails in headless mode ([436525e](https://github.com/openwhyd/openwhyd/commit/436525e))
+
+# [1.24.0](https://github.com/openwhyd/openwhyd/compare/v1.23.0...v1.24.0) (2020-03-01)
+
+
+### Features
+
+* **ui:** restore the default sidebox announcement ([c4812de](https://github.com/openwhyd/openwhyd/commit/c4812de))
+
 # [1.23.0](https://github.com/openwhyd/openwhyd/compare/v1.22.1...v1.23.0) (2020-03-01)
 
 

@@ -666,26 +666,6 @@ input.search-input:focus{
 	margin: 0;
 }
 
-#search-filters{
-	float: right;
-	width: 150px;
-	margin-top: -35px;
-	position: relative;
-	z-index: 10;
-}
-#search-filters span{float: left;margin-right: 3px;}
-#search-filters ul{float: left;width: 100px;margin-top: -5px; }
-#search-filters li{width: 24px; height: 24px; background-repeat: no-repeat;display: inline-block;margin: 0 2px;cursor: pointer;}
-#search-filters li.whyd{background-image: url(/images/icon-whyd.png);}
-#search-filters li.soundcloud{background-image: url(/images/icon-soundcloud.png);}
-
-#search-filters li.youtube{background-image: url(/images/icon-youtube.png);}
-
-#search-filters li div{width: 100%;height: 100%;background-repeat: no-repeat;background-position: center;}
-#search-filters li:hover div{background-color: white; opacity: .64;background-image: url(/images/SearchIconFilterHover.png)}
-#search-filters li.active div{background-color: white; opacity: .84;background-image: url(/images/SearchIconFilterValidated.png)}
-
-
 #searchResults {
 	display: none;
 	width: 384px;
@@ -1174,13 +1154,8 @@ top: 21px;
 	width: 180px;
 	margin-left: -9px;
 	z-index: 11;
-}
-
-#settingsDiv .submenu.fixToBorder{
-	position: absolute;
 	right: 0;
 }
-
 
 #navLinks .submenu
 {

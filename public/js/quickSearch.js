@@ -14,12 +14,12 @@ function toggleClass(elem, className, showOrHide) {
 }
 
 var addEvent = window.addEventListener
-  ? function(elem, type, method) {
-      elem.addEventListener(type, method, false);
-    }
-  : function(elem, type, method) {
-      elem.attachEvent('on' + type, method);
-    };
+  ? function (elem, type, method) {
+    elem.addEventListener(type, method, false);
+  }
+  : function (elem, type, method) {
+    elem.attachEvent('on' + type, method);
+  };
 /*
 var removeEvent = window.removeEventListener ? function (elem, type, method) {
     elem.removeEventListener(type, method, false);
@@ -114,7 +114,7 @@ function QuickSearch(searchForm, options) {
     if (options.onResultClick) {
       function makeHandler(li) {
         var a = li.getElementsByTagName('a')[0];
-        return function(e) {
+        return function (e) {
           e.preventDefault();
           options.onResultClick(a.href, a);
           hideResults();
@@ -143,6 +143,9 @@ function QuickSearch(searchForm, options) {
   function onQueryChange(event) {
     event = event || { keycode: -1 };
     if (event.keyCode == '13') {
+      if (searchField.value.replace(/ /g, '') === '') {
+        return;
+      }
       // return
       hideResults();
       event.preventDefault();
@@ -202,12 +205,12 @@ function QuickSearch(searchForm, options) {
   addEvent(searchField, 'input', onQueryChange);
   addEvent(searchField, 'onpaste', onQueryChange);
 
-  this.cancelQuery = function() {
+  this.cancelQuery = function () {
     cancelQuery();
     searchClear && toggle(searchClear, 'loading', false);
   };
 
-  this.search = function(q) {
+  this.search = function (q) {
     searchField.value = q;
     onQueryChange.apply(searchField); //$searchField.each(onQueryChange);
   };
