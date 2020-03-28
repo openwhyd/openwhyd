@@ -1,3 +1,17 @@
+# [1.33.0](https://github.com/openwhyd/openwhyd/compare/v1.32.0...v1.33.0) (2020-03-28)
+
+
+### Features
+
+* **ci:** add version as tag, when publishing on Docker Hub ([#306](https://github.com/openwhyd/openwhyd/issues/306)) ([dca5597](https://github.com/openwhyd/openwhyd/commit/dca5597))
+
+# [1.32.0](https://github.com/openwhyd/openwhyd/compare/v1.31.0...v1.32.0) (2020-03-28)
+
+
+### Features
+
+* **ci:** prevent regressions on our Docker image ([#308](https://github.com/openwhyd/openwhyd/issues/308)) ([c927534](https://github.com/openwhyd/openwhyd/commit/c927534)), closes [#306](https://github.com/openwhyd/openwhyd/issues/306)
+
 # [1.31.0](https://github.com/openwhyd/openwhyd/compare/v1.30.6...v1.31.0) (2020-03-28)
 
 
