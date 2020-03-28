@@ -1,3 +1,24 @@
+## [1.33.3](https://github.com/openwhyd/openwhyd/compare/v1.33.2...v1.33.3) (2020-03-28)
+
+
+### Bug Fixes
+
+* **deps:** remove forever from dependencies ([#313](https://github.com/openwhyd/openwhyd/issues/313)) ([b41699d](https://github.com/openwhyd/openwhyd/commit/b41699d)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309)
+
+## [1.33.2](https://github.com/openwhyd/openwhyd/compare/v1.33.1...v1.33.2) (2020-03-28)
+
+
+### Bug Fixes
+
+* **browser-ext:** add assets for Chrome Web Store page ([#310](https://github.com/openwhyd/openwhyd/issues/310)) ([925d64d](https://github.com/openwhyd/openwhyd/commit/925d64d))
+
+## [1.33.1](https://github.com/openwhyd/openwhyd/compare/v1.33.0...v1.33.1) (2020-03-28)
+
+
+### Bug Fixes
+
+* **docker:** ignore log files ([#311](https://github.com/openwhyd/openwhyd/issues/311)) ([5b83c07](https://github.com/openwhyd/openwhyd/commit/5b83c07)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309) [#306](https://github.com/openwhyd/openwhyd/issues/306)
+
 # [1.33.0](https://github.com/openwhyd/openwhyd/compare/v1.32.0...v1.33.0) (2020-03-28)
 
 

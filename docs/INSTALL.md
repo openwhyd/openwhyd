@@ -82,7 +82,7 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 
 ### Usage (advanced)
 
-- Run `npm start`, or `npm forever:start` (auto-restart daemon)
+- Run `npm start`, or `npm run forever:start` (auto-restart daemon)
 - Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 - During development, you may have to restart the server to have your changes taken into account.
 
