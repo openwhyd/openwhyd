@@ -25,14 +25,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build and start openwhyd services
-        run: docker-compose up --build --detach
+      - name: Build and start services
+        run: |
+          docker-compose up --build --detach
+          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
 
       - name: Run unit tests
         run: |
-          docker-compose exec -T web npm run test-reset
-          docker-compose restart web
-          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
+          # docker-compose exec -T web npm run test-reset
+          # docker-compose restart web
+          # docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
           docker-compose exec -T web npm run test-unit
 
       - name: Run API tests
@@ -41,6 +43,10 @@ jobs:
           # docker-compose restart web
           # docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
           docker-compose exec -T web npm run test-api
+
+      - name: Run Cypress E2E tests
+        run: |
+          npx cypress run
 
 #   # Push image to GitHub Packages.
 #   # See also https://docs.docker.com/docker-hub/builds/
