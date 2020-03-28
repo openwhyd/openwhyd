@@ -1,4 +1,4 @@
-FROM node:10-slim
+FROM node:10.16.3-slim
 
 # Install Make and Python (for node-gyp and argon2)
 RUN apt-get update
