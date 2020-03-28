@@ -46,6 +46,7 @@ jobs:
 
       - name: Run Cypress E2E tests
         run: |
+          npx cypress install
           npx --package typescript --package @bahmutov/add-typescript-to-cypress cypress run
 
 #   # Push image to GitHub Packages.
