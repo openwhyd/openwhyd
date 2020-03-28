@@ -29,8 +29,11 @@ jobs:
         run: |
           docker-compose up --build --detach
           docker-compose exec web npm run test-reset
+          echo "--- restart web..."
           docker-compose restart web
-          docker-compose exec web ./scripts/wait-for-http-server.sh 8080
+          echo "--- wait for up..."
+          docker-compose exec web sh -c './scripts/wait-for-http-server.sh 8080'
+          echo "--- run unit tests..."
           docker-compose exec web npm run test-unit
 
 #   # Push image to GitHub Packages.
@@ -54,7 +57,7 @@ jobs:
 #       - name: Push image
 #         run: |
 #           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          
+
 #           # Change all uppercase to lowercase
 #           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
