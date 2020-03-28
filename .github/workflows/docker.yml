@@ -46,9 +46,9 @@ jobs:
 
       - name: Run Cypress E2E tests
         run: |
-          npx cypress install
-          npx cypress run --config pluginsFile=false # let's just scaffold
-          npx --package cypress --package typescript --package @bahmutov/add-typescript-to-cypress cypress run
+          # npx cypress install
+          npx cypress run --config pluginsFile=false # because plugins/index.js requires typescript, which is not installed in this production image
+          # npx --package cypress --package typescript --package @bahmutov/add-typescript-to-cypress cypress run
 
 #   # Push image to GitHub Packages.
 #   # See also https://docs.docker.com/docker-hub/builds/
