@@ -1,3 +1,10 @@
+## [1.33.3](https://github.com/openwhyd/openwhyd/compare/v1.33.2...v1.33.3) (2020-03-28)
+
+
+### Bug Fixes
+
+* **deps:** remove forever from dependencies ([#313](https://github.com/openwhyd/openwhyd/issues/313)) ([b41699d](https://github.com/openwhyd/openwhyd/commit/b41699d)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309)
+
 ## [1.33.2](https://github.com/openwhyd/openwhyd/compare/v1.33.1...v1.33.2) (2020-03-28)
 
 
