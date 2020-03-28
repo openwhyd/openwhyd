@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/openwhyd/openwhyd/compare/v1.32.0...v1.33.0) (2020-03-28)
+
+
+### Features
+
+* **ci:** add version as tag, when publishing on Docker Hub ([#306](https://github.com/openwhyd/openwhyd/issues/306)) ([dca5597](https://github.com/openwhyd/openwhyd/commit/dca5597))
+
 # [1.32.0](https://github.com/openwhyd/openwhyd/compare/v1.31.0...v1.32.0) (2020-03-28)
 
 
