@@ -1,3 +1,10 @@
+# [1.34.0](https://github.com/openwhyd/openwhyd/compare/v1.33.6...v1.34.0) (2020-03-28)
+
+
+### Features
+
+* **deps:** upgrade playemjs to get rid of flash/swfobject ([#317](https://github.com/openwhyd/openwhyd/issues/317)) ([f2a0ce6](https://github.com/openwhyd/openwhyd/commit/f2a0ce6))
+
 ## [1.33.6](https://github.com/openwhyd/openwhyd/compare/v1.33.5...v1.33.6) (2020-03-28)
 
 
