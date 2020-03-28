@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.33.4",
+  "version": "1.33.5",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "contributors:generate": "all-contributors generate",
     "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
     "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
-    "forever:stop": "npx forever@0.15.3 stop app.js",
-    "forever:start": "mv appd.out prev.out; mv appd.err prev.err; npx forever@0.15.3 --outFile appd.out --errFile appd.err --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
+    "forever:stop": "npx forever stop app.js",
+    "forever:start": "mv appd.out prev.out; mv appd.err prev.err; npx forever --outFile appd.out --errFile appd.err --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
     "forever:restart": "npm run forever:stop; npm run forever:start $@;",
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
     "test-reset": "node test/reset-test-db.js",

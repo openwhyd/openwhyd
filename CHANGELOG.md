@@ -1,3 +1,10 @@
+## [1.33.5](https://github.com/openwhyd/openwhyd/compare/v1.33.4...v1.33.5) (2020-03-28)
+
+
+### Bug Fixes
+
+* **prod:** use latest version of forever in prod scripts ([#315](https://github.com/openwhyd/openwhyd/issues/315)) ([e2061f5](https://github.com/openwhyd/openwhyd/commit/e2061f5))
+
 ## [1.33.4](https://github.com/openwhyd/openwhyd/compare/v1.33.3...v1.33.4) (2020-03-28)
 
 
