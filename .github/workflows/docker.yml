@@ -46,9 +46,7 @@ jobs:
 
       - name: Run Cypress E2E tests
         run: |
-          sudo npm install typescript @bahmutov/add-typescript-to-cypress
-          npx cypress run
-          # TODO: uninstall npm dependencies installed above?
+          npx --package typescript --package @bahmutov/add-typescript-to-cypress cypress run
 
 #   # Push image to GitHub Packages.
 #   # See also https://docs.docker.com/docker-hub/builds/
