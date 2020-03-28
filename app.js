@@ -29,26 +29,15 @@ function makeColorConsole(fct, color) {
   };
 }
 
-function conciseTrace() {
-  return new Error().stack
-    .split('\n')
-    .filter(function(line) {
-      return /\/app\//.test(line);
-    })
-    .join('\n');
-}
-
 function makeErrorLog(fct, type) {
   return function() {
     fct(
-      '===\n' +
-        new Date().toUTCString() +
-        ', ' +
-        type +
-        ' (concise trace)\n' +
-        conciseTrace()
+      type === 'Warning' ? '⚠' : '❌',
+      type,
+      '--',
+      new Date().toUTCString(),
+      ...arguments
     );
-    fct.apply(console, arguments);
     if (rollbar && (type === 'Warning' || type === 'Error')) {
       rollbar[type.toLowerCase()](Array.prototype.join.call(arguments, ' '));
     }
