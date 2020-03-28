@@ -19,3 +19,4 @@
 /config/apns
 /scripts/mongodb-scripts/db
 /scripts/mongodb-scripts/*.gz
+/misc
