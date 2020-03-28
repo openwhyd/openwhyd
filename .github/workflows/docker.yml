@@ -15,7 +15,6 @@ on:
 
 env:
   IMAGE_NAME: openwhyd
-  COMPOSE_INTERACTIVE_NO_CLI: '1'
 
 jobs:
   # Run tests.
