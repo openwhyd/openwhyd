@@ -1,24 +1,12 @@
 name: Docker
 
 on:
-  push:
-    # Publish `master` as Docker `latest` image.
-    branches:
-      - master
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
-  # Also run tests on pull requests that target master, without publishing
+  # Run tests on Pull Requests that target master
   pull_request:
     branches:
       - master
 
-env:
-  IMAGE_NAME: openwhyd
-
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
 
@@ -28,71 +16,23 @@ jobs:
       - name: Build and start services
         run: |
           docker-compose up --build --detach
-          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
 
-      - name: Run unit tests
+      - name: Init database for tests
         run: |
           docker-compose exec -T web npm run test-reset
           docker-compose restart web
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
+
+      - name: Run unit tests
+        run: |
           docker-compose exec -T web npm run test-unit
 
       - name: Run API tests
         run: |
-          # docker-compose exec -T web npm run test-reset
-          # docker-compose restart web
-          # docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
           docker-compose exec -T web npm run test-api
-
-      - name: Run Webdriver E2E tests
-        run: |
-          # docker-compose exec -T web npm run test-reset
-          # docker-compose restart web
-          # docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
-          docker-compose exec -T web npx wdio wdio.conf.js
 
       - name: Run Cypress E2E tests
         run: |
-          # npx cypress install
           npx cypress run --config pluginsFile=false # because plugins/index.js requires typescript, which is not installed in this production image
-          # npx --package cypress --package typescript --package @bahmutov/add-typescript-to-cypress cypress run
 
-#   # Push image to GitHub Packages.
-#   # See also https://docs.docker.com/docker-hub/builds/
-#   push:
-#     # Ensure test job passes before pushing image.
-#     needs: test
-
-#     runs-on: ubuntu-latest
-#     if: github.event_name == 'push'
-
-#     steps:
-#       - uses: actions/checkout@v2
-
-#       - name: Build image
-#         run: docker build . --file Dockerfile --tag image
-
-#       - name: Log into registry
-#         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-#       - name: Push image
-#         run: |
-#           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-
-#           # Change all uppercase to lowercase
-#           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-#           # Strip git ref prefix from version
-#           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-
-#           # Strip "v" prefix from tag name
-#           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-#           # Use Docker `latest` tag convention
-#           [ "$VERSION" == "master" ] && VERSION=latest
-
-#           echo IMAGE_ID=$IMAGE_ID
-#           echo VERSION=$VERSION
-
-#           docker tag image $IMAGE_ID:$VERSION
-#           docker push $IMAGE_ID:$VERSION
+# To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
