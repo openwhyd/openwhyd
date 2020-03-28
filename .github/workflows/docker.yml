@@ -29,14 +29,16 @@ jobs:
         run: |
           echo "--- docker-compose up --build --detach..."
           docker-compose up --build --detach
-          echo "--- docker-compose exec web npm run test-reset..."
-          docker-compose exec web npm run test-reset
-          echo "--- restart web..."
-          docker-compose restart web
-          echo "--- wait for up..."
-          docker-compose exec web sh -c './scripts/wait-for-http-server.sh 8080'
-          echo "--- run unit tests..."
-          docker-compose exec web npm run test-unit
+          echo "--- docker-compose run web npm run docker:test..."
+          docker-compose run web npm run docker:test
+          # echo "--- docker-compose exec web npm run test-reset..."
+          # docker-compose exec web npm run test-reset
+          # echo "--- restart web..."
+          # docker-compose restart web
+          # echo "--- wait for up..."
+          # docker-compose exec web sh -c './scripts/wait-for-http-server.sh 8080'
+          # echo "--- run unit tests..."
+          # docker-compose exec web npm run test-unit
 
 #   # Push image to GitHub Packages.
 #   # See also https://docs.docker.com/docker-hub/builds/
