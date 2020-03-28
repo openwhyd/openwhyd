@@ -1,5 +1,9 @@
 FROM node:10-slim
 
+# Install Make and Python (for node-gyp and argon2)
+RUN apt-get update
+RUN apt-get -y install build-essential python
+
 # Create app directory
 WORKDIR /usr/src/app
 
