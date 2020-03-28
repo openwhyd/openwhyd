@@ -31,7 +31,7 @@ jobs:
           echo "--- docker-compose up --build --detach..."
           docker-compose up --build --detach
           echo "--- docker-compose exec web npm run test-reset..."
-          docker-compose exec web sh -c 'npm run test-reset'
+          docker-compose exec web npm run test-reset
           echo "--- restart web..."
           docker-compose restart web
           echo "--- wait for up..."
