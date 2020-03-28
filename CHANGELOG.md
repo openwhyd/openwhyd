@@ -1,3 +1,10 @@
+## [1.33.2](https://github.com/openwhyd/openwhyd/compare/v1.33.1...v1.33.2) (2020-03-28)
+
+
+### Bug Fixes
+
+* **browser-ext:** add assets for Chrome Web Store page ([#310](https://github.com/openwhyd/openwhyd/issues/310)) ([925d64d](https://github.com/openwhyd/openwhyd/commit/925d64d))
+
 ## [1.33.1](https://github.com/openwhyd/openwhyd/compare/v1.33.0...v1.33.1) (2020-03-28)
 
 
