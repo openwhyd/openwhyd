@@ -44,6 +44,13 @@ jobs:
           # docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
           docker-compose exec -T web npm run test-api
 
+      - name: Run Webdriver E2E tests
+        run: |
+          # docker-compose exec -T web npm run test-reset
+          # docker-compose restart web
+          # docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
+          docker-compose exec -T web npx wdio wdio.conf.js
+
       - name: Run Cypress E2E tests
         run: |
           # npx cypress install
