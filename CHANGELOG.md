@@ -1,3 +1,10 @@
+## [1.33.4](https://github.com/openwhyd/openwhyd/compare/v1.33.3...v1.33.4) (2020-03-28)
+
+
+### Bug Fixes
+
+* **deps:** upgrade to (smaller) playemjs v0.3.1 ([#314](https://github.com/openwhyd/openwhyd/issues/314)) ([4ea4237](https://github.com/openwhyd/openwhyd/commit/4ea4237)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309) [/github.com/openwhyd/openwhyd/issues/309#issuecomment-605508547](https://github.com//github.com/openwhyd/openwhyd/issues/309/issues/issuecomment-605508547)
+
 ## [1.33.3](https://github.com/openwhyd/openwhyd/compare/v1.33.2...v1.33.3) (2020-03-28)
 
 
