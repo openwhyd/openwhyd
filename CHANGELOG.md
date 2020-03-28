@@ -1,3 +1,10 @@
+## [1.33.6](https://github.com/openwhyd/openwhyd/compare/v1.33.5...v1.33.6) (2020-03-28)
+
+
+### Bug Fixes
+
+* **docker:** use slim node docker image ([#312](https://github.com/openwhyd/openwhyd/issues/312)) ([b9d58ae](https://github.com/openwhyd/openwhyd/commit/b9d58ae)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309)
+
 ## [1.33.5](https://github.com/openwhyd/openwhyd/compare/v1.33.4...v1.33.5) (2020-03-28)
 
 
