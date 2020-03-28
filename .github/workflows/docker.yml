@@ -25,18 +25,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run tests
+      - name: Build and start openwhyd services
+        run: docker-compose up --build --detach
+
+      - name: Run unit tests
         run: |
-          echo "--- docker-compose up --build --detach..."
-          docker-compose up --build --detach
-          echo "--- docker-compose exec web npm run test-reset..."
           docker-compose exec -T web npm run test-reset
-          echo "--- restart web..."
           docker-compose restart web
-          echo "--- wait for up..."
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
-          echo "--- run unit tests..."
-          docker-compose exec -T web sh -c 'npm run test-unit'
+          docker-compose exec -T web npm run test-unit
+
+      - name: Run API tests
+        run: |
+          # docker-compose exec -T web npm run test-reset
+          # docker-compose restart web
+          # docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
+          docker-compose exec -T web npm run test-api
 
 #   # Push image to GitHub Packages.
 #   # See also https://docs.docker.com/docker-hub/builds/
