@@ -1154,13 +1154,8 @@ top: 21px;
 	width: 180px;
 	margin-left: -9px;
 	z-index: 11;
-}
-
-#settingsDiv .submenu.fixToBorder{
-	position: absolute;
 	right: 0;
 }
-
 
 #navLinks .submenu
 {

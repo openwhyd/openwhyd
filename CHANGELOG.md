@@ -1,3 +1,10 @@
+## [1.30.6](https://github.com/openwhyd/openwhyd/compare/v1.30.5...v1.30.6) (2020-03-23)
+
+
+### Bug Fixes
+
+* **ui:** Resizing the page should not scroll to the top ([#303](https://github.com/openwhyd/openwhyd/issues/303)) ([1e43e68](https://github.com/openwhyd/openwhyd/commit/1e43e68)), closes [#20](https://github.com/openwhyd/openwhyd/issues/20)
+
 ## [1.30.5](https://github.com/openwhyd/openwhyd/compare/v1.30.4...v1.30.5) (2020-03-22)
 
 
