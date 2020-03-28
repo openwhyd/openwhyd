@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/openwhyd/openwhyd/compare/v1.30.6...v1.31.0) (2020-03-28)
+
+
+### Features
+
+* **logs:** Simplify logging to stdout and stderr ([#305](https://github.com/openwhyd/openwhyd/issues/305)) ([62fe0ba](https://github.com/openwhyd/openwhyd/commit/62fe0ba))
+
 ## [1.30.6](https://github.com/openwhyd/openwhyd/compare/v1.30.5...v1.30.6) (2020-03-23)
 
 
