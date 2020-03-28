@@ -35,9 +35,9 @@ jobs:
           echo "--- restart web..."
           docker-compose restart web
           echo "--- wait for up..."
-          docker-compose exec web sh -c './scripts/wait-for-http-server.sh 8080'
+          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
           echo "--- run unit tests..."
-          docker-compose exec web sh -c 'npm run test-unit'
+          docker-compose exec -T web sh -c 'npm run test-unit'
 
 #   # Push image to GitHub Packages.
 #   # See also https://docs.docker.com/docker-hub/builds/
