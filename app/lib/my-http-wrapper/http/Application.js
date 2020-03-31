@@ -107,12 +107,10 @@ exports.Application = class Application {
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     if (this._sessionMiddleware) {
       app.use((req, res, next) => {
-        console.warn('NOTRE MIDDLEWARE START');
-        const ret = this._sessionMiddleware(req, res, () => {
-          console.warn('NOTRE MIDDLEWARE END');
+        console.warn('cookie from middleware: ', req.headers.cookie);
+        return this._sessionMiddleware(req, res, function (req, res) {
           next(req, res);
         });
-        return ret;
       });
     }
     app.use(makeStatsUpdater({ accessLogFile: this._accessLogFile }));
