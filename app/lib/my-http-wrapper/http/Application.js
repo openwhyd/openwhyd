@@ -107,8 +107,12 @@ exports.Application = class Application {
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     if (this._sessionMiddleware) {
       app.use((req, res, next) => {
+        // this function is called before every http call to the server 
         console.warn('cookie from middleware: ', req.headers.cookie);
         return this._sessionMiddleware(req, res, function (req, res) {
+          // _sessionMiddleware will inject the "cookie" headers thank's to the onHeader event
+          /* we can probably attach the callback function to onHeader 
+            in order to intercepte the cookie and store it in the body */
           next(req, res);
         });
       });

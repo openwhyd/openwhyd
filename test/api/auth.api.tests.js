@@ -89,12 +89,7 @@ describe('auth api', () => {
     });
   });
 
-  describe('signup with secure hash', () => {
-    it('succeeds', async () => {
-      const { body } = await signupAs(genSecureUser());
-      assert.ifError(body.error);
-    });
-
+  describe('cookie in body', () => {
     it.only('return the cookie in the body', async () => {
       const { body } = await signupAs(genSecureUser());
       console.log(typeof body.cookie, body.cookie);
@@ -108,6 +103,13 @@ describe('auth api', () => {
       assert.ifError(body.error);
       assert.equal(typeof body.cookie, 'string');
       assert(jar);
+    });
+  });
+
+  describe('signup with secure hash', () => {
+    it('succeeds', async () => {
+      const { body } = await signupAs(genSecureUser());
+      assert.ifError(body.error);
     });
 
     it('gives access to personal /stream', async () => {

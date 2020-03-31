@@ -174,9 +174,11 @@ exports.registerInvitedUser = function (request, user, response) {
 
     function loginAndRedirectTo(url) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
+      // the two following logs display max age of the cookie but not the session id
       console.log("==============>>>>>>>>>>>", request.session.cookie);
       console.log("==============>>>>>>>>>>>", request.session.cookie.data);
       if (user.ajax) {
+        // the cookie is probably still empty, we need to intercepte the cookie header when the middleware injected
         var json = { redirect: url, uId: '' + storedUser._id, cookie: request.session.cookie.data };
         function renderJSON() {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
