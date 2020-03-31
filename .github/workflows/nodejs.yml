@@ -1,4 +1,4 @@
-name: GitHub Actions Workflow
+name: CI
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   tests:
-    name: CI Test Suite
+    name: Automated tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     services:
@@ -47,27 +47,27 @@ jobs:
           source env-vars-testing.sh
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: npm test
+      - name: Unit tests
         env:
           CI: true
         run: |
           source env-vars-testing.sh
-          npm test
-      - name: Semantic Release
+          npm run test-unit
+      - name: API tests
         env:
           CI: true
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          npm run semantic-release
-      - name: Publish to Docker Hub registry
-        if: github.event_name == 'push'
-        uses: jerray/publish-docker-action@v1.0.3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          source env-vars-testing.sh
+          npm run test-api
+      - name: E2E / Acceptance tests (Webdriver.io)
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-acceptance
 
   cypress:
-    name: Cypress E2E (experimental)
+    name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-16.04
     services:
@@ -100,12 +100,6 @@ jobs:
             ${{ runner.OS }}-cypress-cache-
       - name: install cypress
         run: node_modules/.bin/cypress install
-      - name: Initialize database
-        env:
-          CI: true
-        run: |
-          source env-vars-testing.sh
-          npm run test-reset
       - name: Start Openwhyd server
         run: |
           source env-vars-testing.sh
@@ -117,3 +111,42 @@ jobs:
         run: |
           source env-vars-testing.sh
           node_modules/.bin/cypress run
+
+  release:
+    name: Release
+    needs:
+      - tests
+      - cypress
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - name: check npm cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Semantic Release
+        env:
+          CI: true
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          npm run semantic-release
+      - name: Publish to Docker Hub registry
+        if: github.event_name == 'push'
+        uses: jerray/publish-docker-action@v1.0.3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          auto_tag: true

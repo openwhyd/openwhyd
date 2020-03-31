@@ -3,7 +3,7 @@ var async = require('async');
 
 var DB_INIT_SCRIPTS = [
   './config/initdb.js',
-  './config/initdb_team.js' // creates an admin user => should not be run on production!
+  './config/initdb_testing.js' // creates an admin user => should not be run on production!
 ];
 
 var params = (process.appParams = {

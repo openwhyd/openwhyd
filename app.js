@@ -1,8 +1,6 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
-var fs = require('fs');
 var util = require('util');
-var async = require('async');
 var colors = require('colors');
 var mongodb = require('mongodb');
 
@@ -22,11 +20,6 @@ if (process.env.NODE_ENV === "production") {
 }
 */
 
-var DB_INIT_SCRIPTS = [
-  './config/initdb.js'
-  //'./config/initdb_team.js', // creates an admin user => should not be run on production!
-];
-
 function makeColorConsole(fct, color) {
   return function() {
     for (var i in arguments)
@@ -36,26 +29,15 @@ function makeColorConsole(fct, color) {
   };
 }
 
-function conciseTrace() {
-  return new Error().stack
-    .split('\n')
-    .filter(function(line) {
-      return /\/app\//.test(line);
-    })
-    .join('\n');
-}
-
 function makeErrorLog(fct, type) {
   return function() {
     fct(
-      '===\n' +
-        new Date().toUTCString() +
-        ', ' +
-        type +
-        ' (concise trace)\n' +
-        conciseTrace()
+      type === 'Warning' ? '⚠' : '❌',
+      type,
+      '--',
+      new Date().toUTCString(),
+      ...arguments
     );
-    fct.apply(console, arguments);
     if (rollbar && (type === 'Warning' || type === 'Error')) {
       rollbar[type.toLowerCase()](Array.prototype.join.call(arguments, ' '));
     }
@@ -179,7 +161,7 @@ function start() {
 
 // startup
 
-function init() {
+async function main() {
   // apply command-line arguments
   if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
@@ -204,28 +186,15 @@ function init() {
     process.appParams.color = false;
   }
   console.log('Starting web server with params:', params);
-  require('./app/models/mongodb.js').init(function(err, db) {
-    if (err) throw err;
-    var mongodb = this;
-    async.eachSeries(
-      DB_INIT_SCRIPTS,
-      function(initScript, nextScript) {
-        console.log('Applying db init script:', initScript, '...');
-        mongodb.runShellScript(fs.readFileSync(initScript), function(err) {
-          if (err) throw err;
-          nextScript();
-        });
-      },
-      function(err, res) {
-        // all db init scripts were interpreted => continue app init
-        mongodb.cacheCollections(function() {
-          mongodb.cacheUsers(function() {
-            start();
-          });
-        });
-      }
-    );
-  });
+  const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
+  await util.promisify(mongodb.init)();
+  await mongodb.initCollections();
+  start();
 }
 
-init();
+main().catch(err => {
+  // in order to prevent UnhandledPromiseRejections, let's catch errors and exit as we should
+  console.log('error from main():', err);
+  console.error('error from main():', err);
+  process.exit(1);
+});

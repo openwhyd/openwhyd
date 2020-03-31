@@ -1,3 +1,150 @@
+# [1.34.0](https://github.com/openwhyd/openwhyd/compare/v1.33.6...v1.34.0) (2020-03-28)
+
+
+### Features
+
+* **deps:** upgrade playemjs to get rid of flash/swfobject ([#317](https://github.com/openwhyd/openwhyd/issues/317)) ([f2a0ce6](https://github.com/openwhyd/openwhyd/commit/f2a0ce6))
+
+## [1.33.6](https://github.com/openwhyd/openwhyd/compare/v1.33.5...v1.33.6) (2020-03-28)
+
+
+### Bug Fixes
+
+* **docker:** use slim node docker image ([#312](https://github.com/openwhyd/openwhyd/issues/312)) ([b9d58ae](https://github.com/openwhyd/openwhyd/commit/b9d58ae)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309)
+
+## [1.33.5](https://github.com/openwhyd/openwhyd/compare/v1.33.4...v1.33.5) (2020-03-28)
+
+
+### Bug Fixes
+
+* **prod:** use latest version of forever in prod scripts ([#315](https://github.com/openwhyd/openwhyd/issues/315)) ([e2061f5](https://github.com/openwhyd/openwhyd/commit/e2061f5))
+
+## [1.33.4](https://github.com/openwhyd/openwhyd/compare/v1.33.3...v1.33.4) (2020-03-28)
+
+
+### Bug Fixes
+
+* **deps:** upgrade to (smaller) playemjs v0.3.1 ([#314](https://github.com/openwhyd/openwhyd/issues/314)) ([4ea4237](https://github.com/openwhyd/openwhyd/commit/4ea4237)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309) [/github.com/openwhyd/openwhyd/issues/309#issuecomment-605508547](https://github.com//github.com/openwhyd/openwhyd/issues/309/issues/issuecomment-605508547)
+
+## [1.33.3](https://github.com/openwhyd/openwhyd/compare/v1.33.2...v1.33.3) (2020-03-28)
+
+
+### Bug Fixes
+
+* **deps:** remove forever from dependencies ([#313](https://github.com/openwhyd/openwhyd/issues/313)) ([b41699d](https://github.com/openwhyd/openwhyd/commit/b41699d)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309)
+
+## [1.33.2](https://github.com/openwhyd/openwhyd/compare/v1.33.1...v1.33.2) (2020-03-28)
+
+
+### Bug Fixes
+
+* **browser-ext:** add assets for Chrome Web Store page ([#310](https://github.com/openwhyd/openwhyd/issues/310)) ([925d64d](https://github.com/openwhyd/openwhyd/commit/925d64d))
+
+## [1.33.1](https://github.com/openwhyd/openwhyd/compare/v1.33.0...v1.33.1) (2020-03-28)
+
+
+### Bug Fixes
+
+* **docker:** ignore log files ([#311](https://github.com/openwhyd/openwhyd/issues/311)) ([5b83c07](https://github.com/openwhyd/openwhyd/commit/5b83c07)), closes [#309](https://github.com/openwhyd/openwhyd/issues/309) [#306](https://github.com/openwhyd/openwhyd/issues/306)
+
+# [1.33.0](https://github.com/openwhyd/openwhyd/compare/v1.32.0...v1.33.0) (2020-03-28)
+
+
+### Features
+
+* **ci:** add version as tag, when publishing on Docker Hub ([#306](https://github.com/openwhyd/openwhyd/issues/306)) ([dca5597](https://github.com/openwhyd/openwhyd/commit/dca5597))
+
+# [1.32.0](https://github.com/openwhyd/openwhyd/compare/v1.31.0...v1.32.0) (2020-03-28)
+
+
+### Features
+
+* **ci:** prevent regressions on our Docker image ([#308](https://github.com/openwhyd/openwhyd/issues/308)) ([c927534](https://github.com/openwhyd/openwhyd/commit/c927534)), closes [#306](https://github.com/openwhyd/openwhyd/issues/306)
+
+# [1.31.0](https://github.com/openwhyd/openwhyd/compare/v1.30.6...v1.31.0) (2020-03-28)
+
+
+### Features
+
+* **logs:** Simplify logging to stdout and stderr ([#305](https://github.com/openwhyd/openwhyd/issues/305)) ([62fe0ba](https://github.com/openwhyd/openwhyd/commit/62fe0ba))
+
+## [1.30.6](https://github.com/openwhyd/openwhyd/compare/v1.30.5...v1.30.6) (2020-03-23)
+
+
+### Bug Fixes
+
+* **ui:** Resizing the page should not scroll to the top ([#303](https://github.com/openwhyd/openwhyd/issues/303)) ([1e43e68](https://github.com/openwhyd/openwhyd/commit/1e43e68)), closes [#20](https://github.com/openwhyd/openwhyd/issues/20)
+
+## [1.30.5](https://github.com/openwhyd/openwhyd/compare/v1.30.4...v1.30.5) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** Migrate acceptance tests from Webdriver to Cypress ([#301](https://github.com/openwhyd/openwhyd/issues/301)) ([2f6de36](https://github.com/openwhyd/openwhyd/commit/2f6de36)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.30.4](https://github.com/openwhyd/openwhyd/compare/v1.30.3...v1.30.4) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** create dummy posts from cypress tests instead of from initdb_testing ([#304](https://github.com/openwhyd/openwhyd/issues/304)) ([e37a0d0](https://github.com/openwhyd/openwhyd/commit/e37a0d0)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.30.3](https://github.com/openwhyd/openwhyd/compare/v1.30.2...v1.30.3) (2020-03-22)
+
+
+### Bug Fixes
+
+* **tests:** Reset database between each Cypress tests ([#302](https://github.com/openwhyd/openwhyd/issues/302)) ([ced6038](https://github.com/openwhyd/openwhyd/commit/ced6038)), closes [#301](https://github.com/openwhyd/openwhyd/issues/301) [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.30.2](https://github.com/openwhyd/openwhyd/compare/v1.30.1...v1.30.2) (2020-03-22)
+
+
+### Bug Fixes
+
+* **ui:** Display correct track error message when using electron app ([#294](https://github.com/openwhyd/openwhyd/issues/294)) ([4f97ccd](https://github.com/openwhyd/openwhyd/commit/4f97ccd)), closes [#224](https://github.com/openwhyd/openwhyd/issues/224) [/github.com/electron/electron/issues/2288#issuecomment-337858978](https://github.com//github.com/electron/electron/issues/2288/issues/issuecomment-337858978) [/github.com/openwhyd/openwhyd/issues/224#issuecomment-601430390](https://github.com//github.com/openwhyd/openwhyd/issues/224/issues/issuecomment-601430390)
+
+## [1.30.1](https://github.com/openwhyd/openwhyd/compare/v1.30.0...v1.30.1) (2020-03-21)
+
+
+### Bug Fixes
+
+* **error:** 404 redirect when clicking load more on account stream ([#296](https://github.com/openwhyd/openwhyd/issues/296)) ([f6dfefe](https://github.com/openwhyd/openwhyd/commit/f6dfefe)), closes [#295](https://github.com/openwhyd/openwhyd/issues/295) [#299](https://github.com/openwhyd/openwhyd/issues/299)
+
+# [1.30.0](https://github.com/openwhyd/openwhyd/compare/v1.29.0...v1.30.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** separate ci tasks for each type of tests ([#298](https://github.com/openwhyd/openwhyd/issues/298)) ([d87ec4a](https://github.com/openwhyd/openwhyd/commit/d87ec4a)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+# [1.29.0](https://github.com/openwhyd/openwhyd/compare/v1.28.2...v1.29.0) (2020-03-21)
+
+
+### Features
+
+* **ci:** enable TypeScript in Cypress tests ([#297](https://github.com/openwhyd/openwhyd/issues/297)) ([929fc79](https://github.com/openwhyd/openwhyd/commit/929fc79)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.28.2](https://github.com/openwhyd/openwhyd/compare/v1.28.1...v1.28.2) (2020-03-14)
+
+
+### Bug Fixes
+
+* **ui:** never-ending loading animation on empty search ([#260](https://github.com/openwhyd/openwhyd/issues/260)) ([3c4cc85](https://github.com/openwhyd/openwhyd/commit/3c4cc85)), closes [#226](https://github.com/openwhyd/openwhyd/issues/226)
+
+## [1.28.1](https://github.com/openwhyd/openwhyd/compare/v1.28.0...v1.28.1) (2020-03-14)
+
+
+### Bug Fixes
+
+* **deps:** bump acorn from 7.1.0 to 7.1.1 ([#292](https://github.com/openwhyd/openwhyd/issues/292)) ([2db3617](https://github.com/openwhyd/openwhyd/commit/2db3617))
+
+# [1.28.0](https://github.com/openwhyd/openwhyd/compare/v1.27.7...v1.28.0) (2020-03-13)
+
+
+### Features
+
+* **tests:** migrate bookmarklet e2e test to Cypress ([#276](https://github.com/openwhyd/openwhyd/issues/276)) ([38fd0f6](https://github.com/openwhyd/openwhyd/commit/38fd0f6)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.27.7](https://github.com/openwhyd/openwhyd/compare/v1.27.6...v1.27.7) (2020-03-13)
 
 

@@ -294,6 +294,10 @@ http.ServerResponse.prototype.badRequest = function(error) {
   this.status(400).send(error ? '' + error : 'BAD REQUEST');
 };
 
+http.ServerResponse.prototype.forbidden = function(error) {
+  this.status(403).send(error ? '' + error : 'FORBIDDEN');
+};
+
 http.ServerResponse.prototype.notFound = function() {
   this.status(404).send();
 };

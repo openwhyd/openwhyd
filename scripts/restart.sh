@@ -46,7 +46,7 @@ do
 
     if [ $retries -ge $MAX_RETRY ]; then
         echo "⚠️  App is not responding. Killing it..."
-        $ROOT_DIR/node_modules/.bin/forever stop 0
+        npx forever stop 0
         # [TODO] Something like this would be better:
         # cd $ROOT_DIR && npm stop -- $NEW_UID
         echo "❌  Deployment failed."
@@ -63,7 +63,7 @@ sudo service nginx restart
 
 echo "🌇  Stopping previous instance of Openwhyd..."
 # Stop old server. Index 0 is always the oldest process.
-$ROOT_DIR/node_modules/.bin/forever stop 0
+npx forever stop 0
 
 # TODO: only do this if there was an oldest process,
 # otherwise it will kill the server it just started!
