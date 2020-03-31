@@ -97,7 +97,17 @@ describe('auth api', () => {
 
     it.only('return the cookie in the body', async () => {
       const { body } = await signupAs(genSecureUser());
+      console.log(typeof body.cookie, body.cookie);
       assert.equal(typeof body.cookie, 'string');
+    });
+
+    it.only('login returns the cookie', async () => {
+      await signupAs(genSecureUser());
+      const { jar, body } = await loginAs(genSecureUser());
+      console.log(typeof body.cookie, body.cookie);
+      assert.ifError(body.error);
+      assert.equal(typeof body.cookie, 'string');
+      assert(jar);
     });
 
     it('gives access to personal /stream', async () => {

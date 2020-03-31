@@ -175,6 +175,7 @@ exports.registerInvitedUser = function (request, user, response) {
     function loginAndRedirectTo(url) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       console.log("==============>>>>>>>>>>>", request.session.cookie);
+      console.log("==============>>>>>>>>>>>", request.session.cookie.data);
       if (user.ajax) {
         var json = { redirect: url, uId: '' + storedUser._id, cookie: request.session.cookie.data };
         function renderJSON() {
