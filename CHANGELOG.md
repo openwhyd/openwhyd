@@ -1,3 +1,10 @@
+## [1.34.1](https://github.com/openwhyd/openwhyd/compare/v1.34.0...v1.34.1) (2020-04-05)
+
+
+### Bug Fixes
+
+* **release:** attempt to publish tags on docker hub ([#320](https://github.com/openwhyd/openwhyd/issues/320)) ([bc64ec0](https://github.com/openwhyd/openwhyd/commit/bc64ec0)), closes [#306](https://github.com/openwhyd/openwhyd/issues/306) [/github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257](https://github.com//github.com/jerray/publish-docker-action/issues/11/issues/issuecomment-607077257)
+
 # [1.34.0](https://github.com/openwhyd/openwhyd/compare/v1.33.6...v1.34.0) (2020-03-28)
 
 
