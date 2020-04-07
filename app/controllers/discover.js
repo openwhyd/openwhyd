@@ -70,10 +70,10 @@ function detectUserId(path) {
 }
 
 var processData = {
-  parseBlogPost: function(p, render) {
+  parseBlogPost: function (p, render) {
     if (!p.loggedUser) return render({ error: 'please log in first' });
     try {
-      get(p.url, function(err, page) {
+      get(p.url, function (err, page) {
         try {
           if (err) throw err;
           var response = {
@@ -112,7 +112,7 @@ var processData = {
       render({ error: err });
     }
   },
-  addFeatured: function(p, render) {
+  addFeatured: function (p, render) {
     if (!p.loggedUser) return render({ error: 'please log in first' });
     var post = {
       url: p.url,
@@ -123,12 +123,12 @@ var processData = {
       uNm: p.uNm,
       date: p.date
     };
-    mongodb.collections['featured'].insert(post, function(err, result) {
+    mongodb.collections['featured'].insert(post, function (err, result) {
       render(result);
     });
   },
-  featured: function(p, render) {
-    followModel.fetchUserSubscriptions((p.loggedUser || {}).id, function(
+  featured: function (p, render) {
+    followModel.fetchUserSubscriptions((p.loggedUser || {}).id, function (
       userSub
     ) {
       var subscribed = snip.objArrayToSet(
@@ -139,8 +139,8 @@ var processData = {
       mongodb.collections['featured'].find(
         {},
         { limit: 20, sort: { _id: -1 } },
-        function(err, cursor) {
-          cursor.toArray(function(err, posts) {
+        function (err, cursor) {
+          cursor.toArray(function (err, posts) {
             for (var i in posts) {
               posts[i].subscribed = subscribed[posts[i].uId];
               if (posts[i].img)
@@ -152,7 +152,7 @@ var processData = {
       );
     });
   },
-  ranking: function(p, render) {
+  ranking: function (p, render) {
     var users = {},
       userList;
     function incrementUserCounter(uId, name, incr) {
@@ -171,7 +171,7 @@ var processData = {
       else {
         var uid = '' + userList[i].id;
         console.log('fetchNextUserStats', i, uid);
-        mongodb.collections['follow'].count({ tId: uid }, function(
+        mongodb.collections['follow'].count({ tId: uid }, function (
           err,
           nbSubscribers
         ) {
@@ -180,12 +180,12 @@ var processData = {
           mongodb.collections['post'].find(
             { uId: uid },
             { limit: 9999999, fields: { _id: 0, lov: 1, nbP: 1 } },
-            function(err, cursor) {
-              cursor.each(function(err, f) {
+            function (err, cursor) {
+              cursor.each(function (err, f) {
                 if (!f) {
                   mongodb.collections['post'].count(
                     { 'repost.uId': uid },
-                    function(err, nbAdds) {
+                    function (err, nbAdds) {
                       userList[i].nbAdds += nbAdds;
                       fetchNextUserStats(cb, i + 1);
                     }
@@ -201,7 +201,7 @@ var processData = {
       }
     }
     var steps = [
-      function(cb) {
+      function (cb) {
         var options = {
           until: new Date(Date.now() - TRENDING_PERIOD),
           excludeCtx: 'auto', // exclude auto-subscriptions
@@ -209,7 +209,7 @@ var processData = {
           limit: 10000
         };
         console.log('fetching subscription history... until', options.until);
-        followModel.fetchSubscriptionHistory(options, function(act) {
+        followModel.fetchSubscriptionHistory(options, function (act) {
           console.log('=> fetched', act.length, 'activities');
           if (!act.length) return cb();
           console.log('=> last activity: ', act[act.length - 1]);
@@ -230,9 +230,9 @@ var processData = {
 				cb();
 			},
 			/ **/
-      function(cb) {
+      function (cb) {
         console.log('scoring and sorting users...');
-        userList = snip.mapToObjArray(users).sort(function(a, b) {
+        userList = snip.mapToObjArray(users).sort(function (a, b) {
           return b.nbNewSubscribers - a.nbNewSubscribers;
         });
         if (userList.length > MAX_TRENDING)
@@ -240,9 +240,9 @@ var processData = {
         console.log('fetching user bios...');
         userModel.fetchUserBios(userList, cb);
       },
-      function(cb) {
+      function (cb) {
         console.log('fetching subscription status for each user...');
-        fetchSubscriptions(p, function(subscr) {
+        fetchSubscriptions(p, function (subscr) {
           if (subscr && subscr.subscriptions) {
             var subscr = snip.arrayToSet(
               snip.objArrayToValueArray(subscr.subscriptions, 'id')
@@ -262,12 +262,12 @@ var processData = {
       } else steps.shift()(nextStep);
     })();
   },
-  recommendedUsers: function(p, render) {
+  recommendedUsers: function (p, render) {
     var uId = (p.loggedUser || {}).id;
     if (!uId) return render({ error: 'please log in first' });
     function renderUsers(users) {
       var users = snip.mapToObjArray(users);
-      users.sort(function(a, b) {
+      users.sort(function (a, b) {
         return b.score - a.score;
       });
       if (users.length > MAX_RECOM_USERS)
@@ -286,11 +286,11 @@ var processData = {
         delete users[i].liked;
         delete users[i].liker;
       }
-      userModel.fetchUserBios(users, function() {
+      userModel.fetchUserBios(users, function () {
         render({ users: users });
       });
     }
-    followModel.fetchUserSubscriptions(uId, function(userSub) {
+    followModel.fetchUserSubscriptions(uId, function (userSub) {
       var options = {
         excludeUids: snip.objArrayToValueArray(
           userSub.subscriptions || [],
@@ -342,7 +342,7 @@ var processData = {
 	}*/
 };
 
-exports.handleRequest = function(request, reqParams, response) {
+exports.handleRequest = function (request, reqParams, response) {
   request.logToConsole('discover.controller', reqParams);
   reqParams = reqParams || {};
 
@@ -364,32 +364,25 @@ exports.handleRequest = function(request, reqParams, response) {
       processData[reqParams.ajax](reqParams, render);
     } else render({ error: 'invalid call' });
   } else {
-    if (!TAB_CLASSES[reqParams.tab]) {
-      console.log('unknown tab => redirecting');
-      response.temporaryRedirect('/discover/featured'); // before: /users
-    } else if (!reqParams.loggedUser) {
-      response.temporaryRedirect('/discover/featured');
-    } else {
-      templateLoader.loadTemplate(TEMPLATE_FILE, function(template) {
-        render({
-          html: mainTemplate.renderWhydPage({
-            bodyClass: 'pgDiscover ' + TAB_CLASSES[reqParams.tab],
-            loggedUser: reqParams.loggedUser,
-            content: template.render({
-              isLogged: !!reqParams.loggedUser,
-              isAdmin: reqParams.loggedUser
-                ? request.isUserAdmin(reqParams.loggedUser)
-                : false
-            })
+    templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
+      render({
+        html: mainTemplate.renderWhydPage({
+          bodyClass: 'pgDiscover ' + TAB_CLASSES[reqParams.tab],
+          loggedUser: reqParams.loggedUser,
+          content: template.render({
+            isLogged: !!reqParams.loggedUser,
+            isAdmin: reqParams.loggedUser
+              ? request.isUserAdmin(reqParams.loggedUser)
+              : false
           })
-        });
-        //analytics.addVisit(reqParams.loggedUser, request.url);
+        })
       });
-    }
+      //analytics.addVisit(reqParams.loggedUser, request.url);
+    });
   }
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   //request.logToConsole("apiPost.controller", request.method);
   exports.handleRequest(request, getParams || request.body, response);
 };
