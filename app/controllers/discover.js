@@ -364,21 +364,26 @@ exports.handleRequest = function (request, reqParams, response) {
       processData[reqParams.ajax](reqParams, render);
     } else render({ error: 'invalid call' });
   } else {
-    templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
-      render({
-        html: mainTemplate.renderWhydPage({
-          bodyClass: 'pgDiscover ' + TAB_CLASSES[reqParams.tab],
-          loggedUser: reqParams.loggedUser,
-          content: template.render({
-            isLogged: !!reqParams.loggedUser,
-            isAdmin: reqParams.loggedUser
-              ? request.isUserAdmin(reqParams.loggedUser)
-              : false
+    if (!TAB_CLASSES[reqParams.tab]) {
+      console.log('unknown tab => redirecting');
+      response.temporaryRedirect('/discover/featured'); // before: /users
+    } else {
+      templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
+        render({
+          html: mainTemplate.renderWhydPage({
+            bodyClass: 'pgDiscover ' + TAB_CLASSES[reqParams.tab],
+            loggedUser: reqParams.loggedUser,
+            content: template.render({
+              isLogged: !!reqParams.loggedUser,
+              isAdmin: reqParams.loggedUser
+                ? request.isUserAdmin(reqParams.loggedUser)
+                : false
+            })
           })
-        })
+        });
+        //analytics.addVisit(reqParams.loggedUser, request.url);
       });
-      //analytics.addVisit(reqParams.loggedUser, request.url);
-    });
+    }
   }
 };
 
