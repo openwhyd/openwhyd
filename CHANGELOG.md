@@ -1,3 +1,10 @@
+## [1.34.2](https://github.com/openwhyd/openwhyd/compare/v1.34.1...v1.34.2) (2020-04-16)
+
+
+### Bug Fixes
+
+* **ui:** redirect error when landing on rankings page ([#321](https://github.com/openwhyd/openwhyd/issues/321)) ([8e6040e](https://github.com/openwhyd/openwhyd/commit/8e6040e))
+
 ## [1.34.1](https://github.com/openwhyd/openwhyd/compare/v1.34.0...v1.34.1) (2020-04-05)
 
 
