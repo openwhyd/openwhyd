@@ -50,6 +50,8 @@ After that, you will be able to sign in as an administrator using the following 
 - username: `admin`
 - password: `admin`
 
+The data imported can be seen from http://localhost:8080/all
+
 ### Connect to the database
 
 If you want to connect to the MongoDB database with the `mongo` shell using `docker-compose` container:
