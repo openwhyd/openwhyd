@@ -1,3 +1,10 @@
+## [1.34.4](https://github.com/openwhyd/openwhyd/compare/v1.34.3...v1.34.4) (2020-07-11)
+
+
+### Bug Fixes
+
+* **announcement:** look for mobile app developer ([e0fc143](https://github.com/openwhyd/openwhyd/commit/e0fc143))
+
 ## [1.34.3](https://github.com/openwhyd/openwhyd/compare/v1.34.2...v1.34.3) (2020-07-11)
 
 
