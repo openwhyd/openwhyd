@@ -7,23 +7,23 @@ function initMenuScrollAnimation(menuId, options) {
   var anchors = $('#' + menuId + ' a');
   var sections = [];
 
-  anchors.each(function(i) {
+  anchors.each(function (i) {
     sections.push($($(anchors[i]).attr('href')));
   });
 
-  anchors.click(function() {
+  anchors.click(function () {
     var anchor = $(this);
     $('#' + menuId + ' a.' + menuActiveClass).removeClass(menuActiveClass);
     anchor.addClass(menuActiveClass);
     $('html, body').animate(
       {
-        scrollTop: $(anchor.attr('href')).offset().top
+        scrollTop: $(anchor.attr('href')).offset().top,
       },
       scrollTime
     );
   });
 
-  $(window).scroll(function() {
+  $(window).scroll(function () {
     var scrollTop = $(this).scrollTop();
     var i, section;
     for (i = sections.length - 1; i >= 0; i--) {

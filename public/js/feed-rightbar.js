@@ -1,19 +1,19 @@
 /* === bookmarklet ad == */
 
 (function initBookmarkletAd() {
-  $('#bookmarkletAd .postRemove').click(function() {
+  $('#bookmarkletAd .postRemove').click(function () {
     $.ajax({
       type: 'POST',
       url: '/api/user',
       data: { pref: { hideBkAd: 1 } },
-      success: function(res) {
-        $('#bookmarkletAd').animate({ height: 0 }, function() {
+      success: function (res) {
+        $('#bookmarkletAd').animate({ height: 0 }, function () {
           $(this).remove();
         });
       },
-      error: function(e) {
+      error: function (e) {
         showMessage(e);
-      }
+      },
     });
   });
 })();
@@ -27,13 +27,10 @@
 
   $inviteEmail
     .find('input')
-    .bind('click keydown', function() /*backtonormal*/ {
-      $(this)
-        .parent()
-        .removeClass('error')
-        .removeClass('valid');
+    .bind('click keydown', function () /*backtonormal*/ {
+      $(this).parent().removeClass('error').removeClass('valid');
     })
-    .blur(function() /*validateEmail*/ {
+    .blur(function () /*validateEmail*/ {
       var val = $(this).val();
       if (val == '') return 0;
       var valid = emailCheck.test(val);
@@ -42,14 +39,14 @@
     });
   /*click(backtonormal).keydown(backtonormal);*/
 
-  var $form = $('.inviteAd').submit(function(event) {
+  var $form = $('.inviteAd').submit(function (event) {
     event.preventDefault();
     $form.addClass('sending');
     $.ajax({
       type: 'POST',
       url: '/invite',
       data: $form.serialize(),
-      success: function(res) {
+      success: function (res) {
         console.log('res', res);
         var sent = res && res.ok && res.email;
         if (sent) $('.valid').addClass('sent');
@@ -61,13 +58,13 @@
           !sent
         );
       },
-      error: function() {
+      error: function () {
         $form.removeClass('sending');
-      }
+      },
     });
   });
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     $inviteEmail.placeholder();
   });
 })();
@@ -77,7 +74,7 @@
 function clearSuggestedUser(elt) {
   $(elt)
     .css({ overflow: 'hidden' })
-    .animate({ height: '0px', opacity: '0' }, function() {
+    .animate({ height: '0px', opacity: '0' }, function () {
       $(this).remove();
     });
 }
@@ -87,9 +84,9 @@ function subscribeToUserAndClear(elt) {
   var $link = $li.find('.subscribe');
   if ($link.html() == 'Follow') {
     $link.html('Unfollow');
-    subscribeTimer = setTimeout(function() {
+    subscribeTimer = setTimeout(function () {
       subscribeTimer = null;
-      subscribeToUser($li.attr('data-uid'), function() {
+      subscribeToUser($li.attr('data-uid'), function () {
         clearSuggestedUser(elt);
       });
     }, 2000);
@@ -113,12 +110,12 @@ function subscribeToUserAndClear(elt) {
     (document.cookie || '').indexOf(COOKIE_DEF) == -1;
   if (display) {
     var $box = $('#iphoneAppAd').show();
-    $box.find('.postRemove').click(function() {
+    $box.find('.postRemove').click(function () {
       document.cookie =
         COOKIE_DEF +
         '; expires=' +
         new Date(Date.now() + COOKIE_EXP).toGMTString();
-      $box.animate({ height: 0 }, function() {
+      $box.animate({ height: 0 }, function () {
         $(this).remove();
       });
     });

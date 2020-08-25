@@ -12,11 +12,11 @@ function listBestContributors(cb) {
   mongodb.forEach(
     'post',
     { fields: { _id: 0, uId: 1, uNm: 1 } },
-    function(f) {
+    function (f) {
       users[f.uId] = users[f.uId] || { id: f.uId, name: f.uNm, c: 0 };
       users[f.uId].c++;
     },
-    function() {
+    function () {
       cb(
         snip.mapToObjArray(users).sort(snip.makeFieldSort('c', snip.descSort))
       );
@@ -30,14 +30,14 @@ function listTracksFromBookmarklet(p, cb) {
     'post',
     {
       q: { 'src.id': { $exists: true }, repost: { $exists: false } },
-      fields: { _id: 1, uNm: 1, 'src.id': 1 }
+      fields: { _id: 1, uNm: 1, 'src.id': 1 },
     },
-    function(post) {
+    function (post) {
       if (post && post.src.id)
         bkPosts.push({
           pId: '' + post._id,
           uNm: post.uNm,
-          src: (post.src.id.split('/')[2] || post.src.id).replace('www.', '')
+          src: (post.src.id.split('/')[2] || post.src.id).replace('www.', ''),
         });
       //else console.log("[WARNING] invalid post", post)
     },
@@ -47,9 +47,9 @@ function listTracksFromBookmarklet(p, cb) {
 }
 
 function listBookmarkletSources(p, cb) {
-  listTracksFromBookmarklet(p, function(bkPosts) {
+  listTracksFromBookmarklet(p, function (bkPosts) {
     var sources = {};
-    bkPosts.map(function(post) {
+    bkPosts.map(function (post) {
       //sources[post.src] = (sources[post.src] || 0) + 1;
       var s = (sources[post.src] = sources[post.src] || { c: 0, u: {} });
       ++s.c;
@@ -64,42 +64,42 @@ function listBookmarkletSources(p, cb) {
 }
 
 var fileGenerators = {
-  'bestContributors.html': function(p, cb) {
-    listBestContributors(function(users) {
+  'bestContributors.html': function (p, cb) {
+    listBestContributors(function (users) {
       var table = new snip.DataTable().fromMap(users);
       table.header = ['user id', 'user name', 'number of tracks'];
       cb({ html: table.toHtml() });
     });
   },
-  'tracksFromBookmarklet.html': function(p, cb) {
-    listTracksFromBookmarklet(p, function(bkPosts) {
+  'tracksFromBookmarklet.html': function (p, cb) {
+    listTracksFromBookmarklet(p, function (bkPosts) {
       bkPosts = bkPosts.sort(snip.makeFieldSort('src', snip.ascSort));
       cb({ html: new snip.DataTable().fromMap(bkPosts).toHtml() });
     });
   },
-  'tracksFromBookmarklet.csv': function(p, cb) {
-    listTracksFromBookmarklet(p, function(bkPosts) {
+  'tracksFromBookmarklet.csv': function (p, cb) {
+    listTracksFromBookmarklet(p, function (bkPosts) {
       cb({ csv: new snip.DataTable().fromMap(bkPosts).toCsv() });
     });
   },
-  'bookmarkletSources.html': function(p, cb) {
-    listBookmarkletSources(p, function(sources) {
+  'bookmarkletSources.html': function (p, cb) {
+    listBookmarkletSources(p, function (sources) {
       var table = new snip.DataTable().fromMap(sources);
       table.header = ['source', 'tracks added', 'unique users'];
       cb({ html: table.toHtml() });
     });
   },
-  'bookmarkletSources.csv': function(p, cb) {
-    listBookmarkletSources(p, function(sources) {
+  'bookmarkletSources.csv': function (p, cb) {
+    listBookmarkletSources(p, function (sources) {
       var table = new snip.DataTable().fromMap(sources);
       table.header = ['source', 'tracks added', 'unique users'];
       cb({ csv: table.toCsv() });
     });
-  }
+  },
 };
 
 exports.controller = FileController.buildController({
   controllerName: 'admin.stats',
   adminOnly: true,
-  fileGenerators: fileGenerators
+  fileGenerators: fileGenerators,
 });

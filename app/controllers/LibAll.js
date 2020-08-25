@@ -37,11 +37,11 @@ function renderAllLibrary(lib) {
   }
 
   if (options.after || options.before)
-    renderFeed(function(feedHtml) {
+    renderFeed(function (feedHtml) {
       lib.render({ html: feedHtml });
     });
   else
-    renderFeed(function(feedHtml) {
+    renderFeed(function (feedHtml) {
       //lib.renderSidebar(/*uidList*/ null, null/*user*/, options, function(sidebarHtml){
       lib.renderPage(
         {

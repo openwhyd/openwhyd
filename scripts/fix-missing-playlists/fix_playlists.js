@@ -60,9 +60,9 @@ db.user.update(
         { id: 55, name: 'Lama Land' },
         { id: 56, name: 'Février 2015' },
         { id: 57, name: 'Sawadee Krap / Relaxing tunes heard in Thailand' },
-        { id: 58, name: 'Hangover' }
-      ]
-    }
+        { id: 58, name: 'Hangover' },
+      ],
+    },
   }
 );
 
@@ -87,9 +87,9 @@ db.user.update(
         { id: 13, name: '2015-09.10.11.12' },
         { id: 14, name: '2016-01.02' },
         { id: 15, name: '2016 spring' },
-        { id: 16, name: '2016 summer' }
-      ]
-    }
+        { id: 16, name: '2016 summer' },
+      ],
+    },
   }
 );
 
@@ -159,9 +159,9 @@ db.user.update(
         { id: 61, name: 'DUB' },
         { id: 62, name: 'britpop' },
         { id: 63, name: 'AWAKEING 2016 ' },
-        { id: 64, name: 'Fusion Reggae' }
-      ]
-    }
+        { id: 64, name: 'Fusion Reggae' },
+      ],
+    },
   }
 );
 
@@ -204,9 +204,9 @@ db.user.update(
         { id: 31, name: 'Septembre 2015' },
         { id: 32, name: 'Septembre 2015' },
         { id: 33, name: 'Juin 2016' },
-        { id: 34, name: 'JUILLET 2016' }
-      ]
-    }
+        { id: 34, name: 'JUILLET 2016' },
+      ],
+    },
   }
 );
 
@@ -242,24 +242,24 @@ db.user.update(
         { id: 26, name: 'WTFM (aka What The Fuck Music)' },
         {
           id: 28,
-          name: 'Break beats and grooves from the Atlantic and Warner vaults'
+          name: 'Break beats and grooves from the Atlantic and Warner vaults',
         },
         {
           id: 29,
-          name: 'Weirdsville style (exotic,  heavy psych, mind traveling...)'
+          name: 'Weirdsville style (exotic,  heavy psych, mind traveling...)',
         },
         { id: 30, name: '¡Argentina¡' },
         {
           id: 31,
-          name: 'Amérique Latine : "La pêche aux sons" aka "La paix chaussons"'
+          name: 'Amérique Latine : "La pêche aux sons" aka "La paix chaussons"',
         },
         { id: 32, name: '"8T" gems' },
         { id: 33, name: 'Library classics KPM' },
         { id: 34, name: 'GTA radios' },
         { id: 35, name: 'Full mixes : Boiler Roomz & co' },
-        { id: 36, name: 'Do you wanna party?' }
-      ]
-    }
+        { id: 36, name: 'Do you wanna party?' },
+      ],
+    },
   }
 );
 
@@ -317,9 +317,9 @@ db.user.update(
         { id: 52, name: 'in da april 2016' },
         { id: 54, name: 'in da may 2016' },
         { id: 55, name: 'in da june 2016' },
-        { id: 56, name: 'in da july 2016' }
-      ]
-    }
+        { id: 56, name: 'in da july 2016' },
+      ],
+    },
   }
 );
 
@@ -333,9 +333,9 @@ db.user.update(
         { id: '2', name: 'autres' },
         { id: 3, name: '1986' },
         { id: 4, name: "Rock'n'Roll" },
-        { id: 6, name: 'salsa' }
-      ]
-    }
+        { id: 6, name: 'salsa' },
+      ],
+    },
   }
 );
 
@@ -379,7 +379,7 @@ db.user.update(
         {
           id: 42,
           name:
-            '10 Tracks To Add To Your Party Playlist V.1 (Mardi Gras Edition) '
+            '10 Tracks To Add To Your Party Playlist V.1 (Mardi Gras Edition) ',
         },
         { id: 43, name: 'March 2015' },
         { id: 44, name: 'April 2015' },
@@ -391,9 +391,9 @@ db.user.update(
         { id: 50, name: 'October 2015' },
         { id: 51, name: 'November 2015' },
         { id: 52, name: 'December 2015' },
-        { id: 53, name: '2016' }
-      ]
-    }
+        { id: 53, name: '2016' },
+      ],
+    },
   }
 );
 
@@ -413,9 +413,9 @@ db.user.update(
         { id: 8, name: 'Tincture' },
         { id: 9, name: 'Boodle' },
         { id: 10, name: 'BLAINE' },
-        { id: 11, name: 'Chauffeur' }
-      ]
-    }
+        { id: 11, name: 'Chauffeur' },
+      ],
+    },
   }
 );
 
@@ -479,9 +479,9 @@ db.user.update(
         { id: 54, name: '2015 - October' },
         { id: 55, name: '2015 - November' },
         { id: 56, name: '2016 - April' },
-        { id: 57, name: '2016 - July' }
-      ]
-    }
+        { id: 57, name: '2016 - July' },
+      ],
+    },
   }
 );
 
@@ -513,9 +513,9 @@ db.user.update(
         { id: 21, name: 'Chouchou' },
         { id: 22, name: '2015-12' },
         { id: 23, name: '2015-11' },
-        { id: 24, name: '2016-07' }
-      ]
-    }
+        { id: 24, name: '2016-07' },
+      ],
+    },
   }
 );
 
@@ -534,9 +534,9 @@ db.user.update(
         { id: 7, name: 'Variety Worldwide' },
         { id: 8, name: 'Funk' },
         { id: 9, name: 'Groovity' },
-        { id: 10, name: 'JazzyJazzYo' }
-      ]
-    }
+        { id: 10, name: 'JazzyJazzYo' },
+      ],
+    },
   }
 );
 
@@ -544,8 +544,8 @@ db.user.update(
   { _id: ObjectId('52371f2e7e91c862b2b02c9d') },
   {
     $set: {
-      pl: [{ id: 0, name: 'Good shit' }]
-    }
+      pl: [{ id: 0, name: 'Good shit' }],
+    },
   }
 );
 
@@ -610,9 +610,9 @@ db.user.update(
         { id: 62, name: 'Multicultural/Tribal Electronic' },
         { id: 63, name: 'Deep' },
         { id: 64, name: 'Burning Man' },
-        { id: 65, name: 'Deep House Amsterdam' }
-      ]
-    }
+        { id: 65, name: 'Deep House Amsterdam' },
+      ],
+    },
   }
 );
 
@@ -639,7 +639,7 @@ db.user.update(
         { id: 15, name: 'Motherfolker #24 - Every creature casts a shadow' },
         {
           id: 16,
-          name: 'Motherfolker #25 - I know life is long but it goes so fast'
+          name: 'Motherfolker #25 - I know life is long but it goes so fast',
         },
         { id: 17, name: "Motherfolker #27 - It's one thing to surprise" },
         { id: 18, name: 'Motherfolker #28 - All You Have To Do Is Wander' },
@@ -660,17 +660,17 @@ db.user.update(
         { id: 34, name: 'Motherfolker #44 - Emerging from the wilderness' },
         {
           id: 35,
-          name: 'Motherfolker #45 - Pass the wine, fuck the government'
+          name: 'Motherfolker #45 - Pass the wine, fuck the government',
         },
         { id: 36, name: 'Motherfolker #46 - How much is it all worth' },
         {
           id: 37,
-          name: 'Motherfolker #50 - It kept me real til’ I’m moving on'
+          name: 'Motherfolker #50 - It kept me real til’ I’m moving on',
         },
         { id: 38, name: 'Motherfolker #51 - I only know the recipe to roam' },
-        { id: 39, name: 'Motherfolker #52' }
-      ]
-    }
+        { id: 39, name: 'Motherfolker #52' },
+      ],
+    },
   }
 );
 
@@ -690,9 +690,9 @@ db.user.update(
         { id: 8, name: 'FRESH JUICE' },
         { id: 9, name: 'French Rap' },
         { id: 10, name: 'Retro France' },
-        { id: 11, name: 'Reggae' }
-      ]
-    }
+        { id: 11, name: 'Reggae' },
+      ],
+    },
   }
 );
 
@@ -716,9 +716,9 @@ db.user.update(
         { id: 12, name: 'B' },
         { id: 13, name: 'C' },
         { id: 14, name: 'S' },
-        { id: 15, name: "0'" }
-      ]
-    }
+        { id: 15, name: "0'" },
+      ],
+    },
   }
 );
 
@@ -740,9 +740,9 @@ db.user.update(
         { id: 10, name: 'playlist 2 - CZ' },
         { id: 11, name: 'Playlist DiscoDynamite - CZ' },
         { id: 12, name: 'Playlist - BC - 1' },
-        { id: 13, name: 'PF - GC' }
-      ]
-    }
+        { id: 13, name: 'PF - GC' },
+      ],
+    },
   }
 );
 
@@ -796,9 +796,9 @@ db.user.update(
         { id: 49, name: 'Chill Out #14' },
         { id: 50, name: 'So Smooth #5' },
         { id: 51, name: 'Vinyl OST' },
-        { id: 52, name: 'Skank In The Air' }
-      ]
-    }
+        { id: 52, name: 'Skank In The Air' },
+      ],
+    },
   }
 );
 
@@ -822,9 +822,9 @@ db.user.update(
         { id: 12, name: 'Buon appetito: Eine Playlist für Pasta' },
         { id: 13, name: 'Der große Frühjahrsputz' },
         { id: 14, name: 'Playlist fürs Blutspenden' },
-        { id: 15, name: 'Auf der Welle' }
-      ]
-    }
+        { id: 15, name: 'Auf der Welle' },
+      ],
+    },
   }
 );
 
@@ -847,9 +847,9 @@ db.user.update(
         { id: 11, name: 'RCP' },
         { id: 12, name: 'BAC chante la France' },
         { id: 13, name: '$UN$ET BOULEVARD' },
-        { id: 14, name: 'KONG KEN // FUNKY $PUNK' }
-      ]
-    }
+        { id: 14, name: 'KONG KEN // FUNKY $PUNK' },
+      ],
+    },
   }
 );
 
@@ -867,76 +867,76 @@ db.user.update(
         { id: 6, name: 'IMC #December 2014' },
         {
           id: 7,
-          name: 'January 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'January 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 8,
-          name: 'February 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'February 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 9,
-          name: 'March 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'March 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 10,
-          name: 'April 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'April 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 11,
-          name: 'May 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'May 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 12,
-          name: 'June 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'June 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 13,
-          name: 'July 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'July 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 14,
-          name: 'August 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'August 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 15,
-          name: 'September 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'September 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 16,
-          name: 'October 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'October 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 17,
-          name: 'November 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'November 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 18,
-          name: 'December 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'December 2015 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 19,
-          name: 'January 2016 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'January 2016 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         { id: 20, name: 'French ☆ Indie Pop' },
         {
           id: 21,
-          name: 'February 2016 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'February 2016 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         {
           id: 22,
-          name: 'March 2016 ● Indie Pop ● Indie Rock ● Folk ● Electronic'
+          name: 'March 2016 ● Indie Pop ● Indie Rock ● Folk ● Electronic',
         },
         { id: 23, name: 'April 2016 ●Indie Pop ●Indie Rock ●Folk ●Electronic' },
         { id: 24, name: 'May 2016 ●Indie Pop ●Indie Rock ●Folk ●Electronic' },
         {
           id: 25,
-          name: 'Nouvelle Scène ☆ French Pop ● French Rock ● Folk ● Electronic'
+          name: 'Nouvelle Scène ☆ French Pop ● French Rock ● Folk ● Electronic',
         },
         { id: 26, name: 'June 2016 ●Indie Pop ●Indie Rock ●Folk ●Electronic' },
         { id: 27, name: 'July 2016 ●Indie Pop ●Indie Rock ●Folk ●Electronic' },
-        { id: 28, name: 'Pop Rock ☆ 2016' }
-      ]
-    }
+        { id: 28, name: 'Pop Rock ☆ 2016' },
+      ],
+    },
   }
 );
 
@@ -950,9 +950,9 @@ db.user.update(
         { id: 2, name: 'MORNING' },
         { id: 3, name: 'HIP RAP POP' },
         { id: 4, name: 'CRAZY STRANGE UNIQUE' },
-        { id: 5, name: 'JUNGLA' }
-      ]
-    }
+        { id: 5, name: 'JUNGLA' },
+      ],
+    },
   }
 );
 
@@ -974,9 +974,9 @@ db.user.update(
         { id: 13, name: 'bondodoça' },
         { id: 14, name: 'Envoutee' },
         { id: 15, name: 'bdy' },
-        { id: 16, name: 'faz' }
-      ]
-    }
+        { id: 16, name: 'faz' },
+      ],
+    },
   }
 );
 
@@ -1010,9 +1010,9 @@ db.user.update(
         { id: 23, name: 'The Gift' },
         { id: 24, name: 'Infected Mushroom' },
         { id: 25, name: 'Hip Hop Intel' },
-        { id: 26, name: 'Bastille' }
-      ]
-    }
+        { id: 26, name: 'Bastille' },
+      ],
+    },
   }
 );
 
@@ -1030,9 +1030,9 @@ db.user.update(
         { id: 6, name: 'Oh joie' },
         { id: 7, name: "c'est kitsch and I love it" },
         { id: 8, name: 'ffilps a ekat' },
-        { id: 9, name: "Rave dans l'salon" }
-      ]
-    }
+        { id: 9, name: "Rave dans l'salon" },
+      ],
+    },
   }
 );
 
@@ -1040,8 +1040,8 @@ db.user.update(
   { _id: ObjectId('552994137d50a7417678b219') },
   {
     $set: {
-      pl: [{ id: 0, name: 'The Good ones :P ' }]
-    }
+      pl: [{ id: 0, name: 'The Good ones :P ' }],
+    },
   }
 );
 
@@ -1055,9 +1055,9 @@ db.user.update(
         { id: 2, name: 'NCS' },
         { id: 3, name: 'Mix' },
         { id: 4, name: 'VLOG' },
-        { id: 5, name: 'Heartwarming' }
-      ]
-    }
+        { id: 5, name: 'Heartwarming' },
+      ],
+    },
   }
 );
 
@@ -1097,9 +1097,9 @@ db.user.update(
         { id: 29, name: 'Hip-Hip-Hop-HIO-HIE' },
         { id: 30, name: 'Ça ravigotte !' },
         { id: 31, name: 'Des éléphants roses dans le ciel' },
-        { id: 32, name: 'Pêle mêle etivohivernal' }
-      ]
-    }
+        { id: 32, name: 'Pêle mêle etivohivernal' },
+      ],
+    },
   }
 );
 
@@ -1137,9 +1137,9 @@ db.user.update(
         { id: 26, name: 'BLACK.' },
         { id: 27, name: 'WHITE.' },
         { id: 28, name: 'LOVE.' },
-        { id: 29, name: 'ESCAPE.' }
-      ]
-    }
+        { id: 29, name: 'ESCAPE.' },
+      ],
+    },
   }
 );
 
@@ -1150,7 +1150,7 @@ db.user.update(
       pl: [
         {
           id: 0,
-          name: "(C'est pas de la) TRAP (mais le son est lourd quand même!!!)"
+          name: "(C'est pas de la) TRAP (mais le son est lourd quand même!!!)",
         },
         { id: 1, name: 'Trance / Psy-Trance / Goa ' },
         { id: 2, name: 'Underground / Deep House' },
@@ -1170,9 +1170,9 @@ db.user.update(
         { id: 19, name: 'Bass, Grime & UK Garage' },
         { id: 20, name: 'The Marvellous Sixties and Seventies' },
         { id: 22, name: 'Macki Music Festival' },
-        { id: 23, name: 'Peacock Society 2016' }
-      ]
-    }
+        { id: 23, name: 'Peacock Society 2016' },
+      ],
+    },
   }
 );
 
@@ -1478,9 +1478,9 @@ db.user.update(
         { id: 296, name: 'September' },
         { id: 297, name: 'The Knife' },
         { id: 298, name: 'The Cardigans' },
-        { id: 299, name: 'Gala' }
-      ]
-    }
+        { id: 299, name: 'Gala' },
+      ],
+    },
   }
 );
 
@@ -1512,9 +1512,9 @@ db.user.update(
         { id: 20, name: 'Rover' },
         { id: 21, name: 'Pony pony run run' },
         { id: 22, name: 'James BLAKE' },
-        { id: 23, name: 'Boulevard des airs ' }
-      ]
-    }
+        { id: 23, name: 'Boulevard des airs ' },
+      ],
+    },
   }
 );
 
@@ -1525,9 +1525,9 @@ db.user.update(
       pl: [
         { id: 0, name: '- ♛ - ' },
         { id: 1, name: '- Chill - ' },
-        { id: 2, name: '- SUMMER - ' }
-      ]
-    }
+        { id: 2, name: '- SUMMER - ' },
+      ],
+    },
   }
 );
 
@@ -1570,9 +1570,9 @@ db.user.update(
         { id: 31, name: 'Experimental (Bin) (Stil Updating)' },
         { id: 32, name: 'Trance (Bin) (Still Updating)' },
         { id: 33, name: 'dnb (Bin) (Still Updating)' },
-        { id: 34, name: 'Deep (Bin) ' }
-      ]
-    }
+        { id: 34, name: 'Deep (Bin) ' },
+      ],
+    },
   }
 );
 
@@ -1590,9 +1590,9 @@ db.user.update(
         { id: 6, name: 'Summer Feel Good' },
         { id: 7, name: 'Old school' },
         { id: 8, name: 'Movie Soundtrack' },
-        { id: 9, name: 'Rock' }
-      ]
-    }
+        { id: 9, name: 'Rock' },
+      ],
+    },
   }
 );
 
@@ -1600,8 +1600,11 @@ db.user.update(
   { _id: ObjectId('575565674bf212908fb82ab0') },
   {
     $set: {
-      pl: [{ id: 0, name: 'June 2016' }, { id: 1, name: 'July 2016' }]
-    }
+      pl: [
+        { id: 0, name: 'June 2016' },
+        { id: 1, name: 'July 2016' },
+      ],
+    },
   }
 );
 
@@ -1613,8 +1616,8 @@ db.user.update(
         { id: 0, name: '01' },
         { id: 1, name: '02' },
         { id: 2, name: '03' },
-        { id: 3, name: '04' }
-      ]
-    }
+        { id: 3, name: '04' },
+      ],
+    },
   }
 );

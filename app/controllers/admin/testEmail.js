@@ -14,21 +14,21 @@ function sendEmails(user, template, cb) {
     template.bodyText,
     null,
     user.name,
-    function(resText) {
+    function (resText) {
       emailModel.email(
         user.email,
         '[HTML] ' + template.subject,
         null,
         template.bodyHtml,
         user.name,
-        function(resHtml) {
+        function (resHtml) {
           cb({
             to: user.email,
             subject: template.subject,
             textResult: resText,
             htmlResult: resHtml,
             bodyText: template.bodyText,
-            bodyHtml: template.bodyHtml
+            bodyHtml: template.bodyHtml,
           });
         }
       );
@@ -36,14 +36,14 @@ function sendEmails(user, template, cb) {
   );
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   console.log('test email notif');
 
   var user = request.checkLogin(response);
   if (!user) return;
 
   function send(email) {
-    sendEmails(user, email, function(res) {
+    sendEmails(user, email, function (res) {
       response.legacyRender(res);
     });
   }

@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "production") {
 */
 
 function makeColorConsole(fct, color) {
-  return function() {
+  return function () {
     for (var i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
@@ -30,7 +30,7 @@ function makeColorConsole(fct, color) {
 }
 
 function makeErrorLog(fct, type) {
-  return function() {
+  return function () {
     fct(
       type === 'Warning' ? '⚠' : '❌',
       type,
@@ -87,23 +87,23 @@ var params = (process.appParams = {
     uploadDirName: 'upload_data',
     uAvatarImgDirName: 'uAvatarImg',
     uCoverImgDirName: 'uCoverImg',
-    uPlaylistDirName: 'uPlaylistImg'
-  }
+    uPlaylistDirName: 'uPlaylistImg',
+  },
 });
 
 var FLAGS = {
-  '--no-color': function() {
+  '--no-color': function () {
     process.appParams.color = false;
   },
-  '--fakeEmail': function() {
+  '--fakeEmail': function () {
     params.emailModule = '';
   },
-  '--emailAdminsOnly': function() {
+  '--emailAdminsOnly': function () {
     params.emailModule = 'emailAdminsOnly';
   },
-  '--runner': function() {
+  '--runner': function () {
     /* ignore this parameter from start-stop-daemon -- note: still required? */
-  }
+  },
 };
 
 // when db is read
@@ -124,20 +124,20 @@ function start() {
   const sessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET.substr(),
     store: new MongoStore({
-      url: makeMongoUrl(params)
+      url: makeMongoUrl(params),
     }),
     cookie: {
-      maxAge: 365 * 24 * 60 * 60 * 1000 // cookies expire in 1 year (provided in milliseconds)
+      maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
     },
     name: 'whydSid',
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
-    saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
+    saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
   var serverOptions = {
     port: params.port,
     appDir: __dirname,
     sessionMiddleware,
-    errorHandler: function(request, params, response, statusCode) {
+    errorHandler: function (request, params, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       console.log('rendering server error page', statusCode);
       require('./app/templates/error.js').renderErrorResponse(
@@ -149,8 +149,8 @@ function start() {
     },
     uploadSettings: {
       uploadDir: params.paths.uploadDirName, // 'upload_data'
-      keepExtensions: true
-    }
+      keepExtensions: true,
+    },
   };
   require('./app/models/logging.js'); // init logging methods (IncomingMessage extensions)
   new myHttp.Application(serverOptions).start();
@@ -192,7 +192,7 @@ async function main() {
   start();
 }
 
-main().catch(err => {
+main().catch((err) => {
   // in order to prevent UnhandledPromiseRejections, let's catch errors and exit as we should
   console.log('error from main():', err);
   console.error('error from main():', err);

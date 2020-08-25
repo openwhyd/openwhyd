@@ -18,5 +18,5 @@ exports.members = [
   '531e23987e91c862b2b64760', // Sergio d'Abbadie
   '53747c4271eaec19b5717c9f', // Jaoquin Guzman
   '53a6080166491c17b2ada3c7', // Spanish Speaking Music Collective
-  '515099257e91c862b2ac4aa6' // Voyageman
+  '515099257e91c862b2ac4aa6', // Voyageman
 ];

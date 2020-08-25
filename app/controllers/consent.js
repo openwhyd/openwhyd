@@ -13,7 +13,7 @@ var mainTemplate = require('../templates/mainTemplate.js');
 
 var filePerLang = {
   en: 'config/gdpr-consent-en.md',
-  fr: 'config/gdpr-consent-fr.md'
+  fr: 'config/gdpr-consent-fr.md',
 };
 
 function removeEmptyLine(mdLine) {
@@ -34,7 +34,7 @@ function renderMarkdownLine(mdLine) {
     .replace(/<\/(li|h1)><\/p>$/, '</$1>');
 }
 
-var templatePerLang = Object.keys(filePerLang).reduce(function(
+var templatePerLang = Object.keys(filePerLang).reduce(function (
   templatePerLang,
   langId
 ) {
@@ -89,11 +89,11 @@ function renderPageContent(params) {
     '  }',
     '  document.getElementsByClassName("checkbox")[0].onchange = toggleConsent;',
     '  document.getElementsByClassName("checkbox")[1].onchange = toggleConsent;',
-    '</script>'
+    '</script>',
   ].join('\n');
 }
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   var isPost = request.method.toLowerCase() === 'post';
   var p = (isPost ? request.body : getParams) || {};
   request.logToConsole('consent.controller ' + request.method, p);
@@ -121,11 +121,11 @@ exports.controller = function(request, getParams, response) {
       { _id: mongodb.ObjectId('' + p.loggedUser.id) },
       {
         $set: {
-          'consent.lang': p.lang
+          'consent.lang': p.lang,
         },
         $currentDate: {
-          'consent.date': true // => mongodb will store a ISODate in consent.date
-        }
+          'consent.date': true, // => mongodb will store a ISODate in consent.date
+        },
       },
       null,
       function onDone(err, user) {

@@ -5,15 +5,15 @@ function ajaxQuery(data, cb) {
     url: '/onboarding',
     data: data,
     dataType: 'json',
-    success: function(data) {
+    success: function (data) {
       $body.removeClass('loading');
       cb && cb(data);
     },
-    error: function(error) {
+    error: function (error) {
       $body.removeClass('loading');
       showMessage(json.error);
       if (!cb || !cb({ error: error })) throw error;
-    }
+    },
   });
 }
 
@@ -22,7 +22,7 @@ function disableLink() {
     .css('cursor', 'default')
     .attr('href', 'javascript:return false;')
     .unbind()
-    .click(function(e) {
+    .click(function (e) {
       e.preventDefault();
     });
 }
@@ -37,28 +37,22 @@ function initOnbGenres() {
   } catch (e) {
     console.log('mixpanel', e, e.stack);
   }
-  $('#genreGallery li').each(function() {
+  $('#genreGallery li').each(function () {
     $(this)
       .append('<div>')
-      .click(function() {
+      .click(function () {
         $(this).toggleClass('selected');
         $('#btnNext').toggle(!!$('#genreGallery li.selected').length);
       });
   });
-  $('#btnNext').click(function(e) {
+  $('#btnNext').click(function (e) {
     e.preventDefault();
     var tags = $('#genreGallery li.selected')
-      .map(function() {
-        return $(this)
-          .find('p')
-          .text()
-          .replace('Electronic', 'Electro');
+      .map(function () {
+        return $(this).find('p').text().replace('Electronic', 'Electro');
       })
       .get();
-    $('input[name=genres]')
-      .val(tags.join(','))
-      .parent()
-      .submit();
+    $('input[name=genres]').val(tags.join(',')).parent().submit();
     return false;
   });
 }
@@ -69,21 +63,21 @@ function initOnbPeople(genres) {
   var $userList = $('.userList');
 
   function renderUserInList(user) {
-    var tags = (user.tags || []).map(function(tag) {
+    var tags = (user.tags || []).map(function (tag) {
       //return $("<a class='tag'>").attr("href", tag.url).text(tag.id + " (" + tag.c + ")");
       return $('<li class="tag" class="user">').text(
         tag.id.replace('Electro', 'Electronic')
       );
     });
     if (tags.length)
-      tags = tags.reduce(function($tags, $nextTag) {
+      tags = tags.reduce(function ($tags, $nextTag) {
         return $tags.add('<span>&bull;&nbsp;</span>').add($nextTag);
       });
     var $li = $('<li>')
       .attr({
         'data-id': user.id,
         'data-subscribed': user.subscribed,
-        class: 'user' + (user.cssClasses || '')
+        class: 'user' + (user.cssClasses || ''),
       })
       .append(
         $("<div class='thumb'>")
@@ -105,16 +99,16 @@ function initOnbPeople(genres) {
           .attr('data-uid', user.id)
           .text(user.subscribed ? 'Following' : 'Follow')
           .toggleClass('subscribed', user.subscribed ? true : false)
-          .click(function() {
+          .click(function () {
             var subscribed = !$(this).hasClass('subscribed');
             $(this)
               .toggleClass('subscribed', subscribed)
               .text(subscribed ? 'Following' : 'Follow');
           })
-          .mouseenter(function() {
+          .mouseenter(function () {
             if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';
           })
-          .mouseleave(function() {
+          .mouseleave(function () {
             if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';
           })
       );
@@ -122,7 +116,7 @@ function initOnbPeople(genres) {
   }
 
   function fetchRecomUsers(cb) {
-    ajaxQuery({ ajax: 'people', genres: genres }, function(recomUsers) {
+    ajaxQuery({ ajax: 'people', genres: genres }, function (recomUsers) {
       //console.log("recomUsers", recomUsers);
       if (recomUsers && recomUsers.length) {
         $('h1').text(
@@ -138,20 +132,18 @@ function initOnbPeople(genres) {
     });
   }
   //$(".userList a, .userList div[style], .homeLink").each();
-  fetchRecomUsers(function() {
+  fetchRecomUsers(function () {
     $('#btnNext').show();
   });
-  $('#btnNext').click(function(e) {
+  $('#btnNext').click(function (e) {
     e.preventDefault();
     var uids = $('.userList .subscribed')
       .toArray()
-      .map(function(elt) {
-        return $(elt)
-          .closest('[data-id]')
-          .attr('data-id');
+      .map(function (elt) {
+        return $(elt).closest('[data-id]').attr('data-id');
       });
     console.log('uids', uids.length, uids);
-    ajaxQuery({ ajax: 'follow', uids: uids.join(',') }, function() {
+    ajaxQuery({ ajax: 'follow', uids: uids.join(',') }, function () {
       //goToPage("/welcome");
       //goToPage("/pick/button");
       window.location.href = '/pick/button';
@@ -173,23 +165,23 @@ function initOnbButton() {
   function moveTo(id, scrollTime) {
     $('html, body').animate(
       {
-        scrollTop: $(id).offset().top
+        scrollTop: $(id).offset().top,
       },
       scrollTime
     );
   }
 
-  $('.step1').click(function() {
-    $(this).fadeOut(300, function() {
+  $('.step1').click(function () {
+    $(this).fadeOut(300, function () {
       $('.howToUseButtonNormal').height(542);
-      $('.indication1').fadeIn(300, function() {
+      $('.indication1').fadeIn(300, function () {
         $('.indication2').fadeIn(300);
       });
     });
     return false;
   });
 
-  $('#linkToInstall').click(function() {
+  $('#linkToInstall').click(function () {
     moveTo('#installTest', 1000);
   });
 
@@ -200,12 +192,12 @@ function initOnbButton() {
     $.browser.chrome &&
     parseInt(('' + $.browser.version).split('.')[0]) >= 15
   ) {
-    $('#btnInstallChromeExt').click(function(e) {
+    $('#btnInstallChromeExt').click(function (e) {
       console.log('trying to install chrome extension', e.target.href);
       chrome.webstore.install(
         e.target.href,
-        function() {},
-        function() {
+        function () {},
+        function () {
           console.log('failed => opening chrome web store in a new tab...');
           //goToPage(e.href);
           window.open(e.target.href, '_blank').focus();
@@ -227,7 +219,7 @@ function initOnbButton() {
       break;
     }
 
-  $('.video > a').click(function(e) {
+  $('.video > a').click(function (e) {
     e.preventDefault();
     openHtmlDialog(
       '<iframe src="' +

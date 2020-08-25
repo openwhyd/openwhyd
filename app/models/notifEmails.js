@@ -34,7 +34,7 @@ function sendEmail(toUid, emailObj, cb) {
 // REGISTRATION RELATED
 
 // 2) when a openwhyd admin accepted a visitor to register => "The team is glad to invite you to join whyd"
-exports.sendAcceptedInvite = function(storedUser) {
+exports.sendAcceptedInvite = function (storedUser) {
   var temp = notifTemplate.generateAcceptedInvite(storedUser);
   emailModel.email(
     storedUser.email,
@@ -45,7 +45,7 @@ exports.sendAcceptedInvite = function(storedUser) {
 };
 
 // 3) when a user just finished registration => "Here are some tips to get started"
-exports.sendRegWelcome = function(storedUser, inviteSender) {
+exports.sendRegWelcome = function (storedUser, inviteSender) {
   var temp = notifTemplate.generateRegWelcome(storedUser, inviteSender);
   emailModel.email(
     storedUser.email,
@@ -55,8 +55,8 @@ exports.sendRegWelcome = function(storedUser, inviteSender) {
   );
 };
 
-exports.sendRegWelcomeAsync = function(storedUser, inviteSender, cb) {
-  notifTemplate.generateRegWelcomeAsync(storedUser, inviteSender, function(
+exports.sendRegWelcomeAsync = function (storedUser, inviteSender, cb) {
+  notifTemplate.generateRegWelcomeAsync(storedUser, inviteSender, function (
     email
   ) {
     emailModel.email(
@@ -80,7 +80,7 @@ exports.sendInviteBy = function(senderName, inviteId, email, message) {
 */
 
 // 5) when the friend registered => "Your friend just accepted your invitation to whyd"
-exports.sendInviteAccepted = function(senderId, storedUser, cb) {
+exports.sendInviteAccepted = function (senderId, storedUser, cb) {
   if (getUserPrefs(senderId)['emAcc'] != -1)
     sendEmail(
       senderId,
@@ -91,7 +91,7 @@ exports.sendInviteAccepted = function(senderId, storedUser, cb) {
 };
 
 // 6) when wants to delete their account => notify team
-exports.askAccountDeletion = function(uId, uNm) {
+exports.askAccountDeletion = function (uId, uNm) {
   var text =
     (uNm || 'A user') +
     ' requested deletion of their profile: ' +
@@ -106,7 +106,7 @@ exports.askAccountDeletion = function(uId, uNm) {
 };
 
 // 7) when user chose to delete their account => notify team
-exports.sendUserDeleted = function(uId, uNm) {
+exports.sendUserDeleted = function (uId, uNm) {
   if (SEND_USER_DELETION_EMAILS) {
     var text =
       (uNm || 'A user') +
@@ -125,7 +125,7 @@ exports.sendUserDeleted = function(uId, uNm) {
 // ACCOUNT RELATED
 
 // 1) when a user forgets his password => "open this link to reset your password"
-exports.sendPasswordReset = function(uid, resetCode, redirect) {
+exports.sendPasswordReset = function (uid, resetCode, redirect) {
   var temp = notifTemplate.generatePasswordReset(
     { id: uid },
     { resetCode: resetCode, redirect: redirect }
@@ -134,16 +134,16 @@ exports.sendPasswordReset = function(uid, resetCode, redirect) {
 };
 
 // 2) when a user has just set a new password => "your openwhyd password was successfully updated"
-exports.sendPasswordUpdated = function(uid, emailAddr) {
+exports.sendPasswordUpdated = function (uid, emailAddr) {
   var temp = notifTemplate.generatePasswordUpdated({
     id: uid,
-    email: emailAddr
+    email: emailAddr,
   });
   emailModel.notif(uid, temp.subject, temp.bodyText, temp.bodyHtml);
 };
 
 // 3) when a user has just set a new email address => "your openwhyd email was successfully updated"
-exports.sendEmailUpdated = function(uid, emailAddr) {
+exports.sendEmailUpdated = function (uid, emailAddr) {
   var temp = notifTemplate.generateEmailUpdated({ id: uid, email: emailAddr });
   emailModel.notif(uid, temp.subject, temp.bodyText, temp.bodyHtml);
 };
@@ -167,8 +167,8 @@ function submitNotif(recipient, type, immediateNotifHandler, noNotifHandler) {
 }
 
 // 1) when reposter reposts a post => "XXX has added one of your tracks on whyd"
-exports.sendRepost = function(reposter, post, postAuthor /*Email*/) {
-  submitNotif(postAuthor, 'emAdd', function() {
+exports.sendRepost = function (reposter, post, postAuthor /*Email*/) {
+  submitNotif(postAuthor, 'emAdd', function () {
     var temp = notifTemplate.generateRepost(reposter, post);
     emailModel.email(
       postAuthor.email /*Email*/,
@@ -180,11 +180,11 @@ exports.sendRepost = function(reposter, post, postAuthor /*Email*/) {
 };
 
 // 2) when subscriber subscribes to selectedUser => "XXX has subscribed to you on Openwhyd!"
-exports.sendSubscribedToUser = function(subscriber, selectedUser, cb) {
+exports.sendSubscribedToUser = function (subscriber, selectedUser, cb) {
   submitNotif(
     selectedUser,
     'emSub',
-    function() {
+    function () {
       var temp = notifTemplate.generateSubscribedToUser(
         subscriber,
         selectedUser._id
@@ -203,8 +203,8 @@ exports.sendSubscribedToUser = function(subscriber, selectedUser, cb) {
 };
 
 // 3) when user likes a post
-exports.sendLike = function(user, post, postAuthor) {
-  submitNotif(postAuthor, 'emLik', function() {
+exports.sendLike = function (user, post, postAuthor) {
+  submitNotif(postAuthor, 'emLik', function () {
     if (postAuthor.pref && postAuthor.pref['emLik'] == 0) {
       // user explicitely chose to receive immediate notifications
       var temp = notifTemplate.generateLike(user, post, postAuthor);
@@ -219,19 +219,19 @@ exports.sendLike = function(user, post, postAuthor) {
 };
 
 // 4) "XXX has added the same track(s) as you"
-exports.sendPostedSameTrack = function(postAuthor, cb) {
+exports.sendPostedSameTrack = function (postAuthor, cb) {
   submitNotif(postAuthor, 'emSam', null, cb);
 };
 
 // 5) "XXX commented your track"
-exports.sendComment = function(post, comment, cb) {
+exports.sendComment = function (post, comment, cb) {
   if (getUserPrefs(post.uId)['emCom'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
   else sendEmail(post.uId, notifTemplate.generateComment(post, comment), cb);
 };
 
 // 6) "XXX mentioned you"
-exports.sendMention = function(mentionedUid, post, comment, cb) {
+exports.sendMention = function (mentionedUid, post, comment, cb) {
   if (getUserPrefs(post.uId)['emMen'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
   else
@@ -243,7 +243,7 @@ exports.sendMention = function(mentionedUid, post, comment, cb) {
 };
 
 // 7) "XXX replied to your comment"
-exports.sendCommentReply = function(post, comment, repliedUid, cb) {
+exports.sendCommentReply = function (post, comment, repliedUid, cb) {
   if (getUserPrefs(post.uId)['emRep'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
   else

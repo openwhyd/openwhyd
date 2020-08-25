@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
   function loading(toggle) {
     $('body')
       .toggleClass('filtering', toggle)
@@ -19,14 +19,14 @@ $(function() {
   var quickSearch = new QuickSearch($box, {
     noMoreResults: true,
     noMoreResultsOnEnter: true,
-    submitQuery: function(query, display) {
+    submitQuery: function (query, display) {
       // called a short delay after when a query was entered
       // display(htmlResults, stillSearch) is to be called when new results are found
       display('', true); // clear the result list and keep the searching animation rolling
       loading(true);
       submitSearchQuery(
         { q: query, uid: window.pageUser.id, format: 'html' },
-        function(resultsHtml) {
+        function (resultsHtml) {
           if (!resultsHtml || typeof resultsHtml == 'object') resultsHtml = ''; // '<a href="#" class="noResults"><p>' + query + ' was not found</p></a>';
           applyFilter(true);
           var $results = $(resultsHtml).appendTo('.posts');
@@ -36,22 +36,22 @@ $(function() {
         }
       );
     },
-    onEmpty: function() {
+    onEmpty: function () {
       applyFilter(false);
-    }
+    },
   });
 
   function focusOnInput() {
     $box.find('.q').focus();
   }
 
-  $('#btnFilter').on('click', function(e) {
+  $('#btnFilter').on('click', function (e) {
     e.preventDefault();
     $('body').addClass('filterMode');
     setTimeout(focusOnInput, 200);
   });
 
-  $box.find('.clear').on('click', function() {
+  $box.find('.clear').on('click', function () {
     quickSearch.search('');
     $('body').removeClass('filterMode');
   });

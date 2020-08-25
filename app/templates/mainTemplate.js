@@ -39,7 +39,7 @@ var playerHtmlCode = fs.readFileSync('app/templates/whydPlayer.html', 'utf8');
 exports.defaultPageMeta = {
   img: config.urlPrefix + '/images/logo-black-square-smaller.png',
   desc:
-    'Discover and collect music gems from Youtube, Soundcloud, Deezer and more'
+    'Discover and collect music gems from Youtube, Soundcloud, Deezer and more',
 };
 
 function makeMetaHead(options) {
@@ -72,7 +72,7 @@ function makeMetaHead(options) {
     '<meta property="fb:admins" content="510739408" />',
     '<meta property="og:type" content="' +
       uiSnippets.htmlEntities(options.pageType || 'website') +
-      '" />'
+      '" />',
   ];
   if (options.pageTitle)
     meta.push(
@@ -93,10 +93,10 @@ var htmlHeading = [
   '<!DOCTYPE html>',
   '<html lang="en">',
   '  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">', // music: http://ogp.me/ns/music# video: http://ogp.me/ns/video# website: http://ogp.me/ns/website#
-  '    <meta charset="utf-8" />'
+  '    <meta charset="utf-8" />',
 ];
 
-exports.makeAnalyticsHeading = function(user) {
+exports.makeAnalyticsHeading = function (user) {
   // only render opengraph preferences (in order to avoid rendering a date object for nextEmail/nextEN)
   var userPrefs = {};
   for (var i in (user || {}).pref)
@@ -112,7 +112,7 @@ exports.makeAnalyticsHeading = function(user) {
             fbId: user.fbId,
             handle: uiSnippets.htmlEntities(user.handle),
             pref: userPrefs,
-            lastFm: user.lastFm
+            lastFm: user.lastFm,
           })) +
       ';',
     '  window.playTrack = window.playTrack || function(){};', // prevent videos from playing in another tab, until whydPlayer is loaded
@@ -127,13 +127,13 @@ exports.makeAnalyticsHeading = function(user) {
     '      palette: { popup: { background: "#000" }, button: { background: "#f1d600" } }',
     '    })',
     '  });',
-    '</script>'
+    '</script>',
   ];
 };
 
 exports.analyticsHeading = exports.makeAnalyticsHeading().join('\n');
 
-exports.renderHtmlFrame = function(body, head) {
+exports.renderHtmlFrame = function (body, head) {
   return (
     htmlHeading.join('') +
     (head || '') +
@@ -143,7 +143,7 @@ exports.renderHtmlFrame = function(body, head) {
   );
 };
 
-exports.renderWhydFrame = function(html, params) {
+exports.renderWhydFrame = function (html, params) {
   params = params || {};
   params.css = params.css || [];
   params.js = params.js || [];
@@ -177,7 +177,7 @@ exports.renderWhydFrame = function(html, params) {
       '    <link rel="search" type="application/opensearchdescription+xml" title="Whyd" href="' +
         config.urlPrefix +
         '/html/opensearch.xml">', // http://www.gravitywell.co.uk/blog/post/allow-google-chrome-and-other-browsers-to-search-your-site-directly-from-the-address-bar
-      '    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk">' // https://developers.google.com/chrome/web-store/docs/inline_installation?hl=fr
+      '    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk">', // https://developers.google.com/chrome/web-store/docs/inline_installation?hl=fr
     ])
     .concat(exports.makeAnalyticsHeading(params.loggedUser));
 
@@ -245,12 +245,12 @@ exports.renderWhydFrame = function(html, params) {
     // TODO: move credentials to makeAnalyticsHeading()
     jsIncludes.join('\n'),
     '  </body>',
-    '</html>'
+    '</html>',
   ]);
 
   return out.join('\n');
 };
-exports.renderHeader = function(user, content, params) {
+exports.renderHeader = function (user, content, params) {
   var uid = user ? user.id : null;
   var content =
     content ||
@@ -260,7 +260,7 @@ exports.renderHeader = function(user, content, params) {
       // '     <img id="logo" src="'+render.urlPrefix+'/images/logo-s.png" />',
       '   </a>',
       uid ? '<div id="notifIcon">0</div><div id="notifPanel"></div>' : '',
-      '  </div>'
+      '  </div>',
     ].concat(
       uid
         ? [
@@ -307,7 +307,7 @@ exports.renderHeader = function(user, content, params) {
             '      <a href="/login?action=logout" class="no-ajaxy">Logout</a>', //javascript:logout()
             '     </div>',
             '   </div>',
-            '  </div>'
+            '  </div>',
           ]
         : [
             '  <div id="searchBar">',
@@ -325,7 +325,7 @@ exports.renderHeader = function(user, content, params) {
             '   <a id="get-app" href="https://itunes.apple.com/fr/app/whyd-everyones-music-playlist/id874380201" target="_blank">Get App</a>',
             '   <a id="signin" href="/login">Login</a>',
             '   <a id="signup" onclick="login();">Sign up</a>',
-            '  </div>'
+            '  </div>',
           ]
     );
   return ['<div id="header"><div class="container">']
@@ -334,7 +334,7 @@ exports.renderHeader = function(user, content, params) {
     .join('\n');
 };
 
-exports.renderWhydPage = function(params) {
+exports.renderWhydPage = function (params) {
   var params = params || {};
 
   params.title =
@@ -360,7 +360,7 @@ exports.renderWhydPage = function(params) {
         'ui.js',
         'whyd.js', // topicBrowser.js
         //	"ContentEmbed.js", // definitely replaced by playemjs, at last! :-)
-        'swfobject.js'
+        'swfobject.js',
       ]
   )
     .concat(['playem-' + playemFile + '.js'])
@@ -369,7 +369,7 @@ exports.renderWhydPage = function(params) {
       'whydPlayer.js',
       //	"postBox.js", // search and modal functions were moved to whyd.js
       'dndUpload.js',
-      'WhydImgUpload.js'
+      'WhydImgUpload.js',
       //	"ajaxUpload.js"
     ])
     .concat(params.js || [])
@@ -381,7 +381,7 @@ exports.renderWhydPage = function(params) {
     'tipsy.css',
     'userProfileV2.css',
     'userPlaylistV2.css',
-    'dlgEditProfileCover.css'
+    'dlgEditProfileCover.css',
   ].concat(params.css || []);
 
   var user = params.loggedUser || {};
@@ -407,7 +407,7 @@ exports.renderWhydPage = function(params) {
     playerHtmlCode,
     params.footer || exports.footer,
     exports.olark,
-    params.endOfBody || ''
+    params.endOfBody || '',
     //	'<script src="'+render.urlPrefix+'/js/uservoice.js"></script>'
   ];
 
@@ -435,22 +435,22 @@ var params = {
 
 // MINIMAL EXAMPLE OF USE: /admin/testMainTemplate.js
 
-exports.makeWhydPageFromFile = function(path, params) {
+exports.makeWhydPageFromFile = function (path, params) {
   params = params || {};
   params.content = fs.readFileSync(path, 'utf8');
   return exports.renderWhydPage(params);
 };
 
-exports.makeWhydPageRendererFromFile = function(path) {
+exports.makeWhydPageRendererFromFile = function (path) {
   var content = fs.readFileSync(path, 'utf8');
-  return function(params) {
+  return function (params) {
     params = params || {};
     params.content = content;
     return exports.renderWhydPage(params);
   };
 };
 
-exports.renderAsyncWhydPageFromTemplateFile = function(
+exports.renderAsyncWhydPageFromTemplateFile = function (
   templateFilePath,
   templateParams,
   whydPageParams,
@@ -459,7 +459,7 @@ exports.renderAsyncWhydPageFromTemplateFile = function(
 ) {
   templateLoader.loadTemplate(
     templateFilePath,
-    function(template) {
+    function (template) {
       whydPageParams = whydPageParams || {};
       whydPageParams.content = template.render(templateParams);
       cb(exports.renderWhydPage(whydPageParams));

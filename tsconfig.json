@@ -1,6 +1,3 @@
 {
-  "include": [
-    "node_modules/cypress",
-    "cypress/*/*.ts"
-  ]
+  "include": ["node_modules/cypress", "**/*.js", "cypress/*/*.ts"]
 }

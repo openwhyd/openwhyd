@@ -6,7 +6,7 @@
 
 var config = require('../models/config.js');
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   //request.logToConsole("[subdir]", reqParams);
 
   var path = request.url.split('?')[0];

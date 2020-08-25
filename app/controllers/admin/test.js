@@ -19,14 +19,14 @@ function loadTestFile(testName) {
   }
 }
 
-var runTests = (function() {
-  return function(tests, p, cb) {
+var runTests = (function () {
+  return function (tests, p, cb) {
     p = p || {};
     function returnResults(res) {
       res = res || tests;
       cb(
         res
-          .map(function(t) {
+          .map(function (t) {
             return t[0] + ' => ' + (t[2] || '(not tested)');
           })
           .join('\n')
@@ -34,7 +34,7 @@ var runTests = (function() {
     }
     function runTest(t, cb) {
       console.log(('testing: ' + t[0] + '...').blue);
-      t[1](function(success) {
+      t[1](function (success) {
         t.push((ok = success ? 'ok' : 'NOK'));
         console.log((' => ' + ok).blue);
         (!success && p.stopOnFail ? returnResults : cb)();
@@ -44,7 +44,7 @@ var runTests = (function() {
   };
 })();
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('test.controller', (reqParams = reqParams || {}));
   var user = request.checkAdmin(response);
   if (false == user) return;
@@ -56,17 +56,17 @@ exports.controller = function(request, reqParams, response) {
     var p = {
       loggedUser: request.getUser(),
       session: request.session,
-      cookie: 'whydSid=' + (request.getCookies() || {})['whydSid']
+      cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'],
     };
     var tests = testFile.makeTests(p);
-    runTests(tests, p, function(res) {
+    runTests(tests, p, function (res) {
       response.renderText(res);
     });
   } else {
-    fs.readdir('app/controllers/admin/tests', function(err, files) {
+    fs.readdir('app/controllers/admin/tests', function (err, files) {
       response.renderHTML(
         files
-          .map(function(file) {
+          .map(function (file) {
             file = file.substr(0, file.lastIndexOf('.'));
             return '<li><a href="test/' + file + '">' + file + '</a>';
           })

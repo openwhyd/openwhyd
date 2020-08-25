@@ -9,7 +9,7 @@ var analytics = require('../../models/analytics');
 //var formidable = require('formidable');
 var querystring = require('querystring');
 
-exports.wrapLink = function(tId, uId, orig, urlPrefix) {
+exports.wrapLink = function (tId, uId, orig, urlPrefix) {
   var params = { tId: tId, uId: uId.replace('/u/', '') };
   if (orig) params.orig = orig;
   return (urlPrefix || '') + '/visit' + '?' + querystring.stringify(params);
@@ -20,14 +20,14 @@ exports.wrapLink = function(tId, uId, orig, urlPrefix) {
 	*/
 };
 
-exports.handleRequest = function(request, params, response) {
+exports.handleRequest = function (request, params, response) {
   if (params) analytics.addVisit(params.uId, params.tId, params.orig);
   else console.log('warning: missing visit parameters');
 
   response.redirect('' + params.tId);
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   request.logToConsole('visit.controller', request.method);
 
   if (request.method.toLowerCase() === 'post') {

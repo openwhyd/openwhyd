@@ -18,7 +18,7 @@ function countOccurences(array, valueSet, coef) {
     var incr = !valueSet || !valueSet[array[j]] ? 1 : coef || 0;
     count[array[j]] = (count[array[j]] || 0) + incr;
   }
-  return snip.mapToObjArray(count, 'id', 'c').sort(function(a, b) {
+  return snip.mapToObjArray(count, 'id', 'c').sort(function (a, b) {
     return b.c - a.c;
   });
 }
@@ -26,7 +26,7 @@ function countOccurences(array, valueSet, coef) {
 var MIN_SCORE_FOR_TAGGED_USER = 0;
 
 var PHRASE_BLACKLIST = {
-  'daft punk': true // because daft punk != punk
+  'daft punk': true, // because daft punk != punk
 };
 
 exports.ORDERED_GENRES = [
@@ -45,7 +45,7 @@ exports.ORDERED_GENRES = [
   { name: 'Reggae' },
   { name: 'Pop' },
   { name: 'Latin' },
-  { name: 'World' }
+  { name: 'World' },
 ];
 
 for (var i in exports.ORDERED_GENRES)
@@ -64,7 +64,7 @@ var GENRES_WITH_SYNONYMS = {
     'meringue',
     'bossa nova',
     'reggaeton',
-    'flamenco'
+    'flamenco',
   ],
   Punk: ['punk', 'screamo', 'post-hardcore', 'straight edge'],
   Metal: ['metal'],
@@ -75,7 +75,7 @@ var GENRES_WITH_SYNONYMS = {
     'dance',
     'techno',
     'beats',
-    'idm'
+    'idm',
   ],
   Blues: ['blues'],
   Classical: ['classical', 'classique', 'baroque', 'opera', 'piano', 'violin'],
@@ -95,9 +95,9 @@ var GENRES_WITH_SYNONYMS = {
     'country',
     'americana',
     'celtic',
-    'acoustic'
+    'acoustic',
   ],
-  Pop: ['pop', 'variety', 'variétés']
+  Pop: ['pop', 'variety', 'variétés'],
 };
 
 var tagSynonyms = {};
@@ -105,13 +105,13 @@ for (var tag in GENRES_WITH_SYNONYMS)
   for (var syn in GENRES_WITH_SYNONYMS[tag])
     tagSynonyms[GENRES_WITH_SYNONYMS[tag][syn]] = tag;
 
-exports.extractGenreTags = function(plName) {
+exports.extractGenreTags = function (plName) {
   var tags = [];
   if (plName)
     snip
       .removeAccents(plName.toLowerCase())
       .split(/[^\-a-z 1-3\&]+/g)
-      .map(function(phrase) {
+      .map(function (phrase) {
         if (!PHRASE_BLACKLIST[phrase])
           for (var synonym in tagSynonyms)
             if (phrase.indexOf(synonym) > -1) {
@@ -141,7 +141,7 @@ exports.tagEngine = new (function TagEngine() {
   }
 
   var initFcts = [
-    function(/*importTagsFromPl*/ cb) {
+    function (/*importTagsFromPl*/ cb) {
       var t0 = new Date();
       console.log('plTags.tagEngine: building playlists list...');
       var nbPl = 0,
@@ -150,7 +150,7 @@ exports.tagEngine = new (function TagEngine() {
       mongodb.forEach(
         'user',
         { q: { pl: { $exists: true } }, fields: { _id: 1, pl: 1 } },
-        function(user) {
+        function (user) {
           ++nbUsersWithPl;
           for (var i in user.pl) {
             ++nbPl;
@@ -164,7 +164,7 @@ exports.tagEngine = new (function TagEngine() {
             }
           }
         },
-        function() {
+        function () {
           console.log(
             'plTags.tagEngine => extracted tags from',
             nbPlWithTags,
@@ -180,7 +180,7 @@ exports.tagEngine = new (function TagEngine() {
         }
       );
     },
-    function(/*buildTagIndex*/ cb) {
+    function (/*buildTagIndex*/ cb) {
       var t0 = new Date();
       console.log('plTags.tagEngine: indexing eId-tags from playlist names...');
       var eidToTags = (self.eidToTags = {});
@@ -188,14 +188,14 @@ exports.tagEngine = new (function TagEngine() {
         'post',
         {
           q: { 'pl.id': { $exists: true } },
-          fields: { _id: 0, pl: 1, eId: 1, uId: 1 }
+          fields: { _id: 0, pl: 1, eId: 1, uId: 1 },
         },
-        function(post) {
+        function (post) {
           var tags = self.plIdToTags['' + post.uId + '_' + post.pl.id];
           if (tags && tags.length)
             eidToTags[post.eId] = (eidToTags[post.eId] || []).concat(tags);
         },
-        function() {
+        function () {
           console.log(
             'plTags.tagEngine => indexed ',
             Object.keys(self.eidToTags).length,
@@ -207,7 +207,7 @@ exports.tagEngine = new (function TagEngine() {
         }
       );
     },
-    function(/*buildUserIndex*/ cb) {
+    function (/*buildUserIndex*/ cb) {
       var t0 = new Date();
       console.log('plTags.tagEngine: indexing users for each tag...');
       var query = {
@@ -215,29 +215,29 @@ exports.tagEngine = new (function TagEngine() {
           _id: {
             $gt: mongodb.ObjectId(
               mongodb.dateToHexObjectId(new Date(t0 - TWO_WEEKS))
-            )
-          }
+            ),
+          },
         }, // posted within the last two weeks
         fields: { _id: 0, eId: 1, uId: 1 },
-        sort: [['_id', 'desc']]
+        sort: [['_id', 'desc']],
       };
       mongodb.forEach(
         'post',
         query,
-        function(post) {
+        function (post) {
           if (post.uId) {
             ++self.totalPosts;
             var userTagSet = (self.uidToTagSet[post.uId] = self.uidToTagSet[
               post.uId
             ] || {
-              _t: 0 // total number of tagged tracks
+              _t: 0, // total number of tagged tracks
             });
             userTagSet['_t']++;
             var eidTags = self.eidToTags[post.eId] || [];
             //var processedTags = {};
-            eidTags.map(function(tag) {
+            eidTags.map(function (tag) {
               userTagSet[tag] = userTagSet[tag] || {
-                c: 0 // total weight of tag for this user (can be >1 for one track)
+                c: 0, // total weight of tag for this user (can be >1 for one track)
                 //	n: 0, // number of tracks posted by user with this tag => sum(n) == userTagSet._t
                 //	_l: post._id // id of last track posted by user with this tag
               };
@@ -247,7 +247,7 @@ exports.tagEngine = new (function TagEngine() {
             });
           }
         },
-        function() {
+        function () {
           console.log(
             'plTags.tagEngine => indexed',
             Object.keys(self.uidToTagSet).length,
@@ -260,10 +260,10 @@ exports.tagEngine = new (function TagEngine() {
           cb();
         }
       );
-    }
+    },
   ];
 
-  self.init = function(cb) {
+  self.init = function (cb) {
     self.initializing = true;
     (function next() {
       if (initFcts.length) initFcts.shift()(next);
@@ -274,11 +274,11 @@ exports.tagEngine = new (function TagEngine() {
     })();
   };
 
-  self.waitForIndex = function(cb) {
+  self.waitForIndex = function (cb) {
     if (self.eidToTags) cb(self);
     else if (!self.initializing) self.init(cb);
     else
-      var interval = setInterval(function() {
+      var interval = setInterval(function () {
         if (self.eidToTags) {
           clearInterval(interval);
           cb(self);
@@ -286,7 +286,7 @@ exports.tagEngine = new (function TagEngine() {
       }, 1000);
   };
 
-  self.addPost = function(post, cb) {
+  self.addPost = function (post, cb) {
     if (self.eidToTags && post && post.eId && post.uId) {
       // 1) index playlist
       if ((post.pl || {}).id != undefined) {
@@ -312,12 +312,12 @@ exports.tagEngine = new (function TagEngine() {
       var userTagSet = (self.uidToTagSet[post.uId] = self.uidToTagSet[
         post.uId
       ] || {
-        _t: 0 // total number of posts per user
+        _t: 0, // total number of posts per user
       });
       userTagSet['_t']++;
-      (self.eidToTags[post.eId] || []).map(function(tag) {
+      (self.eidToTags[post.eId] || []).map(function (tag) {
         userTagSet[tag] = userTagSet[tag] || {
-          c: 0 // total weight of tag for this user (can be >1 for one track)
+          c: 0, // total weight of tag for this user (can be >1 for one track)
         };
         userTagSet[tag].c += 1;
       });
@@ -325,7 +325,7 @@ exports.tagEngine = new (function TagEngine() {
     if (cb) cb();
   };
 
-  self.getTagsByEid = function(eId) {
+  self.getTagsByEid = function (eId) {
     return countOccurences((self.eidToTags || {})[eId] || []).map(appendUrl);
   };
 
@@ -333,7 +333,7 @@ exports.tagEngine = new (function TagEngine() {
     return a + b;
   }
 
-  self.getUsersByTags = function(tags) {
+  self.getUsersByTags = function (tags) {
     if (!tags || !tags.length)
       // prevent reduce() from crashing because of empty array
       return [];
@@ -347,7 +347,7 @@ exports.tagEngine = new (function TagEngine() {
 
     function evalQuantity(userTagSet) {
       return tags
-        .map(function(tag) {
+        .map(function (tag) {
           return (userTagSet[tag] || {}).c || 0;
         })
         .reduce(sum);
@@ -421,7 +421,7 @@ exports.tagEngine = new (function TagEngine() {
 
       var steps = [
         // 1) evaluate "top tags" score
-        (function() {
+        (function () {
           var score = 0;
           var nbTopTags = Math.min(tags.length, userTags.length);
           for (var i = 0; i < nbTopTags; ++i)
@@ -432,12 +432,12 @@ exports.tagEngine = new (function TagEngine() {
           return score / denom; // e.g. 4/7 + 2/7 + 1/7 if all top tags are first
         })(),
         // 2) evaluate "top tags" score
-        (function() {
+        (function () {
           var score = evalQuantity(self.uidToTagSet[uId]) / maxQuantity;
           //if (score > 0.2)
           //	console.log(uId, user.name, score);
           return score;
-        })()
+        })(),
       ];
 
       return (2 * steps[0] + 1 * steps[1]) / 3; //steps.reduce(sum) / steps.length; // compute mean of scores
@@ -450,32 +450,32 @@ exports.tagEngine = new (function TagEngine() {
         users.push({
           id: uId,
           name: mongodb.getUserNameFromId(uId),
-          score: userScore
+          score: userScore,
         });
     }
 
     //console.log("proportion range:", minProportion, '-', maxProportion);
 
-    return users.sort(function(a, b) {
+    return users.sort(function (a, b) {
       return b.score - a.score;
     });
   };
 
-  self.getBestTagsByUid = function(uId) {
+  self.getBestTagsByUid = function (uId) {
     var tags = [];
     for (var tag in self.uidToTagSet[uId])
       if (tag != '_t')
         tags.push({
           id: tag,
           c: self.uidToTagSet[uId][tag].c,
-          url: '/genre/' + tag.replace(/\s+/g, '-')
+          url: '/genre/' + tag.replace(/\s+/g, '-'),
         });
-    return tags.sort(function(a, b) {
+    return tags.sort(function (a, b) {
       return b.c - a.c;
     });
   };
 
-  self.fetchTagsByUid = function(uId, cb) {
+  self.fetchTagsByUid = function (uId, cb) {
     if (!self.eidToTags) cb();
     else cb(self.getBestTagsByUid(uId));
   };
@@ -483,6 +483,6 @@ exports.tagEngine = new (function TagEngine() {
 
 //exports.tagEngine.init();
 
-exports.getTagEngine = function(cb) {
+exports.getTagEngine = function (cb) {
   exports.tagEngine.waitForIndex(cb);
 };

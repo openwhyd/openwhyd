@@ -15,7 +15,7 @@ var emailImpl = require('./' + emailModule);
 // http://www.regular-expressions.info/email.html
 var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
 
-exports.validate = function(email) {
+exports.validate = function (email) {
   if (!email) return email;
   if (typeof email != 'string') {
     console.error('(malicious?) non-string email:', email, new Error().stack);
@@ -24,7 +24,7 @@ exports.validate = function(email) {
   return emailCheck.test(email);
 };
 
-exports.normalize = function(email) {
+exports.normalize = function (email) {
   if (!email) return email;
   if (typeof email != 'string') {
     console.error('(malicious?) non-string email:', email, new Error().stack);
@@ -33,7 +33,7 @@ exports.normalize = function(email) {
   return email.trim().toLowerCase();
 };
 
-exports.email = function(
+exports.email = function (
   emailAddr,
   subject,
   textContent,
@@ -51,13 +51,13 @@ exports.email = function(
   );
 };
 
-exports.notif = function(toUid, subject, text /*, fbAccessToken*/) {
+exports.notif = function (toUid, subject, text /*, fbAccessToken*/) {
   if (!toUid) {
     console.log('ERROR: unable to send email to user ' + toUid);
     return;
   }
 
-  users.fetchByUid(toUid, function(user) {
+  users.fetchByUid(toUid, function (user) {
     if (!user || !user.email) {
       console.log(
         'ERROR: found no email address for user ' + toUid + ' : ',

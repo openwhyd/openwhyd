@@ -6,7 +6,7 @@ window.$ =
     function loadJS(src, cb) {
       var inc = document.createElement('script');
       if (cb)
-        inc.onload = inc.onreadystatechange = function() {
+        inc.onload = inc.onreadystatechange = function () {
           if (
             inc.readyState == 'loaded' ||
             inc.readyState == 'complete' ||
@@ -20,7 +20,7 @@ window.$ =
 
     function loadJSON(src, cb) {
       var r = new XMLHttpRequest();
-      r.onload = function() {
+      r.onload = function () {
         var res = undefined;
         try {
           res = JSON.parse(this.responseText);
@@ -33,14 +33,14 @@ window.$ =
 
     var _getJSON_counter = 0;
     return {
-      getJSON: function(url, cb) {
+      getJSON: function (url, cb) {
         if (url[0] == '/' || url.indexOf('=?') == -1)
           // local request
           loadJSON(url, cb);
         else {
           var wFct = '_getJSON_cb_' + ++_getJSON_counter;
           var wUrl = url.replace('=?', '=' + wFct);
-          window[wFct] = function(data) {
+          window[wFct] = function (data) {
             cb(data);
             // TODO: remove script element from DOM
             delete window[wFct];
@@ -48,7 +48,7 @@ window.$ =
           loadJS(wUrl);
         }
       },
-      getScript: loadJS
+      getScript: loadJS,
     };
   })();
 
@@ -61,10 +61,10 @@ function WhydTrackFinder() {
 
   // from postBox.js
   var searchEngines = {
-    wd: function() {
+    wd: function () {
       return {
         label: 'Whyd',
-        query: function(q, cb) {
+        query: function (q, cb) {
           var url =
             '/search?context=quick&max-results=' +
             MAX_RESULTS_PER_ENGINE +
@@ -72,18 +72,18 @@ function WhydTrackFinder() {
             encodeURIComponent(q);
           $.getJSON(
             url,
-            function(r) {
+            function (r) {
               cb((r || {}).results);
             },
             'json'
           );
-        }
+        },
       };
     },
-    yt: function() {
+    yt: function () {
       return {
         label: 'Youtube',
-        query: function(q, cb) {
+        query: function (q, cb) {
           var url =
             'http://gdata.youtube.com/feeds/api/videos?v=2&alt=jsonc&first-index=0&max-results=' +
             MAX_RESULTS_PER_ENGINE +
@@ -93,13 +93,13 @@ function WhydTrackFinder() {
           var that = this;
           $.getJSON(
             url,
-            function(json) {
+            function (json) {
               var items = ((json || {}).data || {}).items;
               cb(
                 !items
                   ? json
                   : {
-                      Youtube: items.map(function(r) {
+                      Youtube: items.map(function (r) {
                         return {
                           eId: '/yt/' + r.id,
                           img:
@@ -108,18 +108,18 @@ function WhydTrackFinder() {
                             r.thumbnail.sqDefault,
                           url: r.url || r.player['default'],
                           name: r.name || r.title,
-                          playerLabel: that.label
+                          playerLabel: that.label,
                         };
-                      })
+                      }),
                     }
               );
             },
             'json'
           );
-        }
+        },
       };
     },
-    sc: function() {
+    sc: function () {
       var URL =
         'http://api.soundcloud.com/tracks?limit=' +
         MAX_RESULTS_PER_ENGINE +
@@ -128,16 +128,16 @@ function WhydTrackFinder() {
         '&format=json&callback=?';
       return {
         label: 'Soundcloud',
-        query: function(q, cb) {
+        query: function (q, cb) {
           var that = this;
-          $.getJSON(URL + '&q=' + encodeURIComponent(q), function(json) {
+          $.getJSON(URL + '&q=' + encodeURIComponent(q), function (json) {
             var items =
               json instanceof Array ? json : ((json || {}).data || {}).items;
             cb(
               !items
                 ? json
                 : {
-                    Soundcloud: items.map(function(r) {
+                    Soundcloud: items.map(function (r) {
                       r.title = r.title || r.name;
                       var permalink = (r.url || r.permalink_url).split('/');
                       return {
@@ -155,23 +155,23 @@ function WhydTrackFinder() {
                           (r.title.indexOf(' - ') == -1
                             ? (r.uploader || r.user.username) + ' - '
                             : '') + r.title,
-                        playerLabel: that.label
+                        playerLabel: that.label,
                       };
-                    })
+                    }),
                   }
             );
           });
-        }
+        },
       };
-    }
+    },
   };
 
   for (var i in searchEngines) searchEngines[i] = new searchEngines[i]();
 
-  this.query = function(q, cb) {
+  this.query = function (q, cb) {
     for (var i in searchEngines)
-      (function(engine) {
-        engine.query(q, function(res) {
+      (function (engine) {
+        engine.query(q, function (res) {
           cb(res, engine);
         });
       })(searchEngines[i]);
@@ -184,7 +184,7 @@ function WhydTrackFinder() {
 
 // main logic of mobile/index.html
 
-(function() {
+(function () {
   // TrackFinder configuration
 
   var LABELS = {
@@ -192,7 +192,7 @@ function WhydTrackFinder() {
     playlistTracks: 'Tracks',
     myLastPosts: 'My recent tracks',
     myPosts: 'My tracks',
-    theirPosts: 'Other tracks'
+    theirPosts: 'Other tracks',
   };
 
   function eidToUrl(eId) {
@@ -229,7 +229,7 @@ function WhydTrackFinder() {
   function renderResults(array, name, q) {
     return ['<h1>' + (LABELS[name] || name) + '</h1>', '<ul>']
       .concat(
-        array.map(function(item) {
+        array.map(function (item) {
           var name = htmlEscape(item.name);
           if (q) name = name.replace(new RegExp(q, 'gi'), '<b>$&</b>'); // highlight matching part
           return (
@@ -265,12 +265,12 @@ function WhydTrackFinder() {
       return {
         url: eidToUrl(t.eId),
         img: t.img,
-        name: t.name
+        name: t.name,
       };
     }
     $.getJSON(
       url + '?format=json',
-      function(r) {
+      function (r) {
         if (r)
           document.getElementById(id).innerHTML = renderResults(
             r.map(renderLastPost),
@@ -283,7 +283,7 @@ function WhydTrackFinder() {
   }
 
   function loadUserPlaylists(cb) {
-    $.getJSON('/api/user', function(u) {
+    $.getJSON('/api/user', function (u) {
       if (!u || !u.pl) return;
       var uid = u._id,
         i = 0,
@@ -293,14 +293,14 @@ function WhydTrackFinder() {
           cssClass: 'playlist' + (++i > 3 ? ' hidden' : ''),
           url: t.url,
           img: '/img/playlist/' + uid + '_' + t.id,
-          name: t.name
+          name: t.name,
         };
       }
       document.getElementById('myPlaylists').innerHTML = renderResults(
         u.pl.map(renderPlaylist).concat(more),
         'myPlaylists'
       );
-      document.getElementsByClassName('showMore')[0].onclick = function(e) {
+      document.getElementsByClassName('showMore')[0].onclick = function (e) {
         e.preventDefault();
         this.parentNode.removeChild(this);
         fadeIn(document.getElementsByClassName('hidden'));
@@ -322,7 +322,7 @@ function WhydTrackFinder() {
     document.getElementById('playlistName').innerText = playlist.innerText;
     document.getElementById('playlistTracks').innerHTML = '';
     var i = 0;
-    loadStream(url, 'playlistTracks', function(tracks) {
+    loadStream(url, 'playlistTracks', function (tracks) {
       tracks = tracks || [];
       /*
 			var tracks = tracks || [], trackIds = [];
@@ -350,23 +350,23 @@ function WhydTrackFinder() {
 			}
 			document.getElementById("toSpotify").onclick = lookupNextTrack;
 			*/
-      document.getElementById('toDeezer').onclick = function() {
+      document.getElementById('toDeezer').onclick = function () {
         var trackIds = [],
           tasks = [
-            function(cb) {
+            function (cb) {
               DeezerExport.checkLogin(cb);
             },
-            function(cb) {
+            function (cb) {
               (function lookupNextTrack() {
                 var track = tracks.shift();
                 if (!track) cb();
                 else
-                  DeezerExport.lookupTrack(track.name, function(match) {
+                  DeezerExport.lookupTrack(track.name, function (match) {
                     if (match && match.id) trackIds.push(match.id);
                     lookupNextTrack();
                   });
               })();
-            }
+            },
           ];
         whenAllTasksDone(tasks, function whenDone() {
           console.log('=> track ids:', trackIds);
@@ -380,11 +380,11 @@ function WhydTrackFinder() {
   // main logic
 
   function loadMainPage() {
-    loadUserPlaylists(function(user, playlists) {
+    loadUserPlaylists(function (user, playlists) {
       document.getElementById('pleaseLogin').style.display = 'none';
       loadStream('/me', 'myLastPosts');
       for (var i = 0; i < playlists.length; ++i)
-        playlists[i].onclick = function(e) {
+        playlists[i].onclick = function (e) {
           e.preventDefault();
           loadPlaylist(e.target);
           return false;
@@ -408,13 +408,13 @@ function WhydTrackFinder() {
       img: track.img,
       name: elt.getElementsByTagName('a')[0].innerText,
       'src[id]': 'http://openwhyd.org/mobile',
-      'src[name]': 'Openwhyd Mobile Track Finder'
+      'src[name]': 'Openwhyd Mobile Track Finder',
     };
     console.log('posting...', postData);
-    var params = Object.keys(postData).map(function(key) {
+    var params = Object.keys(postData).map(function (key) {
       return key + '=' + encodeURIComponent(postData[key]);
     });
-    $.getJSON('/api/post?' + params.join('&'), function(post) {
+    $.getJSON('/api/post?' + params.join('&'), function (post) {
       console.log('posted:', post);
       if (!post || post.error)
         alert(
@@ -431,7 +431,7 @@ function WhydTrackFinder() {
   var tF = new WhydTrackFinder();
   var qS = new QuickSearch(document.getElementById('searchField'), {
     noMoreResultsOnEnter: true,
-    submitQuery: function(query, display) {
+    submitQuery: function (query, display) {
       // called a short delay after when a query was entered
       display(defaultResults, true); // clear the result list and keep the searching animation rolling
       var remaining = tF.length;
@@ -449,21 +449,21 @@ function WhydTrackFinder() {
       }
       tF.query(query, handleResults);
     },
-    onNewQuery: function() {
+    onNewQuery: function () {
       //mainResults.style.display = "none";
       switchToPage('pgResults');
     },
-    onEmpty: function() {
+    onEmpty: function () {
       //mainResults.style.display = "block";
       switchToPage('pgMain');
-    }
+    },
   });
 
-  document.getElementsByClassName('searchClear')[0].onclick = function() {
+  document.getElementsByClassName('searchClear')[0].onclick = function () {
     qS.search('');
   };
 
-  document.getElementById('exitPlaylist').onclick = function() {
+  document.getElementById('exitPlaylist').onclick = function () {
     switchToPage('pgMain');
   };
 
@@ -479,7 +479,7 @@ function WhydTrackFinder() {
       }
     }
     if (fadeQueue.length)
-      var interval = setInterval(function() {
+      var interval = setInterval(function () {
         var elt = fadeQueue.shift();
         if (elt) elt.className = elt.className.replace('hidden', 'fadeIn');
         else clearInterval(interval);
@@ -488,9 +488,9 @@ function WhydTrackFinder() {
 
   document.getElementById('searchPane').addEventListener(
     'DOMNodeInserted',
-    function(ev) {
+    function (ev) {
       if (ev.target.nodeName == 'UL')
-        fadeIn(ev.target.children, function(li) {
+        fadeIn(ev.target.children, function (li) {
           return li.className.indexOf('hidden') == -1;
         });
     },

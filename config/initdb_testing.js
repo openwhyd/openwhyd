@@ -15,11 +15,11 @@ db.user.update(
       img:
         '/images/blank_user.gif' /* needed for "has default avatar" e2e test */,
       pwd: '21232f297a57a5a743894a0e4a801fc3' /* password = "admin" */,
-      'consent.lang': 'en'
+      'consent.lang': 'en',
     },
     $currentDate: {
-      'consent.date': true // => mongodb will store a ISODate in consent.date
-    }
+      'consent.date': true, // => mongodb will store a ISODate in consent.date
+    },
   },
   { upsert: true }
 );
@@ -33,11 +33,11 @@ db.user.update(
       name: 'dummy',
       img: '/images/blank_user.gif',
       pwd: '21232f297a57a5a743894a0e4a801fc3' /* password = "admin" */,
-      'consent.lang': 'en'
+      'consent.lang': 'en',
     },
     $currentDate: {
-      'consent.date': true // => mongodb will store a ISODate in consent.date
-    }
+      'consent.date': true, // => mongodb will store a ISODate in consent.date
+    },
   },
   { upsert: true }
 );

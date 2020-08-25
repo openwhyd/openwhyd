@@ -22,12 +22,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         ? src.split('facebook.com/l.php?u=')
         : [];
     if (fbLink.length > 1) {
-      fbLink = decodeURIComponent(
-        fbLink
-          .pop()
-          .split('&')
-          .shift()
-      );
+      fbLink = decodeURIComponent(fbLink.pop().split('&').shift());
       var result = fbLink.indexOf('//www.facebook.com/') == -1 ? fbLink : src;
       return result;
     }
@@ -48,13 +43,13 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       cb({
         id: url,
         title: title.replace(/^\s+|\s+$/g, ''),
-        img: urlPrefix + '/images/cover-audiofile.png'
+        img: urlPrefix + '/images/cover-audiofile.png',
       });
     };
   }
 
   var YOUTUBE_PLAYER = {
-    getEid: function(url) {
+    getEid: function (url) {
       // code imported from playem-all
       if (
         /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
@@ -66,16 +61,16 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       )
         return RegExp.lastParen;
     },
-    fetchMetadata: function(url, callback) {
+    fetchMetadata: function (url, callback) {
       var id = this.getEid(url);
       callback({
         id: id,
         eId: '/yt/' + id,
         img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
         url: 'https://www.youtube.com/watch?v=' + id,
-        playerLabel: 'Youtube'
+        playerLabel: 'Youtube',
       });
-    }
+    },
   };
 
   // players = { playerId -> { getEid(), fetchMetadata() } }
@@ -109,7 +104,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       if (!player || !player.fetchMetadata) return cb({ eId: eid }); // quit if we can't enrich the metadata
 
       // 4. try to return the track with enriched metadata
-      player.fetchMetadata(url, function(track) {
+      player.fetchMetadata(url, function (track) {
         if (!track) return cb();
         element = element || {};
         track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of the DETECTORS
@@ -139,8 +134,8 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         {
           id: videoId,
           src: window.location.href,
-          name: window.document.title.replace(/ - YouTube$/, '')
-        }
+          name: window.document.title.replace(/ - YouTube$/, ''),
+        },
       ];
     },
     function detectPandoraTrack(window) {
@@ -169,15 +164,15 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         ' - Spotify',
         ' | www.deezer.com',
         ' - Xbox Music',
-        ' - Royalty Free Music - Jamendo'
+        ' - Royalty Free Music - Jamendo',
       ];
       for (var i = 0; i < titleParts.length; ++i)
         if (title.indexOf(titleParts[i]) > -1)
           return [
             {
               src: window.location.href,
-              searchQuery: title.replace(titleParts[i], '')
-            }
+              searchQuery: title.replace(titleParts[i], ''),
+            },
           ];
     },
     function extractBandcampTracks(window) {
@@ -185,7 +180,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       var bc = window.TralbumData;
       if (bc) {
         var bcPrefix = '/bc/' + bc.url.split('//')[1].split('.')[0] + '/';
-        toDetect = bc.trackinfo.map(function(tr) {
+        toDetect = bc.trackinfo.map(function (tr) {
           if (tr.file) {
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
             return {
@@ -194,7 +189,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
               name: bc.artist + ' - ' + tr.title,
               img: bc.artFullsizeUrl || bc.artThumbURL,
               artist: bc.artist,
-              title: tr.title
+              title: tr.title,
             };
           }
         });
@@ -214,7 +209,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         var elts = window.document.querySelectorAll('a[href^="/track/"]');
         for (var j = 0; j < elts.length; ++j)
           toDetect.push({
-            href: bandcampPageUrl + elts[j].getAttribute('href')
+            href: bandcampPageUrl + elts[j].getAttribute('href'),
           });
       }
 
@@ -223,7 +218,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     },
     function parseDomElements(window) {
       var results = [];
-      ['iframe', 'object', 'embed', 'a', 'audio', 'source'].map(function(
+      ['iframe', 'object', 'embed', 'a', 'audio', 'source'].map(function (
         elName
       ) {
         results = results.concat(
@@ -233,7 +228,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         );
       });
       return results;
-    }
+    },
   ];
 
   function detectTracks({ window, ui, urlDetectors }) {
@@ -246,7 +241,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         if (!remainingUrlDetectors.length) return cb();
         remainingUrlDetectors.shift()(
           url,
-          function(track) {
+          function (track) {
             if (track && track.id) cb(track);
             else processNext();
           },
@@ -260,7 +255,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         element.eId ||
         unwrapFacebookLink(element.href || element.src || element.data || '');
       if (!url) return cb();
-      detectTrack(url, element, function(track) {
+      detectTrack(url, element, function (track) {
         if (track) {
           track.url = url;
           track.title =
@@ -277,7 +272,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     }
 
     function whenDone(searchThumbs) {
-      searchThumbs.map(function(searchThumb) {
+      searchThumbs.map(function (searchThumb) {
         ui.addSearchThumb(searchThumb);
       });
       console.info('finished detecting tracks!');
@@ -299,11 +294,11 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       function size(elt) {
         return (elt.name || getNodeText(elt) || '').length;
       }
-      this.has = function(url) {
+      this.has = function (url) {
         var normalized = normalize(url);
         return normalized && !!set[normalized];
       };
-      this.push = function(elt) {
+      this.push = function (elt) {
         var url =
           elt &&
           normalize(
@@ -315,7 +310,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
           set[url] = elt;
         }
       };
-      this.getSortedArray = function() {
+      this.getSortedArray = function () {
         var eIds = [],
           urls = [],
           keys = Object.keys(set);
@@ -327,10 +322,10 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
     console.info('1/2 parse page...');
 
-    DETECTORS.map(function(detectFct) {
+    DETECTORS.map(function (detectFct) {
       var results = detectFct(window) || [];
       console.info('-----' + detectFct.name, '=>', results.length);
-      results.map(function(result) {
+      results.map(function (result) {
         toDetect.push(result);
       });
     });
@@ -338,7 +333,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     if (!toDetect.has(window.location.href))
       toDetect.push({
         src: window.location.href,
-        searchQuery: window.document.title
+        searchQuery: window.document.title,
       });
 
     console.info('2/2 list streamable tracks...');
@@ -348,7 +343,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       var elt = eltArray.shift();
       if (!elt) whenDone(searchThumbs);
       else
-        detectEmbed(elt, function(track) {
+        detectEmbed(elt, function (track) {
           if (track) ui.addThumb(track);
           else searchThumbs.push(elt);
           processNext();
@@ -360,7 +355,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     YOUTUBE_PLAYER,
     detectTracks,
     makeFileDetector,
-    makeStreamDetector
+    makeStreamDetector,
   };
 }
 
@@ -369,14 +364,14 @@ if (typeof exports !== 'undefined') {
   module.exports = makeBookmarklet(); // will return detectTracks() and other functions
 } else {
   // running from web browser
-  (window._initWhydBk = function() {
+  (window._initWhydBk = function () {
     // prevents bug in firefox 3
     if (undefined == window.console)
       console = {
-        log: function() {},
-        info: function() {},
-        error: function() {},
-        warn: function() {}
+        log: function () {},
+        info: function () {},
+        error: function () {},
+        warn: function () {},
       };
 
     console.log('-= openwhyd bookmarklet v2.6 =-');
@@ -392,7 +387,7 @@ if (typeof exports !== 'undefined') {
     var overflowBackup = window.document.body.style.overflow;
     window.document.body.style.overflow = 'hidden';
 
-    window.closeWhydBk = function() {
+    window.closeWhydBk = function () {
       window.document.body.removeChild(
         window.document.getElementById('whydBookmarklet')
       );
@@ -402,7 +397,7 @@ if (typeof exports !== 'undefined') {
       delete window.closeWhydBk;
     };
 
-    window.document.onkeydown = function(e) {
+    window.document.onkeydown = function (e) {
       if ((e || event).keyCode == 27) closeWhydBk();
     };
 
@@ -445,7 +440,7 @@ if (typeof exports !== 'undefined') {
         inc.href = src;
       } else {
         inc = window.document.createElement('script');
-        inc.onload = function(loaded) {
+        inc.onload = function (loaded) {
           timer = timer ? clearInterval(timer) : null;
           cb && cb();
         };
@@ -474,7 +469,7 @@ if (typeof exports !== 'undefined') {
             track.eId.substr(4).split('?')[0] +
             '/hqdefault.jpg';
           var i = new Image();
-          i.onload = function() {
+          i.onload = function () {
             if (i.height >= 120) {
               window.document.getElementById(track.id).style.backgroundImage =
                 'url(' + img + ')';
@@ -521,7 +516,7 @@ if (typeof exports !== 'undefined') {
         '</div>',
         '<div id="whydContent">',
         '<div id="whydLoading"></div>',
-        '</div>'
+        '</div>',
       ].join('\n');
 
       function showForm() {
@@ -586,8 +581,8 @@ if (typeof exports !== 'undefined') {
           elt({ class: 'whydContOvr' }),
           elt({
             class: 'whydAdd',
-            img: urlPrefix + '/images/bookmarklet_ic_add_normal.png'
-          })
+            img: urlPrefix + '/images/bookmarklet_ic_add_normal.png',
+          }),
         ]);
         addBtn.onclick = thumb.onclick;
         var checkBox = elt({ class: 'whydSelect' }); //onclick: "var tpn=this.parentNode;tpn.className=tpn.className.replace(' selected','')+(tpn.className.indexOf(' selected')>-1?'':' selected');e.preventDefault();"
@@ -596,14 +591,14 @@ if (typeof exports !== 'undefined') {
           {
             id: thumb.id,
             class: 'whydThumb',
-            img: thumb.img || urlPrefix + '/images/cover-track.png'
+            img: thumb.img || urlPrefix + '/images/cover-track.png',
           },
           [
             elt({ class: 'whydGrad' }),
             elt({ tagName: 'p' }, [document.createTextNode(thumb.title)]),
             elt({ class: 'whydSrcLogo', img: thumb.sourceLogo }),
             addBtn,
-            checkBox
+            checkBox,
           ]
         );
         return div;
@@ -611,23 +606,23 @@ if (typeof exports !== 'undefined') {
 
       var contentDiv = window.document.getElementById('whydContent');
 
-      this.addThumb = function(thumb) {
+      this.addThumb = function (thumb) {
         thumb.id = 'whydThumb' + this.nbTracks++;
         thumb = imageToHD(thumb);
         thumb.onclick = thumb.onclick || showForm.bind(thumb);
         contentDiv.appendChild(renderThumb(thumb));
       };
 
-      this.addSearchThumb = function(track) {
+      this.addSearchThumb = function (track) {
         var searchQuery = track.searchQuery || track.name || track.title;
         this.addThumb({
           title: searchQuery || 'Search Openwhyd',
           sourceLogo: urlPrefix + '/images/icon-search-from-bk.png',
-          onclick: showSearch.bind(searchQuery)
+          onclick: showSearch.bind(searchQuery),
         });
       };
 
-      this.finish = function(html) {
+      this.finish = function (html) {
         window.document.getElementById('whydLoading').style.display = 'none';
       };
 
@@ -641,7 +636,7 @@ if (typeof exports !== 'undefined') {
       window.DEEZER_APP_ID = 190482;
       window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
       window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
-      include(playemUrl, function() {
+      include(playemUrl, function () {
         // playem-all.js must be loaded at that point
         callback({
           // yt: new YoutubePlayer(...) should be replaced by bookmarklet.YOUTUBE_PLAYER, to save API quota (see #262)
@@ -650,7 +645,7 @@ if (typeof exports !== 'undefined') {
           dm: new DailymotionPlayer({}),
           dz: new DeezerPlayer({}),
           bc: new BandcampPlayer({}),
-          ja: new JamendoPlayer({})
+          ja: new JamendoPlayer({}),
         });
       });
     }
@@ -667,11 +662,11 @@ if (typeof exports !== 'undefined') {
       ? 'playem-min.js'
       : 'playem-all.js';
     var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
-    initPlayemPlayers(playemUrl, function(players) {
+    initPlayemPlayers(playemUrl, function (players) {
       var bookmarklet = makeBookmarklet(window, urlPrefix, urlSuffix);
       var allPlayers = Object.assign(
         {
-          yt: bookmarklet.YOUTUBE_PLAYER // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
+          yt: bookmarklet.YOUTUBE_PLAYER, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
         },
         players
       );
@@ -680,8 +675,8 @@ if (typeof exports !== 'undefined') {
         ui: new BkUi(),
         urlDetectors: [
           bookmarklet.makeFileDetector(),
-          bookmarklet.makeStreamDetector(allPlayers)
-        ]
+          bookmarklet.makeStreamDetector(allPlayers),
+        ],
       });
     });
   })();

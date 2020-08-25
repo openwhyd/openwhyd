@@ -12,7 +12,7 @@ function noaccent(chaine) {
 }
 
 // must be executed on a name search query before submitting to mongodb
-var normalizeNameSearchQuery = function(queryString) {
+var normalizeNameSearchQuery = function (queryString) {
   var q = noaccent(queryString.trim().toLowerCase());
   var words = q.split(/\W+/);
   var result = [];
@@ -25,7 +25,7 @@ var normalizeNameSearchQuery = function(queryString) {
 
 var timeout;
 
-exports.topicNameSearch = function(
+exports.topicNameSearch = function (
   q,
   resultHandler,
   mongodbModel,
@@ -47,11 +47,11 @@ exports.topicNameSearch = function(
 
   var userResults = [];
 
-  mongodb('user', function(err, usercol) {
+  mongodb('user', function (err, usercol) {
     var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
-    usercol.find(query, { limit: limitUsers }, function(err, cursor) {
-      cursor.each(function(err, item) {
+    usercol.find(query, { limit: limitUsers }, function (err, cursor) {
+      cursor.each(function (err, item) {
         if (item != null) {
           userResults.push({ _id: '/u/' + item.fbId, name: item.name });
           console.log(
@@ -65,7 +65,7 @@ exports.topicNameSearch = function(
         }
       });
 
-      mongodb('topic', function(err, collection) {
+      mongodb('topic', function (err, collection) {
         var cycles = maxCycles;
         var exactResults = [],
           quickResults = [];
@@ -77,10 +77,10 @@ exports.topicNameSearch = function(
         collection.find(
           query,
           { sort: [['s', 'desc']], limit: limitExact },
-          function(err, cursor) {
+          function (err, cursor) {
             var remaining = limitExact;
 
-            var handleNextResult = function(err, item) {
+            var handleNextResult = function (err, item) {
               //console.log("handleNextResult()");
               if (item != null) {
                 console.log(
@@ -105,10 +105,10 @@ exports.topicNameSearch = function(
         collection.find(
           query,
           { /*sort:[['$natural','asc']],*/ limit: limit },
-          function(err, cursor) {
+          function (err, cursor) {
             var remaining = limit;
 
-            var handleNextResult = function(err, item) {
+            var handleNextResult = function (err, item) {
               //console.log("handleNextResult()");
               if (item != null) {
                 console.log(
@@ -128,7 +128,7 @@ exports.topicNameSearch = function(
           }
         );
 
-        var renderer = function() {
+        var renderer = function () {
           clearTimeout(timeout);
           var results = exactResults;
 

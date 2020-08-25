@@ -10,13 +10,13 @@ var snip = require('../snip.js');
 var playlogStream = fs.createWriteStream('./playlog.json.log', {
   flags: 'a',
   encoding: 'utf8',
-  autoClose: true
+  autoClose: true,
 });
 
 var visitStream = fs.createWriteStream('./visits.json.log', {
   flags: 'a',
   encoding: 'utf8',
-  autoClose: true
+  autoClose: true,
 });
 
 /**
@@ -28,16 +28,16 @@ var visitStream = fs.createWriteStream('./visits.json.log', {
  * - err: (object, optional) player-dependant error structure. may contain an error code and/or message.
  * - fbk: (object, optional) structure provided by the fallback mechanism, in case of error while trying to play the track. may contain the status of connection with Deezer (not connected /  connected / premium), a Deezer track id (in case of lookup success), an error code and/or message.
  **/
-exports.addPlay = (function() {
+exports.addPlay = (function () {
   var MANDATORY = { eId: 'string', pId: 'string', uId: 'string' },
     OPTIONAL = {
       own: 'boolean',
       err: 'object',
       fbk: 'object',
       ua: 'object',
-      foc: 'boolean'
+      foc: 'boolean',
     };
-  return function(obj) {
+  return function (obj) {
     try {
       var cleanObj = snip.checkParams(obj, MANDATORY, OPTIONAL);
       cleanObj.eId = cleanObj.eId.split('#')[0];
@@ -64,7 +64,7 @@ var tests = [
 });
 */
 
-exports.addVisit = function(uId, tId, request) {
+exports.addVisit = function (uId, tId, request) {
   var orig = request;
 
   if (uId) {

@@ -25,7 +25,7 @@ function loadTemplates(callback) {
 
 loadTemplates();
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('collabPl.controller', reqParams);
   reqParams = reqParams || {};
   var loggedInUser = request.getUser() || {};
@@ -46,7 +46,7 @@ exports.controller = function(request, reqParams, response) {
   if (!reqParams.id) return render('How did you get here, mate?');
 
   if (request.url.split('?')[0].endsWith('/contributors')) {
-    collabModel.fetchPlaylistById(reqParams.id, function(playlist) {
+    collabModel.fetchPlaylistById(reqParams.id, function (playlist) {
       for (var i in playlist.admin)
         playlist.admin[i].img = playlist.admin[i].id
           ? '/img/u/' + playlist.admin[i].id
@@ -56,7 +56,7 @@ exports.controller = function(request, reqParams, response) {
       function renderTemplate() {
         render(
           tmpContributors.render({
-            moderators: playlist.admin
+            moderators: playlist.admin,
           })
         );
       }
@@ -69,7 +69,7 @@ exports.controller = function(request, reqParams, response) {
   collabModel.fetchPostsByPlaylistId(
     reqParams.id,
     { after: reqParams.after, limit: LIMIT + 1 },
-    function(posts) {
+    function (posts) {
       var hasMore = posts && posts.length > LIMIT;
       if (hasMore) posts = posts.slice(0, LIMIT);
 
@@ -77,11 +77,11 @@ exports.controller = function(request, reqParams, response) {
         id: reqParams.id,
         hasMore: hasMore ? { after: posts[posts.length - 1]._id } : null, // to do before renderPosts
         rawFeed: !!(reqParams.after || reqParams.before),
-        posts: postsTemplate.renderPosts(posts, { loggedUser: loggedInUser })
+        posts: postsTemplate.renderPosts(posts, { loggedUser: loggedInUser }),
       };
 
       if (!pageVars.rawFeed)
-        collabModel.fetchPlaylistById(reqParams.id, function(playlist) {
+        collabModel.fetchPlaylistById(reqParams.id, function (playlist) {
           if (!playlist)
             return render(
               'The playlist you were looking for may have vanished!'
@@ -93,7 +93,7 @@ exports.controller = function(request, reqParams, response) {
             mainTemplate.renderWhydPage({
               bodyClass: 'pgCollabPl',
               loggedUser: loggedInUser,
-              content: template.render(pageVars)
+              content: template.render(pageVars),
             })
           );
         });

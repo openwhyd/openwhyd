@@ -1,6 +1,6 @@
-var deezerFallback = (function() {
+var deezerFallback = (function () {
   if (!String.prototype.trim) {
-    String.prototype.trim = function() {
+    String.prototype.trim = function () {
       return this.replace(/^\s+|\s+$/gm, '');
     };
   }
@@ -24,19 +24,19 @@ var deezerFallback = (function() {
         title = RegExp.$2;
       return {
         artist: normalize(artist.trim()),
-        title: normalize(title.trim())
+        title: normalize(title.trim()),
       };
     }
   }
 
   // by http://andrew.hedges.name
-  var levenshteinenator = (function() {
+  var levenshteinenator = (function () {
     function minimator(x, y, z) {
       if (x < y && x < z) return x;
       if (y < x && y < z) return y;
       return z;
     }
-    return function(a, b) {
+    return function (a, b) {
       var cost,
         m = a.length,
         n = b.length;
@@ -70,12 +70,12 @@ var deezerFallback = (function() {
   function matcher(track) {
     var artist = track.artist.join('+'),
       title = track.title.join('+');
-    return function(dzTrack) {
+    return function (dzTrack) {
       var dzArtist = normalize(dzTrack.artist.name).join('+'),
         dzTitle = normalize(dzTrack.title).join('+');
       return {
         track: dzTrack,
-        rank: dzArtist == artist ? levenshteinenator(title, dzTitle) : 99999
+        rank: dzArtist == artist ? levenshteinenator(title, dzTitle) : 99999,
       };
     };
   }
@@ -88,7 +88,7 @@ var deezerFallback = (function() {
     track = parseTrack(track);
     if (track) {
       var rank = matcher(track);
-      DZ.api('/search?q=' + track.title.join('+'), function(response) {
+      DZ.api('/search?q=' + track.title.join('+'), function (response) {
         var results = (response.data || []).map(rank).sort(rankSort);
         cb(
           results.length && results[0].rank < 5 ? results.shift() : null,
@@ -100,8 +100,8 @@ var deezerFallback = (function() {
     }
   }
 
-  return function(track, cb) {
-    setTimeout(function(track, cb) {
+  return function (track, cb) {
+    setTimeout(function (track, cb) {
       deezerSearch(track, cb);
     }, 1000);
   };

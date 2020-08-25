@@ -20,7 +20,7 @@ context('Openwhyd', () => {
     });
   });
 
-  it('should allow a user to add a track', function() {
+  it('should allow a user to add a track', function () {
     // should allow user to login
     cy.loginAsAdmin();
     cy.visit('/');
@@ -30,9 +30,7 @@ context('Openwhyd', () => {
     cy.get('#searchResults').contains('Demo');
 
     // should lead to a track page when clicking on the Youtube search result
-    cy.get('#searchResults li a')
-      .first()
-      .click();
+    cy.get('#searchResults li a').first().click();
     cy.url().should('include', '/yt/aZT8VlTV1YY');
 
     // should display the name of the track
@@ -44,15 +42,11 @@ context('Openwhyd', () => {
 
     // should show a link to the post after adding the track
     cy.wait(500); // TODO: we should not have to wait for the "Add" link to be clickable
-    cy.get('.dlgPostBox span')
-      .contains('Add')
-      .click();
+    cy.get('.dlgPostBox span').contains('Add').click();
     cy.contains('your tracks'); // notification bar with link to "your tracks"
 
     // should show the post on the user's profile after clicking the link
-    cy.get('a')
-      .contains('your tracks')
-      .click();
+    cy.get('a').contains('your tracks').click();
     cy.url().should('include', '/u/');
     cy.get('.post a[data-eid="/yt/aZT8VlTV1YY"]').should('be.visible');
 
@@ -68,7 +62,7 @@ context('Openwhyd', () => {
     cy.get('#btnPlay').should('not.have.class', 'playing');
   });
 
-  it('should allow a visitor to sign up and follow the onboarding process', function() {
+  it('should allow a visitor to sign up and follow the onboarding process', function () {
     // should not let visitors access admin endpoints
     cy.visit('/admin/config/config.json');
     cy.get('pre').should('not.exist');
@@ -105,12 +99,8 @@ context('Openwhyd', () => {
     cy.url().should('include', '/consent');
 
     // should lead to the welcome page, after giving consent
-    cy.get('input[type="checkbox"]')
-      .first()
-      .click();
-    cy.get('form')
-      .first()
-      .submit();
+    cy.get('input[type="checkbox"]').first().click();
+    cy.get('form').first().submit();
     cy.url().should('include', '/welcome');
 
     // should display user name after skipping the welcome tutorial
@@ -122,7 +112,7 @@ context('Openwhyd', () => {
     cy.logout();
   });
 
-  it('should allow user to re-add a track into a playlist', function() {
+  it('should allow user to re-add a track into a playlist', function () {
     // requirement: one track should be accessible from the user's stream
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
@@ -147,22 +137,18 @@ context('Openwhyd', () => {
     cy.get('#selPlaylist').contains('test playlist');
 
     // should show a link to the post after re-adding the track
-    cy.get('.dlgPostBox span')
-      .contains('Add')
-      .click();
+    cy.get('.dlgPostBox span').contains('Add').click();
     cy.get('.dlgPostBox').should('not.be.visible');
     cy.contains('test playlist'); // notification bar with link
 
     // should show the post on the user's new playlist after clicking the link
-    cy.get('a')
-      .contains('test playlist')
-      .click();
+    cy.get('a').contains('test playlist').click();
     cy.url().should('include', '/u/');
     cy.get('.post').should('have.length', 1);
     cy.get('.post a[data-eid]').should('be.visible');
   });
 
-  it('should allow user to manipulate comments', function() {
+  it('should allow user to manipulate comments', function () {
     // requirement: at least one track should be accessible from the user's stream
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
@@ -186,12 +172,10 @@ context('Openwhyd', () => {
     // TODO: it(`should disappear after being deleted`, function() {
   });
 
-  it('should allow users to search external tracks', function() {
+  it('should allow users to search external tracks', function () {
     // should find a youtube track with id that starts with underscore
     cy.visit('/');
-    cy.get('#q')
-      .click()
-      .type('http://www.youtube.com/watch?v=_BU841qpQsI');
+    cy.get('#q').click().type('http://www.youtube.com/watch?v=_BU841qpQsI');
     const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')

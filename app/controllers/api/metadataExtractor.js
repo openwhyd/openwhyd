@@ -30,7 +30,7 @@ function search(trackMetadata, cb) {
     if (!extractors.length) return cb(null, res);
     var extr = extractors.shift();
     console.log('searching', extr.name, '...');
-    metadataResolver.searchBestMatches(extr.api, trackMetadata, function(
+    metadataResolver.searchBestMatches(extr.api, trackMetadata, function (
       err,
       hits
     ) {
@@ -48,20 +48,20 @@ function monitor(cb) {
     var domainName = domainParts[domainParts.length - 2];
     domains[domainName] = (snip.httpDomains[i][1].queue || []).length;
   }
-  trackModel.countTracksWithField('meta', function(err, countMeta) {
-    trackModel.countTracksWithField('alt', function(err, countAlt) {
+  trackModel.countTracksWithField('meta', function (err, countMeta) {
+    trackModel.countTracksWithField('alt', function (err, countAlt) {
       cb(null, {
         apiQueues: domains,
         tracksWith: {
           meta: countMeta,
-          alt: countAlt
-        }
+          alt: countAlt,
+        },
       });
     });
   });
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('metadataExtractor.controller', reqParams);
 
   // make sure a user is logged, or return an error page

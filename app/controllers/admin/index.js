@@ -9,19 +9,19 @@ var searchModel = require('../../models/search.js');
 var indexCol = {
   user: 'user',
   post: 'post',
-  playlist: 'user'
+  playlist: 'user',
 };
 
 var indexFields = {
   // different from the one from search.js model
   user: { _id: 1, name: 1, email: 1, handle: 1 },
   post: { _id: 1, name: 1, text: 1, uId: 1, eId: 1, pl: 1 },
-  playlist: { _id: 1, name: 1, pl: 1, uId: 1 }
+  playlist: { _id: 1, name: 1, pl: 1, uId: 1 },
 };
 
 function deleteIndex(type, cb) {
   console.log('Deleting ' + type + 's from index ...');
-  searchModel.deleteAllDocs(type, function(r) {
+  searchModel.deleteAllDocs(type, function (r) {
     console.log('Deleting ' + type + 's from index: DONE!');
     if (cb) cb(r);
   });
@@ -34,7 +34,7 @@ function refreshIndex(type, cb, preprocess) {
     indexed = 0;
   console.log('Indexing ' + type + 's ...');
   function flush(cb) {
-    searchModel.indexBulk(bulkDocs, function(r) {
+    searchModel.indexBulk(bulkDocs, function (r) {
       r = r || {};
       if (r.errors || r.error)
         console.error(
@@ -57,30 +57,30 @@ function refreshIndex(type, cb, preprocess) {
   }
   var process = !preprocess
     ? index
-    : function(obj, fetchAndProcessNextObject) {
+    : function (obj, fetchAndProcessNextObject) {
         preprocess(obj, fetchAndProcessNextObject, index);
       };
   var options = {
     fields: indexFields[type],
     //limit: 9999999,
     sort: [['_id', 'desc']],
-    batchSize: 1000
+    batchSize: 1000,
   };
   console.log('index: iterating on collection:', indexCol[type]);
-  mongodb.collections[indexCol[type]].find({}, options, function(err, cursor) {
+  mongodb.collections[indexCol[type]].find({}, options, function (err, cursor) {
     (function next() {
-      cursor.nextObject(function(err, u) {
+      cursor.nextObject(function (err, u) {
         if (err)
           console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err);
         if (u != null) {
           ++fetched;
-          process(u, function() {
+          process(u, function () {
             if (fetched % 100 == 0)
               console.warn('=> last (BULK) indexed document: ', u._id);
             setTimeout(next /*, 100*/);
           });
         } else {
-          flush(function() {
+          flush(function () {
             console.log(
               'admin.index.refreshIndex DONE! => indexed',
               indexed,
@@ -97,23 +97,23 @@ function refreshIndex(type, cb, preprocess) {
 }
 
 var indexFcts = {
-  deleteUserIndex: function(cb) {
+  deleteUserIndex: function (cb) {
     deleteIndex('user', cb);
   },
-  deletePostIndex: function(cb) {
+  deletePostIndex: function (cb) {
     deleteIndex('post', cb);
   },
-  deletePlaylistIndex: function(cb) {
+  deletePlaylistIndex: function (cb) {
     deleteIndex('playlist', cb);
   },
-  refreshUserIndex: function(cb) {
+  refreshUserIndex: function (cb) {
     refreshIndex('user', cb);
   },
-  refreshPostIndex: function(cb) {
+  refreshPostIndex: function (cb) {
     refreshIndex('post', cb);
   },
-  refreshPlaylistIndex: function(cb) {
-    refreshIndex('playlist', cb, function(user, nextUser, index) {
+  refreshPlaylistIndex: function (cb) {
+    refreshIndex('playlist', cb, function (user, nextUser, index) {
       function nextPlaylist() {
         var p = user.pl.pop();
         if (!p) nextUser();
@@ -127,20 +127,20 @@ var indexFcts = {
       if (!user || !user.pl || !user.pl.length) nextUser();
       else nextPlaylist();
     });
-  }
+  },
 };
 
 function countDbUsersAndPlaylists(cb) {
   var result = {
     dbUsers: 0,
-    dbPlaylists: 0
+    dbPlaylists: 0,
   };
   mongodb.collections[indexCol['user']].find(
     {},
     { fields: { pl: 1 } },
-    function(err, cursor) {
+    function (err, cursor) {
       (function nextUser() {
-        cursor.nextObject(function(err, user) {
+        cursor.nextObject(function (err, user) {
           if (!user) cb(result);
           else {
             ++result.dbUsers;
@@ -154,14 +154,14 @@ function countDbUsersAndPlaylists(cb) {
 }
 
 function countItems(cb) {
-  countDbUsersAndPlaylists(function(p) {
-    mongodb.collections[indexCol['post']].count(function(err, dbPosts) {
+  countDbUsersAndPlaylists(function (p) {
+    mongodb.collections[indexCol['post']].count(function (err, dbPosts) {
       p.dbPosts = dbPosts;
-      searchModel.countDocs('user', function(idxUsers) {
+      searchModel.countDocs('user', function (idxUsers) {
         p.idxUsers = idxUsers;
-        searchModel.countDocs('post', function(idxPosts) {
+        searchModel.countDocs('post', function (idxPosts) {
           p.idxPosts = idxPosts;
-          searchModel.countDocs('playlist', function(idxPlaylists) {
+          searchModel.countDocs('playlist', function (idxPlaylists) {
             p.idxPlaylists = idxPlaylists;
             /*
 						p = {
@@ -196,11 +196,11 @@ function renderForm(p) {
     '<input type="submit" name="deletePlaylistIndex" value="DELETE">',
     '<input type="submit" name="refreshPlaylistIndex" value="refresh">',
     '</p>',
-    '</form>'
+    '</form>',
   ].join('\n');
 }
 
-exports.controller = function(request, reqParams, response, error) {
+exports.controller = function (request, reqParams, response, error) {
   request.logToConsole('admin.index.controller', request.body || reqParams);
   var reqParams = reqParams || {};
 
@@ -211,12 +211,12 @@ exports.controller = function(request, reqParams, response, error) {
   if (request.method.toLowerCase() === 'post') {
     for (var i in indexFcts)
       if (request.body[i])
-        return indexFcts[i](function(r) {
+        return indexFcts[i](function (r) {
           response.legacyRender(r || { ok: 'done' });
         });
     response.badRequest();
   } else
-    countItems(function(p) {
+    countItems(function (p) {
       p.message = reqParams.message;
       response.renderHTML(renderForm(p));
     });

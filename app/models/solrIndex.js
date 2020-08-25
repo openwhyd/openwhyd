@@ -14,7 +14,7 @@ var updatePath = '/solr/update/json?wt=json&commit=true';
 
 var DEFAULT_BOOST = 10000;
 
-exports.request = function(path, data, callback) {
+exports.request = function (path, data, callback) {
   var req = http.request(
     {
       path: path,
@@ -23,15 +23,15 @@ exports.request = function(path, data, callback) {
       method: data ? 'POST' : 'GET',
       headers: {
         'Content-type': 'application/json',
-        Accept: 'application/json'
-      }
+        Accept: 'application/json',
+      },
     },
-    function(res) {
+    function (res) {
       var resData = '';
-      res.addListener('data', function(chunk) {
+      res.addListener('data', function (chunk) {
         resData += chunk.toString();
       });
-      res.addListener('end', function() {
+      res.addListener('end', function () {
         //console.log("solr request status code:", res.statusCode);
         //console.log("solr request response:", resData);
         if (callback) callback(resData, res.statusCode);
@@ -40,7 +40,7 @@ exports.request = function(path, data, callback) {
   );
   //req.setHeader('Content-type', 'application/json');
   //req.setHeader('Accept', 'application/json');
-  req.addListener('error', function(err) {
+  req.addListener('error', function (err) {
     console.log('solrIndex.request socket error: ', err);
     if (callback) callback({ error: err });
   });
@@ -51,7 +51,7 @@ exports.request = function(path, data, callback) {
   req.end();
 };
 
-exports.query = function(args, callback) {
+exports.query = function (args, callback) {
   var args = args || {};
   var path =
     queryPath +
@@ -59,7 +59,7 @@ exports.query = function(args, callback) {
     (args.limit || 10) +
     '&q=' +
     encodeURIComponent(args.q || '');
-  exports.request(path, null, function(data) {
+  exports.request(path, null, function (data) {
     try {
       if (callback) callback(JSON.parse(data));
     } catch (e) {
@@ -70,13 +70,13 @@ exports.query = function(args, callback) {
 };
 
 // doc = { id: "whyd", name: "whyd" }
-exports.addDoc = function(doc, callback) {
-  var callback = callback || function() {};
+exports.addDoc = function (doc, callback) {
+  var callback = callback || function () {};
   console.log('solrIndex.addDoc: ', doc);
   exports.request(
     updatePath,
     { add: { doc: doc, boost: DEFAULT_BOOST } },
-    function(data, statusCode) {
+    function (data, statusCode) {
       try {
         if (statusCode != 200) callback({ error: data });
         else callback(JSON.parse(data));
@@ -124,6 +124,6 @@ exports.commit = function(callback) {
 
 // INIT
 
-exports.init = function() {
+exports.init = function () {
   console.log('models.search: SolrIndex client on', host, port);
 };

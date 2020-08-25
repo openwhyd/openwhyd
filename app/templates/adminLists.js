@@ -15,10 +15,10 @@ function cleanInfoArray(info) {
   return result;
 }
 
-exports.AdminLists = function() {
+exports.AdminLists = function () {
   var lists = [];
 
-  var renderList = function(items, title, actionNames, formParams) {
+  var renderList = function (items, title, actionNames, formParams) {
     var html = [];
     for (var i in items) {
       var u = items[i];
@@ -83,7 +83,7 @@ exports.AdminLists = function() {
     );
   };
 
-  var renderWideList = function(items, title, actionNames, formParams) {
+  var renderWideList = function (items, title, actionNames, formParams) {
     var html = [];
     for (var i in items) {
       var u = items[i];
@@ -153,20 +153,20 @@ exports.AdminLists = function() {
   //renderList(validTopics, "in search index", null, {})
 
   return {
-    addList: function(items, title, actionNames, formParams) {
+    addList: function (items, title, actionNames, formParams) {
       lists.push(renderList(items, title, actionNames, formParams));
     },
 
-    addWideList: function(items, title, actionNames, formParams) {
+    addWideList: function (items, title, actionNames, formParams) {
       lists.push(renderWideList(items, title, actionNames, formParams));
     },
 
-    addScript: function(html) {
+    addScript: function (html) {
       lists.push(
         ['<script>', '/*<![CDATA[*/', html, '/*]]>*/', '</script>'].join('\n')
       );
     },
-    renderPage: function(params) {
+    renderPage: function (params) {
       var params = params || {};
 
       if (params.css) params.css.unshift('admin.css');
@@ -202,10 +202,10 @@ exports.AdminLists = function() {
         '   return retArr;',
         '} // Ends the "getSelectedCheckbox" function"',
         '/*]]>*/',
-        '</script>'
+        '</script>',
       ].join('\n');
 
       return mainTemplate.renderWhydFrame(out, params);
-    }
+    },
   };
 };

@@ -7,7 +7,7 @@ exports.ADMIN_USER = {
   username: 'admin',
   password: 'admin',
   pwd: 'admin',
-  md5: '21232f297a57a5a743894a0e4a801fc3'
+  md5: '21232f297a57a5a743894a0e4a801fc3',
 };
 
 exports.TEST_USER = {
@@ -16,5 +16,5 @@ exports.TEST_USER = {
   username: 'test-user',
   pwd: 'test-user',
   password: 'test-user', // for the /register api endpoint
-  md5: '42b27efc1480b4fe6d7eaa5eec47424d'
+  md5: '42b27efc1480b4fe6d7eaa5eec47424d',
 };

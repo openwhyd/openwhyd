@@ -24,7 +24,7 @@ function check() {
       now,
       '=> refreshing hot track trends...'
     );
-    trackModel.snapshotTrackScores(function(r) {
+    trackModel.snapshotTrackScores(function (r) {
       console.log(
         '[HOT SNAPSHOT WORKER] snapshotTrackScores => ',
         r || { ok: 'done' }

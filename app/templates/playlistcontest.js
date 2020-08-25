@@ -11,8 +11,8 @@ var TEMPLATE_FILE = 'app/templates/playlistcontest.html';
 
 var template = null;
 
-exports.refreshTemplates = function(cb) {
-  templateLoader.loadTemplate(TEMPLATE_FILE, function(tmp) {
+exports.refreshTemplates = function (cb) {
+  templateLoader.loadTemplate(TEMPLATE_FILE, function (tmp) {
     template = tmp;
     cb && cb(tmp);
   });
@@ -30,21 +30,21 @@ var i18n = {
     c2: [
       {
         li:
-          'Encourage your audience to dig deeper and identify your personality'
+          'Encourage your audience to dig deeper and identify your personality',
       },
       { li: 'Give people an option to participate, and declare their tastes' },
       {
         li:
-          'Reward your community by featuring their playlists or with other prizes!'
-      }
+          'Reward your community by featuring their playlists or with other prizes!',
+      },
     ],
     t3: 'Engage the Openwhyd community and grow your audience',
     c3: [
       {
         li:
-          'Whyd music lovers are constantly searching for new music, engage them by offering a chance to get to know your site'
+          'Whyd music lovers are constantly searching for new music, engage them by offering a chance to get to know your site',
       },
-      { li: 'Grow the number of fans for your site/project' }
+      { li: 'Grow the number of fans for your site/project' },
     ],
     /*t4: "How does it work?",
 		c4: [
@@ -63,80 +63,80 @@ var i18n = {
         ul: [
           {
             li:
-              'You create a playlist contest with the name of your site/brand/project/event, giving people a starting point to build a playlist, and choose a date that you’d like the contest to end (optimal time is two weeks).'
+              'You create a playlist contest with the name of your site/brand/project/event, giving people a starting point to build a playlist, and choose a date that you’d like the contest to end (optimal time is two weeks).',
           },
           {
             li:
-              'You copy and paste the rules into a post on your site, or other announcements via social media.'
+              'You copy and paste the rules into a post on your site, or other announcements via social media.',
           },
           {
             li:
-              'You support your audience by getting them excited to participate!'
+              'You support your audience by getting them excited to participate!',
           },
           {
             li:
-              'The top three most-shared playlists (judged by the counters for FB and Twitter shares) are the finalists, and the winner is then selected by you to be featured on your site or receive another great prize!'
-          }
-        ]
+              'The top three most-shared playlists (judged by the counters for FB and Twitter shares) are the finalists, and the winner is then selected by you to be featured on your site or receive another great prize!',
+          },
+        ],
       },
       {
         h: 'Participants',
         ul: [
           {
             li:
-              'Participants go to Openwhyd to create a playlist with the title you select.'
+              'Participants go to Openwhyd to create a playlist with the title you select.',
           },
           {
             li:
-              'Participants then share their playlists as much as possible. Every time a playlist is shared it is shared with your name (because it’s the title)'
+              'Participants then share their playlists as much as possible. Every time a playlist is shared it is shared with your name (because it’s the title)',
           },
-          { li: 'The winner will share again the victory page!' }
-        ]
+          { li: 'The winner will share again the victory page!' },
+        ],
       },
       {
         h: 'Whyd',
         ul: [
           {
             li:
-              'Whyd identifies the playlist and adds the necessary features to enable clear voting.'
+              'Whyd identifies the playlist and adds the necessary features to enable clear voting.',
           },
           {
             li:
-              'Whyd will feature the contest and push it out to all users across the site, plus provide support on social media and individual invitations to key users.'
-          }
-        ]
-      }
+              'Whyd will feature the contest and push it out to all users across the site, plus provide support on social media and individual invitations to key users.',
+          },
+        ],
+      },
     ],
     t6: 'Copy and Paste (or completely rewrite) the basics for your site:',
     t7: 'Contest Rules & Instructions',
     c7: [
       {
         p:
-          'Make a playlist titled [[YOURNAME]] on Openwhyd (use this invite link to sign up if you are not already a member)'
+          'Make a playlist titled [[YOURNAME]] on Openwhyd (use this invite link to sign up if you are not already a member)',
       },
       {
         p:
-          'Add tracks to the playlist (at least XX tracks) that reflect our style.'
+          'Add tracks to the playlist (at least XX tracks) that reflect our style.',
       },
       {
         p:
-          'Share this playlist as much as possible on FB and Twitter, the top 3 most-shared playlists (according to the tickers on the playlists) are finalists.'
+          'Share this playlist as much as possible on FB and Twitter, the top 3 most-shared playlists (according to the tickers on the playlists) are finalists.',
       },
-      { p: 'The best playlist will be featured on our site' }
+      { p: 'The best playlist will be featured on our site' },
     ],
     btnCreate: 'Create a playlist contest',
     fldTitle: {
       legend: 'Title',
-      placeholder: 'Best tracks of 2012'
+      placeholder: 'Best tracks of 2012',
     },
     fldOrganizer: {
       legend: 'Organizer',
-      btnLogin: 'Log in as another user'
+      btnLogin: 'Log in as another user',
     },
     fldPage: {
       legend: 'Contest page URL',
-      placeholder: 'http://cocacola.fr/whyd-playlist-contest'
-    }
+      placeholder: 'http://cocacola.fr/whyd-playlist-contest',
+    },
   },
   //////////////////
   FR: {
@@ -148,19 +148,19 @@ var i18n = {
       { li: 'Encouragez votre audience à mieux connaître votre identité' },
       {
         li:
-          'Donnez la possibilité de participer et déclarer leurs goûts musicaux'
+          'Donnez la possibilité de participer et déclarer leurs goûts musicaux',
       },
       {
         li:
-          "Récompensez votre communauté en relayant leurs playlists ou avec d'autres prix!"
-      }
+          "Récompensez votre communauté en relayant leurs playlists ou avec d'autres prix!",
+      },
     ],
     t3: 'Engagez la communauté Openwhyd et montez votre audience',
     c3: [
       {
         li:
-          'Les membres de Openwhyd sont des diggers de sons, engagez avec eux et mettez en avant votre site.'
-      }
+          'Les membres de Openwhyd sont des diggers de sons, engagez avec eux et mettez en avant votre site.',
+      },
     ],
     t5: 'BREAKDOWN: Qui fait quoi ?',
     c5: [
@@ -169,46 +169,46 @@ var i18n = {
         ul: [
           {
             li:
-              'Vous créez un concours de playlist avec le nom de votre site/marque/projet/évènement pour donner aux gens un point de départ pour construire une playlist. Puis, vous sélectionnez une date de fin de concours (le période optimale est deux semaines)'
+              'Vous créez un concours de playlist avec le nom de votre site/marque/projet/évènement pour donner aux gens un point de départ pour construire une playlist. Puis, vous sélectionnez une date de fin de concours (le période optimale est deux semaines)',
           },
           {
             li:
-              'Copiez et collez les régles dans un article/post sur votre site et media sociaux.'
+              'Copiez et collez les régles dans un article/post sur votre site et media sociaux.',
           },
           { li: 'Engager votre audience autour du concours.' },
           {
             li:
-              "Les trois playlists les plus partagées (selon les stats de partage via FB ou Twitter) seront finalistes, et c'est à vous de choisir le vainqueur!"
-          }
-        ]
+              "Les trois playlists les plus partagées (selon les stats de partage via FB ou Twitter) seront finalistes, et c'est à vous de choisir le vainqueur!",
+          },
+        ],
       },
       {
         h: 'Participants',
         ul: [
           {
             li:
-              'Les participants vont sur Openwhyd pour créer leurs playlists avec le nom de votre site/marque/projet/évènement que vous avez sélectionné.'
+              'Les participants vont sur Openwhyd pour créer leurs playlists avec le nom de votre site/marque/projet/évènement que vous avez sélectionné.',
           },
           {
             li:
-              "Les participants partagent leurs playlists au maximum via les réseaux sociaux. Chaque fois qu'une playlist est partagée, le nom de votre site/marque/projet/évènement est partagé."
+              "Les participants partagent leurs playlists au maximum via les réseaux sociaux. Chaque fois qu'une playlist est partagée, le nom de votre site/marque/projet/évènement est partagé.",
           },
-          { li: 'Le vainqueur partage encore!' }
-        ]
+          { li: 'Le vainqueur partage encore!' },
+        ],
       },
       {
         h: 'Whyd',
         ul: [
           {
             li:
-              'Whyd identifie les playlists officielles et ajoute les boutons de vote'
+              'Whyd identifie les playlists officielles et ajoute les boutons de vote',
           },
           {
             li:
-              'Whyd présente le concours, le partage sur les media sociaux, diffuse sur la home du site, et envoie des invitations spéciales à ses membres clés.'
-          }
-        ]
-      }
+              'Whyd présente le concours, le partage sur les media sociaux, diffuse sur la home du site, et envoie des invitations spéciales à ses membres clés.',
+          },
+        ],
+      },
     ],
     t6:
       'Copiez et Collez (ou récrire complètement) les règes de base pour votre site:',
@@ -216,20 +216,20 @@ var i18n = {
     c7: [
       {
         p:
-          "Créez une playlist avec le titre {{VOTRE NOM DE SITE}} sur Openwhyd (utilisez ce lien d'invite si vous n'êtes pas encore un membre)"
+          "Créez une playlist avec le titre {{VOTRE NOM DE SITE}} sur Openwhyd (utilisez ce lien d'invite si vous n'êtes pas encore un membre)",
       },
       { p: 'Ajoutez {{NUMÉRO MINIMUM}} des tracks qui reflètent votre style.' },
       {
         p:
-          'Partagez votre playlist au maximum sur Facebook et Twitter, les trois playlists les plus partagées (voir stats sur les playlists) seront finalistes.'
+          'Partagez votre playlist au maximum sur Facebook et Twitter, les trois playlists les plus partagées (voir stats sur les playlists) seront finalistes.',
       },
       {
         p:
-          'La meilleure des trois playlists sera présentée comme vainqueur sur notre site!'
-      }
+          'La meilleure des trois playlists sera présentée comme vainqueur sur notre site!',
+      },
     ],
-    btnCreate: 'Proposer une compétition!'
-  }
+    btnCreate: 'Proposer une compétition!',
+  },
 };
 
 // fill the holes in FR version
@@ -242,7 +242,7 @@ function renderLink(url) {
   return '<a href="' + url + '">' + url + '</a>';
 }
 
-exports.renderInfoPage = function(plC) {
+exports.renderInfoPage = function (plC) {
   var safe = {};
   for (var i in plC) safe[i] = uiSnippets.htmlEntities(plC[i]);
   return [
@@ -259,22 +259,22 @@ exports.renderInfoPage = function(plC) {
     '<p>=> JOIN URL: ' +
       renderLink(config.urlPrefix + '/playlistcontest/' + safe.uri + '/join') +
       ' (to include in your contest page, for candidates to join)</p>',
-    '</div>'
+    '</div>',
   ].join('\n');
 };
 
-exports.renderJoinPage = function(plC) {
+exports.renderJoinPage = function (plC) {
   var safe = {};
   for (var i in plC) safe[i] = uiSnippets.htmlEntities(plC[i]);
   return [
     '<div class="whitePanel">',
     '<h1>Join: ' + safe.title + '</h1>',
     '<img src="/img/u/' + plC.uId + '">',
-    '</div>'
+    '</div>',
   ].join('\n');
 };
 
-exports.renderListPage = function(list) {
+exports.renderListPage = function (list) {
   var html = ['<div class="whitePanel">', '<h1>Playlist contests</h1>', '<ul>'];
   for (var i in list) {
     var plHtml = '';
@@ -309,7 +309,7 @@ exports.renderListPage = function(list) {
   return html.concat(['</ul>', '</div>']).join('\n');
 };
 
-exports.renderCreatePage = function(p) {
+exports.renderCreatePage = function (p) {
   p.i18n = (p.lang && i18n[p.lang]) || i18n['EN'];
   return template.render(
     p /*{

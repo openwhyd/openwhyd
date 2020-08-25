@@ -1,11 +1,9 @@
 function htmlDecode(s) {
-  return $('<div />')
-    .html(s)
-    .text();
+  return $('<div />').html(s).text();
 }
 
 var sections = {
-  featured: function($content) {
+  featured: function ($content) {
     var $ul = $content.find('ul');
     var $img = $content.find('input[name=img]');
     var $thumb = $content.find('.thumb');
@@ -13,15 +11,15 @@ var sections = {
       $thumb.css('background-image', "url('" + $img.val() + "')");
     }
     $img.bind('keyup input onpaste', updateThumb);
-    $('#addFeatured').submit(function(e) {
+    $('#addFeatured').submit(function (e) {
       e.preventDefault();
-      $.post($(this).attr('action'), $(this).serialize(), function(json) {
+      $.post($(this).attr('action'), $(this).serialize(), function (json) {
         console.log('response', json);
         goToPage();
       });
     });
-    var $url = $('input[name=url]').bind('keyup input onpaste', function() {
-      $.get('/discover', { ajax: 'parseBlogPost', url: $url.val() }, function(
+    var $url = $('input[name=url]').bind('keyup input onpaste', function () {
+      $.get('/discover', { ajax: 'parseBlogPost', url: $url.val() }, function (
         json
       ) {
         //console.log("parseBlogPost response", json)
@@ -40,12 +38,9 @@ var sections = {
         id: p.uId,
         name: p.uNm,
         subscribed: p.subscribed,
-        thumbClickHandler: function() {
-          $(this)
-            .closest('li')
-            .find('a.blogLink')[0]
-            .click();
-        }
+        thumbClickHandler: function () {
+          $(this).closest('li').find('a.blogLink')[0].click();
+        },
       });
       $li
         .find('small')
@@ -57,13 +52,10 @@ var sections = {
             p.uNm +
             "'s full interview</a>"
         );
-      if (p.date)
-        $('<div>')
-          .text(p.date)
-          .appendTo($li.find('.thumb'));
+      if (p.date) $('<div>').text(p.date).appendTo($li.find('.thumb'));
       return $li;
     }
-    $.get('/discover', { ajax: 'featured' }, function(json) {
+    $.get('/discover', { ajax: 'featured' }, function (json) {
       $('.loading').removeClass('loading');
       console.log('featured', json);
       if (json && !json.error && json.posts) {
@@ -74,7 +66,7 @@ var sections = {
       } else (json || {}).error ? showMessage(json.error) : console.log('rankings error', json);
     });
   },
-  ranking: function($content) {
+  ranking: function ($content) {
     function renderUserRanking(users) {
       var $out = $('<ul>').addClass('userList');
       for (var i = 0; i < users.length; ++i) {
@@ -88,7 +80,7 @@ var sections = {
       }
       return $out.ajaxify ? $out.ajaxify() : $out;
     }
-    $.get('/discover', { ajax: 'ranking' }, function(json) {
+    $.get('/discover', { ajax: 'ranking' }, function (json) {
       $('.loading').removeClass('loading');
       console.log('ranking', json);
       if (json && !json.error) {
@@ -104,14 +96,14 @@ var sections = {
       } else (json || {}).error ? showMessage(json.error) : console.log('rankings error', json);
     });
   },
-  users: function($content) {
+  users: function ($content) {
     var $subtitle = $content.find('#subtitle').show();
     var scoreClasses = [
       [80, 'Holy shit!!!'],
       [50, 'Great match!'],
       [20, 'Not too bad!'],
       [10, "Well, it's a good start..."],
-      [0, 'Meh']
+      [0, 'Meh'],
     ];
     function getScoreClass(score) {
       for (var i in scoreClasses) {
@@ -153,16 +145,16 @@ var sections = {
       return $out.ajaxify ? $out.ajaxify() : $out;
     }
     var timeouts = [
-      setTimeout(function() {
+      setTimeout(function () {
         $subtitle.text('Hang on... Your recommendations are on their way!');
       }, 7000),
-      setTimeout(function() {
+      setTimeout(function () {
         $subtitle.text(
           'Hmm... still waiting? Please try to refresh this page, and let us know if nothing shows up.'
         );
-      }, 14000)
+      }, 14000),
     ];
-    $.get('/discover', { ajax: 'recommendedUsers' }, function(json) {
+    $.get('/discover', { ajax: 'recommendedUsers' }, function (json) {
       $('.loading').removeClass('loading');
       if (json && !json.error && json.users) {
         console.log(json.users);
@@ -179,28 +171,23 @@ var sections = {
         }
       } else (json || {}).error ? showMessage(json.error) : console.log('recomUsers error', json);
     });
-  }
+  },
 };
 
-$(function() {
+$(function () {
   var $panel = $('.whitePanel');
   var $tabs = $('#bigTabSelector a') /*.removeClass("loading")*/
-    .click(function() {
+    .click(function () {
       /*$(this)*/ $panel.addClass('loading');
     })
-    .each(function() {
+    .each(function () {
       var $tab = $(this);
       if (window.location.href.indexOf($tab.attr('href')) != -1) {
         $panel.addClass('loading');
         $tab.addClass('selected') /*.addClass("loading")*/;
         $('.section').hide();
         var $content = $($tab.attr('id').replace('tab', '#sec')).show();
-        sections[
-          $tab
-            .attr('href')
-            .split('/')
-            .pop()
-        ]($content); // run section-specific code
+        sections[$tab.attr('href').split('/').pop()]($content); // run section-specific code
       }
     });
 });

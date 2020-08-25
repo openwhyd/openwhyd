@@ -7,7 +7,11 @@ const request = require('request');
 const WAIT_DURATION = 10000;
 
 var defaultAvatarLen;
-request(`${URL_PREFIX}/images/blank_user.gif`, function(error, response, body) {
+request(`${URL_PREFIX}/images/blank_user.gif`, function (
+  error,
+  response,
+  body
+) {
   defaultAvatarLen = body.length;
 });
 
@@ -16,18 +20,18 @@ require('../acceptance-cmds.js'); // also checks that openwhyd's server is teste
 
 // ... AND that the user cache was reset as well. (e.g. by restarting Openwhyd's server)
 
-describe('upload user profile images', function() {
+describe('upload user profile images', function () {
   it(`user login`, webUI.loginAs(ADMIN_USER));
 
-  it(`go to user profile`, function() {
+  it(`go to user profile`, function () {
     browser.url(`${URL_PREFIX}/u/${ADMIN_USER.id}`);
   });
 
-  it(`click on "Edit profile"`, function() {
+  it(`click on "Edit profile"`, function () {
     browser.clickOnContent('Edit profile');
   });
 
-  it(`click on "Edit Profile Info"`, function() {
+  it(`click on "Edit Profile Info"`, function () {
     browser.clickOnContent('Edit Profile Info');
   });
 
@@ -41,11 +45,11 @@ describe('upload user profile images', function() {
       assert.equal(defaultAvatarLen, response.headers['content-length']);
     });
     */
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       //assert.ok(!/blank_user.gif/.test($('.avatar-box img').getAttribute('src')));
       request(
         `${URL_PREFIX}/img/u/${ADMIN_USER.id}?_t=${new Date().getTime()}`,
-        function(error, response, body) {
+        function (error, response, body) {
           assert.equal(defaultAvatarLen, body.length);
           resolve();
         }

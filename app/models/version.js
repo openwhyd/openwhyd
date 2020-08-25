@@ -7,7 +7,7 @@ var config = require('../models/config.js');
 var VERSIONS_CACHE = {
   openwhydServerVersion: config.version,
   decodeVer: undefined,
-  iphoneAppVer: undefined // LATEST IPHONE APP UPDATE NUMBER
+  iphoneAppVer: undefined, // LATEST IPHONE APP UPDATE NUMBER
 };
 
 function countJsonFiles(files) {
@@ -16,10 +16,10 @@ function countJsonFiles(files) {
   return count;
 }
 
-exports.updateVersions = function(cb) {
-  fs.readdir('public/iphone/version', function(err, files) {
+exports.updateVersions = function (cb) {
+  fs.readdir('public/iphone/version', function (err, files) {
     VERSIONS_CACHE.iphoneAppVer = countJsonFiles(files) - 1;
-    fs.stat('public/html/decode.html', function(err, res) {
+    fs.stat('public/html/decode.html', function (err, res) {
       VERSIONS_CACHE.decodeVer = new Date((res || {}).mtime).getTime();
       console.log('current iPhone versions:', VERSIONS_CACHE);
       cb && cb(VERSIONS_CACHE);
@@ -27,7 +27,7 @@ exports.updateVersions = function(cb) {
   });
 };
 
-exports.getVersions = function() {
+exports.getVersions = function () {
   return VERSIONS_CACHE;
 };
 

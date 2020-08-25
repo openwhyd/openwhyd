@@ -6,13 +6,13 @@
 
 var userModel = require('../../models/user.js');
 
-var getNextFreq = (function() {
+var getNextFreq = (function () {
   var FREQS = [];
   for (var i in userModel.EM_FREQ_LABEL) FREQS.push(parseInt(i));
   FREQS.sort();
   FREQS.shift(); // remove -1, the "less frequent" value
 
-  return function(f) {
+  return function (f) {
     console.log('detected freq:', f);
     if (f > -1)
       for (var i in FREQS)
@@ -46,7 +46,7 @@ function withLink(html) {
   return '<p>' + html + "</p><p><a href='/settings'>Edit your settings</a></p>";
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('unsubscribe.controller', reqParams);
 
   function render(r) {
@@ -67,7 +67,7 @@ exports.controller = function(request, reqParams, response) {
         'Starting now, the frequency of email notifications you will receive is set to: ' +
         newFreqlabel;
       response.legacyRender(withLink(html), null, {
-        'content-type': 'text/html'
+        'content-type': 'text/html',
       });
     } else if (r.pref) {
       // user unsubscribed
@@ -75,7 +75,7 @@ exports.controller = function(request, reqParams, response) {
       var html =
         'You successfully unsubscribed from email notifications: ' + type;
       response.legacyRender(withLink(html), null, {
-        'content-type': 'text/html'
+        'content-type': 'text/html',
       });
     } else {
       response.legacyRender(r);

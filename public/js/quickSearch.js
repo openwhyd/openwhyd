@@ -15,11 +15,11 @@ function toggleClass(elem, className, showOrHide) {
 
 var addEvent = window.addEventListener
   ? function (elem, type, method) {
-    elem.addEventListener(type, method, false);
-  }
+      elem.addEventListener(type, method, false);
+    }
   : function (elem, type, method) {
-    elem.attachEvent('on' + type, method);
-  };
+      elem.attachEvent('on' + type, method);
+    };
 /*
 var removeEvent = window.removeEventListener ? function (elem, type, method) {
     elem.removeEventListener(type, method, false);

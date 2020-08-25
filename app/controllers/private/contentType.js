@@ -46,7 +46,7 @@ var getContentType = function(url, handler)
 	req.end();
 }
 */
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('contentType.controller', reqParams);
 
   if (!reqParams) {
@@ -65,7 +65,7 @@ exports.controller = function(request, reqParams, response) {
       statusCode: 200,
       contentType: contentType,
       title: title,
-      images: images
+      images: images,
     };
     console.log('contentType result:', result);
     response.legacyRender(result);
@@ -84,9 +84,9 @@ exports.controller = function(request, reqParams, response) {
   }
 
   try {
-    get.ContentType(url, function(err, contentType) {
+    get.ContentType(url, function (err, contentType) {
       if (contentType === 'text/html')
-        get(url, function(err, page) {
+        get(url, function (err, page) {
           if (page && !err)
             renderResult(contentType, page.getTitle(), page.getImages());
           else handleError(err);

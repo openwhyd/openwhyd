@@ -29,25 +29,25 @@ function initPostBox($box, onPostComplete) {
 
   var scReady = false;
   var scPlayer = new SoundCloudPlayer({
-    onEmbedReady: function() {
+    onEmbedReady: function () {
       scReady = true;
     },
-    onPlaying: function() {
+    onPlaying: function () {
       setPreviewState('playing');
     },
-    onPaused: function() {
+    onPaused: function () {
       setPreviewState('paused');
     },
-    onError: function(e) {
+    onError: function (e) {
       console.log('soundcloud error: ', e);
-    }
+    },
   });
 
-  var $searchInput = $box.find('.q').click(function() {
+  var $searchInput = $box.find('.q').click(function () {
     $box.removeClass('pickedTrack');
   });
 
-  setTimeout(function() {
+  setTimeout(function () {
     $searchInput.focus();
   }, 500);
 
@@ -113,7 +113,7 @@ function initPostBox($box, onPostComplete) {
     setPreviewState('loading');
     if (window.whydPlayer) window.whydPlayer.pause();
 
-    embedder.extractEmbedRef(url, function(embedRef) {
+    embedder.extractEmbedRef(url, function (embedRef) {
       if (embedRef && embedRef.embedType) {
         previewedTrack = embedRef;
         if (embedRef.embedType.play) embedRef.embedType.play(embedRef);
@@ -130,10 +130,10 @@ function initPostBox($box, onPostComplete) {
   }
 
   function checkTune(tune, setEmbedRef) {
-    embedder.extractEmbedRef(tune.url, function(embedRef) {
+    embedder.extractEmbedRef(tune.url, function (embedRef) {
       if (embedRef && embedRef.embedType) setEmbedRef(embedRef);
       else if (embedRef && tune.url.indexOf('http') == 0) {
-        embedder.findTracksInPage(tune.name, tune.url, function(r) {
+        embedder.findTracksInPage(tune.name, tune.url, function (r) {
           //console.log("result", r);
           var firstEmbedRef = ((r || {}).embeds || [null])[0];
           if (firstEmbedRef && (firstEmbedRef.id || firstEmbedRef.type)) {
@@ -170,7 +170,7 @@ function initPostBox($box, onPostComplete) {
     var tune = {
       pid: $a.parent().data('pid'),
       url: $a.attr('href'),
-      name: $a.find('h3').text()
+      name: $a.find('h3').text(),
     };
 
     stopPreview();
@@ -178,7 +178,7 @@ function initPostBox($box, onPostComplete) {
     $btnSubmit.addClass('loading').show();
     $text.focus().attr('placeholder', 'Add a note about ' + tune.name);
 
-    checkTune(tune, function(embedRef) {
+    checkTune(tune, function (embedRef) {
       console.log('final embedRef', tune, embedRef);
       if (embedRef) whydPost.setEmbedRef(embedRef);
       else
@@ -201,7 +201,7 @@ function initPostBox($box, onPostComplete) {
     // sample text: "pouet @[adrien](user:4ecb6ec933d9308badd7b7b4) test"
     console.log('WhydTextWithMentions RESULT:', text);
     whydPost.setText(text);
-    whydPost.submit(true, function(pId, postObj) {
+    whydPost.submit(true, function (pId, postObj) {
       $btnSubmit.removeClass('loading');
       onPostComplete && onPostComplete(pId, postObj);
     });
@@ -218,7 +218,7 @@ function initPostBox($box, onPostComplete) {
   if (urlSplit.length > 1)
     defaultPlaylist = {
       id: urlSplit[1],
-      name: $('#playlistNameField').val()
+      name: $('#playlistNameField').val(),
     };
 
   new WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist).populate();
@@ -237,7 +237,7 @@ function initPostBox($box, onPostComplete) {
   // init search engine filters
   for (var i in searchEngines)
     $('<div class="' + searchEngines[i].label.toLowerCase() + '">')
-      .click(function() {
+      .click(function () {
         if ($(this).hasClass('selected')) {
           $filter.find('div').removeClass('selected');
           //$box.find("#results li").show();
@@ -254,11 +254,11 @@ function initPostBox($box, onPostComplete) {
   var quickSearch = new QuickSearch($box, {
     noMoreResults: true,
     noMoreResultsOnEnter: true,
-    onResultClick: function(href, a) {
+    onResultClick: function (href, a) {
       $(a).each(selectTune);
       return false;
     },
-    submitQuery: function(query, display) {
+    submitQuery: function (query, display) {
       // called a short delay after when a query was entered
       // display(htmlResults, stillSearch) is to be called when new results are found
       stopPreview();
@@ -269,22 +269,16 @@ function initPostBox($box, onPostComplete) {
       display('', true); // clear the result list and keep the searching animation rolling
       $result.show();
       if (query.indexOf('http://') > -1 || query.indexOf('https://') > -1)
-        embedder.extractEmbedRef(query, function(embedRef) {
+        embedder.extractEmbedRef(query, function (embedRef) {
           console.log('detected track url', embedRef);
           try {
             embedRef.playerLabel =
               embedRef.playerLabel || embedRef.embedType.label;
             currentResults = [embedRef];
             display(renderResult(embedRef), false);
-            setTimeout(function() {
-              $result
-                .find('.play')
-                .unbind()
-                .click(previewTune);
-              $result
-                .find('li > a')
-                .first()
-                .each(selectTune);
+            setTimeout(function () {
+              $result.find('.play').unbind().click(previewTune);
+              $result.find('li > a').first().each(selectTune);
             }, 50);
           } catch (e) {
             console.log(e, e.stack);
@@ -313,7 +307,7 @@ function initPostBox($box, onPostComplete) {
         }
 
         function triggerSearch(current) {
-          engines[current].query(query, function(results) {
+          engines[current].query(query, function (results) {
             resultSet[current] = results || [];
             if (expected == current) {
               for (
@@ -335,14 +329,8 @@ function initPostBox($box, onPostComplete) {
                 );
               else {
                 display(html, !lastQuery); // keep the searching animation rolling until results of last query
-                $result
-                  .find('.play')
-                  .unbind()
-                  .click(previewTune);
-                $result
-                  .find('li > a')
-                  .unbind()
-                  .click(selectTune);
+                $result.find('.play').unbind().click(previewTune);
+                $result.find('li > a').unbind().click(selectTune);
                 applyFilter();
               }
             }
@@ -351,28 +339,28 @@ function initPostBox($box, onPostComplete) {
 
         for (var i in engines) triggerSearch(i);
       }
-    }
+    },
   });
 
   var pageSearch = $('#header #searchForm input').val();
   if (pageSearch) quickSearch.search(pageSearch);
 
-  window.onDialogClose = function() {
+  window.onDialogClose = function () {
     stopPreview();
     delete window.onDialogClose;
   };
 }
 
 function modalPostBox(onPosted) {
-  openRemoteDialog('/html/postBox.html', 'dlgPostBox', function($box) {
-    $('#postBoxSearch > p > a').click(function() {
+  openRemoteDialog('/html/postBox.html', 'dlgPostBox', function ($box) {
+    $('#postBoxSearch > p > a').click(function () {
       //$.modal.close();
       avgrundClose();
     });
     try {
       $box.ajaxify();
     } catch (e) {}
-    initPostBox($box, function(pId, whydPost) {
+    initPostBox($box, function (pId, whydPost) {
       //$.modal.close();
       avgrundClose();
       if (onPosted) onPosted(whydPost);

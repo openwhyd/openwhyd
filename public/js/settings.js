@@ -1,21 +1,13 @@
-$(function() {
-  $('#tabSelector a').click(function() {
+$(function () {
+  $('#tabSelector a').click(function () {
     $('#tabSelector a.selected').removeClass('selected');
     $(this).addClass('selected');
     $('.tabContent').hide();
-    $(
-      '.tabContent#' +
-        $(this)
-          .attr('href')
-          .split('#')
-          .pop()
-    ).show();
+    $('.tabContent#' + $(this).attr('href').split('#').pop()).show();
   });
 
   function backtonormal() {
-    $('.fld')
-      .removeClass('error')
-      .removeClass('ok');
+    $('.fld').removeClass('error').removeClass('ok');
     $('.msg').hide();
   }
 
@@ -26,9 +18,9 @@ $(function() {
       url: '/api/user',
       data: data,
       success: cb,
-      error: function(e) {
+      error: function (e) {
         cb && cb({ error: e });
-      }
+      },
     });
   }
 
@@ -37,7 +29,7 @@ $(function() {
       .closest('form')
       .find('input[type=submit]')
       .addClass('loading');
-    submitChange(data, function(res) {
+    submitChange(data, function (res) {
       $btn.removeClass('loading');
       var res = res || {};
       console.log('res', res);
@@ -60,19 +52,19 @@ $(function() {
   var $handle = $('input[name=handle]');
   var $email = $('input[name=email]');
 
-  $('input[data-checked=true]').each(function() {
+  $('input[data-checked=true]').each(function () {
     $(this).attr('checked', 'checked');
   });
 
   function onDeleteConfirm() {
-    $.post('/api/user', { action: 'delete' }, function(response) {
+    $.post('/api/user', { action: 'delete' }, function (response) {
       console.log('response', response);
       avgrundClose();
       showMessage(response);
     });
   }
 
-  $('#deleteAccount').click(function(e) {
+  $('#deleteAccount').click(function (e) {
     e.preventDefault();
     var $html = $(
       '<div>' +
@@ -81,7 +73,7 @@ $(function() {
         '<span style="font-weight:normal;">If you have a question or problem,<br>we\'re happy to help at contact@openwhyd.org.</span>' +
         '</div><span class="redButton">Delete my account</span>'
     );
-    $html.last().click(function() {
+    $html.last().click(function () {
       $html
         .find('span')
         .eq(1)
@@ -97,10 +89,7 @@ $(function() {
   });
 
   function validateUsername() {
-    $handle
-      .parent()
-      .find('.msg')
-      .hide();
+    $handle.parent().find('.msg').hide();
     var val = $handle.val();
     val = val.toLowerCase();
     try {
@@ -115,8 +104,8 @@ $(function() {
 
   validateUsername();
 
-  $handle.bind('keydown keypress change', function() {
-    setTimeout(function() {
+  $handle.bind('keydown keypress change', function () {
+    setTimeout(function () {
       var valid = validateUsername();
       $handle
         .parent()
@@ -128,7 +117,7 @@ $(function() {
   function submitHandle(cb) {
     var handle = $handle.val();
     if (handle)
-      submitFieldChange({ handle: handle }, $handle.parent(), function(res) {
+      submitFieldChange({ handle: handle }, $handle.parent(), function (res) {
         var ok = handle == res.handle;
         $handle.parent().toggleClass(ok ? 'ok' : 'error');
         if (res.handle) $handle.val(res.handle);
@@ -139,7 +128,7 @@ $(function() {
 
   function submitEmail(cb) {
     var email = $email.val();
-    submitFieldChange({ email: email }, $email.parent(), function(res) {
+    submitFieldChange({ email: email }, $email.parent(), function (res) {
       var ok = email == res.email;
       $email.parent().toggleClass(ok ? 'ok' : 'error');
       if (res.email) $email.val(res.email);
@@ -150,11 +139,11 @@ $(function() {
   function submitPref(cb) {
     var pref = {};
     var $pref = $('#pref');
-    $pref.find('input').each(function() {
+    $pref.find('input').each(function () {
       pref[$(this).attr('name')] = $(this).attr('checked') ? 1 : 0;
     });
     console.log('pref', pref);
-    submitFieldChange({ pref: pref }, $pref, function(res) {
+    submitFieldChange({ pref: pref }, $pref, function (res) {
       var ok = res && res.pref;
       $pref.toggleClass(ok ? 'ok' : 'error');
       if (res && res.pref && window.user) window.user.pref = res.pref;
@@ -162,7 +151,7 @@ $(function() {
     });
   }
 
-  $('#tabAccount form').submit(function(event) {
+  $('#tabAccount form').submit(function (event) {
     event.preventDefault();
     backtonormal();
     validateUsername();
@@ -183,7 +172,7 @@ $(function() {
   });
 
   var $fbConn = $('#fbConn').addClass('loading');
-  whenFbReady(function() {
+  whenFbReady(function () {
     function toggleFbPrefs(connected) {
       $fbConn
         .toggle(!connected)
@@ -196,7 +185,7 @@ $(function() {
       $fbConn
         .addClass('loading')
         .unbind()
-        .click(function(e) {
+        .click(function (e) {
           e.preventDefault();
           showMessage('Still loading, please wait...');
         });
@@ -206,7 +195,7 @@ $(function() {
   });
 
   // lastfm
-  (function() {
+  (function () {
     var $lastFmConn = $('#lastFmConn');
     var $lastFmPref = $('#lastFmPref');
     var href = window.location.href;
@@ -233,7 +222,7 @@ $(function() {
       $lastFmConn
         .addClass('loading')
         .unbind()
-        .click(function(e) {
+        .click(function (e) {
           e.preventDefault();
           showMessage('Still loading, please wait...');
         });
@@ -243,7 +232,7 @@ $(function() {
         'height=600,width=800,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
       );
       popup.focus();
-      window.lastFmCallback = function(session) {
+      window.lastFmCallback = function (session) {
         console.log(session, typeof session);
         if (session && session.sk && session.name) {
           window.user.lastFm = session;
@@ -264,7 +253,7 @@ $(function() {
   })();
 
   // DEEZER CONNECTION
-  (function() {
+  (function () {
     $deezerConBtn = $('#deezerProfile');
 
     var SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
@@ -279,7 +268,7 @@ $(function() {
     }
 
     // load DZ SDK INTO SCOPE
-    loader.includeJS(SDK_URL, function() {
+    loader.includeJS(SDK_URL, function () {
       IS_READY = true;
     });
 
@@ -305,10 +294,10 @@ $(function() {
       } else {
         DZ.init({
           appId: DEEZER_APP_ID,
-          channelUrl: DEEZER_CHANNEL_URL
+          channelUrl: DEEZER_CHANNEL_URL,
         });
 
-        DZ.getLoginStatus(function(response) {
+        DZ.getLoginStatus(function (response) {
           if (response.authResponse) {
             IS_LOGGED = true;
             showMessage(
@@ -323,7 +312,7 @@ $(function() {
     function auth() {
       if (IS_LOGGED == false) {
         DZ.login(
-          function(response) {
+          function (response) {
             if (response.userID) {
               IS_LOGGED = true;
               showMessage(
@@ -352,7 +341,7 @@ $(function() {
   var $new1 = $('input[name=new1]');
   var $new2 = $('input[name=new2]');
 
-  var $pwdForm = $('#tabPassword form').submit(function(e) {
+  var $pwdForm = $('#tabPassword form').submit(function (e) {
     e.preventDefault();
     backtonormal();
     if (
@@ -387,7 +376,7 @@ $(function() {
       submitFieldChange(
         { pwd: $new1.val(), oldPwd: $old.val() },
         $pwdForm,
-        function(res) {
+        function (res) {
           $pwdForm.find('.fld').toggleClass(!res.error ? 'ok' : 'error');
           showMessage(
             res.error || 'Your password was successfully set',
@@ -427,7 +416,7 @@ $(function() {
 
   // == "notifications" tab ==
 
-  $('#tabNotif input[data-checked]').each(function() {
+  $('#tabNotif input[data-checked]').each(function () {
     var freq = $(this).attr('data-checked');
     if (freq != '-1') {
       $(this).attr('checked', 'checked');
@@ -441,7 +430,7 @@ $(function() {
 		$(this).find("input[value="+val+"]").attr("checked", "checked");
 	});
 	*/
-  $('#tabNotif form').submit(function(event) {
+  $('#tabNotif form').submit(function (event) {
     event.preventDefault();
     backtonormal();
     var pref = {};
@@ -453,12 +442,12 @@ $(function() {
 		*/
     var freq = $pref.find('input:radio:checked').val();
 
-    $pref.find('input').each(function() {
+    $pref.find('input').each(function () {
       pref[$(this).attr('name')] = $(this).attr('checked') ? freq : -1;
     });
     console.log('pref', pref);
 
-    submitFieldChange({ pref: pref }, $pref, function(res) {
+    submitFieldChange({ pref: pref }, $pref, function (res) {
       var ok = res && res.pref;
       $pref.toggleClass(ok ? 'ok' : 'error');
       if (ok && window.user) window.user.pref = res.pref;
@@ -476,7 +465,7 @@ $(function() {
   var $goodiesCode = $('#tabGoodies textarea');
   var $goodiesSteps = $('#tabGoodies > div.disabled');
   var $goodiesBtns = $('#tabGoodies .content > div');
-  $goodiesBtns.each(function(i, btn) {
+  $goodiesBtns.each(function (i, btn) {
     var $btn = $(btn);
     var width = $btn.attr('data-width');
     var src =
@@ -492,7 +481,7 @@ $(function() {
       (width || '20') +
       '"' +
       ' frameborder="0" allowtransparency="true" scrolling="no"></iframe>';
-    $btn.click(function() {
+    $btn.click(function () {
       $goodiesCode.val(html);
       $goodiesSteps.removeClass('disabled');
       $goodiesBtns.removeClass('selected');

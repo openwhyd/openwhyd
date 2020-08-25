@@ -22,7 +22,7 @@ var tabParams = [
   'showLikes',
   'showActivity',
   'showSubscribers',
-  'showSubscriptions'
+  'showSubscriptions',
 ];
 var paramsToInclude = [
   'after',
@@ -32,7 +32,7 @@ var paramsToInclude = [
   'embedW',
   'format',
   'pageUrl',
-  'callback'
+  'callback',
 ].concat(tabParams);
 
 function LibraryController(reqParams, render) {
@@ -50,7 +50,7 @@ function LibraryController(reqParams, render) {
 		showLikes: reqParams.showLikes,
 		embedW: reqParams.embedW,
 		format: reqParams.format,
-		pageUrl: reqParams.pageUrl*/
+		pageUrl: reqParams.pageUrl*/,
   };
   for (var i in paramsToInclude)
     this.options[paramsToInclude[i]] = reqParams[paramsToInclude[i]];
@@ -59,14 +59,18 @@ function LibraryController(reqParams, render) {
   if (this.options.callback) this.options.format = 'json';
 }
 
-LibraryController.prototype.renderPage = function(user, sidebarHtml, feedHtml) {
+LibraryController.prototype.renderPage = function (
+  user,
+  sidebarHtml,
+  feedHtml
+) {
   var self = this;
   if (!this.options.embedW) {
     this.options.content = feedHtml;
     var html = feedTemplate.renderFeedPage(user, this.options);
     var loggedUserId = (this.options.loggedUser || {}).id;
     if (loggedUserId) {
-      userModel.fetchByUid(loggedUserId, function(user) {
+      userModel.fetchByUid(loggedUserId, function (user) {
         if (user && !user.consent) {
           var thisUrl = encodeURIComponent(self.options.pageUrl || '/');
           html = loggingTemplate.htmlRedirect('/consent?redirect=' + thisUrl);
@@ -80,15 +84,15 @@ LibraryController.prototype.renderPage = function(user, sidebarHtml, feedHtml) {
   }
 };
 
-LibraryController.prototype.renderJson = function(json) {
+LibraryController.prototype.renderJson = function (json) {
   this.render({ json: json });
 };
 
-LibraryController.prototype.renderOther = function(data, mimeType) {
+LibraryController.prototype.renderOther = function (data, mimeType) {
   this.render(data, mimeType);
 };
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('userLibrary.controller', reqParams);
 
   reqParams = reqParams || {};
@@ -112,7 +116,7 @@ exports.controller = function(request, reqParams, response) {
     data = data || {
       error:
         'Nothing to render! Please send the URL of this page to ' +
-        process.appParams.feedbackEmail
+        process.appParams.feedbackEmail,
     };
     if (data.errorCode) {
       //response.renderHTML(errorTemplate.renderErrorCode(data.errorCode));
@@ -155,7 +159,7 @@ exports.controller = function(request, reqParams, response) {
         'embedW',
         'format',
         'limit',
-        'callback'
+        'callback',
       ];
     for (var i in paramsToKeep)
       if (reqParams[paramsToKeep[i]])
@@ -175,7 +179,7 @@ exports.controller = function(request, reqParams, response) {
     else if (reqParams.format == 'json')
       return render({ errorCode: 'REQ_LOGIN' });
     else {
-      loggingTemplate.renderLandingPage(loggedInUser, reqParams, function(
+      loggingTemplate.renderLandingPage(loggedInUser, reqParams, function (
         html
       ) {
         response.renderHTML(html);
@@ -184,7 +188,7 @@ exports.controller = function(request, reqParams, response) {
     }
   } else if (path == '/me') {
     if (request.checkLogin(response, reqParams.format))
-      userModel.fetchByUid(loggedInUser.id, function(user) {
+      userModel.fetchByUid(loggedInUser.id, function (user) {
         if (!user) render({ errorCode: 'USER_NOT_FOUND' });
         else
           redirectTo(
@@ -203,23 +207,23 @@ exports.controller = function(request, reqParams, response) {
     // so that every fb-likable page always have the same URL (for 2012 playlist contest)
 
     if (reqParams.handle)
-      userModel.fetchByHandle(reqParams.handle, function(user) {
+      userModel.fetchByHandle(reqParams.handle, function (user) {
         if (user)
           redirectTo(path.replace('/' + reqParams.handle, '/u/' + user._id));
         else render({ errorCode: 'USER_NOT_FOUND' });
       });
     else if (reqParams.id)
-      userModel.fetchByUid(reqParams.id, function(user) {
+      userModel.fetchByUid(reqParams.id, function (user) {
         renderUserLibrary(lib, user);
       });
   } else if (reqParams.handle)
-    userModel.fetchByHandle(reqParams.handle, function(user) {
+    userModel.fetchByHandle(reqParams.handle, function (user) {
       renderUserLibrary(lib, user);
     });
   else if (reqParams.id) {
     if (!mongodb.isObjectId(reqParams.id))
       return render({ errorCode: 'USER_NOT_FOUND' });
-    userModel.fetchByUid(reqParams.id, function(user) {
+    userModel.fetchByUid(reqParams.id, function (user) {
       if (!user) render({ errorCode: 'USER_NOT_FOUND' });
       else if (user.handle && !reqParams.embedW)
         redirectTo(path.replace('/u/' + reqParams.id, '/' + user.handle));

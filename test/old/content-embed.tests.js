@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-describe('Content Embed', function() {
+describe('Content Embed', function () {
   // DEPRECATION NOTICE: TRACK DETECTION CODE AND TEST SUITE HAS MOVED AND IS MAINTAINED BY PLAYEMJS PROJECT
 
   var log = console.log;
@@ -13,7 +13,7 @@ describe('Content Embed', function() {
   var vimeoUrls = ['http://vimeo.com/8020959'];
 
   var dailymotionUrls = [
-    'http://www.dailymotion.com/video/xmsihw_presidentielle-2012-le-programme-de-francois-asselineau-president-de-l-upr-1-10_news#from=embediframe'
+    'http://www.dailymotion.com/video/xmsihw_presidentielle-2012-le-programme-de-francois-asselineau-president-de-l-upr-1-10_news#from=embediframe',
   ];
 
   var soundcloudUrls = [
@@ -24,7 +24,7 @@ describe('Content Embed', function() {
         "http://snd.sc/XNy3e9", // short url
         */
     'http://soundcloud.com/wildbelle/keep-you', // supposed not to be embeddable, according to oembed API (status code 403)
-    'https://soundcloud.com/wildbelle/keep-you'
+    'https://soundcloud.com/wildbelle/keep-you',
   ];
 
   // from playem tests
@@ -39,18 +39,18 @@ describe('Content Embed', function() {
     'http://www.youtube.com/watch?feature=share&v=Bx2guCyfLXo',
     'http://www.youtube.com/watch?feature=player_embedded&v=EXFhuAbYXBk',
     'https://www.youtube.com/watch?feature=player_embedded&v=rGKfrgqWcv0#!', // tistou: fails with bookmarklet when clicking on the youtube logo from a facebook embed
-    'http://www.youtube.com/watch?v=rGKfrgqWcv0&feature=share'
+    'http://www.youtube.com/watch?v=rGKfrgqWcv0&feature=share',
   ];
 
   var mp3Urls = [
     "http://popdose.com/digging-for-gold-the-time-life-am-gold-series-part-55/#http://earbuds.popdose.com/thechrisholmes/tuneage/amgold/1975/16 (Hey Won't You Play) Another Some.mp3",
     //	"http://popdose.com/digging-for-gold-the-time-life-am-gold-series-part-55/", // blog page that embeds an mp3 file
-    "http://earbuds.popdose.com/thechrisholmes/tuneage/amgold/1975/16 (Hey Won't You Play) Another Some.mp3" // actual mp3 file
+    "http://earbuds.popdose.com/thechrisholmes/tuneage/amgold/1975/16 (Hey Won't You Play) Another Some.mp3", // actual mp3 file
   ];
 
   var bandcampUrls = [
     'https://bienatoi.bandcamp.com/track/noyade-noyade', // cover art to be fetched from album
-    'http://manisnotabird.bandcamp.com/track/the-sound-of-spring'
+    'http://manisnotabird.bandcamp.com/track/the-sound-of-spring',
   ];
 
   // pages avec MP3:
@@ -66,10 +66,10 @@ describe('Content Embed', function() {
       //bandcampUrls,
       mp3Urls
     )
-    .forEach(function(url) {
-      it('should recognize ' + url, function(done) {
-        console.log = function() {}; // prevent ContentEmbed from printing to the console
-        embed.extractEmbedRef(url, function(embedRef) {
+    .forEach(function (url) {
+      it('should recognize ' + url, function (done) {
+        console.log = function () {}; // prevent ContentEmbed from printing to the console
+        embed.extractEmbedRef(url, function (embedRef) {
           console.log = log; // restore console.log
           assert(!!embedRef, 'a result must be provided');
           assert.ifError(embedRef.error);

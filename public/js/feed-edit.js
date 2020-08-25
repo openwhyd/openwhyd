@@ -9,14 +9,14 @@ if (isNewPlaylist) {
   currentPlaylistName = '';
 }
 
-$playlistNameField.bind('keyup input onpaste', function() {
+$playlistNameField.bind('keyup input onpaste', function () {
   $playlistNameSubmit.toggle($playlistNameField.val() != currentPlaylistName);
 });
 
 $playlistNameField
   .parent()
   .unbind()
-  .submit(function(e) {
+  .submit(function (e) {
     e.preventDefault();
     var newPlaylistName = $playlistNameField.val();
     if (currentPlaylistName == newPlaylistName) return;
@@ -29,9 +29,9 @@ $playlistNameField
       data: {
         action: isNewPlaylist ? 'create' : 'rename',
         id: window.pagePlaylist.id,
-        name: newPlaylistName
+        name: newPlaylistName,
       },
-      complete: function(res, status) {
+      complete: function (res, status) {
         $playlistNameField.removeClass('loading').focus();
         try {
           if (status != 'success' || !res.responseText) throw 0;
@@ -62,7 +62,7 @@ $playlistNameField
           $playlistNameSubmit.show();
           console.log('error', status, res);
         }
-      }
+      },
     });
   });
 
@@ -76,9 +76,9 @@ function deletePlaylist() {
       url: '/api/playlist',
       data: {
         action: 'delete',
-        id: window.pagePlaylist.id
+        id: window.pagePlaylist.id,
       },
-      complete: function(res, status) {
+      complete: function (res, status) {
         $deletePlaylist.removeClass('loading');
         try {
           if (status != 'success' || !res.responseText) throw 0;
@@ -89,7 +89,7 @@ function deletePlaylist() {
           showMessage('An error occured. Please try again.');
           console.log('error', status, res);
         }
-      }
+      },
     });
   }
 }

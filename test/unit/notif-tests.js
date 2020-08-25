@@ -4,7 +4,7 @@ process.appParams = {
   mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'] // || "openwhyd_data",
+  mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
 };
 
 var mongodb = require('../../app/models/mongodb.js');
@@ -14,16 +14,16 @@ var db = mongodb.collections;
 var ObjectId = mongodb.ObjectId;
 
 function initDb(cb) {
-  mongodb.init(function(err, db) {
+  mongodb.init(function (err, db) {
     if (err) throw err;
     var mongodbInstance = this;
     var initScript = './config/initdb.js';
     console.log('Applying db init script:', initScript, '...');
     mongodbInstance.runShellScript(
       require('fs').readFileSync(initScript),
-      function(err) {
+      function (err) {
         if (err) throw err;
-        mongodbInstance.cacheCollections(function() {
+        mongodbInstance.cacheCollections(function () {
           mongodb.cacheUsers(cb);
         });
       }
@@ -31,7 +31,7 @@ function initDb(cb) {
   });
 }
 
-describe('notif', function() {
+describe('notif', function () {
   this.timeout(5000);
 
   it('initiatialises db', function async(done) {
@@ -41,7 +41,7 @@ describe('notif', function() {
   var p = {
     loggedUser: require('../fixtures.js').ADMIN_USER, //request.getUser(),
     session: {}, //request.session,
-    cookie: '' //"whydSid=" + (request.getCookies() || {})["whydSid"]
+    cookie: '', //"whydSid=" + (request.getCookies() || {})["whydSid"]
   };
 
   var user = p.loggedUser;
@@ -54,13 +54,13 @@ describe('notif', function() {
     {
       id: '4d7fc1969aa9db130e000003',
       _id: ObjectId('4d7fc1969aa9db130e000003'),
-      name: 'Gilles (test)'
+      name: 'Gilles (test)',
     },
     {
       id: '4dd4060ddb28e240e8508c28',
       _id: ObjectId('4dd4060ddb28e240e8508c28'),
-      name: 'Loick (test)'
-    }
+      name: 'Loick (test)',
+    },
   ];
 
   users.forEach(mongodb.cacheUser.bind(mongodb)); // populate mongodb.usernames for notif endpoints
@@ -69,16 +69,16 @@ describe('notif', function() {
     _id: ObjectId('4fe3428e9f2ec28c92000024'), //ObjectId("4ed3de428fed15d73c00001f"),
     uId: user.id,
     name: 'Knust hjerte by Casiokids (test)',
-    eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590'
+    eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
   };
 
-  var comments = users.map(function(u) {
+  var comments = users.map(function (u) {
     return {
       _id: ObjectId('4ed3de428fed15d73c00001f'),
       pId: '' + fakePost._id,
       uId: u.id,
       uNm: u.name,
-      text: 'coucou (test)'
+      text: 'coucou (test)',
     };
   });
 
@@ -104,8 +104,8 @@ describe('notif', function() {
 
   function pollUntil(fct, cb, timeout) {
     var t0 = Date.now();
-    var interv = setInterval(function() {
-      fct(function(ok) {
+    var interv = setInterval(function () {
+      fct(function (ok) {
         var inTime = Date.now() - t0 <= timeout;
         if (ok || !inTime) {
           clearInterval(interv);
@@ -116,7 +116,7 @@ describe('notif', function() {
   }
 
   function fetchNotifs(uId, cb) {
-    notifModel.getUserNotifs(uId, function(notifs) {
+    notifModel.getUserNotifs(uId, function (notifs) {
       console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
       cb(notifs);
     });
@@ -124,14 +124,14 @@ describe('notif', function() {
 
   function makeNotifChecker(expectedCount) {
     return function checkNotifs(ok) {
-      fetchNotifs(uId, function(notifs) {
+      fetchNotifs(uId, function (notifs) {
         ok(notifs.length == expectedCount);
       });
     };
   }
 
   function countEmptyNotifs(cb) {
-    db['notif'].count({ uId: { $size: 0 } }, function(err, count) {
+    db['notif'].count({ uId: { $size: 0 } }, function (err, count) {
       console.log('found', count, 'empty notifs in db');
       cb(count);
     });
@@ -140,8 +140,8 @@ describe('notif', function() {
   [
     [
       'clean notifications db',
-      function(cb) {
-        countEmptyNotifs(function(count) {
+      function (cb) {
+        countEmptyNotifs(function (count) {
           if (count === 0) {
             cb(true);
             return;
@@ -151,128 +151,128 @@ describe('notif', function() {
           db['notif'].remove(
             { uId: { $size: 0 } },
             { multi: true },
-            function() {
+            function () {
               console.timeEnd('clean');
-              countEmptyNotifs(function(count) {
+              countEmptyNotifs(function (count) {
                 cb(count === 0);
               });
             }
           );
         });
-      }
+      },
     ],
     [
       'clear all notifications',
-      function(cb) {
+      function (cb) {
         notifModel.clearUserNotifs(uId);
         pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      },
     ],
 
     // ---
 
     [
       'add sample notifications',
-      function(cb) {
+      function (cb) {
         for (var u in users) nbNotifs = testAllNotifs(u);
         pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
-      }
+      },
     ],
     [
       'clear all notifications',
-      function(cb) {
+      function (cb) {
         notifModel.clearUserNotifs(uId);
         pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      },
     ],
     [
       'check that db is clean',
-      function(cb) {
-        countEmptyNotifs(function(count) {
+      function (cb) {
+        countEmptyNotifs(function (count) {
           cb(count === 0);
         });
-      }
+      },
     ],
 
     // ---
 
     [
       'add sample notifications (again)',
-      function(cb) {
+      function (cb) {
         for (var u in users) nbNotifs = testAllNotifs(u);
         pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
-      }
+      },
     ],
     [
       'clear individual notifications',
-      function(cb) {
-        fetchNotifs(uId, function(notifs) {
+      function (cb) {
+        fetchNotifs(uId, function (notifs) {
           for (var i in notifs)
             notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
           pollUntil(makeNotifChecker(0), cb, TIMEOUT);
         });
-      }
+      },
     ],
     [
       'check that db is clean',
-      function(cb) {
-        countEmptyNotifs(function(count) {
+      function (cb) {
+        countEmptyNotifs(function (count) {
           cb(count === 0);
         });
-      }
+      },
     ],
 
     // ---
 
     [
       'call notif.sendTrackToUsers() with no parameters [should fail]',
-      function(cb) {
-        notifModel.sendTrackToUsers(null, function(res) {
+      function (cb) {
+        notifModel.sendTrackToUsers(null, function (res) {
           cb(res.error);
         });
-      }
+      },
     ],
     [
       'call notif.sendTrackToUsers() without pId parameter [should fail]',
-      function(cb) {
+      function (cb) {
         notifModel.sendTrackToUsers(
           { uId: users[0].id, uNm: users[0].name, uidList: [uId] },
-          function(res) {
+          function (res) {
             cb(res.error);
           }
         );
-      }
+      },
     ],
     [
       'call notif.sendTrackToUsers() with a object-typed pId parameter [should fail]',
-      function(cb) {
+      function (cb) {
         notifModel.sendTrackToUsers(
           {
             uId: users[0].id,
             uNm: users[0].name,
             uidList: [uId],
-            pId: fakePost
+            pId: fakePost,
           },
-          function(res) {
+          function (res) {
             cb(res.error);
           }
         );
-      }
+      },
     ],
     [
       'gilles sends a track to me',
-      function(cb) {
+      function (cb) {
         var p = {
           uId: users[0].id,
           uNm: users[0].name,
           uidList: [uId],
-          pId: '' + fakePost._id
+          pId: '' + fakePost._id,
         };
-        notifModel.sendTrackToUsers(p, function(res) {
+        notifModel.sendTrackToUsers(p, function (res) {
           pollUntil(
             makeNotifChecker(1),
-            function(inTime) {
-              fetchNotifs(user.id, function(notifs) {
+            function (inTime) {
+              fetchNotifs(user.id, function (notifs) {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
@@ -289,14 +289,14 @@ describe('notif', function() {
             TIMEOUT
           );
         });
-      }
+      },
     ],
     [
       'clear all notifications',
-      function(cb) {
+      function (cb) {
         notifModel.clearUserNotifs(uId);
         pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      },
     ],
 
     // TODO: send to several users at once
@@ -305,19 +305,19 @@ describe('notif', function() {
 
     [
       'gilles sends a playlist to me',
-      function(cb) {
+      function (cb) {
         var p = {
           uId: users[0].id,
           uNm: users[0].name,
           uidList: [uId],
-          plId: users[0].id + '_' + 0 // gilles' 1st playlist
+          plId: users[0].id + '_' + 0, // gilles' 1st playlist
         };
         var plUri = p.plId.replace('_', '/playlist/');
-        notifModel.sendPlaylistToUsers(p, function(res) {
+        notifModel.sendPlaylistToUsers(p, function (res) {
           pollUntil(
             makeNotifChecker(1),
-            function(inTime) {
-              fetchNotifs(user.id, function(notifs) {
+            function (inTime) {
+              fetchNotifs(user.id, function (notifs) {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
@@ -334,38 +334,38 @@ describe('notif', function() {
             TIMEOUT
           );
         });
-      }
+      },
     ],
     [
       'clear all notifications',
-      function(cb) {
+      function (cb) {
         notifModel.clearUserNotifs(uId);
         pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
+      },
     ],
 
     [
       'gilles sends a track to me => res._id is populated',
-      function(cb) {
+      function (cb) {
         var p = {
           uId: users[0].id,
           uNm: users[0].name,
           uidList: [uId],
-          pId: '' + fakePost._id
+          pId: '' + fakePost._id,
         };
-        notifModel.sendTrackToUsers(p, function(res) {
+        notifModel.sendTrackToUsers(p, function (res) {
           cb(!!res._id);
         });
-      }
+      },
     ],
     [
       'clear all notifications',
-      function(cb) {
+      function (cb) {
         notifModel.clearUserNotifs(uId);
         pollUntil(makeNotifChecker(0), cb, TIMEOUT);
-      }
-    ]
-  ].forEach(function(test) {
+      },
+    ],
+  ].forEach(function (test) {
     it(test[0], function async(done) {
       test[1](function cb(res) {
         if (!!res) {

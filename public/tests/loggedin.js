@@ -34,14 +34,14 @@ function fetch(url, cb) {
     Date.now() +
     '_' +
     (window._whyd_counter = (window._whyd_counter || 0) + 1);
-  window[cbName] = function(res) {
+  window[cbName] = function (res) {
     cb(res);
     delete window[cbName];
   };
   include(url + (url.indexOf('?') == -1 ? '?' : '&') + 'callback=' + cbName);
 }
 
-fetch('/api/user', function(res) {
+fetch('/api/user', function (res) {
   var loggedUser = !!(res || {})._id && res;
   if (loggedUser) {
     document.body.className = (document.body.className || '') + 'loggedIn';

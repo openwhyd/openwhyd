@@ -12,7 +12,7 @@ var PLAYLISTS_FEATURED = [
   '53c91b30e04b7b4fca7c8e7a_5', // My Spanish Music by Ana Medina
   '53d4eefae04b7b4fca7cd089_0', // Madrid Sounds like by Cindy Castillo
   '531dabda7e91c862b2b64407_1', // Madrid by Agustin Lopez
-  '53aa9feb66491c17b2ae43f3_0' // 2014 by Sergio
+  '53aa9feb66491c17b2ae43f3_0', // 2014 by Sergio
 ];
 
 var PLAYLISTS_TOP = [
@@ -23,8 +23,8 @@ var PLAYLISTS_TOP = [
     nbTracks: 9,
     plId: 0,
     uId: '5398259366491c17b2ad6c04',
-    uNm: 'Fred BeWater'
-  }
+    uNm: 'Fred BeWater',
+  },
 ];
 
 var PLAYLISTS_BLACKLIST = ['50bca67a7e91c862b2a91d33_13'];

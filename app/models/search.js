@@ -13,7 +13,7 @@ var searchImpl = config.searchModule ? require('./' + config.searchModule) : {};
 
 var FCTS_REQUIRED = {
   init: 1,
-  query: 1
+  query: 1,
 };
 
 var FCTS_OPTIONAL = {
@@ -24,11 +24,11 @@ var FCTS_OPTIONAL = {
   indexPlaylist: 3,
   deleteDoc: 2,
   deleteAllDocs: 1,
-  deletePlaylist: 2
+  deletePlaylist: 2,
 };
 
 function makeNoImplHandler(methodName, cbPos) {
-  return function() {
+  return function () {
     console.log('models.search: NO IMPLEMENTATION for ' + methodName);
     var callback = arguments[cbPos];
     callback && callback();

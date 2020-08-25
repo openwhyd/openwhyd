@@ -7,10 +7,10 @@ var MONGO_OPTIONS = {
   useUnifiedTopology: true,
   //strict: false,
   //safe: false,
-  w: 'majority' // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+  w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
 };
 
-const makeConnUrl = params => {
+const makeConnUrl = (params) => {
   var host = params.mongoDbHost || process.env.MONGODB_HOST;
   var port = params.mongoDbPort || process.env.MONGODB_PORT;
   var authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
@@ -21,15 +21,15 @@ const makeConnUrl = params => {
 };
 
 // populates db.<collection_name>, for each collection
-const cacheCollections = function(db, callback) {
-  db.collections(function(err, collections) {
+const cacheCollections = function (db, callback) {
+  db.collections(function (err, collections) {
     if (err || 0 == collections.length) {
       callback(err, db);
       return;
     }
     var remaining = collections.length;
-    const cacheCollection = colName =>
-      db.collection(colName, function(err, col) {
+    const cacheCollection = (colName) =>
+      db.collection(colName, function (err, col) {
         db.collections[colName] = col;
         if (0 == --remaining) callback(null, db);
       });
@@ -49,7 +49,7 @@ const initMongo = (params, callback) => {
       callback(err);
     } else {
       const db = client.db(dbName);
-      db.addListener('error', function(err) {
+      db.addListener('error', function (err) {
         console.log('MongoDB model async error: ', err);
       });
       cacheCollections(db, callback); // will mutate db and callback
@@ -57,9 +57,9 @@ const initMongo = (params, callback) => {
   });
 };
 
-const init = params =>
+const init = (params) =>
   new Promise((resolve, reject) => {
-    initMongo(params, function(err, db) {
+    initMongo(params, function (err, db) {
       if (err) {
         reject(err);
       } else {
@@ -74,7 +74,7 @@ const forEachObject = (coll, handler, options = {}) =>
     const progress = new Progress({ label: 'fetching from mongodb...' });
     // options.batchSize = options.batchSize || 100;
     // options.cursorDelay = options.cursorDelay || 0;
-    coll.find({}, options, function(err, cursor) {
+    coll.find({}, options, function (err, cursor) {
       const onObject = (err, obj) => {
         if (err) {
           progress.done();
@@ -94,5 +94,5 @@ const forEachObject = (coll, handler, options = {}) =>
 
 module.exports = {
   init,
-  forEachObject
+  forEachObject,
 };

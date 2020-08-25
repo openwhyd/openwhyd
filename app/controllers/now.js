@@ -1,3 +1,3 @@
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   response.legacyRender(Date.now());
 };

@@ -4,21 +4,21 @@
  **/
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function() {} };
+if (undefined == window.console) console = { log: function () {} };
 
 console.log('-= openwhyd bookmarklet =-');
 
-(function() {
+(function () {
   window.onkeydownBackup = window.onkeydownBackup || window.document.onkeydown;
 
-  window.closeWhydBk = function() {
+  window.closeWhydBk = function () {
     document.body.removeChild(document.getElementById('whydBookmarklet'));
     window.document.onkeydown = window.onkeydownBackup;
     delete window.onkeydownBackup;
     delete window.closeWhydBk;
   };
 
-  window.document.onkeydown = function(e) {
+  window.document.onkeydown = function (e) {
     if ((e || event).keyCode == 27) closeWhydBk();
   };
 
@@ -32,7 +32,7 @@ console.log('-= openwhyd bookmarklet =-');
 
   function findScriptHost(scriptPathName) {
     var host = null;
-    forEachElement('script', function(element) {
+    forEachElement('script', function (element) {
       var whydPathPos = element.src.indexOf(scriptPathName);
       if (whydPathPos > -1) host = element.src.substr(0, whydPathPos);
     });
@@ -70,7 +70,7 @@ console.log('-= openwhyd bookmarklet =-');
     '<p>please wait...</p>',
     '<img src="' + urlPrefix + '/images/loader.gif" style="display:inline;">',
     '</div>',
-    '</div>'
+    '</div>',
   ].join('\n');
 
   function include(src, callback) {
@@ -193,7 +193,7 @@ console.log('-= openwhyd bookmarklet =-');
     thumb.element = document.createElement('img');
     thumb.element.src = thumb.img;
     var divThumb = renderThumb(thumb);
-    divThumb.onclick = function() {
+    divThumb.onclick = function () {
       showForm(thumb);
     };
     contentDiv.appendChild(divThumb);
@@ -231,9 +231,9 @@ console.log('-= openwhyd bookmarklet =-');
       t: 1,
       dev: 1,
       testtube: 1,
-      view_all_playlists: 1
+      view_all_playlists: 1,
     };
-    return function(url, cb) {
+    return function (url, cb) {
       //console.log("youtube url", url)
       var id = url.match(regex);
       //console.log("youtube url 2", id)
@@ -244,10 +244,10 @@ console.log('-= openwhyd bookmarklet =-');
           eid: id,
           url: url,
           img: 'https://i.ytimg.com/vi/' + id + '/0.jpg',
-          title: 'Youtube video' // by default
+          title: 'Youtube video', // by default
         };
         var handlerId = 'youtubeHandler' + new Date().getTime();
-        window[handlerId] = function(data) {
+        window[handlerId] = function (data) {
           //console.log("youtube api response", data);
           if (data && data.data) embed.title = data.data.title;
           cb(embed);
@@ -267,11 +267,11 @@ console.log('-= openwhyd bookmarklet =-');
     var regex = /https?:\/\/(?:www\.)?soundcloud\.com\/([\w-_]+\/[\w-_]+)/;
     // TODO: also support http://snd.sc/yp6VMo urls
     var scClientId = 'eb257e698774349c22b0b727df0238ad';
-    return function(url, cb) {
+    return function (url, cb) {
       var embed = {
         url: url,
         img: urlPrefix + '/images/cover-soundcloud.jpg',
-        title: 'SoundCloud Track' // by default
+        title: 'SoundCloud Track', // by default
       };
       var timeout = null;
       function addMetadata(data) {
@@ -331,16 +331,16 @@ console.log('-= openwhyd bookmarklet =-');
   function VimeoDetector() {
     //console.log("Initializing Vimeo Detector");
     var regex = /https?:\/\/(?:www\.)?vimeo\.com\/(clip\:)?(\d+)/;
-    return function(url, cb) {
+    return function (url, cb) {
       var embed = {
         url: url,
-        title: 'Vimeo video'
+        title: 'Vimeo video',
       };
       var id = url.match(regex);
       if (id) {
         embed.eid = id = id.pop();
         var callbackFct = 'viCallback_' + id;
-        window[callbackFct] = function(data) {
+        window[callbackFct] = function (data) {
           if (data && data.length) {
             embed.title = embed.name = data[0].title;
             embed.img = data[0].thumbnail_medium;
@@ -360,15 +360,15 @@ console.log('-= openwhyd bookmarklet =-');
   function DailymotionDetector() {
     //console.log("Initializing Dailymotion Detector");
     var regex = /https?:\/\/(?:www\.)?dailymotion.com\/video\/([\w-_]+)/; // /https?:\/\/(?:www\.)?dailymotion.com\/embed\/video\/([\w-_]+)/,
-    return function(url, cb) {
+    return function (url, cb) {
       var embed = {
         url: url,
         title: 'Dailymotion video',
-        id: (url.match(regex) || []).pop()
+        id: (url.match(regex) || []).pop(),
       };
       if (embed.id) {
         var callbackFct = 'dmCallback_' + embed.id.replace(/[-\/]/g, '__');
-        window[callbackFct] = function(data) {
+        window[callbackFct] = function (data) {
           if (data) {
             embed.title = embed.name = data.title;
             embed.img = data.thumbnail_url; // "http://www.dailymotion.com/thumbnail/video/" + embed.id
@@ -392,15 +392,15 @@ console.log('-= openwhyd bookmarklet =-');
   function DeezerDetector() {
     //console.log("Initializing Deezer Detector");
     var regex = /https?:\/\/(?:www\.)?deezer.com\/track\/([\w-_]+)/;
-    return function(url, cb) {
+    return function (url, cb) {
       var embed = {
         url: url,
         title: 'Deezer track',
-        id: (url.match(regex) || []).pop()
+        id: (url.match(regex) || []).pop(),
       };
       if (embed.id) {
         var callbackFct = 'dzCallback_' + embed.id.replace(/[-\/]/g, '__');
-        window[callbackFct] = function(data) {
+        window[callbackFct] = function (data) {
           if (data && !data.error) {
             embed.title = embed.name = data.artist.name + ' - ' + data.title;
             embed.img = data.album.cover;
@@ -420,7 +420,7 @@ console.log('-= openwhyd bookmarklet =-');
   function BandcampDetector() {
     //console.log("Initializing Bandcamp Detector");
     var regex = /([a-zA-Z0-9_\-]+).bandcamp\.com\/track\/([a-zA-Z0-9_\-]+)/;
-    return function(url, cb) {
+    return function (url, cb) {
       var match = url.match(regex);
       cb(
         (match || []).length < 3
@@ -432,7 +432,7 @@ console.log('-= openwhyd bookmarklet =-');
               title:
                 match[1].replace(/[\-_]+/g, ' ') +
                 ' - ' +
-                match[2].replace(/[\-_]+/g, ' ')
+                match[2].replace(/[\-_]+/g, ' '),
             }
       );
     };
@@ -441,15 +441,15 @@ console.log('-= openwhyd bookmarklet =-');
   function JamendoDetector() {
     //console.log("Initializing Jamendo Detector");
     var JAMENDO_CLIENT_ID = '2c9a11b9';
-    return function(url, cb) {
+    return function (url, cb) {
       var embed = {
         url: url,
         title: 'Jamendo',
-        id: /jamendo.com\/.*track\/(\d+)/.test(url) ? RegExp.$1 : null
+        id: /jamendo.com\/.*track\/(\d+)/.test(url) ? RegExp.$1 : null,
       };
       if (embed.id) {
         var callbackFct = 'jaCallback_' + embed.id.replace(/[-\/]/g, '__');
-        window[callbackFct] = function(data) {
+        window[callbackFct] = function (data) {
           data = data.results[0];
           embed.title = data.artist_name + ' - ' + data.name;
           embed.img = data.album_image;
@@ -467,11 +467,11 @@ console.log('-= openwhyd bookmarklet =-');
     };
   }
 
-  var Mp3Detector = (function() {
+  var Mp3Detector = (function () {
     //console.log("Initializing Mp3 Detector");
     var reg = /([^\/]+)\.(?:mp3|ogg)$/;
     var cover = urlPrefix + '/images/cover-audiofile.png';
-    return function(url, cb, e) {
+    return function (url, cb, e) {
       var title = (url.match(reg) || []).pop();
       title = !title ? '' : e.title || e.innerText || e.textContent || title;
       cb(
@@ -481,7 +481,7 @@ console.log('-= openwhyd bookmarklet =-');
               eid: url,
               url: url,
               img: cover,
-              title: title
+              title: title,
             }
       );
     };
@@ -497,19 +497,14 @@ console.log('-= openwhyd bookmarklet =-');
     new DeezerDetector(),
     new BandcampDetector(),
     new JamendoDetector(),
-    Mp3Detector
+    Mp3Detector,
   ];
 
   function unwrapFacebookLink(src) {
     // e.g. http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DKhXn0anD1lE&h=AAQFjMJBoAQFTPOP4HzFCv0agQUHB6Un31ArdmwvxzZxofA
     var fbLink = src.split('facebook.com/l.php?u=');
     if (fbLink.length > 1) {
-      fbLink = decodeURIComponent(
-        fbLink
-          .pop()
-          .split('&')
-          .shift()
-      );
+      fbLink = decodeURIComponent(fbLink.pop().split('&').shift());
       var result = fbLink.indexOf('//www.facebook.com/') == -1 ? fbLink : src;
       return result;
     }
@@ -522,7 +517,7 @@ console.log('-= openwhyd bookmarklet =-');
       src = unwrapFacebookLink(src);
       p(
         src,
-        function(embed) {
+        function (embed) {
           if (embed) {
             embed.title =
               embed.title || e.textNode || e.title || e.alt || p.label;
@@ -555,7 +550,7 @@ console.log('-= openwhyd bookmarklet =-');
       var remaining = prov.length;
       var detected = null;
       for (var p = 0; p < prov.length; ++p)
-        addEmbedThumb(e, prov[p], function(embed) {
+        addEmbedThumb(e, prov[p], function (embed) {
           nEmbeds += embed ? 1 : 0;
           var eid = embed && (embed.eid || embed.id);
           if (eid && !eidSet[eid])
@@ -565,7 +560,7 @@ console.log('-= openwhyd bookmarklet =-');
     }
 
     function detectAllEmbeds() {
-      detectEmbed({ src: window.location.href }, function(found) {
+      detectEmbed({ src: window.location.href }, function (found) {
         console.log('content page', found);
         /*if (found)
 					showForm(lastThumb);
@@ -586,7 +581,7 @@ console.log('-= openwhyd bookmarklet =-');
               var elts = document.querySelectorAll('a[href^="/track/"]');
               for (var j = 0; j < elts.length; ++j)
                 toDetect.push({
-                  href: bandcampPageUrl + elts[j].getAttribute('href')
+                  href: bandcampPageUrl + elts[j].getAttribute('href'),
                 });
             }
           }

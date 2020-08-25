@@ -6,21 +6,21 @@ var mongodb = require('../../models/mongodb.js');
 var trackModel = require('../../models/track.js');
 
 var ACTIONS = {
-  refresh: function(p, cb) {
+  refresh: function (p, cb) {
     if (!p.eId) return cb({ error: 'missing parameter: eId' });
     console.log('refreshing track metadata for eId', p.eId);
     trackModel.updateAndPopulateMetadata(p.eId, cb, true);
   },
-  listBySource: function(p, cb) {
+  listBySource: function (p, cb) {
     var list = [];
-    mongodb.collections['track'].count(function(err, total) {
+    mongodb.collections['track'].count(function (err, total) {
       function whenDone() {
         cb(
           JSON.stringify(
             {
               total: total,
               count: list.length,
-              list: list
+              list: list,
             },
             null,
             2
@@ -31,7 +31,7 @@ var ACTIONS = {
       mongodb.forEach2(
         'track',
         { fields: { _id: 0, eId: 1, pId: 1, name: 1 } },
-        function(track, next) {
+        function (track, next) {
           if (!track) whenDone();
           else {
             if (++i % 100) console.log('listBySource', i, '/', total);
@@ -43,18 +43,18 @@ var ACTIONS = {
       );
     });
   },
-  fetchMetadataConfidence: function(p, cb) {
+  fetchMetadataConfidence: function (p, cb) {
     var countPerConfidence = {};
     function whenDone() {
       console.log('countPerConfidence', countPerConfidence);
     }
-    mongodb.collections['track'].count(function(err, count) {
+    mongodb.collections['track'].count(function (err, count) {
       var i = 0;
       cb({ total: count });
       mongodb.forEach2(
         'track',
         { fields: { _id: 0, eId: 1, meta: 1 } },
-        function(track, next) {
+        function (track, next) {
           if (!track) whenDone();
           else {
             if (++i % 10)
@@ -76,7 +76,7 @@ var ACTIONS = {
       );
     });
   },
-  fetchMetadataForHotTracks: function(p, cb) {
+  fetchMetadataForHotTracks: function (p, cb) {
     var countPerConfidence = {},
       countPerSource = {},
       count = 50;
@@ -86,10 +86,10 @@ var ACTIONS = {
         {
           fields: { _id: 0, eId: 1, name: 1, meta: 1 },
           sort: { score: -1 },
-          limit: count
+          limit: count,
         }
       )
-      .toArray(function(err, tracks) {
+      .toArray(function (err, tracks) {
         for (var i in tracks) {
           var track = tracks[i];
           console.log(
@@ -116,11 +116,11 @@ var ACTIONS = {
         );
         cb({
           countPerConfidence: countPerConfidence,
-          countPerSource: countPerSource
+          countPerSource: countPerSource,
         });
       });
   },
-  default: function(p, cb) {
+  default: function (p, cb) {
     if (!p.eId) return cb({ error: 'missing parameter: eId' });
     /*
 		if (p.extract)
@@ -131,10 +131,10 @@ var ACTIONS = {
     // use metadata cached in whyd's database (track collection)
     trackModel.fetchTrackByEid(p.eId, cb);
     // TODO: add "extract and update" option
-  }
+  },
 };
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('track.api.controller', reqParams);
 
   // make sure a registered user is logged, or return an error page
@@ -150,7 +150,7 @@ exports.controller = function(request, reqParams, response) {
   else if (isAdmin && reqParams._1 && !reqParams.action)
     reqParams.action = reqParams._1;
 
-  ACTIONS[reqParams.action || 'default'](p, function(res) {
+  ACTIONS[reqParams.action || 'default'](p, function (res) {
     response.renderJSON(res);
   });
 };

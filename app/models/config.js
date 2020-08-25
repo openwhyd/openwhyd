@@ -10,8 +10,8 @@ exports.whydTeam = [
   {
     id: process.env.WHYD_ADMIN_OBJECTID,
     name: process.env.WHYD_ADMIN_NAME,
-    email: process.env.WHYD_ADMIN_EMAIL
-  }
+    email: process.env.WHYD_ADMIN_EMAIL,
+  },
 ];
 
 exports.autoSubscribeUsers = [
@@ -33,18 +33,18 @@ var PLAYERS = {
   yt: {
     name: 'YouTube',
     urlPrefix: '//youtube.com/watch?v=',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         url.match(
           /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/
         ) || []
       ).pop();
-    }
+    },
   },
   sc: {
     name: 'Soundcloud',
     urlPrefix: '//soundcloud.com/',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         (url.indexOf('soundcloud.com/player') != -1
           ? (url.match(/url=([^&]*)/) || []).pop()
@@ -53,61 +53,58 @@ var PLAYERS = {
           url.match(/https?:\/\/(?:www\.)?soundcloud\.com\/([\w-_\/]+)/) || []
         ).pop()
       );
-    }
+    },
   },
   dm: {
     name: 'Dailymotion',
     urlPrefix: '//dailymotion.com/video/',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         url.match(
           /https?:\/\/(?:www\.)?dailymotion.com(?:\/embed)?\/video\/([\w-]+)/
         ) || []
       ).pop();
-    }
+    },
   },
   vi: {
     name: 'Vimeo',
     urlPrefix: '//vimeo.com/',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         url.match(/https?:\/\/(?:www\.)?vimeo\.com\/(clip\:)?(\d+)/) || []
       ).pop();
-    }
+    },
   },
   dz: {
     name: 'Deezer',
-    urlPrefix: '//www.deezer.com/track/'
+    urlPrefix: '//www.deezer.com/track/',
   },
   sp: {
     name: 'Spotify',
-    urlPrefix: '//open.spotify.com/track/'
+    urlPrefix: '//open.spotify.com/track/',
   },
   bc: {
     name: 'Bandcamp',
-    urlMaker: function(eId) {
-      var parts = eId
-        .split('#')[0]
-        .substr(4)
-        .split('/');
+    urlMaker: function (eId) {
+      var parts = eId.split('#')[0].substr(4).split('/');
       return parts.length < 2
         ? undefined
         : '//' + parts[0] + '.bandcamp.com/track/' + parts[1];
-    }
+    },
   },
   ja: {
     name: 'Jamendo',
     urlPrefix: '//jamendo.com/track/',
-    extractId: function(url) {
+    extractId: function (url) {
       /jamendo.com\/.*track\/(\d+)/.test(url) ? { videoId: RegExp.$1 } : null;
-    }
+    },
   },
   fi: {
-    name: 'File'
-  }
+    name: 'File',
+  },
 };
 
-exports.getPlayerMeta = function(eId, src) {
+exports.getPlayerMeta = function (eId, src) {
   if (eId && eId.length && eId[0] == '/') {
     var playerId = eId.split('/')[1];
     var player = PLAYERS[playerId];
@@ -119,35 +116,35 @@ exports.getPlayerMeta = function(eId, src) {
           ? eId.replace('/' + playerId + '/', player.urlPrefix)
           : player.urlMaker
           ? player.urlMaker(eId, src)
-          : src || eId.replace('/fi/', '') // for audio files
+          : src || eId.replace('/fi/', ''), // for audio files
       };
   }
 };
 
-exports.translateEidToUrl = function(eId) {
+exports.translateEidToUrl = function (eId) {
   return (exports.getPlayerMeta(eId) || {}).contentUrl || eId;
 };
 
-exports.translateUrlToEid = function(url) {
+exports.translateUrlToEid = function (url) {
   for (var i in PLAYERS) {
-    var eId = (PLAYERS[i].extractId || function() {})(url);
+    var eId = (PLAYERS[i].extractId || function () {})(url);
     if (eId) return '/' + i + '/' + eId;
   }
 };
 
 // helper functions (from topicRendering module)
 
-exports.addPrefix = function(url, urlPrefix) {
+exports.addPrefix = function (url, urlPrefix) {
   return !url
     ? url
     : url.replace(/^\//, (urlPrefix || exports.urlPrefix) + '/');
 };
 
-exports.userImg = function(uid, urlPrefix) {
+exports.userImg = function (uid, urlPrefix) {
   return exports.addPrefix('/img/u/' + ('' + uid).split('/').pop(), urlPrefix);
 };
 
-exports.imgUrl = function(mid, freebaseThumbParams, urlPrefix) {
+exports.imgUrl = function (mid, freebaseThumbParams, urlPrefix) {
   var urlPrefix = urlPrefix || exports.urlPrefix;
   if (!mid) return mid;
   if (mid.startsWith('/yt/'))

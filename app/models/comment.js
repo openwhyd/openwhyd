@@ -20,25 +20,25 @@ function stringify(a) {
 }
 
 function combineResult(cb) {
-  return function(err, res) {
+  return function (err, res) {
     (cb || console.log)(err ? { error: err } : res);
   };
 }
 
 function combineInsertedResult(cb) {
-  return function(err, res) {
+  return function (err, res) {
     (cb || console.log)(err ? { error: err } : res.ops[0]);
   };
 }
 
 function combineResultArray(cb) {
-  return function(err, res) {
+  return function (err, res) {
     if (err) (cb || console.log)({ error: err });
     else res.toArray(combineResult(cb));
   };
 }
 
-exports.fetchLast = function(p, cb) {
+exports.fetchLast = function (p, cb) {
   p = p || {};
   if (!p.pId) cb({ error: 'missing field: pId' });
   else
@@ -49,7 +49,7 @@ exports.fetchLast = function(p, cb) {
     );
 };
 
-exports.fetch = function(q, p, cb) {
+exports.fetch = function (q, p, cb) {
   q = q || {};
   p = p || {};
   p.sort = p.sort || [['_id', 'asc']];
@@ -61,13 +61,13 @@ exports.fetch = function(q, p, cb) {
       : q._id;
   if (q.pId)
     q.pId = {
-      $in: (q.pId.push ? q.pId : [q.pId]).map(/*mongodb.ObjectId*/ stringify)
+      $in: (q.pId.push ? q.pId : [q.pId]).map(/*mongodb.ObjectId*/ stringify),
     };
   getCol().find(q, p, combineResultArray(cb));
 };
 
 function notifyUsers(comment) {
-  postModel.fetchPostById(comment.pId, function(post) {
+  postModel.fetchPostById(comment.pId, function (post) {
     var post = post || {};
     if (post.error || !post.uId) return;
     var notifiedUidSet = {};
@@ -75,11 +75,11 @@ function notifyUsers(comment) {
     // notif mentioned users
     var mentionedUsers = snip.extractMentions(comment.text);
     if (mentionedUsers.length)
-      todo.push(function(cb) {
+      todo.push(function (cb) {
         console.log('notif mentioned users');
         snip.forEachArrayItem(
           mentionedUsers,
-          function(mentionedUid, next) {
+          function (mentionedUid, next) {
             notifiedUidSet[mentionedUid] = true;
             notifModel.mention(post, comment, mentionedUid, next);
           },
@@ -87,7 +87,7 @@ function notifyUsers(comment) {
         );
       });
     // notify post author
-    todo.push(function(cb) {
+    todo.push(function (cb) {
       if (notifiedUidSet[post.uId]) {
         cb();
         return;
@@ -97,12 +97,12 @@ function notifyUsers(comment) {
       notifModel.comment(post, comment, cb);
     });
     // notify previous commenters
-    todo.push(function(cb) {
+    todo.push(function (cb) {
       console.log('notify previous commenters');
       exports.fetch(
         { pId: comment.pId, _id: { $lt: comment._id } },
         { fields: { uId: 1 } },
-        function(comments) {
+        function (comments) {
           var comments = comments && comments.length ? comments : [];
           var commentsByUid = snip.excludeKeys(
             snip.groupObjectsBy(comments, 'uId'),
@@ -110,7 +110,7 @@ function notifyUsers(comment) {
           );
           snip.forEachArrayItem(
             Object.keys(commentsByUid),
-            function(uId, next) {
+            function (uId, next) {
               notifiedUidSet[uId] = true;
               notifModel.commentReply(post, comment, uId, next);
             },
@@ -119,19 +119,19 @@ function notifyUsers(comment) {
         }
       );
     });
-    snip.forEachArrayItem(todo, function(fct, next) {
+    snip.forEachArrayItem(todo, function (fct, next) {
       fct(next);
     });
   });
 }
 
-exports.insert = function(p, cb) {
+exports.insert = function (p, cb) {
   p = p || {};
   var comment = {
     uId: p.uId,
     uNm: mongodb.getUserNameFromId(p.uId) /*p.uNm*/,
     pId: /*mongodb.ObjectId*/ '' + p.pId,
-    text: (p.text || '').trim()
+    text: (p.text || '').trim(),
   };
   // checking parameters
   for (var f in comment)
@@ -140,7 +140,7 @@ exports.insert = function(p, cb) {
       return;
     }
   // make sure user is not spamming
-  exports.fetchLast(p, function(lastC) {
+  exports.fetchLast(p, function (lastC) {
     if (
       lastC &&
       lastC.uId == comment.uId &&
@@ -148,13 +148,13 @@ exports.insert = function(p, cb) {
     )
       cb({
         error:
-          "You're commenting too quickly! Please try again in a few seconds."
+          "You're commenting too quickly! Please try again in a few seconds.",
       });
     // actual insert
     else
       getCol().insertOne(
         comment,
-        combineInsertedResult(function(res) {
+        combineInsertedResult(function (res) {
           cb && cb(res);
           if (res && !res.error) notifyUsers(comment);
         })
@@ -162,18 +162,18 @@ exports.insert = function(p, cb) {
   });
 };
 
-exports.delete = function(p, cb) {
+exports.delete = function (p, cb) {
   p = p || {};
   var q = { _id: mongodb.ObjectId('' + p._id) };
   getCol().findOne(
     q,
-    combineResult(function(comment) {
+    combineResult(function (comment) {
       var comment = comment || { error: 'comment not found' };
       if (comment.error) {
         cb && cb(comment);
         return;
       }
-      postModel.fetchPostById(comment.pId, function(post) {
+      postModel.fetchPostById(comment.pId, function (post) {
         var post = post || { error: 'post not found' };
         if (post.error) {
           cb && cb(post);
