@@ -1,3 +1,17 @@
+## [1.34.6](https://github.com/openwhyd/openwhyd/compare/v1.34.5...v1.34.6) (2020-08-25)
+
+
+### Bug Fixes
+
+* **CI:** Expect semantic commit message just for PR title ([#337](https://github.com/openwhyd/openwhyd/issues/337)) ([9717160](https://github.com/openwhyd/openwhyd/commit/9717160))
+
+## [1.34.5](https://github.com/openwhyd/openwhyd/compare/v1.34.4...v1.34.5) (2020-08-25)
+
+
+### Bug Fixes
+
+* **CI:** Force cypress v3.8.3 on the Docker Workflow ([#336](https://github.com/openwhyd/openwhyd/issues/336)) ([63a3e1e](https://github.com/openwhyd/openwhyd/commit/63a3e1e)), closes [#333](https://github.com/openwhyd/openwhyd/issues/333)
+
 ## [1.34.4](https://github.com/openwhyd/openwhyd/compare/v1.34.3...v1.34.4) (2020-07-11)
 
 
