@@ -11,8 +11,12 @@ context('reduce frequency of email notifications', () => {
   it('user activates daily email notifications', () => {
     cy.loginAsAdmin();
     cy.visit('/settings');
-    cy.get('a').contains('Notifications').click();
-    cy.get('label').contains('Daily').click();
+    cy.get('a')
+      .contains('Notifications')
+      .click();
+    cy.get('label')
+      .contains('Daily')
+      .click();
     cy.get('#tabNotif input[type="submit"]').click();
     cy.request('api/user').should(response => {
       expect(response.body)
