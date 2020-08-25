@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.34.6",
+  "version": "1.34.8",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "docker:test:cypress:dev": ". ./.env-docker && npm run test:cypress:dev",
     "docker:test:cypress": ". ./.env-docker && npm run test:cypress",
     "docker:test": "npm run docker:run test-unit && npm run docker:run test-api && npm run docker:seed && wdio wdio.conf.js && npm run docker:test:cypress",
-    "lint:fix": "node_modules/.bin/prettier \"./**/*.js\" \"scripts/**/*.js\" --write",
+    "lint:fix": "node_modules/.bin/prettier \"./**/*.js\" \"scripts/**/*.js\"  \"./**/*.ts\"  --write",
     "lint": "eslint app"
   },
   "engines": {
@@ -46,6 +46,8 @@
     "test": "./test"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
     "algoliasearch": "^3.23.0",
     "apn": "1.5.2",
     "argon2": "^0.25.1",
@@ -80,7 +82,7 @@
     "all-contributors-cli": "5.4.0",
     "chromedriver": "^77.0.0",
     "cypress": "^3.8.3",
-    "eslint": "^6.5.1",
+    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-prettier": "^3.1.1",
     "mocha": "5.2.0",
