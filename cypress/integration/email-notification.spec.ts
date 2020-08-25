@@ -23,7 +23,8 @@ context('reduce frequency of email notifications', () => {
         .to.have.property('pref')
         .to.have.property('emSub', '1');
     });
-    cy.visit(`/api/unsubscribe?uId=000000000000000000000001&type=emSub&action=reduce`);
+    cy.visit(
+      `/api/unsubscribe?uId=000000000000000000000001&type=emSub&action=reduce`);
     cy.get('body').contains('weekly');
     cy.request('api/user').should(response => {
       expect(response.body)
@@ -31,13 +32,12 @@ context('reduce frequency of email notifications', () => {
         .to.have.property('emSub', 7);
     });
   });
-  
   it('user has instant eamail notification', () => {
     cy.loginAsAdmin();
     cy.request('/api/user').should((response) =>{
       expect(response.body)
         .to.have.property('pref')
-        .to.have.property('emSub', 0)
+        .to.have.property('emSub', 0);
     });
   });
   it('user unsubscribes from email notification', () => {
