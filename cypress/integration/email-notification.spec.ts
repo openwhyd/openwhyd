@@ -34,7 +34,7 @@ context('reduce frequency of email notifications', () => {
   });
   it('user has instant eamail notification', () => {
     cy.loginAsAdmin();
-    cy.request('/api/user').should((response) =>{
+    cy.request('/api/user').should((response) => {
       expect(response.body)
         .to.have.property('pref')
         .to.have.property('emSub', 0);
