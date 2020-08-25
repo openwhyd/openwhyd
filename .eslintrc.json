@@ -1,19 +1,22 @@
 {
+  "parser": "@typescript-eslint/parser",
   "extends": [
+    "eslint:recommended",
     "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
-    "prettier/@typescript-eslint", // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
-    "plugin:prettier/recommended"
+    "prettier/@typescript-eslint" // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
   ],
-  "plugins": [],
+  "plugins": ["prettier", "@typescript-eslint"],
   "parserOptions": {
-    "experimentalObjectRestSpread": true,
-    "ecmaVersion": 2018
+    "project": "./tsconfig.json",
+    "ecmaVersion": 2019
   },
   "rules": {
-    "quotes": [2, "single", { "avoidEscape": true }]
+    "prettier/prettier": "error"
   },
   "env": {
+    "node": true,
     "es6": true
   }
 }
