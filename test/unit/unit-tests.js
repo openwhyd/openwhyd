@@ -55,6 +55,8 @@ describe('"get" package', function() {
     });
   });
 
+  /*
+  // TODO: serve a iso-2022-jp page to re-enable this test
   it('should provide the title of a web page encoded with an iso-2022-jp charset', function(done) {
     get.Title(
       'http://www.mountainminds.com/tools/paramencodingtest/page/iso-2022-jp',
@@ -65,6 +67,7 @@ describe('"get" package', function() {
       }
     );
   });
+  */
   /*
     it('should provide the title of a web page encoded with an euc-jp charset', function (done) {
         get.Title('http://charset.7jp.net/jis.html', function(err, title) {

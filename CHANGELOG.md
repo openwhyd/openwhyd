@@ -1,3 +1,25 @@
+## [1.34.4](https://github.com/openwhyd/openwhyd/compare/v1.34.3...v1.34.4) (2020-07-11)
+
+
+### Bug Fixes
+
+* **announcement:** look for mobile app developer ([e0fc143](https://github.com/openwhyd/openwhyd/commit/e0fc143))
+
+## [1.34.3](https://github.com/openwhyd/openwhyd/compare/v1.34.2...v1.34.3) (2020-07-11)
+
+
+### Bug Fixes
+
+* **facebook:** remove the `user_friends` scope ([f0ce783](https://github.com/openwhyd/openwhyd/commit/f0ce783)), closes [#330](https://github.com/openwhyd/openwhyd/issues/330)
+* **tests:** disable test that relies on a 3rd-party web page ([00cf365](https://github.com/openwhyd/openwhyd/commit/00cf365))
+
+## [1.34.2](https://github.com/openwhyd/openwhyd/compare/v1.34.1...v1.34.2) (2020-04-16)
+
+
+### Bug Fixes
+
+* **ui:** redirect error when landing on rankings page ([#321](https://github.com/openwhyd/openwhyd/issues/321)) ([8e6040e](https://github.com/openwhyd/openwhyd/commit/8e6040e))
+
 ## [1.34.1](https://github.com/openwhyd/openwhyd/compare/v1.34.0...v1.34.1) (2020-04-05)
 
 

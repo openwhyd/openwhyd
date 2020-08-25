@@ -12,6 +12,14 @@ All you need is:
 - to have [Docker](https://www.docker.com/products/docker-desktop);
 - and to have [Git](https://www.atlassian.com/git/tutorials/install-git) installed on your machine.
 
+### Docker for Windows Home
+Docker for Windows Home runs on a virtual box, so localhost may not work. For all the instructions below, if localhost is not working, replace it with your docker ip. You can find your docker ip with :
+```sh
+$ docker-machine ip                  
+```
+- in your web browser, http://localhost:8080 become http://your-docker-ip:8080
+- replace localhost in the different scripts
+
 ### Clone and run
 
 Commands to type in your shell:
@@ -49,6 +57,8 @@ After that, you will be able to sign in as an administrator using the following 
 
 - username: `admin`
 - password: `admin`
+
+The data imported can be seen from http://localhost:8080/all
 
 ### Connect to the database
 

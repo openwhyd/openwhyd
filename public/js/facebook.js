@@ -13,7 +13,7 @@ if (href.indexOf('openwhyd.org/') > 0) {
   fbId = '118010211606360';
 }
 
-var facebookPerms = 'public_profile,email,user_friends'; // 'user_interests,user_likes,email,publish_stream';
+var facebookPerms = 'public_profile,email'; // 'user_friends,user_interests,user_likes,email,publish_stream';
 var FB_ACTION_URI_PREFIX = href.substr(0, href.indexOf('/', 10)); //"http://openwhyd.org";
 
 var whenFbReadyQueue = [];
