@@ -1,3 +1,10 @@
+## [1.34.6](https://github.com/openwhyd/openwhyd/compare/v1.34.5...v1.34.6) (2020-08-25)
+
+
+### Bug Fixes
+
+* **CI:** Expect semantic commit message just for PR title ([#337](https://github.com/openwhyd/openwhyd/issues/337)) ([9717160](https://github.com/openwhyd/openwhyd/commit/9717160))
+
 ## [1.34.5](https://github.com/openwhyd/openwhyd/compare/v1.34.4...v1.34.5) (2020-08-25)
 
 
