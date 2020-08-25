@@ -1,3 +1,11 @@
+## [1.34.8](https://github.com/openwhyd/openwhyd/compare/v1.34.7...v1.34.8) (2020-08-25)
+
+
+### Bug Fixes
+
+* **int:** Codacy still thinks we want double quotes ([#340](https://github.com/openwhyd/openwhyd/issues/340)) ([c59240a](https://github.com/openwhyd/openwhyd/commit/c59240a))
+* **lint:** Expect single quotes ([#339](https://github.com/openwhyd/openwhyd/issues/339)) ([9c46ed6](https://github.com/openwhyd/openwhyd/commit/9c46ed6))
+
 ## [1.34.7](https://github.com/openwhyd/openwhyd/compare/v1.34.6...v1.34.7) (2020-08-25)
 
 
