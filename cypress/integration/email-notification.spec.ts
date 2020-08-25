@@ -24,7 +24,8 @@ context('reduce frequency of email notifications', () => {
         .to.have.property('emSub', '1');
     });
     cy.visit(
-      `/api/unsubscribe?uId=000000000000000000000001&type=emSub&action=reduce`);
+      `/api/unsubscribe?uId=000000000000000000000001&type=emSub&action=reduce`
+    );
     cy.get('body').contains('weekly');
     cy.request('api/user').should(response => {
       expect(response.body)
@@ -42,14 +43,16 @@ context('reduce frequency of email notifications', () => {
   });
   it('user unsubscribes from email notification', () => {
     cy.loginAsAdmin();
-    cy.visit('/api/unsubscribe?uId=000000000000000000000001&type=emSub'
-            );
+    cy.visit(
+      '/api/unsubscribe?uId=000000000000000000000001&type=emSub'
+    );
     cy.get('body').contains('unsubscribed');
-    cy.request('api/user').should(response => {
+    cy.request('api/user').should((response) => {
       expect(response.body)
         .to.have.property('pref')
         .to.have.property('emSub', -1);
     });
     cy.logout();
+
   });
 });

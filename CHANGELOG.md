@@ -1,3 +1,10 @@
+## [1.34.9](https://github.com/openwhyd/openwhyd/compare/v1.34.8...v1.34.9) (2020-08-25)
+
+
+### Bug Fixes
+
+* **tests:** Migrate 2 tests from Webdriver to Cypress ([#335](https://github.com/openwhyd/openwhyd/issues/335)) ([36451d9](https://github.com/openwhyd/openwhyd/commit/36451d9))
+
 ## [1.34.8](https://github.com/openwhyd/openwhyd/compare/v1.34.7...v1.34.8) (2020-08-25)
 
 
