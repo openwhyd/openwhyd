@@ -5,7 +5,6 @@
  **/
 
 var snip = require('../snip.js');
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var trackModel = require('../models/track.js');
 var postModel = require('../models/post.js');

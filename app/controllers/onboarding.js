@@ -8,7 +8,6 @@
 // $ curl -v --data "ajax=follow" --cookie "whydSid=4j8OSWWYknxyPlmGmgqURg12AiBoKDQpqt4iU610PT9nKkIkRdlMgHWF9kFMsQEvU" http://openwhyd.org/onboarding
 
 var snip = require('../snip.js');
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var plTagsModel = require('../models/plTags.js');

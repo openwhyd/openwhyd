@@ -10,7 +10,6 @@ var followModel = require('../models/follow.js');
 var activityModel = require('../models/activity.js');
 var contestModel = require('../models/plContest.js');
 var feedTemplate = require('../templates/feed.js');
-var snip = require('../snip.js');
 
 var HISTORY_LIMIT = 3;
 var RECOM_PEOPLE_LIMIT = 3;

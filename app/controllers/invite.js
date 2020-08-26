@@ -4,10 +4,8 @@
  * @author adrienjoly, whyd
  */
 
-var config = require('../models/config.js');
 var users = require('../models/user.js');
 var analytics = require('../models/analytics.js');
-var notifEmails = require('../models/notifEmails.js');
 var invitePage = require('../templates/invitePage.js');
 var inviteFormTemplate = require('../templates/inviteForm.js');
 var templateLoader = require('../templates/templateLoader.js');

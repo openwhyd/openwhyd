@@ -5,7 +5,6 @@
  **/
 
 var config = require('../models/config.js');
-var uiSnippets = require('../templates/uiSnippets.js');
 var mainTemplate = require('./mainTemplate.js');
 
 var templateLoader = require('../templates/templateLoader.js');

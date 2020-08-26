@@ -11,7 +11,7 @@ var templateLoader = require('../../templates/templateLoader.js');
 var mainTemplate = require('../../templates/mainTemplate.js');
 var snip = require('../../snip.js');
 
-function renderLoginForm(form) {
+function renderLoginForm() {
   return mainTemplate.renderWhydFrame(
     [
       '<p style="text-align:center;margin-top:140px;">',

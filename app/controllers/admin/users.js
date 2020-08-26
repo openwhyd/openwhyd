@@ -4,7 +4,6 @@
  **/
 
 var snip = require('../../snip.js');
-var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var userModel = require('../../models/user.js');
 var AdminLists = require('../../templates/adminLists.js').AdminLists;

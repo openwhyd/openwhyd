@@ -1,14 +1,7 @@
 // usage: run from http://localhost:8080/admin/test
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var querystring = require('querystring');
-var snip = require('../../../snip.js');
-var config = require('../../../models/config.js'); // {urlPrefix:"http://localhost:8000"};
 var followModel = require('../../../models/follow.js');
-
-function log() {
-  console.log.apply(console, arguments);
-}
 
 exports.makeTests = function (p) {
   var testVars = {};

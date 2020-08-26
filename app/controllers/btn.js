@@ -4,8 +4,6 @@
  * @author adrienjoly, whyd
  */
 
-var config = require('../models/config.js');
-
 var PROFILE_BUTTON_SIZES = {
   48: 32,
   32: 24,

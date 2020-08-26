@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var analytics = require('../models/analytics.js');

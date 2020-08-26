@@ -7,7 +7,6 @@
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var analytics = require('../models/analytics.js');
-var ObjectId = require('../models/mongodb.js').ObjectId;
 var trackModel = require('../models/track.js');
 var plTagsModel = require('../models/plTags.js');
 var followModel = require('../models/follow.js');

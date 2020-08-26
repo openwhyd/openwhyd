@@ -5,23 +5,10 @@
  */
 
 var config = require('../../models/config.js');
-var loggingModel = require('../../models/logging.js');
 var users = require('../../models/user.js');
 var md5 = users.md5;
 var notifEmails = require('../../models/notifEmails.js');
 var templateLoader = require('../../templates/templateLoader.js');
-
-//var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/;
-
-function renderTemplate1(params, callback) {
-  templateLoader.loadTemplate('app/templates/passwordForgot.html', function (
-    template
-  ) {
-    callback(template.render(params));
-  });
-}
-
-function renderTemplate2(params, callback) {}
 
 exports.checkResetCode = function (request, reqParams, response, okCallback) {
   if (!reqParams.resetCode || !reqParams.uid) {

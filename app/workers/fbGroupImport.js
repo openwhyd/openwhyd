@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  */
 
-var fs = require('fs');
 var util = require('util');
 
 var path = '../..';

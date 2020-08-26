@@ -7,13 +7,11 @@ var snip = require('../../snip.js');
 var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var userModel = require('../../models/user.js');
-var postModel = require('../../models/post.js');
 //var searchModel = require("../../models/search.js");
 var plTagsModel = require('../../models/plTags.js');
 var mainTemplate = require('../../templates/mainTemplate.js');
 
 var RELEASE_DATE = new Date('Thursday April 17, 2014 14:00'); // paris page release date
-var PLAYLIST_QUERY_LIMIT = 1000;
 
 var memberCache = (function MemberCache() {
   var perCity = {};

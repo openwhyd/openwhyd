@@ -5,7 +5,6 @@
  */
 
 var config = require('../models/config.js');
-var users = require('../models/user.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
 var templateLoader = require('../templates/templateLoader.js');

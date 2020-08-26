@@ -4,10 +4,8 @@
  * @author adrienjoly, whyd
  */
 
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
-var commentModel = require('../models/comment.js');
 var analytics = require('../models/analytics.js');
 var errorTemplate = require('../templates/error.js');
 var template = require('../templates/postViewer.js');

@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../../snip.js');
 var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var searchModel = require('../../models/search.js');
@@ -19,7 +18,6 @@ var MAX_RESULTS = 100;
 var MAX_PLAYLIST_THUMBS = 3;
 var MAX_IN_ADD_RESULTS = 5;
 var MAX_NB_MENTION_SUGGESTIONS = 6;
-var MAX_FOLLOWING = 5000;
 
 /** submits a query and returns results as {post:[], user:[], playlist:[]} **/
 function fetchResultsPerType(q, cb) {

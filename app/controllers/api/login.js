@@ -1,7 +1,6 @@
 /**
  * login controller, to authenticate users
  */
-var config = require('../../models/config.js');
 var emailModel = require('../../models/email.js');
 var userModel = require('../../models/user.js');
 var notifEmails = require('../../models/notifEmails.js');

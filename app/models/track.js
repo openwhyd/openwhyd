@@ -34,7 +34,6 @@
   -> the score of a track will only be updated on a (re-)post, like, or play operation on that track
 */
 
-var config = require('./config.js');
 var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId;
 var snip = require('../snip.js');

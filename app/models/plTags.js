@@ -110,7 +110,7 @@ exports.extractGenreTags = function (plName) {
   if (plName)
     snip
       .removeAccents(plName.toLowerCase())
-      .split(/[^\-a-z 1-3\&]+/g)
+      .split(/[^\-a-z 1-3&]+/g)
       .map(function (phrase) {
         if (!PHRASE_BLACKLIST[phrase])
           for (var synonym in tagSynonyms)
