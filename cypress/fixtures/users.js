@@ -1,4 +1,4 @@
-module.exports = {
+({
   admin: {
     id: '000000000000000000000001',
     email: process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org',
@@ -25,4 +25,4 @@ module.exports = {
     password: 'test-user', // for the /register api endpoint
     md5: '42b27efc1480b4fe6d7eaa5eec47424d',
   },
-};
+}) // prettier-ignore
