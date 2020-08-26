@@ -1,3 +1,5 @@
+/* global it, browser, $ */
+
 var assert = require('assert');
 var { URL_PREFIX } = require('./fixtures.js');
 

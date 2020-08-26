@@ -1,3 +1,5 @@
+/* global describe, it */
+
 /**
  * snippet tester
  * @author adrienjoly, whyd

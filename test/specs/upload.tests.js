@@ -1,10 +1,10 @@
+/* global describe, it, browser */
+
 var assert = require('assert');
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
+var { URL_PREFIX, ADMIN_USER } = require('../fixtures.js');
 const webUI = require('../web-ui.js');
 
 const request = require('request');
-
-const WAIT_DURATION = 10000;
 
 var defaultAvatarLen;
 request(`${URL_PREFIX}/images/blank_user.gif`, function (

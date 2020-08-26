@@ -1,3 +1,5 @@
+/* global describe, it */
+
 const assert = require('assert');
 const bookmarklet = require('./../../public/js/bookmarklet.js');
 

@@ -1,3 +1,5 @@
+/* global describe, it, browser, $ */
+
 const { URL_PREFIX, ADMIN_USER } = require('../fixtures.js');
 const webUI = require('../web-ui.js');
 

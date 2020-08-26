@@ -1,3 +1,5 @@
+/* global describe, it */
+
 process.appParams = {
   urlPrefix: '',
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
@@ -368,7 +370,7 @@ describe('notif', function () {
   ].forEach(function (test) {
     it(test[0], function async(done) {
       test[1](function cb(res) {
-        if (!!res) {
+        if (res) {
           done();
         } else {
           done(new Error('failed'));

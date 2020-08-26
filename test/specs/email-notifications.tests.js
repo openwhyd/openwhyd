@@ -1,8 +1,8 @@
-var assert = require('assert');
-var { URL_PREFIX, ADMIN_USER } = require('../fixtures.js');
-const webUI = require('../web-ui.js');
+/* global describe, it, browser, $ */
 
-const request = require('request');
+var assert = require('assert');
+var { URL_PREFIX } = require('../fixtures.js');
+const webUI = require('../web-ui.js');
 
 const URL_UNSUB = `${URL_PREFIX}/api/unsubscribe`;
 

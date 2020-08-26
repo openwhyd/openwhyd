@@ -1,3 +1,5 @@
+/* global describe, it */
+
 var { promisify } = require('util');
 var assert = require('assert');
 

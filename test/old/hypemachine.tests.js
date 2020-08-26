@@ -1,3 +1,5 @@
+/* global describe, it */
+
 var assert = require('assert');
 
 describe('hypemachine / mp3 detector', function () {

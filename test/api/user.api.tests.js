@@ -1,7 +1,8 @@
-var assert = require('assert');
-var request = require('request');
+/* global describe, it */
 
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
+var assert = require('assert');
+
+var { TEST_USER } = require('../fixtures.js');
 var api = require('../api-client.js');
 
 // TODO: POST /onboarding endpoints

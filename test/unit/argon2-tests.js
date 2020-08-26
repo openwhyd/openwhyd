@@ -1,3 +1,5 @@
+/* global describe, it */
+
 const assert = require('assert');
 const argon2 = require('argon2');
 
