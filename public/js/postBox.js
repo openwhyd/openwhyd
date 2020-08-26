@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * post box for openwhyd music
  * @author adrienjoly, whyd

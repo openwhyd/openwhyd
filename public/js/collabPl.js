@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * client-side code for collaborative playlist pages
  * @author adrienjoly, whyd

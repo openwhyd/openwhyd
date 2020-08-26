@@ -1,3 +1,5 @@
+/* global $ */
+
 $(function () {
   $('#tabSelector a').click(function () {
     $('#tabSelector a.selected').removeClass('selected');

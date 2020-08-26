@@ -1,3 +1,5 @@
+/* global $ */
+
 var $playlistNameField = $('#playlistNameField');
 var $playlistNameSubmit = $('#playlistNameSubmit');
 var currentPlaylistName = $playlistNameField.val();

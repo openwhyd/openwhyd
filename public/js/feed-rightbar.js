@@ -1,3 +1,5 @@
+/* global $, showMessage */
+
 /* === bookmarklet ad == */
 
 (function initBookmarkletAd() {

@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * scripts for city pages
  * @author: adrienjoly, whyd
@@ -734,11 +736,11 @@ var initCityPage = function (urlPrefix, cityName) {
 
       // Make API call
       $.getJSON(req + '&includeTags=1', function (data) {
-        var garray = new Array();
+        var garray = [];
 
         var html = data
           .map(function (item, i) {
-            garray[i] = new Array();
+            garray[i] = [];
 
             // Get genres
             for (var j = 0; j < item.tags.length; j++) {

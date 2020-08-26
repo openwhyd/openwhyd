@@ -1,3 +1,5 @@
+/* global $ */
+
 var hotTracks = {
   skip: 0,
 

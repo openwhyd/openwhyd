@@ -1,4 +1,5 @@
-//==============================================================================
+/* global $ */
+
 function initMenuScrollAnimation(menuId, options) {
   options || (options = {});
 

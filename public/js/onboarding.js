@@ -1,3 +1,5 @@
+/* global $, showMessage */
+
 function ajaxQuery(data, cb) {
   var $body = $('body').addClass('loading');
   $.ajax({
