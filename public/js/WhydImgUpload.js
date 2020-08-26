@@ -1,7 +1,4 @@
-/**
- * whyd's image upload module
- * @author adrienjoly, whyd
- */
+/* global $ */
 
 function WhydImgUpload(options) {
   options = options || {};

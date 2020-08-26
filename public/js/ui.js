@@ -1,7 +1,4 @@
-/**
- * general ui functions
- * @author adrienjoly
- **/
+/* global $ */
 
 // prevents bug in firefox 3
 if (undefined == window.console) console = { log: function () {} };

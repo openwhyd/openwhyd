@@ -1,3 +1,5 @@
+/* global $ */
+
 $(function () {
   function loading(toggle) {
     $('body')

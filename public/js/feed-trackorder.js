@@ -1,3 +1,5 @@
+/* global $ */
+
 var init = function () {
   console.log('trackorder init');
 

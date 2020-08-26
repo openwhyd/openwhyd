@@ -1,3 +1,5 @@
+/* global $ */
+
 function htmlDecode(s) {
   return $('<div />').html(s).text();
 }

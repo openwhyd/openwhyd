@@ -1,7 +1,4 @@
-/**
- * openwhyd web client
- * @author adrienjoly
- **/
+/* global $ */
 
 var MAX_NB_MENTIONS = 6;
 
