@@ -1,3 +1,5 @@
+/* global $, FB, user, showMessage */
+
 var href = window.location.href + '/';
 
 var namespace, fbId;
@@ -48,25 +50,6 @@ function fbPost(url, callback) {
       if (callback) callback(response);
     });
   else if (callback) callback();
-}
-
-function fbSendMessage(obj, cb) {
-  obj = obj || {};
-  fbSafeCall(function () {
-    obj.method = 'send';
-    if (obj.link && obj.link.indexOf('http') != 0)
-      obj.link = FB_ACTION_URI_PREFIX + obj.link;
-    console.log('sending fb message', obj);
-    FB.ui(obj, function (response) {
-      if (response && response.success)
-        //(response && response.post_id)
-        cb && cb(response);
-      else {
-        console.log('unable to send fb message:', response);
-        cb && cb();
-      }
-    });
-  }, cb);
 }
 
 var verbToPrefName = {

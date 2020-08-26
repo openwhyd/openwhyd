@@ -24,6 +24,7 @@
     }
   ],
   "env": {
+    "DOM": true,
     "node": true,
     "es6": true
   }
