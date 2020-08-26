@@ -10,8 +10,6 @@ var mongodb = require('../models/mongodb.js');
 //var recomModel = require("../models/recom.js");
 var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
-var postModel = require('../models/post.js');
-var analytics = require('../models/analytics.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var mainTemplate = require('../templates/mainTemplate.js');
@@ -39,7 +37,7 @@ function fetchSubscriptions(p, cb) {
   }
 }
 
-var whydUrlRegEx = /href=\"https?:\/\/(?:www\.)?whyd\.com(\/[^"]*)\"/g;
+var whydUrlRegEx = /href="https?:\/\/(?:www\.)?whyd\.com(\/[^"]*)"/g;
 
 function createHtmlElemRegEx(elName) {
   return new RegExp('<' + elName + '(?:[^>]*)?>(.*)</' + elName + '>', 'g');
@@ -50,7 +48,7 @@ function createHtmlElemRegEx2(elName) {
 }
 
 function parseHtmlText(html) {
-  return html.replace(/\<([^\s\>]+)[^\>]*\>([^\<]*)\<\/([^\>]+)\>/gi, '$2'); // remove other html elements
+  return html.replace(/<([^\s>]+)[^>]*>([^<]*)<\/([^>]+)>/gi, '$2'); // remove other html elements
 }
 
 function parseHtmlAttr(html, attr) {

@@ -146,7 +146,7 @@ function loadRoutesFromFile(file) {
 function parseExpressRoute({ pattern, name }) {
   const [upperCaseMethod, legacyPath] = pattern.split('?')[0].split(/\s+/);
   const method = upperCaseMethod.toLowerCase();
-  const pathParams = legacyPath.match(/\{[\w\$]+\}/g);
+  const pathParams = legacyPath.match(/\{[\w$]+\}/g);
   const path = (pathParams || []).reduce(
     (path, param) =>
       path.replace(param, `:${param.substring(1, param.length - 1)}`),

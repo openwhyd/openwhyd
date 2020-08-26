@@ -82,11 +82,8 @@ function renderHtml(parags, title) {
 function renderText(parags) {
   return parags
     .join('\r\n\r\n')
-    .replace(
-      /\<a href\=[\'\"]([^\'\"]+)[\'\"][^\>]*\>([^\<]*)\<\/a\>/gi,
-      '$2 ($1)'
-    ) // translate links (syntax <a href=""></a>)
-    .replace(/\<([^\s\>]+)[^\>]*\>([^\<]*)\<\/([^\>]+)\>/gi, '$2'); // remove other html elements
+    .replace(/<a href=['"]([^'"]+)['"][^>]*>([^<]*)<\/a>/gi, '$2 ($1)') // translate links (syntax <a href=""></a>)
+    .replace(/<([^\s>]+)[^>]*>([^<]*)<\/([^>]+)>/gi, '$2'); // remove other html elements
 }
 
 function renderEmailTemplate(title, body) {

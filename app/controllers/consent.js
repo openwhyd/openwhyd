@@ -22,9 +22,9 @@ function removeEmptyLine(mdLine) {
 
 function renderMarkdownLine(mdLine) {
   return ('<p>' + snip.htmlEntities(mdLine) + '</p>')
-    .replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*([^\*]+)\*/g, '<i>$1</i>')
-    .replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<i>$1</i>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
     .replace(
       /^<p>- \[ \] (.*)/g,
       '<div class="consent-box"><input class="checkbox" type="checkbox"><p>$1</div>'

@@ -9,14 +9,13 @@ var mongodb = require('../models/mongodb.js');
 var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
 var emailModel = require('../models/email.js');
 var postModel = require('../models/post.js');
-var collabModel = require('../models/collabPl.js');
 var searchModel = require('../models/search.js');
 var fbModel = require('../models/facebook.js');
 var snip = require('../snip.js');
 
 var crypto = require('crypto');
 
-var USERNAME_REGEX = /^[a-z0-9]+[a-z0-9_\-\.]+[a-z0-9]+$/i;
+var USERNAME_REGEX = /^[a-z0-9]+[a-z0-9_\-.]+[a-z0-9]+$/i;
 var USERNAME_MIN_LENGTH = 3;
 var USERNAME_MAX_LENGTH = 18;
 var USERNAME_RESERVED = {
@@ -124,7 +123,7 @@ var TESTING_DIGEST = config.digestImmediate;
         routeFile /*, " : ", USERNAME_RESERVED*/
       );
     line = line.substr(line.indexOf('/') + 1);
-    var end = line.search(/[\t\/]/);
+    var end = line.search(/[\t/]/);
     if (end > -1) {
       var handle = line.substr(0, end);
       if (handle.indexOf('{') == -1) {

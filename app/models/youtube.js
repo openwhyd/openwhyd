@@ -36,7 +36,7 @@ function scrape(url, cb) {
 }
 
 function extractMetadataFromYoutubePage(html, cb) {
-  var found = /watch\-meta\-item/.test(html);
+  var found = /watch-meta-item/.test(html);
   if (found) console.log('Parsing metadata from Youtube page...');
   else {
     console.log('Metadata not found from Youtube page => DOC', html);
@@ -124,7 +124,7 @@ exports.fetchTrackMetadata = function (trackId, cb, raw) {
     else {
       var url =
         'http://www.youtube.com/watch?v=' +
-        ('' + trackId).replace(/[^a-z0-9\_\-]/gi, '');
+        ('' + trackId).replace(/[^a-z0-9_-]/gi, '');
       exports.fetchMetadataFromYoutubePage(url, function (err, metadata) {
         var result = exports.translateTrack(data);
         for (var i in metadata) result[i] = metadata[i];

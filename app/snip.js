@@ -74,8 +74,8 @@ exports.removeAccents = function (str) {
 };
 
 //var regexUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-var regexUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-var regexUrl2 = /(\b(https?|ftp|file):\/\/([^\/\s]*)[^\s]*)/gi;
+var regexUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+var regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 exports.replaceURLWithHTMLLinks = function (text) {
   return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
@@ -100,7 +100,7 @@ exports.htmlEntities = function (str) {
 
 exports.addSlashes = function (str) {
   return typeof str == 'string'
-    ? str.replace(/\\/g, '\\\\').replace(/\'/g, "\\'").replace(/\"/g, '\\"')
+    ? str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"')
     : str;
 };
 
@@ -171,7 +171,7 @@ exports.renderTime = function (t) {
 
 // minimal sanitization of function name: remove javascript's special / control characters
 exports.sanitizeJsIdentifier = function (id) {
-  return ('' + id).replace(/\/\\\n\(\)\[\]\;\./g, ' ');
+  return ('' + id).replace(/\/\\\n\(\)\[\];\./g, ' ');
 };
 
 exports.renderJsCallback = function (fctName, obj) {
@@ -191,11 +191,11 @@ exports.cleanTrackName = function (str) {
     ? ''
     : str
         .trim()
-        .replace(/^\d+([\-\.\/\\]\d+)+\s+/, '') // remove prefixing date
-        .replace(/^\d+[\.]+\s+/, '') // remove prefixing track number
-        .replace(/^\#\d+\s+/, '') // remove prefixing rank
-        .replace(/\([^\)]*\)/g, '') // remove parentheses
-        .replace(/\[[^\]]*\]/g, '') // remove brackets
+        .replace(/^\d+([-./\\]\d+)+\s+/, '') // remove prefixing date
+        .replace(/^\d+[.]+\s+/, '') // remove prefixing track number
+        .replace(/^#\d+\s+/, '') // remove prefixing rank
+        .replace(/\([^)]*\)/g, '') // remove parentheses
+        .replace(/\[[^]]*\]/g, '') // remove brackets
         .replace(/\s+/, ' ') // remove extra/duplicate whitespace
         .trim();
 };
@@ -207,7 +207,7 @@ exports.normalizeArtistName = function (artistName) {
     .replace(/[^a-z0-9]/g, ''); // remove non alpha characters
 };
 
-var reQuotes = /\"[^\")]*\"/g;
+var reQuotes = /"[^")]*"/g;
 var reSeparator = /-+\s+/g;
 var reOnlyDigits = /^\d+$/;
 
@@ -447,11 +447,11 @@ exports.getLevenshteinDistance = (function () {
       m = n;
       n = o;
     }
-    var r = new Array();
-    r[0] = new Array();
+    var r = [];
+    r[0] = [];
     for (var c = 0; c < n + 1; c++) r[0][c] = c;
     for (var i = 1; i < m + 1; i++) {
-      r[i] = new Array();
+      r[i] = [];
       r[i][0] = i;
       for (var j = 1; j < n + 1; j++) {
         cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
@@ -823,7 +823,7 @@ exports.checkParams = function (obj, mandatorySet, optionalSet) {
 // =========================================================================
 
 var MAX_NB_MENTIONS = 6;
-var RE_MENTION = /\@\[([^\]]*)\]\(user:([^\)]*)\)/gi;
+var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
 exports.RE_MENTION = RE_MENTION;
 

@@ -16,7 +16,7 @@ var getUserNameFromId = require('../models/mongodb.js').getUserNameFromId;
 var MAX_POSTS = config.nbPostsPerNewsfeedPage;
 var MAX_POSTS_EMBED = config.nbTracksPerPlaylistEmbed;
 var MAX_NB_REPOST_FACES = 12;
-var RE_MENTION = /\@\[([^\]]*)\]\(user:([^\)]*)\)/gi;
+var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
 // database functions
 
