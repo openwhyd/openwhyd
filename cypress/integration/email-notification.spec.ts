@@ -55,4 +55,3 @@ context('unsubscribe from email notifications', () => {
     cy.logout();
   });
 });
-
