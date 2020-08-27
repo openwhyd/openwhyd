@@ -1,3 +1,10 @@
+## [1.34.11](https://github.com/openwhyd/openwhyd/compare/v1.34.10...v1.34.11) (2020-08-27)
+
+
+### Bug Fixes
+
+* **deps:** Update ESLint and Prettier + plugins ([#341](https://github.com/openwhyd/openwhyd/issues/341)) ([b8c7728](https://github.com/openwhyd/openwhyd/commit/b8c7728)), closes [/github.com/openwhyd/openwhyd/pull/335#issuecomment-680291284](https://github.com//github.com/openwhyd/openwhyd/pull/335/issues/issuecomment-680291284)
+
 ## [1.34.10](https://github.com/openwhyd/openwhyd/compare/v1.34.9...v1.34.10) (2020-08-27)
 
 
