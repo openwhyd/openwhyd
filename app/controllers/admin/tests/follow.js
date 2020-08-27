@@ -1,16 +1,9 @@
 // usage: run from http://localhost:8080/admin/test
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var querystring = require('querystring');
-var snip = require('../../../snip.js');
-var config = require('../../../models/config.js'); // {urlPrefix:"http://localhost:8000"};
 var followModel = require('../../../models/follow.js');
 
-function log() {
-  console.log.apply(console, arguments);
-}
-
-exports.makeTests = function(p) {
+exports.makeTests = function (p) {
   var testVars = {};
 
   return [
@@ -18,7 +11,7 @@ exports.makeTests = function(p) {
       'fetchUserSubscriptions',
       function fetchSubscriptions(cb) {
         //console.time("fetchUserSubscriptions");
-        followModel.fetchUserSubscriptions(p.loggedUser.id, function(
+        followModel.fetchUserSubscriptions(p.loggedUser.id, function (
           subscriptions
         ) {
           testVars.uidList = [p.loggedUser.id];
@@ -30,20 +23,20 @@ exports.makeTests = function(p) {
           //console.timeEnd("fetchUserSubscriptions");
           cb(true);
         });
-      }
+      },
     ],
     [
       'fetchSubscriptionArray == fetchUserSubscriptions',
       function fetchSubscriptions(cb) {
         //console.time("fetchSubscriptionArray");
-        followModel.fetchSubscriptionArray(p.loggedUser.id, function(
+        followModel.fetchSubscriptionArray(p.loggedUser.id, function (
           subscriptions
         ) {
           subscriptions.push(p.loggedUser.id);
           //console.timeEnd("fetchSubscriptionArray");
           cb(subscriptions.sort().join() === testVars.uidList.sort().join());
         });
-      }
-    ]
+      },
+    ],
   ];
 };

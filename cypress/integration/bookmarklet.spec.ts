@@ -16,7 +16,7 @@ context('Openwhyd bookmarklet', () => {
 
     cy.get(`[href="${youtubeURL}"]`).should('exist');
 
-    cy.window().then(win => {
+    cy.window().then((win) => {
       // win.document.body.innerHTML += `<script src="${bkURL}"></script>`; // does not work
       win.document.body.appendChild(
         win.document.createElement('script')

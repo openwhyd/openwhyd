@@ -9,7 +9,7 @@ const LOG_THRESHOLD = 500;
 
 // From Response.js
 
-http.ServerResponse.prototype.legacyRender = function(
+http.ServerResponse.prototype.legacyRender = function (
   view,
   data,
   headers = {},
@@ -34,12 +34,12 @@ function noCache(req, res, next) {
   next();
 }
 
-const makeBodyParser = uploadSettings =>
+const makeBodyParser = (uploadSettings) =>
   function bodyParser(req, res, callback) {
     var form = new formidable.IncomingForm();
     form.uploadDir = uploadSettings.uploadDir;
     form.keepExtensions = uploadSettings.keepExtensions;
-    form.parse(req, function(err, postParams, files) {
+    form.parse(req, function (err, postParams, files) {
       if (err) console.error('formidable parsing error:', err);
       // using qset to parse fields with brackets [] for url-encoded form data:
       // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
@@ -68,7 +68,7 @@ const makeStatsUpdater = ({ accessLogFile }) =>
         startDate,
         req,
         userId,
-        userAgent
+        userAgent,
       });
     });
 
@@ -79,7 +79,7 @@ function defaultErrorHandler(req, reqParams, res, statusCode) {
   res.sendStatus(statusCode);
 }
 
-const makeNotFound = errorHandler =>
+const makeNotFound = (errorHandler) =>
   function notFound(req, res, next) {
     errorHandler(req, req.mergedParams, res, 404);
   };
@@ -146,7 +146,7 @@ function loadRoutesFromFile(file) {
 function parseExpressRoute({ pattern, name }) {
   const [upperCaseMethod, legacyPath] = pattern.split('?')[0].split(/\s+/);
   const method = upperCaseMethod.toLowerCase();
-  const pathParams = legacyPath.match(/\{[\w\$]+\}/g);
+  const pathParams = legacyPath.match(/\{[\w$]+\}/g);
   const path = (pathParams || []).reduce(
     (path, param) =>
       path.replace(param, `:${param.substring(1, param.length - 1)}`),
@@ -175,7 +175,7 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile) {
       expressApp,
       method,
       path,
-      controllerFile: loadControllerFile({ name, appDir })
+      controllerFile: loadControllerFile({ name, appDir }),
     });
   });
 }
@@ -185,7 +185,7 @@ function appendSlowQueryToAccessLog({
   startDate,
   req,
   userId,
-  userAgent
+  userAgent,
 }) {
   const duration = Date.now() - startDate;
   if (duration < LOG_THRESHOLD) return;
@@ -193,7 +193,7 @@ function appendSlowQueryToAccessLog({
     startDate.toUTCString(),
     req.method,
     req.path,
-    '(' + duration + 'ms)'
+    '(' + duration + 'ms)',
   ];
   if (userId) logLine.push('uid=' + userId);
   if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));

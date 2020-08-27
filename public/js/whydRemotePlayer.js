@@ -4,7 +4,7 @@
 // => when openwhyd is running in production (i.e. from openwhyd.org),
 // this script will be running from a different domain name (i.e. a CDN).
 
-(function() {
+(function () {
   var wlh = window.location.href;
   // ORIGIN should match the domain on which openwhyd is running
   var ORIGIN =
@@ -20,7 +20,7 @@
       'onTrackInfo',
       'onPaused',
       'onEnded',
-      'onError'
+      'onError',
     ],
     player,
     eventHandlers = {},
@@ -41,18 +41,18 @@
   //css.innerHTML = "#tumblr_controls { visibility: hidden !important; opacity:0 !important; }";
   css.innerHTML = [
     '* { margin:0; padding:0; width:100%; height:100%; position:absolute; top:0; left:0; }',
-    'html { position:relative; }'
+    'html { position:relative; }',
   ].join('\n');
   document.body.appendChild(css);
 
   // parse parameters
-  (window.location.href.split('?').pop() || '').split('&').map(function(p) {
+  (window.location.href.split('?').pop() || '').split('&').map(function (p) {
     var splitted = p.split('=');
     parameters[splitted[0]] = splitted[1];
   });
 
-  EVENTS.map(function(evt) {
-    eventHandlers[evt] = function() {
+  EVENTS.map(function (evt) {
+    eventHandlers[evt] = function () {
       //console.log("[iframe] youtube evt -> parent:", evt, arguments);
       post(evt, arguments);
     };
@@ -81,7 +81,7 @@
     );
   }
 
-  window.addEventListener('message', function(e) {
+  window.addEventListener('message', function (e) {
     if (e.origin == ORIGIN) {
       var message = JSON.parse(e.data);
       var method = message.code;
@@ -90,10 +90,10 @@
       if (typeof player[method] === 'function') {
         if (method === 'getTrackPosition') {
           args = [
-            function(pos) {
+            function (pos) {
               player.trackInfo.position = pos;
               post('onTrackInfo', [player.trackInfo]);
-            }
+            },
           ];
         }
         player[method].apply(player, args);

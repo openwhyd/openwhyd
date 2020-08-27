@@ -19,14 +19,14 @@ var cachedTrackAnalytics;
 function countOccurences(array) {
   var count = {};
   for (var j in array) count[array[j]] = (count[array[j]] || 0) + 1;
-  return snip.mapToObjArray(count, 'id', 'c').sort(function(a, b) {
+  return snip.mapToObjArray(count, 'id', 'c').sort(function (a, b) {
     return b.c - a.c;
   });
 }
 
 function wrapJsonGeneratorToText(name) {
-  return function(p, cb) {
-    fileGenerators[name](p, function(items) {
+  return function (p, cb) {
+    fileGenerators[name](p, function (items) {
       cb(JSON.stringify(items, null, 2));
     });
   };
@@ -40,8 +40,8 @@ function gatherTrackAnalytics(cb) {
     mongodb.collections['post'].find(
       {},
       { batchSize: 1000, fields: { _id: 0, eId: 1, lov: 1, name: 1 } },
-      function(err, cursor) {
-        cursor.each(function(err, track) {
+      function (err, cursor) {
+        cursor.each(function (err, track) {
           ++nb;
           if (!track)
             // we're done
@@ -51,7 +51,7 @@ function gatherTrackAnalytics(cb) {
             eIds[track.eId] = eIds[track.eId] || {
               name: track.name,
               posts: 0,
-              likes: 0
+              likes: 0,
             };
             eIds[track.eId].posts++;
             eIds[track.eId].likes += (track.lov || []).length;
@@ -62,7 +62,7 @@ function gatherTrackAnalytics(cb) {
   }
   if (cachedTrackAnalytics) cb(cachedTrackAnalytics);
   else
-    generateMap(function(eIds, nb) {
+    generateMap(function (eIds, nb) {
       console.log('cached', nb, 'posts');
       for (var eId in eIds)
         eIds[eId].interacted = eIds[eId].posts + eIds[eId].likes;
@@ -80,7 +80,7 @@ function gatherArtistAnalytics(cb) {
     postModel.forEachPost(
       {},
       { batchSize: 1000, fields: { _id: 0, lov: 1, name: 1 } },
-      function(track) {
+      function (track) {
         if (!track) cb(artists, nb);
         else {
           ++nb;
@@ -93,7 +93,7 @@ function gatherArtistAnalytics(cb) {
               artists[artist] = artists[artist] || {
                 name: /*track.name*/ artistName,
                 posts: 0,
-                likes: 0
+                likes: 0,
               };
               artists[artist].posts++;
               artists[artist].likes += (track.lov || []).length;
@@ -105,7 +105,7 @@ function gatherArtistAnalytics(cb) {
   }
   if (cachedArtistAnalytics) cb(cachedArtistAnalytics);
   else
-    generateMap(function(map, nb) {
+    generateMap(function (map, nb) {
       console.log('cached', nb, 'posts');
       for (var artist in map)
         map[artist].interacted = map[artist].posts + map[artist].likes;
@@ -127,7 +127,7 @@ function RecomEvaluator(recomUsersFct) {
     (function next() {
       if (!users.length) return cb();
       var user = users.pop();
-      recomUsersFct(user.id, function(allUsers) {
+      recomUsersFct(user.id, function (allUsers) {
         var min = NaN,
           max = NaN;
         // separate already subscribed users
@@ -144,7 +144,7 @@ function RecomEvaluator(recomUsersFct) {
           recomUsers: recomUsers,
           allRecomUsers: allUsers,
           minScore: min,
-          maxScore: max
+          maxScore: max,
         });
         next();
       });
@@ -158,12 +158,12 @@ function RecomEvaluator(recomUsersFct) {
         res.user.name,
         res.recomUsers.length,
         res.minScore,
-        res.maxScore
+        res.maxScore,
       ];
       //console.log("=> recom", recom);
       table.push(recom);
     }
-    forEachUserRecom(addUserRecoms, function() {
+    forEachUserRecom(addUserRecoms, function () {
       cb((cachedEvalTable = table));
     });
   }
@@ -172,8 +172,8 @@ function RecomEvaluator(recomUsersFct) {
     else buildEvalTable(cb);
   }
   return {
-    genTsv: function(cb) {
-      gatherEvalTable(function(table) {
+    genTsv: function (cb) {
+      gatherEvalTable(function (table) {
         var dataTable = new snip.DataTable();
         dataTable.table = table;
         console.log(
@@ -186,8 +186,8 @@ function RecomEvaluator(recomUsersFct) {
         cb({ tsv: dataTable.toTsv() });
       });
     },
-    countClasses: function(nbClasses, cb) {
-      gatherEvalTable(function(table) {
+    countClasses: function (nbClasses, cb) {
+      gatherEvalTable(function (table) {
         console.log(
           'generated recommendations for ',
           nbUsersWithMatches,
@@ -208,7 +208,7 @@ function RecomEvaluator(recomUsersFct) {
         }
         cb(classes);
       });
-    }
+    },
   };
 }
 
@@ -218,7 +218,7 @@ var artistBasedRecom = new RecomEvaluator(recomUsersByArtists);
 // sorting functions
 
 function makeAlphaFieldSort(field) {
-  return function(a, b) {
+  return function (a, b) {
     if (a[field] < b[field]) return -1;
     if (a[field] > b[field]) return 1;
     return 0;
@@ -247,11 +247,11 @@ function recomUsersByTracks(uId, cb) {
 }
 */
 function recomUsersByArtists(uId, cb) {
-  followModel.fetchUserSubscriptions(uId, function(userSub) {
+  followModel.fetchUserSubscriptions(uId, function (userSub) {
     var followedIdSet = snip.objArrayToSet(userSub.subscriptions, 'id', true);
-    recomModel.recomUsersByArtists(uId, null, function(users) {
+    recomModel.recomUsersByArtists(uId, null, function (users) {
       var users = snip.mapToObjArray(users);
-      users.sort(function(a, b) {
+      users.sort(function (a, b) {
         return b.score - a.score;
       });
       for (var i in users) {
@@ -270,43 +270,45 @@ function recomUsersByArtists(uId, cb) {
 var fileGenerators = {
   // bands to artists (called by /html/bandsToUsers.html)
 
-  'bandsToUsers.json': function(p, cb) {
-    var bands = (p.artists || '').split(/[,\n\r]+/g).map(function(band) {
+  'bandsToUsers.json': function (p, cb) {
+    var bands = (p.artists || '').split(/[,\n\r]+/g).map(function (band) {
       return [snip.normalizeArtistName(band)];
     });
     console.log('bands', bands);
-    recomModel.matchingEngine.fetchUsersByArtists(bands, null, function(users) {
-      var users = snip.mapToObjArray(users).map(function(user) {
+    recomModel.matchingEngine.fetchUsersByArtists(bands, null, function (
+      users
+    ) {
+      var users = snip.mapToObjArray(users).map(function (user) {
         var artists = countOccurences(user.posted || []);
         user.score = artists.length; //(user.posted || []).length;
         user.artists = artists
-          .map(function(artist) {
+          .map(function (artist) {
             return artist.id + ' (' + artist.c + ')';
           })
           .join(', ');
         delete user.posted;
         return user;
       });
-      users.sort(function(a, b) {
+      users.sort(function (a, b) {
         return b.score - a.score;
       });
       cb(users);
     });
   },
-  'bandsToUsers.tsv': function(p, cb) {
-    fileGenerators['bandsToUsers.json'](p, function(users) {
+  'bandsToUsers.tsv': function (p, cb) {
+    fileGenerators['bandsToUsers.json'](p, function (users) {
       var fields = ['id', 'name', 'score', 'artists'];
       cb({
         tsv: new snip.DataTable()
           .fromArray(
-            users.map(function(user) {
-              return fields.map(function(field) {
+            users.map(function (user) {
+              return fields.map(function (field) {
                 return user[field];
               });
             }),
             fields
           )
-          .toTsv()
+          .toTsv(),
       });
     });
   },
@@ -314,8 +316,8 @@ var fileGenerators = {
 
   // stats about tracks
 
-  'tracks.txt': function(p, cb) {
-    gatherTrackAnalytics(function(map) {
+  'tracks.txt': function (p, cb) {
+    gatherTrackAnalytics(function (map) {
       var trackNames = [];
       for (var eId in map) {
         var cleaned = snip.detectTrackFields(
@@ -327,13 +329,13 @@ var fileGenerators = {
       cb(trackNames.join('\n'));
     });
   },
-  'tracks.tsv': function(p, cb) {
-    gatherTrackAnalytics(function(eIds) {
+  'tracks.tsv': function (p, cb) {
+    gatherTrackAnalytics(function (eIds) {
       cb({ tsv: new snip.DataTable().fromMap(eIds).toTsv() });
     });
   },
-  'tracks.json': function(p, cb) {
-    gatherTrackAnalytics(function(eIds, nb) {
+  'tracks.json': function (p, cb) {
+    gatherTrackAnalytics(function (eIds, nb) {
       //snip.mapToObjArray(eIds, "eid");
       var postedTracks = snip
         .objArrayToValueArray(eIds, 'posts')
@@ -348,10 +350,10 @@ var fileGenerators = {
         quartiles: {
           postedTracks: jStat(postedTracks).quartiles(),
           likedTracks: jStat(likedTracks).quartiles(),
-          interactedTracks: jStat(interactedTracks).quartiles()
+          interactedTracks: jStat(interactedTracks).quartiles(),
         },
         nbPosts: nb,
-        nbTracks: interactedTracks.length
+        nbTracks: interactedTracks.length,
         //eIds: Object.keys(eIds)
       });
     });
@@ -359,8 +361,8 @@ var fileGenerators = {
 
   // stats about artists
 
-  'artists.tsv': function(p, cb) {
-    gatherArtistAnalytics(function(map) {
+  'artists.tsv': function (p, cb) {
+    gatherArtistAnalytics(function (map) {
       var table = new snip.DataTable().fromMap(map);
       console.log('=>', table.table.length, 'artists');
       table.sort(makeAlphaFieldSort(0)); // order by name
@@ -370,8 +372,8 @@ var fileGenerators = {
       cb({ tsv: table.toTsv() });
     });
   },
-  'artists.json': function(p, cb) {
-    gatherArtistAnalytics(function(map, nb) {
+  'artists.json': function (p, cb) {
+    gatherArtistAnalytics(function (map, nb) {
       var posted = snip.objArrayToValueArray(map, 'posts').sort(snip.descSort);
       var liked = snip.objArrayToValueArray(map, 'likes').sort(snip.descSort);
       var interacted = snip
@@ -382,10 +384,10 @@ var fileGenerators = {
         quartiles: {
           posted: jStat(posted).quartiles(),
           liked: jStat(liked).quartiles(),
-          interacted: jStat(interacted).quartiles()
+          interacted: jStat(interacted).quartiles(),
         },
         nbPosts: nb,
-        nbArtists: interacted.length
+        nbArtists: interacted.length,
       });
     });
   },
@@ -414,12 +416,12 @@ var fileGenerators = {
 		trackBasedRecom.countClasses(5, cb);
 	},
 */
-  'evalRecomByArtists.tsv': function(p, cb) {
+  'evalRecomByArtists.tsv': function (p, cb) {
     artistBasedRecom.genTsv(cb);
   },
-  'evalRecomByArtists.json': function(p, cb) {
+  'evalRecomByArtists.json': function (p, cb) {
     artistBasedRecom.countClasses(5, cb);
-  }
+  },
 };
 
 // main controller
@@ -427,5 +429,5 @@ var fileGenerators = {
 exports.controller = FileController.buildController({
   controllerName: 'admin.recom',
   adminOnly: true,
-  fileGenerators: fileGenerators
+  fileGenerators: fileGenerators,
 });

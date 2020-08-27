@@ -65,10 +65,10 @@ exports.config = {
           '--disable-gpu',
           '--window-size=1280,800',
           'disable-web-security',
-          'allow-running-insecure-content'
-        ]
-      }
-    }
+          'allow-running-insecure-content',
+        ],
+      },
+    },
   ],
   //
   // ===================
@@ -142,7 +142,7 @@ exports.config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     timeout: 20000,
-    ui: 'bdd'
+    ui: 'bdd',
   },
   //
   // =====
@@ -205,9 +205,9 @@ exports.config = {
    * Hook that gets executed before the suite starts
    * @param {Object} suite suite details
    */
-  beforeSuite: function(suite) {
+  beforeSuite: function (suite) {
     console.log('👋 TEST SUITE:', suite.file.split('/').pop()); // TODO
-  }
+  },
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
    */

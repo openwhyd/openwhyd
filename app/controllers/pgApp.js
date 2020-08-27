@@ -19,8 +19,8 @@ var apps = {
     uId: '50be0bbf7e91c862b2a924da',
     name: 'Hear I Am',
     desc: 'Discover the best Music Lovers where you check-in',
-    img: 'http://adrienjoly.com/heariam/icon.png'
-  }
+    img: 'http://adrienjoly.com/heariam/icon.png',
+  },
 };
 
 function renderSignupPage(p, cb) {
@@ -30,25 +30,25 @@ function renderSignupPage(p, cb) {
     loggedUser: p.loggedUser,
     inviteCode: p.app.uId, // => new user is invited by the app's user profile
     sender: { id: p.app.uId, name: p.app.name }, // => auto follow the app's user profile
-    redirect: '/app/' + p.app.id // => skip onboarding and go straight to app page
+    redirect: '/app/' + p.app.id, // => skip onboarding and go straight to app page
   });
   cb({ html: html });
 }
 
 function renderAppPage(p, cb) {
-  templateLoader.loadTemplate('app/templates/pgApp.html', function(template) {
+  templateLoader.loadTemplate('app/templates/pgApp.html', function (template) {
     cb({
       content: template.render({
         app: p.app,
         done1: !!p.loggedUser,
-        loggedUser: p.loggedUser
-      })
+        loggedUser: p.loggedUser,
+      }),
     });
   });
 }
 
 function sendWelcomeEmail(p, cb) {
-  userModel.fetchByUid(p.loggedUser.id, function(user) {
+  userModel.fetchByUid(p.loggedUser.id, function (user) {
     console.log(
       'app sending WHYD welcome email',
       user.email,
@@ -61,7 +61,7 @@ function sendWelcomeEmail(p, cb) {
 }
 
 function sendHeariamEmail(p) {
-  userModel.fetchByUid(p.loggedUser.id, function(user) {
+  userModel.fetchByUid(p.loggedUser.id, function (user) {
     user = user || {};
     console.log(
       'app sending HEARIAM welcome email',
@@ -82,7 +82,7 @@ function sendHeariamEmail(p) {
           "and of course don't forget to post great music on whyd!",
         'Best regards,',
         'Adrien and Loick, creators of Hear I Am',
-        'http://hearim.net/'
+        'http://hearim.net/',
       ].join('\n\n')
     );
   });
@@ -114,7 +114,7 @@ function handleRequest(p, cb) {
     );
   else if (p.action == 'connected' && p.appId == 'heariam') {
     // callback from heariam
-    getUserFromWid(p.wid, function(user) {
+    getUserFromWid(p.wid, function (user) {
       p.loggedUser = user || {};
       console.log('loggeduser from app', p.loggedUser);
       sendHeariamEmail({ loggedUser: p.loggedUser, sender: app });
@@ -137,15 +137,15 @@ var FIELDS = {
   wid: true,
   fid: true,
   ref: true, // referer (e.g. "email" sent by heariam newletter)
-  email: true // email address of the user, when coming from email newsletter
+  email: true, // email address of the user, when coming from email newsletter
 };
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('pgApp.controller', reqParams);
   reqParams = reqParams || {};
 
   var p = {
-    loggedUser: request.getUser(response)
+    loggedUser: request.getUser(response),
   };
 
   for (var f in reqParams) FIELDS[f] && (p[f] = reqParams[f]);
@@ -154,7 +154,7 @@ exports.controller = function(request, reqParams, response) {
     data = data || {
       error:
         'Nothing to render! Please send the URL of this page to ' +
-        process.appParams.feedbackEmail
+        process.appParams.feedbackEmail,
     };
     if (data.error) console.log('ERROR: ', data.error);
     if (data.content)
@@ -162,7 +162,7 @@ exports.controller = function(request, reqParams, response) {
         bodyClass: 'pgApp',
         loggedUser: p.loggedUser,
         pageUrl: request.url,
-        content: data.content
+        content: data.content,
       });
     if (data.html) {
       response.renderHTML(data.html);

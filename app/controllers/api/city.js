@@ -7,13 +7,11 @@ var snip = require('../../snip.js');
 var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var userModel = require('../../models/user.js');
-var postModel = require('../../models/post.js');
 //var searchModel = require("../../models/search.js");
 var plTagsModel = require('../../models/plTags.js');
 var mainTemplate = require('../../templates/mainTemplate.js');
 
 var RELEASE_DATE = new Date('Thursday April 17, 2014 14:00'); // paris page release date
-var PLAYLIST_QUERY_LIMIT = 1000;
 
 var memberCache = (function MemberCache() {
   var perCity = {};
@@ -23,10 +21,10 @@ var memberCache = (function MemberCache() {
     console.log('path:', filePath);
     delete require.cache[filePath]; // clear the cache entry for this file before reloading it below
     try {
-      var users = (require(filePath).members || []).map(function(uid) {
+      var users = (require(filePath).members || []).map(function (uid) {
         return { id: uid };
       });
-      userModel.fetchUserFields(users, ['name', 'bio'], function(users) {
+      userModel.fetchUserFields(users, ['name', 'bio'], function (users) {
         perCity[city] = users;
         cb && cb(users);
       });
@@ -36,27 +34,27 @@ var memberCache = (function MemberCache() {
     }
   }
   return {
-    hasCity: function(city, cb) {
+    hasCity: function (city, cb) {
       if (perCity[city]) cb(perCity[city]);
       else refresh(city, cb);
     },
-    refresh: function(city, cb) {
+    refresh: function (city, cb) {
       refresh(city, cb);
     },
-    getCityMembers: function(city, cb) {
+    getCityMembers: function (city, cb) {
       if (!perCity[city]) refresh(city, cb);
       else cb(perCity[city]);
     },
-    getCityUids: function(city, cb) {
-      this.getCityMembers(city, function(users) {
+    getCityUids: function (city, cb) {
+      this.getCityMembers(city, function (users) {
         cb(snip.objArrayToValueArray(users, 'id'));
       });
     },
-    getCityUidSet: function(city, cb) {
-      this.getCityUids(city, function(uids) {
+    getCityUidSet: function (city, cb) {
+      this.getCityUids(city, function (uids) {
         cb(snip.arrayToSet(uids));
       });
-    }
+    },
   };
 })();
 
@@ -69,7 +67,7 @@ function posModulo(n, m) {
 }
 
 function fetchCityMembers(p, cb) {
-  memberCache.getCityMembers(p.city, function(users) {
+  memberCache.getCityMembers(p.city, function (users) {
     cb(users.slice(0, parseInt(p.limit)));
   });
 }
@@ -77,7 +75,7 @@ function fetchCityMembers(p, cb) {
 // fetch "featured" users: cycling to all members, 3 new per day (with limit=3)
 function fetchPeopleCurrent(p, cb) {
   var limit = parseInt(p.limit);
-  memberCache.getCityMembers(p.city, function(users) {
+  memberCache.getCityMembers(p.city, function (users) {
     var diff = Date.now() - RELEASE_DATE.getTime();
     var nbDays = Math.round(diff / 1000 / 60 / 60 / 24);
     var offset = posModulo(limit * nbDays, users.length);
@@ -90,13 +88,13 @@ function fetchPeopleCurrent(p, cb) {
 // fetch users that most recently shared a track
 function fetchPeopleRecent(p, cb) {
   var uidSet = {};
-  memberCache.getCityMembers(p.city, function(users) {
+  memberCache.getCityMembers(p.city, function (users) {
     var limit = Math.min(parseInt(p.limit), users.length);
     var uids = snip.objArrayToValueArray(users, 'id');
     mongodb.forEach2(
       'post',
       { q: { uId: { $in: uids } }, sort: [['_id', 'desc']] },
-      function(post, next) {
+      function (post, next) {
         if (!next || !limit)
           userModel.fetchUserFields(snip.values(uidSet), ['name', 'bio'], cb);
         else {
@@ -115,12 +113,12 @@ function fetchPeopleRecent(p, cb) {
 function fetchCityTracks(p, cb) {
   //p.q = {repost: {$exists: false}}, after: p.after/*, before: p.before*/, limit: LIMIT+1}
   var posts = [];
-  memberCache.getCityUids(p.city, function(uids) {
-    plTagsModel.getTagEngine(function(tagEngine) {
+  memberCache.getCityUids(p.city, function (uids) {
+    plTagsModel.getTagEngine(function (tagEngine) {
       mongodb.forEach2(
         'post',
         { q: { uId: { $in: uids } }, after: p.after, sort: [['_id', 'desc']] },
-        function(post, next) {
+        function (post, next) {
           if (!next || posts.length >= p.limit) cb(posts);
           else if (p.genre) {
             var tags = tagEngine.getTagsByEid((post || {}).eId || '');
@@ -174,19 +172,19 @@ var ACTIONS = {
   posts: fetchCityTracks,
   people: fetchCityMembers,
   peopleCurrent: fetchPeopleCurrent,
-  peopleRecent: fetchPeopleRecent
+  peopleRecent: fetchPeopleRecent,
   //	"playlists": fetchPlaylistsFromSearchIndex
 };
 
 function toTitleCase(str) {
-  return str.replace(/\w\S*/g, function(txt) {
+  return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
 
 var CITIZEN_NAMES = {
   paris: 'Parisian',
-  madrid: 'Madrileo'
+  madrid: 'Madrileo',
 };
 
 function renderCityPage(city, loggedUser, cb) {
@@ -199,7 +197,7 @@ function renderCityPage(city, loggedUser, cb) {
     citizensName: CITIZEN_NAMES[city],
     cityImgPrefix: '/images/pgCity-' + city + '-',
     cityUrl: config.urlPrefix + '/' + city,
-    loggedUser: loggedUser
+    loggedUser: loggedUser,
   };
   var whydPageParams = {
     //request: request, // => pageUrl => meta og:url element (useless)
@@ -224,8 +222,8 @@ function renderCityPage(city, loggedUser, cb) {
       '    <script src="' + cityDataPrefix + 'playlists.js"></script>',
       '    <script src="' + cityDataPrefix + 'people.js"></script>',
       '    <script src="/js/pgCity-common.js"></script>',
-      '    <script src="/js/pgCity-popup.js"></script>'
-    ].join('\n')
+      '    <script src="/js/pgCity-popup.js"></script>',
+    ].join('\n'),
   };
   mainTemplate.renderAsyncWhydPageFromTemplateFile(
     'public' + cityDataPath + '/template.html',
@@ -236,7 +234,7 @@ function renderCityPage(city, loggedUser, cb) {
   );
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('city.api.controller', reqParams);
 
   var loggedUser = request.checkLogin();
@@ -245,7 +243,7 @@ exports.controller = function(request, reqParams, response) {
   reqParams = reqParams || {};
   var city = ('' + (reqParams._1 || request.url)).replace(/[^a-z0-9]*/gi, ''); // sanitize city name
 
-  memberCache.hasCity(city, function(members) {
+  memberCache.hasCity(city, function (members) {
     if (!(members || []).length) return response.badRequest();
 
     var action = reqParams._2;
@@ -261,7 +259,7 @@ exports.controller = function(request, reqParams, response) {
       time: Date.now(),
       city: city,
       action: action,
-      limit: reqParams.limit || 5
+      limit: reqParams.limit || 5,
     };
 
     if (reqParams.after) result.after = reqParams.after;
@@ -270,7 +268,7 @@ exports.controller = function(request, reqParams, response) {
       (plTagsModel.extractGenreTags(reqParams.genre || '') || []).shift() || '';
     if (genre) result.genre = genre;
 
-    actionFct(result, function(res) {
+    actionFct(result, function (res) {
       if (!res || res.error) {
         result.error = (res || {}).error || 'null response';
         console.error('api.city.controller ERROR:', result.error);

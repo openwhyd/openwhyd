@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../../snip.js');
 var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var searchModel = require('../../models/search.js');
@@ -19,11 +18,10 @@ var MAX_RESULTS = 100;
 var MAX_PLAYLIST_THUMBS = 3;
 var MAX_IN_ADD_RESULTS = 5;
 var MAX_NB_MENTION_SUGGESTIONS = 6;
-var MAX_FOLLOWING = 5000;
 
 /** submits a query and returns results as {post:[], user:[], playlist:[]} **/
 function fetchResultsPerType(q, cb) {
-  searchModel.query(q, function(r) {
+  searchModel.query(q, function (r) {
     var resultsPerType = {};
     if (r && r.hits)
       for (var i in r.hits) {
@@ -61,17 +59,17 @@ function removeEmptyItems(posts) {
 
 /** fetch extended posts/users/playlists data from db, given a list of simple result objects **/
 var fetchDataByType = {
-  track: function(hits, cb) {
+  track: function (hits, cb) {
     this.post(hits, cb);
     // same as below
   },
-  post: function(hits, cb) {
+  post: function (hits, cb) {
     var idList = toObjectIdList(hits);
     postModel.fetchPosts(
       { _id: { $in: idList } },
       {},
       { limit: MAX_RESULTS },
-      function(items) {
+      function (items) {
         //sort items by search score
         var itemSet = {};
         for (var i in items)
@@ -82,7 +80,7 @@ var fetchDataByType = {
       }
     );
   },
-  user: function(hits, cb) {
+  user: function (hits, cb) {
     // for each user, fetch last track
     //userModel.fetchMulti({_id:{$in:idList}}, {limit: MAX_RESULTS}, cb);
     var idList = toObjectIdList(hits);
@@ -90,20 +88,20 @@ var fetchDataByType = {
     function next() {
       if (!idList.length) return cb(userList);
       var uid = '' + idList.shift();
-      postModel.fetchByAuthors([uid], { limit: 1 }, function(posts) {
+      postModel.fetchByAuthors([uid], { limit: 1 }, function (posts) {
         var user = mongodb.usernames[uid];
         if (user)
           userList.push({
             _id: uid,
             name: user.name,
-            lastTrack: (posts || []).length ? posts[0] : undefined
+            lastTrack: (posts || []).length ? posts[0] : undefined,
           });
         next();
       });
     }
     next();
   },
-  playlist: function(hits, cb) {
+  playlist: function (hits, cb) {
     // for each playlist, fetch number of tracks and 3 last tracks (for thumbs)
     var playlists = (hits || []).slice();
     var result = [];
@@ -114,7 +112,7 @@ var fetchDataByType = {
     function next(i) {
       if (i >= playlists.length) return cb(result);
       var pl = playlists[i];
-      postModel.countPlaylistPosts(pl.idParts[0], pl.idParts[1], function(c) {
+      postModel.countPlaylistPosts(pl.idParts[0], pl.idParts[1], function (c) {
         if (!c) next(i + 1);
         else {
           playlists[i]._id = pl.idParts[1];
@@ -125,7 +123,7 @@ var fetchDataByType = {
             pl.idParts[0],
             pl.idParts[1],
             { limit: MAX_PLAYLIST_THUMBS - 1 },
-            function(posts) {
+            function (posts) {
               for (var j in posts)
                 if (posts[j].img)
                   posts[j].img = posts[j].img.replace('http:', '');
@@ -138,7 +136,7 @@ var fetchDataByType = {
       });
     }
     next(0);
-  }
+  },
 };
 
 function sortByDecreasingScore(a, b) {
@@ -147,11 +145,11 @@ function sortByDecreasingScore(a, b) {
 
 /** re-order posts/users/playlists based on data quality/quantity and subscriptions **/
 var sortByType = {
-  track: function(items, myUid, followedUids) {
+  track: function (items, myUid, followedUids) {
     return items;
     // no sorting (algolia does it)
   },
-  post: function(items, myUid, followedUids) {
+  post: function (items, myUid, followedUids) {
     for (var i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids[items[i].uId];
@@ -164,7 +162,7 @@ var sortByType = {
     items.sort(sortByDecreasingScore);
     return items;
   },
-  user: function(items, myUid, followedUids) {
+  user: function (items, myUid, followedUids) {
     for (var i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids['' + items[i]._id];
@@ -174,7 +172,7 @@ var sortByType = {
     items.sort(sortByDecreasingScore);
     return items;
   },
-  playlist: function(items, myUid, followedUids) {
+  playlist: function (items, myUid, followedUids) {
     for (var i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids[items[i].idParts[0]];
@@ -185,13 +183,13 @@ var sortByType = {
     }
     items.sort(sortByDecreasingScore);
     return items;
-  }
+  },
 };
 
 function processPosts(results, params, cb) {
   params = params || {};
   if (!results || !results.length) return cb([]);
-  fetchDataByType['post'](results, function(posts) {
+  fetchDataByType['post'](results, function (posts) {
     var posts = posts || [];
     if (!posts.length) return cb([]);
     function populateSortAndReturn(followedUids) {
@@ -204,7 +202,7 @@ function processPosts(results, params, cb) {
           name: p.name,
           uId: p.uId,
           uNm: p.uNm,
-          score: followedUids[p.uId] ? 10 : 0
+          score: followedUids[p.uId] ? 10 : 0,
         };
       }
       cb(
@@ -229,7 +227,7 @@ function fetchMyPosts(q, uid, cb) {
       _type: 'post',
       q: q,
       uId: uid,
-      limit: MAX_IN_ADD_RESULTS * 2
+      limit: MAX_IN_ADD_RESULTS * 2,
     },
     cb
   );
@@ -241,7 +239,7 @@ function fetchTheirPosts(q, uid, cb) {
       _type: 'post',
       q: q,
       excludeUid: uid,
-      limit: MAX_IN_ADD_RESULTS * 2
+      limit: MAX_IN_ADD_RESULTS * 2,
       //sort: [/*{_score: "desc"},*/ {_uid:{order: "asc", ignore_unmapped: true}}]
     },
     cb
@@ -249,8 +247,8 @@ function fetchTheirPosts(q, uid, cb) {
 }
 
 function fetchSearchPage(myUid, q, cb) {
-  fetchResultsPerType({ q: q }, function(resultsPerType) {
-    followModel.fetchSubscriptionSet(myUid, function(followedUids) {
+  fetchResultsPerType({ q: q }, function (resultsPerType) {
+    followModel.fetchSubscriptionSet(myUid, function (followedUids) {
       var types = ['track', 'user', 'playlist'];
       var results = {};
       (function next(whenDone) {
@@ -258,7 +256,7 @@ function fetchSearchPage(myUid, q, cb) {
           return cb(results);
         }
         var type = types.pop();
-        fetchDataByType[type](resultsPerType[type], function(items) {
+        fetchDataByType[type](resultsPerType[type], function (items) {
           sortByType[type](items, myUid, followedUids);
           results[type + 's'] = items;
           next();
@@ -268,9 +266,9 @@ function fetchSearchPage(myUid, q, cb) {
   });
 }
 
-exports.controller = function(request, reqParams, response, error) {
+exports.controller = function (request, reqParams, response, error) {
   function renderSearchPage(q, cb) {
-    fetchSearchPage(request.getUid(), q, function(results) {
+    fetchSearchPage(request.getUid(), q, function (results) {
       results.posts = results.tracks; // since algolia integration
       if (reqParams.format == 'json') cb({ q: q, results: results });
       else template.renderSearchPage(results, reqParams, cb);
@@ -278,7 +276,7 @@ exports.controller = function(request, reqParams, response, error) {
   }
 
   function renderResultsBox(q, format, cb) {
-    fetchResultsPerType({ q: q }, function(resultsPerType) {
+    fetchResultsPerType({ q: q }, function (resultsPerType) {
       resultsPerType.posts = resultsPerType.tracks; // since algolia integration
       if (format == 'html') template.renderResultBox(q, resultsPerType, cb);
       else cb({ q: q, results: resultsPerType });
@@ -290,20 +288,20 @@ exports.controller = function(request, reqParams, response, error) {
       console.log('user is not logged in');
       cb({ error: 'you must be logged in to use that feature' });
     } else
-      fetchMyPosts(q, uid, function(myResults) {
+      fetchMyPosts(q, uid, function (myResults) {
         //console.log("myResults", myResults);
-        fetchTheirPosts(q, uid, function(theirResults) {
+        fetchTheirPosts(q, uid, function (theirResults) {
           //console.log("theirResults", myResults);
-          processPosts((theirResults || {}).hits, { uid: uid }, function(
+          processPosts((theirResults || {}).hits, { uid: uid }, function (
             theirPosts
           ) {
-            processPosts((myResults || {}).hits, {}, function(myPosts) {
+            processPosts((myResults || {}).hits, {}, function (myPosts) {
               cb({
                 q: q,
                 results: {
                   myPosts: myPosts,
-                  theirPosts: theirPosts
-                }
+                  theirPosts: theirPosts,
+                },
               });
             });
           });
@@ -312,9 +310,9 @@ exports.controller = function(request, reqParams, response, error) {
   }
 
   function renderFilteredFeed(uid, q, cb) {
-    searchModel.query({ q: q, uId: uid }, function(results) {
+    searchModel.query({ q: q, uId: uid }, function (results) {
       // uid is provided => only posts results will be returned
-      fetchDataByType['post']((results || {}).hits || [], function(posts) {
+      fetchDataByType['post']((results || {}).hits || [], function (posts) {
         if (reqParams.format == 'html')
           template.renderPosts(posts, reqParams.loggedUser, cb);
         else cb({ q: q, uId: uid, results: posts });
@@ -324,20 +322,20 @@ exports.controller = function(request, reqParams, response, error) {
 
   function fetchOtherTracks(uid, q, cb) {
     console.log('fetchOtherTracks', uid, q);
-    fetchTheirPosts(q, uid, function(results) {
+    fetchTheirPosts(q, uid, function (results) {
       var results = (results || {}).hits || [];
-      processPosts(results, { uid: uid }, function(posts) {
+      processPosts(results, { uid: uid }, function (posts) {
         cb(posts);
       });
     });
   }
 
   function fetchQuickUsers(uid, q, cb) {
-    followModel.fetchSubscriptionSet(uid, function(followed) {
+    followModel.fetchSubscriptionSet(uid, function (followed) {
       var sorted = [];
       searchModel.query(
         { _type: 'user', q: reqParams.q, limit: MAX_NB_MENTION_SUGGESTIONS },
-        function(users) {
+        function (users) {
           var hits = (users || {}).hits || [];
           for (var i = hits.length - 1; i > -1; --i) {
             var u = hits[i];

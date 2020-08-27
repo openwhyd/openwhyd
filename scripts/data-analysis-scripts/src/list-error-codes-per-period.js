@@ -2,7 +2,7 @@
 
 const {
   emit,
-  mapReduceFromJsonLines
+  mapReduceFromJsonLines,
 } = require('./json-helpers/map-reduce-over-json-lines');
 
 const {
@@ -11,12 +11,12 @@ const {
   MONTH,
   YEAR,
   today,
-  makeDateRangeQuery
+  makeDateRangeQuery,
 } = require('./mongo-helpers/date-range.mongo.js');
 const {
   renderDate,
   renderWeek,
-  makeMapWith
+  makeMapWith,
 } = require('./mongo-helpers/period-aggregator.mongo.js');
 
 // symbols that should be provided at runtime:
@@ -52,26 +52,26 @@ function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
   var finalVal = {};
   // sum counts for each period
-  vals.forEach(val =>
+  vals.forEach((val) =>
     Object.keys(val).forEach(
-      key => (finalVal[key] = (finalVal[key] || 0) + val[key])
+      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key])
     )
   );
   return finalVal;
 }
 
 var opts = {
-  finalize: function(key, reduced) {
+  finalize: function (key, reduced) {
     // list of player ids from https://github.com/openwhyd/openwhyd/blob/d27fb71220cbd29e9e418bd767426e3b4a2187f3/public/js/whydPlayer.js#L559
     Object.keys(reduced)
-      .filter(key => key !== 'total')
-      .forEach(error => {
+      .filter((key) => key !== 'total')
+      .forEach((error) => {
         reduced[error] = reduced[error] / reduced.total; // compute % of errors againt plays
       });
     delete reduced.total;
     return reduced;
   },
-  query: makeDateRangeQuery(new Date(today - PERIOD))
+  query: makeDateRangeQuery(new Date(today - PERIOD)),
 };
 
 (async () => {

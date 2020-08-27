@@ -34,7 +34,6 @@
   -> the score of a track will only be updated on a (re-)post, like, or play operation on that track
 */
 
-var config = require('./config.js');
 var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId;
 var snip = require('../snip.js');
@@ -45,13 +44,13 @@ var metadataResolver = require('../models/metadataResolver.js');
 var FIELDS_TO_SUM = {
   nbP: true, // number of plays
   nbL: true, // number of likes (from lov[] field)
-  nbR: true // number of posts/reposts
+  nbR: true, // number of posts/reposts
 };
 
 var FIELDS_TO_COPY = {
   name: true,
   img: true,
-  score: true
+  score: true,
 };
 
 var COEF_REPOST = 100;
@@ -66,7 +65,7 @@ function scorePost(post) {
 
 var POST_FETCH_OPTIONS = {
   limit: 10000,
-  sort: [['_id', 'desc']]
+  sort: [['_id', 'desc']],
 };
 
 // core methods
@@ -77,7 +76,7 @@ function save(track, cb, replace) {
     { eId: track.eId },
     op,
     { upsert: true },
-    function(error, result) {
+    function (error, result) {
       //console.log("=> saved hot track:", result);
       if (error) console.error('track.save() db error:', error);
       if (cb) cb(result);
@@ -86,39 +85,39 @@ function save(track, cb, replace) {
 }
 
 function remove(q, cb) {
-  mongodb.collections['track'].remove(q, function(error, result) {
+  mongodb.collections['track'].remove(q, function (error, result) {
     console.log('=> removed hot track:', result);
     if (error) console.error('track.remove() error: ' + error.stack);
     if (cb) cb(result);
   });
 }
 
-exports.countTracksWithField = function(fieldName, cb) {
+exports.countTracksWithField = function (fieldName, cb) {
   var q = {};
   q[fieldName] = { $exists: 1 };
   mongodb.collections['track'].count(q, cb);
 };
 
 /* fetch top hot tracks, without processing */
-exports.fetch = function(params, handler) {
+exports.fetch = function (params, handler) {
   params = params || {};
   params.sort = params.sort || [['score', 'desc']];
-  mongodb.collections['track'].find({}, params, function(err, cursor) {
-    cursor.toArray(function(err, results) {
+  mongodb.collections['track'].find({}, params, function (err, cursor) {
+    cursor.toArray(function (err, results) {
       console.log('=> fetched ' + results.length + ' tracks');
       if (handler) handler(results);
     });
   });
 };
 
-exports.fetchTrackByEid = function(eId, cb) {
+exports.fetchTrackByEid = function (eId, cb) {
   // in order to allow requests of soundcloud eId without hash (#):
   var eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
-  mongodb.collections['track'].findOne({ eId: eId }, function(err, track) {
+  mongodb.collections['track'].findOne({ eId: eId }, function (err, track) {
     if (!err && !track && eidPrefix)
       mongodb.collections['track'].findOne(
         { eId: new RegExp('^' + eidPrefix + '.*') },
-        function(err, track) {
+        function (err, track) {
           if (track && track.eId.split('#')[0] != eidPrefix) track = null;
           cb(err ? { error: err } : track);
         }
@@ -141,15 +140,15 @@ function mergePostData(track, post, offset) {
 }
 
 function fetchPostsByPid(pId, cb) {
-  var pidList = (pId && Array.isArray(pId) ? pId : []).map(function(id) {
+  var pidList = (pId && Array.isArray(pId) ? pId : []).map(function (id) {
     return ObjectId('' + id);
   });
   //for (var i in pidList) pidList[i] = ObjectId("" + pidList[i]);
   mongodb.collections['post'].find(
     { _id: { $in: pidList } },
     POST_FETCH_OPTIONS,
-    function(err, cursor) {
-      cursor.toArray(function(err, posts) {
+    function (err, cursor) {
+      cursor.toArray(function (err, posts) {
         cb(posts);
       });
     }
@@ -157,12 +156,12 @@ function fetchPostsByPid(pId, cb) {
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
-exports.fetchPosts = function(params, handler) {
+exports.fetchPosts = function (params, handler) {
   params = params || {};
   var firstIndex = (params.skip = parseInt(params.skip || 0));
-  exports.fetch(params, function(tracks) {
+  exports.fetch(params, function (tracks) {
     var pidList = snip.objArrayToValueArray(tracks, 'pId');
-    fetchPostsByPid(pidList, function(posts) {
+    fetchPostsByPid(pidList, function (posts) {
       var postsByEid = snip.objArrayToSet(posts, 'eId');
       for (var i in tracks) {
         var track = tracks[i];
@@ -182,13 +181,13 @@ exports.fetchPosts = function(params, handler) {
   });
 };
 
-exports.fetchPostsByGenres = function(genres, p, cb) {
+exports.fetchPostsByGenres = function (genres, p, cb) {
   if (!genres || !genres.length) return exports.fetchPosts(p, cb);
   var genreSet = snip.arrayToSet(genres);
   var posts = [];
   var toSkip = (p.skip = parseInt(p.skip || 0)); // TODO: find a more optimal solution (less db queries)
-  plTagsModel.getTagEngine(function(tagEngine) {
-    mongodb.forEach2('track', { sort: [['score', 'desc']] }, function(
+  plTagsModel.getTagEngine(function (tagEngine) {
+    mongodb.forEach2('track', { sort: [['score', 'desc']] }, function (
       track,
       next
     ) {
@@ -196,7 +195,7 @@ exports.fetchPostsByGenres = function(genres, p, cb) {
       else {
         var tags = tagEngine.getTagsByEid((track || {}).eId || '');
         if (tags && tags.length && genreSet[tags[0].id]) {
-          postModel.fetchPostById(track.pId, function(post) {
+          postModel.fetchPostById(track.pId, function (post) {
             if (post && --toSkip < 0) {
               posts.push(mergePostData(track, post));
             }
@@ -208,18 +207,18 @@ exports.fetchPostsByGenres = function(genres, p, cb) {
   });
 };
 
-exports.fetchPostsByGenre = function(genre, p, cb) {
+exports.fetchPostsByGenre = function (genre, p, cb) {
   if (!genre) exports.fetchPosts(p, cb);
   else exports.fetchPostsByGenres([genre], p, cb);
 };
 
-exports.fetchPostsFromSubscriptions = function(uidList, p, cb) {
+exports.fetchPostsFromSubscriptions = function (uidList, p, cb) {
   var posts = [];
   if (!uidList || !uidList.length) return cb(posts);
   var toSkip = (params.skip = parseInt(p.skip || 0)); // TODO: find a more optimal solution (less db queries)
   var ranking = 0;
-  plTagsModel.getTagEngine(function(tagEngine) {
-    mongodb.forEach2('track', { sort: [['score', 'desc']] }, function(
+  plTagsModel.getTagEngine(function (tagEngine) {
+    mongodb.forEach2('track', { sort: [['score', 'desc']] }, function (
       track,
       next
     ) {
@@ -229,9 +228,9 @@ exports.fetchPostsFromSubscriptions = function(uidList, p, cb) {
         var query = {
           eId: track.eId,
           uId: { $in: uidList },
-          'repost.uId': { $nin: uidList }
+          'repost.uId': { $nin: uidList },
         };
-        postModel.fetchPosts(query, {}, {}, function(postArray) {
+        postModel.fetchPosts(query, {}, {}, function (postArray) {
           if (postArray && postArray.length && --toSkip < 0) {
             var post = mergePostData(track, postArray[0]);
             post.tags = tagEngine.getTagsByEid((track || {}).eId || '');
@@ -249,11 +248,11 @@ exports.fetchPostsFromSubscriptions = function(uidList, p, cb) {
 
 function fetchPostsByEid(eId, cb) {
   var criteria = { eId: eId && Array.isArray(eId) ? { $in: eId } : eId };
-  mongodb.collections['post'].find(criteria, POST_FETCH_OPTIONS, function(
+  mongodb.collections['post'].find(criteria, POST_FETCH_OPTIONS, function (
     err,
     cursor
   ) {
-    cursor.toArray(function(err, posts) {
+    cursor.toArray(function (err, posts) {
       cb(posts);
     });
   });
@@ -261,16 +260,16 @@ function fetchPostsByEid(eId, cb) {
 
 // called when a track is updated/deleted by a user,
 // or called by updateAndPopulateMetadata() when a track is posted by a user
-exports.updateByEid = function(eId, cb, replace, additionalFields) {
+exports.updateByEid = function (eId, cb, replace, additionalFields) {
   var since = Date.now() - HOT_TRACK_TIME_WINDOW;
   console.log('track.updateByEid: ', eId);
-  fetchPostsByEid(eId, function(posts) {
+  fetchPostsByEid(eId, function (posts) {
     if (!posts || !posts.length) return remove({ eId: eId }, cb);
     // 0) init track objects (one for storage and display, one for scoring over the selected period of time)
     var freshTrackStats = {},
       track = {
         eId: eId,
-        nbR: posts.length
+        nbR: posts.length,
       };
     for (var f in FIELDS_TO_SUM) {
       track[f] = track[f] || 0;
@@ -290,7 +289,7 @@ exports.updateByEid = function(eId, cb, replace, additionalFields) {
         ++freshTrackStats.nbR;
       }
     }
-    posts.sort(function(a, b) {
+    posts.sort(function (a, b) {
       return b.score - a.score;
     });
     // 2) populate and save track object, based on best-scored post
@@ -314,7 +313,7 @@ var CONCISE_META_FIELDS = {
   trackTitle: 'tit',
   artistName: 'art',
   duration: 'dur',
-  confidence: 'c'
+  confidence: 'c',
 };
 
 var MINIMUM_CONFIDENCE = 0.8;
@@ -343,8 +342,8 @@ function translateTrackToConciseMetadata(track) {
 
 // translates resulting metadata and mappings from metadataResolver,
 // to whyd's track collection format (concise fields)
-exports.fetchConciseMetadataForEid = function(eId, cb) {
-  metadataResolver.fetchMetadataForEid(eId, function(err, track) {
+exports.fetchConciseMetadataForEid = function (eId, cb) {
+  metadataResolver.fetchMetadataForEid(eId, function (err, track) {
     //console.log("fetchMetadataForEid =>", track);
     cb(err ? { error: '' + err } : translateTrackToConciseMetadata(track));
   });
@@ -375,16 +374,16 @@ function flattenObjectProperties(obj, path, res) {
 
 // called in place of updateByEid(), when a track is posted by a user
 // populates meta{t,art,tit,c} and alternative source mapping/identifiers
-exports.updateAndPopulateMetadata = function(eId, cb, force) {
+exports.updateAndPopulateMetadata = function (eId, cb, force) {
   console.log('updateAndPopulateMetadata...', eId);
-  exports.fetchTrackByEid(eId, function(track) {
+  exports.fetchTrackByEid(eId, function (track) {
     if (!force && hasAltMappings(track) && hasGoodMetadata(track)) {
       console.log(
         'good metadata and alternative mappings already found for this track => skipping metadata extraction'
       );
       return exports.updateByEid(eId, cb, false);
     }
-    exports.fetchConciseMetadataForEid(eId, function(finalMeta) {
+    exports.fetchConciseMetadataForEid(eId, function (finalMeta) {
       finalMeta = finalMeta || {};
       //console.log("metadata result", finalMeta);
       if (finalMeta.error) {
@@ -413,10 +412,10 @@ exports.updateAndPopulateMetadata = function(eId, cb, force) {
 
 // maintenance functions
 
-exports.snapshotTrackScores = function(cb) {
-  mongodb.collections['track'].count(function(err, count) {
+exports.snapshotTrackScores = function (cb) {
+  mongodb.collections['track'].count(function (err, count) {
     var i = 0;
-    mongodb.forEach2('track', { fields: { score: 1 } }, function(track, next) {
+    mongodb.forEach2('track', { fields: { score: 1 } }, function (track, next) {
       if (!track) cb();
       else {
         console.log('snapshotTrackScores', ++i, '/', count);
@@ -430,10 +429,10 @@ exports.snapshotTrackScores = function(cb) {
   });
 };
 
-exports.refreshTrackCollection = function(cb) {
-  mongodb.collections['track'].count(function(err, count) {
+exports.refreshTrackCollection = function (cb) {
+  mongodb.collections['track'].count(function (err, count) {
     var i = 0;
-    mongodb.forEach2('track', { fields: { _id: 0, eId: 1 } }, function(
+    mongodb.forEach2('track', { fields: { _id: 0, eId: 1 } }, function (
       track,
       next
     ) {
@@ -446,26 +445,27 @@ exports.refreshTrackCollection = function(cb) {
   });
 };
 
-exports.populateTrackMetadata = function(cb, force) {
-  mongodb.collections['track'].count(function(err, count) {
+exports.populateTrackMetadata = function (cb, force) {
+  mongodb.collections['track'].count(function (err, count) {
     var i = 0;
-    mongodb.forEach2('track', { fields: { _id: 0, eId: 1, name: 1 } }, function(
-      track,
-      next
-    ) {
-      if (!track) cb();
-      else {
-        console.log(
-          'updateAndPopulateMetadata',
-          ++i,
-          '/',
-          count,
-          track.eId,
-          track.name
-        );
-        exports.updateAndPopulateMetadata(track.eId, next, force);
+    mongodb.forEach2(
+      'track',
+      { fields: { _id: 0, eId: 1, name: 1 } },
+      function (track, next) {
+        if (!track) cb();
+        else {
+          console.log(
+            'updateAndPopulateMetadata',
+            ++i,
+            '/',
+            count,
+            track.eId,
+            track.name
+          );
+          exports.updateAndPopulateMetadata(track.eId, next, force);
+        }
       }
-    });
+    );
   });
 };
 

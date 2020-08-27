@@ -1,7 +1,7 @@
 context('reduce frequency of email notifications', () => {
   it('user has instant email notifications', () => {
     cy.loginAsAdmin();
-    cy.request('api/user').should(response => {
+    cy.request('api/user').should((response) => {
       expect(response.body)
         .to.have.property('pref')
         .to.have.property('emSub', 0);
@@ -11,14 +11,10 @@ context('reduce frequency of email notifications', () => {
   it('user activates daily email notifications then reduce it to weekly', () => {
     cy.loginAsAdmin();
     cy.visit('/settings');
-    cy.get('a')
-      .contains('Notifications')
-      .click();
-    cy.get('label')
-      .contains('Daily')
-      .click();
+    cy.get('a').contains('Notifications').click();
+    cy.get('label').contains('Daily').click();
     cy.get('#tabNotif input[type="submit"]').click();
-    cy.request('api/user').should(response => {
+    cy.request('api/user').should((response) => {
       expect(response.body)
         .to.have.property('pref')
         .to.have.property('emSub', '1');
@@ -27,7 +23,7 @@ context('reduce frequency of email notifications', () => {
       `/api/unsubscribe?uId=000000000000000000000001&type=emSub&action=reduce`
     );
     cy.get('body').contains('weekly');
-    cy.request('api/user').should(response => {
+    cy.request('api/user').should((response) => {
       expect(response.body)
         .to.have.property('pref')
         .to.have.property('emSub', 7);

@@ -19,10 +19,7 @@ var API_HOST = 'ws.audioscrobbler.com';
 var API_PREFIX = '/2.0/';
 
 function md5(data) {
-  return crypto
-    .createHash('md5')
-    .update(data)
-    .digest('hex');
+  return crypto.createHash('md5').update(data).digest('hex');
 }
 
 function LastFM(apiKey, apiSecret) {
@@ -37,7 +34,7 @@ function LastFM(apiKey, apiSecret) {
     return p;
   }
 
-  this.submitRequest = function(p, options, cb) {
+  this.submitRequest = function (p, options, cb) {
     var options = options || {};
     options.responseEncoding = 'utf-8';
 
@@ -51,13 +48,13 @@ function LastFM(apiKey, apiSecret) {
       options.body = body;
       options.headers = {
         'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-        'Content-Length': body.length
+        'Content-Length': body.length,
       };
     } else path += '?' + body;
 
     console.log('submitting ' + path + ' request to last.fm ...', options);
 
-    snip.httpRequestJSON(path, options, function(err, data, res) {
+    snip.httpRequestJSON(path, options, function (err, data, res) {
       //console.log("-> last.fm response status code", (res || {}).statusCode)
       cb(data || err);
     });
@@ -88,47 +85,47 @@ function LastFM(apiKey, apiSecret) {
 
   // http://www.lastfm.fr/api/show/auth.getSession
   // Note: "Session keys have an infinite lifetime by default. You are recommended to store the key securely."
-  this.fetchSession = function(token, cb) {
+  this.fetchSession = function (token, cb) {
     this.submitRequest(
       sign({
         method: 'auth.getSession',
-        token: token
+        token: token,
       }),
       {},
-      function(res) {
+      function (res) {
         cb((res || {}).session);
       }
     );
   };
 
   // http://www.lastfm.fr/api/show/user.getInfo
-  this.getUserInfo = function(handle, cb) {
+  this.getUserInfo = function (handle, cb) {
     this.submitRequest(
       {
         method: 'user.getinfo',
-        user: handle
+        user: handle,
       },
       {},
-      function(res) {
+      function (res) {
         cb && cb((res || {}).user);
       }
     );
   };
 
   // http://www.lastfm.fr/api/show/track.updateNowPlaying
-  this.updateNowPlaying = function(data, cb) {
+  this.updateNowPlaying = function (data, cb) {
     data.method = 'track.updateNowPlaying';
     this.submitRequest(sign(data), { method: 'POST' }, cb);
   };
 
-  this.updateNowPlaying2 = function(post, lastFmSessionKey, cb) {
+  this.updateNowPlaying2 = function (post, lastFmSessionKey, cb) {
     post = post || {};
     var splitted = ('' + post.name).split(' - ');
     if (lastFmSessionKey && splitted.length > 1) {
       var scrobbleData = {
         sk: lastFmSessionKey,
         artist: splitted[0], //"Man is not a Bird", //"Finnebassen", //"Maybeshewill",
-        track: splitted[1] //"Bringer of rain and seed" //"Touching Me (Original Mix)" //"Opening"
+        track: splitted[1], //"Bringer of rain and seed" //"Touching Me (Original Mix)" //"Opening"
       };
       if (post.duration) scrobbleData.duration = parseInt(post.duration);
       this.updateNowPlaying(scrobbleData, cb);
@@ -136,12 +133,12 @@ function LastFM(apiKey, apiSecret) {
   };
 
   // http://www.lastfm.fr/api/scrobbling
-  this.scrobble = function(data, cb) {
+  this.scrobble = function (data, cb) {
     data.method = 'track.scrobble';
     this.submitRequest(sign(data), { method: 'POST' }, cb);
   };
 
-  this.scrobble2 = function(
+  this.scrobble2 = function (
     trackName,
     lastFmSessionKey,
     chosenByUser,
@@ -157,7 +154,7 @@ function LastFM(apiKey, apiSecret) {
           artist: splitted[0],
           track: splitted[1],
           timestamp: timestamp,
-          chosenByUser: !!chosenByUser
+          chosenByUser: !!chosenByUser,
         },
         cb
       );
@@ -167,7 +164,7 @@ function LastFM(apiKey, apiSecret) {
 
 exports.lastFm = new LastFM(API_KEY, API_SECRET);
 
-exports.controller = function(request, p, response) {
+exports.controller = function (request, p, response) {
   request.logToConsole('api.lastFm.controller', p);
   p = p || {};
 
@@ -179,7 +176,7 @@ exports.controller = function(request, p, response) {
       var session = session
         ? JSON.stringify({
             sk: session.key,
-            name: uiSnip.htmlEntities(session.name)
+            name: uiSnip.htmlEntities(session.name),
           })
         : '';
       console.log('rendering lastfm session for callback', message, session);
@@ -190,16 +187,16 @@ exports.controller = function(request, p, response) {
           ');</script>'
       );
     }
-    exports.lastFm.fetchSession(p.token, function(session) {
+    exports.lastFm.fetchSession(p.token, function (session) {
       if (session) {
         var userUpdate = {
           id: loggedUser.id,
           lastFm: {
             sk: session.key,
-            name: session.name
-          }
+            name: session.name,
+          },
         };
-        userModel.save(userUpdate, function() {
+        userModel.save(userUpdate, function () {
           render('Yeah!', session);
         });
         /*

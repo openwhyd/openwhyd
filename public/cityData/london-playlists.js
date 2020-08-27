@@ -11,5 +11,5 @@ var PLAYLISTS_FEATURED = [
   '53ff22d1e04b7b4fca7e2c12_0', // Songs for an indian summer by Sounds good to me too
   '514c8a037e91c862b2ac0b4a_5', // London Night Bus by Charlie Whelton
   '52dd7e2d7e91c862b2b36410_7', // My London Deepness by Alan Syna
-  '53a835de66491c17b2adb195_13' // Best of London by Echoes and Dust
+  '53a835de66491c17b2adb195_13', // Best of London by Echoes and Dust
 ];

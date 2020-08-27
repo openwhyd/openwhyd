@@ -11,12 +11,12 @@ var uploadCtr = require('../uploadedFile.js');
 // hosting settings
 var settings = {
   uploadDir: uploadCtr.config.uploadPath, //'../upload_data',
-  keepExtensions: true
+  keepExtensions: true,
 };
 
 var defaults = {
   keepOriginal: false,
-  thumbDims: '180x' // image resize settings (optimized for profile/topic pictures)
+  thumbDims: '180x', // image resize settings (optimized for profile/topic pictures)
 };
 
 // image resize settings
@@ -31,14 +31,14 @@ function processFile(file, options, callback) {
     console.log('uploaded a file that is not an image => deleting file');
     uploadCtr.deleteFile(file.path);
     return callback({
-      error: 'Only images are supported for upload, for now.'
+      error: 'Only images are supported for upload, for now.',
     });
   } else {
     var result = {
       name: file.name,
       mime: file.type,
       path: uploadCtr.cleanFilePath(file.path),
-      thumbs: {}
+      thumbs: {},
     };
 
     var thumbDims = options.thumbDims ? options.thumbDims.split(',') : [];
@@ -54,10 +54,10 @@ function processFile(file, options, callback) {
     if (thumbDims.length > 0) {
       // create thumbs
       var f = uploadCtr.splitFilePath(file.path);
-      var genThumb = function(thumbWidth, thumbHeight, callback) {
+      var genThumb = function (thumbWidth, thumbHeight, callback) {
         var dims = (thumbWidth || '') + 'x' + (thumbHeight || '');
         var newPath = f.prefix + '_' + dims + f.ext;
-        img.makeThumb(file.path, newPath, thumbWidth, thumbHeight, function() {
+        img.makeThumb(file.path, newPath, thumbWidth, thumbHeight, function () {
           if (callback) callback(newPath, thumbWidth, thumbHeight, dims);
         });
       };
@@ -70,7 +70,7 @@ function processFile(file, options, callback) {
           thumbWidthHeight.length > 0 ? thumbWidthHeight[0] : null;
         var thumbHeight =
           thumbWidthHeight.length > 1 ? thumbWidthHeight[1] : null;
-        genThumb(thumbWidth, thumbHeight, function(
+        genThumb(thumbWidth, thumbHeight, function (
           thumbFile,
           thumbWidth,
           thumbHeight,
@@ -89,7 +89,7 @@ function processFile(file, options, callback) {
   }
 }
 
-exports.controller = function(req, requestParams, res) {
+exports.controller = function (req, requestParams, res) {
   req.logToConsole('upload.controller', requestParams);
 
   var user = req.checkLogin(res);
@@ -120,8 +120,8 @@ exports.controller = function(req, requestParams, res) {
   for (var i in defaults) options[i] = defaults[i];
   for (var i in postParams) options[i] = postParams[i];
 
-  var processAndPushFile = function(i) {
-    processFile(files[i], options, function(result) {
+  var processAndPushFile = function (i) {
+    processFile(files[i], options, function (result) {
       if (result && result.error) console.log(result.error);
       results[i] = result;
       if (--remaining == 0) {

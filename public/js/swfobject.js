@@ -1,7 +1,9 @@
+// TODO: update playemjs then get rid of this file.
+
 /*	SWFObject v2.2 <http://code.google.com/p/swfobject/> 
 	is released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
 */
-var swfobject = (function() {
+var swfobject = (function () {
   var D = 'undefined',
     r = 'object',
     S = 'Shockwave Flash',
@@ -26,7 +28,7 @@ var swfobject = (function() {
     n,
     G,
     m = true,
-    M = (function() {
+    M = (function () {
       var aa =
           typeof j.getElementById != D &&
           typeof j.getElementsByTagName != D &&
@@ -72,7 +74,7 @@ var swfobject = (function() {
                 ag = [
                   parseInt(ab[0], 10),
                   parseInt(ab[1], 10),
-                  parseInt(ab[2], 10)
+                  parseInt(ab[2], 10),
                 ];
               }
             }
@@ -81,7 +83,7 @@ var swfobject = (function() {
       }
       return { w3: aa, pv: ag, wk: af, ie: X, win: ae, mac: ac };
     })(),
-    k = (function() {
+    k = (function () {
       if (!M.w3) {
         return;
       }
@@ -97,14 +99,14 @@ var swfobject = (function() {
           j.addEventListener('DOMContentLoaded', f, false);
         }
         if (M.ie && M.win) {
-          j.attachEvent(x, function() {
+          j.attachEvent(x, function () {
             if (j.readyState == 'complete') {
               j.detachEvent(x, arguments.callee);
               f();
             }
           });
           if (O == top) {
-            (function() {
+            (function () {
               if (J) {
                 return;
               }
@@ -119,7 +121,7 @@ var swfobject = (function() {
           }
         }
         if (M.wk) {
-          (function() {
+          (function () {
             if (J) {
               return;
             }
@@ -168,7 +170,7 @@ var swfobject = (function() {
         } else {
           if (typeof O.onload == 'function') {
             var X = O.onload;
-            O.onload = function() {
+            O.onload = function () {
               X();
               Y();
             };
@@ -193,7 +195,7 @@ var swfobject = (function() {
     var Z = X.appendChild(aa);
     if (Z) {
       var Y = 0;
-      (function() {
+      (function () {
         if (typeof Z.GetVariable != D) {
           var ab = Z.GetVariable('$version');
           if (ab) {
@@ -201,7 +203,7 @@ var swfobject = (function() {
             M.pv = [
               parseInt(ab[0], 10),
               parseInt(ab[1], 10),
-              parseInt(ab[2], 10)
+              parseInt(ab[2], 10),
             ];
           }
         } else {
@@ -345,7 +347,7 @@ var swfobject = (function() {
         Y.setAttribute('id', X);
         ae.parentNode.insertBefore(Y, ae);
         ae.style.display = 'none';
-        (function() {
+        (function () {
           if (ae.readyState == 4) {
             ae.parentNode.removeChild(ae);
           } else {
@@ -362,7 +364,7 @@ var swfobject = (function() {
       Y.parentNode.insertBefore(X, Y);
       X.parentNode.replaceChild(g(Y), X);
       Y.style.display = 'none';
-      (function() {
+      (function () {
         if (Y.readyState == 4) {
           Y.parentNode.removeChild(Y);
         } else {
@@ -473,7 +475,7 @@ var swfobject = (function() {
     if (X && X.nodeName == 'OBJECT') {
       if (M.ie && M.win) {
         X.style.display = 'none';
-        (function() {
+        (function () {
           if (X.readyState == 4) {
             b(Y);
           } else {
@@ -576,9 +578,9 @@ var swfobject = (function() {
     var X = Z.exec(Y) != null;
     return X && typeof encodeURIComponent != D ? encodeURIComponent(Y) : Y;
   }
-  var d = (function() {
+  var d = (function () {
     if (M.ie && M.win) {
-      window.attachEvent('onunload', function() {
+      window.attachEvent('onunload', function () {
         var ac = I.length;
         for (var ab = 0; ab < ac; ab++) {
           I[ab][0].detachEvent(I[ab][1], I[ab][2]);
@@ -599,7 +601,7 @@ var swfobject = (function() {
     }
   })();
   return {
-    registerObject: function(ab, X, aa, Z) {
+    registerObject: function (ab, X, aa, Z) {
       if (M.w3 && ab && X) {
         var Y = {};
         Y.id = ab;
@@ -614,16 +616,16 @@ var swfobject = (function() {
         }
       }
     },
-    getObjectById: function(X) {
+    getObjectById: function (X) {
       if (M.w3) {
         return z(X);
       }
     },
-    embedSWF: function(ab, ah, ae, ag, Y, aa, Z, ad, af, ac) {
+    embedSWF: function (ab, ah, ae, ag, Y, aa, Z, ad, af, ac) {
       var X = { success: false, id: ah };
       if (M.w3 && !(M.wk && M.wk < 312) && ab && ah && ae && ag && Y) {
         w(ah, false);
-        K(function() {
+        K(function () {
           ae += '';
           ag += '';
           var aj = {};
@@ -676,39 +678,39 @@ var swfobject = (function() {
         }
       }
     },
-    switchOffAutoHideShow: function() {
+    switchOffAutoHideShow: function () {
       m = false;
     },
     ua: M,
-    getFlashPlayerVersion: function() {
+    getFlashPlayerVersion: function () {
       return { major: M.pv[0], minor: M.pv[1], release: M.pv[2] };
     },
     hasFlashPlayerVersion: F,
-    createSWF: function(Z, Y, X) {
+    createSWF: function (Z, Y, X) {
       if (M.w3) {
         return u(Z, Y, X);
       } else {
         return undefined;
       }
     },
-    showExpressInstall: function(Z, aa, X, Y) {
+    showExpressInstall: function (Z, aa, X, Y) {
       if (M.w3 && A()) {
         P(Z, aa, X, Y);
       }
     },
-    removeSWF: function(X) {
+    removeSWF: function (X) {
       if (M.w3) {
         y(X);
       }
     },
-    createCSS: function(aa, Z, Y, X) {
+    createCSS: function (aa, Z, Y, X) {
       if (M.w3) {
         v(aa, Z, Y, X);
       }
     },
     addDomLoadEvent: K,
     addLoadEvent: s,
-    getQueryParamValue: function(aa) {
+    getQueryParamValue: function (aa) {
       var Z = j.location.search || j.location.hash;
       if (Z) {
         if (/\?/.test(Z)) {
@@ -726,7 +728,7 @@ var swfobject = (function() {
       }
       return '';
     },
-    expressInstallCallback: function() {
+    expressInstallCallback: function () {
       if (a) {
         var X = c(R);
         if (X && l) {
@@ -743,6 +745,6 @@ var swfobject = (function() {
         }
         a = false;
       }
-    }
+    },
   };
 })();

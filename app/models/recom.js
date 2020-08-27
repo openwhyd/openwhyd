@@ -3,27 +3,27 @@ var mongodb = require('./mongodb.js');
 var snip = require('../snip.js');
 //var postModel = require("./post.js");
 var postModel = {
-  forEachPost: function(q, p, handler) {
-    mongodb.collections['post'].find(q, p, function(err, cursor) {
-      cursor.each(function(err, track) {
+  forEachPost: function (q, p, handler) {
+    mongodb.collections['post'].find(q, p, function (err, cursor) {
+      cursor.each(function (err, track) {
         if (err)
           // we're done
           console.log('recom.forEachPost error:', err);
         handler(track);
       });
     });
-  }
+  },
 };
 
 var MAX_ARTISTS_PER_MATCH = 3;
 var TRACK_MEMORY_USAGE = false;
 
-var sizeof = TRACK_MEMORY_USAGE ? require('object-sizeof') : function() {};
+var sizeof = TRACK_MEMORY_USAGE ? require('object-sizeof') : function () {};
 
 function countOccurences(array) {
   var count = {};
   for (var j in array) count[array[j]] = (count[array[j]] || 0) + 1;
-  return snip.mapToObjArray(count, 'id', 'c').sort(function(a, b) {
+  return snip.mapToObjArray(count, 'id', 'c').sort(function (a, b) {
     return b.c - a.c;
   });
 }
@@ -95,7 +95,7 @@ exports.fetchCommonTracks = function(uId, options, cb) {
 	});
 }
 */
-exports.matchingEngine = (function() {
+exports.matchingEngine = (function () {
   var artists; /// { "manisnotabird" : ["Man Is Not A Bird", popularity] }
   var usersByArtist; // { "manisnotabird" : [ [uId, posted], ... ] }
   var artistsByUser; // { uId: [ ["manisnotabird", posted], ... ] }
@@ -116,11 +116,11 @@ exports.matchingEngine = (function() {
         mostPopular = Math.max(mostPopular, ++artists[artist][1]); // increment artist popularity counter, and update max score
         (usersByArtist[artist] = usersByArtist[artist] || []).push([
           track.uId,
-          true
+          true,
         ]);
         (artistsByUser[track.uId] = artistsByUser[track.uId] || []).push([
           artist,
-          true
+          true,
         ]);
       }
     }
@@ -146,7 +146,7 @@ exports.matchingEngine = (function() {
       postModel.forEachPost(
         {},
         { batchSize: 1000, fields: { _id: 0, uId: 1, uNm: 1, name: 1 } },
-        function(track) {
+        function (track) {
           if (!track) {
             console.log(
               'recom.matchingEngine.populateIndex: done indexing! => score of most popular artist',
@@ -169,8 +169,8 @@ exports.matchingEngine = (function() {
   }
 
   var printMemUsage = !TRACK_MEMORY_USAGE
-    ? function() {}
-    : function() {
+    ? function () {}
+    : function () {
         console.log('RECOM MEMORY USAGE...');
         console.log('RECOM MEMORY USAGE, artists:', sizeof(artists));
         console.log(
@@ -187,26 +187,26 @@ exports.matchingEngine = (function() {
 
   return {
     init: populateIndex,
-    getMemoryUsage: function() {
+    getMemoryUsage: function () {
       return {
         artists: sizeof(artists),
         usersByArtist: sizeof(usersByArtist),
-        artistsByUser: sizeof(artistsByUser)
+        artistsByUser: sizeof(artistsByUser),
       };
     },
-    getArtistsByUser: function(uid) {
+    getArtistsByUser: function (uid) {
       return artistsByUser['' + uid];
     },
-    getArtistName: function(artistId) {
+    getArtistName: function (artistId) {
       var artist = artists['' + artistId];
       return artist ? artist[0] : null;
     },
-    getArtistRarity: function(artistId) {
+    getArtistRarity: function (artistId) {
       var artist = artists['' + artistId];
       return artist ? (mostPopular - artist[1]) / mostPopular : 0;
     },
-    addPost: function(post, cb) {
-      waitForIndex(function() {
+    addPost: function (post, cb) {
+      waitForIndex(function () {
         addPost(post);
         if (cb) cb();
       });
@@ -214,8 +214,8 @@ exports.matchingEngine = (function() {
     /**
      * returns {manisnotabird:4, ...}
      **/
-    fetchCommonArtistsForTwoUsers: function(uId1, uId2, cb) {
-      waitForIndex(function() {
+    fetchCommonArtistsForTwoUsers: function (uId1, uId2, cb) {
+      waitForIndex(function () {
         var artistSet = snip.objArrayToSet(artistsByUser['' + uId1], 0, true);
         //console.log("artistSet", artistSet);
         var artistList = artistsByUser['' + uId2];
@@ -233,9 +233,9 @@ exports.matchingEngine = (function() {
      * myArtists: [[ artistId, (int)weight ]]
      * returns { uId: {manisnotabird:4, ...} }
      **/
-    fetchUsersByArtists: function(myArtists, options, cb) {
+    fetchUsersByArtists: function (myArtists, options, cb) {
       var options = options || {}; // this line must stay before call to waitForIndex, in order to keep in scope
-      waitForIndex(function() {
+      waitForIndex(function () {
         var recomUsers = {};
         var excludedUid = snip.arrayToSet(options.excludeUids || []);
         for (var artist in myArtists) {
@@ -250,7 +250,7 @@ exports.matchingEngine = (function() {
             }
             var recomUser = (recomUsers[userId] = recomUsers[userId] || {
               id: userId,
-              name: mongodb.usernames[userId].name
+              name: mongodb.usernames[userId].name,
             });
             (recomUser.posted = recomUser.posted || []).push(artist);
           }
@@ -261,14 +261,14 @@ exports.matchingEngine = (function() {
     /**
      * returns { uId: {manisnotabird:4, ...} }
      **/
-    fetchCommonArtists: function(uId, options, cb) {
+    fetchCommonArtists: function (uId, options, cb) {
       var self = this;
       var options = options || {}; // this line must stay before call to waitForIndex, in order to keep in scope
       options.excludeUids = (options.excludeUids || []).concat(['' + uId]);
-      waitForIndex(function() {
+      waitForIndex(function () {
         self.fetchUsersByArtists(artistsByUser[uId], options, cb);
       });
-    }
+    },
   };
 })();
 
@@ -322,8 +322,8 @@ exports.recomUsersByTracks = function(uId, options, cb) {
 */
 
 /** returns a similarity scored and the list of common artists **/
-exports.computeUserSimilarity = function(uId1, uId2, cb) {
-  exports.matchingEngine.fetchCommonArtistsForTwoUsers(uId1, uId2, function(
+exports.computeUserSimilarity = function (uId1, uId2, cb) {
+  exports.matchingEngine.fetchCommonArtistsForTwoUsers(uId1, uId2, function (
     common
   ) {
     //console.log("common", common);
@@ -331,26 +331,26 @@ exports.computeUserSimilarity = function(uId1, uId2, cb) {
       (exports.matchingEngine.getArtistsByUser(uId1) || []).length / 2;
     common = snip
       .mapToObjArray(common, 'id', 'c')
-      .sort(function(a, b) {
+      .sort(function (a, b) {
         return b.c - a.c;
       })
-      .map(function(artist) {
+      .map(function (artist) {
         return {
           id: artist.id,
           name: exports.matchingEngine.getArtistName(artist.id),
-          c: artist.c
+          c: artist.c,
         };
       });
     cb({
       artists: common,
-      score: common.length / nbArtists
+      score: common.length / nbArtists,
     });
   });
 };
 
 /** returns a scored list of recommended users, based on common artists **/
-exports.recomUsersByArtists = function(uId, options, cb) {
-  exports.matchingEngine.fetchCommonArtists(uId, options, function(users) {
+exports.recomUsersByArtists = function (uId, options, cb) {
+  exports.matchingEngine.fetchCommonArtists(uId, options, function (users) {
     var nbArtists = (exports.matchingEngine.getArtistsByUser(uId) || []).length;
     console.log('user has', nbArtists, 'artists');
     if (nbArtists == 0) return cb([]);
@@ -361,12 +361,12 @@ exports.recomUsersByArtists = function(uId, options, cb) {
         .concat(users[i].liker || []);
       var bestArtists = countOccurences(commonArtists);
       users[i].artistNames = [];
-      bestArtists = bestArtists.map(function(artist) {
+      bestArtists = bestArtists.map(function (artist) {
         return {
           name: exports.matchingEngine.getArtistName(
             artist.id
           ) /*,
-					rarity: exports.matchingEngine.getArtistRarity(artist.id)*/
+					rarity: exports.matchingEngine.getArtistRarity(artist.id)*/,
         };
       });
       /*bestArtists.sort(function(a,b){

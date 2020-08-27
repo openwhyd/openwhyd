@@ -35,7 +35,7 @@ function renderTemplate(report) {
   return mainTemplate.renderWhydFrame(out, params);
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('analytics.controller', reqParams);
 
   if (!request.checkAdmin(response)) return;
@@ -47,8 +47,8 @@ exports.controller = function(request, reqParams, response) {
   var report = { 'Report date': t0 };
   //t0 = t0.getTime();
 
-  var populateUsers = function(callback) {
-    userModel.fetchAll(function(usersP) {
+  var populateUsers = function (callback) {
+    userModel.fetchAll(function (usersP) {
       users = usersP;
       for (var i in users) {
         users[i].firstDate = users[i]._id.getTimestamp();
@@ -170,7 +170,7 @@ exports.controller = function(request, reqParams, response) {
   var recentUserIds = {};
 
   function findUsersRegisteredAfter(date) {
-    return function(cb) {
+    return function (cb) {
       for (var i in users)
         if (new Date(users[i].firstDate) >= date)
           recentUserIds[users[i]._id] = users[i];
@@ -185,14 +185,14 @@ exports.controller = function(request, reqParams, response) {
 
   var pendingInvites = null;
 
-  var fetchPendingInvites = function(callback) {
+  var fetchPendingInvites = function (callback) {
     console.log('fetching invite collection...');
-    mongodb.collections['invite'].find({}, { limit: 999999 }, function(
+    mongodb.collections['invite'].find({}, { limit: 999999 }, function (
       err,
       cursor
     ) {
       console.log('done fetching invite collection.');
-      cursor.toArray(function(err, items) {
+      cursor.toArray(function (err, items) {
         callback('Number of pending invites', (pendingInvites = items).length);
       });
     });
@@ -239,7 +239,7 @@ exports.controller = function(request, reqParams, response) {
 		*/
     fetchPendingInvites,
     findUsersRegisteredAfter(new Date('December 1, 2012 00:01')),
-    countRecentInvites
+    countRecentInvites,
   ];
 
   (function runNext(reportLabel, reportValue) {
@@ -247,7 +247,7 @@ exports.controller = function(request, reqParams, response) {
     if (seq.length > 0) seq.shift()(runNext);
     else
       response.legacyRender(renderTemplate(report), null, {
-        'content-type': 'text/html'
+        'content-type': 'text/html',
       });
   })();
 };

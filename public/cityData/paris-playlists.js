@@ -53,7 +53,7 @@ var PLAYLISTS_FEATURED = [
   '5350f3d871eaec19b56fd481_2', // My Selecta by T.Boon
   '530947277e91c862b2b5c341_0', // Au-dela du R.L. by Y. Dubois
   '52e629ac7e91c862b2b43cbd_7', // Fortissimo by AFO
-  '53d8e5b2e04b7b4fca7ce4e8_10' // Paris Superstar by Bsynthe
+  '53d8e5b2e04b7b4fca7ce4e8_10', // Paris Superstar by Bsynthe
 ];
 
 var PLAYLISTS_TOP = [
@@ -64,7 +64,7 @@ var PLAYLISTS_TOP = [
     nbTracks: 15,
     plId: 10,
     uId: '52f4e8bc7e91c862b2b52837',
-    uNm: 'Trax Magazine'
+    uNm: 'Trax Magazine',
   },
 
   {
@@ -74,7 +74,7 @@ var PLAYLISTS_TOP = [
     nbTracks: 7,
     plId: 8,
     uId: '5278f7427e91c862b2b0d3f6',
-    uNm: 'TRACKS / Arte'
+    uNm: 'TRACKS / Arte',
   },
 
   {
@@ -84,15 +84,15 @@ var PLAYLISTS_TOP = [
     nbTracks: 33,
     plId: 5,
     uId: '52df0c0e7e91c862b2b38480',
-    uNm: 'don rimini'
-  }
+    uNm: 'don rimini',
+  },
 ];
 
 var PLAYLISTS_BLACKLIST = [
   '50bca67a7e91c862b2a91d33_13',
   '50990e7a7e91c862b2a841ab_167',
   '51803b7a7e91c862b2adc459_0',
-  '533a8d1f71eaec19b56f7d72_0'
+  '533a8d1f71eaec19b56f7d72_0',
 ];
 
 //var PLAYLISTS_ORDER = ["52f4e8bc7e91c862b2b52837_10", "5278f7427e91c862b2b0d3f6_8"];

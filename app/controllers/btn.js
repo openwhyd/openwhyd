@@ -4,13 +4,11 @@
  * @author adrienjoly, whyd
  */
 
-var config = require('../models/config.js');
-
 var PROFILE_BUTTON_SIZES = {
   48: 32,
   32: 24,
   24: 18,
-  16: 12
+  16: 12,
 };
 
 function genButton(p) {
@@ -44,18 +42,18 @@ function genButton(p) {
       (btnSize ? '' : '<div>Subscribe to me on Openwhyd</div>') +
       '</a>',
     '</body>',
-    '</html>'
+    '</html>',
   ].join('\n');
 }
 
 var btnTypes = {
-  profile: function(p, cb) {
+  profile: function (p, cb) {
     if (!p.uId) cb({ error: 'missing uId parameter' });
     else cb({ html: genButton(p) });
-  }
+  },
 };
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('btn', reqParams);
 
   if (!reqParams || !reqParams.type || !btnTypes[reqParams.type])

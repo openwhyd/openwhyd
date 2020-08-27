@@ -1,7 +1,4 @@
-/**
- * whyd's image upload module
- * @author adrienjoly, whyd
- */
+/* global $ */
 
 function WhydImgUpload(options) {
   options = options || {};
@@ -19,19 +16,19 @@ function WhydImgUpload(options) {
 
   var self = this;
 
-  this.activate = function() {
+  this.activate = function () {
     console.log('legacy upload activation');
     $boxes.hide();
     $avatarForm.show();
   };
 
-  this.getImgUrl = function() {
+  this.getImgUrl = function () {
     console.log('lastAvatarUrl', lastAvatarUrl);
     lastUploadUrl = null; // prevent file from being deleted
     return lastAvatarUrl;
   };
 
-  this.dispose = function() {
+  this.dispose = function () {
     // deleteTempAvatar()
     if (lastUploadUrl)
       $.ajax({
@@ -39,8 +36,8 @@ function WhydImgUpload(options) {
         url: uploadUrl,
         data: {
           action: 'delete',
-          id: lastUploadUrl.split('/').pop()
-        }
+          id: lastUploadUrl.split('/').pop(),
+        },
       });
     lastUploadUrl = null;
   };
@@ -66,7 +63,7 @@ function WhydImgUpload(options) {
     if (typeof data == 'string') {
       if (data.indexOf('{') == -1 && data.toLowerCase().indexOf('too large'))
         data = {
-          error: 'Your file is too large. Please resize it and try again.'
+          error: 'Your file is too large. Please resize it and try again.',
         };
       else
         data = JSON.parse(
@@ -94,10 +91,10 @@ function WhydImgUpload(options) {
 
   $avatarForm.iframePostForm({
     post: onImageUpload,
-    complete: onImageUploadComplete
+    complete: onImageUploadComplete,
   });
 
-  $input.change(function() {
+  $input.change(function () {
     $avatarForm.submit();
   });
 
@@ -109,58 +106,54 @@ function WhydImgUpload(options) {
     var $avatarDrop = $dlg.find('#avatarDrop');
     var $progress = $dlg.find('.progress');
     var $progressLevel = $progress.find('div');
-    this.activate = function() {
+    this.activate = function () {
       console.log('html5 upload activation');
       $boxes.hide();
       $avatarDrop.show();
     };
-    $avatarDrop.find('button').click(function() {
+    $avatarDrop.find('button').click(function () {
       $input.click();
     });
-    $avatarDrop.on('dragenter', function(e) {
+    $avatarDrop.on('dragenter', function (e) {
       destination = event.target;
       $(this).addClass('hover');
     });
-    $avatarDrop.on('dragleave', function(e) {
+    $avatarDrop.on('dragleave', function (e) {
       if (
-        !$(this)
-          .find(destination)
-          .size() &&
-        !$(this)
-          .find(event.target)
-          .size()
+        !$(this).find(destination).size() &&
+        !$(this).find(event.target).size()
       )
         $(this).removeClass('hover');
     });
     var handlers = {
-      error: function(eventData) {
+      error: function (eventData) {
         $boxes.hide();
         $avatarForm.show();
         $progress.hide();
       },
-      post: function(eventData) {
+      post: function (eventData) {
         onImageUpload();
         $progressLevel.css('width', '0px');
         $progress.show();
       },
-      progress: function(eventData) {
+      progress: function (eventData) {
         $progressLevel.css('width', ((eventData * 100) | 0) + 'px');
       },
-      complete: function(eventData) {
+      complete: function (eventData) {
         $progress.hide();
         onImageUploadComplete(eventData);
-      }
+      },
     };
     var dndUpload = new DndUpload({
       form: $avatarForm[0],
       holder: $avatarDrop[0],
       url: uploadUrl,
-      handler: function(eventName, eventData) {
+      handler: function (eventName, eventData) {
         $(this).removeClass('hover');
         var handler = handlers[eventName];
         if (handler) handler(eventData);
         else console.log('DndUpload handler', eventName, eventData);
-      }
+      },
     });
   }
 

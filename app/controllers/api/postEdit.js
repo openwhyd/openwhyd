@@ -11,7 +11,7 @@ var templateLoader = require('../../templates/templateLoader.js');
 var mainTemplate = require('../../templates/mainTemplate.js');
 var snip = require('../../snip.js');
 
-function renderLoginForm(form) {
+function renderLoginForm() {
   return mainTemplate.renderWhydFrame(
     [
       '<p style="text-align:center;margin-top:140px;">',
@@ -21,7 +21,7 @@ function renderLoginForm(form) {
       '</p>',
       '<script>',
       '  setTimeout(function(){ window.location.reload(); }, 1000);',
-      '</script>'
+      '</script>',
     ].join('\n')
   );
   /* other way (ajax) of doing this:
@@ -47,7 +47,7 @@ function renderLoginForm(form) {
 }
 
 function makePostEditDlg(action, reqParams, playlists, cb) {
-  postModel.fetchPostById(reqParams.pId, function(post) {
+  postModel.fetchPostById(reqParams.pId, function (post) {
     if (!post)
       return cb("Sorry, we can't find that post... Maybe was it deleted?"); // TODO: replace by standard error page
     var p = {
@@ -56,7 +56,7 @@ function makePostEditDlg(action, reqParams, playlists, cb) {
       text: post.text || '',
       img: post.img,
       playlists: playlists, //user.pl,
-      embedded: true
+      embedded: true,
     };
     if (reqParams.ctx) p.ctx = reqParams.ctx;
     if (action == 'edit') {
@@ -70,7 +70,7 @@ function makePostEditDlg(action, reqParams, playlists, cb) {
       p.repost = true;
       p.pId = reqParams.pId;
       // bug fix: avoid re-mentionning users mentionned in the original post
-      p.text = p.text.replace(snip.RE_MENTION, function(str, name, id) {
+      p.text = p.text.replace(snip.RE_MENTION, function (str, name, id) {
         return name;
       });
     }
@@ -90,7 +90,7 @@ function makeAddDlg(reqParams, playlists, user, cb) {
     text: reqParams.text || '',
     playlists: playlists, //user.pl,
     head: mainTemplate.makeAnalyticsHeading(user).join('\n'),
-    ctx: reqParams.ctx || 'bk' // bookmarklet
+    ctx: reqParams.ctx || 'bk', // bookmarklet
   };
   var eId = reqParams.eId || config.translateUrlToEid(reqParams.embed);
   /*
@@ -106,7 +106,7 @@ function makeAddDlg(reqParams, playlists, user, cb) {
 		render(p);
 	});
 	*/
-  postModel.fetchPosts({ eId: eId, uId: user.id }, {}, { limit: 1 }, function(
+  postModel.fetchPosts({ eId: eId, uId: user.id }, {}, { limit: 1 }, function (
     posts
   ) {
     if (posts && posts.length && posts[0])
@@ -121,7 +121,7 @@ function makeAddDlg(reqParams, playlists, user, cb) {
 /**
  * called by bookmarklet, when user selects a resource to share from an external web page
  */
-exports.controller = function(request, reqParams, response, error) {
+exports.controller = function (request, reqParams, response, error) {
   request.logToConsole('bookmarklet.controller', reqParams);
   if (!reqParams) reqParams = {};
 
@@ -137,20 +137,17 @@ exports.controller = function(request, reqParams, response, error) {
       reqParams.v == 2
         ? 'app/templates/postEditV2.html'
         : 'app/templates/postEdit.html',
-      function(template) {
+      function (template) {
         response.renderHTML(template.render(params));
       }
     );
   }
 
-  userModel.fetchByUid(user.id, function(user) {
-    userModel.fetchPlaylists(user, {}, function(playlists) {
+  userModel.fetchByUid(user.id, function (user) {
+    userModel.fetchPlaylists(user, {}, function (playlists) {
       if (reqParams.pId) {
         // repost or edit from openwhyd ui
-        var action = request.url
-          .split('?')[0]
-          .split('/')
-          .pop();
+        var action = request.url.split('?')[0].split('/').pop();
         makePostEditDlg(action, reqParams, playlists, render);
       } else if (reqParams.embed || reqParams.eId) {
         // adding new track from bookmarklet or external search results on openwhyd.org

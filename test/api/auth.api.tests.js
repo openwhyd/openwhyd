@@ -1,3 +1,5 @@
+/* global describe, it */
+
 var { promisify } = require('util');
 var assert = require('assert');
 
@@ -15,7 +17,7 @@ const genSecureUser = (() => {
   return (number = ++globalNumber) => ({
     name: `secure user ${number}`,
     email: `secure-user-${number}@openwhyd.org`,
-    password: `mySecurePassword${number}`
+    password: `mySecurePassword${number}`,
   });
 })();
 
@@ -80,7 +82,7 @@ describe('auth api', () => {
         ...TEST_USER,
         pwd: '',
         password: '',
-        md5: ''
+        md5: '',
       };
       const { jar, body: signupBody } = await signupAs(userWithMissingPwd);
       assert.equal(signupBody.error, 'Please enter a password');
@@ -109,7 +111,7 @@ describe('auth api', () => {
       assert(jar);
     });
 
-    it('stores secure hash in db', async function() {
+    it('stores secure hash in db', async function () {
       const { jar } = await signupAs(genSecureUser());
       const { body } = await getUser(jar, {});
       assert.ifError(body.error);

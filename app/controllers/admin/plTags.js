@@ -10,8 +10,8 @@ var FileController = require('./FileController.js');
 var util = require('util');
 
 function wrapJsonGeneratorToText(name) {
-  return function(p, cb) {
-    fileGenerators[name](p, function(items) {
+  return function (p, cb) {
+    fileGenerators[name](p, function (items) {
       var items = items.length ? { results: items } : items;
       //cb(JSON.stringify(items, null, 2));
       var lines = ['{'];
@@ -40,14 +40,14 @@ var fileGenerators = {
   /** supported parameters:
    *   - tags = comma-separated list of tags
    **/
-  'bestUsersForTags.json': function(p, cb) {
+  'bestUsersForTags.json': function (p, cb) {
     var tags = plTagsModel.extractGenreTags((p || {}).tags);
-    plTagsModel.getTagEngine(function(tagEngine) {
+    plTagsModel.getTagEngine(function (tagEngine) {
       cb(
-        tagEngine.getUsersByTags(tags).map(function(user) {
+        tagEngine.getUsersByTags(tags).map(function (user) {
           user.tags = (tagEngine.getBestTagsByUid(user.id) || [])
             .slice(0, 10)
-            .map(function(tag) {
+            .map(function (tag) {
               return tag.id + ' (' + tag.c + ')';
             });
           return user;
@@ -57,8 +57,8 @@ var fileGenerators = {
   },
   'bestUsersForTags.txt': wrapJsonGeneratorToText('bestUsersForTags.json'),
 
-  nbTaggedTracks: function(p, cb) {
-    plTagsModel.getTagEngine(function(tagEngine) {
+  nbTaggedTracks: function (p, cb) {
+    plTagsModel.getTagEngine(function (tagEngine) {
       var nb = 0,
         total = 0,
         eids = {},
@@ -66,13 +66,13 @@ var fileGenerators = {
       mongodb.forEach(
         'track',
         { fields: { _id: 0, eId: 1 } },
-        function(post) {
+        function (post) {
           if (eids[post.eId]) return;
           eids[post.eId] = true;
           total++;
           if ((eidToTags[post.eId] || []).length) ++nb;
         },
-        function() {
+        function () {
           cb(
             'tagged tracks (thanks to playlists): ' +
               nb +
@@ -87,11 +87,11 @@ var fileGenerators = {
     });
   },
 
-  nbTracksInPlaylists: function(p, cb) {
-    mongodb.collections['post'].count({}, function(err, nbTracks) {
+  nbTracksInPlaylists: function (p, cb) {
+    mongodb.collections['post'].count({}, function (err, nbTracks) {
       mongodb.collections['post'].count(
         { 'pl.id': { $exists: true } },
-        function(err, nbTracksInPlaylists) {
+        function (err, nbTracksInPlaylists) {
           cb(
             'number of tracks in playlists: ' +
               nbTracksInPlaylists +
@@ -104,11 +104,11 @@ var fileGenerators = {
         }
       );
     });
-  }
+  },
 };
 
 exports.controller = FileController.buildController({
   controllerName: 'admin.plTags',
   adminOnly: true,
-  fileGenerators: fileGenerators
+  fileGenerators: fileGenerators,
 });

@@ -16,7 +16,7 @@ var getUserNameFromId = require('../models/mongodb.js').getUserNameFromId;
 var MAX_POSTS = config.nbPostsPerNewsfeedPage;
 var MAX_POSTS_EMBED = config.nbTracksPerPlaylistEmbed;
 var MAX_NB_REPOST_FACES = 12;
-var RE_MENTION = /\@\[([^\]]*)\]\(user:([^\)]*)\)/gi;
+var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
 // database functions
 
@@ -28,7 +28,7 @@ function getPostId(post) {
 function loadComments(posts, cb) {
   if (!(posts || []).length) cb();
   else
-    commentModel.fetch({ pId: posts.map(getPostId) }, {}, function(comments) {
+    commentModel.fetch({ pId: posts.map(getPostId) }, {}, function (comments) {
       comments = snip.groupObjectsBy(comments, 'pId');
       //console.log("=> comments", comments)
       for (var i in posts)
@@ -50,14 +50,14 @@ function loadReposts(posts, cb) {
       query,
       { fields: { uId: 1, uNm: 1, 'repost.pId': 1 } },
       { limit: MAX_NB_REPOST_FACES },
-      function(reposts) {
+      function (reposts) {
         reposts = reposts || { error: 'null reposts response from fetchPosts' };
         if (reposts.error) {
           cb(reposts);
           return;
         }
         reposts = snip.groupObjectsBy(
-          reposts.map(function(r) {
+          reposts.map(function (r) {
             return { id: r.uId, name: r.uNm, pId: r.repost.pId };
           }),
           'pId'
@@ -86,7 +86,7 @@ function renderCommentDate(when) {
   else return snip.renderTimestamp(ago) + ' ago';
 }
 
-exports.preparePost = function(post, options) {
+exports.preparePost = function (post, options) {
   if (!post) return null;
   post._id = post._id || post.id;
   var when = post._id ? post._id.getTimestamp().getTime() : undefined;
@@ -94,7 +94,7 @@ exports.preparePost = function(post, options) {
   if (post.ctx == 'mob')
     post.src = {
       id: config.urlPrefix + '/mobile',
-      shortenedUrl: 'Whyd Mobile Track Finder'
+      shortenedUrl: 'Whyd Mobile Track Finder',
     };
   else if (post.src) post.src.shortenedUrl = snip.shortenURLs(post.src.id);
 
@@ -116,7 +116,7 @@ exports.preparePost = function(post, options) {
       _id: post._id,
       uId: post.uId,
       uNm: post.uNm,
-      text: post.text
+      text: post.text,
     });
 
   for (var j = 0; j < comments.length; ++j) {
@@ -128,7 +128,7 @@ exports.preparePost = function(post, options) {
       .replaceURLWithHTMLLinks(snip.htmlEntities(c.text || ''))
       .replace(/\n\n/g, '\n')
       .replace(/\n/g, '<br/>');
-    c.html = c.html.replace(RE_MENTION, function(match, uNm, uId) {
+    c.html = c.html.replace(RE_MENTION, function (match, uNm, uId) {
       return '<a href="/u/' + uId + '">' + snip.htmlEntities(uNm) + '</a>';
     });
     c.canDelete = loggedUser.id == c.uId || loggedUser.id == post.uId;
@@ -198,7 +198,7 @@ exports.preparePost = function(post, options) {
       plTagsModel.tagEngine.getTagsByEid(post.eId) ||
       [] /*.map(function(tag){
 			return {name: tag.id + " (" + tag.c + ")"};
-		})*/
+		})*/,
   };
 
   //if (options.customImgHandler)
@@ -208,7 +208,7 @@ exports.preparePost = function(post, options) {
   // rendering "faces"
 
   newPost.faces = snip.removeDuplicates(
-    (post.reposts || []).concat(post.lov || []).map(function(u) {
+    (post.reposts || []).concat(post.lov || []).map(function (u) {
       return { id: u.id || u, name: getUserNameFromId(u.id || u) };
     }),
     'id'
@@ -238,7 +238,7 @@ exports.preparePost = function(post, options) {
   return newPost;
 };
 
-exports.render = function(postsVars) {
+exports.render = function (postsVars) {
   return template.render(postsVars);
 };
 /*
@@ -247,7 +247,7 @@ options = options || {};
 return !posts || posts.length == 0 ? options.defaultHtml || '' : exports.renderPosts(posts, options);
 };
 */
-exports.renderPosts = function(posts, options) {
+exports.renderPosts = function (posts, options) {
   posts = posts || [];
   options = options || {};
   console.log('_ _ _ _ _ _ _ _PREPAREEE');
@@ -255,11 +255,11 @@ exports.renderPosts = function(posts, options) {
   for (var p in posts) posts[p] = exports.preparePost(posts[p], options || {});
 
   return exports.render({
-    posts: posts
+    posts: posts,
   });
 };
 
-exports.renderPostsAsync = function(posts, options, callback) {
+exports.renderPostsAsync = function (posts, options, callback) {
   posts = posts || [];
   options = options || {};
   options.loggedUser =
@@ -280,24 +280,24 @@ exports.renderPostsAsync = function(posts, options, callback) {
       lastPid:
         options.playlist && !isNaN(lastPost.order)
           ? lastPost.order
-          : lastPost._id
+          : lastPost._id,
     };
   }
 
   function prepareAndRender(posts, options, cb) {
     var templateVars = options.templateVars || {};
-    templateVars.posts = posts.map(function(post) {
+    templateVars.posts = posts.map(function (post) {
       return exports.preparePost(post, options || {});
     });
     if (options.customTemplateFile)
-      templateLoader.loadTemplate(options.customTemplateFile, function(tmpl) {
+      templateLoader.loadTemplate(options.customTemplateFile, function (tmpl) {
         cb(tmpl.render(templateVars));
       });
     else cb(exports.render(templateVars));
   }
 
-  loadComments(posts, function() {
-    loadReposts(posts, function() {
+  loadComments(posts, function () {
+    loadReposts(posts, function () {
       if (options.format == 'json') callback(posts);
       else {
         prepareAndRender(
@@ -309,7 +309,7 @@ exports.renderPostsAsync = function(posts, options, callback) {
             templateVars: options.templateVars,
             ownProfile: options.ownProfile,
             displayVia: !!options.embedW,
-            displayPlaylistName: options.displayPlaylistName
+            displayPlaylistName: options.displayPlaylistName,
           },
           callback
         );

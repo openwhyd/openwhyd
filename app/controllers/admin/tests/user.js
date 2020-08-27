@@ -15,7 +15,7 @@ var TEST_USER = {
   handle: 'testvaliduserhandl',
   fbId: '1',
   apTok:
-    '00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000'
+    '00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000',
 };
 
 function log() {
@@ -24,7 +24,7 @@ function log() {
 
 function makeJsonRequest(method, cookie) {
   function makeJsonResponseHandler(cb) {
-    return function(err, data, response) {
+    return function (err, data, response) {
       if (typeof data == 'string')
         try {
           data = JSON.parse(data);
@@ -34,7 +34,7 @@ function makeJsonRequest(method, cookie) {
       cb(data, response);
     };
   }
-  return function(url, options, cb) {
+  return function (url, options, cb) {
     options.method = method;
     options.headers = options.headers || {};
     options.headers.Cookie = options.cookie || cookie;
@@ -47,7 +47,7 @@ function makeJsonRequest(method, cookie) {
   };
 }
 
-exports.makeTests = function(p) {
+exports.makeTests = function (p) {
   p.stopOnFail = true;
 
   var testVars = {};
@@ -62,8 +62,8 @@ exports.makeTests = function(p) {
       {
         params: {
           col: 'user',
-          email: email
-        }
+          email: email,
+        },
       },
       cb
     );
@@ -79,7 +79,7 @@ exports.makeTests = function(p) {
 	}
 	*/
   function fetchTestUser(cb) {
-    fetchUsersByEmail(TEST_USER.email, function(res) {
+    fetchUsersByEmail(TEST_USER.email, function (res) {
       var testUser = res && res[0];
       testVars.registeredUid = (testUser || {})._id;
       if (!testUser) delete testVars.cookie;
@@ -96,10 +96,10 @@ exports.makeTests = function(p) {
           name: TEST_USER.name,
           password: TEST_USER.password,
           email: TEST_USER.email,
-          fbId: TEST_USER.fbId
-        }
+          fbId: TEST_USER.fbId,
+        },
       },
-      function(res, response) {
+      function (res, response) {
         log('/register result:', res);
         testVars.registeredUid = res.uId;
         testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
@@ -115,11 +115,11 @@ exports.makeTests = function(p) {
       {
         body: {
           action: 'delete',
-          _id: testVars.registeredUid
-        }
+          _id: testVars.registeredUid,
+        },
       },
-      function(res) {
-        fetchTestUser(function(testUser) {
+      function (res) {
+        fetchTestUser(function (testUser) {
           log('user deleted:', !testUser);
           cb(!testUser);
         });
@@ -128,7 +128,7 @@ exports.makeTests = function(p) {
   }
 
   function makeSureTestUserExists(cb) {
-    fetchTestUser(function(testUser) {
+    fetchTestUser(function (testUser) {
       if (testUser) cb(true);
       else registerTestUser(cb);
     });
@@ -148,8 +148,8 @@ exports.makeTests = function(p) {
     END_TEST, // DELETE TEST USER
     [
       'check that test user does not already exist',
-      function(cb) {
-        fetchTestUser(function(testUser) {
+      function (cb) {
+        fetchTestUser(function (testUser) {
           if (testUser)
             log(
               'please delete the test user before running this test => /admin/users?action=delete&_id=' +
@@ -157,63 +157,63 @@ exports.makeTests = function(p) {
             );
           cb(!testUser);
         });
-      }
+      },
     ],
     [
       'register without name fails',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/register',
           {
             body: {
-              ajax: true
-            }
+              ajax: true,
+            },
           },
-          function(res) {
+          function (res) {
             cb(res.error == 'Please enter your name');
           }
         );
-      }
+      },
     ],
     [
       'register without password fails',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/register',
           {
             body: {
               ajax: true,
               name: TEST_USER.name,
-              email: TEST_USER.email
-            }
+              email: TEST_USER.email,
+            },
           },
-          function(res) {
+          function (res) {
             cb(res.error == 'Please enter a password');
           }
         );
-      }
+      },
     ],
     [
       'register without email fails',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/register',
           {
             body: {
               ajax: true,
               name: TEST_USER.name,
-              password: TEST_USER.password
-            }
+              password: TEST_USER.password,
+            },
           },
-          function(res) {
+          function (res) {
             cb(res.error == 'Please enter your email');
           }
         );
-      }
+      },
     ],
     [
       'register with invalid facebook id fails',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/register',
           {
@@ -223,39 +223,41 @@ exports.makeTests = function(p) {
               email: TEST_USER.email,
               password: TEST_USER.password,
               fbId:
-                'unexisting/../../../../../../../../../../windows/win.ini.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\'
-            }
+                'unexisting/../../../../../../../../../../windows/win.ini.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\.\\',
+            },
           },
-          function(res) {
+          function (res) {
             cb(res.error == 'Invalid Facebook id');
           }
         );
-      }
+      },
     ],
     ['register test user -> redirect and uId fields', registerTestUser],
     ['user is registered in database', fetchTestUser],
-    END_TEST
+    END_TEST,
   ];
 
   var TESTS_FETCH = [
     BEGIN_TEST,
     [
       'fetch user using API (logged as admin)',
-      function(cb) {
-        fetchTestUser(function(testUser) {
-          jsonGet('/api/user/' + testVars.registeredUid, {}, function(apiUser) {
+      function (cb) {
+        fetchTestUser(function (testUser) {
+          jsonGet('/api/user/' + testVars.registeredUid, {}, function (
+            apiUser
+          ) {
             cb(testUser._id === apiUser._id);
           });
         });
-      }
+      },
     ],
     [
       'fetch user using API (logged as user)',
-      function(cb) {
-        fetchTestUser(function(testUser) {
+      function (cb) {
+        fetchTestUser(function (testUser) {
           userModel.processUser(testUser);
           //log("admin user", testUser);
-          getUser(function(apiUser) {
+          getUser(function (apiUser) {
             //log("api user", apiUser)
             cb(
               testUser._id === apiUser._id &&
@@ -264,111 +266,111 @@ exports.makeTests = function(p) {
             );
           });
         });
-      }
+      },
     ],
-    END_TEST
+    END_TEST,
   ];
 
   var TESTS_USERDATA = [
     BEGIN_TEST,
     [
       'check default prefs',
-      function(cb) {
-        getUser(function(user) {
+      function (cb) {
+        getUser(function (user) {
           cb(user.pref['emLik'] == -1);
         });
-      }
+      },
     ],
     [
       'set prefs',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           {
             cookie: testVars.cookie,
             body: {
-              'pref[emLik]': 0
-            }
+              'pref[emLik]': 0,
+            },
           },
-          function() {
-            getUser(function(user) {
+          function () {
+            getUser(function (user) {
               cb(user.pref['emLik'] == 0);
             });
           }
         );
-      }
+      },
     ],
     [
       'try to set reserved handle',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           {
             cookie: testVars.cookie,
             body: {
-              handle: 'register'
-            }
+              handle: 'register',
+            },
           },
-          function(res) {
+          function (res) {
             cb(res.error);
           }
         );
-      }
+      },
     ],
     [
       'set valid handle',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           {
             cookie: testVars.cookie,
             body: {
-              handle: TEST_USER.handle
-            }
+              handle: TEST_USER.handle,
+            },
           },
-          function(res) {
+          function (res) {
             if (res.error) cb(false);
             else
-              getUser(function(user) {
+              getUser(function (user) {
                 cb(user.handle == TEST_USER.handle);
               });
           }
         );
-      }
+      },
     ],
     [
       'set invalid apple push notification token',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           { cookie: testVars.cookie, body: { apTok: 'pouet' } },
-          function(res) {
+          function (res) {
             //log("apTok set ->", res);
-            getUser(function(user) {
+            getUser(function (user) {
               cb(!user.apTok);
             });
           }
         );
-      }
+      },
     ],
     [
       'set valid apple push notification token',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           { cookie: testVars.cookie, body: { apTok: TEST_USER.apTok } },
-          function(res) {
-            getUser(function(user) {
+          function (res) {
+            getUser(function (user) {
               //log("user", user);
               cb(user.apTok[0].tok === TEST_USER.apTok.replace(/ /g, ''));
             });
           }
         );
-      }
+      },
     ],
     [
       'connect to twitter',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           {
@@ -376,69 +378,69 @@ exports.makeTests = function(p) {
             body: {
               twId: 'abc',
               twTok: 'def',
-              twSec: 'ghi'
-            }
+              twSec: 'ghi',
+            },
           },
-          function(res) {
-            getUser(function(user) {
+          function (res) {
+            getUser(function (user) {
               cb(user.twId && user.twTok && user.twSec);
             });
           }
         );
-      }
+      },
     ],
     [
       'discconnect from twitter',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           {
             cookie: testVars.cookie,
             body: {
-              twId: ''
-            }
+              twId: '',
+            },
           },
-          function(res) {
-            getUser(function(user) {
+          function (res) {
+            getUser(function (user) {
               cb(!user.twId && !user.twTok && !user.twSec);
             });
           }
         );
-      }
+      },
     ],
-    END_TEST
+    END_TEST,
   ];
 
   var TESTS_LOGIN = [
     BEGIN_TEST,
     [
       'get logged user => testUser',
-      function(cb) {
-        getUser(function(user, response) {
+      function (cb) {
+        getUser(function (user, response) {
           //log("response headers", response.headers);
           var cookie = response.headers['set-cookie'][0].split(';')[0];
           log('cookie', cookie);
           log('expected cookie', testVars.cookie);
           cb(cookie === testVars.cookie);
         });
-      }
+      },
     ],
     [
       'log out',
-      function(cb) {
-        jsonGet('/login?action=logout', { cookie: testVars.cookie }, function(
+      function (cb) {
+        jsonGet('/login?action=logout', { cookie: testVars.cookie }, function (
           data,
           response
         ) {
-          getUser(function(user, response) {
+          getUser(function (user, response) {
             cb(!response.headers['set-cookie']);
           });
         });
-      }
+      },
     ],
     [
       'try to log back in with wrong password',
-      function(cb) {
+      function (cb) {
         jsonGet(
           '/login',
           {
@@ -446,20 +448,20 @@ exports.makeTests = function(p) {
             params: {
               action: 'login',
               email: TEST_USER.email,
-              md5: 'wrong'
-            }
+              md5: 'wrong',
+            },
           },
-          function(data, response) {
-            getUser(function(user, response) {
+          function (data, response) {
+            getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
           }
         );
-      }
+      },
     ],
     [
       'log back in',
-      function(cb) {
+      function (cb) {
         jsonGet(
           '/login',
           {
@@ -467,41 +469,41 @@ exports.makeTests = function(p) {
             params: {
               action: 'login',
               email: TEST_USER.email,
-              md5: userModel.md5(TEST_USER.password)
-            }
+              md5: userModel.md5(TEST_USER.password),
+            },
           },
-          function(data, response) {
+          function (data, response) {
             testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
-            getUser(function(user, response) {
+            getUser(function (user, response) {
               var cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
           }
         );
-      }
+      },
     ],
-    END_TEST
+    END_TEST,
   ];
 
   var TESTS_RESETPASSWORD = [
     BEGIN_TEST,
     [
       'try to reset password with wrong initial password',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           {
             cookie: testVars.cookie,
             body: {
               oldPwd: 'wrongpassword',
-              pwd: 'newpassword'
-            }
+              pwd: 'newpassword',
+            },
           },
-          function(data, response) {
+          function (data, response) {
             cb(!!data.error);
           }
         );
-      }
+      },
     ],
     /*
 		["try to reset password with invalid new password", function(cb){
@@ -515,26 +517,26 @@ exports.makeTests = function(p) {
 		*/
     [
       'reset password',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/api/user',
           {
             cookie: testVars.cookie,
             body: {
               oldPwd: TEST_USER.password,
-              pwd: TEST_USER.password.toUpperCase()
-            }
+              pwd: TEST_USER.password.toUpperCase(),
+            },
           },
-          function(data, response) {
+          function (data, response) {
             log('response', data);
             cb(!data.error);
           }
         );
-      }
+      },
     ],
     [
       'try to log back in with old password',
-      function(cb) {
+      function (cb) {
         jsonGet(
           '/login',
           {
@@ -542,20 +544,20 @@ exports.makeTests = function(p) {
             params: {
               action: 'login',
               email: TEST_USER.email,
-              md5: userModel.md5(TEST_USER.password)
-            }
+              md5: userModel.md5(TEST_USER.password),
+            },
           },
-          function(data, response) {
-            getUser(function(user, response) {
+          function (data, response) {
+            getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
           }
         );
-      }
+      },
     ],
     [
       'log back in with new password',
-      function(cb) {
+      function (cb) {
         jsonGet(
           '/login',
           {
@@ -563,47 +565,47 @@ exports.makeTests = function(p) {
             params: {
               action: 'login',
               email: TEST_USER.email,
-              md5: userModel.md5(TEST_USER.password.toUpperCase())
-            }
+              md5: userModel.md5(TEST_USER.password.toUpperCase()),
+            },
           },
-          function(data, response) {
+          function (data, response) {
             testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
-            getUser(function(user, response) {
+            getUser(function (user, response) {
               var cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
           }
         );
-      }
+      },
     ],
-    END_TEST
+    END_TEST,
   ];
 
   var TESTS_ONBOARDING = [
     BEGIN_TEST,
     [
       '(loading) wait for tag library...',
-      function(cb) {
-        require('../../../models/plTags.js').getTagEngine(function(plTags) {
+      function (cb) {
+        require('../../../models/plTags.js').getTagEngine(function (plTags) {
           var nbUsers = Object.keys((plTags || {}).uidToTagSet || {}).length;
           console.log('nbUsers', nbUsers);
           cb(nbUsers > 0);
         });
-      }
+      },
     ],
     [
       'fetch at least one suggested user, based on genre tags',
-      function(cb) {
+      function (cb) {
         jsonPost(
           '/onboarding',
           {
             cookie: testVars.cookie,
             body: {
               ajax: 'people',
-              genres: 'Electro,Indie,Reggae,World'
-            }
+              genres: 'Electro,Indie,Reggae,World',
+            },
           },
-          function(data, response) {
+          function (data, response) {
             var users = data || [],
               sum = 0;
             for (var i in users) sum += users[i].score;
@@ -612,15 +614,17 @@ exports.makeTests = function(p) {
             cb((data || []).length > 0);
           }
         );
-      }
+      },
     ],
     [
       'check that suggested users have posted less than 2 weeks ago',
-      function(cb) {
+      function (cb) {
         var TWO_WEEKS = 2 * 7 * 24 * 60 * 60 * 1000,
           now = Date.now();
         function fetchLastPost(uId, cb) {
-          postModel.fetchPosts({ uId: uId }, {}, { limit: 1 }, function(posts) {
+          postModel.fetchPosts({ uId: uId }, {}, { limit: 1 }, function (
+            posts
+          ) {
             cb(null, (posts || []).shift());
           });
         }
@@ -634,10 +638,10 @@ exports.makeTests = function(p) {
           users = users || [];
           async.mapSeries(
             users,
-            function(user, cb) {
+            function (user, cb) {
               fetchLastPost(user.id, cb);
             },
-            function(err, res) {
+            function (err, res) {
               var withinTwoWeeks = res
                 .map(wasPostedWithin.bind(null, TWO_WEEKS))
                 .reduce(sum);
@@ -657,14 +661,14 @@ exports.makeTests = function(p) {
             cookie: testVars.cookie,
             body: {
               ajax: 'people',
-              genres: 'Electro,Indie,Reggae,World'
-            }
+              genres: 'Electro,Indie,Reggae,World',
+            },
           },
           processUsers
         );
-      }
+      },
     ],
-    END_TEST
+    END_TEST,
   ];
 
   /*
@@ -691,8 +695,8 @@ exports.makeTests = function(p) {
     TESTS_USERDATA,
     TESTS_LOGIN,
     TESTS_RESETPASSWORD,
-    TESTS_ONBOARDING
-  ].reduce(function(a, b) {
+    TESTS_ONBOARDING,
+  ].reduce(function (a, b) {
     return a.concat(b);
   });
 };

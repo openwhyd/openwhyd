@@ -5,32 +5,32 @@
 var htmlparser = require('htmlparser');
 
 // returns the <html> node, as a SimpleDomNode instance
-exports.parseDom = function(dom) {
+exports.parseDom = function (dom) {
   function SimpleDomNode(node) {
     this.node = node;
   }
-  SimpleDomNode.prototype.getFirstElementByTagName = function(tagName) {
+  SimpleDomNode.prototype.getFirstElementByTagName = function (tagName) {
     var nodes = this.node.children || this.node;
     for (var i in nodes)
       if (nodes[i].name == tagName) return new SimpleDomNode(nodes[i]);
   };
-  SimpleDomNode.prototype.getText = function() {
+  SimpleDomNode.prototype.getText = function () {
     var results = [];
     if (this.node.type == 'text') {
       results.push(this.node.data);
     }
     if (this.node.children)
-      this.node.children.map(function(child) {
+      this.node.children.map(function (child) {
         results = results.concat(new SimpleDomNode(child).getText());
       });
     return results.join(' ');
   };
-  SimpleDomNode.prototype.getChildren = function() {
-    return this.node.children.map(function(child) {
+  SimpleDomNode.prototype.getChildren = function () {
+    return this.node.children.map(function (child) {
       return new SimpleDomNode(child);
     });
   };
-  SimpleDomNode.prototype.getElementsByTagName = function(tagName) {
+  SimpleDomNode.prototype.getElementsByTagName = function (tagName) {
     var results = [];
     var nodes = this.node.children;
     for (var i in nodes) {
@@ -41,9 +41,9 @@ exports.parseDom = function(dom) {
     }
     return results;
   };
-  SimpleDomNode.prototype.getElementsByClassName = function(className) {
-    var nodeHasClass = (function(className) {
-      return function(node) {
+  SimpleDomNode.prototype.getElementsByClassName = function (className) {
+    var nodeHasClass = (function (className) {
+      return function (node) {
         var classNames = (node.attribs || {}).class;
         return classNames && (' ' + classNames + ' ').indexOf(className) > -1;
       };
@@ -61,9 +61,9 @@ exports.parseDom = function(dom) {
   return new SimpleDomNode(dom).getFirstElementByTagName('html');
 };
 
-exports.parseHtmlDom = function(html, cb) {
+exports.parseHtmlDom = function (html, cb) {
   var parser = new htmlparser.Parser(
-    new htmlparser.DefaultHandler(function(error, dom) {
+    new htmlparser.DefaultHandler(function (error, dom) {
       if (error) {
         console.error(error);
         cb({ error: error });

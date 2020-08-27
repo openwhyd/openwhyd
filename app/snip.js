@@ -10,17 +10,14 @@ var querystring = require('querystring');
 var firstWeek = new Date('Monday January 3, 2011 08:00'); // week #1 = 1st of january 2010
 
 // privacy helper: anonymise email address
-exports.formatEmail = function(emailAddr) {
+exports.formatEmail = function (emailAddr) {
   if (typeof emailAddr !== 'string' || emailAddr.length < 1)
     return '<invalid_email>';
   const [name, domain] = emailAddr.split('@');
-  return name
-    .substring(0, 1)
-    .concat('*********@')
-    .concat(domain);
+  return name.substring(0, 1).concat('*********@').concat(domain);
 };
 
-exports.formatPrivateFields = obj => {
+exports.formatPrivateFields = (obj) => {
   if (typeof obj !== 'object') return obj;
   const res = { ...obj };
   if (typeof obj.email === 'string') res.email = exports.formatEmail(obj.email);
@@ -33,18 +30,18 @@ exports.console = {
   log(...args) {
     const filteredArgs = args.map(exports.formatPrivateFields);
     console.log(...filteredArgs);
-  }
+  },
 };
 
-exports.getWeekNumber = function(date) {
+exports.getWeekNumber = function (date) {
   return date && Math.floor(1 + (date - firstWeek) / 1000 / 60 / 60 / 24 / 7);
 };
 
-exports.weekNumberToDate = function(weekNumber) {
+exports.weekNumberToDate = function (weekNumber) {
   return new Date(firstWeek.getTime() + 7 * 24 * 60 * 60 * 1000 * weekNumber);
 };
 
-exports.forEachFileLine = function(fileName, lineHandler) {
+exports.forEachFileLine = function (fileName, lineHandler) {
   var buffer = '';
   function processBuffer(flush) {
     var parts = buffer.replace('\r', '').split('\n');
@@ -52,11 +49,11 @@ exports.forEachFileLine = function(fileName, lineHandler) {
     parts.forEach(lineHandler);
   }
   fs.createReadStream(fileName)
-    .addListener('data', function(data) {
+    .addListener('data', function (data) {
       buffer += data.toString();
       processBuffer();
     })
-    .addListener('end', function() {
+    .addListener('end', function () {
       processBuffer(true);
       lineHandler();
     });
@@ -65,7 +62,7 @@ exports.forEachFileLine = function(fileName, lineHandler) {
 // =========================================================================
 // string manipulation / regular expressions
 
-exports.removeAccents = function(str) {
+exports.removeAccents = function (str) {
   return !str
     ? ''
     : str
@@ -77,23 +74,23 @@ exports.removeAccents = function(str) {
 };
 
 //var regexUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-var regexUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-var regexUrl2 = /(\b(https?|ftp|file):\/\/([^\/\s]*)[^\s]*)/gi;
+var regexUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+var regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
-exports.replaceURLWithHTMLLinks = function(text) {
+exports.replaceURLWithHTMLLinks = function (text) {
   return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
 };
 
-exports.replaceURLWithFullHTMLLinks = function(text) {
+exports.replaceURLWithFullHTMLLinks = function (text) {
   return String(text || '').replace(regexUrl, "<a href='$1'>$1</a>");
 };
 
-exports.shortenURLs = function(text) {
+exports.shortenURLs = function (text) {
   return String(text || '').replace(regexUrl, '$3...');
 };
 
 // source: http://css-tricks.com/snippets/javascript/htmlentities-for-javascript/
-exports.htmlEntities = function(str) {
+exports.htmlEntities = function (str) {
   return String(str || '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -101,16 +98,13 @@ exports.htmlEntities = function(str) {
     .replace(/"/g, '&quot;');
 };
 
-exports.addSlashes = function(str) {
+exports.addSlashes = function (str) {
   return typeof str == 'string'
-    ? str
-        .replace(/\\/g, '\\\\')
-        .replace(/\'/g, "\\'")
-        .replace(/\"/g, '\\"')
+    ? str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"')
     : str;
 };
 
-exports.sanitizeJsStringInHtml = function(str) {
+exports.sanitizeJsStringInHtml = function (str) {
   return exports.htmlEntities(exports.addSlashes(str || ''));
 };
 
@@ -119,10 +113,10 @@ var timeScales = [
   { 'hour(s)': 60 },
   { 'day(s)': 24 },
   { 'month(s)': 30 },
-  { 'year(s)': 12 }
+  { 'year(s)': 12 },
 ];
 
-exports.renderTimestamp = function(timestamp) {
+exports.renderTimestamp = function (timestamp) {
   var t = timestamp / 1000,
     lastScale = 'second(s)';
   for (i in timeScales) {
@@ -150,10 +144,10 @@ exports.MONTHS_SHORT = [
   'Sep',
   'Oct',
   'Nov',
-  'Dec'
+  'Dec',
 ];
 
-exports.renderShortMonthYear = function(t) {
+exports.renderShortMonthYear = function (t) {
   var t = new Date(t);
   var sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
   return (
@@ -161,7 +155,7 @@ exports.renderShortMonthYear = function(t) {
   );
 };
 
-exports.padNumber = function(str, n) {
+exports.padNumber = function (str, n) {
   var ret = '' + str;
   while (
     ret.length < n // pad with leading zeroes
@@ -170,17 +164,17 @@ exports.padNumber = function(str, n) {
   return ret;
 };
 
-exports.renderTime = function(t) {
+exports.renderTime = function (t) {
   var t = new Date(t);
   return t.getHours() + ':' + exports.padNumber(t.getMinutes(), 2);
 };
 
 // minimal sanitization of function name: remove javascript's special / control characters
-exports.sanitizeJsIdentifier = function(id) {
-  return ('' + id).replace(/\/\\\n\(\)\[\]\;\./g, ' ');
+exports.sanitizeJsIdentifier = function (id) {
+  return ('' + id).replace(/\/\\\n\(\)\[\];\./g, ' ');
 };
 
-exports.renderJsCallback = function(fctName, obj) {
+exports.renderJsCallback = function (fctName, obj) {
   return (
     exports.sanitizeJsIdentifier(fctName) +
     '(' +
@@ -192,33 +186,33 @@ exports.renderJsCallback = function(fctName, obj) {
 // =========================================================================
 // music track related functions
 
-exports.cleanTrackName = function(str) {
+exports.cleanTrackName = function (str) {
   return !str
     ? ''
     : str
         .trim()
-        .replace(/^\d+([\-\.\/\\]\d+)+\s+/, '') // remove prefixing date
-        .replace(/^\d+[\.]+\s+/, '') // remove prefixing track number
-        .replace(/^\#\d+\s+/, '') // remove prefixing rank
-        .replace(/\([^\)]*\)/g, '') // remove parentheses
-        .replace(/\[[^\]]*\]/g, '') // remove brackets
+        .replace(/^\d+([-./\\]\d+)+\s+/, '') // remove prefixing date
+        .replace(/^\d+[.]+\s+/, '') // remove prefixing track number
+        .replace(/^#\d+\s+/, '') // remove prefixing rank
+        .replace(/\([^)]*\)/g, '') // remove parentheses
+        .replace(/\[[^]]*\]/g, '') // remove brackets
         .replace(/\s+/, ' ') // remove extra/duplicate whitespace
         .trim();
 };
 
 // to run on cleaned track names, for better performance
-exports.normalizeArtistName = function(artistName) {
+exports.normalizeArtistName = function (artistName) {
   return exports
     .removeAccents(artistName.trim().toLowerCase())
     .replace(/[^a-z0-9]/g, ''); // remove non alpha characters
 };
 
-var reQuotes = /\"[^\")]*\"/g;
+var reQuotes = /"[^")]*"/g;
 var reSeparator = /-+\s+/g;
 var reOnlyDigits = /^\d+$/;
 
 // to run on cleaned track names, for better performance
-exports.detectArtistName = function(trackName) {
+exports.detectArtistName = function (trackName) {
   var quoted = trackName.match(reQuotes) || [];
   var splitted = (trackName || '').replace(reQuotes, ' - ').split(reSeparator);
   // remove track title (last item of the string, or quoted items)
@@ -231,7 +225,7 @@ exports.detectArtistName = function(trackName) {
 };
 
 // to run on cleaned track names, for better performance
-exports.detectTrackFields = function(trackName) {
+exports.detectTrackFields = function (trackName) {
   var quoted = trackName.match(reQuotes) || [];
   if (quoted.length == 1) return JSON.stringify(quoted);
   else return null;
@@ -240,12 +234,12 @@ exports.detectTrackFields = function(trackName) {
 // =========================================================================
 // data structures
 
-exports.arrayHas = function(array, value) {
+exports.arrayHas = function (array, value) {
   if (array) for (var i in array) if (value == array[i]) return true;
   return false;
 };
 
-exports.values = function(set) {
+exports.values = function (set) {
   var list = [];
   for (var i in set)
     if (set[i])
@@ -254,7 +248,7 @@ exports.values = function(set) {
   return list;
 };
 
-exports.mapToObjArray = function(map, keyFieldName, valueFieldName) {
+exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   var array = [];
   for (var k in map) {
     var obj = {};
@@ -267,7 +261,7 @@ exports.mapToObjArray = function(map, keyFieldName, valueFieldName) {
   return array;
 };
 
-exports.arrayToSet = function(array, value) {
+exports.arrayToSet = function (array, value) {
   var set = {};
   for (var i in array)
     if (array[i])
@@ -276,7 +270,7 @@ exports.arrayToSet = function(array, value) {
   return set;
 };
 
-exports.objArrayToSet = function(array, attr, val) {
+exports.objArrayToSet = function (array, attr, val) {
   var set = {};
   for (var i in array)
     if (array[i] && array[i].hasOwnProperty(attr))
@@ -284,7 +278,7 @@ exports.objArrayToSet = function(array, attr, val) {
   return set;
 };
 
-exports.groupObjectsBy = function(array, attr) {
+exports.groupObjectsBy = function (array, attr) {
   var r = {};
   var path = ('' + attr).split('.');
   if (path.length > 1) {
@@ -309,7 +303,7 @@ exports.groupObjectsBy = function(array, attr) {
   return r;
 };
 
-exports.removeDuplicates = function(array, keyFieldName) {
+exports.removeDuplicates = function (array, keyFieldName) {
   if (keyFieldName)
     return exports.mapToObjArray(
       exports.objArrayToSet(array, keyFieldName),
@@ -318,7 +312,7 @@ exports.removeDuplicates = function(array, keyFieldName) {
   else return Object.keys(exports.arrayToSet(array));
 };
 
-exports.objArrayToValueArray = function(array, attr) {
+exports.objArrayToValueArray = function (array, attr) {
   var list = [];
   for (var i in array)
     if (array[i] && array[i][attr])
@@ -327,18 +321,18 @@ exports.objArrayToValueArray = function(array, attr) {
   return list;
 };
 
-exports.forEachArrayItem = function(array, handler, cb) {
+exports.forEachArrayItem = function (array, handler, cb) {
   var i = 0;
   var length = array.length;
   (function next() {
-    setTimeout(function() {
+    setTimeout(function () {
       if (i < length) handler(array[i++], next);
       else if (cb) cb(array);
     }, 0);
   })();
 };
 
-exports.getMapFieldNames = function(map /*, firstField*/) {
+exports.getMapFieldNames = function (map /*, firstField*/) {
   var fieldNames = [],
     fieldSet = {};
   for (var i in map) {
@@ -354,7 +348,7 @@ exports.getMapFieldNames = function(map /*, firstField*/) {
   return fieldNames;
 };
 
-exports.excludeKeys = function(map, keySet) {
+exports.excludeKeys = function (map, keySet) {
   var map = map || [],
     keySet = keySet || {},
     res = [];
@@ -365,7 +359,7 @@ exports.excludeKeys = function(map, keySet) {
   return res;
 };
 
-exports.checkMissingFields = function(obj, fieldSet) {
+exports.checkMissingFields = function (obj, fieldSet) {
   if (!obj || typeof obj !== 'object') return { error: 'object is null' };
   for (var f in fieldSet)
     if (fieldSet[f] && !obj.hasOwnProperty(f))
@@ -374,14 +368,14 @@ exports.checkMissingFields = function(obj, fieldSet) {
       return { field: f, expected: false, error: 'forbidden field: ' + f };
 };
 
-exports.checkMistypedFields = function(obj, fieldTypeSet) {
+exports.checkMistypedFields = function (obj, fieldTypeSet) {
   if (!obj || typeof obj !== 'object') return { error: 'object is null' };
   function Error(error, f) {
     return {
       field: f,
       type: typeof obj[f],
       expected: fieldTypeSet[f],
-      error: error + ': ' + f
+      error: error + ': ' + f,
     };
   }
   for (var f in fieldTypeSet)
@@ -396,7 +390,7 @@ exports.checkMistypedFields = function(obj, fieldTypeSet) {
 };
 
 // translateFields({a,b,c}, {b:"bb"}) => {a,bb,c}
-exports.translateFields = function(obj, mapping) {
+exports.translateFields = function (obj, mapping) {
   if (obj && typeof obj === 'object')
     for (var f in mapping)
       if (Object.hasOwnProperty.call(obj, f)) {
@@ -407,7 +401,7 @@ exports.translateFields = function(obj, mapping) {
 };
 
 // filterFields({a,b,c}, {b:"bb"}) => {bb}
-exports.filterFields = function(obj, mapping) {
+exports.filterFields = function (obj, mapping) {
   var finalObj = {};
   for (var field in mapping)
     if (obj.hasOwnProperty(field))
@@ -418,30 +412,30 @@ exports.filterFields = function(obj, mapping) {
 // =========================================================================
 // sorting comparators
 
-exports.descSort = function(a, b) {
+exports.descSort = function (a, b) {
   return parseInt(b) - parseInt(a);
 };
 
-exports.ascSort = function(a, b) {
+exports.ascSort = function (a, b) {
   if (a < b) return -1;
   if (a > b) return 1;
   return 0;
 };
 
-exports.makeFieldSort = function(field, sortFct) {
-  return function(a, b) {
+exports.makeFieldSort = function (field, sortFct) {
+  return function (a, b) {
     return sortFct(a[field], b[field]);
   };
 };
 
 // by http://andrew.hedges.name
-exports.getLevenshteinDistance = (function() {
+exports.getLevenshteinDistance = (function () {
   function minimator(x, y, z) {
     if (x < y && x < z) return x;
     if (y < x && y < z) return y;
     return z;
   }
-  return function(a, b) {
+  return function (a, b) {
     var cost,
       m = a.length,
       n = b.length;
@@ -453,11 +447,11 @@ exports.getLevenshteinDistance = (function() {
       m = n;
       n = o;
     }
-    var r = new Array();
-    r[0] = new Array();
+    var r = [];
+    r[0] = [];
     for (var c = 0; c < n + 1; c++) r[0][c] = c;
     for (var i = 1; i < m + 1; i++) {
-      r[i] = new Array();
+      r[i] = [];
       r[i][0] = i;
       for (var j = 1; j < n + 1; j++) {
         cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
@@ -475,18 +469,18 @@ exports.getLevenshteinDistance = (function() {
 // =========================================================================
 // table structures
 
-exports.DataTable = function() {
+exports.DataTable = function () {
   var self = this;
   self.table = [];
   self.header = null; //[]; // fields
 
-  self.fromArray = function(array, header) {
+  self.fromArray = function (array, header) {
     if (header) self.header = header;
     self.table = array;
     return self;
   };
 
-  self.fromMap = function(map, header) {
+  self.fromMap = function (map, header) {
     self.header = header || exports.getMapFieldNames(map);
     //table = /*mapToTable(map, header);*/ [];
     for (var i in map) {
@@ -500,7 +494,7 @@ exports.DataTable = function() {
     return self;
   };
 
-  self.sort = function(fct) {
+  self.sort = function (fct) {
     self.table.sort(fct);
     return self;
   };
@@ -521,11 +515,11 @@ exports.DataTable = function() {
     return table.join(lineSepar || '\n');
   }
 
-  self.toTsv = function() {
+  self.toTsv = function () {
     return toCharSeparatedValues('\t');
   };
 
-  self.toCsv = function() {
+  self.toCsv = function () {
     return toCharSeparatedValues(',');
   };
 
@@ -533,8 +527,8 @@ exports.DataTable = function() {
     return '<td>' + exports.htmlEntities(val) + '</td>';
   }
 
-  self.toHtml = function() {
-    var table = getFullTableCopy().map(function(line) {
+  self.toHtml = function () {
+    var table = getFullTableCopy().map(function (line) {
       return '<tr>' + line.map(valToHtmlCell).join('') + '</tr>';
     });
     return [
@@ -549,7 +543,7 @@ exports.DataTable = function() {
       "<thead style='background:#ccc;'>",
       table.shift(),
       '</thead>',
-      '<tbody>'
+      '<tbody>',
     ]
       .concat(table)
       .concat(['</tbody', '</table>', '</body>', '</html>'])
@@ -564,14 +558,14 @@ exports.DataTable = function() {
 
 var httpDomains = {};
 
-exports.httpSetDomain = function(regex, options) {
+exports.httpSetDomain = function (regex, options) {
   if (!options) delete httpDomains[regex];
   else httpDomains[regex] = [regex, options];
 };
 
 exports.httpDomains = httpDomains;
 
-exports.httpGetDomain = function(domain) {
+exports.httpGetDomain = function (domain) {
   for (var i in httpDomains)
     if (httpDomains[i][0].test(domain)) return httpDomains[i][1];
 };
@@ -584,17 +578,17 @@ function _httpRequest(options, callback) {
     delete options.body;
   //console.log("httpRequest", options.host + options.path);
   var req = (options.protocol === 'http:' ? http : https)
-    .request(options, function(res) {
+    .request(options, function (res) {
       if (options.responseEncoding)
         res.setEncoding(options.responseEncoding /*'utf-8'*/);
-      res.addListener('data', function(chunk) {
+      res.addListener('data', function (chunk) {
         data += chunk.toString();
       });
-      res.addListener('end', function() {
+      res.addListener('end', function () {
         callback(null, data, res);
       });
     })
-    .on('error', function(err) {
+    .on('error', function (err) {
       //console.log("[ERR] snip.httpRequest ", url, err);
       //console.error("[ERR] snip.httpRequest ", url, err);
       callback(err);
@@ -603,7 +597,7 @@ function _httpRequest(options, callback) {
   return req;
 }
 
-exports.httpRequest = function(url, options, callback) {
+exports.httpRequest = function (url, options, callback) {
   var urlObj = urlModule.parse(url),
     options = options || {};
   options.method = options.method || 'GET';
@@ -620,7 +614,7 @@ exports.httpRequest = function(url, options, callback) {
     }
     //console.log("1-REQ", options.host, domainOpts.queue.length);
     domainOpts.queue.push(
-      _httpRequest.bind(null, options, function() {
+      _httpRequest.bind(null, options, function () {
         //console.log("2-RES", options.host, domainOpts.queue.length);
         callback.apply(null, arguments);
         //console.log("3-END", options.host, domainOpts.queue.length);
@@ -634,7 +628,7 @@ exports.httpRequest = function(url, options, callback) {
   return _httpRequest(options, callback);
 };
 
-exports.httpRequestWithParams = function(url, options, cb) {
+exports.httpRequestWithParams = function (url, options, cb) {
   if (options.params) {
     url += '?' + querystring.stringify(options.params);
     delete options.params;
@@ -651,8 +645,8 @@ exports.httpRequestWithParams = function(url, options, cb) {
   return exports.httpRequest(url, options, cb);
 };
 
-exports.httpRequestJSON = function(url, options, callback) {
-  return exports.httpRequest(url, options, function(err, data, res) {
+exports.httpRequestJSON = function (url, options, callback) {
+  return exports.httpRequest(url, options, function (err, data, res) {
     if (err) callback(err, null, res);
     else {
       try {
@@ -668,25 +662,25 @@ exports.httpRequestJSON = function(url, options, callback) {
 
 function BasicCache() {
   var cache = {};
-  this.get = function(url) {
+  this.get = function (url) {
     return cache[url];
   };
-  this.set = function(url, data) {
+  this.set = function (url, data) {
     return (cache[url] = data);
   };
-  this.dump = function() {
+  this.dump = function () {
     return cache;
   };
-  this.restore = function(cacheDump) {
+  this.restore = function (cacheDump) {
     return (cache = cacheDump);
   };
   return this;
 }
 
-exports.HttpRequestCache = function(cache) {
+exports.HttpRequestCache = function (cache) {
   var realRequest = exports.httpRequest;
   this.cache = cache = cache || new BasicCache();
-  this.httpRequest = function(url, options, callback) {
+  this.httpRequest = function (url, options, callback) {
     // TODO: options are ignored for now
     var cached = cache.get(url);
     if (cached) {
@@ -694,7 +688,7 @@ exports.HttpRequestCache = function(cache) {
       callback(null, cached);
     } else {
       //console.warn("making a real request to", url, "...");
-      realRequest(url, options, function(err, data, res) {
+      realRequest(url, options, function (err, data, res) {
         cache.set(url, data);
         callback(err, data, res);
       });
@@ -702,7 +696,7 @@ exports.HttpRequestCache = function(cache) {
   };
 };
 
-exports.HttpRequestFileCache = function(fileName) {
+exports.HttpRequestFileCache = function (fileName) {
   exports.HttpRequestCache.apply(this);
   try {
     // try to restore from file, if it exists
@@ -712,9 +706,9 @@ exports.HttpRequestFileCache = function(fileName) {
   } catch (e) {
     console.error(e);
   }
-  this.save = function() {
+  this.save = function () {
     fs.writeFileSync(fileName, JSON.stringify(this.cache.dump()), {
-      encoding: 'utf8'
+      encoding: 'utf8',
     });
   };
 };
@@ -769,19 +763,19 @@ function AsyncEventEmitter() {
   this._eventListeners = {};
 }
 
-AsyncEventEmitter.prototype.on = function(evtName, listener) {
+AsyncEventEmitter.prototype.on = function (evtName, listener) {
   this._eventListeners[evtName] = this._eventListeners[evtName] || [];
   this._eventListeners[evtName].push(listener);
   return this;
 };
 
-AsyncEventEmitter.prototype.emit = function(evtName, param, callback) {
+AsyncEventEmitter.prototype.emit = function (evtName, param, callback) {
   var listeners = this._eventListeners[evtName];
   if (!listeners) return false;
   var self = this;
   listeners = listeners.slice(); // duplicate array
   (function nextListener() {
-    process.nextTick(function() {
+    process.nextTick(function () {
       if (listeners.length) {
         //var args = Array.prototype.slice.call(arguments, 1);
         listeners.pop().call(self, param, nextListener);
@@ -798,9 +792,9 @@ exports.AsyncEventEmitter = AsyncEventEmitter;
  * callWhenDone: a simple synchronized callback closure
  * @author adrienjoly, whyd
  */
-exports.callWhenDone = function(callback) {
+exports.callWhenDone = function (callback) {
   var counter = 0;
-  return function(incr) {
+  return function (incr) {
     if (0 == (counter += incr)) callback();
   };
 };
@@ -811,7 +805,7 @@ exports.callWhenDone = function(callback) {
  * returns validated object, or throws an error.
  * @author adrienjoly, whyd
  */
-exports.checkParams = function(obj, mandatorySet, optionalSet) {
+exports.checkParams = function (obj, mandatorySet, optionalSet) {
   var finalObj = {};
   function storeIfValid(fieldName, typeSet) {
     if (typeof obj[fieldName] != typeSet[fieldName])
@@ -829,11 +823,11 @@ exports.checkParams = function(obj, mandatorySet, optionalSet) {
 // =========================================================================
 
 var MAX_NB_MENTIONS = 6;
-var RE_MENTION = /\@\[([^\]]*)\]\(user:([^\)]*)\)/gi;
+var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
 exports.RE_MENTION = RE_MENTION;
 
-exports.extractMentions = function(commentText) {
+exports.extractMentions = function (commentText) {
   var mentions = [];
   for (;;) {
     // extract user id (last matched group) of each mention
@@ -847,7 +841,7 @@ exports.extractMentions = function(commentText) {
 // =========================================================================
 // class to track the execution of long jobs, with callback timeout capability
 
-exports.Worker = function(options) {
+exports.Worker = function (options) {
   options = options || {};
   var jobs = 0,
     interval = null;
@@ -855,7 +849,7 @@ exports.Worker = function(options) {
     console.log('added job: ' + job);
     ++jobs;
     if (!interval)
-      interval = setInterval(function() {
+      interval = setInterval(function () {
         console.log('(' + jobs + ' jobs)');
       }, options.statusDisplayInterval || 5000);
   }
@@ -869,12 +863,12 @@ exports.Worker = function(options) {
   }
   function Job(id) {
     var self = this;
-    this.toString = function() {
+    this.toString = function () {
       return id;
     };
     this.done = removeJob.bind(this, this);
-    this.wrapCallback = function(callback) {
-      return function() {
+    this.wrapCallback = function (callback) {
+      return function () {
         if (self && self.done) {
           callback && callback.apply(null, arguments);
           self.done();
@@ -884,7 +878,7 @@ exports.Worker = function(options) {
           );
       };
     };
-    this.timeout = setTimeout(function() {
+    this.timeout = setTimeout(function () {
       console.log(
         'job ' + self + ' was still running 1 minute after launch => destroying'
       );
@@ -896,10 +890,10 @@ exports.Worker = function(options) {
     addJob(this);
     return this;
   }
-  this.newJob = function(id) {
+  this.newJob = function (id) {
     return new Job(id);
   };
-  this.countPendingJobs = function() {
+  this.countPendingJobs = function () {
     return jobs;
   };
   return this;

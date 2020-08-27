@@ -17,9 +17,9 @@ function TestRunner() {
   var finalCallback = null;
 
   function wrapTest(testFct, title) {
-    return function(nextTestFct) {
+    return function (nextTestFct) {
       console.log('%c[TEST] ' + title + ' ...', 'color:#888');
-      testFct(function(res) {
+      testFct(function (res) {
         console.log(
           '%c[TEST]=> ' + (!!res ? 'OK' : 'FAIL: ' + title),
           'color:' + (!!res ? 'green' : 'red')
@@ -30,14 +30,14 @@ function TestRunner() {
     };
   }
 
-  this.addTests = function(testMap) {
+  this.addTests = function (testMap) {
     for (var title in testMap) tests.push(wrapTest(testMap[title], title));
     return this;
   };
 
-  this.run = function(cb) {
+  this.run = function (cb) {
     finalCallback = cb;
-    forEachAsync(tests, function() {
+    forEachAsync(tests, function () {
       console.log('%cAll tests done!', 'color:green');
       finalCallback({ ok: true });
     });

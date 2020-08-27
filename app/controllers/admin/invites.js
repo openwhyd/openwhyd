@@ -15,16 +15,16 @@ var mainTemplate = require('../../templates/mainTemplate.js');
 
 var callWhenDone = require('../../snip.js').callWhenDone;
 
-var fetchUsers = function(table, handler, options) {
+var fetchUsers = function (table, handler, options) {
   console.log('fetching users from ' + table + '...');
-  mongodb.collections[table].find({}, options, function(err, cursor) {
+  mongodb.collections[table].find({}, options, function (err, cursor) {
     cursor.toArray(handler);
   });
 };
 
-var inviteUser = function(email, handler) {
+var inviteUser = function (email, handler) {
   console.log('invite user ', email);
-  userModel.inviteUser(email, function(storedUser) {
+  userModel.inviteUser(email, function (storedUser) {
     if (storedUser) notifEmails.sendAcceptedInvite(storedUser);
     handler(storedUser);
   });
@@ -180,13 +180,13 @@ function renderTemplate(requests, invites, users, reqParams) {
     '	for (var i in checkboxes)',
     '		checkboxes[i].checked = source.checked;',
     '}',
-    '</script>'
+    '</script>',
   ].join('\n');
 
   return mainTemplate.renderWhydFrame(out, params);
 }
 
-exports.handleRequest = function(request, reqParams, response) {
+exports.handleRequest = function (request, reqParams, response) {
   request.logToConsole('invites.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
@@ -194,21 +194,21 @@ exports.handleRequest = function(request, reqParams, response) {
   if (!user /*|| !(user.fbId == "510739408" || user.fbId == "577922742")*/)
     return /*response.legacyRender("you're not an admin!")*/;
 
-  var fetchAndRender = function() {
+  var fetchAndRender = function () {
     fetchUsers(
       'user',
-      function(err, users) {
+      function (err, users) {
         fetchUsers(
           'invite',
-          function(err, invites) {
+          function (err, invites) {
             fetchUsers(
               'email',
-              function(err, requests) {
+              function (err, requests) {
                 for (var i in requests)
                   requests[i] = {
                     _id: requests[i]._id,
                     email: requests[i]._id,
-                    date: requests[i].date
+                    date: requests[i].date,
                   };
 
                 response.legacyRender(
@@ -237,7 +237,7 @@ exports.handleRequest = function(request, reqParams, response) {
       if (reqParams.action == 'invite') {
         var sync = callWhenDone(fetchAndRender);
         for (var i in emails) {
-          var processing = inviteUser(emails[i], function(user) {
+          var processing = inviteUser(emails[i], function (user) {
             sync(-1);
           });
           if (processing) sync(+1);
@@ -263,7 +263,7 @@ exports.handleRequest = function(request, reqParams, response) {
   } else fetchAndRender();
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   if (request.method.toLowerCase() === 'post') {
     //var form = new formidable.IncomingForm();
     //form.parse(request, function(err, postParams) {

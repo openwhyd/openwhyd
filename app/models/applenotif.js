@@ -25,14 +25,14 @@ var CONN_OPTIONS = {
     : process.env.WHYD_DEV_APNS_PASSPHRASE.substr(),
   gateway: prod ? 'gateway.push.apple.com' : 'gateway.sandbox.push.apple.com',
   port: 2195,
-  production: prod // by default: false unless the NODE_ENV environment variable is set to "production"
+  production: prod, // by default: false unless the NODE_ENV environment variable is set to "production"
 };
 
 //console.log("[APNS] parameters:", CONN_OPTIONS);
 
 var FEEDBACK_OPTIONS = {
   batchFeedback: true,
-  interval: 300
+  interval: 300,
 };
 
 var DEFAULT_EXPIRY = 24 * 60 * 60; // 1 day
@@ -44,11 +44,11 @@ var apnConnection = apn.Connection(CONN_OPTIONS);
 
 // listen to all events
 
-apnConnection.on('connected', function() {
+apnConnection.on('connected', function () {
   console.log('[APNS] is connected');
 });
 
-apnConnection.on('transmitted', function(data, dest) {
+apnConnection.on('transmitted', function (data, dest) {
   console.log(
     '[APNS] transmitted:',
     (data || {}).compiledPayload,
@@ -57,26 +57,26 @@ apnConnection.on('transmitted', function(data, dest) {
   );
 });
 
-['transmissionError', 'disconnected'].map(function(evt) {
-  apnConnection.on(evt, function() {
+['transmissionError', 'disconnected'].map(function (evt) {
+  apnConnection.on(evt, function () {
     console.log('[APNS]', evt, 'event:', arguments);
   });
 });
 
-['error', 'socketError', 'timeout', 'cacheTooSmall'].map(function(evt) {
-  apnConnection.on(evt, function() {
+['error', 'socketError', 'timeout', 'cacheTooSmall'].map(function (evt) {
+  apnConnection.on(evt, function () {
     console.error('[APNS]', evt, 'event:', arguments);
   });
 });
 
-exports.sendApplePushNotification = function(device, data) {
+exports.sendApplePushNotification = function (device, data) {
   console.log('[APNS] Sending notif:', data);
   var note = new apn.Notification();
   for (var i in data) note[i] = data[i];
   return apnConnection.pushNotification(note, device);
 };
 
-exports.pushToDevice = function(token, text, payload) {
+exports.pushToDevice = function (token, text, payload) {
   payload = payload || {};
   var badge = DEFAULT_BADGE;
   if (payload.badge) {
@@ -88,7 +88,7 @@ exports.pushToDevice = function(token, text, payload) {
     badge: badge,
     sound: DEFAULT_SOUND,
     alert: text,
-    payload: payload
+    payload: payload,
   });
 };
 /*

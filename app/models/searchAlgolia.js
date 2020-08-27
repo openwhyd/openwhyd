@@ -16,14 +16,14 @@ var INDEX_NAME_BY_TYPE = {
   user: 'users',
   track: 'tracks',
   post: 'posts',
-  playlist: 'playlists'
+  playlist: 'playlists',
 };
 
 var INDEX_TYPE_BY_NAME = {
   users: 'user',
   tracks: 'track',
   posts: 'post',
-  playlists: 'playlist'
+  playlists: 'playlist',
 };
 
 // fields that will be indexed for search and faceting (together with the `name` field)
@@ -31,7 +31,7 @@ var INDEX_FIELDS_BY_TYPE = {
   user: ['handle'],
   track: [],
   post: ['text', 'uId'],
-  playlist: []
+  playlist: [],
 };
 
 // fields that will be stored in the search index's documents
@@ -40,16 +40,16 @@ var FIELDS_BY_TYPE = {
   track: INDEX_FIELDS_BY_TYPE.track.concat([
     'name',
     /*'img',*/ 'nbPosts',
-    'post'
+    'post',
   ]),
   post: INDEX_FIELDS_BY_TYPE.post.concat(['name', /*'img',*/ 'eId', 'pl']),
-  playlist: INDEX_FIELDS_BY_TYPE.playlist.concat(['name', 'number', 'nbPosts'])
+  playlist: INDEX_FIELDS_BY_TYPE.playlist.concat(['name', 'number', 'nbPosts']),
 };
 
 // lazy init and caching of indexes
-var getIndex = (function() {
+var getIndex = (function () {
   var INDEX = {}; // cache of indexes
-  return function(indexName) {
+  return function (indexName) {
     var index = INDEX[indexName];
     if (!index) {
       index = INDEX[indexName] = ENGINE.initIndex(indexName);
@@ -57,10 +57,10 @@ var getIndex = (function() {
       var fields = INDEX_FIELDS_BY_TYPE[INDEX_TYPE_BY_NAME[indexName]] || [];
       index.setSettings({
         attributesForFaceting: ['name'].concat(
-          fields.map(function(field) {
+          fields.map(function (field) {
             return 'filterOnly(' + field + ')';
           })
-        )
+        ),
       });
     }
     return index;
@@ -69,7 +69,7 @@ var getIndex = (function() {
 
 function Search() {}
 
-Search.prototype.search = function(index, query, options, cb) {
+Search.prototype.search = function (index, query, options, cb) {
   var facetAttrs = [];
   var facetFilters = [];
   var i, q;
@@ -115,7 +115,7 @@ function makeCallbackTranslator(type, cb) {
     delete r.objectID;
     return r;
   }
-  return function(err, res) {
+  return function (err, res) {
     if (err) cb({ error: err });
     else {
       res.hits = res.hits.map(translateResult);
@@ -125,7 +125,7 @@ function makeCallbackTranslator(type, cb) {
 }
 
 var FIELD_MAPPING = {
-  limit: 'hitsPerPage'
+  limit: 'hitsPerPage',
 };
 
 function extractOptions(q) {
@@ -135,7 +135,7 @@ function extractOptions(q) {
 var searchIndex = new Search();
 
 var searchByType = {
-  user: function(q, cb) {
+  user: function (q, cb) {
     console.log('search users', q);
     var options = extractOptions(q);
     return searchIndex.search(
@@ -149,15 +149,15 @@ var searchByType = {
     // tested http://localhost:8080/search?q=pouet&context=header
     //     => { q: 'pouet' }
   },
-  track: function(q, cb) {
+  track: function (q, cb) {
     console.log('search tracks', q);
     var options = extractOptions(q);
     return searchIndex.search(
       'tracks',
       q.q,
       options,
-      makeCallbackTranslator('track', function(res) {
-        (res.hits || []).map(function(h) {
+      makeCallbackTranslator('track', function (res) {
+        (res.hits || []).map(function (h) {
           h.eId = h._id;
           h._id = mongodb.ObjectId(h.post);
           delete h.post;
@@ -166,13 +166,13 @@ var searchByType = {
       })
     );
   },
-  post: function(q, cb) {
+  post: function (q, cb) {
     console.log('search posts', q);
     var options = extractOptions(q);
     if (q.uId) {
       q = {
         q: q.q,
-        uId: q.uId
+        uId: q.uId,
       };
       return searchIndex.search(
         'posts',
@@ -187,7 +187,7 @@ var searchByType = {
     } else if (q.excludeUid) {
       q = {
         q: q.q,
-        uId: '-' + q.excludeUid
+        uId: '-' + q.excludeUid,
       };
       return searchIndex.search(
         'posts',
@@ -210,7 +210,7 @@ var searchByType = {
       //     => { q: 'pouet' }
     }
   },
-  playlist: function(q, cb) {
+  playlist: function (q, cb) {
     console.log('search playlists', q);
     var options = extractOptions(q);
     return searchIndex.search(
@@ -221,10 +221,10 @@ var searchByType = {
     );
     // tested http://localhost:8080/search?q=pouet&context=header
     //     => { q: 'pouet' }
-  }
+  },
 };
 
-exports.query = function(q, cb) {
+exports.query = function (q, cb) {
   var hits = [];
   var q = q || {};
   var queue;
@@ -236,7 +236,7 @@ exports.query = function(q, cb) {
     var type = queue.pop();
     if (!type) cb({ q: q.q, hits: hits });
     else
-      searchByType[type](q, function(res) {
+      searchByType[type](q, function (res) {
         if (res.hits) {
           console.log('=>', res.hits.length, 'hits');
           hits = hits.concat(res.hits);
@@ -262,18 +262,21 @@ function indexTypedDocs(type, items, callback) {
   if (!type || !INDEX_NAME_BY_TYPE[type]) {
     callback && callback(new Error('indexTyped: unknown type'));
   } else {
-    var docs = items.map(function(item) {
+    var docs = items.map(function (item) {
       if (!item || !item._id || !item.name) {
         logToConsole({ error: 'indexTypedDocs: missing parameters' });
       }
       // filter fields to be indexed
       var doc = { objectID: item._id };
-      FIELDS_BY_TYPE[type].forEach(function(field) {
+      FIELDS_BY_TYPE[type].forEach(function (field) {
         doc[field] = item[field];
       });
       return doc;
     });
-    getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function(err, content) {
+    getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function (
+      err,
+      content
+    ) {
       if (err) {
         console.error(
           'algolia error when indexing ' +
@@ -295,22 +298,22 @@ function indexTypedDocs(type, items, callback) {
   }
 }
 
-exports.indexTyped = function(type, item, handler) {
+exports.indexTyped = function (type, item, handler) {
   //console.log("models.search.index(): ", item, "...");
   if (!item || !item._id || !item.name) {
     logToConsole({ error: 'indexTyped: missing parameters' });
     handler && handler(); // TODO: check if parameters are required or not
   }
-  return indexTypedDocs(type, [item], function() {
+  return indexTypedDocs(type, [item], function () {
     handler && handler(); // TODO: check if parameters are required or not
   });
 };
 
-exports.countDocs = function(type, callback) {
-  ENGINE.listIndexes(function(err, content) {
+exports.countDocs = function (type, callback) {
+  ENGINE.listIndexes(function (err, content) {
     try {
       callback(
-        content.items.find(function(index) {
+        content.items.find(function (index) {
           return index.name === INDEX_NAME_BY_TYPE[type];
         }).entries
       );
@@ -321,37 +324,38 @@ exports.countDocs = function(type, callback) {
   });
 };
 
-exports.deleteAllDocs = function(type, callback) {
-  getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function(err, content) {
+exports.deleteAllDocs = function (type, callback) {
+  getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err, content) {
     console.log('algolia deleteAllDocs =>', err || 'ok');
     callback && callback(); // TODO: check if parameters are required or not
   });
 };
 
-exports.indexBulk = function(docs, callback) {
+exports.indexBulk = function (docs, callback) {
   console.log('indexBulk', docs.length, '...');
   var docsPerType = {};
-  docs.forEach(function(doc) {
+  docs.forEach(function (doc) {
     docsPerType[doc._type] = (docsPerType[doc._type] || []).concat([doc]);
   });
-  var typeToBeIndexed = Object.keys(docsPerType).find(function(type) {
+  var typeToBeIndexed = Object.keys(docsPerType).find(function (type) {
     console.log('docsPerType', type, ':', docsPerType[type].length);
     return docsPerType[type].length > 0;
   });
   // TODO: also index from other types
-  return indexTypedDocs(typeToBeIndexed, docsPerType[typeToBeIndexed], function(
-    err,
-    res
-  ) {
-    callback({
-      error: err,
-      items: (res || {}).items
-    });
-  });
+  return indexTypedDocs(
+    typeToBeIndexed,
+    docsPerType[typeToBeIndexed],
+    function (err, res) {
+      callback({
+        error: err,
+        items: (res || {}).items,
+      });
+    }
+  );
 };
 
 // INIT
 
-exports.init = function() {
+exports.init = function () {
   //console.log("models.search: using Algolia Search index");
 };

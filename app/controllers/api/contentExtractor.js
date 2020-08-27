@@ -4,7 +4,7 @@
  */
 var get = require('../../lib/get');
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('contentExtractor.controller', reqParams);
 
   // make sure a registered user is logged, or return an error page
@@ -35,7 +35,7 @@ exports.controller = function(request, reqParams, response) {
             normalize(embeds[i].name),
             title
           );
-      embeds.sort(function(a, b) {
+      embeds.sort(function (a, b) {
         return a.distance - b.distance;
       });
     }
@@ -47,12 +47,12 @@ exports.controller = function(request, reqParams, response) {
   var url = reqParams.url;
 
   try {
-    get(url, function(err, page) {
+    get(url, function (err, page) {
       if (err)
         //throw err;
         console.log('contentExtractor.get() error: ', err, err.stack);
       else
-        page.extractEmbeds(function(embeds) {
+        page.extractEmbeds(function (embeds) {
           // 1) extract named embeds
           var embedRefs = [];
           embeds = embeds || [];
@@ -77,7 +77,7 @@ exports.controller = function(request, reqParams, response) {
                 name: mp3[i]
                   .split('/')
                   .pop()
-                  .replace(/\.mp3$/i, '')
+                  .replace(/\.mp3$/i, ''),
               });
           }
           renderResult(embedRefs, embeds);
@@ -104,14 +104,14 @@ http://andrew.hedges.name/resume/
 */
 
 // return the smallest of the three values passed in
-var minimator = function(x, y, z) {
+var minimator = function (x, y, z) {
   if (x < y && x < z) return x;
   if (y < x && y < z) return y;
   return z;
 };
 
 // calculate the Levenshtein distance between a and b
-var levenshteinenator = function(a, b) {
+var levenshteinenator = function (a, b) {
   var cost;
 
   var m = a.length;

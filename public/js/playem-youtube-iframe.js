@@ -5,7 +5,7 @@ function YoutubeIframePlayer() {
   return YoutubeIframePlayer.super_.apply(this, arguments);
 }
 
-(function() {
+(function () {
   console.log(
     '_____----_________----_________----_________----_________----____',
     embedVars
@@ -23,7 +23,7 @@ function YoutubeIframePlayer() {
     this.eventHandlers = eventHandlers || {};
     this.embedVars = embedVars || {};
     this.label = 'Youtube';
-    window.addEventListener('message', function(e) {
+    window.addEventListener('message', function (e) {
       if (e.origin === IFRAME_HOST) {
         var message = JSON.parse(e.data);
         var param = message.data[0];
@@ -42,7 +42,7 @@ function YoutubeIframePlayer() {
     this.safeClientCall('onApiReady', this);
   }
 
-  Player.prototype.safeCall = function(fctName, param) {
+  Player.prototype.safeCall = function (fctName, param) {
     if (!this.iframeReady)
       return console.warn('YT-iframe not ready => ignoring call to', fctName);
     try {
@@ -56,7 +56,7 @@ function YoutubeIframePlayer() {
     }
   };
 
-  Player.prototype.safeClientCall = function(fctName, param) {
+  Player.prototype.safeClientCall = function (fctName, param) {
     try {
       if (this.eventHandlers[fctName]) this.eventHandlers[fctName](param);
     } catch (e) {
@@ -64,7 +64,7 @@ function YoutubeIframePlayer() {
     }
   };
 
-  Player.prototype.getEid = function(url) {
+  Player.prototype.getEid = function (url) {
     if (
       /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
         url
@@ -75,7 +75,7 @@ function YoutubeIframePlayer() {
       return RegExp.lastParen;
   };
 
-  Player.prototype.play = function(id) {
+  Player.prototype.play = function (id) {
     var that = this;
     this.iframeReady = false;
     this.embedVars.videoId = id;
@@ -84,13 +84,13 @@ function YoutubeIframePlayer() {
     this.iframe.id = this.embedVars.playerId;
     var settings = {
       width: this.embedVars.width || '200',
-      height: this.embedVars.height || '200'
+      height: this.embedVars.height || '200',
       //origin: this.embedVars.origin
     };
     this.iframe.style.border = '0';
     this.iframe.style.width = '100%';
     this.iframe.style.height = '100%';
-    this.iframe.onload = function() {
+    this.iframe.onload = function () {
       that.iframeReady = true;
     };
     this.iframe.setAttribute(
@@ -99,7 +99,7 @@ function YoutubeIframePlayer() {
         IFRAME_PATH +
         '?' +
         Object.keys(settings)
-          .map(function(p) {
+          .map(function (p) {
             return p + '=' + encodeURIComponent(settings[p]);
           })
           .join('&')
@@ -107,30 +107,30 @@ function YoutubeIframePlayer() {
     this.embedVars.playerContainer.appendChild(this.iframe);
   };
 
-  Player.prototype.pause = function() {
+  Player.prototype.pause = function () {
     this.safeCall('pause');
   };
 
-  Player.prototype.resume = function() {
+  Player.prototype.resume = function () {
     this.safeCall('resume');
   };
 
-  Player.prototype.stop = function() {
+  Player.prototype.stop = function () {
     this.iframeReady = false;
     this.safeCall('stop');
     this.iframe.setAttribute('src', '');
     this.embedVars.playerContainer.removeChild(this.iframe);
   };
 
-  Player.prototype.getTrackPosition = function(callback) {
+  Player.prototype.getTrackPosition = function (callback) {
     this.safeCall('getTrackPosition'); // -> will call onTrackInfo()
   };
 
-  Player.prototype.setTrackPosition = function(pos) {
+  Player.prototype.setTrackPosition = function (pos) {
     this.safeCall('setTrackPosition', pos);
   };
 
-  Player.prototype.setVolume = function(vol) {
+  Player.prototype.setVolume = function (vol) {
     this.safeCall('setVolume', vol);
   };
 

@@ -23,7 +23,7 @@ function getFinalAvatarUrl(url, uId, p){
 }
 */
 // e.g. filename : 'public/register.html'
-exports.loadTemplate = function(fileName, callback, forceReload) {
+exports.loadTemplate = function (fileName, callback, forceReload) {
   if (!forceReload) {
     var cached = templateCache[fileName];
     if (cached) {
@@ -37,10 +37,10 @@ exports.loadTemplate = function(fileName, callback, forceReload) {
 
   var instance = {};
 
-  fs.readFile(fileName, 'utf-8', function(err, data) {
+  fs.readFile(fileName, 'utf-8', function (err, data) {
     if (err) console.log('template.templateLoader ERROR ', err, err.stack);
     instance.template = hogan.compile(data);
-    instance.render = function(params) {
+    instance.render = function (params) {
       try {
         return this.template.render(params); //.replace(RE_AVATAR_URL, getFinalAvatarUrl);
       } catch (err) {

@@ -14,68 +14,68 @@ var cats = [
   { name: 'Tracks', _type: 'track' },
   { name: 'Posts', _type: 'post' },
   { name: 'People', _type: 'user' },
-  { name: 'Playlists', _type: 'playlist' }
+  { name: 'Playlists', _type: 'playlist' },
 ];
 
 var makeLink = {
-  track: function(item) {
+  track: function (item) {
     return '/c/' + item._id;
   }, // in algolia index only
-  post: function(item) {
+  post: function (item) {
     return '/c/' + item._id;
   },
-  user: function(item) {
+  user: function (item) {
     return '/u/' + item._id;
   },
-  playlist: function(item) {
+  playlist: function (item) {
     return '/u/' + item._id.replace('_', '/playlist/');
-  }
+  },
 };
 
 var makeImg = {
-  track: function(item) {
+  track: function (item) {
     return item.img;
   }, // in algolia index only
-  post: function(item) {
+  post: function (item) {
     return '/img/post/' + item._id;
   },
-  user: function(item) {
+  user: function (item) {
     return '/img/u/' + item._id;
   },
-  playlist: function(item) {
+  playlist: function (item) {
     return '/img/playlist/' + item._id;
-  }
+  },
 };
 
-exports.makeResultObject = function(item) {
+exports.makeResultObject = function (item) {
   return {
     id: item._id,
     name: item.name,
     img: makeImg[item._type](item),
     url: makeLink[item._type](item),
     score: item.score,
-    isSubscribed: item.isSubscribed
+    isSubscribed: item.isSubscribed,
   };
 };
 
-exports.renderPosts = function(posts, loggedUser, cb) {
+exports.renderPosts = function (posts, loggedUser, cb) {
   postsTemplate.renderPostsAsync(
     posts,
     {
       loggedUser: loggedUser,
-      displayPlaylistName: true
+      displayPlaylistName: true,
     },
     cb
   );
 };
 
-exports.renderSearchPage = function(results, reqParams, cb) {
+exports.renderSearchPage = function (results, reqParams, cb) {
   function render() {
-    templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, function(template) {
+    templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, function (template) {
       var templateParams = {
         q: reqParams.q,
         results: results,
-        isUserLogged: !!reqParams.loggedUser
+        isUserLogged: !!reqParams.loggedUser,
       };
       reqParams.content = template.render(templateParams);
       reqParams.bodyClass = 'pgSearch';
@@ -87,7 +87,7 @@ exports.renderSearchPage = function(results, reqParams, cb) {
     results.nbUsers = (results.users || []).length;
     results.nbPlaylists = (results.playlists || []).length;
     if (results.posts)
-      exports.renderPosts(results.posts, reqParams.loggedUser, function(
+      exports.renderPosts(results.posts, reqParams.loggedUser, function (
         postsHtml
       ) {
         results.postsHtml = postsHtml;
@@ -96,7 +96,7 @@ exports.renderSearchPage = function(results, reqParams, cb) {
   } else render();
 };
 
-exports.renderResultBox = function(q, resultsPerType, cb) {
+exports.renderResultBox = function (q, resultsPerType, cb) {
   var templateParams = { q: q, categories: [] };
   for (var i in cats) {
     var cat = cats[i];
@@ -105,10 +105,10 @@ exports.renderResultBox = function(q, resultsPerType, cb) {
       templateParams.categories.push({
         name: cat.name,
         _type: cat._type,
-        results: res.length > 2 ? res.slice(0, 2) : res
+        results: res.length > 2 ? res.slice(0, 2) : res,
       });
   }
-  templateLoader.loadTemplate(TEMPLATE_RESULTS_BOX, function(template) {
+  templateLoader.loadTemplate(TEMPLATE_RESULTS_BOX, function (template) {
     cb(template.render(templateParams));
   });
 };

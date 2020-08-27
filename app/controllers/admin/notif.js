@@ -30,19 +30,19 @@ function renderTemplate(user) {
       '"></p>',
     out.join('\n'),
     '<input type="submit">',
-    '</form>'
+    '</form>',
   ].join('\n');
   return mainTemplate.renderWhydFrame(out, {
     title: 'whyd notif console',
     css: [],
-    js: []
+    js: [],
   });
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('notif.admin.controller', reqParams);
   if (!request.checkAdmin(response)) return;
-  userModel.fetchByUid(request.getUser().id, function(user) {
+  userModel.fetchByUid(request.getUser().id, function (user) {
     response.renderHTML(renderTemplate(user));
   });
 };

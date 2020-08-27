@@ -3,12 +3,12 @@
  * Copyright (c) 2011
  * This document is licensed as free software under the terms of the
  * MIT License: http://www.opensource.org/licenses/mit-license.php */
-exports.j$ = exports.jStat = (function(Math, undefined) {
+exports.j$ = exports.jStat = (function (Math, undefined) {
   // for quick reference
   var slice = Array.prototype.slice,
     toString = Object.prototype.toString,
     // calculate correction for IEEE error
-    calcRdx = function(n, m) {
+    calcRdx = function (n, m) {
       var val = n > m ? n : m;
       return Math.pow(
         10,
@@ -18,19 +18,19 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     // test if array
     isArray =
       Array.isArray ||
-      function(arg) {
+      function (arg) {
         return toString.call(arg) === '[object Array]';
       },
     // test if function
-    isFunction = function(arg) {
+    isFunction = function (arg) {
       return toString.call(arg) === '[object Function]';
     },
     // test if number and not NaN
-    isNumber = function(arg) {
+    isNumber = function (arg) {
       return toString.call(arg) === '[object Number]' && !isNaN(arg);
     },
     // converts the jStat matrix to vector
-    toVector = function(arr) {
+    toVector = function (arr) {
       return [].concat.apply([], arr);
     };
 
@@ -42,7 +42,7 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
   // extend jStat prototype
   jStat.fn = jStat.prototype = {
     constructor: jStat,
-    init: function(args) {
+    init: function (args) {
       var i = 0;
       // if first argument is an array, must be vector or matrix
       if (isArray(args[0])) {
@@ -82,7 +82,7 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     length: 0,
 
     // return clean array
-    toArray: function() {
+    toArray: function () {
       return this.length > 1 ? slice.call(this) : slice.call(this)[0];
     },
 
@@ -90,7 +90,7 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     push: [].push,
     sort: [].sort,
     splice: [].splice,
-    slice: [].slice
+    slice: [].slice,
   };
 
   // for later instantiation
@@ -102,11 +102,11 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     isArray: isArray,
     isFunction: isFunction,
     isNumber: isNumber,
-    toVector: toVector
+    toVector: toVector,
   };
 
   // create method for easy extension
-  jStat.extend = function(obj) {
+  jStat.extend = function (obj) {
     var args = slice.call(arguments),
       i = 1,
       j;
@@ -125,30 +125,30 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
   // static methods
   jStat.extend({
     // Returns the number of rows in the matrix
-    rows: function(arr) {
+    rows: function (arr) {
       return arr.length || 1;
     },
 
     // Returns the number of columns in the matrix
-    cols: function(arr) {
+    cols: function (arr) {
       return arr[0].length || 1;
     },
 
     // Returns the dimensions of the object { rows: i, cols: j }
-    dimensions: function(arr) {
+    dimensions: function (arr) {
       return {
         rows: jStat.rows(arr),
-        cols: jStat.cols(arr)
+        cols: jStat.cols(arr),
       };
     },
 
     // Returns a specified row as a vector
-    row: function(arr, index) {
+    row: function (arr, index) {
       return arr[index];
     },
 
     // Returns the specified column as a vector
-    col: function(arr, index) {
+    col: function (arr, index) {
       var column = new Array(arr.length),
         i = 0;
       for (; i < arr.length; i++) {
@@ -158,7 +158,7 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     },
 
     // Returns the diagonal of the matrix
-    diag: function(arr) {
+    diag: function (arr) {
       var row = 0,
         nrow = jStat.rows(arr),
         res = new Array(nrow);
@@ -169,7 +169,7 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     },
 
     // Returns the anti-diagonal of the matrix
-    antidiag: function(arr) {
+    antidiag: function (arr) {
       var nrow = jStat.rows(arr) - 1,
         res = new Array(nrow),
         i = 0;
@@ -180,7 +180,7 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     },
 
     // transpose a matrix or array
-    transpose: function(arr) {
+    transpose: function (arr) {
       var obj = [],
         i = 0,
         rows,
@@ -202,7 +202,7 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
 
     // map a function to an array or array of arrays
     // toAlter is an internal variable
-    map: function(arr, func, toAlter) {
+    map: function (arr, func, toAlter) {
       var row = 0,
         nrow,
         ncol,
@@ -222,12 +222,12 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     },
 
     // destructively alter an array
-    alter: function(arr, func) {
+    alter: function (arr, func) {
       return jStat.map(arr, func, true);
     },
 
     // generate a rows x cols matrix according to the supplied function
-    create: function(rows, cols, func) {
+    create: function (rows, cols, func) {
       var res = new Array(rows),
         i,
         j;
@@ -245,39 +245,39 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     },
 
     // generate a rows x cols matrix of zeros
-    zeros: function(rows, cols) {
+    zeros: function (rows, cols) {
       if (!isNumber(cols)) cols = rows;
-      return jStat.create(rows, cols, function() {
+      return jStat.create(rows, cols, function () {
         return 0;
       });
     },
 
     // generate a rows x cols matrix of ones
-    ones: function(rows, cols) {
+    ones: function (rows, cols) {
       if (!isNumber(cols)) cols = rows;
-      return jStat.create(rows, cols, function() {
+      return jStat.create(rows, cols, function () {
         return 1;
       });
     },
 
     // generate a rows x cols matrix of uniformly random numbers
-    rand: function(rows, cols) {
+    rand: function (rows, cols) {
       if (!isNumber(cols)) cols = rows;
-      return jStat.create(rows, cols, function() {
+      return jStat.create(rows, cols, function () {
         return Math.random();
       });
     },
 
     // generate an identity matrix of size row x cols
-    identity: function(rows, cols) {
+    identity: function (rows, cols) {
       if (!isNumber(cols)) cols = rows;
-      return jStat.create(rows, cols, function(i, j) {
+      return jStat.create(rows, cols, function (i, j) {
         return i === j ? 1 : 0;
       });
     },
 
     // Tests whether a matrix is symmetric
-    symmetric: function(arr) {
+    symmetric: function (arr) {
       var issymmetric = true,
         row = 0,
         size = arr.length,
@@ -292,14 +292,14 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
     },
 
     // set all values to zero
-    clear: function(arr) {
-      return jStat.alter(arr, function() {
+    clear: function (arr) {
+      return jStat.alter(arr, function () {
         return 0;
       });
     },
 
     // generate sequence
-    seq: function(min, max, length, func) {
+    seq: function (min, max, length, func) {
       if (!isFunction(func)) func = false;
       var arr = [],
         hival = calcRdx(min, max),
@@ -314,19 +314,19 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
       )
         arr.push(func ? func(current, cnt) : current);
       return arr;
-    }
+    },
   });
 
   // extend jStat.fn with methods that have no argument
-  (function(funcs) {
+  (function (funcs) {
     for (var i = 0; i < funcs.length; i++)
-      (function(passfunc) {
-        jStat.fn[passfunc] = function(func) {
+      (function (passfunc) {
+        jStat.fn[passfunc] = function (func) {
           var tmpthis = this,
             results;
           // check for callback
           if (func) {
-            setTimeout(function() {
+            setTimeout(function () {
               func.call(tmpthis, jStat.fn[passfunc].call(tmpthis));
             }, 15);
             return this;
@@ -338,14 +338,14 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
   })('transpose clear symmetric rows cols dimensions diag antidiag'.split(' '));
 
   // extend jStat.fn with methods that have one argument
-  (function(funcs) {
+  (function (funcs) {
     for (var i = 0; i < funcs.length; i++)
-      (function(passfunc) {
-        jStat.fn[passfunc] = function(index, func) {
+      (function (passfunc) {
+        jStat.fn[passfunc] = function (index, func) {
           var tmpthis = this;
           // check for callback
           if (func) {
-            setTimeout(function() {
+            setTimeout(function () {
               func.call(tmpthis, jStat.fn[passfunc].call(tmpthis, index));
             }, 15);
             return this;
@@ -356,10 +356,10 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
   })('row col'.split(' '));
 
   // extend jStat.fn with simple shortcut methods
-  (function(funcs) {
+  (function (funcs) {
     for (var i = 0; i < funcs.length; i++)
-      (function(passfunc) {
-        jStat.fn[passfunc] = function() {
+      (function (passfunc) {
+        jStat.fn[passfunc] = function () {
           return jStat(jStat[passfunc].apply(null, arguments));
         };
       })(funcs[i]);
@@ -369,15 +369,15 @@ exports.j$ = exports.jStat = (function(Math, undefined) {
   // specialized instance methods that can't have generalized assignments
   jStat.extend(jStat.fn, {
     // map a function to a matrix or vector
-    map: function(func, toAlter) {
+    map: function (func, toAlter) {
       return jStat(jStat.map(this, func, toAlter));
     },
 
     // destructively alter an array
-    alter: function(func) {
+    alter: function (func) {
       jStat.alter(this, func);
       return this;
-    }
+    },
   });
 
   // exposing jStat

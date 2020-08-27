@@ -4,7 +4,7 @@ window.Whyd = window.Whyd || {};
 
 window.Whyd.tracking =
   window.Whyd.tracking ||
-  (function(options) {
+  (function (options) {
     options = options || {};
 
     var runsLocally =
@@ -14,10 +14,10 @@ window.Whyd.tracking =
 
     // tools
 
-    var getWeekNumber = (function() {
+    var getWeekNumber = (function () {
       var MUL = 1000 * 60 * 60 * 24 * 7,
         FIRST_WEEK_DATE = new Date('Monday January 3, 2011 08:00');
-      return function(date) {
+      return function (date) {
         return date && Math.floor(1 + (date - FIRST_WEEK_DATE) / MUL);
       };
     })();
@@ -31,11 +31,11 @@ window.Whyd.tracking =
 
     function injectGoogleAnalytics() {
       console.log('injecting google analytics');
-      (function(i, s, o, g, r, a, m) {
+      (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         (i[r] =
           i[r] ||
-          function() {
+          function () {
             (i[r].q = i[r].q || []).push(arguments);
           }),
           (i[r].l = 1 * new Date());
@@ -111,24 +111,24 @@ window.Whyd.tracking =
     // init
 
     if (!runsLocally) injectGoogleAnalytics();
-    else window.ga = function() {}; //console.log.bind(console, "[GA]"); // fake google analytics
+    else window.ga = function () {}; //console.log.bind(console, "[GA]"); // fake google analytics
 
     // exported methods
 
-    this.sendPageview = function() {
-      setTimeout(function() {
+    this.sendPageview = function () {
+      setTimeout(function () {
         var wlh = window.location.href;
         var path = wlh.substr(wlh.indexOf('/', 10));
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
         //ga('send', 'pageview', path);
         ga('send', 'pageview', {
           page: path,
-          title: document.title
+          title: document.title,
         });
       }, 1);
     };
 
-    this._log = function(type, category, action, value) {
+    this._log = function (type, category, action, value) {
       console.log('[GA] send', arguments);
       try {
         ga('send', type, category, action, value);
@@ -137,29 +137,29 @@ window.Whyd.tracking =
       }
     };
 
-    this.log = function(action, value) {
+    this.log = function (action, value) {
       this._log('event', uId || '(visitor)', action, value);
       this._log('event', action); // redundant event, just for the sequence diagram there: for https://www.google.com/analytics/web/#report/content-engagement-flow/a23759101w46480794p46730353/%3F_.useg%3Dbuiltin1%2Cbuiltin2%26_r.engageMode%3Devents%26_r.screen%3D%2F/
     };
 
-    this.logSocial = function(network, action, url) {
+    this.logSocial = function (network, action, url) {
       this.log('Social: ' + network + ' ' + action, url);
       this._log('social', network, action, url);
     };
 
-    this.logTrackPlay = function(pId) {
+    this.logTrackPlay = function (pId) {
       // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
       this.log('play', pId);
       this._log('event', '(consumers)', uId || '(visitor)');
     };
 
-    this.setLoggedUser = function(user) {
+    this.setLoggedUser = function (user) {
       loggedUser = options.loggedUser = user || {};
       uId = loggedUser._id || loggedUser.id;
       setUser();
     };
 
-    this.signedUp = function(user) {
+    this.signedUp = function (user) {
       this.setLoggedUser(user);
       this.log('Signed up');
       this.sendPageview();

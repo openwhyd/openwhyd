@@ -10,8 +10,6 @@ var mongodb = require('../models/mongodb.js');
 //var recomModel = require("../models/recom.js");
 var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
-var postModel = require('../models/post.js');
-var analytics = require('../models/analytics.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var mainTemplate = require('../templates/mainTemplate.js');
@@ -20,7 +18,7 @@ var TEMPLATE_FILE = 'app/templates/discover.html';
 var TAB_CLASSES = {
   //	"users": "pgDiscoverUsers",
   featured: 'pgDiscoverFeatured',
-  ranking: 'pgDiscoverRankings' // "rankings"
+  ranking: 'pgDiscoverRankings', // "rankings"
   //"fbfriends": "pgDiscoverFriends" // DEPRECATED
 };
 
@@ -39,7 +37,7 @@ function fetchSubscriptions(p, cb) {
   }
 }
 
-var whydUrlRegEx = /href=\"https?:\/\/(?:www\.)?whyd\.com(\/[^"]*)\"/g;
+var whydUrlRegEx = /href="https?:\/\/(?:www\.)?whyd\.com(\/[^"]*)"/g;
 
 function createHtmlElemRegEx(elName) {
   return new RegExp('<' + elName + '(?:[^>]*)?>(.*)</' + elName + '>', 'g');
@@ -50,7 +48,7 @@ function createHtmlElemRegEx2(elName) {
 }
 
 function parseHtmlText(html) {
-  return html.replace(/\<([^\s\>]+)[^\>]*\>([^\<]*)\<\/([^\>]+)\>/gi, '$2'); // remove other html elements
+  return html.replace(/<([^\s>]+)[^>]*>([^<]*)<\/([^>]+)>/gi, '$2'); // remove other html elements
 }
 
 function parseHtmlAttr(html, attr) {
@@ -79,7 +77,7 @@ var processData = {
           var response = {
             title: parseHtmlText(
               parseHtmlText(page.find(createHtmlElemRegEx('h2'))[0])
-            )
+            ),
           };
 
           var links = page.find(whydUrlRegEx);
@@ -121,7 +119,7 @@ var processData = {
       desc: p.desc,
       uId: p.uId,
       uNm: p.uNm,
-      date: p.date
+      date: p.date,
     };
     mongodb.collections['featured'].insert(post, function (err, result) {
       render(result);
@@ -161,7 +159,7 @@ var processData = {
         name: (mongodb.usernames[uId] || {}).name,
         nbAdds: 0,
         nbLikes: 0,
-        nbPlays: 0
+        nbPlays: 0,
       };
       users[uId][name] = (users[uId][name] || 0) + (incr || 1);
     }
@@ -206,7 +204,7 @@ var processData = {
           until: new Date(Date.now() - TRENDING_PERIOD),
           excludeCtx: 'auto', // exclude auto-subscriptions
           excludeTids: WHYD_UIDS,
-          limit: 10000
+          limit: 10000,
         };
         console.log('fetching subscription history... until', options.until);
         followModel.fetchSubscriptionHistory(options, function (act) {
@@ -253,7 +251,7 @@ var processData = {
           cb();
         });
       },
-      fetchNextUserStats
+      fetchNextUserStats,
     ];
     (function nextStep() {
       if (!steps.length) {
@@ -295,7 +293,7 @@ var processData = {
         excludeUids: snip.objArrayToValueArray(
           userSub.subscriptions || [],
           'id'
-        )
+        ),
       };
       //recomModel.recomUsersByTracks(uId, options, renderUsers);
       //recomModel.recomUsersByArtists(uId, options, renderUsers);
@@ -339,7 +337,7 @@ var processData = {
 				});
 			});
 		}
-	}*/
+	}*/,
 };
 
 exports.handleRequest = function (request, reqParams, response) {
@@ -377,9 +375,9 @@ exports.handleRequest = function (request, reqParams, response) {
               isLogged: !!reqParams.loggedUser,
               isAdmin: reqParams.loggedUser
                 ? request.isUserAdmin(reqParams.loggedUser)
-                : false
-            })
-          })
+                : false,
+            }),
+          }),
         });
         //analytics.addVisit(reqParams.loggedUser, request.url);
       });

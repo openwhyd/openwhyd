@@ -1,3 +1,5 @@
+/* global $ */
+
 var hotTracks = {
   skip: 0,
 
@@ -24,14 +26,14 @@ var hotTracks = {
     { name: 'Classical', key: 'classical' },
     { name: 'Reggae', key: 'reggae' },
     { name: 'Latin', key: 'latin' },
-    { name: 'World', key: 'world' }
+    { name: 'World', key: 'world' },
   ],
 
-  init: function() {
+  init: function () {
     hotTracks.loadGenre(hotTracks.genre_index);
   },
 
-  loadGenre: function(genre_index) {
+  loadGenre: function (genre_index) {
     if (hotTracks.current_genre != undefined) {
       $('body').addClass('loading');
     }
@@ -39,7 +41,7 @@ var hotTracks = {
     hotTracks.current_genre = hotTracks.genres[genre_index];
     //DISPLAY GENRES
 
-    genreList = hotTracks.genres.map(function(object, i) {
+    genreList = hotTracks.genres.map(function (object, i) {
       cssClass = object.key == hotTracks.current_genre.key ? 'selected' : '';
       return (
         '<li class=' +
@@ -55,14 +57,14 @@ var hotTracks = {
     $('#genres').html(genreList);
     $('.genreSelector').html(' / ' + hotTracks.current_genre.name);
 
-    hotTracks.loadTracks(function() {
+    hotTracks.loadTracks(function () {
       $('.post:eq(0) .thumb').append('<div class="medal">1</div>');
       $('.post:eq(1) .thumb').append('<div class="medal">2</div>');
       $('.post:eq(2) .thumb').append('<div class="medal">3</div>');
     });
   },
 
-  loadTracks: function(callback) {
+  loadTracks: function (callback) {
     if (hotTracks.skip == 0) {
       $('.posts .post').remove();
     }
@@ -74,10 +76,10 @@ var hotTracks = {
         hotTracks.skip +
         '&limit=' +
         hotTracks.limit,
-      function(data) {
+      function (data) {
         var content = '';
 
-        content = data.tracks.map(function(track, i) {
+        content = data.tracks.map(function (track, i) {
           return hotTracks.templating(hotTracks.template, track);
         });
 
@@ -93,13 +95,13 @@ var hotTracks = {
     );
   },
 
-  loadMore: function() {
+  loadMore: function () {
     hotTracks.skip = hotTracks.skip + hotTracks.limit;
     hotTracks.loadTracks();
     $('.btnLoadMore').addClass('loading');
   },
 
-  templating: function(template, item) {
+  templating: function (template, item) {
     //CSS
     item.cssClass = '';
     var rankIncr = item.rankIncr;
@@ -172,7 +174,7 @@ var hotTracks = {
     '    <span> Share </span>' +
     '  </a>' +
     '</div>' +
-    '</div>'
+    '</div>',
 };
 
 /********************* UTILS ***************************/
@@ -183,18 +185,18 @@ var PLAYERS = {
   yt: {
     name: 'YouTube',
     urlPrefix: '//youtube.com/watch?v=',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         url.match(
           /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/
         ) || []
       ).pop();
-    }
+    },
   },
   sc: {
     name: 'Soundcloud',
     urlPrefix: '//soundcloud.com/',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         (url.indexOf('soundcloud.com/player') != -1
           ? (url.match(/url=([^&]*)/) || []).pop()
@@ -203,61 +205,58 @@ var PLAYERS = {
           url.match(/https?:\/\/(?:www\.)?soundcloud\.com\/([\w-_\/]+)/) || []
         ).pop()
       );
-    }
+    },
   },
   dm: {
     name: 'Dailymotion',
     urlPrefix: '//dailymotion.com/video/',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         url.match(
           /https?:\/\/(?:www\.)?dailymotion.com(?:\/embed)?\/video\/([\w-]+)/
         ) || []
       ).pop();
-    }
+    },
   },
   vi: {
     name: 'Vimeo',
     urlPrefix: '//vimeo.com/',
-    extractId: function(url) {
+    extractId: function (url) {
       return (
         url.match(/https?:\/\/(?:www\.)?vimeo\.com\/(clip\:)?(\d+)/) || []
       ).pop();
-    }
+    },
   },
   dz: {
     name: 'Deezer',
-    urlPrefix: '//www.deezer.com/track/'
+    urlPrefix: '//www.deezer.com/track/',
   },
   sp: {
     name: 'Spotify',
-    urlPrefix: '//open.spotify.com/track/'
+    urlPrefix: '//open.spotify.com/track/',
   },
   bc: {
     name: 'Bandcamp',
-    urlMaker: function(eId) {
-      var parts = eId
-        .split('#')[0]
-        .substr(4)
-        .split('/');
+    urlMaker: function (eId) {
+      var parts = eId.split('#')[0].substr(4).split('/');
       return parts.length < 2
         ? undefined
         : '//' + parts[0] + '.bandcamp.com/track/' + parts[1];
-    }
+    },
   },
   ja: {
     name: 'Jamendo',
     urlPrefix: '//jamendo.com/track/',
-    extractId: function(url) {
+    extractId: function (url) {
       /jamendo.com\/.*track\/(\d+)/.test(url) ? { videoId: RegExp.$1 } : null;
-    }
+    },
   },
   fi: {
-    name: 'File'
-  }
+    name: 'File',
+  },
 };
 
-getPlayerMeta = function(eId, src) {
+getPlayerMeta = function (eId, src) {
   if (eId && eId.length && eId[0] == '/') {
     var playerId = eId.split('/')[1];
     var player = PLAYERS[playerId];
@@ -269,18 +268,18 @@ getPlayerMeta = function(eId, src) {
           ? eId.replace('/' + playerId + '/', player.urlPrefix)
           : player.urlMaker
           ? player.urlMaker(eId, src)
-          : src || eId.replace('/fi/', '') // for audio files
+          : src || eId.replace('/fi/', ''), // for audio files
       };
   }
 };
 
-translateEidToUrl = function(eId) {
+translateEidToUrl = function (eId) {
   return (getPlayerMeta(eId) || {}).contentUrl || eId;
 };
 
 /********************* TIME AGO ***************************/
 
-timeFromPost = function(post) {
+timeFromPost = function (post) {
   var timeString = post._id.substring(0, 8);
   var timestamp = parseInt(timeString, 16) * 1000;
   return timeAgoWithString(timestamp);
@@ -290,7 +289,7 @@ timeFromPost = function(post) {
  * @param timestamp
  * @return date string
  */
-timeAgoWithString = function(timestamp) {
+timeAgoWithString = function (timestamp) {
   var MONTHS_SHORT = [
     'Jan',
     'Feb',
@@ -303,7 +302,7 @@ timeAgoWithString = function(timestamp) {
     'Sep',
     'Oct',
     'Nov',
-    'Dec'
+    'Dec',
   ];
 
   var timeScales = [
@@ -311,10 +310,10 @@ timeAgoWithString = function(timestamp) {
     { 'hour(s)': 60 },
     { 'day(s)': 24 },
     { 'month(s)': 30 },
-    { 'year(s)': 12 }
+    { 'year(s)': 12 },
   ];
 
-  padNumber = function(str, n) {
+  padNumber = function (str, n) {
     var ret = '' + str;
     while (ret.length < n) {
       // pad with leading zeroes
@@ -323,12 +322,12 @@ timeAgoWithString = function(timestamp) {
     return ret;
   };
 
-  renderTime = function(t) {
+  renderTime = function (t) {
     var t = new Date(t);
     return t.getHours() + ':' + padNumber(t.getMinutes(), 2);
   };
 
-  renderTimestamp = function(timestamp) {
+  renderTimestamp = function (timestamp) {
     var t = timestamp / 1000,
       lastScale = 'second(s)';
     for (i in timeScales) {
@@ -345,7 +344,7 @@ timeAgoWithString = function(timestamp) {
     return rounded + ' ' + lastScale.replace(/\(s\)/g, rounded > 1 ? 's' : '');
   };
 
-  renderShortMonthYear = function(t) {
+  renderShortMonthYear = function (t) {
     var t = new Date(t);
     var sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
     return MONTHS_SHORT[t.getMonth()] + (sameYear ? '' : ' ' + t.getFullYear());
@@ -370,7 +369,7 @@ timeAgoWithString = function(timestamp) {
   return ago;
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
   hotTracks.init();
   $('#searchForm input').focus();
 });

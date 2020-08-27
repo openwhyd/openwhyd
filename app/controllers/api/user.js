@@ -38,13 +38,13 @@ function addUserInfo(userSub, mySub) {
 }
 
 var publicActions = {
-  subscriptions: function(p, cb) {
+  subscriptions: function (p, cb) {
     if (!p || !p.id) cb({ error: 'user not found' });
     else
-      followModel.fetchUserSubscriptions(p.id, function(sub) {
-        userModel.fetchUserBios(sub.subscriptions, function() {
+      followModel.fetchUserSubscriptions(p.id, function (sub) {
+        userModel.fetchUserBios(sub.subscriptions, function () {
           if (p.loggedUser && p.loggedUser.id != p.id)
-            followModel.fetchUserSubscriptions(p.loggedUser.id, function(
+            followModel.fetchUserSubscriptions(p.loggedUser.id, function (
               mySub
             ) {
               cb(
@@ -68,13 +68,13 @@ var publicActions = {
         });
       });
   },
-  subscribers: function(p, cb) {
+  subscribers: function (p, cb) {
     if (!p || !p.id) cb({ error: 'user not found' });
     else
-      followModel.fetchUserSubscriptions(p.id, function(sub) {
-        userModel.fetchUserBios(sub.subscribers, function() {
+      followModel.fetchUserSubscriptions(p.id, function (sub) {
+        userModel.fetchUserBios(sub.subscribers, function () {
           if (p.loggedUser && p.loggedUser.id != p.id)
-            followModel.fetchUserSubscriptions(p.loggedUser.id, function(
+            followModel.fetchUserSubscriptions(p.loggedUser.id, function (
               mySub
             ) {
               cb(
@@ -98,34 +98,34 @@ var publicActions = {
         });
       });
   },
-  delete: function(p, cb) {
+  delete: function (p, cb) {
     if (!p || !p.loggedUser || !p.loggedUser.id)
       cb({ error: 'Please log in first' });
     else {
       console.log('deleting user... ', p.loggedUser.id);
-      userModel.delete({ _id: p.loggedUser.id }, function(r) {
+      userModel.delete({ _id: p.loggedUser.id }, function (r) {
         console.log('deleted user', p.loggedUser.id, r);
       });
       notifEmails.sendUserDeleted(p.loggedUser.id, p.loggedUser.name);
       cb({
         ok: 1,
         message:
-          'We are deleting your Openwhyd account. Sorry to see you leave...'
+          'We are deleting your Openwhyd account. Sorry to see you leave...',
       });
     }
   },
-  askAccountDeletion: function(p, cb) {
+  askAccountDeletion: function (p, cb) {
     if (!p || !p.loggedUser || !p.loggedUser.id)
       cb({ error: 'Please log in first' });
     else {
       notifEmails.askAccountDeletion(p.loggedUser.id, p.loggedUser.name);
       cb({ ok: 1, message: 'Thank you, we will get back to you shortly.' });
     }
-  }
+  },
 };
 
 function defaultSetter(fieldName) {
-  return function(p, cb) {
+  return function (p, cb) {
     var u = { _id: p._id };
     u[fieldName.replace('_', '.')] = p[fieldName];
     userModel.save(u, cb);
@@ -133,11 +133,11 @@ function defaultSetter(fieldName) {
 }
 
 var fieldSetters = {
-  name: function(p, cb) {
+  name: function (p, cb) {
     userModel.renameUser(p._id, p.name, cb);
   },
-  img: function(p, cb) {
-    userModel.fetchByUid(p._id, function(user) {
+  img: function (p, cb) {
+    userModel.fetchByUid(p._id, function (user) {
       if (user.img && user.img.indexOf('blank_user.gif') == -1) {
         console.log('deleting previous profile pic: ' + user.img);
         uploadCtr.deleteFile(user.img);
@@ -150,39 +150,40 @@ var fieldSetters = {
       else actualUpdate(p.img);
     });
   },
-  cvrImg: function(p, cb) {
-    userModel.fetchByUid(p._id, function(user) {
+  cvrImg: function (p, cb) {
+    userModel.fetchByUid(p._id, function (user) {
       if (user.cvrImg && user.cvrImg.indexOf('blank') == -1) {
         console.log('deleting previous cover image: ' + user.cvrImg);
         uploadCtr.deleteFile(user.cvrImg);
       }
       function actualUpdate(newFilename) {
-        defaultSetter(
-          'cvrImg'
-        )({ _id: p._id, cvrImg: newFilename || p.cvrImg }, cb);
+        defaultSetter('cvrImg')(
+          { _id: p._id, cvrImg: newFilename || p.cvrImg },
+          cb
+        );
       }
       if (p.cvrImg.indexOf('blank') == -1)
         uploadCtr.moveTo(p.cvrImg, uploadCtr.config.uCoverImgDir, actualUpdate);
       else userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
     });
   },
-  pwd: function(p, cb) {
-    userModel.fetchByUid(p._id, function(item) {
+  pwd: function (p, cb) {
+    userModel.fetchByUid(p._id, function (item) {
       if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
         defaultSetter('pwd')({ _id: p._id, pwd: userModel.md5(p.pwd) }, cb);
         notifEmails.sendPasswordUpdated(p._id, item.email);
       } else cb({ error: 'Your current password is incorrect' });
     });
   },
-  handle: function(p, cb) {
+  handle: function (p, cb) {
     userModel.setHandle(p._id, p.handle, cb);
   },
-  email: function(p, cb) {
+  email: function (p, cb) {
     p.email = emailModel.normalize(p.email);
     if (!emailModel.validate(p.email))
       cb({ error: 'This email address is invalid' });
     else
-      userModel.fetchByEmail(p.email, function(existingUser) {
+      userModel.fetchByEmail(p.email, function (existingUser) {
         if (!existingUser) {
           notifEmails.sendEmailUpdated(p._id, p.email);
           defaultSetter('email')(p, cb);
@@ -192,7 +193,7 @@ var fieldSetters = {
         else cb({ error: 'This email already belongs to another user' });
       });
   },
-  pref: function(p, cb) {
+  pref: function (p, cb) {
     // type each provided pref value accordingly to defaults. "true" boolean was translated to "1"
     for (var i in p.pref)
       p.pref[i] =
@@ -201,13 +202,13 @@ var fieldSetters = {
           : p.pref[i];
     userModel.setPref(p._id, p.pref, cb);
   },
-  fbId: function(p, cb) {
+  fbId: function (p, cb) {
     userModel.setFbId(p._id, p.fbId, cb, p.fbTok);
   },
-  twId: function(p, cb) {
+  twId: function (p, cb) {
     userModel.setTwitterId(p._id, p.twId, p.twTok, p.twSec, cb);
   },
-  apTok: function(p, cb) {
+  apTok: function (p, cb) {
     if (p.apTok === '') userModel.clearApTok(p._id, cb);
     else userModel.setApTok(p._id, p.apTok, cb);
   },
@@ -219,14 +220,14 @@ var fieldSetters = {
   lnk_tw: defaultSetter('lnk_tw'),
   lnk_sc: defaultSetter('lnk_sc'),
   lnk_yt: defaultSetter('lnk_yt'),
-  lnk_igrm: defaultSetter('lnk_igrm')
+  lnk_igrm: defaultSetter('lnk_igrm'),
 };
 
 function hasSubscribed(loggedUser, user, cb) {
   user = user || {};
   var uId = user.id || user._id;
   if (uId && loggedUser)
-    followModel.get({ uId: loggedUser.id, tId: uId }, function(err, res) {
+    followModel.get({ uId: loggedUser.id, tId: uId }, function (err, res) {
       user.isSubscribing = !!res;
       cb(user);
     });
@@ -235,9 +236,9 @@ function hasSubscribed(loggedUser, user, cb) {
 
 function countUserSubscr(user, cb) {
   var uId = '' + user._id;
-  followModel.countSubscriptions(uId, function(res) {
+  followModel.countSubscriptions(uId, function (res) {
     user.nbSubscriptions = res;
-    followModel.countSubscribers(uId, function(res) {
+    followModel.countSubscribers(uId, function (res) {
       user.nbSubscribers = res;
       cb(user);
     });
@@ -246,15 +247,15 @@ function countUserSubscr(user, cb) {
 
 function includeTags(user, cb) {
   var uId = '' + user._id;
-  plTagsModel.getTagEngine(function(tagEngine) {
-    tagEngine.fetchTagsByUid(uId, function(tags) {
+  plTagsModel.getTagEngine(function (tagEngine) {
+    tagEngine.fetchTagsByUid(uId, function (tags) {
       user.tags = tags;
       //user.artists = recomModel.matchingEngine.getArtistsByUser(uId);
       postModel.fetchPosts(
         { uId: '' + uId },
         { fields: { name: 1 } },
         { limit: 10 },
-        function(posts, b) {
+        function (posts, b) {
           user.lastArtists = [];
           for (var i in posts) {
             var artist = snip.detectArtistName((posts[i] || {}).name);
@@ -268,14 +269,14 @@ function includeTags(user, cb) {
 }
 
 function countUserPosts(user, cb) {
-  postModel.countUserPosts(user.id, function(res) {
+  postModel.countUserPosts(user.id, function (res) {
     user.nbPosts = res;
     cb(user);
   });
 }
 
 function countUserLikes(user, cb) {
-  postModel.countLovedPosts(user.id, function(res) {
+  postModel.countLovedPosts(user.id, function (res) {
     user.nbLikes = res;
     cb(user);
   });
@@ -287,7 +288,7 @@ function appendVersions(user, cb) {
   cb();
 }
 
-exports.fetchUserData = function(user, cb) {
+exports.fetchUserData = function (user, cb) {
   var ops = [countUserSubscr, countUserPosts, countUserLikes, appendVersions];
   (function next() {
     if (!ops.length) cb(user);
@@ -297,9 +298,9 @@ exports.fetchUserData = function(user, cb) {
 
 function fetchUserById(uId, options, cb) {
   options = options || {};
-  userModel.fetchByUid(uId, function(user) {
+  userModel.fetchByUid(uId, function (user) {
     user = user || {};
-    userModel.fetchPlaylists(user, {}, function(playlists) {
+    userModel.fetchPlaylists(user, {}, function (playlists) {
       user.pl = playlists || user.pl;
       if (options.excludePrivateFields) {
         delete user.pwd;
@@ -314,7 +315,7 @@ function fetchUserById(uId, options, cb) {
       var getters = [
         ['getVersion', appendVersions],
         ['includeSubscr', countUserSubscr],
-        ['includeTags', includeTags]
+        ['includeTags', includeTags],
       ];
       (function next() {
         var item = getters.shift();
@@ -350,10 +351,10 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
     return true;
   } else if (reqParams.id) {
     reqParams.excludePrivateFields = true;
-    fetchUserByIdOrHandle(reqParams.id, reqParams, function(u) {
+    fetchUserByIdOrHandle(reqParams.id, reqParams, function (u) {
       var tasks = [localRendering];
       if (reqParams.isSubscr)
-        tasks.push(function(u, next) {
+        tasks.push(function (u, next) {
           hasSubscribed(loggedUser, u, next);
         });
       if (reqParams.countPosts) tasks.push(countUserPosts);
@@ -406,7 +407,7 @@ function handleRequest(loggedUser, reqParams, localRendering) {
   return handleAuthRequest(loggedUser, reqParams, localRendering);
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
 

@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * post box for openwhyd music
  * @author adrienjoly, whyd
@@ -26,12 +28,12 @@ function htmlDecode(str) {
 function WhydPost(embedRef) {
   var that = this;
   this.postData = {
-    action: 'insert'
+    action: 'insert',
   };
-  this.set_id = function(_id) {
+  this.set_id = function (_id) {
     this.postData._id = _id;
   };
-  this.setEmbedRef = function(embedRef) {
+  this.setEmbedRef = function (embedRef) {
     this.postData.eId =
       embedRef.eId ||
       embedRef.id + (embedRef.contentId ? '#' + embedRef.contentId : '');
@@ -39,35 +41,35 @@ function WhydPost(embedRef) {
     this.postData.img = embedRef.img;
     this.postData.src = embedRef.src; // (typeof embedSrc == "string" ? embedSrc : JSON.stringify(embedSrc))
   };
-  this.setText = function(text) {
+  this.setText = function (text) {
     this.postData.text = text;
   };
-  this.setName = function(name) {
+  this.setName = function (name) {
     if (name) this.postData.name = name;
   };
-  this.setRepostPid = function(pId) {
+  this.setRepostPid = function (pId) {
     this.postData.pId = pId;
   };
-  this.setContext = function(ctx) {
+  this.setContext = function (ctx) {
     this.postData.ctx = ctx;
   };
-  this.setPlaylist = function(id, name, collabId) {
+  this.setPlaylist = function (id, name, collabId) {
     this.postData.pl = { name: name };
     if (collabId) this.postData.pl.collabId = collabId;
     else this.postData.pl.id = id;
   };
-  this.submit = function(shareOnFb, onPostComplete) {
+  this.submit = function (shareOnFb, onPostComplete) {
     //console.log("submitting post: ", postData);
     $.ajax({
       type: 'POST',
       url: '/api/post',
       data: this.postData,
-      success: function(post) {
+      success: function (post) {
         console.log('posted:', post);
         that.storedPost = post;
         if (onPostComplete) onPostComplete(post._id, that /*postData*/);
         if (shareOnFb && fbAction) fbAction('add', '/c/' + post._id, 'track');
-      }
+      },
     });
   };
 }
@@ -100,23 +102,14 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
   }
   function showMenu() {
     $playlistMenu.show();
-    $selPlaylist
-      .parent()
-      .unbind('click')
-      .click(hideMenu);
+    $selPlaylist.parent().unbind('click').click(hideMenu);
   }
   $playlistHead.click(showMenu);
 
   function addPlaylist(name, id, collabId) {
-    var $li = $('<li>')
-      .attr('data-plid', id)
-      .text(name)
-      .appendTo($ul);
+    var $li = $('<li>').attr('data-plid', id).text(name).appendTo($ul);
     if (collabId) $li.attr('data-collabid', collabId);
-    $ul
-      .find('li')
-      .unbind()
-      .click(selectPlaylist);
+    $ul.find('li').unbind().click(selectPlaylist);
     return $li;
   }
 
@@ -133,7 +126,7 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
     hideMenu();
   }
 
-  $selPlaylist.find('form').submit(function() {
+  $selPlaylist.find('form').submit(function () {
     var name = $('#newPlaylistName').val();
     if (name != '') {
       addPlaylist(name, 'create').each(selectPlaylist);
@@ -156,10 +149,7 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
         );
       $li.each(selectPlaylist);
     }
-    $ul
-      .find('li')
-      .unbind()
-      .click(selectPlaylist);
+    $ul.find('li').unbind().click(selectPlaylist);
   }
 
   return {
@@ -177,7 +167,7 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
 			});
 		},
 		*/
-    bindItems: bindItems
+    bindItems: bindItems,
   };
 }
 
@@ -191,7 +181,7 @@ function WhydTextWithMentions(textArea, btn, onSubmit) {
       type: 'GET',
       url: '/search',
       data: q,
-      complete: function(res, status) {
+      complete: function (res, status) {
         try {
           if (status != 'success' || !res.responseText) throw 0;
           cb && cb(res.responseText);
@@ -199,29 +189,29 @@ function WhydTextWithMentions(textArea, btn, onSubmit) {
           cb && cb({ error: e || 'An error occured. Please try again.' });
           if (e) throw e;
         }
-      }
+      },
     });
   }
   var $btn = $(btn);
   var $textField = $(textArea).mentionsInput({
     maxMentions: MAX_NB_MENTIONS,
-    onDataRequest: function(mode, query, callback) {
-      submitSearchQuery({ q: query, context: 'mention' }, function(res) {
+    onDataRequest: function (mode, query, callback) {
+      submitSearchQuery({ q: query, context: 'mention' }, function (res) {
         res = JSON.parse(res);
-        var hits = (res.hits || []).map(function(r) {
+        var hits = (res.hits || []).map(function (r) {
           return {
             id: r._id,
             name: r.name,
             avatar: '/img/u/' + r._id,
-            type: 'user'
+            type: 'user',
           };
         });
         callback.call(this, hits);
       });
-    }
+    },
   });
-  $btn.click(function(e) {
-    $textField.mentionsInput('val', function(text) {
+  $btn.click(function (e) {
+    $textField.mentionsInput('val', function (text) {
       onSubmit(text.trim ? text.trim() : text);
     });
   });
@@ -273,10 +263,7 @@ function initPostBox(params) {
             htmlEntities(url) +
             '"></div>'
         );
-      $confirm
-        .find('a')
-        .first()
-        .attr('href', url);
+      $confirm.find('a').first().attr('href', url);
     } else {
       /* from openwhyd ui: close dialog and show message with link to playlist */
       avgrundClose();
@@ -334,7 +321,7 @@ function initPostBox(params) {
     new WhydTextWithMentions(
       document.getElementById('text'),
       document.getElementById('btnSubmit'),
-      function(text) {
+      function (text) {
         // sample text: "pouet @[adrien](user:4ecb6ec933d9308badd7b7b4) test"
         console.log('WhydTextWithMentions RESULT:', text);
         if ($titleInput.length) whydPost.setName($titleInput.val());
@@ -354,7 +341,7 @@ function initPostBox(params) {
       dz: new DeezerPlayer({}),
       bc: new BandcampPlayer({}),
       ja: new JamendoPlayer({}),
-      fi: new AudioFilePlayer({})
+      fi: new AudioFilePlayer({}),
       // TODO: make sure that the list of players is always up to date
     };
     function getPlayerId(url) {
@@ -366,15 +353,15 @@ function initPostBox(params) {
       cb(player && '/' + playerId + '/' + player.getEid(url), player);
     }
     return function detect(url, cb) {
-      detectEid(url, function(eId, player) {
+      detectEid(url, function (eId, player) {
         if (!eId || !player) return cb();
         if (!player.fetchMetadata)
           // e.g. MP3 files
           return cb({
             eId: eId,
-            playerLabel: player.label
+            playerLabel: player.label,
           }); // todo: add default metadata
-        player.fetchMetadata(url, function(track) {
+        player.fetchMetadata(url, function (track) {
           track = track || {};
           track.playerLabel = player.label;
           track.eId = track.eId || eId.substr(0, 4) + track.id; // || eid;
@@ -384,10 +371,10 @@ function initPostBox(params) {
     };
   }
 
-  $(function() {
+  $(function () {
     // todo: make sure that playemjs is loaded and ready to use
     // todo: in editPost case: populate track object and display using post metadata, instead of fetching
-    makePlayemStreamDetector()(params.embed.replace(/\&amp\;/g, '&'), function(
+    makePlayemStreamDetector()(params.embed.replace(/\&amp\;/g, '&'), function (
       track
     ) {
       console.log('postEdit detected track:', track);
@@ -407,9 +394,9 @@ function initPostBox(params) {
       onTrack(track);
     });
 
-    $('#lnkDeletePost').click(function() {
+    $('#lnkDeletePost').click(function () {
       avgrundClose();
-      window.setTimeout(function() {
+      window.setTimeout(function () {
         var html =
           '<div><div style="background-image:url(\'' +
           params.img +
@@ -425,7 +412,7 @@ function initPostBox(params) {
     });
   });
 
-  $(document).ajaxComplete(function() {
+  $(document).ajaxComplete(function () {
     try {
       FB.XFBML.parse();
     } catch (ex) {}

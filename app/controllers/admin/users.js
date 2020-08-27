@@ -4,7 +4,6 @@
  **/
 
 var snip = require('../../snip.js');
-var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var userModel = require('../../models/user.js');
 var AdminLists = require('../../templates/adminLists.js').AdminLists;
@@ -12,9 +11,9 @@ var AdminLists = require('../../templates/adminLists.js').AdminLists;
 // ACTION HANDLERS
 
 var handlers = {
-  rename: function(p, cb) {
+  rename: function (p, cb) {
     if (p._id && p.name)
-      userModel.renameUser(p._id, p.name, function(result) {
+      userModel.renameUser(p._id, p.name, function (result) {
         result = result || {};
         if (result.error) console.log('error:', result.error);
         else result.message = 'The user name has been set to ' + p.name;
@@ -22,18 +21,18 @@ var handlers = {
       });
     else cb({ error: 'missing arguments' });
   },
-  delete: function(p, cb) {
+  delete: function (p, cb) {
     var id = p._id && p._id.join ? p._id[0] : p._id;
     if (id) {
       console.log('delete user ', id);
-      userModel.delete({ _id: id }, function(res) {
+      userModel.delete({ _id: id }, function (res) {
         res = res || {};
         var json = JSON.parse(JSON.stringify(res));
         res.json = json;
         cb(res);
       });
     } else cb({ error: 'missing arguments' });
-  }
+  },
 };
 
 // ADMIN CONSOLE TEMPLATES
@@ -64,8 +63,8 @@ function renderItem(item) {
         : '') +
         (item.iPo ? ' from <a href="/c/' + item.iPo + '">post</a>' : '') +
         (item.iPg ? ' from <a href="' + item.iPg + '">page</a>' : '') +
-        (item.iRf ? ' via <a href="' + item.iRf + '">referrer</a>' : '')
-    ]
+        (item.iRf ? ' via <a href="' + item.iRf + '">referrer</a>' : ''),
+    ],
   };
 }
 
@@ -91,7 +90,7 @@ function renderTemplate(items) {
       '	else',
       '		alert("aborted rename request");',
       '	return false;',
-      '});'
+      '});',
     ].join('\n')
   );
 
@@ -100,7 +99,7 @@ function renderTemplate(items) {
 
 // MAIN CONTROLLER / REQUEST HANDLING CODE
 
-exports.handleRequest = function(request, reqParams, response) {
+exports.handleRequest = function (request, reqParams, response) {
   request.logToConsole('admin/users.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
@@ -127,14 +126,14 @@ exports.handleRequest = function(request, reqParams, response) {
   if (reqParams.action && handlers[reqParams.action])
     handlers[reqParams.action](reqParams, renderResult);
   else
-    userModel.fetchMulti({}, { sort: [['_id', 'desc']], limit: 600 }, function(
+    userModel.fetchMulti({}, { sort: [['_id', 'desc']], limit: 600 }, function (
       users
     ) {
       renderResult({ html: renderTemplate(/*mongodb.usernames*/ users) });
     });
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   //request.logToConsole("admin/users.controller", request.method);
   if (request.method.toLowerCase() === 'post') {
     //var form = new formidable.IncomingForm();

@@ -8,7 +8,7 @@ var uservoiceOptions = {
   alignment: 'left',
   background_color: '#F24E4C',
   text_color: 'white',
-  hover_color: '#f00'
+  hover_color: '#f00',
 };
 
 function _loadUserVoice() {
@@ -25,7 +25,7 @@ _loadSuper = window.onload;
 window.onload =
   typeof window.onload != 'function'
     ? _loadUserVoice
-    : function() {
+    : function () {
         _loadSuper();
         _loadUserVoice();
       };

@@ -9,7 +9,7 @@ var fakeDeliveryDuration = 2000; // ms
 
 //console.log("FAKE EMAIL ENABLED, duration: ", fakeDeliveryDuration, " milliseconds");
 
-exports.email = function(
+exports.email = function (
   emailAddr,
   subject,
   textContent,
@@ -21,9 +21,9 @@ exports.email = function(
     to: emailAddr,
     subject: subject,
     text: textContent,
-    html: !!htmlContent
+    html: !!htmlContent,
   });
-  setTimeout(function() {
+  setTimeout(function () {
     var result = 'FAKE EMAIL => success';
     console.log(result);
     if (callback) callback(result);

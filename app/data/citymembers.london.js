@@ -47,5 +47,5 @@ exports.members = [
   '52cc253b7e91c862b2b24b8e', // Slitears
   '514ef2b27e91c862b2ac3627', // Steve Benton
   '4eb0d8b638bd914736c6d6a1', // Tibz
-  '505342c27e91c862b2a80fe5' // Wake The Deaf
+  '505342c27e91c862b2a80fe5', // Wake The Deaf
 ];

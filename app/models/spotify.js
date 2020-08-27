@@ -10,11 +10,11 @@ function getIsrc(external) {
   for (var i in external) if (external[i].type == 'isrc') return external[i].id;
 }
 
-exports.translateTrack = function(track) {
+exports.translateTrack = function (track) {
   return {
     id: track.href,
     artistName: track.artists
-      .map(function(a) {
+      .map(function (a) {
         return a.name;
       })
       .join(', '),
@@ -22,7 +22,7 @@ exports.translateTrack = function(track) {
     isrc: getIsrc(track['external-ids']),
     duration: track.length ? Math.floor(track.length) : undefined, // in seconds
     albumTitle: track.album.name,
-    albumYear: track.album.released
+    albumYear: track.album.released,
   };
 };
 
@@ -37,12 +37,12 @@ function translateOutgoingQueryParams(trackMetadata) {
   return { q: trackMetadata.q || trackMatcher.getTrackTitle(trackMetadata) };
 }
 
-exports.searchTracks = function(p, cb, raw) {
-  querySpotify(translateOutgoingQueryParams(p).q, function(err, res) {
+exports.searchTracks = function (p, cb, raw) {
+  querySpotify(translateOutgoingQueryParams(p).q, function (err, res) {
     if (err || raw) cb(err, res);
     else
       cb(null, {
-        items: (res || {}).tracks.map(exports.translateTrack)
+        items: (res || {}).tracks.map(exports.translateTrack),
       });
   });
 };
@@ -53,12 +53,12 @@ exports.searchByIsrc = function(isrc, cb) {
 	});
 }
 */
-exports.fetchTrackMetadata = function(trackId, cb, raw) {
+exports.fetchTrackMetadata = function (trackId, cb, raw) {
   var trackId = ('' + trackId).split(':').pop();
   assert.ok(trackId, 'trackId is null');
   var url = 'http://ws.spotify.com/lookup/1/.json?uri=spotify:track:' + trackId;
   //console.log(url);
-  snip.httpRequestJSON(url, {}, function(err, res) {
+  snip.httpRequestJSON(url, {}, function (err, res) {
     if (err || raw) cb(err, res);
     else cb(null, exports.translateTrack(res.track));
   });

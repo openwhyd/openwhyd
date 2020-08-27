@@ -1,22 +1,24 @@
+/* global describe, it, browser, $ */
+
 const { URL_PREFIX, ADMIN_USER } = require('../fixtures.js');
 const webUI = require('../web-ui.js');
 
 require('../acceptance-cmds.js'); // also checks that openwhyd's server is tested against the test database
 // TODO: make sure that DB was reset before starting Openwhyd's app server
 
-describe('bookmarklet - adding from a youtube track', function() {
+describe('bookmarklet - adding from a youtube track', function () {
   it(`user login`, webUI.loginAs(ADMIN_USER));
 
-  it(`should load a youtube page`, function() {
+  it(`should load a youtube page`, function () {
     browser.url('https://www.youtube.com/watch?v=-F9vo4Z5lO4');
     browser.waitForContent(/1sec/);
   });
 
-  it('should load the bookmarklet', function() {
+  it('should load the bookmarklet', function () {
     browser.injectJS(`${URL_PREFIX}/js/bookmarklet.js`);
   });
 
-  it(`should have the bookmarklet loaded`, function() {
+  it(`should have the bookmarklet loaded`, function () {
     function getBookmarklet() {
       return window._initWhydBk;
     }
@@ -24,7 +26,7 @@ describe('bookmarklet - adding from a youtube track', function() {
     // TODO: create a re-usable waitForSymbol() wdio command
   });
 
-  it(`should find the page's track in the list`, function() {
+  it(`should find the page's track in the list`, function () {
     $('.whydThumb').waitForExist();
   });
 
@@ -52,16 +54,16 @@ describe('bookmarklet - adding from a youtube track', function() {
   */
 });
 
-describe('bookmarklet - adding a second time from same youtube page', function() {
-  it('should close the bookmarklet', function() {
+describe('bookmarklet - adding a second time from same youtube page', function () {
+  it('should close the bookmarklet', function () {
     $('#whydHeader div').click();
   });
 
-  it('should load the bookmarklet', function() {
+  it('should load the bookmarklet', function () {
     browser.injectJS(`${URL_PREFIX}/js/bookmarklet.js`);
   });
 
-  it(`should find the page's track in the list`, function() {
+  it(`should find the page's track in the list`, function () {
     $('.whydThumb').waitForExist();
   });
 

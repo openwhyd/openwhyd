@@ -7,7 +7,6 @@
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var analytics = require('../models/analytics.js');
-var ObjectId = require('../models/mongodb.js').ObjectId;
 var trackModel = require('../models/track.js');
 var plTagsModel = require('../models/plTags.js');
 var followModel = require('../models/follow.js');
@@ -19,13 +18,13 @@ function makeGenreList(selectedGenre) {
   var set = {
     all: {
       name: 'All',
-      url: '/hot'
-    }
+      url: '/hot',
+    },
   };
-  plTagsModel.ORDERED_GENRES.map(function(genre) {
+  plTagsModel.ORDERED_GENRES.map(function (genre) {
     set[genre.name] = {
       name: genre.name,
-      url: '/hot/' + genre.id
+      url: '/hot/' + genre.id,
     };
   });
   (set[selectedGenre || 'all'] || {}).selected = true;
@@ -40,7 +39,7 @@ var template;
   );
 })();
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   reqParams = reqParams || {};
   var loggedInUser = request.getUser() || {};
   //if (!loggedInUser.id)
@@ -73,7 +72,7 @@ exports.controller = function(request, reqParams, response) {
       response.legacyRender({
         hasMore: hasMore ? { skip: firstIndex + reqParams.limit } : false,
         genre: genre || 'All',
-        tracks: posts
+        tracks: posts,
       });
     else {
       // html rendering
@@ -83,20 +82,20 @@ exports.controller = function(request, reqParams, response) {
       postsTemplate.renderPostsAsync(
         posts,
         { loggedUser: loggedInUser },
-        function(postsHtml) {
+        function (postsHtml) {
           var pageVars = {
             hasMore: hasMore ? { skip: firstIndex + reqParams.limit } : null, // to do before renderPosts
             rawFeed: !!reqParams.skip, //reqParams.after || reqParams.before,
             genre: genre || 'All',
             genres: makeGenreList(genre), //GENRE_LIST,
-            posts: postsHtml
+            posts: postsHtml,
           };
           var html = template.render(pageVars);
           if (!pageVars.rawFeed)
             html = mainTemplate.renderWhydPage({
               bodyClass: 'pgHotTracks', // pgWithSideBar
               loggedUser: loggedInUser,
-              content: html
+              content: html,
             });
           render(html);
         }
@@ -107,7 +106,7 @@ exports.controller = function(request, reqParams, response) {
   var params = { skip: reqParams.skip, limit: reqParams.limit + 1 };
 
   if (reqParams.genre == 'subscribed' && loggedInUser.id) {
-    followModel.fetchSubscriptionArray(loggedInUser.id, function(uidList) {
+    followModel.fetchSubscriptionArray(loggedInUser.id, function (uidList) {
       trackModel.fetchPostsFromSubscriptions(uidList, params, renderHotTracks);
     });
   } else {

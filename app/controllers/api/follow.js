@@ -7,7 +7,7 @@ var notifModel = require('../../models/notif.js');
 
 var IMPLICIT_PARAMS = { _1: 'action', _2: 'id' }; //[null, "action", "id"];
 
-var follow = function(reqParams, dbHandler) {
+var follow = function (reqParams, dbHandler) {
   switch (reqParams.action) {
     case 'get':
       followModel.get({ uId: reqParams.uId, tId: reqParams.tId }, dbHandler);
@@ -17,7 +17,7 @@ var follow = function(reqParams, dbHandler) {
         uId: reqParams.uId,
         uNm: reqParams.uNm,
         tId: reqParams.tId,
-        tNm: reqParams.tNm
+        tNm: reqParams.tNm,
       };
       if (!obj.uId || !obj.tId) return dbHandler();
       //if (reqParams.recom) obj.recom = true;
@@ -33,7 +33,7 @@ var follow = function(reqParams, dbHandler) {
   }
 };
 
-exports.follow = function(followerId, followingId, callback) {
+exports.follow = function (followerId, followingId, callback) {
   follow(
     {
       action: 'insert',
@@ -42,9 +42,9 @@ exports.follow = function(followerId, followingId, callback) {
       tId: followingId,
       tNm: ('' + followingId).startsWith('/u/')
         ? (mongodb.usernames[followingId.substr(3)] || {}).name
-        : null
+        : null,
     },
-    function(error, result) {
+    function (error, result) {
       if (callback) {
         callback(result);
       }
@@ -52,12 +52,12 @@ exports.follow = function(followerId, followingId, callback) {
   );
 };
 
-exports.isUserFollowing = function(
+exports.isUserFollowing = function (
   uid,
   followingMid,
   handler /*, fbAccessToken*/
 ) {
-  follow({ action: 'get', uId: uid, tId: followingMid }, function(
+  follow({ action: 'get', uId: uid, tId: followingMid }, function (
     error,
     result
   ) {
@@ -66,12 +66,12 @@ exports.isUserFollowing = function(
 };
 
 var PUBLIC_ACTIONS = {
-  fetchFollowers: function(p, cb) {
+  fetchFollowers: function (p, cb) {
     followModel.fetchFollowers(p.id, { skip: p.skip, limit: p.limit }, cb);
   },
-  fetchFollowing: function(p, cb) {
+  fetchFollowing: function (p, cb) {
     followModel.fetchFollowing(p.id, { skip: p.skip, limit: p.limit }, cb);
-  }
+  },
 };
 
 function ranPublicAction(loggedUser, reqParams, cb) {
@@ -85,7 +85,7 @@ function ranPublicAction(loggedUser, reqParams, cb) {
       followModel.fetch(
         { uId: loggedUser.id, tId: { $in: uids } },
         null,
-        function(subscrStatus) {
+        function (subscrStatus) {
           var subscrSet = snip.objArrayToSet(subscrStatus, 'tId', true);
           for (var i in res)
             res[i].isSubscribing = subscrSet[res[i].uId || res[i].tId];
@@ -98,12 +98,12 @@ function ranPublicAction(loggedUser, reqParams, cb) {
   }
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('follow.controller', reqParams);
 
   reqParams = reqParams || {};
 
-  var sendResult = function(error, result) {
+  var sendResult = function (error, result) {
     result = result && result._id ? { _id: result._id } : {};
     if (error) result.error = error;
     //console.log("follow API error: " + error);
@@ -115,7 +115,7 @@ exports.controller = function(request, reqParams, response) {
 
   var user = request.checkLogin(/*response*/);
   if (
-    ranPublicAction(user, reqParams, function(res) {
+    ranPublicAction(user, reqParams, function (res) {
       response.renderJSON(res);
     })
   )

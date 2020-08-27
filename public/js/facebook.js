@@ -1,3 +1,5 @@
+/* global $, FB, user, showMessage */
+
 var href = window.location.href + '/';
 
 var namespace, fbId;
@@ -31,7 +33,7 @@ function fbSafeCall(fct, failFct) {
 
 function fbIsLogged(cb) {
   if (window.FB)
-    FB.getLoginStatus(function(response) {
+    FB.getLoginStatus(function (response) {
       cb(
         response.status === 'connected' &&
           window.user.fbId == response.authResponse.userID
@@ -43,37 +45,18 @@ function fbIsLogged(cb) {
 function fbPost(url, callback) {
   console.log('fbPost', url);
   if (window.FB)
-    FB.api(url, 'post', function(response) {
+    FB.api(url, 'post', function (response) {
       console.log('fbPost response:', response);
       if (callback) callback(response);
     });
   else if (callback) callback();
 }
 
-function fbSendMessage(obj, cb) {
-  obj = obj || {};
-  fbSafeCall(function() {
-    obj.method = 'send';
-    if (obj.link && obj.link.indexOf('http') != 0)
-      obj.link = FB_ACTION_URI_PREFIX + obj.link;
-    console.log('sending fb message', obj);
-    FB.ui(obj, function(response) {
-      if (response && response.success)
-        //(response && response.post_id)
-        cb && cb(response);
-      else {
-        console.log('unable to send fb message:', response);
-        cb && cb();
-      }
-    });
-  }, cb);
-}
-
 var verbToPrefName = {
   add: 'ogAdd',
   repost: 'ogAdd',
   like: 'ogLik',
-  listen: 'ogPla'
+  listen: 'ogPla',
 };
 
 function fbIsActionPermitted(verb) {
@@ -88,7 +71,7 @@ function fbIsActionPermitted(verb) {
 
 function fbAction(verb, uri, type, callback) {
   //console.log("fbAction", verb, uri, fbIsActionPermitted(verb));
-  fbIsLogged(function(loggedIn) {
+  fbIsLogged(function (loggedIn) {
     if (loggedIn && fbIsActionPermitted(verb)) {
       var url =
         verb == 'listen'
@@ -110,7 +93,7 @@ function fbAction(verb, uri, type, callback) {
 }
 
 function fbLike(uri, callback) {
-  fbIsLogged(function(loggedIn) {
+  fbIsLogged(function (loggedIn) {
     if (loggedIn && fbIsActionPermitted('like'))
       fbPost(
         '/me/og.likes' + '?object=' + FB_ACTION_URI_PREFIX + uri,
@@ -121,9 +104,9 @@ function fbLike(uri, callback) {
 }
 
 function fbAuth(perms, cb, dontLink) {
-  fbSafeCall(function() {
+  fbSafeCall(function () {
     FB.login(
-      function(response) {
+      function (response) {
         console.log('fb response', response);
         response = response || {};
         cb((response.authResponse || {}).userID, response);
@@ -136,8 +119,8 @@ function fbAuth(perms, cb, dontLink) {
             data: {
               action: 'link',
               fbUid: response.authResponse.userID,
-              fbAccessToken: response.authResponse.accessToken
-            }
+              fbAccessToken: response.authResponse.accessToken,
+            },
           });
       },
       { scope: facebookPerms + (perms ? ',' + perms : '') }
@@ -148,7 +131,7 @@ function fbAuth(perms, cb, dontLink) {
 function fbLogin(perms, cb) {
   fbAuth(
     perms,
-    function(fbId, fbAuthResponse) {
+    function (fbId, fbAuthResponse) {
       if (!fbId) {
         return console.log('no fb login');
         cb({ error: 'no fb login' });
@@ -171,7 +154,7 @@ function fbLogin(perms, cb) {
       // if (!$('script[src*="jquery.iframe-post-form"]').length) ...
       $fbForm
         .iframePostForm({
-          complete: function(res) {
+          complete: function (res) {
             res = res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1);
             res = JSON.parse(res);
             console.log('fbLogin response', res);
@@ -181,7 +164,7 @@ function fbLogin(perms, cb) {
             // res can contain: error, redirect, fbUser...
             // res.fbUser contains: id, name, email...
             cb(res);
-          }
+          },
         })
         .submit();
     },
@@ -192,7 +175,7 @@ function fbLogin(perms, cb) {
 function fbRegister(perms, cb) {
   fbAuth(
     perms,
-    function(fbId, fbAuthResponse) {
+    function (fbId, fbAuthResponse) {
       if (!fbId) {
         return console.log('no fb login');
         cb({ error: 'no fb login' });
@@ -200,17 +183,17 @@ function fbRegister(perms, cb) {
 
       const options = {
         fields: 'last_name, first_name, email',
-        access_token: fbAuthResponse.authResponse.accessToken
+        access_token: fbAuthResponse.authResponse.accessToken,
       };
 
-      FB.api('/me', options, response => {
+      FB.api('/me', options, (response) => {
         cb({
           fbAuthResponse: fbAuthResponse.authResponse, // fbTok
           fbUser: {
             name: response.first_name + ' ' + response.last_name,
             email: response.email,
-            id: fbId // fbUid
-          }
+            id: fbId, // fbUid
+          },
         });
       });
     },
@@ -223,10 +206,10 @@ function fbInvite(fbUser) {
   // if coming from fbLogin, update the fbId of logged in user
   if (fbUser)
     $.ajax({ type: 'GET', url: '/api/user', data: { fbId: fbUser.id } });
-  fbSafeCall(function() {
+  fbSafeCall(function () {
     FB.ui(
       { method: 'apprequests', message: 'Show me your interests on whyd!' },
-      function(response) {
+      function (response) {
         console.log(response);
         // old requests 1.0 format
         if (response && response.request_ids)
@@ -234,7 +217,7 @@ function fbInvite(fbUser) {
             null,
             { fbRequestIds: response.request_ids },
             window.user.name + ' invited you to join whyd',
-            function(params) {
+            function (params) {
               console.log('sent!');
             }
           );
@@ -243,7 +226,7 @@ function fbInvite(fbUser) {
             null,
             { fbRequestIds: response.request, fbTo: response.to },
             window.user.name + ' invited you to join whyd',
-            function(params) {
+            function (params) {
               console.log('sent!');
             }
           );
@@ -253,27 +236,27 @@ function fbInvite(fbUser) {
   });
 }
 
-window.fbAsyncInit = function() {
+window.fbAsyncInit = function () {
   FB.init({
     appId: fbId,
     version: 'v2.3',
     status: true,
     cookie: true,
     oauth: true,
-    xfbml: true
+    xfbml: true,
   });
-  window.whenFbReady = function(fct) {
+  window.whenFbReady = function (fct) {
     fct();
   };
   while (whenFbReadyQueue.length) whenFbReadyQueue.shift()();
 };
 
-whenFbReady(function() {
+whenFbReady(function () {
   console.log('watching fb events');
-  FB.Event.subscribe('edge.create', function(targetUrl) {
+  FB.Event.subscribe('edge.create', function (targetUrl) {
     window.Whyd.tracking.logSocial('facebook', 'like', targetUrl);
   });
-  FB.Event.subscribe('message.send', function(sharedUrl) {
+  FB.Event.subscribe('message.send', function (sharedUrl) {
     //var pId = sharedUrl.split("/").pop();
     //console.log("facebook invitation was sent", pId);
     window.Whyd.tracking.logSocial('facebook', 'message', sharedUrl);
@@ -281,7 +264,7 @@ whenFbReady(function() {
 });
 
 // Load the SDK Asynchronously
-(function(d) {
+(function (d) {
   /*if (!d.getElementById("fb-root"))
 		d.getElementsByTagName('body')[0].appendChild(d.createElement('div')).id = "fb-root";*/
   var js,

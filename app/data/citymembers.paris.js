@@ -147,5 +147,5 @@ exports.members = [
   '5045d5f97e91c862b2a804cb', // Winston Mad Dog
   '531616217e91c862b2b61e5e', // YungPso
   '530947277e91c862b2b5c341', // Y. Dubois
-  '538045c171eaec19b571be8d' // Zandoli Production
+  '538045c171eaec19b571be8d', // Zandoli Production
 ];

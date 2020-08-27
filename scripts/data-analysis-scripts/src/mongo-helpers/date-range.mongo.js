@@ -2,7 +2,7 @@ try {
   ObjectId;
 } catch (err) {
   ObjectId = {
-    fromDate: date => date // will be handled by mapReduceFromJsonLines()
+    fromDate: (date) => date, // will be handled by mapReduceFromJsonLines()
   };
 }
 
@@ -15,8 +15,8 @@ const today = new Date();
 const makeDateRangeQuery = (from, to = today) => ({
   _id: {
     $gt: ObjectId.fromDate(from),
-    $lt: ObjectId.fromDate(to)
-  }
+    $lt: ObjectId.fromDate(to),
+  },
 });
 
 //printjson(db.playlog.find(makeDateRangeQuery(new Date(today - WEEK))).toArray());
@@ -28,5 +28,5 @@ module.exports = {
   MONTH,
   YEAR,
   today,
-  makeDateRangeQuery
+  makeDateRangeQuery,
 };

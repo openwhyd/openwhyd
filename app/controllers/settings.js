@@ -11,13 +11,13 @@ var mainTemplate = require('../templates/mainTemplate.js');
 var TEMPLATE_FILE = 'app/templates/settings.html';
 var pageTemplate = null;
 
-exports.refreshTemplates = function(callback) {
+exports.refreshTemplates = function (callback) {
   pageTemplate = templateLoader.loadTemplate(TEMPLATE_FILE, callback);
 };
 
 exports.refreshTemplates();
 
-exports.renderSettingsForm = function(p, cb) {
+exports.renderSettingsForm = function (p, cb) {
   //userModel.fetchByUid(p.loggedUser._id, function(loggedUser){
   /*exports.refreshTemplates(function(){*/
   p.user = p.loggedUser;
@@ -28,13 +28,13 @@ exports.renderSettingsForm = function(p, cb) {
   //});
 };
 
-exports.controller = function(request, reqParams, response, error) {
+exports.controller = function (request, reqParams, response, error) {
   request.logToConsole('settings.controller', request.method);
   reqParams = reqParams || {};
   reqParams.loggedUser = request.checkLogin(response);
   if (!reqParams.loggedUser) return;
 
-  exports.renderSettingsForm(reqParams, function(res) {
+  exports.renderSettingsForm(reqParams, function (res) {
     response.legacyRender(res.html, null, { 'content-type': 'text/html' });
   });
   analytics.addVisit(reqParams.loggedUser, request.url /*"/u/"+uid*/);

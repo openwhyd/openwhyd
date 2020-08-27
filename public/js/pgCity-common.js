@@ -1,15 +1,15 @@
+/* global $ */
+
 /**
  * scripts for city pages
  * @author: adrienjoly, whyd
  **/
 
-var initCityPage = function(urlPrefix, cityName) {
+var initCityPage = function (urlPrefix, cityName) {
   var htmlEntities =
     htmlEntities ||
     function htmlEntities(str) {
-      return $('<div>')
-        .text(str)
-        .html();
+      return $('<div>').text(str).html();
     };
 
   function include(src, callback) {
@@ -48,7 +48,7 @@ var initCityPage = function(urlPrefix, cityName) {
       Date.now() +
       '_' +
       (window._whyd_counter = (window._whyd_counter || 0) + 1);
-    window[cbName] = function(res) {
+    window[cbName] = function (res) {
       cb(res);
       delete window[cbName];
     };
@@ -101,7 +101,7 @@ var initCityPage = function(urlPrefix, cityName) {
       '/img/u/{uId});"></span>',
     '<a href="' + urlPrefix + '/u/{uId}">{uNm}</a>',
     '</p>',
-    '</li>'
+    '</li>',
   ].join('');
 
   var TEMPLATE_PEOPLE = [
@@ -113,7 +113,7 @@ var initCityPage = function(urlPrefix, cityName) {
     '<p class="username">{name}</p>',
     '</a>',
     '<p class="userbio">{bio}</p>',
-    '</li>'
+    '</li>',
   ].join('');
 
   var TEMPLATE_PLAYLISTS = [
@@ -127,7 +127,7 @@ var initCityPage = function(urlPrefix, cityName) {
     '<p class="title"><span class="plName">{name}</span> by <span class="plAuthor">{uNm}</span></p>',
     '</a>',
     '<p class="nbTracks"><span>{nbTracks}</span> tracks</p>',
-    '</li>'
+    '</li>',
   ].join('');
 
   // make sure that ajax navigation is prevented on all links
@@ -137,7 +137,7 @@ var initCityPage = function(urlPrefix, cityName) {
     var $p = $(this);
     var divh = 48; // 3 lines
     while ($p.outerHeight() > divh) {
-      $p.text(function(index, text) {
+      $p.text(function (index, text) {
         return text.replace(/\W*\s(\S)*$/, '...');
       });
     }
@@ -186,49 +186,45 @@ var initCityPage = function(urlPrefix, cityName) {
 
   function startIndexPage() {
     function renderTracks(template, div) {
-      return function(res) {
+      return function (res) {
         // Save server timestamp for playlists
         playlistTime = res.time;
         // We have the server timestamp, get the playlists
         getPlaylists(3);
 
         div.innerHTML = res.data
-          .map(function(item, i) {
+          .map(function (item, i) {
             item.index = i;
             item.url = '#';
             item.onclick = 'return playTrack(this);';
             return t(template, item);
           })
           .join('\n');
-        $(div)
-          .find('.title')
-          .each(truncateLines);
+        $(div).find('.title').each(truncateLines);
       };
     }
 
     function makeDivRendererPeople(template, divOrCallback) {
-      return function(res) {
+      return function (res) {
         var html = res.data
-          .map(function(item, i) {
+          .map(function (item, i) {
             item.index = i;
             return t(template, item);
           })
           .join('\n');
         divOrCallback.innerHTML = html;
-        $(divOrCallback)
-          .find('.userbio')
-          .each(truncateLines);
+        $(divOrCallback).find('.userbio').each(truncateLines);
         // Adapt layout to screen size
         adaptScreen();
       };
     }
 
     function makeDivRendererPlaylists(template, divOrCallback) {
-      return function(res) {
+      return function (res) {
         res.data = pushTopPlaylists(res.data);
 
         var html = res.data
-          .map(function(item, i) {
+          .map(function (item, i) {
             item.index = i;
             return t(template, item);
           })
@@ -285,17 +281,15 @@ var initCityPage = function(urlPrefix, cityName) {
       console.log(req);
 
       // Make API call
-      $.getJSON(req, function(data) {
+      $.getJSON(req, function (data) {
         console.log(data);
         var html = data
-          .map(function(item, i) {
+          .map(function (item, i) {
             return t(TEMPLATE_PLAYLISTS, item);
           })
           .join('\n');
 
-        $('.playlists')
-          .eq(0)
-          .append(html);
+        $('.playlists').eq(0).append(html);
       });
     }
 
@@ -338,7 +332,7 @@ var initCityPage = function(urlPrefix, cityName) {
       'Reggae',
       'Pop',
       'Latin',
-      'World'
+      'World',
     ];
 
     var checkDup = [];
@@ -359,9 +353,9 @@ var initCityPage = function(urlPrefix, cityName) {
         .getElementsByClassName('posts')[0];
       console.log('AFTER: ' + after);
       if (after) url += '&after=' + after;
-      fetch(url, function(res) {
+      fetch(url, function (res) {
         var html = res.data
-          .map(function(item, i) {
+          .map(function (item, i) {
             if (checkDup.indexOf(item.eId) == -1) {
               item.index = i;
               item.url = '#';
@@ -388,7 +382,7 @@ var initCityPage = function(urlPrefix, cityName) {
       $('#genres .selected').removeClass('selected');
       e.target.className = 'selected';
       $('body').addClass('loading');
-      populatePosts(genre, null, function() {
+      populatePosts(genre, null, function () {
         $('body').removeClass('loading');
       });
     }
@@ -397,12 +391,10 @@ var initCityPage = function(urlPrefix, cityName) {
       $('.btnLoadMore').fadeTo(200, 0.75);
       $('.btnLoadMore').text('Loading...');
       var $frame = $('#tracks posts');
-      var after = $('#tracks .post')
-        .last()
-        .attr('data-pid');
-      $frame.ready(function() {
-        populatePosts(genre, after, function() {
-          $frame.ready(function() {
+      var after = $('#tracks .post').last().attr('data-pid');
+      $frame.ready(function () {
+        populatePosts(genre, after, function () {
+          $frame.ready(function () {
             $('.btnLoadMore').fadeTo(200, 1.0);
             $('.btnLoadMore').text('Load more');
             window.whydPlayer.updateTracks();
@@ -412,20 +404,18 @@ var initCityPage = function(urlPrefix, cityName) {
       });
     }
 
-    GENRES.map(function(genre) {
+    GENRES.map(function (genre) {
       var li = document.createElement('li');
       li.onclick = onGenreClick;
       $(li).text(genre);
       genres.appendChild(li);
     });
 
-    $('.genres li')
-      .first()
-      .addClass('selected');
+    $('.genres li').first().addClass('selected');
 
-    populatePosts((genre = 'All'), null, function() {
+    populatePosts((genre = 'All'), null, function () {
       (function parseParams(params) {
-        params.map(function(p) {
+        params.map(function (p) {
           /*var s = p.split("=");
                     var key = s.shift();
                     var value = s.pop();
@@ -438,26 +428,22 @@ var initCityPage = function(urlPrefix, cityName) {
       })((window.location.href.split('?').pop() || '').split('&'));
     });
     //preventAjax();
-    $('.btnLoadMore')
-      .off()
-      .click(loadMoreCityTracks);
+    $('.btnLoadMore').off().click(loadMoreCityTracks);
   }
 
   // PEOPLE
 
   function startPeoplePage() {
     function makeDivRenderer(template, divOrCallback) {
-      return function(res) {
+      return function (res) {
         var html = res.data
-          .map(function(item, i) {
+          .map(function (item, i) {
             item.index = i;
             return t(template, item);
           })
           .join('\n');
         divOrCallback.innerHTML = html;
-        $(divOrCallback)
-          .find('.userbio')
-          .each(truncateLines);
+        $(divOrCallback).find('.userbio').each(truncateLines);
       };
     }
 
@@ -467,12 +453,12 @@ var initCityPage = function(urlPrefix, cityName) {
       .click(function seeEverybody() {
         GGPopup.setBlurred([
           document.getElementById('header'),
-          document.getElementById('mainPanel')
+          document.getElementById('mainPanel'),
         ]);
         GGPopup.show('ggpopup', '<h1>Loading...</h1>');
         fetch(
           urlPrefix + '/api/city/' + cityName + '/people?limit=200',
-          function(res) {
+          function (res) {
             var obj = _renderUserList(res.data);
             var html = $(obj).html();
             GGPopup.update(html);
@@ -525,7 +511,7 @@ var initCityPage = function(urlPrefix, cityName) {
         }
 
         // Make API req
-        $.getJSON('/api/user?id=' + uid + '&includeTags=1', function(data) {
+        $.getJSON('/api/user?id=' + uid + '&includeTags=1', function (data) {
           console.log('Top user ' + uid + ' fetched');
           var index = indexOfObject(users, data.id);
           if (index == -1) {
@@ -633,12 +619,10 @@ var initCityPage = function(urlPrefix, cityName) {
       }
     }
 
-    $('#people .top-posts')
-      .find('.userbio')
-      .each(truncateLines);
+    $('#people .top-posts').find('.userbio').each(truncateLines);
 
     // Load top featured users
-    loadTopFeatured(function() {
+    loadTopFeatured(function () {
       // After the top featured have been loaded
       console.log('Top featured loaded');
       fetch(
@@ -688,7 +672,7 @@ var initCityPage = function(urlPrefix, cityName) {
       '<p class="nbTracks"><strong>{nbTracks}</strong> tracks</p>',
       '<p class="artists">{artists}</p>',
       '</div>',
-      '</li>'
+      '</li>',
     ].join('');
 
     function indexOfObject(arr, obj) {
@@ -701,7 +685,7 @@ var initCityPage = function(urlPrefix, cityName) {
     }
 
     function makeDivRendererPlaylists(template, divOrCallback) {
-      return function(res) {
+      return function (res) {
         var alldata = res.data;
 
         // Push the playlists we want to feature first (playlists.js)
@@ -712,7 +696,7 @@ var initCityPage = function(urlPrefix, cityName) {
 
         // Populate HTML
         var html = alldata
-          .map(function(item, i) {
+          .map(function (item, i) {
             //item.index = i+PLAYLISTS_TOP.length;
 
             // Replace title with a description if available (in playlists.js)
@@ -751,12 +735,12 @@ var initCityPage = function(urlPrefix, cityName) {
       }
 
       // Make API call
-      $.getJSON(req + '&includeTags=1', function(data) {
-        var garray = new Array();
+      $.getJSON(req + '&includeTags=1', function (data) {
+        var garray = [];
 
         var html = data
-          .map(function(item, i) {
-            garray[i] = new Array();
+          .map(function (item, i) {
+            garray[i] = [];
 
             // Get genres
             for (var j = 0; j < item.tags.length; j++) {
@@ -789,13 +773,10 @@ var initCityPage = function(urlPrefix, cityName) {
           for (var k = 0; k < tags.length; k++) {
             var tag = tags[k];
             $li = $('<li>' + tag + '</li>');
-            $('#playlists > .posts > li')
-              .eq(j)
-              .find('.genres ul')
-              .append($li);
+            $('#playlists > .posts > li').eq(j).find('.genres ul').append($li);
           }
         }
-      }).done(function() {
+      }).done(function () {
         $('#playlists > .posts .load').hide();
       });
     }
@@ -855,7 +836,7 @@ var initCityPage = function(urlPrefix, cityName) {
   }
   startIndexPage();
 
-  $('.cityBtn').click(function(e) {
+  $('.cityBtn').click(function (e) {
     switchPage(e.target);
   });
 };
