@@ -33,7 +33,7 @@ context('reduce frequency of email notifications', () => {
         .to.have.property('emSub', 7);
     });
   });
-  
+});
 context('unsubscribe from email notifications', () => {
   it('user has instant eamail notification', () => {
     cy.loginAsAdmin();
@@ -55,4 +55,4 @@ context('unsubscribe from email notifications', () => {
     cy.logout();
   });
 });
-});
+
