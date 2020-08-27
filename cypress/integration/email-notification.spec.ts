@@ -32,6 +32,7 @@ context('reduce frequency of email notifications', () => {
     });
   });
   
+context('unsubscribe from email notifications', () => {
   it('user has instant eamail notification', () => {
     cy.loginAsAdmin();
     cy.request('/api/user').should((response) =>{
@@ -51,4 +52,5 @@ context('reduce frequency of email notifications', () => {
     });
     cy.logout();
   });
+});
 });
