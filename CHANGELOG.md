@@ -1,3 +1,10 @@
+## [1.34.10](https://github.com/openwhyd/openwhyd/compare/v1.34.9...v1.34.10) (2020-08-27)
+
+
+### Bug Fixes
+
+* **tests:** Migrate tests of email notifications from WebDriver to Cypress ([#342](https://github.com/openwhyd/openwhyd/issues/342)) ([c640c4c](https://github.com/openwhyd/openwhyd/commit/c640c4c)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.34.9](https://github.com/openwhyd/openwhyd/compare/v1.34.8...v1.34.9) (2020-08-25)
 
 
