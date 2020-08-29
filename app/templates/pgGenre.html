@@ -1,256 +1,262 @@
 {{#header}}
 
 <style>
-	.pgGenre #tabSelector {
-		margin: 0;
-		margin-top: 20px;
-	}
+  .pgGenre #tabSelector {
+    margin: 0;
+    margin-top: 20px;
+  }
 
-	/* PEOPLE TAB */
+  /* PEOPLE TAB */
 
-	.pgGenre #contentPane #mainPanel .posts {
-		/*width: 960px;*/
-		padding: 10px;
-		box-shadow: none;
-		border: none;
-		top: 0;
-	}
+  .pgGenre #contentPane #mainPanel .posts {
+    /*width: 960px;*/
+    padding: 10px;
+    box-shadow: none;
+    border: none;
+    top: 0;
+  }
 
-	.pgGenre ul.users {
-		list-style: none;
-		padding: 0;
-		overflow: auto;
-		clear: both;
-	}
+  .pgGenre ul.users {
+    list-style: none;
+    padding: 0;
+    overflow: auto;
+    clear: both;
+  }
 
-	.pgGenre ul.users>li {
-		float: left;
-		position: relative;
-		margin: 0 22px;
-		margin-bottom: 20px;
-		padding: 0;
-		width: 430px;
-		padding-top: 20px;
-		border-top: 1px dotted #ccc;
-	}
+  .pgGenre ul.users > li {
+    float: left;
+    position: relative;
+    margin: 0 22px;
+    margin-bottom: 20px;
+    padding: 0;
+    width: 430px;
+    padding-top: 20px;
+    border-top: 1px dotted #ccc;
+  }
 
+  .pgGenre ul.users > li .userSubscribe {
+    right: 0;
+    top: 20px;
+    color: #4a4a4a;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    background-image: -o-linear-gradient(-90deg, #fafafa 0%, #ededed 100%);
+    background-image: -moz-linear-gradient(-90deg, #fafafa 0%, #ededed 100%);
+    background-image: -webkit-linear-gradient(-90deg, #fafafa 0%, #ededed 100%);
+    background-image: -ms-linear-gradient(-90deg, #fafafa 0%, #ededed 100%);
+    background-image: linear-gradient(-180deg, #fafafa 0%, #ededed 100%);
+    border: 1px solid #d0d0d0;
+    /*margin-top: 10px;*/
+  }
 
-	.pgGenre ul.users>li .userSubscribe {
-		right: 0;
-		top: 20px;
-		color: #4A4A4A;
-		border-radius: 4px;
-		-webkit-border-radius: 4px;
-		-moz-border-radius: 4px;
-		background-image: -o-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-		background-image: -moz-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-		background-image: -webkit-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-		background-image: -ms-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-		background-image: linear-gradient(-180deg, #FAFAFA 0%, #EDEDED 100%);
-		border: 1px solid #d0d0d0;
-		/*margin-top: 10px;*/
-	}
+  .pgGenre ul.users > li .userSubscribe.subscribed {
+    right: 0;
+    top: 20px;
+    color: #878787;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border: 1px solid #dbdbdb;
+    background: transparent;
+    box-shadow: none;
+  }
 
-	.pgGenre ul.users>li .userSubscribe.subscribed {
-		right: 0;
-		top: 20px;
-		color: #878787;
-		border-radius: 4px;
-		-webkit-border-radius: 4px;
-		-moz-border-radius: 4px;
-		border: 1px solid #dbdbdb;
-		background: transparent;
-		box-shadow: none;
-	}
+  .pgGenre ul.users > li:first-child .userSubscribe {
+    margin-top: 0px;
+    top: 0;
+  }
 
+  .pgGenre ul.users > li:nth-child(2) .userSubscribe {
+    margin-top: 0px;
+    top: 0;
+  }
 
-	.pgGenre ul.users>li:first-child .userSubscribe {
-		margin-top: 0px;
-		top: 0;
-	}
+  .pgGenre ul.users > li .thumb {
+    float: left;
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-position: 50% 50%;
+    margin-right: 20px;
+  }
 
-	.pgGenre ul.users>li:nth-child(2) .userSubscribe {
-		margin-top: 0px;
-		top: 0;
-	}
+  .pgGenre ul.users > li p {
+    width: 310px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-	.pgGenre ul.users>li .thumb {
-		float: left;
-		width: 100px;
-		height: 100px;
-		background-size: cover;
-		background-position: 50% 50%;
-		margin-right: 20px;
-	}
+  .pgGenre ul.users > li p.username {
+    width: 220px;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
+  }
 
-	.pgGenre ul.users>li p {
-		width: 310px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+  .pgGenre ul.users > li .stats {
+    color: #999;
+    font-size: 10px;
+  }
 
-	.pgGenre ul.users>li p.username {
-		width: 220px;
-		font-weight: bold;
-		margin-top: 10px;
-		font-size: 14px;
-	}
+  .pgGenre ul.users > li p.userbio {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #333;
+  }
 
-	.pgGenre ul.users>li .stats {
-		color: #999;
-		font-size: 10px;
-	}
+  .pgGenre ul.users > li .tags {
+    margin-top: 10px;
+    font-size: 10px;
+    overflow: hidden;
+    height: 18px;
+  }
 
-	.pgGenre ul.users>li p.userbio {
-		font-size: 12px;
-		margin-top: 10px;
-		color: #333;
-	}
+  .pgGenre ul.users > li .tag {
+    display: inline-block;
+    background: rgb(186, 210, 235);
+    color: white;
+    margin-right: 4px;
+    margin-bottom: 3px;
+    border-radius: 3px;
+    padding: 2px;
+  }
 
-	.pgGenre ul.users>li .tags {
-		margin-top: 10px;
-		font-size: 10px;
-		overflow: hidden;
-		height: 18px;
-	}
+  .pgGenre .post .bigMedal {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    background: url(/images/icon-hot-medal-big.png);
+    color: white;
+    text-align: center;
+    font-size: 16px;
+  }
 
-	.pgGenre ul.users>li .tag {
-		display: inline-block;
-		background: rgb(186, 210, 235);
-		color: white;
-		margin-right: 4px;
-		margin-bottom: 3px;
-		border-radius: 3px;
-		padding: 2px;
-	}
-
-	.pgGenre .post .bigMedal {
-		position: absolute;
-		right: -15px;
-		top: -15px;
-		width: 44px;
-		height: 44px;
-		line-height: 44px;
-		background: url(/images/icon-hot-medal-big.png);
-		color: white;
-		text-align: center;
-		font-size: 16px;
-	}
-
-	.pgGenre .post .smallMedal {
-		position: absolute;
-		right: -10px;
-		top: -10px;
-		width: 30px;
-		height: 30px;
-		line-height: 30px;
-		background: url(/images/icon-hot-medal-small.png);
-		color: white;
-		text-align: center;
-		font-size: 12px;
-	}
+  .pgGenre .post .smallMedal {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    background: url(/images/icon-hot-medal-small.png);
+    color: white;
+    text-align: center;
+    font-size: 12px;
+  }
 </style>
 
 <div id="head">
-	<div class="wrapper">
-		<div class="feedHeader">
-			<h1>Genre: {{genre}}</h1>
-		</div>
-	</div>
+  <div class="wrapper">
+    <div class="feedHeader">
+      <h1>Genre: {{genre}}</h1>
+    </div>
+  </div>
 </div>
 
 <div id="tabSelector">
-	<!--<a href="{{genreUrl}}" {{#tabHot}}class="selected"{{/tabHot}}>Hot tracks</a>-->
-	<a href="{{genreUrl}}/latest" class="{{#tabLatest}}selected{{/tabLatest}}">Latest tracks</a>
-	<a href="{{genreUrl}}/people" class="{{#showUsers}}selected{{/showUsers}}">People</a>
+  <!--<a href="{{genreUrl}}" {{#tabHot}}class="selected"{{/tabHot}}>Hot tracks</a>-->
+  <a href="{{genreUrl}}/latest" class="{{#tabLatest}}selected{{/tabLatest}}"
+    >Latest tracks</a
+  >
+  <a href="{{genreUrl}}/people" class="{{#showUsers}}selected{{/showUsers}}"
+    >People</a
+  >
 </div>
 
 <div class="posts">
-	{{/header}}
+  {{/header}}
 
-	<!-- TRACKS TAB CONTENT -->
+  <!-- TRACKS TAB CONTENT -->
 
-	{{#showTracks}}
+  {{#showTracks}} {{{posts}}} {{#emptyFeed}}
+  <div class="emptyFeed">No tracks yet...</div>
+  {{/emptyFeed}} {{#hasMore}}
+  <div class="btnLoadMore" onclick="loadMore()">
+    <div>&nbsp;</div>
+    <span>Load more</span>
+  </div>
+  <script>
+    window.nextPageUrl = window.location.href + '?after=' + '{{lastPid}}';
+  </script>
+  {{/hasMore}} {{#tabHot}}
+  <script>
+    window.whydCtx = 'hot';
+    $(function () {
+      //activateSubscribeButton($(".hotTracks .userSubscribe"));
+      //$(".post:eq(0) .thumb").append('<div class="bigMedal">1</div>');
+      //$(".post:eq(1) .thumb").append('<div class="smallMedal">2</div>');
+      //$(".post:eq(2) .thumb").append('<div class="smallMedal">3</div>');
+      $('.post .thumb').each(function (i) {
+        var $post = $(this);
+        if (!$post.find('.medal').length)
+          $post.append('<div class="medal smallMedal">' + (i + 1) + '</div>');
+      });
+      $('.post:eq(0) .thumb .smallMedal')
+        .removeClass('smallMedal')
+        .addClass('bigMedal');
+    });
+  </script>
+  {{/tabHot}} {{/showTracks}}
 
-	{{{posts}}}
+  <!-- SUBSCRIBERS TAB CONTENT -->
 
-	{{#emptyFeed}}
-	<div class="emptyFeed">No tracks yet...</div>
-	{{/emptyFeed}}
+  {{#showUsers}}
+  <ul class="users">
+    {{#items}}
+    <li data-id="{{id}}" data-subscribed="{{subscribed}}">
+      <a href="{{url}}">
+        <div
+          class="thumb"
+          style="background-image:url('{{img}}?width=100&amp;height=100');"
+        ></div>
+        <p class="username">{{name}}</p>
+      </a>
+      <div class="stats">
+        <span class="nbTracks"><span>{{nbTracks}}</span> tracks</span>
+        <span class="nbSubscriptions"
+          ><span>{{nbSubscriptions}}</span> subscriptions</span
+        >
+        <span class="nbSubscribers"
+          ><span>{{nbSubscribers}}</span> subscribers</span
+        >
+      </div>
+      <p class="userbio">{{bio}}</p>
+      <div class="tags">
+        {{#tags}}<a class="tag" href="{{url}}">{{id}} ({{c}})</a>{{/tags}}
+      </div>
+    </li>
+    {{/items}}
+  </ul>
 
-	{{#hasMore}}
-	<div class="btnLoadMore" onclick="loadMore()">
-		<div>&nbsp;</div><span>Load more</span>
-	</div>
-	<script> window.nextPageUrl = window.location.href + "?after=" + "{{lastPid}}"; </script>
-	{{/hasMore}}
+  <script>
+    $(document).ready(function () {
+      var $subscr = $('.users li').each(function (i, li) {
+        var $li = $(li);
+        _createSubscribeButton(
+          { id: $li.attr('data-id'), subscribed: $li.attr('data-subscribed') },
+          $li
+        );
+      });
+      try {
+        $subscr
+          .first()
+          .add($subscr.get(1))
+          .css({ border: 0, padding: 0, top: 10 });
+      } catch (e) {}
+    });
+  </script>
 
-	{{#tabHot}}
-	<script>
-		window.whydCtx = "hot";
-		$(function () {
-			//activateSubscribeButton($(".hotTracks .userSubscribe"));
-			//$(".post:eq(0) .thumb").append('<div class="bigMedal">1</div>');
-			//$(".post:eq(1) .thumb").append('<div class="smallMedal">2</div>');
-			//$(".post:eq(2) .thumb").append('<div class="smallMedal">3</div>');
-			$(".post .thumb").each(function (i) {
-				var $post = $(this);
-				if (!$post.find(".medal").length)
-					$post.append('<div class="medal smallMedal">' + (i + 1) + '</div>');
-			});
-			$(".post:eq(0) .thumb .smallMedal").removeClass('smallMedal').addClass('bigMedal');
-		});
-	</script>
-	{{/tabHot}}
+  {{^items}}
+  <div class="emptyFeed">No people yet</div>
+  {{/items}} {{/showUsers}}
 
-	{{/showTracks}}
+  <!-- COMMON ENDING CODE -->
 
-	<!-- SUBSCRIBERS TAB CONTENT -->
-
-	{{#showUsers}}
-	<ul class="users">
-		{{#items}}
-		<li data-id="{{id}}" data-subscribed="{{subscribed}}">
-			<a href="{{url}}">
-				<div class="thumb" style="background-image:url('{{img}}?width=100&amp;height=100');">
-				</div>
-				<p class="username">{{name}}</p>
-			</a>
-			<div class="stats">
-				<span class="nbTracks"><span>{{nbTracks}}</span> tracks</span>
-				<span class="nbSubscriptions"><span>{{nbSubscriptions}}</span> subscriptions</span>
-				<span class="nbSubscribers"><span>{{nbSubscribers}}</span> subscribers</span>
-			</div>
-			<p class="userbio">{{bio}}</p>
-			<div class="tags">
-				{{#tags}}<a class="tag" href="{{url}}">{{id}} ({{c}})</a>{{/tags}}
-			</div>
-		</li>
-		{{/items}}
-	</ul>
-
-	<script>
-		$(document).ready(function () {
-			var $subscr = $(".users li").each(function (i, li) {
-				var $li = $(li);
-				_createSubscribeButton({ id: $li.attr("data-id"), subscribed: $li.attr("data-subscribed") }, $li);
-			});
-			try {
-				$subscr.first().add($subscr.get(1)).css({ border: 0, padding: 0, top: 10 });
-			}
-			catch (e) { }
-		});
-	</script>
-
-	{{^items}}
-	<div class="emptyFeed">No people yet</div>
-	{{/items}}
-
-	{{/showUsers}}
-
-	<!-- COMMON ENDING CODE -->
-
-	{{#header}}
+  {{#header}}
 </div>
 {{/header}}
