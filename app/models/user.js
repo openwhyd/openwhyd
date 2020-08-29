@@ -945,7 +945,7 @@ exports.fetchUserFields = function (subList, attrToCopy, cb) {
 exports.fetchUserFieldsIfNeeded = function (userList, fields, cb) {
   for (var u in userList)
     for (var f in fields)
-      if (!userList[u].hasOwnProperty(fields[f]))
+      if (!(fields[f] in userList[u]))
         return exports.fetchUserFields(userList, fields, cb);
   cb(userFields);
 };

@@ -62,9 +62,7 @@ Dist.prototype.toString = function (prefix) {
       this.nameDistance +
       ' + duration distance: ' +
       this.durationDistance +
-      (this.hasOwnProperty('confidence')
-        ? ' => confidence: ' + this.confidence
-        : ''),
+      ('confidence' in this ? ' => confidence: ' + this.confidence : ''),
   ].join('\n');
 };
 

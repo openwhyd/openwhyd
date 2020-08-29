@@ -231,8 +231,7 @@ function appendTrackMappings(track, cb) {
       c: 1,
     });
   }
-  if (!track.metadata.hasOwnProperty('confidence'))
-    track.metadata.confidence = 1;
+  if (!('confidence' in track.metadata)) track.metadata.confidence = 1;
   // fetch other mappings, based on resolvers
   var resolvers = MAPPING_RESOLVERS.slice();
   (function nextResolver(err) {

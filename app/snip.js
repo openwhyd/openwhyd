@@ -273,8 +273,7 @@ exports.arrayToSet = function (array, value) {
 exports.objArrayToSet = function (array, attr, val) {
   var set = {};
   for (var i in array)
-    if (array[i] && array[i].hasOwnProperty(attr))
-      set[array[i][attr]] = val || array[i];
+    if (array[i] && attr in array[i]) set[array[i][attr]] = val || array[i];
   return set;
 };
 
@@ -362,9 +361,9 @@ exports.excludeKeys = function (map, keySet) {
 exports.checkMissingFields = function (obj, fieldSet) {
   if (!obj || typeof obj !== 'object') return { error: 'object is null' };
   for (var f in fieldSet)
-    if (fieldSet[f] && !obj.hasOwnProperty(f))
+    if (fieldSet[f] && !(f in obj))
       return { field: f, expected: true, error: 'missing field: ' + f };
-    else if (!fieldSet[f] && obj.hasOwnProperty(f))
+    else if (!fieldSet[f] && f in obj)
       return { field: f, expected: false, error: 'forbidden field: ' + f };
 };
 
@@ -380,20 +379,20 @@ exports.checkMistypedFields = function (obj, fieldTypeSet) {
   }
   for (var f in fieldTypeSet)
     if (fieldTypeSet[f]) {
-      if (!obj.hasOwnProperty(f)) return Error('missing field', f);
+      if (!(f in obj)) return Error('missing field', f);
       else if (
         typeof obj[f] !== fieldTypeSet[f] &&
         (fieldTypeSet[f] !== 'array' || !obj[f].splice)
       )
         return Error('mistyped field', f);
-    } else if (obj.hasOwnProperty(f)) return Error('forbidden field', f);
+    } else if (f in obj) return Error('forbidden field', f);
 };
 
 // translateFields({a,b,c}, {b:"bb"}) => {a,bb,c}
 exports.translateFields = function (obj, mapping) {
   if (obj && typeof obj === 'object')
     for (var f in mapping)
-      if (Object.hasOwnProperty.call(obj, f)) {
+      if (f in obj) {
         obj[mapping[f]] = obj[f];
         delete obj[f];
       }
@@ -404,7 +403,7 @@ exports.translateFields = function (obj, mapping) {
 exports.filterFields = function (obj, mapping) {
   var finalObj = {};
   for (var field in mapping)
-    if (obj.hasOwnProperty(field))
+    if (field in obj)
       finalObj[mapping[field] === true ? field : mapping[field]] = obj[field];
   return finalObj;
 };
@@ -815,7 +814,7 @@ exports.checkParams = function (obj, mandatorySet, optionalSet) {
   obj = obj || {};
   for (var fieldName in mandatorySet) storeIfValid(fieldName, mandatorySet);
   for (var fieldName in optionalSet)
-    if (obj.hasOwnProperty(fieldName) && obj[fieldName] != null)
+    if (fieldName in obj && obj[fieldName] != null)
       storeIfValid(fieldName, optionalSet);
   return finalObj;
 };
