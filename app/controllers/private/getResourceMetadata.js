@@ -2,9 +2,6 @@
  * getResourceMetadata controller
  * Extracts image(s) and textual content from a URL
  */
-var URL = require('url');
-var http = require('http');
-var https = require('https');
 var userModel = require('../../models/user');
 
 exports.handleRequest = function (request, reqParams, response) {
@@ -55,28 +52,8 @@ exports.handleRequest = function (request, reqParams, response) {
               }
         );
       });
-    } /*
-		else if (url.startsWith('/m/') || url.startsWith('/k/')) {
-			topicModel.fetchQuick(url, function (topic){
-				console.log(topic);
-				response.legacyRender(!topic ? {error:"not found"} : {
-					id: topic._id,
-					mid: topic.mid,
-					name: topic.name,
-					img: render.imgUrl('/m/'+topic._id),
-					desc: topic.desc,
-					key: topic.key,
-					types: topic.types,
-					cat: topic.cat,
-					category: topic.category,
-					url: url
-				});
-			});
-		}*/
-
+    }
     // TODO: public post page, conversation page
-
-    //getContentType(url, function(type) { response.legacyRender(type) });
   } catch (e) {
     console.log('getResourceMetadata error:', e);
     response.legacyRender(null);

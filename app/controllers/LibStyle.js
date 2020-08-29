@@ -81,7 +81,6 @@ function renderFriendsLibrary(lib, style) {
     );
 
   var options = lib.options;
-  var uid = options.loggedUser.id;
   options.bodyClass = 'pgStream pgWithSideBar';
   options.streamTitle = 'Style: ' + style;
   options.displayPlaylistName = true;

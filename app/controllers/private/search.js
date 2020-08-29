@@ -249,7 +249,7 @@ function fetchSearchPage(myUid, q, cb) {
     followModel.fetchSubscriptionSet(myUid, function (followedUids) {
       var types = ['track', 'user', 'playlist'];
       var results = {};
-      (function next(whenDone) {
+      (function next() {
         if (!types.length) {
           return cb(results);
         }

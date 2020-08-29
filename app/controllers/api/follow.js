@@ -78,7 +78,7 @@ function ranPublicAction(loggedUser, reqParams, cb) {
   var p = snip.translateFields(reqParams, IMPLICIT_PARAMS); //translateParams(reqParams);
   var action = PUBLIC_ACTIONS[p.action];
   if (action) {
-    function fetchSubscriptionStatus(res) {
+    const fetchSubscriptionStatus = (res) => {
       var uids = snip
         .objArrayToValueArray(res, 'uId')
         .concat(snip.objArrayToValueArray(res, 'tId'));
@@ -92,7 +92,7 @@ function ranPublicAction(loggedUser, reqParams, cb) {
           cb(res);
         }
       );
-    }
+    };
     action(p, !loggedUser || !p.isSubscr ? cb : fetchSubscriptionStatus);
     return true;
   }

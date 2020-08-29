@@ -1,9 +1,4 @@
 var http = require('http');
-var mainTemplate = {
-  renderWhydFrame: function (a) {
-    return a;
-  },
-};
 
 var maxResults = 20;
 
@@ -23,7 +18,7 @@ exports.requestVideos = function (query, handler) {
     '&q=' +
     encodeURIComponent(query);
   //console.log("requesting: "+host+url+"...");
-  var req = http
+  http
     .request({ path: url, host: host, port: 80, method: 'GET' }, function (
       res
     ) {

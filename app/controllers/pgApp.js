@@ -11,7 +11,6 @@ var notifEmails = require('../models/notifEmails.js');
 var invitePage = require('../templates/invitePage.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 var templateLoader = require('../templates/templateLoader.js');
-var template = templateLoader.loadTemplate('app/templates/pgApp.html');
 
 var apps = {
   heariam: {

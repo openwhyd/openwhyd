@@ -23,7 +23,7 @@ var SEARCH_FIELD_MAPPING = {
   trackTitle: 'release_title',
 };
 
-function searchTracks(p, cb, raw) {
+function searchTracks(p, cb) {
   p = snip.filterFields(p || {}, SEARCH_FIELD_MAPPING);
   queryDiscogs(p, cb);
 }

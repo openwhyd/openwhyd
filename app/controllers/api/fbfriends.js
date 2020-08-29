@@ -8,7 +8,6 @@
  * @author adrienjoly, whyd
  */
 
-var https = require('https');
 var facebookModel = require('../../models/facebook.js');
 
 exports.handleRequest = function (request, reqParams, response) {

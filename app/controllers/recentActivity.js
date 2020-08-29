@@ -202,7 +202,7 @@ exports.controller = function (request, reqParams, response) {
       analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
   }
 
-  fetchSubscriptions(loggedInUser.id, function (uidList, subscriptions) {
+  fetchSubscriptions(loggedInUser.id, function (uidList) {
     exports.generateActivityFeed(uidList, uidList, reqParams, function (
       pageVars
     ) {

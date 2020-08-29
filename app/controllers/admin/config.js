@@ -3,9 +3,7 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
 var version = require('../../models/version.js');
-var snip = require('../../snip.js');
 var FileController = require('./FileController.js');
 
 function wrapJsonGeneratorToText(name) {

@@ -6,7 +6,6 @@
 
 var mongodb = require('../../models/mongodb.js');
 var ObjectId = mongodb.ObjectId;
-var snip = require('../../snip.js');
 var followModel = require('../../models/follow.js');
 var activityModel = require('../../models/activity.js');
 var postModel = require('../../models/post.js');
@@ -107,65 +106,6 @@ function fetchRepostedTrackSet(uid, options, cb) {
   });
 }
 
-var MAX_RECENT_SAME_TRACKS = 5;
-var MAX_SAME_TRACKS_USERS = 10;
-var MAX_SAME_TRACKS_LOOKUP = 100;
-
-// list of users who posted the same tracks as you, since the last digest, per eId
-function fetchSameTrackSet(uid, options, cb) {
-  var sameTrackSet = {}; // eId -> [uId]
-  if (!options.includeSameTracks) cb(sameTrackSet);
-  else {
-    var myUid = ['' + uid, ObjectId('' + uid)];
-    function onEachTrack(myTrack, nextTrack) {
-      //console.log("- onEachTrack", !!myTrack);
-      var remaining = MAX_RECENT_SAME_TRACKS - Object.keys(sameTrackSet).length;
-      var eId = myTrack && myTrack.eId;
-      if (eId) {
-        var pId = '' + myTrack._id;
-        function onEachSameTrack(sameTrack) {
-          //console.log("  - onEachSameTrack");
-          if (sameTrack.uId && '' + sameTrack.uId != '' + uid)
-            (sameTrackSet[eId] = sameTrackSet[eId] || {
-              id: pId,
-              name: myTrack.name,
-              sameTracks: {},
-            }).sameTracks[sameTrack.uId] = true;
-        }
-        var qTheirPosts = {
-          q: {
-            //	uId: {$nin: myUid},
-            eId: eId,
-          },
-          fields: { uId: true, _id: false },
-          limit: MAX_SAME_TRACKS_USERS,
-        };
-        mongodb.forEach(
-          'post',
-          qTheirPosts,
-          onEachSameTrack,
-          (remaining > 0 && nextTrack) || onEachTrack
-        );
-        // TODO: close cursor?
-      } else if (!nextTrack || remaining < 1) {
-        for (let eId in sameTrackSet)
-          sameTrackSet[eId].sameTracks = snip.mapToObjArray(
-            sameTrackSet[eId].sameTracks,
-            'id'
-          );
-        cb((options.data.sameTrackSet = sameTrackSet));
-      } else nextTrack();
-    }
-    var qMyPosts = {
-      q: { uId: /*{$in: myUid}*/ '' + uid },
-      fields: { eId: true, name: true },
-      limit: MAX_SAME_TRACKS_LOOKUP,
-      sort: [['_id', 'desc']],
-    };
-    mongodb.forEach2('post', qMyPosts, onEachTrack);
-  }
-}
-
 function fetchData(uid, options, cb) {
   options.data = {};
   var fcts = [
@@ -173,7 +113,6 @@ function fetchData(uid, options, cb) {
     fetchRepostedTrackSet,
     fetchSubscribers,
     fetchSubscriptionSet,
-    // fetchSameTrackSet // disabled because too DB and memory intensive => suspected to crash Openwhyd since on openwhyd-2gb instance
   ];
   (function next() {
     var fct = fcts.shift();

@@ -3,7 +3,6 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
 var userModel = require('../../models/user.js');
 var mainTemplate = require('../../templates/mainTemplate.js');
 

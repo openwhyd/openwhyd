@@ -30,11 +30,6 @@ var CONN_OPTIONS = {
 
 //console.log("[APNS] parameters:", CONN_OPTIONS);
 
-var FEEDBACK_OPTIONS = {
-  batchFeedback: true,
-  interval: 300,
-};
-
 var DEFAULT_EXPIRY = 24 * 60 * 60; // 1 day
 var DEFAULT_BADGE = 0;
 var DEFAULT_SOUND = 'ping.aiff';
