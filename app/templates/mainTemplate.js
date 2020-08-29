@@ -42,8 +42,7 @@ exports.defaultPageMeta = {
     'Discover and collect music gems from Youtube, Soundcloud, Deezer and more',
 };
 
-function makeMetaHead(options) {
-  var options = options || {};
+function makeMetaHead(options = {}) {
   var appUrl =
     options.pageUrl &&
     'whyd://app?href=' +
@@ -210,7 +209,7 @@ exports.renderWhydFrame = function (html, params) {
   );
 
   var jsIncludes = [];
-  for (var i in params.js) {
+  for (let i in params.js) {
     var src =
       params.js[i].indexOf('//') > -1
         ? params.js[i]
@@ -252,7 +251,7 @@ exports.renderWhydFrame = function (html, params) {
 };
 exports.renderHeader = function (user, content, params) {
   var uid = user ? user.id : null;
-  var content =
+  content =
     content ||
     [
       '  <div id="headCenter">',
@@ -334,9 +333,7 @@ exports.renderHeader = function (user, content, params) {
     .join('\n');
 };
 
-exports.renderWhydPage = function (params) {
-  var params = params || {};
-
+exports.renderWhydPage = function (params = {}) {
   params.title =
     (params.pageTitle ? params.pageTitle + ' - ' : '') +
     'Openwhyd' +
@@ -366,17 +363,14 @@ exports.renderWhydPage = function (params) {
     .concat([
       'playem-youtube-iframe-patch.js',
       'whydPlayer.js',
-      //	"postBox.js", // search and modal functions were moved to whyd.js
       'dndUpload.js',
       'WhydImgUpload.js',
-      //	"ajaxUpload.js"
     ])
     .concat(params.js || [])
     .concat(params.noDefaultJs ? [] : ['facebook.js']);
 
   params.css = [
     'browse.css',
-    //	"postBox.css", // loaded on demand
     'tipsy.css',
     'userProfileV2.css',
     'userPlaylistV2.css',
@@ -387,8 +381,6 @@ exports.renderWhydPage = function (params) {
   console.log('connected user:', user.name, user.id);
 
   // other recognized params: bodyClass, head, content, sidebar
-
-  var uid = (user || {}).id;
 
   var out = [
     //'<div class="topWarning">🚧 We\'re moving! => Openwhyd will be unavailable on Sunday 21th of May.</div>',
