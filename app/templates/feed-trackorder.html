@@ -1,27 +1,37 @@
 <div class="container">
-	
-	<div class="feedHeader">
-		<span>Drag &amp; drop tracks to set their order</span>
-		<input type="button" id="playlistTrackOrderSubmit" class="greenButton" value="Save">
-		<a class="cancelTrackOrder" href="javascript:history.back()">Cancel</a>
-	</div>
+  <div class="feedHeader">
+    <span>Drag &amp; drop tracks to set their order</span>
+    <input
+      type="button"
+      id="playlistTrackOrderSubmit"
+      class="greenButton"
+      value="Save"
+    />
+    <a class="cancelTrackOrder" href="javascript:history.back()">Cancel</a>
+  </div>
 
-	<div class="posts">
-	{{#posts}}
-		<div class="post" data-pid="{{id}}" data-time="{{agoTimestamp}}" >
-			<img src="{{img}}">
-			<h2>{{name}}</h2>
-		</div>
-	{{/posts}}
-	</div>
+  <div class="posts">
+    {{#posts}}
+    <div class="post" data-pid="{{id}}" data-time="{{agoTimestamp}}">
+      <img src="{{img}}" />
+      <h2>{{name}}</h2>
+    </div>
+    {{/posts}}
+  </div>
 
-	<script>
-		window.uId = "{{uId}}";
-		window.plId = "{{plId}}";
-	</script>
+  <script>
+    window.uId = '{{uId}}';
+    window.plId = '{{plId}}';
+  </script>
 
-	<script src="/js/jquery-ui-1.9.0.sortable.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/js/feed-trackorder.js" type="text/javascript" charset="utf-8"></script>
-
-
+  <script
+    src="/js/jquery-ui-1.9.0.sortable.min.js"
+    type="text/javascript"
+    charset="utf-8"
+  ></script>
+  <script
+    src="/js/feed-trackorder.js"
+    type="text/javascript"
+    charset="utf-8"
+  ></script>
 </div>
