@@ -9,7 +9,7 @@ _[openwhyd.org](https://openwhyd.org) is an open-source music platform used dail
 
 _Tech stack: Node.js, MongoDB, Docker, Mocka, Webdriver.io, jQuery, Electron + iOS app_
 
-**Goal**
+## Goal
 
 Today, ... <!-- describe the situation/usage BEFORE the existence of the feature -->
 
@@ -19,7 +19,7 @@ In order to achieve that, we could ... <!-- (optional) provide solutions, ideas 
 
 <!-- Screenshots and images are appreciated, to illustrate the current situation and your feature -->
 
-**Howto**
+## Howto
 
 <!-- This section explains how to contribute successfully to Openwhyd's repo -->
 
