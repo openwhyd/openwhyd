@@ -11,7 +11,7 @@ _Tech stack: Node.js, MongoDB, Docker, Mocka, Webdriver.io, jQuery, Electron + i
 
 ---
 
-#### Goal
+**Goal**
 
 Today, ... <!-- describe the situation/usage BEFORE the existence of the feature -->
 
@@ -25,7 +25,7 @@ In order to achieve that, we could ... <!-- (optional) provide solutions, ideas 
 
 <!-- This section explains how to contribute successfully to Openwhyd's repo -->
 
-#### Howto
+**Howto**
 
 In order to solve this issue, you are invited to fork this GitHub repository, makes changes to it, and then create a Pull Request so we can merge your changes back to this repository.
 
