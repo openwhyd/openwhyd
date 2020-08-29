@@ -170,19 +170,20 @@ exports.delete = function (p, cb) {
         cb && cb(comment);
         return;
       }
-      postModel.fetchPostById(comment.pId, function (
-        post = { error: 'post not found' }
-      ) {
-        if (post.error) {
-          cb && cb(post);
-          return;
+      postModel.fetchPostById(
+        comment.pId,
+        (post = { error: 'post not found' }) => {
+          if (post.error) {
+            cb && cb(post);
+            return;
+          }
+          if (p.uId != post.uId && comment.uId != p.uId) {
+            cb && cb({ error: 'you are not allowed to delete this comment' });
+            return;
+          }
+          getCol().remove(q, combineResult(cb));
         }
-        if (p.uId != post.uId && comment.uId != p.uId) {
-          cb && cb({ error: 'you are not allowed to delete this comment' });
-          return;
-        }
-        getCol().remove(q, combineResult(cb));
-      });
+      );
     })
   );
 };
