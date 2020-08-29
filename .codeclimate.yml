@@ -1,33 +1,30 @@
-engines: 
+engines:
   duplication:
     enabled: true
     config:
       languages:
-      - javascript
+        - javascript
   eslint:
     enabled: true
-    channel: "eslint-2"
+    channel: 'eslint-2'
     config:
       config: ./.eslintrc
 
 ratings:
   paths:
-    - "./app/**.js"
+    - './app/**.js'
 
 exclude_patterns:
-  - "./config/"
-  - "./public/js/jquery*.js"
-  - "./public/js/swfobject.js"
-  - "./public/js/soundmanager2.js"
-  - "./public/js/*-all.js"
-  - "./public/js/*-min.js"
-  - "./public/js/*.min.js"
-  - "features/"
-  - "**/node_modules/"
-  - "**/unused/"
-  - "**/unused/"
-  - "**/spec/"
-  - "**/test/"
-  - "**/tests/"
-  - "**/vendor/"
-  - "**/*.d.ts"
+  - './config/'
+  - './public/js/jquery*.js'
+  - './public/js/soundmanager2.js'
+  - './public/js/*-all.js'
+  - './public/js/*-min.js'
+  - './public/js/*.min.js'
+  - 'features/'
+  - '**/node_modules/'
+  - '**/spec/'
+  - '**/test/'
+  - '**/tests/'
+  - '**/vendor/'
+  - '**/*.d.ts'

@@ -217,12 +217,6 @@ var DEBUG = false, // for soundmanager
     cb();
   }
 
-  function loadSwfObject(cb) {
-    //console.info("initializing swfobject...");
-    include(urlPrefix + '/js/swfobject.js');
-    cb();
-  }
-
   function runAll(init, cb) {
     var remaining = init.length;
     init.map(function (o) {
@@ -243,7 +237,6 @@ var DEBUG = false, // for soundmanager
   var init = [
     { fct: fetchFeed },
     { fct: loadSoundManager },
-    { fct: loadSwfObject },
     { fct: loadStyle },
   ];
 
