@@ -366,22 +366,16 @@
 			<script>
 				$(function () {
 					window.pageUser = { id: "{{id}}", name: "{{{_js_name}}}" };
-					{ {#hasMore } }
+					/*{{#hasMore}}*/
 					window.nextPageUrl = makeUrl({ after: "{{lastPid}}" }); //window.location.href + "?after=" + "{{lastPid}}";
-					{
-						{
-							/hasMore}}
-							{ {#hasLess } }
-							window.prevPageUrl = makeUrl({ before: "{{firstPid}}" }); //window.location.href + "?before=" + "{{firstPid}}";
-							{
-								{
-									/hasLess}}
-									{ {#playlist } }
-									window.pagePlaylist = { id: "{{id}}", name: "{{{_js_name}}}" };
-									{
-										{
-											/playlist}}
-										});
+					/*{{/hasMore}}*/
+					/*{{#hasLess}}*/
+					window.prevPageUrl = makeUrl({ before: "{{firstPid}}" }); //window.location.href + "?before=" + "{{firstPid}}";
+					/*{{/hasLess}}*/
+					/*{{#playlist}}*/
+					window.pagePlaylist = { id: "{{id}}", name: "{{{_js_name}}}" };
+					/*{{/playlist}}*/
+				});
 			</script>
 			{{/user}}
 
