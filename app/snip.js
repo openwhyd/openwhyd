@@ -466,40 +466,39 @@ exports.getLevenshteinDistance = (function () {
 // table structures
 
 exports.DataTable = function () {
-  var self = this;
-  self.table = [];
-  self.header = null; //[]; // fields
+  this.table = [];
+  this.header = null; //[]; // fields
 
-  self.fromArray = function (array, header) {
-    if (header) self.header = header;
-    self.table = array;
-    return self;
+  this.fromArray = (array, header) => {
+    if (header) this.header = header;
+    this.table = array;
+    return this;
   };
 
-  self.fromMap = function (map, header) {
-    self.header = header || exports.getMapFieldNames(map);
+  this.fromMap = (map, header) => {
+    this.header = header || exports.getMapFieldNames(map);
     //table = /*mapToTable(map, header);*/ [];
     for (var i in map) {
       var line = [
         /*i*/
       ];
       //for (var f in map[i]) line.push(map[i][f]);
-      for (var f in self.header) line.push(map[i][self.header[f]]);
-      self.table.push(line);
+      for (var f in this.header) line.push(map[i][this.header[f]]);
+      this.table.push(line);
     }
-    return self;
+    return this;
   };
 
-  self.sort = function (fct) {
-    self.table.sort(fct);
-    return self;
+  this.sort = (fct) => {
+    this.table.sort(fct);
+    return this;
   };
 
-  function getFullTableCopy() {
-    return [].concat(self.header ? [self.header] : []).concat(self.table);
-  }
+  const getFullTableCopy = () => {
+    return [].concat(this.header ? [this.header] : []).concat(this.table);
+  };
 
-  function toCharSeparatedValues(charSepar, replacement, lineSepar) {
+  const toCharSeparatedValues = (charSepar, replacement, lineSepar) => {
     var table = getFullTableCopy();
     var regExp = new RegExp('[' + charSepar + '\n"]', 'g');
     for (var i in table) {
@@ -509,22 +508,22 @@ exports.DataTable = function () {
       table[i] = table[i].join(charSepar);
     }
     return table.join(lineSepar || '\n');
-  }
+  };
 
-  self.toTsv = function () {
+  this.toTsv = () => {
     return toCharSeparatedValues('\t');
   };
 
-  self.toCsv = function () {
+  this.toCsv = () => {
     return toCharSeparatedValues(',');
   };
 
-  function valToHtmlCell(val) {
+  const valToHtmlCell = (val) => {
     return '<td>' + exports.htmlEntities(val) + '</td>';
-  }
+  };
 
-  self.toHtml = function () {
-    var table = getFullTableCopy().map(function (line) {
+  this.toHtml = () => {
+    var table = getFullTableCopy().map((line) => {
       return '<tr>' + line.map(valToHtmlCell).join('') + '</tr>';
     });
     return [
@@ -546,7 +545,7 @@ exports.DataTable = function () {
       .join('\n');
   };
 
-  return self;
+  return this;
 };
 
 // =========================================================================
