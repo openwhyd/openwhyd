@@ -215,7 +215,7 @@ exports.fetchPostsByGenre = function (genre, p, cb) {
 exports.fetchPostsFromSubscriptions = function (uidList, p, cb) {
   var posts = [];
   if (!uidList || !uidList.length) return cb(posts);
-  var toSkip = (params.skip = parseInt(p.skip || 0)); // TODO: find a more optimal solution (less db queries)
+  var toSkip = (p.skip = parseInt(p.skip || 0)); // TODO: find a more optimal solution (less db queries)
   var ranking = 0;
   plTagsModel.getTagEngine(function (tagEngine) {
     mongodb.forEach2('track', { sort: [['score', 'desc']] }, function (
@@ -318,9 +318,8 @@ var CONCISE_META_FIELDS = {
 
 var MINIMUM_CONFIDENCE = 0.8;
 
-function translateTrackToConciseMetadata(track) {
+function translateTrackToConciseMetadata(track = {}) {
   var concise = {};
-  var track = track || {};
   var meta = track.metadata || {};
   var trackId = meta.uri || meta.id;
   if (
@@ -358,9 +357,7 @@ function hasAltMappings(conciseTrack) {
   return ((conciseTrack || {}).alt || []).length;
 }
 
-function flattenObjectProperties(obj, path, res) {
-  var path = path || [];
-  var res = res || {};
+function flattenObjectProperties(obj, path = [], res = {}) {
   for (let f in obj) {
     path.push(f);
     if (typeof obj[f] == 'object' && !obj[f].splice)
