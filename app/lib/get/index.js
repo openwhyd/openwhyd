@@ -1,7 +1,6 @@
 var url = require('url');
 var http = require('http');
 var https = require('https');
-var fs = require('fs');
 var path = require('path');
 var iconv = require('iconv'); //'iconv-jp'
 
@@ -20,50 +19,8 @@ var CONTENT_TYPE_REG = /([^\s;]+)/;
 //------------------------------------------------------------------------------
 
 function ContentEmbedWrapper() {
-  // wrap/fake jQuery HTTP requests
-  var fakeRequest = function () {
-    var url = null,
-      callback = null;
-
-    for (let i in arguments)
-      if (typeof arguments[i] == 'string' && arguments[i].indexOf('//') > -1)
-        url = arguments[i]./*replace("alt=jsonc", "alt=json").*/ replace(
-          /[&?]callback=\?/,
-          ''
-        );
-      else if (typeof arguments[i] == 'function') callback = arguments[i];
-
-    url = 'https:' + url.substr(url.indexOf('//'));
-    console.log('wrapped request', url /*, callback*/);
-
-    function responseHandler(err, data) {
-      //console.log("wrapped request returns", err || data);
-      try {
-        data = JSON.parse(data);
-        //console.log("successful json", data);
-      } catch (e) {
-        console.log('request error:', e, e.stack);
-      }
-      if (data && data.status && data.location) {
-        console.log('redirecting to -> ', data.location);
-        getPage.Request(data.location, responseHandler);
-      } else {
-        console.log('back to callback, data =', !!data);
-        callback.call(null, /*[*/ data /*]*/);
-      }
-    }
-
-    getPage.Request(url, responseHandler);
-  };
-
-  $ = {
-    //  post: fakeRequest,
-    ajax: fakeRequest,
-    getJSON: fakeRequest,
-  };
   var ContentEmbed = require('../../../public/js/ContentEmbed.js');
   this.embed = ContentEmbed();
-  //return ContentEmbed();
 }
 
 ContentEmbedWrapper.prototype.extractEmbedRef = function (url, callback) {
@@ -160,11 +117,11 @@ Page.prototype.extractEmbeds = function (cb) {
   while (embed) {
     embed = EMBED_REG.exec(this.text);
     if (embed && embed.length) {
-      var wholeElement = embed.shift(); // first item of the array
-      var elementName = embed.shift(); // second item of the array
+      embed.shift(); // first item of the array: wholeElement
+      embed.shift(); // second item of the array: elementName
       while (embed.length > 1) {
-        var attr = embed.shift();
-        var val = embed.shift();
+        embed.shift(); // attr
+        const val = embed.shift();
         if (val && embedUrls.indexOf(val) === -1) {
           embedUrls.push(val);
           //console.log("detected", elementName, attr, val);

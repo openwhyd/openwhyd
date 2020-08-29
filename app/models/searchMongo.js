@@ -3,7 +3,7 @@ var util = require('util');
 // search functions -- not a controller
 
 function noaccent(chaine) {
-  temp = chaine.replace(/[àâä]/gi, 'a');
+  let temp = chaine.replace(/[àâä]/gi, 'a');
   temp = temp.replace(/[éèêë]/gi, 'e');
   temp = temp.replace(/[îï]/gi, 'i');
   temp = temp.replace(/[ôö]/gi, 'o');

@@ -143,7 +143,7 @@ exports.controller = function (request, reqParams, response) {
 
   var isAdmin = request.isAdmin();
 
-  p = reqParams;
+  const p = reqParams;
 
   if (reqParams._1 && reqParams._2)
     p.eId = request.url.split('/api/track')[1].split('?')[0];
