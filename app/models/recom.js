@@ -1,7 +1,7 @@
 var config = require('./config.js');
 var mongodb = require('./mongodb.js');
 var snip = require('../snip.js');
-//var postModel = require("./post.js");
+
 var postModel = {
   forEachPost: function (q, p, handler) {
     mongodb.collections['post'].find(q, p, function (err, cursor) {
@@ -15,10 +15,13 @@ var postModel = {
   },
 };
 
-var MAX_ARTISTS_PER_MATCH = 3;
 var TRACK_MEMORY_USAGE = false;
 
-var sizeof = TRACK_MEMORY_USAGE ? require('object-sizeof') : function () {};
+const nothingToDo = () => {
+  // do nothing
+};
+
+var sizeof = TRACK_MEMORY_USAGE ? require('object-sizeof') : nothingToDo;
 
 function countOccurences(array) {
   var count = {};
@@ -28,73 +31,6 @@ function countOccurences(array) {
   });
 }
 
-/** returns common liked/posted tracks for each user **/
-/*
-exports.fetchCommonTracks = function(uId, options, cb) {
-	var eIds = {};
-	var users = {};
-	var tracks = {};
-	var options = options || {};
-	options.excludeUids = (options.excludeUids || []).concat([""+uId]);
-	function fetchPostedTracks(cb) {
-		console.log("fetching posted tracks...");
-		var q = {eId:{$in:Object.keys(eIds)}, uId:{$nin:options.excludeUids}};
-		postModel.forEachPost(q, {batchSize:1000, fields:{_id: 0, eId:1, uId:1, uNm:1, name:1}}, function(track) {
-			if (!track)
-				cb(users);
-			else if (track.eId && track.uId) {
-				users[track.uId] = users[track.uId] || {id: track.uId, name:track.uNm};
-				(users[track.uId].posted = users[track.uId].posted || []).push(track.eId);
-				tracks[track.eId] = tracks[track.eId] || track.name;
-			}
-		});		
-	}
-	function fetchLikedTracks(cb) {
-		console.log("fetching liked tracks...");
-		var q = {lov:""+uId, uId:{$nin:options.excludeUids}};
-		postModel.forEachPost(q, {batchSize:1000, fields:{_id: 0, eId:1, uId:1, uNm:1, name:1}}, function(track) {
-			if (!track)
-				cb(users);
-			else if (track.eId && track.uId) {
-				users[track.uId] = users[track.uId] || {id: track.uId, name:track.uNm};
-				(users[track.uId].liked = users[track.uId].liked || []).push(track.eId);
-				tracks[track.eId] = tracks[track.eId] || track.name;
-			}
-		});		
-	}
-	function fetchTrackLikers(cb) {
-		console.log("fetching track likers...");
-		var excludedUids = snip.arrayToSet(options.excludeUids);
-		postModel.forEachPost({uId:""+uId}, {batchSize:1000, fields:{_id: 0, eId:1, lov:1, name:1}}, function(track) {
-			if (!track)
-				cb(users);
-			else if (track.eId) {
-				tracks[track.eId] = tracks[track.eId] || track.name;
-				for(var i in track.lov) {
-					var id = track.lov[i];
-					if (!excludedUids[id]) {
-						//likers[track.lov[i]] = true;
-						users[id] = users[id] || {id: id, name:(mongodb.usernames[id] || {}).name};
-						(users[id].liker = users[id].liker || []).push(track.eId);
-					}
-				}
-			}
-		});		
-	}
-	var steps = [fetchTrackLikers, fetchLikedTracks, fetchPostedTracks];
-	postModel.forEachPost({uId:""+uId}, {batchSize:1000, fields:{_id: 0, eId:1}}, function(track) {
-		if (!track)
-			(function runNextStep() {
-				if (steps.length)
-					steps.shift()(runNextStep);
-				else
-					cb(users, tracks);
-			})();
-		else if (track.eId)
-			eIds[track.eId] = true;
-	});
-}
-*/
 exports.matchingEngine = (function () {
   var artists; /// { "manisnotabird" : ["Man Is Not A Bird", popularity] }
   var usersByArtist; // { "manisnotabird" : [ [uId, posted], ... ] }
@@ -169,7 +105,7 @@ exports.matchingEngine = (function () {
   }
 
   var printMemUsage = !TRACK_MEMORY_USAGE
-    ? function () {}
+    ? nothingToDo
     : function () {
         console.log('RECOM MEMORY USAGE...');
         console.log('RECOM MEMORY USAGE, artists:', sizeof(artists));
@@ -233,8 +169,7 @@ exports.matchingEngine = (function () {
      * myArtists: [[ artistId, (int)weight ]]
      * returns { uId: {manisnotabird:4, ...} }
      **/
-    fetchUsersByArtists: function (myArtists, options, cb) {
-      var options = options || {}; // this line must stay before call to waitForIndex, in order to keep in scope
+    fetchUsersByArtists: function (myArtists, options = {}, cb) {
       waitForIndex(function () {
         var recomUsers = {};
         var excludedUid = snip.arrayToSet(options.excludeUids || []);
@@ -255,71 +190,20 @@ exports.matchingEngine = (function () {
             (recomUser.posted = recomUser.posted || []).push(artist);
           }
         }
-        cb(recomUsers /*, artists*/);
+        cb(recomUsers);
       });
     },
     /**
      * returns { uId: {manisnotabird:4, ...} }
      **/
-    fetchCommonArtists: function (uId, options, cb) {
-      var self = this;
-      var options = options || {}; // this line must stay before call to waitForIndex, in order to keep in scope
+    fetchCommonArtists: function (uId, options = {}, cb) {
       options.excludeUids = (options.excludeUids || []).concat(['' + uId]);
-      waitForIndex(function () {
-        self.fetchUsersByArtists(artistsByUser[uId], options, cb);
-      });
+      waitForIndex(() =>
+        this.fetchUsersByArtists(artistsByUser[uId], options, cb)
+      );
     },
   };
 })();
-
-//exports.matchingEngine.init(); // init recommendation index on startup
-
-/** returns common liked/posted artists for each user **/
-/*
-exports.fetchCommonArtists = function(uId, options, cb) {
-	function fetchTheirLikedArtists(cb) {
-		console.log("fetching their liked artists...");
-		var excludedUids = snip.arrayToSet(options.excludeUids);
-		postModel.forEachPost({uId:""+uId}, {batchSize:1000, fields:{_id: 0, lov:1, name:1}}, function(track) {
-			if (!track)
-				cb(users);
-			else if (track.name && track.uId && track.lov && track.lov.length) {
-				var artistName = track.name ? snip.detectArtistName(snip.cleanTrackName(track.name)) : "";
-				artistName = artistName ? snip.normalizeArtistName(artistName) : "";
-				if (artistName && myArtists[artistName]) {
-					for(var i in track.lov) {
-						var id = track.lov[i];
-						users[id] = users[id] || {id: id, name:(mongodb.usernames[id] || {}).name};
-						(users[id].liker = users[id].liker || []).push(artistName);
-					}						
-				}
-			}
-		});		
-	}
-}
-*/
-
-/** returns a scored list of recommended users, based on common tracks **/
-/*
-exports.recomUsersByTracks = function(uId, options, cb) {
-	exports.fetchCommonTracks(uId, options, function(users, tracks){
-		for(var i in users) {
-			var eids = (users[i].posted || []).concat(users[i].liked || []).concat(users[i].liker || []);
-			var bestTracks = countOccurences(eids);
-			if (bestTracks.length > MAX_ARTISTS_PER_MATCH)
-				bestTracks = bestTracks.slice(0, MAX_ARTISTS_PER_MATCH);
-			users[i].artistNames = [];
-			for (var j in bestTracks) {
-				var artistName = snip.detectArtistName(snip.cleanTrackName(tracks[bestTracks[j].id]));
-				if (artistName)
-					users[i].artistNames.push(artistName);
-			}
-			users[i].score = (users[i].posted || []).length * 4 + (users[i].liked || []).length * 2 + (users[i].liker || []).length
-		}
-		cb(users);
-	});
-}
-*/
 
 /** returns a similarity scored and the list of common artists **/
 exports.computeUserSimilarity = function (uId1, uId2, cb) {
@@ -363,58 +247,16 @@ exports.recomUsersByArtists = function (uId, options, cb) {
       users[i].artistNames = [];
       bestArtists = bestArtists.map(function (artist) {
         return {
-          name: exports.matchingEngine.getArtistName(
-            artist.id
-          ) /*,
-					rarity: exports.matchingEngine.getArtistRarity(artist.id)*/,
+          name: exports.matchingEngine.getArtistName(artist.id),
         };
       });
-      /*bestArtists.sort(function(a,b){
-				return b.rarity - a.rarity;
-			});*/
       for (var j in bestArtists) {
         var artist = bestArtists[j];
         if (artist && artist.name)
           users[i].artistNames.push(bestArtists[j].name);
       }
-      users[i].score =
-        ((users[i].posted || []).length * 1) /
-        //	+	(users[i].liked || []).length * 0.5
-        //	+	(users[i].liker || []).length * 0.25
-        nbArtists;
+      users[i].score = ((users[i].posted || []).length * 1) / nbArtists;
     }
     cb(users);
   });
 };
-
-/** returns a scored list of recommended users, based on common rare artists => poor results (only one artist per recommended user) **/
-/*
-exports.recomUsersByRareArtists = function(uId, options, cb) {
-	function sortByRarity(array, artists) {
-		var res = {}; // artistid -> popularity score
-		for (var j in array)
-			res[array[j]] = artists[array[j]][1];
-		return snip.mapToObjArray(res, "id", "p").sort(function(a,b){
-			return a.p - b.p;
-		});
-	}
-	exports.matchingEngine.fetchCommonArtists(uId, options, function(users, artists){
-		for(var i in users) {
-			var commonArtists = (users[i].posted || []).concat(users[i].liked || []).concat(users[i].liker || []);
-			var rareArtists = sortByRarity(commonArtists, artists);
-			if (rareArtists.length > MAX_ARTISTS_PER_MATCH)
-				rareArtists = rareArtists.slice(0, MAX_ARTISTS_PER_MATCH);
-			users[i].artistNames = [];
-			users[i].score = 0;
-			for (var j in rareArtists) {
-				var artist = artists[rareArtists[j].id];
-				if (artist) {
-					users[i].score -= artist[1]; // sum opposite popularities => rarity scoring
-					users[i].artistNames.push(artist[0]);
-				}
-			}
-		}
-		cb(users);
-	});
-}
-*/

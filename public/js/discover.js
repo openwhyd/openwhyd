@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, goToPage, showMessage, _renderUserInList */
 
 function htmlDecode(s) {
   return $('<div />').html(s).text();
@@ -6,7 +6,6 @@ function htmlDecode(s) {
 
 var sections = {
   featured: function ($content) {
-    var $ul = $content.find('ul');
     var $img = $content.find('input[name=img]');
     var $thumb = $content.find('.thumb');
     function updateThumb() {
@@ -98,89 +97,13 @@ var sections = {
       } else (json || {}).error ? showMessage(json.error) : console.log('rankings error', json);
     });
   },
-  users: function ($content) {
-    var $subtitle = $content.find('#subtitle').show();
-    var scoreClasses = [
-      [80, 'Holy shit!!!'],
-      [50, 'Great match!'],
-      [20, 'Not too bad!'],
-      [10, "Well, it's a good start..."],
-      [0, 'Meh'],
-    ];
-    function getScoreClass(score) {
-      for (var i in scoreClasses) {
-        //console.log(typeof score, typeof i, score >= parseInt(i))
-        if (score >= scoreClasses[i][0]) return scoreClasses[i][1];
-      }
-    }
-    function renderRecommendedUsers(users) {
-      var $out = $('<ul>').addClass('userList');
-      for (var i = 0; i < users.length; ++i) {
-        var $li = _renderUserInList(users[i]);
-        if (users[i].score) {
-          users[i].score = Math.min(users[i].score, 1) * 100;
-          var $box = $('<div class="recomBox">')
-            .text('Similarity')
-            .append(
-              $('<div class="scoreClass">').text(getScoreClass(users[i].score))
-            )
-            .append(
-              '<div class="bar"><div style="width:' +
-                users[i].score +
-                '%;"></div></div>'
-            );
-          //.append($('<div class="score">').text(users[i].score))
-          if (users[i].artistNames && users[i].artistNames.length) {
-            var artistNames = '';
-            if (users[i].artistNames.length > 3) {
-              artistNames =
-                ' + ' + (users[i].artistNames.length - 3) + ' other artists...';
-              artistNames =
-                users[i].artistNames.slice(0, 3).join(', ') + artistNames;
-            } else artistNames = users[i].artistNames.join(', ');
-            $box.append('<span>You both like: ' + artistNames + '</span>');
-          }
-          $box.prependTo($li);
-        }
-        $out.append($li);
-      }
-      return $out.ajaxify ? $out.ajaxify() : $out;
-    }
-    var timeouts = [
-      setTimeout(function () {
-        $subtitle.text('Hang on... Your recommendations are on their way!');
-      }, 7000),
-      setTimeout(function () {
-        $subtitle.text(
-          'Hmm... still waiting? Please try to refresh this page, and let us know if nothing shows up.'
-        );
-      }, 14000),
-    ];
-    $.get('/discover', { ajax: 'recommendedUsers' }, function (json) {
-      $('.loading').removeClass('loading');
-      if (json && !json.error && json.users) {
-        console.log(json.users);
-        for (var i in timeouts) clearTimeout(timeouts[i]);
-        if (json.users.length)
-          $content
-            .html(
-              '<h1>These recommendations are based on the tracks you shared and liked:</h1>'
-            )
-            .append(renderRecommendedUsers(json.users));
-        else {
-          $subtitle.hide();
-          $content.find('.nocontent').show();
-        }
-      } else (json || {}).error ? showMessage(json.error) : console.log('recomUsers error', json);
-    });
-  },
 };
 
 $(function () {
   var $panel = $('.whitePanel');
-  var $tabs = $('#bigTabSelector a') /*.removeClass("loading")*/
+  $('#bigTabSelector a') /*.removeClass("loading")*/
     .click(function () {
-      /*$(this)*/ $panel.addClass('loading');
+      $panel.addClass('loading');
     })
     .each(function () {
       var $tab = $(this);
