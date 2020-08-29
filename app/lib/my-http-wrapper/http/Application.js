@@ -80,7 +80,7 @@ function defaultErrorHandler(req, reqParams, res, statusCode) {
 }
 
 const makeNotFound = (errorHandler) =>
-  function notFound(req, res, next) {
+  function notFound(req, res) {
     errorHandler(req, req.mergedParams, res, 404);
   };
 
@@ -143,7 +143,7 @@ function loadRoutesFromFile(file) {
 }
 
 // for a given app.route entry, returns { method, path } to define an Express endpoint
-function parseExpressRoute({ pattern, name }) {
+function parseExpressRoute({ pattern }) {
   const [upperCaseMethod, legacyPath] = pattern.split('?')[0].split(/\s+/);
   const method = upperCaseMethod.toLowerCase();
   const pathParams = legacyPath.match(/\{[\w$]+\}/g);

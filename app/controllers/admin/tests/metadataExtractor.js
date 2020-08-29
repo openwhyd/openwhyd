@@ -113,7 +113,7 @@ var TestRunner = require("../../../serverTestRunner.js").ServerTestRunner;
 var testRunner = new TestRunner().addTests(TESTS);
 */
 
-exports.makeTests = function (p) {
+exports.makeTests = function () {
   return [
     /*
 		["worker requests calls back exactly once", function(cb){

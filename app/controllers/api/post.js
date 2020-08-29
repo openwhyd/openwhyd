@@ -233,7 +233,7 @@ exports.actions = {
         lastFm.updateNowPlaying2(
           post,
           (mongodb.usernames[p.uId].lastFm || {}).sk,
-          function (res) {
+          function () {
             //console.log("-> last fm response", res);
           }
         );

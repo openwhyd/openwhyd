@@ -70,7 +70,7 @@ function makePostEditDlg(action, reqParams, playlists, cb) {
       p.repost = true;
       p.pId = reqParams.pId;
       // bug fix: avoid re-mentionning users mentionned in the original post
-      p.text = p.text.replace(snip.RE_MENTION, function (str, name, id) {
+      p.text = p.text.replace(snip.RE_MENTION, function (str, name) {
         return name;
       });
     }
@@ -121,7 +121,7 @@ function makeAddDlg(reqParams, playlists, user, cb) {
 /**
  * called by bookmarklet, when user selects a resource to share from an external web page
  */
-exports.controller = function (request, reqParams, response, error) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('bookmarklet.controller', reqParams);
   if (!reqParams) reqParams = {};
 
