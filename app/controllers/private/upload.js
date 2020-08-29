@@ -112,9 +112,7 @@ exports.controller = function (req, requestParams, res) {
 
   console.log('upload.controller completed', files);
   var results = {},
-    remaining = 0;
-
-  for (let i in files) remaining++;
+    remaining = Object.keys(files).length;
 
   var options = {};
   for (let i in defaults) options[i] = defaults[i];
