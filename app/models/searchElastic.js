@@ -48,9 +48,8 @@ function getJson(pathSuffix, cb) {
     .end();
 }
 
-function postJson(data, cb) {
+function postJson(data = {}, cb) {
   var pathSuffix = '';
-  var data = data || {};
   if (data._type && data._id) {
     pathSuffix += '/' + data._type + '/' + data._id;
     delete data._type;
@@ -151,9 +150,7 @@ exports.query = function(q, handler) {
 	});
 }
 */
-exports.query = function (q, handler) {
-  var q = q || {};
-
+exports.query = function (q = {}, handler) {
   var filter = [];
 
   if (q.uId) filter.push({ term: { uId: q.uId } });

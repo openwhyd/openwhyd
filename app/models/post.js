@@ -12,7 +12,6 @@ var notif = require('../models/notif.js');
 var searchModel = require('../models/search.js');
 var activityModel = require('../models/activity.js');
 var trackModel = require('../models/track.js');
-//var recomModel = require("../models/recom.js");
 var plTagsModel = require('../models/plTags.js');
 var notifModel = require('../models/notif.js');
 
@@ -110,16 +109,6 @@ exports.fetchAll = function (handler, after, limit) {
   );
 };
 
-exports.fetchAllUntil = function (date, limit, handler) {
-  console.log('post.fetchAllUntil date=', date);
-  exports.fetchPosts(
-    { _id: { $gt: fakeOid } },
-    {},
-    { limit: limit, until: date },
-    handler
-  );
-};
-
 exports.fetchByAuthorsOld = function (uidList, options, handler) {
   console.log('post.fetchByAuthors...');
   var query = {
@@ -162,7 +151,6 @@ var MAX_OTHER_AUTHORS = 3;
 exports.fetchByOtherAuthors = function (uidList, options, cb) {
   //console.time("post.fetchByOtherAuthors...");
   var posts = [],
-    query = {},
     uidSet = snip.arrayToSet(uidList);
   mongodb.forEach2('post', { q: {}, sort: [['_id', 'desc']] }, function (
     post,
@@ -227,7 +215,7 @@ function setPostLove(collection, pId, uId, state, handler) {
   var update = state
     ? { $push: { lov: '' + uId } }
     : { $pull: { lov: '' + uId } };
-  collection.update({ _id: ObjectId('' + pId) }, update, function (err, res) {
+  collection.update({ _id: ObjectId('' + pId) }, update, function (err) {
     if (err) console.log(err);
     collection.findOne({ _id: ObjectId('' + pId) }, function (err, post) {
       if (err) console.log(err);
@@ -318,7 +306,7 @@ exports.savePost = function (postObj, handler) {
     mongodb.collections['post'].update(
       { _id: ObjectId('' + pId) },
       update,
-      function (error, result) {
+      function (error) {
         if (error) console.log('update error', error);
         mongodb.collections['post'].findOne(
           { _id: ObjectId('' + pId) },
@@ -426,7 +414,7 @@ exports.incrPlayCounter = function (pId, cb) {
   mongodb.collections['post'].update(
     { _id: _id },
     { $inc: { nbP: 1 } },
-    function (err, res) {
+    function (err) {
       if (err) console.log(err);
       //cb && cb(res || err);
       exports.fetchPostById(pId, function (postObj) {
@@ -439,9 +427,8 @@ exports.incrPlayCounter = function (pId, cb) {
 
 // wrappers for playlists
 
-exports.fetchPlaylistPosts = function (uId, plId, options, handler) {
+exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
   //console.log("fetchPlaylistPosts(uId, plId, options) + order: ", uId, plId, options, playlistSort);
-  var options = options || {};
   options = {
     limit: options.limit,
     after: options.after,
@@ -519,8 +506,7 @@ exports.unsetPlaylist = function (uId, plId, handler) {
   );
 };
 
-exports.setPlaylistOrder = function (uId, plId, order, handler) {
-  var order = order || [];
+exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
   console.log(
     'post.setPlaylistOrder(uId, plId, order.length): ',
     uId,

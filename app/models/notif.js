@@ -65,9 +65,8 @@ function getUser(u) {
   return u && mongodb.usernames['' + (u.id || u._id || u)];
 }
 
-function pushToMobile(code, toUser, text, payload) {
-  var initialToUser = toUser;
-  var toUser = getUser(toUser);
+function pushToMobile(code, initialToUser, text, payload) {
+  var toUser = getUser(initialToUser);
   if (!(toUser || {}).pref)
     return console.error(
       'push notif prefs not found for user: ',
@@ -160,29 +159,26 @@ function pushNotif(to, q, set, push, cb) {
   );
 }
 
-function makeLink(text, url) {
+function makeLink(text /*, url*/) {
   //return "<a href='" + url + "'>" + snip.htmlEntities(text) + "</a>";
   return '<span>' + snip.htmlEntities(text) + '</span>';
 }
 
 // main methods
-/*
-setInterval(function(){
-	// remove documents with empty uid
-	db["notif"].remove({uId:{$size:0}}, {multi:true, w:0});
-}, 60*1000);
-*/
+
 exports.clearUserNotifsForPost = function (uId, pId) {
   if (!uId || !pId) return;
   var idList = [pId];
   try {
     idList.push(mongodb.ObjectID.createFromHexString(pId));
-  } catch (e) {}
+  } catch (e) {
+    console.error('error in clearUserNotifsForPost:', e);
+  }
   db['notif'].update(
     { _id: { $in: idList } },
     { $pull: { uId: uId } },
     { safe: true /*w:0*/ },
-    function (err, objects) {
+    function () {
       // remove documents with empty uid
       db['notif'].remove(
         { _id: { $in: idList }, uId: { $size: 0 } },
@@ -422,9 +418,7 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
   }
 };
 
-exports.comment = function (post, comment, cb) {
-  var post = post || {},
-    comment = comment || {};
+exports.comment = function (post = {}, comment = {}, cb) {
   var commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.comment' });
@@ -443,7 +437,7 @@ exports.comment = function (post, comment, cb) {
         href: '/c/' + post._id,
       },
       null,
-      function (res) {
+      function () {
         notifEmails.sendComment(post, comment, cb);
         pushToMobile(
           'Com',
@@ -458,9 +452,7 @@ exports.comment = function (post, comment, cb) {
   }
 };
 
-exports.mention = function (post, comment, mentionedUid, cb) {
-  var post = post || {},
-    comment = comment || {};
+exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
   var commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !mentionedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.mention' });
@@ -475,7 +467,7 @@ exports.mention = function (post, comment, mentionedUid, cb) {
         img: '/img/u/' + comment.uId,
         href: '/c/' + post._id,
       },
-      function (res) {
+      function () {
         notifEmails.sendMention(mentionedUid, post, comment, cb);
         pushToMobile(
           'Men',
@@ -490,9 +482,7 @@ exports.mention = function (post, comment, mentionedUid, cb) {
   }
 };
 
-exports.commentReply = function (post, comment, repliedUid, cb) {
-  var post = post || {},
-    comment = comment || {};
+exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
   var commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !repliedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.commentReply' });
@@ -512,7 +502,7 @@ exports.commentReply = function (post, comment, repliedUid, cb) {
         },
         $addToSet: { uId: repliedUid },
       },
-      function (res) {
+      function () {
         notifEmails.sendCommentReply(post, comment, repliedUid, cb);
         pushToMobile(
           'Rep',
@@ -539,7 +529,7 @@ exports.inviteAccepted = function (inviterId, newUser) {
       img: '/img/u/' + newUser.id,
       href: '/u/' + newUser.id,
     },
-    function (res) {
+    function () {
       pushToMobile(
         'Acc',
         { id: inviterId },

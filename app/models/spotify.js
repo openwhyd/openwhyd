@@ -1,5 +1,4 @@
 var assert = require('assert');
-var querystring = require('querystring');
 var snip = require('../snip.js');
 var trackMatcher = require('../models/trackMatcher.js');
 
@@ -46,15 +45,9 @@ exports.searchTracks = function (p, cb, raw) {
       });
   });
 };
-/*
-exports.searchByIsrc = function(isrc, cb) {
-	return querySpotify("isrc:" + isrc, function(res){
-		cb(res || {});
-	});
-}
-*/
-exports.fetchTrackMetadata = function (trackId, cb, raw) {
-  var trackId = ('' + trackId).split(':').pop();
+
+exports.fetchTrackMetadata = function (_trackId, cb, raw) {
+  const trackId = ('' + _trackId).split(':').pop();
   assert.ok(trackId, 'trackId is null');
   var url = 'http://ws.spotify.com/lookup/1/.json?uri=spotify:track:' + trackId;
   //console.log(url);

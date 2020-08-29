@@ -19,10 +19,6 @@ var defaults = {
   thumbDims: '180x', // image resize settings (optimized for profile/topic pictures)
 };
 
-// image resize settings
-var thumbWidths = [180 /*, 50*/]; // optimized for profile pictures
-var thumbHeight = null; // auto-scaling
-
 function processFile(file, options, callback) {
   console.log('processFile', file, options);
   if (!file || !file.path)
@@ -45,11 +41,11 @@ function processFile(file, options, callback) {
 
     console.log('thumbDims', thumbDims);
 
-    function whenDone() {
+    const whenDone = () => {
       console.log('whendone');
       if (!options.keepOriginal) uploadCtr.deleteFile(file.path);
       callback(result);
-    }
+    };
 
     if (thumbDims.length > 0) {
       // create thumbs
@@ -70,12 +66,7 @@ function processFile(file, options, callback) {
           thumbWidthHeight.length > 0 ? thumbWidthHeight[0] : null;
         var thumbHeight =
           thumbWidthHeight.length > 1 ? thumbWidthHeight[1] : null;
-        genThumb(thumbWidth, thumbHeight, function (
-          thumbFile,
-          thumbWidth,
-          thumbHeight,
-          dims
-        ) {
+        genThumb(thumbWidth, thumbHeight, function (thumbFile) {
           console.log('generated thumb', thumbDim, thumbFile);
           result.thumbs[/*dims*/ thumbDim] = uploadCtr.cleanFilePath(thumbFile);
           if (!options.keepOriginal)

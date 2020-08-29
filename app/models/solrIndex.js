@@ -10,7 +10,6 @@ var port = process.env['SOLR_PORT'] || 8983;
 
 var queryPath = '/solr/select/';
 var updatePath = '/solr/update/json?wt=json&commit=true';
-//var commitPath = "/solr/update/json?wt=json?commit=true";
 
 var DEFAULT_BOOST = 10000;
 
@@ -51,8 +50,7 @@ exports.request = function (path, data, callback) {
   req.end();
 };
 
-exports.query = function (args, callback) {
-  var args = args || {};
+exports.query = function (args = {}, callback) {
   var path =
     queryPath +
     '?version=2.2&wt=json&start=0&rows=' +
@@ -69,9 +67,12 @@ exports.query = function (args, callback) {
   });
 };
 
+const noOp = () => {
+  /* nothing to do */
+};
+
 // doc = { id: "whyd", name: "whyd" }
-exports.addDoc = function (doc, callback) {
-  var callback = callback || function () {};
+exports.addDoc = function (doc, callback = noOp) {
   console.log('solrIndex.addDoc: ', doc);
   exports.request(
     updatePath,

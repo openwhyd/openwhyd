@@ -88,9 +88,9 @@ function ensureScUrl(url) {
   else return url;
 }
 
-exports.fetchTrackMetadata = function (trackId, cb, raw) {
-  assert.ok(trackId, 'trackId is null');
-  var trackId = '' + trackId;
+exports.fetchTrackMetadata = function (_trackId, cb, raw) {
+  assert.ok(_trackId, 'trackId is null');
+  const trackId = '' + _trackId;
   var url =
     'https://api.soundcloud.com' +
     ('' + parseInt(trackId) === trackId

@@ -132,7 +132,7 @@ var fieldList = Object.keys(FIELDS_TO_COPY)
   .concat(Object.keys(FIELDS_TO_SUM))
   .concat(['prev']);
 
-function mergePostData(track, post, offset) {
+function mergePostData(track, post) {
   for (let f in fieldList) post[fieldList[f]] = track[fieldList[f]];
   post.trackId = track._id;
   post.rankIncr = track.prev - track.score;
