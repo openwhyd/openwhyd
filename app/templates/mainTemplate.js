@@ -360,7 +360,6 @@ exports.renderWhydPage = function (params) {
         'ui.js',
         'whyd.js', // topicBrowser.js
         //	"ContentEmbed.js", // definitely replaced by playemjs, at last! :-)
-        'swfobject.js',
       ]
   )
     .concat(['playem-' + playemFile + '.js'])
@@ -397,7 +396,6 @@ exports.renderWhydPage = function (params) {
     '<div class="topWarning">Warning: your web browser is not supported by Openwhyd. Please upgrade to a modern browser.</div>',
     '<![endif]-->',
     //	'<a id="feedbackLink" href="mailto:contact@openwhyd.org?subject=[proto-support]&body=Please%20enter%20your%20feedback%20here">Send feedback</a>',
-    //	'<a id="feedbackLink" href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;">&nbsp;</a>',
     exports.renderHeader(user, params.whydHeaderContent, params),
     '<div id="contentPane">',
     '  <div id="mainPanel">',
@@ -408,7 +406,6 @@ exports.renderWhydPage = function (params) {
     params.footer || exports.footer,
     exports.olark,
     params.endOfBody || '',
-    //	'<script src="'+render.urlPrefix+'/js/uservoice.js"></script>'
   ];
 
   return this.renderWhydFrame(out.join('\n'), params);

@@ -208,7 +208,6 @@ exports.renderFeedEmbed = function (feedHtml, options) {
       ? 'feedEmbedV2.css'
       : 'feedEmbed.css'
   );
-  options.js.push('swfobject.js');
   options.js.push('playem-min.js');
   options.js.push('playem-youtube-iframe-patch.js');
   options.js.push('whydPlayer.js');
