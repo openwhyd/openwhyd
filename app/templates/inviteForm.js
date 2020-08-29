@@ -21,8 +21,7 @@ exports.refreshTemplates();
 var MSG_HTML = '<span>[[ your personal message here ]]</span>';
 var MSG_TOKEN = '[[MSG]]';
 
-exports.renderInviteForm = function (params) {
-  var params = params || {};
+exports.renderInviteForm = function (params = {}) {
   params.fields = [{ n: 1 }, { n: 2 }]; //var NB_INVITES = 3;
   params.pageTitle = 'Invite your friends!';
   params.inviteCode = 'XXXXXXXXXXXXXX';

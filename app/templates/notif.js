@@ -20,12 +20,6 @@ var FEEDBACK_FOOTER =
   "P.S  : We'd love your feedback! We're all ears at " +
   FEEDBACK_EMAIL +
   ', and you can follow @open_whyd on twitter.';
-var FEEDBACK_FOOTER_HTML =
-  "P.S  : We'd love your feedback! We're all ears at <a href=\"mailto:" +
-  FEEDBACK_EMAIL +
-  '" style="color:#3177AF;text-decoration:underline;">' +
-  FEEDBACK_EMAIL +
-  '</a>, and you can follow <a href="http://twitter.com/open_whyd" style="color:#3177AF;text-decoration:underline;">@open_whyd</a> on twitter.';
 
 var MAX_HOT_TRACKS = 3,
   MAX_RECOM_USERS = 4,
@@ -49,8 +43,7 @@ var renderTemplateFile = (function () {
     TEMPLATES[i].template = templateLoader.loadTemplate(
       TEMPLATE_PATH + TEMPLATES[i].file
     );
-  return function (templateName, p) {
-    var p = p || {};
+  return function (templateName, p = {}) {
     for (let i in TEMPLATE_DEFAULTS)
       if (p[i] == undefined) p[i] = TEMPLATE_DEFAULTS[i];
     var template = (TEMPLATES[templateName] || {}).template;
@@ -59,7 +52,6 @@ var renderTemplateFile = (function () {
 })();
 
 function renderLink(text, href) {
-  var href = href;
   if (href && href[0] == '/') href = urlPrefix + href;
   return '<a href="' + href + '">' + text + '</a>';
 }
@@ -267,7 +259,7 @@ exports.generatePasswordUpdated = function (user) {
   };
 };
 
-exports.generateEmailUpdated = function (user) {
+exports.generateEmailUpdated = function () {
   return {
     subject: 'your Openwhyd email address was successfully updated!',
     bodyText: [
@@ -311,7 +303,7 @@ exports.generateSubscribedToUser = function (sender, favoritedId) {
   }).renderNotifEmailObj(sender.name + ' has subscribed to you on Openwhyd!');
 };
 
-exports.generateLike = function (user, post, postAuthor) {
+exports.generateLike = function (user, post) {
   return new NotifDigest({
     recipient: mongodb.getUserFromId(post.uId),
     notifType: 'emLik',

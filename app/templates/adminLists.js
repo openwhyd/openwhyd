@@ -3,13 +3,12 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 var uiSnippets = require('../templates/uiSnippets.js');
 
-function cleanInfoArray(info) {
+function cleanInfoArray(_info) {
   var result = [];
-  var info = info && info.join ? info : [info];
+  var info = _info && _info.join ? _info : [_info];
   for (let i in info)
     if (info[i]) result.push(/*uiSnippets.htmlEntities*/ info[i]);
   return result;
@@ -166,9 +165,7 @@ exports.AdminLists = function () {
         ['<script>', '/*<![CDATA[*/', html, '/*]]>*/', '</script>'].join('\n')
       );
     },
-    renderPage: function (params) {
-      var params = params || {};
-
+    renderPage: function (params = {}) {
       if (params.css) params.css.unshift('admin.css');
       else params.css = ['admin.css'];
 

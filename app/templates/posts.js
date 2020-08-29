@@ -20,8 +20,7 @@ var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
 // database functions
 
-function getPostId(post) {
-  var post = post || {};
+function getPostId(post = {}) {
   return '' + (post._id || post.id);
 }
 

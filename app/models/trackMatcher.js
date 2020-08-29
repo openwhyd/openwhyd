@@ -42,8 +42,7 @@ function Dist(track, hit) {
   this.hitTrackDuration = hit.duration;
   return this;
 }
-Dist.prototype.toString = function (prefix) {
-  var prefix = prefix || '';
+Dist.prototype.toString = function (prefix = '') {
   return [
     prefix +
       'track: ' +
@@ -82,11 +81,11 @@ function TrackMatcher(track) {
         snip.getLevenshteinDistance(track.artistName, hit.artistName) +
         snip.getLevenshteinDistance(track.trackTitle, hit.trackTitle);
     } else if (richHit) {
-      var comb = getBestTitle(hit, dist.targetName);
+      const comb = getBestTitle(hit, dist.targetName);
       dist.hitTrackName = comb[0];
       dist.nameDistance = comb[1];
     } else if (richTrack) {
-      var comb = getBestTitle(track, dist.hitTrackName);
+      const comb = getBestTitle(track, dist.hitTrackName);
       dist.targetName = comb[0];
       dist.nameDistance = comb[1];
     } else {
