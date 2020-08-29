@@ -50,7 +50,8 @@
 	{{#results}}
 
 	<div id="tabSelector">
-		<ul style="overflow:auto;"><!-- style= hack to prevent a side effect of damien's integration -->
+		<ul style="overflow:auto;">
+			<!-- style= hack to prevent a side effect of damien's integration -->
 			<li>
 				<a id="tab_tracks" href="javascript:{};//#tracks" class="selected">{{nbPosts}} Tracks<div></div></a>
 			</li>
@@ -95,14 +96,9 @@
 							<span class="username">{{name}}<span>
 									{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}}
 						</a>
-						<span class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
-							{{#isUserLogged}}
-								onclick="$(this).each(switchSubscription);"
-							{{/isUserLogged}}
-							{{^isUserLogged}}
-								onclick="window.location = '/signup';"
-							{{/isUserLogged}}
-							data-uid="{{_id}}"
+						<span class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}" {{#isUserLogged}}
+							onclick="$(this).each(switchSubscription);" {{/isUserLogged}} {{^isUserLogged}}
+							onclick="window.location = '/signup';" {{/isUserLogged}} data-uid="{{_id}}"
 							onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
 							onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';">
 							{{#isSubscribed}}Following{{/isSubscribed}}

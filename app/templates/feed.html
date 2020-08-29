@@ -56,8 +56,7 @@
 			</div>
 			<div class="body">
 				<div class="video">
-					<a href="javascript:openVideo()" alt="Watch the video tutorial"
-						title="Watch the video tutorial"></a>
+					<a href="javascript:openVideo()" alt="Watch the video tutorial" title="Watch the video tutorial"></a>
 				</div>
 			</div>
 		</div>
@@ -124,8 +123,7 @@
 				<ul>
 					{{#items}}
 					<li data-uid="{{id}}">
-						<div style="background-image:url('/img/u/{{id}}');"
-							onclick="$(this).parent().find('a.userName').click();">
+						<div style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();">
 						</div>
 						<a class="userName" href="/u/{{id}}">{{name}}</a>
 						<span class="subscribe" onclick="subscribeToUserAndClear(this.parentNode)">Subscribe</span>
@@ -149,8 +147,7 @@
 				<ul>
 					{{#items}}
 					<li data-uid="{{id}}">
-						<div style="background-image:url('/img/u/{{id}}');"
-							onclick="$(this).parent().find('a.userName').click();">
+						<div style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();">
 						</div>
 						<a class="userName" href="/u/{{id}}">{{name}}</a>
 						{{#subscription}}
@@ -334,14 +331,14 @@
 			{{#user}}
 
 			<div id="tabSelector">
-				<a href="/u/{{id}}" {{^showPlaylists}}{{^showLikes}}class="selected" {{/showLikes}}{{/showPlaylists}}>
+				<a href="/u/{{id}}" class="{{^showPlaylists}}{{^showLikes}}selected{{/showLikes}}{{/showPlaylists}}">
 					{{#ownProfile}}All tracks{{/ownProfile}}
 					{{^ownProfile}}Stream{{/ownProfile}}
 				</a>
-				<a href="/u/{{id}}/playlists" {{#showPlaylists}}class="selected" {{/showPlaylists}}>
+				<a href="/u/{{id}}/playlists" class="{{#showPlaylists}}selected{{/showPlaylists}}">
 					{{nbPlaylists}} Playlists
 				</a>
-				<a href="/u/{{id}}/likes" {{#showLikes}}class="selected" {{/showLikes}}>
+				<a href="/u/{{id}}/likes" class="{{#showLikes}}selected{{/showLikes}}">
 					{{nbLikes}} Likes
 				</a>
 				<a href="javascript:return false;" class="right filter">

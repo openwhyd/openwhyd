@@ -1,132 +1,124 @@
-
-
-
 <div class="posts">
 
-{{#posts}}
+	{{#posts}}
 
-<div class="background-header">
-	<div class="jsDynThumb" style="background-image:url({{img}})"></div>
-</div>
-
-<div class="post {{cssClass}}" data-pid="{{id}}"
-{{#score}} data-score="{{score}}" {{/score}}
-{{#order}} data-order="{{n}}" {{/order}}
-{{#repost}} data-initialpid="{{pId}}" {{/repost}}
-{{#isLoved}} data-loved="true" {{/isLoved}}
-data-time="{{agoTimestamp}}" >
-
-
-	<a class="thumb jsDynThumb" target="_blank" data-eid="{{eId}}" data-img="{{img}}" onclick="return playTrack(this);"
-	style="background-image:url('{{img}}');">
-	<img src="{{img}}">
-	<div class="play"></div>
-	</a>
-
-	<h2><a href="{{postUrl}}" class="no-ajaxy" >{{name}}</a></h2>
-	<span class="ago" datetime="{{agoTimestamp}}">
-		<a href="{{postUrl}}">{{agoRendered}}</a>
-	</span>
-
-	<p class="author">
-		<span style="{{#uId}}background-image:url('/img/u/{{uId}}');{{/uId}}"></span>
-		<a href="/u/{{uId}}">{{uNm}}</a> {{#showAdded}}added this track{{/showAdded}}
-		{{#pl}}
-		to <a href="{{plUrl}}">{{name}}</a>
-		{{/pl}}
-		{{#repost}}
-		via <a href="/u/{{uId}}">{{uNm}}</a>
-		{{/repost}}
-	</p>
-
-
-
-	<div class="stats">
-		<span class="nbReposts" style="{{^hasReposts}}display:none;{{/hasReposts}}" onclick="javascript:showReposts('{{id}}')">
-			<span>{{nbReposts}}</span>
-		</span>
-		
-		<span class="nbLoves" style="{{^hasLoves}}display:none;{{/hasLoves}}" onclick="javascript:showPostLovers('{{id}}')" >
-			<span>{{nbLoves}}</span>
-		</span>
-		<span class="nbComments" style="{{^hasComments}}display:none;{{/hasComments}}" onclick="javascript:$('textarea.commentEntry').focus();">
-			<span>{{nbComments}}</span>
-		</span>
+	<div class="background-header">
+		<div class="jsDynThumb" style="background-image:url({{img}})"></div>
 	</div>
 
-	<div class="btns">
-		<a class="btnRepost" href="javascript:publishPost('{{id}}');" >
-			Add to
+	<div class="post {{cssClass}}" data-pid="{{id}}" {{#score}} data-score="{{score}}" {{/score}} {{#order}}
+		data-order="{{n}}" {{/order}} {{#repost}} data-initialpid="{{pId}}" {{/repost}} {{#isLoved}} data-loved="true"
+		{{/isLoved}} data-time="{{agoTimestamp}}">
+
+
+		<a class="thumb jsDynThumb" target="_blank" data-eid="{{eId}}" data-img="{{img}}" onclick="return playTrack(this);"
+			style="background-image:url('{{img}}');">
+			<img src="{{img}}">
+			<div class="play"></div>
 		</a>
-		<span>&middot;</span>
-		<a class="btnLike {{#isLoved}}selected{{/isLoved}}" href="javascript:toggleLovePost('{{id}}');">
-			{{#isLoved}}Liked{{/isLoved}}
-			{{^isLoved}}Like{{/isLoved}}
-		</a>
-		<span>&middot;</span>
-		<a class="btnComment" onclick="javascript:$('textarea.commentEntry').focus();" >
-			Comment
-		</a>
-		<span>&middot;</span>
-		<a class="btnShare" href="javascript:sharePost('{{id}}');">
-			<span> Share </span>
-		</a>
-		{{#ownPost}}
-		<span class="postEdit">
-			<span>&middot;</span>
-			<a onclick="modalPostEditBox('{{id}}')">
-				Edit
+
+		<h2><a href="{{postUrl}}" class="no-ajaxy">{{name}}</a></h2>
+		<span class="ago" datetime="{{agoTimestamp}}">
+			<a href="{{postUrl}}">{{agoRendered}}</a>
+		</span>
+
+		<p class="author">
+			<span style="{{#uId}}background-image:url('/img/u/{{uId}}');{{/uId}}"></span>
+			<a href="/u/{{uId}}">{{uNm}}</a> {{#showAdded}}added this track{{/showAdded}}
+			{{#pl}}
+			to <a href="{{plUrl}}">{{name}}</a>
+			{{/pl}}
+			{{#repost}}
+			via <a href="/u/{{uId}}">{{uNm}}</a>
+			{{/repost}}
+		</p>
+
+
+
+		<div class="stats">
+			<span class="nbReposts" style="{{^hasReposts}}display:none;{{/hasReposts}}"
+				onclick="javascript:showReposts('{{id}}')">
+				<span>{{nbReposts}}</span>
+			</span>
+
+			<span class="nbLoves" style="{{^hasLoves}}display:none;{{/hasLoves}}"
+				onclick="javascript:showPostLovers('{{id}}')">
+				<span>{{nbLoves}}</span>
+			</span>
+			<span class="nbComments" style="{{^hasComments}}display:none;{{/hasComments}}"
+				onclick="javascript:$('textarea.commentEntry').focus();">
+				<span>{{nbComments}}</span>
+			</span>
+		</div>
+
+		<div class="btns">
+			<a class="btnRepost" href="javascript:publishPost('{{id}}');">
+				Add to
 			</a>
-		</span>
-		{{/ownPost}}
+			<span>&middot;</span>
+			<a class="btnLike {{#isLoved}}selected{{/isLoved}}" href="javascript:toggleLovePost('{{id}}');">
+				{{#isLoved}}Liked{{/isLoved}}
+				{{^isLoved}}Like{{/isLoved}}
+			</a>
+			<span>&middot;</span>
+			<a class="btnComment" onclick="javascript:$('textarea.commentEntry').focus();">
+				Comment
+			</a>
+			<span>&middot;</span>
+			<a class="btnShare" href="javascript:sharePost('{{id}}');">
+				<span> Share </span>
+			</a>
+			{{#ownPost}}
+			<span class="postEdit">
+				<span>&middot;</span>
+				<a onclick="modalPostEditBox('{{id}}')">
+					Edit
+				</a>
+			</span>
+			{{/ownPost}}
+		</div>
+
+		<div class="ext">
+
+			<form class="comments">
+				{{#comments}}
+				<div class="comment {{cssClass}}" data-cid="{{_id}}">
+					<div class="author">
+						<span style="background-image:url('/img/u/{{uId}}');"></span>
+						<a href="/u/{{uId}}">
+							{{uNm}}
+							<span class="t">{{tRendered}}</span>
+						</a>
+					</div>
+					<p class="text">{{{html}}}</p>
+					{{#canDelete}}<div class="delete"></div>{{/canDelete}}
+				</div>
+				{{/comments}}
+				{{#loggedUser}}
+				<div class="newComment">
+					<span class="author">
+						<span style="background-image:url('/img/u/{{id}}');"></span>
+					</span>
+					<div>
+						<textarea class="commentEntry mention" placeholder="Comment"></textarea>
+					</div>
+				</div>
+				<div class="newTip">
+					<input type="submit" value="Post comment">
+					<p>Tip: You can mention people with "@"</p>
+				</div>
+				{{/loggedUser}}
+			</form>
+		</div>
+
+
 	</div>
 
-	<div class="ext">
-
-		<form class="comments">
-			{{#comments}}
-			<div class="comment {{cssClass}}" data-cid="{{_id}}">
-				<div class="author">
-					<span style="background-image:url('/img/u/{{uId}}');"></span>
-					<a href="/u/{{uId}}">
-						{{uNm}}
-						<span class="t">{{tRendered}}</span>
-					</a>
-				</div>
-				<p class="text">{{{html}}}</p>
-				{{#canDelete}}<div class="delete"></div>{{/canDelete}}
-			</div>
-			{{/comments}}
-			{{#loggedUser}}
-			<div class="newComment">
-				<span class="author">
-					<span style="background-image:url('/img/u/{{id}}');"></span>
-				</span>
-				<div>
-					<textarea class="commentEntry mention" placeholder="Comment"></textarea>
-				</div>
-			</div>
-			<div class="newTip">
-				<input type="submit" value="Post comment">
-				<p>Tip: You can mention people with "@"</p>
-			</div>
-			{{/loggedUser}}
-		</form>	
-	</div>
-
-
-</div>	
-
-		{{#via}}
-			<a class="powered {{hostClass}}" href="{{contentUrl}}" target="_blank">Powered by  {{hostLabel}}</a>
-		{{/via}}
-{{/posts}}
+	{{#via}}
+	<a class="powered {{hostClass}}" href="{{contentUrl}}" target="_blank">Powered by {{hostLabel}}</a>
+	{{/via}}
+	{{/posts}}
 
 </div>
-
-
-
 
 <script src="/js/postPage.js"></script>
-
-
