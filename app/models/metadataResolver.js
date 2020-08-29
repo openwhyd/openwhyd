@@ -110,7 +110,7 @@ function findBestMatches(trackMetadata, hits) {
   if (!hits.length) return [];
   var matcher = TrackMatcher(trackMetadata);
   return (hits || [])
-    .map(function (hit, i) {
+    .map(function (hit) {
       hit._d = matcher.evalConfidence(hit);
       hit.distance = hit._d.distance;
       hit.c = hit._d.confidence;
@@ -237,9 +237,7 @@ function appendTrackMappings(track, cb) {
   (function nextResolver(err) {
     var resolver = resolvers.shift();
     if (!resolver || err) return cb(err, track);
-    var resolverName = resolver[0],
-      resolverFct = resolver[1];
-    //		console.log(" -> trying", resolverName, "resolver...");
+    var resolverFct = resolver[1]; // FYI: resolver[0] is resolverName
     resolverFct(track, nextResolver);
   })();
 }
