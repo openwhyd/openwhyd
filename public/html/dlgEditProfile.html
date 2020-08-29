@@ -1,57 +1,88 @@
 <h1>Edit profile</h1>
 <div id="dlgEditProfile">
-	<div class="avatar-box">
-		<div class="fldLabel">Avatar:</div>
-		<div class="dlgImgPane">
-	 		<img src="/images/no_image.png" /><br/>
-	 		<span href="javascript:setAvatar()">Delete</span>
-		</div>
-		
-		<div class="wrapUploadBox">
-			<form id="avatarForm" class="uploadBox" action="/upload" method="post" enctype="multipart/form-data">
-				<p>Select the image file to import</p>
-				<small>Only JPG, PNG or GIF formats are accepted</small>
-				<input type="file" name="postImg" />
-			</form>
-	
-			<div id="avatarDrop" class="uploadBox">
-				<p>Drop your image file here</p>
-				<small>Only JPG, PNG or GIF formats are accepted</small>
-				<button>Or Select from computer</button>
-			</div>
-		
-			<div id="avatarUploading" class="uploadBox">
-				<p>Uploading image, please wait...</p>
-				<div class="progress">
-					<div></div>
-				</div>
-			</div><!-- /avatarUploading -->
-		</div> <!-- /wrapUploadBox -->
-		<p class="legend">This photo is your Openwhyd identity, and will appear with your account.</p>
-	</div><!-- /avatar-box -->
-	
-	<form id="profileForm" action="/api/user" method="get">
-		<div class="fld">
-			<label class="fldLabel" for="userName">Name:</label>
-			<input type="text" id="userName" name="name" placeholder="John Doe">
-			<p class="legend">Make it easy for people to find you, think about the people who will search for you</p>
-		</div>
-		<div class="fld">
-			<label class="fldLabel" for="biographyProfile">Biography:</label>
-			<textarea name="bio" maxlength="250" placeholder="I love cookies and headbanging" id="biographyProfile"></textarea>
-			<p class="legend">Tell us bit more about you</p>
-		</div>
-		<div class="fld">
-			<label class="fldLabel" for="location-prof">Location:</label>
-			<input type="text" name="loc" placeholder="Paris, France" id="location-prof">
-			<p class="legend">Where are you in the world?</p>
-		</div>
-		<div class="fld">
-			<label class="fldLabel" for="websiteProfile">Website URL:</label>
-			<input type="text" name="lnk_home" placeholder="http://mywebsite.com/" id="websiteProfile">
-			<p class="legend">Do you have a Website or a blog? Enter the address here</p>
-		</div>
-		<!--
+  <div class="avatar-box">
+    <div class="fldLabel">Avatar:</div>
+    <div class="dlgImgPane">
+      <img src="/images/no_image.png" /><br />
+      <span href="javascript:setAvatar()">Delete</span>
+    </div>
+
+    <div class="wrapUploadBox">
+      <form
+        id="avatarForm"
+        class="uploadBox"
+        action="/upload"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <p>Select the image file to import</p>
+        <small>Only JPG, PNG or GIF formats are accepted</small>
+        <input type="file" name="postImg" />
+      </form>
+
+      <div id="avatarDrop" class="uploadBox">
+        <p>Drop your image file here</p>
+        <small>Only JPG, PNG or GIF formats are accepted</small>
+        <button>Or Select from computer</button>
+      </div>
+
+      <div id="avatarUploading" class="uploadBox">
+        <p>Uploading image, please wait...</p>
+        <div class="progress">
+          <div></div>
+        </div>
+      </div>
+      <!-- /avatarUploading -->
+    </div>
+    <!-- /wrapUploadBox -->
+    <p class="legend">
+      This photo is your Openwhyd identity, and will appear with your account.
+    </p>
+  </div>
+  <!-- /avatar-box -->
+
+  <form id="profileForm" action="/api/user" method="get">
+    <div class="fld">
+      <label class="fldLabel" for="userName">Name:</label>
+      <input type="text" id="userName" name="name" placeholder="John Doe" />
+      <p class="legend">
+        Make it easy for people to find you, think about the people who will
+        search for you
+      </p>
+    </div>
+    <div class="fld">
+      <label class="fldLabel" for="biographyProfile">Biography:</label>
+      <textarea
+        name="bio"
+        maxlength="250"
+        placeholder="I love cookies and headbanging"
+        id="biographyProfile"
+      ></textarea>
+      <p class="legend">Tell us bit more about you</p>
+    </div>
+    <div class="fld">
+      <label class="fldLabel" for="location-prof">Location:</label>
+      <input
+        type="text"
+        name="loc"
+        placeholder="Paris, France"
+        id="location-prof"
+      />
+      <p class="legend">Where are you in the world?</p>
+    </div>
+    <div class="fld">
+      <label class="fldLabel" for="websiteProfile">Website URL:</label>
+      <input
+        type="text"
+        name="lnk_home"
+        placeholder="http://mywebsite.com/"
+        id="websiteProfile"
+      />
+      <p class="legend">
+        Do you have a Website or a blog? Enter the address here
+      </p>
+    </div>
+    <!--
 		<div class="fld">
 			<div class="fldLabel">Add service...</div>
 			<div class="add_fb"><div></div><span>Instagram</span></div>
@@ -61,71 +92,100 @@
 			<div class="add_igrm"><div></div><span>Instagram</span></div>
 		</div>
 		-->
-		<div class="fld">
-			<label class="fldLabel" for="facebookProfile">Facebook URL:</label>
-			<input type="text" name="lnk_fb" placeholder="http://facebook.com/my.name" id="facebookProfile">
-		</div>
-		<div class="fld">
-			<label class="fldLabel" for="twitterProfile">Twitter URL:</label>
-			<input type="text" name="lnk_tw" placeholder="http://twitter.com/mynick" id="twitterProfile">
-		</div>
-		<div class="fld">
-			<label class="fldLabel" for="soundcloudProfile">Soundcloud URL:</label>
-			<input type="text" name="lnk_sc" placeholder="http://soundcloud.com/mynick" id="soundcloudProfile">
-		</div>
-		<div class="fld">
-			<label class="fldLabel" for="youtubeProfile">Youtube URL:</label>
-			<input type="text" name="lnk_yt" placeholder="http://youtube.com/user/mynick" id="youtubeProfile">
-		</div>
-		<div class="fld">
-			<label class="fldLabel" for="instagramProfile">Instagram URL:</label>
-			<input type="text" name="lnk_igrm" placeholder="http://instagram.com/mynick" id="instagramProfile">
-		</div>
-		<p class="bottomText">Visit <a href="/settings">account setttings</a> to change your password, email address, and other preferences.</p>
-		<input type="submit" class="btnSave greenButton" value="Save">
-	</form>
-
+    <div class="fld">
+      <label class="fldLabel" for="facebookProfile">Facebook URL:</label>
+      <input
+        type="text"
+        name="lnk_fb"
+        placeholder="http://facebook.com/my.name"
+        id="facebookProfile"
+      />
+    </div>
+    <div class="fld">
+      <label class="fldLabel" for="twitterProfile">Twitter URL:</label>
+      <input
+        type="text"
+        name="lnk_tw"
+        placeholder="http://twitter.com/mynick"
+        id="twitterProfile"
+      />
+    </div>
+    <div class="fld">
+      <label class="fldLabel" for="soundcloudProfile">Soundcloud URL:</label>
+      <input
+        type="text"
+        name="lnk_sc"
+        placeholder="http://soundcloud.com/mynick"
+        id="soundcloudProfile"
+      />
+    </div>
+    <div class="fld">
+      <label class="fldLabel" for="youtubeProfile">Youtube URL:</label>
+      <input
+        type="text"
+        name="lnk_yt"
+        placeholder="http://youtube.com/user/mynick"
+        id="youtubeProfile"
+      />
+    </div>
+    <div class="fld">
+      <label class="fldLabel" for="instagramProfile">Instagram URL:</label>
+      <input
+        type="text"
+        name="lnk_igrm"
+        placeholder="http://instagram.com/mynick"
+        id="instagramProfile"
+      />
+    </div>
+    <p class="bottomText">
+      Visit <a href="/settings">account setttings</a> to change your password,
+      email address, and other preferences.
+    </p>
+    <input type="submit" class="btnSave greenButton" value="Save" />
+  </form>
 </div>
 
 <script>
-/*<![CDATA[*/
+  /*<![CDATA[*/
 
-$(function() {
+  $(function () {
+    console.log('init dlgEditProfile...');
+    var prevAvatarUrl = null;
 
-	console.log("init dlgEditProfile...");
-	var prevAvatarUrl = null;
+    var $dlg = $('#dlgEditProfile');
+    var whydImgUpload = new WhydImgUpload({
+      holder: $dlg,
+      onError: function (msg) {
+        showMessage(msg, true);
+      },
+    });
 
-	var $dlg = $("#dlgEditProfile");
-	var whydImgUpload = new WhydImgUpload({
-		holder: $dlg,
-		onError: function(msg) {
-			showMessage(msg, true);
-		}
-	});
+    window.onDialogClose = function () {
+      console.log('closing dlgEditProfile');
+      whydImgUpload.dispose(); //deleteTempAvatar();
+      delete window.onDialogClose;
+    };
 
-	window.onDialogClose = function() {
-		console.log("closing dlgEditProfile");
-		whydImgUpload.dispose(); //deleteTempAvatar();
-		delete window.onDialogClose;
-	}
+    function closeAndRefresh(changedAvatar) {
+      var needsReload = $.browser.mozilla || $.browser.safari;
+      if (
+        changedAvatar &&
+        needsReload &&
+        confirm('Please reload Openwhyd to see your new avatar now.')
+      )
+        window.location.reload(true);
+      else goToPage(window.location.href); //window.location.reload(false);
+      window.onDialogClose();
+      avgrundClose();
+    }
 
-	function closeAndRefresh(changedAvatar) {
-		var needsReload = $.browser.mozilla || $.browser.safari;
-		if (changedAvatar && needsReload && confirm("Please reload Openwhyd to see your new avatar now."))
-			window.location.reload(true);
-		else
-			goToPage(window.location.href); //window.location.reload(false);
-		window.onDialogClose();
-		avgrundClose();
-	}
-
-	function refreshBackgroundImg(selectors, replacement) {
-		//var $elt;
-		//var replacement = replacement.split("/").pop(); // (val.indexOf("?") < 0 ? "?" : "&") + "_=" + Date.now() + "\")"
-		var replacement = "/uAvatarImg/" + replacement.split("/").pop();
-		for(var i in selectors)
-			$(selectors[i]).css("background-image", "url("+replacement+")");
-			/*.each(function(){
+    function refreshBackgroundImg(selectors, replacement) {
+      //var $elt;
+      //var replacement = replacement.split("/").pop(); // (val.indexOf("?") < 0 ? "?" : "&") + "_=" + Date.now() + "\")"
+      var replacement = '/uAvatarImg/' + replacement.split('/').pop();
+      for (var i in selectors)
+        $(selectors[i]).css('background-image', 'url(' + replacement + ')');
+      /*.each(function(){
 				var val = ($elt = $(this)).css("background-image");
 				if (val && val.indexOf(window.user.id) !== -1) {
 					val = val.replace(window.user.id, replacement);
@@ -133,54 +193,60 @@ $(function() {
 				}
 			})
 			*/
-	}
+    }
 
-	var $profileForm = $dlg.find("#profileForm");
+    var $profileForm = $dlg.find('#profileForm');
 
-	$profileForm.submit(function(e) {
-		e.preventDefault();
-		var data = {};
-		$profileForm.find("*[name]").each(function(i, elt){
-			data[elt.name] = elt.value;
-		});
-		var lastAvatarUrl = whydImgUpload.getImgUrl();
-		if (lastAvatarUrl)
-			data.img = lastAvatarUrl;
-		var changedAvatar = lastAvatarUrl && (lastAvatarUrl != prevAvatarUrl);
-		$.ajax({
-			type: "POST", url: "/api/user",
-			data: data,
-			success: function(result) {
-				// update user avatars on page
-				if (changedAvatar)
-					refreshBackgroundImg(["#loginDiv a[style]", "#profileTop .avatar"/*, ".post .author span[style]"*/], lastAvatarUrl);
-				showMessage("Your profile has been successfully updated!");
-				closeAndRefresh(changedAvatar);
-			},
-			error: function(result) {
-				console.log("error", result);
-				showMessage("Oops! something went wrong... Please try again!", true);
-			}
-		});
-		return false;
-	});
+    $profileForm.submit(function (e) {
+      e.preventDefault();
+      var data = {};
+      $profileForm.find('*[name]').each(function (i, elt) {
+        data[elt.name] = elt.value;
+      });
+      var lastAvatarUrl = whydImgUpload.getImgUrl();
+      if (lastAvatarUrl) data.img = lastAvatarUrl;
+      var changedAvatar = lastAvatarUrl && lastAvatarUrl != prevAvatarUrl;
+      $.ajax({
+        type: 'POST',
+        url: '/api/user',
+        data: data,
+        success: function (result) {
+          // update user avatars on page
+          if (changedAvatar)
+            refreshBackgroundImg(
+              [
+                '#loginDiv a[style]',
+                '#profileTop .avatar' /*, ".post .author span[style]"*/,
+              ],
+              lastAvatarUrl
+            );
+          showMessage('Your profile has been successfully updated!');
+          closeAndRefresh(changedAvatar);
+        },
+        error: function (result) {
+          console.log('error', result);
+          showMessage('Oops! something went wrong... Please try again!', true);
+        },
+      });
+      return false;
+    });
 
-	// POPULATE USER FORM
+    // POPULATE USER FORM
 
-	$.ajax({
-		type: "GET", url: "/api/user",
-		success: function(user){
-			prevAvatarUrl = user.img;
-			$("#userName").val(user.name);
-			$("textarea[name=bio]").val(user.bio);
-			$("input[name=loc]").val(user.loc);
-			for(var f in user.lnk)
-				$profileForm.find("*[name=lnk_"+f+"]").val(user.lnk[f]);
-			$dlg.find(".dlgImgPane > img").attr("src", '/img/u/'+user.id);
-		}
-	});
+    $.ajax({
+      type: 'GET',
+      url: '/api/user',
+      success: function (user) {
+        prevAvatarUrl = user.img;
+        $('#userName').val(user.name);
+        $('textarea[name=bio]').val(user.bio);
+        $('input[name=loc]').val(user.loc);
+        for (var f in user.lnk)
+          $profileForm.find('*[name=lnk_' + f + ']').val(user.lnk[f]);
+        $dlg.find('.dlgImgPane > img').attr('src', '/img/u/' + user.id);
+      },
+    });
+  });
 
-});
-	
-/*]]>*/
+  /*]]>*/
 </script>

@@ -1,107 +1,110 @@
 <style type="text/css">
-	/*<![CDATA[*/
+  /*<![CDATA[*/
 
-	body {
-		background: #F4F4F4;
-	}
+  body {
+    background: #f4f4f4;
+  }
 
-	.pgOnboarding h1 {
-		margin-top: 60px;
-		margin-bottom: 40px;
-		color: #535559;
-	}
+  .pgOnboarding h1 {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    color: #535559;
+  }
 
-	#btnNext {
-		float: right;
-		position: relative;
-		top: -5px;
-		background: url('/images/btn-jumpin.png') no-repeat;
-		width: 112px;
-		height: 50px;
-	}
+  #btnNext {
+    float: right;
+    position: relative;
+    top: -5px;
+    background: url('/images/btn-jumpin.png') no-repeat;
+    width: 112px;
+    height: 50px;
+  }
 
-	#btnNext:hover {
-		background-position: 0 -52px;
-	}
+  #btnNext:hover {
+    background-position: 0 -52px;
+  }
 
-	#btnNext:active {
-		background-position: 0 -103px;
-	}
+  #btnNext:active {
+    background-position: 0 -103px;
+  }
 
-	#mainContent h1 {
-		font-size: 20px;
-		font-weight: bold;
-		color: #2f2f2f;
-		text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
-		line-height: 70px;
-	}
+  #mainContent h1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2f2f2f;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+    line-height: 70px;
+  }
 
-	/* main box */
+  /* main box */
 
-	#mainBox {
-		clear: both;
-		position: relative;
-		width: 100%;
-		/*height: 390px;*/
-		border: 1px solid #777;
-		background: rgb(248, 248, 248);
-		border: 1px solid rgb(181, 187, 191);
-		border-bottom: 1px solid rgb(133, 139, 141);
-		border-radius: 5px;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		box-shadow: inset 0 0 1px rgba(255, 255, 255, 1), 0 0 1px rgba(0, 0, 0, 0.18);
-		-webkit-box-shadow: inset 0 0 1px rgba(255, 255, 255, 1), 0 0 1px rgba(0, 0, 0, 0.18);
-		-moz-box-shadow: inset 0 0 1px rgba(255, 255, 255, 1), 0 0 1px rgba(0, 0, 0, 0.18);
-		margin-bottom: 40px;
-	}
+  #mainBox {
+    clear: both;
+    position: relative;
+    width: 100%;
+    /*height: 390px;*/
+    border: 1px solid #777;
+    background: rgb(248, 248, 248);
+    border: 1px solid rgb(181, 187, 191);
+    border-bottom: 1px solid rgb(133, 139, 141);
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    box-shadow: inset 0 0 1px rgba(255, 255, 255, 1),
+      0 0 1px rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: inset 0 0 1px rgba(255, 255, 255, 1),
+      0 0 1px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: inset 0 0 1px rgba(255, 255, 255, 1),
+      0 0 1px rgba(0, 0, 0, 0.18);
+    margin-bottom: 40px;
+  }
 
-	.bookmarkletBox {
-		margin: 50px;
-		background: url("/images/clickanddrag.jpg") no-repeat 60% 0;
-	}
+  .bookmarkletBox {
+    margin: 50px;
+    background: url('/images/clickanddrag.jpg') no-repeat 60% 0;
+  }
 
-	#bookmarklet {
-		float: left;
-		background: url("/images/btn-add-to-my-library.png");
-		width: 236px;
-		height: 66px;
+  #bookmarklet {
+    float: left;
+    background: url('/images/btn-add-to-my-library.png');
+    width: 236px;
+    height: 66px;
 
-		text-align: center;
-		line-height: 66px;
-		font-size: 28px;
-		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255, 255, 255, 0.8);
-		color: #07567D;
-	}
+    text-align: center;
+    line-height: 66px;
+    font-size: 28px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255, 255, 255, 0.8);
+    color: #07567d;
+  }
 
-	#bookmarklet span {
-		display: none;
-	}
+  #bookmarklet span {
+    display: none;
+  }
 
-	.bookmarkletBox>h2 {
-		clear: both;
-		padding-top: 50px;
-		color: #414141;
-		text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
-	}
+  .bookmarkletBox > h2 {
+    clear: both;
+    padding-top: 50px;
+    color: #414141;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+  }
 
-	.bookmarkletBox>ol {
-		color: #414141;
-		line-height: 16px;
-		font-size: 14px;
-	}
+  .bookmarkletBox > ol {
+    color: #414141;
+    line-height: 16px;
+    font-size: 14px;
+  }
 
-	.bookmarkletBox>ol>li {
-		margin-top: 10px;
-	}
+  .bookmarkletBox > ol > li {
+    margin-top: 10px;
+  }
 
-	.youtubeVid {
-		margin: 30px 100px;
-		border: 1px solid #CCC;
-		padding: 2px;
-	}
+  .youtubeVid {
+    margin: 30px 100px;
+    border: 1px solid #ccc;
+    padding: 2px;
+  }
 
-	/*]]>*/
+  /*]]>*/
 </style>
 
 <!--<body class="step4">-->
@@ -110,54 +113,66 @@
 <h1>Complete your library with tracks from any website</h1>
 
 <div id="mainBox">
+  <div class="bookmarkletBox">
+    <a
+      id="bookmarklet"
+      onclick="setTimeout(function(){alert('Please drag & drop this button to your browser\'s bookmarks bar')},50); return false;"
+      title="Drop this bookmarklet to the bookmarks bar of your web browser"
+      href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();"
+    >
+      Openwhyd ✚ Track
+    </a>
 
-	<div class="bookmarkletBox">
+    <h2>To install the bookmarklet in your browser:</h2>
+    <ol>
+      <!-- CONDITIONAL PART: depends on the user's web browser -->
+      <li class="instr chrome" style="hidden">
+        In Chrome, display your bookmarks bar by clicking
+        <strong>View &gt; Always Show Bookmarks Bar</strong>
+      </li>
 
-		<a id="bookmarklet"
-			onclick="setTimeout(function(){alert('Please drag & drop this button to your browser\'s bookmarks bar')},50); return false;"
-			title="Drop this bookmarklet to the bookmarks bar of your web browser"
-			href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();">
-			Openwhyd ✚ Track
-		</a>
+      <li class="instr firefox" style="hidden">
+        In Firefox, display your bookmarks bar by clicking
+        <strong>View &gt; Toolbars &gt; Bookmarks Toolbar</strong>
+      </li>
 
-		<h2>To install the bookmarklet in your browser:</h2>
-		<ol>
-			<!-- CONDITIONAL PART: depends on the user's web browser -->
-			<li class="instr chrome" style="hidden">
-				In Chrome, display your bookmarks bar by clicking
-				<strong>View &gt; Always Show Bookmarks Bar</strong></li>
+      <li class="instr safari" style="hidden">
+        In Safari, display your bookmarks bar by clicking
+        <strong>View &gt; Show Bookmarks Bar</strong>
+      </li>
 
-			<li class="instr firefox" style="hidden">
-				In Firefox, display your bookmarks bar by clicking
-				<strong>View &gt; Toolbars &gt; Bookmarks Toolbar</strong></li>
+      <li class="instr msie" style="hidden">
+        In Internet Explorer, display your bookmarks bar by clicking
+        <strong>Tools &gt; Toolbars &gt; Favorites Bar</strong>
+      </li>
+      <!-- END OF CONDITIONAL PART -->
 
-			<li class="instr safari" style="hidden">
-				In Safari, display your bookmarks bar by clicking
-				<strong>View &gt; Show Bookmarks Bar</strong></li>
+      <li>Drag this button, and drop it in your bookmarks bar</li>
+      <li>
+        While browsing the web, click the bookmarklet whenever you see some
+        music you want to add to your library
+      </li>
+    </ol>
 
-			<li class="instr msie" style="hidden">
-				In Internet Explorer, display your bookmarks bar by clicking
-				<strong>Tools &gt; Toolbars &gt; Favorites Bar</strong></li>
-			<!-- END OF CONDITIONAL PART -->
-
-			<li>Drag this button, and drop it in your bookmarks bar</li>
-			<li>While browsing the web, click the bookmarklet whenever you see some music you want to add to your library</li>
-		</ol>
-
-		<iframe class="youtubeVid" width="560" height="315" src="//www.youtube.com/embed/qHkJcp-yucE" frameborder="0"
-			allowfullscreen></iframe>
-
-	</div>
+    <iframe
+      class="youtubeVid"
+      width="560"
+      height="315"
+      src="//www.youtube.com/embed/qHkJcp-yucE"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+  </div>
 </div>
 
 <script>
-	/*<![CDATA[*/
-	$("li.instr").hide();
-	var b = ["Opera", "MSIE", "Chrome", "Safari", "Firefox"];
-	for (var i in b)
-		if (navigator.userAgent.indexOf(b[i]) > -1) {
-			$("li.instr." + b[i].toLowerCase()).show();
-			break;
-		}
-/*]]>*/
+  /*<![CDATA[*/
+  $('li.instr').hide();
+  var b = ['Opera', 'MSIE', 'Chrome', 'Safari', 'Firefox'];
+  for (var i in b)
+    if (navigator.userAgent.indexOf(b[i]) > -1) {
+      $('li.instr.' + b[i].toLowerCase()).show();
+      break;
+    }
+  /*]]>*/
 </script>

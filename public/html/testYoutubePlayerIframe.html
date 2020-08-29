@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <!-- downloaded from http://metrics.whyd.com/hack.html -->
 <html>
-  
   <head>
-    <title>Hack</title>    
+    <title>Hack</title>
     <script>
-      
       function postMessage(method, args) {
-        document.getElementById('track')
-          .contentWindow
-          .postMessage(
-            JSON.stringify({code: method, data: args}), 
+        document
+          .getElementById('track')
+          .contentWindow.postMessage(
+            JSON.stringify({ code: method, data: args }),
             'http://adrienjoly.tumblr.com/post/80167551383/iframe-test'
           );
       }
-      
-      window.addEventListener('message', function(e) {
+
+      window.addEventListener('message', function (e) {
         if (e.origin === 'http://adrienjoly.tumblr.com') {
           var message = JSON.parse(e.data);
-          console.log("[host] receives from:", e.origin, message.code, message.data);
+          console.log(
+            '[host] receives from:',
+            e.origin,
+            message.code,
+            message.data
+          );
           if (message.code === 'getTrackPositionCallback')
             document.getElementById('time').innerHTML = 'Time:' + message.data;
         }
       });
-      
-      setInterval(function() {
-        postMessage('getTrackPosition');       
-      }, 1000);
 
-    </script>    
-  </head>  
-  
-  <body>    
+      setInterval(function () {
+        postMessage('getTrackPosition');
+      }, 1000);
+    </script>
+  </head>
+
+  <body>
     <button onclick="postMessage('play', ['qrO4YZeyl0I'])">play gaga</button>
     <button onclick="postMessage('play', ['ehcVomMexkY'])">play rihanna</button>
     <button onclick="postMessage('pause')">pause</button>
     <button onclick="postMessage('resume')">resume</button>
-    <button onclick="postMessage('stop')">stop</button>    
-    <iframe id="track" src="http://adrienjoly.tumblr.com/post/80167551383/iframe-test"></iframe>
+    <button onclick="postMessage('stop')">stop</button>
+    <iframe
+      id="track"
+      src="http://adrienjoly.tumblr.com/post/80167551383/iframe-test"
+    ></iframe>
     <span id="time">Time: 0</span>
   </body>
-  
 </html>

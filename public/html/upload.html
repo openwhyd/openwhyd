@@ -1,27 +1,25 @@
 <html>
-<head>
-	<style>
-		#dropzone {
-			width: 400px;
-			height: 400px;
-			background: red;
-		}
-	</style>
-</head>
-<body>
-	<div id="dropzone"></div>
-<script src="../js/dropzone.js"></script>
-<script>
-	window.onload = function() {
-		console.log("loaded");
-		var myDropzone = new Dropzone("#dropzone", {
-			url: "/upload",
-			maxFilesize: 12 // MB
-		});
-		console.log(myDropzone);
-	}
-
-</script>
-
-</body>
+  <head>
+    <style>
+      #dropzone {
+        width: 400px;
+        height: 400px;
+        background: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dropzone"></div>
+    <script src="../js/dropzone.js"></script>
+    <script>
+      window.onload = function () {
+        console.log('loaded');
+        var myDropzone = new Dropzone('#dropzone', {
+          url: '/upload',
+          maxFilesize: 12, // MB
+        });
+        console.log(myDropzone);
+      };
+    </script>
+  </body>
 </html>
