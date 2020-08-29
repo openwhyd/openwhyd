@@ -3,14 +3,9 @@
  * @author adrienjoly, whyd
  **/
 
-//var formidable = require('formidable'); // for POST request handling
-
-//var util = require("util");
 var mongodb = require('../../models/mongodb.js');
-//var db = mongodb.model;
 var userModel = require('../../models/user.js');
 var notifEmails = require('../../models/notifEmails.js');
-//var AdminLists = require("../../templates/adminLists").AdminLists;
 var mainTemplate = require('../../templates/mainTemplate.js');
 
 var callWhenDone = require('../../snip.js').callWhenDone;
@@ -51,7 +46,7 @@ function renderUserList(users, title, actionNames) {
     var date = u.date || u._id.getTimestamp();
     date =
       date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
-    var fieldName = u.email ? 'email' : 'fbId'; //(u.fbId ? "fbId" : "email");
+    const fieldName = u.email ? 'email' : 'fbId'; //(u.fbId ? "fbId" : "email");
     var userId = u.email || u.fbId;
 
     var img =
@@ -60,9 +55,10 @@ function renderUserList(users, title, actionNames) {
         ? '//graph.facebook.com/v2.3/' + u.fbId + '/picture?type=square'
         : null);
 
-    if (title == 'invites') var link = '/invite/' + u._id;
-    else
-      var link = u.name
+    const link =
+      title == 'invites'
+        ? '/invite/' + u._id
+        : u.name
         ? '/u/' + u._id
         : /*u.email ? "mailto:" + u.email :*/ null;
 
@@ -115,7 +111,7 @@ function renderUserList(users, title, actionNames) {
 
   if (actionNames) {
     userList += '<input type="hidden" name="title" value="' + title + '" />';
-    for (var i in actionNames)
+    for (let i in actionNames)
       userList +=
         '<input type="submit" name="action" value="' +
         actionNames[i] +
@@ -131,7 +127,7 @@ function renderUserList(users, title, actionNames) {
   return '<div class="userList">' + userList + '</div>';
 }
 
-function renderTemplate(requests, invites, users, reqParams) {
+function renderTemplate(requests, invites) {
   var params = { title: 'whyd invites', css: ['admin.css'], js: [] };
 
   var out = [
@@ -237,7 +233,7 @@ exports.handleRequest = function (request, reqParams, response) {
       if (reqParams.action == 'invite') {
         var sync = callWhenDone(fetchAndRender);
         for (var i in emails) {
-          var processing = inviteUser(emails[i], function (user) {
+          var processing = inviteUser(emails[i], function () {
             sync(-1);
           });
           if (processing) sync(+1);

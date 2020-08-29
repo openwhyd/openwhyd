@@ -200,9 +200,8 @@ function renderForm(p) {
   ].join('\n');
 }
 
-exports.controller = function (request, reqParams, response, error) {
+exports.controller = function (request, reqParams = {}, response) {
   request.logToConsole('admin.index.controller', request.body || reqParams);
-  var reqParams = reqParams || {};
 
   // make sure an admin is logged, or return an error page
   reqParams.loggedUser = request.checkAdmin(response);

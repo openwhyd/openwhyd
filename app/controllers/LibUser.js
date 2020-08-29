@@ -11,9 +11,7 @@ var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
 var contestModel = require('../models/plContest.js');
-//var recomModel = require("../models/recom.js");
 var activityModel = require('../models/activity.js');
-//var plTagsModel = require("../models/plTags.js");
 var activityController = require('../controllers/recentActivity.js');
 var feedTemplate = require('../templates/feed.js');
 var uiSnippets = require('../templates/uiSnippets.js');
@@ -102,8 +100,8 @@ function fetchActivity(options, cb) {
         function (posts) {
           var postSet = {};
           options.activity = [];
-          for (var i in posts) postSet['' + posts[i]._id] = posts[i];
-          for (var i in activities) {
+          for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+          for (let i in activities) {
             if ((activities[i] || {}).like) {
               if (postSet['' + activities[i].like.pId])
                 activities[i].like.post = postSet['' + activities[i].like.pId];
@@ -346,7 +344,7 @@ function fetchAndRenderProfile(options, callback, process) {
               //						ago: uiSnippets.renderTimestamp(new Date() - creation.getTimestamp())
             });
           }
-          for (var i in options.showActivity.items)
+          for (let i in options.showActivity.items)
             options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
               new Date() - options.showActivity.items[i]._id.getTimestamp()
             );
@@ -385,7 +383,7 @@ function fetchAndRenderProfile(options, callback, process) {
 
     options.bodyClass += ' userSubscriptions';
     options.pageTitle = options.user.name + "'s following";
-    var params = {
+    const params = {
       sort: { _id: -1 },
       limit: MAX_SUBSCRIPTIONS + 1,
       fields: { _id: 0, tId: 1 },
@@ -412,9 +410,9 @@ function fetchAndRenderProfile(options, callback, process) {
     options.bodyClass += ' userTracks';
     options.showTracks = true;
     options.pageTitle = options.user.name + "'s tracks";
-    function proceed() {
+    const proceed = () =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, process);
-    }
+
     if (options.after || options.before)
       // no page rendering required
       proceed();
@@ -514,10 +512,10 @@ var LNK_URL_PREFIX = {
 
 function renderUserLinks(lnk) {
   // clean social links
-  for (var i in lnk) lnk[i] = ('' + lnk[i]).trim();
+  for (let i in lnk) lnk[i] = ('' + lnk[i]).trim();
 
   // for each social link, detect username and rebuild URL
-  for (var i in LNK_URL_PREFIX)
+  for (let i in LNK_URL_PREFIX)
     if (lnk[i]) {
       var parts = lnk[i].split('?').shift().split('/');
       lnk[i] = ''; // by default, if no username was found
