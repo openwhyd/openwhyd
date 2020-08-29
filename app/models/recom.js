@@ -136,7 +136,7 @@ exports.matchingEngine = (function () {
       populating = false;
       ready = true;
       // TODO: delete artists that have only 1 reference (useless for matches)
-      for (var fct; !!(fct = whenReady.pop()); fct());
+      for (var fct; (fct = whenReady.pop()); fct());
       if (TRACK_MEMORY_USAGE) printMemUsage();
     }
     if (config.recomPopulation) {
