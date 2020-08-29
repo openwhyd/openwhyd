@@ -93,8 +93,8 @@
 					<li class="user">
 						<a href="/u/{{_id}}" target="_blank">
 							<div class="thumb" style="background-image:url('/img/u/{{_id}}');"></div>
-							<span class="username">{{name}}<span>
-									{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}}
+							<span class="username">{{name}}</span>
+							{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}}
 						</a>
 						<span class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}" {{#isUserLogged}}
 							onclick="$(this).each(switchSubscription);" {{/isUserLogged}} {{^isUserLogged}}

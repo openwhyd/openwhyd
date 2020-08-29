@@ -108,19 +108,16 @@
 		<li><a href="/u/{{id}}" class="{{#showTracks}}selected{{/showTracks}}">
 				Tracks <span class="number-stats">{{nbTracks}}</span>
 			</a></li>
-		<li><a href="/u/{{id}}/playlists" {{#showPlaylists}}class="selected" {{/showPlaylists}}>
+		<li><a href="/u/{{id}}/playlists" class="{{#showPlaylists}}selected{{/showPlaylists}}">
 				Playlists <span class="number-stats">{{nbPlaylists}}</span>
 			</a></li>
-		<li><a href="/u/{{id}}/likes" {{#showLikes}}class="selected" {{/showLikes}}>
+		<li><a href="/u/{{id}}/likes" class="{{#showLikes}}selected{{/showLikes}}">
 				Likes <span class="number-stats">{{nbLikes}}</span>
 			</a></li>
-		<!--<li><a href="/u/{{id}}/activity" {{#showActivity}}class="selected"{{/showActivity}}>
-			Activity
-		</a></li>-->
-		<li><a href="/u/{{id}}/subscriptions" {{#showSubscriptions}}class="selected" {{/showSubscriptions}}>
+		<li><a href="/u/{{id}}/subscriptions" class="{{#showSubscriptions}}selected{{/showSubscriptions}}">
 				Following {{#subscriptions}}<span class="number-stats">{{nbSubscriptions}}</span> {{/subscriptions}}
 			</a></li>
-		<li><a href="/u/{{id}}/subscribers" {{#showSubscribers}}class="selected" {{/showSubscribers}}>
+		<li><a href="/u/{{id}}/subscribers" class="{{#showSubscribers}}selected{{/showSubscribers}}">
 				Followers {{#subscriptions}}<span class="number-stats">{{nbSubscribers}}</span> {{/subscriptions}}
 			</a></li>
 		<!--	<a href="javascript:return false;" class="right filter"><div></div>pouet</a>-->
