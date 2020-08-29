@@ -1,3 +1,10 @@
+## [1.34.14](https://github.com/openwhyd/openwhyd/compare/v1.34.13...v1.34.14) (2020-08-29)
+
+
+### Bug Fixes
+
+* **clean-up:** `npm run lint:fix` to also format HTML files ([#345](https://github.com/openwhyd/openwhyd/issues/345)) ([950d981](https://github.com/openwhyd/openwhyd/commit/950d981)), closes [#300](https://github.com/openwhyd/openwhyd/issues/300)
+
 ## [1.34.13](https://github.com/openwhyd/openwhyd/compare/v1.34.12...v1.34.13) (2020-08-29)
 
 
