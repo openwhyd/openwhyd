@@ -14,9 +14,9 @@ function wrapJsonGeneratorToText(name) {
       const items = _items.length ? { results: items } : items;
       //cb(JSON.stringify(items, null, 2));
       var lines = ['{'];
-      for (var i in items) {
+      for (let i in items) {
         lines.push('  "' + i + '": [');
-        for (var u in items[i])
+        for (let u in items[i])
           lines.push(
             '    ' +
               util

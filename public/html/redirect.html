@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head></head>
+
   <body>
     You are being redirected, please wait...
     <script>
       var params = window.location.href
         .substr(window.location.href.indexOf('?') + 1)
         .split('&');
-      for (var i in params) {
+      for (let i in params) {
         var kv = params[i].split('=');
         if (kv[0] == 'to') {
           params.splice(i, 1);

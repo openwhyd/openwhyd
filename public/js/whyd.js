@@ -364,7 +364,7 @@ function _renderUserInList(user, liHandler) {
 
 function _renderUserList(users, liHandler) {
   var $out = $('<ul>').addClass('userList');
-  for (var i = 0; i < users.length; ++i)
+  for (let i = 0; i < users.length; ++i)
     $out.append(_renderUserInList(users[i], liHandler));
   return $out.ajaxify ? $out.ajaxify() : $out;
 }
@@ -610,7 +610,7 @@ var $notifIcon = $('#notifIcon');
 var refreshNotifCounter = function () {
   var notifs = lastNotifData;
   var total = 0;
-  for (var i in notifs) total += notifs[i].n || 1;
+  for (let i in notifs) total += notifs[i].n || 1;
   $notifIcon.text(total);
   $notifIcon.removeClass('someNotif');
   if (total == 0) $notifPanel.hide();
@@ -688,7 +688,7 @@ var refreshNotifPanel = function () {
     '<div onclick="clearNotifs();">Clear all</div>' +
     '<p>Your notifications</p><ul>';
   var notifs = lastNotifData;
-  for (var i in notifs) content += renderNotif(notifs[i]);
+  for (let i in notifs) content += renderNotif(notifs[i]);
   $notifPanel.html(content + '</ul>').ajaxify();
 };
 
@@ -859,7 +859,7 @@ function makeUrl(getParamsObj) {
   if (getParamsObj) {
     wlh += hasParams ? '&' : '?';
     var p = [];
-    for (var i in getParamsObj)
+    for (let i in getParamsObj)
       p.push(encodeURIComponent(i) + '=' + encodeURIComponent(getParamsObj[i]));
     wlh += p.join('&');
   }
@@ -1296,7 +1296,7 @@ $(document).ready(function () {
               $('head').append($(this));
             }
           });
-          for (var i in currentLinks) {
+          for (let i in currentLinks) {
             //console.log("remove link: ", i, currentLinks[i]);
             currentLinks[i].remove();
           }

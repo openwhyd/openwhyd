@@ -137,9 +137,9 @@ exports.query = function(q, handler) {
 		//console.log("json response", response);
 		if (response && response.hits) {
 			var hits = (response.hits || {}).hits;
-			for (var i in hits) {
+			for (let i in hits) {
 				if (hits[i] && hits[i]._source) {
-					for (var j in hits[i]._source)
+					for (let j in hits[i]._source)
 						hits[i][j] = hits[i]._source[j];
 					delete hits[i]._source
 				}
@@ -204,9 +204,9 @@ exports.query = function (q, handler) {
     if (response && response.hits) {
       //console.log("hits", response.hits.hits);
       var hits = (response.hits || {}).hits;
-      for (var i in hits) {
+      for (let i in hits) {
         if (hits[i] && hits[i]._source) {
-          for (var j in hits[i]._source) hits[i][j] = hits[i]._source[j];
+          for (let j in hits[i]._source) hits[i][j] = hits[i]._source[j];
           delete hits[i]._source;
         }
       }
@@ -229,7 +229,7 @@ exports.index = function (doc, handler) {
 exports.indexBulk = function (docs, cb) {
   console.log('indexBulk', docs.length, '...');
   var bulkStr = '';
-  for (var i in docs) {
+  for (let i in docs) {
     var u = docs[i],
       meta = {},
       data = {};
@@ -237,7 +237,7 @@ exports.indexBulk = function (docs, cb) {
       console.warn('ignoring empty doc from being indexed in BULK');
       continue;
     }
-    for (var field in u)
+    for (let field in u)
       if (field[0] == '_') meta[field] = u[field];
       else data[field] = u[field];
     bulkStr +=
@@ -258,7 +258,7 @@ exports.indexTyped = function (type, item, handler) {
     handler || logToConsole({ error: 'indexTyped: missing parameters' });
   else {
     var doc = { _type: type };
-    for (var f in INDEX_FIELDS[type]) doc[f] = item[f];
+    for (let f in INDEX_FIELDS[type]) doc[f] = item[f];
     this.index(doc, handler);
   }
 };

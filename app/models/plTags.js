@@ -14,7 +14,7 @@ var TWO_WEEKS = 6 * 7 * 24 * 60 * 60 * 1000;
  **/
 function countOccurences(array, valueSet, coef) {
   var count = {};
-  for (var j in array) {
+  for (let j in array) {
     var incr = !valueSet || !valueSet[array[j]] ? 1 : coef || 0;
     count[array[j]] = (count[array[j]] || 0) + incr;
   }
@@ -48,7 +48,7 @@ exports.ORDERED_GENRES = [
   { name: 'World' },
 ];
 
-for (var i in exports.ORDERED_GENRES)
+for (let i in exports.ORDERED_GENRES)
   exports.ORDERED_GENRES[i].id = exports.ORDERED_GENRES[i].name
     .toLowerCase()
     .replace('&', 'n')
@@ -101,8 +101,8 @@ var GENRES_WITH_SYNONYMS = {
 };
 
 var tagSynonyms = {};
-for (var tag in GENRES_WITH_SYNONYMS)
-  for (var syn in GENRES_WITH_SYNONYMS[tag])
+for (let tag in GENRES_WITH_SYNONYMS)
+  for (let syn in GENRES_WITH_SYNONYMS[tag])
     tagSynonyms[GENRES_WITH_SYNONYMS[tag][syn]] = tag;
 
 exports.extractGenreTags = function (plName) {
@@ -113,7 +113,7 @@ exports.extractGenreTags = function (plName) {
       .split(/[^\-a-z 1-3&]+/g)
       .map(function (phrase) {
         if (!PHRASE_BLACKLIST[phrase])
-          for (var synonym in tagSynonyms)
+          for (let synonym in tagSynonyms)
             if (phrase.indexOf(synonym) > -1) {
               tags.push(tagSynonyms[synonym]);
               break;
@@ -151,12 +151,12 @@ exports.tagEngine = new (function TagEngine() {
         { q: { pl: { $exists: true } }, fields: { _id: 1, pl: 1 } },
         (user) => {
           ++nbUsersWithPl;
-          for (var i in user.pl) {
+          for (let i in user.pl) {
             ++nbPl;
             var tags = exports.extractGenreTags(user.pl[i].name);
             if (tags.length) {
               ++nbPlWithTags;
-              for (var t in tags) {
+              for (let t in tags) {
                 (this.tags[tags[t]] = this.tags[tags[t]] || { c: 0 }).c++;
               }
               this.plIdToTags['' + user._id + '_' + user.pl[i].id] = tags;
@@ -293,7 +293,7 @@ exports.tagEngine = new (function TagEngine() {
         var plId = '' + post.uId + '_' + post.pl.id;
         var tags = exports.extractGenreTags(post.pl.name);
         if (tags && tags.length) {
-          for (var t in tags) {
+          for (let t in tags) {
             (this.tags[tags[t]] = this.tags[tags[t]] || { c: 0 }).c++;
           }
           this.plIdToTags[plId] = tags;
@@ -344,7 +344,7 @@ exports.tagEngine = new (function TagEngine() {
       return tags.map((tag) => (userTagSet[tag] || {}).c || 0).reduce(sum);
     };
 
-    for (var uId in this.uidToTagSet) {
+    for (let uId in this.uidToTagSet) {
       var userTagSet = this.uidToTagSet[uId];
       maxQuantity = Math.max(maxQuantity, evalQuantity(userTagSet));
     }
@@ -374,7 +374,7 @@ exports.tagEngine = new (function TagEngine() {
         (() => {
           var score = 0;
           var nbTopTags = Math.min(tags.length, userTags.length);
-          for (var i = 0; i < nbTopTags; ++i)
+          for (let i = 0; i < nbTopTags; ++i)
             if (tagSet[userTags[i]]) score += Math.pow(2, tags.length - i - 1);
           var denom = Math.pow(2, tags.length) - 1;
           //if (score/denom > 0.5)
@@ -411,7 +411,7 @@ exports.tagEngine = new (function TagEngine() {
 
   this.getBestTagsByUid = (uId) => {
     var tags = [];
-    for (var tag in this.uidToTagSet[uId])
+    for (let tag in this.uidToTagSet[uId])
       if (tag != '_t')
         tags.push({
           id: tag,

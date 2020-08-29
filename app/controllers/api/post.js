@@ -28,7 +28,7 @@ function getBrowserVersionFromUserAgent(ua) {
     /(Safari)\/([^ $]+)/,
     /(Firefox)\/([^ $]+)/,
   ];
-  for (var i = 0; i < BROWSER_UA_REGEX.length; ++i) {
+  for (let i = 0; i < BROWSER_UA_REGEX.length; ++i) {
     var match = ua.match(BROWSER_UA_REGEX[i]);
     if (match) return match.slice(1, 3); // => [ browser_name, version ]
   }
@@ -39,7 +39,7 @@ function fetchSubscribedUsers(uidList, uid, cb) {
     results
   ) {
     var uidSet = {};
-    for (var i in results) uidSet[results[i].tId] = results[i];
+    for (let i in results) uidSet[results[i].tId] = results[i];
     cb(uidSet);
   });
 }
@@ -50,7 +50,7 @@ var publicActions = {
       var lovers = [];
       if (post && post.lov)
         fetchSubscribedUsers(post.lov, p.uId, function (subscrUidSet) {
-          for (var i in post.lov)
+          for (let i in post.lov)
             lovers.push({
               id: /*"/u/"+*/ post.lov[i],
               name: (mongodb.usernames[post.lov[i]] || {}).name,
@@ -72,9 +72,9 @@ var publicActions = {
       var reposts = [];
       if (results) {
         var repostUids = [];
-        for (var i in results) repostUids.push(results[i].uId);
+        for (let i in results) repostUids.push(results[i].uId);
         fetchSubscribedUsers(repostUids, p.uId, function (subscrUidSet) {
-          for (var i in results)
+          for (let i in results)
             reposts.push({
               id: /*"/u/"+*/ results[i].uId,
               name: (mongodb.usernames[results[i].uId] || {}).name,
@@ -297,7 +297,7 @@ exports.controller = function (request, getParams, response) {
   var params = snip.translateFields(getParams || {}, sequencedParameters);
 
   //if (request.method.toLowerCase() === 'post')
-  for (var i in request.body) params[i] = request.body[i];
+  for (let i in request.body) params[i] = request.body[i];
 
   exports.handleRequest(request, params, response);
 };

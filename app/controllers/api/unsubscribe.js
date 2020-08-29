@@ -8,14 +8,14 @@ var userModel = require('../../models/user.js');
 
 var getNextFreq = (function () {
   var FREQS = [];
-  for (var i in userModel.EM_FREQ_LABEL) FREQS.push(parseInt(i));
+  for (let i in userModel.EM_FREQ_LABEL) FREQS.push(parseInt(i));
   FREQS.sort();
   FREQS.shift(); // remove -1, the "less frequent" value
 
   return function (f) {
     console.log('detected freq:', f);
     if (f > -1)
-      for (var i in FREQS)
+      for (let i in FREQS)
         if (FREQS[i] > f) {
           console.log('new freq:', FREQS[i]);
           return FREQS[i];
@@ -27,18 +27,18 @@ var getNextFreq = (function () {
 (function tests() {
 	console.log("getNextFreq tests");
 	var cases = [-1, 0, 1, 2, 7, 8];
-	for (var i in cases)
+	for (let i in cases)
 		console.log("case:", cases[i], " => ", getNextFreq(cases[i]));
 })();
 */
 
 var EM_TYPES = [];
-for (var i in userModel.DEFAULT_PREF)
+for (let i in userModel.DEFAULT_PREF)
   if (i.indexOf('em') == 0) EM_TYPES.push(i);
 
 function setNotifFreq(user, freq, cb) {
   var pref = {};
-  for (var i in EM_TYPES) pref[EM_TYPES[i]] = freq;
+  for (let i in EM_TYPES) pref[EM_TYPES[i]] = freq;
   userModel.setPref(user._id || user.id, pref, cb);
 }
 

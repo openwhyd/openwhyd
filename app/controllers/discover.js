@@ -55,7 +55,7 @@ function detectUserId(path) {
   var splitted = path.split('/');
   if (splitted.length == 3 && splitted[1] == 'u') return splitted[2];
   if (splitted.length == 2)
-    for (var i in mongodb.usernames)
+    for (let i in mongodb.usernames)
       if (
         mongodb.usernames[i].handle &&
         mongodb.usernames[i].handle == splitted[1]
@@ -77,7 +77,7 @@ var processData = {
           };
 
           var links = page.find(whydUrlRegEx);
-          for (var i in links) {
+          for (let i in links) {
             var uId = detectUserId(links[i].replace(whydUrlRegEx, '$1'));
             if (uId && mongodb.usernames[uId]) {
               //console.log(" * ", links[i], uId, mongodb.usernames[uId].name);
@@ -135,7 +135,7 @@ var processData = {
         { limit: 20, sort: { _id: -1 } },
         function (err, cursor) {
           cursor.toArray(function (err, posts) {
-            for (var i in posts) {
+            for (let i in posts) {
               posts[i].subscribed = subscribed[posts[i].uId];
               if (posts[i].img)
                 posts[i].img = posts[i].img.replace('http:', '');
@@ -210,7 +210,7 @@ var processData = {
             '=> date of last activity',
             act[act.length - 1]._id.getTimestamp()
           );
-          for (var i in act)
+          for (let i in act)
             incrementUserCounter('' + act[i].tId, 'nbNewSubscribers');
           cb();
         });
@@ -232,7 +232,7 @@ var processData = {
             const subscr = snip.arrayToSet(
               snip.objArrayToValueArray(subscr.subscriptions, 'id')
             );
-            for (var i in userList)
+            for (let i in userList)
               userList[i].subscribed = subscr[userList[i].id];
           }
           cb();

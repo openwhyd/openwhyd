@@ -62,7 +62,7 @@ exports.controller = function (request, getParams, response) {
     getParams.plId,
     { limit: MAX_TRACKS },
     function (posts) {
-      for (var i in posts) posts[i] = postsTemplate.preparePost(posts[i]);
+      for (let i in posts) posts[i] = postsTemplate.preparePost(posts[i]);
       var params = {
         uId: getParams.uId,
         plId: getParams.plId,

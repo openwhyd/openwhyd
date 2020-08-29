@@ -24,14 +24,14 @@
           paramNames,
           lines,
           padding = '';
-        for (var i in scopeChain) padding += INDENT;
+        for (let i in scopeChain) padding += INDENT;
 
         function interpretFunction() {
           var finalResult = undefined;
           var vars = {}; // represents the function's runtime scope (dictionary of variables)
 
           // store values of provided parameters in the function's scope
-          for (var i = 0; i < arguments.length; ++i)
+          for (let i = 0; i < arguments.length; ++i)
             if (paramNames[i]) vars[paramNames[i]] = arguments[i];
 
           // for each type of expression, a function computes it and return its final value
@@ -139,7 +139,7 @@
           function computeExpression(expr) {
             console.log('start computing : ' + expr);
             // try all evaluators, until one matches
-            for (var i in EVALUATORS) {
+            for (let i in EVALUATORS) {
               var evaluator = EVALUATORS[i];
               var match = expr.match(evaluator[0]);
 
@@ -153,7 +153,7 @@
             throw new Error('unsupported expression: ' + expr);
           }
 
-          for (var i in lines) {
+          for (let i in lines) {
             var line = lines[i].trim();
             //console.log(padding + fctName + " scope vars:", JSON.stringify(vars));
             console.log('___' + padding + line);
@@ -284,7 +284,7 @@
 
         var fi = new FunctionInterpreter(code);
 
-        for (var i in RE_FUNCTIONS) {
+        for (let i in RE_FUNCTIONS) {
           var evaluator = RE_FUNCTIONS[i];
 
           var matchResults = code.match(evaluator);

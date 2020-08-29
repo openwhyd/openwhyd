@@ -72,7 +72,7 @@ apnConnection.on('transmitted', function (data, dest) {
 exports.sendApplePushNotification = function (device, data) {
   console.log('[APNS] Sending notif:', data);
   var note = new apn.Notification();
-  for (var i in data) note[i] = data[i];
+  for (let i in data) note[i] = data[i];
   return apnConnection.pushNotification(note, device);
 };
 
@@ -93,7 +93,7 @@ exports.pushToDevice = function (token, text, payload) {
 };
 /*
 (function ApnsFeedbackMonitor(){
-	for (var i in CONN_OPTIONS)
+	for (let i in CONN_OPTIONS)
 		FEEDBACK_OPTIONS[i] = CONN_OPTIONS[i];
 	console.log("Listening to APNS feedback...");
 	var feedback = new apn.Feedback(FEEDBACK_OPTIONS);

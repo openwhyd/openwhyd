@@ -40,7 +40,7 @@ exports.searchMp3s = function (query, callback) {
       get
         .Mp3s(data.posturl, function (err, mp3Urls) {
           if (!err && mp3Urls.length > 0) {
-            for (var i = 0, url; (url = mp3Urls[i]); i++) {
+            for (let i = 0, url; (url = mp3Urls[i]); i++) {
               if (url.endsWith(encodeURI(data.title) + '.mp3')) {
                 data.mp3 = url;
                 mp3s.push(data);
@@ -82,7 +82,7 @@ exports.getMp3FromPostUrl = function (postUrl, title, callback) {
     if (err) {
       callback(err, null);
     } else {
-      for (var i = 0, mp3; (mp3 = mp3s[i]); i++) {
+      for (let i = 0, mp3; (mp3 = mp3s[i]); i++) {
         if (mp3.endsWith(encodeURI(title) + '.mp3')) {
           callback(null, mp3);
           return;

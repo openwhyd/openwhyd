@@ -39,8 +39,8 @@ function sampleData(cb) {
 
 function aggregateByPost(setList) {
   var postSet = {};
-  for (var setName in setList)
-    for (var pId in setList[setName]) {
+  for (let setName in setList)
+    for (let pId in setList[setName]) {
       postSet[pId] = postSet[pId] || {};
       postSet[pId].id = postSet[pId].id || setList[setName][pId].id;
       postSet[pId].name = postSet[pId].name || setList[setName][pId].name;
@@ -63,7 +63,7 @@ var INIT_PARAMS = {
 };
 
 exports.NotifDigest = function (p) {
-  for (var key in INIT_PARAMS)
+  for (let key in INIT_PARAMS)
     this[key] = p[key] || (INIT_PARAMS[key] && new INIT_PARAMS[key]());
 };
 
@@ -141,7 +141,7 @@ exports.NotifDigest.prototype.renderText = function () {
   //return textTemplate.render(p).replace(/\n/g, "\n\n"); //"You need a modern email client to read this email, sorry...";
   var text = ['Hey, ' + p.user.name + '!'];
   if (p.posts)
-    for (var i in p.posts) {
+    for (let i in p.posts) {
       text.push('');
       text.push(
         p.posts[i].count +
@@ -151,9 +151,9 @@ exports.NotifDigest.prototype.renderText = function () {
           p.posts[i].name +
           '"'
       );
-      for (var j in p.posts[i].reposts)
+      for (let j in p.posts[i].reposts)
         text.push('- ' + p.posts[i].reposts[j].name);
-      for (var j in p.posts[i].likes)
+      for (let j in p.posts[i].likes)
         text.push('- ' + p.posts[i].likes[j].name);
     }
   if (p.subscriptions) {
@@ -164,7 +164,7 @@ exports.NotifDigest.prototype.renderText = function () {
         (p.subscriptions.plural ? 's' : '') +
         ' subscribed to you'
     );
-    for (var i in p.subscriptions.items)
+    for (let i in p.subscriptions.items)
       text.push('- ' + p.subscriptions.items[i].name);
   }
   text = text.concat([

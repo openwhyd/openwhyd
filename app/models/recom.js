@@ -25,7 +25,7 @@ var sizeof = TRACK_MEMORY_USAGE ? require('object-sizeof') : nothingToDo;
 
 function countOccurences(array) {
   var count = {};
-  for (var j in array) count[array[j]] = (count[array[j]] || 0) + 1;
+  for (let j in array) count[array[j]] = (count[array[j]] || 0) + 1;
   return snip.mapToObjArray(count, 'id', 'c').sort(function (a, b) {
     return b.c - a.c;
   });
@@ -72,7 +72,7 @@ exports.matchingEngine = (function () {
       populating = false;
       ready = true;
       // TODO: delete artists that have only 1 reference (useless for matches)
-      for (var fct; (fct = whenReady.pop()); fct());
+      for (let fct; (fct = whenReady.pop()); fct());
       if (TRACK_MEMORY_USAGE) printMemUsage();
     }
     if (config.recomPopulation) {
@@ -157,7 +157,7 @@ exports.matchingEngine = (function () {
         var artistList = artistsByUser['' + uId2];
         //console.log("artistList", artistList);
         var common = {};
-        for (var i in artistList) {
+        for (let i in artistList) {
           var artist = artistList[i][0];
           if (artistSet[artist]) common[artist] = (common[artist] || 0) + 1;
         }
@@ -173,10 +173,10 @@ exports.matchingEngine = (function () {
       waitForIndex(function () {
         var recomUsers = {};
         var excludedUid = snip.arrayToSet(options.excludeUids || []);
-        for (var artist in myArtists) {
+        for (let artist in myArtists) {
           artist = myArtists[artist][0];
           var users = usersByArtist[artist];
-          for (var u in users) {
+          for (let u in users) {
             var userId = users[u][0];
             if (excludedUid[userId]) continue;
             if (!mongodb.usernames['' + userId]) {
@@ -239,7 +239,7 @@ exports.recomUsersByArtists = function (uId, options, cb) {
     console.log('user has', nbArtists, 'artists');
     if (nbArtists == 0) return cb([]);
     nbArtists /= 2; // => a score of 50% (common artists) will be show as "holy shit!"
-    for (var i in users) {
+    for (let i in users) {
       var commonArtists = (users[i].posted || [])
         .concat(users[i].liked || [])
         .concat(users[i].liker || []);
@@ -250,7 +250,7 @@ exports.recomUsersByArtists = function (uId, options, cb) {
           name: exports.matchingEngine.getArtistName(artist.id),
         };
       });
-      for (var j in bestArtists) {
+      for (let j in bestArtists) {
         var artist = bestArtists[j];
         if (artist && artist.name)
           users[i].artistNames.push(bestArtists[j].name);

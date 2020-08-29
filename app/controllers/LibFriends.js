@@ -30,7 +30,7 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 	]);
 	return;*/
   var subscribers = [];
-  for (var i in uidList)
+  for (let i in uidList)
     if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
   activityModel.fetchHistoryFromUidList(
     /*uidList*/ subscribers,

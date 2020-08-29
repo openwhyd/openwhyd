@@ -86,7 +86,7 @@ http.IncomingMessage.prototype.getCookies = (function () {
     var cookiesArray = this.headers.cookie.split(';');
     //console.log("cookies array:", cookiesArray);
     var cookies = {};
-    for (var i = 0; i < cookiesArray.length; i++) {
+    for (let i = 0; i < cookiesArray.length; i++) {
       //var match = cookiesArray[i].trim().match(cookieReg);
       //if (match)
       cookiesArray[i] = cookiesArray[i].trim();
@@ -107,11 +107,11 @@ http.IncomingMessage.prototype.getCookies = (function () {
 http.IncomingMessage.prototype.getFacebookCookie = function () {
   var cookies = this.getCookies();
   //console.log("cookies:", cookies);
-  for (var i in cookies)
+  for (let i in cookies)
     if (i.startsWith('fbs_')) {
       var cookie = {},
         cookieArray = cookies[i].split('&');
-      for (var j in cookieArray) {
+      for (let j in cookieArray) {
         var cookieItem = cookieArray[j].split('=');
         cookie[cookieItem[0]] = cookieItem[1];
       }

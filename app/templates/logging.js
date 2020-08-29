@@ -54,7 +54,7 @@ exports.renderLoginPage = function (form) {
   };
 
   if (form) {
-    for (var i in form) // [error, email, password]
+    for (let i in form) // [error, email, password]
       params[i] = form[i];
     if (form.error) params.message = [{ text: form.error }];
   }

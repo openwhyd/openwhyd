@@ -29,8 +29,8 @@ var SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
 
 function addUserInfo(userSub, mySub) {
   var mySubIdSet = {};
-  if (mySub) for (var i in mySub) mySubIdSet[mySub[i].id] = true;
-  for (var i in userSub) {
+  if (mySub) for (let i in mySub) mySubIdSet[mySub[i].id] = true;
+  for (let i in userSub) {
     var user = userSub[i];
     user.subscribed = mySubIdSet[user.id];
   }
@@ -195,7 +195,7 @@ var fieldSetters = {
   },
   pref: function (p, cb) {
     // type each provided pref value accordingly to defaults. "true" boolean was translated to "1"
-    for (var i in p.pref)
+    for (let i in p.pref)
       p.pref[i] =
         typeof userModel.DEFAULT_PREF[i] == 'boolean'
           ? p.pref[i] == 1
@@ -257,7 +257,7 @@ function includeTags(user, cb) {
         { limit: 10 },
         function (posts, b) {
           user.lastArtists = [];
-          for (var i in posts) {
+          for (let i in posts) {
             var artist = snip.detectArtistName((posts[i] || {}).name);
             if (artist) user.lastArtists.push(artist);
           }
@@ -284,7 +284,7 @@ function countUserLikes(user, cb) {
 
 function appendVersions(user, cb) {
   var versions = versionModel.getVersions();
-  for (var i in versions) user[i] = versions[i];
+  for (let i in versions) user[i] = versions[i];
   cb();
 }
 
@@ -376,13 +376,13 @@ function handleAuthRequest(loggedUser, reqParams, localRendering) {
   reqParams._id = loggedUser._id;
 
   var toUpdate = [];
-  for (var i in fieldSetters) if (reqParams[i] !== undefined) toUpdate.push(i);
+  for (let i in fieldSetters) if (reqParams[i] !== undefined) toUpdate.push(i);
 
   if (toUpdate.length) {
     var result = {};
     (function setNextField(prevResult) {
       if (prevResult)
-        for (var i in prevResult) result[i] = prevResult[i] || result[i];
+        for (let i in prevResult) result[i] = prevResult[i] || result[i];
       if (!toUpdate.length) localRendering(result);
       else {
         var fieldName = toUpdate.pop();

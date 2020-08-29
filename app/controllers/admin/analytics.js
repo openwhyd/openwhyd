@@ -20,7 +20,7 @@ function renderTemplate(report) {
   var p = 0;
   var color = ['lightgray', 'white'];
 
-  for (var i in report)
+  for (let i in report)
     out +=
       "<tr  style='background:" +
       color[p++ % 2] +
@@ -50,7 +50,7 @@ exports.controller = function (request, reqParams, response) {
   var populateUsers = function (callback) {
     userModel.fetchAll(function (usersP) {
       users = usersP;
-      for (var i in users) {
+      for (let i in users) {
         users[i].firstDate = users[i]._id.getTimestamp();
         userIndex['' + users[i]._id] = users[i];
       }
@@ -87,7 +87,7 @@ exports.controller = function (request, reqParams, response) {
 	var countPeriodFollows = function (t1, t2, nameSuffix) {
 		return function(callback) {
 			var counter = 0;
-			for (var i in follows) {
+			for (let i in follows) {
 				var item = follows[i];
 				if (!userIndex[item.uId]) continue ; //console.log("user not found:",item.uId, item.uNm);
 				//console.log(item);
@@ -125,7 +125,7 @@ exports.controller = function (request, reqParams, response) {
 	var countPeriodActiveUsers = function (t1, t2, nameSuffix) {
 		return function(callback) {
 			var counter = 0, activeUsers = {};
-			for (var i in posts) {
+			for (let i in posts) {
 				var item = posts[i];
 				if (!userIndex[item.uId]) continue ; //console.log("user not found:",item.uId, item.uNm);
 				//console.log(item);
@@ -146,7 +146,7 @@ exports.controller = function (request, reqParams, response) {
 	var countPeriodPosts = function (t1, t2, nameSuffix) {
 		return function(callback) {
 			var counter = 0;
-			for (var i in posts) {
+			for (let i in posts) {
 				var item = posts[i];
 				if (!userIndex[item.uId]) continue ; //console.log("user not found:",item.uId, item.uNm);
 				//console.log(item);
@@ -171,7 +171,7 @@ exports.controller = function (request, reqParams, response) {
 
   function findUsersRegisteredAfter(date) {
     return function (cb) {
-      for (var i in users)
+      for (let i in users)
         if (new Date(users[i].firstDate) >= date)
           recentUserIds[users[i]._id] = users[i];
       cb(
@@ -200,17 +200,17 @@ exports.controller = function (request, reqParams, response) {
 
   function countRecentInvites(cb) {
     var nb = 0;
-    for (var i in users) if (users[i].lastFm) ++nb;
+    for (let i in users) if (users[i].lastFm) ++nb;
     cb('Number of lastfm users', nb);
   }
 
   function countLastfmUsers(cb) {
     var nbAccepted = 0,
       nbPending = 0;
-    for (var uid in recentUserIds)
+    for (let uid in recentUserIds)
       if (recentUserIds[uid].iBy && recentUserIds[recentUserIds[uid].iBy])
         ++nbAccepted;
-    for (var i in pendingInvites)
+    for (let i in pendingInvites)
       if (pendingInvites[i].iBy && recentUserIds[pendingInvites[i].iBy])
         ++nbPending;
     report['Number of recent pending invites'] = nbPending;

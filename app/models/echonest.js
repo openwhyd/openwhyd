@@ -59,7 +59,7 @@ exports.translateTrack = function (track) {
     // 2) foreign ids
     var tracks = track.tracks;
     res.foreignIds = {};
-    for (var i in tracks)
+    for (let i in tracks)
       if (!res.foreignIds[tracks[i].catalog])
         res.foreignIds[tracks[i].catalog] = tracks[i].foreign_id;
   }

@@ -41,7 +41,7 @@ function renderUserList(users, title, actionNames) {
   }
   //<input type="hidden" name="list" value="'+name+'" />';
 
-  for (var i in users) {
+  for (let i in users) {
     var u = users[i];
     var date = u.date || u._id.getTimestamp();
     date =
@@ -155,7 +155,7 @@ function renderTemplate(requests, invites) {
     '   var retArr = new Array();',
     '   var lastElement = 0;',
     '   if (buttonGroup[0]) { // if the button group is an array (one check box is not an array)',
-    '      for (var i=0; i<buttonGroup.length; i++) {',
+    '      for (let i=0; i<buttonGroup.length; i++) {',
     '         if (buttonGroup[i].checked) {',
     '            retArr.length = lastElement;',
     '            retArr[lastElement] = buttonGroup[i].value;',
@@ -173,7 +173,7 @@ function renderTemplate(requests, invites) {
     'function toggle(fieldName, formName, source) {',
     //'	checkboxes = document.getElementsByName(name);',
     '	checkboxes = document.forms[formName].elements[fieldName];',
-    '	for (var i in checkboxes)',
+    '	for (let i in checkboxes)',
     '		checkboxes[i].checked = source.checked;',
     '}',
     '</script>',
@@ -200,7 +200,7 @@ exports.handleRequest = function (request, reqParams, response) {
             fetchUsers(
               'email',
               function (err, requests) {
-                for (var i in requests)
+                for (let i in requests)
                   requests[i] = {
                     _id: requests[i]._id,
                     email: requests[i]._id,
@@ -232,7 +232,7 @@ exports.handleRequest = function (request, reqParams, response) {
     if (reqParams.title == 'requests') {
       if (reqParams.action == 'invite') {
         var sync = callWhenDone(fetchAndRender);
-        for (var i in emails) {
+        for (let i in emails) {
           var processing = inviteUser(emails[i], function () {
             sync(-1);
           });

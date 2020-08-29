@@ -608,7 +608,7 @@ exports.makeTests = function (p) {
           function (data) {
             var users = data || [],
               sum = 0;
-            for (var i in users) sum += users[i].score;
+            for (let i in users) sum += users[i].score;
             var avgScore = sum / users.length;
             console.log('avgScore', avgScore);
             cb((data || []).length > 0);

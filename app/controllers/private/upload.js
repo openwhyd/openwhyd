@@ -63,7 +63,7 @@ function processFile(file, options, callback) {
       };
 
       var remaining = thumbDims.length; //thumbWidths.length;
-      for (var i in thumbDims) {
+      for (let i in thumbDims) {
         var thumbDim = thumbDims[i];
         var thumbWidthHeight = thumbDim.split('x');
         var thumbWidth =
@@ -114,11 +114,11 @@ exports.controller = function (req, requestParams, res) {
   var results = {},
     remaining = 0;
 
-  for (var i in files) remaining++;
+  for (let i in files) remaining++;
 
   var options = {};
-  for (var i in defaults) options[i] = defaults[i];
-  for (var i in postParams) options[i] = postParams[i];
+  for (let i in defaults) options[i] = defaults[i];
+  for (let i in postParams) options[i] = postParams[i];
 
   var processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
@@ -134,6 +134,6 @@ exports.controller = function (req, requestParams, res) {
     });
   };
 
-  for (var i in files) processAndPushFile(i);
+  for (let i in files) processAndPushFile(i);
   //});
 };

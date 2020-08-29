@@ -55,7 +55,7 @@ function listBookmarkletSources(p, cb) {
       ++s.c;
       s.u[post.uNm] = (s.u[post.uNm] || 0) + 1;
     });
-    for (var i in sources) sources[i].u = Object.keys(sources[i].u).length;
+    for (let i in sources) sources[i].u = Object.keys(sources[i].u).length;
     sources = snip.mapToObjArray(sources, 'src' /*, "c"*/);
     sources = sources.sort(snip.makeFieldSort('c', snip.descSort));
     sources = sources.sort(snip.makeFieldSort('u', snip.descSort));

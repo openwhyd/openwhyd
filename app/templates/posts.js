@@ -31,7 +31,7 @@ function loadComments(posts, cb) {
     commentModel.fetch({ pId: posts.map(getPostId) }, {}, function (comments) {
       comments = snip.groupObjectsBy(comments, 'pId');
       //console.log("=> comments", comments)
-      for (var i in posts)
+      for (let i in posts)
         if (posts[i])
           try {
             posts[i].comments = comments[getPostId(posts[i])] || [];
@@ -62,7 +62,7 @@ function loadReposts(posts, cb) {
           }),
           'pId'
         );
-        for (var i in posts)
+        for (let i in posts)
           if (posts[i])
             try {
               posts[i].reposts = reposts[getPostId(posts[i])] || [];
@@ -119,7 +119,7 @@ exports.preparePost = function (post, options) {
       text: post.text,
     });
 
-  for (var j = 0; j < comments.length; ++j) {
+  for (let j = 0; j < comments.length; ++j) {
     var c = comments[j];
     var t = c._id.getTimestamp();
     c.t = t.getTime();
@@ -135,7 +135,7 @@ exports.preparePost = function (post, options) {
   }
 
   if (comments.length > 3)
-    for (var j = 2; j < comments.length - 1; ++j)
+    for (let j = 2; j < comments.length - 1; ++j)
       comments[j].cssClass = (comments[j].cssClass || '') + ' hidden';
 
   // rendering dates
@@ -252,7 +252,7 @@ exports.renderPosts = function (posts, options) {
   options = options || {};
   console.log('_ _ _ _ _ _ _ _PREPAREEE');
 
-  for (var p in posts) posts[p] = exports.preparePost(posts[p], options || {});
+  for (let p in posts) posts[p] = exports.preparePost(posts[p], options || {});
 
   return exports.render({
     posts: posts,

@@ -214,7 +214,7 @@ function ContentEmbed() {
       whydPrefix: sourceId,
       label: sourceName,
       detect: function (url, cb) {
-        for (var i in regexs)
+        for (let i in regexs)
           if (regexs[i].test(url)) return cb({ url: url, videoId: RegExp.$1 });
         cb();
       },
@@ -530,7 +530,7 @@ function ContentEmbed() {
   };
 
   var embedDetectors = [];
-  for (var i in embedTypes) embedDetectors.push(embedTypes[i]);
+  for (let i in embedTypes) embedDetectors.push(embedTypes[i]);
 
   return {
     extractEmbedRef: function (url, callback) {
@@ -586,7 +586,7 @@ function ContentEmbed() {
     },
     renderEmbed: function (embedId, options) {
       if (options)
-        for (var i in embedDefaults)
+        for (let i in embedDefaults)
           options[i] = options[i] != undefined ? options[i] : embedDefaults[i];
       //console.log("renderEmbed", embedId, options);
       var embedTypeId = embedId.split('/')[1];

@@ -81,7 +81,7 @@
       path + '/index.json',
     ];
 
-    for (var i = 0; i < paths.length; i++) {
+    for (let i = 0; i < paths.length; i++) {
       var path = paths[i];
       if (has.call(require.modules, path)) return path;
     }
@@ -108,7 +108,7 @@
     curr = curr.split('/');
     path = path.split('/');
 
-    for (var i = 0; i < path.length; ++i) {
+    for (let i = 0; i < path.length; ++i) {
       if ('..' == path[i]) {
         curr.pop();
       } else if ('.' != path[i] && '' != path[i]) {
@@ -237,7 +237,7 @@
      */
 
     function mixin(obj) {
-      for (var key in Emitter.prototype) {
+      for (let key in Emitter.prototype) {
         obj[key] = Emitter.prototype[key];
       }
       return obj;
@@ -327,7 +327,7 @@
 
       if (callbacks) {
         callbacks = callbacks.slice(0);
-        for (var i = 0, len = callbacks.length; i < len; ++i) {
+        for (let i = 0, len = callbacks.length; i < len; ++i) {
           callbacks[i].apply(this, args);
         }
       }
@@ -406,7 +406,7 @@
         without,
         __hasProp = {}.hasOwnProperty,
         __extends = function (child, parent) {
-          for (var key in parent) {
+          for (let key in parent) {
             if (__hasProp.call(parent, key)) child[key] = parent[key];
           }
           function ctor() {
@@ -421,7 +421,7 @@
         __indexOf =
           [].indexOf ||
           function (item) {
-            for (var i = 0, l = this.length; i < l; i++) {
+            for (let i = 0, l = this.length; i < l; i++) {
               if (i in this && this[i] === item) return i;
             }
             return -1;

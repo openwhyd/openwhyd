@@ -21,7 +21,7 @@ var TEST_TITLES = [
 	" t e s t ",
 	".-!?ç$%^hey&@(§)"
 ];
-for (var i in TEST_TITLES)
+for (let i in TEST_TITLES)
 	console.log('TEST_TITLES', TEST_TITLES[i], titleToURI(TEST_TITLES[i]));
 */
 
@@ -102,7 +102,7 @@ exports.fetch = function (cb) {
             searchModel.query({ q: contest.title }, function (r) {
               contest.playlists = [];
               var hits = (r || {}).hits || [];
-              for (var j in hits)
+              for (let j in hits)
                 if (
                   hits[j]._type == 'playlist' &&
                   hits[j].name == contest.title

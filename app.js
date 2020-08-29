@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "production") {
 
 function makeColorConsole(fct, color) {
   return function () {
-    for (var i in arguments)
+    for (let i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
     fct(Array.prototype.join.call(arguments, ' ')[color]);
@@ -165,7 +165,7 @@ async function main() {
   // apply command-line arguments
   if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
-    for (var i = 2; i < process.argv.length; ++i) {
+    for (let i = 2; i < process.argv.length; ++i) {
       var flag = process.argv[i];
       var flagFct = FLAGS[flag];
       if (flagFct) flagFct();

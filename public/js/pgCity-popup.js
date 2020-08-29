@@ -115,14 +115,14 @@ var GGPopup = {
 
   // Set the elements to be blurred
   setBlurred: function (els) {
-    for (var i = 0; i < els.length; i++) {
+    for (let i = 0; i < els.length; i++) {
       this.blurElements.push(els[i]);
     }
   },
 
   // Blur the background elements
   blurBackground: function () {
-    for (var i = 0; i < this.blurElements.length; i++) {
+    for (let i = 0; i < this.blurElements.length; i++) {
       var el = this.blurElements[i];
       var classe = this.blurredClass;
       if (el.className.length > 0) {
@@ -133,7 +133,7 @@ var GGPopup = {
   },
 
   unblurBackground: function () {
-    for (var i = 0; i < this.blurElements.length; i++) {
+    for (let i = 0; i < this.blurElements.length; i++) {
       var el = this.blurElements[i];
 
       // Remove blurred class

@@ -47,7 +47,7 @@ exports.controller = function (request, reqParams, response) {
 
   if (request.url.split('?')[0].endsWith('/contributors')) {
     collabModel.fetchPlaylistById(reqParams.id, function (playlist) {
-      for (var i in playlist.admin)
+      for (let i in playlist.admin)
         playlist.admin[i].img = playlist.admin[i].id
           ? '/img/u/' + playlist.admin[i].id
           : 'http://graph.facebook.com/v2.3/' +

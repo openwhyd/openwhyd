@@ -129,7 +129,7 @@ var hotTracks = {
 
     item.trackUrl = translateEidToUrl(item.eId);
 
-    for (var p in item) {
+    for (let p in item) {
       template = template.replace(
         new RegExp('{' + p + '}', 'g'),
         htmlEntities(item[p])

@@ -7,7 +7,7 @@ var trackMatcher = require('../models/trackMatcher.js');
 snip.httpSetDomain(/ws\.spotify\.com/, { queue: [] });
 
 function getIsrc(external) {
-  for (var i in external) if (external[i].type == 'isrc') return external[i].id;
+  for (let i in external) if (external[i].type == 'isrc') return external[i].id;
 }
 
 exports.translateTrack = function (track) {

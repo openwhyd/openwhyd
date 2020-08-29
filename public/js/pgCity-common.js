@@ -57,13 +57,13 @@ var initCityPage = function (urlPrefix, cityName) {
 
   function preventAjax() {
     var links = document.getElementsByTagName('a');
-    for (var i = links.length - 1; i > -1; --i)
+    for (let i = links.length - 1; i > -1; --i)
       links[i].className = (links[i].className || '') + ' no-ajaxy';
   }
 
   // minimal template engine, http://mir.aculo.us/2011/03/09/little-helpers-a-tweet-sized-javascript-templating-engine/
   function t(s, d) {
-    for (var p in d)
+    for (let p in d)
       s = s.replace(new RegExp('{' + p + '}', 'g'), htmlEntities(d[p]));
     return s.replace(/\{\w*\}/gi, ''); // remove un-populated slots
   }
@@ -145,7 +145,7 @@ var initCityPage = function (urlPrefix, cityName) {
 
   function pushTopPlaylists(data) {
     // Push the playlists we want to feature first (playlists.js)
-    for (var j = 0; j < PLAYLISTS_TOP.length; j++) {
+    for (let j = 0; j < PLAYLISTS_TOP.length; j++) {
       var playlist = PLAYLISTS_TOP[j];
       console.log('Pushing at ' + playlist.index);
       data.splice(playlist.index, 0, playlist);
@@ -154,7 +154,7 @@ var initCityPage = function (urlPrefix, cityName) {
   }
 
   function removeBlacklistedPlaylists(data) {
-    for (var k = 0; k < data.length; k++) {
+    for (let k = 0; k < data.length; k++) {
       var playlist = data[k];
       var index = indexOfObject(PLAYLISTS_BLACKLIST, playlist.id);
       if (index != -1) {
@@ -270,7 +270,7 @@ var initCityPage = function (urlPrefix, cityName) {
 
       // Get all the playlist id
       var req = '/api/playlist?';
-      for (var i = start; i < nbPlaylist + start; i++) {
+      for (let i = start; i < nbPlaylist + start; i++) {
         var id = list[i];
         if (i != start) {
           req += '&';
@@ -467,7 +467,7 @@ var initCityPage = function (urlPrefix, cityName) {
       });
 
     function indexOfObject(arr, obj) {
-      for (var i = 0; i < arr.length; i++) {
+      for (let i = 0; i < arr.length; i++) {
         if (arr[i] == obj) {
           return i;
         }
@@ -502,7 +502,7 @@ var initCityPage = function (urlPrefix, cityName) {
 
       var $container = $('.top-posts').children();
 
-      for (var i = 0; i < users.length; i++) {
+      for (let i = 0; i < users.length; i++) {
         var uid = users[i];
 
         if (uid == undefined) {
@@ -574,7 +574,7 @@ var initCityPage = function (urlPrefix, cityName) {
             limit = 3;
           }
 
-          for (var j = 0; j < limit; j++) {
+          for (let j = 0; j < limit; j++) {
             var tag = data.tags[j];
             // Create li
             var $lig = $(
@@ -590,7 +590,7 @@ var initCityPage = function (urlPrefix, cityName) {
           // Load last artists
           var $part = $li.find('.artists');
           var artists = data.lastArtists;
-          for (var j = 0; j < artists.length; j++) {
+          for (let j = 0; j < artists.length; j++) {
             var art = artists[j];
             var still = $part.text();
             if (still.length > 0) {
@@ -676,7 +676,7 @@ var initCityPage = function (urlPrefix, cityName) {
     ].join('');
 
     function indexOfObject(arr, obj) {
-      for (var i = 0; i < arr.length; i++) {
+      for (let i = 0; i < arr.length; i++) {
         if (arr[i] == obj) {
           return i;
         }
@@ -726,7 +726,7 @@ var initCityPage = function (urlPrefix, cityName) {
 
       // Get all the playlist id
       var req = '/api/playlist?';
-      for (var i = start; i < nbPlaylist + start; i++) {
+      for (let i = start; i < nbPlaylist + start; i++) {
         var id = list[i];
         if (i != start) {
           req += '&';
@@ -743,7 +743,7 @@ var initCityPage = function (urlPrefix, cityName) {
             garray[i] = [];
 
             // Get genres
-            for (var j = 0; j < item.tags.length; j++) {
+            for (let j = 0; j < item.tags.length; j++) {
               var title = item.tags[j].id;
               //var $g = $("<li>" + title + "</li>");
               garray[i][j] = title;
@@ -752,7 +752,7 @@ var initCityPage = function (urlPrefix, cityName) {
 
             // Get artists
             var strart = '';
-            for (var j = 0; j < item.lastArtists.length; j++) {
+            for (let j = 0; j < item.lastArtists.length; j++) {
               var artist = item.lastArtists[j];
               if (strart.length > 0) {
                 strart += ', ';
@@ -768,9 +768,9 @@ var initCityPage = function (urlPrefix, cityName) {
         $('#playlists > .posts').append(html);
 
         // Append genres
-        for (var j = 0; j < garray.length; j++) {
+        for (let j = 0; j < garray.length; j++) {
           var tags = garray[j];
-          for (var k = 0; k < tags.length; k++) {
+          for (let k = 0; k < tags.length; k++) {
             var tag = tags[k];
             $li = $('<li>' + tag + '</li>');
             $('#playlists > .posts > li').eq(j).find('.genres ul').append($li);

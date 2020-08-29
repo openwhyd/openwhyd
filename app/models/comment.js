@@ -134,7 +134,7 @@ exports.insert = function (p, cb) {
     text: (p.text || '').trim(),
   };
   // checking parameters
-  for (var f in comment)
+  for (let f in comment)
     if (!comment[f]) {
       cb({ error: 'missing field: ' + f });
       return;

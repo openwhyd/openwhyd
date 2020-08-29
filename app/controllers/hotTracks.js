@@ -66,7 +66,7 @@ exports.controller = function (request, reqParams, response) {
     var hasMore = posts && posts.length > reqParams.limit;
     if (hasMore) posts = posts.slice(0, reqParams.limit);
     if (loggedInUser.id)
-      for (var i in posts)
+      for (let i in posts)
         posts[i].isLoved = snip.arrayHas(posts[i].lov, '' + loggedInUser.id);
     if (reqParams.format == 'json')
       response.legacyRender({
@@ -76,7 +76,7 @@ exports.controller = function (request, reqParams, response) {
       });
     else {
       // html rendering
-      for (var i in posts)
+      for (let i in posts)
         if (posts[i].rankIncr < 0) posts[i].cssClass = 'rankingUp';
         else if (posts[i].rankIncr > 0) posts[i].cssClass = 'rankingDown';
       postsTemplate.renderPostsAsync(

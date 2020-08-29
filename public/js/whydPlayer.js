@@ -36,12 +36,12 @@ EventEmitter.prototype.on = function (eventName, handler) {
 EventEmitter.prototype.emit = function (eventName /*, args...*/) {
   var args = Array.prototype.slice.call(arguments, 1); // remove eventName from arguments, and make it an array
   var listeners = this._eventListeners[eventName];
-  for (var i in listeners) listeners[i].apply(null, args);
+  for (let i in listeners) listeners[i].apply(null, args);
 };
 
 function inheritEventEmitter(object) {
   var eventEmitter = new EventEmitter();
-  for (var i in eventEmitter) object[i] = eventEmitter[i];
+  for (let i in eventEmitter) object[i] = eventEmitter[i];
 }
 
 // from snip.js
@@ -85,7 +85,7 @@ var extractTrackMetaFromTitle = (function () {
       .split(reSeparator);
     // remove track title (last item of the string, or quoted items)
     splitted.length = splitted.length - (quoted.length || 1);
-    for (var i in splitted) {
+    for (let i in splitted) {
       var normalized = normalizeArtistName(splitted[i]);
       if (normalized && !reOnlyDigits.test(normalized))
         return splitted[i].trim();
@@ -226,7 +226,7 @@ function WhydPlayer() {
     $body.toggleClass('playing', isPlaying);
 
     var classes = $body.attr('class').split(' ');
-    for (var i in classes)
+    for (let i in classes)
       if (classes[i].indexOf('playing_') == 0) $body.removeClass(classes[i]);
     $body.addClass('playing_' + currentTrack.playerName);
 
@@ -386,7 +386,7 @@ function WhydPlayer() {
     console.log('populating track list...');
     playem.clearQueue();
     var posts = $('.post:visible');
-    for (var i = 0; i < posts.length; ++i)
+    for (let i = 0; i < posts.length; ++i)
       addTrackFromAnchor(posts[i].getElementsByTagName('a')[0]);
     var playQueue = playem.getQueue();
     if (isShuffle && playQueue && playQueue.length) shuffleArray(playQueue);
@@ -481,7 +481,7 @@ function WhydPlayer() {
   function playTrackFromFirstAlternativeSource(eId) {
     fetchTrackMetadata(eId, function (track) {
       console.log('found', track.alt || 0, 'alternatives');
-      for (var i in track.alt) {
+      for (let i in track.alt) {
         var newEid = track.alt[i];
         if (newEid != eId && shortcuts[newEid.substr(0, 4)])
           return playTrackFromAlternativeSource(newEid);
@@ -639,7 +639,7 @@ function WhydPlayer() {
 
   // init playem object, based on DOM elements
 
-  for (var i in playemEventHandlers)
+  for (let i in playemEventHandlers)
     playem.on(i, wrapLogger(i, playemEventHandlers[i]));
 
   var genericHolder = document.createElement('div');
@@ -669,7 +669,7 @@ function WhydPlayer() {
     },
     players = [];
 
-  for (var prefix in PLAYERS)
+  for (let prefix in PLAYERS)
     players[prefix] = playem.addPlayer(
       window[PLAYERS[prefix]],
       defaultDefaultParams
@@ -695,14 +695,14 @@ function WhydPlayer() {
 
   var exports = {
     detectTrackByUrl: function (url) {
-      for (var i in players) {
+      for (let i in players) {
         var player = players[i];
         var eId = player.getEid(url);
         if (eId) return eId;
       }
     },
     fetchTrackByUrl: function (url, cb) {
-      for (var playerId in players) {
+      for (let playerId in players) {
         var player = players[playerId];
         var eId = player.getEid(url);
         if (eId) {
@@ -741,7 +741,7 @@ function WhydPlayer() {
             );
           else if (res && res.mappings) {
             console.log('found the following mappings:');
-            for (var src in res.mappings)
+            for (let src in res.mappings)
               console.log(
                 '-',
                 src,
@@ -790,7 +790,7 @@ function WhydPlayer() {
       var trackList = populateTracksFromPosts();
       var trackNumber = 0;
       if (postNode)
-        for (var i in trackList)
+        for (let i in trackList)
           if (trackList[i].metadata.post == postNode) trackNumber = i;
       if (currentTrack && currentTrack.metadata.post == postNode)
         self.playPause();
@@ -830,7 +830,7 @@ function WhydPlayer() {
     },
   };
 
-  for (var f in exports) self[f] = exports[f];
+  for (let f in exports) self[f] = exports[f];
 
   //populateTracksFromPosts();
   return self; //exports;

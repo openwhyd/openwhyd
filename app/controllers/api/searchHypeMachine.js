@@ -22,7 +22,7 @@ exports.controller = function (request, reqParams, response) {
     if (!err && results) {
       if (results.join) list = results;
       else if (typeof results == 'object')
-        for (var i in results) list.push(results[i]);
+        for (let i in results) list.push(results[i]);
     }
     var result = err ? { error: err } : { q: q, results: list };
     console.log('searchHypeMachine => ', err || list.length);

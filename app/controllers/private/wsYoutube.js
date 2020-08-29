@@ -8,7 +8,7 @@ var mainTemplate = {
 var maxResults = 20;
 
 var renderTemplate = function (results) {
-  for (var i in results)
+  for (let i in results)
     results[i] = { id: '/yt/' + results[i].id, name: results[i].title };
 
   return results;

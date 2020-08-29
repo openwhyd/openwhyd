@@ -216,7 +216,7 @@ exports.md5 = function (data) {
 // make sure user prefs are set with default values, if not set manually yet
 function processUserPref(user) {
   user.pref = user.pref || {}; //defaultPref;
-  for (var i in defaultPref)
+  for (let i in defaultPref)
     user.pref[i] =
       user.pref[i] === undefined || user.pref[i] === null
         ? defaultPref[i] // default is better than null/undefined value
@@ -229,7 +229,7 @@ function processUserPref(user) {
 exports.processUser = processUserPref;
 
 function processUsers(list) {
-  for (var i in list) if (list[i]) processUserPref(list[i]);
+  for (let i in list) if (list[i]) processUserPref(list[i]);
 }
 
 function fetch(q, handler) {
@@ -261,9 +261,9 @@ exports.fetchMulti = function (q, options, handler) {
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   if (q._id && typeof q._id == 'object')
     // $in:[]
-    for (var i in q._id)
+    for (let i in q._id)
       if (i == '$in')
-        for (var j in q._id['$in'])
+        for (let j in q._id['$in'])
           q._id['$in'][j] = ObjectId('' + q._id['$in'][j]);
   mongodb.collections['user'].find(q, options || {}, function (err, cursor) {
     cursor.toArray(function (err, array) {
@@ -511,7 +511,7 @@ exports.fetchPlaylist = function (uId, plId, cb) {
   console.log('user.fetchPlaylist', uId, plId);
   exports.fetchByUid(uId, function (user) {
     if (user && user.pl && user.pl.length)
-      for (var i in user.pl) {
+      for (let i in user.pl) {
         if (user.pl[i].id == plId) return cb(user.pl[i]);
       }
     else if (cb) cb();
@@ -523,7 +523,7 @@ exports.hasPlaylistName = function (user, name) {
   if (!user && user.id != null)
     console.error('null user provided in user.hasPlaylist');
   else if (user.pl && user.pl.length)
-    for (var i in user.pl) if (user.pl[i].name == name) return user.pl[i];
+    for (let i in user.pl) if (user.pl[i].name == name) return user.pl[i];
   return false;
 };
 
@@ -594,7 +594,7 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
   fetch({ _id: '' + uId }, function (err, user) {
     var found = true;
     user.pl = user.pl || [];
-    for (var i in user.pl)
+    for (let i in user.pl)
       if ('' + user.pl[i].id == '' + plId) {
         found = user.pl[i]; // = {id:plId, name:plName};
         if (upd.name) user.pl[i].name = upd.name;
@@ -628,7 +628,7 @@ exports.setPlaylistImg = function(uId, plId, img, cb) {
 	fetch({_id:uId}, function(err, user) {
 		var found = true;
 		user.pl = user.pl || [];
-		for (var i in user.pl)
+		for (let i in user.pl)
 			if (""+user.pl[i].id == ""+plId) {
 				if (img || img.indexOf("blank") == -1)
 					user.pl[i].img = img;
@@ -651,7 +651,7 @@ exports.deletePlaylist = function (uId, plId, handler) {
   fetch({ _id: uId }, function (err, user) {
     var newPl = [];
     user.pl = user.pl || [];
-    for (var i in user.pl)
+    for (let i in user.pl)
       if ('' + user.pl[i].id != '' + plId) newPl.push(user.pl[i]);
     postModel.unsetPlaylist(uId, plId, function () {
       user.pl = newPl;
@@ -680,7 +680,7 @@ function msToDigestTimestamp(date) {
 
 exports.getEmailNotifsFreq = function (user) {
   var freq = -1; // daily (by default)
-  for (var i in user.pref)
+  for (let i in user.pref)
     if (i.indexOf('em') == 0) freq = Math.max(freq, user.pref[i]);
   return freq;
 };
@@ -714,7 +714,7 @@ exports.setPref = function (uId, pref, handler) {
   else {
     var cleanPref = {},
       emailFreq = 0;
-    for (var i in defaultPref)
+    for (let i in defaultPref)
       if (pref[i] !== undefined && pref[i] !== null) {
         // only clean provided pref values
         cleanPref['pref.' + i] =
@@ -755,7 +755,7 @@ exports.setApTok = function (uId, _apTok, cb) {
 	mongodb.collections["user"].findOne({_id:ObjectId(""+uId), "apTok.tok":apTok}, {fields:{apTok:1}}, function(err, user) {
 		if (user) {
 			var finalApTok = [];
-			for (var i in user.apTok)
+			for (let i in user.apTok)
 				if (user.apTok[i].tok != apTok)
 					finalApTok.push(user.apTok[i]);
 			finalApTok.push(newApTok);
@@ -926,7 +926,7 @@ exports.renameUser = function (uid, name, callback) {
 
 exports.fetchUserFields = function (subList, attrToCopy, cb) {
   var uidList = [];
-  if (subList) for (var i in subList) uidList.push(subList[i].id);
+  if (subList) for (let i in subList) uidList.push(subList[i].id);
   if (uidList.length) {
     var attrSet = snip.arrayToSet(attrToCopy, 1);
     exports.fetchMulti(

@@ -138,8 +138,8 @@ function WhydLogging() {
   this.validateFields = function (fieldSetList) {
     // [{name:$name},{password:$password}...] // old name: signIn()
     var results = [];
-    for (var i in fieldSetList)
-      for (var key in fieldSetList[i]) {
+    for (let i in fieldSetList)
+      for (let key in fieldSetList[i]) {
         var $elt = fieldSetList[i][key];
         var error = this.validateField[key]($elt);
         if (error) {

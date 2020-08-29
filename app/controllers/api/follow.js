@@ -87,7 +87,7 @@ function ranPublicAction(loggedUser, reqParams, cb) {
         null,
         function (subscrStatus) {
           var subscrSet = snip.objArrayToSet(subscrStatus, 'tId', true);
-          for (var i in res)
+          for (let i in res)
             res[i].isSubscribing = subscrSet[res[i].uId || res[i].tId];
           cb(res);
         }

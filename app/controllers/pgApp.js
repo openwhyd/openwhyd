@@ -148,7 +148,7 @@ exports.controller = function (request, reqParams, response) {
     loggedUser: request.getUser(response),
   };
 
-  for (var f in reqParams) FIELDS[f] && (p[f] = reqParams[f]);
+  for (let f in reqParams) FIELDS[f] && (p[f] = reqParams[f]);
 
   function render(data) {
     data = data || {

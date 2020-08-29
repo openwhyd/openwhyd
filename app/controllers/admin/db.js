@@ -47,7 +47,7 @@ function fetchUidList(cb) {
 
 function cleanUidList(uidList) {
   var uids = [];
-  for (var i in uidList)
+  for (let i in uidList)
     if (mongodb.isObjectId(uidList[i]))
       try {
         uids.push(mongodb.ObjectId('' + uidList[i]));
@@ -131,7 +131,7 @@ var fileGenerators = {
       if (p.action) delete p.action;
       if (p.loggedUser) delete p.loggedUser;
       if (p._id) p._id = mongodb.ObjectId(p._id);
-      for (var i in p) {
+      for (let i in p) {
         if (p[i] == '$exists') p[i] = { $exists: true };
       }
       console.log('query:', p);

@@ -12,7 +12,7 @@ var TESTS = (function () {
     // no argument is passed to cb() if at least one of the criteria is not met
     return function (p, cb) {
       console.log('hasfields?', fields);
-      for (var i = fields.length - 1; i >= 0; --i) {
+      for (let i = fields.length - 1; i >= 0; --i) {
         var mapping = p.mappings[metadataResolver.SOURCES[fields[i]]];
         //console.log(fields[i], metadataResolver.SOURCES[fields[i]], mapping.c);
         if (!mapping || mapping.c < 0.1) return cb();
@@ -31,7 +31,7 @@ var TESTS = (function () {
           track.metadata.trackTitle,
           ']'
         );
-        for (var s in track.mappings)
+        for (let s in track.mappings)
           ee.emit(
             'log',
             '  => mapping: /' + s + '/' + track.mappings[s].id,
@@ -103,7 +103,7 @@ function translateTests(tests) {
     p = {},
     ee = new EventEmitter();
   ee.on('log', console.log.bind(console));
-  for (var name in tests)
+  for (let name in tests)
     arr.push([name, tests[name].bind(tests, p, ee /*, cb*/)]);
   return arr;
 }

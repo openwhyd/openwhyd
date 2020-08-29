@@ -127,7 +127,7 @@ var submitInvites = function (request, reqParams, response) {
     var successEmails = [];
     var message =
       reqParams.message && reqParams.message != '' ? reqParams.message : null;
-    for (var i in reqParams.email)
+    for (let i in reqParams.email)
       if (reqParams.email[i])
         users.inviteUserBy(reqParams.email[i], '' + loggedUser._id, function(
           invite

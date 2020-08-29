@@ -217,7 +217,7 @@ exports.detectArtistName = function (trackName) {
   var splitted = (trackName || '').replace(reQuotes, ' - ').split(reSeparator);
   // remove track title (last item of the string, or quoted items)
   splitted.length = splitted.length - (quoted.length || 1);
-  for (var i in splitted) {
+  for (let i in splitted) {
     var normalized = exports.normalizeArtistName(splitted[i]);
     if (normalized && !reOnlyDigits.test(normalized)) return splitted[i].trim();
   }
@@ -235,13 +235,13 @@ exports.detectTrackFields = function (trackName) {
 // data structures
 
 exports.arrayHas = function (array, value) {
-  if (array) for (var i in array) if (value == array[i]) return true;
+  if (array) for (let i in array) if (value == array[i]) return true;
   return false;
 };
 
 exports.values = function (set) {
   var list = [];
-  for (var i in set)
+  for (let i in set)
     if (set[i])
       // TODO: remove this line
       list.push(set[i]);
@@ -250,12 +250,12 @@ exports.values = function (set) {
 
 exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   var array = [];
-  for (var k in map) {
+  for (let k in map) {
     var obj = {};
     if (keyFieldName) obj[keyFieldName] = k;
     if (valueFieldName) obj[valueFieldName] = map[k];
     else if (typeof map[k] == 'object')
-      for (var f in map[k]) obj[f] = map[k][f];
+      for (let f in map[k]) obj[f] = map[k][f];
     array.push(obj);
   }
   return array;
@@ -263,7 +263,7 @@ exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
 
 exports.arrayToSet = function (array, value) {
   var set = {};
-  for (var i in array)
+  for (let i in array)
     if (array[i])
       // TODO: remove this line
       set[array[i]] = value !== undefined ? value : true;
@@ -272,7 +272,7 @@ exports.arrayToSet = function (array, value) {
 
 exports.objArrayToSet = function (array, attr, val) {
   var set = {};
-  for (var i in array)
+  for (let i in array)
     if (array[i] && attr in array[i]) set[array[i][attr]] = val || array[i];
   return set;
 };
@@ -284,7 +284,7 @@ exports.groupObjectsBy = function (array, attr) {
     for (let i in array) {
       const obj = array[i] || {};
       let key = obj;
-      for (var j in path) {
+      for (let j in path) {
         key = (key || {})[path[j]];
       }
       if (key) (r[key] = r[key] || []).push(obj);
@@ -312,7 +312,7 @@ exports.removeDuplicates = function (array, keyFieldName) {
 
 exports.objArrayToValueArray = function (array, attr) {
   var list = [];
-  for (var i in array)
+  for (let i in array)
     if (array[i] && array[i][attr])
       // TODO: fix this line, cf line 217
       list.push(array[i][attr]);
@@ -333,8 +333,8 @@ exports.forEachArrayItem = function (array, handler, cb) {
 exports.getMapFieldNames = function (map /*, firstField*/) {
   var fieldNames = [],
     fieldSet = {};
-  for (var i in map) {
-    for (var f in map[i])
+  for (let i in map) {
+    for (let f in map[i])
       if (!fieldSet[f]) {
         // TODO: check this line
         fieldNames.push(f);
@@ -357,7 +357,7 @@ exports.excludeKeys = function (map = [], keySet = {}) {
 
 exports.checkMissingFields = function (obj, fieldSet) {
   if (!obj || typeof obj !== 'object') return { error: 'object is null' };
-  for (var f in fieldSet)
+  for (let f in fieldSet)
     if (fieldSet[f] && !(f in obj))
       return { field: f, expected: true, error: 'missing field: ' + f };
     else if (!fieldSet[f] && f in obj)
@@ -374,7 +374,7 @@ exports.checkMistypedFields = function (obj, fieldTypeSet) {
       error: error + ': ' + f,
     };
   }
-  for (var f in fieldTypeSet)
+  for (let f in fieldTypeSet)
     if (fieldTypeSet[f]) {
       if (!(f in obj)) return Error('missing field', f);
       else if (
@@ -388,7 +388,7 @@ exports.checkMistypedFields = function (obj, fieldTypeSet) {
 // translateFields({a,b,c}, {b:"bb"}) => {a,bb,c}
 exports.translateFields = function (obj, mapping) {
   if (obj && typeof obj === 'object')
-    for (var f in mapping)
+    for (let f in mapping)
       if (f in obj) {
         obj[mapping[f]] = obj[f];
         delete obj[f];
@@ -399,7 +399,7 @@ exports.translateFields = function (obj, mapping) {
 // filterFields({a,b,c}, {b:"bb"}) => {bb}
 exports.filterFields = function (obj, mapping) {
   var finalObj = {};
-  for (var field in mapping)
+  for (let field in mapping)
     if (field in obj)
       finalObj[mapping[field] === true ? field : mapping[field]] = obj[field];
   return finalObj;
@@ -478,12 +478,12 @@ exports.DataTable = function () {
   this.fromMap = (map, header) => {
     this.header = header || exports.getMapFieldNames(map);
     //table = /*mapToTable(map, header);*/ [];
-    for (var i in map) {
+    for (let i in map) {
       var line = [
         /*i*/
       ];
-      //for (var f in map[i]) line.push(map[i][f]);
-      for (var f in this.header) line.push(map[i][this.header[f]]);
+      //for (let f in map[i]) line.push(map[i][f]);
+      for (let f in this.header) line.push(map[i][this.header[f]]);
       this.table.push(line);
     }
     return this;
@@ -501,8 +501,8 @@ exports.DataTable = function () {
   const toCharSeparatedValues = (charSepar, replacement, lineSepar) => {
     var table = getFullTableCopy();
     var regExp = new RegExp('[' + charSepar + '\n"]', 'g');
-    for (var i in table) {
-      for (var j in table[i])
+    for (let i in table) {
+      for (let j in table[i])
         table[i][j] = ('' + table[i][j]).replace(regExp, replacement || ' ');
       //console.log(i, table[i]);
       table[i] = table[i].join(charSepar);
@@ -561,7 +561,7 @@ exports.httpSetDomain = function (regex, options) {
 exports.httpDomains = httpDomains;
 
 exports.httpGetDomain = function (domain) {
-  for (var i in httpDomains)
+  for (let i in httpDomains)
     if (httpDomains[i][0].test(domain)) return httpDomains[i][1];
 };
 

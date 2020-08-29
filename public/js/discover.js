@@ -24,7 +24,7 @@ var sections = {
         json
       ) {
         //console.log("parseBlogPost response", json)
-        for (var f in json) {
+        for (let f in json) {
           json[f] = htmlDecode(json[f]);
           console.log(f, json[f]);
           $('input[name=' + f + ']').val(json[f]);
@@ -61,7 +61,7 @@ var sections = {
       console.log('featured', json);
       if (json && !json.error && json.posts) {
         var $out = $('ul');
-        for (var i = 0; i < json.posts.length; ++i)
+        for (let i = 0; i < json.posts.length; ++i)
           $out.append(renderPost(json.posts[i]));
         if ($out.ajaxify) $out.ajaxify();
       } else (json || {}).error ? showMessage(json.error) : console.log('rankings error', json);
@@ -70,7 +70,7 @@ var sections = {
   ranking: function ($content) {
     function renderUserRanking(users) {
       var $out = $('<ul>').addClass('userList');
-      for (var i = 0; i < users.length; ++i) {
+      for (let i = 0; i < users.length; ++i) {
         var $li = _renderUserInList(users[i]);
         var $box = $('<div class="statBox">')
           .append($('<div class="nbSubscribers">').text(users[i].nbSubscribers))

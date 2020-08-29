@@ -208,7 +208,7 @@ exports.controller = function (request, reqParams = {}, response) {
   if (!reqParams.loggedUser) return;
 
   if (request.method.toLowerCase() === 'post') {
-    for (var i in indexFcts)
+    for (let i in indexFcts)
       if (request.body[i])
         return indexFcts[i](function (r) {
           response.legacyRender(r || { ok: 'done' });

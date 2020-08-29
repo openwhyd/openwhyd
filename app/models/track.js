@@ -133,7 +133,7 @@ var fieldList = Object.keys(FIELDS_TO_COPY)
   .concat(['prev']);
 
 function mergePostData(track, post, offset) {
-  for (var f in fieldList) post[fieldList[f]] = track[fieldList[f]];
+  for (let f in fieldList) post[fieldList[f]] = track[fieldList[f]];
   post.trackId = track._id;
   post.rankIncr = track.prev - track.score;
   return post;
@@ -143,7 +143,7 @@ function fetchPostsByPid(pId, cb) {
   var pidList = (pId && Array.isArray(pId) ? pId : []).map(function (id) {
     return ObjectId('' + id);
   });
-  //for (var i in pidList) pidList[i] = ObjectId("" + pidList[i]);
+  //for (let i in pidList) pidList[i] = ObjectId("" + pidList[i]);
   mongodb.collections['post'].find(
     { _id: { $in: pidList } },
     POST_FETCH_OPTIONS,
@@ -163,7 +163,7 @@ exports.fetchPosts = function (params, handler) {
     var pidList = snip.objArrayToValueArray(tracks, 'pId');
     fetchPostsByPid(pidList, function (posts) {
       var postsByEid = snip.objArrayToSet(posts, 'eId');
-      for (var i in tracks) {
+      for (let i in tracks) {
         var track = tracks[i];
         if (!track) {
           console.error('warning: skipping null track in track.fetchPosts()');
@@ -271,14 +271,14 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
         eId: eId,
         nbR: posts.length,
       };
-    for (var f in FIELDS_TO_SUM) {
+    for (let f in FIELDS_TO_SUM) {
       track[f] = track[f] || 0;
       freshTrackStats[f] = freshTrackStats[f] || 0;
     }
     // 1) score posts, to select which user will be featured for this track
-    for (var p in posts) {
+    for (let p in posts) {
       posts[p].nbL = (posts[p].lov || []).length;
-      for (var f in FIELDS_TO_SUM) posts[p][f] = posts[p][f] || 0;
+      for (let f in FIELDS_TO_SUM) posts[p][f] = posts[p][f] || 0;
       posts[p].score = scorePost(posts[p]);
       track.nbP += posts[p].nbP;
       track.nbL += posts[p].nbL;
@@ -294,7 +294,7 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
     });
     // 2) populate and save track object, based on best-scored post
     track.pId = posts[0]._id;
-    for (var f in FIELDS_TO_COPY) track[f] = posts[0][f];
+    for (let f in FIELDS_TO_COPY) track[f] = posts[0][f];
     track.score = scorePost(freshTrackStats);
     if (additionalFields) {
       console.log(
@@ -302,7 +302,7 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
         Object.keys(additionalFields),
         '...'
       );
-      for (var f in additionalFields) track[f] = additionalFields[f];
+      for (let f in additionalFields) track[f] = additionalFields[f];
     }
     console.log('saving track', track);
     save(track, cb, replace);
@@ -331,7 +331,7 @@ function translateTrackToConciseMetadata(track) {
   }
   if (typeof track.mappings == 'object') {
     concise.alt = [];
-    for (var sourceId in track.mappings) {
+    for (let sourceId in track.mappings) {
       var alt = track.mappings[sourceId];
       if (alt.id != trackId && alt.c >= MINIMUM_CONFIDENCE)
         concise.alt.push('/' + sourceId + '/' + (alt.uri || alt.id));
@@ -361,7 +361,7 @@ function hasAltMappings(conciseTrack) {
 function flattenObjectProperties(obj, path, res) {
   var path = path || [];
   var res = res || {};
-  for (var f in obj) {
+  for (let f in obj) {
     path.push(f);
     if (typeof obj[f] == 'object' && !obj[f].splice)
       flattenObjectProperties(obj[f], path, res);
@@ -398,7 +398,7 @@ exports.updateAndPopulateMetadata = function (eId, cb, force) {
       if (finalMeta.meta) {
         var updates = flattenObjectProperties({ meta: finalMeta.meta });
         delete finalMeta.meta;
-        for (var key in updates) finalMeta[key] = updates[key];
+        for (let key in updates) finalMeta[key] = updates[key];
       }
       if (!hasAltMappings(finalMeta)) delete finalMeta.alt;
       // TODO: complete mappings, when possible

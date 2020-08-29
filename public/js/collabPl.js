@@ -19,7 +19,7 @@ $(function () {
   function renderUserList(users) {
     if (!users || !users.length) return '';
     var resultsHtml = '';
-    for (var i in users)
+    for (let i in users)
       resultsHtml +=
         '<li>' +
         '<div class="thumb" style="background-image:url(' +

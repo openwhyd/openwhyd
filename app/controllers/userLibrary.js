@@ -51,7 +51,7 @@ function LibraryController(reqParams, render) {
 		format: reqParams.format,
 		pageUrl: reqParams.pageUrl*/,
   };
-  for (var i in paramsToInclude)
+  for (let i in paramsToInclude)
     this.options[paramsToInclude[i]] = reqParams[paramsToInclude[i]];
   if (typeof this.options.limit == 'string')
     this.options.limit = parseInt(this.options.limit);
@@ -158,7 +158,7 @@ exports.controller = function (request, reqParams, response) {
         'limit',
         'callback',
       ];
-    for (var i in paramsToKeep)
+    for (let i in paramsToKeep)
       if (reqParams[paramsToKeep[i]])
         paramsObj[paramsToKeep[i]] = reqParams[paramsToKeep[i]];
     response.temporaryRedirect(path, paramsObj);

@@ -33,7 +33,7 @@ const cacheCollections = function (db, callback) {
         db.collections[colName] = col;
         if (0 == --remaining) callback(null, db);
       });
-    for (var i in collections) {
+    for (let i in collections) {
       cacheCollection(collections[i].collectionName);
       // cacheCollection will mutate remaining, and callback when remaining == 0
     }

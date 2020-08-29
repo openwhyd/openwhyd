@@ -11,7 +11,7 @@ exports.TestLogger = function () {
   };
 
   this.log = function () {
-    for (var i in arguments)
+    for (let i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
     var message = Array.prototype.join.call(arguments, ' ');
@@ -46,7 +46,7 @@ exports.ServerTestRunner = function () {
   };
 
   this.addTests = function (testMap) {
-    for (var title in testMap) this.addTest(title, testMap[title]);
+    for (let title in testMap) this.addTest(title, testMap[title]);
     return this;
   };
 

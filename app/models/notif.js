@@ -83,7 +83,7 @@ function pushToMobile(code, toUser, text, payload) {
 }
 
 function pushToMobiles(code, toUsers, text, payload) {
-  for (var i in toUsers) pushToMobile(code, toUsers[i], text, payload);
+  for (let i in toUsers) pushToMobile(code, toUsers[i], text, payload);
 }
 
 function cacheUserNotifs(uId, notifs) {
@@ -92,7 +92,7 @@ function cacheUserNotifs(uId, notifs) {
 
 function invalidateUserNotifsCache(uId) {
   if (uId.splice)
-    for (var i in uId) delete exports.userNotifsCache['' + uId[i]];
+    for (let i in uId) delete exports.userNotifsCache['' + uId[i]];
   else delete exports.userNotifsCache['' + uId]; // => force fetch on next request
 }
 
@@ -105,7 +105,7 @@ function logErrors(cb) {
 }
 
 function detectTo(p) {
-  for (var i in p) {
+  for (let i in p) {
     var uId = (p[i] || {}).uId;
     var to = ((uId || {}).$each || [uId])[0];
     if (to) return to;
@@ -231,10 +231,10 @@ exports.fetchUserNotifs = function (uId, handler) {
   ) {
     cursor.toArray(function (err, results) {
       var notifs = [];
-      for (var i in results) {
+      for (let i in results) {
         var n = 0;
         if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
-        else for (var j in results[i].uId) if (results[i].uId[j] == uId) n++;
+        else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
         var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
         notifs.push({
           type: results[i].type,
@@ -266,7 +266,7 @@ exports.getUserNotifs = function (uid, handler) {
 
 function countUserNotifs(notifs) {
   var total = 0;
-  for (var i in notifs) total += notifs[i].n || 1;
+  for (let i in notifs) total += notifs[i].n || 1;
   return total;
 }
 

@@ -18,7 +18,7 @@ function fetchSubscribers(uid, options, cb) {
   followModel.fetchSubscriptionHistory(
     { toUId: uid, until: options.until },
     function (subscribers) {
-      for (var i in subscribers)
+      for (let i in subscribers)
         subscribers[i] = {
           id: subscribers[i].uId,
           name: subscribers[i].uNm,
@@ -42,7 +42,7 @@ function fetchLikedPostSet(uid, options, cb) {
   activityModel.fetchLikersOfUser(uid, { until: options.until }, function (
     activities
   ) {
-    for (var i in activities) {
+    for (let i in activities) {
       var pId = '' + activities[i].like.pId;
       postsToPopulate.push(ObjectId(pId));
       likersPerPost[pId] = likersPerPost[pId] || [];
@@ -59,7 +59,7 @@ function fetchLikedPostSet(uid, options, cb) {
       /*params*/ null,
       /*options*/ null,
       function (posts) {
-        for (var i in posts) {
+        for (let i in posts) {
           if (posts[i] && likersPerPost['' + posts[i]._id])
             likersPerTrack[posts[i].eId] = {
               id: '' + posts[i]._id,
@@ -69,7 +69,7 @@ function fetchLikedPostSet(uid, options, cb) {
             };
         }
         // delete records of deleted posts (stored as arrays of likers instead of encapsulated objects)
-        for (var i in likersPerTrack)
+        for (let i in likersPerTrack)
           if (
             !likersPerTrack[i] ||
             !likersPerTrack[i].likes ||
@@ -86,7 +86,7 @@ function fetchRepostedTrackSet(uid, options, cb) {
   var repostedTrackSet = {};
   if (!options.includeReposts) return cb(repostedTrackSet);
   postModel.fetchRepostsFromMe(uid, options, function (reposts) {
-    for (var i in reposts) {
+    for (let i in reposts) {
       var pId = '' + reposts[i].repost.pId;
       var eId = '' + reposts[i].eId;
       repostedTrackSet[eId] = repostedTrackSet[eId] || {
@@ -148,7 +148,7 @@ function fetchSameTrackSet(uid, options, cb) {
         );
         // TODO: close cursor?
       } else if (!nextTrack || remaining < 1) {
-        for (var eId in sameTrackSet)
+        for (let eId in sameTrackSet)
           sameTrackSet[eId].sameTracks = snip.mapToObjArray(
             sameTrackSet[eId].sameTracks,
             'id'
@@ -198,10 +198,10 @@ exports.fetchAndGenerateNotifDigest = function (user, options, cb) {
       Object.keys(sameTrackSet).length
     ) {
       var lists = [repostedTrackSet, likersPerPost];
-      for (var list in lists) {
-        for (var track in lists[list]) {
+      for (let list in lists) {
+        for (let track in lists[list]) {
           var users = lists[list][track].reposts || lists[list][track].likes;
-          for (var i in users)
+          for (let i in users)
             if (users[i]) users[i].subscribed = !!subscriptionSet[users[i].id];
         }
       }

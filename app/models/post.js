@@ -27,7 +27,7 @@ var playlistSort = {
 };
 
 function processPosts(results) {
-  for (var i in results) results[i].lov = results[i].lov || [];
+  for (let i in results) results[i].lov = results[i].lov || [];
   return results;
 }
 
@@ -349,7 +349,7 @@ exports.rePost = function (pId, repostObj, handler) {
       handler(postObj);
       return;
     }
-    for (var i in fieldsToCopy)
+    for (let i in fieldsToCopy)
       if (/*repostObj[i] == null &&*/ postObj[i] != null)
         repostObj[i] = postObj[i];
     repostObj.repost = { pId: pId, uId: postObj.uId, uNm: postObj.uNm };

@@ -183,7 +183,7 @@
       //var $elt;
       //var replacement = replacement.split("/").pop(); // (val.indexOf("?") < 0 ? "?" : "&") + "_=" + Date.now() + "\")"
       var replacement = '/uAvatarImg/' + replacement.split('/').pop();
-      for (var i in selectors)
+      for (let i in selectors)
         $(selectors[i]).css('background-image', 'url(' + replacement + ')');
       /*.each(function(){
 				var val = ($elt = $(this)).css("background-image");
@@ -241,7 +241,7 @@
         $('#userName').val(user.name);
         $('textarea[name=bio]').val(user.bio);
         $('input[name=loc]').val(user.loc);
-        for (var f in user.lnk)
+        for (let f in user.lnk)
           $profileForm.find('*[name=lnk_' + f + ']').val(user.lnk[f]);
         $dlg.find('.dlgImgPane > img').attr('src', '/img/u/' + user.id);
       },

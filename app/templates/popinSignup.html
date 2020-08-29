@@ -20,7 +20,7 @@
           console.log('response', res);
           $('.errorMessage').remove();
           if (res.error) {
-            for (var fName in signup.fields) {
+            for (let fName in signup.fields) {
               var hasError = res.error.indexOf(fName) != -1;
               var $field = signup.fields[fName].toggleClass(
                 'errorInput',

@@ -166,7 +166,7 @@ var MAPPING_RESOLVERS = [
         track.echonestHits = hits.length;
         if (!hits.length) return cb(null, track);
         var bestHit = hits[0];
-        for (var source in bestHit.foreignIds) {
+        for (let source in bestHit.foreignIds) {
           if (SOURCES[source])
             appendMapping(track, SOURCES[source], {
               id: bestHit.foreignIds[source].split(':').pop(),
@@ -205,7 +205,7 @@ var MAPPING_RESOLVERS = [
 // takes trackMetadata (artistName, trackTitle, etc...)
 // => returns mapping for expectedSourceId only
 exports.getTrackMapping = function (expectedSourceId, trackMetadata, cb) {
-  for (var i in MAPPING_RESOLVERS) {
+  for (let i in MAPPING_RESOLVERS) {
     var resolver = MAPPING_RESOLVERS[i];
     var dests = resolver[0].split('->').pop();
     if (dests.indexOf(expectedSourceId) != -1)

@@ -141,7 +141,7 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
 				url: "/api/user",
 				success: function(user){
 					if (user && user.pl)
-						for (var i in user.pl)
+						for (let i in user.pl)
 							addPlaylist(user.pl[i].name, user.pl[i].id, user.pl[i].collabId);
 					bindItems();
 				}
@@ -367,7 +367,7 @@ function initPostBox(params) {
       // TODO: make sure that the list of players is always up to date
     };
     function getPlayerId(url) {
-      for (var i in players) if (players[i].getEid(url)) return i;
+      for (let i in players) if (players[i].getEid(url)) return i;
     }
     function detectEid(url, cb) {
       var playerId = getPlayerId(url);

@@ -15,7 +15,7 @@ var STATIC_FILES = {
 exports.controller = function (request, reqParams, response) {
   var path = request.url.split('?')[0];
 
-  for (var i in STATIC_FILES)
+  for (let i in STATIC_FILES)
     if (i == path) return response.temporaryRedirect(STATIC_FILES[i]);
 
   response.temporaryRedirect(path + '/'); // /index.html

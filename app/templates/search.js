@@ -98,7 +98,7 @@ exports.renderSearchPage = function (results, reqParams, cb) {
 
 exports.renderResultBox = function (q, resultsPerType, cb) {
   var templateParams = { q: q, categories: [] };
-  for (var i in cats) {
+  for (let i in cats) {
     var cat = cats[i];
     var res = resultsPerType[cat._type];
     if (res)

@@ -22,10 +22,10 @@ exports.notifyUserActivity = function ({ userId, userAgent, startDate }) {
 function filterByFreshness(d) {
   var now = Date.now();
   var filtered = {};
-  for (var ua in lastAccessPerUA) {
+  for (let ua in lastAccessPerUA) {
     var users = 0; //[];
     var userAccess = lastAccessPerUA[ua];
-    for (var uid in userAccess) {
+    for (let uid in userAccess) {
       var t = userAccess[uid];
       if (now - t <= d) ++users;
       //users.push({id: uid, secondsAgo: (now - t) / 1000}) ;

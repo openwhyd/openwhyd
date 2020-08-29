@@ -7,7 +7,7 @@
 
   var log = (console.log = function () {
     origLog.apply(console, arguments);
-    for (var i in arguments)
+    for (let i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = JSON.stringify(arguments[i]);
     var p = document.createElement('p');
@@ -49,7 +49,7 @@
 
   function countNotifs(notifs) {
     var total = 0;
-    for (var i in notifs) total += notifs[i].n || 1;
+    for (let i in notifs) total += notifs[i].n || 1;
     return total;
   }
 
@@ -198,7 +198,7 @@
 
   // display list for tests
   var listEl = document.getElementById('tests');
-  for (var t in TESTS) {
+  for (let t in TESTS) {
     var li = document.createElement('li');
     li.innerText = t;
     listEl.appendChild(li);

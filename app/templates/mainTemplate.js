@@ -98,7 +98,7 @@ var htmlHeading = [
 exports.makeAnalyticsHeading = function (user) {
   // only render opengraph preferences (in order to avoid rendering a date object for nextEmail/nextEN)
   var userPrefs = {};
-  for (var i in (user || {}).pref)
+  for (let i in (user || {}).pref)
     if (i.indexOf('og') == 0) userPrefs[i] = user.pref[i];
   return [
     '<script>',
@@ -185,7 +185,7 @@ exports.renderWhydFrame = function (html, params) {
       '    <title>' + uiSnippets.htmlEntities(params.title) + '</title>'
     );
 
-  for (var i in params.css)
+  for (let i in params.css)
     out.push(
       '    <link href="' +
         render.urlPrefix +

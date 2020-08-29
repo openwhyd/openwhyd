@@ -1,7 +1,7 @@
 // command-line overridable config
 
 var config = process.appParams; // cf init in appd.js
-for (var key in config) exports[key] = config[key];
+for (let key in config) exports[key] = config[key];
 
 // TODO: update team and autoSubscribeUsers
 
@@ -24,7 +24,7 @@ exports.autoSubscribeUsers = [
 ];
 
 exports.adminEmails = {};
-for (var i in exports.whydTeam)
+for (let i in exports.whydTeam)
   exports.adminEmails[exports.whydTeam[i].email] = true;
 
 // track players
@@ -126,7 +126,7 @@ exports.translateEidToUrl = function (eId) {
 };
 
 exports.translateUrlToEid = function (url) {
-  for (var i in PLAYERS) {
+  for (let i in PLAYERS) {
     var eId = (PLAYERS[i].extractId || function () {})(url);
     if (eId) return '/' + i + '/' + eId;
   }

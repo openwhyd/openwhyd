@@ -124,7 +124,7 @@ function initOnbPeople(genres) {
         $('h1').text(
           "You're now subscribing to music lovers we think you'll like"
         );
-        for (var i in recomUsers) {
+        for (let i in recomUsers) {
           recomUsers[i].subscribed = true;
           $userList.append(renderUserInList(recomUsers[i]));
         }
@@ -214,7 +214,7 @@ function initOnbButton() {
   // adapt instructions to web browser in use
   $('li.instr').hide();
   var b = ['Opera', 'MSIE 8.', 'MSIE', 'Chrome', 'Safari', 'Firefox'];
-  for (var i in b)
+  for (let i in b)
     if (navigator.userAgent.indexOf(b[i]) != -1) {
       $('.instr.' + b[i].toLowerCase().replace(/[^a-z0-9]+/g, '')).show();
       $('.browserIcon').attr('class', 'browserIcon ' + b[i].toLowerCase());

@@ -15,7 +15,7 @@ exports.makeTests = function (p) {
           subscriptions
         ) {
           testVars.uidList = [p.loggedUser.id];
-          for (var i in subscriptions.subscriptions)
+          for (let i in subscriptions.subscriptions)
             if (subscriptions.subscriptions[i].id)
               testVars.uidList.push(
                 ('' + subscriptions.subscriptions[i].id).replace('/u/', '')

@@ -24,7 +24,7 @@ function fetchResultsPerType(q, cb) {
   searchModel.query(q, function (r) {
     var resultsPerType = {};
     if (r && r.hits)
-      for (var i in r.hits) {
+      for (let i in r.hits) {
         var item = r.hits[i];
         resultsPerType[item._type] = resultsPerType[item._type] || [];
         resultsPerType[item._type].push(template.makeResultObject(item));
@@ -36,14 +36,14 @@ function fetchResultsPerType(q, cb) {
 function toObjectIdList(hits) {
   var idList = [];
   if (hits)
-    for (var i in hits) idList.push(ObjectId('' + (hits[i]._id || hits[i].id)));
+    for (let i in hits) idList.push(ObjectId('' + (hits[i]._id || hits[i].id)));
   return idList;
 }
 
 function removeDuplicates(posts) {
   var finalPosts = [],
     eidSet = {};
-  for (var i in posts)
+  for (let i in posts)
     if (!eidSet[posts[i].eId]) {
       finalPosts.push(posts[i]);
       eidSet[posts[i].eId] = true;
@@ -53,7 +53,7 @@ function removeDuplicates(posts) {
 
 function removeEmptyItems(posts) {
   var finalPosts = [];
-  for (var i in posts) if (posts[i]) finalPosts.push(posts[i]);
+  for (let i in posts) if (posts[i]) finalPosts.push(posts[i]);
   return finalPosts;
 }
 
@@ -72,10 +72,10 @@ var fetchDataByType = {
       function (items) {
         //sort items by search score
         var itemSet = {};
-        for (var i in items)
+        for (let i in items)
           if (items[i]) itemSet['' + items[i]._id] = items[i];
         items = [];
-        for (var i in idList) items.push(itemSet['' + idList[i]]);
+        for (let i in idList) items.push(itemSet['' + idList[i]]);
         cb(items);
       }
     );
@@ -105,7 +105,7 @@ var fetchDataByType = {
     // for each playlist, fetch number of tracks and 3 last tracks (for thumbs)
     var playlists = (hits || []).slice();
     var result = [];
-    for (var i in playlists)
+    for (let i in playlists)
       playlists[i].idParts = ('' + (playlists[i]._id || playlists[i].id)).split(
         '_'
       );
@@ -124,7 +124,7 @@ var fetchDataByType = {
             pl.idParts[1],
             { limit: MAX_PLAYLIST_THUMBS - 1 },
             function (posts) {
-              for (var j in posts)
+              for (let j in posts)
                 if (posts[j].img)
                   posts[j].img = posts[j].img.replace('http:', '');
               playlists[i].lastPosts = posts;
@@ -150,7 +150,7 @@ var sortByType = {
     // no sorting (algolia does it)
   },
   post: function (items, myUid, followedUids) {
-    for (var i in items) {
+    for (let i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids[items[i].uId];
       items[i].score =
@@ -163,7 +163,7 @@ var sortByType = {
     return items;
   },
   user: function (items, myUid, followedUids) {
-    for (var i in items) {
+    for (let i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids['' + items[i]._id];
       items[i].score =
@@ -173,7 +173,7 @@ var sortByType = {
     return items;
   },
   playlist: function (items, myUid, followedUids) {
-    for (var i in items) {
+    for (let i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids[items[i].idParts[0]];
       items[i].score =
@@ -337,7 +337,7 @@ exports.controller = function (request, reqParams, response, error) {
         { _type: 'user', q: reqParams.q, limit: MAX_NB_MENTION_SUGGESTIONS },
         function (users) {
           var hits = (users || {}).hits || [];
-          for (var i = hits.length - 1; i > -1; --i) {
+          for (let i = hits.length - 1; i > -1; --i) {
             var u = hits[i];
             sorted[followed[u._id] ? 'unshift' : 'push'](u);
           }

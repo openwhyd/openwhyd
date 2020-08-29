@@ -43,7 +43,7 @@ function search(trackMetadata, cb) {
 
 function monitor(cb) {
   var domains = {};
-  for (var i in snip.httpDomains) {
+  for (let i in snip.httpDomains) {
     var domainParts = i.replace(/\\+/g, '').split('.');
     var domainName = domainParts[domainParts.length - 2];
     domains[domainName] = (snip.httpDomains[i][1].queue || []).length;

@@ -84,7 +84,7 @@ function fetchActivity(options, cb) {
           other: { text: 'joined whyd' },
         });
       var postsToPopulate = [];
-      for (var i in activities)
+      for (let i in activities)
         if (activities[i]) {
           activities[i].ago = uiSnippets.renderTimestamp(
             new Date() - activities[i]._id.getTimestamp()
@@ -194,7 +194,7 @@ function renderPlaylists(options, maxNb) {
       //	playlists.push({url:"javascript:;"});
     }
   }
-  for (var i in playlists)
+  for (let i in playlists)
     if (playlists[i].id !== undefined) {
       //playlists[i].url = "/u/" + options.user.id + "/playlist/" + playlists[i].id;
       playlists[i].img =
@@ -205,7 +205,7 @@ function renderPlaylists(options, maxNb) {
 }
 
 function renderFriends(friends) {
-  for (var i in friends) {
+  for (let i in friends) {
     friends[i].url = '/u/' + friends[i].id;
     friends[i].img = '/img/u/' + friends[i].id;
   }
@@ -217,7 +217,7 @@ function populateUsers(subscr, options, cb) {
     mySubscr
   ) {
     var subscrSet = snip.arrayToSet(mySubscr);
-    for (var i in subscr)
+    for (let i in subscr)
       if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
     userModel.fetchUserBios(subscr, function () {
       cb(renderFriends(subscr));
@@ -228,7 +228,7 @@ function populateUsers(subscr, options, cb) {
 function fetchAndRenderPlaylist(options, callback, process) {
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
-  for (var i in options.user.pl)
+  for (let i in options.user.pl)
     if (options.user.pl[i] && options.user.pl[i].id == options.playlistId) {
       options.playlist = options.user.pl[i];
       break;
@@ -253,7 +253,7 @@ function fetchAndRenderPlaylist(options, callback, process) {
       contest
     ) {
       var prevId = null;
-      for (var p = options.user.pl.length - 1; p > -1; --p) {
+      for (let p = options.user.pl.length - 1; p > -1; --p) {
         var pl = options.user.pl[p];
         if (!pl) continue;
         if (pl.id == options.playlistId) {
@@ -326,7 +326,7 @@ function fetchAndRenderProfile(options, callback, process) {
         mySubscrUidList,
         options,
         function (result) {
-          for (var i in result.recentActivity.items)
+          for (let i in result.recentActivity.items)
             if (result.recentActivity.items[i].subscriptions) {
               result.recentActivity.items[i].subscribedUsers =
                 result.recentActivity.items[i].subscriptions;
@@ -370,7 +370,7 @@ function fetchAndRenderProfile(options, callback, process) {
         };
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
-      for (var i in subscr) subscr[i] = { id: subscr[i].uId };
+      for (let i in subscr) subscr[i] = { id: subscr[i].uId };
       populateUsers(subscr, options, function (subscr) {
         options.showSubscribers = {
           items: subscr,
@@ -396,7 +396,7 @@ function fetchAndRenderProfile(options, callback, process) {
         };
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
-      for (var i in subscr) subscr[i] = { id: subscr[i].tId };
+      for (let i in subscr) subscr[i] = { id: subscr[i].tId };
       populateUsers(subscr, options, function (subscr) {
         options.showSubscriptions = {
           items: subscr,
@@ -437,7 +437,7 @@ function fetchAndRenderProfile(options, callback, process) {
         };
         followModel.fetch({ uId: options.user.id }, params, function (subscr) {
           if (subscr.length || ownProfile) {
-            for (var i in subscr) subscr[i] = { id: subscr[i].tId };
+            for (let i in subscr) subscr[i] = { id: subscr[i].tId };
             userModel.fetchUserBios(subscr, function () {
               options.friends = {
                 url: '/u/' + options.user.id + '/subscriptions',
@@ -521,7 +521,7 @@ function renderUserLinks(lnk) {
       lnk[i] = ''; // by default, if no username was found
       var username = '';
       while (!(username = parts.pop()));
-      //for (var j=parts.length-1; j>-1; --j)
+      //for (let j=parts.length-1; j>-1; --j)
       //	if (parts[j]) {
       lnk[i] = LNK_URL_PREFIX[i] + username; //parts[j];
       //break;
@@ -529,7 +529,7 @@ function renderUserLinks(lnk) {
     }
 
   // make sure URLs are valid
-  for (var i in lnk)
+  for (let i in lnk)
     if (lnk[i]) {
       var lnkBody = '//' + lnk[i].split('//').pop();
       if (i == 'home') {

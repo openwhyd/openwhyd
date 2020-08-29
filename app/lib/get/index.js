@@ -25,7 +25,7 @@ function ContentEmbedWrapper() {
     var url = null,
       callback = null;
 
-    for (var i in arguments)
+    for (let i in arguments)
       if (typeof arguments[i] == 'string' && arguments[i].indexOf('//') > -1)
         url = arguments[i]./*replace("alt=jsonc", "alt=json").*/ replace(
           /[&?]callback=\?/,
@@ -176,7 +176,7 @@ Page.prototype.extractEmbeds = function (cb) {
     remaining = embedUrls.length;
   if (!remaining) return cb(embedRefs);
   // step 2: extract recognized embeds from urls
-  for (var i in embedUrls)
+  for (let i in embedUrls)
     embedDetector.extractEmbedRef(embedUrls[i], function (embedRef) {
       //console.log("url", url/*, embedRef*/);
       if (embedRef && embedRef.id)

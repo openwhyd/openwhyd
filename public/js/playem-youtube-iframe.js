@@ -28,7 +28,7 @@ function YoutubeIframePlayer() {
         var message = JSON.parse(e.data);
         var param = message.data[0];
         that.iframeReady = true;
-        //for (var i in message.data)
+        //for (let i in message.data)
         //	if (message.data[i] == "(object)")
         //    message.data[i] = that;
         if (param == '(player)') param = that;

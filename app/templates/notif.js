@@ -45,13 +45,13 @@ var TEMPLATE_DEFAULTS = {
 // rendering functions
 
 var renderTemplateFile = (function () {
-  for (var i in TEMPLATES)
+  for (let i in TEMPLATES)
     TEMPLATES[i].template = templateLoader.loadTemplate(
       TEMPLATE_PATH + TEMPLATES[i].file
     );
   return function (templateName, p) {
     var p = p || {};
-    for (var i in TEMPLATE_DEFAULTS)
+    for (let i in TEMPLATE_DEFAULTS)
       if (p[i] == undefined) p[i] = TEMPLATE_DEFAULTS[i];
     var template = (TEMPLATES[templateName] || {}).template;
     if (template) return template.render(p);
@@ -164,7 +164,7 @@ exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
               .slice(0, MAX_RECOM_USERS);
             if (inviteSender) hotUsers.unshift(inviteSender);
             userModel.fetchUserBios(hotUsers, function () {
-              for (var i in hotUsers)
+              for (let i in hotUsers)
                 if (((hotUsers[i] || {}).bio || '').length > MAX_BIO_LENGTH)
                   hotUsers[i].bio =
                     hotUsers[i].bio.substr(0, MAX_BIO_LENGTH) + '...';

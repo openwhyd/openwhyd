@@ -29,7 +29,7 @@ function LastFM(apiKey, apiSecret) {
     var keys = Object.keys(p);
     keys.sort();
     var chain = '';
-    for (var i in keys) chain += keys[i] + p[keys[i]];
+    for (let i in keys) chain += keys[i] + p[keys[i]];
     p.api_sig = md5(chain + apiSecret);
     return p;
   }

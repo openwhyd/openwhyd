@@ -90,7 +90,7 @@ var ACTIONS = {
         }
       )
       .toArray(function (err, tracks) {
-        for (var i in tracks) {
+        for (let i in tracks) {
           var track = tracks[i];
           console.log(
             'fetchMetadataForHotTracks',

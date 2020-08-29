@@ -62,7 +62,7 @@
     (function maxSize(el){
       el.style.width = "100%";
       el.style.height = "100%";
-      for (var i=el.children.length-1; i>=0; --i)
+      for (let i=el.children.length-1; i>=0; --i)
         maxSize(el.children[i]);
     })(document.getElementsByTagName("html")[0]);
     post("onEmbedReady", arguments);
@@ -72,7 +72,7 @@
   console.log('PLAYER', player);
   function post(code, data) {
     //console.log("[iframe] sends:", code, data);
-    for (var i in data)
+    for (let i in data)
       if (typeof data[i] == 'object' && data[i].label == 'Youtube')
         data[i] = '(player)';
     parent.window.postMessage(

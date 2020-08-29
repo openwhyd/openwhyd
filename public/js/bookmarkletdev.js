@@ -36,7 +36,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
 
   function findScriptHost(scriptPathName) {
     var els = document.getElementsByTagName('script');
-    for (var i = els.length - 1; i > -1; --i) {
+    for (let i = els.length - 1; i > -1; --i) {
       var whydPathPos = els[i].src.indexOf(scriptPathName);
       if (whydPathPos > -1) return els[i].src.substr(0, whydPathPos);
     }
@@ -228,7 +228,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
         ),
         alt = [e.title, e.innerText, e.textContent];
       if (eidSet[url] || !title) return cb();
-      for (var i = 0; i < alt.length; ++i) {
+      for (let i = 0; i < alt.length; ++i) {
         var trimmed = e.title.replace(/^\s+|\s+$/g, '');
         if (trimmed) {
           title = trimmed;
@@ -264,7 +264,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
       },
       eidSet = {}; // to prevent duplicates
     function getPlayerId(url) {
-      for (var i in players) {
+      for (let i in players) {
         var player = players[i];
         var eId = player.getEid(url);
         if (eId) return i;
@@ -319,7 +319,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
         ' - Xbox Music',
         ' - Royalty Free Music - Jamendo',
       ];
-      for (var i = 0; i < titleParts.length; ++i)
+      for (let i = 0; i < titleParts.length; ++i)
         if (title.indexOf(titleParts[i]) > -1)
           return [{ name: title.replace(titleParts[i], '') }];
     },
@@ -342,7 +342,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
         var pathPos = bandcampPageUrl.indexOf('/', 10);
         if (pathPos != -1) bandcampPageUrl = bandcampPageUrl.substr(0, pathPos); // remove path
         var elts = document.querySelectorAll('a[href^="/track/"]');
-        for (var j = 0; j < elts.length; ++j)
+        for (let j = 0; j < elts.length; ++j)
           toDetect.push({
             href: bandcampPageUrl + elts[j].getAttribute('href'),
           });
@@ -419,7 +419,7 @@ console.log('-= openwhyd bookmarklet v2 =-');
         set[url] = elt;
       };
       this.pushAll = function (elts) {
-        for (var j = 0; j < elts.length; ++j) this.push(elts[j]);
+        for (let j = 0; j < elts.length; ++j) this.push(elts[j]);
       };
       this.shift = function () {
         var keys = Object.keys(set),

@@ -84,7 +84,7 @@ exports.cacheUser = function (user) {
   //console.log("Caching user: ", user);
   exports.usernames[user.id] = exports.usernames[user.id] || {};
   exports.usernames[user.id].id = user.id;
-  for (var i in user)
+  for (let i in user)
     if (USER_CACHE_FIELDS[i])
       exports.usernames[user.id][i] = user[i] || exports.usernames[user.id][i];
 };
@@ -93,7 +93,7 @@ exports.cacheUsers = function (callback) {
   console.log('Caching users ...');
   userModel = userModel || require('./user.js');
   userModel.fetchMulti({}, { fields: USER_CACHE_FIELDS }, function (results) {
-    for (var i in results) exports.cacheUser(results[i]);
+    for (let i in results) exports.cacheUser(results[i]);
     console.log('Caching users: done!');
     if (callback) callback();
   });
@@ -149,7 +149,7 @@ exports.cacheCollections = function (callback) {
     else {
       if (0 == collections.length) finishInit();
       var remaining = collections.length;
-      for (var i in collections) {
+      for (let i in collections) {
         var queryHandler = (function () {
           var table = collections[i].collectionName;
           return function (err, result) {

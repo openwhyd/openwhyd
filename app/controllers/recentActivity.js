@@ -30,7 +30,7 @@ var fetchSubscriptions = function (uid, callback) {
   var uidList = [];
   //console.log("recentActivity.fetchSubscriptions", uid);
   followModel.fetchUserSubscriptions(uid, function (subscriptions) {
-    for (var i in subscriptions.subscriptions)
+    for (let i in subscriptions.subscriptions)
       if (
         subscriptions.subscriptions[i].id &&
         subscriptions.subscriptions[i].id != uid
@@ -51,7 +51,7 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 		}}
 	]); */
   var uidSet = {};
-  for (var i in mySubscriptionsUidList)
+  for (let i in mySubscriptionsUidList)
     uidSet[mySubscriptionsUidList[i]] = true;
   //options = options || {};
   //uidList.push("4d94501d1f78ac091dbc9b4d"); // adrien (for tests)
@@ -66,7 +66,7 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 
     var usersToPopulate = [],
       postsToPopulate = [];
-    for (var i in activities)
+    for (let i in activities)
       if ((activities[i] || {}).subscription) {
         activities[i].subscription.subscribed =
           uidSet[activities[i].subscription.id];
@@ -85,8 +85,8 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
           // apply fetched data (when not null) to liked posts
           var postSet = {},
             finalActivities = [];
-          for (var i in posts) postSet['' + posts[i]._id] = posts[i];
-          for (var i in activities) {
+          for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+          for (let i in activities) {
             if ((activities[i] || {}).like) {
               if (postSet['' + activities[i].like.pId])
                 activities[i].like.post = postSet['' + activities[i].like.pId];
@@ -108,7 +108,7 @@ function fetchSuggestedPeople(uidList, cb) {
   ) {
     var userSet = {},
       userList = [];
-    for (var i in allPosts)
+    for (let i in allPosts)
       if (!userSet[allPosts[i].uId])
         userSet[allPosts[i].uId] = {
           id: allPosts[i].uId,
@@ -116,7 +116,7 @@ function fetchSuggestedPeople(uidList, cb) {
           track: allPosts[i].name,
           trackUrl: '/c/' + allPosts[i]._id,
         };
-    for (var i in userSet) userList.push(userSet[i]);
+    for (let i in userSet) userList.push(userSet[i]);
     cb(userList);
   });
 }
@@ -125,7 +125,7 @@ function aggregateActivities(acts) {
   //console.log("acts", acts);
   var aggrs = [],
     aggr = {};
-  for (var i in acts) {
+  for (let i in acts) {
     var attrName = (acts[i].type = acts[i].like ? 'like' : 'subscription'),
       sameAuthor = aggr.id == acts[i].id,
       sameActType = aggr.type == acts[i].type;
