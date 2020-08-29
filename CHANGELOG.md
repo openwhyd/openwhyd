@@ -1,3 +1,10 @@
+## [1.34.12](https://github.com/openwhyd/openwhyd/compare/v1.34.11...v1.34.12) (2020-08-29)
+
+
+### Bug Fixes
+
+* **clean-up:** Remove swfobject and other unused scripts and pages ([#343](https://github.com/openwhyd/openwhyd/issues/343)) ([fb94438](https://github.com/openwhyd/openwhyd/commit/fb94438))
+
 ## [1.34.11](https://github.com/openwhyd/openwhyd/compare/v1.34.10...v1.34.11) (2020-08-27)
 
 
