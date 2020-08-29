@@ -56,7 +56,7 @@ exports.handleRequest = function (request, reqParams, response) {
       // actual facebook login
       userModel.fetchByFbUid(reqParams.fbUid, function (dbUser) {
         if (dbUser) {
-          var result =
+          const result =
             'ok, user id=' +
             reqParams.fbUid +
             ' found in db as: ' +
@@ -78,9 +78,9 @@ exports.handleRequest = function (request, reqParams, response) {
           );
         } else {
           // user not found => new user or legacy user (not yet connected to fb)
-          var result = 'nok, user id=' + reqParams.fbUid + ' not found in db';
+          const result = 'nok, user id=' + reqParams.fbUid + ' not found in db';
           console.log(result);
-          renderJSON({ result: result, fbUser: fbUser });
+          renderJSON({ result, fbUser });
         }
       });
     }

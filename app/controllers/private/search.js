@@ -8,7 +8,6 @@ var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var searchModel = require('../../models/search.js');
 var postModel = require('../../models/post.js');
-//var userModel = require("../../models/user.js");
 var followModel = require('../../models/follow.js');
 var template = require('../../templates/search.js');
 
@@ -145,7 +144,7 @@ function sortByDecreasingScore(a, b) {
 
 /** re-order posts/users/playlists based on data quality/quantity and subscriptions **/
 var sortByType = {
-  track: function (items, myUid, followedUids) {
+  track: function (items) {
     return items;
     // no sorting (algolia does it)
   },
@@ -189,8 +188,7 @@ var sortByType = {
 function processPosts(results, params, cb) {
   params = params || {};
   if (!results || !results.length) return cb([]);
-  fetchDataByType['post'](results, function (posts) {
-    var posts = posts || [];
+  fetchDataByType['post'](results, function (posts = []) {
     if (!posts.length) return cb([]);
     function populateSortAndReturn(followedUids) {
       function mapping(p) {
@@ -266,7 +264,7 @@ function fetchSearchPage(myUid, q, cb) {
   });
 }
 
-exports.controller = function (request, reqParams, response, error) {
+exports.controller = function (request, reqParams = {}, response) {
   function renderSearchPage(q, cb) {
     fetchSearchPage(request.getUid(), q, function (results) {
       results.posts = results.tracks; // since algolia integration
@@ -322,8 +320,8 @@ exports.controller = function (request, reqParams, response, error) {
 
   function fetchOtherTracks(uid, q, cb) {
     console.log('fetchOtherTracks', uid, q);
-    fetchTheirPosts(q, uid, function (results) {
-      var results = (results || {}).hits || [];
+    fetchTheirPosts(q, uid, function (_results = {}) {
+      const results = _results.hits || [];
       processPosts(results, { uid: uid }, function (posts) {
         cb(posts);
       });
@@ -358,7 +356,6 @@ exports.controller = function (request, reqParams, response, error) {
   }
 
   request.logToConsole('search.controller', reqParams);
-  var reqParams = reqParams || {};
   reqParams.loggedUser = request.getUser();
 
   // track filter (from user profile)

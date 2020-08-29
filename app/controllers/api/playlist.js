@@ -84,8 +84,8 @@ function fetchPlaylist(p, cb) {
     plIdSet = {},
     uidList = [];
   var plIds = (typeof p.id == 'object' && p.id.length ? p.id : [p.id]).map(
-    function (plId) {
-      var plId = '' + plId;
+    function (_plId) {
+      const plId = '' + _plId;
       plIdSet[plId] = {};
       uidList.push(plId.split('_')[0]);
       return plId;

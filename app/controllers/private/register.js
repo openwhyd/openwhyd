@@ -7,7 +7,6 @@
 var userModel = require('../../models/user.js');
 var followModel = require('../../models/follow.js');
 var emailModel = require('../../models/email.js'); // for validation
-var facebookModel = require('../../models/facebook.js');
 var notifModel = require('../../models/notif.js');
 var contestModel = require('../../models/plContest.js');
 var inviteController = require('../invite.js');
@@ -167,8 +166,6 @@ exports.registerInvitedUser = function (request, user, response) {
         'Oops, your registration failed... Please try again!'
       );
 
-    var inviteSender = user.iBy ? request.getUserFromId(user.iBy) : null;
-
     if (user.fbRequest) userModel.removeInviteByFbRequestIds(user.fbRequest);
     else userModel.removeInvite(user.inviteCode);
 
@@ -176,11 +173,11 @@ exports.registerInvitedUser = function (request, user, response) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       if (user.ajax) {
         var json = { redirect: url, uId: '' + storedUser._id };
-        function renderJSON() {
+        const renderJSON = () => {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
             json
           );
-        }
+        };
         if (user.includeUser) {
           userApi.fetchUserData(storedUser, function (user) {
             json.user = user;
@@ -192,7 +189,7 @@ exports.registerInvitedUser = function (request, user, response) {
 
     // connect users
     if (user.iBy) {
-      var inviteSender = {
+      const inviteSender = {
         id: user.iBy,
         name: request.getUserNameFromId(user.iBy),
       };

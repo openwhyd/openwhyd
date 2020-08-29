@@ -63,7 +63,7 @@ exports.controller = function (request, reqParams, response) {
             ? r.pref[reqParams.type]
             : '' + userModel.getEmailNotifsFreq(r)
         ];
-      var html =
+      const html =
         'Starting now, the frequency of email notifications you will receive is set to: ' +
         newFreqlabel;
       response.legacyRender(withLink(html), null, {
@@ -72,7 +72,7 @@ exports.controller = function (request, reqParams, response) {
     } else if (r.pref) {
       // user unsubscribed
       var type = userModel.EM_LABEL[reqParams.type] || 'all';
-      var html =
+      const html =
         'You successfully unsubscribed from email notifications: ' + type;
       response.legacyRender(withLink(html), null, {
         'content-type': 'text/html',
