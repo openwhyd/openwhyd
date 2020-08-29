@@ -1,5 +1,4 @@
 var fs = require('fs');
-//var util = require('util');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
@@ -69,9 +68,9 @@ exports.actualFilePath = function (filepath) {
       exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath);
 };
 
-exports.deleteFile = function (filepath) {
+exports.deleteFile = function (_filepath) {
   try {
-    var filepath = exports.actualFilePath(filepath);
+    const filepath = exports.actualFilePath(_filepath);
     console.log('deleting ' + filepath);
     fs.unlinkSync(filepath);
   } catch (e) {

@@ -43,18 +43,6 @@ var renderUnauthorizedPage = loggingTemplate.renderUnauthorizedPage;
 
 // ========= USER AGENT STUFF
 
-/***
- * Recognize mobile clients from user agent
- */
-http.IncomingMessage.prototype.isMobileBrowser = function () {
-  return null; // mobile adaptation is DISABLED
-
-  var ua = this.headers['user-agent'];
-  return ua && ua.indexOf('Mobile') != -1 && ua.indexOf('iPad') == -1
-    ? ua
-    : null;
-};
-
 /**
  * Gets the http referer of a request
  */
@@ -109,7 +97,7 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
   //console.log("cookies:", cookies);
   for (let i in cookies)
     if (i.startsWith('fbs_')) {
-      var cookie = {},
+      const cookie = {},
         cookieArray = cookies[i].split('&');
       for (let j in cookieArray) {
         var cookieItem = cookieArray[j].split('=');
@@ -120,7 +108,7 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
     } else if (i.startsWith('fbsr_')) {
       // https://developers.facebook.com/docs/authentication/signed_request/
       try {
-        var cookie = cookies[i].split('.')[1];
+        let cookie = cookies[i].split('.')[1];
         cookie = new Buffer(cookie /*|| ""*/, 'base64').toString('ascii');
         cookie = JSON.parse(cookie);
         console.log('found secure facebook cookie'); //, cookie);
@@ -281,10 +269,10 @@ http.ServerResponse.prototype.renderIframe = function (url, metaOverrides) {
   return this.renderHTML(loggingTemplate.renderIframe(url, metaOverrides));
 };
 
-http.ServerResponse.prototype.temporaryRedirect = function (url, reqParams) {
-  var url = '' + url;
-  if (reqParams /*request.method.toLowerCase() == "get"*/) {
-    var reqParams = querystring.stringify(reqParams);
+http.ServerResponse.prototype.temporaryRedirect = function (_url, _reqParams) {
+  let url = '' + _url;
+  if (_reqParams /*request.method.toLowerCase() == "get"*/) {
+    const reqParams = querystring.stringify(_reqParams);
     if (reqParams.length) url += '?' + reqParams;
   }
   this.redirect(307, url); // see https://expressjs.com/fr/4x/api.html#res.redirect

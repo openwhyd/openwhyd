@@ -60,8 +60,8 @@ function fetchTrackInfo(trackId, cb) {
   );
 }
 
-exports.fetchTrackMetadata = function (trackId, cb, raw) {
-  var trackId = ('' + trackId).split(/[:/]/).pop();
+exports.fetchTrackMetadata = function (_trackId, cb, raw) {
+  const trackId = ('' + _trackId).split(/[:/]/).pop();
   assert.ok(trackId, 'trackId is null');
   return snip.httpRequestJSON(
     'http://api.deezer.com/track/' + encodeURIComponent(trackId),

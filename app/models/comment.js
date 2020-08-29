@@ -67,8 +67,7 @@ exports.fetch = function (q, p, cb) {
 };
 
 function notifyUsers(comment) {
-  postModel.fetchPostById(comment.pId, function (post) {
-    var post = post || {};
+  postModel.fetchPostById(comment.pId, function (post = {}) {
     if (post.error || !post.uId) return;
     var notifiedUidSet = {};
     var todo = [];
@@ -102,8 +101,7 @@ function notifyUsers(comment) {
       exports.fetch(
         { pId: comment.pId, _id: { $lt: comment._id } },
         { fields: { uId: 1 } },
-        function (comments) {
-          var comments = comments && comments.length ? comments : [];
+        function (comments = []) {
           var commentsByUid = snip.excludeKeys(
             snip.groupObjectsBy(comments, 'uId'),
             notifiedUidSet
@@ -167,14 +165,14 @@ exports.delete = function (p, cb) {
   var q = { _id: mongodb.ObjectId('' + p._id) };
   getCol().findOne(
     q,
-    combineResult(function (comment) {
-      var comment = comment || { error: 'comment not found' };
+    combineResult(function (comment = { error: 'comment not found' }) {
       if (comment.error) {
         cb && cb(comment);
         return;
       }
-      postModel.fetchPostById(comment.pId, function (post) {
-        var post = post || { error: 'post not found' };
+      postModel.fetchPostById(comment.pId, function (
+        post = { error: 'post not found' }
+      ) {
         if (post.error) {
           cb && cb(post);
           return;

@@ -32,8 +32,7 @@ function transformSubscriberArray(results) {
   return results;
 }
 
-function fetchArray(query, options, callback) {
-  var query = query || {};
+function fetchArray(query = {}, options, callback) {
   if (typeof query.uId == 'string' && query.uId.indexOf('/u/') == 0)
     console.error('warning: found uId with /u/ prefix');
   if (typeof query.tId == 'string' && query.tId.indexOf('/u/') == 0)

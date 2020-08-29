@@ -127,7 +127,7 @@ exports.translateEidToUrl = function (eId) {
 
 exports.translateUrlToEid = function (url) {
   for (let i in PLAYERS) {
-    var eId = (PLAYERS[i].extractId || function () {})(url);
+    var eId = PLAYERS[i].extractId && PLAYERS[i].extractId(url);
     if (eId) return '/' + i + '/' + eId;
   }
 };
@@ -144,8 +144,8 @@ exports.userImg = function (uid, urlPrefix) {
   return exports.addPrefix('/img/u/' + ('' + uid).split('/').pop(), urlPrefix);
 };
 
-exports.imgUrl = function (mid, freebaseThumbParams, urlPrefix) {
-  var urlPrefix = urlPrefix || exports.urlPrefix;
+exports.imgUrl = function (mid, freebaseThumbParams, _urlPrefix) {
+  const urlPrefix = _urlPrefix || exports.urlPrefix;
   if (!mid) return mid;
   if (mid.startsWith('/yt/'))
     return 'https://i.ytimg.com/vi/' + mid.substr(4) + '/0.jpg';
