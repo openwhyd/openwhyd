@@ -1,11 +1,12 @@
 [![Build Status](https://img.shields.io/travis-ci/openwhyd/openwhyd.svg?style=flat-square)](https://travis-ci.org/openwhyd/openwhyd) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](./FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=flat-square&label=Follow)](https://twitter.com/open_whyd)
+
 # Openwhyd.org
 
 > Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
 
 Music libraries like Spotify and Apple Music make it easy to play and collect music that is released officially by music labels.
 
-Openwhyd, on the other hand, allows music lovers to discover, play and collect *any* musical gem that is available on the most popular streaming platforms, including:
+Openwhyd, on the other hand, allows music lovers to discover, play and collect _any_ musical gem that is available on the most popular streaming platforms, including:
 
 - music videos, bootlegs and specific live performances,
 - fresh tracks from new and/or local artists,
@@ -16,7 +17,7 @@ Openwhyd, on the other hand, allows music lovers to discover, play and collect *
 
 ## Features
 
-[![Openwhyd Demo Video](./img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Openwhyd Demo Video")
+[![Openwhyd Demo Video](./img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY 'Openwhyd Demo Video')
 
 Features:
 
@@ -76,6 +77,7 @@ Support us with a monthly donation and help us keep Openwhyd alive. [[Become a b
 <a href="https://opencollective.com/openwhyd/backer/29/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/29/avatar.svg"></a>
 
 ## Sponsors
+
 Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/openwhyd#sponsor)]
 
 <a href="https://www.digitalocean.com/" target="_blank"><img alt="DigitalOcean has kindly offered us one year worth of hosting, to help us maintain our open-source development effort" src="./img/sponsor-digitalocean.png"></a>

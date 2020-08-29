@@ -1,28 +1,28 @@
 /* used to be called invites.css */
 
 .userList {
-	display:table-cell;
-	height:100%;
-	border:1px solid gray;
-	padding:5px;
+  display: table-cell;
+  height: 100%;
+  border: 1px solid gray;
+  padding: 5px;
 }
 
 .wideList {
-	border:1px solid gray;
-	padding:5px;
+  border: 1px solid gray;
+  padding: 5px;
 }
 
 .wideList ul {
-	padding: 0;
-	margin: 10px;
-	list-style: none;
+  padding: 0;
+  margin: 10px;
+  list-style: none;
 }
 
 .wideList li {
-	float:left;
-	margin: 5px;
-	width: 300px;
-	height: 60px;
+  float: left;
+  margin: 5px;
+  width: 300px;
+  height: 60px;
 }
 /*
 .wideList li > input[type=checkbox] {
@@ -30,28 +30,28 @@
 }
 */
 .wideList li > img {
-	float:left;
-	width: 24px;
-	height: 24px;
+  float: left;
+  width: 24px;
+  height: 24px;
 }
 
 .wideList li > div {
-	float:left;
+  float: left;
 }
 
 .wideList li > div > .itemName {
-	display:inline-block;
-	width: 150px;
-	white-space: nowrap;
-	overflow:hidden;
-	text-overflow:ellipsis;
+  display: inline-block;
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .wideList li > div > small {
-	color: gray;
+  color: gray;
 }
 
-.wideList input[type=submit] {
-	clear: both;
-	display: block;
+.wideList input[type='submit'] {
+  clear: both;
+  display: block;
 }

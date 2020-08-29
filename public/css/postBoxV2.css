@@ -1,260 +1,278 @@
 /* commons */
 
 img {
-	border:none;
+  border: none;
 }
 
 button {
-	display:block; /* for firefox compat */
+  display: block; /* for firefox compat */
 }
 
 a {
-	color: #2477bc;
-	text-decoration: none;
+  color: #2477bc;
+  text-decoration: none;
 }
 
 a:hover {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 /* bookmarklet form */
 
 body {
-	background: #EFEFEF;
-	width: 600px; /* the width of the popup window is set in the call to window.open(), in bookmarklet_new.js */
-	margin: 90px auto;
-	padding: 0;
-	overflow-x:hidden;
-	font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
-	overflow: visible;
+  background: #efefef;
+  width: 600px; /* the width of the popup window is set in the call to window.open(), in bookmarklet_new.js */
+  margin: 90px auto;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+  overflow: visible;
 }
 
 #pageLoader {
-	position: fixed;
-	top:-100px;
-	left:-100px;
-	width:72px;
-	height: 72px;
-	background-image: url('/images/pageloarder.gif');
-	background-color: black;
-	opacity: 0;
-	border-radius: 60px;
-	-webkit-border-radius: 60px;
-	-moz-border-radius: 60px;
-	-webkit-transform: scale(1.3);
-	-moz-transform: scale(1.3);
-	-o-transform: scale(1.3);
-	transform: scale(1.3);
-	z-index:9999;
+  position: fixed;
+  top: -100px;
+  left: -100px;
+  width: 72px;
+  height: 72px;
+  background-image: url('/images/pageloarder.gif');
+  background-color: black;
+  opacity: 0;
+  border-radius: 60px;
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  -o-transform: scale(1.3);
+  transform: scale(1.3);
+  z-index: 9999;
 }
 
 .loading #pageLoader {
-	top: 50%;
-	left: 47.5%;
-	opacity: 0.5;
-	transition: opacity,transform 0.2s;
-	-moz-transition: opacity,-moz-transform 0.2s;
-	-webkit-transition: opacity,-webkit-transform 0.2s;
-	-webkit-transform: scale(1);
-	-moz-transform: scale(1);
-	-o-transform: scale(1);
-	transform: scale(1);
+  top: 50%;
+  left: 47.5%;
+  opacity: 0.5;
+  transition: opacity, transform 0.2s;
+  -moz-transition: opacity, -moz-transform 0.2s;
+  -webkit-transition: opacity, -webkit-transform 0.2s;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
 }
 
 /* playlist selection */
 
 #selPlaylist {
-	position: relative;
-	color: #555;
-	font-size: 12px;
-	height: 55px;
-	z-index: 1;
-	background: #FFF;
+  position: relative;
+  color: #555;
+  font-size: 12px;
+  height: 55px;
+  z-index: 1;
+  background: #fff;
 }
 
 #selPlaylist > span {
-	box-sizing: border-box;
-	cursor: pointer;
-	position: absolute;
-	display: block;
-	width: 100%;
-	padding: 14px 14px;
-	border-bottom: 1px solid #EAEDEF;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	color: #3177AF;
-	font-weight: bold;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  width: 100%;
+  padding: 14px 14px;
+  border-bottom: 1px solid #eaedef;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #3177af;
+  font-weight: bold;
 }
 
 #selPlaylist > span > span {
-	position: absolute;
-	top: 17px;
-	right: 12px;
-	background: url(/images/puce-create-playlist.png)no-repeat;
-	width: 12px;
-	height: 12px;
-	text-indent: -9999px;
+  position: absolute;
+  top: 17px;
+  right: 12px;
+  background: url(/images/puce-create-playlist.png) no-repeat;
+  width: 12px;
+  height: 12px;
+  text-indent: -9999px;
 }
 
 #selPlaylist > div.content {
-	opacity:0;
-	visibility: hidden;
-	position: fixed;
-	max-height: 271px;
-	width: 294px;
-	background: #FFF;
-	transition:opacity .1s linear, margin .1s linear;
- 	/* overflow: hidden; */
-	box-shadow: 0 1px 4px rgba(0,0,0,0.26);  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.26);  -moz-box-shadow: 0 1px 4px rgba(0,0,0,0.26);
- 	overflow-y:	auto;
- 	margin-top: -43px;
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  max-height: 271px;
+  width: 294px;
+  background: #fff;
+  transition: opacity 0.1s linear, margin 0.1s linear;
+  /* overflow: hidden; */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
+  overflow-y: auto;
+  margin-top: -43px;
 }
 
-#selPlaylist > div.content.open{
-	opacity:1;
-	visibility:visible;
-	margin-top: -53px;
-	/* display: block; */
+#selPlaylist > div.content.open {
+  opacity: 1;
+  visibility: visible;
+  margin-top: -53px;
+  /* display: block; */
 }
 
 #selPlaylist > div ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 #selPlaylist > div ul > li {
-	padding: 10px 14px;
-	cursor: pointer;
+  padding: 10px 14px;
+  cursor: pointer;
 }
 
 #selPlaylist > div ul > li:hover {
-	color: #62A1D3;
-	background-image: url(/images/bookmarklet_ic_Selected_Playlist_hover.png);
-	background-repeat: no-repeat;
-	background-position: 268px center;
+  color: #62a1d3;
+  background-image: url(/images/bookmarklet_ic_Selected_Playlist_hover.png);
+  background-repeat: no-repeat;
+  background-position: 268px center;
 }
 
 #selPlaylist > div ul > li.selected {
-	color: #3177AF;
-	background-image: url(/images/bookmarklet_ic_Selected_Playlist.png);
-	background-repeat: no-repeat;
-	background-position: 268px center;
-	
-	font-weight: bold;
+  color: #3177af;
+  background-image: url(/images/bookmarklet_ic_Selected_Playlist.png);
+  background-repeat: no-repeat;
+  background-position: 268px center;
+
+  font-weight: bold;
 }
 
 #selPlaylist > div form {
-	padding: 10px;
-	border-bottom: 1px solid #EAEDEF;
+  padding: 10px;
+  border-bottom: 1px solid #eaedef;
 }
 
 #selPlaylist > div form > input#newPlaylistName {
-	padding: 8px 5px;
-	font-size: 12px;
-	width: 190px;
-	border: 1px solid #dcdcdc;
+  padding: 8px 5px;
+  font-size: 12px;
+  width: 190px;
+  border: 1px solid #dcdcdc;
 }
 
 #selPlaylist > div form > input.greenButton {
-	cursor: pointer;
-	margin-left: 10px;
-	padding: 8px;
-	background-color: #3174AF;
-	border: 0;
-	font-size: 13px;
-	corner-radius: 3px;
-	border-radius: 3px;  -webkit-border-radius: 3px;  -moz-border-radius: 3px;
-	color: white;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 8px;
+  background-color: #3174af;
+  border: 0;
+  font-size: 13px;
+  corner-radius: 3px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  color: white;
 }
 
-#selPlaylist > div form > input.greenButton:hover{
-	background-color:#62A1D3;
+#selPlaylist > div form > input.greenButton:hover {
+  background-color: #62a1d3;
 }
 /* left panel: track thumb + title */
 
 #contentThumb {
-	float: left;
-	width: 296px;
-	height: 236px;
-	overflow: hidden;
-	position: relative;
-	background-position: center;
-	background-size: cover;
+  float: left;
+  width: 296px;
+  height: 236px;
+  overflow: hidden;
+  position: relative;
+  background-position: center;
+  background-size: cover;
 }
 
 .whydGrad {
-	position: absolute;
-	top: 50%;
-	height: 50%;
-	width: 100%;
-	background: linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, #111315 100%));
-	background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
+  position: absolute;
+  top: 50%;
+  height: 50%;
+  width: 100%;
+  background: linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(255, 255, 255, 0) 0%,
+    #111315 100%
+  );
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, rgba(255, 255, 255, 0)),
+    color-stop(100%, #111315 100%)
+  );
+  background: -moz-linear-gradient(
+    top,
+    rgba(255, 255, 255, 0) 0%,
+    #111315 100%
+  );
+  background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
 }
 
 p#contentTitle {
-	position: absolute;
-	bottom: 12px;
-	font-size: 14px;
-	color: #fff;
-	margin: 0;
-	padding: 0;
-	line-height: 18px;
-	padding: 0 10px;
+  position: absolute;
+  bottom: 12px;
+  font-size: 14px;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  line-height: 18px;
+  padding: 0 10px;
 }
 
 .whydSrcLogo {
-	position: absolute;
-	top: 8px;
-	left: 8px;
-	width: 24px;
-	height: 24px;
-	background-size: fit;
-	/* opacity: 0.5; */
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 24px;
+  height: 24px;
+  background-size: fit;
+  /* opacity: 0.5; */
 }
 
 /* right panel: playlist selector + description */
 
 .postPanel {
-	float: left;
-	width: 296px;
-	height: 236px;
-	background: #fff;
-	overflow: auto;
-	overflow-x: hidden;
-	overflow-y: visible;
+  float: left;
+  width: 296px;
+  height: 236px;
+  background: #fff;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-	position: relative;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
 }
 
 .authorImg {
-	float: left;
-	width: 32px;
-	height: 32px;
-	margin: 0 14px;
-	background-position: center;
-	background-size: cover;
-	border-radius: 32px;
+  float: left;
+  width: 32px;
+  height: 32px;
+  margin: 0 14px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 32px;
 }
 
 #trackPresenceMsg {
-	font-size: 11px;
-	color: black;
-	margin-top: 6px;
-	font-size:13px;
-	letter-spacing: initial;
+  font-size: 11px;
+  color: black;
+  margin-top: 6px;
+  font-size: 13px;
+  letter-spacing: initial;
 }
 
 #descForm {
-	overflow: auto;
-	overflow-y: visible;
-	float: left;
+  overflow: auto;
+  overflow-y: visible;
+  float: left;
 }
 
 /* from query.mentionsInput.css */
@@ -262,7 +280,7 @@ p#contentTitle {
 .mentions-input-box {
   position: relative;
   width: 220px;
-  border: 1px solid #EAEDEF;
+  border: 1px solid #eaedef;
   border-radius: 3px;
 }
 
@@ -275,17 +293,17 @@ p#contentTitle {
   border: 0;
   resize: none;
   -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   font-size: 12px;
   line-height: 15px;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif; /* make sure the font is the same in all children */
+  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif; /* make sure the font is the same in all children */
 }
 
 textarea {
-	display: none;
+  display: none;
 }
 
 .mentions-input-box textarea {
@@ -324,8 +342,8 @@ textarea {
 }
 
 .mentions-autocomplete-list ul {
-    margin: 0;
-    padding: 5px 0;
+  margin: 0;
+  padding: 5px 0;
 }
 
 .mentions-autocomplete-list li {
@@ -339,8 +357,8 @@ textarea {
   cursor: pointer;
   list-style: none;
   white-space: nowrap;
-  color:#3F6191;
-  font-weight:bold;
+  color: #3f6191;
+  font-weight: bold;
 }
 
 .mentions-autocomplete-list li > img,
@@ -349,10 +367,10 @@ textarea {
   height: 26px;
   float: left;
   margin-right: 7px;
-  -moz-background-origin:2px;
-  -webkit-border-radius:2px;
-  	 -moz-border-radius:2px;
-  		  border-radius:2px;
+  -moz-background-origin: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
 }
 
 .mentions-autocomplete-list li em {
@@ -361,59 +379,58 @@ textarea {
 }
 
 .mentions-autocomplete-list li.active {
-  background-color: #417BD1;
-  border-radius:0;
-  color:#FFF;
+  background-color: #417bd1;
+  border-radius: 0;
+  color: #fff;
 }
 
 /* bottom panel: buttons */
 
 .buttons {
-	clear: both;
-	width: 600px;
-	padding-top: 10px;
-	text-align: right;
+  clear: both;
+  width: 600px;
+  padding-top: 10px;
+  text-align: right;
 }
 
 body.loading .buttons {
-	display: none;
+  display: none;
 }
 
 .buttons > * {
-	display: inline-block;
-	cursor: pointer;
-	margin-right: 8px;
-	padding: 10px 20px;
-	font-weight: bold;
-	font-size: 12px;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	color: #FFF;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 8px;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  color: #fff;
 }
 
 #btnCancel {
-	color: #999999;
+  color: #999999;
 }
 
 #btnRetry {
-	color: #3177AF;
-	border-color: #3177AF;
-	background: url(/images/bookmarklet_ic_retry.png) no-repeat 12px 50%;
-	padding-left: 35px;
+  color: #3177af;
+  border-color: #3177af;
+  background: url(/images/bookmarklet_ic_retry.png) no-repeat 12px 50%;
+  padding-left: 35px;
 }
 
 #btnClose,
 #btnSubmit {
-	background: #3177AF;
+  background: #3177af;
 }
 
 #btnClose:hover,
 #btnSubmit:hover {
-	background-color: #62A1D3;
-	
+  background-color: #62a1d3;
 }
- 
+
 #btnRetry,
 #btnClose,
 #btnCancel,
@@ -423,139 +440,139 @@ body.failed #postForm,
 body.success #postForm,
 body.failed #btnSubmit,
 body.success #btnSubmit {
-	 display: none;  
+  display: none;
 }
 
 body.failed #btnRetry,
 body.failed #btnCancel,
 body.success #btnClose {
-	display: inline-block;
+  display: inline-block;
 }
 
 body.failed div.failed,
 body.success div.success {
-	display: block;
+  display: block;
 }
 
-
 .thumbOverlay {
-	display: block!important;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	opacity:0;
+  display: block !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
 
-    transition:opacity 0.2s linear, padding 0.2s linear;
-    padding-top: 15px;
+  transition: opacity 0.2s linear, padding 0.2s linear;
+  padding-top: 15px;
 }
 
 .failed .thumbOverlay.failed {
-	background: rgba(188,22,42,0.92) url(/images/bookmarklet_ic_error_post.png) no-repeat 50% 50%;
-	opacity: 1;
-	padding-top: 0;
+  background: rgba(188, 22, 42, 0.92) url(/images/bookmarklet_ic_error_post.png)
+    no-repeat 50% 50%;
+  opacity: 1;
+  padding-top: 0;
 }
 
 .success .thumbOverlay.success {
-	background: rgba(49,173,85, 0.92) url(/images/bookmarklet_ic_validate_post.png) no-repeat 50% 50%;
-	opacity: 1;
-	padding-top: 0;
+  background: rgba(49, 173, 85, 0.92)
+    url(/images/bookmarklet_ic_validate_post.png) no-repeat 50% 50%;
+  opacity: 1;
+  padding-top: 0;
 }
 
-
 #lnkDeletePost {
-	float: left;
-	color: #F56165;
-	cursor: pointer;
-	font-size: 11px;
-	font-weight: bold;
+  float: left;
+  color: #f56165;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
 }
 
 /* error screen */
 
 #errorScreen {
-	position: relative;
-	padding: 10px;
-	color: #333;
+  position: relative;
+  padding: 10px;
+  color: #333;
 }
 
 #errorScreen h1 {
-	font-size: 14px;
+  font-size: 14px;
 }
 
 div.note {
-	position: absolute;
-	left: 10px;
-	right: 10px;
-	bottom: 6px;
-	border-top: 1px solid #EAEDEF;
-	padding-top: 11px;
-	color: #A5ACB1;
-	font-size: 9px;
-	letter-spacing: 1px;
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 6px;
+  border-top: 1px solid #eaedef;
+  padding-top: 11px;
+  color: #a5acb1;
+  font-size: 9px;
+  letter-spacing: 1px;
 }
 
 #errorScreen p {
-	font-size: 13px;
-	color: #333;
-	letter-spacing: initial;
+  font-size: 13px;
+  color: #333;
+  letter-spacing: initial;
 }
 
 /* confirmation screen */
 
 #confirmationScreen {
-	position: relative;
-	padding: 10px;
-	color: #333;
+  position: relative;
+  padding: 10px;
+  color: #333;
 }
 
 #confirmationScreen > h1 {
-	font-size: 14px;
-	font-weight: bold;
-	margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 #confirmationScreen > a {
-	border: 1px solid #3177AF;
-	padding: 12px;
-	font-size: 14px;
-	background-color: white;
-	border-radius: 3px;
-	color: #3177AF;
-	text-decoration: none;
+  border: 1px solid #3177af;
+  padding: 12px;
+  font-size: 14px;
+  background-color: white;
+  border-radius: 3px;
+  color: #3177af;
+  text-decoration: none;
 }
 
-#confirmationScreen > a:hover{
-	background-color:#62A1D3 ;
-	 border: 1px solid #62A1D3;
-	color:white;
+#confirmationScreen > a:hover {
+  background-color: #62a1d3;
+  border: 1px solid #62a1d3;
+  color: white;
 }
 
 #confirmationScreen p {
-	color: #333;
-	font-size: 14px;
-	letter-spacing: initial;
+  color: #333;
+  font-size: 14px;
+  letter-spacing: initial;
 }
 
 #confirmationScreen > div > div {
-	position: relative;
-	width: 140px;
-	height: 40px;
+  position: relative;
+  width: 140px;
+  height: 40px;
 }
 
 #confirmationScreen > div > div > .twitter-share-button {
-	position: absolute;
-	left: 0px;
+  position: absolute;
+  left: 0px;
 }
 
 #confirmationScreen > div > div > .fb-like {
-	position: absolute;
-	right: 0px;
-	width: 50px;
+  position: absolute;
+  right: 0px;
+  width: 50px;
 }
 
 /* remove fb like flyout, usually clipped by iframe */
 #confirmationScreen .fb_edge_widget_with_comment > span > iframe {
-	height: 20px !important;
+  height: 20px !important;
 }

@@ -1,14 +1,13 @@
 ---
 name: Feature request
 about: Propose a feature that would make Openwhyd better for its users
-
 ---
 
 <!-- This section gives a bit of context for new contributors -->
 
-*[openwhyd.org](https://openwhyd.org) is an open-source music platform used daily by thousands of users to create playlists of songs from the web (Youtube, Soundcloud, etc...), and discover musical gems from similar users.*
+_[openwhyd.org](https://openwhyd.org) is an open-source music platform used daily by thousands of users to create playlists of songs from the web (Youtube, Soundcloud, etc...), and discover musical gems from similar users._
 
-*Tech stack: Node.js, MongoDB, Docker, Mocka, Webdriver.io, jQuery, Electron + iOS app*
+_Tech stack: Node.js, MongoDB, Docker, Mocka, Webdriver.io, jQuery, Electron + iOS app_
 
 ---
 
@@ -31,6 +30,7 @@ In order to achieve that, we could ... <!-- (optional) provide solutions, ideas 
 In order to solve this issue, you are invited to fork this GitHub repository, makes changes to it, and then create a Pull Request so we can merge your changes back to this repository.
 
 First, you may want to read about:
+
 - How to install, setup and run Openwhyd on your computer: [`INSTALL.md`](https://github.com/openwhyd/openwhyd/blob/master/docs/INSTALL.md)
 - How to propose a valuable contribution to this repo: [`CONTRIBUTING.md`](https://github.com/openwhyd/openwhyd/blob/master/docs/CONTRIBUTING.md)
 
