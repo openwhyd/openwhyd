@@ -119,7 +119,7 @@ var timeScales = [
 exports.renderTimestamp = function (timestamp) {
   var t = timestamp / 1000,
     lastScale = 'second(s)';
-  for (i in timeScales) {
+  for (let i in timeScales) {
     var scaleTitle;
     for (scaleTitle in timeScales[i]);
     var scaleVal = timeScales[i][scaleTitle];
@@ -147,8 +147,8 @@ exports.MONTHS_SHORT = [
   'Dec',
 ];
 
-exports.renderShortMonthYear = function (t) {
-  var t = new Date(t);
+exports.renderShortMonthYear = function (date) {
+  var t = new Date(date);
   var sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
   return (
     exports.MONTHS_SHORT[t.getMonth()] + (sameYear ? '' : ' ' + t.getFullYear())
@@ -164,8 +164,8 @@ exports.padNumber = function (str, n) {
   return ret;
 };
 
-exports.renderTime = function (t) {
-  var t = new Date(t);
+exports.renderTime = function (date) {
+  var t = new Date(date);
   return t.getHours() + ':' + exports.padNumber(t.getMinutes(), 2);
 };
 
@@ -281,19 +281,18 @@ exports.groupObjectsBy = function (array, attr) {
   var r = {};
   var path = ('' + attr).split('.');
   if (path.length > 1) {
-    for (var i in array) {
-      var obj = array[i] || {};
-      var key = obj;
+    for (let i in array) {
+      const obj = array[i] || {};
+      let key = obj;
       for (var j in path) {
-        var attr = path[j];
-        key = (key || {})[attr];
+        key = (key || {})[path[j]];
       }
       if (key) (r[key] = r[key] || []).push(obj);
     }
   } else {
-    for (var i in array) {
-      var obj = array[i] || {};
-      var key = obj[attr];
+    for (let i in array) {
+      const obj = array[i] || {};
+      let key = obj[attr];
       if (key)
         // TODO: fix this line
         (r[key] = r[key] || []).push(obj);
@@ -347,11 +346,9 @@ exports.getMapFieldNames = function (map /*, firstField*/) {
   return fieldNames;
 };
 
-exports.excludeKeys = function (map, keySet) {
-  var map = map || [],
-    keySet = keySet || {},
-    res = [];
-  for (var k in map)
+exports.excludeKeys = function (map = [], keySet = {}) {
+  const res = [];
+  for (let k in map)
     if (!keySet[k])
       // TODO: check this line
       res[k] = map[k];
@@ -448,11 +445,11 @@ exports.getLevenshteinDistance = (function () {
     }
     var r = [];
     r[0] = [];
-    for (var c = 0; c < n + 1; c++) r[0][c] = c;
-    for (var i = 1; i < m + 1; i++) {
+    for (let c = 0; c < n + 1; c++) r[0][c] = c;
+    for (let i = 1; i < m + 1; i++) {
       r[i] = [];
       r[i][0] = i;
-      for (var j = 1; j < n + 1; j++) {
+      for (let j = 1; j < n + 1; j++) {
         cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
         r[i][j] = minimator(
           r[i - 1][j] + 1,
@@ -596,9 +593,8 @@ function _httpRequest(options, callback) {
   return req;
 }
 
-exports.httpRequest = function (url, options, callback) {
-  var urlObj = urlModule.parse(url),
-    options = options || {};
+exports.httpRequest = function (url, options = {}, callback) {
+  var urlObj = urlModule.parse(url);
   options.method = options.method || 'GET';
   options.protocol = urlObj.protocol;
   options.host = urlObj.hostname;
@@ -607,10 +603,10 @@ exports.httpRequest = function (url, options, callback) {
   //options.headers = {'Accept':'application/json'};
   var domainOpts = exports.httpGetDomain(options.host) || {};
   if (domainOpts.queue) {
-    function runNext() {
+    const runNext = () => {
       //console.log("5-next?", options.host, domainOpts.queue.length);
       return domainOpts.queue.length && domainOpts.queue[0](); // run next request in line
-    }
+    };
     //console.log("1-REQ", options.host, domainOpts.queue.length);
     domainOpts.queue.push(
       _httpRequest.bind(null, options, function () {
@@ -771,16 +767,16 @@ AsyncEventEmitter.prototype.on = function (evtName, listener) {
 AsyncEventEmitter.prototype.emit = function (evtName, param, callback) {
   var listeners = this._eventListeners[evtName];
   if (!listeners) return false;
-  var self = this;
   listeners = listeners.slice(); // duplicate array
-  (function nextListener() {
-    process.nextTick(function () {
+  const nextListener = () => {
+    process.nextTick(() => {
       if (listeners.length) {
         //var args = Array.prototype.slice.call(arguments, 1);
-        listeners.pop().call(self, param, nextListener);
+        listeners.pop().call(this, param, nextListener);
       } else if (callback) callback();
     });
-  })();
+  };
+  nextListener();
   return true;
 };
 
@@ -812,8 +808,8 @@ exports.checkParams = function (obj, mandatorySet, optionalSet) {
     else finalObj[fieldName] = obj[fieldName];
   }
   obj = obj || {};
-  for (var fieldName in mandatorySet) storeIfValid(fieldName, mandatorySet);
-  for (var fieldName in optionalSet)
+  for (let fieldName in mandatorySet) storeIfValid(fieldName, mandatorySet);
+  for (let fieldName in optionalSet)
     if (fieldName in obj && obj[fieldName] != null)
       storeIfValid(fieldName, optionalSet);
   return finalObj;
@@ -861,30 +857,29 @@ exports.Worker = function (options) {
     delete job;
   }
   function Job(id) {
-    var self = this;
     this.toString = function () {
       return id;
     };
     this.done = removeJob.bind(this, this);
-    this.wrapCallback = function (callback) {
+    this.wrapCallback = (callback) => {
       return function () {
-        if (self && self.done) {
+        if (this && this.done) {
           callback && callback.apply(null, arguments);
-          self.done();
+          this.done();
         } else
           console.log(
-            'warning: intercepted callback from terminated job ' + self
+            'warning: intercepted callback from terminated job ' + this
           );
       };
     };
-    this.timeout = setTimeout(function () {
+    this.timeout = setTimeout(() => {
       console.log(
-        'job ' + self + ' was still running 1 minute after launch => destroying'
+        'job ' + this + ' was still running 1 minute after launch => destroying'
       );
       console.warn(
         'destroyed a job that was still running 1 minute after launch'
       );
-      removeJob(self);
+      removeJob(this);
     }, options.expiry || 60000);
     addJob(this);
     return this;
