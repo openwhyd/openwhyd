@@ -1,4 +1,5 @@
 public/js/jquery*.js
-public/js/playem*.js
+public/js/playem-all.js
+public/js/playem-min.js
 public/js/soundmanager2*.js
 app/jstat*.js
