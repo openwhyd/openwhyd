@@ -1,15 +1,19 @@
-// You may want to clear the test database with `$ npm run docker:seed`
-// before running this script.
+// Import tracks from a user profile on openwhyd.org, to the local test db.
+//
+// Usage:
+//   $ npm run docker:seed  # will clear the database and create the admin user
+//   $ node scripts/import-from-prod.js adrien
+//   # ... will import 21 posts from https://openwhyd.org/adrien
 
 const request = require('request');
 const mongodb = require('mongodb');
 
 const ObjectID = (id) => mongodb.ObjectID.createFromHexString(id);
 
-// Parameters // TODO: get from command line arguments and/or env vars
+// Parameters
 const url = 'mongodb://localhost:27117';
 const dbName = 'openwhyd_test';
-const username = 'adrien';
+const username = process.env[2] || 'test'; // default profile: https://openwhyd.org/test
 
 const connectToDb = ({ url, dbName }) =>
   new Promise((resolve, reject) =>

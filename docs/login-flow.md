@@ -9,5 +9,6 @@ Here's the login flow:
 - the session will be checked in all following HTTP requests received by openwhyd's web app, if they contain the `whydUid` cookie in their headers
 
 Notes:
+
 - You can find the documentation of API endpoints in [`API.md`](API.md).
 - As mentioned in the API reference documentation, cookies are also used to check the identity of the user on all API endpoints.

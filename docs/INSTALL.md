@@ -13,10 +13,13 @@ All you need is:
 - and to have [Git](https://www.atlassian.com/git/tutorials/install-git) installed on your machine.
 
 ### Docker for Windows Home
+
 Docker for Windows Home runs on a virtual box, so localhost may not work. For all the instructions below, if localhost is not working, replace it with your docker ip. You can find your docker ip with :
+
 ```sh
-$ docker-machine ip                  
+$ docker-machine ip
 ```
+
 - in your web browser, http://localhost:8080 become http://your-docker-ip:8080
 - replace localhost in the different scripts
 
@@ -50,7 +53,7 @@ If you want to import some user data from openwhyd.org into your local/test data
 
 ```sh
 $ npm run docker:seed               # will clear the database and create the admin user
-$ node scripts/import-from-prod.js  # will import 21 posts from https://openwhyd.org/adrien
+$ node scripts/import-from-prod.js  # will import 21 posts from https://openwhyd.org/test
 ```
 
 After that, you will be able to sign in as an administrator using the following credentials:

@@ -1,4 +1,8 @@
+CHANGELOG.md
+*.html
 *min.js
+*min.css
+tipsy.css
 jquery*.js
 playem-all.js
 public/js/soundmanager2.js

@@ -1,23 +1,24 @@
 body {
-	background: #EFEFEF;
+  background: #efefef;
 }
 
 /* CLEAR:BOTH */
-.clear:before,.clear:after {
-	content: "";
-	display: table;
+.clear:before,
+.clear:after {
+  content: '';
+  display: table;
 }
 
 .clear:after {
-	clear: both;
+  clear: both;
 }
 
 .clear {
-	zoom: 1;
+  zoom: 1;
 }
 
 .fb_edge_widget_with_comment {
-	float: left;
+  float: left;
 }
 
 /*
@@ -36,218 +37,215 @@ background-repeat: no-repeat;
 /* notifications */
 
 #notifIcon {
-	display: none;
+  display: none;
 }
 
 #notifIcon.someNotif {
-	display: block;
-	position: absolute;
-	left: 80px;
-	top: 13px;
-	border:none;
-	padding: 5px 10px;
-	cursor: pointer;
-	color: white;
-	border-radius:2px;
-	-webkit-border-radius:2px;
-	-moz-border-radius:2px;
-	background: #CF3044;
+  display: block;
+  position: absolute;
+  left: 80px;
+  top: 13px;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: white;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  background: #cf3044;
 }
 
-
-
 #notifPanel {
-	display:none;
-	position: absolute;
-	top: 45px;
-	background-color:#FFF;
-	color: white;
-	width:350px;
-	/*opacity: 0.99;*/
-	border-radius:3px;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
-	box-shadow: 0 1px 4px rgba(24, 27, 31, 0.26);
-	z-index:4;
+  display: none;
+  position: absolute;
+  top: 45px;
+  background-color: #fff;
+  color: white;
+  width: 350px;
+  /*opacity: 0.99;*/
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(24, 27, 31, 0.26);
+  z-index: 4;
 }
 
 #notifPanel > p {
-	font-weight: bold;
-	color: black;
-	font-size: 14px;
-	margin: 0;
-	display: block;
-	/*border-bottom: 1px solid #989898;*/
-	padding: 10px 10px 5px  10px;
-	vertical-align: middle;
+  font-weight: bold;
+  color: black;
+  font-size: 14px;
+  margin: 0;
+  display: block;
+  /*border-bottom: 1px solid #989898;*/
+  padding: 10px 10px 5px 10px;
+  vertical-align: middle;
 }
 
-
-
-#notifPanel > div { /* clear */
-	font-size:12px;
-	vertical-align: middle;
-	padding: 9px 10px;
-	float:right;
-	color:#3177AF;
-	cursor: pointer;
+#notifPanel > div {
+  /* clear */
+  font-size: 12px;
+  vertical-align: middle;
+  padding: 9px 10px;
+  float: right;
+  color: #3177af;
+  cursor: pointer;
 }
 
 #notifPanel > div:hover {
-	color:#62A1D3;
+  color: #62a1d3;
 }
 
 #notifPanel > ul {
-	margin: 2px 0;
-	list-style: none;
-	padding:0;
+  margin: 2px 0;
+  list-style: none;
+  padding: 0;
 }
 
 #notifPanel li {
-	height: 36px;
-	padding: 10px;
-	padding-right: 30px;
-	font-size: 12px;
-	position:relative;
-	line-height: 16px;
-	color:#373737;
-	border-top: 1px solid #EFEFEF;
+  height: 36px;
+  padding: 10px;
+  padding-right: 30px;
+  font-size: 12px;
+  position: relative;
+  line-height: 16px;
+  color: #373737;
+  border-top: 1px solid #efefef;
 }
 
 #notifPanel li:first-child {
-	border: none;
+  border: none;
 }
 
 #notifPanel li:hover {
-	background: #3177AF;
-	color:white;
+  background: #3177af;
+  color: white;
 }
 
 #notifPanel li div.img {
-	margin-right: 10px;
-	width:36px;
-	height:36px;
-	float:left;
-	background-size: cover;
+  margin-right: 10px;
+  width: 36px;
+  height: 36px;
+  float: left;
+  background-size: cover;
 }
 
 #notifPanel li span {
-	color:#3177AF;
-	font-weight: bold;
+  color: #3177af;
+  font-weight: bold;
 }
 
 #notifPanel li:hover span {
-	color:white;
+  color: white;
 }
 
 #notifPanel a {
-	color:inherit;
-	display:block;
-	height:36px;
-	overflow: hidden;
-	line-height: 18px;
+  color: inherit;
+  display: block;
+  height: 36px;
+  overflow: hidden;
+  line-height: 18px;
 }
 
 #notifPanel a:hover {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 #notifPanel li div.remove {
-	position:absolute;
-	right:4px;
-	top: 15px;
-	width: 16px;
-	height:16px;
-	background-color: none;
-	background:url(/images/icon-delete.png) no-repeat;
-	cursor: pointer;
+  position: absolute;
+  right: 4px;
+  top: 15px;
+  width: 16px;
+  height: 16px;
+  background-color: none;
+  background: url(/images/icon-delete.png) no-repeat;
+  cursor: pointer;
 }
 
 #notifPanel li:hover div.remove {
-	display: block;
-	background:url(/images/croixNotif.png) no-repeat;
+  display: block;
+  background: url(/images/croixNotif.png) no-repeat;
 }
 
 #notifPanel li div:hover {
-	background-color:none;
+  background-color: none;
 }
 
 /** footer **/
 
 #footer {
-	clear: both;
-	padding-bottom: 70px; /* to prevent olark from hiding links */
-	padding-top: 16px;
-	background: url(/images/border-footer.png) repeat-x top;
+  clear: both;
+  padding-bottom: 70px; /* to prevent olark from hiding links */
+  padding-top: 16px;
+  background: url(/images/border-footer.png) repeat-x top;
 }
 
 #footer > div {
-	width: 1000px;
-	margin: 0 auto;
+  width: 1000px;
+  margin: 0 auto;
 }
 
 ul#footerLinks {
-	float: right;
-	list-style: none;
-	margin: 0;
-	font-size: 12px;
+  float: right;
+  list-style: none;
+  margin: 0;
+  font-size: 12px;
 }
 
 ul#footerLinks > li {
-	float: left;
-	margin-right:10px;
+  float: left;
+  margin-right: 10px;
 }
 
 /* dialogs */
 
 .dlg {
-	padding: 20px;
-	color: #000;
+  padding: 20px;
+  color: #000;
 }
 
 .dlgContactUs {
-	width: 300px;
-	line-height: 100px;
-	background: white;
+  width: 300px;
+  line-height: 100px;
+  background: white;
 }
 
 .dlgWelcome {
-	width: 600px;
-	height: 550px;
+  width: 600px;
+  height: 550px;
 }
 
 .dlgPlContributors {
-	width:600px;
-	height:600px;
+  width: 600px;
+  height: 600px;
 }
 
 /* follower list dlg */
 
 .dlgUserList {
-	width: 520px;
-	text-align: left;
+  width: 520px;
+  text-align: left;
 }
 
 .dlgUserList ul.userList {
-	height: auto;
+  height: auto;
 }
 
 ul.userList {
-	list-style: none;
-	margin:0;
-	padding:0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 ul.userList > li {
-	position: relative;
-	overflow: auto;
-	padding: 10px 0;
-	margin:0;
+  position: relative;
+  overflow: auto;
+  padding: 10px 0;
+  margin: 0;
 }
 
-ul.userList li.user:last-child{
-	border-bottom: none;
-} 
+ul.userList li.user:last-child {
+  border-bottom: none;
+}
 
 /*ul.userList > li > div.thumb {
 	float: left;
@@ -268,185 +266,184 @@ ul.userList li.user:last-child{
 }*/
 
 ul.userList > li > a {
-	display: block;
-	font-weight: bold;
-	margin: 8px 0;
-	color: #333;
-	font-size: 13px;
+  display: block;
+  font-weight: bold;
+  margin: 8px 0;
+  color: #333;
+  font-size: 13px;
 }
 
 ul.userList > li > small {
-	color: #777;
-	display: block;
-	width: 320px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-size: 12px;
+  color: #777;
+  display: block;
+  width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
 }
 
 ul.userList > li > .userSubscribe {
-	position: absolute;
-	top: 20px;
-	right: 0;
+  position: absolute;
+  top: 20px;
+  right: 0;
 }
 
 /* change avatar dlg */
 
-
 .dlgEditProfile {
-	width: 610px;
-	height: 400px;
-	overflow: auto;
-	overflow-x: hidden;
-	font-size: 12px;
+  width: 610px;
+  height: 400px;
+  overflow: auto;
+  overflow-x: hidden;
+  font-size: 12px;
 }
 
 .dlgEditProfile > h1 {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .dlgEditProfile .fldLabel {
-	float: left;
-	width: 110px;
-	margin-right: 20px;
-	text-align: right;
-	font-size: 12px;
-	font-weight: bold;
-	color: #565656;
-	padding-top: 8px;
+  float: left;
+  width: 110px;
+  margin-right: 20px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: bold;
+  color: #565656;
+  padding-top: 8px;
 }
 
 #dlgEditProfile > .avatar-box > .dlgImgPane {
-	text-align: center;
-	float: left;
-	margin-right: 20px;
-	margin-bottom: 7px;
+  text-align: center;
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 7px;
 }
 
 #dlgEditProfile .avatar-box > .dlgImgPane > img {
-	background: #ccc;
-	width: 136px;
-	height: 136px;
-	padding: 1px 1px;
-	margin-bottom: 5px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	background: #EFEFF1;
+  background: #ccc;
+  width: 136px;
+  height: 136px;
+  padding: 1px 1px;
+  margin-bottom: 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background: #efeff1;
 }
 
 #dlgEditProfile > .avatar-box .dlgImgPane > span {
-	color: inherit;
-	text-decoration: none;
-	cursor: pointer;
-	color: #FB818D;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  color: #fb818d;
 }
 
 #dlgEditProfile > .wrapUploadBox {
-	width: 298px;
-	float: right;
+  width: 298px;
+  float: right;
 }
 
 #dlgEditProfile .uploadBox {
-	float: left;
-	padding: 10px;
-	width: 272px;
-	height: 118px;
-	border: 2px dashed transparent;
-	text-align: center;
-	display: none;
+  float: left;
+  padding: 10px;
+  width: 272px;
+  height: 118px;
+  border: 2px dashed transparent;
+  text-align: center;
+  display: none;
 }
 
 #dlgEditProfile .legend {
-	color: #B2B2B2;
-	clear: both;
-	margin: 6px 0 0 140px;
+  color: #b2b2b2;
+  clear: both;
+  margin: 6px 0 0 140px;
 }
 
 #dlgEditProfile .uploadBox p {
-	margin:5px 0px;
-	font-size: 16px;
+  margin: 5px 0px;
+  font-size: 16px;
 }
 
 #dlgEditProfile .uploadBox small {
-	display: block;
-	font-size: 12px;
-	color:#ccc;
-	margin-bottom: 18px;
+  display: block;
+  font-size: 12px;
+  color: #ccc;
+  margin-bottom: 18px;
 }
 
 #dlgEditProfile #avatarDrop {
-	display: block;
-	border-color: #ccc;
+  display: block;
+  border-color: #ccc;
 }
 
 #dlgEditProfile #avatarDrop.hover {
-	border-color: #888;
+  border-color: #888;
 }
 
 #dlgEditProfile #avatarDrop button {
-	display: inline-block;
-	background-color: #48f;
-	padding: 14px;
-	border: 0;
-	font-size: 12px;
-	font-weight: bold;
-	color: white;
-	cursor: pointer;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+  display: inline-block;
+  background-color: #48f;
+  padding: 14px;
+  border: 0;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
 #dlgEditProfile.loading {
-	background-image: none !important;
+  background-image: none !important;
 }
 
 #dlgEditProfile.loading .uploadBox /*#avatarDrop, #dlgEditProfile.loading #avatarForm*/ {
-	display: none !important;
+  display: none !important;
 }
 
 #dlgEditProfile.loading #avatarUploading {
-	display: block !important;
+  display: block !important;
 }
 
 #dlgEditProfile.loading button,
 #dlgEditProfile.loading .btnSave,
-#dlgEditProfile.loading input[type=file],
+#dlgEditProfile.loading input[type='file'],
 #dlgEditProfile.loading > .dlgImgPane > span {
-	display: none !important;
+  display: none !important;
 }
 
 #dlgEditProfile #avatarUploading {
-	background: url(/images/loader.gif) no-repeat 50% 70%;
+  background: url(/images/loader.gif) no-repeat 50% 70%;
 }
 
 #dlgEditProfile #avatarUploading > div.progress {
-	display: none;
-	height: 5px;
-	width: 100px;
-	margin: 0 auto;
-	overflow: hidden;
-	margin-top: 10px;
-	background: #eee;
+  display: none;
+  height: 5px;
+  width: 100px;
+  margin: 0 auto;
+  overflow: hidden;
+  margin-top: 10px;
+  background: #eee;
 }
 
 #dlgEditProfile #avatarUploading > div.progress > div {
-	height: 100%;
-	background-color: #48f;
-	width: 50%;
+  height: 100%;
+  background-color: #48f;
+  width: 50%;
 }
 
 #dlgEditProfile > #profileForm {
-	padding-top: 5px;
-	clear: both;
+  padding-top: 5px;
+  clear: both;
 }
 
 #dlgEditProfile .fld {
-	clear: both;
-	margin-top: 24px;
-	/*	position: relative;*/
+  clear: both;
+  margin-top: 24px;
+  /*	position: relative;*/
 }
 
 /*#dlgEditProfile .fld .fldLabel {
@@ -460,155 +457,156 @@ font-size: 13px;
 }*/
 
 #dlgEditProfile .fld span {
-	display: block;
-	background: #eee;
-	padding: 8px;
-	/*position: relative;
+  display: block;
+  background: #eee;
+  padding: 8px;
+  /*position: relative;
 	top: 1px;*/
-	width: 340px;
+  width: 340px;
 }
 
 #dlgEditProfile .fld input {
-	padding: 12px 8px;
-	margin: 0;
+  padding: 12px 8px;
+  margin: 0;
 }
 
 .dlgEditProfile .fldLabel > textarea {
-	width: 436px;
-	margin: 0;
+  width: 436px;
+  margin: 0;
 }
 
 #dlgEditProfile .btnSave {
-	/*position: relative;
+  /*position: relative;
 	/* new: *!/
 	float: right;*/
-	margin-top: 20px;
-	width: 100px;
+  margin-top: 20px;
+  width: 100px;
 }
 
-/*#dlgChangeAvatar >*/ .dlgButtons {
-position: absolute;
-bottom: 40px;
-right: 40px;
+/*#dlgChangeAvatar >*/
+.dlgButtons {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
 }
 
 #dlgEditProfile .bottomText {
-	float: left;
-	width: 340px;
-	font-size: 12px;
-	width: 300px;
-	margin: 26px 54px 20px 140px;
-	color: #57575C;
+  float: left;
+  width: 340px;
+  font-size: 12px;
+  width: 300px;
+  margin: 26px 54px 20px 140px;
+  color: #57575c;
 }
 
 /* moved from postBox.css */
 
 .dlgPostBox {
-	width: 600px;
-	height: 500px;
-	padding-top: 5px;
-	overflow:auto;
-	overflow-x: hidden;
-	overflow-y: auto;
+  width: 600px;
+  height: 500px;
+  padding-top: 5px;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .dlgPostBox.dlgRepostBox {
-	width: 480px;
-	height: 360px;
-	padding: 20px;
-	overflow:auto;
+  width: 480px;
+  height: 360px;
+  padding: 20px;
+  overflow: auto;
 }
 
 /* delete post dlg */
 
 .dlgDeletePost {
-	height: 280px;
-	width: 500px;
-	padding: 20px;
+  height: 280px;
+  width: 500px;
+  padding: 20px;
 }
 
 .dlgDeletePost > div {
-	background: #eee;
-	width: 580px;
-	height: 150px;
-	position:relative;
-	left: -40px;
-	margin-bottom: 40px;
+  background: #eee;
+  width: 580px;
+  height: 150px;
+  position: relative;
+  left: -40px;
+  margin-bottom: 40px;
 }
 
 .dlgDeletePost > div > div {
-	float: left;
-	width: 120px;
-	height: 120px;
-	margin: 15px 20px;
-	margin-left: 40px;
-	background-size: cover;
+  float: left;
+  width: 120px;
+  height: 120px;
+  margin: 15px 20px;
+  margin-left: 40px;
+  background-size: cover;
 }
 
 .dlgDeletePost > div > span {
-	position: relative;
-	top: 30px;
-	font-weight: bold;
+  position: relative;
+  top: 30px;
+  font-weight: bold;
 }
 
 /* delete comment dlg */
 .dlgDeleteComment {
-	height: 150px;
-	width: 500px;
+  height: 150px;
+  width: 500px;
 }
 
 .dlgDeleteComment > div {
-	width: 500px;
-	position:relative;
-	margin-bottom: 40px;
-	padding-top:30px;
+  width: 500px;
+  position: relative;
+  margin-bottom: 40px;
+  padding-top: 30px;
 }
 
 .dlgDeleteComment > div > p {
-	font-weight:bold;
+  font-weight: bold;
 }
 
 .dlgDeleteComment .btnDelete {
-	float:right;
-	background: #357BD1;
-	padding: 10px 20px;
-	font-size: 14px;
-	font-weight:bold;
-	color: #FFF;
-	border: 0;
-	cursor: pointer;
-	margin: 10px 0 0 0;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+  float: right;
+  background: #357bd1;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  margin: 10px 0 0 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 
 /* embedPlaylist dialog */
 
 .dlgEmbedPlaylist {
-	overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 .dlgEmbedPlaylist /*> .ajaxFrame*/ {
-	width: 800px;
-	height: 600px;
-	padding: 20px;
-	padding-top: 5px;
-	overflow:auto;
+  width: 800px;
+  height: 600px;
+  padding: 20px;
+  padding-top: 5px;
+  overflow: auto;
 }
 
 .dlgEmbedPlaylist .dlgClose {
-	position:absolute;
-	top:12px;
-	right:18px;
-	width: 9px;
-	height:9px;
-	background:url(/images/icon-delete.png);
-	cursor: pointer;
-	z-index: 1;
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  width: 9px;
+  height: 9px;
+  background: url(/images/icon-delete.png);
+  cursor: pointer;
+  z-index: 1;
 }
 /*
 / *#sidebar* / .stats {
@@ -637,132 +635,128 @@ font-family: Helvetica, Arial, Sans-serif;
 /* create / edit playlist dlg */
 
 .dlgEditPlaylist {
-	width: 500px;
-	height: 200px;
-	overflow: auto;
-	margin: 0;
-	padding: 20px;
+  width: 500px;
+  height: 200px;
+  overflow: auto;
+  margin: 0;
+  padding: 20px;
 }
 
 .dlgEditPlaylist > h1 {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .dlgEditPlaylist #playlistForm .fldLabel {
-	float: left;
-	margin-top: 15px;
-	margin-right: 30px;
+  float: left;
+  margin-top: 15px;
+  margin-right: 30px;
 }
 
-.dlgEditPlaylist #playlistForm input[name="name"] {
-	width: 404px;
-	box-shadow: none;
+.dlgEditPlaylist #playlistForm input[name='name'] {
+  width: 404px;
+  box-shadow: none;
 }
 
-.dlgEditPlaylist #playlistForm input:focus[name="name"] {
-	outline: 1px solid #3892E3;
+.dlgEditPlaylist #playlistForm input:focus[name='name'] {
+  outline: 1px solid #3892e3;
 }
 
 .dlgEditPlaylist #formToggler {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .dlgEditPlaylist #imageForm {
-	display: none;
-	background: #fff;
-	overflow: auto;
-	margin-bottom: 0;
+  display: none;
+  background: #fff;
+  overflow: auto;
+  margin-bottom: 0;
 }
 
 .dlgEditPlaylist #imageForm .dlgImgPane {
-	float: left;
-	margin-right: 20px;
+  float: left;
+  margin-right: 20px;
 }
 
 .dlgEditPlaylist #imageForm .dlgImgPane img {
-	width: 150px;
-	height: 150px;
+  width: 150px;
+  height: 150px;
 }
 
 .dlgEditPlaylist #imageForm .dlgText {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 .dlgEditPlaylist #imageForm .dlgText small {
-	color: #888;
+  color: #888;
 }
 
-.dlgEditPlaylist #imageForm input[type=file] {
-	margin-top: 20px;
-	margin-bottom: 20x;
-	font-size: 14px;
+.dlgEditPlaylist #imageForm input[type='file'] {
+  margin-top: 20px;
+  margin-bottom: 20x;
+  font-size: 14px;
 }
 
 .dlgEditPlaylist #imageForm .dlgText > p {
-	margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 
 .dlgEditPlaylist #imageForm .btnDelete {
-	display: block;
-	cursor: pointer;
-	color: #3177AF;
-	font-size: 12px;
-	margin-top: 14px;
+  display: block;
+  cursor: pointer;
+  color: #3177af;
+  font-size: 12px;
+  margin-top: 14px;
 }
 
 .dlgEditPlaylist #buttonBar {
-	width: 100%;
-	overflow: auto;
+  width: 100%;
+  overflow: auto;
 }
 
 .dlgEditPlaylist #buttonBar .deletePl {
-	float: left;
-	color: #9CA1A5;
-	font-size: 12px;
-	margin-top: 20px;
+  float: left;
+  color: #9ca1a5;
+  font-size: 12px;
+  margin-top: 20px;
 }
 
 .dlgEditPlaylist #buttonBar .deletePl:hover {
-	color: #FF7784;
+  color: #ff7784;
 }
 
 .dlgEditPlaylist #buttonBar button {
-	float: right;
-	border: 1px solid #7B9D33;
-	box-shadow: none;
-	padding: 10px 16px;
-	font-size: 13px;
+  float: right;
+  border: 1px solid #7b9d33;
+  box-shadow: none;
+  padding: 10px 16px;
+  font-size: 13px;
 }
 
 /* track ordering page */
 
 .pgPlaylistOrder .feedHeader {
-
-	padding: 30px 0;
-	text-align: center;
-	background-color: #464748;
-	background: url(/images/background-header-invite.jpg);
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	margin-bottom: 20px;
+  padding: 30px 0;
+  text-align: center;
+  background-color: #464748;
+  background: url(/images/background-header-invite.jpg);
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  margin-bottom: 20px;
 }
 
 .pgPlaylistOrder .greenButton {
-	border: 1px solid #3177AF;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	background: #3177AF;
-	color:white;
+  border: 1px solid #3177af;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  background: #3177af;
+  color: white;
 }
 
-
 .pgPlaylistOrder .greenButton:hover {
-	background: #62A1D3;
-	border: 1px solid #62A1D3;
-
-
+  background: #62a1d3;
+  border: 1px solid #62a1d3;
 }
 
 /*.pgPlaylistOrder .greenButton:active {
@@ -776,104 +770,104 @@ font-family: Helvetica, Arial, Sans-serif;
 }*/
 
 .pgPlaylistOrder .feedHeader > * {
-	padding: 7px 15px;
+  padding: 7px 15px;
 }
 
 .pgPlaylistOrder .feedHeader > span {
-	color: white;
-	font-size: 14px;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  color: white;
+  font-size: 14px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .pgPlaylistOrder .cancelTrackOrder {
-	color: #CACACA;
-	text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  color: #cacaca;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .pgPlaylistOrder .posts {
-	border-top: none;
+  border-top: none;
 }
 
 .pgPlaylistOrder .post {
-	border-bottom: none;
-	padding-bottom: 0;
-	cursor: move;
-	border: 1px dashed transparent!important;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
+  border-bottom: none;
+  padding-bottom: 0;
+  cursor: move;
+  border: 1px dashed transparent !important;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
 }
 
 .pgPlaylistOrder .post:hover {
-	border: 1px dashed #cbcbcb;
-	background-color: #eee;
+  border: 1px dashed #cbcbcb;
+  background-color: #eee;
 }
 
 .pgPlaylistOrder .post > img {
-	float: left;
-	width: 60px;
-	height: 60px;
-	margin-right: 20px;
-	padding-left: 50px;
-	background: #E6F7F8 url(/images/icon-move.png) no-repeat 8px center;
+  float: left;
+  width: 60px;
+  height: 60px;
+  margin-right: 20px;
+  padding-left: 50px;
+  background: #e6f7f8 url(/images/icon-move.png) no-repeat 8px center;
 }
 
 .pgPlaylistOrder .post > h2 {
-	color: #2B2B2B;
+  color: #2b2b2b;
 }
 
 .pgPlaylistOrder .postDropZone {
-	border: 1px dashed #cbcbcb;
-	height: 60px;
-	margin-bottom: 18px;
-	border-radius: 2px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
+  border: 1px dashed #cbcbcb;
+  height: 60px;
+  margin-bottom: 18px;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
 }
 
 .pgPlaylistOrder #playerContainer /*.reduced*/ > div {
-	width: 1px;
-	height: 1px;
+  width: 1px;
+  height: 1px;
 }
 
 .pgStream .boxCityPage {
-	display: block;
-	background-image: url('/images/london-home-button.png');
-	height: 150px;
-	border-radius: 5px;
-	margin-bottom: 24px;
-	margin-right: 2px;
+  display: block;
+  background-image: url('/images/london-home-button.png');
+  height: 150px;
+  border-radius: 5px;
+  margin-bottom: 24px;
+  margin-right: 2px;
 }
 
 .pgStream #iphoneAppAd {
-	display: none;
+  display: none;
 }
 
 .pgStream #iphoneAppAd .body {
-	overflow: auto;
-	position: relative;
-	padding-bottom: 0;
+  overflow: auto;
+  position: relative;
+  padding-bottom: 0;
 }
 
 .pgStream #iphoneAppAd img {
-	float: left;
+  float: left;
 }
 
 .pgStream #iphoneAppAd a {
-	display: block;
-	position: absolute;
-	top: 38px;
-	right: 16px;
-	background-image: url('/images/btnAvailableAppStoreSprite.png');
-	background-position: top;
-	height: 47px;
-	width: 140px;
+  display: block;
+  position: absolute;
+  top: 38px;
+  right: 16px;
+  background-image: url('/images/btnAvailableAppStoreSprite.png');
+  background-position: top;
+  height: 47px;
+  width: 140px;
 }
 
 .pgStream #iphoneAppAd a:hover {
-	background-position: bottom;
+  background-position: bottom;
 }
 
 .pgStream #iphoneAppAd a > span {
-	display: none;
+  display: none;
 }

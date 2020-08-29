@@ -1,408 +1,454 @@
 /* CITY PEOPLE PAGE */
 
 #people {
-    overflow: hidden;
+  overflow: hidden;
 }
-
 
 #people .sub {
-    margin-top: 5px;
-    font-size: 24px;
-    font-weight: 300;
-    color: #515f6a;
+  margin-top: 5px;
+  font-size: 24px;
+  font-weight: 300;
+  color: #515f6a;
 }
-
 
 /* Top featured */
 
 #people .top-featured {
-    margin-top: 40px;
-    margin-bottom: 60px;
+  margin-top: 40px;
+  margin-bottom: 60px;
 }
 
 #people .top-posts {
-    display: none;
-    text-align: center;
+  display: none;
+  text-align: center;
 }
 
 #people .top-posts > li {
-    display: inline-block;
-    vertical-align: top;
-    width: 300px;
-    margin: 0 10px;
-    text-align: center;
-    background: #fff;
-    border-radius: 5px;
+  display: inline-block;
+  vertical-align: top;
+  width: 300px;
+  margin: 0 10px;
+  text-align: center;
+  background: #fff;
+  border-radius: 5px;
 
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 #people .top-posts > li .cover {
-    position: relative;
-    height: 200px;
-    background-size: cover;
-    border-radius: 5px 5px 0 0;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  position: relative;
+  height: 200px;
+  background-size: cover;
+  border-radius: 5px 5px 0 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
 #people .top-posts .grad {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    
-    background: -webkit-linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%), -webkit-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
-    
-    background: rgba(0, 0, 0, 0.5);
-    background: linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%), linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%); 
-    background: -webkit-linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%), -webkit-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(33%, transparent), color-stop(100%, rgba(0, 0, 0, 0.5) 100%)), -webkit-gradient(linear, left top, left bottom, color-stop(75%, transparent), color-stop(100%, rgba(0, 0, 0, 0.5) 100%));
-    background: -moz-linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%), -moz-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
-    background: -o-linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%), -o-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
-    background: -ms-linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%), -ms-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 
-    z-index: 0;
+  background: -webkit-linear-gradient(
+      top,
+      transparent 33%,
+      rgba(0, 0, 0, 0.5) 100%
+    ),
+    -webkit-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
+
+  background: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%),
+    linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
+  background: -webkit-linear-gradient(
+      top,
+      transparent 33%,
+      rgba(0, 0, 0, 0.5) 100%
+    ),
+    -webkit-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
+  background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(33%, transparent),
+      color-stop(100%, rgba(0, 0, 0, 0.5) 100%)
+    ),
+    -webkit-gradient(linear, left top, left bottom, color-stop(75%, transparent), color-stop(100%, rgba(
+              0,
+              0,
+              0,
+              0.5
+            )
+            100%));
+  background: -moz-linear-gradient(
+      top,
+      transparent 33%,
+      rgba(0, 0, 0, 0.5) 100%
+    ),
+    -moz-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
+  background: -o-linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%),
+    -o-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
+  background: -ms-linear-gradient(top, transparent 33%, rgba(0, 0, 0, 0.5) 100%),
+    -ms-linear-gradient(top, transparent 75%, rgba(0, 0, 0, 0.5) 100%);
+
+  z-index: 0;
 }
 
-#people .top-posts > li p, #people .top-posts > li .thumb {
-    position: relative;
-    z-index: 9;
+#people .top-posts > li p,
+#people .top-posts > li .thumb {
+  position: relative;
+  z-index: 9;
 }
 
 #people .top-posts > li .cover p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #people .top-posts > li .thumb {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    width: 80px;
-    height: 80px;
-    margin: 0 0 0 -40px;
-    border-radius: 40px;
-    background: rgba(0, 0, 0, 0.2);
-    background-position: 50% 50%;
-    background-size: cover;
-    box-shadow: inset 0 0 0 3px #fff, 0 1px 5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  margin: 0 0 0 -40px;
+  border-radius: 40px;
+  background: rgba(0, 0, 0, 0.2);
+  background-position: 50% 50%;
+  background-size: cover;
+  box-shadow: inset 0 0 0 3px #fff, 0 1px 5px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
 #people .top-posts > li .username {
-    margin: 0 15px;
-    padding-top: 105px;
-    font-size: 18px;
-    font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  margin: 0 15px;
+  padding-top: 105px;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 #people .top-posts > li .username a {
-    color: #fff;
+  color: #fff;
 }
 
 #people .top-posts > li .userbio {
-    margin: 0 15px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
+  margin: 0 15px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 #people .top-posts > li .website {
-    position: absolute;
-    bottom: 15px;
-    width: 100%;
-    margin: 0;
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  margin: 0;
 }
 
 #people .top-posts > li .website a {
-    display: block;
-    color: rgba(255, 255, 255, 0.75);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  display: block;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #people .top-posts > li ul {
-    display: block;
-    width: 100%;
-    margin: 20px 0 10px 0;
-    padding: 0;
-    list-style: none;
+  display: block;
+  width: 100%;
+  margin: 20px 0 10px 0;
+  padding: 0;
+  list-style: none;
 }
 
 #people .top-posts > li ul li {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 
 #people .top-posts > li ul li:first-child {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 #people .top-posts > li ul li a {
-    position: relative;
-    float: left;
-    margin: 0 8px;
- 
-    font-size: 11px;
-    font-weight: 500;
-    text-decoration: none;
- 
-    color: #383a3b;
- 
-    padding: 5px 10px;
- 
-    border-top: 1px solid rgba(0, 0, 0, 0.3);
-    border-right: 1px solid rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
- 
-    border-radius: 0 3px 3px 0;
- 
-    background: #dadfe4;
-    background: linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -webkit-linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f3f5f7), color-stop(100%, #dadfe4));
-    background: -moz-linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -o-linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -ms-linear-gradient(top, #f3f5f7, #dadfe4);
- 
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
- 
-    z-index:100;
+  position: relative;
+  float: left;
+  margin: 0 8px;
+
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+
+  color: #383a3b;
+
+  padding: 5px 10px;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+
+  border-radius: 0 3px 3px 0;
+
+  background: #dadfe4;
+  background: linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -webkit-linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #f3f5f7),
+    color-stop(100%, #dadfe4)
+  );
+  background: -moz-linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -o-linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -ms-linear-gradient(top, #f3f5f7, #dadfe4);
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+
+  z-index: 100;
 }
 
 #people .top-posts > li ul li a:hover {
-    cursor: default;
+  cursor: default;
 }
 
 #people .top-posts > li ul li a:before {
-    content:'';
- 
-    width: 1.55em;
-    height: 1.55em;
- 
-    background: #dadfe4;
-    background: linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -webkit-linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f3f5f7), color-stop(100%, #dadfe4));
-    background: -moz-linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -o-linear-gradient(top, #f3f5f7, #dadfe4);
-    background: -ms-linear-gradient(top, #f3f5f7, #dadfe4);
+  content: '';
 
-    position: absolute;
-    left: -0.83em;
-    top: .2em;
- 
-    -webkit-transform:rotate(45deg);
-    -moz-transform:rotate(45deg);
-    -o-transform:rotate(45deg);
-    transform:rotate(45deg);
- 
-    border-left: 2px solid rgba(0, 0, 0, 0.2);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
- 
-    border-radius: 0 0 0 4px;
- 
-    z-index: -1;
+  width: 1.55em;
+  height: 1.55em;
+
+  background: #dadfe4;
+  background: linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -webkit-linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #f3f5f7),
+    color-stop(100%, #dadfe4)
+  );
+  background: -moz-linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -o-linear-gradient(top, #f3f5f7, #dadfe4);
+  background: -ms-linear-gradient(top, #f3f5f7, #dadfe4);
+
+  position: absolute;
+  left: -0.83em;
+  top: 0.2em;
+
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+
+  border-left: 2px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+
+  border-radius: 0 0 0 4px;
+
+  z-index: -1;
 }
 
 #people .top-posts > li ul li a:after {
-    content:'';
-    position: absolute;
-    top: 10px;
-    left: -5px;
-    z-index: 9999;
-    width: 4px;
-    height: 4px;
-    background: #fff;
-    border-radius: 2px;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: -5px;
+  z-index: 9999;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 #people .top-posts > li ul li i {
-    font-size: normal;
-    color: rgba(0, 0, 0, 0.5);
-    font-style: normal;
+  font-size: normal;
+  color: rgba(0, 0, 0, 0.5);
+  font-style: normal;
 }
 
 #people .top-posts > li .artists {
-    display: block;
-    margin: 0 15px 20px 15px;
-    font-size: 14px;
-    font-weight: normal;
-    color: rgba(0, 0, 0, 0.5);
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  display: block;
+  margin: 0 15px 20px 15px;
+  font-size: 14px;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #people .top-posts > li .action a {
-    display: block;
-    width: 120px;
-    height: 32px;
-    line-height: 32px;
-    margin: 0 auto 20px auto;
-    padding: 0;
-    background: #9ac73f;
-    background: linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: -moz-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: -ms-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: -o-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: -webkit-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3177AF), color-stop(1, #9ac73f));
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
-    border-radius: 5px;
-    border: none;
+  display: block;
+  width: 120px;
+  height: 32px;
+  line-height: 32px;
+  margin: 0 auto 20px auto;
+  padding: 0;
+  background: #9ac73f;
+  background: linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: -moz-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: -ms-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: -o-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: -webkit-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, #3177af),
+    color-stop(1, #9ac73f)
+  );
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  border: none;
 
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 #people .top-posts > li .action a:active {
-    background: #9ac73f;
+  background: #9ac73f;
 }
-
-
 
 /* Featured */
 
 #people .posts {
-    text-align: center;
+  text-align: center;
 }
 
 #people .posts li {
-    display: inline-block;
-    vertical-align: top;
-    width: 16%;
-    text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  width: 16%;
+  text-align: center;
 }
 
 #people .posts li .thumb {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 10px auto;
-    border-radius: 50px;
-    background: rgba(0, 0, 0, 0.2);
-    background-position: 50% 50%;
-    background-size: cover;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-    -o-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 10px auto;
+  border-radius: 50px;
+  background: rgba(0, 0, 0, 0.2);
+  background-position: 50% 50%;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 #people .posts li .username {
-    display: block;
-    height: 24px;
-    margin-bottom: 5px;
-    padding: 0 10px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #3177AF;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  display: block;
+  height: 24px;
+  margin-bottom: 5px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3177af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #people .posts li .userbio {
-    display: none;
-    padding: 0 10px;
-    color: #2d2e2f;
+  display: none;
+  padding: 0 10px;
+  color: #2d2e2f;
 }
 
-
 #people .see-all {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 
 #people .see-all a {
-    width: 120px;
-    height: 30px;
-    line-height: 30px;
-    border: 1px solid #4a9123;
-    color: #4a9123;
-    font-size: 14px;
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #4a9123;
+  color: #4a9123;
+  font-size: 14px;
 }
 
 #people p {
-    text-align: center;
-    word-wrap: break-word;
+  text-align: center;
+  word-wrap: break-word;
 }
 
 .pgCitySection .post > h2 {
-    color: black;
+  color: black;
 }
 
 .post > .author a {
-    color: black;
+  color: black;
 }
 
 .userSubscribe {
-    display: none;
+  display: none;
 }
 
 ul.userList > li > small {
-    width: auto;
+  width: auto;
 }
-
 
 /* See everybody popup elements */
 
 #ggpopup ul {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 #ggpopup li {
-    display: block;
-    height: 80px;
-    padding: 15px;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -o-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-    -ms-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  display: block;
+  height: 80px;
+  padding: 15px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  -ms-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
 #ggpopup li:last-child {
-    box-shadow: none;
+  box-shadow: none;
 }
 
 #ggpopup .thumb {
-    display: block;
-    float: left;
-    width: 80px;
-    height: 80px;
-    margin-right: 15px;
-    background: #C0C0C0;
-    background-size: cover; 
-    background-position: 50% 50%;
-    color: #000;
-    border-radius: 40px;
+  display: block;
+  float: left;
+  width: 80px;
+  height: 80px;
+  margin-right: 15px;
+  background: #c0c0c0;
+  background-size: cover;
+  background-position: 50% 50%;
+  color: #000;
+  border-radius: 40px;
 }
 
 #ggpopup .userLink {
-    display: block;
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: 300;
+  display: block;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 300;
 }
 
 #ggpopup small {
-    display: block;
-    width: auto;
-    color: rgba(0, 0, 0, 0.75);
-    font-size: 12px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+  display: block;
+  width: auto;
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }

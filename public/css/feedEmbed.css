@@ -1,36 +1,36 @@
 body {
-	margin: 0;
-	padding: 0;
-	font-size: 12px;
-	font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
-	width: 100%;
-	overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+  width: 100%;
+  overflow: hidden;
 }
 
 a {
-	color: inherit;
-	text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 a:hover {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 p {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 img {
-	border:none;
+  border: none;
 }
 
 button {
-	display:block; /* for firefox compat */
+  display: block; /* for firefox compat */
 }
 
 .clear {
-	clear: both;
+  clear: both;
 }
 /*
 .loading {
@@ -47,44 +47,44 @@ button {
 /* feed header */
 
 #feedHeader {
-	position:fixed;
-	height: 75px;
-	width: 100%;
-	/*overflow: auto;*/
-	background: #555;
-	padding: 10px;
+  position: fixed;
+  height: 75px;
+  width: 100%;
+  /*overflow: auto;*/
+  background: #555;
+  padding: 10px;
 }
 
 #feedHeader > #trackThumb {
-	float: left;
-	width: 70px;
-	height: 70px;
-	background-position: 50% 50%;
-	background-size: cover;
-	margin: 0 20px 0 4px;
+  float: left;
+  width: 70px;
+  height: 70px;
+  background-position: 50% 50%;
+  background-size: cover;
+  margin: 0 20px 0 4px;
 }
 
 #feedHeader > p {
-	margin-right: 20px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  margin-right: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #feedHeader > p#trackTitle {
-	color: white;
-	font-size: 14px;
-	padding-top: 14px;
+  color: white;
+  font-size: 14px;
+  padding-top: 14px;
 }
 
 #feedHeader > p#trackTitle.loading {
-	background-image: none !important;
+  background-image: none !important;
 }
 
 #feedHeader > p#playlistRef {
-	color: #A5ACB1;
-	padding-top: 6px;
-	/*width: 100%;
+  color: #a5acb1;
+  padding-top: 6px;
+  /*width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -92,62 +92,62 @@ button {
 }
 
 #feedHeader > p > a {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 /* player bar */
 
 #whydPlayer {
-	position:fixed;
-	top: 92px;
-	/*height: 30px;*/
-	width: 100%;
-	/*padding-left: 5px;*/
-	background-color: #333;
-	overflow: hidden;
-	border-top: 1px solid #222;
-	border-bottom: 1px solid black;
+  position: fixed;
+  top: 92px;
+  /*height: 30px;*/
+  width: 100%;
+  /*padding-left: 5px;*/
+  background-color: #333;
+  overflow: hidden;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid black;
 }
 
 #whydPlayer button {
-	float: left;
-	width: 16px;
-	height: 16px;
-	padding: 15px;
-	border: none;
-	border-right: 1px solid #222;
-	background-position: 50% 50%;
-	background-color: inherit;
-	background-repeat: no-repeat;
-	cursor: pointer;
+  float: left;
+  width: 16px;
+  height: 16px;
+  padding: 15px;
+  border: none;
+  border-right: 1px solid #222;
+  background-position: 50% 50%;
+  background-color: inherit;
+  background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 #whydPlayer #btnPrev {
-	background-image: url("/images/btn-embedplayer-prev.png");
+  background-image: url('/images/btn-embedplayer-prev.png');
 }
 
 #whydPlayer #btnPlay {
-	background-image: url("/images/btn-embedplayer-play.png");
+  background-image: url('/images/btn-embedplayer-play.png');
 }
 
 #whydPlayer #btnPlay.playing {
-	background-image: url("/images/btn-embedplayer-pause.png");
+  background-image: url('/images/btn-embedplayer-pause.png');
 }
 
 #whydPlayer #btnNext {
-	background-image: url("/images/btn-embedplayer-next.png");
+  background-image: url('/images/btn-embedplayer-next.png');
 }
 
 #whydPlayer #btnLike {
-	display: none;
+  display: none;
 }
 
 #whydPlayer #btnRepost {
-	display: none;
+  display: none;
 }
 
 #whydPlayer > #whydLogo {
-	position: absolute;
+  position: absolute;
   top: 12px;
   right: 12px;
   width: 24px;
@@ -159,278 +159,277 @@ button {
 /* progress bar */
 
 .progressPanel {
-	display: none;
+  display: none;
 }
 
 body.playing .progressPanel {
-	display: block;
+  display: block;
 }
 
 @media all and (max-width: 460px) {
-	.progressPanel * {
-		display: none;
-	}
+  .progressPanel * {
+    display: none;
+  }
 }
 
 #progressTimer {
-	position: absolute;
-	top: 9px;
-	left: 375px;
-	color: #777;
-	font-size: 10px;
+  position: absolute;
+  top: 9px;
+  left: 375px;
+  color: #777;
+  font-size: 10px;
 }
 
 #progressTrack {
-	position: absolute;
-	top: 11px;
-	left: 105px;
-	width: 260px;
-	height: 6px;
-	border: 1px solid #777;
-	border-top: 1px solid #333;
-	border-radius: 5px;
-	background: #151515;
+  position: absolute;
+  top: 11px;
+  left: 105px;
+  width: 260px;
+  height: 6px;
+  border: 1px solid #777;
+  border-top: 1px solid #333;
+  border-radius: 5px;
+  background: #151515;
 }
 
 #progressTrack > #progressBar {
-	height: 100%;
-	width: 50%;
-	background: #68696A;
-	border-radius: 5px;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
+  height: 100%;
+  width: 50%;
+  background: #68696a;
+  border-radius: 5px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 #progressTrack > #progressCursor {
-	position: absolute;
-	top: -3px;
-	left: -6px;
-	width: 12px;
-	height: 12px;
-	background: url("/images/player-cursor.png");
+  position: absolute;
+  top: -3px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  background: url('/images/player-cursor.png');
 }
 
 /* track list */
 
 #posts {
-	position:fixed;
-	top: 124px;
-	bottom: 0px;
-	width: 100%;
-	background: #ddd;
-	overflow: hidden;
+  position: fixed;
+  top: 124px;
+  bottom: 0px;
+  width: 100%;
+  background: #ddd;
+  overflow: hidden;
 }
 
 .emptyFeed {
-	clear:both;
-	display: block;
-	margin: 30px 0;
-	text-align: center;
+  clear: both;
+  display: block;
+  margin: 30px 0;
+  text-align: center;
 }
 
 /* newfeed items */
 
 .post {
-	position: relative;
-	overflow: hidden;
-	padding: 10px;
-	text-shadow: 0 1px 0 rgba(255,255,255,1);
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid #888;
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #888;
 }
 
 .post > h2 {
-	font-size: 13px;
-	margin: 8px 0 4px 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  font-size: 13px;
+  margin: 8px 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .post > h2 > a {
-	color: #555;
+  color: #555;
 }
 
 .post > p > a {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 .post > .author {
-	display:none;
+  display: none;
 }
 
 .post > .postEdit {
-	display:none;
+  display: none;
 }
 
 .post:hover {
-	background: #f0f1f2;
+  background: #f0f1f2;
 }
 
 .post.playing {
-	background-color: #eaf5fc;
+  background-color: #eaf5fc;
 }
 
 .post > .text {
-	display: none;
+  display: none;
 }
 
 .post > .src {
-	display: none;
+  display: none;
 }
 
 .post > .stats {
-	display:none;
+  display: none;
 }
 
 .post > .via {
-	color: #8e8d8d;
-	margin: 0 0 8px 0;
+  color: #8e8d8d;
+  margin: 0 0 8px 0;
 }
 
 /* content */
 
 .post > .thumb {
-	float: left;
-	position: relative;
-	margin-right: 15px;
-	width: 48px;
-	height: 48px;
-	overflow: hidden;
-	border-top: 1px solid #333;
-	border-bottom: 1px solid #eee;
+  float: left;
+  position: relative;
+  margin-right: 15px;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #eee;
 }
 
 .post > .thumb > img {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .post > .thumb > .play {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	background: url("/images/play-big-embed.png") no-repeat center center;
-	opacity: 0.9;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: url('/images/play-big-embed.png') no-repeat center center;
+  opacity: 0.9;
 }
 
 .post > .thumb > .play.playing {
-	background: url("/images/pause-big-embed.png") no-repeat center center;
+  background: url('/images/pause-big-embed.png') no-repeat center center;
 }
 
 .post > .thumb:hover > .play {
-	opacity: 1.0;
+  opacity: 1;
 }
 
 .post .ext,
 .post .btns,
 .post .ago {
-	display: none;
+  display: none;
 }
 
 /* music player */
 
 #playerContainer {
-	position: absolute;
-	top: 10px !important;
-	left: 14px !important;
-	width: 70px;
-	height: 70px;
-	overflow: hidden;
+  position: absolute;
+  top: 10px !important;
+  left: 14px !important;
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
 }
 
 #playerContainer.reduced {
-	width: 1px;
-	height: 1px;
+  width: 1px;
+  height: 1px;
 }
 
 #playerContainer > div {
-	position: relative;
+  position: relative;
 }
 
 #playerContainer > div > * /*#playerYoutube*/ {
-	position: absolute;
-	top: -64px;
-	left: -64px;
+  position: absolute;
+  top: -64px;
+  left: -64px;
 }
 
 #playerContainer > div > #blackBack {
-	width: 200px;
-	height: 200px;
-	background-color: #000;
-	z-index: 1;
+  width: 200px;
+  height: 200px;
+  background-color: #000;
+  z-index: 1;
 }
 
 #playerContainer > div > #playBtnOverlay {
-	width: 200px;
-	height: 200px;
-	z-index: 3;
+  width: 200px;
+  height: 200px;
+  z-index: 3;
 }
 
 #playerContainer > div > #playBtnOverlay.paused {
-	background: url("/images/play-big-embed.png") no-repeat center center;
+  background: url('/images/play-big-embed.png') no-repeat center center;
 }
 
 #playerContainer > div > #playBtnOverlay.playing {
-	background: none;
+  background: none;
 }
 
 #playerContainer > div > #playBtnOverlay.playing:hover {
-	background: url("/images/pause-big-embed.png") no-repeat center center;
+  background: url('/images/pause-big-embed.png') no-repeat center center;
 }
 
 #containerSoundCloud {
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 /* scrollbars - Tiny Scrollbar */
 
 .customScrollbar {
-	position: relative;
-	overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .customScrollbar > .viewport {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 .customScrollbar > .viewport > .overview {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	padding: 0;
-	margin: 0;
-	list-style: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
-.customScrollbar > .scrollbar{
-	position: relative;
-	float: right;
-	width: 10px;
-	height: 100% !important;
+.customScrollbar > .scrollbar {
+  position: relative;
+  float: right;
+  width: 10px;
+  height: 100% !important;
 }
 .customScrollbar > .scrollbar > .track {
-	height: 100% !important;
-	width:10px;
-	position: relative;
-	background: #bbb;
+  height: 100% !important;
+  width: 10px;
+  position: relative;
+  background: #bbb;
 }
 .customScrollbar > .scrollbar > .track > .thumb {
-	height: 20px;
-	width: 10px;
-	background: #777;
-	border-radius: 5px;
-	cursor: pointer;
-	overflow: hidden;
-	position: absolute;
+  height: 20px;
+  width: 10px;
+  background: #777;
+  border-radius: 5px;
+  cursor: pointer;
+  overflow: hidden;
+  position: absolute;
 }
 .customScrollbar .disable {
-	display: none;
+  display: none;
 }
-

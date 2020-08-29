@@ -1,138 +1,158 @@
 /* background image */
 body {
-    background: url(images/background.jpg) no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    color: white;
+  background: url(images/background.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color: white;
 }
 
 /* MAIN PAGE CONTENT */
 
 #pgCityPanel {
-    position: relative;
-    z-index: 0;
-    padding: 190px 0;
-    text-align: center;
+  position: relative;
+  z-index: 0;
+  padding: 190px 0;
+  text-align: center;
 }
 
 #pgCityPanel h1 {
-    display: block;
-    width: 100%;
-    height: 77px;
-    margin-top: 0;
-    margin-bottom: 10px;
-    background-repeat: no-repeat;
-    background-position: center center;
-    text-indent: -9999px;
+  display: block;
+  width: 100%;
+  height: 77px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  text-indent: -9999px;
 }
 
 #pgCityPanel p {
-    margin-bottom: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 32px;
-    font-weight: 300;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 32px;
+  font-weight: 300;
 }
 
 #pgCityPanel .button {
-    display: block;
-    width: 200px;
-    height: 42px;
-    line-height: 42px;
-    margin: 0 auto;
-    padding: 0;
-    background: url(/images/play-pgCity.png) no-repeat 15px center, #9ac73f;
-    background: url(/images/play-pgCity.png) no-repeat 15px center, linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: url(/images/play-pgCity.png) no-repeat 15px center, -moz-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: url(/images/play-pgCity.png) no-repeat 15px center, -ms-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: url(/images/play-pgCity.png) no-repeat 15px center, -o-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: url(/images/play-pgCity.png) no-repeat 15px center, -webkit-linear-gradient(top, #3177AF 0%, #9ac73f 100%);
-    background: url(/images/play-pgCity.png) no-repeat 15px center, -webkit-gradient(linear, left top, left bottom, color-stop(0, #3177AF), color-stop(1, #9ac73f));
-    color: #fff;
-    font-size: 18px;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border: none;
+  display: block;
+  width: 200px;
+  height: 42px;
+  line-height: 42px;
+  margin: 0 auto;
+  padding: 0;
+  background: url(/images/play-pgCity.png) no-repeat 15px center, #9ac73f;
+  background: url(/images/play-pgCity.png) no-repeat 15px center,
+    linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: url(/images/play-pgCity.png) no-repeat 15px center,
+    -moz-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: url(/images/play-pgCity.png) no-repeat 15px center,
+    -ms-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: url(/images/play-pgCity.png) no-repeat 15px center,
+    -o-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: url(/images/play-pgCity.png) no-repeat 15px center,
+    -webkit-linear-gradient(top, #3177af 0%, #9ac73f 100%);
+  background: url(/images/play-pgCity.png) no-repeat 15px center,
+    -webkit-gradient(linear, left top, left bottom, color-stop(0, #3177af), color-stop(1, #9ac73f));
+  color: #fff;
+  font-size: 18px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border: none;
 }
 
 #pgCityPanel .button:active {
-    background: url(/images/play-pgCity.png) no-repeat 15px center, #9ac73f;
+  background: url(/images/play-pgCity.png) no-repeat 15px center, #9ac73f;
 }
 
 #pgCityPanel > .button.pause {
-    background: url(/images/pause-pgCity.png) no-repeat 17px center, #2676b5;
+  background: url(/images/pause-pgCity.png) no-repeat 17px center, #2676b5;
 }
 
 #wrap-cat {
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    padding-bottom: 20px;
-    background: linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    background: -moz-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    background: -ms-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    background: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    background: -webkit-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, transparent), color-stop(1, rgba(0, 0, 0, 0.8)));
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  padding-bottom: 20px;
+  background: linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  background: -moz-linear-gradient(
+    top,
+    transparent 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  background: -ms-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  background: -o-linear-gradient(top, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+  background: -webkit-linear-gradient(
+    top,
+    transparent 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0, transparent),
+    color-stop(1, rgba(0, 0, 0, 0.8))
+  );
 }
 
 #categories {
-    position: relative;
-    width: 930px;
-    margin: 0 auto;
-    z-index: 0;
-    padding-bottom: 0;
+  position: relative;
+  width: 930px;
+  margin: 0 auto;
+  z-index: 0;
+  padding-bottom: 0;
 }
 
 .column {
-    display: inline-block;
-    width: 33%;
-    margin: 0;
-    padding: 0;
+  display: inline-block;
+  width: 33%;
+  margin: 0;
+  padding: 0;
 }
 
 .column > p {
-    text-align: center;
-    font-size: 24px;
-    margin: 0 0 20px 0;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .column > p a {
-    color: #fff;
+  color: #fff;
 }
 
-.column .post, .column li {
-    height: 80px;
-    min-height: 80px;
-    margin: 0 0 20px 0;
+.column .post,
+.column li {
+  height: 80px;
+  min-height: 80px;
+  margin: 0 0 20px 0;
 }
-
 
 /* See more link */
 
 .column p.more {
-    margin-top: 20px;
-    margin-bottom: 0;
-    font-size: 12px;
-    text-align: center;
+  margin-top: 20px;
+  margin-bottom: 0;
+  font-size: 12px;
+  text-align: center;
 }
 
 .column p.more a {
-    display: inline-block;
-    height: 26px;
-    padding: 0 10px;
-    line-height: 26px;
-    color: #fff;
-    font-weight: bold;
-    text-transform: uppercase;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
+  display: inline-block;
+  height: 26px;
+  padding: 0 10px;
+  line-height: 26px;
+  color: #fff;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
 }

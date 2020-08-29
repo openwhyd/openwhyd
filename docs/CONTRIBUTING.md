@@ -23,7 +23,7 @@ You can contribute to Openwhyd in various ways:
 - [Become a backer / donate](https://opencollective.com/openwhyd#support) to help us cover openwhyd.org's hosting fees
 - Read more in the FAQ about [other ways to help the Openwhyd project](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help)
 
-> **Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github). And don't hesitate to ask for assistance by posting a message in any of the Github issues that you would like to contribute to.
+> **Working on your first Pull Request?** You can learn how from this _free_ series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github). And don't hesitate to ask for assistance by posting a message in any of the Github issues that you would like to contribute to.
 
 ## How to contribute to the code base
 
@@ -41,6 +41,7 @@ You can contribute to Openwhyd in various ways:
 ## Core principles
 
 More generally, make sure to follow these three principles:
+
 - Keep your PRs short
 - Keep your PRs simple
 - Avoid submitting PRs that may cause long discussions with the PR reviewer and/or other contributors
