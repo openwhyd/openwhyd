@@ -213,7 +213,7 @@
 						<p>{{name}}</p>
 					</a>
 					<span>{{nbTracks}} tracks</span>
-					{{#collabId}}<span class="collabPl">&nbsp;(collaborative playlist)<span>{{/collabId}}
+					{{#collabId}}<span class="collabPl">&nbsp;(collaborative playlist)</span>{{/collabId}}
 				</li>
 				{{/items}}
 			</ul>
@@ -242,20 +242,18 @@
 							<div class="bio">{{bio}}</div>
 						</div>
 						{{/aggregatedItems}}
-					</span>
-					{{/subscribedUsers}}
+						{{/subscribedUsers}}
 
-					{{#likes}}
-					&nbsp;liked {{nbTracks}}
-					</span>
-					{{{posts}}}
-					{{/likes}}
+						{{#likes}}
+						&nbsp;liked {{nbTracks}}
+						{{/likes}}
+						
+						{{{posts}}}
 
-
-					{{#other}}
-					<p class="actOth">{{text}}</p>
+						{{#other}}
+						<p class="actOth">{{text}}</p>
+						{{/other}}
 					</span>
-					{{/other}}
 				</li>
 				{{/items}}
 			</ul>
