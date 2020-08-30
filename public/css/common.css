@@ -558,7 +558,6 @@ textarea.ok {
 }
 
 .pgHotTracks .post .medal {
-  position: absolute;
   right: -15px;
   top: -15px;
   width: 45px;
