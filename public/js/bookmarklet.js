@@ -1,13 +1,12 @@
+/* global SoundCloudPlayer, VimeoPlayer, DailymotionPlayer, DeezerPlayer, BandcampPlayer, JamendoPlayer */
+
 /**
  * openwhyd bookmarklet
  * @author adrienjoly
  * https://github.com/openwhyd/openwhyd
  **/
 
-function makeBookmarklet(window, urlPrefix, urlSuffix) {
-  urlPrefix = urlPrefix || '';
-  urlSuffix = urlSuffix || '';
-
+function makeBookmarklet(window, urlPrefix = '') {
   // Helpers
 
   function getNodeText(node) {
@@ -34,7 +33,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
   function makeFileDetector() {
     var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
     return function detectMusicFiles(url, cb, element) {
-      var fileName = (url.match(/([^\/]+)\.(?:mp3|ogg)$/) || []).pop();
+      var fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
       if (eidSet[url] || !fileName) return cb();
       var title =
         (element ? element.title || getNodeText(element) : null) ||
@@ -52,12 +51,12 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     getEid: function (url) {
       // code imported from playem-all
       if (
-        /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
+        /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
           url
         ) ||
-        /^\/yt\/([a-zA-Z0-9_\-]+)/.test(url) ||
-        /youtube\.com\/attribution_link\?.*v\%3D([^ \%]+)/.test(url) ||
-        /youtube.googleapis.com\/v\/([a-zA-Z0-9_\-]+)/.test(url)
+        /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
+        /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||
+        /youtube.googleapis.com\/v\/([a-zA-Z0-9_-]+)/.test(url)
       )
         return RegExp.lastParen;
     },
@@ -95,7 +94,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
       // 2. extract the (optional) stream URL from the identifier
       var parts = eid.split('#');
-      var streamUrl = /^https?\:\/\//.test(parts[1] || '') && parts[1];
+      var streamUrl = /^https?:\/\//.test(parts[1] || '') && parts[1];
       if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
 
       // 3. store the identifier, with and without stream URL, to prevent duplicates
@@ -158,7 +157,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     },
     function detectTrackFromTitle(window) {
       var title = window.document.title
-        .replace(/[▶\<\>\"\']+/g, ' ')
+        .replace(/[▶<>"']+/g, ' ')
         .replace(/[ ]+/g, ' ');
       var titleParts = [
         ' - Spotify',
@@ -285,7 +284,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       // this class holds a collections of elements that potentially reference streamable tracks
       var set = {};
       function normalize(url) {
-        if (typeof url === 'string' && !/^javascript\:/.test(url)) {
+        if (typeof url === 'string' && !/^javascript:/.test(url)) {
           return url.split('#')[0];
         } else {
           return undefined;
@@ -398,7 +397,7 @@ if (typeof exports !== 'undefined') {
     };
 
     window.document.onkeydown = function (e) {
-      if ((e || event).keyCode == 27) closeWhydBk();
+      if ((e || event).keyCode == 27) window.closeWhydBk();
     };
 
     // utility functions
@@ -426,13 +425,7 @@ if (typeof exports !== 'undefined') {
 
     function include(src, cb) {
       var inc, timer;
-      if (
-        src
-          .split(/[\#\?]/)[0]
-          .split('.')
-          .pop()
-          .toLowerCase() == 'css'
-      ) {
+      if (src.split(/[#?]/)[0].split('.').pop().toLowerCase() == 'css') {
         inc = window.document.createElement('link');
         inc.rel = 'stylesheet';
         inc.type = 'text/css';
@@ -440,11 +433,11 @@ if (typeof exports !== 'undefined') {
         inc.href = src;
       } else {
         inc = window.document.createElement('script');
-        inc.onload = function (loaded) {
+        inc.onload = function () {
           timer = timer ? clearInterval(timer) : null;
           cb && cb();
         };
-        function check() {
+        const check = () => {
           if (
             inc.readyState &&
             (inc.readyState == 'loaded' ||
@@ -452,7 +445,7 @@ if (typeof exports !== 'undefined') {
               inc.readyState == 4)
           )
             inc.onload();
-        }
+        };
         timer = cb ? setInterval(check, 500) : undefined;
         inc.onreadystatechange = check;
         inc.type = 'text/javascript';
@@ -561,8 +554,8 @@ if (typeof exports !== 'undefined') {
           div.style.backgroundImage = 'url(' + attrs.img + ')';
           delete attrs.img;
         }
-        for (var i in attrs) div.setAttribute(i, attrs[i]);
-        for (var i = 0; i < (children || []).length; ++i)
+        for (let i in attrs) div.setAttribute(i, attrs[i]);
+        for (let i = 0; i < (children || []).length; ++i)
           div.appendChild(children[i]);
         return div;
       }
@@ -601,7 +594,6 @@ if (typeof exports !== 'undefined') {
             checkBox,
           ]
         );
-        return div;
       }
 
       var contentDiv = window.document.getElementById('whydContent');
@@ -622,7 +614,7 @@ if (typeof exports !== 'undefined') {
         });
       };
 
-      this.finish = function (html) {
+      this.finish = function () {
         window.document.getElementById('whydLoading').style.display = 'none';
       };
 
@@ -636,6 +628,7 @@ if (typeof exports !== 'undefined') {
       window.DEEZER_APP_ID = 190482;
       window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
       window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
+      window.YOUTUBE_API_KEY = '';
       include(playemUrl, function () {
         // playem-all.js must be loaded at that point
         callback({
