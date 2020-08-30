@@ -47,11 +47,11 @@ context('Openwhyd bookmarklet', () => {
     // cy.get('.whydThumb').first().click();
   });
 
-  it('can add a track from the /post route', () => {
+  it('can display the "add track" dialog from /post', () => {
     const postUrl =
       '/post?v=2&embed=1&eId=%2Fyt%2FGwL-COqlauA&title=Galaxy%20Buds%20Live%20review%3A%20good%20beans%2C%20no%20compromises&refUrl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DGwL-COqlauA&refTtl=Galaxy%20Buds%20Live%20review%3A%20good%20beans%2C%20no%20compromises%20-%20YouTube&text=';
 
     cy.visit(Cypress.config().baseUrl + postUrl);
-    // TODO: Fix "Uncaught SyntaxError: Unexpected token ','" error
+    // before #347, opening that page resulted in an error that caused the test to fail.
   });
 });
