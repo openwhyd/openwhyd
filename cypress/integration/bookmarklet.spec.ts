@@ -2,9 +2,56 @@
 
 context('Openwhyd bookmarklet', () => {
   beforeEach('login', () => {
+    Cypress.on('uncaught:exception', () => {
+      // We prevent the following uncaught exceptions from failing the test:
+      // - YouTube failing to load "/cast/sdk/libs/sender/1.0/cast_framework.js"
+      // - Deezer failing to find window.jQuery
+      return false; // prevents Cypress from failing the test
+    });
+
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
     });
+  });
+
+  it('can be opened twice from the same youtube page', () => {
+    const youtubeId = '-F9vo4Z5lO4';
+    const youtubeName = 'YouTube Video 1';
+    const youtubeURL = `https://www.youtube.com/watch?v=${youtubeId}`;
+    const bkURL = () =>
+      `${Cypress.config().baseUrl}/js/bookmarklet.js?${Date.now()}`;
+
+    cy.visit('http://localhost:8080/html/test-resources/youtube-videos.html');
+
+    cy.get(`[href="${youtubeURL}"]`).should('exist');
+
+    cy.window().then((win) => {
+      win.document.body.appendChild(
+        win.document.createElement('script')
+      ).src = bkURL();
+    });
+
+    // check that bookmarklet is loaded
+    cy.window().should('have.property', '_initWhydBk');
+
+    // should list more than 1 track
+    cy.get('.whydThumb', { timeout: 10000 }).should('have.length.above', 1);
+
+    // close the bookmarklet
+    cy.get('#whydHeader div').click();
+
+    // there should be no thumbs displayed anymore
+    cy.get('.whydThumb').should('have.length', 0);
+
+    // re-inject the bookmarklet
+    cy.window().then((win) => {
+      win.document.body.appendChild(
+        win.document.createElement('script')
+      ).src = bkURL();
+    });
+
+    // should list more than 1 track
+    cy.get('.whydThumb', { timeout: 10000 }).should('have.length.above', 1);
   });
 
   it('can pick a track from a youtube page', () => {
