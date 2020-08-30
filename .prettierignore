@@ -6,3 +6,4 @@ jquery*.js
 playem-all.js
 public/js/soundmanager2.js
 public/press/js/sliderz.v1.js
+docs/_site/*.html

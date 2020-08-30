@@ -212,14 +212,16 @@
         o.async = 1;
         o.src = e;
         g.parentNode.insertBefore(o, g);
-        o.onload = a.onreadystatechange = function () {
-          a.readyState === 'complete' && Barelog(options);
-        };
-      })(window, document, 'script', 'https://cdn.barelog.com/widget.js');
+        o.addEventListener('load', function () {
+          setTimeout(function () {
+            Barelog(options);
+          }, 50);
+        });
+      })(window, document, 'script', 'https://cdn.productfeed.app/widget.js');
 
       var options = {
         id: 't8nrxyyfogwt',
-        trigger: '#barelog-trigger',
+        trigger: '#productfeed-trigger',
       };
     </script>
     <!-- end of "What's new?" link -->

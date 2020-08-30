@@ -1,5 +1,8 @@
-public/js/jquery*.js
+public/js/*-min.js
+public/js/*.min.js
+public/js/*jquery*.js
+public/js/md5.js
+public/js/mustache.js
 public/js/playem-all.js
-public/js/playem-min.js
 public/js/soundmanager2*.js
 app/jstat*.js

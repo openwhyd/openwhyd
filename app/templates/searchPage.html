@@ -1,152 +1,160 @@
 <style type="text/css">
-	/*<![CDATA[*/
+  /*<![CDATA[*/
 
-	#results {
-		padding-bottom: 30px;
-	}
+  #results {
+    padding-bottom: 30px;
+  }
 
-	.resultPage {
-		display: none;
-	}
+  .resultPage {
+    display: none;
+  }
 
-	.resultPage#tracks {
-		display: block;
-	}
+  .resultPage#tracks {
+    display: block;
+  }
 
-	.noResult {
-		display: none;
-		width: 350px;
-		padding-left: 150px;
-		padding-top: 20px;
-		height: 150px;
-		background-repeat: no-repeat;
-	}
+  .noResult {
+    display: none;
+    width: 350px;
+    padding-left: 150px;
+    padding-top: 20px;
+    height: 150px;
+    background-repeat: no-repeat;
+  }
 
-	#users .noResult {
-		background-image: url('/images/no-result-user.png');
-	}
+  #users .noResult {
+    background-image: url('/images/no-result-user.png');
+  }
 
-	#tracks .noResult {
-		background-image: url('/images/no-result-music.png');
-	}
+  #tracks .noResult {
+    background-image: url('/images/no-result-music.png');
+  }
 
-	#playlists .noResult {
-		background-image: url('/images/no-result-playlist.png');
-	}
+  #playlists .noResult {
+    background-image: url('/images/no-result-playlist.png');
+  }
 
-
-
-
-	/*]]>*/
+  /*]]>*/
 </style>
 
-
-
 <div class="container">
+  {{#results}}
 
+  <div id="tabSelector">
+    <ul style="overflow: auto">
+      <!-- style= hack to prevent a side effect of damien's integration -->
+      <li>
+        <a id="tab_tracks" href="javascript:{};//#tracks" class="selected"
+          >{{nbPosts}} Tracks
+          <div></div
+        ></a>
+      </li>
+      <li>
+        <a id="tab_users" href="javascript:{};//#users"
+          >{{nbUsers}} People
+          <div></div
+        ></a>
+      </li>
+      <li>
+        <a id="tab_playlists" href="javascript:{};//#playlists"
+          >{{nbPlaylists}} Playlists
+          <div></div
+        ></a>
+      </li>
+    </ul>
+    <a id="algolia" href="https://algolia.com"
+      ><img src="/images/algolia.svg" alt="algolia" width="130"
+    /></a>
+  </div>
 
+  <div class="sub-container">
+    <h2 class="head-name-tab">
+      <span>Search results for: {{q}}</span>
+    </h2>
 
+    <div id="results" class="posts">
+      <div id="tracks" class="resultPage tracks">
+        {{{postsHtml}}}
+        <div class="noResult">
+          <h2>Not found on Openwhyd yet.<br />Be the first to add it!</h2>
+          <p>
+            Install <a href="/button">the "Add Track" button</a> into your web
+            browser to add a track directly from other websites.
+          </p>
+          <p style="margin-top: 10px">
+            Or you can paste the URL of the track in the search bar, above.
+          </p>
+        </div>
+      </div>
 
-	{{#results}}
+      <div id="users" class="resultPage">
+        <ul>
+          {{#users}}
 
-	<div id="tabSelector">
-		<ul style="overflow:auto;">
-			<!-- style= hack to prevent a side effect of damien's integration -->
-			<li>
-				<a id="tab_tracks" href="javascript:{};//#tracks" class="selected">{{nbPosts}} Tracks<div></div></a>
-			</li>
-			<li>
-				<a id="tab_users" href="javascript:{};//#users">{{nbUsers}} People<div></div></a>
-			</li>
-			<li>
-				<a id="tab_playlists" href="javascript:{};//#playlists">{{nbPlaylists}} Playlists<div></div></a>
-			</li>
-		</ul>
-		<a id="algolia" href="https://algolia.com"><img src="/images/algolia.svg" alt="algolia" width="130"></a>
-	</div>
+          <li class="user">
+            <a href="/u/{{_id}}" target="_blank">
+              <div
+                class="thumb"
+                style="background-image:url('/img/u/{{_id}}');"
+              ></div>
+              <span class="username">{{name}}</span>
+              {{#lastTrack}}
+              <p>Last track: <span>{{name}}</span></p>
+              {{/lastTrack}}
+            </a>
+            <span
+              class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
+              onclick="{{#isUserLogged}}$(this).each(switchSubscription);{{/isUserLogged}}{{^isUserLogged}}window.location = '/signup';{{/isUserLogged}}"
+              data-uid="{{_id}}"
+              onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
+              onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';"
+            >
+              {{#isSubscribed}}Following{{/isSubscribed}}
+              {{^isSubscribed}}Follow{{/isSubscribed}}
+            </span>
+          </li>
 
+          {{/users}}
+        </ul>
+        {{^users}}
+        <div class="noResult">
+          <h2>It's lonely in here!</h2>
+          <p><a href="/invite">Invite more people</a></p>
+        </div>
+        {{/users}}
+      </div>
 
-
-
-	<div class="sub-container">
-
-		<h2 class="head-name-tab">
-			<span>Search results for: {{q}}</span>
-		</h2>
-
-		<div id="results" class="posts">
-
-			<div id="tracks" class="resultPage tracks">
-				{{{postsHtml}}}
-				<div class="noResult">
-					<h2>Not found on Openwhyd yet.<br />Be the first to add it!</h2>
-					<p>Install <a href="/button">the "Add Track" button</a> into your web browser to add a track directly from
-						other websites.</p>
-					<p style="margin-top: 10px;">Or you can paste the URL of the track in the search bar, above.</p>
-				</div>
-			</div>
-
-			<div id="users" class="resultPage">
-				<ul>
-					{{#users}}
-
-					<li class="user">
-						<a href="/u/{{_id}}" target="_blank">
-							<div class="thumb" style="background-image:url('/img/u/{{_id}}');"></div>
-							<span class="username">{{name}}</span>
-							{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}}
-						</a>
-						<span class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}" {{#isUserLogged}}
-							onclick="$(this).each(switchSubscription);" {{/isUserLogged}} {{^isUserLogged}}
-							onclick="window.location = '/signup';" {{/isUserLogged}} data-uid="{{_id}}"
-							onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
-							onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';">
-							{{#isSubscribed}}Following{{/isSubscribed}}
-							{{^isSubscribed}}Follow{{/isSubscribed}}
-						</span>
-					</li>
-
-					{{/users}}
-				</ul>
-				{{^users}}
-				<div class="noResult">
-					<h2>It's lonely in here!</h2>
-					<p><a href="/invite">Invite more people</a></p>
-				</div>
-				{{/users}}
-			</div>
-
-			<div id="playlists" class="resultPage ">
-				{{#playlists}}
-				<div class="playlist">
-					<a href="{{url}}">
-						<div class="thumb" style="background-image:url('{{img}}?localOnly=1');">
-							<img class="blur" src="{{img}}?remoteOnly=1">
-							<div class="cover-playlist-vinyle"></div>
-						</div>
-						<p>{{name}}</p>
-					</a>
-					<span>{{nbTracks}} tracks</span>
-					{{#author}}
-					<div class="author">
-						<span style="background-image:url('/img/u/{{_id}}');"></span>
-						<a href="/u/{{_id}}">{{name}}</a>
-					</div>
-					{{/author}}
-				</div>
-				{{/playlists}}
-				{{^playlists}}
-				<div class="noResult">
-					<h2>No playlist was found for this query</h2>
-					<p>Click tabs to explore other categories</p>
-				</div>
-				{{/playlists}}
-			</div>
-
-		</div>
-	</div>
-	{{/results}}
-
+      <div id="playlists" class="resultPage">
+        {{#playlists}}
+        <div class="playlist">
+          <a href="{{url}}">
+            <div
+              class="thumb"
+              style="background-image:url('{{img}}?localOnly=1');"
+            >
+              <img class="blur" src="{{img}}?remoteOnly=1" />
+              <div class="cover-playlist-vinyle"></div>
+            </div>
+            <p>{{name}}</p>
+          </a>
+          <span>{{nbTracks}} tracks</span>
+          {{#author}}
+          <div class="author">
+            <span style="background-image:url('/img/u/{{_id}}');"></span>
+            <a href="/u/{{_id}}">{{name}}</a>
+          </div>
+          {{/author}}
+        </div>
+        {{/playlists}} {{^playlists}}
+        <div class="noResult">
+          <h2>No playlist was found for this query</h2>
+          <p>Click tabs to explore other categories</p>
+        </div>
+        {{/playlists}}
+      </div>
+    </div>
+  </div>
+  {{/results}}
 </div>
 
 <script src="/js/searchPage.js"></script>
