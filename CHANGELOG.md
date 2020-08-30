@@ -1,3 +1,10 @@
+## [1.34.15](https://github.com/openwhyd/openwhyd/compare/v1.34.14...v1.34.15) (2020-08-30)
+
+
+### Bug Fixes
+
+* Cannot add a track from bookmarklet ([#347](https://github.com/openwhyd/openwhyd/issues/347)) ([0c66c52](https://github.com/openwhyd/openwhyd/commit/0c66c52))
+
 ## [1.34.14](https://github.com/openwhyd/openwhyd/compare/v1.34.13...v1.34.14) (2020-08-29)
 
 
