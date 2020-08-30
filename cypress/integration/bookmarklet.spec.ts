@@ -56,19 +56,9 @@ context('Openwhyd bookmarklet', () => {
     cy.get('.whydThumb').should('have.length.above', 1);
 
     // should list the main track of the page
-
-    cy.get('.whydThumb').should(function ($thumbs) {
-      cy.log('thumbs:', ($thumbs || []).length); // removing this log causes the test to occasionally hang...
-      for (let i = 0; i < ($thumbs || []).length; i++) {
-        expect($($thumbs[i]).html()).to.include(VIDEO.id);
-        expect($($thumbs[i]).find('p')).to.include(VIDEO.name);
-      }
-    });
-
-    // TODO
-    // cy.get('.whydThumb').should('contain.html', VIDEO.id); // causing "Uncaught ReferenceError: YOUTUBE_API_KEY is not defined"
-    // cy.get('.whydThumb').first().should('contain.text', VIDEO.name);
-    // cy.get('.whydThumb').first().click();
+    cy.get('#whydContent').should('contain.html', VIDEO.id);
+    cy.get('.whydThumb').first().should('contain.text', VIDEO.name);
+    cy.get('.whydThumb').first().click();
   });
 
   it('can display the "add track" dialog from /post', () => {
