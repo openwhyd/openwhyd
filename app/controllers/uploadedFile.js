@@ -1,5 +1,4 @@
 var fs = require('fs');
-//var util = require('util');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
@@ -32,7 +31,7 @@ var dirsToCreate = [
   exports.config.uCoverImgPath,
   exports.config.uPlaylistPath,
 ];
-for (var i in dirsToCreate)
+for (let i in dirsToCreate)
   try {
     fs.mkdirSync(dirsToCreate[i], dirMode);
     console.log('Created directory:', dirsToCreate[i]);
@@ -69,9 +68,9 @@ exports.actualFilePath = function (filepath) {
       exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath);
 };
 
-exports.deleteFile = function (filepath) {
+exports.deleteFile = function (_filepath) {
   try {
-    var filepath = exports.actualFilePath(filepath);
+    const filepath = exports.actualFilePath(_filepath);
     console.log('deleting ' + filepath);
     fs.unlinkSync(filepath);
   } catch (e) {
@@ -203,7 +202,7 @@ exports.controller = function (request, reqParams, response) {
           parts[1],
           { limit: 1 },
           function (posts) {
-            for (var i in posts) {
+            for (let i in posts) {
               var img = (posts[i] || {}).img;
               if (img) {
                 renderImg(img);

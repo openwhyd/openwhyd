@@ -20,7 +20,7 @@ var DEBUG = false, // for soundmanager
 
   // minimal template engine, http://mir.aculo.us/2011/03/09/little-helpers-a-tweet-sized-javascript-templating-engine/
   function t(s, d) {
-    for (var p in d) s = s.replace(new RegExp('{' + p + '}', 'g'), d[p]);
+    for (let p in d) s = s.replace(new RegExp('{' + p + '}', 'g'), d[p]);
     return s;
   }
 
@@ -249,7 +249,7 @@ var DEBUG = false, // for soundmanager
   };
 
   function getTrackUrl(eId) {
-    for (var s in shortcuts)
+    for (let s in shortcuts)
       if (eId.indexOf(s) == 0) return eId.replace(s, shortcuts[s]);
     return eId;
   }
@@ -260,7 +260,7 @@ var DEBUG = false, // for soundmanager
       console.info('ready!');
       var tracks = res[0].res[0];
       view.populateTracks(tracks);
-      for (var i in tracks)
+      for (let i in tracks)
         playem.addTrackByUrl(getTrackUrl(tracks[i].eId), tracks[i]);
       forEachElement('li', function (element) {
         var wtn = element.getAttribute('data-wtn'); // openwhyd track number

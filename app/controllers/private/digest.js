@@ -6,7 +6,6 @@
 
 var mongodb = require('../../models/mongodb.js');
 var ObjectId = mongodb.ObjectId;
-var snip = require('../../snip.js');
 var followModel = require('../../models/follow.js');
 var activityModel = require('../../models/activity.js');
 var postModel = require('../../models/post.js');
@@ -18,7 +17,7 @@ function fetchSubscribers(uid, options, cb) {
   followModel.fetchSubscriptionHistory(
     { toUId: uid, until: options.until },
     function (subscribers) {
-      for (var i in subscribers)
+      for (let i in subscribers)
         subscribers[i] = {
           id: subscribers[i].uId,
           name: subscribers[i].uNm,
@@ -42,7 +41,7 @@ function fetchLikedPostSet(uid, options, cb) {
   activityModel.fetchLikersOfUser(uid, { until: options.until }, function (
     activities
   ) {
-    for (var i in activities) {
+    for (let i in activities) {
       var pId = '' + activities[i].like.pId;
       postsToPopulate.push(ObjectId(pId));
       likersPerPost[pId] = likersPerPost[pId] || [];
@@ -59,7 +58,7 @@ function fetchLikedPostSet(uid, options, cb) {
       /*params*/ null,
       /*options*/ null,
       function (posts) {
-        for (var i in posts) {
+        for (let i in posts) {
           if (posts[i] && likersPerPost['' + posts[i]._id])
             likersPerTrack[posts[i].eId] = {
               id: '' + posts[i]._id,
@@ -69,7 +68,7 @@ function fetchLikedPostSet(uid, options, cb) {
             };
         }
         // delete records of deleted posts (stored as arrays of likers instead of encapsulated objects)
-        for (var i in likersPerTrack)
+        for (let i in likersPerTrack)
           if (
             !likersPerTrack[i] ||
             !likersPerTrack[i].likes ||
@@ -86,7 +85,7 @@ function fetchRepostedTrackSet(uid, options, cb) {
   var repostedTrackSet = {};
   if (!options.includeReposts) return cb(repostedTrackSet);
   postModel.fetchRepostsFromMe(uid, options, function (reposts) {
-    for (var i in reposts) {
+    for (let i in reposts) {
       var pId = '' + reposts[i].repost.pId;
       var eId = '' + reposts[i].eId;
       repostedTrackSet[eId] = repostedTrackSet[eId] || {
@@ -107,65 +106,6 @@ function fetchRepostedTrackSet(uid, options, cb) {
   });
 }
 
-var MAX_RECENT_SAME_TRACKS = 5;
-var MAX_SAME_TRACKS_USERS = 10;
-var MAX_SAME_TRACKS_LOOKUP = 100;
-
-// list of users who posted the same tracks as you, since the last digest, per eId
-function fetchSameTrackSet(uid, options, cb) {
-  var sameTrackSet = {}; // eId -> [uId]
-  if (!options.includeSameTracks) cb(sameTrackSet);
-  else {
-    var myUid = ['' + uid, ObjectId('' + uid)];
-    function onEachTrack(myTrack, nextTrack) {
-      //console.log("- onEachTrack", !!myTrack);
-      var remaining = MAX_RECENT_SAME_TRACKS - Object.keys(sameTrackSet).length;
-      var eId = myTrack && myTrack.eId;
-      if (eId) {
-        var pId = '' + myTrack._id;
-        function onEachSameTrack(sameTrack) {
-          //console.log("  - onEachSameTrack");
-          if (sameTrack.uId && '' + sameTrack.uId != '' + uid)
-            (sameTrackSet[eId] = sameTrackSet[eId] || {
-              id: pId,
-              name: myTrack.name,
-              sameTracks: {},
-            }).sameTracks[sameTrack.uId] = true;
-        }
-        var qTheirPosts = {
-          q: {
-            //	uId: {$nin: myUid},
-            eId: eId,
-          },
-          fields: { uId: true, _id: false },
-          limit: MAX_SAME_TRACKS_USERS,
-        };
-        mongodb.forEach(
-          'post',
-          qTheirPosts,
-          onEachSameTrack,
-          (remaining > 0 && nextTrack) || onEachTrack
-        );
-        // TODO: close cursor?
-      } else if (!nextTrack || remaining < 1) {
-        for (var eId in sameTrackSet)
-          sameTrackSet[eId].sameTracks = snip.mapToObjArray(
-            sameTrackSet[eId].sameTracks,
-            'id'
-          );
-        cb((options.data.sameTrackSet = sameTrackSet));
-      } else nextTrack();
-    }
-    var qMyPosts = {
-      q: { uId: /*{$in: myUid}*/ '' + uid },
-      fields: { eId: true, name: true },
-      limit: MAX_SAME_TRACKS_LOOKUP,
-      sort: [['_id', 'desc']],
-    };
-    mongodb.forEach2('post', qMyPosts, onEachTrack);
-  }
-}
-
 function fetchData(uid, options, cb) {
   options.data = {};
   var fcts = [
@@ -173,7 +113,6 @@ function fetchData(uid, options, cb) {
     fetchRepostedTrackSet,
     fetchSubscribers,
     fetchSubscriptionSet,
-    // fetchSameTrackSet // disabled because too DB and memory intensive => suspected to crash Openwhyd since on openwhyd-2gb instance
   ];
   (function next() {
     var fct = fcts.shift();
@@ -198,10 +137,10 @@ exports.fetchAndGenerateNotifDigest = function (user, options, cb) {
       Object.keys(sameTrackSet).length
     ) {
       var lists = [repostedTrackSet, likersPerPost];
-      for (var list in lists) {
-        for (var track in lists[list]) {
+      for (let list in lists) {
+        for (let track in lists[list]) {
           var users = lists[list][track].reposts || lists[list][track].likes;
-          for (var i in users)
+          for (let i in users)
             if (users[i]) users[i].subscribed = !!subscriptionSet[users[i].id];
         }
       }

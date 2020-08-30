@@ -1,14 +1,9 @@
 var http = require('http');
-var mainTemplate = {
-  renderWhydFrame: function (a) {
-    return a;
-  },
-};
 
 var maxResults = 20;
 
 var renderTemplate = function (results) {
-  for (var i in results)
+  for (let i in results)
     results[i] = { id: '/yt/' + results[i].id, name: results[i].title };
 
   return results;
@@ -23,7 +18,7 @@ exports.requestVideos = function (query, handler) {
     '&q=' +
     encodeURIComponent(query);
   //console.log("requesting: "+host+url+"...");
-  var req = http
+  http
     .request({ path: url, host: host, port: 80, method: 'GET' }, function (
       res
     ) {

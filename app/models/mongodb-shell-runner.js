@@ -6,8 +6,8 @@ const VERBOSE = false; // true to display debug logs (for diagnostics and testin
 const LOG_PREFIX = '[mongo shell]';
 
 function buildContext(db, nextCommand, callback) {
-  function makeCallback(prefix, callback) {
-    return function (err, res) {
+  function makeCallback(prefix) {
+    return function (err) {
       VERBOSE &&
         console.log(LOG_PREFIX, 'db.' + prefix, '=>', err ? err.errmsg : 'ok');
       nextCommand();
@@ -49,7 +49,7 @@ function buildContext(db, nextCommand, callback) {
     };
   }
 
-  function wrapCollection(colName, callback, commandCallback) {
+  function wrapCollection(colName, callback) {
     db.collection(colName, function (err, col) {
       callback(
         err,
@@ -78,7 +78,7 @@ function buildContext(db, nextCommand, callback) {
           nextCommand
         );
       },
-      function (err, res) {
+      function (err) {
         callback(err, context);
       }
     );

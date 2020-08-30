@@ -29,7 +29,7 @@ exports.controller = function (request, reqParams, response) {
     if (reqParams.title) {
       var title = normalize(reqParams.title);
       console.log('normalized title:', title);
-      for (var i in embeds)
+      for (let i in embeds)
         if (embeds[i].name)
           embeds[i].distance = levenshteinenator(
             normalize(embeds[i].name),
@@ -56,7 +56,7 @@ exports.controller = function (request, reqParams, response) {
           // 1) extract named embeds
           var embedRefs = [];
           embeds = embeds || [];
-          for (var i in embeds)
+          for (let i in embeds)
             if (embeds[i] && embeds[i].name) embedRefs.push(embeds[i]);
           console.log(
             '-> extracted embeds',
@@ -70,7 +70,7 @@ exports.controller = function (request, reqParams, response) {
           var mp3 = page.getMp3s();
           if (mp3) {
             console.log('-> extracted mp3', mp3.length);
-            for (var i in mp3)
+            for (let i in mp3)
               embedRefs.push({
                 type: 'mp3 file',
                 url: mp3[i],
@@ -129,14 +129,14 @@ var levenshteinenator = function (a, b) {
 
   var r = [];
   r[0] = [];
-  for (var c = 0; c < n + 1; c++) {
+  for (let c = 0; c < n + 1; c++) {
     r[0][c] = c;
   }
 
-  for (var i = 1; i < m + 1; i++) {
+  for (let i = 1; i < m + 1; i++) {
     r[i] = [];
     r[i][0] = i;
-    for (var j = 1; j < n + 1; j++) {
+    for (let j = 1; j < n + 1; j++) {
       cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
       r[i][j] = minimator(
         r[i - 1][j] + 1,

@@ -77,7 +77,7 @@ function makeBookmarklet(window, urlPrefix = '') {
   function makeStreamDetector(players) {
     var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
     function getPlayerId(url) {
-      for (var i in players) {
+      for (let i in players) {
         var player = players[i];
         var eId = player.getEid(url);
         if (eId) return i;
@@ -165,7 +165,7 @@ function makeBookmarklet(window, urlPrefix = '') {
         ' - Xbox Music',
         ' - Royalty Free Music - Jamendo',
       ];
-      for (var i = 0; i < titleParts.length; ++i)
+      for (let i = 0; i < titleParts.length; ++i)
         if (title.indexOf(titleParts[i]) > -1)
           return [
             {
@@ -206,7 +206,7 @@ function makeBookmarklet(window, urlPrefix = '') {
         var pathPos = bandcampPageUrl.indexOf('/', 10);
         if (pathPos != -1) bandcampPageUrl = bandcampPageUrl.substr(0, pathPos); // remove path
         var elts = window.document.querySelectorAll('a[href^="/track/"]');
-        for (var j = 0; j < elts.length; ++j)
+        for (let j = 0; j < elts.length; ++j)
           toDetect.push({
             href: bandcampPageUrl + elts[j].getAttribute('href'),
           });
@@ -313,7 +313,7 @@ function makeBookmarklet(window, urlPrefix = '') {
         var eIds = [],
           urls = [],
           keys = Object.keys(set);
-        for (var i = 0; i < keys.length; ++i)
+        for (let i = 0; i < keys.length; ++i)
           (/\/..\//.test(keys[i]) ? eIds : urls).push(set[keys[i]]);
         return eIds.concat(urls);
       };
@@ -405,7 +405,7 @@ if (typeof exports !== 'undefined') {
     function findScriptHost(scriptPathName) {
       // TODO: use window.document.currentScript.src when IE becomes completely forgotten by humans
       var els = window.document.getElementsByTagName('script');
-      for (var i = els.length - 1; i > -1; --i) {
+      for (let i = els.length - 1; i > -1; --i) {
         var whydPathPos = els[i].src.indexOf(scriptPathName);
         if (whydPathPos > -1) return els[i].src.substr(0, whydPathPos);
       }

@@ -19,10 +19,6 @@ var defaults = {
   thumbDims: '180x', // image resize settings (optimized for profile/topic pictures)
 };
 
-// image resize settings
-var thumbWidths = [180 /*, 50*/]; // optimized for profile pictures
-var thumbHeight = null; // auto-scaling
-
 function processFile(file, options, callback) {
   console.log('processFile', file, options);
   if (!file || !file.path)
@@ -45,11 +41,11 @@ function processFile(file, options, callback) {
 
     console.log('thumbDims', thumbDims);
 
-    function whenDone() {
+    const whenDone = () => {
       console.log('whendone');
       if (!options.keepOriginal) uploadCtr.deleteFile(file.path);
       callback(result);
-    }
+    };
 
     if (thumbDims.length > 0) {
       // create thumbs
@@ -63,19 +59,14 @@ function processFile(file, options, callback) {
       };
 
       var remaining = thumbDims.length; //thumbWidths.length;
-      for (var i in thumbDims) {
+      for (let i in thumbDims) {
         var thumbDim = thumbDims[i];
         var thumbWidthHeight = thumbDim.split('x');
         var thumbWidth =
           thumbWidthHeight.length > 0 ? thumbWidthHeight[0] : null;
         var thumbHeight =
           thumbWidthHeight.length > 1 ? thumbWidthHeight[1] : null;
-        genThumb(thumbWidth, thumbHeight, function (
-          thumbFile,
-          thumbWidth,
-          thumbHeight,
-          dims
-        ) {
+        genThumb(thumbWidth, thumbHeight, function (thumbFile) {
           console.log('generated thumb', thumbDim, thumbFile);
           result.thumbs[/*dims*/ thumbDim] = uploadCtr.cleanFilePath(thumbFile);
           if (!options.keepOriginal)
@@ -112,13 +103,11 @@ exports.controller = function (req, requestParams, res) {
 
   console.log('upload.controller completed', files);
   var results = {},
-    remaining = 0;
-
-  for (var i in files) remaining++;
+    remaining = Object.keys(files).length;
 
   var options = {};
-  for (var i in defaults) options[i] = defaults[i];
-  for (var i in postParams) options[i] = postParams[i];
+  for (let i in defaults) options[i] = defaults[i];
+  for (let i in postParams) options[i] = postParams[i];
 
   var processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
@@ -134,6 +123,6 @@ exports.controller = function (req, requestParams, res) {
     });
   };
 
-  for (var i in files) processAndPushFile(i);
+  for (let i in files) processAndPushFile(i);
   //});
 };

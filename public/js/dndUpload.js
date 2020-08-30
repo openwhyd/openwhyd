@@ -49,7 +49,7 @@ function DndUpload(options) {
     var formData = new FormData();
     var formFields = (options.form || {}).elements;
     if (formFields)
-      for (var i = formFields.length - 1; i >= 0; --i)
+      for (let i = formFields.length - 1; i >= 0; --i)
         if (formFields[i].type != 'file')
           formData.append(formFields[i].name, formFields[i].value);
     formData.append('file', files[0]);

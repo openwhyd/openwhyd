@@ -67,7 +67,9 @@ var getIndex = (function () {
   };
 })();
 
-function Search() {}
+function Search() {
+  /* empty class definition */
+}
 
 Search.prototype.search = function (index, query, options, cb) {
   var facetAttrs = [];
@@ -224,9 +226,8 @@ var searchByType = {
   },
 };
 
-exports.query = function (q, cb) {
+exports.query = function (q = {}, cb) {
   var hits = [];
-  var q = q || {};
   var queue;
   if (q._type) queue = [q._type];
   else if (q.uId) queue = ['post'];
@@ -273,10 +274,7 @@ function indexTypedDocs(type, items, callback) {
       });
       return doc;
     });
-    getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function (
-      err,
-      content
-    ) {
+    getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function (err) {
       if (err) {
         console.error(
           'algolia error when indexing ' +
@@ -325,7 +323,7 @@ exports.countDocs = function (type, callback) {
 };
 
 exports.deleteAllDocs = function (type, callback) {
-  getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err, content) {
+  getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err) {
     console.log('algolia deleteAllDocs =>', err || 'ok');
     callback && callback(); // TODO: check if parameters are required or not
   });

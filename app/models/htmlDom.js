@@ -11,7 +11,7 @@ exports.parseDom = function (dom) {
   }
   SimpleDomNode.prototype.getFirstElementByTagName = function (tagName) {
     var nodes = this.node.children || this.node;
-    for (var i in nodes)
+    for (let i in nodes)
       if (nodes[i].name == tagName) return new SimpleDomNode(nodes[i]);
   };
   SimpleDomNode.prototype.getText = function () {
@@ -33,7 +33,7 @@ exports.parseDom = function (dom) {
   SimpleDomNode.prototype.getElementsByTagName = function (tagName) {
     var results = [];
     var nodes = this.node.children;
-    for (var i in nodes) {
+    for (let i in nodes) {
       var node = new SimpleDomNode(nodes[i]);
       if (nodes[i].name == tagName) results.push(node);
       if (nodes[i].children)
@@ -50,7 +50,7 @@ exports.parseDom = function (dom) {
     })(' ' + className + ' ');
     var results = [];
     var nodes = this.node.children;
-    for (var i in nodes) {
+    for (let i in nodes) {
       var node = new SimpleDomNode(nodes[i]);
       if (nodeHasClass(nodes[i])) results.push(node);
       if (nodes[i].children)

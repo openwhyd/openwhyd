@@ -12,7 +12,7 @@ var VERSIONS_CACHE = {
 
 function countJsonFiles(files) {
   var count = 0;
-  for (var i in files) if (files[i].indexOf('.json') != -1) ++count;
+  for (let i in files) if (files[i].indexOf('.json') != -1) ++count;
   return count;
 }
 

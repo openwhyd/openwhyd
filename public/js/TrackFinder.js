@@ -166,10 +166,10 @@ function WhydTrackFinder() {
     },
   };
 
-  for (var i in searchEngines) searchEngines[i] = new searchEngines[i]();
+  for (let i in searchEngines) searchEngines[i] = new searchEngines[i]();
 
   this.query = function (q, cb) {
-    for (var i in searchEngines)
+    for (let i in searchEngines)
       (function (engine) {
         engine.query(q, function (res) {
           cb(res, engine);
@@ -221,7 +221,7 @@ function WhydTrackFinder() {
       console.log('task: done');
       if (!--remaining) cb();
     }
-    for (var i in tasks) tasks[i](onTaskEnd);
+    for (let i in tasks) tasks[i](onTaskEnd);
   }
 
   // rendering
@@ -383,7 +383,7 @@ function WhydTrackFinder() {
     loadUserPlaylists(function (user, playlists) {
       document.getElementById('pleaseLogin').style.display = 'none';
       loadStream('/me', 'myLastPosts');
-      for (var i = 0; i < playlists.length; ++i)
+      for (let i = 0; i < playlists.length; ++i)
         playlists[i].onclick = function (e) {
           e.preventDefault();
           loadPlaylist(e.target);
@@ -394,7 +394,7 @@ function WhydTrackFinder() {
 
   function switchToPage(id) {
     var pages = document.getElementsByClassName('page');
-    for (var i = 0; i < pages.length; ++i) pages[i].style.display = 'none';
+    for (let i = 0; i < pages.length; ++i) pages[i].style.display = 'none';
     document.getElementById(id).style.display = 'block';
   }
 
@@ -440,11 +440,11 @@ function WhydTrackFinder() {
         if (!res || res.error || res.errors)
           console.log('error(s)', engine.label, res);
         else
-          for (var i in res) {
+          for (let i in res) {
             var container = document.getElementById(i);
             display(renderResults(res[i], i, query), remaining, container);
             var btns = container.getElementsByClassName('btnAdd');
-            for (var i in btns) btns[i].onclick = onAddTrack;
+            for (let i in btns) btns[i].onclick = onAddTrack;
           }
       }
       tF.query(query, handleResults);
@@ -470,7 +470,7 @@ function WhydTrackFinder() {
   // fade-in effect for results
   function fadeIn(nodeSet, liCondition) {
     var fadeQueue = [];
-    for (var i = 0; i < nodeSet.length; ++i) {
+    for (let i = 0; i < nodeSet.length; ++i) {
       var li = nodeSet[i];
       //if (log) console.log(li);
       if (li.nodeName == 'LI' && (!liCondition || liCondition(li))) {

@@ -44,7 +44,7 @@ const makeBodyParser = (uploadSettings) =>
       // using qset to parse fields with brackets [] for url-encoded form data:
       // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
       var parsedParams = {};
-      for (var key in postParams) {
+      for (let key in postParams) {
         qset.deep(parsedParams, key, postParams[key]);
       }
       req.body = { ...postParams, ...parsedParams };
@@ -80,7 +80,7 @@ function defaultErrorHandler(req, reqParams, res, statusCode) {
 }
 
 const makeNotFound = (errorHandler) =>
-  function notFound(req, res, next) {
+  function notFound(req, res) {
     errorHandler(req, req.mergedParams, res, 404);
   };
 
@@ -134,7 +134,7 @@ function loadRoutesFromFile(file) {
   const lines = fs.readFileSync(file, 'utf8').split('\n');
   var routeArray = [];
   var line;
-  for (var i = 0, len = lines.length; i < len; i++) {
+  for (let i = 0, len = lines.length; i < len; i++) {
     line = lines[i].split('->');
     if (line.length >= 2)
       routeArray.push({ pattern: line[0].trim(), name: line[1].trim() });
@@ -143,7 +143,7 @@ function loadRoutesFromFile(file) {
 }
 
 // for a given app.route entry, returns { method, path } to define an Express endpoint
-function parseExpressRoute({ pattern, name }) {
+function parseExpressRoute({ pattern }) {
   const [upperCaseMethod, legacyPath] = pattern.split('?')[0].split(/\s+/);
   const method = upperCaseMethod.toLowerCase();
   const pathParams = legacyPath.match(/\{[\w$]+\}/g);

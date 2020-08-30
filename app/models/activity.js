@@ -86,7 +86,7 @@ exports.fetchHistoryFromUidList = function (uidList, options, callback) {
     options.fromUId = uidList;
     //followModel.fetchUsersSubscriptionsHistory(uidList, options, function(subscriptions) {
     followModel.fetchSubscriptionHistory(options, function (subscriptions) {
-      for (var i in subscriptions)
+      for (let i in subscriptions)
         activities.push({
           _id: subscriptions[i]._id,
           id: subscriptions[i].uId,

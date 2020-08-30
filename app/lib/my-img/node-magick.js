@@ -7,7 +7,7 @@ exports.createCommand = function (input) {
 var magickCommand = function (obj) {
   obj.inArgs = [];
   obj.outArgs = [];
-  obj.cropResized = function (width, height, gravity) {
+  obj.cropResized = function (width, height) {
     return obj.resize(width, height).crop(width, height);
   };
   obj.resize = function (width, height) {
@@ -41,11 +41,7 @@ var magickCommand = function (obj) {
     args.unshift(cmd);
     cmd = 'gm';
     console.log('running command: ' + cmd + ' ' + args.join(' '));
-    var p = childProcess.exec(cmd + ' ' + args.join(' '), function (
-      error,
-      stdout,
-      stderr
-    ) {
+    childProcess.exec(cmd + ' ' + args.join(' '), function () {
       callback();
     });
   };

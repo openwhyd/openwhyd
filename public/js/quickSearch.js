@@ -76,7 +76,7 @@ function QuickSearch(searchForm, options) {
 
   function unhoverItem() {
     var liArray = searchResults.getElementsByTagName('li');
-    for (var i = liArray.length - 1; i >= 0; --i)
+    for (let i = liArray.length - 1; i >= 0; --i)
       toggleClass(liArray[i], 'hover', false);
   }
 
@@ -121,7 +121,7 @@ function QuickSearch(searchForm, options) {
           return false;
         };
       }
-      for (var i = anchors.length - 1; i >= 0; --i)
+      for (let i = anchors.length - 1; i >= 0; --i)
         addEvent(anchors[i], 'click', makeHandler(anchors[i]));
     }
 

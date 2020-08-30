@@ -46,7 +46,7 @@ function extractMetadataFromYoutubePage(html, cb) {
   htmlDom.parseHtmlDom(html, function (doc) {
     var metadata = {};
     var meta = doc.getElementsByClassName('watch-meta-item');
-    for (var i in meta) {
+    for (let i in meta) {
       var type = meta[i].getElementsByClassName('title').pop();
       type = type && type.getText();
       var data = meta[i].getElementsByTagName('li')[0];
@@ -62,7 +62,7 @@ function extractMetadataFromYoutubePage(html, cb) {
       else if (/Artist/.test(type)) metadata.artistName = data.getText();
       //else console.log("unrecognized youtube metadata type:", type);
     }
-    for (var i in metadata) {
+    for (let i in metadata) {
       metadata[i] = ent.decode(metadata[i]);
       metadata.confidence = 0.9;
     }
@@ -127,7 +127,7 @@ exports.fetchTrackMetadata = function (trackId, cb, raw) {
         ('' + trackId).replace(/[^a-z0-9_-]/gi, '');
       exports.fetchMetadataFromYoutubePage(url, function (err, metadata) {
         var result = exports.translateTrack(data);
-        for (var i in metadata) result[i] = metadata[i];
+        for (let i in metadata) result[i] = metadata[i];
         cb(null, result);
       });
     }

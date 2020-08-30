@@ -118,7 +118,7 @@ exports.makeTests = function (p) {
           _id: testVars.registeredUid,
         },
       },
-      function (res) {
+      function () {
         fetchTestUser(function (testUser) {
           log('user deleted:', !testUser);
           cb(!testUser);
@@ -344,8 +344,7 @@ exports.makeTests = function (p) {
         jsonPost(
           '/api/user',
           { cookie: testVars.cookie, body: { apTok: 'pouet' } },
-          function (res) {
-            //log("apTok set ->", res);
+          function () {
             getUser(function (user) {
               cb(!user.apTok);
             });
@@ -359,7 +358,7 @@ exports.makeTests = function (p) {
         jsonPost(
           '/api/user',
           { cookie: testVars.cookie, body: { apTok: TEST_USER.apTok } },
-          function (res) {
+          function () {
             getUser(function (user) {
               //log("user", user);
               cb(user.apTok[0].tok === TEST_USER.apTok.replace(/ /g, ''));
@@ -381,7 +380,7 @@ exports.makeTests = function (p) {
               twSec: 'ghi',
             },
           },
-          function (res) {
+          function () {
             getUser(function (user) {
               cb(user.twId && user.twTok && user.twSec);
             });
@@ -400,7 +399,7 @@ exports.makeTests = function (p) {
               twId: '',
             },
           },
-          function (res) {
+          function () {
             getUser(function (user) {
               cb(!user.twId && !user.twTok && !user.twSec);
             });
@@ -428,14 +427,15 @@ exports.makeTests = function (p) {
     [
       'log out',
       function (cb) {
-        jsonGet('/login?action=logout', { cookie: testVars.cookie }, function (
-          data,
-          response
-        ) {
-          getUser(function (user, response) {
-            cb(!response.headers['set-cookie']);
-          });
-        });
+        jsonGet(
+          '/login?action=logout',
+          { cookie: testVars.cookie },
+          function () {
+            getUser(function (user, response) {
+              cb(!response.headers['set-cookie']);
+            });
+          }
+        );
       },
     ],
     [
@@ -451,7 +451,7 @@ exports.makeTests = function (p) {
               md5: 'wrong',
             },
           },
-          function (data, response) {
+          function () {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
@@ -499,7 +499,7 @@ exports.makeTests = function (p) {
               pwd: 'newpassword',
             },
           },
-          function (data, response) {
+          function (data) {
             cb(!!data.error);
           }
         );
@@ -527,7 +527,7 @@ exports.makeTests = function (p) {
               pwd: TEST_USER.password.toUpperCase(),
             },
           },
-          function (data, response) {
+          function (data) {
             log('response', data);
             cb(!data.error);
           }
@@ -547,7 +547,7 @@ exports.makeTests = function (p) {
               md5: userModel.md5(TEST_USER.password),
             },
           },
-          function (data, response) {
+          function () {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
@@ -605,10 +605,10 @@ exports.makeTests = function (p) {
               genres: 'Electro,Indie,Reggae,World',
             },
           },
-          function (data, response) {
+          function (data) {
             var users = data || [],
               sum = 0;
-            for (var i in users) sum += users[i].score;
+            for (let i in users) sum += users[i].score;
             var avgScore = sum / users.length;
             console.log('avgScore', avgScore);
             cb((data || []).length > 0);

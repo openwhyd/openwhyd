@@ -12,7 +12,6 @@ var contestModel = require('../models/plContest.js');
 var feedTemplate = require('../templates/feed.js');
 
 var HISTORY_LIMIT = 3;
-var RECOM_PEOPLE_LIMIT = 3;
 
 function fetchSubscriptions(uid, callback) {
   //console.time("LibFriends.fetchSubscriptions");
@@ -20,21 +19,6 @@ function fetchSubscriptions(uid, callback) {
     //console.timeEnd("LibFriends.fetchSubscriptions");
     callback(subscriptions.concat([uid]));
   });
-}
-
-function renderSuggestedPeople(allPosts) {
-  var userSet = {},
-    userList = [];
-  for (var i in allPosts)
-    if (!userSet[allPosts[i].uId])
-      userSet[allPosts[i].uId] = {
-        id: allPosts[i].uId,
-        name: allPosts[i].uNm,
-        track: allPosts[i].name,
-        trackUrl: '/c/' + allPosts[i]._id,
-      };
-  for (var i in userSet) userList.push(userSet[i]);
-  return userList.slice(0, RECOM_PEOPLE_LIMIT);
 }
 
 function fetchRecentActivity(uidList, loggedUid, cb) {
@@ -46,7 +30,7 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 	]);
 	return;*/
   var subscribers = [];
-  for (var i in uidList)
+  for (let i in uidList)
     if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
   activityModel.fetchHistoryFromUidList(
     /*uidList*/ subscribers,
@@ -104,7 +88,6 @@ function renderFriendsFeed(options, callback) {
 
 function renderFriendsLibrary(lib) {
   var options = lib.options;
-  var uid = options.loggedUser.id;
   options.bodyClass = 'pgStream pgWithSideBar';
   options.homeFeed = true;
   options.displayPlaylistName = true;

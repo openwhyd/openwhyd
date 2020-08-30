@@ -110,7 +110,7 @@ function findBestMatches(trackMetadata, hits) {
   if (!hits.length) return [];
   var matcher = TrackMatcher(trackMetadata);
   return (hits || [])
-    .map(function (hit, i) {
+    .map(function (hit) {
       hit._d = matcher.evalConfidence(hit);
       hit.distance = hit._d.distance;
       hit.c = hit._d.confidence;
@@ -166,7 +166,7 @@ var MAPPING_RESOLVERS = [
         track.echonestHits = hits.length;
         if (!hits.length) return cb(null, track);
         var bestHit = hits[0];
-        for (var source in bestHit.foreignIds) {
+        for (let source in bestHit.foreignIds) {
           if (SOURCES[source])
             appendMapping(track, SOURCES[source], {
               id: bestHit.foreignIds[source].split(':').pop(),
@@ -205,7 +205,7 @@ var MAPPING_RESOLVERS = [
 // takes trackMetadata (artistName, trackTitle, etc...)
 // => returns mapping for expectedSourceId only
 exports.getTrackMapping = function (expectedSourceId, trackMetadata, cb) {
-  for (var i in MAPPING_RESOLVERS) {
+  for (let i in MAPPING_RESOLVERS) {
     var resolver = MAPPING_RESOLVERS[i];
     var dests = resolver[0].split('->').pop();
     if (dests.indexOf(expectedSourceId) != -1)
@@ -231,16 +231,13 @@ function appendTrackMappings(track, cb) {
       c: 1,
     });
   }
-  if (!track.metadata.hasOwnProperty('confidence'))
-    track.metadata.confidence = 1;
+  if (!('confidence' in track.metadata)) track.metadata.confidence = 1;
   // fetch other mappings, based on resolvers
   var resolvers = MAPPING_RESOLVERS.slice();
   (function nextResolver(err) {
     var resolver = resolvers.shift();
     if (!resolver || err) return cb(err, track);
-    var resolverName = resolver[0],
-      resolverFct = resolver[1];
-    //		console.log(" -> trying", resolverName, "resolver...");
+    var resolverFct = resolver[1]; // FYI: resolver[0] is resolverName
     resolverFct(track, nextResolver);
   })();
 }

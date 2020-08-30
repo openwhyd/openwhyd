@@ -3,9 +3,7 @@
  * @author adrienjoly, whyd
  **/
 
-var util = require('util');
 var mongodb = require('../../models/mongodb.js');
-var userModel = require('../../models/user.js');
 var trackModel = require('../../models/track.js');
 var snip = require('../../snip.js');
 var FileController = require('./FileController.js');
@@ -28,17 +26,6 @@ function wrapJsonGeneratorToCsv(name) {
   };
 }
 
-/*
-function fetchUidList(cb) {
-	var uidList = [], uidSet = {};
-	mongodb.forEach("post", {fields:{uId:1}}, function(post) {
-		if (!uidSet[post.uId]) {
-			uidSet[post.uId] = true;
-			uidList.push(post.uId);
-		}
-	}, cb, uidList);
-}
-*/
 function fetchUidList(cb) {
   mongodb.collections['post'].distinct('uId', {}, function (err, uidList) {
     cb(uidList);
@@ -47,7 +34,7 @@ function fetchUidList(cb) {
 
 function cleanUidList(uidList) {
   var uids = [];
-  for (var i in uidList)
+  for (let i in uidList)
     if (mongodb.isObjectId(uidList[i]))
       try {
         uids.push(mongodb.ObjectId('' + uidList[i]));
@@ -90,26 +77,6 @@ var fileGenerators = {
     });
     cb('refreshing track trends...');
   },
-  /*"deleteUsersWithoutPosts": function(p, cb) {
-		fetchUidList(function(uidList){
-			listMissingUsers(cleanUidList(uidList), function(users){
-				var nb = 0;
-				(function next(){
-					var u = users.pop();
-					if (!u)
-						console.log("Done deleting users: ", nb);
-					else {
-						process.nextTick(function(){
-							++nb;
-							console.log("deleting user", u);
-							userModel.delete({_id: ""+u._id}, next);							
-						});
-					}
-				})();
-				cb("deleting "+users.length+" users...");
-			});
-		});
-	},*/
   'listUsersWithoutPosts.html': function (p, cb) {
     fetchUidList(function (uidList) {
       listMissingUsers(cleanUidList(uidList), function (users) {
@@ -131,7 +98,7 @@ var fileGenerators = {
       if (p.action) delete p.action;
       if (p.loggedUser) delete p.loggedUser;
       if (p._id) p._id = mongodb.ObjectId(p._id);
-      for (var i in p) {
+      for (let i in p) {
         if (p[i] == '$exists') p[i] = { $exists: true };
       }
       console.log('query:', p);

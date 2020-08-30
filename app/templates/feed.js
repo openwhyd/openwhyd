@@ -40,7 +40,7 @@ var templates = {};
 const loadTemplate = (path) =>
   new Promise((resolve) => templateLoader.loadTemplate(path, resolve));
 
-async function loadTemplates(callback) {
+async function loadTemplates() {
   templates = {
     html: await loadTemplate('app/templates/feed.html'),
     embed: await loadTemplate('app/templates/feedEmbed.html'),

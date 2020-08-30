@@ -11,7 +11,7 @@ exports.TestLogger = function () {
   };
 
   this.log = function () {
-    for (var i in arguments)
+    for (let i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
     var message = Array.prototype.join.call(arguments, ' ');
@@ -29,9 +29,8 @@ exports.TestLogger = function () {
 exports.ServerTestRunner = function () {
   var tests = [];
 
-  function wrapTest(fct, title) {
-    return function (p, ee, cb) {
-      var ee = ee || new EventEmitter();
+  function wrapTest(fct) {
+    return function (p, ee = new EventEmitter(), cb) {
       process.nextTick(function () {
         fct(p, ee, cb);
       });
@@ -46,13 +45,12 @@ exports.ServerTestRunner = function () {
   };
 
   this.addTests = function (testMap) {
-    for (var title in testMap) this.addTest(title, testMap[title]);
+    for (let title in testMap) this.addTest(title, testMap[title]);
     return this;
   };
 
   function makeTestSet(tests) {
-    return function (p, ee, cb) {
-      var ee = ee || new EventEmitter();
+    return function (p, ee = new EventEmitter(), cb) {
       var testSeq = [];
       Object.keys(tests).map(function (testId) {
         var testFct = tests[testId];

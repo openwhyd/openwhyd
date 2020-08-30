@@ -38,7 +38,7 @@ function inviteByRequestId(reqIds, response) {
     });
   };
 
-  for (var i in reqIds) checkInvite(reqIds[i]);
+  for (let i in reqIds) checkInvite(reqIds[i]);
 }
 
 exports.controller = function (request, reqParams, response) {

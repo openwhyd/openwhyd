@@ -3,13 +3,12 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
 var userModel = require('../../models/user.js');
 var mainTemplate = require('../../templates/mainTemplate.js');
 
 function renderTemplate(user) {
   var out = [];
-  for (var field in userModel.DEFAULT_PREF)
+  for (let field in userModel.DEFAULT_PREF)
     if (field.indexOf('mn') == 0)
       out.push(
         '<p>' +

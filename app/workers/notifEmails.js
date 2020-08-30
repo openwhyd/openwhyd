@@ -15,7 +15,7 @@ var timer = null;
 function processUser(u, cb) {
   var freq = 0,
     cleanPref = {}; // daily (by default)
-  for (var i in u.pref)
+  for (let i in u.pref)
     if (i.indexOf('em') == 0 && u.pref[i] > 0) {
       freq = u.pref[i];
       cleanPref[i] = u.pref[i];

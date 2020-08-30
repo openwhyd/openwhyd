@@ -5,9 +5,7 @@
  */
 
 var https = require('https');
-var mongodb = require('./mongodb.js');
 var userModel = require('./user.js');
-var followModel = require('./follow.js');
 var querystring = require('querystring');
 
 var host = 'graph.facebook.com';

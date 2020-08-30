@@ -7,7 +7,6 @@
 // testing phase 3: send welcome email
 // $ curl -v --data "ajax=follow" --cookie "whydSid=4j8OSWWYknxyPlmGmgqURg12AiBoKDQpqt4iU610PT9nKkIkRdlMgHWF9kFMsQEvU" http://openwhyd.org/onboarding
 
-var snip = require('../snip.js');
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var plTagsModel = require('../models/plTags.js');
@@ -20,12 +19,10 @@ var notifEmails = require('../models/notifEmails.js');
 var TEMPLATE_FILE = 'app/templates/onboarding.html';
 var mainTemplate = require('../templates/mainTemplate.js');
 var templateLoader = require('../templates/templateLoader.js');
-var template = templateLoader.loadTemplate(TEMPLATE_FILE);
 
 var MAX_RECOM_USERS = 10;
 
 var templates = {
-  //"people": "app/templates/onboarding/pickPeople.html",
   'bookmarklet-legacy': 'app/templates/onboarding/bookmarklet.html', // old version (still bound to openwhyd.org/bookmarklet and openwhyd.org/button)
 };
 
@@ -40,40 +37,19 @@ function makeTemplateRenderer(cb) {
   };
 }
 
-function fetchUserData(recomUsers, pickedTags, cb) {
-  var pickedTagSet = snip.arrayToSet(pickedTags || []);
+function fetchUserData(recomUsers, _pickedTags, cb) {
   plTagsModel.getTagEngine(function (tagEngine) {
-    userModel.fetchUserBios(
-      recomUsers,
-      /*cb*/ function () {
-        var i = recomUsers.length;
-        (function next() {
-          if (--i < 0) cb(recomUsers);
-          else
-            tagEngine.fetchTagsByUid(recomUsers[i].id, function (tags) {
-              /*
-						var total = tags.map(function(tag){
-							return tag.c;
-						}).reduce(function(a, b){
-							return a + b;
-						});
-						(recomUsers[i].tags = tags.slice(0,3)).map(function(tag){
-							tag.c = Math.floor(100 * tag.c / total) + " %";
-						});
-						*/
-              /*
-						recomUsers[i].tags = [];
-						tags.map(function(tag){
-							if (pickedTagSet[tag.id])
-								recomUsers[i].tags.push(tag);
-						});
-						*/
-              recomUsers[i].tags = tags.slice(0, 3);
-              next();
-            });
-        })();
-      }
-    );
+    userModel.fetchUserBios(recomUsers, function () {
+      var i = recomUsers.length;
+      (function next() {
+        if (--i < 0) cb(recomUsers);
+        else
+          tagEngine.fetchTagsByUid(recomUsers[i].id, function (tags) {
+            recomUsers[i].tags = tags.slice(0, 3);
+            next();
+          });
+      })();
+    });
   });
 }
 

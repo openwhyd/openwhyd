@@ -55,6 +55,7 @@
   .pgOnboarding .whitePanel {
     padding: 30px 40px;
   }
+
   /*]]>*/
 </style>
 
@@ -107,7 +108,7 @@
       $('#btnNext').show();
       if (json && !json.error) {
         $('h1').text('Top music lovers to follow');
-        for (var i in json.autoSubscribeUsers)
+        for (let i in json.autoSubscribeUsers)
           json.autoSubscribeUsers[i].subscribed = true;
         $('#whydTeam').append(_renderUserList(json.autoSubscribeUsers)).show();
         $('.userList a').each(disableLink); // user names

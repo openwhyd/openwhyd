@@ -6,7 +6,7 @@ var followModel = require('../../../models/follow.js');
 
 function hashPosts(posts) {
   var hash = '';
-  for (var i in posts) hash += posts[i]._id;
+  for (let i in posts) hash += posts[i]._id;
   //console.log("HASH", hash);
   return hash;
 }

@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  */
 
-//var http = require('http');
 var crypto = require('crypto');
 var querystring = require('querystring');
 
@@ -29,13 +28,12 @@ function LastFM(apiKey, apiSecret) {
     var keys = Object.keys(p);
     keys.sort();
     var chain = '';
-    for (var i in keys) chain += keys[i] + p[keys[i]];
+    for (let i in keys) chain += keys[i] + p[keys[i]];
     p.api_sig = md5(chain + apiSecret);
     return p;
   }
 
-  this.submitRequest = function (p, options, cb) {
-    var options = options || {};
+  this.submitRequest = function (p, options = {}, cb) {
     options.responseEncoding = 'utf-8';
 
     p.api_key = apiKey;
@@ -54,33 +52,10 @@ function LastFM(apiKey, apiSecret) {
 
     console.log('submitting ' + path + ' request to last.fm ...', options);
 
-    snip.httpRequestJSON(path, options, function (err, data, res) {
+    snip.httpRequestJSON(path, options, function (err, data) {
       //console.log("-> last.fm response status code", (res || {}).statusCode)
       cb(data || err);
     });
-    /*
-		return req = http.request({
-			host: API_HOST,
-			path: path,
-			method: "GET",
-		}, function (res) {
-			res.setEncoding('utf-8');
-			console.log("-> statusCode", res.statusCode);
-			{
-				var json = "";
-				res.addListener('data', function(chunk) {
-					json += chunk.toString();
-				});
-				res.addListener('end', function() {
-					try {
-						json = JSON.parse(json);
-					} catch(e) {};
-					cb(json);
-				});
-			}
-		})
-		.end();
-		*/
   };
 
   // http://www.lastfm.fr/api/show/auth.getSession
@@ -172,8 +147,8 @@ exports.controller = function (request, p, response) {
   if (!loggedUser) return;
 
   if (p.token) {
-    function render(message, session) {
-      var session = session
+    const render = (message, _session) => {
+      const session = _session
         ? JSON.stringify({
             sk: session.key,
             name: uiSnip.htmlEntities(session.name),
@@ -186,7 +161,7 @@ exports.controller = function (request, p, response) {
           session +
           ');</script>'
       );
-    }
+    };
     exports.lastFm.fetchSession(p.token, function (session) {
       if (session) {
         var userUpdate = {
@@ -199,10 +174,6 @@ exports.controller = function (request, p, response) {
         userModel.save(userUpdate, function () {
           render('Yeah!', session);
         });
-        /*
-				lastfm.getUserInfo(session.name, function(user){
-					console.log("lastfm user", user);
-				});*/
       } else render('Unable to connect openwhyd to last.fm. Please try again!');
     });
   }

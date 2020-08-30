@@ -138,7 +138,7 @@ function fetchPlaylistsFromSearchIndex(p, cb){
 	memberCache.getCityUidSet(p.city, function(uidSet){
 		searchModel.query({_type: "playlist", q: p.city, limit: PLAYLIST_QUERY_LIMIT}, function(r) {
 			var playlists = [], hits = ((r || {}).hits || []);
-			for (var i in hits) {
+			for (let i in hits) {
 				hits[i].id = "" + hits[i]._id;
 				var idParts = hits[i].id.split("_");
 				hits[i].uId = idParts[0];

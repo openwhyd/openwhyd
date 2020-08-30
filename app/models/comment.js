@@ -67,8 +67,7 @@ exports.fetch = function (q, p, cb) {
 };
 
 function notifyUsers(comment) {
-  postModel.fetchPostById(comment.pId, function (post) {
-    var post = post || {};
+  postModel.fetchPostById(comment.pId, function (post = {}) {
     if (post.error || !post.uId) return;
     var notifiedUidSet = {};
     var todo = [];
@@ -102,8 +101,7 @@ function notifyUsers(comment) {
       exports.fetch(
         { pId: comment.pId, _id: { $lt: comment._id } },
         { fields: { uId: 1 } },
-        function (comments) {
-          var comments = comments && comments.length ? comments : [];
+        function (comments = []) {
           var commentsByUid = snip.excludeKeys(
             snip.groupObjectsBy(comments, 'uId'),
             notifiedUidSet
@@ -134,7 +132,7 @@ exports.insert = function (p, cb) {
     text: (p.text || '').trim(),
   };
   // checking parameters
-  for (var f in comment)
+  for (let f in comment)
     if (!comment[f]) {
       cb({ error: 'missing field: ' + f });
       return;
@@ -167,24 +165,25 @@ exports.delete = function (p, cb) {
   var q = { _id: mongodb.ObjectId('' + p._id) };
   getCol().findOne(
     q,
-    combineResult(function (comment) {
-      var comment = comment || { error: 'comment not found' };
+    combineResult(function (comment = { error: 'comment not found' }) {
       if (comment.error) {
         cb && cb(comment);
         return;
       }
-      postModel.fetchPostById(comment.pId, function (post) {
-        var post = post || { error: 'post not found' };
-        if (post.error) {
-          cb && cb(post);
-          return;
+      postModel.fetchPostById(
+        comment.pId,
+        (post = { error: 'post not found' }) => {
+          if (post.error) {
+            cb && cb(post);
+            return;
+          }
+          if (p.uId != post.uId && comment.uId != p.uId) {
+            cb && cb({ error: 'you are not allowed to delete this comment' });
+            return;
+          }
+          getCol().remove(q, combineResult(cb));
         }
-        if (p.uId != post.uId && comment.uId != p.uId) {
-          cb && cb({ error: 'you are not allowed to delete this comment' });
-          return;
-        }
-        getCol().remove(q, combineResult(cb));
-      });
+      );
     })
   );
 };

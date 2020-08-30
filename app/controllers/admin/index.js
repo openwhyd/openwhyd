@@ -200,16 +200,15 @@ function renderForm(p) {
   ].join('\n');
 }
 
-exports.controller = function (request, reqParams, response, error) {
+exports.controller = function (request, reqParams = {}, response) {
   request.logToConsole('admin.index.controller', request.body || reqParams);
-  var reqParams = reqParams || {};
 
   // make sure an admin is logged, or return an error page
   reqParams.loggedUser = request.checkAdmin(response);
   if (!reqParams.loggedUser) return;
 
   if (request.method.toLowerCase() === 'post') {
-    for (var i in indexFcts)
+    for (let i in indexFcts)
       if (request.body[i])
         return indexFcts[i](function (r) {
           response.legacyRender(r || { ok: 'done' });

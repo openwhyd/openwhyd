@@ -234,7 +234,7 @@ var i18n = {
 
 // fill the holes in FR version
 var defaultI18n = i18n['EN'];
-for (var i in defaultI18n) i18n['FR'][i] = i18n['FR'][i] || defaultI18n[i];
+for (let i in defaultI18n) i18n['FR'][i] = i18n['FR'][i] || defaultI18n[i];
 
 // === views ===
 
@@ -244,7 +244,7 @@ function renderLink(url) {
 
 exports.renderInfoPage = function (plC) {
   var safe = {};
-  for (var i in plC) safe[i] = uiSnippets.htmlEntities(plC[i]);
+  for (let i in plC) safe[i] = uiSnippets.htmlEntities(plC[i]);
   return [
     '<div class="whitePanel">',
     '<h1>Your playlist contest is active!</h1>',
@@ -265,7 +265,7 @@ exports.renderInfoPage = function (plC) {
 
 exports.renderJoinPage = function (plC) {
   var safe = {};
-  for (var i in plC) safe[i] = uiSnippets.htmlEntities(plC[i]);
+  for (let i in plC) safe[i] = uiSnippets.htmlEntities(plC[i]);
   return [
     '<div class="whitePanel">',
     '<h1>Join: ' + safe.title + '</h1>',
@@ -276,9 +276,9 @@ exports.renderJoinPage = function (plC) {
 
 exports.renderListPage = function (list) {
   var html = ['<div class="whitePanel">', '<h1>Playlist contests</h1>', '<ul>'];
-  for (var i in list) {
+  for (let i in list) {
     var plHtml = '';
-    for (var j in list[i].playlists) {
+    for (let j in list[i].playlists) {
       var plId = list[i].playlists[j].split('_');
       plHtml +=
         '<li><a href="/u/' +

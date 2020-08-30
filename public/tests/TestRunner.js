@@ -21,17 +21,17 @@ function TestRunner() {
       console.log('%c[TEST] ' + title + ' ...', 'color:#888');
       testFct(function (res) {
         console.log(
-          '%c[TEST]=> ' + (!!res ? 'OK' : 'FAIL: ' + title),
-          'color:' + (!!res ? 'green' : 'red')
+          '%c[TEST]=> ' + (res ? 'OK' : 'FAIL: ' + title),
+          'color:' + (res ? 'green' : 'red')
         );
-        if (!!res) setTimeout(nextTestFct);
+        if (res) setTimeout(nextTestFct);
         else finalCallback({ ok: false, title: title });
       });
     };
   }
 
   this.addTests = function (testMap) {
-    for (var title in testMap) tests.push(wrapTest(testMap[title], title));
+    for (let title in testMap) tests.push(wrapTest(testMap[title], title));
     return this;
   };
 

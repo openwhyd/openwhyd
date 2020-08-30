@@ -13,11 +13,12 @@
     "ecmaVersion": 2019
   },
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-inner-declarations": ["warn", "functions"]
   },
   "overrides": [
     {
-      "files": ["*.js", "*.ts"],
+      "files": ["*.js"],
       "rules": {
         "@typescript-eslint/no-var-requires": "off"
       }

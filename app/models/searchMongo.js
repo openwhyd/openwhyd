@@ -3,7 +3,7 @@ var util = require('util');
 // search functions -- not a controller
 
 function noaccent(chaine) {
-  temp = chaine.replace(/[àâä]/gi, 'a');
+  let temp = chaine.replace(/[àâä]/gi, 'a');
   temp = temp.replace(/[éèêë]/gi, 'e');
   temp = temp.replace(/[îï]/gi, 'i');
   temp = temp.replace(/[ôö]/gi, 'o');
@@ -18,7 +18,7 @@ var normalizeNameSearchQuery = function (queryString) {
   var result = [];
 
   // remove empty items
-  for (var i in words) if (words[i].length > 0) result.push(words[i]);
+  for (let i in words) if (words[i].length > 0) result.push(words[i]);
 
   return result;
 };
@@ -134,9 +134,9 @@ exports.topicNameSearch = function (
 
           // combine exact and quick results without duplicates
           if (exactResults.length > 0 && quickResults.length > 0)
-            for (var j in quickResults) {
+            for (let j in quickResults) {
               var found = false;
-              for (var i in exactResults)
+              for (let i in exactResults)
                 if (exactResults[i]._id === quickResults[j]._id) {
                   //console.log("found dup " + exactResults[i].name);
                   found = true;

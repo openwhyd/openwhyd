@@ -6,22 +6,9 @@
 
 var fs = require('fs');
 var hogan = require('hogan.js');
-var getUserFromId = require('../models/mongodb.js').getUserFromId;
 
 var templateCache = {};
-/*
-var RE_AVATAR_URL = /[\(\"\']\/img\/u\/([0-9a-z_\.]+)([^\)\"\']*)[\)\"\']/g;
-function getFinalAvatarUrl(url, uId, p){
-	if (uId.indexOf(".") > -1) // already a filename => skipping conversion
-		return url;
-	console.log("-- getFinalAvatarUrl -- ", url, uId, p);
-	var braces = [url[0], url[url.length-1]];
-	var img = (getUserFromId(uId) || {}).img;
-	img = img ? img + (p || "") : "/images/blank_user.gif";
-	console.log("--", url, "=>", img);
-	return braces[0] + img + braces[1];
-}
-*/
+
 // e.g. filename : 'public/register.html'
 exports.loadTemplate = function (fileName, callback, forceReload) {
   if (!forceReload) {

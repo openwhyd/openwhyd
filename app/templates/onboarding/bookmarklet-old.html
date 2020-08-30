@@ -169,7 +169,7 @@
   /*<![CDATA[*/
   $('li.instr').hide();
   var b = ['Opera', 'MSIE', 'Chrome', 'Safari', 'Firefox'];
-  for (var i in b)
+  for (let i in b)
     if (navigator.userAgent.indexOf(b[i]) > -1) {
       $('li.instr.' + b[i].toLowerCase()).show();
       break;

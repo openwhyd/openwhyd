@@ -26,7 +26,7 @@ function* generateCsvLines(object, opts = {}) {
   if (fields.length === 0) {
     const header = ['_id', 'value'];
     yield renderRow(header);
-    for (var _id in object) {
+    for (let _id in object) {
       yield renderRow([_id, object[_id]]);
     }
   } else {
@@ -35,7 +35,7 @@ function* generateCsvLines(object, opts = {}) {
       fields.map((field) => `value.${field}`)
     );
     yield renderRow(header);
-    for (var _id in object) {
+    for (let _id in object) {
       yield renderRow(
         [].concat.apply(
           [_id],

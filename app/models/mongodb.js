@@ -4,12 +4,11 @@
  * @author adrienjoly, whyd
  **/
 
-// GLOBAL.DEBUG = false; // deprecated and not needed
 var fs = require('fs');
 var mongodb = require('mongodb');
 var async = require('async');
 var shellRunner = require('./mongodb-shell-runner.js');
-var userModel = null; //require("./user.js");
+var userModel = null; // require("./user.js") will be lazy-loaded here
 
 const DB_INIT_SCRIPT = './config/initdb.js';
 const DB_TEST_SCRIPT = './config/initdb_testing.js';
@@ -47,8 +46,8 @@ exports.ObjectId = function (v) {
 };
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
-exports.dateToHexObjectId = function (t) {
-  var t = Math.round(t.getTime() / 1000); // turn into seconds
+exports.dateToHexObjectId = function (date) {
+  var t = Math.round(date.getTime() / 1000); // turn into seconds
   t = t.toString(16); // translate into hexadecimal representation
   t = t + '0000000000000000'; // add null values for 8 other bytes
   while (
@@ -85,7 +84,7 @@ exports.cacheUser = function (user) {
   //console.log("Caching user: ", user);
   exports.usernames[user.id] = exports.usernames[user.id] || {};
   exports.usernames[user.id].id = user.id;
-  for (var i in user)
+  for (let i in user)
     if (USER_CACHE_FIELDS[i])
       exports.usernames[user.id][i] = user[i] || exports.usernames[user.id][i];
 };
@@ -94,7 +93,7 @@ exports.cacheUsers = function (callback) {
   console.log('Caching users ...');
   userModel = userModel || require('./user.js');
   userModel.fetchMulti({}, { fields: USER_CACHE_FIELDS }, function (results) {
-    for (var i in results) exports.cacheUser(results[i]);
+    for (let i in results) exports.cacheUser(results[i]);
     console.log('Caching users: done!');
     if (callback) callback();
   });
@@ -150,7 +149,7 @@ exports.cacheCollections = function (callback) {
     else {
       if (0 == collections.length) finishInit();
       var remaining = collections.length;
-      for (var i in collections) {
+      for (let i in collections) {
         var queryHandler = (function () {
           var table = collections[i].collectionName;
           return function (err, result) {
@@ -174,7 +173,7 @@ exports.runShellScript = function (script, callback) {
 
 exports.clearCollections = async function () {
   if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
-    return reject(new Error('allowed on test database only'));
+    throw new Error('allowed on test database only');
   } else {
     for (const name in exports.collections) {
       await exports.collections[name].remove({}, { multi: true });
@@ -183,7 +182,7 @@ exports.clearCollections = async function () {
 };
 
 exports.initCollections = function ({ addTestData } = {}) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const dbInitScripts = [DB_INIT_SCRIPT];
     if (addTestData) {
       if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
@@ -201,7 +200,8 @@ exports.initCollections = function ({ addTestData } = {}) {
           nextScript();
         });
       },
-      function (err, res) {
+      function (err) {
+        if (err) reject(err);
         // all db init scripts were interpreted => continue app init
         exports.cacheCollections(function () {
           exports.cacheUsers(function () {

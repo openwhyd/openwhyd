@@ -90,7 +90,7 @@ var ACTIONS = {
         }
       )
       .toArray(function (err, tracks) {
-        for (var i in tracks) {
+        for (let i in tracks) {
           var track = tracks[i];
           console.log(
             'fetchMetadataForHotTracks',
@@ -143,7 +143,7 @@ exports.controller = function (request, reqParams, response) {
 
   var isAdmin = request.isAdmin();
 
-  p = reqParams;
+  const p = reqParams;
 
   if (reqParams._1 && reqParams._2)
     p.eId = request.url.split('/api/track')[1].split('?')[0];

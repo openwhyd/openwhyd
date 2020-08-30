@@ -70,7 +70,7 @@ function renderItem(item) {
 
 function renderTemplate(items) {
   var users = [];
-  for (var i in items) users.push(renderItem(items[i]));
+  for (let i in items) users.push(renderItem(items[i]));
 
   var console = new AdminLists();
   console.addWideList(users, 'Users', ['rename', 'delete'], {});

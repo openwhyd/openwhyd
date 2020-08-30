@@ -50,7 +50,8 @@
 	{{#results}}
 
 	<div id="tabSelector">
-		<ul style="overflow:auto;"><!-- style= hack to prevent a side effect of damien's integration -->
+		<ul style="overflow:auto;">
+			<!-- style= hack to prevent a side effect of damien's integration -->
 			<li>
 				<a id="tab_tracks" href="javascript:{};//#tracks" class="selected">{{nbPosts}} Tracks<div></div></a>
 			</li>
@@ -92,17 +93,12 @@
 					<li class="user">
 						<a href="/u/{{_id}}" target="_blank">
 							<div class="thumb" style="background-image:url('/img/u/{{_id}}');"></div>
-							<span class="username">{{name}}<span>
-									{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}}
+							<span class="username">{{name}}</span>
+							{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}}
 						</a>
-						<span class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
-							{{#isUserLogged}}
-								onclick="$(this).each(switchSubscription);"
-							{{/isUserLogged}}
-							{{^isUserLogged}}
-								onclick="window.location = '/signup';"
-							{{/isUserLogged}}
-							data-uid="{{_id}}"
+						<span class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}" {{#isUserLogged}}
+							onclick="$(this).each(switchSubscription);" {{/isUserLogged}} {{^isUserLogged}}
+							onclick="window.location = '/signup';" {{/isUserLogged}} data-uid="{{_id}}"
 							onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
 							onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';">
 							{{#isSubscribed}}Following{{/isSubscribed}}

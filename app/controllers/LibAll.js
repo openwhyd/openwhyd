@@ -10,7 +10,7 @@ var feedTemplate = require('../templates/feed.js');
 
 function makeUserList() {
   var userList = [];
-  for (var i in mongodb.usernames /*.slice(0,9)*/)
+  for (let i in mongodb.usernames /*.slice(0,9)*/)
     userList.push(mongodb.usernames[i]);
   return userList;
 }

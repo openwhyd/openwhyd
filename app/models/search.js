@@ -35,7 +35,7 @@ function makeNoImplHandler(methodName, cbPos) {
   };
 }
 
-for (var methodName in FCTS_REQUIRED) {
+for (let methodName in FCTS_REQUIRED) {
   if (!searchImpl[methodName])
     console.error('models.search: NO IMPLEMENTATION for ' + methodName);
   exports[methodName] =
@@ -43,7 +43,7 @@ for (var methodName in FCTS_REQUIRED) {
     makeNoImplHandler(methodName, FCTS_REQUIRED[methodName]);
 }
 
-for (var methodName in FCTS_OPTIONAL)
+for (let methodName in FCTS_OPTIONAL)
   exports[methodName] =
     searchImpl[methodName] ||
     makeNoImplHandler(methodName, FCTS_OPTIONAL[methodName]);

@@ -36,7 +36,7 @@ describe('hypemachine / mp3 detector', function () {
 
   function objToArray(results) {
     var array = [];
-    for (var i in results) array.push(results[i]);
+    for (let i in results) array.push(results[i]);
     return array;
   }
 

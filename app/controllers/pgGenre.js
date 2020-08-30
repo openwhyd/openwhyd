@@ -51,7 +51,7 @@ function fetchGenreLatest(p, cb) {
       var hasMore = posts && posts.length > LIMIT;
       if (hasMore) posts = posts.slice(0, LIMIT);
       if (p.loggedUser)
-        for (var i in posts)
+        for (let i in posts)
           posts[i].isLoved = snip.arrayHas(posts[i].lov, '' + p.loggedUser.id);
       cb({
         hasMore: hasMore ? { lastPid: posts[LIMIT - 1]._id } : null,
@@ -69,7 +69,7 @@ function fetchGenreStream(p, cb) {
     var hasMore =
       posts && posts.length > LIMIT ? { skip: firstIndex + LIMIT } : null; // to do before renderPosts
     if (hasMore) posts = posts.slice(0, LIMIT);
-    for (var i in posts) {
+    for (let i in posts) {
       if (posts[i].rankIncr < 0) posts[i].cssClass = 'rankingUp';
       else if (posts[i].rankIncr > 0) posts[i].cssClass = 'rankingDown';
       if (p.loggedUser)

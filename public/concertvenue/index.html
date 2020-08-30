@@ -1,326 +1,484 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Concert Venues - Openwhyd</title>
-        <link rel="shortcut icon" href="/favicon.png">
-        
-        <style>
-        
-        /* RESET */
-        html, body, div, span, applet, object, iframe,
-        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-        a, abbr, acronym, address, big, cite, code,
-        del, dfn, em, img, ins, kbd, q, s, samp,
-        small, strike, strong, sub, sup, tt, var,
-        b, u, i, center,
-        dl, dt, dd, ol, ul, li,
-        fieldset, form, label, legend,
-        table, caption, tbody, tfoot, thead, tr, th, td,
-        article, aside, canvas, details, embed, 
-        figure, figcaption, footer, header, hgroup, 
-        menu, nav, output, ruby, section, summary,
-        time, mark, audio, video {
-        	margin: 0;
-        	padding: 0;
-        	border: 0;
-        	font-size: 100%;
-        	font: inherit;
-        	vertical-align: baseline;
-        }
-        /* HTML5 display-role reset for older browsers */
-        article, aside, details, figcaption, figure, 
-        footer, header, hgroup, menu, nav, section {
-        	display: block;
-        }
-        body {
-        	line-height: 1;
-        }
-        ol, ul {
-        	list-style: none;
-        }
-        blockquote, q {
-        	quotes: none;
-        }
-        blockquote:before, blockquote:after,
-        q:before, q:after {
-        	content: '';
-        	content: none;
-        }
-        table {
-        	border-collapse: collapse;
-        	border-spacing: 0;
-        }
-        
-        /* ********* */
-        
-        
-        body {
-        	background: #F4F4F4;
-        	font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
-        	font-size: 14px;
-        	color: #717171;
-        	line-height: 21px;
-        }
-        
-        #header {
-        	background: #535559;
-        	position: relative;
-        	height: 49px;
-        }
-        
-        #header > div {
-        	width: 968px;
-        	margin: 0 auto;
-        }
-        
-        #header > div > a {
-        	position: absolute;
-        	top: 4px;
-        }
-        
-        #content {
-        	width: 888px;
-        	margin: 30px auto;
-        	padding: 40px;
-        	background: #FFF;
-        	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        	border-radius: 3px;
-        }
-        
-        .italic {
-        	font-style: italic; 
-        }
-        
-        .bold {
-        	font-weight: bold;
-        }
-        
-        .underline {
-        	text-decoration: underline;
-        } 
-        
-        a {
-        	color: #0870c1;
-        	text-decoration: none;
-        	cursor: pointer;
-        }
-        
-        p,h1,h2,h3,h4,ul,blockquote {
-        	margin-bottom: 21px;
-        }
-        
-        h1,h2,h3,h4 {
-        	color: #4d4d4d;
-        	font-weight: bold;
-        }
-        
-        h1 {
-        	font-size: 26px;
-        	padding-bottom: 21px;
-        	border-bottom: 1px dotted #DEDEDE;
-        }
-        
-        h2 {
-        	font-size: 20px;
-        	padding-bottom: 21px;
-        	border-bottom: 1px dotted #DEDEDE;
-        }
-        
-        h3 {
-        	font-size: 16px;
-        }
-        
-        ul {
-        	margin-left: 30px;
-        	list-style: disc;
-        }
-        
-        li {
-        	margin-bottom: 21px;
-        }
-        
-        .whyshould {
-        	margin: 0;
-        }
-        
-        .whyshould ul {
-        	float: left;
-        	margin: 0;
-        	background-color: #F1F1F1;
-        	border-radius: 2px;
-        	padding: 0 10px;
-        }
-        
-        .whyshould ul.fast, ul.awesome {
-        	margin-right: 30px;	
-        }
-        
-        .whyshould li {
-        	text-align: center;
-        	list-style: none;
-        	width: 256px;
-        	font-size: 14px;        
-        }
-        
-        .whyshould li h4 {
-        	font-size: 16px;
-        	padding: 14px 0;
-        	padding-bottom: 14px;
-        	border-bottom: 1px dotted #DBDBDB;
-        	text-transform: uppercase;
-        	text-shadow: 0 1px 0 rgba(255,255,255,0.3);
-        }
-               
-        .clear {
-        	clear: both;
-        }
-        
-       .intro, .product, .community, .company, .team, .quotes, .social, .images {
-        	margin: 21px 0 63px 0;
-        } 
-        
-        .images {
-        	margin: 21px 0 0 0px;
-        }
-         
-        .images > ul {
-        	list-style: none;
-        	margin: 0;
-        	padding: 0;
-        }
-        
-        .images > ul > li {
-        	float: left;
-        	margin: 0 18px 0 0;
-        }
-        
-        
-        blockquote {
-        	margin: 20px;
-        	border-left: 3px solid #bfe3ff;
-        	padding-left: 14px;
-        } 
-        
-        .why, .who, .instruction {
-        	margin-bottom: 63px;
-        }
-        
-        .question {
-        	padding-top: 24px;
-        	font-size: 16px;
-        	text-align: center;
-        }
-        
-        .who ul {
-        	margin: 0 0 0 16px;
-        }
-        
-        .etape {
-        	font-size: 16px;
-        	font-weight: bold;
-        	border-right: 1px solid #BFE3FF;
-        	display: inline-block;
-        	background: #BFE3FF;
-        	padding: 4px 8px;
-        	border-radius: 2px;
-        	text-shadow: 0 1px 0 rgba(255,255,255,0.3);
-        	margin-right: 10px;
-        }
-        
-        .instruction ul {
-        	margin: 0;
-        }
-        
-        .instruction ul li {
-        	list-style: none;
-        }
-        
-        .vimeo{
-            margin: 0 auto;
-            text-align: center;
-        }
+  <head>
+    <title>Concert Venues - Openwhyd</title>
+    <link rel="shortcut icon" href="/favicon.png" />
 
-        #logo {
-            margin-top: 4px;
-        }
-        
-        </style>
-        
-    </head>
-    <body>
+    <style>
+      /* RESET */
+      html,
+      body,
+      div,
+      span,
+      applet,
+      object,
+      iframe,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      blockquote,
+      pre,
+      a,
+      abbr,
+      acronym,
+      address,
+      big,
+      cite,
+      code,
+      del,
+      dfn,
+      em,
+      img,
+      ins,
+      kbd,
+      q,
+      s,
+      samp,
+      small,
+      strike,
+      strong,
+      sub,
+      sup,
+      tt,
+      var,
+      b,
+      u,
+      i,
+      center,
+      dl,
+      dt,
+      dd,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      legend,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      article,
+      aside,
+      canvas,
+      details,
+      embed,
+      figure,
+      figcaption,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      output,
+      ruby,
+      section,
+      summary,
+      time,
+      mark,
+      audio,
+      video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+
+      /* HTML5 display-role reset for older browsers */
+      article,
+      aside,
+      details,
+      figcaption,
+      figure,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      section {
+        display: block;
+      }
+
+      body {
+        line-height: 1;
+      }
+
+      ol,
+      ul {
+        list-style: none;
+      }
+
+      blockquote,
+      q {
+        quotes: none;
+      }
+
+      blockquote:before,
+      blockquote:after,
+      q:before,
+      q:after {
+        content: '';
+        content: none;
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      /* ********* */
+
+      body {
+        background: #f4f4f4;
+        font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+        font-size: 14px;
+        color: #717171;
+        line-height: 21px;
+      }
+
+      #header {
+        background: #535559;
+        position: relative;
+        height: 49px;
+      }
+
+      #header > div {
+        width: 968px;
+        margin: 0 auto;
+      }
+
+      #header > div > a {
+        position: absolute;
+        top: 4px;
+      }
+
+      #content {
+        width: 888px;
+        margin: 30px auto;
+        padding: 40px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      .italic {
+        font-style: italic;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .underline {
+        text-decoration: underline;
+      }
+
+      a {
+        color: #0870c1;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      ul,
+      blockquote {
+        margin-bottom: 21px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        color: #4d4d4d;
+        font-weight: bold;
+      }
+
+      h1 {
+        font-size: 26px;
+        padding-bottom: 21px;
+        border-bottom: 1px dotted #dedede;
+      }
+
+      h2 {
+        font-size: 20px;
+        padding-bottom: 21px;
+        border-bottom: 1px dotted #dedede;
+      }
+
+      h3 {
+        font-size: 16px;
+      }
+
+      ul {
+        margin-left: 30px;
+        list-style: disc;
+      }
+
+      li {
+        margin-bottom: 21px;
+      }
+
+      .whyshould {
+        margin: 0;
+      }
+
+      .whyshould ul {
+        float: left;
+        margin: 0;
+        background-color: #f1f1f1;
+        border-radius: 2px;
+        padding: 0 10px;
+      }
+
+      .whyshould ul.fast,
+      ul.awesome {
+        margin-right: 30px;
+      }
+
+      .whyshould li {
+        text-align: center;
+        list-style: none;
+        width: 256px;
+        font-size: 14px;
+      }
+
+      .whyshould li h4 {
+        font-size: 16px;
+        padding: 14px 0;
+        padding-bottom: 14px;
+        border-bottom: 1px dotted #dbdbdb;
+        text-transform: uppercase;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+
+      .clear {
+        clear: both;
+      }
+
+      .intro,
+      .product,
+      .community,
+      .company,
+      .team,
+      .quotes,
+      .social,
+      .images {
+        margin: 21px 0 63px 0;
+      }
+
+      .images {
+        margin: 21px 0 0 0px;
+      }
+
+      .images > ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .images > ul > li {
+        float: left;
+        margin: 0 18px 0 0;
+      }
+
+      blockquote {
+        margin: 20px;
+        border-left: 3px solid #bfe3ff;
+        padding-left: 14px;
+      }
+
+      .why,
+      .who,
+      .instruction {
+        margin-bottom: 63px;
+      }
+
+      .question {
+        padding-top: 24px;
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .who ul {
+        margin: 0 0 0 16px;
+      }
+
+      .etape {
+        font-size: 16px;
+        font-weight: bold;
+        border-right: 1px solid #bfe3ff;
+        display: inline-block;
+        background: #bfe3ff;
+        padding: 4px 8px;
+        border-radius: 2px;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+        margin-right: 10px;
+      }
+
+      .instruction ul {
+        margin: 0;
+      }
+
+      .instruction ul li {
+        list-style: none;
+      }
+
+      .vimeo {
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      #logo {
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+
+  <body>
     <div id="header">
-    <div>
-    <a href="http://openwhyd.org"><img id="logo" src="../images/logo-white.png" /></a>
+      <div>
+        <a href="http://openwhyd.org"
+          ><img id="logo" src="../images/logo-white.png"
+        /></a>
+      </div>
     </div>
-    </div>
-    
+
     <div id="content">
-    
-    <div class="vimeo">
-    	<iframe src="http://player.vimeo.com/video/55519541?badge=0" width="500" height="281" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></p>
-    </div>
-    
-    <div class="intro">
-	    <p>Openwhyd is the platform for music lovers to keep, play, and share all of the internet’s music, from emerging groups to the classics. We build a <span class="bold">playlist embed for concert venues</span> to showcase upcoming bands and artists by combining all of the places where artists share their music in one place that anyone can listen to regardless of geographic limitations. </p>
-    </div>
-    
-    <div class="why">
-	    <h2>Why Should I use it?</h2> 
-	    <ul class="whyshould">    
-	    	<ul class="fast">
-	    		<li><h4>Fast</h4></li>
-	    		<li>- Make and embed a playlist in under a minute</li>
-	    		<li>- Bookmark tracks to your embed automatically while you surf the web</li>
-	    		<li>- Manage your playlist on Openwhyd to keep it fresh</li>
-	    	</ul>
-	    	
-	    	<ul class="awesome">
-	    		<li><h4>Awesome</h4></li>
-	    		<li>- Share the great bands coming to your area with the world, showcase their talent!</li>
-	    		<li>- Improve the quality of your site with media that will make people want to visit often</li>
-	    		<li>- Share new music with the Openwhyd Community automatically</li>
-	    	</ul>
-	    	
-	    	<ul class="free">
-	    		<li><h4>Free</h4></li>
-	    		<li>- It's totally and completely free</li>
-	    	</ul>
-	    	
-	    </ul> <!-- Close UL -->
-	    <div class="clear"></div>
-    </div> <!-- Close .why -->
-    
-    
-    <div class="who">
+      <div class="vimeo">
+        <iframe
+          src="http://player.vimeo.com/video/55519541?badge=0"
+          width="500"
+          height="281"
+          frameborder="0"
+          webkitAllowFullScreen
+          mozallowfullscreen
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <div class="intro">
+        <p>
+          Openwhyd is the platform for music lovers to keep, play, and share all
+          of the internet’s music, from emerging groups to the classics. We
+          build a <span class="bold">playlist embed for concert venues</span> to
+          showcase upcoming bands and artists by combining all of the places
+          where artists share their music in one place that anyone can listen to
+          regardless of geographic limitations.
+        </p>
+      </div>
+
+      <div class="why">
+        <h2>Why Should I use it?</h2>
+        <ul class="whyshould">
+          <ul class="fast">
+            <li>
+              <h4>Fast</h4>
+            </li>
+            <li>- Make and embed a playlist in under a minute</li>
+            <li>
+              - Bookmark tracks to your embed automatically while you surf the
+              web
+            </li>
+            <li>- Manage your playlist on Openwhyd to keep it fresh</li>
+          </ul>
+
+          <ul class="awesome">
+            <li>
+              <h4>Awesome</h4>
+            </li>
+            <li>
+              - Share the great bands coming to your area with the world,
+              showcase their talent!
+            </li>
+            <li>
+              - Improve the quality of your site with media that will make
+              people want to visit often
+            </li>
+            <li>- Share new music with the Openwhyd Community automatically</li>
+          </ul>
+
+          <ul class="free">
+            <li>
+              <h4>Free</h4>
+            </li>
+            <li>- It's totally and completely free</li>
+          </ul>
+        </ul>
+        <!-- Close UL -->
+        <div class="clear"></div>
+      </div>
+      <!-- Close .why -->
+
+      <div class="who">
         <h2>Who else uses it?</h2>
         <ul>
-        	<li><a href="http://www.glazart.com/">Glazart</a> - Paris Concert Venue
-        	(Openwhyd integrated into radio button on left menu)</li>
-        	<li><a href="http://www.musiclikedirt.com/2012/12/04/the-blog-sound-of-2013-longlist/">Music Like Dirt</a> - UK Music Blog</li>
-        	<li><a href="http://www.caveauxpoetes.com/">Cave aux Poètes</a> - Lille Concert Venue
-        	(Openwhyd integrated into right menu under “Playstation”)</li>
-        	<li><a href="http://www.federationfrancaisedeclubbing.fr/2012/12/le-meilleur-de-la-musique-des-musiques-de-la-selection-de-la-semaine-part1/">Federation Francaise de Clubbing</a></li>
+          <li>
+            <a href="http://www.glazart.com/">Glazart</a> - Paris Concert Venue
+            (Openwhyd integrated into radio button on left menu)
+          </li>
+          <li>
+            <a
+              href="http://www.musiclikedirt.com/2012/12/04/the-blog-sound-of-2013-longlist/"
+              >Music Like Dirt</a
+            >
+            - UK Music Blog
+          </li>
+          <li>
+            <a href="http://www.caveauxpoetes.com/">Cave aux Poètes</a> - Lille
+            Concert Venue (Openwhyd integrated into right menu under
+            “Playstation”)
+          </li>
+          <li>
+            <a
+              href="http://www.federationfrancaisedeclubbing.fr/2012/12/le-meilleur-de-la-musique-des-musiques-de-la-selection-de-la-semaine-part1/"
+              >Federation Francaise de Clubbing</a
+            >
+          </li>
         </ul>
-    </div>
-    
-    <div class="instruction">
+      </div>
+
+      <div class="instruction">
         <h2>Sounds cool, how do I do it?</h2>
         <ul>
-        	<li><span class="etape">1</span> Sign up directly with this link: <a href="http://openwhyd.org/invite/4fb118c368b1a410ecdc0058">http://openwhyd.org/invite/4fb118c368b1a410ecdc0058</a></li>
-        	<li><span class="etape">2</span> Create a playlist</li>
-        	<li><span class="etape">3</span> Add songs</li>
-        	<li><span class="etape">4</span> Copy Embed code</li>
-        	<li><span class="etape">5</span> Paste into your HTML</li>
-        	<li><span class="etape">6</span> Manage from Openwhyd (or via Bookmarklet!) </li>
+          <li>
+            <span class="etape">1</span> Sign up directly with this link:
+            <a href="http://openwhyd.org/invite/4fb118c368b1a410ecdc0058"
+              >http://openwhyd.org/invite/4fb118c368b1a410ecdc0058</a
+            >
+          </li>
+          <li><span class="etape">2</span> Create a playlist</li>
+          <li><span class="etape">3</span> Add songs</li>
+          <li><span class="etape">4</span> Copy Embed code</li>
+          <li><span class="etape">5</span> Paste into your HTML</li>
+          <li>
+            <span class="etape">6</span> Manage from Openwhyd (or via
+            Bookmarklet!)
+          </li>
         </ul>
+      </div>
+
+      <div class="footer">
+        <p>
+          The Openwhyd community is made up of passionate music lovers with a
+          stake in music, from concert venues to blogs to curators to artists
+          themselves, Openwhyd is the cutting edge of music around the world.
+        </p>
+      </div>
     </div>
-    
-    <div class="footer">
-    <p>The Openwhyd community is made up of passionate music lovers with a stake in music, from concert venues to blogs to curators to artists themselves, Openwhyd is the cutting edge of music around the world.</p>
-    
-    </div>
-    
-       	
-   	</div>
-   <body>
+  </body>
 </html>

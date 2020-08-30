@@ -14,7 +14,7 @@ var HISTORY_LIMIT = 20;
 
 function transformSubscriptionArray(results) {
   if (results)
-    for (var i in results)
+    for (let i in results)
       results[i] = {
         id: ('' + results[i].tId).replace('/u/', ''),
         name: results[i].tNm,
@@ -24,7 +24,7 @@ function transformSubscriptionArray(results) {
 
 function transformSubscriberArray(results) {
   if (results)
-    for (var i in results)
+    for (let i in results)
       results[i] = {
         id: /*"/u/" +*/ '' + results[i].uId,
         name: results[i].uNm,
@@ -32,8 +32,7 @@ function transformSubscriberArray(results) {
   return results;
 }
 
-function fetchArray(query, options, callback) {
-  var query = query || {};
+function fetchArray(query = {}, options, callback) {
   if (typeof query.uId == 'string' && query.uId.indexOf('/u/') == 0)
     console.error('warning: found uId with /u/ prefix');
   if (typeof query.tId == 'string' && query.tId.indexOf('/u/') == 0)
@@ -131,7 +130,7 @@ exports.fetchSubscriptionSet = function (uid, callback) {
 
 exports.fetchSubscriptionArray = function (uid, cb) {
   fetchArray({ uId: uid }, { fields: { _id: 0, tId: 1 } }, function (subscr) {
-    for (var i in subscr) subscr[i] = subscr[i].tId;
+    for (let i in subscr) subscr[i] = subscr[i].tId;
     cb(subscr);
   });
 };
@@ -186,7 +185,7 @@ exports.addMulti = function(user, subscriptionList, callback) {
 		if (--remaining == 0)
 			callback && callback();
 	}
-	for (var i in subscriptionList) {
+	for (let i in subscriptionList) {
 		var tId = subscriptionList[i].id;
 		if (tId)
 			exports.add({

@@ -34,6 +34,7 @@ var runTests = (function () {
     }
     function runTest(t, cb) {
       console.log(('testing: ' + t[0] + '...').blue);
+      let ok;
       t[1](function (success) {
         t.push((ok = success ? 'ok' : 'NOK'));
         console.log((' => ' + ok).blue);

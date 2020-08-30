@@ -53,7 +53,7 @@ exports.checkInviteCode = function (request, reqParams, response, okCallback) {
 /**
  * called when user follows an invite URL (/invite/xxx), e.g. provided in an email
  */
-exports.renderRegisterPage = function (request, reqParams, response, error) {
+exports.renderRegisterPage = function (request, reqParams, response) {
   if (!reqParams) reqParams = {};
   if (reqParams.id) reqParams.inviteCode = reqParams.id; // for compatibility with previous versions of routes.conf
 
@@ -67,8 +67,7 @@ exports.renderRegisterPage = function (request, reqParams, response, error) {
     plC: reqParams.plC, // playlist contest id => will skip autofollow/onboarding and redirect to playlist page
   });
 
-  function render(user) {
-    var user = user || {};
+  function render(user = {}) {
     //invitePage.refreshTemplates(function() {
     var sender = request.getUserFromId(user.iBy);
     var registrationPage = invitePage.renderInvitePage(
@@ -127,7 +126,7 @@ var submitInvites = function (request, reqParams, response) {
     var successEmails = [];
     var message =
       reqParams.message && reqParams.message != '' ? reqParams.message : null;
-    for (var i in reqParams.email)
+    for (let i in reqParams.email)
       if (reqParams.email[i])
         users.inviteUserBy(reqParams.email[i], '' + loggedUser._id, function(
           invite

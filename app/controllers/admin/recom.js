@@ -18,7 +18,7 @@ var cachedTrackAnalytics;
 
 function countOccurences(array) {
   var count = {};
-  for (var j in array) count[array[j]] = (count[array[j]] || 0) + 1;
+  for (let j in array) count[array[j]] = (count[array[j]] || 0) + 1;
   return snip.mapToObjArray(count, 'id', 'c').sort(function (a, b) {
     return b.c - a.c;
   });
@@ -64,7 +64,7 @@ function gatherTrackAnalytics(cb) {
   else
     generateMap(function (eIds, nb) {
       console.log('cached', nb, 'posts');
-      for (var eId in eIds)
+      for (let eId in eIds)
         eIds[eId].interacted = eIds[eId].posts + eIds[eId].likes;
       cb((cachedTrackAnalytics = eIds), nb);
     });
@@ -107,7 +107,7 @@ function gatherArtistAnalytics(cb) {
   else
     generateMap(function (map, nb) {
       console.log('cached', nb, 'posts');
-      for (var artist in map)
+      for (let artist in map)
         map[artist].interacted = map[artist].posts + map[artist].likes;
       cb((cachedArtistAnalytics = map), nb);
     });
@@ -132,7 +132,7 @@ function RecomEvaluator(recomUsersFct) {
           max = NaN;
         // separate already subscribed users
         var recomUsers = [];
-        for (var i in allUsers)
+        for (let i in allUsers)
           if (!allUsers[i].subscribed) recomUsers.push(allUsers[i]);
         if (recomUsers && recomUsers.length) {
           max = recomUsers[0].score;
@@ -198,11 +198,11 @@ function RecomEvaluator(recomUsersFct) {
         var classes = [
           /* {gte:4, c:0}, {gte:3, c:0}, {gte:2, c:0}, {gte:1, c:0}, {gte:0, c:0} */
         ];
-        for (var j = 0; j < nbClasses; ++j) classes.push(0);
-        for (var i = table.length - 1; i > 0; --i) {
+        for (let j = 0; j < nbClasses; ++j) classes.push(0);
+        for (let i = table.length - 1; i > 0; --i) {
           console.log(table[i]);
           var nbRecoms = table[i][2];
-          for (var j = 0; j < nbClasses; ++j)
+          for (let j = 0; j < nbClasses; ++j)
             if (nbRecoms >= j) ++classes[j];
             else break; // => jump to next user of the recom table
         }
@@ -226,35 +226,16 @@ function makeAlphaFieldSort(field) {
 }
 
 // recommendation functions
-/*
-function recomUsersByTracks(uId, cb) {
-	followModel.fetchUserSubscriptions(uId, function(userSub) {
-		var followedIdSet = snip.objArrayToSet(userSub.subscriptions, "id", true);
-		recomModel.recomUsersByTracks(uId, null, function(users){
-			var users = snip.mapToObjArray(users);
-			users.sort(function(a,b){
-				return b.score - a.score;
-			})
-			for (var i in users) {
-				users[i].posted = (users[i].posted || []).length;
-				users[i].liked = (users[i].liked || []).length;
-				users[i].liker = (users[i].liker || []).length;
-				users[i].subscribed = !!followedIdSet[users[i].id];
-			}
-			cb(users);
-		});
-	});
-}
-*/
+
 function recomUsersByArtists(uId, cb) {
   followModel.fetchUserSubscriptions(uId, function (userSub) {
     var followedIdSet = snip.objArrayToSet(userSub.subscriptions, 'id', true);
-    recomModel.recomUsersByArtists(uId, null, function (users) {
-      var users = snip.mapToObjArray(users);
+    recomModel.recomUsersByArtists(uId, null, function (_users) {
+      var users = snip.mapToObjArray(_users);
       users.sort(function (a, b) {
         return b.score - a.score;
       });
-      for (var i in users) {
+      for (let i in users) {
         users[i].posted = (users[i].posted || []).length;
         users[i].liked = (users[i].liked || []).length;
         users[i].liker = (users[i].liker || []).length;
@@ -278,9 +259,9 @@ var fileGenerators = {
     recomModel.matchingEngine.fetchUsersByArtists(bands, null, function (
       users
     ) {
-      var users = snip.mapToObjArray(users).map(function (user) {
+      const processedUsers = snip.mapToObjArray(users).map(function (user) {
         var artists = countOccurences(user.posted || []);
-        user.score = artists.length; //(user.posted || []).length;
+        user.score = artists.length;
         user.artists = artists
           .map(function (artist) {
             return artist.id + ' (' + artist.c + ')';
@@ -289,10 +270,10 @@ var fileGenerators = {
         delete user.posted;
         return user;
       });
-      users.sort(function (a, b) {
+      processedUsers.sort(function (a, b) {
         return b.score - a.score;
       });
-      cb(users);
+      cb(processedUsers);
     });
   },
   'bandsToUsers.tsv': function (p, cb) {
@@ -319,7 +300,7 @@ var fileGenerators = {
   'tracks.txt': function (p, cb) {
     gatherTrackAnalytics(function (map) {
       var trackNames = [];
-      for (var eId in map) {
+      for (let eId in map) {
         var cleaned = snip.detectTrackFields(
           snip.cleanTrackName(map[eId].name)
         );

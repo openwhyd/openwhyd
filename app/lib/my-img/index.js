@@ -9,7 +9,9 @@ var USE_GRAPHICS_MAGICK = true; // previously process.env.WHYD_USE_GRAPHICS_MAGI
 function getVersion(cmd) {
   try {
     return child_process.execSync(cmd).toString().split('\n')[0];
-  } catch (e) {}
+  } catch (e) {
+    // let the function return undefined
+  }
 }
 
 // detect graphicsmagick

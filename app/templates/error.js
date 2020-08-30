@@ -3,8 +3,6 @@
  * @author adrienjoly, whyd
  **/
 
-var url = require('url');
-var querystring = require('querystring');
 var snip = require('../snip.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 

@@ -51,7 +51,7 @@ function LibraryController(reqParams, render) {
 		format: reqParams.format,
 		pageUrl: reqParams.pageUrl*/,
   };
-  for (var i in paramsToInclude)
+  for (let i in paramsToInclude)
     this.options[paramsToInclude[i]] = reqParams[paramsToInclude[i]];
   if (typeof this.options.limit == 'string')
     this.options.limit = parseInt(this.options.limit);
@@ -63,28 +63,26 @@ LibraryController.prototype.renderPage = function (
   sidebarHtml,
   feedHtml
 ) {
-  var self = this;
   if (!this.options.embedW) {
     this.options.content = feedHtml;
-    var html = feedTemplate.renderFeedPage(user, this.options);
+    let html = feedTemplate.renderFeedPage(user, this.options);
     var loggedUserId = (this.options.loggedUser || {}).id;
     if (loggedUserId) {
-      userModel.fetchByUid(loggedUserId, function (user) {
+      userModel.fetchByUid(loggedUserId, (user) => {
         if (user && !user.consent) {
-          var thisUrl = encodeURIComponent(self.options.pageUrl || '/');
+          var thisUrl = encodeURIComponent(this.options.pageUrl || '/');
           html = loggingTemplate.htmlRedirect('/consent?redirect=' + thisUrl);
         }
-        self.render({ html: html });
+        this.render({ html });
       });
-    } else this.render({ html: html });
+    } else this.render({ html });
   } else {
-    var html = feedTemplate.renderFeedEmbed(feedHtml, this.options);
-    this.render({ html: html });
+    this.render({ html: feedTemplate.renderFeedEmbed(feedHtml, this.options) });
   }
 };
 
 LibraryController.prototype.renderJson = function (json) {
-  this.render({ json: json });
+  this.render({ json });
 };
 
 LibraryController.prototype.renderOther = function (data, mimeType) {
@@ -160,7 +158,7 @@ exports.controller = function (request, reqParams, response) {
         'limit',
         'callback',
       ];
-    for (var i in paramsToKeep)
+    for (let i in paramsToKeep)
       if (reqParams[paramsToKeep[i]])
         paramsObj[paramsToKeep[i]] = reqParams[paramsToKeep[i]];
     response.temporaryRedirect(path, paramsObj);

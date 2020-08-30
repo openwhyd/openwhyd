@@ -5,19 +5,18 @@
 
 var mongodb = require('../../models/mongodb.js');
 var plTagsModel = require('../../models/plTags.js');
-var snip = require('../../snip.js');
 var FileController = require('./FileController.js');
 var util = require('util');
 
 function wrapJsonGeneratorToText(name) {
   return function (p, cb) {
-    fileGenerators[name](p, function (items) {
-      var items = items.length ? { results: items } : items;
+    fileGenerators[name](p, function (_items) {
+      const items = _items.length ? { results: items } : items;
       //cb(JSON.stringify(items, null, 2));
       var lines = ['{'];
-      for (var i in items) {
+      for (let i in items) {
         lines.push('  "' + i + '": [');
-        for (var u in items[i])
+        for (let u in items[i])
           lines.push(
             '    ' +
               util

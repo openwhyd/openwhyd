@@ -84,8 +84,8 @@ function fetchPlaylist(p, cb) {
     plIdSet = {},
     uidList = [];
   var plIds = (typeof p.id == 'object' && p.id.length ? p.id : [p.id]).map(
-    function (plId) {
-      var plId = '' + plId;
+    function (_plId) {
+      const plId = '' + _plId;
       plIdSet[plId] = {};
       uidList.push(plId.split('_')[0]);
       return plId;
@@ -97,12 +97,12 @@ function fetchPlaylist(p, cb) {
     function (userList) {
       // populate userSet
       var userSet = {};
-      for (var i in userList) userSet['' + userList[i]._id] = userList[i];
+      for (let i in userList) userSet['' + userList[i]._id] = userList[i];
       // populate plIdSet
-      for (var i in plIdSet) {
+      for (let i in plIdSet) {
         var plId = i.split('_');
         var userPl = (userSet[plId[0]] || {}).pl || [];
-        for (var j in userPl)
+        for (let j in userPl)
           if (userPl[j].id == plId[1]) plIdSet[i] = userPl[j];
       }
       // for each playlist, fetch number of tracks
@@ -141,7 +141,7 @@ function includeTags(playlists, cb) {
         function (posts) {
           var tagSet = {};
           playlists[i].lastArtists = [];
-          for (var j in posts) {
+          for (let j in posts) {
             var artist = snip.detectArtistName((posts[j] || {}).name);
             if (artist) playlists[i].lastArtists.push(artist);
             (tagEngine.getTagsByEid((posts[j] || {}).eId) || []).map(function (

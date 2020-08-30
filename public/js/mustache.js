@@ -201,7 +201,7 @@ var Mustache = (function () {
         }
       };
       var lines = template.split('\n');
-      for (var i = 0; i < lines.length; i++) {
+      for (let i = 0; i < lines.length; i++) {
         lines[i] = lines[i].replace(regex, tag_replace_callback, this);
         if (!in_recursion) {
           this.send(lines[i]);
@@ -345,7 +345,7 @@ var Mustache = (function () {
       } else {
         var r = [];
         var l = array.length;
-        for (var i = 0; i < l; i++) {
+        for (let i = 0; i < l; i++) {
           r.push(fn(array[i]));
         }
         return r;
@@ -373,6 +373,6 @@ var Mustache = (function () {
   };
 })();
 
-for (var name in Mustache)
+for (let name in Mustache)
   if (Object.prototype.hasOwnProperty.call(Mustache, name))
     exports[name] = Mustache[name];

@@ -34,6 +34,7 @@ var USERNAME_RESERVED = {
   'favicon.png': true,
 };
 
+/*
 var USER_FIELDS = {
   _id: true,
   bio: true,
@@ -51,6 +52,7 @@ var USER_FIELDS = {
   lastFm: true,
 };
 // fields that should not be stored: id, mid, n
+*/
 
 // default user preferences
 var defaultPref = (exports.DEFAULT_PREF = {
@@ -153,7 +155,7 @@ var TESTING_DIGEST = config.digestImmediate;
 
 exports.validateName = function (name) {
   if (!name) return null;
-  var name = ('' + name).trim();
+  name = ('' + name).trim();
   if (name.length < 2) return { error: 'name is too short' };
   if (name.length > 32) return { error: 'name is too long' };
   return { name: name, ok: true };
@@ -214,7 +216,7 @@ exports.md5 = function (data) {
 // make sure user prefs are set with default values, if not set manually yet
 function processUserPref(user) {
   user.pref = user.pref || {}; //defaultPref;
-  for (var i in defaultPref)
+  for (let i in defaultPref)
     user.pref[i] =
       user.pref[i] === undefined || user.pref[i] === null
         ? defaultPref[i] // default is better than null/undefined value
@@ -227,7 +229,7 @@ function processUserPref(user) {
 exports.processUser = processUserPref;
 
 function processUsers(list) {
-  for (var i in list) if (list[i]) processUserPref(list[i]);
+  for (let i in list) if (list[i]) processUserPref(list[i]);
 }
 
 function fetch(q, handler) {
@@ -259,9 +261,9 @@ exports.fetchMulti = function (q, options, handler) {
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   if (q._id && typeof q._id == 'object')
     // $in:[]
-    for (var i in q._id)
+    for (let i in q._id)
       if (i == '$in')
-        for (var j in q._id['$in'])
+        for (let j in q._id['$in'])
           q._id['$in'][j] = ObjectId('' + q._id['$in'][j]);
   mongodb.collections['user'].find(q, options || {}, function (err, cursor) {
     cursor.toArray(function (err, array) {
@@ -312,7 +314,7 @@ exports.updateAndFetch = function (criteria, update, opts, cb) {
     criteria,
     /*{$set:*/ update /*}*/,
     opts || {},
-    function (err, item) {
+    function (err) {
       if (err) console.error(err);
       fetch(criteria, function (err2, user) {
         if (err2) console.error(err2);
@@ -333,12 +335,12 @@ exports.update = function (uid, update, handler) {
   });
 };
 
-exports.save = function (user, handler) {
-  var uid = user._id || user.id;
+exports.save = function (pUser, handler) {
+  var uid = pUser._id || pUser.id;
   var criteria = uid
     ? { _id: typeof uid == 'string' ? ObjectId(uid) : uid }
-    : { email: emailModel.normalize(user.email) };
-  var user = user;
+    : { email: emailModel.normalize(pUser.email) };
+  var user = pUser;
   delete user._id;
   if (user.name) user.n = exports.normalizeName(user.name);
   console.log(
@@ -351,7 +353,7 @@ exports.save = function (user, handler) {
     criteria,
     { $set: user },
     { upsert: true },
-    function (err, item) {
+    function (err) {
       //console.log("updated user => item ", item);
       if (err) console.log(err);
       fetch(criteria, function (err, user) {
@@ -459,7 +461,7 @@ function insertInvite(obj, handler) {
     criteria,
     { $set: obj },
     { upsert: true, multi: true },
-    function (err, item) {
+    function (err) {
       if (err) console.log(err);
       mongodb.collections['invite'].findOne(criteria, function (err, user) {
         console.log('user invite stored as ', user);
@@ -488,7 +490,7 @@ exports.inviteFbUserBy = function (fbId, senderId, handler) {
 
 exports.removeInvite = function (inviteCode, handler) {
   var id = typeof inviteCode == 'string' ? ObjectId(inviteCode) : inviteCode;
-  mongodb.collections['invite'].remove({ _id: id }, function (err, item) {
+  mongodb.collections['invite'].remove({ _id: id }, function (err) {
     console.log(err || 'removed invite ' + id);
     if (handler) handler({ _id: id });
   });
@@ -496,8 +498,7 @@ exports.removeInvite = function (inviteCode, handler) {
 
 exports.removeInviteByEmail = function (emailList, handler) {
   mongodb.collections['invite'].remove({ email: { $in: emailList } }, function (
-    err,
-    item
+    err
   ) {
     console.log(err || 'removed invites ' + emailList);
     if (handler) handler({ emailList: emailList });
@@ -510,7 +511,7 @@ exports.fetchPlaylist = function (uId, plId, cb) {
   console.log('user.fetchPlaylist', uId, plId);
   exports.fetchByUid(uId, function (user) {
     if (user && user.pl && user.pl.length)
-      for (var i in user.pl) {
+      for (let i in user.pl) {
         if (user.pl[i].id == plId) return cb(user.pl[i]);
       }
     else if (cb) cb();
@@ -522,7 +523,7 @@ exports.hasPlaylistName = function (user, name) {
   if (!user && user.id != null)
     console.error('null user provided in user.hasPlaylist');
   else if (user.pl && user.pl.length)
-    for (var i in user.pl) if (user.pl[i].name == name) return user.pl[i];
+    for (let i in user.pl) if (user.pl[i].name == name) return user.pl[i];
   return false;
 };
 
@@ -560,14 +561,17 @@ exports.createPlaylist = function (uId, name, handler) {
             function (result) {
               //console.log("opengraph playlist =>", result);
               if (result && result.id)
-                exports.setPlaylist(uId, pl.id, { fbId: result.id }, function (
-                  r
-                ) {
-                  console.log('=> done updating playlist', pl);
-                  handler(pl);
-                });
+                exports.setPlaylist(
+                  uId,
+                  pl.id,
+                  { fbId: result.id },
+                  function () {
+                    console.log('=> done updating playlist', pl);
+                    handler(pl);
+                  }
+                );
               else {
-                exports.setPlaylist(uId, pl.id, {}, function (r) {
+                exports.setPlaylist(uId, pl.id, {}, function () {
                   console.log('user.createPlaylist failed opengraph request');
                   console.log('=> done updating playlist', pl);
                   handler(pl);
@@ -590,7 +594,7 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
   fetch({ _id: '' + uId }, function (err, user) {
     var found = true;
     user.pl = user.pl || [];
-    for (var i in user.pl)
+    for (let i in user.pl)
       if ('' + user.pl[i].id == '' + plId) {
         found = user.pl[i]; // = {id:plId, name:plName};
         if (upd.name) user.pl[i].name = upd.name;
@@ -606,7 +610,9 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
             'updating playlist name in index and corresponding tracks...'
           );
           searchModel.indexPlaylist(uId, plId, upd.name);
-          postModel.setPlaylist(uId, plId, upd.name, function () {});
+          postModel.setPlaylist(uId, plId, upd.name, function () {
+            /* do nothing */
+          });
         }
       });
     } else if (handler) handler();
@@ -622,7 +628,7 @@ exports.setPlaylistImg = function(uId, plId, img, cb) {
 	fetch({_id:uId}, function(err, user) {
 		var found = true;
 		user.pl = user.pl || [];
-		for (var i in user.pl)
+		for (let i in user.pl)
 			if (""+user.pl[i].id == ""+plId) {
 				if (img || img.indexOf("blank") == -1)
 					user.pl[i].img = img;
@@ -645,7 +651,7 @@ exports.deletePlaylist = function (uId, plId, handler) {
   fetch({ _id: uId }, function (err, user) {
     var newPl = [];
     user.pl = user.pl || [];
-    for (var i in user.pl)
+    for (let i in user.pl)
       if ('' + user.pl[i].id != '' + plId) newPl.push(user.pl[i]);
     postModel.unsetPlaylist(uId, plId, function () {
       user.pl = newPl;
@@ -674,13 +680,12 @@ function msToDigestTimestamp(date) {
 
 exports.getEmailNotifsFreq = function (user) {
   var freq = -1; // daily (by default)
-  for (var i in user.pref)
+  for (let i in user.pref)
     if (i.indexOf('em') == 0) freq = Math.max(freq, user.pref[i]);
   return freq;
 };
 
-exports.fetchEmailNotifsToSend = function (now, cb) {
-  var now = now || new Date();
+exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
   //console.log("fetchEmailNotifsToSend, now:", msToDigestTimestamp(now));
   var criteria = {
     'pref.pendEN': { $gt: 0 }, // number of pending email notifs
@@ -709,7 +714,7 @@ exports.setPref = function (uId, pref, handler) {
   else {
     var cleanPref = {},
       emailFreq = 0;
-    for (var i in defaultPref)
+    for (let i in defaultPref)
       if (pref[i] !== undefined && pref[i] !== null) {
         // only clean provided pref values
         cleanPref['pref.' + i] =
@@ -737,8 +742,8 @@ exports.setPref = function (uId, pref, handler) {
 // === OTHER METHODS
 
 // apple push notification token
-exports.setApTok = function (uId, apTok, cb) {
-  var apTok = ('' + apTok).replace(/[^0-9a-f]/gi, '');
+exports.setApTok = function (uId, _apTok, cb) {
+  var apTok = ('' + _apTok).replace(/[^0-9a-f]/gi, '');
   if (apTok.length != 64)
     return cb({ error: 'invalid apple push notification device token' });
   function handleResult(err, success) {
@@ -750,7 +755,7 @@ exports.setApTok = function (uId, apTok, cb) {
 	mongodb.collections["user"].findOne({_id:ObjectId(""+uId), "apTok.tok":apTok}, {fields:{apTok:1}}, function(err, user) {
 		if (user) {
 			var finalApTok = [];
-			for (var i in user.apTok)
+			for (let i in user.apTok)
 				if (user.apTok[i].tok != apTok)
 					finalApTok.push(user.apTok[i]);
 			finalApTok.push(newApTok);
@@ -846,7 +851,7 @@ exports.setHandle = function (uId, username, handler) {
     handler && handler(result);
   }
   if (!username) return res({ error: 'You must enter a username' });
-  var username = ('' + username).trim().toLowerCase();
+  username = ('' + username).trim().toLowerCase();
   if (username.length < USERNAME_MIN_LENGTH)
     return res({
       error: 'Must be at least ' + USERNAME_MIN_LENGTH + ' characters long',
@@ -882,7 +887,7 @@ exports.renameUser = function (uid, name, callback) {
     exports.save({ _id: uid, name: name }, callback);
   }
   var cols = ['follow', 'post'];
-  var uid = '' + uid;
+  uid = '' + uid;
   var user = mongodb.getUserFromId(uid);
   var oldName = (user || {}).name;
   if (!user) callback({ error: 'renameUser error: user not found' });
@@ -900,14 +905,14 @@ exports.renameUser = function (uid, name, callback) {
           { uId: uid /*, uNm: oldName*/ },
           { $set: { uNm: name } },
           { multi: true },
-          function (err, result) {
+          function (err) {
             if (err) console.log('err', err);
             //console.log("-> updated to ", result);
             col.update(
               { tId: uid /*, tNm: oldName*/ },
               { $set: { tNm: name } },
               { multi: true },
-              function (err, result) {
+              function (err) {
                 if (err) console.log('err', err);
                 //console.log("-> updated to ", result);
                 next();
@@ -921,7 +926,7 @@ exports.renameUser = function (uid, name, callback) {
 
 exports.fetchUserFields = function (subList, attrToCopy, cb) {
   var uidList = [];
-  if (subList) for (var i in subList) uidList.push(subList[i].id);
+  if (subList) for (let i in subList) uidList.push(subList[i].id);
   if (uidList.length) {
     var attrSet = snip.arrayToSet(attrToCopy, 1);
     exports.fetchMulti(
@@ -931,23 +936,15 @@ exports.fetchUserFields = function (subList, attrToCopy, cb) {
         var uidSet = {};
         //console.log(userList);
         if (userList)
-          for (var i in userList) uidSet['' + userList[i]._id] = userList[i];
-        for (var i in subList)
-          for (var j in attrToCopy)
+          for (let i in userList) uidSet['' + userList[i]._id] = userList[i];
+        for (let i in subList)
+          for (let j in attrToCopy)
             if (subList[i] && uidSet[subList[i].id])
               subList[i][attrToCopy[j]] = uidSet[subList[i].id][attrToCopy[j]];
         cb(subList);
       }
     );
   } else cb();
-};
-
-exports.fetchUserFieldsIfNeeded = function (userList, fields, cb) {
-  for (var u in userList)
-    for (var f in fields)
-      if (!userList[u].hasOwnProperty(fields[f]))
-        return exports.fetchUserFields(userList, fields, cb);
-  cb(userFields);
 };
 
 exports.fetchUserBios = function (subList, cb) {
@@ -961,7 +958,7 @@ exports.fetchPlaylists = function (user, params, cb) {
     [{ $match: { uId: uId } }, { $group: { _id: '$pl.id', c: { $sum: 1 } } }],
     function (err, counts) {
       var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
-      counts.map(function (counter, i) {
+      counts.map(function (counter) {
         // necessary to make a sum, because playlist ids can be both stored as int and string
         plCount['' + counter._id] =
           (plCount['' + counter._id] || 0) + counter.c;

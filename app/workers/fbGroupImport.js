@@ -38,9 +38,9 @@ exports.fetchGroupInfo = function (fbGroupId, fbAccessToken, cb) {
   fbModel.graphApiRequest(fbAccessToken, '/' + fbGroupId, {}, cb);
 };
 
-exports.startJob = function (fbGroupId, fbAccessToken, cb) {
+exports.startJob = function (fbGroupId, fbAccessToken) {
   var job = new FbGroupImport(fbAccessToken, fbGroupId);
-  process.nextTick(function () {
+  process.nextTick(() => {
     job.start();
   });
   return job;
@@ -96,70 +96,68 @@ util.inherits(FbGroupImport, snip.AsyncEventEmitter);
 
 // parse one page of posts, emits "post" events asynchronously for each of them, then calls backs
 FbGroupImport.prototype.processJsonPage = function (json, cb) {
-  var job = this;
-  if (json && json.data)
-    (function next() {
-      if (!job.running) return;
-      process.nextTick(function () {
+  if (json && json.data) {
+    const next = () => {
+      if (!this.running) return;
+      process.nextTick(() => {
         if (json.data.length) {
-          ++job.stats.posts;
-          job.emit('post', json.data.shift(), next); // asynchronous: calling next when all listeners are done on this post
+          ++this.stats.posts;
+          this.emit('post', json.data.shift(), next); // asynchronous: calling next when all listeners are done on this post
         } else if (cb) cb();
       });
-    })();
-  else if (cb) process.nextTick(cb);
+    };
+    next();
+  } else if (cb) process.nextTick(cb);
 };
 
 // recursive request+parsing cycles from facebook graph api
 FbGroupImport.prototype.processJsonPages = function (json) {
-  var job = this;
-  process.nextTick(function () {
+  process.nextTick(() => {
     console.log(
       'processing facebook group data, length=',
       json && json.data && json.data.length
     );
-    job.processJsonPage(json, function () {
+    this.processJsonPage(json, () => {
       if (json.paging && json.paging.next) {
-        console.log('requesting page #' + job.stats.page + '...');
+        console.log('requesting page #' + this.stats.page + '...');
         json.paging.next = json.paging.next.replace(
           'limit=20',
           'limit=' + LIMIT_PAGE
         );
         console.log('NEXT PAGE: ', json.paging.next);
-        snip.httpRequestJSON(json.paging.next, {}, function (err, json) {
-          ++job.stats.page;
+        snip.httpRequestJSON(json.paging.next, {}, (err, json) => {
+          ++this.stats.page;
           //console.log("=>", err, json)
           if (err) {
             console.error('=> fbGroupImportERR', err);
-            job.emit('error', err);
-          } else job.processJsonPages(json); // recursive call on following pages
+            this.emit('error', err);
+          } else this.processJsonPages(json); // recursive call on following pages
         });
       } else {
         console.log('no more posts to parse');
-        job.stop();
+        this.stop();
       }
     });
   });
 };
 
 FbGroupImport.prototype.start = function () {
-  var job = this;
   this.running = true;
   fbModel.graphApiRequest(
     this.fbAccessToken,
     '/' + this.fbGroupId + '/feed',
     { limit: LIMIT_FIRST },
-    function (json) {
-      job.stats.page = 1;
+    (json) => {
+      this.stats.page = 1;
       if (!json || json.error) {
         console.error('=> fbGroupImportERR', (json || {}).error);
-        job.emit('error', {
+        this.emit('error', {
           message: (json || {}).error || 'first facebook request failed',
         });
-      } else job.processJsonPages(json); // recursive call
+      } else this.processJsonPages(json); // recursive call
     }
   );
-  return job;
+  return this;
 };
 
 FbGroupImport.prototype.stop = function () {
