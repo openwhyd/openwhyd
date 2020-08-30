@@ -1,3 +1,10 @@
+## [1.34.17](https://github.com/openwhyd/openwhyd/compare/v1.34.16...v1.34.17) (2020-08-30)
+
+
+### Bug Fixes
+
+* **lint:** Fix ESLint & Codacy issues ([#348](https://github.com/openwhyd/openwhyd/issues/348)) ([440dda6](https://github.com/openwhyd/openwhyd/commit/440dda6)), closes [#346](https://github.com/openwhyd/openwhyd/issues/346)
+
 ## [1.34.16](https://github.com/openwhyd/openwhyd/compare/v1.34.15...v1.34.16) (2020-08-30)
 
 
