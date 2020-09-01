@@ -1,3 +1,10 @@
+## [1.34.18](https://github.com/openwhyd/openwhyd/compare/v1.34.17...v1.34.18) (2020-09-01)
+
+
+### Bug Fixes
+
+* **css:** Remove obsolete definitions ([#350](https://github.com/openwhyd/openwhyd/issues/350)) ([44d4445](https://github.com/openwhyd/openwhyd/commit/44d4445))
+
 ## [1.34.17](https://github.com/openwhyd/openwhyd/compare/v1.34.16...v1.34.17) (2020-08-30)
 
 
