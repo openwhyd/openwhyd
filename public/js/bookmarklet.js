@@ -182,11 +182,15 @@ function makeBookmarklet(window, urlPrefix = '') {
         toDetect = bc.trackinfo.map(function (tr) {
           if (tr.file) {
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
+            debugger;
             return {
+              id: 'coucou',
               href: streamUrl,
               eId: bcPrefix + tr.title_link.split('/').pop() + '#' + streamUrl,
               name: bc.artist + ' - ' + tr.title,
-              img: bc.artFullsizeUrl || bc.artThumbURL,
+              img: bc.art_id
+                ? `https://f4.bcbits.com/img/a${bc.art_id}_16.jpg`
+                : undefined,
               artist: bc.artist,
               title: tr.title,
             };
