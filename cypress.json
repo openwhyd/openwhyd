@@ -1,3 +1,5 @@
 {
+  "screenshotOnRunFailure": false,
+  "video": false,
   "baseUrl": "http://localhost:8080"
 }
