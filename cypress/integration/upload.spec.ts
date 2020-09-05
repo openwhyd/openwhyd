@@ -26,14 +26,7 @@ context('upload', () => {
     cy.get('body').contains('Edit profile').click();
     cy.get('body').contains('Edit Profile Info').click();
     cy.get('body').contains('Drop your image file here');
-    cy.fixture(SAMPLE_IMG_PATH, 'binary').then((fileContent) => {
-      cy.get('input[type="file"]').attachFile({
-        fileContent,
-        filePath: SAMPLE_IMG_PATH,
-        encoding: 'utf-8',
-        mimeType: 'image/jpeg',
-      });
-    });
+    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH);
 
     // wait for the progress bar to disappear
     cy.get('body').contains('Drop your image file here');
