@@ -15,6 +15,8 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+/// <reference types="./" />
+
 import './commands';
 
 beforeEach(function () {
