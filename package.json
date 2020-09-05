@@ -46,7 +46,7 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
-    "algoliasearch": "^4.4.0",
+    "algoliasearch": "^3.35.1",
     "apn": "1.5.2",
     "argon2": "^0.27.0",
     "async": "*",
