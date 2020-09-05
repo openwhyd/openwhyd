@@ -1,24 +1,9 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 var util = require('util');
-var colors = require('colors');
 var mongodb = require('mongodb');
 
 var openwhydVersion = require('./package.json').version;
-
-// initialize error monitoring
-var rollbar;
-/*
-if (process.env.NODE_ENV === "production") {
-	var Rollbar = require("rollbar");
-	rollbar = new Rollbar({
-		accessToken: "655e72dc704f43c78f9c1e06b8b45ab0",
-		captureUncaught: true,
-		captureUnhandledRejections: true
-	});
-	rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
-}
-*/
 
 function makeColorConsole(fct, color) {
   return function () {
@@ -38,9 +23,6 @@ function makeErrorLog(fct, type) {
       new Date().toUTCString(),
       ...arguments
     );
-    if (rollbar && (type === 'Warning' || type === 'Error')) {
-      rollbar[type.toLowerCase()](Array.prototype.join.call(arguments, ' '));
-    }
   };
 }
 
