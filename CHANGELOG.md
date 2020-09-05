@@ -1,3 +1,10 @@
+## [1.34.19](https://github.com/openwhyd/openwhyd/compare/v1.34.18...v1.34.19) (2020-09-05)
+
+
+### Bug Fixes
+
+* **e2e-tests:** Finish migration from Webdriver to Cypress ([#358](https://github.com/openwhyd/openwhyd/issues/358)) ([5eccaa7](https://github.com/openwhyd/openwhyd/commit/5eccaa7)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.34.18](https://github.com/openwhyd/openwhyd/compare/v1.34.17...v1.34.18) (2020-09-01)
 
 
