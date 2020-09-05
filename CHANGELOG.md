@@ -1,3 +1,10 @@
+## [1.34.20](https://github.com/openwhyd/openwhyd/compare/v1.34.19...v1.34.20) (2020-09-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependencies ([#360](https://github.com/openwhyd/openwhyd/issues/360)) ([3ad78f6](https://github.com/openwhyd/openwhyd/commit/3ad78f64081c6552137d65642d2716a6069688f9))
+
 ## [1.34.19](https://github.com/openwhyd/openwhyd/compare/v1.34.18...v1.34.19) (2020-09-05)
 
 
