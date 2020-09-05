@@ -1,3 +1,10 @@
+## [1.34.21](https://github.com/openwhyd/openwhyd/compare/v1.34.20...v1.34.21) (2020-09-05)
+
+
+### Bug Fixes
+
+* **logs:** Re-import colors package, to prevent "undefined" entries in logs ([#361](https://github.com/openwhyd/openwhyd/issues/361)) ([14c3032](https://github.com/openwhyd/openwhyd/commit/14c3032083d5c75c5efd1e4d871ffc7c16a02d9f))
+
 ## [1.34.20](https://github.com/openwhyd/openwhyd/compare/v1.34.19...v1.34.20) (2020-09-05)
 
 
