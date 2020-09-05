@@ -1,5 +1,3 @@
-/// <reference types="Cypress" />
-
 // This end-to-end / functional test suite covers the happy path,
 // as inspired by https://www.youtube.com/watch?v=aZT8VlTV1YY
 
