@@ -157,6 +157,7 @@ async function main() {
     }
   }
   if (params.color == true) {
+    require('colors'); // populates .grey, .cyan, etc... on strings, for logging.js and MyController.js
     console.warn = makeErrorLog(
       makeColorConsole(consoleError, 'yellow'),
       'Warning'
