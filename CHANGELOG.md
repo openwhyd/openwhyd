@@ -1,3 +1,10 @@
+## [1.34.22](https://github.com/openwhyd/openwhyd/compare/v1.34.21...v1.34.22) (2020-09-05)
+
+
+### Bug Fixes
+
+* **tests:** Test avatar upload ([#362](https://github.com/openwhyd/openwhyd/issues/362)) ([04c4f91](https://github.com/openwhyd/openwhyd/commit/04c4f919e6b0de278faa3623541ba55229c2685e)), closes [#358](https://github.com/openwhyd/openwhyd/issues/358) [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.34.21](https://github.com/openwhyd/openwhyd/compare/v1.34.20...v1.34.21) (2020-09-05)
 
 
