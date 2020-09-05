@@ -1,5 +1,3 @@
-/// <reference types="Cypress" />
-
 context('Openwhyd bookmarklet', () => {
   const VIDEO = {
     id: '-F9vo4Z5lO4',
