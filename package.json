@@ -47,7 +47,7 @@
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "algoliasearch": "^4.4.0",
-    "apn": "2.2.0",
+    "apn": "1.5.2",
     "argon2": "^0.27.0",
     "async": "*",
     "colors": "*",
