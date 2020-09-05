@@ -23,6 +23,11 @@ jobs:
           docker-compose restart web
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
 
+      - name: Run all tests
+        run: |
+          npm install # also install dev dependencies (including test runners)
+          npm run docker:test
+
       - name: Run unit tests
         run: |
           docker-compose exec -T web npm run test-unit
