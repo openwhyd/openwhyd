@@ -1,5 +1,5 @@
 context('upload', () => {
-  const SAMPLE_IMG_PATH = '../../test/specs/upload-resources/sample-avatar.jpg';
+  const SAMPLE_IMG_PATH = 'upload-resources/sample-avatar.jpg';
   let userId;
 
   beforeEach('login', () => {
