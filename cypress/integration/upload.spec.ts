@@ -42,11 +42,11 @@ context('upload', () => {
     //cy.get('input[type="submit"]').scrollIntoView().click();
     cy.get('body').contains('Save').scrollIntoView().click({ force: true });
 
-    // cy.wait(3000); // wait for the dialog to close and page to refresh
-    // cy.request(
-    //   `/img/u/${userId}?_t=${new Date().getTime()}`
-    // ).should((response) =>
-    //   expect(response.body.length).not.to.equal(defaultImageBody.length)
-    // );
+    cy.wait(3000); // wait for the dialog to close and page to refresh
+    cy.request(
+      `/img/u/${userId}?_t=${new Date().getTime()}`
+    ).should((response) =>
+      expect(response.body.length).not.to.equal(defaultImageBody.length)
+    );
   });
 });
