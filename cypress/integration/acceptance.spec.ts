@@ -55,7 +55,7 @@ context('Openwhyd', () => {
     cy.get('#btnPlay').should('be.visible');
 
     // should play the track
-    cy.get('#btnPlay.playing').should('be.visible');
+    cy.get('#btnPlay.playing', { timeout: 10000 }).should('be.visible');
 
     // should pause the track when the user clicks on the play/pause button
     cy.get('#btnPlay').click();
