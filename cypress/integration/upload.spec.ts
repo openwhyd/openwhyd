@@ -21,21 +21,20 @@ context('upload', () => {
       expect(response.body.length).to.equal(defaultImageBody.length)
     );
 
-    // upload a new profile image
+    // open the "edit profile" dialog
     cy.visit(`/u/${userId}`); // user's profile page
     cy.get('body').contains('Edit profile').click();
     cy.get('body').contains('Edit Profile Info').click();
-    cy.get('body').contains('Drop your image file here');
-    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH);
+    cy.get('body').contains('Drop your image file here'); // to wait for upload scripts to load and init propertly on the page
 
-    // wait for the progress bar to disappear
-    cy.get('body').contains('Drop your image file here');
-    cy.wait(1000); // wait for upload scripts to load and init propertly on the page
-    //cy.get('#avatarForm').submit();
-    //cy.get('input[type="submit"]').scrollIntoView().click();
+    // upload a new profile image
+    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
+    cy.get('body').contains('Drop your image file here'); // to wait for the progress bar to disappear
+    cy.wait(1000); // to wait for the form to be ready to save
     cy.get('body').contains('Save').scrollIntoView().click({ force: true });
+    cy.wait(1000); // to wait for the dialog to close and page to refresh
 
-    cy.wait(3000); // wait for the dialog to close and page to refresh
+    // check that the user's profile image was updated
     cy.request(
       `/img/u/${userId}?_t=${new Date().getTime()}`
     ).should((response) =>
