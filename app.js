@@ -96,7 +96,8 @@ function makeMongoUrl(params) {
   const user = params.mongoDbAuthUser;
   const password = params.mongoDbAuthPassword;
   const db = params.mongoDbDatabase; // ?w=0
-  return `mongodb://${user}:${password}@${host}:${port}/${db}`;
+  const auth = user || password ? `${user}:${password}@` : '';
+  return `mongodb://${auth}${host}:${port}/${db}`;
 }
 
 function start() {
