@@ -33,6 +33,7 @@ jobs:
 
       - name: Run Cypress E2E tests
         run: |
+          docker-compose exec -T web npm install # also install dev dependencies (including cypress and typescript)
           docker-compose exec -T web npm run test:cypress
 
 # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
