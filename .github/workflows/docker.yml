@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Cypress E2E tests
         run: |
-          sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb # cf https://docs.cypress.io/guides/guides/continuous-integration.html#Linux
+          docker-compose exec -T web sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb # cf https://docs.cypress.io/guides/guides/continuous-integration.html#Linux
           docker-compose exec -T web npm install # also install dev dependencies (including cypress and typescript)
           docker-compose exec -T web npm run test:cypress
 
