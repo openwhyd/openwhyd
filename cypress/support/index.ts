@@ -15,7 +15,7 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-require('./commands');
+import './commands';
 
 beforeEach(function () {
   // reset the db before each it() test, across all files no matter what,
