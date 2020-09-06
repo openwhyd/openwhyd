@@ -12,6 +12,7 @@ process.appParams = {
 const consoleBackup = console.log;
 console.log = () => {}; // prevent mongodb from adding noise to stdout
 
+const util = require('util');
 const assert = require('assert');
 var mongodb = require('../../app/models/mongodb.js');
 var notifModel = require('../../app/models/notif.js');
@@ -144,18 +145,17 @@ describe('notif', function () {
     assert(count === 0, 'failed to remove notifs with empty uid');
   };
 
-  function clearAllNotifsLegacy(cb) {
-    notifModel.clearUserNotifs(uId, () => {
-      fetchNotifs(uId, (err, notifs) => cb(notifs.length === 0));
-    });
+  async function clearAllNotifs() {
+    await util.promisify(notifModel.clearUserNotifs)(uId);
+    const notifs = await util.promisify(fetchNotifs)(uId);
+    assert(notifs.length === 0, 'failed to clear all notifs');
   }
 
-  const clearAllNotifs = () =>
-    new Promise((resolve, reject) =>
-      clearAllNotifsLegacy((succeded) =>
-        succeded ? resolve() : reject(new Error('failed to clear all notifs'))
-      )
-    );
+  function clearAllNotifsLegacy(cb) {
+    clearAllNotifs()
+      .then(() => cb(true))
+      .catch(() => cb(false));
+  }
 
   it('clean notifications db', cleanNotificationsDb);
 
