@@ -209,39 +209,31 @@ describe('notif', function () {
     assert.equal(res.error, 'mistyped field: pId');
   });
 
+  it('can receive a notification from Gilles', async () => {
+    await clearAllNotifs();
+    // action: send the notif
+    var p = {
+      uId: users[0].id,
+      uNm: users[0].name,
+      uidList: [uId],
+      pId: '' + fakePost._id,
+    };
+    await new Promise((resolve) => notifModel.sendTrackToUsers(p, resolve));
+    // expect: the notif is received by recipient
+    await util.promisify(pollUntil)(makeNotifChecker(1));
+    const notifs = await util.promisify(fetchNotifs)(user.id);
+    const n = notifs.length === 1 && notifs[0];
+    // (note / warning: pId field is the _id of the notif, not the id of the post)
+    assert(n.t && n.html, 't and html props should be set');
+    assert.strictEqual(n.type, 'Snt');
+    assert.strictEqual(n.lastAuthor.id, p.uId);
+    assert.strictEqual(n.img, n.track.img);
+    assert(n.track.img.indexOf(p.pId) > -1, 'track.img should include the pId');
+    assert(n.href.indexOf(p.pId) > -1, 'href should include the pId');
+  });
+
   [
     // ---
-
-    [
-      'gilles sends a track to me',
-      function (cb) {
-        var p = {
-          uId: users[0].id,
-          uNm: users[0].name,
-          uidList: [uId],
-          pId: '' + fakePost._id,
-        };
-        notifModel.sendTrackToUsers(p, function (res) {
-          pollUntil(makeNotifChecker(1), function (inTime) {
-            fetchNotifs(user.id, function (err, notifs) {
-              var n = notifs.length === 1 && notifs[0];
-              // warning: pId field is the _id of the notif, not the id of the post
-              cb(
-                !(
-                  n.t &&
-                  n.html &&
-                  n.type === 'Snt' &&
-                  n.lastAuthor.id === p.uId &&
-                  n.img === n.track.img &&
-                  n.track.img.indexOf(p.pId) > -1 &&
-                  n.href.indexOf(p.pId) > -1
-                )
-              );
-            });
-          });
-        });
-      },
-    ],
     ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
 
     // TODO: send to several users at once
