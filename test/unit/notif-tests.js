@@ -124,15 +124,12 @@ describe('notif', function () {
   }
 
   function fetchNotifs(uId, cb) {
-    notifModel.getUserNotifs(uId, function (notifs) {
-      // console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
-      cb && cb(notifs);
-    });
+    notifModel.getUserNotifs(uId, (notifs) => cb(null, notifs));
   }
 
   function makeNotifChecker(expectedCount) {
     return function checkNotifs(ok) {
-      fetchNotifs(uId, function (notifs) {
+      fetchNotifs(uId, function (err, notifs) {
         ok(notifs.length == expectedCount);
       });
     };
@@ -149,7 +146,7 @@ describe('notif', function () {
 
   function clearAllNotifsLegacy(cb) {
     notifModel.clearUserNotifs(uId, () => {
-      fetchNotifs(uId, (notifs) => cb(notifs.length === 0));
+      fetchNotifs(uId, (err, notifs) => cb(notifs.length === 0));
     });
   }
 
@@ -167,7 +164,7 @@ describe('notif', function () {
   it('add a love notif', () =>
     new Promise((resolve, reject) =>
       notifModel.love(users[0].id, fakePost, () =>
-        fetchNotifs(uId, (notifs) =>
+        fetchNotifs(uId, (err, notifs) =>
           notifs.length === 1
             ? resolve()
             : reject(new Error('there should be one notif'))
@@ -209,7 +206,7 @@ describe('notif', function () {
     [
       'clear individual notifications',
       function (cb) {
-        fetchNotifs(uId, function (notifs) {
+        fetchNotifs(uId, function (err, notifs) {
           for (let i in notifs)
             notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
           pollUntil(makeNotifChecker(0), cb, TIMEOUT);
@@ -275,7 +272,7 @@ describe('notif', function () {
           pollUntil(
             makeNotifChecker(1),
             function (inTime) {
-              fetchNotifs(user.id, function (notifs) {
+              fetchNotifs(user.id, function (err, notifs) {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
@@ -314,7 +311,7 @@ describe('notif', function () {
           pollUntil(
             makeNotifChecker(1),
             function (inTime) {
-              fetchNotifs(user.id, function (notifs) {
+              fetchNotifs(user.id, function (err, notifs) {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
