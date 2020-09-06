@@ -57,29 +57,14 @@ var COMMENTS = USERS.map(function (u) {
 
 // test helpers
 
-const initDb = () =>
-  new Promise((resolve, reject) => {
-    mongodb.init(function (err) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      const mongodbInstance = this;
-      // var initScript = './config/initdb.js';
-      // mongodbInstance.runShellScript(
-      //   require('fs').readFileSync(initScript),
-      //   function (err) {
-      //     if (err) throw err;
-      mongodbInstance.cacheCollections(function () {
-        mongodb.cacheUsers(() => {
-          console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
-          resolve();
-        });
-      });
-      //   }
-      // );
-    });
-  });
+async function initDb() {
+  await util.promisify(mongodb.init)();
+  // const initScript = './config/initdb.js';
+  // await mongodb.runShellScript(require('fs').readFileSync(initScript))
+  await util.promisify(mongodb.cacheCollections)();
+  await util.promisify(mongodb.cacheUsers)();
+  console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
+}
 
 function testAllNotifs(u) {
   // 1 record per user
@@ -120,9 +105,8 @@ const pollUntil = (fct) =>
     }, 500);
   });
 
-function fetchNotifs(uId) {
-  return new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));
-}
+const fetchNotifs = (uId) =>
+  new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));
 
 function makeNotifChecker(expectedCount) {
   return async function checkNotifs(cb) {
