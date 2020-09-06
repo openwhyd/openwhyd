@@ -14,11 +14,14 @@ console.log = () => {}; // prevent mongodb from adding noise to stdout
 
 const util = require('util');
 const assert = require('assert');
-var mongodb = require('../../app/models/mongodb.js');
-var notifModel = require('../../app/models/notif.js');
+const { ObjectId, ...mongodb } = require('../../app/models/mongodb.js');
+const notifModel = require('../../app/models/notif.js');
 
-var db = mongodb.collections;
-var ObjectId = mongodb.ObjectId;
+const { ADMIN_USER } = require('../fixtures.js');
+
+const POLL_TIMEOUT = 4000;
+
+const db = mongodb.collections;
 
 const initDb = () =>
   new Promise((resolve, reject) => {
@@ -27,7 +30,7 @@ const initDb = () =>
         reject(err);
         return;
       }
-      var mongodbInstance = this;
+      const mongodbInstance = this;
       // var initScript = './config/initdb.js';
       // mongodbInstance.runShellScript(
       //   require('fs').readFileSync(initScript),
@@ -49,17 +52,7 @@ describe('notif', function () {
 
   it('initiatialises db', initDb);
 
-  var p = {
-    loggedUser: require('../fixtures.js').ADMIN_USER, //request.getUser(),
-    session: {}, //request.session,
-    cookie: '', //"whydSid=" + (request.getCookies() || {})["whydSid"]
-  };
-
-  var user = p.loggedUser;
-  var uId = p.loggedUser.id;
-  var POLL_TIMEOUT = 4000;
-
-  var users = [
+  const USERS = [
     {
       id: '4d7fc1969aa9db130e000003',
       _id: ObjectId('4d7fc1969aa9db130e000003'),
@@ -72,16 +65,16 @@ describe('notif', function () {
     },
   ];
 
-  users.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
+  USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
 
   var fakePost = {
     _id: ObjectId('4fe3428e9f2ec28c92000024'), //ObjectId("4ed3de428fed15d73c00001f"),
-    uId: user.id,
+    uId: ADMIN_USER.id,
     name: 'Knust hjerte by Casiokids (test)',
     eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
   };
 
-  var comments = users.map(function (u) {
+  var comments = USERS.map(function (u) {
     return {
       _id: ObjectId('4ed3de428fed15d73c00001f'),
       pId: '' + fakePost._id,
@@ -93,25 +86,25 @@ describe('notif', function () {
 
   function testAllNotifs(u) {
     // 1 record per user
-    notifModel.subscribedToUser(users[u].id, user.id);
+    notifModel.subscribedToUser(USERS[u].id, ADMIN_USER.id);
     notifModel.html(
-      user.id,
+      ADMIN_USER.id,
       'coucou <small>html</small>',
       'http://www.facebook.com',
       '/images/logo-s.png'
     );
-    notifModel.mention(fakePost, comments[u], user.id);
+    notifModel.mention(fakePost, comments[u], ADMIN_USER.id);
 
     // 1 common record
-    notifModel.love(users[u].id, fakePost);
+    notifModel.love(USERS[u].id, fakePost);
     notifModel.comment(fakePost, comments[u]);
-    notifModel.commentReply(fakePost, comments[u], user.id);
-    notifModel.repost(users[u].id, fakePost);
+    notifModel.commentReply(fakePost, comments[u], ADMIN_USER.id);
+    notifModel.repost(USERS[u].id, fakePost);
   }
 
   async function addAllNotifs() {
-    var NOTIF_COUNT = users.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
-    for (let u in users) nbNotifs = testAllNotifs(u);
+    var NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
+    for (let u in USERS) nbNotifs = testAllNotifs(u);
     await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
   }
 
@@ -134,7 +127,7 @@ describe('notif', function () {
 
   function makeNotifChecker(expectedCount) {
     return function checkNotifs(cb) {
-      fetchNotifs(uId, function (err, notifs) {
+      fetchNotifs(ADMIN_USER.id, function (err, notifs) {
         cb(!(notifs.length == expectedCount));
       });
     };
@@ -143,8 +136,8 @@ describe('notif', function () {
   const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
 
   async function clearAllNotifs() {
-    await util.promisify(notifModel.clearUserNotifs)(uId);
-    const notifs = await util.promisify(fetchNotifs)(uId);
+    await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
+    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
     assert(notifs.length === 0, 'failed to clear all notifs');
   }
 
@@ -157,7 +150,7 @@ describe('notif', function () {
 
   it('can add a "love" notification', async () => {
     await clearAllNotifs();
-    await notifModel.love(users[0].id, fakePost);
+    await notifModel.love(USERS[0].id, fakePost);
     await util.promisify(pollUntil)(makeNotifChecker(1));
   });
 
@@ -171,8 +164,9 @@ describe('notif', function () {
     await clearAllNotifs();
     await addAllNotifs();
     // action: clear individual notifications
-    const notifs = await util.promisify(fetchNotifs)(uId);
-    for (let i in notifs) notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
+    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
+    for (let i in notifs)
+      notifModel.clearUserNotifsForPost(ADMIN_USER.id, notifs[i].pId);
     await util.promisify(pollUntil)(makeNotifChecker(0));
     // expect: db is clean
     const count = await countEmptyNotifs();
@@ -189,7 +183,7 @@ describe('notif', function () {
   it('fails when calling notif.sendTrackToUsers() without pId parameter', async () => {
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(
-        { uId: users[0].id, uNm: users[0].name, uidList: [uId] },
+        { uId: USERS[0].id, uNm: USERS[0].name, uidList: [ADMIN_USER.id] },
         resolve
       )
     );
@@ -200,9 +194,9 @@ describe('notif', function () {
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(
         {
-          uId: users[0].id,
-          uNm: users[0].name,
-          uidList: [uId],
+          uId: USERS[0].id,
+          uNm: USERS[0].name,
+          uidList: [ADMIN_USER.id],
           pId: fakePost,
         },
         resolve
@@ -215,9 +209,9 @@ describe('notif', function () {
     await clearAllNotifs();
     // action: send the notif
     var p = {
-      uId: users[0].id,
-      uNm: users[0].name,
-      uidList: [uId],
+      uId: USERS[0].id,
+      uNm: USERS[0].name,
+      uidList: [ADMIN_USER.id],
       pId: '' + fakePost._id,
     };
     const res = await new Promise((resolve) =>
@@ -225,7 +219,7 @@ describe('notif', function () {
     );
     // expect: the notif is received by recipient
     await util.promisify(pollUntil)(makeNotifChecker(1));
-    const notifs = await util.promisify(fetchNotifs)(user.id);
+    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
     const n = notifs.length === 1 && notifs[0];
     // (note / warning: pId field is the _id of the notif, not the id of the post)
     assert(res._id, 'sendTrackToUsers() should return the _id of the notif');
@@ -242,16 +236,16 @@ describe('notif', function () {
     await clearAllNotifs();
     // action: send the notif
     var p = {
-      uId: users[0].id,
-      uNm: users[0].name,
-      uidList: [uId],
-      plId: users[0].id + '_' + 0, // gilles' 1st playlist
+      uId: USERS[0].id,
+      uNm: USERS[0].name,
+      uidList: [ADMIN_USER.id],
+      plId: USERS[0].id + '_' + 0, // gilles' 1st playlist
     };
     var plUri = p.plId.replace('_', '/playlist/');
     await new Promise((resolve) => notifModel.sendPlaylistToUsers(p, resolve));
     // expect: the notif is received by recipient
     await util.promisify(pollUntil)(makeNotifChecker(1));
-    const notifs = await util.promisify(fetchNotifs)(user.id);
+    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
     const n = notifs.length === 1 && notifs[0];
     // (note / warning: pId field is the _id of the notif, not the id of the post)
     assert(n.t && n.html, 't and html props should be set');
