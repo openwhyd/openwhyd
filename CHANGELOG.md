@@ -1,3 +1,10 @@
+# [1.35.0](https://github.com/openwhyd/openwhyd/compare/v1.34.23...v1.35.0) (2020-09-06)
+
+
+### Features
+
+* ⚰️ Bury collaborative playlists (never-finished feature) ([#364](https://github.com/openwhyd/openwhyd/issues/364)) ([9a342fa](https://github.com/openwhyd/openwhyd/commit/9a342fa1fdf50282b0ea86d3ad9a1604dcac82ea))
+
 ## [1.34.23](https://github.com/openwhyd/openwhyd/compare/v1.34.22...v1.34.23) (2020-09-06)
 
 
