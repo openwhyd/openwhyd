@@ -12,6 +12,7 @@ process.appParams = {
 const consoleBackup = console.log;
 console.log = () => {}; // prevent mongodb from adding noise to stdout
 
+const assert = require('assert');
 var mongodb = require('../../app/models/mongodb.js');
 var notifModel = require('../../app/models/notif.js');
 
@@ -137,24 +138,14 @@ describe('notif', function () {
     };
   }
 
-  function countEmptyNotifs(cb) {
-    db['notif'].count({ uId: { $size: 0 } }, function (err, count) {
-      // console.log('found', count, 'empty notifs in db');
-      cb(count);
-    });
-  }
+  const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
 
-  const cleanNotificationsDb = () =>
-    new Promise((resolve, reject) => {
-      // remove documents with empty uid
-      db['notif'].remove({ uId: { $size: 0 } }, { multi: true }, () => {
-        countEmptyNotifs((count) =>
-          count === 0
-            ? resolve()
-            : reject(new Error('failed to remove notifs with empty uid'))
-        );
-      });
-    });
+  const cleanNotificationsDb = async () => {
+    // remove documents with empty uid
+    await db['notif'].remove({ uId: { $size: 0 } }, { multi: true });
+    const count = await countEmptyNotifs();
+    assert(count === 0, 'failed to remove notifs with empty uid');
+  };
 
   function clearAllNotifsLegacy(cb) {
     notifModel.clearUserNotifs(uId, () => {
@@ -200,7 +191,7 @@ describe('notif', function () {
     [
       'check that db is clean',
       function (cb) {
-        countEmptyNotifs(function (count) {
+        countEmptyNotifs(function (err, count) {
           cb(count === 0);
         });
       },
@@ -228,7 +219,7 @@ describe('notif', function () {
     [
       'check that db is clean',
       function (cb) {
-        countEmptyNotifs(function (count) {
+        countEmptyNotifs(function (err, count) {
           cb(count === 0);
         });
       },
