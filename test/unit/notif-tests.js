@@ -56,7 +56,6 @@ describe('notif', function () {
   var TIMEOUT = 4000;
 
   var users = [
-    user,
     {
       id: '4d7fc1969aa9db130e000003',
       _id: ObjectId('4d7fc1969aa9db130e000003'),
