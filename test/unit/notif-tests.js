@@ -218,12 +218,15 @@ describe('notif', function () {
       uidList: [uId],
       pId: '' + fakePost._id,
     };
-    await new Promise((resolve) => notifModel.sendTrackToUsers(p, resolve));
+    const res = await new Promise((resolve) =>
+      notifModel.sendTrackToUsers(p, resolve)
+    );
     // expect: the notif is received by recipient
     await util.promisify(pollUntil)(makeNotifChecker(1));
     const notifs = await util.promisify(fetchNotifs)(user.id);
     const n = notifs.length === 1 && notifs[0];
     // (note / warning: pId field is the _id of the notif, not the id of the post)
+    assert(res._id, 'sendTrackToUsers() should return the _id of the notif');
     assert(n.t && n.html, 't and html props should be set');
     assert.strictEqual(n.type, 'Snt');
     assert.strictEqual(n.lastAuthor.id, p.uId);
@@ -249,7 +252,6 @@ describe('notif', function () {
     const notifs = await util.promisify(fetchNotifs)(user.id);
     const n = notifs.length === 1 && notifs[0];
     // (note / warning: pId field is the _id of the notif, not the id of the post)
-
     assert(n.t && n.html, 't and html props should be set');
     assert.strictEqual(n.type, 'Snp');
     assert.strictEqual(n.lastAuthor.id, p.uId);
@@ -259,35 +261,5 @@ describe('notif', function () {
       'track.img should include the plId'
     );
     assert(n.href.indexOf(plUri) > -1, 'href should include the plUri');
-  });
-
-  [
-    // ---
-
-    ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
-
-    [
-      'gilles sends a track to me => res._id is populated',
-      function (cb) {
-        var p = {
-          uId: users[0].id,
-          uNm: users[0].name,
-          uidList: [uId],
-          pId: '' + fakePost._id,
-        };
-        notifModel.sendTrackToUsers(p, function (res) {
-          cb(!!!res._id);
-        });
-      },
-    ],
-    ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
-  ].forEach(function (test) {
-    it(
-      test[0],
-      () =>
-        new Promise((resolve, reject) =>
-          test[1]((err) => (err ? reject(new Error('failed')) : resolve()))
-        )
-    );
   });
 });
