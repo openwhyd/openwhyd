@@ -1,3 +1,10 @@
+## [1.34.23](https://github.com/openwhyd/openwhyd/compare/v1.34.22...v1.34.23) (2020-09-06)
+
+
+### Bug Fixes
+
+* **logs:** Reduce amount of logging in production ([#363](https://github.com/openwhyd/openwhyd/issues/363)) ([4b5efce](https://github.com/openwhyd/openwhyd/commit/4b5efce5772216afdbe9bee68346ee920445088a))
+
 ## [1.34.22](https://github.com/openwhyd/openwhyd/compare/v1.34.21...v1.34.22) (2020-09-05)
 
 
