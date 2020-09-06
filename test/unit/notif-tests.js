@@ -118,15 +118,14 @@ function pollUntil(fct, cb) {
   }, 500);
 }
 
-function fetchNotifs(uId, cb) {
-  notifModel.getUserNotifs(uId, (notifs) => cb(null, notifs));
+function fetchNotifs(uId) {
+  return new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));
 }
 
 function makeNotifChecker(expectedCount) {
-  return function checkNotifs(cb) {
-    fetchNotifs(ADMIN_USER.id, function (err, notifs) {
-      cb(!(notifs.length == expectedCount));
-    });
+  return async function checkNotifs(cb) {
+    const notifs = await fetchNotifs(ADMIN_USER.id);
+    cb(!(notifs.length == expectedCount));
   };
 }
 
@@ -134,7 +133,7 @@ const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
 
 async function clearAllNotifs() {
   await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
-  const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
+  const notifs = await fetchNotifs(ADMIN_USER.id);
   assert(notifs.length === 0, 'failed to clear all notifs');
 }
 
@@ -170,7 +169,7 @@ describe('notifications', function () {
     await clearAllNotifs();
     await addAllNotifs();
     // action: clear individual notifications
-    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
+    const notifs = await fetchNotifs(ADMIN_USER.id);
     for (let i in notifs)
       notifModel.clearUserNotifsForPost(ADMIN_USER.id, notifs[i].pId);
     await util.promisify(pollUntil)(makeNotifChecker(0));
@@ -225,7 +224,7 @@ describe('notifications', function () {
     );
     // expect: the notif is received by recipient
     await util.promisify(pollUntil)(makeNotifChecker(1));
-    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
+    const notifs = await fetchNotifs(ADMIN_USER.id);
     const n = notifs.length === 1 && notifs[0];
     // (note / warning: pId field is the _id of the notif, not the id of the post)
     assert(res._id, 'sendTrackToUsers() should return the _id of the notif');
@@ -251,7 +250,7 @@ describe('notifications', function () {
     await new Promise((resolve) => notifModel.sendPlaylistToUsers(p, resolve));
     // expect: the notif is received by recipient
     await util.promisify(pollUntil)(makeNotifChecker(1));
-    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
+    const notifs = await fetchNotifs(ADMIN_USER.id);
     const n = notifs.length === 1 && notifs[0];
     // (note / warning: pId field is the _id of the notif, not the id of the post)
     assert(n.t && n.html, 't and html props should be set');
