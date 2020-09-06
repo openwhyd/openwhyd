@@ -94,18 +94,16 @@ describe('notif', function () {
     notifModel.subscribedToUser(users[u].id, user.id);
     notifModel.html(
       user.id,
-      'coucou <small>html</small>', //ok (x2)
+      'coucou <small>html</small>',
       'http://www.facebook.com',
       '/images/logo-s.png'
     );
-    notifModel.mention(fakePost, comments[u], user.id); //ok (x2)
+    notifModel.mention(fakePost, comments[u], user.id);
 
     // 1 common record
-    console.warn('PARAMS', u, users[u].id, fakePost);
-
     notifModel.love(users[u].id, fakePost);
-    notifModel.comment(fakePost, comments[u]); //ok
-    notifModel.commentReply(fakePost, comments[u], user.id); //ok
+    notifModel.comment(fakePost, comments[u]);
+    notifModel.commentReply(fakePost, comments[u], user.id);
     notifModel.repost(users[u].id, fakePost);
   }
 
@@ -124,8 +122,8 @@ describe('notif', function () {
 
   function fetchNotifs(uId, cb) {
     notifModel.getUserNotifs(uId, function (notifs) {
-      console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
-      cb(notifs);
+      // console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
+      cb && cb(notifs);
     });
   }
 
@@ -139,7 +137,7 @@ describe('notif', function () {
 
   function countEmptyNotifs(cb) {
     db['notif'].count({ uId: { $size: 0 } }, function (err, count) {
-      console.log('found', count, 'empty notifs in db');
+      // console.log('found', count, 'empty notifs in db');
       cb(count);
     });
   }
@@ -184,9 +182,6 @@ describe('notif', function () {
       'add sample notifications',
       function (cb) {
         for (var u in users) nbNotifs = testAllNotifs(u);
-        fetchNotifs(uId, function (notifs) {
-          console.warn('nb notifs:', notifs);
-        });
         pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
       },
     ],

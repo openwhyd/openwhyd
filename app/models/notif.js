@@ -295,7 +295,6 @@ exports.html = function (uId, html, href, img) {
 exports.love = function (loverUid, post, callback) {
   var user = mongodb.usernames['' + loverUid];
   var author = mongodb.usernames['' + post.uId];
-  console.warn('LOVE', { user, author });
   if (!user || !author) return;
   db['notif'].update(
     { _id: post._id + '/loves' },
