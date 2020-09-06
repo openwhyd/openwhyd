@@ -1,3 +1,10 @@
+## [1.35.1](https://github.com/openwhyd/openwhyd/compare/v1.35.0...v1.35.1) (2020-09-06)
+
+
+### Bug Fixes
+
+* **logs:** Remove or clarify old production + unit test logs ([#365](https://github.com/openwhyd/openwhyd/issues/365)) ([b22d871](https://github.com/openwhyd/openwhyd/commit/b22d87132861f57c0ff83634597b28c4c1b69b49))
+
 # [1.35.0](https://github.com/openwhyd/openwhyd/compare/v1.34.23...v1.35.0) (2020-09-06)
 
 
