@@ -66,6 +66,39 @@ async function initDb() {
   console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
 }
 
+const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
+
+const fetchNotifs = (uId) =>
+  new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));
+
+async function clearAllNotifs() {
+  await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
+  const notifs = await fetchNotifs(ADMIN_USER.id);
+  assert(notifs.length === 0, 'failed to clear all notifs');
+}
+
+function makeNotifChecker(expectedCount) {
+  return async function checkNotifs(cb) {
+    const notifs = await fetchNotifs(ADMIN_USER.id);
+    cb(notifs.length !== expectedCount);
+  };
+}
+
+const pollUntil = (fct) =>
+  new Promise((resolve, reject) => {
+    const t0 = Date.now();
+    const interv = setInterval(function () {
+      fct((err) => {
+        const inTime = Date.now() - t0 <= POLL_TIMEOUT;
+        if (!err || !inTime) {
+          clearInterval(interv);
+          if (!inTime) reject(new Error('timeout'));
+          else resolve();
+        }
+      });
+    }, 500);
+  });
+
 function testAllNotifs(u) {
   // 1 record per user
   notifModel.subscribedToUser(USERS[u].id, ADMIN_USER.id);
@@ -88,39 +121,6 @@ async function addAllNotifs() {
   var NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
   for (let u in USERS) nbNotifs = testAllNotifs(u);
   await pollUntil(makeNotifChecker(NOTIF_COUNT));
-}
-
-const pollUntil = (fct) =>
-  new Promise((resolve, reject) => {
-    const t0 = Date.now();
-    const interv = setInterval(function () {
-      fct((err) => {
-        const inTime = Date.now() - t0 <= POLL_TIMEOUT;
-        if (!err || !inTime) {
-          clearInterval(interv);
-          if (!inTime) reject(new Error('timeout'));
-          else resolve();
-        }
-      });
-    }, 500);
-  });
-
-const fetchNotifs = (uId) =>
-  new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));
-
-function makeNotifChecker(expectedCount) {
-  return async function checkNotifs(cb) {
-    const notifs = await fetchNotifs(ADMIN_USER.id);
-    cb(notifs.length !== expectedCount);
-  };
-}
-
-const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
-
-async function clearAllNotifs() {
-  await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
-  const notifs = await fetchNotifs(ADMIN_USER.id);
-  assert(notifs.length === 0, 'failed to clear all notifs');
 }
 
 // test suite
