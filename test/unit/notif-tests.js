@@ -152,8 +152,9 @@ describe('notif', function () {
   }
 
   function clearAllNotifsLegacy(cb) {
-    notifModel.clearUserNotifs(uId);
-    pollUntil(makeNotifChecker(0), cb, TIMEOUT);
+    notifModel.clearUserNotifs(uId, () => {
+      fetchNotifs(uId, (notifs) => cb(notifs.length == 0));
+    });
   }
 
   const clearAllNotifs = (done) =>

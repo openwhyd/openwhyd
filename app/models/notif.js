@@ -198,7 +198,7 @@ exports.clearUserNotifsForPost = function (uId, pId) {
   );
 };
 
-exports.clearUserNotifs = function (uId) {
+exports.clearUserNotifs = function (uId, cb) {
   if (!uId) return;
   db['notif'].find({ uId: uId }, { uId: 1 }, { limit: 1000 }, function (
     err,
@@ -215,9 +215,12 @@ exports.clearUserNotifs = function (uId) {
           db['notif'].update(
             { uId: uId },
             { $pull: { uId: uId } },
-            { multi: true, w: 0 }
+            { multi: true, w: 0 },
+            () => {
+              invalidateUserNotifsCache(uId);
+              cb && cb();
+            }
           );
-          invalidateUserNotifsCache(uId);
         }
       );
     }
