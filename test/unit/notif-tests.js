@@ -181,7 +181,7 @@ describe('notif', function () {
     [
       'add sample notifications',
       function (cb) {
-        for (var u in users) nbNotifs = testAllNotifs(u);
+        for (let u in users) nbNotifs = testAllNotifs(u);
         pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
       },
     ],
@@ -200,7 +200,7 @@ describe('notif', function () {
     [
       'add sample notifications (again)',
       function (cb) {
-        for (var u in users) nbNotifs = testAllNotifs(u);
+        for (let u in users) nbNotifs = testAllNotifs(u);
         pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
       },
     ],
@@ -208,7 +208,7 @@ describe('notif', function () {
       'clear individual notifications',
       function (cb) {
         fetchNotifs(uId, function (notifs) {
-          for (var i in notifs)
+          for (let i in notifs)
             notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
           pollUntil(makeNotifChecker(0), cb, TIMEOUT);
         });
