@@ -91,8 +91,6 @@ describe('notif', function () {
     };
   });
 
-  var NOTIF_COUNT = 10; // 4 common records + 2 * 3 individual records. (see below)
-
   function testAllNotifs(u) {
     // 1 record per user
     notifModel.subscribedToUser(users[u].id, user.id);
@@ -109,6 +107,12 @@ describe('notif', function () {
     notifModel.comment(fakePost, comments[u]);
     notifModel.commentReply(fakePost, comments[u], user.id);
     notifModel.repost(users[u].id, fakePost);
+  }
+
+  async function addAllNotifs() {
+    var NOTIF_COUNT = users.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
+    for (let u in users) nbNotifs = testAllNotifs(u);
+    await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
   }
 
   function pollUntil(fct, cb) {
@@ -159,15 +163,13 @@ describe('notif', function () {
 
   it('can add sample notifications', async () => {
     await clearAllNotifs();
-    for (let u in users) nbNotifs = testAllNotifs(u);
-    await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
+    await addAllNotifs();
   });
 
   it('can clear individual notifications', async () => {
     // setup: re-add sample notifications (again)
     await clearAllNotifs();
-    for (let u in users) nbNotifs = testAllNotifs(u);
-    await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
+    await addAllNotifs();
     // action: clear individual notifications
     const notifs = await util.promisify(fetchNotifs)(uId);
     for (let i in notifs) notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
