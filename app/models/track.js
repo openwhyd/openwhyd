@@ -415,7 +415,14 @@ exports.snapshotTrackScores = function (cb) {
     mongodb.forEach2('track', { fields: { score: 1 } }, function (track, next) {
       if (!track) cb();
       else {
-        console.log('snapshotTrackScores', ++i, '/', count);
+        if (count < 1000) {
+          console.log(`snapshotTrackScores ${i + 1} / ${count}`);
+        } else if (count % 1000 === 0) {
+          console.log(
+            `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`
+          );
+        }
+        ++i;
         mongodb.collections['track'].update(
           { _id: track._id },
           { $set: { prev: track.score } },
