@@ -1,3 +1,10 @@
+## [1.35.2](https://github.com/openwhyd/openwhyd/compare/v1.35.1...v1.35.2) (2020-09-06)
+
+
+### Bug Fixes
+
+* **tests:** Modernize unit tests of Notifications ([#366](https://github.com/openwhyd/openwhyd/issues/366)) ([2233e2d](https://github.com/openwhyd/openwhyd/commit/2233e2dabfdae116ed3fb957c77573d6158788bc)), closes [#212](https://github.com/openwhyd/openwhyd/issues/212)
+
 ## [1.35.1](https://github.com/openwhyd/openwhyd/compare/v1.35.0...v1.35.1) (2020-09-06)
 
 
