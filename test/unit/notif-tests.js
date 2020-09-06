@@ -114,11 +114,11 @@ describe('notif', function () {
   function pollUntil(fct, cb, timeout) {
     var t0 = Date.now();
     var interv = setInterval(function () {
-      fct(function (ok) {
+      fct(function (err) {
         var inTime = Date.now() - t0 <= timeout;
-        if (ok || !inTime) {
+        if (!err || !inTime) {
           clearInterval(interv);
-          cb(inTime);
+          cb(!inTime);
         }
       });
     }, 500);
@@ -129,9 +129,9 @@ describe('notif', function () {
   }
 
   function makeNotifChecker(expectedCount) {
-    return function checkNotifs(ok) {
+    return function checkNotifs(cb) {
       fetchNotifs(uId, function (err, notifs) {
-        ok(notifs.length == expectedCount);
+        cb(!(notifs.length == expectedCount));
       });
     };
   }
@@ -146,8 +146,8 @@ describe('notif', function () {
 
   function clearAllNotifsLegacy(cb) {
     clearAllNotifs()
-      .then(() => cb(true))
-      .catch(() => cb(false));
+      .then(() => cb(null))
+      .catch((err) => cb(err));
   }
 
   it('clean notifications db', async () => {
@@ -157,15 +157,22 @@ describe('notif', function () {
     assert(count === 0, 'failed to remove notifs with empty uid');
   });
 
-  it('clear all notifications', clearAllNotifs);
-
   it('add a love notif', async () => {
+    await clearAllNotifs();
     await notifModel.love(users[0].id, fakePost);
     const notifs = await util.promisify(fetchNotifs)(uId);
     assert(notifs.length === 1, 'there should be one notif');
   });
 
   it('clear all notifications', clearAllNotifs);
+
+  /*
+  it('add sample notifications', async () => {
+    // await clearAllNotifs();
+    for (let u in users) nbNotifs = testAllNotifs(u);
+    pollUntil(makeNotifChecker(NOTIF_COUNT), success => , TIMEOUT);
+  });
+  */
 
   [
     // ---
@@ -182,7 +189,7 @@ describe('notif', function () {
       'check that db is clean',
       function (cb) {
         countEmptyNotifs(function (err, count) {
-          cb(count === 0);
+          cb(!(count === 0));
         });
       },
     ],
@@ -210,7 +217,7 @@ describe('notif', function () {
       'check that db is clean',
       function (cb) {
         countEmptyNotifs(function (err, count) {
-          cb(count === 0);
+          cb(!(count === 0));
         });
       },
     ],
@@ -221,7 +228,7 @@ describe('notif', function () {
       'call notif.sendTrackToUsers() with no parameters [should fail]',
       function (cb) {
         notifModel.sendTrackToUsers(null, function (res) {
-          cb(res.error);
+          cb(!res.error);
         });
       },
     ],
@@ -231,7 +238,7 @@ describe('notif', function () {
         notifModel.sendTrackToUsers(
           { uId: users[0].id, uNm: users[0].name, uidList: [uId] },
           function (res) {
-            cb(res.error);
+            cb(!res.error);
           }
         );
       },
@@ -247,7 +254,7 @@ describe('notif', function () {
             pId: fakePost,
           },
           function (res) {
-            cb(res.error);
+            cb(!res.error);
           }
         );
       },
@@ -269,13 +276,15 @@ describe('notif', function () {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
-                  n.t &&
+                  !(
+                    n.t &&
                     n.html &&
                     n.type === 'Snt' &&
                     n.lastAuthor.id === p.uId &&
                     n.img === n.track.img &&
                     n.track.img.indexOf(p.pId) > -1 &&
                     n.href.indexOf(p.pId) > -1
+                  )
                 );
               });
             },
@@ -308,13 +317,15 @@ describe('notif', function () {
                 var n = notifs.length === 1 && notifs[0];
                 // warning: pId field is the _id of the notif, not the id of the post
                 cb(
-                  n.t &&
+                  !(
+                    n.t &&
                     n.html &&
                     n.type === 'Snp' &&
                     n.lastAuthor.id === p.uId &&
                     n.img === n.track.img &&
                     n.track.img.indexOf(p.plId) > -1 &&
                     n.href.indexOf(plUri) > -1
+                  )
                 );
               });
             },
@@ -335,7 +346,7 @@ describe('notif', function () {
           pId: '' + fakePost._id,
         };
         notifModel.sendTrackToUsers(p, function (res) {
-          cb(!!res._id);
+          cb(!!!res._id);
         });
       },
     ],
@@ -345,7 +356,7 @@ describe('notif', function () {
       test[0],
       () =>
         new Promise((resolve, reject) =>
-          test[1]((res) => (res ? resolve(res) : reject(new Error('failed'))))
+          test[1]((err) => (err ? reject(new Error('failed')) : resolve()))
         )
     );
   });
