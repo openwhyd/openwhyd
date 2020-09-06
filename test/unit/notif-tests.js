@@ -144,26 +144,26 @@ describe('notif', function () {
     assert(notifs.length === 0, 'failed to clear all notifs');
   }
 
-  it('clean notifications db', async () => {
+  it('can clean notifications db', async () => {
     // remove documents with empty uid
     await db['notif'].remove({ uId: { $size: 0 } }, { multi: true });
     const count = await countEmptyNotifs();
     assert(count === 0, 'failed to remove notifs with empty uid');
   });
 
-  it('add a love notif', async () => {
+  it('can add a "love" notification', async () => {
     await clearAllNotifs();
     await notifModel.love(users[0].id, fakePost);
     await util.promisify(pollUntil)(makeNotifChecker(1));
   });
 
-  it('add sample notifications', async () => {
+  it('can add sample notifications', async () => {
     await clearAllNotifs();
     for (let u in users) nbNotifs = testAllNotifs(u);
     await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
   });
 
-  it('clear individual notifications', async () => {
+  it('can clear individual notifications', async () => {
     // setup: re-add sample notifications (again)
     await clearAllNotifs();
     for (let u in users) nbNotifs = testAllNotifs(u);
@@ -177,14 +177,14 @@ describe('notif', function () {
     assert(count === 0, 'failed to clear all individual notifications');
   });
 
-  it('call notif.sendTrackToUsers() with no parameters should fail', async () => {
+  it('fails when calling notif.sendTrackToUsers() with no parameters', async () => {
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(null, resolve)
     );
     assert.equal(res.error, 'object is null');
   });
 
-  it('call notif.sendTrackToUsers() without pId parameter should fail', async () => {
+  it('fails when calling notif.sendTrackToUsers() without pId parameter', async () => {
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(
         { uId: users[0].id, uNm: users[0].name, uidList: [uId] },
@@ -194,7 +194,7 @@ describe('notif', function () {
     assert.equal(res.error, 'missing field: pId');
   });
 
-  it('call notif.sendTrackToUsers() with a object-typed pId parameter should fail', async () => {
+  it('fails when calling notif.sendTrackToUsers() with a object-typed pId parameter', async () => {
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(
         {
