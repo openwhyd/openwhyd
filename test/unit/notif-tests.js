@@ -9,6 +9,9 @@ process.appParams = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
 };
 
+const consoleBackup = console.log;
+console.log = () => {}; // prevent mongodb from adding noise to stdout
+
 var mongodb = require('../../app/models/mongodb.js');
 var notifModel = require('../../app/models/notif.js');
 
@@ -16,20 +19,22 @@ var db = mongodb.collections;
 var ObjectId = mongodb.ObjectId;
 
 function initDb(cb) {
-  mongodb.init(function (err, db) {
-    if (err) throw err;
+  mongodb.init(function (err) {
+    if (err) console.error(err);
     var mongodbInstance = this;
-    var initScript = './config/initdb.js';
-    console.log('Applying db init script:', initScript, '...');
-    mongodbInstance.runShellScript(
-      require('fs').readFileSync(initScript),
-      function (err) {
-        if (err) throw err;
-        mongodbInstance.cacheCollections(function () {
-          mongodb.cacheUsers(cb);
-        });
-      }
-    );
+    // var initScript = './config/initdb.js';
+    // mongodbInstance.runShellScript(
+    //   require('fs').readFileSync(initScript),
+    //   function (err) {
+    //     if (err) throw err;
+    mongodbInstance.cacheCollections(function () {
+      mongodb.cacheUsers(() => {
+        console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
+        cb();
+      });
+    });
+    //   }
+    // );
   });
 }
 
@@ -50,8 +55,6 @@ describe('notif', function () {
   var uId = p.loggedUser.id;
   var TIMEOUT = 4000;
 
-  var testVars = {};
-
   var users = [
     {
       id: '4d7fc1969aa9db130e000003',
@@ -65,7 +68,7 @@ describe('notif', function () {
     },
   ];
 
-  users.forEach(mongodb.cacheUser.bind(mongodb)); // populate mongodb.usernames for notif endpoints
+  users.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
 
   var fakePost = {
     _id: ObjectId('4fe3428e9f2ec28c92000024'), //ObjectId("4ed3de428fed15d73c00001f"),
@@ -119,7 +122,7 @@ describe('notif', function () {
 
   function fetchNotifs(uId, cb) {
     notifModel.getUserNotifs(uId, function (notifs) {
-      console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
+      // console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
       cb(notifs);
     });
   }
@@ -134,7 +137,7 @@ describe('notif', function () {
 
   function countEmptyNotifs(cb) {
     db['notif'].count({ uId: { $size: 0 } }, function (err, count) {
-      console.log('found', count, 'empty notifs in db');
+      // console.log('found', count, 'empty notifs in db');
       cb(count);
     });
   }

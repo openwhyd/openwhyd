@@ -166,11 +166,19 @@ function makeLink(text /*, url*/) {
 
 // main methods
 
+const extractObjectID = (str) => str.match(/[0-9a-f]{24}/)[0];
+
 exports.clearUserNotifsForPost = function (uId, pId) {
   if (!uId || !pId) return;
   var idList = [pId];
   try {
-    idList.push(mongodb.ObjectID.createFromHexString(pId));
+    idList.push(
+      mongodb.ObjectID.createFromHexString(
+        typeof pId === 'string'
+          ? extractObjectID(pId) // strip the eventual "/u/" prefix or "/reposts" suffix (e.g. in notif-tests.js)
+          : pId
+      )
+    );
   } catch (e) {
     console.error('error in clearUserNotifsForPost:', e);
   }

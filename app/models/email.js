@@ -9,7 +9,7 @@ var config = require('./config');
 var users = require('./user');
 
 var emailModule = config.emailModule || 'emailFake.js';
-console.log('loading EMAIL module: ' + emailModule + '...');
+// console.log('loading EMAIL module: ' + emailModule + '...');
 var emailImpl = require('./' + emailModule);
 
 // http://www.regular-expressions.info/email.html

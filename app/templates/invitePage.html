@@ -339,9 +339,9 @@
             $('input[type=submit]').removeClass('loading');
             res = res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1);
             res = JSON.parse(res);
-            console.log('response', res);
+            // console.log('response', res);
             if (res.error) {
-              console.log('error', res.error);
+              console.log('invitePage error', res.error);
               if (res.error.indexOf('name') != -1) $name.each(error);
               else if (res.error.indexOf('email') != -1) $email.each(error);
               else if (res.error.indexOf('password') != -1)

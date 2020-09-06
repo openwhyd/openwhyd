@@ -86,7 +86,7 @@ function save(track, cb, replace) {
 
 function remove(q, cb) {
   mongodb.collections['track'].remove(q, function (error, result) {
-    console.log('=> removed hot track:', result);
+    console.log('=> removed hot track:', q);
     if (error) console.error('track.remove() error: ' + error.stack);
     if (cb) cb(result);
   });
