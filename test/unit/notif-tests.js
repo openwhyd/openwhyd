@@ -18,32 +18,34 @@ var notifModel = require('../../app/models/notif.js');
 var db = mongodb.collections;
 var ObjectId = mongodb.ObjectId;
 
-function initDb(cb) {
-  mongodb.init(function (err) {
-    if (err) console.error(err);
-    var mongodbInstance = this;
-    // var initScript = './config/initdb.js';
-    // mongodbInstance.runShellScript(
-    //   require('fs').readFileSync(initScript),
-    //   function (err) {
-    //     if (err) throw err;
-    mongodbInstance.cacheCollections(function () {
-      mongodb.cacheUsers(() => {
-        console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
-        cb();
+const initDb = () =>
+  new Promise((resolve, reject) => {
+    mongodb.init(function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      var mongodbInstance = this;
+      // var initScript = './config/initdb.js';
+      // mongodbInstance.runShellScript(
+      //   require('fs').readFileSync(initScript),
+      //   function (err) {
+      //     if (err) throw err;
+      mongodbInstance.cacheCollections(function () {
+        mongodb.cacheUsers(() => {
+          console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
+          resolve();
+        });
       });
+      //   }
+      // );
     });
-    //   }
-    // );
   });
-}
 
 describe('notif', function () {
   this.timeout(5000);
 
-  it('initiatialises db', function async(done) {
-    initDb(done);
-  });
+  it('initiatialises db', initDb);
 
   var p = {
     loggedUser: require('../fixtures.js').ADMIN_USER, //request.getUser(),
@@ -142,37 +144,45 @@ describe('notif', function () {
     });
   }
 
-  function cleanNotificationsDb(done) {
-    // remove documents with empty uid
-    db['notif'].remove({ uId: { $size: 0 } }, { multi: true }, function () {
-      countEmptyNotifs(function (count) {
-        done(count > 0 && new Error('failed to remove notifs with empty uid'));
+  const cleanNotificationsDb = () =>
+    new Promise((resolve, reject) => {
+      // remove documents with empty uid
+      db['notif'].remove({ uId: { $size: 0 } }, { multi: true }, () => {
+        countEmptyNotifs((count) =>
+          count === 0
+            ? resolve()
+            : reject(new Error('failed to remove notifs with empty uid'))
+        );
       });
     });
-  }
 
   function clearAllNotifsLegacy(cb) {
     notifModel.clearUserNotifs(uId, () => {
-      fetchNotifs(uId, (notifs) => cb(notifs.length == 0));
+      fetchNotifs(uId, (notifs) => cb(notifs.length === 0));
     });
   }
 
-  const clearAllNotifs = (done) =>
-    clearAllNotifsLegacy((succeded) =>
-      done(!succeded && new Error('failed to clear all notifs'))
+  const clearAllNotifs = () =>
+    new Promise((resolve, reject) =>
+      clearAllNotifsLegacy((succeded) =>
+        succeded ? resolve() : reject(new Error('failed to clear all notifs'))
+      )
     );
 
   it('clean notifications db', cleanNotificationsDb);
 
   it('clear all notifications', clearAllNotifs);
 
-  it('add a love notif', (done) => {
-    notifModel.love(users[0].id, fakePost, () => {
-      fetchNotifs(uId, function (notifs) {
-        done(notifs.length !== 1 && new Error('there should be one notif'));
-      });
-    });
-  });
+  it('add a love notif', () =>
+    new Promise((resolve, reject) =>
+      notifModel.love(users[0].id, fakePost, () =>
+        fetchNotifs(uId, (notifs) =>
+          notifs.length === 1
+            ? resolve()
+            : reject(new Error('there should be one notif'))
+        )
+      )
+    ));
 
   it('clear all notifications', clearAllNotifs);
 
@@ -350,14 +360,12 @@ describe('notif', function () {
     ],
     ['clear all notifications', clearAllNotifsLegacy],
   ].forEach(function (test) {
-    it(test[0], function async(done) {
-      test[1](function cb(res) {
-        if (res) {
-          done();
-        } else {
-          done(new Error('failed'));
-        }
-      });
-    });
+    it(
+      test[0],
+      () =>
+        new Promise((resolve, reject) =>
+          test[1]((res) => (res ? resolve(res) : reject(new Error('failed'))))
+        )
+    );
   });
 });
