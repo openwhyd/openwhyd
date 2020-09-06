@@ -144,12 +144,6 @@ describe('notif', function () {
     assert(notifs.length === 0, 'failed to clear all notifs');
   }
 
-  function clearAllNotifsLegacy(cb) {
-    clearAllNotifs()
-      .then(() => cb(null))
-      .catch((err) => cb(err));
-  }
-
   it('clean notifications db', async () => {
     // remove documents with empty uid
     await db['notif'].remove({ uId: { $size: 0 } }, { multi: true });
@@ -160,31 +154,19 @@ describe('notif', function () {
   it('add a love notif', async () => {
     await clearAllNotifs();
     await notifModel.love(users[0].id, fakePost);
-    const notifs = await util.promisify(fetchNotifs)(uId);
-    assert(notifs.length === 1, 'there should be one notif');
+    await util.promisify(pollUntil)(makeNotifChecker(1));
   });
 
-  it('clear all notifications', clearAllNotifs);
-
-  /*
   it('add sample notifications', async () => {
-    // await clearAllNotifs();
+    await clearAllNotifs();
     for (let u in users) nbNotifs = testAllNotifs(u);
-    pollUntil(makeNotifChecker(NOTIF_COUNT), success => );
+    await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
   });
-  */
 
   [
     // ---
 
-    [
-      'add sample notifications',
-      function (cb) {
-        for (let u in users) nbNotifs = testAllNotifs(u);
-        pollUntil(makeNotifChecker(NOTIF_COUNT), cb);
-      },
-    ],
-    ['clear all notifications', clearAllNotifsLegacy],
+    ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
     [
       'check that db is clean',
       function (cb) {
@@ -289,7 +271,7 @@ describe('notif', function () {
         });
       },
     ],
-    ['clear all notifications', clearAllNotifsLegacy],
+    ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
 
     // TODO: send to several users at once
 
@@ -326,7 +308,7 @@ describe('notif', function () {
         });
       },
     ],
-    ['clear all notifications', clearAllNotifsLegacy],
+    ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
 
     [
       'gilles sends a track to me => res._id is populated',
@@ -342,7 +324,7 @@ describe('notif', function () {
         });
       },
     ],
-    ['clear all notifications', clearAllNotifsLegacy],
+    ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
   ].forEach(function (test) {
     it(
       test[0],
