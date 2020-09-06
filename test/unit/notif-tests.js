@@ -163,19 +163,13 @@ describe('notif', function () {
     await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
   });
 
+  it('check that db is clean', async () => {
+    await clearAllNotifs();
+    const count = await countEmptyNotifs();
+    assert(count === 0, 'failed to clean-up notifs from db');
+  });
+
   [
-    // ---
-
-    ['clear all notifications', (cb) => clearAllNotifs().then(cb)],
-    [
-      'check that db is clean',
-      function (cb) {
-        countEmptyNotifs(function (err, count) {
-          cb(!(count === 0));
-        });
-      },
-    ],
-
     // ---
 
     [
