@@ -173,7 +173,7 @@ function getPage(address, callback) {
           length += chunk.length;
         });
         res.on('end', function () {
-          var buffer = new Buffer(length);
+          var buffer = Buffer.alloc(length);
           var bufferPos = 0;
           var i, chunk, text, charset;
           for (i = 0; (chunk = chunks[i]); i++) {
