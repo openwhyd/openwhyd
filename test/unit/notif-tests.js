@@ -177,44 +177,41 @@ describe('notif', function () {
     assert(count === 0, 'failed to clear all individual notifications');
   });
 
+  it('call notif.sendTrackToUsers() with no parameters should fail', async () => {
+    const res = await new Promise((resolve) =>
+      notifModel.sendTrackToUsers(null, resolve)
+    );
+    assert.equal(res.error, 'object is null');
+  });
+
+  it('call notif.sendTrackToUsers() without pId parameter should fail', async () => {
+    const res = await new Promise((resolve) =>
+      notifModel.sendTrackToUsers(
+        { uId: users[0].id, uNm: users[0].name, uidList: [uId] },
+        resolve
+      )
+    );
+    assert.equal(res.error, 'missing field: pId');
+  });
+
+  it('call notif.sendTrackToUsers() with a object-typed pId parameter should fail', async () => {
+    const res = await new Promise((resolve) =>
+      notifModel.sendTrackToUsers(
+        {
+          uId: users[0].id,
+          uNm: users[0].name,
+          uidList: [uId],
+          pId: fakePost,
+        },
+        resolve
+      )
+    );
+    assert.equal(res.error, 'mistyped field: pId');
+  });
+
   [
     // ---
 
-    [
-      'call notif.sendTrackToUsers() with no parameters [should fail]',
-      function (cb) {
-        notifModel.sendTrackToUsers(null, function (res) {
-          cb(!res.error);
-        });
-      },
-    ],
-    [
-      'call notif.sendTrackToUsers() without pId parameter [should fail]',
-      function (cb) {
-        notifModel.sendTrackToUsers(
-          { uId: users[0].id, uNm: users[0].name, uidList: [uId] },
-          function (res) {
-            cb(!res.error);
-          }
-        );
-      },
-    ],
-    [
-      'call notif.sendTrackToUsers() with a object-typed pId parameter [should fail]',
-      function (cb) {
-        notifModel.sendTrackToUsers(
-          {
-            uId: users[0].id,
-            uNm: users[0].name,
-            uidList: [uId],
-            pId: fakePost,
-          },
-          function (res) {
-            cb(!res.error);
-          }
-        );
-      },
-    ],
     [
       'gilles sends a track to me',
       function (cb) {
