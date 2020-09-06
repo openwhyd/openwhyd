@@ -57,7 +57,7 @@ describe('notif', function () {
 
   var user = p.loggedUser;
   var uId = p.loggedUser.id;
-  var TIMEOUT = 4000;
+  var POLL_TIMEOUT = 4000;
 
   var users = [
     {
@@ -111,11 +111,11 @@ describe('notif', function () {
     notifModel.repost(users[u].id, fakePost);
   }
 
-  function pollUntil(fct, cb, timeout) {
+  function pollUntil(fct, cb) {
     var t0 = Date.now();
     var interv = setInterval(function () {
       fct(function (err) {
-        var inTime = Date.now() - t0 <= timeout;
+        var inTime = Date.now() - t0 <= POLL_TIMEOUT;
         if (!err || !inTime) {
           clearInterval(interv);
           cb(!inTime);
@@ -170,7 +170,7 @@ describe('notif', function () {
   it('add sample notifications', async () => {
     // await clearAllNotifs();
     for (let u in users) nbNotifs = testAllNotifs(u);
-    pollUntil(makeNotifChecker(NOTIF_COUNT), success => , TIMEOUT);
+    pollUntil(makeNotifChecker(NOTIF_COUNT), success => );
   });
   */
 
@@ -181,7 +181,7 @@ describe('notif', function () {
       'add sample notifications',
       function (cb) {
         for (let u in users) nbNotifs = testAllNotifs(u);
-        pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
+        pollUntil(makeNotifChecker(NOTIF_COUNT), cb);
       },
     ],
     ['clear all notifications', clearAllNotifsLegacy],
@@ -200,7 +200,7 @@ describe('notif', function () {
       'add sample notifications (again)',
       function (cb) {
         for (let u in users) nbNotifs = testAllNotifs(u);
-        pollUntil(makeNotifChecker(NOTIF_COUNT), cb, TIMEOUT);
+        pollUntil(makeNotifChecker(NOTIF_COUNT), cb);
       },
     ],
     [
@@ -209,7 +209,7 @@ describe('notif', function () {
         fetchNotifs(uId, function (err, notifs) {
           for (let i in notifs)
             notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
-          pollUntil(makeNotifChecker(0), cb, TIMEOUT);
+          pollUntil(makeNotifChecker(0), cb);
         });
       },
     ],
@@ -269,27 +269,23 @@ describe('notif', function () {
           pId: '' + fakePost._id,
         };
         notifModel.sendTrackToUsers(p, function (res) {
-          pollUntil(
-            makeNotifChecker(1),
-            function (inTime) {
-              fetchNotifs(user.id, function (err, notifs) {
-                var n = notifs.length === 1 && notifs[0];
-                // warning: pId field is the _id of the notif, not the id of the post
-                cb(
-                  !(
-                    n.t &&
-                    n.html &&
-                    n.type === 'Snt' &&
-                    n.lastAuthor.id === p.uId &&
-                    n.img === n.track.img &&
-                    n.track.img.indexOf(p.pId) > -1 &&
-                    n.href.indexOf(p.pId) > -1
-                  )
-                );
-              });
-            },
-            TIMEOUT
-          );
+          pollUntil(makeNotifChecker(1), function (inTime) {
+            fetchNotifs(user.id, function (err, notifs) {
+              var n = notifs.length === 1 && notifs[0];
+              // warning: pId field is the _id of the notif, not the id of the post
+              cb(
+                !(
+                  n.t &&
+                  n.html &&
+                  n.type === 'Snt' &&
+                  n.lastAuthor.id === p.uId &&
+                  n.img === n.track.img &&
+                  n.track.img.indexOf(p.pId) > -1 &&
+                  n.href.indexOf(p.pId) > -1
+                )
+              );
+            });
+          });
         });
       },
     ],
@@ -310,27 +306,23 @@ describe('notif', function () {
         };
         var plUri = p.plId.replace('_', '/playlist/');
         notifModel.sendPlaylistToUsers(p, function (res) {
-          pollUntil(
-            makeNotifChecker(1),
-            function (inTime) {
-              fetchNotifs(user.id, function (err, notifs) {
-                var n = notifs.length === 1 && notifs[0];
-                // warning: pId field is the _id of the notif, not the id of the post
-                cb(
-                  !(
-                    n.t &&
-                    n.html &&
-                    n.type === 'Snp' &&
-                    n.lastAuthor.id === p.uId &&
-                    n.img === n.track.img &&
-                    n.track.img.indexOf(p.plId) > -1 &&
-                    n.href.indexOf(plUri) > -1
-                  )
-                );
-              });
-            },
-            TIMEOUT
-          );
+          pollUntil(makeNotifChecker(1), function (inTime) {
+            fetchNotifs(user.id, function (err, notifs) {
+              var n = notifs.length === 1 && notifs[0];
+              // warning: pId field is the _id of the notif, not the id of the post
+              cb(
+                !(
+                  n.t &&
+                  n.html &&
+                  n.type === 'Snp' &&
+                  n.lastAuthor.id === p.uId &&
+                  n.img === n.track.img &&
+                  n.track.img.indexOf(p.plId) > -1 &&
+                  n.href.indexOf(plUri) > -1
+                )
+              );
+            });
+          });
         });
       },
     ],
