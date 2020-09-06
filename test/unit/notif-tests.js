@@ -9,6 +9,9 @@ process.appParams = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
 };
 
+const consoleBackup = console.log;
+console.log = () => {}; // prevent mongodb from adding noise to stdout
+
 var mongodb = require('../../app/models/mongodb.js');
 var notifModel = require('../../app/models/notif.js');
 
@@ -20,13 +23,15 @@ function initDb(cb) {
     if (err) throw err;
     var mongodbInstance = this;
     var initScript = './config/initdb.js';
-    console.log('Applying db init script:', initScript, '...');
     mongodbInstance.runShellScript(
       require('fs').readFileSync(initScript),
       function (err) {
         if (err) throw err;
         mongodbInstance.cacheCollections(function () {
-          mongodb.cacheUsers(cb);
+          mongodb.cacheUsers(() => {
+            console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
+            cb();
+          });
         });
       }
     );
