@@ -138,13 +138,6 @@ describe('notif', function () {
 
   const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
 
-  const cleanNotificationsDb = async () => {
-    // remove documents with empty uid
-    await db['notif'].remove({ uId: { $size: 0 } }, { multi: true });
-    const count = await countEmptyNotifs();
-    assert(count === 0, 'failed to remove notifs with empty uid');
-  };
-
   async function clearAllNotifs() {
     await util.promisify(notifModel.clearUserNotifs)(uId);
     const notifs = await util.promisify(fetchNotifs)(uId);
@@ -157,20 +150,20 @@ describe('notif', function () {
       .catch(() => cb(false));
   }
 
-  it('clean notifications db', cleanNotificationsDb);
+  it('clean notifications db', async () => {
+    // remove documents with empty uid
+    await db['notif'].remove({ uId: { $size: 0 } }, { multi: true });
+    const count = await countEmptyNotifs();
+    assert(count === 0, 'failed to remove notifs with empty uid');
+  });
 
   it('clear all notifications', clearAllNotifs);
 
-  it('add a love notif', () =>
-    new Promise((resolve, reject) =>
-      notifModel.love(users[0].id, fakePost, () =>
-        fetchNotifs(uId, (err, notifs) =>
-          notifs.length === 1
-            ? resolve()
-            : reject(new Error('there should be one notif'))
-        )
-      )
-    ));
+  it('add a love notif', async () => {
+    await notifModel.love(users[0].id, fakePost);
+    const notifs = await util.promisify(fetchNotifs)(uId);
+    assert(notifs.length === 1, 'there should be one notif');
+  });
 
   it('clear all notifications', clearAllNotifs);
 
