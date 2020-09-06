@@ -147,11 +147,9 @@ exports.actions = {
       q.pl = {
         id: p['pl[id]'],
         name: p['pl[name]'],
-        collabId: p['pl[collabId]'] || undefined,
       };
     }
-    if (q.pl.collabId) delete q.pl.id;
-    else if (q.pl.id == 'create') {
+    if (q.pl.id == 'create') {
       userModel.createPlaylist(p.uId, q.pl.name, function (playlist) {
         if (playlist) {
           q.pl.id = playlist.id;
