@@ -23,6 +23,40 @@ const POLL_TIMEOUT = 4000;
 
 const db = mongodb.collections;
 
+// test data
+
+const USERS = [
+  {
+    id: '4d7fc1969aa9db130e000003',
+    _id: ObjectId('4d7fc1969aa9db130e000003'),
+    name: 'Gilles (test)',
+  },
+  {
+    id: '4dd4060ddb28e240e8508c28',
+    _id: ObjectId('4dd4060ddb28e240e8508c28'),
+    name: 'Loick (test)',
+  },
+];
+
+var FAKE_POST = {
+  _id: ObjectId('4fe3428e9f2ec28c92000024'),
+  uId: ADMIN_USER.id,
+  name: 'Knust hjerte by Casiokids (test)',
+  eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
+};
+
+var COMMENTS = USERS.map(function (u) {
+  return {
+    _id: ObjectId('4ed3de428fed15d73c00001f'),
+    pId: '' + FAKE_POST._id,
+    uId: u.id,
+    uNm: u.name,
+    text: 'coucou (test)',
+  };
+});
+
+// test helpers
+
 const initDb = () =>
   new Promise((resolve, reject) => {
     mongodb.init(function (err) {
@@ -47,99 +81,71 @@ const initDb = () =>
     });
   });
 
-describe('notif', function () {
+function testAllNotifs(u) {
+  // 1 record per user
+  notifModel.subscribedToUser(USERS[u].id, ADMIN_USER.id);
+  notifModel.html(
+    ADMIN_USER.id,
+    'coucou <small>html</small>',
+    'http://www.facebook.com',
+    '/images/logo-s.png'
+  );
+  notifModel.mention(FAKE_POST, COMMENTS[u], ADMIN_USER.id);
+
+  // 1 common record
+  notifModel.love(USERS[u].id, FAKE_POST);
+  notifModel.comment(FAKE_POST, COMMENTS[u]);
+  notifModel.commentReply(FAKE_POST, COMMENTS[u], ADMIN_USER.id);
+  notifModel.repost(USERS[u].id, FAKE_POST);
+}
+
+async function addAllNotifs() {
+  var NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
+  for (let u in USERS) nbNotifs = testAllNotifs(u);
+  await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
+}
+
+function pollUntil(fct, cb) {
+  var t0 = Date.now();
+  var interv = setInterval(function () {
+    fct(function (err) {
+      var inTime = Date.now() - t0 <= POLL_TIMEOUT;
+      if (!err || !inTime) {
+        clearInterval(interv);
+        cb(!inTime);
+      }
+    });
+  }, 500);
+}
+
+function fetchNotifs(uId, cb) {
+  notifModel.getUserNotifs(uId, (notifs) => cb(null, notifs));
+}
+
+function makeNotifChecker(expectedCount) {
+  return function checkNotifs(cb) {
+    fetchNotifs(ADMIN_USER.id, function (err, notifs) {
+      cb(!(notifs.length == expectedCount));
+    });
+  };
+}
+
+const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
+
+async function clearAllNotifs() {
+  await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
+  const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
+  assert(notifs.length === 0, 'failed to clear all notifs');
+}
+
+// test suite
+
+describe('notifications', function () {
   this.timeout(5000);
-
-  it('initiatialises db', initDb);
-
-  const USERS = [
-    {
-      id: '4d7fc1969aa9db130e000003',
-      _id: ObjectId('4d7fc1969aa9db130e000003'),
-      name: 'Gilles (test)',
-    },
-    {
-      id: '4dd4060ddb28e240e8508c28',
-      _id: ObjectId('4dd4060ddb28e240e8508c28'),
-      name: 'Loick (test)',
-    },
-  ];
 
   USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
 
-  var fakePost = {
-    _id: ObjectId('4fe3428e9f2ec28c92000024'), //ObjectId("4ed3de428fed15d73c00001f"),
-    uId: ADMIN_USER.id,
-    name: 'Knust hjerte by Casiokids (test)',
-    eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
-  };
-
-  var comments = USERS.map(function (u) {
-    return {
-      _id: ObjectId('4ed3de428fed15d73c00001f'),
-      pId: '' + fakePost._id,
-      uId: u.id,
-      uNm: u.name,
-      text: 'coucou (test)',
-    };
-  });
-
-  function testAllNotifs(u) {
-    // 1 record per user
-    notifModel.subscribedToUser(USERS[u].id, ADMIN_USER.id);
-    notifModel.html(
-      ADMIN_USER.id,
-      'coucou <small>html</small>',
-      'http://www.facebook.com',
-      '/images/logo-s.png'
-    );
-    notifModel.mention(fakePost, comments[u], ADMIN_USER.id);
-
-    // 1 common record
-    notifModel.love(USERS[u].id, fakePost);
-    notifModel.comment(fakePost, comments[u]);
-    notifModel.commentReply(fakePost, comments[u], ADMIN_USER.id);
-    notifModel.repost(USERS[u].id, fakePost);
-  }
-
-  async function addAllNotifs() {
-    var NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
-    for (let u in USERS) nbNotifs = testAllNotifs(u);
-    await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
-  }
-
-  function pollUntil(fct, cb) {
-    var t0 = Date.now();
-    var interv = setInterval(function () {
-      fct(function (err) {
-        var inTime = Date.now() - t0 <= POLL_TIMEOUT;
-        if (!err || !inTime) {
-          clearInterval(interv);
-          cb(!inTime);
-        }
-      });
-    }, 500);
-  }
-
-  function fetchNotifs(uId, cb) {
-    notifModel.getUserNotifs(uId, (notifs) => cb(null, notifs));
-  }
-
-  function makeNotifChecker(expectedCount) {
-    return function checkNotifs(cb) {
-      fetchNotifs(ADMIN_USER.id, function (err, notifs) {
-        cb(!(notifs.length == expectedCount));
-      });
-    };
-  }
-
-  const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
-
-  async function clearAllNotifs() {
-    await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
-    const notifs = await util.promisify(fetchNotifs)(ADMIN_USER.id);
-    assert(notifs.length === 0, 'failed to clear all notifs');
-  }
+  it('initiatialises db', initDb);
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid
@@ -150,7 +156,7 @@ describe('notif', function () {
 
   it('can add a "love" notification', async () => {
     await clearAllNotifs();
-    await notifModel.love(USERS[0].id, fakePost);
+    await notifModel.love(USERS[0].id, FAKE_POST);
     await util.promisify(pollUntil)(makeNotifChecker(1));
   });
 
@@ -197,7 +203,7 @@ describe('notif', function () {
           uId: USERS[0].id,
           uNm: USERS[0].name,
           uidList: [ADMIN_USER.id],
-          pId: fakePost,
+          pId: FAKE_POST,
         },
         resolve
       )
@@ -212,7 +218,7 @@ describe('notif', function () {
       uId: USERS[0].id,
       uNm: USERS[0].name,
       uidList: [ADMIN_USER.id],
-      pId: '' + fakePost._id,
+      pId: '' + FAKE_POST._id,
     };
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(p, resolve)
