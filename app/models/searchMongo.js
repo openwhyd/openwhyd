@@ -157,7 +157,7 @@ exports.topicNameSearch = function (
             //console.log(renderTemplate(q,results));
             //response.legacyRender(util.inspect(results));
             resultHandler(results, q);
-            console.log('search: rendering done!');
+            // console.log('search: rendering done!');
           }
         };
         var timeout = setTimeout(renderer, timeoutDuration);

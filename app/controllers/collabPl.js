@@ -33,7 +33,7 @@ exports.controller = function (request, reqParams, response) {
 
   function render(html) {
     response.renderHTML(html);
-    console.log('rendering done!');
+    // console.log('rendering done!');
     if (
       loggedInUser &&
       loggedInUser.id &&

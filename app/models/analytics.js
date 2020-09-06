@@ -90,12 +90,9 @@ exports.addVisit = function (uId, tId, request) {
     else if (orig.includes('http')) orig = null;
   }
 
-  console.log('analytics.addVisit ', uId, tId, orig);
-
-  var visit = { uId: uId, tId: tId };
+  var visit = { uId, tId };
   if (orig) visit.orig = orig;
 
-  //mongodb.collections["visit"].insertOne(visit, {w:0}); // disabled write concern
   visit._t = new Date().getTime();
   visitStream.write(JSON.stringify(visit) + '\n');
 };
