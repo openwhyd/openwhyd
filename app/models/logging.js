@@ -1,32 +1,40 @@
 var http = require('http');
 var querystring = require('querystring');
 var errorTemplate = require('../templates/error.js');
+const snip = require('../snip.js');
 
-http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-  var head = '=== ' + new Date().toUTCString(),
-    path = this.url.split('?') /*[0]*/;
-  params = params ? JSON.stringify(params) : '';
-  suffix = suffix ? '(' + suffix + ')' : '';
-  // output with colors
+const genReqLogLine = ({ head, method, path, params, suffix }) =>
+  !process.appParams.color
+    ? [
+        head,
+        method,
+        path[0] + (path.length > 1 ? '?' + path.slice(1).join('?') : ''),
+        suffix,
+        params,
+      ]
+    : [
+        head.grey,
+        method.cyan,
+        path[0].green +
+          (path.length > 1 ? '?' + path.slice(1).join('?') : '').yellow,
+        suffix.white,
+        params.grey,
+      ];
+
+http.IncomingMessage.prototype.logToConsole = function (suffix, params) {
   console.log(
-    head.grey,
-    this.method.cyan,
-    path[0].green +
-      (path.length > 1 ? '?' + path.slice(1).join('?') : '').yellow,
-    suffix.white,
-    params.grey
-  ); // -> stdout
+    ...genReqLogLine({
+      head: '=== ' + new Date().toUTCString(),
+      method: this.method,
+      path: this.url.split('?'),
+      params:
+        typeof params === 'object'
+          ? JSON.stringify(snip.formatPrivateFields(params))
+          : '',
+      suffix: suffix ? '(' + suffix + ')' : '',
+    })
+  );
 };
-
-if (!process.appParams.color)
-  http.IncomingMessage.prototype.logToConsole = function(suffix, params) {
-    var head = '=== ' + new Date().toUTCString(),
-      path = this.url /*.split("?")[0]*/;
-    params = params ? JSON.stringify(params) : '';
-    suffix = suffix ? '(' + suffix + ')' : '';
-    // output without colors
-    console.log(head, this.method, path, suffix, params);
-  };
 
 var config = require('./config.js');
 var mongodb = require('./mongodb.js');
@@ -35,22 +43,10 @@ var renderUnauthorizedPage = loggingTemplate.renderUnauthorizedPage;
 
 // ========= USER AGENT STUFF
 
-/***
- * Recognize mobile clients from user agent
- */
-http.IncomingMessage.prototype.isMobileBrowser = function() {
-  return null; // mobile adaptation is DISABLED
-
-  var ua = this.headers['user-agent'];
-  return ua && ua.indexOf('Mobile') != -1 && ua.indexOf('iPad') == -1
-    ? ua
-    : null;
-};
-
 /**
  * Gets the http referer of a request
  */
-http.IncomingMessage.prototype.getReferer = function() {
+http.IncomingMessage.prototype.getReferer = function () {
   return this.headers['referrer'] || this.headers['referer'];
 };
 
@@ -70,15 +66,15 @@ exports.makeCookie = function(user) {
 /**
  * Transforms cookies found in the request into an object
  */
-http.IncomingMessage.prototype.getCookies = (function() {
+http.IncomingMessage.prototype.getCookies = (function () {
   //var cookieReg = /([^=\s]+)="([^"]*)"/;
-  return function() {
+  return function () {
     //console.log("cookies raw:", this.headers.cookie);
     if (!this.headers.cookie) return null;
     var cookiesArray = this.headers.cookie.split(';');
     //console.log("cookies array:", cookiesArray);
     var cookies = {};
-    for (var i = 0; i < cookiesArray.length; i++) {
+    for (let i = 0; i < cookiesArray.length; i++) {
       //var match = cookiesArray[i].trim().match(cookieReg);
       //if (match)
       cookiesArray[i] = cookiesArray[i].trim();
@@ -96,14 +92,14 @@ http.IncomingMessage.prototype.getCookies = (function() {
 /**
  * Return facebook's "fbs_" cookie object from the request
  */
-http.IncomingMessage.prototype.getFacebookCookie = function() {
+http.IncomingMessage.prototype.getFacebookCookie = function () {
   var cookies = this.getCookies();
   //console.log("cookies:", cookies);
-  for (var i in cookies)
+  for (let i in cookies)
     if (i.startsWith('fbs_')) {
-      var cookie = {},
+      const cookie = {},
         cookieArray = cookies[i].split('&');
-      for (var j in cookieArray) {
+      for (let j in cookieArray) {
         var cookieItem = cookieArray[j].split('=');
         cookie[cookieItem[0]] = cookieItem[1];
       }
@@ -112,8 +108,8 @@ http.IncomingMessage.prototype.getFacebookCookie = function() {
     } else if (i.startsWith('fbsr_')) {
       // https://developers.facebook.com/docs/authentication/signed_request/
       try {
-        var cookie = cookies[i].split('.')[1];
-        cookie = new Buffer(cookie /*|| ""*/, 'base64').toString('ascii');
+        let cookie = cookies[i].split('.')[1];
+        cookie = Buffer.from(cookie /*|| ""*/, 'base64').toString('ascii');
         cookie = JSON.parse(cookie);
         console.log('found secure facebook cookie'); //, cookie);
         return cookie;
@@ -129,14 +125,14 @@ http.IncomingMessage.prototype.getFacebookCookie = function() {
 /**
  * Returns the logged in user's facebook uid, from its cookie
  */
-http.IncomingMessage.prototype.getFbUid = function() {
+http.IncomingMessage.prototype.getFbUid = function () {
   var fbCookie = this.getFacebookCookie();
   if (fbCookie && fbCookie.uid)
-    this.getFbUid = function() {
+    this.getFbUid = function () {
       return fbCookie.uid;
     };
   else if (fbCookie && fbCookie.user_id)
-    this.getFbUid = function() {
+    this.getFbUid = function () {
       return fbCookie.user_id;
     };
   else return null;
@@ -146,7 +142,7 @@ http.IncomingMessage.prototype.getFbUid = function() {
 /**
  * Returns the logged in user's uid, from its openwhyd session cookie
  */
-http.IncomingMessage.prototype.getUid = function() {
+http.IncomingMessage.prototype.getUid = function () {
   /*
 	var uid = (this.getCookies() || {})["whydUid"];
 	if (uid) uid = uid.replace(/\"/g, "");
@@ -159,7 +155,7 @@ http.IncomingMessage.prototype.getUid = function() {
 /**
  * Returns the logged in user as an object {_id, id, fbId, name, img}
  */
-http.IncomingMessage.prototype.getUser = function() {
+http.IncomingMessage.prototype.getUser = function () {
   var uid = this.getUid();
   if (uid) {
     var user = mongodb.usernames[uid];
@@ -179,7 +175,7 @@ http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId;
 /**
  * Checks that a registered user is logged in, and return that user, or show an error page
  */
-http.IncomingMessage.prototype.checkLogin = function(response, format) {
+http.IncomingMessage.prototype.checkLogin = function (response, format) {
   var user = this.getUser();
   //console.log("checkLogin, cached record for logged in user: ", user);
   if (!user /*|| !user.name*/) {
@@ -197,17 +193,17 @@ http.IncomingMessage.prototype.checkLogin = function(response, format) {
   return user;
 };
 
-http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin = function(
+http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin = function (
   user
 ) {
   return user.email && config.adminEmails[user.email];
 };
 
-http.IncomingMessage.prototype.isAdmin = function() {
+http.IncomingMessage.prototype.isAdmin = function () {
   return this.isUserAdmin(this.getUser());
 };
 
-http.IncomingMessage.prototype.checkAdmin = function(response, format) {
+http.IncomingMessage.prototype.checkAdmin = function (response, format) {
   var user = this.checkLogin(response, format);
   if (!user) return false;
   else if (!exports.isUserAdmin(user)) {
@@ -223,7 +219,7 @@ http.IncomingMessage.prototype.checkAdmin = function(response, format) {
 
 // ========= HTTP RESPONSE SNIPPETS
 
-http.ServerResponse.prototype.renderHTML = function(html, statusCode) {
+http.ServerResponse.prototype.renderHTML = function (html, statusCode) {
   return this.legacyRender(
     html,
     null,
@@ -232,7 +228,7 @@ http.ServerResponse.prototype.renderHTML = function(html, statusCode) {
   );
 };
 
-http.ServerResponse.prototype.renderJSON = function(json, statusCode) {
+http.ServerResponse.prototype.renderJSON = function (json, statusCode) {
   return this.legacyRender(
     json,
     null,
@@ -241,7 +237,7 @@ http.ServerResponse.prototype.renderJSON = function(json, statusCode) {
   );
 };
 
-http.ServerResponse.prototype.renderWrappedJSON = function(json, statusCode) {
+http.ServerResponse.prototype.renderWrappedJSON = function (json, statusCode) {
   this.renderHTML(
     '<!DOCTYPE html><html><body><textarea>' +
       JSON.stringify(json) +
@@ -250,7 +246,7 @@ http.ServerResponse.prototype.renderWrappedJSON = function(json, statusCode) {
   );
 };
 
-http.ServerResponse.prototype.renderText = function(json, statusCode) {
+http.ServerResponse.prototype.renderText = function (json, statusCode) {
   return this.legacyRender(
     json,
     null,
@@ -259,33 +255,37 @@ http.ServerResponse.prototype.renderText = function(json, statusCode) {
   );
 };
 
-http.ServerResponse.prototype.redirect = function(url) {
+http.ServerResponse.prototype.redirect = function (url) {
   return this.renderHTML(loggingTemplate.htmlRedirect(url));
 };
 
-http.ServerResponse.prototype.redirectWithTracking = function(url, title) {
+http.ServerResponse.prototype.redirectWithTracking = function (url, title) {
   return this.renderHTML(
     loggingTemplate.renderRedirectPageWithTracking(url, title)
   );
 };
 
-http.ServerResponse.prototype.renderIframe = function(url, metaOverrides) {
+http.ServerResponse.prototype.renderIframe = function (url, metaOverrides) {
   return this.renderHTML(loggingTemplate.renderIframe(url, metaOverrides));
 };
 
-http.ServerResponse.prototype.temporaryRedirect = function(url, reqParams) {
-  var url = '' + url;
-  if (reqParams /*request.method.toLowerCase() == "get"*/) {
-    var reqParams = querystring.stringify(reqParams);
+http.ServerResponse.prototype.temporaryRedirect = function (_url, _reqParams) {
+  let url = '' + _url;
+  if (_reqParams /*request.method.toLowerCase() == "get"*/) {
+    const reqParams = querystring.stringify(_reqParams);
     if (reqParams.length) url += '?' + reqParams;
   }
   this.redirect(307, url); // see https://expressjs.com/fr/4x/api.html#res.redirect
 };
 
-http.ServerResponse.prototype.badRequest = function(error) {
+http.ServerResponse.prototype.badRequest = function (error) {
   this.status(400).send(error ? '' + error : 'BAD REQUEST');
 };
 
-http.ServerResponse.prototype.notFound = function() {
+http.ServerResponse.prototype.forbidden = function (error) {
+  this.status(403).send(error ? '' + error : 'FORBIDDEN');
+};
+
+http.ServerResponse.prototype.notFound = function () {
   this.status(404).send();
 };

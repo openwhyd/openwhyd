@@ -8,5 +8,5 @@ var FEATURED_PEOPLE = [
   '52cb7bc07e91c862b2b2145b', // Rob Filomena
   '531e23987e91c862b2b64760', // Sergio d'Abbadie
   '53a6080166491c17b2ada3c7', // Spanish Speaking Music Collective
-  '515099257e91c862b2ac4aa6' // Voyageman
+  '515099257e91c862b2ac4aa6', // Voyageman
 ];

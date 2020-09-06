@@ -1,8 +1,8 @@
-**Before using Openwhyd, and in compliance with [RGPD](https://www.eugdpr.org/), please read the conditions below and give your consent if you are comfortable with them.**
+**Before using Openwhyd, and in compliance with [GDPR](https://www.eugdpr.org/), please read the conditions below and give your consent if you are comfortable with them.**
 
 ## Project
 
-- Openwhyd is an *open source* and non-profit project.
+- Openwhyd is an _open source_ and non-profit project.
 - Its [source code](https://github.com/openwhyd/openwhyd) is maintained by volunteers. Contributions are coordinated and approved by Adrien Joly (administrator of the openwhyd.org platform since August 2016), on his spare time.
 - The `openwhyd.org` domain name, the hosting server and the associated data are also managed by Adrien Joly.
 - Technical costs are covered by sponsors and donors. The corresponding invoices are published on [our Opencollective page](https://opencollective.com/openwhyd).

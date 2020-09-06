@@ -7,5 +7,5 @@ var FEATURED_PEOPLE = [
   '503693ac7e91c862b2a8018f', // Kemptation
   '5032447c7e91c862b2a7ff1a', // Music Like Dirt
   '53ff22d1e04b7b4fca7e2c12', // Sounds good to me too
-  '4eb0d8b638bd914736c6d6a1' // Tibz
+  '4eb0d8b638bd914736c6d6a1', // Tibz
 ];

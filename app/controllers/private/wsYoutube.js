@@ -1,20 +1,15 @@
 var http = require('http');
-var mainTemplate = {
-  renderWhydFrame: function(a) {
-    return a;
-  }
-};
 
 var maxResults = 20;
 
-var renderTemplate = function(results) {
-  for (var i in results)
+var renderTemplate = function (results) {
+  for (let i in results)
     results[i] = { id: '/yt/' + results[i].id, name: results[i].title };
 
   return results;
 };
 
-exports.requestVideos = function(query, handler) {
+exports.requestVideos = function (query, handler) {
   //console.log("querying youtube for: "+query);
   var host = 'gdata.youtube.com';
   var url =
@@ -23,13 +18,15 @@ exports.requestVideos = function(query, handler) {
     '&q=' +
     encodeURIComponent(query);
   //console.log("requesting: "+host+url+"...");
-  var req = http
-    .request({ path: url, host: host, port: 80, method: 'GET' }, function(res) {
+  http
+    .request({ path: url, host: host, port: 80, method: 'GET' }, function (
+      res
+    ) {
       var json = '';
-      res.addListener('data', function(chunk) {
+      res.addListener('data', function (chunk) {
         json += chunk.toString();
       });
-      res.addListener('end', function() {
+      res.addListener('end', function () {
         json = JSON.parse(json);
         var results = json.data.items || [];
         console.log(
@@ -42,7 +39,7 @@ exports.requestVideos = function(query, handler) {
         handler(results);
       });
     })
-    .on('error', function(err) {
+    .on('error', function (err) {
       console.log('[ERR] wsYoutube.requestVideos ', err);
       console.error('[ERR] wsYoutube.requestVideos ', err);
       handler([]);
@@ -50,8 +47,8 @@ exports.requestVideos = function(query, handler) {
     .end();
 };
 
-exports.render = function(q, callback) {
-  exports.requestVideos(q, function(results) {
+exports.render = function (q, callback) {
+  exports.requestVideos(q, function (results) {
     callback(
       results
         ? renderTemplate(results)
@@ -60,8 +57,8 @@ exports.render = function(q, callback) {
   });
 };
 
-exports.controller = function(request, reqParams, response) {
-  exports.render(reqParams.q, function(html) {
+exports.controller = function (request, reqParams, response) {
+  exports.render(reqParams.q, function (html) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
   });
 };

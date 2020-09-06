@@ -5,13 +5,12 @@
  **/
 
 var config = require('../models/config.js');
-var uiSnippets = require('../templates/uiSnippets.js');
 var mainTemplate = require('./mainTemplate.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var pageTemplate = null;
 
-exports.refreshTemplates = function(callback) {
+exports.refreshTemplates = function (callback) {
   pageTemplate = templateLoader.loadTemplate(
     'app/templates/invitePage.html',
     callback
@@ -26,11 +25,11 @@ var FIELDS = [
   'iPo', // post/track from which user was invited
   'fbRequest', // id of facebook request used to invite
   'email',
-  'redirect'
+  'redirect',
 ];
 
 // TODO : verify usefullness
-exports.renderSignupPage = function(p) {
+exports.renderSignupPage = function (p) {
   p = p || {}; // FIELDS + loggedUser
   var params = {
     title: 'Join Openwhyd',
@@ -51,11 +50,11 @@ exports.renderSignupPage = function(p) {
     sender: p.sender && {
       id: p.sender.id,
       name: p.sender.name,
-      img: config.imgUrl('/u/' + p.sender.id)
-    }
+      img: config.imgUrl('/u/' + p.sender.id),
+    },
   };
 
-  FIELDS.map(function(field) {
+  FIELDS.map(function (field) {
     params[field] = p[field];
   });
 
@@ -65,7 +64,7 @@ exports.renderSignupPage = function(p) {
   return pageTemplate.render(params);
 };
 
-exports.renderInvitePage = function(
+exports.renderInvitePage = function (
   sender,
   loggedUser,
   inviteCode,
@@ -76,9 +75,7 @@ exports.renderInvitePage = function(
   redirect
 ) {
   var params = {};
-  params.title = /*config.landingStream &&*/ !inviteCode
-    ? 'Join Openwhyd'
-    : 'Your invitation to Openwhyd';
+  params.title = !inviteCode ? 'Join Openwhyd' : 'Your invitation to Openwhyd';
   params.pageDesc = !sender
     ? mainTemplate.defaultPageMeta.desc
     : sender.name +
@@ -99,8 +96,8 @@ exports.renderInvitePage = function(
       {
         id: sender.id,
         name: sender.name,
-        img: config.imgUrl('/u/' + sender.id)
-      }
+        img: config.imgUrl('/u/' + sender.id),
+      },
     ];
   }
 

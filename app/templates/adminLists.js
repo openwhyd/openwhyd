@@ -3,24 +3,23 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 var uiSnippets = require('../templates/uiSnippets.js');
 
-function cleanInfoArray(info) {
+function cleanInfoArray(_info) {
   var result = [];
-  var info = info && info.join ? info : [info];
-  for (var i in info)
+  var info = _info && _info.join ? _info : [_info];
+  for (let i in info)
     if (info[i]) result.push(/*uiSnippets.htmlEntities*/ info[i]);
   return result;
 }
 
-exports.AdminLists = function() {
+exports.AdminLists = function () {
   var lists = [];
 
-  var renderList = function(items, title, actionNames, formParams) {
+  var renderList = function (items, title, actionNames, formParams) {
     var html = [];
-    for (var i in items) {
+    for (let i in items) {
       var u = items[i];
       var info = cleanInfoArray(u.info);
       html.push(
@@ -53,7 +52,7 @@ exports.AdminLists = function() {
 
     if (actionNames) {
       if (formParams)
-        for (var i in formParams)
+        for (let i in formParams)
           if (formParams[i])
             // prevent null values
             html +=
@@ -63,7 +62,7 @@ exports.AdminLists = function() {
               formParams[i] +
               '" />';
       var buttons = '';
-      for (var i in actionNames)
+      for (let i in actionNames)
         buttons +=
           '<input type="submit" name="action" value="' +
           actionNames[i] +
@@ -83,9 +82,9 @@ exports.AdminLists = function() {
     );
   };
 
-  var renderWideList = function(items, title, actionNames, formParams) {
+  var renderWideList = function (items, title, actionNames, formParams) {
     var html = [];
-    for (var i in items) {
+    for (let i in items) {
       var u = items[i];
       var info = cleanInfoArray(u.info);
       html.push(
@@ -118,7 +117,7 @@ exports.AdminLists = function() {
 
     if (actionNames) {
       if (formParams)
-        for (var i in formParams)
+        for (let i in formParams)
           if (formParams[i])
             // prevent null values
             html +=
@@ -128,7 +127,7 @@ exports.AdminLists = function() {
               formParams[i] +
               '" />';
       var buttons = '';
-      for (var i in actionNames)
+      for (let i in actionNames)
         buttons +=
           '<input type="submit" name="action" value="' +
           actionNames[i] +
@@ -153,22 +152,20 @@ exports.AdminLists = function() {
   //renderList(validTopics, "in search index", null, {})
 
   return {
-    addList: function(items, title, actionNames, formParams) {
+    addList: function (items, title, actionNames, formParams) {
       lists.push(renderList(items, title, actionNames, formParams));
     },
 
-    addWideList: function(items, title, actionNames, formParams) {
+    addWideList: function (items, title, actionNames, formParams) {
       lists.push(renderWideList(items, title, actionNames, formParams));
     },
 
-    addScript: function(html) {
+    addScript: function (html) {
       lists.push(
         ['<script>', '/*<![CDATA[*/', html, '/*]]>*/', '</script>'].join('\n')
       );
     },
-    renderPage: function(params) {
-      var params = params || {};
-
+    renderPage: function (params = {}) {
       if (params.css) params.css.unshift('admin.css');
       else params.css = ['admin.css'];
 
@@ -186,7 +183,7 @@ exports.AdminLists = function() {
         '   var retArr = new Array();',
         '   var lastElement = 0;',
         '   if (buttonGroup[0]) { // if the button group is an array (one check box is not an array)',
-        '      for (var i=0; i<buttonGroup.length; i++) {',
+        '      for (let i=0; i<buttonGroup.length; i++) {',
         '         if (buttonGroup[i].checked) {',
         '            retArr.length = lastElement;',
         '            retArr[lastElement] = buttonGroup[i].value;',
@@ -202,10 +199,10 @@ exports.AdminLists = function() {
         '   return retArr;',
         '} // Ends the "getSelectedCheckbox" function"',
         '/*]]>*/',
-        '</script>'
+        '</script>',
       ].join('\n');
 
       return mainTemplate.renderWhydFrame(out, params);
-    }
+    },
   };
 };

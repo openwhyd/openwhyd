@@ -1,17 +1,28 @@
-# from https://docs.cypress.io/guides/guides/continuous-integration.html#CircleCI
 version: 2
+
+defaults: &defaults
+  working_directory: ~/app
+  docker:
+    - image: circleci/node:10.16.3-browsers
+      environment:
+        ## this enables colors in the output
+        TERM: xterm
+    - image: mongo:3.4
+      environment:
+        ## this enables colors in the output
+        TERM: xterm
+
+aliases:
+  # Forward the current folder when using workflows
+  - &persist-work-dir
+    root: .
+    paths: .
+  - &attach-work-dir
+    at: ~/app/
+
 jobs:
-  build:
-    docker:
-      - image: circleci/node:8.11.4-browsers
-        environment:
-          ## this enables colors in the output
-          TERM: xterm
-      - image: mongo:3.4
-        environment:
-          ## this enables colors in the output
-          TERM: xterm
-    working_directory: ~/app
+  checkout:
+    <<: *defaults
     steps:
       - checkout
       - run:
@@ -27,22 +38,70 @@ jobs:
           command: npm ci
       - save_cache:
           key: v1-deps-{{ .Branch }}-{{ checksum "package.json" }}
+          # cache NPM modules and the folder with the Cypress binary
           paths:
             - ~/.npm
+            - ~/.cache
+      - persist-to-workspace: *persist-work-dir
+
+  unit-tests:
+    <<: *defaults
+    steps:
+      - attach-workspace: *attach-work-dir
+      - run:
+          name: Database init.
+          command: source env-vars-testing.sh && npm run test-reset
+      - run:
+          name: Run tests
+          command: source env-vars-testing.sh && npm run test-unit
+
+  api-tests:
+    <<: *defaults
+    steps:
+      - attach-workspace: *attach-work-dir
+      # Get Openwhyd ready for testing
       - run:
           name: Database init.
           command: source env-vars-testing.sh && npm run test-reset
       - run:
           name: Run Openwhyd server
-          command: source env-vars-testing.sh && npm run run --mongoDbDatabase openwhyd_test
+          command: source env-vars-testing.sh && npm start --mongoDbDatabase openwhyd_test
           background: true
       - run:
           name: Wait for server up
           command: ./scripts/wait-for-http-server.sh 8080
       - run:
           name: Run tests
-          command: source env-vars-testing.sh && npm test
-      - run:
-          name: Semantic Release
-          command: npm run semantic-release
+          command: source env-vars-testing.sh && npm run test-api
 
+  cypress-tests:
+    <<: *defaults
+    steps:
+      - attach-workspace: *attach-work-dir
+      # Install Cypress and its dependencies
+      - run: sudo apt install xvfb libgtk-3-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 fonts-liberation libappindicator3-1 lsb-release xdg-utils
+      - run: npx cypress install
+      # Get Openwhyd ready for testing
+      - run:
+          name: Run Openwhyd server
+          command: source env-vars-testing.sh && npm start --mongoDbDatabase openwhyd_test
+          background: true
+      - run:
+          name: Wait for server up
+          command: ./scripts/wait-for-http-server.sh 8080
+      - run: $(npm bin)/cypress run # --record --key <record_key>
+
+workflows:
+  version: 2
+  suite:
+    jobs:
+      - checkout
+      - unit-tests:
+          requires:
+            - checkout
+      - api-tests:
+          requires:
+            - checkout
+      - cypress-tests:
+          requires:
+            - checkout

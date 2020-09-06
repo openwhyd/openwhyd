@@ -1,3 +1,5 @@
+/* global $ */
+
 /**
  * post box for openwhyd music
  * @author adrienjoly, whyd
@@ -26,12 +28,12 @@ function htmlDecode(str) {
 function WhydPost(embedRef) {
   var that = this;
   this.postData = {
-    action: 'insert'
+    action: 'insert',
   };
-  this.set_id = function(_id) {
+  this.set_id = function (_id) {
     this.postData._id = _id;
   };
-  this.setEmbedRef = function(embedRef) {
+  this.setEmbedRef = function (embedRef) {
     this.postData.eId =
       embedRef.eId ||
       embedRef.id + (embedRef.contentId ? '#' + embedRef.contentId : '');
@@ -39,40 +41,39 @@ function WhydPost(embedRef) {
     this.postData.img = embedRef.img;
     this.postData.src = embedRef.src; // (typeof embedSrc == "string" ? embedSrc : JSON.stringify(embedSrc))
   };
-  this.setText = function(text) {
+  this.setText = function (text) {
     this.postData.text = text;
   };
-  this.setName = function(name) {
+  this.setName = function (name) {
     if (name) this.postData.name = name;
   };
-  this.setRepostPid = function(pId) {
+  this.setRepostPid = function (pId) {
     this.postData.pId = pId;
   };
-  this.setContext = function(ctx) {
+  this.setContext = function (ctx) {
     this.postData.ctx = ctx;
   };
-  this.setPlaylist = function(id, name, collabId) {
+  this.setPlaylist = function (id, name) {
     this.postData.pl = { name: name };
-    if (collabId) this.postData.pl.collabId = collabId;
-    else this.postData.pl.id = id;
+    this.postData.pl.id = id;
   };
-  this.submit = function(shareOnFb, onPostComplete) {
+  this.submit = function (shareOnFb, onPostComplete) {
     //console.log("submitting post: ", postData);
     $.ajax({
       type: 'POST',
       url: '/api/post',
       data: this.postData,
-      success: function(post) {
+      success: function (post) {
         console.log('posted:', post);
         that.storedPost = post;
         if (onPostComplete) onPostComplete(post._id, that /*postData*/);
         if (shareOnFb && fbAction) fbAction('add', '/c/' + post._id, 'track');
       },
-      error: function(cause) {
+      error: function (cause) {
         console.log('post error:', cause);
         that.storedPost = null;
         if (onPostComplete) onPostComplete(null, that);
-      }
+      },
     });
   };
 }
@@ -109,18 +110,12 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
     $head.text(datatext).append($arrow);
     hideMenu();
   }
-  function addPlaylist(name, id, collabId) {
-    var $li = $('<li>')
-      .attr('data-plid', id)
-      .text(name)
-      .appendTo($ul);
-    $ul
-      .find('li')
-      .unbind()
-      .click(selectPlaylist);
+  function addPlaylist(name, id) {
+    var $li = $('<li>').attr('data-plid', id).text(name).appendTo($ul);
+    $ul.find('li').unbind().click(selectPlaylist);
     return $li;
   }
-  $form.unbind().submit(function() {
+  $form.unbind().submit(function () {
     var name = $('#newPlaylistName').val();
     if (name != '') {
       addPlaylist(name, 'create').each(selectPlaylist);
@@ -134,29 +129,10 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
         $li = addPlaylist(defaultPlaylist.name, defaultPlaylist.id);
       $li.each(selectPlaylist);
     }
-    $ul
-      .find('li')
-      .unbind()
-      .click(selectPlaylist);
+    $ul.find('li').unbind().click(selectPlaylist);
   }
   bindItems();
-  return {
-    /*
-		populate: function() {
-			$.ajax({
-				type: "GET",
-				url: "/api/user",
-				success: function(user){
-					if (user && user.pl)
-						for (var i in user.pl)
-							addPlaylist(user.pl[i].name, user.pl[i].id, user.pl[i].collabId);
-					bindItems();
-				}
-			});
-		},
-		*/
-    bindItems: bindItems
-  };
+  return { bindItems };
 }
 
 //================ DESCRIPTION FIELD (ui component)
@@ -169,7 +145,7 @@ function WhydTextWithMentions(textArea) {
       type: 'GET',
       url: '/search',
       data: q,
-      complete: function(res, status) {
+      complete: function (res, status) {
         try {
           if (status != 'success' || !res.responseText) throw 0;
           cb && cb(res.responseText);
@@ -177,32 +153,32 @@ function WhydTextWithMentions(textArea) {
           cb && cb({ error: e || 'An error occured. Please try again.' });
           if (e) throw e;
         }
-      }
+      },
     });
   }
   var $textField = $(textArea).mentionsInput({
     maxMentions: MAX_NB_MENTIONS,
-    onDataRequest: function(mode, query, callback) {
-      submitSearchQuery({ q: query, context: 'mention' }, function(res) {
+    onDataRequest: function (mode, query, callback) {
+      submitSearchQuery({ q: query, context: 'mention' }, function (res) {
         res = JSON.parse(res);
-        var hits = (res.hits || []).map(function(r) {
+        var hits = (res.hits || []).map(function (r) {
           return {
             id: r._id,
             name: r.name,
             avatar: '/img/u/' + r._id,
-            type: 'user'
+            type: 'user',
           };
         });
         callback.call(this, hits);
       });
-    }
+    },
   });
   return {
-    getTextWithMentions: function(cb) {
-      $textField.mentionsInput('val', function(text) {
+    getTextWithMentions: function (cb) {
+      $textField.mentionsInput('val', function (text) {
         cb(text.trim ? text.trim() : text);
       });
-    }
+    },
   };
 }
 
@@ -250,9 +226,7 @@ function initPostBox(params) {
     // TODO: also close bookmarklet overlay
   }
 
-  $('#btnClose, #btnCancel')
-    .unbind()
-    .click(close);
+  $('#btnClose, #btnCancel').unbind().click(close);
 
   // for bookmarklet
   function displayConfirmationScreen(posted) {
@@ -266,23 +240,18 @@ function initPostBox(params) {
         '/c/' +
         pId;
       var $confirm = $('#confirmationScreen');
-      $confirm
-        .find('a')
-        .first()
-        .attr('href', url)
-        .unbind()
-        .click(close);
+      $confirm.find('a').first().attr('href', url).unbind().click(close);
       $confirm.find('.sharing').html(
         '<a href="https://twitter.com/share" class="twitter-share-button"' +
-        ' data-count="none" data-via="open_whyd" data-url="' +
-        htmlEntities(url) +
-        '"' +
-        ' data-text="' +
-        htmlEntities('♫ ' + posted.name /*+ " " + url*/) +
-        '">Tweet</a>' +
-        '<' +
-        'script src="https://platform.twitter.com/widgets.js" type="text/javascript"></' +
-        'script>' + // '+' avoids this script from being interpreted as a html file
+          ' data-count="none" data-via="open_whyd" data-url="' +
+          htmlEntities(url) +
+          '"' +
+          ' data-text="' +
+          htmlEntities('♫ ' + posted.name /*+ " " + url*/) +
+          '">Tweet</a>' +
+          '<' +
+          'script src="https://platform.twitter.com/widgets.js" type="text/javascript"></' +
+          'script>' + // '+' avoids this script from being interpreted as a html file
           '<div class="fb-like" data-send="false" data-layout="button_count" data-width="450"' +
           ' data-show-faces="false" data-href="' +
           htmlEntities(url) +
@@ -301,8 +270,7 @@ function initPostBox(params) {
       );
     var url = '/u/' + posted.uId;
     if (posted.pl) {
-      if (posted.pl.collabId != null) url = '/playlist/' + posted.pl.collabId;
-      else url += '/playlist/' + posted.pl.id;
+      url += '/playlist/' + posted.pl.id;
     }
     if (window.showMessage) {
       var plName = posted.pl ? posted.pl.name : 'your tracks';
@@ -351,8 +319,8 @@ function initPostBox(params) {
     var descBox = new WhydTextWithMentions(document.getElementById('text'));
     $('#btnSubmit')
       .unbind()
-      .click(function(e) {
-        descBox.getTextWithMentions(function(text) {
+      .click(function (e) {
+        descBox.getTextWithMentions(function (text) {
           // sample text: "pouet @[adrien](user:4ecb6ec933d9308badd7b7b4) test"
           console.log('WhydTextWithMentions RESULT:', text);
           //				if ($titleInput.length)
@@ -362,7 +330,7 @@ function initPostBox(params) {
           whydPost.submit(true, onPostSuccess);
         });
       });
-    setTimeout(function() {
+    setTimeout(function () {
       $body.removeClass('loading');
     }, 200);
   }
@@ -377,11 +345,11 @@ function initPostBox(params) {
       dz: new DeezerPlayer({}),
       bc: new BandcampPlayer({}),
       ja: new JamendoPlayer({}),
-      fi: new AudioFilePlayer({})
+      fi: new AudioFilePlayer({}),
       // TODO: make sure that the list of players is always up to date
     };
     function getPlayerId(url) {
-      for (var i in players) if (players[i].getEid(url)) return i;
+      for (let i in players) if (players[i].getEid(url)) return i;
     }
     function detectEid(url, cb) {
       var playerId = getPlayerId(url);
@@ -389,15 +357,15 @@ function initPostBox(params) {
       cb(player && '/' + playerId + '/' + player.getEid(url), player);
     }
     return function detect(url, cb) {
-      detectEid(url, function(eId, player) {
+      detectEid(url, function (eId, player) {
         if (!eId || !player) return cb();
         if (!player.fetchMetadata)
           // e.g. MP3 files
           return cb({
             eId: eId,
-            playerLabel: player.label
+            playerLabel: player.label,
           }); // todo: add default metadata
-        player.fetchMetadata(url, function(track) {
+        player.fetchMetadata(url, function (track) {
           track = track || {};
           track.playerLabel = player.label;
           track.eId = track.eId || eId.substr(0, 4) + track.id; // || eid;
@@ -415,7 +383,7 @@ function initPostBox(params) {
           track.eId.substr(4).split('?')[0] +
           '/hqdefault.jpg';
         var i = new Image();
-        i.onload = function() {
+        i.onload = function () {
           if (i.height >= 120) {
             document.getElementById('contentThumb').style.backgroundImage =
               'url(' + img + ')';
@@ -440,7 +408,7 @@ function initPostBox(params) {
     $body.removeClass('failed');
     // todo: make sure that playemjs is loaded and ready to use
     // todo: in editPost case: populate track object and display using post metadata, instead of fetching
-    makePlayemStreamDetector()(params.embed.replace(/\&amp\;/g, '&'), function(
+    makePlayemStreamDetector()(params.embed.replace(/\&amp\;/g, '&'), function (
       track
     ) {
       console.log('postBox detected track:', track);
@@ -468,11 +436,9 @@ function initPostBox(params) {
 
   $(init);
 
-  $('#btnRetry')
-    .unbind()
-    .click(init);
+  $('#btnRetry').unbind().click(init);
 
-  $(document).ajaxComplete(function() {
+  $(document).ajaxComplete(function () {
     try {
       FB.XFBML.parse();
     } catch (ex) {}

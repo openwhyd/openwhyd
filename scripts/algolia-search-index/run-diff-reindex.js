@@ -19,13 +19,13 @@ const COLLECTIONS = [
   {
     name: 'user',
     indexName: 'users',
-    objTransform: dbObj => ({
+    objTransform: (dbObj) => ({
       objectID: dbObj._id.toString(),
       name: dbObj.name,
       username: dbObj.username,
-      img: dbObj.img
-    })
-  }
+      img: dbObj.img,
+    }),
+  },
   // TODO: run on the "post" collection next
   /*
   {
@@ -46,13 +46,13 @@ const COLLECTIONS = [
 
 // misc. helpers
 
-const bindCollectionToDB = db => coll =>
+const bindCollectionToDB = (db) => (coll) =>
   Object.assign({}, coll, {
-    coll: db.collections[coll.name]
+    coll: db.collections[coll.name],
   });
 
 // to run a list of functions (promise factories) one after another
-const runSeq = functions =>
+const runSeq = (functions) =>
   functions.reduce((p, fct) => p.then(fct), Promise.resolve());
 
 const getCollCounts = ({ name, coll }) =>
@@ -66,12 +66,12 @@ const getIndexCounts = ({ indexName }) =>
     .search('')
     .then(({ nbHits }) => ({ name: indexName, count: nbHits }));
 
-const renderResults = diffIndexer =>
+const renderResults = (diffIndexer) =>
   `skipped ${diffIndexer.nbSkipped} / ${diffIndexer.nbConsidered} objects`;
 
 // dry run
 
-const dryRunIndexer = obj => console.log(`  would index ${obj._id}`);
+const dryRunIndexer = (obj) => console.log(`  would index ${obj._id}`);
 
 // diff logic
 
@@ -97,13 +97,13 @@ const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
   new Promise((resolve, reject) => {
     algoliaUtils
       .makeSetFromIndex({ appId, apiKey, indexName })
-      .then(alreadyIndexed => {
+      .then((alreadyIndexed) => {
         const diffIndexer = new DiffIndexer({
           alreadyIndexed,
-          missingObjectHandler
+          missingObjectHandler,
         });
         mongo
-          .forEachObject(coll, obj => diffIndexer.consider(obj), { _id: 1 })
+          .forEachObject(coll, (obj) => diffIndexer.consider(obj), { _id: 1 })
           .then(() => resolve(diffIndexer));
       });
   });
@@ -112,7 +112,7 @@ const reindexAndDisplay = (collection, indexer = dryRunIndexer) => {
   console.log(`- collection: ${collection.name} ...`);
   return indexMissingObjects(
     Object.assign({ missingObjectHandler: indexer }, collection)
-  ).then(diffIndexer => console.log('  =>', renderResults(diffIndexer)));
+  ).then((diffIndexer) => console.log('  =>', renderResults(diffIndexer)));
 };
 
 // main script
@@ -124,45 +124,45 @@ let cols;
 const init = () =>
   mongo
     .init(MONGODB_PARAMS)
-    .then(db => (cols = COLLECTIONS.map(bindCollectionToDB(db))));
+    .then((db) => (cols = COLLECTIONS.map(bindCollectionToDB(db))));
 
 const displayCounts = () =>
-  Promise.all(cols.map(getCollCounts)).then(results => {
+  Promise.all(cols.map(getCollCounts)).then((results) => {
     console.log('___\nindexable collections:');
-    results.forEach(result =>
+    results.forEach((result) =>
       console.log(`- ${result.name} (${result.count} objects)`)
     );
   });
 
 const displayIndexCounts = () =>
-  Promise.all(cols.map(getIndexCounts)).then(results => {
+  Promise.all(cols.map(getIndexCounts)).then((results) => {
     console.log('___\ncurrent indexes:');
-    results.forEach(result =>
+    results.forEach((result) =>
       console.log(`- ${result.name} (${result.count} objects)`)
     );
   });
 
 const dryRun = () => {
   console.log('___\ndry run:');
-  return runSeq(cols.map(coll => () => reindexAndDisplay(coll)));
+  return runSeq(cols.map((coll) => () => reindexAndDisplay(coll)));
 };
 
 const askConfirmation = () =>
   confirm(
     '___\nstart the actual reindexing of this collection now? [y|N] '
-  ).then(res => !res && process.exit(0));
+  ).then((res) => !res && process.exit(0));
 
 const reindex = () => {
   console.log('___\nreindexing:');
   return runSeq(
-    cols.map(coll => {
+    cols.map((coll) => {
       const index = algoliaUtils.getIndex({
         appId,
         apiKey,
-        indexName: coll.indexName
+        indexName: coll.indexName,
       });
       const batcher = new algoliaUtils.BatchedAlgoliaIndexer({ index });
-      const processObject = dbObj =>
+      const processObject = (dbObj) =>
         batcher.addObject(coll.objTransform(dbObj));
       return () =>
         reindexAndDisplay(coll, processObject).then(() => batcher.flush());

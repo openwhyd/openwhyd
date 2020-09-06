@@ -14,12 +14,12 @@ function dateFromObject(object) {
     : new Date(object._t);
 }
 
-const promoteObject = object => ({
+const promoteObject = (object) => ({
   ...object,
   _id: {
     ...object._id,
-    getTimestamp: () => dateFromObject(object)
-  }
+    getTimestamp: () => dateFromObject(object),
+  },
 });
 
 // equivalent to db.<collection>.mapReduce(map, reduce, opts);
@@ -32,24 +32,24 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
       : ((remaining = opts.limit) => () => remaining-- <= 0)();
     const inTimeRange = !opts.query
       ? () => true
-      : object => {
+      : (object) => {
           const date = dateFromObject(object);
           return date && date > opts.query._id.$gt && date < opts.query._id.$lt;
         };
     function finalizeAndResolve() {
       if (opts.finalize) {
         Object.keys(reduced).forEach(
-          key => (reduced[key] = opts.finalize(key, reduced[key]))
+          (key) => (reduced[key] = opts.finalize(key, reduced[key]))
         );
       }
       opts.out = opts.out || {};
       // cf https://docs.mongodb.com/manual/reference/command/mapReduce/#output
       if (opts.out.inline) {
         resolve({
-          results: Object.keys(reduced).map(_id => ({
+          results: Object.keys(reduced).map((_id) => ({
             _id,
-            value: reduced[_id]
-          }))
+            value: reduced[_id],
+          })),
         });
       } else {
         console.error(
@@ -94,5 +94,5 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
 module.exports = {
   emit,
   dateFromObjectId,
-  mapReduceFromJsonLines
+  mapReduceFromJsonLines,
 };

@@ -1,397 +1,396 @@
-{{#header}}
-{{#user}}
+{{#header}} {{#user}}
 
 <div id="profileHead" class="{{#cvrImg}}withCover{{/cvrImg}}">
+  {{#cvrImg}}
+  <img class="coverImg" src="{{cvrImg}}" />
+  <!-- src="/images/minab-cover.jpg" -->
+  <script>
+    $(function () {
+      var $cvr = $('.coverImg');
+      var interval = setInterval(function () {
+        if ($cvr.height()) {
+          clearInterval(interval);
+          var top = $('.feedHeader').offset().top - $('#header').height() - 150;
+          //console.log("offset", $(".feedHeader").offset().top, $("#header").height());
+          //$("html, body").animate({scrollTop:top});
+          $(document).scrollTop(top);
+        }
+      }, 200);
+    });
+  </script>
+  {{/cvrImg}}
 
-	{{#cvrImg}}
-	<img class="coverImg" src="{{cvrImg}}"> <!-- src="/images/minab-cover.jpg" -->
-	<script>
-	$(function(){
-		var $cvr = $(".coverImg");
-		var interval = setInterval(function(){
-			if ($cvr.height()) {
-				clearInterval(interval);
-				var top = $(".feedHeader").offset().top - $("#header").height() - 150;
-				//console.log("offset", $(".feedHeader").offset().top, $("#header").height());
-				//$("html, body").animate({scrollTop:top});
-				$(document).scrollTop(top);
-			}
-		}, 200);
-	});
-	</script>
-	{{/cvrImg}}
+  <div id="profileTop" class="wrapper">
+    <div class="feedHeader container">
+      <div
+        class="avatar"
+        style="background-image:url('{{img}}?width=100&amp;height=100')"
+      ></div>
+      <h1>{{name}}</h1>
 
-	<div id="profileTop" class="wrapper">
-		<div class="feedHeader container">
+      <div id="userStats">
+        <a id="userSubscriptions" href="/u/{{id}}/subscriptions">
+          {{#subscriptions}}<span>{{nbSubscriptions}}</span>
+          following{{/subscriptions}}</a
+        >
+        <a id="userSubscribers" href="/u/{{id}}/subscribers">
+          {{#subscriptions}}<span>{{nbSubscribers}}</span>
+          followers{{/subscriptions}}</a
+        >
+      </div>
 
-			<div class="avatar" style="background-image:url('{{img}}?width=100&amp;height=100')"></div>
-			<h1>{{name}}</h1>
+      <div class="tags">
+        {{#tags}}<a class="tag" href="{{url}}">{{id}} ({{c}})</a>{{/tags}}
+      </div>
 
-			<div id="userStats">
-				<a id="userSubscriptions" href="/u/{{id}}/subscriptions">
-					{{#subscriptions}}<span>{{nbSubscriptions}}</span> following{{/subscriptions}}</a>
-					<a id="userSubscribers" href="/u/{{id}}/subscribers">
-						{{#subscriptions}}<span>{{nbSubscribers}}</span> followers{{/subscriptions}}</a>
-					</div>
+      <p class="bio">{{{renderedBio}}}</p>
 
-					<div class="tags">
-						{{#tags}}<a class="tag" href="{{url}}">{{id}} ({{c}})</a>{{/tags}}
-					</div>
+      <ul class="lnkIcons">
+        {{#loc}}
+        <li class="loc"><span>{{loc}}</span></li>
+        {{/loc}} {{#lnk}} {{#home}}
+        <li class="home"><a href="{{url}}">{{renderedUrl}}</a></li>
+        {{/home}} {{#fb}}
+        <li class="fb"><a href="{{fb}}">Facebook</a></li>
+        {{/fb}} {{#tw}}
+        <li class="tw"><a href="{{tw}}">Twitter</a></li>
+        {{/tw}} {{#sc}}
+        <li class="sc"><a href="{{sc}}">Soundcloud</a></li>
+        {{/sc}} {{#yt}}
+        <li class="yt"><a href="{{yt}}">Youtube</a></li>
+        {{/yt}} {{#igrm}}
+        <li class="igrm"><a href="{{igrm}}">Instagram</a></li>
+        {{/igrm}} {{/lnk}}
+      </ul>
 
-					<p class="bio">{{{renderedBio}}}</p>
-
-					<ul class="lnkIcons">
-						{{#loc}}<li class="loc"><span>{{loc}}</span></li>{{/loc}}
-						{{#lnk}}
-						{{#home}}<li class="home"><a href="{{url}}" >{{renderedUrl}}</a></li>{{/home}}
-						{{#fb}}<li class="fb"><a href="{{fb}}" >Facebook</a></li>{{/fb}}
-						{{#tw}}<li class="tw"><a href="{{tw}}" >Twitter</a></li>{{/tw}}
-						{{#sc}}<li class="sc"><a href="{{sc}}" >Soundcloud</a></li>{{/sc}}
-						{{#yt}}<li class="yt"><a href="{{yt}}" >Youtube</a></li>{{/yt}}
-						{{#igrm}}<li class="igrm"><a href="{{igrm}}" >Instagram</a></li>{{/igrm}}
-						{{/lnk}}
-					</ul>
-
-					{{#isUserLogged}}
-					{{#ownProfile}}
-					<div class="userSubscribe btnEditProfile">Edit profile</div>
-					<div id="popinEditProfile">
-						<div onclick="$('#popinEditProfile').hide();showEditProfileDlg();">Edit Profile Info</div>
-						<div onclick="$('#popinEditProfile').hide();showEditProfileCoverDlg();">Edit Profile Cover</div>
-					</div>
-					<script>
-						var $dlg = $("#popinEditProfile");
-						var $btn = $(".btnEditProfile");
-						$btn.click(function(e){
-							//$btn.addClass("active");
-							/*window.onDialogClose = function() {
-							$btn.removeClass("active");
-							delete window.onDialogClose;
-						};*/
-						/*openHtmlPopin($dlg, {
-						containerId: "modalEditProfile",
-						appendTo: $(this).parent(),
-						autoPosition: false
-					});*/
-					if($dlg.css('display') == "none") {
-						$(this).addClass("active");
-						$dlg.show();
-					}
-					else {
-						$(this).removeClass("active");
-						$dlg.hide();
-					}
-				});
-			</script>
-			{{/ownProfile}}
-			{{^ownProfile}}
-			<div class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
-			data-uid="{{id}}"
-			onclick="$(this).each(switchSubscription)"
-			onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
-			onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';">
-			{{#isSubscribed}}Following{{/isSubscribed}}
-			{{^isSubscribed}}Follow{{/isSubscribed}}
-		</div>
-		{{/ownProfile}}
-		{{/isUserLogged}}
-		{{^isUserLogged}}
-		<div class="userSubscribe" onclick="login();">Follow</div>
-		{{/isUserLogged}}
-	</div>
-</div>
-
+      {{#isUserLogged}} {{#ownProfile}}
+      <div class="userSubscribe btnEditProfile">Edit profile</div>
+      <div id="popinEditProfile">
+        <div onclick="$('#popinEditProfile').hide();showEditProfileDlg();">
+          Edit Profile Info
+        </div>
+        <div onclick="$('#popinEditProfile').hide();showEditProfileCoverDlg();">
+          Edit Profile Cover
+        </div>
+      </div>
+      <script>
+        var $dlg = $('#popinEditProfile');
+        var $btn = $('.btnEditProfile');
+        $btn.click(function (e) {
+          //$btn.addClass("active");
+          /*window.onDialogClose = function() {
+					$btn.removeClass("active");
+					delete window.onDialogClose;
+				};*/
+          /*openHtmlPopin($dlg, {
+					containerId: "modalEditProfile",
+					appendTo: $(this).parent(),
+					autoPosition: false
+				});*/
+          if ($dlg.css('display') == 'none') {
+            $(this).addClass('active');
+            $dlg.show();
+          } else {
+            $(this).removeClass('active');
+            $dlg.hide();
+          }
+        });
+      </script>
+      {{/ownProfile}} {{^ownProfile}}
+      <div
+        class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
+        data-uid="{{id}}"
+        onclick="$(this).each(switchSubscription)"
+        onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
+        onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';"
+      >
+        {{#isSubscribed}}Following{{/isSubscribed}}
+        {{^isSubscribed}}Follow{{/isSubscribed}}
+      </div>
+      {{/ownProfile}} {{/isUserLogged}} {{^isUserLogged}}
+      <div class="userSubscribe" onclick="login();">Follow</div>
+      {{/isUserLogged}}
+    </div>
+  </div>
 </div>
 
 <div class="container">
+  <ul id="tabSelector">
+    <li>
+      <a href="/u/{{id}}" class="{{#showTracks}}selected{{/showTracks}}">
+        Tracks <span class="number-stats">{{nbTracks}}</span>
+      </a>
+    </li>
+    <li>
+      <a
+        href="/u/{{id}}/playlists"
+        class="{{#showPlaylists}}selected{{/showPlaylists}}"
+      >
+        Playlists <span class="number-stats">{{nbPlaylists}}</span>
+      </a>
+    </li>
+    <li>
+      <a href="/u/{{id}}/likes" class="{{#showLikes}}selected{{/showLikes}}">
+        Likes <span class="number-stats">{{nbLikes}}</span>
+      </a>
+    </li>
+    <li>
+      <a
+        href="/u/{{id}}/subscriptions"
+        class="{{#showSubscriptions}}selected{{/showSubscriptions}}"
+      >
+        Following {{#subscriptions}}<span class="number-stats"
+          >{{nbSubscriptions}}</span
+        >
+        {{/subscriptions}}
+      </a>
+    </li>
+    <li>
+      <a
+        href="/u/{{id}}/subscribers"
+        class="{{#showSubscribers}}selected{{/showSubscribers}}"
+      >
+        Followers {{#subscriptions}}<span class="number-stats"
+          >{{nbSubscribers}}</span
+        >
+        {{/subscriptions}}
+      </a>
+    </li>
+    <!--	<a href="javascript:return false;" class="right filter"><div></div>pouet</a>-->
+  </ul>
 
-	<ul id="tabSelector">
-		<li><a href="/u/{{id}}" {{#showTracks}}class="selected"{{/showTracks}}>
-			Tracks <span class="number-stats">{{nbTracks}}</span>
-		</a></li>
-		<li><a href="/u/{{id}}/playlists" {{#showPlaylists}}class="selected"{{/showPlaylists}}>
-			Playlists <span class="number-stats">{{nbPlaylists}}</span>
-		</a></li>
-		<li><a href="/u/{{id}}/likes" {{#showLikes}}class="selected"{{/showLikes}}>
-			Likes <span class="number-stats">{{nbLikes}}</span>
-		</a></li>
-		<!--<li><a href="/u/{{id}}/activity" {{#showActivity}}class="selected"{{/showActivity}}>
-			Activity
-		</a></li>-->
-		<li><a href="/u/{{id}}/subscriptions" {{#showSubscriptions}}class="selected"{{/showSubscriptions}}>
-			Following  {{#subscriptions}}<span class="number-stats">{{nbSubscriptions}}</span> {{/subscriptions}}
-		</a></li>
-		<li><a href="/u/{{id}}/subscribers" {{#showSubscribers}}class="selected"{{/showSubscribers}}>
-			Followers {{#subscriptions}}<span class="number-stats">{{nbSubscribers}}</span> {{/subscriptions}}
-		</a></li>
-		<!--	<a href="javascript:return false;" class="right filter"><div></div>pouet</a>-->
-	</ul>
+  {{/user}}
 
-	{{/user}}
+  <section class="sub-container">
+    <div>
+      <h2 class="head-name-tab clearfix">
+        <span>{{streamTitle}}</span>
+        {{#showTracks}} {{^emptyFeed}}
+        <a href="" id="btnFilter" title="Filter"></a>
+        {{/emptyFeed}} {{/showTracks}}
+      </h2>
 
-	<section class="sub-container">
+      <div id="filterBox">
+        <input type="text" class="q search-input" placeholder="Filter" />
+        <div class="clear" title="close"></div>
+      </div>
+    </div>
 
+    <div class="posts">
+      {{/header}}
 
-		<div >
-			<h2 class="head-name-tab clearfix"><span>{{streamTitle}}</span>
-				{{#showTracks}}
+      <!-- TRACKS TAB CONTENT -->
 
-				{{^emptyFeed}}
-				<a href="" id="btnFilter" title="Filter"></a>
-				{{/emptyFeed}}
-				{{/showTracks}}
-			</h2>
+      {{#showTracks}} {{{posts}}} {{#emptyFeed}} {{#ownProfile}}
+      <div class="emptyFeed">No tracks yet... You should add one!</div>
+      {{/ownProfile}} {{^ownProfile}}
+      <div class="emptyFeed">No tracks yet...</div>
+      {{/ownProfile}} {{/emptyFeed}} {{/showTracks}}
 
+      <!-- LIKES TAB CONTENT -->
 
-			<div id="filterBox" >
-				<input type="text" class="q search-input" placeholder="Filter">
-				<div class="clear " title="close"></div>
-			</div>
+      {{#showLikes}} {{{posts}}} {{#emptyFeed}} {{#ownProfile}}
+      <div class="emptyFeed">
+        No liked tracks yet... You should like someone's track!
+      </div>
+      {{/ownProfile}} {{^ownProfile}}
+      <div class="emptyFeed">No liked tracks yet...</div>
+      {{/ownProfile}} {{/emptyFeed}} {{/showLikes}}
 
-		</div>
+      <!-- PLAYLISTS TAB CONTENT -->
 
+      {{#showPlaylists}} {{^items}} {{^ownProfile}}
+      <div class="emptyFeed">This user didn't publish any playlist yet...</div>
+      {{/ownProfile}} {{/items}}
+      <ul id="playlists">
+        {{#ownProfile}}
+        <li class="btnNewPlaylist playlist">
+          <a href="javascript:dlgCreatePlaylist();">
+            <div class="thumb"></div>
+            <p>+ New Playlist</p>
+          </a>
+        </li>
+        {{/ownProfile}} {{#items}}
+        <li class="playlist">
+          <a href="{{url}}">
+            <div
+              class="thumb"
+              style="background-image:url('{{img}}?localOnly=1');"
+            >
+              <img class="blur" src="{{img}}?remoteOnly=1" />
+              <div class="cover-playlist-vinyle"></div>
+            </div>
+            <p>{{name}}</p>
+          </a>
+          <span>{{nbTracks}} tracks</span>
+        </li>
+        {{/items}}
+      </ul>
+      {{/showPlaylists}}
 
-		<div class="posts">
+      <!-- ACTIVITY TAB CONTENT -->
 
-			{{/header}}
+      {{#showActivity}}
+      <ul id="activity">
+        {{#items}}
+        <li data-uid="{{id}}" class="icon-post-type {{type}}">
+          <p class="ago">{{ago}} ago</p>
+          <span class="activity">
+            <a class="userName" href="/u/{{id}}">{{name}}</a>
 
+            {{#subscribedUsers}} &nbsp;subscribed to {{#aggregatedItems}}
+            <div class="subscription">
+              <span
+                class="userSubscribe {{#subscribed}}subscribed{{/subscribed}}"
+                data-uid="{{id}}"
+                >{{#subscribed}}Following{{/subscribed}}{{^subscribed}}Follow{{/subscribed}}</span
+              >
+              <div
+                class="thumb"
+                style="background-image:url('/img/u/{{id}}');"
+                onclick="$(this).parent().find('a.userName').click();"
+              ></div>
+              <a class="userName" href="/u/{{id}}">{{name}}</a>
+              <div class="bio">{{bio}}</div>
+            </div>
+            {{/aggregatedItems}} {{/subscribedUsers}} {{#likes}} &nbsp;liked
+            {{nbTracks}} {{/likes}} {{{posts}}} {{#other}}
+            <p class="actOth">{{text}}</p>
+            {{/other}}
+          </span>
+        </li>
+        {{/items}}
+      </ul>
+      <script>
+        $(function () {
+          var $act = $('ul#activity');
+          activateSubscribeButton($act.find('.userSubscribe'));
+          $act.find('li.like').each(function () {
+            $(this).find('.post').first().css({ border: 0 });
+          });
+        });
+      </script>
+      {{/showActivity}}
 
-			<!-- TRACKS TAB CONTENT -->
+      <!-- SUBSCRIBERS TAB CONTENT -->
 
-			{{#showTracks}}
+      {{#showSubscribers}}
+      <ul id="subscriptions">
+        {{#items}}
+        <li class="user" data-id="{{id}}" data-subscribed="{{subscribed}}">
+          <a
+            href="{{url}}"
+            class="thumb"
+            style="background-image:url('{{img}}?width=100&amp;height=100');"
+          ></a>
+          <a href="{{url}}" class="username">{{name}}</a>
+          <div class="userbio">{{bio}}</div>
+          <!--{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}} -->
+        </li>
+        {{/items}}
+      </ul>
+      <script>
+        $(document).ready(function () {
+          var $subscr = $('#subscriptions li').each(function (i, li) {
+            var $li = $(li);
+            _createSubscribeButton(
+              {
+                id: $li.attr('data-id'),
+                subscribed: $li.attr('data-subscribed'),
+              },
+              $li
+            );
+          });
+          // try {
+          // 	$subscr.first().add($subscr.get(1)).css({border:0, padding:0, top:10});
+          // }
+          // catch(e) {}
+        });
+      </script>
 
-			{{{posts}}}
+      {{^items}} {{#ownProfile}}
+      <div class="emptyFeed">You have no subscribers yet</div>
+      {{/ownProfile}} {{^ownProfile}}
+      <div class="emptyFeed">No subscribers yet</div>
+      {{/ownProfile}} {{/items}} {{/showSubscribers}}
 
-			{{#emptyFeed}}
-			{{#ownProfile}}
-			<div class="emptyFeed">No tracks yet... You should add one!</div>
-			{{/ownProfile}}
-			{{^ownProfile}}
-			<div class="emptyFeed">No tracks yet...</div>
-			{{/ownProfile}}
-			{{/emptyFeed}}
+      <!-- SUBSCRIPTIONS TAB CONTENT -->
 
-			{{/showTracks}}
+      {{#showSubscriptions}}
 
-			<!-- LIKES TAB CONTENT -->
+      <ul id="subscriptions">
+        {{#items}}
+        <li class="user" data-id="{{id}}" data-subscribed="{{subscribed}}">
+          <a
+            href="{{url}}"
+            class="thumb"
+            style="background-image:url('{{img}}?width=100&amp;height=100');"
+          >
+          </a>
+          <a href="{{url}}" class="username">{{name}}</a>
+          <div class="userbio">{{bio}}</div>
+        </li>
+        {{/items}}
+      </ul>
+      <script>
+        $(document).ready(function () {
+          var $subscr = $('#subscriptions li').each(function (i, li) {
+            var $li = $(li);
+            _createSubscribeButton(
+              {
+                id: $li.attr('data-id'),
+                subscribed: $li.attr('data-subscribed'),
+              },
+              $li
+            );
+          });
+          try {
+            $subscr.first().add($subscr.get(1)).css({ border: 0, padding: 0 });
+          } catch (e) {}
+        });
+      </script>
 
-			{{#showLikes}}
+      {{^items}} {{#ownProfile}}
+      <div class="emptyFeed">You have no subscriptions yet</div>
+      {{/ownProfile}} {{^ownProfile}}
+      <div class="emptyFeed">No subscriptions yet</div>
+      {{/ownProfile}} {{/items}} {{/showSubscriptions}}
 
-			{{{posts}}}
+      <!-- COMMON ENDING CODE -->
 
-			{{#emptyFeed}}
-			{{#ownProfile}}
-			<div class="emptyFeed">No liked tracks yet... You should like someone's track!</div>
-			{{/ownProfile}}
-			{{^ownProfile}}
-			<div class="emptyFeed">No liked tracks yet...</div>
-			{{/ownProfile}}
-			{{/emptyFeed}}
-
-			{{/showLikes}}
-
-			<!-- PLAYLISTS TAB CONTENT -->
-
-			{{#showPlaylists}}
-			{{^items}}
-			{{^ownProfile}}
-			<div class="emptyFeed">This user didn't publish any playlist yet...</div>
-			{{/ownProfile}}
-			{{/items}}
-			<ul id="playlists">
-				{{#ownProfile}}
-				<li class="btnNewPlaylist playlist">
-					<a href="javascript:dlgCreatePlaylist();">
-						<div class="thumb"></div>
-						<p>+ New Playlist</p>
-					</a>
-				</li>
-				{{/ownProfile}}
-				{{#items}}
-				<li class="playlist">
-					<a href="{{url}}">
-						<div class="thumb" style="background-image:url('{{img}}?localOnly=1');">
-							<img class="blur" src="{{img}}?remoteOnly=1">
-							<div class="cover-playlist-vinyle"></div>
-						</div>
-						<p>{{name}}</p>
-					</a>
-					<span>{{nbTracks}} tracks</span>
-					{{#collabId}}<span class="collabPl">&nbsp;(collaborative playlist)<span>{{/collabId}}
-				</li>
-				{{/items}}
-			</ul>
-				{{/showPlaylists}}
-
-				<!-- ACTIVITY TAB CONTENT -->
-
-				{{#showActivity}}
-				<ul id="activity">
-					{{#items}}
-					<li data-uid="{{id}}" class="icon-post-type {{type}}">
-
-						<p class="ago">{{ago}} ago</p>
-						<span class="activity">
-							<a class="userName" href="/u/{{id}}">{{name}}</a>
-
-							{{#subscribedUsers}}
-							&nbsp;subscribed to
-							{{#aggregatedItems}}
-							<div class="subscription">
-								<span class='userSubscribe {{#subscribed}}subscribed{{/subscribed}}' data-uid="{{id}}">{{#subscribed}}Following{{/subscribed}}{{^subscribed}}Follow{{/subscribed}}</span>
-								<div class="thumb" style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();"></div>
-								<a class="userName" href="/u/{{id}}">{{name}}</a>
-								<div class="bio">{{bio}}</div>
-							</div>
-							{{/aggregatedItems}}
-						</span>
-						{{/subscribedUsers}}
-
-						{{#likes}}
-						&nbsp;liked {{nbTracks}}
-					</span>
-					{{{posts}}}
-					{{/likes}}
-
-
-					{{#other}}
-					<p class="actOth">{{text}}</p>
-				</span>
-				{{/other}}
-			</li>
-			{{/items}}
-		</ul>
-		<script>
-			$(function() {
-				var $act = $("ul#activity");
-				activateSubscribeButton($act.find(".userSubscribe"));
-				$act.find("li.like").each(function(){
-					$(this).find(".post").first().css({border:0});
-				});
-			});
-		</script>
-		{{/showActivity}}
-
-		<!-- SUBSCRIBERS TAB CONTENT -->
-
-		{{#showSubscribers}}
-		<ul id="subscriptions">
-			{{#items}}
-			<li class="user" data-id="{{id}}" data-subscribed="{{subscribed}}">
-				
-					<a href="{{url}}" class="thumb" style="background-image:url('{{img}}?width=100&amp;height=100');"></a>
-					<a href="{{url}}" class="username">{{name}}</a>
-					<div class="userbio">{{bio}}</div>
-					<!--{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}} -->
-				
-
-			</li>
-			{{/items}}
-		</ul>
-		<script>
-			$(document).ready(function(){
-				var $subscr = $("#subscriptions li").each(function(i, li) {
-					var $li = $(li);
-					_createSubscribeButton({id:$li.attr("data-id"), subscribed:$li.attr("data-subscribed")}, $li);
-				});
-				// try {
-				// 	$subscr.first().add($subscr.get(1)).css({border:0, padding:0, top:10});
-				// }
-				// catch(e) {}
-
-			});
-		</script>
-
-		{{^items}}
-		{{#ownProfile}}
-		<div class="emptyFeed">You have no subscribers yet</div>
-		{{/ownProfile}}
-		{{^ownProfile}}
-		<div class="emptyFeed">No subscribers yet</div>
-		{{/ownProfile}}
-		{{/items}}
-
-		{{/showSubscribers}}
-
-		<!-- SUBSCRIPTIONS TAB CONTENT -->
-
-		{{#showSubscriptions}}
-
-		<ul id="subscriptions">
-			{{#items}}
-			<li class="user" data-id="{{id}}" data-subscribed="{{subscribed}}">
-					<a href="{{url}}" class="thumb" style="background-image:url('{{img}}?width=100&amp;height=100');">
-					</a>
-					<a href="{{url}}" class="username">{{name}}</a>
-					<div class="userbio">{{bio}}</div>
-
-			</li>
-			{{/items}}
-		</ul>
-		<script>
-			$(document).ready(function(){
-				var $subscr = $("#subscriptions li").each(function(i, li) {
-					var $li = $(li);
-					_createSubscribeButton({id:$li.attr("data-id"), subscribed:$li.attr("data-subscribed")}, $li);
-				});
-				try {
-					$subscr.first().add($subscr.get(1)).css({border:0, padding:0});
-				}
-				catch(e) {}
-			});
-		</script>
-
-		{{^items}}
-		{{#ownProfile}}
-		<div class="emptyFeed">You have no subscriptions yet</div>
-		{{/ownProfile}}
-		{{^ownProfile}}
-		<div class="emptyFeed">No subscriptions yet</div>
-		{{/ownProfile}}
-		{{/items}}
-
-		{{/showSubscriptions}}
-
-		<!-- COMMON ENDING CODE -->
-
-
-		{{#hasMore}}
-		<div class="btnLoadMore" onclick="loadMore()"><div>&nbsp;</div><span>Load more</span></div>
-		{{/hasMore}}
-
-		{{#user}}
-		<script>
-			$(function(){
-				window.pageUser = {id:"{{id}}", name: "{{{_js_name}}}"};
-				{{#hasMore}}
-				window.nextPageUrl = makeUrl({after:"{{lastPid}}"}); //window.location.href + "?after=" + "{{lastPid}}";
-				{{/hasMore}}
-				{{#hasLess}}
-				window.prevPageUrl = makeUrl({before:"{{firstPid}}"}); //window.location.href + "?before=" + "{{firstPid}}";
-				{{/hasLess}}
-				{{#playlist}}
-				window.pagePlaylist = {id:"{{id}}", name: "{{{_js_name}}}"};
-				{{/playlist}}
-			});
-		</script>
-		{{/user}}
-
-		{{#showTracks}}
-	</div>
-	{{/showTracks}}
-
-
-</section> <!-- /sub-container -->
-</div> <!-- /container -->
-{{#showTracks}}
-<script src="/js/feed-filter.js" type="text/javascript" charset="utf-8"></script>
-{{/showTracks}}
-
-{{#header}}
+      {{#hasMore}}
+      <div class="btnLoadMore" onclick="loadMore()">
+        <div>&nbsp;</div>
+        <span>Load more</span>
+      </div>
+      {{/hasMore}} {{#user}}
+      <script>
+        $(function () {
+          window.pageUser = { id: '{{id}}', name: '{{{_js_name}}}' };
+          /*{{#hasMore}}*/
+          window.nextPageUrl = makeUrl({ after: '{{lastPid}}' }); //window.location.href + "?after=" + "{{lastPid}}";
+          /*{{/hasMore}}*/
+          /*{{#hasLess}}*/
+          window.prevPageUrl = makeUrl({ before: '{{firstPid}}' }); //window.location.href + "?before=" + "{{firstPid}}";
+          /*{{/hasLess}}*/
+          /*{{#playlist}}*/
+          window.pagePlaylist = { id: '{{id}}', name: '{{{_js_name}}}' };
+          /*{{/playlist}}*/
+        });
+      </script>
+      {{/user}} {{#showTracks}}
+    </div>
+    {{/showTracks}}
+  </section>
+  <!-- /sub-container -->
 </div>
-
-
-{{#ownProfile}}
+<!-- /container -->
+{{#showTracks}}
+<script
+  src="/js/feed-filter.js"
+  type="text/javascript"
+  charset="utf-8"
+></script>
+{{/showTracks}} {{#header}} {{#ownProfile}}
 <script src="/js/feed-edit.js" type="text/javascript" charset="utf-8"></script>
-{{/ownProfile}}
-{{/header}}
+{{/ownProfile}} {{/header}}

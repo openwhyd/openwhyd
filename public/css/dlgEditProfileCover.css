@@ -1,181 +1,178 @@
-
 .dlgEditProfileCover {
-	width: 560px;
-	height: 400px;
-	overflow: auto;
-	padding-left: 40px;
+  width: 560px;
+  height: 400px;
+  overflow: auto;
+  padding-left: 40px;
 }
 
 .dlgEditProfileCover > h1 {
-
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
-
 
 .dlgEditProfileCover > .steps {
-	position: relative;
+  position: relative;
 }
 
-
 .dlgEditProfileCover > .steps > * {
-	display: none;
+  display: none;
 
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 520px;
-	height: 300px;
-	padding: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 520px;
+  height: 300px;
+  padding: 10px;
 
-	border: 2px dashed transparent;
-	text-align: center;
+  border: 2px dashed transparent;
+  text-align: center;
 }
 
 /* for html5 upload, copied from browse.css:#dlgEditProfile */
 
 .dlgEditProfileCover > .steps .step p {
-	margin:5px 0px;
-	font-size: 16px;
+  margin: 5px 0px;
+  font-size: 16px;
 }
 
 .dlgEditProfileCover > .steps .step small {
-	display: block;
-	font-size: 12px;
-	color:#ccc;
-	margin-bottom: 18px;
+  display: block;
+  font-size: 12px;
+  color: #ccc;
+  margin-bottom: 18px;
 }
 
 .dlgEditProfileCover > .steps #avatarDrop {
-	display: block;
-	border-color: #ccc;
+  display: block;
+  border-color: #ccc;
 }
 
 .dlgEditProfileCover > .steps #avatarDrop.hover {
-	border-color: #888;
+  border-color: #888;
 }
 
 .dlgEditProfileCover > .steps #avatarDrop button {
-	display: inline-block;
-	background-color: #48f;
-	padding: 14px;
-	border: 0;
-	font-size: 12px;
-	font-weight: bold;
-	color: white;
-	cursor: pointer;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+  display: inline-block;
+  background-color: #48f;
+  padding: 14px;
+  border: 0;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .dlgEditProfileCover > .steps.loading {
-	background-image: none !important;
+  background-image: none !important;
 }
 
 .dlgEditProfileCover > .steps.loading .step {
-	display: none !important;
+  display: none !important;
 }
 
 .dlgEditProfileCover > .steps.loading #avatarUploading {
-	display: block !important;
+  display: block !important;
 }
 
 .dlgEditProfileCover > .steps.loading button,
 .dlgEditProfileCover > .steps.loading .btnSave,
-.dlgEditProfileCover > .steps.loading input[type=file],
+.dlgEditProfileCover > .steps.loading input[type='file'],
 .dlgEditProfileCover > .steps.loading > .dlgImgPane > span {
-	display: none !important;
+  display: none !important;
 }
 
 .dlgEditProfileCover > .steps #avatarUploading {
-	background: url(/images/loader.gif) no-repeat 50% 70%;
+  background: url(/images/loader.gif) no-repeat 50% 70%;
 }
 
 .dlgEditProfileCover > .steps #avatarUploading > div.progress {
-	display: none;
-	height: 5px;
-	width: 100px;
-	margin: 0 auto;
-	overflow: hidden;
-	margin-top: 10px;
-	background: #eee;
+  display: none;
+  height: 5px;
+  width: 100px;
+  margin: 0 auto;
+  overflow: hidden;
+  margin-top: 10px;
+  background: #eee;
 }
 
 .dlgEditProfileCover > .steps #avatarUploading > div.progress > div {
-	height: 100%;
-	background-color: #48f;
-	width: 50%;
+  height: 100%;
+  background-color: #48f;
+  width: 50%;
 }
 
 /* upload page */
 
 .dlgEditProfileCover .stepUpload > .dlgText {
-	margin: 0 0 16px 0;
+  margin: 0 0 16px 0;
 }
 
 .dlgEditProfileCover .stepUpload > .dlgText > p {
-	margin:5px 0px;
-	font-size: 16px;
+  margin: 5px 0px;
+  font-size: 16px;
 }
 
 .dlgEditProfileCover .stepUpload > .dlgText > small {
-	font-size: 12px;
-	color:#ccc;
+  font-size: 12px;
+  color: #ccc;
 }
 
-.dlgEditProfileCover .stepUpload > input[type=file] {
-	font-size: 14px;
+.dlgEditProfileCover .stepUpload > input[type='file'] {
+  font-size: 14px;
 }
 
 .dlgEditProfileCover .stepUpload > #avatarForm {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 /* edit page */
 
 .dlgEditProfileCover .dlgImgPane {
-	height: 257px;
-	overflow: hidden;
-	margin-bottom: 5px;
+  height: 257px;
+  overflow: hidden;
+  margin-bottom: 5px;
 }
 
 .dlgEditProfileCover .dlgImgPane > img {
-	width: 100%;
+  width: 100%;
 }
 
 .dlgEditProfileCover .dlgImgPane > span {
-	font-size: 12px;
-	color: inherit;
-	text-decoration: none;
-	padding-left: 20px;
-	background: url(/images/delete.png) no-repeat;
-	cursor: pointer;
+  font-size: 12px;
+  color: inherit;
+  text-decoration: none;
+  padding-left: 20px;
+  background: url(/images/delete.png) no-repeat;
+  cursor: pointer;
 }
 
-.dlgEditProfileCover #deleteImage, .dlgEditProfileCover #uploadImage {
-	margin-top: 50px;
-	float: left;
-	margin-right: 30px;
-	cursor: pointer;
-	margin-top: 36px;
-	color: #9CA1A5;
-	font-size: 12px;
+.dlgEditProfileCover #deleteImage,
+.dlgEditProfileCover #uploadImage {
+  margin-top: 50px;
+  float: left;
+  margin-right: 30px;
+  cursor: pointer;
+  margin-top: 36px;
+  color: #9ca1a5;
+  font-size: 12px;
 }
 
 .dlgEditProfileCover #uploadImage {
-	color: #3578CA;
+  color: #3578ca;
 }
 
 .dlgEditProfileCover #deleteImage:hover {
-	color: #FF7784;
+  color: #ff7784;
 }
 
 .dlgEditProfileCover #btnSave {
-	position: absolute;
-	right: 8px;
-	bottom: -15px;
-	border: 1px solid #7B9D33;
-	box-shadow: none;
-	padding: 10px 16px;
-	font-size: 13px;
+  position: absolute;
+  right: 8px;
+  bottom: -15px;
+  border: 1px solid #7b9d33;
+  box-shadow: none;
+  padding: 10px 16px;
+  font-size: 13px;
 }

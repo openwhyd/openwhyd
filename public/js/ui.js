@@ -1,10 +1,7 @@
-/**
- * general ui functions
- * @author adrienjoly
- **/
+/* global $ */
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function() {} };
+if (undefined == window.console) console = { log: function () {} };
 
 // === Popup dialogs / video overlays ===
 
@@ -21,26 +18,24 @@ function openHtmlDialog(html) {
     //onBlurContainer: '#contentPane',
     enableStackAnimation: true,
     template: html,
-    onLoad: function() {
+    onLoad: function () {
       console.log('Avgrund loaded!');
     },
-    onReady: function() {
+    onReady: function () {
       console.log('Avgrund ready!');
       overflowPopin();
     },
-    onUnload: function() {
+    onUnload: function () {
       console.log('Avgrund closed!');
       console.log('closing dialog, handler:', !!window.onDialogClose);
       window.onDialogClose && window.onDialogClose();
-    }
+    },
   });
 }
 
 function overflowPopin() {
   var avgrund = $('.avgrund-popin');
-  var child = $('.avgrund-popin')
-    .children()
-    .eq(1);
+  var child = $('.avgrund-popin').children().eq(1);
 
   if (child.innerHeight() > avgrund.height()) {
     avgrund.css('overflow-y', 'scroll');
@@ -64,14 +59,14 @@ function openRemoteDialog(url, dlgClass, callback) {
   $.ajax({
     type: 'GET',
     url: url,
-    complete: function(data) {
+    complete: function (data) {
       var $ajaxFrame = $('.dlg');
-      $ajaxFrame.html(data.responseText).ready(function() {
+      $ajaxFrame.html(data.responseText).ready(function () {
         //$(this).find("a").click(function(){$.modal.close();});
         $ajaxFrame.removeClass('loading');
         if (callback) callback($ajaxFrame);
       });
-    }
+    },
   });
 }
 
@@ -119,32 +114,32 @@ function WhydLogging() {
   //var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/;
 
   this.validateField = {
-    name: function($name) {
+    name: function ($name) {
       if (!$name.val() /*.trim()*/)
         return /*! $name.each(error(*/ 'Please enter your name. E.g. John Smith' /*))*/;
       else return null; //$name.each(ok);
     },
-    email: function($email) {
+    email: function ($email) {
       if (!emailCheck.test($email.val() /*.trim()*/))
         // trim not supported by IE8-
         return /*! $name.each(error(*/ 'Your email address looks wrong...' /*))*/;
       else return null; //$name.each(ok);
     },
-    password: function($password) {
-      var pwd = $password.val() /*.trim()*/;
+    password: function ($password) {
+      var pwd = $password.val(); /*.trim()*/
       if (pwd.length < 4 || pwd.length > 32)
         return /*! $password.each(error(*/ 'Please enter a password between 4 and 32 characters' /*))*/;
       //else if (!pwdRegex.test(pwd))
       //	return /*! $password.each(error(*/"Your password contains invalid characters"/*))*/;
       else return null; //$password.each(ok);
-    }
+    },
   };
 
-  this.validateFields = function(fieldSetList) {
+  this.validateFields = function (fieldSetList) {
     // [{name:$name},{password:$password}...] // old name: signIn()
     var results = [];
-    for (var i in fieldSetList)
-      for (var key in fieldSetList[i]) {
+    for (let i in fieldSetList)
+      for (let key in fieldSetList[i]) {
         var $elt = fieldSetList[i][key];
         var error = this.validateField[key]($elt);
         if (error) {

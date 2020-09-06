@@ -4,7 +4,7 @@ var mongodb = require('../../models/mongodb.js');
 var ObjectId = mongodb.ObjectId;
 var notifModel = require('../../models/notif.js');
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('admin.testNotifs', reqParams);
 
   var user = request.checkLogin(response);
@@ -15,14 +15,14 @@ exports.controller = function(request, reqParams, response) {
   var gilles = {
     id: '4d7fc1969aa9db130e000003',
     _id: ObjectId('4d7fc1969aa9db130e000003'),
-    name: 'Gilles'
+    name: 'Gilles',
   };
 
   var fakePost = {
     _id: ObjectId('4fe3428e9f2ec28c92000024'), //ObjectId("4ed3de428fed15d73c00001f"),
     uId: user.id,
     name: 'Knust hjerte by Casiokids',
-    eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590'
+    eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
   };
 
   var fakeComment = {
@@ -30,7 +30,7 @@ exports.controller = function(request, reqParams, response) {
     pId: '' + fakePost._id,
     uId: gilles.id,
     uNm: gilles.name,
-    text: 'coucou'
+    text: 'coucou',
   };
 
   notifModel.love(gilles.id, fakePost);

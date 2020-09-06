@@ -65,9 +65,8 @@ function getUser(u) {
   return u && mongodb.usernames['' + (u.id || u._id || u)];
 }
 
-function pushToMobile(code, toUser, text, payload) {
-  var initialToUser = toUser;
-  var toUser = getUser(toUser);
+function pushToMobile(code, initialToUser, text, payload) {
+  var toUser = getUser(initialToUser);
   if (!(toUser || {}).pref)
     return console.error(
       'push notif prefs not found for user: ',
@@ -83,7 +82,7 @@ function pushToMobile(code, toUser, text, payload) {
 }
 
 function pushToMobiles(code, toUsers, text, payload) {
-  for (var i in toUsers) pushToMobile(code, toUsers[i], text, payload);
+  for (let i in toUsers) pushToMobile(code, toUsers[i], text, payload);
 }
 
 function cacheUserNotifs(uId, notifs) {
@@ -92,7 +91,7 @@ function cacheUserNotifs(uId, notifs) {
 
 function invalidateUserNotifsCache(uId) {
   if (uId.splice)
-    for (var i in uId) delete exports.userNotifsCache['' + uId[i]];
+    for (let i in uId) delete exports.userNotifsCache['' + uId[i]];
   else delete exports.userNotifsCache['' + uId]; // => force fetch on next request
 }
 
@@ -105,7 +104,7 @@ function logErrors(cb) {
 }
 
 function detectTo(p) {
-  for (var i in p) {
+  for (let i in p) {
     var uId = (p[i] || {}).uId;
     var to = ((uId || {}).$each || [uId])[0];
     if (to) return to;
@@ -160,29 +159,34 @@ function pushNotif(to, q, set, push, cb) {
   );
 }
 
-function makeLink(text, url) {
+function makeLink(text /*, url*/) {
   //return "<a href='" + url + "'>" + snip.htmlEntities(text) + "</a>";
   return '<span>' + snip.htmlEntities(text) + '</span>';
 }
 
 // main methods
-/*
-setInterval(function(){
-	// remove documents with empty uid
-	db["notif"].remove({uId:{$size:0}}, {multi:true, w:0});
-}, 60*1000);
-*/
+
+const extractObjectID = (str) => str.match(/[0-9a-f]{24}/)[0];
+
 exports.clearUserNotifsForPost = function (uId, pId) {
   if (!uId || !pId) return;
   var idList = [pId];
   try {
-    idList.push(mongodb.ObjectID.createFromHexString(pId));
-  } catch (e) { }
+    idList.push(
+      mongodb.ObjectID.createFromHexString(
+        typeof pId === 'string'
+          ? extractObjectID(pId) // strip the eventual "/u/" prefix or "/reposts" suffix (e.g. in notif-tests.js)
+          : pId
+      )
+    );
+  } catch (e) {
+    console.error('error in clearUserNotifsForPost:', e);
+  }
   db['notif'].update(
     { _id: { $in: idList } },
     { $pull: { uId: uId } },
     { safe: true /*w:0*/ },
-    function (err, objects) {
+    function () {
       // remove documents with empty uid
       db['notif'].remove(
         { _id: { $in: idList }, uId: { $size: 0 } },
@@ -231,10 +235,10 @@ exports.fetchUserNotifs = function (uId, handler) {
   ) {
     cursor.toArray(function (err, results) {
       var notifs = [];
-      for (var i in results) {
+      for (let i in results) {
         var n = 0;
         if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
-        else for (var j in results[i].uId) if (results[i].uId[j] == uId) n++;
+        else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
         var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
         notifs.push({
           type: results[i].type,
@@ -242,14 +246,14 @@ exports.fetchUserNotifs = function (uId, handler) {
           track: {
             eId: results[i].eId,
             name: results[i].name,
-            img: config.imgUrl(results[i].img)
+            img: config.imgUrl(results[i].img),
           },
           t: new Date(results[i].t * 1000),
           lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
           n: n,
           img: results[i].img,
           html: results[i].html,
-          href: results[i].href
+          href: results[i].href,
         });
       }
       cacheUserNotifs(uId, notifs);
@@ -266,7 +270,7 @@ exports.getUserNotifs = function (uid, handler) {
 
 function countUserNotifs(notifs) {
   var total = 0;
-  for (var i in notifs) total += notifs[i].n || 1;
+  for (let i in notifs) total += notifs[i].n || 1;
   return total;
 }
 
@@ -279,7 +283,7 @@ exports.html = function (uId, html, href, img) {
       uId: [uId],
       html: html,
       href: href,
-      img: img
+      img: img,
     },
     { w: 0 }
   );
@@ -291,7 +295,7 @@ exports.html = function (uId, html, href, img) {
 exports.love = function (loverUid, post, callback) {
   var user = mongodb.usernames['' + loverUid];
   var author = mongodb.usernames['' + post.uId];
-  console.warn('LOVE', { user, author, })
+  console.warn('LOVE', { user, author });
   if (!user || !author) return;
   db['notif'].update(
     { _id: post._id + '/loves' },
@@ -301,10 +305,10 @@ exports.love = function (loverUid, post, callback) {
         name: post.name,
         t: Math.round(new Date().getTime() / 1000),
         uIdLast: loverUid, // last lover of this post
-        uId: [post.uId]
+        uId: [post.uId],
       },
       $push: { lov: loverUid },
-      $inc: { n: 1 }
+      $inc: { n: 1 },
     },
     { upsert: true, w: 0 },
     callback
@@ -312,7 +316,7 @@ exports.love = function (loverUid, post, callback) {
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);
   pushToMobile('Lik', author, user.name + ' liked one of your tracks', {
-    href: '/c/' + post._id
+    href: '/c/' + post._id,
   });
 };
 
@@ -346,10 +350,10 @@ exports.post = function (post) {
   var query = {
     q: {
       eId: post.eId,
-      uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] }
+      uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
     },
     limit: 100,
-    fields: { uId: true }
+    fields: { uId: true },
   };
   mongodb.forEach2('post', query, function (sameTrack, next) {
     var author = sameTrack && mongodb.usernames[sameTrack.uId];
@@ -370,17 +374,17 @@ exports.repost = function (reposterUid, post) {
         name: post.name,
         t: Math.round(new Date().getTime() / 1000),
         uIdLast: reposterUid, // last reposter of this post
-        uId: [post.uId]
+        uId: [post.uId],
       },
       $push: { reposters: reposterUid },
-      $inc: { n: 1 }
+      $inc: { n: 1 },
     },
     { upsert: true, w: 0 }
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendRepost(reposter, post, author /*.email*/);
   pushToMobile('Add', author, reposter.name + ' re-added your track', {
-    href: '/c/' + post._id
+    href: '/c/' + post._id,
   });
 };
 /*
@@ -410,23 +414,21 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
         $set: {
           eId: '/u/' + sender.id,
           name: sender.name,
-          t: Math.round(new Date().getTime() / 1000)
+          t: Math.round(new Date().getTime() / 1000),
         },
-        $push: { uId: favoritedId }
+        $push: { uId: favoritedId },
       },
       { upsert: true, w: 0 }
     );
     invalidateUserNotifsCache(favoritedId);
     notifEmails.sendSubscribedToUser(sender, favorited, cb);
     pushToMobile('Sub', favorited, sender.name + ' subscribed to you', {
-      href: '/u/' + senderId
+      href: '/u/' + senderId,
     });
   }
 };
 
-exports.comment = function (post, comment, cb) {
-  var post = post || {},
-    comment = comment || {};
+exports.comment = function (post = {}, comment = {}, cb) {
   var commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.comment' });
@@ -442,17 +444,17 @@ exports.comment = function (post, comment, cb) {
           ' commented on your track ' +
           makeLink(post.name, '/c/' + post._id),
         img: '/img/u/' + comment.uId,
-        href: '/c/' + post._id
+        href: '/c/' + post._id,
       },
       null,
-      function (res) {
+      function () {
         notifEmails.sendComment(post, comment, cb);
         pushToMobile(
           'Com',
           post.uId,
           commentUser.name + ' commented on one of your tracks',
           {
-            href: '/c/' + post._id
+            href: '/c/' + post._id,
           }
         );
       }
@@ -460,9 +462,7 @@ exports.comment = function (post, comment, cb) {
   }
 };
 
-exports.mention = function (post, comment, mentionedUid, cb) {
-  var post = post || {},
-    comment = comment || {};
+exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
   var commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !mentionedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.mention' });
@@ -475,16 +475,16 @@ exports.mention = function (post, comment, mentionedUid, cb) {
           ' mentionned you about ' +
           makeLink(post.name, '/c/' + post._id),
         img: '/img/u/' + comment.uId,
-        href: '/c/' + post._id
+        href: '/c/' + post._id,
       },
-      function (res) {
+      function () {
         notifEmails.sendMention(mentionedUid, post, comment, cb);
         pushToMobile(
           'Men',
           mongodb.usernames['' + mentionedUid],
           commentUser.name + ' mentionned you',
           {
-            href: '/c/' + post._id
+            href: '/c/' + post._id,
           }
         );
       }
@@ -492,9 +492,7 @@ exports.mention = function (post, comment, mentionedUid, cb) {
   }
 };
 
-exports.commentReply = function (post, comment, repliedUid, cb) {
-  var post = post || {},
-    comment = comment || {};
+exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
   var commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !repliedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.commentReply' });
@@ -510,18 +508,18 @@ exports.commentReply = function (post, comment, repliedUid, cb) {
             ' replied to your comment on ' +
             makeLink(post.name, '/c/' + post._id),
           img: '/img/u/' + comment.uId,
-          href: '/c/' + post._id
+          href: '/c/' + post._id,
         },
-        $addToSet: { uId: repliedUid }
+        $addToSet: { uId: repliedUid },
       },
-      function (res) {
+      function () {
         notifEmails.sendCommentReply(post, comment, repliedUid, cb);
         pushToMobile(
           'Rep',
           mongodb.usernames['' + repliedUid],
           commentUser.name + ' replied to your comment',
           {
-            href: '/c/' + post._id
+            href: '/c/' + post._id,
           }
         );
       }
@@ -539,15 +537,15 @@ exports.inviteAccepted = function (inviterId, newUser) {
         makeLink(newUser.name, '/u/' + newUser.id) +
         ' accepted your invite',
       img: '/img/u/' + newUser.id,
-      href: '/u/' + newUser.id
+      href: '/u/' + newUser.id,
     },
-    function (res) {
+    function () {
       pushToMobile(
         'Acc',
         { id: inviterId },
         'Your friend ' + newUser.name + ' accepted your invite',
         {
-          href: '/u/' + newUser.id
+          href: '/u/' + newUser.id,
         }
       );
     }
@@ -560,7 +558,7 @@ exports.sendTrackToUsers = function (p, cb) {
     uId: 'string', // id of the sender
     uNm: 'string', // name of the sender
     pId: 'string', // id of the post to share
-    uidList: 'array' // list of IDs of users to share this track with
+    uidList: 'array', // list of IDs of users to share this track with
   });
   if (fieldCheck) {
     cb(fieldCheck); // {error:"..."}
@@ -571,12 +569,12 @@ exports.sendTrackToUsers = function (p, cb) {
     href: '/c/' + p.pId,
     img: '/img/post/' + p.pId,
     uIdLast: p.uId,
-    html: makeLink(p.uNm, '/u/' + p.uId) + ' sent you a track'
+    html: makeLink(p.uNm, '/u/' + p.uId) + ' sent you a track',
   };
   //updateNotif({_id: p.pId+"/sent"}, { $set: payload, $addToSet: {uId:{$each:p.uidList}} }, function(res){
   insertNotif(p.uidList, payload, function (res) {
     pushToMobiles(payload.type, p.uidList, p.uNm + ' sent you a track', {
-      href: payload.href
+      href: payload.href,
     });
     // no email to send
     cb && cb(res);
@@ -588,7 +586,7 @@ exports.sendPlaylistToUsers = function (p, cb) {
     uId: 'string', // id of the sender
     uNm: 'string', // name of the sender
     plId: 'string', // id of the playlist to share (format: <uid>_<number>)
-    uidList: 'array' // list of IDs of users to share this track with
+    uidList: 'array', // list of IDs of users to share this track with
   });
   if (fieldCheck) {
     cb(fieldCheck); // {error:"..."}
@@ -600,11 +598,11 @@ exports.sendPlaylistToUsers = function (p, cb) {
     href: '/u/' + plUri,
     img: '/img/playlist/' + p.plId,
     uIdLast: p.uId,
-    html: makeLink(p.uNm, '/u/' + p.uId) + ' sent you a playlist'
+    html: makeLink(p.uNm, '/u/' + p.uId) + ' sent you a playlist',
   };
   insertNotif(p.uidList, payload, function (res) {
     pushToMobiles(payload.type, p.uidList, p.uNm + ' sent you a playlist', {
-      href: payload.href
+      href: payload.href,
     });
     // no email to send
     cb && cb(res);

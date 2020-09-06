@@ -4,8 +4,7 @@
 
 Closes #<!-- enter issue number here -->.
 
-What does this PR do / solve?
------------------------------
+## What does this PR do / solve?
 
 <!--
 | Type a high-level summary.
@@ -16,8 +15,7 @@ What does this PR do / solve?
 | * Don't forget to provide context to reviewers.
 -->
 
-Overview of changes
--------------------
+## Overview of changes
 
 <!--
 | If your PR introduces visual changes, add a screenshot.
@@ -25,7 +23,6 @@ Overview of changes
 | If your PR fixes something, add a before/after sample/screenshot.
 -->
 
-How to test this PR?
---------------------
+## How to test this PR?
 
 <!-- Provide steps that the reviewer can follow to quickly test your PR. -->

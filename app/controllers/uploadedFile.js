@@ -1,5 +1,4 @@
 var fs = require('fs');
-//var util = require('util');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
@@ -10,7 +9,7 @@ exports.config = {
   uploadSubDir: '/' + config.paths.uploadDirName, // "/upload_data"
   uAvatarImgDir: '/' + config.paths.uAvatarImgDirName, // "/uAvatarImg"
   uCoverImgDir: '/' + config.paths.uCoverImgDirName,
-  uPlaylistDir: '/' + config.paths.uPlaylistDirName
+  uPlaylistDir: '/' + config.paths.uPlaylistDirName,
 };
 
 exports.config.uploadPath =
@@ -22,15 +21,17 @@ exports.config.uCoverImgPath =
 exports.config.uPlaylistPath =
   exports.config.whydPath + exports.config.uPlaylistDir;
 
+const NO_IMAGE_PATH = exports.config.whydPath + '/public/images/no_image.png';
+
 // create upload dirs
 var dirMode = 0755;
 var dirsToCreate = [
   exports.config.uploadPath,
   exports.config.uAvatarImgPath,
   exports.config.uCoverImgPath,
-  exports.config.uPlaylistPath
+  exports.config.uPlaylistPath,
 ];
-for (var i in dirsToCreate)
+for (let i in dirsToCreate)
   try {
     fs.mkdirSync(dirsToCreate[i], dirMode);
     console.log('Created directory:', dirsToCreate[i]);
@@ -39,7 +40,7 @@ for (var i in dirsToCreate)
   }
 
 // separate file prefix (path & name) and extension from file.path
-exports.splitFilePath = function(filepath) {
+exports.splitFilePath = function (filepath) {
   var path = filepath.split('/');
   var name = path.pop();
   path = path.length > 0 ? path.join('/') + '/' : '';
@@ -51,15 +52,15 @@ exports.splitFilePath = function(filepath) {
     prefix: prefix,
     path: path,
     name: name,
-    ext: ext
+    ext: ext,
   };
 };
 
-exports.cleanFilePath = function(filepath) {
+exports.cleanFilePath = function (filepath) {
   return filepath.replace(exports.config.whydPath, '');
 };
 
-exports.actualFilePath = function(filepath) {
+exports.actualFilePath = function (filepath) {
   if (!filepath || filepath.indexOf(exports.config.whydPath) == 0)
     return filepath;
   else
@@ -67,9 +68,9 @@ exports.actualFilePath = function(filepath) {
       exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath);
 };
 
-exports.deleteFile = function(filepath) {
+exports.deleteFile = function (_filepath) {
   try {
-    var filepath = exports.actualFilePath(filepath);
+    const filepath = exports.actualFilePath(_filepath);
     console.log('deleting ' + filepath);
     fs.unlinkSync(filepath);
   } catch (e) {
@@ -77,7 +78,7 @@ exports.deleteFile = function(filepath) {
   }
 };
 
-exports.renameTo = function(filename, toFilename, callback) {
+exports.renameTo = function (filename, toFilename, callback) {
   //console.log("uploadedFile.renameTo", filename, toFilename);
   function error(e) {
     if (callback) callback();
@@ -91,7 +92,7 @@ exports.renameTo = function(filename, toFilename, callback) {
     var actualFilename = exports.actualFilePath(filename);
     var actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
-    fs.rename(actualFilename, actualToFilename, function() {
+    fs.rename(actualFilename, actualToFilename, function () {
       callback && callback(toFilename);
     });
     /*
@@ -109,7 +110,7 @@ exports.renameTo = function(filename, toFilename, callback) {
   }
 };
 
-exports.moveTo = function(filename, toPath, callback) {
+exports.moveTo = function (filename, toPath, callback) {
   //console.log("uploadedFile.moveTo", filename, toPath);
   if (!filename || !toPath) {
     if (callback) callback();
@@ -123,20 +124,20 @@ exports.moveTo = function(filename, toPath, callback) {
   return newFilename;
 };
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   function renderNoImage() {
-    response.sendFile(exports.config.whydPath + '/public/images/no_image.png');
+    response.sendFile(NO_IMAGE_PATH);
   }
 
   function renderFile(path, defaultImg) {
     //console.log("uploadedFile Path:", path);
-    response.sendFile('' + path, function(error) {
+    response.sendFile('' + path, function (error) {
       if (!error) return;
       //console.log("uploadedFile error: ", error, exports.config.whydPath + "/public" + defaultImg);
       if (defaultImg)
         response.sendFile(
           exports.config.whydPath + '/public' + defaultImg,
-          err => err && renderNoImage()
+          (err) => err && renderNoImage()
         );
       else renderNoImage();
     });
@@ -172,13 +173,13 @@ exports.controller = function(request, reqParams, response) {
   var renderTypedImg = {
     u: renderUserImg,
     user: renderUserImg,
-    userCover: function(id) {
+    userCover: function (id) {
       if (id.indexOf('.') > -1)
         return renderFile(
           exports.config.uCoverImgPath + '/' + id,
           '/images/1x1-pixel.png'
         );
-      userModel.fetchByUid(id, function(user) {
+      userModel.fetchByUid(id, function (user) {
         if (user && user.cvrImg) {
           var args = request.url.indexOf('?');
           response.temporaryRedirect(
@@ -187,42 +188,45 @@ exports.controller = function(request, reqParams, response) {
         } else renderFile(exports.config.uCoverImgPath + '/' + id, '/images/1x1-pixel.png');
       });
     },
-    post: function(id) {
-      postModel.fetchPostById(id, function(post) {
-        renderImg((post || {}).img);
+    post: function (id) {
+      postModel.fetchPostById(id, function (post) {
+        renderImg((post || {}).img || NO_IMAGE_PATH);
       });
     },
-    playlist: function(id, reqParams) {
+    playlist: function (id, reqParams) {
       var filePath = exports.config.uPlaylistPath + '/' + id;
       function renderLastPostImg() {
         var parts = ('' + id).split('_');
-        postModel.fetchPlaylistPosts(parts[0], parts[1], { limit: 1 }, function(
-          posts
-        ) {
-          for (var i in posts) {
-            var img = (posts[i] || {}).img;
-            if (img) {
-              renderImg(img);
-              return;
+        postModel.fetchPlaylistPosts(
+          parts[0],
+          parts[1],
+          { limit: 1 },
+          function (posts) {
+            for (let i in posts) {
+              var img = (posts[i] || {}).img;
+              if (img) {
+                renderImg(img);
+                return;
+              }
             }
+            response.notFound();
           }
-          renderImg();
-        });
+        );
       }
       if (reqParams.remoteOnly)
-        fs.stat(filePath, function(error, stats) {
+        fs.stat(filePath, function (error, stats) {
           if (error || !stats.isFile()) renderLastPostImg();
           else renderImg(config.urlPrefix + '/images/1x1-pixel.png'); // transparent image
         });
       else
-        response.sendFile(filePath, function(error) {
+        response.sendFile(filePath, function (error) {
           if (!error) return;
           if (reqParams.localOnly)
             renderImg(config.urlPrefix + '/images/1x1-pixel.png');
           // transparent image
           else renderLastPostImg();
         });
-    }
+    },
   };
 
   //request.logToConsole("uploadedFile.controller", request.method);

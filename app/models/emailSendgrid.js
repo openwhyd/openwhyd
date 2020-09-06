@@ -5,6 +5,7 @@
  **/
 
 var https = require('https');
+var snip = require('./../snip.js');
 //var email = require("emailjs/email");
 
 var querystring = require('querystring');
@@ -22,7 +23,7 @@ console.log ("Email notifier connecting to SMTP server: ", credentials.host);
 var server = email.server.connect(credentials);
 */
 
-exports.email = function(
+exports.email = function (
   emailAddr,
   subject,
   textContent,
@@ -30,7 +31,7 @@ exports.email = function(
   userName,
   callback
 ) {
-  console.log('email', emailAddr, subject);
+  console.log('email', snip.formatEmail(emailAddr), subject);
   /*
 	var message = email.message.create({
 		text: textContent, 
@@ -55,7 +56,7 @@ exports.email = function(
     fromname: process.env.SENDGRID_API_FROM_NAME.substr(), // "whyd",
     to: emailAddr,
     subject: subject,
-    text: textContent
+    text: textContent,
   };
 
   if (userName) content.toname = userName;
@@ -73,21 +74,21 @@ exports.email = function(
         path: '/api/mail.send.json',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-length': content.length
-        }
+          'Content-length': content.length,
+        },
       },
-      function(response) {
+      function (response) {
         var data = '';
-        response.on('data', function(chunk) {
+        response.on('data', function (chunk) {
           data += chunk;
         });
-        response.on('end', function() {
+        response.on('end', function () {
           console.log('email response: ', data);
           if (callback) callback(data);
         });
       }
     )
-    .on('error', function(err) {
+    .on('error', function (err) {
       console.log('[ERR] emailSendgrid.email ', err);
       console.error('[ERR] emailSendgrid.email ', err);
       if (callback) callback({ error: err });

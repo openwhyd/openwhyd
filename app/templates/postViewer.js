@@ -15,13 +15,13 @@ var fbAppNs = 'whydapp'; // or whyd-dev
 // http://localhost:8080/yt/-hHpSlEz73k
 // http://localhost:8080/sc/manisnotabird/bringer-of-rain-and-seed-good
 
-exports.renderPostPage = function(p, cb) {
+exports.renderPostPage = function (p, cb) {
   p = p || {};
   var post = p.post;
   var options = {
     loggedUser: p.loggedUser,
     bodyClass: 'pgPost',
-    pageType: fbAppNs + ':track' // "music.song"
+    pageType: fbAppNs + ':track', // "music.song"
   };
 
   if (p.isDynamic) {
@@ -63,7 +63,7 @@ exports.renderPostPage = function(p, cb) {
     // this has to be done dynamically in /public/js/postPage.js
   }
 
-  postsTemplate.renderPostsAsync([post], options, function(res) {
+  postsTemplate.renderPostsAsync([post], options, function (res) {
     if (p.format == 'json') cb({ data: (res || []).pop() });
     else {
       options.content = res;

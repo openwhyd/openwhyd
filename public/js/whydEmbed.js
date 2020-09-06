@@ -4,7 +4,7 @@
  **/
 
 var DEBUG = false, // for soundmanager
-  YOUTUBE_API_KEY = 'AIzaSyADm2ekf-_KONB3cSGm1fnuPSXx3br4fvI',
+  YOUTUBE_API_KEY = 'AIzaSyCAZvC5tsGWWA2I2cKKsbfaqjwtXfr4bmg',
   SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad',
   JAMENDO_CLIENT_ID = '2c9a11b9',
   DEEZER_APP_ID = 190482,
@@ -12,15 +12,15 @@ var DEBUG = false, // for soundmanager
     window.location.href.substr(0, window.location.href.indexOf('/', 10)) +
     '/html/channel.html';
 
-(function() {
+(function () {
   console.log('-= openwhyd embed script =-');
 
   // prevents bug in firefox 3
-  window.console = window.console || { log: function() {} };
+  window.console = window.console || { log: function () {} };
 
   // minimal template engine, http://mir.aculo.us/2011/03/09/little-helpers-a-tweet-sized-javascript-templating-engine/
   function t(s, d) {
-    for (var p in d) s = s.replace(new RegExp('{' + p + '}', 'g'), d[p]);
+    for (let p in d) s = s.replace(new RegExp('{' + p + '}', 'g'), d[p]);
     return s;
   }
 
@@ -40,7 +40,7 @@ var DEBUG = false, // for soundmanager
       try {
         inc.href = src;
         document.getElementsByTagName('head')[0].appendChild(inc);
-        setTimeout(function() {
+        setTimeout(function () {
           callback && callback({ loaded: true });
         });
       } catch (exception) {
@@ -89,7 +89,7 @@ var DEBUG = false, // for soundmanager
     params = (function getScriptParams(fileName) {
       var url = (function findScriptUrls(fileName) {
         var url = null;
-        forEachElement('script', function(element) {
+        forEachElement('script', function (element) {
           var pathPos = element.src.indexOf(fileName);
           if (pathPos > -1) {
             url = element.src;
@@ -104,7 +104,7 @@ var DEBUG = false, // for soundmanager
           .split('?')
           .pop()
           .split('&')
-          .map(function(p) {
+          .map(function (p) {
             p = p.split('=');
             params[p[0]] = p[1];
           });
@@ -114,12 +114,12 @@ var DEBUG = false, // for soundmanager
 
   // openwhyd api + rendering
 
-  var view = (function() {
+  var view = (function () {
     var that = {
       rootElement: null,
       videoElement: null,
       tracklistElement: null,
-      init: function(el) {
+      init: function (el) {
         this.rootElement = el;
         el.className = (el.className || '') + ' whydEmbed';
         el.innerHTML = [
@@ -127,24 +127,24 @@ var DEBUG = false, // for soundmanager
           '<div id="whydVideo"></div>',
           '</div>',
           '<ul>',
-          '</ul>'
+          '</ul>',
         ].join('');
         this.videoElement = el.getElementsByTagName('div')[0];
         this.tracklistElement = el.getElementsByTagName('ul')[0];
         return this;
       },
-      populateTracks: function(tracks) {
+      populateTracks: function (tracks) {
         this.tracklistElement.innerHTML = tracks
-          .map(function(d, i) {
+          .map(function (d, i) {
             d.index = i;
             return t('<li data-wtn="{index}"><span></span>{name}</li>', d);
           })
           .join('');
       },
-      setCurrentTrack: function(metadata) {
+      setCurrentTrack: function (metadata) {
         this.videoElement.style.backgroundImage =
           'url(' + metadata.img.replace(/[\"\'\(\)\<\>]/gi, '') + ')';
-      }
+      },
     };
     // private functions
     return that;
@@ -155,7 +155,7 @@ var DEBUG = false, // for soundmanager
     // for testing:
     //return cb([{"_id":"5310a968c8e454890aefd55a","eId":"/bc/3260779883#http://popplers5.bandcamp.com/download/track?enc=mp3-128&fsig=55b170d8bf20c559b32fe666faf06eee&id=3260779883&stream=1&ts=1393600816.0","img":"http://f0.bcbits.com/img/a1188033111_10.jpg","name":"Manisnotabird - The sound of spring","nbP":5,"pl":{"name":"tests","id":49},"text":"bandcamp","uId":"4d94501d1f78ac091dbc9b4d","uNm":"Adrien Joly","lov":[]},{"_id":"52eb894f79a8b6d330abddf8","eId":"/dz/73414915","img":"http://api.deezer.com/album/7227700/image","name":"datA - Patriots","nbP":12,"pl":{"name":"tests","id":49},"text":"","uId":"4d94501d1f78ac091dbc9b4d","uNm":"Adrien Joly","lov":[]},{"_id":"52eb894579a8b6d330abddf6","eId":"/sc/manisnotabird/bringer-of-rain-and-seed-good#https://api.soundcloud.com/tracks/71480483","img":"https://i1.sndcdn.com/artworks-000047584907-quet7v-large.jpg?e30f094","name":"Man Is Not A Bird - Bringer Of Rain And Seed","nbP":10,"nbR":3,"pl":{"name":"tests","id":49},"text":"","uId":"4d94501d1f78ac091dbc9b4d","uNm":"Adrien Joly","lov":[]},{"_id":"52eb893c79a8b6d330abddf4","eId":"/yt/iL3IYGgqaNU","img":"https://i.ytimg.com/vi/iL3IYGgqaNU/0.jpg","name":"MAN IS NOT A BIRD / LIVE @ BATOFAR, PARIS / 04.12.2013","nbP":6,"pl":{"name":"tests","id":49},"text":"","uId":"4d94501d1f78ac091dbc9b4d","uNm":"Adrien Joly","lov":[]},{"_id":"52eb893179a8b6d330abddf2","eId":"/dm/x142x6e","img":"https://s1-ssl.dmcdn.net/CVlV-/x240-tvG.jpg","name":"JEAN JEAN \"Love\"","nbP":6,"pl":{"name":"tests","id":49},"text":"","uId":"4d94501d1f78ac091dbc9b4d","uNm":"Adrien Joly","lov":[]},{"_id":"52eb892879a8b6d330abddf0","eId":"/vi/46314116","img":"https://secure-b.vimeocdn.com/ts/322/503/322503703_200.jpg","name":"Man is not a Bird - IV - Live at le Klub, Paris","nbP":4,"pl":{"name":"tests","id":49},"text":"","uId":"4d94501d1f78ac091dbc9b4d","uNm":"Adrien Joly","lov":[]},{"_id":"52eb891779a8b6d330abddef","eId":"http://robtowns.com/music/blind_willie.mp3","img":"/images/cover-audiofile.png","name":"blind_willie.mp3","nbP":3,"pl":{"name":"tests","id":49},"text":"","uId":"4d94501d1f78ac091dbc9b4d","uNm":"Adrien Joly","lov":[]}]);
     var cbName = '_whyd_feed_callback_' + Date.now() + '_';
-    window[cbName] = function(data) {
+    window[cbName] = function (data) {
       cb(data);
       delete window[cbName];
     };
@@ -179,18 +179,18 @@ var DEBUG = false, // for soundmanager
         'Dailymotion',
         'Deezer',
         'AudioFile',
-        'Bandcamp'
+        'Bandcamp',
       ],
       PLAYER_PARAMS = {
         playerId: playerId,
         origin: window.location.host || window.location.hostname,
         width: params.videoWidth || playerContainer.clientWidth,
         height: params.videoHeight || playerContainer.clientHeight,
-        playerContainer: playerContainer
+        playerContainer: playerContainer,
       };
-    include(urlPrefix + '/js/playem-min.js', function() {
+    include(urlPrefix + '/js/playem-min.js', function () {
       playem = new Playem();
-      PLAYERS.map(function(pl) {
+      PLAYERS.map(function (pl) {
         //console.log("Init " + pl + " player...");
         playem.addPlayer(window[pl + 'Player'], PLAYER_PARAMS);
       });
@@ -202,14 +202,14 @@ var DEBUG = false, // for soundmanager
     //console.info("initializing soundmanager2...");
     include(
       urlPrefix + '/js/soundmanager2' + (DEBUG ? '.js' : '-nodebug-jsmin.js'),
-      function() {
+      function () {
         soundManager.setup({
           debugMode: DEBUG,
           url: urlPrefix + '/swf/soundmanager2_xdomain.swf',
           flashVersion: 9,
-          onready: function() {
+          onready: function () {
             soundManager.isReady = true;
-          }
+          },
         });
         soundManager.beginDelayedInit();
       }
@@ -217,16 +217,10 @@ var DEBUG = false, // for soundmanager
     cb();
   }
 
-  function loadSwfObject(cb) {
-    //console.info("initializing swfobject...");
-    include(urlPrefix + '/js/swfobject.js');
-    cb();
-  }
-
   function runAll(init, cb) {
     var remaining = init.length;
-    init.map(function(o) {
-      (o.args = o.args || []).push(function() {
+    init.map(function (o) {
+      (o.args = o.args || []).push(function () {
         o.res = arguments;
         if (!--remaining) cb(init);
       });
@@ -243,8 +237,7 @@ var DEBUG = false, // for soundmanager
   var init = [
     { fct: fetchFeed },
     { fct: loadSoundManager },
-    { fct: loadSwfObject },
-    { fct: loadStyle }
+    { fct: loadStyle },
   ];
 
   var shortcuts = {
@@ -252,31 +245,31 @@ var DEBUG = false, // for soundmanager
     '/sc/': window.location.protocol + '//soundcloud.com/',
     '/dm/': window.location.protocol + '//dailymotion.com/video/',
     '/vi/': window.location.protocol + '//vimeo.com/',
-    '/dz/': window.location.protocol + '//www.deezer.com/track/'
+    '/dz/': window.location.protocol + '//www.deezer.com/track/',
   };
 
   function getTrackUrl(eId) {
-    for (var s in shortcuts)
+    for (let s in shortcuts)
       if (eId.indexOf(s) == 0) return eId.replace(s, shortcuts[s]);
     return eId;
   }
 
-  runAll(init, function(res) {
+  runAll(init, function (res) {
     view.init(document.getElementById(params.id));
-    initPlayem(view.videoElement, 'whydVideo', function(playem) {
+    initPlayem(view.videoElement, 'whydVideo', function (playem) {
       console.info('ready!');
       var tracks = res[0].res[0];
       view.populateTracks(tracks);
-      for (var i in tracks)
+      for (let i in tracks)
         playem.addTrackByUrl(getTrackUrl(tracks[i].eId), tracks[i]);
-      forEachElement('li', function(element) {
+      forEachElement('li', function (element) {
         var wtn = element.getAttribute('data-wtn'); // openwhyd track number
         if (wtn !== null)
-          element.onclick = function() {
+          element.onclick = function () {
             playem.play(wtn);
           };
       });
-      playem.on('onTrackChange', function(track) {
+      playem.on('onTrackChange', function (track) {
         view.setCurrentTrack(track.metadata);
       });
     });

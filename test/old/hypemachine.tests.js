@@ -1,6 +1,8 @@
+/* global describe, it */
+
 var assert = require('assert');
 
-describe('hypemachine / mp3 detector', function() {
+describe('hypemachine / mp3 detector', function () {
   var hypem = require('../../app/lib/hypem');
 
   // Wrapper to a controller that detects embeds (youtube + soundcloud) and MP3 files from a HTML page
@@ -10,23 +12,23 @@ describe('hypemachine / mp3 detector', function() {
     var controller = require('../../app/controllers/api/contentExtractor.js')
       .controller;
     var fakeRequest = {
-      logToConsole: function() {},
-      checkLogin: function() {
+      logToConsole: function () {},
+      checkLogin: function () {
         return { id: 1, name: 'fake' };
-      }
+      },
     };
     return {
-      detect: function(url, title, cb) {
+      detect: function (url, title, cb) {
         var params = { url: url };
         if (title) params.title = title;
-        console.log = function() {}; // prevent controller from writing to stdout
+        console.log = function () {}; // prevent controller from writing to stdout
         controller(fakeRequest, params, {
-          render: function(r) {
+          render: function (r) {
             console.log = console.logBackup; // restore console.log
             cb(r);
-          }
+          },
         });
-      }
+      },
     };
   }
 
@@ -34,16 +36,16 @@ describe('hypemachine / mp3 detector', function() {
 
   function objToArray(results) {
     var array = [];
-    for (var i in results) array.push(results[i]);
+    for (let i in results) array.push(results[i]);
     return array;
   }
 
   function genSearchTest(q) {
-    it('finds a match on hypemachine from the title "' + q + '"', function(
+    it('finds a match on hypemachine from the title "' + q + '"', function (
       done
     ) {
       //console.log('(hypem.search) query:', q, '...');
-      hypem.search(q, function(err, results) {
+      hypem.search(q, function (err, results) {
         assert.ifError(err);
         assert(objToArray(results).length);
         done();
@@ -52,9 +54,9 @@ describe('hypemachine / mp3 detector', function() {
   }
 
   function genSearchMp3Test(q) {
-    it('finds a mp3 file from the title "' + q + '"', function(done) {
+    it('finds a mp3 file from the title "' + q + '"', function (done) {
       //console.log('(hypem.searchMp3s) query:', q, '...');
-      hypem.searchMp3s(q, function(err, results) {
+      hypem.searchMp3s(q, function (err, results) {
         assert.ifError(err);
         assert(objToArray(results).length);
         done();
@@ -63,9 +65,9 @@ describe('hypemachine / mp3 detector', function() {
   }
 
   function genExtractMp3Test(url, title) {
-    it('extracts the mp3 file from ' + url, function(done) {
+    it('extracts the mp3 file from ' + url, function (done) {
       //console.log('(hypem.getMp3FromPostUrl) ', {url:url, title:title}, '...');
-      hypem.getMp3FromPostUrl(url, title, function(err, mp3) {
+      hypem.getMp3FromPostUrl(url, title, function (err, mp3) {
         assert.ifError(err);
         assert(mp3);
         done();
@@ -74,8 +76,8 @@ describe('hypemachine / mp3 detector', function() {
   }
 
   function genDetectTracksTest(url, title) {
-    it('detects title of ' + url, function(done) {
-      new ContentDetector().detect(url, title, function(r) {
+    it('detects title of ' + url, function (done) {
+      new ContentDetector().detect(url, title, function (r) {
         assert(r && r.embeds && r.embeds.join && r.embeds.length);
         //console.log("First result: ", r.embeds[0]);
         done();

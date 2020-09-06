@@ -1,145 +1,176 @@
 <style>
-    #header {
-        display: none;
-    }
+  #header {
+    display: none;
+  }
 
-    #contentPane {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0!important;
-        padding: 0;
-        background: url(/images/404-bg.jpg) no-repeat fixed 50% 50%;
-        background-size: cover;
-        font-family: "Helvetica Neue", Helvetica, Sans-serif;
-        color: #fff;
-        -webkit-font-smoothing: antialiased;
-    }
+  #contentPane {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 !important;
+    padding: 0;
+    background: url(/images/404-bg.jpg) no-repeat fixed 50% 50%;
+    background-size: cover;
+    font-family: 'Helvetica Neue', Helvetica, Sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    #mainPanel {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-    }
+  #mainPanel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
 
-    /* HEAD */
+  /* HEAD */
 
-    .header {
-        height: 80px;
-        background: transparent;
-        margin-bottom: 40px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
+  .header {
+    height: 80px;
+    background: transparent;
+    margin-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
 
-    .header > div {
-        position: relative;
-        z-index: 2;
-        min-width: 880px;
-        width: 968px;
-        margin: 0 auto;
-        padding: 0;
-        background: none;
-    }
+  .header > div {
+    position: relative;
+    z-index: 2;
+    min-width: 880px;
+    width: 968px;
+    margin: 0 auto;
+    padding: 0;
+    background: none;
+  }
 
-    .header #headCenter {
-        position: absolute;
-        top: 20px;
-        left: 1px;
-    }
+  .header #headCenter {
+    position: absolute;
+    top: 20px;
+    left: 1px;
+  }
 
-    .background {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
+  .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
 
-        background: rgba(0, 0, 0, 0.5);
-        background: linear-gradient(top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 100%);
-        background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0.75)), color-stop(100%, rgba(0, 0, 0, 0.2) 100%));
-        background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 100%);
-        background: -o-linear-gradient(top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 100%);
-        background: -ms-linear-gradient(top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 100%);
-    }
+    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(
+      top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    background: -webkit-linear-gradient(
+      top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0%, rgba(0, 0, 0, 0.75)),
+      color-stop(100%, rgba(0, 0, 0, 0.2) 100%)
+    );
+    background: -moz-linear-gradient(
+      top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    background: -o-linear-gradient(
+      top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    background: -ms-linear-gradient(
+      top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+  }
 
-    .wrapper {
-        width: 960px;
-        margin: 120px auto;
-        text-align: center;
-    }
+  .wrapper {
+    width: 960px;
+    margin: 120px auto;
+    text-align: center;
+  }
 
-    h1 {
-        margin: 0;
-        padding: 0;
-        font-size: 100px;
-        font-weight: 500;
-    }
+  h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 100px;
+    font-weight: 500;
+  }
 
-    h2 {
-        margin: -20px 0 0 0;
-        padding: 0;
-        font-size: 48px;
-        font-weight: normal;
-        color:white;
-    }
+  h2 {
+    margin: -20px 0 0 0;
+    padding: 0;
+    font-size: 48px;
+    font-weight: normal;
+    color: white;
+  }
 
-    .jamming {
-        font-size: 30px;
-        font-weight: 300;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        text-transform: uppercase;
-    }
+  .jamming {
+    font-size: 30px;
+    font-weight: 300;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+  }
 
-    a.btnPlug {
-        display: block;
-        width: 280px;
-        height: 75px;
-        line-height: 75px;
-        margin: 30px auto;
-        border-radius:5px;
-        color: #fff;
-        font-size: 24px;
-        font-weight: 500;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        text-decoration: none;
+  a.btnPlug {
+    display: block;
+    width: 280px;
+    height: 75px;
+    line-height: 75px;
+    margin: 30px auto;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
 
-        background: #a5c052;
-        background: linear-gradient(top, #b2c967 0%, #a5c052 100%);
-        background: -webkit-linear-gradient(top, #b2c967 0%, #a5c052 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #b2c967), color-stop(100%, #a5c052 100%));
-        background: -moz-linear-gradient(top, #b2c967 0%, #a5c052 100%);
-        background: -o-linear-gradient(top, #b2c967 0%, #a5c052 100%);
-        background: -ms-linear-gradient(top, #b2c967 0%, #a5c052 100%);
+    background: #a5c052;
+    background: linear-gradient(top, #b2c967 0%, #a5c052 100%);
+    background: -webkit-linear-gradient(top, #b2c967 0%, #a5c052 100%);
+    background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0%, #b2c967),
+      color-stop(100%, #a5c052 100%)
+    );
+    background: -moz-linear-gradient(top, #b2c967 0%, #a5c052 100%);
+    background: -o-linear-gradient(top, #b2c967 0%, #a5c052 100%);
+    background: -ms-linear-gradient(top, #b2c967 0%, #a5c052 100%);
+  }
 
-    }
-
-    a.btnPlug:active {
-        background: #a5c052;
-    }
+  a.btnPlug:active {
+    background: #a5c052;
+  }
 </style>
 
 <div class="header">
-    <div>
-        <div id="headCenter">
-            <a target="_top" href="/">
-                <img src="/images/logo-white.png" />
-            </a>
-        </div>
+  <div>
+    <div id="headCenter">
+      <a target="_top" href="/">
+        <img src="/images/logo-white.png" />
+      </a>
     </div>
+  </div>
 </div>
 
 <div class="background"></div>
 
 <div id="content">
-    <div class="wrapper">
-        <h1>404</h1>
-        <h2>There is no music here</h2>
-        <p><a href="/" class="btnPlug">Plug back in</a></p>
-        <p class="jamming">Never stop jamming</a>
-    </div>
+  <div class="wrapper">
+    <h1>404</h1>
+    <h2>There is no music here</h2>
+    <p><a href="/" class="btnPlug">Plug back in</a></p>
+    <p class="jamming">Never stop jamming</p>
+  </div>
 </div>

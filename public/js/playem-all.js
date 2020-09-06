@@ -1,9 +1,8 @@
-/* playemjs 0.3.0, commit: 9a52b60c227acdef67c9b224ca7efab5ed1cf8f0 */
+/* playemjs 1.0.0-rc.2, commit: 663eb200b5f688025fa0d188394969917f6af210 */
 
 // configuration
 
 var DEFAULT_PLAY_TIMEOUT = 10000
-window.USE_SWFOBJECT = true //! !window.swfobject; // ... to embed youtube flash player
 
 window.$ = window.$ || function () { return window.$ }
 
@@ -952,12 +951,7 @@ function DailymotionPlayer(){
       data: window.location.protocol+'//www.dailymotion.com/swf/'+this.embedVars.videoId+'?'+paramsQS,
       innerHTML: paramsHTML
     };
-    if (USE_SWFOBJECT) {
-      swfobject.embedSWF(embedAttrs.data, this.embedVars.playerId, embedAttrs.width, embedAttrs.height, "9.0.0", "/js/swfobject_expressInstall.swf", null, params, atts);
-    }
-    else {
-      $(this.element).attr(embedAttrs);
-    }
+    $(this.element).attr(embedAttrs);
     $(this.element).show();
     this.safeClientCall("onEmbedReady");
   }

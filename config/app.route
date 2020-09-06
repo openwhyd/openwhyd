@@ -102,7 +102,6 @@ POST   /login                          -> controllers.api.login
 GET    /facebookLogin                  -> controllers.api.facebookLogin
 POST   /facebookLogin                  -> controllers.api.facebookLogin
 
-GET    /dlBetaApp/{file}               -> controllers.private.dlBetaApp
 GET    /digest                         -> controllers.private.digest
 GET    /contentType                    -> controllers.private.contentType
 POST   /contentType                    -> controllers.private.contentType
@@ -110,8 +109,6 @@ GET    /getResourceMetadata            -> controllers.private.getResourceMetadat
 POST   /getResourceMetadata            -> controllers.private.getResourceMetadata
 GET    /password                       -> controllers.private.password
 POST   /password                       -> controllers.private.password
-GET    /thanks                         -> controllers.private.thanks
-POST   /thanks                         -> controllers.private.thanks
 GET    /upload                         -> controllers.private.upload
 POST   /upload                         -> controllers.private.upload
 GET    /visit                          -> controllers.private.visit
@@ -137,9 +134,6 @@ GET    /bc/{eId}                       -> controllers.postViewer
 GET    /bc/{eId}/{_1}                  -> controllers.postViewer
 GET    /bc/{eId}/{_1}/{_2}             -> controllers.postViewer
 
-GET    /playlist/{id}                  -> controllers.collabPl
-GET    /playlist/{id}/contributors     -> controllers.collabPl
-
 GET    /api/{_subCtr}                  -> controllers.subdir
 POST   /api/{_subCtr}                  -> controllers.subdir
 GET    /api/{_subCtr}/{_1}             -> controllers.subdir
@@ -152,6 +146,8 @@ POST   /api/{_subCtr}/{_1}/{_2}/{_3}   -> controllers.subdir
 GET    /admin/{_subCtr}                -> controllers.subdir
 POST   /admin/{_subCtr}                -> controllers.subdir
 GET    /admin/{_subCtr}/{action}       -> controllers.subdir
+
+POST   /testing/{_subCtr}              -> controllers.subdir
 
 GET    /style/{style}                  -> controllers.userLibrary
 GET    /genre/{genre}                  -> controllers.pgGenre

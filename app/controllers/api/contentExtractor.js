@@ -4,7 +4,7 @@
  */
 var get = require('../../lib/get');
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('contentExtractor.controller', reqParams);
 
   // make sure a registered user is logged, or return an error page
@@ -29,13 +29,13 @@ exports.controller = function(request, reqParams, response) {
     if (reqParams.title) {
       var title = normalize(reqParams.title);
       console.log('normalized title:', title);
-      for (var i in embeds)
+      for (let i in embeds)
         if (embeds[i].name)
           embeds[i].distance = levenshteinenator(
             normalize(embeds[i].name),
             title
           );
-      embeds.sort(function(a, b) {
+      embeds.sort(function (a, b) {
         return a.distance - b.distance;
       });
     }
@@ -47,16 +47,16 @@ exports.controller = function(request, reqParams, response) {
   var url = reqParams.url;
 
   try {
-    get(url, function(err, page) {
+    get(url, function (err, page) {
       if (err)
         //throw err;
         console.log('contentExtractor.get() error: ', err, err.stack);
       else
-        page.extractEmbeds(function(embeds) {
+        page.extractEmbeds(function (embeds) {
           // 1) extract named embeds
           var embedRefs = [];
           embeds = embeds || [];
-          for (var i in embeds)
+          for (let i in embeds)
             if (embeds[i] && embeds[i].name) embedRefs.push(embeds[i]);
           console.log(
             '-> extracted embeds',
@@ -70,14 +70,14 @@ exports.controller = function(request, reqParams, response) {
           var mp3 = page.getMp3s();
           if (mp3) {
             console.log('-> extracted mp3', mp3.length);
-            for (var i in mp3)
+            for (let i in mp3)
               embedRefs.push({
                 type: 'mp3 file',
                 url: mp3[i],
                 name: mp3[i]
                   .split('/')
                   .pop()
-                  .replace(/\.mp3$/i, '')
+                  .replace(/\.mp3$/i, ''),
               });
           }
           renderResult(embedRefs, embeds);
@@ -104,14 +104,14 @@ http://andrew.hedges.name/resume/
 */
 
 // return the smallest of the three values passed in
-var minimator = function(x, y, z) {
+var minimator = function (x, y, z) {
   if (x < y && x < z) return x;
   if (y < x && y < z) return y;
   return z;
 };
 
 // calculate the Levenshtein distance between a and b
-var levenshteinenator = function(a, b) {
+var levenshteinenator = function (a, b) {
   var cost;
 
   var m = a.length;
@@ -127,16 +127,16 @@ var levenshteinenator = function(a, b) {
     n = o;
   }
 
-  var r = new Array();
-  r[0] = new Array();
-  for (var c = 0; c < n + 1; c++) {
+  var r = [];
+  r[0] = [];
+  for (let c = 0; c < n + 1; c++) {
     r[0][c] = c;
   }
 
-  for (var i = 1; i < m + 1; i++) {
-    r[i] = new Array();
+  for (let i = 1; i < m + 1; i++) {
+    r[i] = [];
     r[i][0] = i;
-    for (var j = 1; j < n + 1; j++) {
+    for (let j = 1; j < n + 1; j++) {
       cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
       r[i][j] = minimator(
         r[i - 1][j] + 1,

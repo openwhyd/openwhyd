@@ -5,7 +5,7 @@ function DndUpload(options) {
 
   var handler =
     options.handler ||
-    function(eventName, eventData) {
+    function (eventName, eventData) {
       if (options[eventName]) options[eventName](eventData, this);
       else console.log('DndHandler', eventName, eventData);
     };
@@ -31,36 +31,36 @@ function DndUpload(options) {
   var acceptedTypes = options.acceptedTypes || {
     'image/png': true,
     'image/jpeg': true,
-    'image/gif': true
+    'image/gif': true,
   };
 
-  holder.ondragover = function() {
+  holder.ondragover = function () {
     //this.className += ' hover';
     return false;
   };
-  holder.ondragend = function() {
+  holder.ondragend = function () {
     //this.className = this.className.replace('hover', '');
     return false;
   };
-  holder.ondrop = function(e) {
+  holder.ondrop = function (e) {
     //this.className = this.className.replace(' hover', '');
     e.preventDefault();
     var files = e.dataTransfer.files;
     var formData = new FormData();
     var formFields = (options.form || {}).elements;
     if (formFields)
-      for (var i = formFields.length - 1; i >= 0; --i)
+      for (let i = formFields.length - 1; i >= 0; --i)
         if (formFields[i].type != 'file')
           formData.append(formFields[i].name, formFields[i].value);
     formData.append('file', files[0]);
     handler('post', files[0]);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url);
-    xhr.onload = function(e2) {
+    xhr.onload = function (e2) {
       handler('progress', 1);
       handler('complete', e2.target.response);
     };
-    xhr.upload.onprogress = function(event) {
+    xhr.upload.onprogress = function (event) {
       if (event.lengthComputable) {
         //var complete = ( * 100 | 0);
         handler('progress', event.loaded / event.total);

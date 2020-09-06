@@ -1,9 +1,11 @@
-[![Build Status](https://img.shields.io/travis/openwhyd/openwhyd/master.svg?style=flat-square)](https://travis-ci.org/openwhyd/openwhyd) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=flat-square&label=Follow)](https://twitter.com/open_whyd)
+[![Build Status](https://github.com/openwhyd/openwhyd/workflows/GitHub%20Actions%20Workflow/badge.svg)](https://github.com/openwhyd/openwhyd/actions) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=flat-square&label=Follow)](https://twitter.com/open_whyd)
+
 # Openwhyd
 
 > Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
 
 Openwhyd is:
+
 - an independent music curation service freely available at [openwhyd.org](https://openwhyd.org);
 - a community of music lovers who enjoy taking their time to find the best tracks and videos for their collection;
 - a collaborative / open-source project maintained by passionate volunteers. You too can contribute!
@@ -12,7 +14,7 @@ Openwhyd is:
 
 Music libraries like Spotify and Apple Music make it easy to play and collect music that is released officially by music labels.
 
-**Openwhyd**, on the other hand, allows music lovers to discover, play and collect *any* musical gem that is available on the most popular streaming platforms, including:
+**Openwhyd**, on the other hand, allows music lovers to discover, play and collect _any_ musical gem that is available on the most popular streaming platforms, including:
 
 - music videos, bootlegs and specific live performances,
 - fresh tracks from new and/or local artists,
@@ -23,7 +25,7 @@ Music libraries like Spotify and Apple Music make it easy to play and collect mu
 
 Demo video:
 
-[![Openwhyd Demo Video](./docs/img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY "Openwhyd Demo Video")
+[![Openwhyd Demo Video](./docs/img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY 'Openwhyd Demo Video')
 
 ### Features
 
@@ -57,6 +59,7 @@ Initially known as [whyd.com](https://whyd.com), the development of this product
 Since 2016, Adrien Joly has been taking care of Openwhyd's domain name, infrastructure and data on his spare time.
 
 The project is **open to contributions**. Check out our [Support Openwhyd](#support-openwhyd) section for more info. Beginners are welcome too! 🤗
+
 <!--
 - Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2017](https://infograph.venngage.com/publish/c74df49b-2d2f-48bc-b9cb-5bc1f5908c37) 🔥
 -->
@@ -79,6 +82,8 @@ $ open localhost:8080
 ```
 
 More info about **Setup and Usage**: [INSTALL.md](docs/INSTALL.md).
+
+If you want to run it directly with `docker-compose`, checkout [Openwhyd on Docker Hub](https://hub.docker.com/r/openwhyd/openwhyd).
 
 If you want to deploy Openwhyd to a server, you can follow our guide: [How to deploy on DigitalOcean](docs/howto-deploy-on-digitalocean.md).
 
@@ -105,6 +110,7 @@ These are the wonderful people whose time and sweat have made Openwhyd's heart b
 | [<img src="https://cloudinary-a.akamaihd.net/hopwork/image/upload/h_360,w_360,c_thumb,g_face,z_0.4,q_auto,dpr_2.0/wdxqlikzwk4p8fcj1u6k.jpeg" width="98px;"/><br /><sub><b>Claire Marion</b></sub>](https://github.com/cmdcmdcmd)<br />[🎨](#design-cmdcmdcmd "Design") [📝](#blog-cmdcmdcmd "Blogposts") [🤔](#ideas-cmdcmdcmd "Ideas, Planning, & Feedback") | [<img src="https://avatars1.githubusercontent.com/u/1169844?v=4" width="98px;"/><br /><sub><b>Julien Tanay</b></sub>](http://julientanay.com)<br />[🚇](#infra-Djiit "Infrastructure (Hosting, Build-Tools, etc)") [🔧](#tool-Djiit "Tools") [💻](https://github.com/openwhyd/openwhyd/commits?author=Djiit "Code") | [<img src="https://avatars0.githubusercontent.com/u/243268?v=4" width="98px;"/><br /><sub><b>Adrien Candiotti</b></sub>](https://github.com/SkinyMonkey)<br />[🚇](#infra-SkinyMonkey "Infrastructure (Hosting, Build-Tools, etc)") [💻](https://github.com/openwhyd/openwhyd/commits?author=SkinyMonkey "Code") [🤔](#ideas-SkinyMonkey "Ideas, Planning, & Feedback") | [<img src="http://static8.viadeo-static.com/ukTJaFEht8_7xghQiybGR5b-XS0=/300x300/member/002141lujf3ta0qu%3Fts%3D1383075404000" width="98px;"/><br /><sub><b>Constance Betinyani</b></sub>](https://www.linkedin.com/in/constance-betinyani-30b8b95a/)<br />[📝](#blog "Blogposts") [🔍](#fundingFinding "Funding Finding") | [<img src="https://d1qb2nb5cznatu.cloudfront.net/users/28089-large?1489180378" width="98px;"/><br /><sub><b>Alberto Fantappie</b></sub>](https://angel.co/alberto-fantappie)<br />[🔍](#fundingFinding "Funding Finding") [📋](#eventOrganizing "Event Organizing") | [<img src="http://www.doyoubuzz.com/var/users/_/2016/8/31/13/1245112/avatar/1188719/avatar_cp_630.jpg?t=1545569639" width="98px;"/><br /><sub><b>Mathilde Vercelletto</b></sub>](https://www.linkedin.com/in/mathildevercelletto/)<br />[📖](https://github.com/openwhyd/openwhyd/commits?author= "Documentation") [💵](#financial "Financial") | [<img src="https://pbs.twimg.com/profile_images/465242079145099264/NXppNjIg_400x400.png" width="98px;"/><br /><sub><b>Henri Lieutaud</b></sub>](https://github.com/ElBurritoPodrido)<br />[🤔](#ideas-ElBurritoPodrido "Ideas, Planning, & Feedback") |
 | [<img src="https://avatars3.githubusercontent.com/u/8008820?v=4" width="98px;"/><br /><sub><b>François Burra</b></sub>](https://github.com/FrancoisBurra)<br />[🤔](#ideas-FrancoisBurra "Ideas, Planning, & Feedback") | [<img src="https://avatars0.githubusercontent.com/u/3294460?v=4" width="98px;"/><br /><sub><b>Grey Vugrin</b></sub>](http://greyvugrin@github.io)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=greyvugrin "Code") [🐛](https://github.com/openwhyd/openwhyd/issues?q=author%3Agreyvugrin "Bug reports") [🔧](#tool-greyvugrin "Tools") | [<img src="https://avatars3.githubusercontent.com/u/5300654?v=4" width="98px;"/><br /><sub><b>Marin le Maignan</b></sub>](https://github.com/Marinlemaignan)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=Marinlemaignan "Code") [🐛](https://github.com/openwhyd/openwhyd/issues?q=author%3AMarinlemaignan "Bug reports") [🤔](#ideas-Marinlemaignan "Ideas, Planning, & Feedback") | [<img src="https://media.licdn.com/dms/image/C5603AQFMhpwwbDWWzQ/profile-displayphoto-shrink_800_800/0?e=1546473600&v=beta&t=bijrXeAQKSJoCRybxCoyVgkS0GF_h3GucQVLXu5TKik" width="98px;"/><br /><sub><b>Nicolas Leger</b></sub>](https://github.com/nicolasleger)<br />[🚇](#infra-nicolasleger "Infrastructure (Hosting, Build-Tools, etc)") [💻](https://github.com/openwhyd/openwhyd/commits?author=nicolasleger "Code") | [<img src="https://avatars2.githubusercontent.com/u/1911478?v=4" width="98px;"/><br /><sub><b>Serdar Sever</b></sub>](https://znk.github.io)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=znk "Code") [🐛](https://github.com/openwhyd/openwhyd/issues?q=author%3Aznk "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/19236802?v=4" width="98px;"/><br /><sub><b>Stanislas Châble</b></sub>](https://www.linkedin.com/in/stanislas-chable/)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=Selbahc "Code") [🐛](https://github.com/openwhyd/openwhyd/issues?q=author%3ASelbahc "Bug reports") | [<img src="https://avatars2.githubusercontent.com/u/3671070?v=4" width="98px;"/><br /><sub><b>Pia Mancini</b></sub>](http://piamancini.com)<br />[🔍](#fundingFinding-piamancini "Funding Finding") |
 | [<img src="https://avatars2.githubusercontent.com/u/265349?v=4" width="98px;"/><br /><sub><b>Maurice Svay</b></sub>](http://svay.com/)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=mauricesvay "Code") [🐛](https://github.com/openwhyd/openwhyd/issues?q=author%3Amauricesvay "Bug reports") [🎨](#design-mauricesvay "Design") | [<img src="http://jenaiccambre.com/static/jenaic_cambre.7ab05dc2.jpg" width="98px;"/><br /><sub><b>Jénaïc Cambré</b></sub>](http://www.kadiks.net)<br />[💬](#question-kadiks "Answering Questions") | [<img src="https://i.imgur.com/wjtYzX4.jpg" width="98px;"/><br /><sub><b>Felix Aknin</b></sub>](https://www.linkedin.com/in/felix-aknin-61b72597/)<br />[💬](#question "Answering Questions") | [<img src="https://media.licdn.com/dms/image/C4D03AQH19-cggJnutA/profile-displayphoto-shrink_800_800/0?e=1546473600&v=beta&t=fHtEddqYGfuvvn7x4gKeSeLaot89o6OYFn5FFF54cIw" width="98px;"/><br /><sub><b>Patrick Rainier Juen</b></sub>](https://github.com/uLan08)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=uLan08 "Code") [🚇](#infra-uLan08 "Infrastructure (Hosting, Build-Tools, etc)") [✅](#tutorial-uLan08 "Tutorials") | [<img src="https://avatars1.githubusercontent.com/u/9751243?v=4" width="98px;"/><br /><sub><b>Brandon Okeke</b></sub>](http://brawrdon.com)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=Brawrdon "Code") | [<img src="https://avatars2.githubusercontent.com/u/43063269?v=4" width="98px;"/><br /><sub><b>namanbiyani</b></sub>](https://github.com/namanbiyani)<br />[💻](https://github.com/openwhyd/openwhyd/commits?author=namanbiyani "Code") |
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
@@ -147,6 +153,7 @@ Support us with a monthly donation and help us keep Openwhyd alive. [[Become a b
 <a href="https://opencollective.com/openwhyd/backer/29/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/29/avatar.svg"></a>
 
 ### Sponsors
+
 Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/openwhyd#sponsor)]
 
 <a href="https://whyd.com/" target="_blank"><img alt="Whyd is the company that founded this service, donated the source code and still pays for distribution on Apple's App Store" src="docs/img/sponsor-whyd-smaller.png"></a>

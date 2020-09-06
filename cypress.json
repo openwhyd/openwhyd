@@ -1,0 +1,6 @@
+{
+  "screenshotOnRunFailure": false,
+  "video": false,
+  "chromeWebSecurity": false,
+  "baseUrl": "http://localhost:8080"
+}

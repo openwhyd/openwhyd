@@ -11,8 +11,8 @@ var invitePage = require('../../templates/invitePage.js');
 function inviteByRequestId(reqIds, response) {
   var remaining = reqIds.length;
 
-  var checkInvite = function(reqId) {
-    userModel.fetchInviteByFbRequestId(reqId, function(invite) {
+  var checkInvite = function (reqId) {
+    userModel.fetchInviteByFbRequestId(reqId, function (invite) {
       console.log('found invite:', invite);
       if (invite && invite.fbRequestIds) {
         //return response.redirect("/invite/" + invite._id);
@@ -28,21 +28,20 @@ function inviteByRequestId(reqIds, response) {
           reqIds
         );
         response.legacyRender(registrationPage, null, {
-          'content-type': 'text/html'
+          'content-type': 'text/html',
         });
       } else console.log('request id not found: ', reqId);
       if (--remaining == 0) {
         console.log('invitation token not found => redirect to /');
-        //response.legacyRender("Your invite code is invalid or expired. Please go to http://openwhyd.org/ to request an invite.");
         response.redirect('/');
       }
     });
   };
 
-  for (var i in reqIds) checkInvite(reqIds[i]);
+  for (let i in reqIds) checkInvite(reqIds[i]);
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('fbCanvas.controller', reqParams);
 
   reqParams = reqParams || { request: '' };

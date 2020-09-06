@@ -14,10 +14,10 @@ function toggleClass(elem, className, showOrHide) {
 }
 
 var addEvent = window.addEventListener
-  ? function(elem, type, method) {
+  ? function (elem, type, method) {
       elem.addEventListener(type, method, false);
     }
-  : function(elem, type, method) {
+  : function (elem, type, method) {
       elem.attachEvent('on' + type, method);
     };
 /*
@@ -76,7 +76,7 @@ function QuickSearch(searchForm, options) {
 
   function unhoverItem() {
     var liArray = searchResults.getElementsByTagName('li');
-    for (var i = liArray.length - 1; i >= 0; --i)
+    for (let i = liArray.length - 1; i >= 0; --i)
       toggleClass(liArray[i], 'hover', false);
   }
 
@@ -114,14 +114,14 @@ function QuickSearch(searchForm, options) {
     if (options.onResultClick) {
       function makeHandler(li) {
         var a = li.getElementsByTagName('a')[0];
-        return function(e) {
+        return function (e) {
           e.preventDefault();
           options.onResultClick(a.href, a);
           hideResults();
           return false;
         };
       }
-      for (var i = anchors.length - 1; i >= 0; --i)
+      for (let i = anchors.length - 1; i >= 0; --i)
         addEvent(anchors[i], 'click', makeHandler(anchors[i]));
     }
 
@@ -143,6 +143,9 @@ function QuickSearch(searchForm, options) {
   function onQueryChange(event) {
     event = event || { keycode: -1 };
     if (event.keyCode == '13') {
+      if (searchField.value.replace(/ /g, '') === '') {
+        return;
+      }
       // return
       hideResults();
       event.preventDefault();
@@ -202,12 +205,12 @@ function QuickSearch(searchForm, options) {
   addEvent(searchField, 'input', onQueryChange);
   addEvent(searchField, 'onpaste', onQueryChange);
 
-  this.cancelQuery = function() {
+  this.cancelQuery = function () {
     cancelQuery();
     searchClear && toggle(searchClear, 'loading', false);
   };
 
-  this.search = function(q) {
+  this.search = function (q) {
     searchField.value = q;
     onQueryChange.apply(searchField); //$searchField.each(onQueryChange);
   };

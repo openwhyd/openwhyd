@@ -8,11 +8,10 @@ var USE_GRAPHICS_MAGICK = true; // previously process.env.WHYD_USE_GRAPHICS_MAGI
 // returns a version string from cmd's stdout, or undefined if cmd could not be run
 function getVersion(cmd) {
   try {
-    return child_process
-      .execSync(cmd)
-      .toString()
-      .split('\n')[0];
-  } catch (e) {}
+    return child_process.execSync(cmd).toString().split('\n')[0];
+  } catch (e) {
+    // let the function return undefined
+  }
 }
 
 // detect graphicsmagick
@@ -37,19 +36,19 @@ if (gmVersion) {
 
 console.log('my.img:USE_GRAPHICS_MAGICK =', USE_GRAPHICS_MAGICK);
 
-exports.get = function(imgUrl, imgOutput, endListener, errorListener) {
+exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
   imgUrl = url.parse(imgUrl);
-  http.get({ host: imgUrl.host, path: imgUrl.pathname, port: 80 }, function(
+  http.get({ host: imgUrl.host, path: imgUrl.pathname, port: 80 }, function (
     res
   ) {
     var data = '';
     res.setEncoding('binary');
-    res.on('data', function(chunk) {
+    res.on('data', function (chunk) {
       data += chunk;
     });
-    res.on('end', function() {
+    res.on('end', function () {
       console.log('done');
-      fs.writeFile(imgOutput, data, 'binary', function(err) {
+      fs.writeFile(imgOutput, data, 'binary', function (err) {
         if (err) {
           if (errorListener) errorListener(err);
           else console.error(err);
@@ -61,7 +60,7 @@ exports.get = function(imgUrl, imgOutput, endListener, errorListener) {
 
 if (USE_GRAPHICS_MAGICK) {
   var gm = require('./node-magick');
-  exports.makeThumb = function(
+  exports.makeThumb = function (
     imgPath,
     thumbOutput,
     width,
@@ -70,20 +69,20 @@ if (USE_GRAPHICS_MAGICK) {
   ) {
     gm.createCommand(imgPath)
       .resize(width || '', height || '')
-      .write(thumbOutput, function() {
+      .write(thumbOutput, function () {
         if (endListener) endListener();
       });
   };
 } else {
   var exec = child_process.exec;
-  exports.makeThumb = function(
+  exports.makeThumb = function (
     imgPath,
     thumbOutput,
     width,
     height,
     endListener
   ) {
-    var execCallback = function(error, stdout, stderr) {
+    var execCallback = function (error, stdout, stderr) {
       console.log('exec convert => ', error, stdout, stderr);
       if (endListener) endListener(error, stdout, stderr);
     };

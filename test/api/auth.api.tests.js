@@ -1,98 +1,122 @@
+/* global describe, it */
+
+var { promisify } = require('util');
 var assert = require('assert');
-var request = require('request');
 
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
-var { logout, loginAs, signupAs } = require('../api-client.js');
+var { ADMIN_USER, TEST_USER } = require('../fixtures.js');
+const apiClient = require('../api-client.js');
 
-describe('auth api -- login with email', function() {
-  it('succeeds', function(done) {
-    loginAs(ADMIN_USER, function(error, { response, body }) {
+const get = promisify(apiClient.get);
+const logout = promisify(apiClient.logout);
+const loginAs = promisify(apiClient.loginAs);
+const signupAs = promisify(apiClient.signupAs);
+const getUser = promisify(apiClient.getUser);
+
+const genSecureUser = (() => {
+  let globalNumber = 0;
+  return (number = ++globalNumber) => ({
+    name: `secure user ${number}`,
+    email: `secure-user-${number}@openwhyd.org`,
+    password: `mySecurePassword${number}`,
+  });
+})();
+
+describe('auth api', () => {
+  describe('login with email', () => {
+    it('succeeds', async () => {
+      const { response, body } = await loginAs(ADMIN_USER);
       const cookies = ((response.headers || {})['set-cookie'] || []).join(' ');
       assert(/whydSid\=/.test(cookies));
-      assert(JSON.parse(body).redirect);
-      done();
+      assert(body.redirect);
+    });
+
+    it('access to personal /stream requires login', async () => {
+      const { body } = await get({}, '/stream?format=json');
+      assert.equal(body.error, 'Please login first');
+    });
+
+    it('gives access to personal /stream', async () => {
+      const { jar } = await loginAs(ADMIN_USER);
+      const { response, body } = await get(jar, '/stream?format=json');
+      assert.equal(response.statusCode, 200);
+      assert.ifError(body.error);
+      assert(body.join); // check that it's an array
+    });
+
+    it('fails if wrong email', async () => {
+      const { body } = await loginAs({ ...ADMIN_USER, email: 'qq' });
+      assert(/email/.test(body.error));
+    });
+
+    it('fails if wrong password', async () => {
+      const { body } = await loginAs({ ...ADMIN_USER, md5: 'qq' });
+      assert(body.wrongPassword);
     });
   });
 
-  it('gives access to personal /stream', function(done) {
-    loginAs(ADMIN_USER, function(error, { response, body, jar }) {
-      request({ jar, url: URL_PREFIX + '/stream?format=json' }, function(
-        error,
-        response,
-        body
-      ) {
-        assert.ifError(error);
-        assert.equal(response.statusCode, 200);
-        var json = JSON.parse(body);
-        assert.ifError(json.error);
-        assert(json.join); // check that it's an array
-        done();
-      });
+  describe('logout', () => {
+    it('denies access to personal /stream', async () => {
+      const { jar: loginJar } = await loginAs(ADMIN_USER);
+      const { jar } = await logout(loginJar);
+      const { body } = await get(jar, '/stream?format=json');
+      assert(/login/.test(body.error));
     });
   });
 
-  it('fails if wrong email', function(done) {
-    loginAs(Object.assign({}, ADMIN_USER, { email: 'qq' }), function(
-      error,
-      { response, body }
-    ) {
-      assert(/email/.test(JSON.parse(body).error));
-      done();
+  //describe('forgot password', () => {); // TODO <= mock emails
+
+  // Register / sign up a new user
+
+  describe('signup with md5', () => {
+    it('gives access to personal /stream', async () => {
+      const { jar, body: signupBody } = await signupAs(TEST_USER);
+      assert.ifError(signupBody.error);
+      const { response, body } = await get(jar, '/stream?format=json');
+      assert.equal(response.statusCode, 200);
+      assert.ifError(body.error);
+      assert(body.join); // check that it's an array
+    });
+
+    it('fails if password is missing', async () => {
+      const userWithMissingPwd = {
+        ...TEST_USER,
+        pwd: '',
+        password: '',
+        md5: '',
+      };
+      const { jar, body: signupBody } = await signupAs(userWithMissingPwd);
+      assert.equal(signupBody.error, 'Please enter a password');
+      const { body } = await get(jar, '/stream?format=json');
+      assert.equal(body.error, 'Please login first');
     });
   });
 
-  it('fails if wrong password', function(done) {
-    loginAs(Object.assign({}, ADMIN_USER, { md5: 'qq' }), function(
-      error,
-      { response, body }
-    ) {
-      assert(JSON.parse(body).wrongPassword);
-      done();
+  describe('signup with secure hash', () => {
+    it('succeeds', async () => {
+      const { body } = await signupAs(genSecureUser());
+      assert.ifError(body.error);
     });
-  });
-});
 
-describe('auth api -- logout', function() {
-  it('denies access to personal /stream', function(done) {
-    loginAs(ADMIN_USER, function(error, { response, body, jar }) {
-      logout(jar, function(error, { response, body, jar }) {
-        request({ jar, url: URL_PREFIX + '/stream?format=json' }, function(
-          error,
-          response,
-          body
-        ) {
-          assert.ifError(error);
-          assert(/login/.test(JSON.parse(body).error));
-          done();
-        });
-      });
+    it('gives access to personal /stream', async () => {
+      const { jar } = await signupAs(genSecureUser());
+      const { body } = await get(jar, '/stream?format=json');
+      assert.ifError(body.error);
     });
-  });
-});
 
-//describe('auth api -- forgot password', function() {}); // TODO <= mock emails
+    it.skip('login with secure hash', async () => {
+      const secureUser = genSecureUser();
+      await signupAs(secureUser);
+      const { jar, body } = await loginAs(secureUser);
+      assert.ifError(body.error);
+      assert(jar);
+    });
 
-// Register / sign up a new user
-
-describe('auth api -- signup', function() {
-  it('gives access to personal /stream', function(done) {
-    signupAs(TEST_USER, function(error, { response, body, jar }) {
-      assert.ifError(error);
-      try {
-        assert.ifError(JSON.parse(body).error);
-      } catch (e) {}
-      request({ jar, url: URL_PREFIX + '/stream?format=json' }, function(
-        error,
-        response,
-        body
-      ) {
-        assert.ifError(error);
-        assert.equal(response.statusCode, 200);
-        var json = JSON.parse(body);
-        assert.ifError(json.error);
-        assert(json.join); // check that it's an array
-        done();
-      });
+    it('stores secure hash in db', async function () {
+      const { jar } = await signupAs(genSecureUser());
+      const { body } = await getUser(jar, {});
+      assert.ifError(body.error);
+      assert.equal(typeof body.arPwd, 'string');
+      assert.notEqual(body.arPwd.length, 0);
     });
   });
 });

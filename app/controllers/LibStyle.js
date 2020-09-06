@@ -17,7 +17,7 @@ var uidLists = {
     '512ba8757e91c862b2ab1ae5', // Mauricio Estrada Munoz
     '4fe0f8b57e91c862b2a7c274', // Masscut
     '4e61ec47981d90d694c13657', // Kien - RAP SLAM HIPHOP
-    '51430f4e7e91c862b2ab552e' // Mika Mikaz
+    '51430f4e7e91c862b2ab552e', // Mika Mikaz
   ] /*,
 	indie: [
 		adrien/playlist/34
@@ -33,7 +33,7 @@ var uidLists = {
 	jazz: [
 		dontfearmistakes (paris jazz scene)
 	]
-	*/
+	*/,
 };
 
 /*
@@ -53,7 +53,7 @@ GET		/style/funk						-> controllers.userLibrary
 function renderFriendsFeed(options, uidList, callback) {
   var params = {
     after: options.after,
-    before: options.before
+    before: options.before,
     //limit:limit
   };
   postModel.fetchByAuthors(uidList, params, function process(posts) {
@@ -81,12 +81,11 @@ function renderFriendsLibrary(lib, style) {
     );
 
   var options = lib.options;
-  var uid = options.loggedUser.id;
   options.bodyClass = 'pgStream pgWithSideBar';
   options.streamTitle = 'Style: ' + style;
   options.displayPlaylistName = true;
 
-  renderFriendsFeed(options, uidList, function(feedHtml) {
+  renderFriendsFeed(options, uidList, function (feedHtml) {
     if (options.after || options.before) lib.render({ html: feedHtml });
     else {
       /*

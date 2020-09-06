@@ -7,8 +7,6 @@
 // testing phase 3: send welcome email
 // $ curl -v --data "ajax=follow" --cookie "whydSid=4j8OSWWYknxyPlmGmgqURg12AiBoKDQpqt4iU610PT9nKkIkRdlMgHWF9kFMsQEvU" http://openwhyd.org/onboarding
 
-var snip = require('../snip.js');
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var plTagsModel = require('../models/plTags.js');
@@ -21,18 +19,16 @@ var notifEmails = require('../models/notifEmails.js');
 var TEMPLATE_FILE = 'app/templates/onboarding.html';
 var mainTemplate = require('../templates/mainTemplate.js');
 var templateLoader = require('../templates/templateLoader.js');
-var template = templateLoader.loadTemplate(TEMPLATE_FILE);
 
 var MAX_RECOM_USERS = 10;
 
 var templates = {
-  //"people": "app/templates/onboarding/pickPeople.html",
-  'bookmarklet-legacy': 'app/templates/onboarding/bookmarklet.html' // old version (still bound to openwhyd.org/bookmarklet and openwhyd.org/button)
+  'bookmarklet-legacy': 'app/templates/onboarding/bookmarklet.html', // old version (still bound to openwhyd.org/bookmarklet and openwhyd.org/button)
 };
 
 function makeTemplateRenderer(cb) {
-  return function(p) {
-    templateLoader.loadTemplate(templates[p.step] || TEMPLATE_FILE, function(
+  return function (p) {
+    templateLoader.loadTemplate(templates[p.step] || TEMPLATE_FILE, function (
       template
     ) {
       p.content = template.render(p);
@@ -41,72 +37,51 @@ function makeTemplateRenderer(cb) {
   };
 }
 
-function fetchUserData(recomUsers, pickedTags, cb) {
-  var pickedTagSet = snip.arrayToSet(pickedTags || []);
-  plTagsModel.getTagEngine(function(tagEngine) {
-    userModel.fetchUserBios(
-      recomUsers,
-      /*cb*/ function() {
-        var i = recomUsers.length;
-        (function next() {
-          if (--i < 0) cb(recomUsers);
-          else
-            tagEngine.fetchTagsByUid(recomUsers[i].id, function(tags) {
-              /*
-						var total = tags.map(function(tag){
-							return tag.c;
-						}).reduce(function(a, b){
-							return a + b;
-						});
-						(recomUsers[i].tags = tags.slice(0,3)).map(function(tag){
-							tag.c = Math.floor(100 * tag.c / total) + " %";
-						});
-						*/
-              /*
-						recomUsers[i].tags = [];
-						tags.map(function(tag){
-							if (pickedTagSet[tag.id])
-								recomUsers[i].tags.push(tag);
-						});
-						*/
-              recomUsers[i].tags = tags.slice(0, 3);
-              next();
-            });
-        })();
-      }
-    );
+function fetchUserData(recomUsers, _pickedTags, cb) {
+  plTagsModel.getTagEngine(function (tagEngine) {
+    userModel.fetchUserBios(recomUsers, function () {
+      var i = recomUsers.length;
+      (function next() {
+        if (--i < 0) cb(recomUsers);
+        else
+          tagEngine.fetchTagsByUid(recomUsers[i].id, function (tags) {
+            recomUsers[i].tags = tags.slice(0, 3);
+            next();
+          });
+      })();
+    });
   });
 }
 
 function fetchUsersByTags(tags, cb) {
-  plTagsModel.getTagEngine(function(tagEngine) {
+  plTagsModel.getTagEngine(function (tagEngine) {
     cb(tagEngine.getUsersByTags(tags).slice(0, MAX_RECOM_USERS));
   });
 }
 
 var processAjax = {
-  fbFriends: function(p, cb) {
+  fbFriends: function (p, cb) {
     // DEPRECATED => will return dummy data
-    facebookModel.fetchAccessToken(p.loggedUser.id, function(fbTok) {
+    facebookModel.fetchAccessToken(p.loggedUser.id, function (fbTok) {
       facebookModel.fetchFbFriendsWithSub(
         p.loggedUser,
         p.fbTok || fbTok,
-        function(res) {
+        function (res) {
           var fbFriends = (res || {}).whydFriends || [];
           cb(fbFriends);
         }
       );
     });
   },
-  people: function(p, cb) {
+  people: function (p, cb) {
     var tags = (p.genres || '').split(',');
     console.log('fetchpeople...', tags);
-    fetchUsersByTags(tags, function(recomUsers) {
+    fetchUsersByTags(tags, function (recomUsers) {
       fetchUserData(recomUsers, tags, cb);
     });
   },
-  follow: function(p, cb) {
-    userModel.fetchByUid(p.loggedUser.id, function(user) {
+  follow: function (p, cb) {
+    userModel.fetchByUid(p.loggedUser.id, function (user) {
       console.log('onboarding, sending welcome email', user.email, user.iBy);
       var inviteSender = user.iBy ? mongodb.getUserFromId(user.iBy) : null;
       notifEmails.sendRegWelcomeAsync(user, inviteSender);
@@ -123,43 +98,43 @@ var processAjax = {
             uNm: p.loggedUser.name,
             tId: uid,
             tNm: mongodb.getUserNameFromId(uid),
-            ctx: 'onb' // onb = onboarding context
+            ctx: 'onb', // onb = onboarding context
           },
-          function() {
+          function () {
             console.log('onboarding, followed uid', uid);
             notifModel.subscribedToUser(p.loggedUser.id, uid, next);
           }
         );
     })();
     cb({ ok: true });
-  }
+  },
 };
 
 var processStep = {
-  genres: function(p, render) {
+  genres: function (p, render) {
     (p.css = p.css || []).push('onboarding.css');
     p.bodyClass = 'pgOnboarding stepGenres minimalHeader';
     p.stepGenres = true;
     render(p);
   },
-  people: function(p, render) {
+  people: function (p, render) {
     (p.css = p.css || []).push('onboarding.css');
     p.bodyClass = 'pgOnboarding stepPeople minimalHeader';
     p.stepPeople = true;
     render(p);
     userModel.update(p.loggedUser.id, {
-      $set: { 'onb.tags': p.genres.split(',') }
+      $set: { 'onb.tags': p.genres.split(',') },
     });
   },
-  button: function(p, render) {
+  button: function (p, render) {
     (p.css = p.css || []).push('onboarding.css');
     p.bodyClass = 'pgOnboarding stepButton minimalHeader';
     p.stepButton = true;
     render(p);
   },
-  'bookmarklet-legacy': function(p, render) {
+  'bookmarklet-legacy': function (p, render) {
     render(p);
-  }
+  },
 };
 
 function handleRequest(p, cb) {
@@ -180,7 +155,7 @@ function handleRequest(p, cb) {
   }
 }
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   var p =
     (request.method.toLowerCase() === 'post' ? request.body : getParams) || {};
   request.logToConsole('onboarding.controller ' + request.method, p);
@@ -189,7 +164,7 @@ exports.controller = function(request, getParams, response) {
   p.pageUrl = request.url;
   p.genres = plTagsModel.extractGenreTags(p.genres || '').join(','); // sanitize genres
   console.log('sanitized genres', p.genres);
-  handleRequest(p, function(r) {
+  handleRequest(p, function (r) {
     if (!r || r.error) {
       r = r || {};
       console.log(r.error);

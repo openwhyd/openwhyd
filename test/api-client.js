@@ -1,5 +1,5 @@
 var assert = require('assert');
-var request = require('request');
+var request = require('request'); // TODO: promisify it
 var genuine = require('../app/genuine.js'); // for signup
 
 var { URL_PREFIX } = require('./fixtures.js');
@@ -18,7 +18,7 @@ function extractCookieJar(response) {
 }
 
 exports.logout = function logout(jar, callback) {
-  exports.get(jar, `/login?action=logout&ajax=1`, function(error, res) {
+  exports.get(jar, `/login?action=logout&ajax=1`, function (error, res) {
     assert.ifError(error);
     assert.equal(res.response.statusCode, 200);
     callback(
@@ -30,7 +30,7 @@ exports.logout = function logout(jar, callback) {
 
 exports.loginAs = function loginAs(user, callback) {
   const url = `/login?action=login&ajax=1&email=${user.email}&md5=${user.md5}`;
-  exports.get(null, url, function(error, res) {
+  exports.get(null, url, function (error, res) {
     assert.ifError(error);
     assert.equal(res.response.statusCode, 200);
     callback(
@@ -49,36 +49,35 @@ exports.signupAs = function signupAs(user, callback) {
         {
           ajax: 1,
           sTk: genuine.makeSignupToken({
-            connection: { remoteAddress: '::ffff:127.0.0.1' }
-          })
+            connection: { remoteAddress: '::ffff:127.0.0.1' },
+          }),
         },
         user
-      )
+      ),
     },
-    function(error, response, body) {
+    function (error, response, body) {
       assert.ifError(error);
       assert.equal(response.statusCode, 200);
       callback(error, {
         response,
         body,
-        jar: extractCookieJar(response)
+        jar: extractCookieJar(response),
       });
     }
   );
 };
 // HTTP request wrappers
 
-exports.get = function(jar, url, callback) {
-  request.get({ jar, url: `${URL_PREFIX}${url}` }, function(
+exports.get = function (jar, url, callback) {
+  request.get({ jar, url: `${URL_PREFIX}${url}` }, function (
     error,
     response,
     body
   ) {
-    var json = undefined;
     try {
-      json = JSON.parse(body);
+      body = JSON.parse(body);
     } catch (e) {}
-    callback(error, { response, body, json, jar });
+    callback(error, { response, body, jar });
   });
 };
 
@@ -95,25 +94,24 @@ exports.getMe = function(jar, callback) {
 }
 */
 
-exports.getUser = function(jar, body, callback) {
+exports.getUser = function (jar, body, callback) {
   // TODO: pass body parameters
-  exports.get(jar, `/api/user`, function(error, res) {
+  exports.get(jar, `/api/user`, function (error, res) {
     assert.ifError(error);
     assert.equal(res.response.statusCode, 200);
     callback(error, res);
   });
 };
 
-exports.setUser = function(jar, body, callback) {
-  // TODO: pass body parameters
+exports.setUser = function (jar, body, callback) {
   request.post(
     {
       jar,
       url: `${URL_PREFIX}/api/user`,
       json: true,
-      body
+      body,
     },
-    function(error, response, body) {
+    function (error, response, body) {
       assert.ifError(error);
       assert.equal(response.statusCode, 200);
       callback(error, { response, body, jar });
@@ -123,15 +121,15 @@ exports.setUser = function(jar, body, callback) {
 
 // /api/post
 
-exports.addPost = function(jar, body, callback) {
+exports.addPost = function (jar, body, callback) {
   request.post(
     {
       jar,
       url: `${URL_PREFIX}/api/post`,
       json: true,
-      body: Object.assign({ action: 'insert' }, body)
+      body: Object.assign({ action: 'insert' }, body),
     },
-    function(error, response, body) {
+    function (error, response, body) {
       assert.ifError(error);
       assert.equal(response.statusCode, 200);
       callback(error, { response, body, jar });
@@ -139,15 +137,15 @@ exports.addPost = function(jar, body, callback) {
   );
 };
 
-exports.addComment = function(jar, body, callback) {
+exports.addComment = function (jar, body, callback) {
   request.post(
     {
       jar,
       url: `${URL_PREFIX}/api/post`,
       json: true,
-      body: Object.assign({ action: 'addComment' }, body)
+      body: Object.assign({ action: 'addComment' }, body),
     },
-    function(error, response, body) {
+    function (error, response, body) {
       assert.ifError(error);
       assert.equal(response.statusCode, 200);
       callback(error, { response, body, jar });
@@ -155,11 +153,11 @@ exports.addComment = function(jar, body, callback) {
   );
 };
 
-exports.getPlaylist = function(jar, plId, callback) {
+exports.getPlaylist = function (jar, plId, callback) {
   exports.get(jar, `/api/playlist?id=${plId}`, callback);
 };
 
-exports.getPlaylistTracks = function(jar, uId, plId, callback) {
+exports.getPlaylistTracks = function (jar, uId, plId, callback) {
   // TODO: define a version that accepts parameters (limit, after, before...)
   exports.get(jar, `/${uId}/playlist/${plId}?format=json`, callback);
 };

@@ -15,7 +15,7 @@ function queryEchonest(p, cb) {
     'audio_summary',
     'tracks',
     'id:deezer',
-    'id:spotify-WW' /*, "id:musicbrainz", "id:discogs"*/
+    'id:spotify-WW' /*, "id:musicbrainz", "id:discogs"*/,
   ];
   var url =
     'http://developer.echonest.com/api/v4/song/search?' +
@@ -25,7 +25,7 @@ function queryEchonest(p, cb) {
 
 var SEARCH_FIELD_MAPPING = {
   artistName: 'artist',
-  trackTitle: 'title'
+  trackTitle: 'title',
 };
 
 // cf http://developer.echonest.com/docs/v4/song.html
@@ -42,11 +42,11 @@ function translateOutgoingQueryParams(p) {
   return res;
 }
 
-exports.translateTrack = function(track) {
+exports.translateTrack = function (track) {
   var res = {
     id: track.id,
     artistName: track.artist_name || track.artist,
-    trackTitle: track.title || track.title
+    trackTitle: track.title || track.title,
     //albumTitle: track.tracks,
   };
   if (track.tracks && track.tracks.length) {
@@ -59,7 +59,7 @@ exports.translateTrack = function(track) {
     // 2) foreign ids
     var tracks = track.tracks;
     res.foreignIds = {};
-    for (var i in tracks)
+    for (let i in tracks)
       if (!res.foreignIds[tracks[i].catalog])
         res.foreignIds[tracks[i].catalog] = tracks[i].foreign_id;
   }
@@ -70,29 +70,29 @@ exports.translateTrack = function(track) {
 };
 
 function searchTracks(p, cb, raw) {
-  queryEchonest(translateOutgoingQueryParams(p), function(err, res) {
+  queryEchonest(translateOutgoingQueryParams(p), function (err, res) {
     if (err || raw) cb(err, res);
     else
       cb(null, {
         items: (((res || {}).response || {}).songs || []).map(
           exports.translateTrack
-        )
+        ),
       });
   });
 }
 
-exports.fetchTrackMetadata = function(trackId, cb, raw) {
+exports.fetchTrackMetadata = function (trackId, cb, raw) {
   assert.ok(trackId, 'trackId is null');
   var p = {
     id: trackId,
     api_key: ECHONEST_API_KEY,
-    bucket: 'audio_summary'
+    bucket: 'audio_summary',
   };
   var url =
     'http://developer.echonest.com/api/v4/track/profile?' +
     querystring.stringify(p);
   //console.log("url", url);
-  return snip.httpRequestJSON(url, null, function(err, res) {
+  return snip.httpRequestJSON(url, null, function (err, res) {
     //console.log("EN", err, res)
     if (err || raw) return cb(err, res);
     var data = (res || {}).response;

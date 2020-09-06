@@ -1,34 +1,56 @@
 <div id="playerContainer">
-	<div id="playerContainerSub">
-		<div id="playerClose" onclick="window.whydPlayer.toggleVideo();" title="Hide"></div>
-		<div id="playBtnOverlay" onclick="window.whydPlayer.playPause();"></div>
-	</div>
+  <div id="playerContainerSub">
+    <div
+      id="playerClose"
+      onclick="window.whydPlayer.toggleVideo();"
+      title="Hide"
+    ></div>
+    <div id="playBtnOverlay" onclick="window.whydPlayer.playPause();"></div>
+  </div>
 </div>
 <div id="whydPlayer">
-<div id="progressTrack" class="progressTrack">
-	<div id="progressBar" class="progressBar"></div>
-	<div id="progressCursor" class="progressCursor"></div>
-</div>
-<div class="rightButtons buttons">
-	<div id="btnShuffle" onclick="whydPlayer.toggleShuffle()" title="Shuffle mode"><div></div></div>
-	<div class="volumePanel">
-		<div class="volume"></div>
-		<div id="volumeTrack" class="progressTrack">
-			<div class="progressBar"></div>
-			<div class="progressCursor"></div>
-		</div>
-	</div>
-	<div id="btnFullscreen" onclick="whydPlayer.toggleFullscreen()" title="Fullscreen"><div></div></div>
-</div>
-<div class="progressPanel buttons">
-	<button id="btnPrev" onclick="whydPlayer.prev()"></button>
-	<button id="btnPlay" onclick="whydPlayer.playPause()"></button>
-	<button id="btnNext" onclick="whydPlayer.next()"></button>
-	<button id="btnRepost" onclick="whydPlayer.repost()" title="Add"><div></div></button>
-	<button id="btnLike" onclick="whydPlayer.like()" title="Like"><div></div></button>
-	<button id="btnComment" onclick="whydPlayer.comment()" title="Comment"><div></div></button>
-	<span id="trackTitle">(none)</span>
-	<span id="progressTimer"></span>
-</div>
-<div id="trackDragPos"></div>
+  <div id="progressTrack" class="progressTrack">
+    <div id="progressBar" class="progressBar"></div>
+    <div id="progressCursor" class="progressCursor"></div>
+  </div>
+  <div class="rightButtons buttons">
+    <div
+      id="btnShuffle"
+      onclick="whydPlayer.toggleShuffle()"
+      title="Shuffle mode"
+    >
+      <div></div>
+    </div>
+    <div class="volumePanel">
+      <div class="volume"></div>
+      <div id="volumeTrack" class="progressTrack">
+        <div class="progressBar"></div>
+        <div class="progressCursor"></div>
+      </div>
+    </div>
+    <div
+      id="btnFullscreen"
+      onclick="whydPlayer.toggleFullscreen()"
+      title="Fullscreen"
+    >
+      <div></div>
+    </div>
+  </div>
+  <div class="progressPanel buttons">
+    <button id="btnPrev" onclick="whydPlayer.prev()"></button>
+    <button id="btnPlay" onclick="whydPlayer.playPause()"></button>
+    <button id="btnNext" onclick="whydPlayer.next()"></button>
+    <button id="btnRepost" onclick="whydPlayer.repost()" title="Add">
+      <div></div>
+    </button>
+    <button id="btnLike" onclick="whydPlayer.like()" title="Like">
+      <div></div>
+    </button>
+    <button id="btnComment" onclick="whydPlayer.comment()" title="Comment">
+      <div></div>
+    </button>
+    <span id="trackTitle">(none)</span>
+    <span id="progressTimer"></span>
+  </div>
+  <div id="trackDragPos"></div>
 </div>

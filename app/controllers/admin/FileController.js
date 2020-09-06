@@ -1,7 +1,6 @@
-exports.buildController = function(params) {
-  return function(request, reqParams, response) {
+exports.buildController = function (params = {}) {
+  return function (request, reqParams, response) {
     request.logToConsole(params.controllerName + '.controller', reqParams);
-    var reqParams = reqParams || {};
 
     // make sure an admin is logged, or return an error page
     reqParams.loggedUser = request.getUser();
@@ -29,8 +28,8 @@ exports.buildController = function(params) {
           '<h2>available filenames:</h2>',
           '<ul><li>',
           Object.keys(params.fileGenerators).join('</li><li>'),
-          '</li></ul>'
-        ].join('\n')
+          '</li></ul>',
+        ].join('\n'),
       });
   };
 };

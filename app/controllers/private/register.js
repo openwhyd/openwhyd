@@ -7,13 +7,13 @@
 var userModel = require('../../models/user.js');
 var followModel = require('../../models/follow.js');
 var emailModel = require('../../models/email.js'); // for validation
-var facebookModel = require('../../models/facebook.js');
 var notifModel = require('../../models/notif.js');
 var contestModel = require('../../models/plContest.js');
 var inviteController = require('../invite.js');
 var userApi = require('../../controllers/api/user.js');
 var htmlRedirect = require('../../templates/logging.js').htmlRedirect;
 var genuine = require('../../genuine.js');
+const argon2 = require('argon2');
 
 var ENFORCE_GENUINE_SIGNUP_FROM_IOS = false; // TODO: set to true, after x-real-ip header is set by the nginx proxy
 var onboardingUrl = '/pick/genres';
@@ -26,9 +26,9 @@ function follow(user, userToFollow, ctx) {
       uNm: user.name,
       tId: userToFollow.id,
       tNm: userToFollow.name,
-      ctx: ctx
+      ctx: ctx,
     },
-    function() {
+    function () {
       console.log('auto follow: ', user.name, userToFollow.name);
     }
   );
@@ -44,7 +44,7 @@ function renderError(request, getParams, response, errorMsg) {
 /**
  * called when user submits the form from register.html
  */
-exports.registerInvitedUser = function(request, user, response) {
+exports.registerInvitedUser = function (request, user, response) {
   request.logToConsole(
     'register.registerInvitedUser',
     user
@@ -61,7 +61,7 @@ exports.registerInvitedUser = function(request, user, response) {
           plC: user.plC, // playlist contest id
           sTk: user.sTk || '', // signup token (genuine client check)
           ajax: user.ajax,
-          fbRequest: user.fbRequest
+          fbRequest: user.fbRequest,
         }
       : null
   );
@@ -123,7 +123,7 @@ exports.registerInvitedUser = function(request, user, response) {
   //	return error(request, user, response, "Your password contains invalid characters");
 
   function registerUser() {
-    userModel.fetchByEmail(user.email, function(item) {
+    userModel.fetchByEmail(user.email, function (item) {
       if (item)
         return error(
           request,
@@ -136,7 +136,8 @@ exports.registerInvitedUser = function(request, user, response) {
         name: user.name,
         email: user.email,
         pwd: userModel.md5(user.password),
-        img: '/images/blank_user.gif' //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
+        arPwd: argon2.hash(user.password).toString('hex'),
+        img: '/images/blank_user.gif', //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
       };
 
       if (user.iBy) dbUser.iBy = user.iBy; // invited by (user id)
@@ -165,8 +166,6 @@ exports.registerInvitedUser = function(request, user, response) {
         'Oops, your registration failed... Please try again!'
       );
 
-    var inviteSender = user.iBy ? request.getUserFromId(user.iBy) : null;
-
     if (user.fbRequest) userModel.removeInviteByFbRequestIds(user.fbRequest);
     else userModel.removeInvite(user.inviteCode);
 
@@ -174,13 +173,13 @@ exports.registerInvitedUser = function(request, user, response) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       if (user.ajax) {
         var json = { redirect: url, uId: '' + storedUser._id };
-        function renderJSON() {
+        const renderJSON = () => {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
             json
           );
-        }
+        };
         if (user.includeUser) {
-          userApi.fetchUserData(storedUser, function(user) {
+          userApi.fetchUserData(storedUser, function (user) {
             json.user = user;
             renderJSON(json);
           });
@@ -190,9 +189,9 @@ exports.registerInvitedUser = function(request, user, response) {
 
     // connect users
     if (user.iBy) {
-      var inviteSender = {
+      const inviteSender = {
         id: user.iBy,
-        name: request.getUserNameFromId(user.iBy)
+        name: request.getUserNameFromId(user.iBy),
       };
       follow(storedUser, inviteSender, 'invite');
       follow(inviteSender, storedUser, 'invite');
@@ -200,7 +199,7 @@ exports.registerInvitedUser = function(request, user, response) {
     }
 
     if (user.plContest)
-      userModel.createPlaylist(storedUser._id, user.plContest.title, function(
+      userModel.createPlaylist(storedUser._id, user.plContest.title, function (
         playlist
       ) {
         loginAndRedirectTo('/u/' + storedUser._id + '/playlist/' + playlist.id);
@@ -211,9 +210,9 @@ exports.registerInvitedUser = function(request, user, response) {
   }
 
   if (user.iBy || checkInvites)
-    inviteController.checkInviteCode(request, user, response, function() {
+    inviteController.checkInviteCode(request, user, response, function () {
       if (user.plC)
-        contestModel.fetchById(user.plC, function(plContest) {
+        contestModel.fetchById(user.plC, function (plContest) {
           if (!plContest)
             console.error('plcontest not found when trying to signup');
           else user.plContest = plContest;
@@ -224,7 +223,7 @@ exports.registerInvitedUser = function(request, user, response) {
   else registerUser();
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   request.logToConsole('register.controller', request.method);
   if (request.method.toLowerCase() === 'post')
     // sent by (new) register form

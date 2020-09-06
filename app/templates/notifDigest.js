@@ -39,8 +39,8 @@ function sampleData(cb) {
 
 function aggregateByPost(setList) {
   var postSet = {};
-  for (var setName in setList)
-    for (var pId in setList[setName]) {
+  for (let setName in setList)
+    for (let pId in setList[setName]) {
       postSet[pId] = postSet[pId] || {};
       postSet[pId].id = postSet[pId].id || setList[setName][pId].id;
       postSet[pId].name = postSet[pId].name || setList[setName][pId].name;
@@ -59,43 +59,43 @@ var INIT_PARAMS = {
   likersPerPost: Object,
   sameTrackSet: Object,
   digestFrequency: null,
-  notifType: null
+  notifType: null,
 };
 
-exports.NotifDigest = function(p) {
-  for (var key in INIT_PARAMS)
+exports.NotifDigest = function (p) {
+  for (let key in INIT_PARAMS)
     this[key] = p[key] || (INIT_PARAMS[key] && new INIT_PARAMS[key]());
 };
 
-exports.NotifDigest.prototype.addRepostedTrack = function(post, reposter) {
+exports.NotifDigest.prototype.addRepostedTrack = function (post, reposter) {
   var pId = post._id || post.id;
   var track = (this.repostedTrackSet[pId] = this.repostedTrackSet[pId] || {
     id: pId,
-    name: post.name
+    name: post.name,
   });
   track.reposts = track.reposts || [];
   track.reposts.push({
     id: reposter._id || reposter.id,
-    name: reposter.name
+    name: reposter.name,
   });
   return this;
 };
 
-exports.NotifDigest.prototype.addLikedTrack = function(post, liker) {
+exports.NotifDigest.prototype.addLikedTrack = function (post, liker) {
   var pId = post._id || post.id;
   var track = (this.likersPerPost[pId] = this.likersPerPost[pId] || {
     id: pId,
-    name: post.name
+    name: post.name,
   });
   track.likes = track.likes || [];
   track.likes.push({
     id: liker._id || liker.id,
-    name: liker.name
+    name: liker.name,
   });
   return this;
 };
 
-exports.NotifDigest.prototype._prepareTemplateParameters = function() {
+exports.NotifDigest.prototype._prepareTemplateParameters = function () {
   var unsubPrefix =
     URL_PREFIX +
     '/api/unsubscribe?uId=' +
@@ -108,11 +108,11 @@ exports.NotifDigest.prototype._prepareTemplateParameters = function() {
     supportEmail: SUPPORT_EMAIL,
     linkUnsubscribeNotifs: {
       url: unsubPrefix,
-      text: 'Unsubscribe'
+      text: 'Unsubscribe',
     },
     linkReduceNotifs: {
       url: unsubPrefix + '&action=reduce',
-      text: 'receive less notifications'
+      text: 'receive less notifications',
     },
     // params
     user: this.recipient,
@@ -120,28 +120,28 @@ exports.NotifDigest.prototype._prepareTemplateParameters = function() {
     posts: aggregateByPost({
       reposts: this.repostedTrackSet,
       sameTracks: this.sameTrackSet,
-      likes: this.likersPerPost
-    })
+      likes: this.likersPerPost,
+    }),
   };
   if (this.subscriptions.length)
     params.subscriptions = {
       count: this.subscriptions.length,
       plural: this.subscriptions.length > 1 ? 's' : '',
-      items: this.subscriptions
+      items: this.subscriptions,
     };
   return params;
 };
 
-exports.NotifDigest.prototype.renderHtml = function() {
+exports.NotifDigest.prototype.renderHtml = function () {
   return digestTemplate.render(this._prepareTemplateParameters());
 };
 
-exports.NotifDigest.prototype.renderText = function() {
+exports.NotifDigest.prototype.renderText = function () {
   var p = this._prepareTemplateParameters();
   //return textTemplate.render(p).replace(/\n/g, "\n\n"); //"You need a modern email client to read this email, sorry...";
   var text = ['Hey, ' + p.user.name + '!'];
   if (p.posts)
-    for (var i in p.posts) {
+    for (let i in p.posts) {
       text.push('');
       text.push(
         p.posts[i].count +
@@ -151,9 +151,9 @@ exports.NotifDigest.prototype.renderText = function() {
           p.posts[i].name +
           '"'
       );
-      for (var j in p.posts[i].reposts)
+      for (let j in p.posts[i].reposts)
         text.push('- ' + p.posts[i].reposts[j].name);
-      for (var j in p.posts[i].likes)
+      for (let j in p.posts[i].likes)
         text.push('- ' + p.posts[i].likes[j].name);
     }
   if (p.subscriptions) {
@@ -164,7 +164,7 @@ exports.NotifDigest.prototype.renderText = function() {
         (p.subscriptions.plural ? 's' : '') +
         ' subscribed to you'
     );
-    for (var i in p.subscriptions.items)
+    for (let i in p.subscriptions.items)
       text.push('- ' + p.subscriptions.items[i].name);
   }
   text = text.concat([
@@ -175,7 +175,7 @@ exports.NotifDigest.prototype.renderText = function() {
       p.supportEmail +
       ', or you can chat live with us while browsing on ' +
       p.whydUrl,
-    ''
+    '',
   ]);
   if (p.linkUnsubscribeNotifs) {
     text.push('You receive too many Openwhyd notifications? You can: ');
@@ -194,10 +194,10 @@ exports.NotifDigest.prototype.renderText = function() {
   return text.join('\n');
 };
 
-exports.NotifDigest.prototype.renderNotifEmailObj = function(subject) {
+exports.NotifDigest.prototype.renderNotifEmailObj = function (subject) {
   return {
     subject: subject,
     bodyText: this.renderText(),
-    bodyHtml: this.renderHtml()
+    bodyHtml: this.renderHtml(),
   };
 };

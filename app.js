@@ -1,64 +1,28 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
-var fs = require('fs');
 var util = require('util');
-var async = require('async');
-var colors = require('colors');
 var mongodb = require('mongodb');
 
 var openwhydVersion = require('./package.json').version;
 
-// initialize error monitoring
-var rollbar;
-/*
-if (process.env.NODE_ENV === "production") {
-	var Rollbar = require("rollbar");
-	rollbar = new Rollbar({
-		accessToken: "655e72dc704f43c78f9c1e06b8b45ab0",
-		captureUncaught: true,
-		captureUnhandledRejections: true
-	});
-	rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
-}
-*/
-
-var DB_INIT_SCRIPTS = [
-  './config/initdb.js'
-  //'./config/initdb_team.js', // creates an admin user => should not be run on production!
-];
-
 function makeColorConsole(fct, color) {
-  return function() {
-    for (var i in arguments)
+  return function () {
+    for (let i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
     fct(Array.prototype.join.call(arguments, ' ')[color]);
   };
 }
 
-function conciseTrace() {
-  return new Error().stack
-    .split('\n')
-    .filter(function(line) {
-      return /\/app\//.test(line);
-    })
-    .join('\n');
-}
-
 function makeErrorLog(fct, type) {
-  return function() {
+  return function () {
     fct(
-      '===\n' +
-        new Date().toUTCString() +
-        ', ' +
-        type +
-        ' (concise trace)\n' +
-        conciseTrace()
+      type === 'Warning' ? '⚠' : '❌',
+      type,
+      '--',
+      new Date().toUTCString(),
+      ...arguments
     );
-    fct.apply(console, arguments);
-    if (rollbar && (type === 'Warning' || type === 'Error')) {
-      rollbar[type.toLowerCase()](Array.prototype.join.call(arguments, ' '));
-    }
   };
 }
 
@@ -78,6 +42,7 @@ var params = (process.appParams = {
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
+  color: true,
 
   // secrets
   genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
@@ -96,7 +61,6 @@ var params = (process.appParams = {
   // rendering preferences
   version: openwhydVersion,
   startTime: new Date(),
-  // landingPage: "public/html/landingPhoto.html", //"public/html/landingPageLaunch.html",  //cf logging.js
   nbPostsPerNewsfeedPage: 20,
   nbTracksPerPlaylistEmbed: 100,
 
@@ -105,31 +69,23 @@ var params = (process.appParams = {
     uploadDirName: 'upload_data',
     uAvatarImgDirName: 'uAvatarImg',
     uCoverImgDirName: 'uCoverImg',
-    uPlaylistDirName: 'uPlaylistImg'
-  }
+    uPlaylistDirName: 'uPlaylistImg',
+  },
 });
 
 var FLAGS = {
-  '--color': function() {
-    console.warn = makeErrorLog(
-      makeColorConsole(consoleError, 'yellow'),
-      'Warning'
-    );
-    console.error = makeErrorLog(
-      makeColorConsole(consoleError, 'red'),
-      'Error'
-    );
-    process.appParams.color = true;
+  '--no-color': function () {
+    process.appParams.color = false;
   },
-  '--fakeEmail': function() {
+  '--fakeEmail': function () {
     params.emailModule = '';
   },
-  '--emailAdminsOnly': function() {
+  '--emailAdminsOnly': function () {
     params.emailModule = 'emailAdminsOnly';
   },
-  '--runner': function() {
+  '--runner': function () {
     /* ignore this parameter from start-stop-daemon -- note: still required? */
-  }
+  },
 };
 
 // when db is read
@@ -140,7 +96,8 @@ function makeMongoUrl(params) {
   const user = params.mongoDbAuthUser;
   const password = params.mongoDbAuthPassword;
   const db = params.mongoDbDatabase; // ?w=0
-  return `mongodb://${user}:${password}@${host}:${port}/${db}`;
+  const auth = user || password ? `${user}:${password}@` : '';
+  return `mongodb://${auth}${host}:${port}/${db}`;
 }
 
 function start() {
@@ -150,20 +107,20 @@ function start() {
   const sessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET.substr(),
     store: new MongoStore({
-      url: makeMongoUrl(params)
+      url: makeMongoUrl(params),
     }),
     cookie: {
-      maxAge: 365 * 24 * 60 * 60 * 1000 // cookies expire in 1 year (provided in milliseconds)
+      maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
     },
     name: 'whydSid',
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
-    saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
+    saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
   var serverOptions = {
     port: params.port,
     appDir: __dirname,
     sessionMiddleware,
-    errorHandler: function(request, params, response, statusCode) {
+    errorHandler: function (request, params, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       console.log('rendering server error page', statusCode);
       require('./app/templates/error.js').renderErrorResponse(
@@ -175,8 +132,8 @@ function start() {
     },
     uploadSettings: {
       uploadDir: params.paths.uploadDirName, // 'upload_data'
-      keepExtensions: true
-    }
+      keepExtensions: true,
+    },
   };
   require('./app/models/logging.js'); // init logging methods (IncomingMessage extensions)
   new myHttp.Application(serverOptions).start();
@@ -187,39 +144,41 @@ function start() {
 
 // startup
 
-function init() {
-  if (process.argv.length > 2)
+async function main() {
+  // apply command-line arguments
+  if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
-    for (var i = 2; i < process.argv.length; ++i) {
+    for (let i = 2; i < process.argv.length; ++i) {
       var flag = process.argv[i];
       var flagFct = FLAGS[flag];
       if (flagFct) flagFct();
       else if (flag.indexOf('--') == 0)
         params[flag.substr(2)] = process.argv[++i];
     }
-  console.log('Starting web server with params:', params);
-  require('./app/models/mongodb.js').init(function(err, db) {
-    if (err) throw err;
-    var mongodb = this;
-    async.eachSeries(
-      DB_INIT_SCRIPTS,
-      function(initScript, nextScript) {
-        console.log('Applying db init script:', initScript, '...');
-        mongodb.runShellScript(fs.readFileSync(initScript), function(err) {
-          if (err) throw err;
-          nextScript();
-        });
-      },
-      function(err, res) {
-        // all db init scripts were interpreted => continue app init
-        mongodb.cacheCollections(function() {
-          mongodb.cacheUsers(function() {
-            start();
-          });
-        });
-      }
+  }
+  if (params.color == true) {
+    require('colors'); // populates .grey, .cyan, etc... on strings, for logging.js and MyController.js
+    console.warn = makeErrorLog(
+      makeColorConsole(consoleError, 'yellow'),
+      'Warning'
     );
-  });
+    console.error = makeErrorLog(
+      makeColorConsole(consoleError, 'red'),
+      'Error'
+    );
+  } else {
+    process.appParams.color = false;
+  }
+  console.log('Starting web server with params:', params);
+  const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
+  await util.promisify(mongodb.init)();
+  await mongodb.initCollections();
+  start();
 }
 
-init();
+main().catch((err) => {
+  // in order to prevent UnhandledPromiseRejections, let's catch errors and exit as we should
+  console.log('error from main():', err);
+  console.error('error from main():', err);
+  process.exit(1);
+});

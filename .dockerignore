@@ -6,6 +6,7 @@
 */*/node_modules
 */*/*.log
 */*/db
+/*.log
 /*.out
 /*.pid
 /*.err
@@ -18,3 +19,4 @@
 /config/apns
 /scripts/mongodb-scripts/db
 /scripts/mongodb-scripts/*.gz
+/misc

@@ -1,0 +1,150 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tests:
+    name: Automated tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27017:27017
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - name: check npm cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Initialize database
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-reset
+      - name: Start Openwhyd server
+        run: |
+          source env-vars-testing.sh
+          npm start --mongoDbDatabase openwhyd_test &
+          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+      - name: Unit tests
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-unit
+      - name: API tests
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-api
+
+  cypress:
+    name: Cypress E2E tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-16.04
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27017:27017
+    steps:
+      - uses: docker://cypress/base:10
+      - uses: actions/checkout@v1
+      - name: check npm cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-cypress-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-cypress-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-cypress-build-
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: check cypress cache
+        uses: actions/cache@v1
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
+            ${{ runner.OS }}-cypress-cache-
+      - name: install cypress
+        run: node_modules/.bin/cypress install
+      - name: Start Openwhyd server
+        run: |
+          source env-vars-testing.sh
+          npm start --mongoDbDatabase openwhyd_test &
+          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+      - name: Run Cypress tests
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          node_modules/.bin/cypress run
+
+  release:
+    name: Release
+    needs:
+      - tests
+      - cypress
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      - name: check npm cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Semantic Release
+        env:
+          CI: true
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          npm run semantic-release
+      - id: create_docker_tags
+        run: |
+          echo "::set-output name=tags::latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)"
+          # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
+      - name: Publish to Docker Hub registry
+        if: github.event_name == 'push'
+        uses: jerray/publish-docker-action@v1.0.3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          tags: ${{ steps.create_docker_tags.outputs.tags }}

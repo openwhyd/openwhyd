@@ -9,7 +9,12 @@ MAX_RETRY=50
 ROOT_DIR="`pwd`/.."
 NGINX_AVAIL=/etc/nginx/sites-available
 NGINX_ENBLD=/etc/nginx/sites-enabled
+NGINX_TEMPLATE=$ROOT_DIR/config/nginx-site-template
 NEW_PORT=`cat $ROOT_DIR/.port` || port=$PORT_A
+
+echo "🤖  Generate nginx configuration files based on template..."
+sed "s/{{PORT}}/$PORT_A/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_A > /dev/null
+sed "s/{{PORT}}/$PORT_B/g;" $NGINX_TEMPLATE | sudo tee $NGINX_AVAIL/openwhyd.org_$PORT_B > /dev/null
 
 echo "👋  Deployment starting on port $NEW_PORT..."
 
@@ -31,7 +36,8 @@ do
     sleep 1
     res="`curl -sL -w "%{http_code}" "localhost:$NEW_PORT" -o /dev/null`"
     if [ $res -eq 200 ]; then
-        echo "✅  Openwhyd ($(grep version $ROOT_DIR/package.json)) now listening on port $NEW_PORT."
+        VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
+        echo "✅  Openwhyd ($VERSION) now listening on port $NEW_PORT."
         break
     fi
 
@@ -40,7 +46,7 @@ do
 
     if [ $retries -ge $MAX_RETRY ]; then
         echo "⚠️  App is not responding. Killing it..."
-        $ROOT_DIR/node_modules/.bin/forever stop 0
+        npx forever stop 0
         # [TODO] Something like this would be better:
         # cd $ROOT_DIR && npm stop -- $NEW_UID
         echo "❌  Deployment failed."
@@ -49,13 +55,15 @@ do
 done
 
 echo "🔧  Applying nginx configuration..."
+set -e # starting now, any error will interrupt the execution of the script
 sudo unlink $NGINX_ENBLD/openwhyd.org
 sudo ln -s $NGINX_AVAIL/openwhyd.org_$NEW_PORT $NGINX_ENBLD/openwhyd.org
+sudo nginx -t # make sure that the configuration is valid
 sudo service nginx restart
 
 echo "🌇  Stopping previous instance of Openwhyd..."
 # Stop old server. Index 0 is always the oldest process.
-$ROOT_DIR/node_modules/.bin/forever stop 0
+npx forever stop 0
 
 # TODO: only do this if there was an oldest process,
 # otherwise it will kill the server it just started!

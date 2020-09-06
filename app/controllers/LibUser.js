@@ -11,9 +11,7 @@ var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
 var contestModel = require('../models/plContest.js');
-//var recomModel = require("../models/recom.js");
 var activityModel = require('../models/activity.js');
-//var plTagsModel = require("../models/plTags.js");
 var activityController = require('../controllers/recentActivity.js');
 var feedTemplate = require('../templates/feed.js');
 var uiSnippets = require('../templates/uiSnippets.js');
@@ -35,29 +33,29 @@ var MAX_SUBSCRIPTIONS = 50;
 // DATA FETCHING HELPERS
 
 function fetchPlaylists(options, callback) {
-  userModel.fetchPlaylists(options.user, {}, function(playlists) {
+  userModel.fetchPlaylists(options.user, {}, function (playlists) {
     options.user.pl = playlists;
     callback();
   });
 }
 
 function fetchLikes(options, callback) {
-  postModel.countLovedPosts(options.user.id, function(count) {
+  postModel.countLovedPosts(options.user.id, function (count) {
     options.user.nbLikes = count;
     callback();
   });
 }
 
 function fetchStats(options, callback) {
-  followModel.countSubscriptions(options.user.id, function(nbSubscriptions) {
-    followModel.countSubscribers(options.user.id, function(nbSubscribers) {
+  followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
+    followModel.countSubscribers(options.user.id, function (nbSubscribers) {
       options.subscriptions = {
         nbSubscriptions: nbSubscriptions,
-        nbSubscribers: nbSubscribers
+        nbSubscribers: nbSubscribers,
       };
       followModel.get(
         { uId: options.loggedUser.id, tId: options.user.id },
-        function(err, res) {
+        function (err, res) {
           options.user.isSubscribed = !!res;
           callback();
         }
@@ -67,7 +65,7 @@ function fetchStats(options, callback) {
 }
 
 function fetchNbTracks(options, callback) {
-  postModel.countUserPosts(options.user.id, function(nbPosts) {
+  postModel.countUserPosts(options.user.id, function (nbPosts) {
     options.user.nbTracks =
       nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
     callback();
@@ -79,14 +77,14 @@ function fetchActivity(options, cb) {
   activityModel.fetchHistoryFromUidList(
     [options.user.id],
     { limit: MAX_HISTORY },
-    function(activities) {
+    function (activities) {
       if (activities.length < MAX_HISTORY)
         activities.push({
           _id: mongodb.ObjectId(options.user.id),
-          other: { text: 'joined whyd' }
+          other: { text: 'joined whyd' },
         });
       var postsToPopulate = [];
-      for (var i in activities)
+      for (let i in activities)
         if (activities[i]) {
           activities[i].ago = uiSnippets.renderTimestamp(
             new Date() - activities[i]._id.getTimestamp()
@@ -99,11 +97,11 @@ function fetchActivity(options, cb) {
         { _id: { $in: postsToPopulate } },
         /*params*/ null,
         /*options*/ null,
-        function(posts) {
+        function (posts) {
           var postSet = {};
           options.activity = [];
-          for (var i in posts) postSet['' + posts[i]._id] = posts[i];
-          for (var i in activities) {
+          for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+          for (let i in activities) {
             if ((activities[i] || {}).like) {
               if (postSet['' + activities[i].like.pId])
                 activities[i].like.post = postSet['' + activities[i].like.pId];
@@ -174,7 +172,7 @@ function generateMixpanelCode(options) {
   return /*options.uid == options.loggedUser.id ? "" :*/ [
     '<script>',
     ' window.Whyd.tracking.log("Visit profile", "' + options.uid + '");',
-    '</script>'
+    '</script>',
   ].join('\n');
 }
 
@@ -190,13 +188,13 @@ function renderPlaylists(options, maxNb) {
           url: 'javascript:dlgCreatePlaylist();',
           class: 'btnNewPlaylist',
           img: '#',
-          name: 'Create a playlist'
+          name: 'Create a playlist',
         });
       //while(playlists.length < maxNb)
       //	playlists.push({url:"javascript:;"});
     }
   }
-  for (var i in playlists)
+  for (let i in playlists)
     if (playlists[i].id !== undefined) {
       //playlists[i].url = "/u/" + options.user.id + "/playlist/" + playlists[i].id;
       playlists[i].img =
@@ -207,7 +205,7 @@ function renderPlaylists(options, maxNb) {
 }
 
 function renderFriends(friends) {
-  for (var i in friends) {
+  for (let i in friends) {
     friends[i].url = '/u/' + friends[i].id;
     friends[i].img = '/img/u/' + friends[i].id;
   }
@@ -215,11 +213,13 @@ function renderFriends(friends) {
 }
 
 function populateUsers(subscr, options, cb) {
-  followModel.fetchSubscriptionArray(options.loggedUser.id, function(mySubscr) {
+  followModel.fetchSubscriptionArray(options.loggedUser.id, function (
+    mySubscr
+  ) {
     var subscrSet = snip.arrayToSet(mySubscr);
-    for (var i in subscr)
+    for (let i in subscr)
       if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
-    userModel.fetchUserBios(subscr, function() {
+    userModel.fetchUserBios(subscr, function () {
       cb(renderFriends(subscr));
     });
   });
@@ -228,7 +228,7 @@ function populateUsers(subscr, options, cb) {
 function fetchAndRenderPlaylist(options, callback, process) {
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
-  for (var i in options.user.pl)
+  for (let i in options.user.pl)
     if (options.user.pl[i] && options.user.pl[i].id == options.playlistId) {
       options.playlist = options.user.pl[i];
       break;
@@ -238,7 +238,7 @@ function fetchAndRenderPlaylist(options, callback, process) {
       id: 'create',
       name:
         /*(options.reqParams || {}).name ||*/ 'Playlist #' +
-        options.user.pl.length
+        options.user.pl.length,
     };
     options.pageTitle = 'new playlist';
   } else {
@@ -249,9 +249,11 @@ function fetchAndRenderPlaylist(options, callback, process) {
   }
   if (!options.playlist) callback('meh... this playlist does not exist!');
   else
-    contestModel.fetchByTitle((options.playlist || {}).name, function(contest) {
+    contestModel.fetchByTitle((options.playlist || {}).name, function (
+      contest
+    ) {
       var prevId = null;
-      for (var p = options.user.pl.length - 1; p > -1; --p) {
+      for (let p = options.user.pl.length - 1; p > -1; --p) {
         var pl = options.user.pl[p];
         if (!pl) continue;
         if (pl.id == options.playlistId) {
@@ -311,7 +313,7 @@ function fetchAndRenderProfile(options, callback, process) {
     options.tabTitle = 'Activity';
     options.bodyClass += ' userActivity';
     options.pageTitle = options.user.name + "'s recent activity";
-    followModel.fetchUserSubscriptions(options.loggedUser.id, function(
+    followModel.fetchUserSubscriptions(options.loggedUser.id, function (
       mySubscr
     ) {
       //console.log("mySubscr.subscriptions", mySubscr.subscriptions);
@@ -323,8 +325,8 @@ function fetchAndRenderProfile(options, callback, process) {
         [options.user.id],
         mySubscrUidList,
         options,
-        function(result) {
-          for (var i in result.recentActivity.items)
+        function (result) {
+          for (let i in result.recentActivity.items)
             if (result.recentActivity.items[i].subscriptions) {
               result.recentActivity.items[i].subscribedUsers =
                 result.recentActivity.items[i].subscriptions;
@@ -338,11 +340,11 @@ function fetchAndRenderProfile(options, callback, process) {
             var creation = mongodb.ObjectId(options.user.id);
             options.showActivity.items.push({
               _id: creation,
-              other: { text: 'joined whyd' }
+              other: { text: 'joined whyd' },
               //						ago: uiSnippets.renderTimestamp(new Date() - creation.getTimestamp())
             });
           }
-          for (var i in options.showActivity.items)
+          for (let i in options.showActivity.items)
             options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
               new Date() - options.showActivity.items[i]._id.getTimestamp()
             );
@@ -359,19 +361,19 @@ function fetchAndRenderProfile(options, callback, process) {
       sort: { _id: -1 },
       limit: MAX_SUBSCRIPTIONS + 1,
       fields: { _id: 0, uId: 1 },
-      skip: Number(options.after || 0)
+      skip: Number(options.after || 0),
     };
-    followModel.fetch({ tId: options.user.id }, params, function(subscr) {
+    followModel.fetch({ tId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
         options.hasMore = {
-          lastPid: params.skip + MAX_SUBSCRIPTIONS
+          lastPid: params.skip + MAX_SUBSCRIPTIONS,
         };
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
-      for (var i in subscr) subscr[i] = { id: subscr[i].uId };
-      populateUsers(subscr, options, function(subscr) {
+      for (let i in subscr) subscr[i] = { id: subscr[i].uId };
+      populateUsers(subscr, options, function (subscr) {
         options.showSubscribers = {
-          items: subscr
+          items: subscr,
         };
         process([]);
       });
@@ -381,23 +383,23 @@ function fetchAndRenderProfile(options, callback, process) {
 
     options.bodyClass += ' userSubscriptions';
     options.pageTitle = options.user.name + "'s following";
-    var params = {
+    const params = {
       sort: { _id: -1 },
       limit: MAX_SUBSCRIPTIONS + 1,
       fields: { _id: 0, tId: 1 },
-      skip: Number(options.after || 0)
+      skip: Number(options.after || 0),
     };
-    followModel.fetch({ uId: options.user.id }, params, function(subscr) {
+    followModel.fetch({ uId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
         options.hasMore = {
-          lastPid: params.skip + MAX_SUBSCRIPTIONS
+          lastPid: params.skip + MAX_SUBSCRIPTIONS,
         };
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
-      for (var i in subscr) subscr[i] = { id: subscr[i].tId };
-      populateUsers(subscr, options, function(subscr) {
+      for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+      populateUsers(subscr, options, function (subscr) {
         options.showSubscriptions = {
-          items: subscr
+          items: subscr,
         };
         process([]);
       });
@@ -408,16 +410,16 @@ function fetchAndRenderProfile(options, callback, process) {
     options.bodyClass += ' userTracks';
     options.showTracks = true;
     options.pageTitle = options.user.name + "'s tracks";
-    function proceed() {
+    const proceed = () =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, process);
-    }
+
     if (options.after || options.before)
       // no page rendering required
       proceed();
     else {
       // SIDEBAR
       //console.time("LibUser.fetchActivity");
-      fetchActivity(options, function() {
+      fetchActivity(options, function () {
         // => populates options.activity
         //console.timeEnd("LibUser.fetchActivity");
         var ownProfile = options.user.id == (options.loggedUser || {}).id;
@@ -425,21 +427,21 @@ function fetchAndRenderProfile(options, callback, process) {
         if ((options.user.pl || []).length || ownProfile)
           options.playlists = {
             url: '/u/' + options.user.id + '/playlists',
-            items: renderPlaylists(options, MAX_PLAYLISTS_SIDE)
+            items: renderPlaylists(options, MAX_PLAYLISTS_SIDE),
           };
         // fetch and render friends
         var params = {
           sort: { _id: -1 },
           limit: MAX_FRIENDS,
-          fields: { _id: 0, tId: 1 }
+          fields: { _id: 0, tId: 1 },
         };
-        followModel.fetch({ uId: options.user.id }, params, function(subscr) {
+        followModel.fetch({ uId: options.user.id }, params, function (subscr) {
           if (subscr.length || ownProfile) {
-            for (var i in subscr) subscr[i] = { id: subscr[i].tId };
-            userModel.fetchUserBios(subscr, function() {
+            for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+            userModel.fetchUserBios(subscr, function () {
               options.friends = {
                 url: '/u/' + options.user.id + '/subscriptions',
-                items: renderFriends(subscr)
+                items: renderFriends(subscr),
               };
               proceed();
             });
@@ -457,7 +459,7 @@ function fetchAndRender(options, callback) {
 
   var process = bareFormats[options.format]
     ? callback
-    : function(posts) {
+    : function (posts) {
         if (!options.format && !options.embedW) {
           if (options.playlistId)
             options.pageImage =
@@ -477,7 +479,7 @@ function fetchAndRender(options, callback) {
   options.fetchParams = {
     after: options.after,
     before: options.before,
-    limit: options.limit
+    limit: options.limit,
   };
   if (options.embedW)
     options.fetchParams.limit = config.nbTracksPerPlaylistEmbed;
@@ -505,24 +507,21 @@ var LNK_URL_PREFIX = {
   tw: 'twitter.com/',
   sc: 'soundcloud.com/',
   yt: 'youtube.com/user/',
-  igrm: 'instagram.com/'
+  igrm: 'instagram.com/',
 };
 
 function renderUserLinks(lnk) {
   // clean social links
-  for (var i in lnk) lnk[i] = ('' + lnk[i]).trim();
+  for (let i in lnk) lnk[i] = ('' + lnk[i]).trim();
 
   // for each social link, detect username and rebuild URL
-  for (var i in LNK_URL_PREFIX)
+  for (let i in LNK_URL_PREFIX)
     if (lnk[i]) {
-      var parts = lnk[i]
-        .split('?')
-        .shift()
-        .split('/');
+      var parts = lnk[i].split('?').shift().split('/');
       lnk[i] = ''; // by default, if no username was found
       var username = '';
       while (!(username = parts.pop()));
-      //for (var j=parts.length-1; j>-1; --j)
+      //for (let j=parts.length-1; j>-1; --j)
       //	if (parts[j]) {
       lnk[i] = LNK_URL_PREFIX[i] + username; //parts[j];
       //break;
@@ -530,7 +529,7 @@ function renderUserLinks(lnk) {
     }
 
   // make sure URLs are valid
-  for (var i in lnk)
+  for (let i in lnk)
     if (lnk[i]) {
       var lnkBody = '//' + lnk[i].split('//').pop();
       if (i == 'home') {
@@ -544,11 +543,7 @@ function renderUserLinks(lnk) {
   if (lnk.home)
     lnk.home = {
       url: lnk.home,
-      renderedUrl: lnk.home
-        .split('//')
-        .pop()
-        .split('/')
-        .shift() //uiSnippets.shortenURLs(lnk.home).replace("...", "")
+      renderedUrl: lnk.home.split('//').pop().split('/').shift(), //uiSnippets.shortenURLs(lnk.home).replace("...", "")
     };
 }
 
@@ -578,7 +573,7 @@ function renderUserLibrary(lib, user) {
     } else if (options.format == 'links')
       lib.renderOther(
         feed
-          .map(function(p) {
+          .map(function (p) {
             return config.translateEidToUrl((p || {}).eId);
           })
           .join('\n'),
@@ -604,7 +599,7 @@ function renderUserLibrary(lib, user) {
       fetchPlaylists,
       /*fetchSubscriptions,*/ fetchStats,
       fetchLikes,
-      fetchNbTracks /*fetchSimilarity, fetchTags*/
+      fetchNbTracks /*fetchSimilarity, fetchTags*/,
     ].concat(fcts);
   //if (options.showSubscribers || options.showSubscriptions || options.showActivity)
   //	fcts = [fetchSubscriptions].concat(fcts);
@@ -613,7 +608,7 @@ function renderUserLibrary(lib, user) {
   (function next(res) {
     var fct = fcts.shift();
     //console.time(fct.name);
-    fct(res || options, function(res) {
+    fct(res || options, function (res) {
       //console.timeEnd(fct.name);
       next(res || options);
     });

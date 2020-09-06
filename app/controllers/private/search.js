@@ -4,12 +4,10 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../../snip.js');
 var config = require('../../models/config.js');
 var mongodb = require('../../models/mongodb.js');
 var searchModel = require('../../models/search.js');
 var postModel = require('../../models/post.js');
-//var userModel = require("../../models/user.js");
 var followModel = require('../../models/follow.js');
 var template = require('../../templates/search.js');
 
@@ -19,14 +17,13 @@ var MAX_RESULTS = 100;
 var MAX_PLAYLIST_THUMBS = 3;
 var MAX_IN_ADD_RESULTS = 5;
 var MAX_NB_MENTION_SUGGESTIONS = 6;
-var MAX_FOLLOWING = 5000;
 
 /** submits a query and returns results as {post:[], user:[], playlist:[]} **/
 function fetchResultsPerType(q, cb) {
-  searchModel.query(q, function(r) {
+  searchModel.query(q, function (r) {
     var resultsPerType = {};
     if (r && r.hits)
-      for (var i in r.hits) {
+      for (let i in r.hits) {
         var item = r.hits[i];
         resultsPerType[item._type] = resultsPerType[item._type] || [];
         resultsPerType[item._type].push(template.makeResultObject(item));
@@ -38,14 +35,14 @@ function fetchResultsPerType(q, cb) {
 function toObjectIdList(hits) {
   var idList = [];
   if (hits)
-    for (var i in hits) idList.push(ObjectId('' + (hits[i]._id || hits[i].id)));
+    for (let i in hits) idList.push(ObjectId('' + (hits[i]._id || hits[i].id)));
   return idList;
 }
 
 function removeDuplicates(posts) {
   var finalPosts = [],
     eidSet = {};
-  for (var i in posts)
+  for (let i in posts)
     if (!eidSet[posts[i].eId]) {
       finalPosts.push(posts[i]);
       eidSet[posts[i].eId] = true;
@@ -55,34 +52,34 @@ function removeDuplicates(posts) {
 
 function removeEmptyItems(posts) {
   var finalPosts = [];
-  for (var i in posts) if (posts[i]) finalPosts.push(posts[i]);
+  for (let i in posts) if (posts[i]) finalPosts.push(posts[i]);
   return finalPosts;
 }
 
 /** fetch extended posts/users/playlists data from db, given a list of simple result objects **/
 var fetchDataByType = {
-  track: function(hits, cb) {
+  track: function (hits, cb) {
     this.post(hits, cb);
     // same as below
   },
-  post: function(hits, cb) {
+  post: function (hits, cb) {
     var idList = toObjectIdList(hits);
     postModel.fetchPosts(
       { _id: { $in: idList } },
       {},
       { limit: MAX_RESULTS },
-      function(items) {
+      function (items) {
         //sort items by search score
         var itemSet = {};
-        for (var i in items)
+        for (let i in items)
           if (items[i]) itemSet['' + items[i]._id] = items[i];
         items = [];
-        for (var i in idList) items.push(itemSet['' + idList[i]]);
+        for (let i in idList) items.push(itemSet['' + idList[i]]);
         cb(items);
       }
     );
   },
-  user: function(hits, cb) {
+  user: function (hits, cb) {
     // for each user, fetch last track
     //userModel.fetchMulti({_id:{$in:idList}}, {limit: MAX_RESULTS}, cb);
     var idList = toObjectIdList(hits);
@@ -90,31 +87,31 @@ var fetchDataByType = {
     function next() {
       if (!idList.length) return cb(userList);
       var uid = '' + idList.shift();
-      postModel.fetchByAuthors([uid], { limit: 1 }, function(posts) {
+      postModel.fetchByAuthors([uid], { limit: 1 }, function (posts) {
         var user = mongodb.usernames[uid];
         if (user)
           userList.push({
             _id: uid,
             name: user.name,
-            lastTrack: (posts || []).length ? posts[0] : undefined
+            lastTrack: (posts || []).length ? posts[0] : undefined,
           });
         next();
       });
     }
     next();
   },
-  playlist: function(hits, cb) {
+  playlist: function (hits, cb) {
     // for each playlist, fetch number of tracks and 3 last tracks (for thumbs)
     var playlists = (hits || []).slice();
     var result = [];
-    for (var i in playlists)
+    for (let i in playlists)
       playlists[i].idParts = ('' + (playlists[i]._id || playlists[i].id)).split(
         '_'
       );
     function next(i) {
       if (i >= playlists.length) return cb(result);
       var pl = playlists[i];
-      postModel.countPlaylistPosts(pl.idParts[0], pl.idParts[1], function(c) {
+      postModel.countPlaylistPosts(pl.idParts[0], pl.idParts[1], function (c) {
         if (!c) next(i + 1);
         else {
           playlists[i]._id = pl.idParts[1];
@@ -125,8 +122,8 @@ var fetchDataByType = {
             pl.idParts[0],
             pl.idParts[1],
             { limit: MAX_PLAYLIST_THUMBS - 1 },
-            function(posts) {
-              for (var j in posts)
+            function (posts) {
+              for (let j in posts)
                 if (posts[j].img)
                   posts[j].img = posts[j].img.replace('http:', '');
               playlists[i].lastPosts = posts;
@@ -138,7 +135,7 @@ var fetchDataByType = {
       });
     }
     next(0);
-  }
+  },
 };
 
 function sortByDecreasingScore(a, b) {
@@ -147,12 +144,12 @@ function sortByDecreasingScore(a, b) {
 
 /** re-order posts/users/playlists based on data quality/quantity and subscriptions **/
 var sortByType = {
-  track: function(items, myUid, followedUids) {
+  track: function (items) {
     return items;
     // no sorting (algolia does it)
   },
-  post: function(items, myUid, followedUids) {
-    for (var i in items) {
+  post: function (items, myUid, followedUids) {
+    for (let i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids[items[i].uId];
       items[i].score =
@@ -164,8 +161,8 @@ var sortByType = {
     items.sort(sortByDecreasingScore);
     return items;
   },
-  user: function(items, myUid, followedUids) {
-    for (var i in items) {
+  user: function (items, myUid, followedUids) {
+    for (let i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids['' + items[i]._id];
       items[i].score =
@@ -174,8 +171,8 @@ var sortByType = {
     items.sort(sortByDecreasingScore);
     return items;
   },
-  playlist: function(items, myUid, followedUids) {
-    for (var i in items) {
+  playlist: function (items, myUid, followedUids) {
+    for (let i in items) {
       if (!items[i]) continue;
       items[i].isSubscribed = !!followedUids[items[i].idParts[0]];
       items[i].score =
@@ -185,14 +182,13 @@ var sortByType = {
     }
     items.sort(sortByDecreasingScore);
     return items;
-  }
+  },
 };
 
 function processPosts(results, params, cb) {
   params = params || {};
   if (!results || !results.length) return cb([]);
-  fetchDataByType['post'](results, function(posts) {
-    var posts = posts || [];
+  fetchDataByType['post'](results, function (posts = []) {
     if (!posts.length) return cb([]);
     function populateSortAndReturn(followedUids) {
       function mapping(p) {
@@ -204,7 +200,7 @@ function processPosts(results, params, cb) {
           name: p.name,
           uId: p.uId,
           uNm: p.uNm,
-          score: followedUids[p.uId] ? 10 : 0
+          score: followedUids[p.uId] ? 10 : 0,
         };
       }
       cb(
@@ -229,7 +225,7 @@ function fetchMyPosts(q, uid, cb) {
       _type: 'post',
       q: q,
       uId: uid,
-      limit: MAX_IN_ADD_RESULTS * 2
+      limit: MAX_IN_ADD_RESULTS * 2,
     },
     cb
   );
@@ -241,7 +237,7 @@ function fetchTheirPosts(q, uid, cb) {
       _type: 'post',
       q: q,
       excludeUid: uid,
-      limit: MAX_IN_ADD_RESULTS * 2
+      limit: MAX_IN_ADD_RESULTS * 2,
       //sort: [/*{_score: "desc"},*/ {_uid:{order: "asc", ignore_unmapped: true}}]
     },
     cb
@@ -249,16 +245,16 @@ function fetchTheirPosts(q, uid, cb) {
 }
 
 function fetchSearchPage(myUid, q, cb) {
-  fetchResultsPerType({ q: q }, function(resultsPerType) {
-    followModel.fetchSubscriptionSet(myUid, function(followedUids) {
+  fetchResultsPerType({ q: q }, function (resultsPerType) {
+    followModel.fetchSubscriptionSet(myUid, function (followedUids) {
       var types = ['track', 'user', 'playlist'];
       var results = {};
-      (function next(whenDone) {
+      (function next() {
         if (!types.length) {
           return cb(results);
         }
         var type = types.pop();
-        fetchDataByType[type](resultsPerType[type], function(items) {
+        fetchDataByType[type](resultsPerType[type], function (items) {
           sortByType[type](items, myUid, followedUids);
           results[type + 's'] = items;
           next();
@@ -268,9 +264,9 @@ function fetchSearchPage(myUid, q, cb) {
   });
 }
 
-exports.controller = function(request, reqParams, response, error) {
+exports.controller = function (request, reqParams = {}, response) {
   function renderSearchPage(q, cb) {
-    fetchSearchPage(request.getUid(), q, function(results) {
+    fetchSearchPage(request.getUid(), q, function (results) {
       results.posts = results.tracks; // since algolia integration
       if (reqParams.format == 'json') cb({ q: q, results: results });
       else template.renderSearchPage(results, reqParams, cb);
@@ -278,7 +274,7 @@ exports.controller = function(request, reqParams, response, error) {
   }
 
   function renderResultsBox(q, format, cb) {
-    fetchResultsPerType({ q: q }, function(resultsPerType) {
+    fetchResultsPerType({ q: q }, function (resultsPerType) {
       resultsPerType.posts = resultsPerType.tracks; // since algolia integration
       if (format == 'html') template.renderResultBox(q, resultsPerType, cb);
       else cb({ q: q, results: resultsPerType });
@@ -290,20 +286,20 @@ exports.controller = function(request, reqParams, response, error) {
       console.log('user is not logged in');
       cb({ error: 'you must be logged in to use that feature' });
     } else
-      fetchMyPosts(q, uid, function(myResults) {
+      fetchMyPosts(q, uid, function (myResults) {
         //console.log("myResults", myResults);
-        fetchTheirPosts(q, uid, function(theirResults) {
+        fetchTheirPosts(q, uid, function (theirResults) {
           //console.log("theirResults", myResults);
-          processPosts((theirResults || {}).hits, { uid: uid }, function(
+          processPosts((theirResults || {}).hits, { uid: uid }, function (
             theirPosts
           ) {
-            processPosts((myResults || {}).hits, {}, function(myPosts) {
+            processPosts((myResults || {}).hits, {}, function (myPosts) {
               cb({
                 q: q,
                 results: {
                   myPosts: myPosts,
-                  theirPosts: theirPosts
-                }
+                  theirPosts: theirPosts,
+                },
               });
             });
           });
@@ -312,9 +308,9 @@ exports.controller = function(request, reqParams, response, error) {
   }
 
   function renderFilteredFeed(uid, q, cb) {
-    searchModel.query({ q: q, uId: uid }, function(results) {
+    searchModel.query({ q: q, uId: uid }, function (results) {
       // uid is provided => only posts results will be returned
-      fetchDataByType['post']((results || {}).hits || [], function(posts) {
+      fetchDataByType['post']((results || {}).hits || [], function (posts) {
         if (reqParams.format == 'html')
           template.renderPosts(posts, reqParams.loggedUser, cb);
         else cb({ q: q, uId: uid, results: posts });
@@ -324,22 +320,22 @@ exports.controller = function(request, reqParams, response, error) {
 
   function fetchOtherTracks(uid, q, cb) {
     console.log('fetchOtherTracks', uid, q);
-    fetchTheirPosts(q, uid, function(results) {
-      var results = (results || {}).hits || [];
-      processPosts(results, { uid: uid }, function(posts) {
+    fetchTheirPosts(q, uid, function (_results = {}) {
+      const results = _results.hits || [];
+      processPosts(results, { uid: uid }, function (posts) {
         cb(posts);
       });
     });
   }
 
   function fetchQuickUsers(uid, q, cb) {
-    followModel.fetchSubscriptionSet(uid, function(followed) {
+    followModel.fetchSubscriptionSet(uid, function (followed) {
       var sorted = [];
       searchModel.query(
         { _type: 'user', q: reqParams.q, limit: MAX_NB_MENTION_SUGGESTIONS },
-        function(users) {
+        function (users) {
           var hits = (users || {}).hits || [];
-          for (var i = hits.length - 1; i > -1; --i) {
+          for (let i = hits.length - 1; i > -1; --i) {
             var u = hits[i];
             sorted[followed[u._id] ? 'unshift' : 'push'](u);
           }
@@ -360,7 +356,6 @@ exports.controller = function(request, reqParams, response, error) {
   }
 
   request.logToConsole('search.controller', reqParams);
-  var reqParams = reqParams || {};
   reqParams.loggedUser = request.getUser();
 
   // track filter (from user profile)

@@ -1,232 +1,102 @@
-
-{{#header}}
-
-{{^user}}
+{{#header}} {{^user}}
 <div class="container">
+  <div class="rightBar">
+    {{^isUserLogged}}
+    <style>
+      #introAd .video {
+        height: 192px;
+        width: 280px;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+        -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+        -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+        background: url(/images/video.png) no-repeat center center;
+      }
 
-	<div class="rightBar">
+      #introAd .video > a {
+        display: block;
+        width: 280px;
+        height: 192px;
+        background: url(/images/pickBookmarklet/video-play.png) no-repeat center
+          center;
+        opacity: 0.6;
+      }
 
-		{{^isUserLogged}}
-		<style>
-		#introAd .video {
-			height: 192px;
-			width: 280px;
-			box-shadow: 0 0 3px rgba(0,0,0,0.43);
-			-webkit-box-shadow: 0 0 3px rgba(0,0,0,0.43);
-			-moz-box-shadow: 0 0 3px rgba(0,0,0,0.43);
-			background: url(/images/landing/video.png) no-repeat center center;
-		}
+      #introAd .video > a:hover {
+        opacity: 0.9;
+      }
+    </style>
+    <script>
+      /*<![CDATA[*/
+      $(document).ready(function () {
+        function loadTop() {
+          console.log('polling new tracks...');
+          $.get(window.prevPageUrl, function (data) {
+            $('.posts > .post').first().before(data);
+            setTimeout(function () {
+              console.log('refreshing...');
+              //window.whydPlayer.updateTracks();
+              window.whydPlayer.refresh(); // in order to re-position the video currently being played
+            }, 200);
+          });
+        }
+        setInterval(loadTop, 4000);
+      });
+      function openVideo() {
+        openHtmlDialog(
+          '<iframe src="//player.vimeo.com/video/53666841?autoplay=1" width="560" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
+        );
+      }
+      /*]]>*/
+    </script>
+    <div class="sideBox" id="introAd">
+      <div class="head">
+        <h2>What is Openwhyd?</h2>
+      </div>
+      <div class="body">
+        <div class="video">
+          <a
+            href="javascript:openVideo()"
+            alt="Watch the video tutorial"
+            title="Watch the video tutorial"
+          ></a>
+        </div>
+      </div>
+    </div>
 
-		#introAd .video > a {
-			display: block;
-			width: 280px;
-			height: 192px;
-			background: url(/images/pickBookmarklet/video-play.png) no-repeat center center;
-			opacity: 0.6;
-		}
+    {{/isUserLogged}} {{{ sideBox }}} {{#isUserLogged}}
 
-		#introAd .video > a:hover {
-			opacity: 0.9;
-		}
-		</style>
-		<script>
-			/*<![CDATA[*/
-			$(document).ready(function(){
-				function loadTop() {
-					console.log("polling new tracks...");
-					$.get(window.prevPageUrl, function(data) {
-						$(".posts > .post").first().before(data);
-						setTimeout(function() {
-							console.log("refreshing...")
-							//window.whydPlayer.updateTracks();
-							window.whydPlayer.refresh(); // in order to re-position the video currently being played
-						}, 200);
-					});
+    <!-- <a class="sideBox boxCityPage no-ajaxy" target="_blank" href="/london"></a> -->
 
-				}
-				setInterval(loadTop, 4000);
-			});
-			function openVideo() {
-				openHtmlDialog('<iframe src="//player.vimeo.com/video/53666841?autoplay=1" width="560" height="315" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
-			}
-			/*]]>*/
-		</script>
-		<div class="sideBox" id="introAd">
-			<div class="head">
-				<h2>What is Openwhyd?</h2>
-			</div>
-			<div class="body">
-				<div class="video">
-					<a href="javascript:openVideo()" alt="Watch the video tutorial" title="Watch the video tutorial"></a>
-				</div>
-			</div>
-		</div>
+    {{#userPrefs}}{{^hideBkAd}}
+    <div class="sideBox" id="bookmarkletAd">
+      <div class="head">
+        <h2>Add a track from anywhere</h2>
+        <div class="postRemove" title="Remove this box"></div>
+      </div>
+      <div class="body">
+        Install the "Openwhyd ✚ Track" button into your web browser to add a
+        track directly from other websites.
+        <a href="/button">Use it now!</a>
+      </div>
+    </div>
+    {{/hideBkAd}}{{/userPrefs}} {{#playlistContest}}
+    <div class="sideBox" id="plContestAd">
+      <div class="head">
+        <h2>Playlist contest</h2>
+      </div>
+      <div class="body">
+        <div
+          class="thumb"
+          style="background-image:url('/img/u/{{uId}}?width=80&amp;height=80');"
+        ></div>
+        <p>Participate in the <strong>{{title}}</strong> going on right now!</p>
+        <!--playlist contest-->
+        <p><a href="{{url}}">Jump in!</a></p>
+      </div>
+    </div>
+    {{/playlistContest}}
 
-		{{/isUserLogged}}
-<!--
-		<div class="sideBox" id="speakerLandingBox">
-			<div class="body">
-				<h2>Experience music like never before.</h2>
-				<p>Get news about the launch of our new product before everyone else.</p>
-				<a href="http://home.whyd.com?src=whyd" target="_blank">Get notified</a>
-			</div>
-		</div>
-		<div class="sideBox" id="iphoneAppAd">
-			<div class="head">
-				<h2>Openwhyd also runs on your iPhone!</h2>
-				<div class="postRemove" title="Remove this box"></div>
-			</div>
-			<div class="body">
-				<img src="/images/illustrationIphoneApp.png" alt="whyd iphone mobile app screenshot">
-				<a href="/iphone" target="_blank" class="no-ajaxy">
-					<span>Install Openwhyd from the App Store</span>
-				</a>
-			</div>
-		</div>
--->
-		<!--
-		<div class="sideBox">
-			<div class="head">
-				<h2>Join our community on Facebook</h2>
-			</div>
-			<div class="body" style="overflow:auto;">
-				<img src="/images/megaphone.png" width="64px" height="64px" style="float:left; margin-right:16px;" alt="openwhyd announcement megaphone">
-				<p style="margin-bottom:8px;">Want to meet fellow Openwhyd users, share an idea, or ask a question?</p>
-				<a href="https://www.facebook.com/groups/openwhyd/" target="_blank" class="no-ajaxy">Join the music lovers club</a>
-			</div>
-		</div>
-		-->
-	<!--
-		<div class="sideBox">
-			<div class="head">
-				<h2>What is Openwhyd?</h2>
-			</div>
-			<div class="body" style="overflow:auto;">
-				<img src="/images/logo2-square-512px.png" width="64" height="64" style="float:left; margin-right:16px;" alt="openwhyd announcement logo music">
-				<p style="margin-bottom:8px;">A community of volunteers!</p>
-				<a style="display: block;" href="https://medium.com/@adrienjoly/music-amongst-other-topics-a4f41657d6d" target="_blank" class="no-ajaxy">→ Read our story</a>
-				<a style="display: block;" href="https://www.facebook.com/groups/openwhyd/" target="_blank" class="no-ajaxy">→ Join the music lovers club</a>
-			</div>
-		</div>
-		-->
-		<!--
-		<div class="sideBox sidebox--important">
-			<div class="head">
-				<h2>💓 Openwhyd needs you!</h2>
-			</div>
-			<div class="body" style="overflow:auto;">
-				<a href="https://opencollective.com/openwhyd#support" target="_blank" class="no-ajaxy">
-					<img src="/images/github-octocat.png" width="64px" style="float:left; margin-right:16px;" alt="donate / support openwhyd on opencollective">
-				</a>
-				<p style="margin-bottom:8px;">Help us keep Openwhyd free, independant and without ads.</p>
-				<p style="margin-bottom:12px;font-weight:bold;">Donate today!</p>
-				<div id="donateBox" style="margin: 12px 0; text-align: center; font-size: 14px;">
-					<a href="https://opencollective.com/openwhyd/donate" target="_blank" class="no-ajaxy">
-						<span style="padding: 8px;">$1</span>
-						<span style="padding: 8px;">$2</span>
-						<span style="padding: 8px;">$5</span>
-						<span style="padding: 8px;">$10</span>
-						<span style="padding: 8px;">$20</span>
-					</a>
-				</div>
-			</div>
-			<style>
-				#donateBox a { color: #3177AF; }
-				#donateBox span { display: inline-block; width: 28px; border-radius: 2rem; background-color: #fafafa; }
-				#donateBox span:hover { background-color: #62A1D3; color: #fff; }
-			</style>
-		</div>
-		-->
-		<div class="sideBox sidebox--important">
-			<div class="head">
-				<h2>🤗 Openwhyd needs you!</h2>
-			</div>
-			<div class="body" style="overflow:auto;">
-				<a href="https://openwhyd.org/contribute" target="_blank" class="no-ajaxy">
-					<img src="/images/github-octocat.png" width="64px" style="float:left; margin-right:16px;" alt="contribute to open-source project openwhyd on github">
-				</a>
-				<p style="margin-bottom:8px;">Help us keep Openwhyd free and independent by donating $1 today!</p>
-				<p style="margin-bottom:8px;">Developers, contribute to our open-source project on GitHub!</p>
-				<div id="contribChoices" style="margin: 12px 0; text-align: center; font-size: 14px;">
-					<a href="https://opencollective.com/openwhyd/donate" target="_blank" class="no-ajaxy">Donate</a>
-					<a href="https://openwhyd.org/contribute" target="_blank" class="no-ajaxy">Improve Openwhyd</a>
-				</div>
-			</div>
-			<style>
-				#contribChoices a { color: #3177AF; display: inline-block; border-radius: 2rem; background-color: #fafafa; padding: 8px 12px; margin: 8px; }
-				#contribChoices a:hover { background-color: #62A1D3; color: #fff; }
-			</style>
-		</div>
-		<!--
-		<div class="sideBox">
-			<div class="head">
-				<h2>📣 Sponsoring opportunity</h2>
-			</div>
-			<div class="body" style="overflow:auto;">
-				<a href="mailto:adrien@openwhyd.org" target="_blank" class="no-ajaxy"
-				   style="float:left; width:64px; height:64px; border: 2px dashed gray; color:gray; margin-right:16px; display:table;">
-					 <div style="display:table-cell; text-align:center; vertical-align:middle;">YOUR BRAND HERE</div>
-				</a>
-				<p style="margin-bottom:8px;">Get thousands of passionate music lovers to see <b>your brand</b> everyday.</p>
-				<p>
-					<a href="https://openwhyd.org/about" target="_blank" class="no-ajaxy" style="float:left; padding: 1px 5px;">Read our story</a>
-					<a href="mailto:adrien@openwhyd.org?subject=Sponsoring" target="_blank" class="no-ajaxy" style="border: 1px solid #3177AF; border-radius: 5px; padding: 1px 5px; float: right;">Contact us</a>
-				</p>
-			</div>
-		</div>
-		-->
-		<!--
-		<div class="sideBox">
-			<div class="head">
-				<a href="mailto:adrien@openwhyd.org?subject=Sponsoring" target="_blank" class="no-ajaxy"
-				   style="float: none; position: static; width:280px; height:64px; border: 2px dashed gray; color:gray; display:table;">
-					 <div style="display:table-cell; text-align:center; vertical-align:middle;">YOUR BRAND HERE</div>
-				</a>
-			</div>
-			<div class="body" style="overflow:auto;">
-				<h2 style="margin-top:0; font-size: 14px;">📣 Sponsoring opportunity</h2>
-				<p style="margin-bottom:8px;">Get thousands of passionate music lovers to see your brand everyday.</p>
-				<p>
-					<a href="https://openwhyd.org/about" target="_blank" class="no-ajaxy" style="float:left; padding: 1px 0;">Read our story</a>
-					<a href="mailto:adrien@openwhyd.org?subject=Sponsoring" target="_blank" class="no-ajaxy" style="border: 1px solid #3177AF; border-radius: 5px; padding: 1px 5px; float: right;">Contact us</a>
-				</p>
-			</div>
-		</div>
-		-->
-
-		{{#isUserLogged}}
-
-
-
-		<!-- <a class="sideBox boxCityPage no-ajaxy" target="_blank" href="/london"></a> -->
-
-		{{#userPrefs}}{{^hideBkAd}}
-		<div class="sideBox" id="bookmarkletAd">
-			<div class="head">
-				<h2>Add a track from anywhere</h2>
-				<div class="postRemove" title="Remove this box"></div>
-			</div>
-			<div class="body">
-				Install the "Whyd + Track" button into your web browser to add a track directly from other websites.
-				<a href="/button">Use it now!</a>
-			</div>
-		</div>
-		{{/hideBkAd}}{{/userPrefs}}
-
-		{{#playlistContest}}
-		<div class="sideBox" id="plContestAd">
-			<div class="head">
-				<h2>Playlist contest</h2>
-			</div>
-			<div class="body">
-				<div class="thumb" style="background-image:url('/img/u/{{uId}}?width=80&amp;height=80');"></div>
-				<p>Participate in the <strong>{{title}}</strong> going on right now!</p> <!--playlist contest-->
-				<p><a href="{{url}}" >Jump in!</a></p>
-			</div>
-		</div>
-		{{/playlistContest}}
-
-		<!--
+    <!--
 		<div class="sideBox">
 			<div class="head">
 				<h2>Invite your Friends</h2>
@@ -241,317 +111,387 @@
 		</div>
 		-->
 
-		<script src="/js/feed-rightbar.js" type="text/javascript" charset="utf-8"></script>
+    <script
+      src="/js/feed-rightbar.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
 
-		{{#suggestedUsers}}
-		<div class="sideBox suggestedUsers">
-			<div class="head">
-				<h2>Subscribe to these people</h2>
-				<a href="/discover/users">Discover more</a>
-			</div>
-			<div class="body">
-				<ul>
-					{{#items}}
-					<li data-uid="{{id}}">
-						<div style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();"></div>
-						<a class="userName" href="/u/{{id}}">{{name}}</a>
-						<span class="subscribe" onclick="subscribeToUserAndClear(this.parentNode)">Subscribe</span>
-						<a class="suggType" href="{{trackUrl}}">♪ {{track}}</a>
-						<!--<span class="remove" onclick="clearSuggestedUser(this.parentNode)">x</span>-->
-					</li>
-					{{/items}}
-				</ul>
-			</div>
-		</div>
-		{{/suggestedUsers}}
-		{{/isUserLogged}}
+    {{#suggestedUsers}}
+    <div class="sideBox suggestedUsers">
+      <div class="head">
+        <h2>Subscribe to these people</h2>
+        <a href="/discover/users">Discover more</a>
+      </div>
+      <div class="body">
+        <ul>
+          {{#items}}
+          <li data-uid="{{id}}">
+            <div
+              style="background-image:url('/img/u/{{id}}');"
+              onclick="$(this).parent().find('a.userName').click();"
+            ></div>
+            <a class="userName" href="/u/{{id}}">{{name}}</a>
+            <span
+              class="subscribe"
+              onclick="subscribeToUserAndClear(this.parentNode)"
+              >Subscribe</span
+            >
+            <a class="suggType" href="{{trackUrl}}">♪ {{track}}</a>
+            <!--<span class="remove" onclick="clearSuggestedUser(this.parentNode)">x</span>-->
+          </li>
+          {{/items}}
+        </ul>
+      </div>
+    </div>
+    {{/suggestedUsers}} {{/isUserLogged}} {{#recentActivity}}
+    <div class="sideBox recentActivity">
+      <div class="head">
+        <h2>Recent activity</h2>
+        <a href="/recent">See more</a>
+      </div>
+      <div class="body">
+        <ul>
+          {{#items}}
+          <li data-uid="{{id}}">
+            <div
+              style="background-image:url('/img/u/{{id}}');"
+              onclick="$(this).parent().find('a.userName').click();"
+            ></div>
+            <a class="userName" href="/u/{{id}}">{{name}}</a>
+            {{#subscription}} &nbsp;subscribed to
+            <a class="subscribedUser" href="/u/{{id}}">{{name}}</a>
+            {{/subscription}} {{#like}} &nbsp;liked
+            <a href="/c/{{pId}}">a track</a> from
+            <a class="subscribedUser" href="/u/{{id}}">{{name}}</a>
+            {{/like}}
+          </li>
+          {{/items}}
+        </ul>
+        <!--<a href="/recent">See more</a>-->
+      </div>
+    </div>
+    {{/recentActivity}}
 
-		{{#recentActivity}}
-		<div class="sideBox recentActivity">
-			<div class="head">
-				<h2>Recent activity</h2>
-				<a href="/recent">See more</a>
-			</div>
-			<div class="body">
-				<ul>
-					{{#items}}
-					<li data-uid="{{id}}">
-						<div style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();"></div>
-						<a class="userName" href="/u/{{id}}">{{name}}</a>
-						{{#subscription}}
-						&nbsp;subscribed to <a class="subscribedUser" href="/u/{{id}}">{{name}}</a>
-						{{/subscription}}
-						{{#like}}
-						&nbsp;liked <a href="/c/{{pId}}">a track</a> from
-						<a class="subscribedUser" href="/u/{{id}}">{{name}}</a>
-						{{/like}}
-					</li>
-					{{/items}}
-				</ul>
-				<!--<a href="/recent">See more</a>-->
-			</div>
-		</div>
-		{{/recentActivity}}
+    <div id="sideFooter">
+      <ul>
+        <li>
+          <a target="_blank" href="https://github.com/openwhyd">GitHub</a>
+        </li>
+        <li>
+          <a target="_blank" href="http://www.facebook.com/openwhyd"
+            >Facebook</a
+          >
+        </li>
+        <li>
+          <a target="_blank" href="http://twitter.com/open_whyd">Twitter</a>
+        </li>
+        <li>
+          <a
+            target="_blank"
+            href="https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md"
+            >FAQ</a
+          >
+        </li>
+      </ul>
+      <p>
+        Openwhyd is maintained collaboratively,<br />under the MIT License.
+        <a
+          id="barelog-trigger"
+          href="#"
+          style="position: relative; padding-right: 22px"
+          >What's new?</a
+        ><span id="headway-changelog-badge" />
+      </p>
+    </div>
 
-		<div id="sideFooter">
-			<ul>
-				<li><a target="_blank" href="https://github.com/openwhyd">GitHub</a></li>
-				<li><a target="_blank" href="http://www.facebook.com/openwhyd">Facebook</a></li>
-				<li><a target="_blank" href="http://twitter.com/open_whyd">Twitter</a></li>
-				<li><a target="_blank" href="https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md">FAQ</a></li>
-			</ul>
-			<p>Openwhyd is maintained collaboratively,<br/>under the MIT License. <a id="barelog-trigger" href="#" style="position: relative;padding-right: 22px;">What's new?</a><span id="headway-changelog-badge" /></p>
-		</div>
+    <!-- this script activates the "What's new?" link -->
+    <script>
+      (function (b, a, r, e, l, o, g) {
+        (o = a.createElement(r)), (g = a.getElementsByTagName(r)[0]);
+        o.async = 1;
+        o.src = e;
+        g.parentNode.insertBefore(o, g);
+        o.addEventListener('load', function () {
+          setTimeout(function () {
+            Barelog(options);
+          }, 50);
+        });
+      })(window, document, 'script', 'https://cdn.productfeed.app/widget.js');
 
-		<!-- this script activates the "What's new?" link -->
-		<script>
-			(function(b,a,r,e,l,o,g){
-				o=a.createElement(r),
-				g=a.getElementsByTagName(r)[0];
-				o.async=1;o.src=e;g.parentNode.insertBefore(o,g);
-				o.onload=a.onreadystatechange=function(){
-					a.readyState==="complete"&&Barelog(options);}
-			})(window,document,'script','https://cdn.barelog.com/widget.js');
+      var options = {
+        id: 't8nrxyyfogwt',
+        trigger: '#productfeed-trigger',
+      };
+    </script>
+    <!-- end of "What's new?" link -->
+  </div>
+  <!-- END RIGHT BAR-->
+  {{/user}} {{#playlist}}{{#inContest}}
+  <div class="playlistContestHeader">
+    <div
+      class="thumb"
+      style="background-image:url('/img/u/{{uId}}?width=100&amp;height=100');"
+    ></div>
+    Hey! This is an official entry in the <strong>{{title}}</strong>. If you
+    like the music, vote for it by sharing! <br />Want to make your own entry?
+    Check out the details <a href="{{url}}">here</a>.
+    <!-- playlist contest -->
+  </div>
+  {{/inContest}}{{/playlist}}
 
-			var options = {
-				id: "t8nrxyyfogwt",
-				trigger: "#barelog-trigger"
-			}
-		</script>
-		<!-- end of "What's new?" link -->
-
-	</div> <!-- END RIGHT BAR-->
-	{{/user}}
-
-	{{#playlist}}{{#inContest}}
-	<div class="playlistContestHeader">
-		<div class="thumb" style="background-image:url('/img/u/{{uId}}?width=100&amp;height=100');"></div>
-		Hey! This is an official entry in the <strong>{{title}}</strong>. If you like the music, vote for it by sharing!
-		<br>Want to make your own entry? Check out the details <a href="{{url}}" >here</a>. <!-- playlist contest -->
-	</div>
-	{{/inContest}}{{/playlist}}
-
-	<section class="sub-container">
-
-		<div >
-			{{#playlist}}
-			<div class="sharing">
-				{{#inContest}}
-				<div class="btnVote">Vote</div>
-				<div class="dlgVote" style="display:none;">
-					<div class="pointe"></div>
-					{{/inContest}}
-					<!--
+  <section class="sub-container">
+    <div>
+      {{#playlist}}
+      <div class="sharing">
+        {{#inContest}}
+        <div class="btnVote">Vote</div>
+        <div class="dlgVote" style="display: none">
+          <div class="pointe"></div>
+          {{/inContest}}
+          <!--
 					<a name="fb_share" type="button"></a>
 					<script src="//static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
 					<a href="//twitter.com/share" class="twitter-share-button" data-count="none" data-via="open_whyd" >Tweet</a>
 					<script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
 				-->
-				<iframe class="twitter-share-button twitter-count-horizontal" src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;via=open_whyd&amp;text={{{urlEncodedTweet}}}" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
-				<iframe class="fblikeBtn" src="//www.facebook.com/plugins/like.php?href={{urlEncoded}}&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-				<!--<fb:like id="fblike" href="{{url}}" send="false" layout="button_count" width="450" show_faces="false"></fb:like>
+          <iframe
+            class="twitter-share-button twitter-count-horizontal"
+            src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;via=open_whyd&amp;text={{{urlEncodedTweet}}}"
+            title="Twitter Tweet Button"
+            data-twttr-rendered="true"
+            allowtransparency="true"
+            frameborder="0"
+            scrolling="no"
+          ></iframe>
+          <iframe
+            class="fblikeBtn"
+            src="//www.facebook.com/plugins/like.php?href={{urlEncoded}}&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=169250156435902"
+            scrolling="no"
+            frameborder="0"
+            allowTransparency="true"
+          ></iframe>
+          <!--<fb:like id="fblike" href="{{url}}" send="false" layout="button_count" width="450" show_faces="false"></fb:like>
 				<script>
 				/*$("#fblike").attr("href", window.location.href);*/
 				FB.XFBML.parse(document.getElementById('fblike'));
 			</script>
 		-->
-		{{#inContest}}
-		</div>
-		<script>
-			var $dlg = $(".dlgVote");
-			var $btn = $(".btnVote").click(function(e){
-				$btn.addClass("active");
-				var offset = $btn.offset();
-				offset.top += 36;
-				offset.left -= 131;
-				//$(".votePopin").remove();
-				window.onDialogClose = function() {
-					$btn.removeClass("active");
-					delete window.onDialogClose;
-				};
-				openHtmlDialog($dlg);
-			});
-		</script>
-		{{/inContest}}
-		</div>
-		{{^ownProfile}}
-		<h1>{{name}}</h1>
-		{{/ownProfile}}
-		{{#ownProfile}}
-		<form action="javascript:;">
-			<input type="text" id="playlistNameField" class="bio" value="{{name}}" placeholder="give a name to your playlist" MAXLENGTH=42>
-			<input type="submit" id="playlistNameSubmit" class="greenButton" value="Save">
-		</form>
-		<div id="playlistActions">
-			<a class="orderPlaylist button" href="{{trackOrderUrl}}">Change order</a>
-			<a class="embedPlaylist button" href="javascript:embedPlaylist();">Embed</a>
-			<a class="deletePlaylist" href="javascript:deletePlaylist();">Delete</a>
-		</div>
-		{{/ownProfile}}
-		{{#user}}
-		<div class="playlistOwner">
-			<div style="background-image:url('/img/u/{{id}}?width=100&amp;height=100')"></div>
-			<p>by <a href="/u/{{id}}">{{name}}</a></p>
-		</div>
-		{{/user}}
-		{{/playlist}}
+          {{#inContest}}
+        </div>
+        <script>
+          var $dlg = $('.dlgVote');
+          var $btn = $('.btnVote').click(function (e) {
+            $btn.addClass('active');
+            var offset = $btn.offset();
+            offset.top += 36;
+            offset.left -= 131;
+            //$(".votePopin").remove();
+            window.onDialogClose = function () {
+              $btn.removeClass('active');
+              delete window.onDialogClose;
+            };
+            openHtmlDialog($dlg);
+          });
+        </script>
+        {{/inContest}}
+      </div>
+      {{^ownProfile}}
+      <h1>{{name}}</h1>
+      {{/ownProfile}} {{#ownProfile}}
+      <form action="javascript:;">
+        <input
+          type="text"
+          id="playlistNameField"
+          class="bio"
+          value="{{name}}"
+          placeholder="give a name to your playlist"
+          maxlength="42"
+        />
+        <input
+          type="submit"
+          id="playlistNameSubmit"
+          class="greenButton"
+          value="Save"
+        />
+      </form>
+      <div id="playlistActions">
+        <a class="orderPlaylist button" href="{{trackOrderUrl}}"
+          >Change order</a
+        >
+        <a class="embedPlaylist button" href="javascript:embedPlaylist();"
+          >Embed</a
+        >
+        <a class="deletePlaylist" href="javascript:deletePlaylist();">Delete</a>
+      </div>
+      {{/ownProfile}} {{#user}}
+      <div class="playlistOwner">
+        <div
+          style="background-image:url('/img/u/{{id}}?width=100&amp;height=100')"
+        ></div>
+        <p>by <a href="/u/{{id}}">{{name}}</a></p>
+      </div>
+      {{/user}} {{/playlist}} {{^playlist}} {{#user}}
+      <div
+        class="avatar"
+        style="background-image:url('/img/u/{{id}}?width=100&amp;height=100')"
+      ></div>
+      <h2>{{name}}</h2>
 
-		{{^playlist}}
-		{{#user}}
-		<div class="avatar" style="background-image:url('/img/u/{{id}}?width=100&amp;height=100')"></div>
-		<h2>{{name}}</h2>
+      {{#subscriptions}}
+      <div id="userStats">
+        <a id="userSubscriptions" href="javascript:showSubscriptions()">
+          <span>{{nbSubscriptions}}</span> following</a
+        >
+        <a id="userSubscribers" href="javascript:showSubscribers()">
+          <span>{{nbSubscribers}}</span> followers</a
+        >
+      </div>
+      {{/subscriptions}}
 
-		{{#subscriptions}}
-		<div id="userStats">
-			<a id="userSubscriptions" href="javascript:showSubscriptions()">
-				<span>{{nbSubscriptions}}</span> following</a>
-				<a id="userSubscribers" href="javascript:showSubscribers()">
-					<span>{{nbSubscribers}}</span> followers</a>
-				</div>
-				{{/subscriptions}}
+      <div class="bio">{{{renderedBio}}}</div>
 
-				<div class="bio">{{{renderedBio}}}</div>
+      {{#isUserLogged}} {{#ownProfile}}
+      <div class="userSubscribe" onclick="showEditProfileDlg()">
+        Edit profile
+      </div>
+      {{/ownProfile}} {{^ownProfile}}
+      <div
+        class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
+        onclick="switchSubscription()"
+        onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
+        onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';"
+      >
+        {{#isSubscribed}}Following{{/isSubscribed}}
+        {{^isSubscribed}}Follow{{/isSubscribed}}
+      </div>
+      {{/ownProfile}} {{/isUserLogged}} {{/user}} {{^user}} {{#globalFeed}}
+      {{#isUserLogged}}
+      <a href="/stream" style="float: right; margin-top: 22px"
+        >Back to Stream</a
+      >
+      {{/isUserLogged}}
+      <h2>Full Stream</h2>
+      {{/globalFeed}} {{#homeFeed}}
+      <!--<a href="/all" style="float:right; margin-top: 22px;">Switch to Full Stream</a>-->
+      <!-- <a href="/hot" class="lnkHotTracks"><img src="/images/icon-fire-small.png">Hot Tracks</a> -->
+      <h2 class="head-name-tab">Stream</h2>
+      {{/homeFeed}}
+      <!--	<h2>{{streamTitle}}</h2> -->
+      {{/user}} {{/playlist}}
+    </div>
 
-				{{#isUserLogged}}
-				{{#ownProfile}}
-				<div class="userSubscribe" onclick="showEditProfileDlg()">Edit profile</div>
-				{{/ownProfile}}
-				{{^ownProfile}}
-				<div class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
-				onclick="switchSubscription()"
-				onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
-				onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';">
-				{{#isSubscribed}}Following{{/isSubscribed}}
-				{{^isSubscribed}}Follow{{/isSubscribed}}
-			</div>
-			{{/ownProfile}}
-			{{/isUserLogged}}
+    <div class="posts {{^user}}fullStream{{/user}}">
+      {{^playlist}} {{#user}}
 
-			{{/user}}
-			{{^user}}
-			{{#globalFeed}}
-			{{#isUserLogged}}
-			<a href="/stream" style="float:right; margin-top: 22px;">Back to Stream</a>
-			{{/isUserLogged}}
-			<h2>Full Stream</h2>
-			{{/globalFeed}}
-			{{#homeFeed}}
-			<!--<a href="/all" style="float:right; margin-top: 22px;">Switch to Full Stream</a>-->
-			<!-- <a href="/hot" class="lnkHotTracks"><img src="/images/icon-fire-small.png">Hot Tracks</a> -->
-			<h2 class="head-name-tab" >Stream</h2>
-			{{/homeFeed}}
-		<!--	<h2>{{streamTitle}}</h2> -->
-			{{/user}}
-			{{/playlist}}
-		</div>
+      <div id="tabSelector">
+        <a
+          href="/u/{{id}}"
+          class="{{^showPlaylists}}{{^showLikes}}selected{{/showLikes}}{{/showPlaylists}}"
+        >
+          {{#ownProfile}}All tracks{{/ownProfile}}
+          {{^ownProfile}}Stream{{/ownProfile}}
+        </a>
+        <a
+          href="/u/{{id}}/playlists"
+          class="{{#showPlaylists}}selected{{/showPlaylists}}"
+        >
+          {{nbPlaylists}} Playlists
+        </a>
+        <a href="/u/{{id}}/likes" class="{{#showLikes}}selected{{/showLikes}}">
+          {{nbLikes}} Likes
+        </a>
+        <a href="javascript:return false;" class="right filter">
+          <div></div>
+          Filter
+        </a>
+      </div>
+      <div id="filterBox">
+        <input type="text" class="q" placeholder="filter" />
+        <div class="clear"></div>
+      </div>
+      {{/user}} {{/playlist}} {{/header}} {{#showPlaylists}} {{#ownProfile}}
+      <a href="/u/{{#user}}{{id}}{{/user}}/playlist/create" id="btnNewPlaylist">
+        + new playlist
+      </a>
+      {{/ownProfile}} {{#items}}
+      <div class="playlist" onclick="goToPage('{{url}}');">
+        <div class="thumbs">
+          {{#lastPosts}}
+          <img src="{{img}}" />
+          {{/lastPosts}}
+        </div>
+        <h2><a href="{{url}}">{{name}}</a></h2>
+        <span>{{nbTracks}} tracks</span>
+      </div>
+      {{/items}} {{/showPlaylists}} {{^showPlaylists}} {{{posts}}}
+      {{#emptyFeed}} {{#ownProfile}}
+      <div class="emptyFeed post">
+        <a class="fakePost" href="javascript:modalPostBox(onNewPost)">
+          <div class="grayOverlay"></div>
+          <div class="addButton">
+            <div id="btnAdd" class="btnAdd">
+              <div></div>
+            </div>
+            <span>Add a track</span>
+          </div>
+        </a>
+        <a class="fakePost" href="javascript:modalPostBox(onNewPost)">
+          <div class="grayOverlay"></div>
+          <div class="addButton">
+            <div id="btnAdd" class="btnAdd">
+              <div></div>
+            </div>
+            <span>Add a track</span>
+          </div>
+        </a>
+      </div>
+      {{/ownProfile}} {{^ownProfile}}
+      <div class="emptyFeed">No posts yet...</div>
+      {{/ownProfile}} {{/emptyFeed}} {{#hasMore}}
+      <div class="btnLoadMore" onclick="loadMore()">
+        <div>&nbsp;</div>
+        <span>Load more</span>
+      </div>
+      {{/hasMore}}
 
-		<div class="posts {{^user}}fullStream{{/user}}">
-			{{^playlist}}
-			{{#user}}
+      <script>
+        $(function () {
+          /*{{#hasMore}}*/
+          window.nextPageUrl = makeUrl({
+            after: '{{lastPid}}',
+          }); /*window.location.href + "?after=" + "{{lastPid}}";*/
+          /*{{/hasMore}}*/
 
-			<div id="tabSelector">
-				<a href="/u/{{id}}" {{^showPlaylists}}{{^showLikes}}class="selected"{{/showLikes}}{{/showPlaylists}}>
-					{{#ownProfile}}All tracks{{/ownProfile}}
-					{{^ownProfile}}Stream{{/ownProfile}}
-				</a>
-				<a href="/u/{{id}}/playlists" {{#showPlaylists}}class="selected"{{/showPlaylists}}>
-					{{nbPlaylists}} Playlists
-				</a>
-				<a href="/u/{{id}}/likes" {{#showLikes}}class="selected"{{/showLikes}}>
-					{{nbLikes}} Likes
-				</a>
-				<a href="javascript:return false;" class="right filter"><div></div>Filter</a>
-			</div>
-			<div id="filterBox">
-				<input type="text" class="q" placeholder="filter">
-				<div class="clear"></div>
-			</div>
-			{{/user}}
-			{{/playlist}}
+          /*{{#hasLess}}*/
+          window.prevPageUrl = makeUrl({ before: '{{firstPid}}' }); //window.location.href + "?before=" + "{{firstPid}}";
+          /*{{/hasLess}}*/
 
-			{{/header}}
+          /*{{#playlist}}*/
+          window.pagePlaylist = { id: '{{id}}', name: '{{{_js_name}}}' };
+          /*{{/playlist}}*/
+        });
+      </script>
 
-			{{#showPlaylists}}
-			{{#ownProfile}}
-			<a href="/u/{{#user}}{{id}}{{/user}}/playlist/create" id="btnNewPlaylist">
-				+ new playlist
-			</a>
-			{{/ownProfile}}
-			{{#items}}
-			<div class="playlist" onclick="goToPage('{{url}}');">
-				<div class="thumbs">
-					{{#lastPosts}}
-					<img src="{{img}}">
-					{{/lastPosts}}
-				</div>
-				<h2><a href="{{url}}">{{name}}</a></h2>
-				<span>{{nbTracks}} tracks</span>
-				{{#collabId}}<span class="collabPl">&nbsp;(collaborative playlist)<span>{{/collabId}}
-				</div>
-				{{/items}}
-				{{/showPlaylists}}
+      {{/showPlaylists}} {{#user}}
+      <script>
+        window.pageUser = { id: '{{id}}', name: '{{{_js_name}}}' };
+      </script>
+      {{/user}} {{#header}}
+    </div>
+  </section>
+  <!-- END SUB CONTAINER-->
 
-				{{^showPlaylists}}
-				{{{posts}}}
-				{{#emptyFeed}}
-				{{#ownProfile}}
-				<div class="emptyFeed post">
-					<a class="fakePost" href="javascript:modalPostBox(onNewPost)">
-						<div class="grayOverlay"></div>
-						<div class="addButton">
-							<div id="btnAdd" class="btnAdd"><div></div></div>
-							<span>Add a track</span>
-						</div>
-					</a>
-					<a class="fakePost" href="javascript:modalPostBox(onNewPost)">
-						<div class="grayOverlay"></div>
-						<div class="addButton">
-							<div id="btnAdd" class="btnAdd"><div></div></div>
-							<span>Add a track</span>
-						</div>
-					</a>
-				</div>
-				{{/ownProfile}}
-				{{^ownProfile}}
-				<div class="emptyFeed">No posts yet...</div>
-				{{/ownProfile}}
-				{{/emptyFeed}}
-				{{#hasMore}}
-				<div class="btnLoadMore" onclick="loadMore()"><div>&nbsp;</div><span>Load more</span></div>
-				{{/hasMore}}
+  {{/header}}
+</div>
+<!-- END CONTAINER-->
 
-				<script>
-					$(function(){
-						{{#hasMore}}
-						window.nextPageUrl = makeUrl({after:"{{lastPid}}"}); //window.location.href + "?after=" + "{{lastPid}}";
-						{{/hasMore}}
-						{{#hasLess}}
-						window.prevPageUrl = makeUrl({before:"{{firstPid}}"}); //window.location.href + "?before=" + "{{firstPid}}";
-						{{/hasLess}}
-						{{#playlist}}
-						window.pagePlaylist = {id:"{{id}}", name: "{{{_js_name}}}"};
-						{{/playlist}}
-					});
-				</script>
-				{{/showPlaylists}}
-
-				{{#user}}
-				<script> window.pageUser = {id:"{{id}}", name: "{{{_js_name}}}"}; </script>
-				{{/user}}
-
-				{{#header}}
-			</div>
-		</section> <!-- END SUB CONTAINER-->
-
-		{{/header}}
-</div> <!-- END CONTAINER-->
-
-		{{#header}}
-		{{#user}}
-		<script src="/js/feed-filter.js" type="text/javascript" charset="utf-8"></script>
-		{{/user}}
-		{{/header}}
-
-		{{#ownProfile}}
-		<script src="/js/feed-edit.js" type="text/javascript" charset="utf-8"></script>
-		{{/ownProfile}}
+{{#header}} {{#user}}
+<script
+  src="/js/feed-filter.js"
+  type="text/javascript"
+  charset="utf-8"
+></script>
+{{/user}} {{/header}} {{#ownProfile}}
+<script src="/js/feed-edit.js" type="text/javascript" charset="utf-8"></script>
+{{/ownProfile}}

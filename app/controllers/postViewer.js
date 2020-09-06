@@ -4,15 +4,13 @@
  * @author adrienjoly, whyd
  */
 
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
-var commentModel = require('../models/comment.js');
 var analytics = require('../models/analytics.js');
 var errorTemplate = require('../templates/error.js');
 var template = require('../templates/postViewer.js');
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('postViewer.controller', reqParams);
 
   reqParams = reqParams || {};
@@ -46,7 +44,7 @@ exports.controller = function(request, reqParams, response) {
           isDynamic: isDynamic,
           post: post,
           format: reqParams.format,
-          loggedUser: request.getUser()
+          loggedUser: request.getUser(),
         },
         render
       );
@@ -56,7 +54,7 @@ exports.controller = function(request, reqParams, response) {
     renderPost(
       {
         eId: decodeURIComponent(request.url),
-        img: '/images/cover-track.png' // by default => changed by postViewerDynamic.js
+        img: '/images/cover-track.png', // by default => changed by postViewerDynamic.js
       },
       true
     );

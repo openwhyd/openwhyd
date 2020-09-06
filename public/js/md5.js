@@ -60,7 +60,7 @@ function rstr_hmac_md5(key, data) {
 
   var ipad = Array(16),
     opad = Array(16);
-  for (var i = 0; i < 16; i++) {
+  for (let i = 0; i < 16; i++) {
     ipad[i] = bkey[i] ^ 0x36363636;
     opad[i] = bkey[i] ^ 0x5c5c5c5c;
   }
@@ -81,7 +81,7 @@ function rstr2hex(input) {
   var hex_tab = hexcase ? '0123456789ABCDEF' : '0123456789abcdef';
   var output = '';
   var x;
-  for (var i = 0; i < input.length; i++) {
+  for (let i = 0; i < input.length; i++) {
     x = input.charCodeAt(i);
     output += hex_tab.charAt((x >>> 4) & 0x0f) + hex_tab.charAt(x & 0x0f);
   }
@@ -100,12 +100,12 @@ function rstr2b64(input) {
   var tab = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
   var output = '';
   var len = input.length;
-  for (var i = 0; i < len; i += 3) {
+  for (let i = 0; i < len; i += 3) {
     var triplet =
       (input.charCodeAt(i) << 16) |
       (i + 1 < len ? input.charCodeAt(i + 1) << 8 : 0) |
       (i + 2 < len ? input.charCodeAt(i + 2) : 0);
-    for (var j = 0; j < 4; j++) {
+    for (let j = 0; j < 4; j++) {
       if (i * 8 + j * 6 > input.length * 8) output += b64pad;
       else output += tab.charAt((triplet >>> (6 * (3 - j))) & 0x3f);
     }
@@ -204,7 +204,7 @@ function str2rstr_utf8(input) {
  */
 function str2rstr_utf16le(input) {
   var output = '';
-  for (var i = 0; i < input.length; i++)
+  for (let i = 0; i < input.length; i++)
     output += String.fromCharCode(
       input.charCodeAt(i) & 0xff,
       (input.charCodeAt(i) >>> 8) & 0xff
@@ -214,7 +214,7 @@ function str2rstr_utf16le(input) {
 
 function str2rstr_utf16be(input) {
   var output = '';
-  for (var i = 0; i < input.length; i++)
+  for (let i = 0; i < input.length; i++)
     output += String.fromCharCode(
       (input.charCodeAt(i) >>> 8) & 0xff,
       input.charCodeAt(i) & 0xff
@@ -228,8 +228,8 @@ function str2rstr_utf16be(input) {
  */
 function rstr2binl(input) {
   var output = Array(input.length >> 2);
-  for (var i = 0; i < output.length; i++) output[i] = 0;
-  for (var i = 0; i < input.length * 8; i += 8)
+  for (let i = 0; i < output.length; i++) output[i] = 0;
+  for (let i = 0; i < input.length * 8; i += 8)
     output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << i % 32;
   return output;
 }
@@ -239,7 +239,7 @@ function rstr2binl(input) {
  */
 function binl2rstr(input) {
   var output = '';
-  for (var i = 0; i < input.length * 32; i += 8)
+  for (let i = 0; i < input.length * 32; i += 8)
     output += String.fromCharCode((input[i >> 5] >>> i % 32) & 0xff);
   return output;
 }
@@ -257,7 +257,7 @@ function binl_md5(x, len) {
   var c = -1732584194;
   var d = 271733878;
 
-  for (var i = 0; i < x.length; i += 16) {
+  for (let i = 0; i < x.length; i += 16) {
     var olda = a;
     var oldb = b;
     var oldc = c;

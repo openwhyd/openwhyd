@@ -1,29 +1,38 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+  <head>
     <title>Welcome to Openwhyd</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width" />
     <style type="text/css">
+      body,
+      td {
+        font-family: 'Helvetica Neue', Arial, Helvetica, Geneva, sans-serif;
+        font-size: 14px;
+      }
 
-    body, td { font-family: 'Helvetica Neue', Arial, Helvetica, Geneva, sans-serif; font-size:14px; }
+      body {
+        background-color: #efefef;
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: none;
+        -ms-text-size-adjust: none;
+      }
 
-    body { background-color: #EFEFEF; margin: 0; padding: 0; -webkit-text-size-adjust:none; -ms-text-size-adjust:none; }
-
-    .track {
+      .track {
         height: 120px;
         margin-bottom: 50px;
-    }
+      }
 
-    .artwork {
+      .artwork {
         position: relative;
         float: left;
         width: 120px;
         height: 120px;
         margin: 0 20px;
-    }
+      }
 
-    .title {
+      .title {
         display: block;
         width: 380px;
         padding-top: 22px;
@@ -32,174 +41,458 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
+      }
 
-    .title a {
+      .title a {
         color: #3177af;
         text-decoration: none;
-    }
+      }
 
-    .user {
+      .user {
         line-height: 32px;
-    }
+      }
 
-    .user a {
+      .user a {
         color: #404040;
         text-decoration: none;
-    }
+      }
 
-    .user img {
+      .user img {
         float: left;
         width: 32px;
         height: 32px;
         margin-right: 10px;
         border-radius: 16px;
-    }
+      }
 
-    @media only screen and (max-width: 480px) {
-
-        .w628, table[class=w628], td[class=w628], img[class=w628] { width:100% !important; }
-        table[class=wrapper] {
-            padding: 0 10px;
+      @media only screen and (max-width: 480px) {
+        .w628,
+        table[class='w628'],
+        td[class='w628'],
+        img[class='w628'] {
+          width: 100% !important;
+        }
+        table[class='wrapper'] {
+          padding: 0 10px;
         }
         .track {
-            height: auto;
-            text-align: center;
+          height: auto;
+          text-align: center;
         }
         .artwork {
-            float: none;
-            margin: 0 auto;
+          float: none;
+          margin: 0 auto;
         }
         .title {
-            width: auto;
-            white-space: normal;
+          width: auto;
+          white-space: normal;
         }
-        .visit, .download {
+        .visit,
+        .download {
         }
-    }
-
+      }
     </style>
-
-</head>
-<body style="background: #f2f2f2; margin:0px; padding:0px; -webkit-text-size-adjust:none;">
-
-    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; background-color: #EFEFEF;" >
-        <tbody>
-            <tr>
-                <td align="center">
-                    <table  cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px;">
-                        <tbody>
-
-                            <!-- entete -->
-                            <tr class="pagetoplogo">
-                                <td class="w628"  width="628">
-                                    <table  class="w628"  width="628" cellpadding="0" cellspacing="0" border="0" bgcolor="#fff" style="border-radius: 5px 5px 0 0;">
-                                        <tbody>
-                                            <tr>
-                                                <td class="w30"  width="30"></td>
-                                                <td  class="w628"  width="628" valign="middle" align="left">
-                                                    <div class="pagetoplogo-content">
-                                                        <a href="{{urlPrefix}}"><img class="w628" style="border-radius: 5px 5px 0 0; text-decoration: none; display: block; color:#fff; font-size:30px;" src="{{imgPath}}/emailWelcome/header.png" alt="Openwhyd" width="628" height="auto"/></a>
-                                                    </div>
-                                                </td>
-                                                <td class="w30"  width="30"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-                             <!-- contenu -->
-                            <tr class="content" style="-webkit-font-smoothing: antialiased;">
-                                <td class="w628" class="w628"  width="628" bgcolor="#ffffff">
-                                    <table class="w628"  width="628" cellpadding="0" cellspacing="0" border="0" style="box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.2), inset -1px 0 0 rgba(0, 0, 0, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.2); border-radius: 0 0 5px 5px;">
-                                        <tbody>
-                                            <tr>
-                                                <td  class="w628"  width="628">
-                                                    <!-- une zone de contenu -->
-                                                    <table class="w628"  width="628" cellpadding="0" cellspacing="0" border="0">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class="w628"  width="628">
-                                                                    <h2 style="margin: 20px 0 10px 0; text-align:center; color:#333538; font-size:32px; font-weight: 300;">Welcome to Openwhyd!</h2>
-
-                                                                    <div align="left" class="article-content" style="padding: 0 40px;">
-                                                                        <p class="w628" style="text-align: center; font-size:14px; color:#5e5e5e;line-height: 20px;">Collect and share all of the tracks you love, and follow other similar music lovers to power a stream of endless music discovery.</p>
-                                                                        <p style="text-align: center;">
-                                                                            <a href="{{urlPrefix}}/download" style=""><img src="{{imgPath}}/emailWelcome/download.png" alt="Download app" class="download" style="margin-left: 20px; margin-right: 20px;" /></a>
-                                                                        </p>
-
-                                                                        <p style="margin: 20px 0; padding: 0;"><img class="w628" src="{{imgPath}}/emailWelcome/sep.png" alt="" /></p>
-
-                                                                        <h3 style="margin: 35px 0; text-align:center; color:#333538; font-size:24px; font-weight: normal;">Here are some tracks for you</h3>
-
-                                                                        {{#hotTracks}}
-
-                                                                        <div class="track w628" style="height: 120px;margin-bottom: 50px;">
-                                                                            <a href="{{urlPrefix}}/c/{{_id}}"><div class="artwork" style="position: relative;float: left;width: 120px;height: 120px;margin: 0 20px;">
-                                                                                <img src="{{img}}" alt="" width="120" height="120" />
-                                                                            </div></a>
-                                                                            <p class="title" style="display:block;padding-top: 22px;font-size: 18px;font-weight: 500;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color: #3177af;"><a href="{{urlPrefix}}/c/{{_id}}" style="color: #3177af;text-decoration: none;">{{name}}</a></p>
-                                                                            <p class="w628 user" style="color: #404040;text-decoration: none;"><a href="{{urlPrefix}}/u/{{uId}}" style="color: #404040;text-decoration: none;"><img src="{{urlPrefix}}/img/u/{{uId}}" alt="" style="float: left;width: 32px;height: 32px;margin-right: 10px;border-radius: 16px;" /> added by <strong>{{uNm}}</strong></a></p>
-                                                                        </div>
-
-                                                                        {{/hotTracks}}
-
-                                                                        <p style="text-align: center;margin-top: 0;"><a href="{{urlPrefix}}/hot" class="visit"><img src="{{imgPath}}/emailWelcome/seemore.png" alt="See more" style="margin-top: 0;margin-bottom: 30px;" /></a></p>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-
-                            <tr class="content" style="-webkit-font-smoothing: antialiased;">
-                                <td class="w628" class="w628"  width="628">
-                                    <table class="w628"  width="628" cellpadding="0" cellspacing="0" border="0" style="">
-                                        <tbody>
-                                            <tr>
-                                                <td  class="w628"  width="628">
-                                                    <!-- une zone de contenu -->
-                                                    <table class="w628"  width="628" cellpadding="0" cellspacing="0" border="0">
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class="w628"  width="628">
-                                                                    <p style="text-align: center;">
-                                                                        <a href="http://twitter.com/open_whyd" style="margin: 0 20px;color: #36bdf0;font-size: 14px;font-weight: bold;text-decoration: none;">Twitter</a>
-                                                                        <a href="https://www.facebook.com/openwhyd" style="margin: 0 20px;color: #49629e;font-size: 14px;font-weight: bold;text-decoration: none;">Facebook</a>
-                                                                        <a href="https://github.com/openwhyd" style="margin: 0 20px;color: #333538;font-size: 14px;font-weight: bold;text-decoration: none;">GitHub</a>
-                                                                    </p>
-                                                                    <p class="links" style="color: #C0C0C0;text-align: center;">
-                                                                        <a href="{{urlPrefix}}/about" style="margin: 0 10px;color: #878787;font-size: 12px;text-decoration: none;">About</a>
-                                                                        •
-                                                                        <a href="https://www.facebook.com/groups/openwhyd/" style="margin: 0 10px;color: #878787;font-size: 12px;text-decoration: none;">Music Lovers Club</a>
-                                                                    </p>
-                                                                    <p style="text-align: center;font-size: 12px;color: #878787;">
-                                                                        Whyd, Inc. 80 rue des haies, Paris, France 75020<br />
-Si vous ne souhaitez pas recevoir ce type d'e-mail de la part de Openwhyd, vous pouvez vous <a href="{{unsubUrl}}" style="color: #878787;text-decoration: none;font-weight: bold;">désabonner</a>.
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-                        </tbody>
+  </head>
+  <body
+    style="
+      background: #f2f2f2;
+      margin: 0px;
+      padding: 0px;
+      -webkit-text-size-adjust: none;
+    "
+  >
+    <table
+      class="wrapper"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="margin: 0 auto; background-color: #efefef"
+    >
+      <tbody>
+        <tr>
+          <td align="center">
+            <table
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              style="margin-bottom: 30px"
+            >
+              <tbody>
+                <!-- entete -->
+                <tr class="pagetoplogo">
+                  <td class="w628" width="628">
+                    <table
+                      class="w628"
+                      width="628"
+                      cellpadding="0"
+                      cellspacing="0"
+                      border="0"
+                      bgcolor="#fff"
+                      style="border-radius: 5px 5px 0 0"
+                    >
+                      <tbody>
+                        <tr>
+                          <td class="w30" width="30"></td>
+                          <td
+                            class="w628"
+                            width="628"
+                            valign="middle"
+                            align="left"
+                          >
+                            <div class="pagetoplogo-content">
+                              <a href="{{urlPrefix}}"
+                                ><img
+                                  class="w628"
+                                  style="
+                                    border-radius: 5px 5px 0 0;
+                                    text-decoration: none;
+                                    display: block;
+                                    color: #fff;
+                                    font-size: 30px;
+                                  "
+                                  src="{{imgPath}}/emailWelcome/header.png"
+                                  alt="Openwhyd"
+                                  width="628"
+                                  height="auto"
+                              /></a>
+                            </div>
+                          </td>
+                          <td class="w30" width="30"></td>
+                        </tr>
+                      </tbody>
                     </table>
-                </td>
-            </tr>
-        </tbody>
+                  </td>
+                </tr>
+
+                <!-- contenu -->
+                <tr class="content" style="-webkit-font-smoothing: antialiased">
+                  <td class="w628" class="w628" width="628" bgcolor="#ffffff">
+                    <table
+                      class="w628"
+                      width="628"
+                      cellpadding="0"
+                      cellspacing="0"
+                      border="0"
+                      style="
+                        box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.2),
+                          inset -1px 0 0 rgba(0, 0, 0, 0.2),
+                          inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+                        border-radius: 0 0 5px 5px;
+                      "
+                    >
+                      <tbody>
+                        <tr>
+                          <td class="w628" width="628">
+                            <!-- une zone de contenu -->
+                            <table
+                              class="w628"
+                              width="628"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tbody>
+                                <tr>
+                                  <td class="w628" width="628">
+                                    <h2
+                                      style="
+                                        margin: 20px 0 10px 0;
+                                        text-align: center;
+                                        color: #333538;
+                                        font-size: 32px;
+                                        font-weight: 300;
+                                      "
+                                    >
+                                      Welcome to Openwhyd!
+                                    </h2>
+
+                                    <div
+                                      align="left"
+                                      class="article-content"
+                                      style="padding: 0 40px"
+                                    >
+                                      <p
+                                        class="w628"
+                                        style="
+                                          text-align: center;
+                                          font-size: 14px;
+                                          color: #5e5e5e;
+                                          line-height: 20px;
+                                        "
+                                      >
+                                        Collect and share all of the tracks you
+                                        love, and follow other similar music
+                                        lovers to power a stream of endless
+                                        music discovery.
+                                      </p>
+                                      <p style="text-align: center">
+                                        <a
+                                          href="{{urlPrefix}}/download"
+                                          style=""
+                                          ><img
+                                            src="{{imgPath}}/emailWelcome/download.png"
+                                            alt="Download app"
+                                            class="download"
+                                            style="
+                                              margin-left: 20px;
+                                              margin-right: 20px;
+                                            "
+                                        /></a>
+                                      </p>
+
+                                      <p style="margin: 20px 0; padding: 0">
+                                        <img
+                                          class="w628"
+                                          src="{{imgPath}}/emailWelcome/sep.png"
+                                          alt=""
+                                        />
+                                      </p>
+
+                                      <h3
+                                        style="
+                                          margin: 35px 0;
+                                          text-align: center;
+                                          color: #333538;
+                                          font-size: 24px;
+                                          font-weight: normal;
+                                        "
+                                      >
+                                        Here are some tracks for you
+                                      </h3>
+
+                                      {{#hotTracks}}
+
+                                      <div
+                                        class="track w628"
+                                        style="
+                                          height: 120px;
+                                          margin-bottom: 50px;
+                                        "
+                                      >
+                                        <a href="{{urlPrefix}}/c/{{_id}}"
+                                          ><div
+                                            class="artwork"
+                                            style="
+                                              position: relative;
+                                              float: left;
+                                              width: 120px;
+                                              height: 120px;
+                                              margin: 0 20px;
+                                            "
+                                          >
+                                            <img
+                                              src="{{img}}"
+                                              alt=""
+                                              width="120"
+                                              height="120"
+                                            /></div
+                                        ></a>
+                                        <p
+                                          class="title"
+                                          style="
+                                            display: block;
+                                            padding-top: 22px;
+                                            font-size: 18px;
+                                            font-weight: 500;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;
+                                            color: #3177af;
+                                          "
+                                        >
+                                          <a
+                                            href="{{urlPrefix}}/c/{{_id}}"
+                                            style="
+                                              color: #3177af;
+                                              text-decoration: none;
+                                            "
+                                            >{{name}}</a
+                                          >
+                                        </p>
+                                        <p
+                                          class="w628 user"
+                                          style="
+                                            color: #404040;
+                                            text-decoration: none;
+                                          "
+                                        >
+                                          <a
+                                            href="{{urlPrefix}}/u/{{uId}}"
+                                            style="
+                                              color: #404040;
+                                              text-decoration: none;
+                                            "
+                                            ><img
+                                              src="{{urlPrefix}}/img/u/{{uId}}"
+                                              alt=""
+                                              style="
+                                                float: left;
+                                                width: 32px;
+                                                height: 32px;
+                                                margin-right: 10px;
+                                                border-radius: 16px;
+                                              "
+                                            />
+                                            added by <strong>{{uNm}}</strong></a
+                                          >
+                                        </p>
+                                      </div>
+
+                                      {{/hotTracks}}
+
+                                      <p
+                                        style="
+                                          text-align: center;
+                                          margin-top: 0;
+                                        "
+                                      >
+                                        <a
+                                          href="{{urlPrefix}}/hot"
+                                          class="visit"
+                                          ><img
+                                            src="{{imgPath}}/emailWelcome/seemore.png"
+                                            alt="See more"
+                                            style="
+                                              margin-top: 0;
+                                              margin-bottom: 30px;
+                                            "
+                                        /></a>
+                                      </p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr class="content" style="-webkit-font-smoothing: antialiased">
+                  <td class="w628" class="w628" width="628">
+                    <table
+                      class="w628"
+                      width="628"
+                      cellpadding="0"
+                      cellspacing="0"
+                      border="0"
+                      style=""
+                    >
+                      <tbody>
+                        <tr>
+                          <td class="w628" width="628">
+                            <!-- une zone de contenu -->
+                            <table
+                              class="w628"
+                              width="628"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tbody>
+                                <tr>
+                                  <td class="w628" width="628">
+                                    <p style="text-align: center">
+                                      <a
+                                        href="http://twitter.com/open_whyd"
+                                        style="
+                                          margin: 0 20px;
+                                          color: #36bdf0;
+                                          font-size: 14px;
+                                          font-weight: bold;
+                                          text-decoration: none;
+                                        "
+                                        >Twitter</a
+                                      >
+                                      <a
+                                        href="https://www.facebook.com/openwhyd"
+                                        style="
+                                          margin: 0 20px;
+                                          color: #49629e;
+                                          font-size: 14px;
+                                          font-weight: bold;
+                                          text-decoration: none;
+                                        "
+                                        >Facebook</a
+                                      >
+                                      <a
+                                        href="https://github.com/openwhyd"
+                                        style="
+                                          margin: 0 20px;
+                                          color: #333538;
+                                          font-size: 14px;
+                                          font-weight: bold;
+                                          text-decoration: none;
+                                        "
+                                        >GitHub</a
+                                      >
+                                    </p>
+                                    <p
+                                      class="links"
+                                      style="color: #c0c0c0; text-align: center"
+                                    >
+                                      <a
+                                        href="{{urlPrefix}}/about"
+                                        style="
+                                          margin: 0 10px;
+                                          color: #878787;
+                                          font-size: 12px;
+                                          text-decoration: none;
+                                        "
+                                        >About</a
+                                      >
+                                      •
+                                      <a
+                                        href="https://www.facebook.com/groups/openwhyd/"
+                                        style="
+                                          margin: 0 10px;
+                                          color: #878787;
+                                          font-size: 12px;
+                                          text-decoration: none;
+                                        "
+                                        >Music Lovers Club</a
+                                      >
+                                    </p>
+                                    <p
+                                      style="
+                                        text-align: center;
+                                        font-size: 12px;
+                                        color: #878787;
+                                      "
+                                    >
+                                      Whyd, Inc. 80 rue des haies, Paris, France
+                                      75020<br />
+                                      Si vous ne souhaitez pas recevoir ce type
+                                      d'e-mail de la part de Openwhyd, vous
+                                      pouvez vous
+                                      <a
+                                        href="{{unsubUrl}}"
+                                        style="
+                                          color: #878787;
+                                          text-decoration: none;
+                                          font-weight: bold;
+                                        "
+                                        >désabonner</a
+                                      >.
+                                    </p>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
     </table>
-</body>
+  </body>
 </html>
