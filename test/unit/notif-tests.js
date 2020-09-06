@@ -119,7 +119,7 @@ describe('notif', function () {
 
   function fetchNotifs(uId, cb) {
     notifModel.getUserNotifs(uId, function (notifs) {
-      console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
+      // console.log('found', notifs.length, 'notifs in db' /*, notifs*/);
       cb(notifs);
     });
   }
@@ -134,7 +134,7 @@ describe('notif', function () {
 
   function countEmptyNotifs(cb) {
     db['notif'].count({ uId: { $size: 0 } }, function (err, count) {
-      console.log('found', count, 'empty notifs in db');
+      // console.log('found', count, 'empty notifs in db');
       cb(count);
     });
   }
