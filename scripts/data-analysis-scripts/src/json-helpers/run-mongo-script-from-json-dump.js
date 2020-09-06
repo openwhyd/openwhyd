@@ -7,7 +7,6 @@ const {
 
 const MONGO_SCRIPT_FILE = process.argv[2];
 const JSON_DUMP_FILE = process.argv[3]; // '../playlog_last.json.log';
-const LOG_PREFIX = '[mongo shell]';
 
 const script = [
   '(async () => {',
