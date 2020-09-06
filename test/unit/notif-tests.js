@@ -163,41 +163,21 @@ describe('notif', function () {
     await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
   });
 
-  it('check that db is clean', async () => {
+  it('clear individual notifications', async () => {
+    // setup: re-add sample notifications (again)
     await clearAllNotifs();
+    for (let u in users) nbNotifs = testAllNotifs(u);
+    await util.promisify(pollUntil)(makeNotifChecker(NOTIF_COUNT));
+    // action: clear individual notifications
+    const notifs = await util.promisify(fetchNotifs)(uId);
+    for (let i in notifs) notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
+    await util.promisify(pollUntil)(makeNotifChecker(0));
+    // expect: db is clean
     const count = await countEmptyNotifs();
-    assert(count === 0, 'failed to clean-up notifs from db');
+    assert(count === 0, 'failed to clear all individual notifications');
   });
 
   [
-    // ---
-
-    [
-      'add sample notifications (again)',
-      function (cb) {
-        for (let u in users) nbNotifs = testAllNotifs(u);
-        pollUntil(makeNotifChecker(NOTIF_COUNT), cb);
-      },
-    ],
-    [
-      'clear individual notifications',
-      function (cb) {
-        fetchNotifs(uId, function (err, notifs) {
-          for (let i in notifs)
-            notifModel.clearUserNotifsForPost(uId, notifs[i].pId);
-          pollUntil(makeNotifChecker(0), cb);
-        });
-      },
-    ],
-    [
-      'check that db is clean',
-      function (cb) {
-        countEmptyNotifs(function (err, count) {
-          cb(!(count === 0));
-        });
-      },
-    ],
-
     // ---
 
     [
