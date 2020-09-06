@@ -378,7 +378,7 @@ exports.renderWhydPage = function (params = {}) {
   ].concat(params.css || []);
 
   var user = params.loggedUser || {};
-  console.log('connected user:', user.name, user.id);
+  // console.log('connected user:', user.name, user.id);
 
   // other recognized params: bodyClass, head, content, sidebar
 

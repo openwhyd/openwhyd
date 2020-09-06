@@ -144,7 +144,7 @@ exports.controller = function (request, reqParams, response) {
     if (data.error) console.log('ERROR: ', data.error);
     if (data.html) {
       response.renderHTML(data.html);
-      console.log('rendering done!');
+      // console.log('rendering done!');
       //if (loggedInUser && loggedInUser.id && !reqParams.after && !reqParams.before)
       //	analytics.addVisit(loggedInUser, request.url/*"/u/"+uid*/);
     } else response.legacyRender(data.json || data.error);

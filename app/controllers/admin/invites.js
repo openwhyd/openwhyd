@@ -212,7 +212,7 @@ exports.handleRequest = function (request, reqParams, response) {
                   null,
                   { 'content-type': 'text/html' }
                 );
-                console.log('rendering done!');
+                // console.log('rendering done!');
               },
               { sort: [['date', 'desc']] }
             );

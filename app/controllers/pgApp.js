@@ -165,7 +165,7 @@ exports.controller = function (request, reqParams, response) {
       });
     if (data.html) {
       response.renderHTML(data.html);
-      console.log('rendering done!');
+      // console.log('rendering done!');
       //if (loggedInUser && loggedInUser.id && !reqParams.after && !reqParams.before)
       //	analytics.addVisit(loggedInUser, request.url/*"/u/"+uid*/);
     } else response.legacyRender(data.text || data.json || data.error);
