@@ -11,17 +11,13 @@ var uploadCtr = require('../uploadedFile.js');
 // hosting settings
 var settings = {
   uploadDir: uploadCtr.config.uploadPath, //'../upload_data',
-  keepExtensions: true
+  keepExtensions: true,
 };
 
 var defaults = {
   keepOriginal: false,
-  thumbDims: '180x' // image resize settings (optimized for profile/topic pictures)
+  thumbDims: '180x', // image resize settings (optimized for profile/topic pictures)
 };
-
-// image resize settings
-var thumbWidths = [180 /*, 50*/]; // optimized for profile pictures
-var thumbHeight = null; // auto-scaling
 
 function processFile(file, options, callback) {
   console.log('processFile', file, options);
@@ -31,51 +27,46 @@ function processFile(file, options, callback) {
     console.log('uploaded a file that is not an image => deleting file');
     uploadCtr.deleteFile(file.path);
     return callback({
-      error: 'Only images are supported for upload, for now.'
+      error: 'Only images are supported for upload, for now.',
     });
   } else {
     var result = {
       name: file.name,
       mime: file.type,
       path: uploadCtr.cleanFilePath(file.path),
-      thumbs: {}
+      thumbs: {},
     };
 
     var thumbDims = options.thumbDims ? options.thumbDims.split(',') : [];
 
     console.log('thumbDims', thumbDims);
 
-    function whenDone() {
+    const whenDone = () => {
       console.log('whendone');
       if (!options.keepOriginal) uploadCtr.deleteFile(file.path);
       callback(result);
-    }
+    };
 
     if (thumbDims.length > 0) {
       // create thumbs
       var f = uploadCtr.splitFilePath(file.path);
-      var genThumb = function(thumbWidth, thumbHeight, callback) {
+      var genThumb = function (thumbWidth, thumbHeight, callback) {
         var dims = (thumbWidth || '') + 'x' + (thumbHeight || '');
         var newPath = f.prefix + '_' + dims + f.ext;
-        img.makeThumb(file.path, newPath, thumbWidth, thumbHeight, function() {
+        img.makeThumb(file.path, newPath, thumbWidth, thumbHeight, function () {
           if (callback) callback(newPath, thumbWidth, thumbHeight, dims);
         });
       };
 
       var remaining = thumbDims.length; //thumbWidths.length;
-      for (var i in thumbDims) {
+      for (let i in thumbDims) {
         var thumbDim = thumbDims[i];
         var thumbWidthHeight = thumbDim.split('x');
         var thumbWidth =
           thumbWidthHeight.length > 0 ? thumbWidthHeight[0] : null;
         var thumbHeight =
           thumbWidthHeight.length > 1 ? thumbWidthHeight[1] : null;
-        genThumb(thumbWidth, thumbHeight, function(
-          thumbFile,
-          thumbWidth,
-          thumbHeight,
-          dims
-        ) {
+        genThumb(thumbWidth, thumbHeight, function (thumbFile) {
           console.log('generated thumb', thumbDim, thumbFile);
           result.thumbs[/*dims*/ thumbDim] = uploadCtr.cleanFilePath(thumbFile);
           if (!options.keepOriginal)
@@ -89,7 +80,7 @@ function processFile(file, options, callback) {
   }
 }
 
-exports.controller = function(req, requestParams, res) {
+exports.controller = function (req, requestParams, res) {
   req.logToConsole('upload.controller', requestParams);
 
   var user = req.checkLogin(res);
@@ -112,16 +103,14 @@ exports.controller = function(req, requestParams, res) {
 
   console.log('upload.controller completed', files);
   var results = {},
-    remaining = 0;
-
-  for (var i in files) remaining++;
+    remaining = Object.keys(files).length;
 
   var options = {};
-  for (var i in defaults) options[i] = defaults[i];
-  for (var i in postParams) options[i] = postParams[i];
+  for (let i in defaults) options[i] = defaults[i];
+  for (let i in postParams) options[i] = postParams[i];
 
-  var processAndPushFile = function(i) {
-    processFile(files[i], options, function(result) {
+  var processAndPushFile = function (i) {
+    processFile(files[i], options, function (result) {
       if (result && result.error) console.log(result.error);
       results[i] = result;
       if (--remaining == 0) {
@@ -134,6 +123,6 @@ exports.controller = function(req, requestParams, res) {
     });
   };
 
-  for (var i in files) processAndPushFile(i);
+  for (let i in files) processAndPushFile(i);
   //});
 };

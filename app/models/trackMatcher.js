@@ -13,11 +13,11 @@ var DEFAULT_DURATION_TOLERANCE = 8; // 8 seconds difference = 50% confidence
 function getBestTitle(track, targetName) {
   var comb = [
     track.artistName + ' ' + track.trackTitle,
-    track.trackTitle + ' ' + track.artistName
-  ].map(function(combinedName) {
+    track.trackTitle + ' ' + track.artistName,
+  ].map(function (combinedName) {
     return [
       combinedName,
-      snip.getLevenshteinDistance(combinedName, targetName)
+      snip.getLevenshteinDistance(combinedName, targetName),
     ];
   });
   return comb[0][1] <= comb[1][1] ? comb[0] : comb[1];
@@ -42,8 +42,7 @@ function Dist(track, hit) {
   this.hitTrackDuration = hit.duration;
   return this;
 }
-Dist.prototype.toString = function(prefix) {
-  var prefix = prefix || '';
+Dist.prototype.toString = function (prefix = '') {
   return [
     prefix +
       'track: ' +
@@ -62,9 +61,7 @@ Dist.prototype.toString = function(prefix) {
       this.nameDistance +
       ' + duration distance: ' +
       this.durationDistance +
-      (this.hasOwnProperty('confidence')
-        ? ' => confidence: ' + this.confidence
-        : '')
+      ('confidence' in this ? ' => confidence: ' + this.confidence : ''),
   ].join('\n');
 };
 
@@ -75,7 +72,7 @@ function TrackMatcher(track) {
   // private vars
   var richTrack = track.artistName && track.trackTitle;
   // returns distances between the track and the given hit
-  this.evalDistances = function(hit) {
+  this.evalDistances = function (hit) {
     var dist = new Dist(track, hit);
     var richHit = hit.artistName + hit.trackTitle;
     // 1) compare names
@@ -84,11 +81,11 @@ function TrackMatcher(track) {
         snip.getLevenshteinDistance(track.artistName, hit.artistName) +
         snip.getLevenshteinDistance(track.trackTitle, hit.trackTitle);
     } else if (richHit) {
-      var comb = getBestTitle(hit, dist.targetName);
+      const comb = getBestTitle(hit, dist.targetName);
       dist.hitTrackName = comb[0];
       dist.nameDistance = comb[1];
     } else if (richTrack) {
-      var comb = getBestTitle(track, dist.hitTrackName);
+      const comb = getBestTitle(track, dist.hitTrackName);
       dist.targetName = comb[0];
       dist.nameDistance = comb[1];
     } else {
@@ -104,7 +101,7 @@ function TrackMatcher(track) {
     return dist;
   };
   // returns confidence (0.0-1.0) using levenshtein distance between queried track metadata and hit.
-  this.evalConfidence = function(hit, dist) {
+  this.evalConfidence = function (hit, dist) {
     dist = /*hit._dist =*/ dist || this.evalDistances(hit);
     dist.durationDistance =
       dist.durationDistance || this.DURATION_TOLERANCE / 2;

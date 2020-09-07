@@ -1,7 +1,6 @@
 /**
  * login controller, to authenticate users
  */
-var config = require('../../models/config.js');
 var emailModel = require('../../models/email.js');
 var userModel = require('../../models/user.js');
 var notifEmails = require('../../models/notifEmails.js');
@@ -10,14 +9,14 @@ var userApi = require('../../controllers/api/user.js');
 var md5 = userModel.md5;
 var loggingTemplate = require('../../templates/logging.js');
 
-exports.handleRequest = function(request, form, response, ignorePassword) {
+exports.handleRequest = function (request, form, response, ignorePassword) {
   form = form || {};
   if (form.password && !form.md5) form.md5 = md5(form.password);
 
   request.logToConsole('login.handleRequest', {
     action: form.action,
     email: form.email,
-    md5: form.md5
+    md5: form.md5,
   });
 
   function renderJSON(json) {
@@ -31,7 +30,7 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
     else {
       var json = { redirect: url };
       if (form.includeUser) {
-        userApi.fetchUserData(user, function(user) {
+        userApi.fetchUserData(user, function (user) {
           json.user = user;
           renderJSON(json);
         });
@@ -46,7 +45,7 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
   }
 
   if (form.action === 'logout') {
-    request.session.destroy(function(err) {
+    request.session.destroy(function (err) {
       if (err) {
         console.error('error from request.session.destroy()', err);
         form.error = err;
@@ -60,7 +59,7 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
 
     userModel[form.email.indexOf('@') > -1 ? 'fetchByEmail' : 'fetchByHandle'](
       form.email,
-      function(dbUser) {
+      function (dbUser) {
         if (!dbUser) {
           form.error = "Are you sure? We don't recognize your email address!";
         } else if (form.action == 'forgot') {
@@ -82,8 +81,8 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
             userModel.update(dbUser._id, {
               $set: {
                 fbId: form.fbUid,
-                fbTok: form.fbTok // access token provided on last facebook login
-              }
+                fbTok: form.fbTok, // access token provided on last facebook login
+              },
             });
           renderRedirect(form.redirect || '/', dbUser);
           return; // prevent default response (renderForm)
@@ -99,7 +98,7 @@ exports.handleRequest = function(request, form, response, ignorePassword) {
   } else renderForm(form);
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   if (request.method.toLowerCase() === 'post')
     exports.handleRequest(request, request.body, response);
   else exports.handleRequest(request, getParams, response);

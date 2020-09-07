@@ -1,115 +1,120 @@
 <script>
-try {
-	window.Whyd.tracking.log("Visit people selection page");
-} catch (e) {
-	console.log("mixpanel", e, e.stack);
-}
+  try {
+    window.Whyd.tracking.log('Visit people selection page');
+  } catch (e) {
+    console.log('mixpanel', e, e.stack);
+  }
 </script>
 
 <style type="text/css">
-/*<![CDATA[*/
-	.pgOnboarding #contentPane {
-		width: 700px;
-	}
+  /*<![CDATA[*/
+  .pgOnboarding #contentPane {
+    width: 700px;
+  }
 
-	.pgOnboarding .loading {
-		width: 200px;
-		height: 100px;
-		margin: 0 auto;
-		text-align: center;
-	}
+  .pgOnboarding .loading {
+    width: 200px;
+    height: 100px;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-	#btnNext {
-		float: right;
-		position:relative;
-		top: -5px;
-		background: url('/images/btn-jumpin.png') no-repeat;
-		width: 112px;
-		height: 50px;
-	}
+  #btnNext {
+    float: right;
+    position: relative;
+    top: -5px;
+    background: url('/images/btn-jumpin.png') no-repeat;
+    width: 112px;
+    height: 50px;
+  }
 
-	#btnNext:hover {
-		background-position: 0 -51px;
-	}
+  #btnNext:hover {
+    background-position: 0 -51px;
+  }
 
-	#btnNext:active {
-		background-position: 0 -102px;
-	}
+  #btnNext:active {
+    background-position: 0 -102px;
+  }
 
-	.pgOnboarding h1 {
-		margin-top: 60px;
-		margin-bottom: 40px;
-		color: #535559;
-	}
+  .pgOnboarding h1 {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    color: #535559;
+  }
 
-	.pgOnboarding h2 {
-		color: #535559;
-		font-weight: normal;
-	}
+  .pgOnboarding h2 {
+    color: #535559;
+    font-weight: normal;
+  }
 
-	.pgOnboarding p {
-		color: #999;
-		margin-bottom: 15px;
-	}
+  .pgOnboarding p {
+    color: #999;
+    margin-bottom: 15px;
+  }
 
-	.pgOnboarding .whitePanel {
-		padding: 30px 40px;
-	}
-/*]]>*/
+  .pgOnboarding .whitePanel {
+    padding: 30px 40px;
+  }
+
+  /*]]>*/
 </style>
 
-<a id="btnNext" href="/welcome" style="display:none;"></a>
+<a id="btnNext" href="/welcome" style="display: none"></a>
 
 <h1>Looking for relevant music lovers...</h1>
 <div class="loading">Please wait...</div>
 
-<div class="whitePanel" id="whydTeam" style="display:none;">
-	<h2>To get you started, we have subscribed you automatically to a selection of top music lovers.</h2>
-	<p>Feel free to unsubscribe from anyone if you don't like their music.</p>
+<div class="whitePanel" id="whydTeam" style="display: none">
+  <h2>
+    To get you started, we have subscribed you automatically to a selection of
+    top music lovers.
+  </h2>
+  <p>Feel free to unsubscribe from anyone if you don't like their music.</p>
 </div>
 
 <script>
-/*<![CDATA[*/
-	function getFriends(fbId, fbAccessToken, cb) {
-		$.ajax({
-			type: "POST",
-			url: "/onboarding",
-			data: { ajax: "people" },
-			complete: function(res, status) {
-				try {
-					if (status != "success" || !res.responseText) throw 0;
-					//console.log("result", res.responseText);
-					var json = JSON.parse(""+res.responseText) || {};
-					//console.log("result", json);
-					cb && cb(json);
-				}
-				catch(e) {
-					cb && cb({error: e || "An error occured. Please try again."});
-					if (e) throw e;
-				}
-			}
-		});
-	}
-	function disableLink() {
-		$(this).css("cursor", "default")
-			.attr("href","javascript:return false;")
-			.unbind().click(function(e) { e.preventDefault(); });
-	}
-	$(function() {
-		getFriends(null, null, function(json) {
-			$(".loading").hide();
-			$("#btnNext").show();
-			if (json && !json.error) {
-				$("h1").text("Top music lovers to follow");
-				for (var i in json.autoSubscribeUsers)
-					json.autoSubscribeUsers[i].subscribed = true;
-				$("#whydTeam").append(_renderUserList(json.autoSubscribeUsers)).show();
-				$(".userList a").each(disableLink); // user names
-				$(".userList div[style]").each(disableLink); // user avatars
-			}
-			else
-				(json || {}).error ? showMessage(json.error) : console.log("fbfriends error", json);
-		})
-	});
-/*]]>*/
+  /*<![CDATA[*/
+  function getFriends(fbId, fbAccessToken, cb) {
+    $.ajax({
+      type: 'POST',
+      url: '/onboarding',
+      data: { ajax: 'people' },
+      complete: function (res, status) {
+        try {
+          if (status != 'success' || !res.responseText) throw 0;
+          //console.log("result", res.responseText);
+          var json = JSON.parse('' + res.responseText) || {};
+          //console.log("result", json);
+          cb && cb(json);
+        } catch (e) {
+          cb && cb({ error: e || 'An error occured. Please try again.' });
+          if (e) throw e;
+        }
+      },
+    });
+  }
+  function disableLink() {
+    $(this)
+      .css('cursor', 'default')
+      .attr('href', 'javascript:return false;')
+      .unbind()
+      .click(function (e) {
+        e.preventDefault();
+      });
+  }
+  $(function () {
+    getFriends(null, null, function (json) {
+      $('.loading').hide();
+      $('#btnNext').show();
+      if (json && !json.error) {
+        $('h1').text('Top music lovers to follow');
+        for (let i in json.autoSubscribeUsers)
+          json.autoSubscribeUsers[i].subscribed = true;
+        $('#whydTeam').append(_renderUserList(json.autoSubscribeUsers)).show();
+        $('.userList a').each(disableLink); // user names
+        $('.userList div[style]').each(disableLink); // user avatars
+      } else (json || {}).error ? showMessage(json.error) : console.log('fbfriends error', json);
+    });
+  });
+  /*]]>*/
 </script>

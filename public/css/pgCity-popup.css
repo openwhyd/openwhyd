@@ -1,70 +1,98 @@
 #ggpopup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    background: rgba(0, 0, 0, 0.6);
-    background-image: -webkit-gradient(radial, center center, 0, center center, 141, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
-    background-image: -webkit-radial-gradient(center center, circle contain, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
-    background-image: -moz-radial-gradient(center center, circle contain, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
-    background-image: -ms-radial-gradient(center center, circle contain, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
-    background-image: -o-radial-gradient(center center, circle contain, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.5) 100%);
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.6);
+  background-image: -webkit-gradient(
+    radial,
+    center center,
+    0,
+    center center,
+    141,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.5)
+  );
+  background-image: -webkit-radial-gradient(
+    center center,
+    circle contain,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  background-image: -moz-radial-gradient(
+    center center,
+    circle contain,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  background-image: -ms-radial-gradient(
+    center center,
+    circle contain,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  background-image: -o-radial-gradient(
+    center center,
+    circle contain,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
 
-    -webkit-transition: 0.2s all ease-out;
-    -moz-transition: 0.2s all ease-out;
-    -ms-transition: 0.2s all ease-out;
-    -o-transition: 0.2s all ease-out;
-    transition: 0.2s all ease-out;
+  -webkit-transition: 0.2s all ease-out;
+  -moz-transition: 0.2s all ease-out;
+  -ms-transition: 0.2s all ease-out;
+  -o-transition: 0.2s all ease-out;
+  transition: 0.2s all ease-out;
 }
 
 #ggpopup #global {
-    position: relative;
-    display: table-cell;
-    vertical-align: middle;
-    width: 500px;
-    margin: 0;
+  position: relative;
+  display: table-cell;
+  vertical-align: middle;
+  width: 500px;
+  margin: 0;
 }
 
 #ggpopup #container {
-    position: relative;
-    width: 500px;
-    height: 330px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 5px;
-    overflow-y: scroll;
+  position: relative;
+  width: 500px;
+  height: 330px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 5px;
+  overflow-y: scroll;
 }
 
 #ggpopup .close {
-    display: block;
-    width: 100px;
-    margin: 20px auto;
-    padding: 5px 0;
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 12px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
+  display: block;
+  width: 100px;
+  margin: 20px auto;
+  padding: 5px 0;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 12px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
 }
 
 #ggpopup h1 {
-    color: rgba(0, 0, 0, 0.5);
-    text-align: center;
-    margin: 20px auto;
-    font-weight: 300;
+  color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  margin: 20px auto;
+  font-weight: 300;
 }
 
 .ggpopup-blurred {
-    filter: blur(3px);
-    -webkit-filter: blur(3px);
-    -moz-filter: blur(3px);
-    -o-filter: blur(3px);
-    -ms-filter: blur(3px);
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  -moz-filter: blur(3px);
+  -o-filter: blur(3px);
+  -ms-filter: blur(3px);
 }

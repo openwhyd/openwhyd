@@ -19,17 +19,17 @@ function AjaxUpload($form, onComplete, onPost) {
       $.ajax({
         type: 'POST',
         url: '/upload',
-        data: { id: lastUploadUrl.split('/').pop(), action: 'delete' }
+        data: { id: lastUploadUrl.split('/').pop(), action: 'delete' },
       });
     lastUploadUrl = null;
   }
 
   $form.iframePostForm({
-    post: function() {
+    post: function () {
       deleteTempImage();
       if (onPost) onPost($uploadInput.val());
     },
-    complete: function(res) {
+    complete: function (res) {
       var data = res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1);
       //console.log('json', data);
       var img = {};
@@ -43,15 +43,15 @@ function AjaxUpload($form, onComplete, onPost) {
       }
       //console.log('img', img);
       onComplete(img);
-    }
+    },
   });
 
-  $uploadInput.change(function() {
+  $uploadInput.change(function () {
     $form.submit();
   });
 
   return {
-    cancel: function() {
+    cancel: function () {
       deleteTempImage();
     } /*,
 		updateImage: function() {
@@ -67,6 +67,6 @@ function AjaxUpload($form, onComplete, onPost) {
 				}
 			});
 			$.modal.close();
-		}*/
+		}*/,
   };
 }

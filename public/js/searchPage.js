@@ -1,12 +1,11 @@
-if(document.getElementById('q').value.replace(/ /g, '')) {
+/* global $ */
+
+if (document.getElementById('q').value.replace(/ /g, '')) {
   function selectTab() {
     $('#tabSelector a.selected').removeClass('selected');
     $(this).addClass('selected');
     $('.resultPage').hide();
-    var current = $(this)
-      .attr('href')
-      .split('#')
-      .pop();
+    var current = $(this).attr('href').split('#').pop();
     $('.resultPage#' + current).show();
   }
 
@@ -60,7 +59,9 @@ if(document.getElementById('q').value.replace(/ /g, '')) {
         );
       }
       function isAlreadyListed(track) {
-        return !!document.querySelector('a.thumb[data-eid="' + track.eId + '"]');
+        return !!document.querySelector(
+          'a.thumb[data-eid="' + track.eId + '"]'
+        );
       }
       var tracks = [];
       function displayDynamicSearchResults() {

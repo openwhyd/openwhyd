@@ -1,7 +1,4 @@
-/**
- * openwhyd web client
- * @author adrienjoly
- **/
+/* global $ */
 
 var MAX_NB_MENTIONS = 6;
 
@@ -15,7 +12,7 @@ window.goToPage = function (url) {
 };
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function () { } };
+if (undefined == window.console) console = { log: function () {} };
 
 /* utility functions */
 
@@ -25,15 +22,11 @@ function login() {
 }
 
 function decodeHtmlEntities(str) {
-  return $('<div>')
-    .html(str)
-    .text();
+  return $('<div>').html(str).text();
 }
 
 function encodeHtmlEntities(str) {
-  return $('<div>')
-    .text(str)
-    .html();
+  return $('<div>').text(str).html();
 }
 
 window.htmlEntities = encodeHtmlEntities;
@@ -58,25 +51,19 @@ function extractPostData($post, defaults) {
     .text();
   try {
     text = text.trim(); // trim() not supported on IE8
-  } catch (e) { }
+  } catch (e) {}
   return {
     id: $post.attr('data-pid'), // for askPostShareFB
     pId: $post.attr('data-pid'),
-    eId: $post
-      .find('a')
-      .first()
-      .attr('data-eid'),
+    eId: $post.find('a').first().attr('data-eid'),
     name: $post.find('h2')[0].innerText,
     text: text,
     uId: uId ? uId.replace('/u/', '') : undefined,
     uNm: $author.text() || defaults.uNm, // title.find("a").get(0).innerText;
-    img: $post
-      .find('img')
-      .first()
-      .attr('src'),
+    img: $post.find('img').first().attr('src'),
     initialpid: $post.attr('data-initialpid'), // for reposts only
     nbLoves: parseInt($post.find('.nbLoves > span').text()),
-    nbReposts: parseInt($post.find('.nbReposts > span').text())
+    nbReposts: parseInt($post.find('.nbReposts > span').text()),
   };
 }
 
@@ -95,7 +82,7 @@ function submitSearchQuery(q, cb) {
         cb && cb({ error: e || 'An error occured. Please try again.' });
         if (e) throw e;
       }
-    }
+    },
   });
 }
 
@@ -105,13 +92,13 @@ function removePost(pId) {
     url: '/api/post',
     data: {
       action: 'delete',
-      _id: pId
+      _id: pId,
     },
     complete: function () {
       //refreshFeed
       $('.post[data-pid=' + pId + ']').remove();
       whydPlayer.populateTracks();
-    }
+    },
   });
 }
 
@@ -121,13 +108,13 @@ function deleteComment(cId, cb) {
     url: '/api/post',
     data: {
       action: 'deleteComment',
-      _id: cId
+      _id: cId,
     },
     complete: function () {
       //refreshFeed
       $('.post div[data-cid=' + cId + ']').remove();
       cb && cb();
-    }
+    },
   });
 }
 
@@ -139,9 +126,9 @@ function addComment(pId, text, cb) {
     data: {
       action: 'addComment',
       pId: pId,
-      text: text
+      text: text,
     },
-    complete: cb
+    complete: cb,
   });
 }
 
@@ -153,7 +140,7 @@ function subscribeToUser(uId, cb) {
     success: function (r) {
       cb && cb(r);
       window.Whyd.tracking.log('Followed', uId);
-    }
+    },
   });
 }
 
@@ -173,7 +160,7 @@ function switchSubscription() {
         .text(subscribing ? 'Following' : 'Follow');
       if (subscribing) window.Whyd.tracking.log('Followed', uid);
       else window.Whyd.tracking.log('Unfollowed', uid);
-    }
+    },
   });
 }
 
@@ -182,7 +169,7 @@ function _fetchUserInfo(uid, action, callback) {
     type: 'GET',
     url: '/api/user/' + uid + '/' + action,
     success: callback,
-    dataType: 'json'
+    dataType: 'json',
   });
 }
 
@@ -191,7 +178,7 @@ function _fetchPostInfo(pid, action, callback) {
     type: 'GET',
     url: '/api/post/' + pid + '/' + action,
     success: callback,
-    dataType: 'json'
+    dataType: 'json',
   });
 }
 
@@ -297,12 +284,12 @@ function onNewPost(whydPost) {
 
   showMessage(
     "Successfully added track to <a target='_blank' href='" +
-    '/u/' +
-    p.uId +
-    (p.pl ? '/playlist/' + p.pl.id : '') +
-    "'>" +
-    encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
-    '</a>'
+      '/u/' +
+      p.uId +
+      (p.pl ? '/playlist/' + p.pl.id : '') +
+      "'>" +
+      encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
+      '</a>'
   );
 
   try {
@@ -351,17 +338,14 @@ function _renderUserInList(user, liHandler) {
         .css(
           'background-image',
           "url('" +
-          (user.img || '/img/u/' + user.id) +
-          "?width=100&amp;height=100')"
+            (user.img || '/img/u/' + user.id) +
+            "?width=100&amp;height=100')"
         )
         .click(
           user.thumbClickHandler ||
-          function () {
-            $(this)
-              .parent()
-              .find('a.userLink')
-              .click();
-          }
+            function () {
+              $(this).parent().find('a.userLink').click();
+            }
         )
     )
     .append(
@@ -380,7 +364,7 @@ function _renderUserInList(user, liHandler) {
 
 function _renderUserList(users, liHandler) {
   var $out = $('<ul>').addClass('userList');
-  for (var i = 0; i < users.length; ++i)
+  for (let i = 0; i < users.length; ++i)
     $out.append(_renderUserInList(users[i], liHandler));
   return $out.ajaxify ? $out.ajaxify() : $out;
 }
@@ -418,7 +402,7 @@ function _commentDeleteHandler() {
   var $post = $comment.closest('.post');
   var $html = $(
     '<div><p>Do you want to permanently delete this comment?</p></div>' +
-    '<span class="btnDelete greenButton">Delete</span>'
+      '<span class="btnDelete greenButton">Delete</span>'
   );
   openJqueryDialog($html, 'dlgDeleteComment');
   $('.dlgDeleteComment .btnDelete').click(function () {
@@ -435,18 +419,10 @@ function _renderComment(c) {
   var $com = $("<div class='comment' data-cid='" + c._id + "'>");
   $("<a class='author' href='/u/" + c.uId + "'>")
     .append("<span style='background-image:url(/img/u/" + c.uId + ");'>")
-    .append(
-      $('<p>')
-        .text(c.uNm)
-        .append($("<span class='t'>").text(t))
-    )
+    .append($('<p>').text(c.uNm).append($("<span class='t'>").text(t)))
     .appendTo($com);
-  $("<p class='text'>")
-    .html(_renderCommentText(c.text))
-    .appendTo($com);
-  $("<div class='delete'>")
-    .click(_commentDeleteHandler)
-    .appendTo($com);
+  $("<p class='text'>").html(_renderCommentText(c.text)).appendTo($com);
+  $("<div class='delete'>").click(_commentDeleteHandler).appendTo($com);
   return $com.ajaxify ? $com.ajaxify() : $com;
 }
 
@@ -486,7 +462,7 @@ function toggleComments(pId, toggle) {
               id: r._id,
               name: r.name,
               avatar: '/img/u/' + r._id,
-              type: 'user'
+              type: 'user',
             };
           });
           callback.call(this, hits);
@@ -496,7 +472,7 @@ function toggleComments(pId, toggle) {
         if ((text.trim ? text.trim() : text).length == 0)
           $btn.attr('disabled', 'disabled');
         else $btn.removeAttr('disabled');
-      }
+      },
     });
     // init "post" button
     $ext
@@ -534,15 +510,9 @@ function toggleComments(pId, toggle) {
           .prepend('<div>');
     }
     // init "delete" icons
-    $ext
-      .find('.delete')
-      .unbind('click')
-      .click(_commentDeleteHandler);
+    $ext.find('.delete').unbind('click').click(_commentDeleteHandler);
     // focus en comment input
-    $ext
-      .find('textarea')
-      .focus()
-      .click();
+    $ext.find('textarea').focus().click();
   });
 }
 
@@ -640,7 +610,7 @@ var $notifIcon = $('#notifIcon');
 var refreshNotifCounter = function () {
   var notifs = lastNotifData;
   var total = 0;
-  for (var i in notifs) total += notifs[i].n || 1;
+  for (let i in notifs) total += notifs[i].n || 1;
   $notifIcon.text(total);
   $notifIcon.removeClass('someNotif');
   if (total == 0) $notifPanel.hide();
@@ -655,7 +625,7 @@ var fetchNotifs = function () {
     success: function (notifs) {
       lastNotifData = notifs;
       refreshNotifCounter();
-    }
+    },
   });
 };
 
@@ -718,7 +688,7 @@ var refreshNotifPanel = function () {
     '<div onclick="clearNotifs();">Clear all</div>' +
     '<p>Your notifications</p><ul>';
   var notifs = lastNotifData;
-  for (var i in notifs) content += renderNotif(notifs[i]);
+  for (let i in notifs) content += renderNotif(notifs[i]);
   $notifPanel.html(content + '</ul>').ajaxify();
 };
 
@@ -727,7 +697,7 @@ function clearNotif(pId) {
     type: 'POST',
     url: '/api/notif',
     data: { action: 'delete', pId: pId },
-    complete: fetchNotifs
+    complete: fetchNotifs,
   });
   $('#notifPanel li').each(function () {
     if ($(this).attr('data-pid') == pId) $(this).remove();
@@ -739,7 +709,7 @@ function clearNotifs() {
     type: 'POST',
     url: '/api/notif',
     data: { action: 'deleteAll' },
-    complete: fetchNotifs
+    complete: fetchNotifs,
   });
   $notifPanel.hide();
 }
@@ -762,7 +732,7 @@ function submitBio() {
       setTimeout(function () {
         bio.parent().removeClass('submitting');
       }, 500);
-    }
+    },
   });
 }
 
@@ -784,13 +754,13 @@ function showHelpOverlay() {
     .addClass('help')
     .append(
       '<div class="helpOverlay">' +
-      '<div class="overlay"></div>' +
-      '<div class="container">' +
-      '<div class="content">' +
-      '<h3>Welcome</h3>' +
-      '<p >Here is the Incoming tracks from people you follow to</p>' +
-      '<div class="btnCloseHelp" onclick="hideHelpOverlay()">Ok, Got it</div>' +
-      '</div></div></div>'
+        '<div class="overlay"></div>' +
+        '<div class="container">' +
+        '<div class="content">' +
+        '<h3>Welcome</h3>' +
+        '<p >Here is the Incoming tracks from people you follow to</p>' +
+        '<div class="btnCloseHelp" onclick="hideHelpOverlay()">Ok, Got it</div>' +
+        '</div></div></div>'
     );
   $('.posts a').bind('click', hideHelpOverlay);
 }
@@ -821,30 +791,28 @@ function sharePost(pId) {
       '<div class="pointe"></div>',
       '<div class="sharing">',
       '<iframe class="twitter-share-button twitter-count-horizontal" src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;text=' +
-      encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/) +
-      '&amp;url=' +
-      encodeURIComponent(postUrl) +
-      '&amp;via=open_whyd&amp;original_referer=' +
-      encodeURIComponent(window.location.href) +
-      '" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
+        encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/) +
+        '&amp;url=' +
+        encodeURIComponent(postUrl) +
+        '&amp;via=open_whyd&amp;original_referer=' +
+        encodeURIComponent(window.location.href) +
+        '" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
       '<iframe class="fblikeBtn" src="//www.facebook.com/plugins/like.php?href=' +
-      encodeURIComponent(postUrl) +
-      '&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;font&amp;colorscheme=light&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>',
+        encodeURIComponent(postUrl) +
+        '&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;font&amp;colorscheme=light&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>',
       '</div>',
       '<p>Permalink</p>',
       '<input type="text" value="' +
-      postUrl +
-      '" readonly="readonly" onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand(\'Copy\');"></input>',
-      '</div>'
+        postUrl +
+        '" readonly="readonly" onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand(\'Copy\');"></input>',
+      '</div>',
     ].join('\n');
 
     if ($('#sharePopin').length > 0) {
       $('#sharePopin').remove();
       $('#sharepopin-overlay').remove();
     } else {
-      var container = $($btn)
-        .parent()
-        .parent();
+      var container = $($btn).parent().parent();
       var share = $(TEMPLATE);
       $(container).append(share);
       offset.top += 25;
@@ -891,7 +859,7 @@ function makeUrl(getParamsObj) {
   if (getParamsObj) {
     wlh += hasParams ? '&' : '?';
     var p = [];
-    for (var i in getParamsObj)
+    for (let i in getParamsObj)
       p.push(encodeURIComponent(i) + '=' + encodeURIComponent(getParamsObj[i]));
     wlh += p.join('&');
   }
@@ -906,12 +874,7 @@ function onPageLoad() {
   )
     showHelpOverlay();
   else if ($body.hasClass('pgPost'))
-    toggleComments(
-      $('.post')
-        .first()
-        .attr('data-pid'),
-      true
-    );
+    toggleComments($('.post').first().attr('data-pid'), true);
 }
 
 $(document).ready(function () {
@@ -938,7 +901,7 @@ $(document).ready(function () {
     112: function () {
       // P: switch to prev track
       window.whydPlayer.prev();
-    }
+    },
   };
 
   var keyUpShortcuts = {
@@ -953,7 +916,7 @@ $(document).ready(function () {
     39: function () {
       // right arrow => next (playlist) page
       if (window.nextPageInList) goToPage(window.nextPageInList);
-    }
+    },
   };
 
   $(document).keypress(function (e) {
@@ -1016,12 +979,12 @@ $(document).ready(function () {
   // init search bar
 
   var noResultsYet = function (q) {
-    return /*$(*/[
+    return /*$(*/ [
       '<ul class="showAllResults loading">',
       '<li><a href="/search?q=' +
-      encodeURIComponent(q) +
-      '" target="_blank">Show all results...</a></li>',
-      '</ul>'
+        encodeURIComponent(q) +
+        '" target="_blank">Show all results...</a></li>',
+      '</ul>',
     ].join('\n') /*).ajaxify()[0]*/;
   };
 
@@ -1054,13 +1017,13 @@ $(document).ready(function () {
           return !tracks.length
             ? resultsHtml || ''
             : (resultsHtml || '</ul>').replace(
-              '</ul>',
-              '</ul>' +
-              "<ul class='resultCategory'>" +
-              '<div>Tracks</div>' +
-              tracks.map(renderTrack).join('\n') +
-              '</ul>'
-            );
+                '</ul>',
+                '</ul>' +
+                  "<ul class='resultCategory'>" +
+                  '<div>Tracks</div>' +
+                  tracks.map(renderTrack).join('\n') +
+                  '</ul>'
+              );
         }
         if (/^https?\:\/\//.test(query))
           whydPlayer.fetchTrackByUrl(query, function (track) {
@@ -1071,10 +1034,10 @@ $(document).ready(function () {
               track.eId
                 ? prependExternalTracks([track])
                 : '<div class="noResults">' +
-                "<p>Sorry, we don't recognize this URL...</p>" +
-                '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
-                '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
-                '</div>',
+                    "<p>Sorry, we don't recognize this URL...</p>" +
+                    '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
+                    '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
+                    '</div>',
               false
             );
             // TODO: send this URL back to whyd/playemJS team
@@ -1106,7 +1069,7 @@ $(document).ready(function () {
       onResultClick: function (href, a) {
         if (!a.onclick) window.goToPage(href);
         return false;
-      }
+      },
     });
 
   // init other stuff...
@@ -1269,12 +1232,12 @@ $(document).ready(function () {
           $menuChildren.filter(activeSelector).removeClass(activeClass);
           $menuChildren = $menuChildren.has(
             'a[href^="' +
-            relativeUrl +
-            '"],a[href^="/' +
-            relativeUrl +
-            '"],a[href^="' +
-            url +
-            '"]'
+              relativeUrl +
+              '"],a[href^="/' +
+              relativeUrl +
+              '"],a[href^="' +
+              url +
+              '"]'
           );
           if ($menuChildren.length === 1) {
             $menuChildren.addClass(activeClass);
@@ -1291,11 +1254,13 @@ $(document).ready(function () {
           // Update the title
           document.title = $data.find('.document-title:first').text();
           try {
-            document.getElementsByTagName('title')[0].innerHTML = document.title
+            document.getElementsByTagName(
+              'title'
+            )[0].innerHTML = document.title
               .replace('<', '&lt;')
               .replace('>', '&gt;')
               .replace(' & ', ' &amp; ');
-          } catch (Exception) { }
+          } catch (Exception) {}
 
           // Add the scripts
           $scripts.each(function () {
@@ -1331,7 +1296,7 @@ $(document).ready(function () {
               $('head').append($(this));
             }
           });
-          for (var i in currentLinks) {
+          for (let i in currentLinks) {
             //console.log("remove link: ", i, currentLinks[i]);
             currentLinks[i].remove();
           }
@@ -1342,10 +1307,7 @@ $(document).ready(function () {
             // update the body class
             $('body').attr(
               'class',
-              data
-                .split('<body')[1]
-                .split('class=')[1]
-                .split(/["']/)[1]
+              data.split('<body')[1].split('class=')[1].split(/["']/)[1]
             );
             // re-position the player
             window.whydPlayer.refresh();
@@ -1372,7 +1334,7 @@ $(document).ready(function () {
             document.location.href = url;
           }, 300);
           return false;
-        }
+        },
       }); // end ajax
     }
 
@@ -1400,7 +1362,7 @@ $(document).ready(function () {
 })(window); // end closure
 
 $.ajaxSetup({
-  cache: false
+  cache: false,
 });
 
 var initWhydTooltips = (function () {

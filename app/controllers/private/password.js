@@ -5,25 +5,12 @@
  */
 
 var config = require('../../models/config.js');
-var loggingModel = require('../../models/logging.js');
 var users = require('../../models/user.js');
 var md5 = users.md5;
 var notifEmails = require('../../models/notifEmails.js');
 var templateLoader = require('../../templates/templateLoader.js');
 
-//var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/;
-
-function renderTemplate1(params, callback) {
-  templateLoader.loadTemplate('app/templates/passwordForgot.html', function(
-    template
-  ) {
-    callback(template.render(params));
-  });
-}
-
-function renderTemplate2(params, callback) {}
-
-exports.checkResetCode = function(request, reqParams, response, okCallback) {
+exports.checkResetCode = function (request, reqParams, response, okCallback) {
   if (!reqParams.resetCode || !reqParams.uid) {
     console.log('resetCode and uid parameters are required');
     response.legacyRender(
@@ -33,7 +20,7 @@ exports.checkResetCode = function(request, reqParams, response, okCallback) {
     return false;
   }
 
-  users.fetchByUid(reqParams.uid, function(user) {
+  users.fetchByUid(reqParams.uid, function (user) {
     if (user && user.pwd == reqParams.resetCode) {
       if (okCallback) okCallback(user);
     } else {
@@ -49,26 +36,26 @@ exports.checkResetCode = function(request, reqParams, response, okCallback) {
 /**
  * called when a user wants to reset his password
  */
-exports.renderForgotPage = function(request, reqParams, response, error) {
+exports.renderForgotPage = function (request, reqParams, response, error) {
   reqParams = reqParams || {};
 
   request.logToConsole('password.renderForgotPage', {
     email: reqParams.email,
     error: reqParams.error,
-    redirect: reqParams.redirect
+    redirect: reqParams.redirect,
   });
 
   var vars = {
     email: reqParams.email,
     error: error || reqParams.error || '',
-    redirect: reqParams.redirect || ''
+    redirect: reqParams.redirect || '',
   };
 
-  templateLoader.loadTemplate('app/templates/passwordForgot.html', function(
+  templateLoader.loadTemplate('app/templates/passwordForgot.html', function (
     template
   ) {
     response.legacyRender(template.render(vars), null, {
-      'content-type': 'text/html'
+      'content-type': 'text/html',
     });
   });
 };
@@ -76,7 +63,7 @@ exports.renderForgotPage = function(request, reqParams, response, error) {
 /**
  * called when user follows the password reset URL (/password?uid=xxx&resetCode=yyy), e.g. provided in an email
  */
-exports.renderPasswordPage = function(request, reqParams, response, error) {
+exports.renderPasswordPage = function (request, reqParams, response, error) {
   reqParams = reqParams || {};
 
   request.logToConsole('password.renderPasswordPage', {
@@ -84,10 +71,10 @@ exports.renderPasswordPage = function(request, reqParams, response, error) {
     resetCode: reqParams.resetCode,
     email: reqParams.email,
     error: reqParams.error,
-    redirect: reqParams.redirect
+    redirect: reqParams.redirect,
   });
 
-  exports.checkResetCode(request, reqParams, response, function(user) {
+  exports.checkResetCode(request, reqParams, response, function (user) {
     var vars = {
       resetCode: reqParams.resetCode,
       uid: user.id,
@@ -95,16 +82,16 @@ exports.renderPasswordPage = function(request, reqParams, response, error) {
       password: reqParams.password || '',
       password2: reqParams.password2 || '',
       error: error || reqParams.error || '',
-      redirect: reqParams.redirect || ''
+      redirect: reqParams.redirect || '',
     };
 
     //var html = Mustache.to_html(htmlTemplate, vars);
     //response.legacyRender(html, null, {'content-type': 'text/html'});
-    templateLoader.loadTemplate('app/templates/passwordSet.html', function(
+    templateLoader.loadTemplate('app/templates/passwordSet.html', function (
       template
     ) {
       response.legacyRender(template.render(vars), null, {
-        'content-type': 'text/html'
+        'content-type': 'text/html',
       });
     });
   });
@@ -113,7 +100,7 @@ exports.renderPasswordPage = function(request, reqParams, response, error) {
 /**
  * called when user submits the form from password.html
  */
-exports.resetPassword = function(request, reqParams, response) {
+exports.resetPassword = function (request, reqParams, response) {
   request.logToConsole(
     'register.resetPassword',
     reqParams
@@ -121,7 +108,7 @@ exports.resetPassword = function(request, reqParams, response) {
           resetCode: reqParams.resetCode,
           uid: reqParams.uid,
           email: reqParams.email,
-          redirect: reqParams.redirect
+          redirect: reqParams.redirect,
         }
       : null
   );
@@ -153,8 +140,8 @@ exports.resetPassword = function(request, reqParams, response) {
   //else if (!pwdRegex.test(reqParams.password))
   //	return exports.renderPasswordPage(request, reqParams, response, "Your password contains invalid characters");
 
-  exports.checkResetCode(request, reqParams, response, function(user) {
-    users.save({ _id: user._id, pwd: md5(reqParams.password) }, function(
+  exports.checkResetCode(request, reqParams, response, function (user) {
+    users.save({ _id: user._id, pwd: md5(reqParams.password) }, function (
       storedUser
     ) {
       if (!storedUser)
@@ -179,7 +166,7 @@ exports.resetPassword = function(request, reqParams, response) {
   });
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   request.logToConsole('password.controller', request.method);
 
   if (request.method.toLowerCase() === 'post')

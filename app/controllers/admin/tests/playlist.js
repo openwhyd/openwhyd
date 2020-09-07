@@ -6,9 +6,9 @@ var snip = require('../../../snip.js');
 var config = require('../../../models/config.js'); // {urlPrefix:"http://localhost:8000"};
 
 function makeResponseHandler(cb) {
-  return function(err, res, responseData) {
+  return function (err, res, responseData) {
     var result = {
-      statusCode: responseData.statusCode
+      statusCode: responseData.statusCode,
     };
     if (err) result.error = err;
     else {
@@ -24,7 +24,7 @@ function makeResponseHandler(cb) {
 }
 
 function makeRequest(cookie) {
-  return function(url, options, cb) {
+  return function (url, options, cb) {
     (options.headers = options.headers || {}).Cookie = cookie;
     if (options.body) {
       options.method = 'post';
@@ -39,7 +39,7 @@ function makeRequest(cookie) {
   };
 }
 
-exports.makeTests = function(p) {
+exports.makeTests = function (p) {
   var req = makeRequest(p.cookie);
   var testVars = {};
   return [
@@ -47,21 +47,21 @@ exports.makeTests = function(p) {
     //["/api/user provides user data", "/api/user?format=json", {}, function(res, cb){ cb(res.response.name == "Adrien Joly"); }],
     [
       'create a playlist',
-      function(cb) {
+      function (cb) {
         req(
           '/api/playlist',
           { body: { action: 'create', name: '(testAPI)' } },
-          function(res) {
+          function (res) {
             testVars.pl = res.response;
             cb(testVars.pl.id > -1);
           }
         );
-      }
+      },
     ],
     [
       'check that playlist exists',
-      function(cb) {
-        req('/api/user?format=json', {}, function(res) {
+      function (cb) {
+        req('/api/user?format=json', {}, function (res) {
           var lastPl = {};
           try {
             lastPl = res.response.pl.shift();
@@ -70,25 +70,24 @@ exports.makeTests = function(p) {
           }
           cb(lastPl.id == testVars.pl.id && lastPl.name == testVars.pl.name);
         });
-      }
+      },
     ],
     [
       'delete playlist',
-      function(cb) {
+      function (cb) {
         req(
           '/api/playlist',
           { body: { action: 'delete', id: testVars.pl.id } },
-          function(res) {
-            console.log('RES', res);
+          function (res) {
             cb(true);
           }
         );
-      }
+      },
     ],
     [
       'check that playlist does not exists',
-      function(cb) {
-        req('/api/user?format=json', {}, function(res) {
+      function (cb) {
+        req('/api/user?format=json', {}, function (res) {
           var lastPl = {};
           try {
             lastPl = res.response.pl.shift();
@@ -98,7 +97,7 @@ exports.makeTests = function(p) {
           cb(lastPl.id != testVars.pl.id);
           delete testVars.pl;
         });
-      }
-    ]
+      },
+    ],
   ];
 };

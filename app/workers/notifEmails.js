@@ -15,7 +15,7 @@ var timer = null;
 function processUser(u, cb) {
   var freq = 0,
     cleanPref = {}; // daily (by default)
-  for (var i in u.pref)
+  for (let i in u.pref)
     if (i.indexOf('em') == 0 && u.pref[i] > 0) {
       freq = u.pref[i];
       cleanPref[i] = u.pref[i];
@@ -28,14 +28,14 @@ function processUser(u, cb) {
     includeLikes: !!cleanPref['emLik'],
     includeReposts: !!cleanPref['emAdd'],
     includeSameTracks: !!cleanPref['emSam'],
-    includeSubscribers: !!cleanPref['emSub']
+    includeSubscribers: !!cleanPref['emSub'],
   };
   console.log('[DIGEST WORKER] ' + u._id + ':', JSON.stringify(options));
 
   function done() {
     // set next digest date
     cleanPref.pendEN = 0; // reset the notification counter
-    userModel.setPref(u._id, cleanPref, function(updatedUser) {
+    userModel.setPref(u._id, cleanPref, function (updatedUser) {
       console.log(
         '[DIGEST WORKER] ' + u._id + ' => next digest date: ',
         ((updatedUser || {}).pref || {}).nextEN
@@ -49,7 +49,7 @@ function processUser(u, cb) {
     var renderingLabel = '[DIGEST WORKER] ' + u._id + ' rendering';
     console.log(renderingLabel, '...');
     console.time(renderingLabel);
-    digest.fetchAndGenerateNotifDigest(u, options, function(email) {
+    digest.fetchAndGenerateNotifDigest(u, options, function (email) {
       console.timeEnd(renderingLabel);
       if (email)
         emailModel.email(
@@ -58,7 +58,7 @@ function processUser(u, cb) {
           email.bodyText,
           email.bodyHtml,
           u.name,
-          function(r) {
+          function (r) {
             console.log(
               '[DIGEST WORKER] ' + u._id + ' => digest email result:',
               r
@@ -82,7 +82,7 @@ function worker(cb) {
   var now = new Date();
   var label = '[DIGEST WORKER] notifEmails.worker #' + now.getTime();
   console.time(label);
-  userModel.fetchEmailNotifsToSend(now, function(users) {
+  userModel.fetchEmailNotifsToSend(now, function (users) {
     console.timeEnd(label);
     console.log('[DIGEST WORKER] users to notify by email: ', users.length);
     (function next() {
@@ -105,7 +105,7 @@ worker(function(){
 
 function oneAtATime(fct, msg) {
   var running = false;
-  return function() {
+  return function () {
     if (running)
       console.error(
         msg ||
@@ -113,7 +113,7 @@ function oneAtATime(fct, msg) {
       );
     else {
       running = true;
-      fct(function() {
+      fct(function () {
         running = false;
       });
     }

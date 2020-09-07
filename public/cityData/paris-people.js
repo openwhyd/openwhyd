@@ -28,5 +28,5 @@ var FEATURED_PEOPLE = [
   '51507ef57e91c862b2ac4878', // Paris Mix
   '50abb88b7e91c862b2a8ca33', // Sodwee
   '52f9004e7e91c862b2b544cb', // We Do Music
-  '5278f7427e91c862b2b0d3f6' // Tracks ARTE
+  '5278f7427e91c862b2b0d3f6', // Tracks ARTE
 ];

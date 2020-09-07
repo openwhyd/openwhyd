@@ -1,11 +1,11 @@
-var init = function() {
+/* global $ */
+
+var init = function () {
   console.log('trackorder init');
 
-  $('.posts')
-    .disableSelection()
-    .sortable({
-      placeholder: 'postDropZone'
-    });
+  $('.posts').disableSelection().sortable({
+    placeholder: 'postDropZone',
+  });
 
   function submitTrackOrder(plId, order, cb) {
     $.ajax({
@@ -16,23 +16,23 @@ var init = function() {
       data: JSON.stringify({
         action: 'setOrder',
         id: plId,
-        order: order
+        order: order,
       }),
-      success: function(res) {
+      success: function (res) {
         cb(res);
       },
-      error: function(e) {
+      error: function (e) {
         cb();
-      }
+      },
     });
   }
 
-  $('#playlistTrackOrderSubmit').click(function() {
+  $('#playlistTrackOrderSubmit').click(function () {
     var order = [];
-    var posts = $('.post').each(function() {
+    var posts = $('.post').each(function () {
       order.push($(this).attr('data-pid'));
     });
-    submitTrackOrder(plId, order, function(res) {
+    submitTrackOrder(plId, order, function (res) {
       if (!res || res.error) {
         showMessage('Something went wrong... Please excuse us and try again!');
         console.log('error', res);
@@ -41,8 +41,8 @@ var init = function() {
   });
 };
 
-$(function() {
-  var interval = setInterval(function() {
+$(function () {
+  var interval = setInterval(function () {
     console.log('jquery ui loading ready?', !!$.fn.disableSelection);
     if ($.fn.disableSelection) {
       init();

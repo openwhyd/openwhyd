@@ -1,15 +1,15 @@
-DeezerExport = (function() {
+DeezerExport = (function () {
   var INIT_PARAMS = {
     appId: '128545',
     channelUrl: window.location.href.replace(
       '/mobile/',
       '/html/deezer.channel.html'
-    )
+    ),
   };
 
   function whenLoggedIn() {
     console.log('Deezer: logged in!');
-    DZ.api('/user/me', function(response) {
+    DZ.api('/user/me', function (response) {
       console.log('Deezer: me', response);
     });
   }
@@ -17,7 +17,7 @@ DeezerExport = (function() {
   function login(cb) {
     console.log('Deezer: logging in...');
     DZ.login(
-      function(response) {
+      function (response) {
         console.log('Deezer: login response', response);
         if ((response.authResponse || {}).accessToken) {
           whenLoggedIn();
@@ -33,7 +33,7 @@ DeezerExport = (function() {
   }
 
   function checkLoginStatus(cb) {
-    DZ.getLoginStatus(function(response) {
+    DZ.getLoginStatus(function (response) {
       console.log('Deezer: getLoginStatus response', response);
       if ((response.authResponse || {}).accessToken) {
         whenLoggedIn();
@@ -44,7 +44,7 @@ DeezerExport = (function() {
     });
   }
 
-  window.dzAsyncInit = function() {
+  window.dzAsyncInit = function () {
     console.log('Deezer: init...');
     DZ.init(INIT_PARAMS);
   };
@@ -56,26 +56,26 @@ DeezerExport = (function() {
 
   var methods = {
     checkLogin: checkLoginStatus,
-    lookupTrack: function(title, cb) {
-      DZ.api('search/autocomplete', { q: title }, function(res) {
+    lookupTrack: function (title, cb) {
+      DZ.api('search/autocomplete', { q: title }, function (res) {
         console.log('Deezer: search', title, res);
         cb && cb((((res || {}).tracks || {}).data || []).shift());
       });
     },
-    playTracks: function(trackIds, plName) {
-      checkLoginStatus(function() {
+    playTracks: function (trackIds, plName) {
+      checkLoginStatus(function () {
         DZ.api(
           'user/me/playlists',
           'POST',
           { title: plName || 'whyd mobile playlist' },
-          function(response) {
+          function (response) {
             console.log('Deezer: created playlist', response);
             var plId = response.id;
             DZ.api(
               'playlist/' + plId + '/tracks',
               'POST',
               { songs: trackIds },
-              function(response) {
+              function (response) {
                 console.log('Deezer: added tracks', response);
                 window.location.href =
                   'deezer://www.deezer.com/playlist/' +
@@ -86,7 +86,7 @@ DeezerExport = (function() {
           }
         );
       });
-    }
+    },
   };
 
   return new (function DeezerExport() {

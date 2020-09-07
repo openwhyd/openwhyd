@@ -74,25 +74,6 @@ jobs:
           name: Run tests
           command: source env-vars-testing.sh && npm run test-api
 
-  webdriver-tests:
-    <<: *defaults
-    steps:
-      - attach-workspace: *attach-work-dir
-      # Get Openwhyd ready for testing
-      - run:
-          name: Database init.
-          command: source env-vars-testing.sh && npm run test-reset
-      - run:
-          name: Run Openwhyd server
-          command: source env-vars-testing.sh && npm start --mongoDbDatabase openwhyd_test
-          background: true
-      - run:
-          name: Wait for server up
-          command: ./scripts/wait-for-http-server.sh 8080
-      - run:
-          name: Run tests
-          command: source env-vars-testing.sh && npm run test-acceptance
-
   cypress-tests:
     <<: *defaults
     steps:
@@ -119,9 +100,6 @@ workflows:
           requires:
             - checkout
       - api-tests:
-          requires:
-            - checkout
-      - webdriver-tests:
           requires:
             - checkout
       - cypress-tests:

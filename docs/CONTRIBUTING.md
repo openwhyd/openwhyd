@@ -23,7 +23,7 @@ You can contribute to Openwhyd in various ways:
 - [Become a backer / donate](https://opencollective.com/openwhyd#support) to help us cover openwhyd.org's hosting fees
 - Read more in the FAQ about [other ways to help the Openwhyd project](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help)
 
-> **Working on your first Pull Request?** You can learn how from this *free* series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github). And don't hesitate to ask for assistance by posting a message in any of the Github issues that you would like to contribute to.
+> **Working on your first Pull Request?** You can learn how from this _free_ series [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github). And don't hesitate to ask for assistance by posting a message in any of the Github issues that you would like to contribute to.
 
 ## How to contribute to the code base
 
@@ -41,6 +41,7 @@ You can contribute to Openwhyd in various ways:
 ## Core principles
 
 More generally, make sure to follow these three principles:
+
 - Keep your PRs short
 - Keep your PRs simple
 - Avoid submitting PRs that may cause long discussions with the PR reviewer and/or other contributors
@@ -50,6 +51,19 @@ More generally, make sure to follow these three principles:
 ## Code guidelines
 
 - Optimize for search: [Like in the React.js project](https://facebook.github.io/react/contributing/design-principles.html), we want to make it easy for contributors to search for symbols (constants, variables and function names). So don't hesitate to give them verbose/specific names.
+
+## Project Structure
+
+- **app** API endpoints and backend codes
+- **config** Database initialization scripts, http routes, and other configuration files
+- **cypress** End-to-End tests
+- **docs** API documentation and other references documents
+- **misc** Code of browser extension 
+- **public** Frontend assets: images, css, js files 
+- **scripts** Utilities for production and data analatics
+- **test** Integration and unit tests
+
+Note: The player code is hosted at [playemJS](https://github.com/adrienjoly/playemjs).
 
 ## Contact information
 

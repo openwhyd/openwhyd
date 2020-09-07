@@ -1,13 +1,12 @@
+/* global SoundCloudPlayer, VimeoPlayer, DailymotionPlayer, DeezerPlayer, BandcampPlayer, JamendoPlayer */
+
 /**
  * openwhyd bookmarklet
  * @author adrienjoly
  * https://github.com/openwhyd/openwhyd
  **/
 
-function makeBookmarklet(window, urlPrefix, urlSuffix) {
-  urlPrefix = urlPrefix || '';
-  urlSuffix = urlSuffix || '';
-
+function makeBookmarklet(window, urlPrefix = '') {
   // Helpers
 
   function getNodeText(node) {
@@ -22,12 +21,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         ? src.split('facebook.com/l.php?u=')
         : [];
     if (fbLink.length > 1) {
-      fbLink = decodeURIComponent(
-        fbLink
-          .pop()
-          .split('&')
-          .shift()
-      );
+      fbLink = decodeURIComponent(fbLink.pop().split('&').shift());
       var result = fbLink.indexOf('//www.facebook.com/') == -1 ? fbLink : src;
       return result;
     }
@@ -39,7 +33,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
   function makeFileDetector() {
     var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
     return function detectMusicFiles(url, cb, element) {
-      var fileName = (url.match(/([^\/]+)\.(?:mp3|ogg)$/) || []).pop();
+      var fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
       if (eidSet[url] || !fileName) return cb();
       var title =
         (element ? element.title || getNodeText(element) : null) ||
@@ -48,34 +42,34 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       cb({
         id: url,
         title: title.replace(/^\s+|\s+$/g, ''),
-        img: urlPrefix + '/images/cover-audiofile.png'
+        img: urlPrefix + '/images/cover-audiofile.png',
       });
     };
   }
 
   var YOUTUBE_PLAYER = {
-    getEid: function(url) {
+    getEid: function (url) {
       // code imported from playem-all
       if (
-        /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
+        /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
           url
         ) ||
-        /^\/yt\/([a-zA-Z0-9_\-]+)/.test(url) ||
-        /youtube\.com\/attribution_link\?.*v\%3D([^ \%]+)/.test(url) ||
-        /youtube.googleapis.com\/v\/([a-zA-Z0-9_\-]+)/.test(url)
+        /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
+        /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||
+        /youtube.googleapis.com\/v\/([a-zA-Z0-9_-]+)/.test(url)
       )
         return RegExp.lastParen;
     },
-    fetchMetadata: function(url, callback) {
+    fetchMetadata: function (url, callback) {
       var id = this.getEid(url);
       callback({
         id: id,
         eId: '/yt/' + id,
         img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
         url: 'https://www.youtube.com/watch?v=' + id,
-        playerLabel: 'Youtube'
+        playerLabel: 'Youtube',
       });
-    }
+    },
   };
 
   // players = { playerId -> { getEid(), fetchMetadata() } }
@@ -83,7 +77,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
   function makeStreamDetector(players) {
     var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
     function getPlayerId(url) {
-      for (var i in players) {
+      for (let i in players) {
         var player = players[i];
         var eId = player.getEid(url);
         if (eId) return i;
@@ -100,7 +94,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
       // 2. extract the (optional) stream URL from the identifier
       var parts = eid.split('#');
-      var streamUrl = /^https?\:\/\//.test(parts[1] || '') && parts[1];
+      var streamUrl = /^https?:\/\//.test(parts[1] || '') && parts[1];
       if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
 
       // 3. store the identifier, with and without stream URL, to prevent duplicates
@@ -109,7 +103,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       if (!player || !player.fetchMetadata) return cb({ eId: eid }); // quit if we can't enrich the metadata
 
       // 4. try to return the track with enriched metadata
-      player.fetchMetadata(url, function(track) {
+      player.fetchMetadata(url, function (track) {
         if (!track) return cb();
         element = element || {};
         track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of the DETECTORS
@@ -139,8 +133,8 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         {
           id: videoId,
           src: window.location.href,
-          name: window.document.title.replace(/ - YouTube$/, '')
-        }
+          name: window.document.title.replace(/ - YouTube$/, ''),
+        },
       ];
     },
     function detectPandoraTrack(window) {
@@ -163,21 +157,21 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     },
     function detectTrackFromTitle(window) {
       var title = window.document.title
-        .replace(/[▶\<\>\"\']+/g, ' ')
+        .replace(/[▶<>"']+/g, ' ')
         .replace(/[ ]+/g, ' ');
       var titleParts = [
         ' - Spotify',
         ' | www.deezer.com',
         ' - Xbox Music',
-        ' - Royalty Free Music - Jamendo'
+        ' - Royalty Free Music - Jamendo',
       ];
-      for (var i = 0; i < titleParts.length; ++i)
+      for (let i = 0; i < titleParts.length; ++i)
         if (title.indexOf(titleParts[i]) > -1)
           return [
             {
               src: window.location.href,
-              searchQuery: title.replace(titleParts[i], '')
-            }
+              searchQuery: title.replace(titleParts[i], ''),
+            },
           ];
     },
     function extractBandcampTracks(window) {
@@ -185,7 +179,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       var bc = window.TralbumData;
       if (bc) {
         var bcPrefix = '/bc/' + bc.url.split('//')[1].split('.')[0] + '/';
-        toDetect = bc.trackinfo.map(function(tr) {
+        toDetect = bc.trackinfo.map(function (tr) {
           if (tr.file) {
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
             return {
@@ -194,7 +188,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
               name: bc.artist + ' - ' + tr.title,
               img: bc.artFullsizeUrl || bc.artThumbURL,
               artist: bc.artist,
-              title: tr.title
+              title: tr.title,
             };
           }
         });
@@ -212,9 +206,9 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         var pathPos = bandcampPageUrl.indexOf('/', 10);
         if (pathPos != -1) bandcampPageUrl = bandcampPageUrl.substr(0, pathPos); // remove path
         var elts = window.document.querySelectorAll('a[href^="/track/"]');
-        for (var j = 0; j < elts.length; ++j)
+        for (let j = 0; j < elts.length; ++j)
           toDetect.push({
-            href: bandcampPageUrl + elts[j].getAttribute('href')
+            href: bandcampPageUrl + elts[j].getAttribute('href'),
           });
       }
 
@@ -223,7 +217,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     },
     function parseDomElements(window) {
       var results = [];
-      ['iframe', 'object', 'embed', 'a', 'audio', 'source'].map(function(
+      ['iframe', 'object', 'embed', 'a', 'audio', 'source'].map(function (
         elName
       ) {
         results = results.concat(
@@ -233,7 +227,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         );
       });
       return results;
-    }
+    },
   ];
 
   function detectTracks({ window, ui, urlDetectors }) {
@@ -246,7 +240,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         if (!remainingUrlDetectors.length) return cb();
         remainingUrlDetectors.shift()(
           url,
-          function(track) {
+          function (track) {
             if (track && track.id) cb(track);
             else processNext();
           },
@@ -260,7 +254,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
         element.eId ||
         unwrapFacebookLink(element.href || element.src || element.data || '');
       if (!url) return cb();
-      detectTrack(url, element, function(track) {
+      detectTrack(url, element, function (track) {
         if (track) {
           track.url = url;
           track.title =
@@ -277,7 +271,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     }
 
     function whenDone(searchThumbs) {
-      searchThumbs.map(function(searchThumb) {
+      searchThumbs.map(function (searchThumb) {
         ui.addSearchThumb(searchThumb);
       });
       console.info('finished detecting tracks!');
@@ -290,7 +284,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       // this class holds a collections of elements that potentially reference streamable tracks
       var set = {};
       function normalize(url) {
-        if (typeof url === 'string' && !/^javascript\:/.test(url)) {
+        if (typeof url === 'string' && !/^javascript:/.test(url)) {
           return url.split('#')[0];
         } else {
           return undefined;
@@ -299,11 +293,11 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       function size(elt) {
         return (elt.name || getNodeText(elt) || '').length;
       }
-      this.has = function(url) {
+      this.has = function (url) {
         var normalized = normalize(url);
         return normalized && !!set[normalized];
       };
-      this.push = function(elt) {
+      this.push = function (elt) {
         var url =
           elt &&
           normalize(
@@ -315,11 +309,11 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
           set[url] = elt;
         }
       };
-      this.getSortedArray = function() {
+      this.getSortedArray = function () {
         var eIds = [],
           urls = [],
           keys = Object.keys(set);
-        for (var i = 0; i < keys.length; ++i)
+        for (let i = 0; i < keys.length; ++i)
           (/\/..\//.test(keys[i]) ? eIds : urls).push(set[keys[i]]);
         return eIds.concat(urls);
       };
@@ -327,10 +321,10 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
 
     console.info('1/2 parse page...');
 
-    DETECTORS.map(function(detectFct) {
+    DETECTORS.map(function (detectFct) {
       var results = detectFct(window) || [];
       console.info('-----' + detectFct.name, '=>', results.length);
-      results.map(function(result) {
+      results.map(function (result) {
         toDetect.push(result);
       });
     });
@@ -338,7 +332,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     if (!toDetect.has(window.location.href))
       toDetect.push({
         src: window.location.href,
-        searchQuery: window.document.title
+        searchQuery: window.document.title,
       });
 
     console.info('2/2 list streamable tracks...');
@@ -348,7 +342,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
       var elt = eltArray.shift();
       if (!elt) whenDone(searchThumbs);
       else
-        detectEmbed(elt, function(track) {
+        detectEmbed(elt, function (track) {
           if (track) ui.addThumb(track);
           else searchThumbs.push(elt);
           processNext();
@@ -360,7 +354,7 @@ function makeBookmarklet(window, urlPrefix, urlSuffix) {
     YOUTUBE_PLAYER,
     detectTracks,
     makeFileDetector,
-    makeStreamDetector
+    makeStreamDetector,
   };
 }
 
@@ -369,14 +363,14 @@ if (typeof exports !== 'undefined') {
   module.exports = makeBookmarklet(); // will return detectTracks() and other functions
 } else {
   // running from web browser
-  (window._initWhydBk = function() {
+  (window._initWhydBk = function () {
     // prevents bug in firefox 3
     if (undefined == window.console)
       console = {
-        log: function() {},
-        info: function() {},
-        error: function() {},
-        warn: function() {}
+        log: function () {},
+        info: function () {},
+        error: function () {},
+        warn: function () {},
       };
 
     console.log('-= openwhyd bookmarklet v2.6 =-');
@@ -392,7 +386,7 @@ if (typeof exports !== 'undefined') {
     var overflowBackup = window.document.body.style.overflow;
     window.document.body.style.overflow = 'hidden';
 
-    window.closeWhydBk = function() {
+    window.closeWhydBk = function () {
       window.document.body.removeChild(
         window.document.getElementById('whydBookmarklet')
       );
@@ -402,8 +396,8 @@ if (typeof exports !== 'undefined') {
       delete window.closeWhydBk;
     };
 
-    window.document.onkeydown = function(e) {
-      if ((e || event).keyCode == 27) closeWhydBk();
+    window.document.onkeydown = function (e) {
+      if ((e || event).keyCode == 27) window.closeWhydBk();
     };
 
     // utility functions
@@ -411,7 +405,7 @@ if (typeof exports !== 'undefined') {
     function findScriptHost(scriptPathName) {
       // TODO: use window.document.currentScript.src when IE becomes completely forgotten by humans
       var els = window.document.getElementsByTagName('script');
-      for (var i = els.length - 1; i > -1; --i) {
+      for (let i = els.length - 1; i > -1; --i) {
         var whydPathPos = els[i].src.indexOf(scriptPathName);
         if (whydPathPos > -1) return els[i].src.substr(0, whydPathPos);
       }
@@ -431,13 +425,7 @@ if (typeof exports !== 'undefined') {
 
     function include(src, cb) {
       var inc, timer;
-      if (
-        src
-          .split(/[\#\?]/)[0]
-          .split('.')
-          .pop()
-          .toLowerCase() == 'css'
-      ) {
+      if (src.split(/[#?]/)[0].split('.').pop().toLowerCase() == 'css') {
         inc = window.document.createElement('link');
         inc.rel = 'stylesheet';
         inc.type = 'text/css';
@@ -445,11 +433,11 @@ if (typeof exports !== 'undefined') {
         inc.href = src;
       } else {
         inc = window.document.createElement('script');
-        inc.onload = function(loaded) {
+        inc.onload = function () {
           timer = timer ? clearInterval(timer) : null;
           cb && cb();
         };
-        function check() {
+        const check = () => {
           if (
             inc.readyState &&
             (inc.readyState == 'loaded' ||
@@ -457,7 +445,7 @@ if (typeof exports !== 'undefined') {
               inc.readyState == 4)
           )
             inc.onload();
-        }
+        };
         timer = cb ? setInterval(check, 500) : undefined;
         inc.onreadystatechange = check;
         inc.type = 'text/javascript';
@@ -474,7 +462,7 @@ if (typeof exports !== 'undefined') {
             track.eId.substr(4).split('?')[0] +
             '/hqdefault.jpg';
           var i = new Image();
-          i.onload = function() {
+          i.onload = function () {
             if (i.height >= 120) {
               window.document.getElementById(track.id).style.backgroundImage =
                 'url(' + img + ')';
@@ -521,7 +509,7 @@ if (typeof exports !== 'undefined') {
         '</div>',
         '<div id="whydContent">',
         '<div id="whydLoading"></div>',
-        '</div>'
+        '</div>',
       ].join('\n');
 
       function showForm() {
@@ -566,8 +554,8 @@ if (typeof exports !== 'undefined') {
           div.style.backgroundImage = 'url(' + attrs.img + ')';
           delete attrs.img;
         }
-        for (var i in attrs) div.setAttribute(i, attrs[i]);
-        for (var i = 0; i < (children || []).length; ++i)
+        for (let i in attrs) div.setAttribute(i, attrs[i]);
+        for (let i = 0; i < (children || []).length; ++i)
           div.appendChild(children[i]);
         return div;
       }
@@ -586,8 +574,8 @@ if (typeof exports !== 'undefined') {
           elt({ class: 'whydContOvr' }),
           elt({
             class: 'whydAdd',
-            img: urlPrefix + '/images/bookmarklet_ic_add_normal.png'
-          })
+            img: urlPrefix + '/images/bookmarklet_ic_add_normal.png',
+          }),
         ]);
         addBtn.onclick = thumb.onclick;
         var checkBox = elt({ class: 'whydSelect' }); //onclick: "var tpn=this.parentNode;tpn.className=tpn.className.replace(' selected','')+(tpn.className.indexOf(' selected')>-1?'':' selected');e.preventDefault();"
@@ -596,38 +584,37 @@ if (typeof exports !== 'undefined') {
           {
             id: thumb.id,
             class: 'whydThumb',
-            img: thumb.img || urlPrefix + '/images/cover-track.png'
+            img: thumb.img || urlPrefix + '/images/cover-track.png',
           },
           [
             elt({ class: 'whydGrad' }),
             elt({ tagName: 'p' }, [document.createTextNode(thumb.title)]),
             elt({ class: 'whydSrcLogo', img: thumb.sourceLogo }),
             addBtn,
-            checkBox
+            checkBox,
           ]
         );
-        return div;
       }
 
       var contentDiv = window.document.getElementById('whydContent');
 
-      this.addThumb = function(thumb) {
+      this.addThumb = function (thumb) {
         thumb.id = 'whydThumb' + this.nbTracks++;
         thumb = imageToHD(thumb);
         thumb.onclick = thumb.onclick || showForm.bind(thumb);
         contentDiv.appendChild(renderThumb(thumb));
       };
 
-      this.addSearchThumb = function(track) {
+      this.addSearchThumb = function (track) {
         var searchQuery = track.searchQuery || track.name || track.title;
         this.addThumb({
           title: searchQuery || 'Search Openwhyd',
           sourceLogo: urlPrefix + '/images/icon-search-from-bk.png',
-          onclick: showSearch.bind(searchQuery)
+          onclick: showSearch.bind(searchQuery),
         });
       };
 
-      this.finish = function(html) {
+      this.finish = function () {
         window.document.getElementById('whydLoading').style.display = 'none';
       };
 
@@ -641,7 +628,8 @@ if (typeof exports !== 'undefined') {
       window.DEEZER_APP_ID = 190482;
       window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
       window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
-      include(playemUrl, function() {
+      window.YOUTUBE_API_KEY = '';
+      include(playemUrl, function () {
         // playem-all.js must be loaded at that point
         callback({
           // yt: new YoutubePlayer(...) should be replaced by bookmarklet.YOUTUBE_PLAYER, to save API quota (see #262)
@@ -650,7 +638,7 @@ if (typeof exports !== 'undefined') {
           dm: new DailymotionPlayer({}),
           dz: new DeezerPlayer({}),
           bc: new BandcampPlayer({}),
-          ja: new JamendoPlayer({})
+          ja: new JamendoPlayer({}),
         });
       });
     }
@@ -667,11 +655,11 @@ if (typeof exports !== 'undefined') {
       ? 'playem-min.js'
       : 'playem-all.js';
     var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
-    initPlayemPlayers(playemUrl, function(players) {
+    initPlayemPlayers(playemUrl, function (players) {
       var bookmarklet = makeBookmarklet(window, urlPrefix, urlSuffix);
       var allPlayers = Object.assign(
         {
-          yt: bookmarklet.YOUTUBE_PLAYER // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
+          yt: bookmarklet.YOUTUBE_PLAYER, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
         },
         players
       );
@@ -680,8 +668,8 @@ if (typeof exports !== 'undefined') {
         ui: new BkUi(),
         urlDetectors: [
           bookmarklet.makeFileDetector(),
-          bookmarklet.makeStreamDetector(allPlayers)
-        ]
+          bookmarklet.makeStreamDetector(allPlayers),
+        ],
       });
     });
   })();

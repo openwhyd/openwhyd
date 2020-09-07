@@ -1,7 +1,6 @@
 var url = require('url');
 var http = require('http');
 var https = require('https');
-var fs = require('fs');
 var path = require('path');
 var iconv = require('iconv'); //'iconv-jp'
 
@@ -20,58 +19,16 @@ var CONTENT_TYPE_REG = /([^\s;]+)/;
 //------------------------------------------------------------------------------
 
 function ContentEmbedWrapper() {
-  // wrap/fake jQuery HTTP requests
-  var fakeRequest = function() {
-    var url = null,
-      callback = null;
-
-    for (var i in arguments)
-      if (typeof arguments[i] == 'string' && arguments[i].indexOf('//') > -1)
-        url = arguments[i]./*replace("alt=jsonc", "alt=json").*/ replace(
-          /[&?]callback=\?/,
-          ''
-        );
-      else if (typeof arguments[i] == 'function') callback = arguments[i];
-
-    url = 'https:' + url.substr(url.indexOf('//'));
-    console.log('wrapped request', url /*, callback*/);
-
-    function responseHandler(err, data) {
-      //console.log("wrapped request returns", err || data);
-      try {
-        data = JSON.parse(data);
-        //console.log("successful json", data);
-      } catch (e) {
-        console.log('request error:', e, e.stack);
-      }
-      if (data && data.status && data.location) {
-        console.log('redirecting to -> ', data.location);
-        getPage.Request(data.location, responseHandler);
-      } else {
-        console.log('back to callback, data =', !!data);
-        callback.call(null, /*[*/ data /*]*/);
-      }
-    }
-
-    getPage.Request(url, responseHandler);
-  };
-
-  $ = {
-    //  post: fakeRequest,
-    ajax: fakeRequest,
-    getJSON: fakeRequest
-  };
   var ContentEmbed = require('../../../public/js/ContentEmbed.js');
   this.embed = ContentEmbed();
-  //return ContentEmbed();
 }
 
-ContentEmbedWrapper.prototype.extractEmbedRef = function(url, callback) {
+ContentEmbedWrapper.prototype.extractEmbedRef = function (url, callback) {
   /*var timeout = setTimeout(function(){
     console.log("ContentEmbedWrapper.extractEmbedRef timeout");
     callback({error:"timeout", url: url});
   }, 5000);*/
-  this.embed.extractEmbedRef(url, function(embedRef) {
+  this.embed.extractEmbedRef(url, function (embedRef) {
     //clearTimeout(timeout);
     callback(embedRef);
   });
@@ -87,18 +44,18 @@ function Page(host, path, text) {
 }
 
 //==============================================================================
-Page.prototype.find = function(regEx) {
+Page.prototype.find = function (regEx) {
   //return regEx.test(this.text) ? RegExp.$1.toString('utf8') : '';
   return this.text.match(regEx) || [];
 };
 
 //==============================================================================
-Page.prototype.getTitle = function() {
+Page.prototype.getTitle = function () {
   return TITLE_REG.test(this.text) ? RegExp.$1.toString('utf8') : '';
 };
 
 //==============================================================================
-Page.prototype.getImages = function() {
+Page.prototype.getImages = function () {
   var imgs = this.text.match(IMAGE_REG) || [];
   var imgsUniq = [];
   var base = BASE_REG.test(this.text) ? RegExp.$1 : null;
@@ -126,7 +83,7 @@ Page.prototype.getImages = function() {
 };
 
 //==============================================================================
-Page.prototype.getMp3s = function() {
+Page.prototype.getMp3s = function () {
   var mp3s = this.text.match(MP3_REG) || [];
   var mp3sUniq = [];
   var base = BASE_REG.test(this.text) ? RegExp.$1 : null;
@@ -152,7 +109,7 @@ Page.prototype.getMp3s = function() {
 };
 
 //==============================================================================
-Page.prototype.extractEmbeds = function(cb) {
+Page.prototype.extractEmbeds = function (cb) {
   var embedUrls = [];
   //console.log("looking for embeds in html page", this.text);
   // step 1: parse embed urls from the html page
@@ -160,11 +117,11 @@ Page.prototype.extractEmbeds = function(cb) {
   while (embed) {
     embed = EMBED_REG.exec(this.text);
     if (embed && embed.length) {
-      var wholeElement = embed.shift(); // first item of the array
-      var elementName = embed.shift(); // second item of the array
+      embed.shift(); // first item of the array: wholeElement
+      embed.shift(); // second item of the array: elementName
       while (embed.length > 1) {
-        var attr = embed.shift();
-        var val = embed.shift();
+        embed.shift(); // attr
+        const val = embed.shift();
         if (val && embedUrls.indexOf(val) === -1) {
           embedUrls.push(val);
           //console.log("detected", elementName, attr, val);
@@ -176,8 +133,8 @@ Page.prototype.extractEmbeds = function(cb) {
     remaining = embedUrls.length;
   if (!remaining) return cb(embedRefs);
   // step 2: extract recognized embeds from urls
-  for (var i in embedUrls)
-    embedDetector.extractEmbedRef(embedUrls[i], function(embedRef) {
+  for (let i in embedUrls)
+    embedDetector.extractEmbedRef(embedUrls[i], function (embedRef) {
       //console.log("url", url/*, embedRef*/);
       if (embedRef && embedRef.id)
         embedRefs.push({
@@ -186,7 +143,7 @@ Page.prototype.extractEmbeds = function(cb) {
             embedRef.name && embedRef.name != 'undefined'
               ? embedRef.name
               : null,
-          url: embedRef.url
+          url: embedRef.url,
         });
       if (!--remaining) return cb(embedRefs);
     });
@@ -198,28 +155,25 @@ function getPage(address, callback) {
   var options = {
     host: urlObj.hostname,
     path: urlObj.pathname,
-    port: urlObj.port || 80
+    port: urlObj.port || 80,
   };
   var chunks = [];
   var length = 0;
   return http
-    .get(options, function(res) {
+    .get(options, function (res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
       res.on('error', callback);
       if (location) {
         options.path = location;
-        http
-          .get(options, arguments.callee)
-          .on('error', callback)
-          .end();
+        http.get(options, arguments.callee).on('error', callback).end();
       } else {
-        res.on('data', function(chunk) {
+        res.on('data', function (chunk) {
           chunks.push(chunk);
           length += chunk.length;
         });
-        res.on('end', function() {
-          var buffer = new Buffer(length);
+        res.on('end', function () {
+          var buffer = Buffer.alloc(length);
           var bufferPos = 0;
           var i, chunk, text, charset;
           for (i = 0; (chunk = chunks[i]); i++) {
@@ -246,44 +200,44 @@ function getPage(address, callback) {
 }
 
 //==============================================================================
-getPage.Title = function(address, callback) {
-  return getPage(address, function(err, page) {
+getPage.Title = function (address, callback) {
+  return getPage(address, function (err, page) {
     err ? callback(err) : callback(null, page.getTitle());
   });
 };
 
 //==============================================================================
-getPage.Images = function(address, callback) {
-  return getPage(address, function(err, page) {
+getPage.Images = function (address, callback) {
+  return getPage(address, function (err, page) {
     err ? callback(err) : callback(null, page.getImages());
   });
 };
 
 //==============================================================================
-getPage.Mp3s = function(address, callback) {
-  return getPage(address, function(err, page) {
+getPage.Mp3s = function (address, callback) {
+  return getPage(address, function (err, page) {
     err ? callback(err) : callback(null, page.getMp3s());
   });
 };
 
 //==============================================================================
-getPage.Request = function(address, callback) {
+getPage.Request = function (address, callback) {
   var urlObj = url.parse(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = {
     method: 'GET',
     host: urlObj.hostname,
     path: address /*urlObj.pathname,
-    headers: {'Accept':'application/json'}*/
+    headers: {'Accept':'application/json'}*/,
   };
   //console.log(options);
   var data = '';
   httpOrHttps
-    .request(options, function(res) {
-      res.addListener('data', function(chunk) {
+    .request(options, function (res) {
+      res.addListener('data', function (chunk) {
         data += chunk.toString();
       });
-      res.addListener('end', function() {
+      res.addListener('end', function () {
         callback(null, data);
       });
     })
@@ -292,13 +246,13 @@ getPage.Request = function(address, callback) {
 };
 
 //==============================================================================
-getPage.ContentType = function(address, callback) {
+getPage.ContentType = function (address, callback) {
   var urlObj = url.parse(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = { method: 'GET', host: urlObj.hostname, path: urlObj.pathname };
   var contentType;
   httpOrHttps
-    .request(options, function(res) {
+    .request(options, function (res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
       if (location) {

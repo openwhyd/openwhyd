@@ -8,21 +8,20 @@
  * @author adrienjoly, whyd
  */
 
-var https = require('https');
 var facebookModel = require('../../models/facebook.js');
 
-exports.handleRequest = function(request, reqParams, response) {
+exports.handleRequest = function (request, reqParams, response) {
   request.logToConsole('fbfriends.handleRequest', reqParams);
   reqParams = reqParams || {};
 
   var loggedUser = request.checkLogin();
   if (!loggedUser) return response.legacyRender({ error: 'must be logged in' });
 
-  facebookModel.fetchAccessToken(loggedUser.id, function(fbTok) {
+  facebookModel.fetchAccessToken(loggedUser.id, function (fbTok) {
     console.log('fbTok in db + param', fbTok, reqParams.fbAccessToken);
 
     if (reqParams.fetchUsersToInvite) {
-      facebookModel.fetchCachedFriends(loggedUser.id, fbTok, function(
+      facebookModel.fetchCachedFriends(loggedUser.id, fbTok, function (
         fbfriends
       ) {
         var list = (fbfriends || {}).notOnWhyd || [];
@@ -32,14 +31,14 @@ exports.handleRequest = function(request, reqParams, response) {
       facebookModel.fetchFbFriendsWithSub(
         loggedUser,
         reqParams.fbAccessToken || fbTok,
-        function(result) {
+        function (result) {
           response.legacyRender(result);
         }
       );
   });
 };
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   if (request.method.toLowerCase() === 'post')
     exports.handleRequest(request, request.body, response);
   else exports.handleRequest(request, getParams, response);

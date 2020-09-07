@@ -17,27 +17,27 @@ function TestRunner() {
   var finalCallback = null;
 
   function wrapTest(testFct, title) {
-    return function(nextTestFct) {
+    return function (nextTestFct) {
       console.log('%c[TEST] ' + title + ' ...', 'color:#888');
-      testFct(function(res) {
+      testFct(function (res) {
         console.log(
-          '%c[TEST]=> ' + (!!res ? 'OK' : 'FAIL: ' + title),
-          'color:' + (!!res ? 'green' : 'red')
+          '%c[TEST]=> ' + (res ? 'OK' : 'FAIL: ' + title),
+          'color:' + (res ? 'green' : 'red')
         );
-        if (!!res) setTimeout(nextTestFct);
+        if (res) setTimeout(nextTestFct);
         else finalCallback({ ok: false, title: title });
       });
     };
   }
 
-  this.addTests = function(testMap) {
-    for (var title in testMap) tests.push(wrapTest(testMap[title], title));
+  this.addTests = function (testMap) {
+    for (let title in testMap) tests.push(wrapTest(testMap[title], title));
     return this;
   };
 
-  this.run = function(cb) {
+  this.run = function (cb) {
     finalCallback = cb;
-    forEachAsync(tests, function() {
+    forEachAsync(tests, function () {
       console.log('%cAll tests done!', 'color:green');
       finalCallback({ ok: true });
     });

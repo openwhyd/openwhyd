@@ -2,7 +2,7 @@
 
 const mongodb = require('../../models/mongodb.js');
 
-exports.controller = async function(request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   request.logToConsole('reset.controller', request.method);
   if (request.method.toLowerCase() !== 'post') {
     return response.badRequest();

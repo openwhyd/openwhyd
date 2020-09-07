@@ -18,14 +18,14 @@ var SCRAPING_HTTP_OPTIONS = {
     Pragma: 'no-cache',
     Accept: 'application/json',
     //	"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36",
-    'Accept-Language': 'en-US;q=1,en;q=1'
-  }
+    'Accept-Language': 'en-US;q=1,en;q=1',
+  },
 };
 
 function scrape(url, cb) {
   var result = { url: url };
   try {
-    snip.httpRequest(url, SCRAPING_HTTP_OPTIONS, function(err, html) {
+    snip.httpRequest(url, SCRAPING_HTTP_OPTIONS, function (err, html) {
       if (err) return cb(err, result);
       if (html) result.html = html;
       cb(null, result);
@@ -36,17 +36,17 @@ function scrape(url, cb) {
 }
 
 function extractMetadataFromYoutubePage(html, cb) {
-  var found = /watch\-meta\-item/.test(html);
+  var found = /watch-meta-item/.test(html);
   if (found) console.log('Parsing metadata from Youtube page...');
   else {
     console.log('Metadata not found from Youtube page => DOC', html);
     cb();
     return;
   }
-  htmlDom.parseHtmlDom(html, function(doc) {
+  htmlDom.parseHtmlDom(html, function (doc) {
     var metadata = {};
     var meta = doc.getElementsByClassName('watch-meta-item');
-    for (var i in meta) {
+    for (let i in meta) {
       var type = meta[i].getElementsByClassName('title').pop();
       type = type && type.getText();
       var data = meta[i].getElementsByTagName('li')[0];
@@ -62,7 +62,7 @@ function extractMetadataFromYoutubePage(html, cb) {
       else if (/Artist/.test(type)) metadata.artistName = data.getText();
       //else console.log("unrecognized youtube metadata type:", type);
     }
-    for (var i in metadata) {
+    for (let i in metadata) {
       metadata[i] = ent.decode(metadata[i]);
       metadata.confidence = 0.9;
     }
@@ -70,19 +70,19 @@ function extractMetadataFromYoutubePage(html, cb) {
   });
 }
 
-exports.fetchMetadataFromYoutubePage = function(url, cb) {
-  scrape(url, function(err, res) {
+exports.fetchMetadataFromYoutubePage = function (url, cb) {
+  scrape(url, function (err, res) {
     if (err || !(res || {}).html) cb(err, res);
     else extractMetadataFromYoutubePage(res.html, cb);
   });
 };
 
-exports.translateTrack = function(track) {
+exports.translateTrack = function (track) {
   return {
     id: track.id,
     name: track.title,
     desc: track.description,
-    duration: track.duration
+    duration: track.duration,
   };
 };
 
@@ -98,36 +98,36 @@ function searchYoutubeTracks(q, cb) {
   return snip.httpRequestJSON(url, null, cb);
 }
 
-exports.searchTracks = function(trackMetadata, cb, raw) {
+exports.searchTracks = function (trackMetadata, cb, raw) {
   return searchYoutubeTracks(
     translateOutgoingQueryParams(trackMetadata).q,
-    function(err, res) {
+    function (err, res) {
       if (err || raw) cb(err, res);
       else
         cb(err, {
           items: (((res || {}).data || {}).items || []).map(
             exports.translateTrack
-          )
+          ),
         });
     }
   );
 };
 
-exports.fetchTrackMetadata = function(trackId, cb, raw) {
+exports.fetchTrackMetadata = function (trackId, cb, raw) {
   assert.ok(trackId, 'trackId is null');
   var url =
     'https://gdata.youtube.com/feeds/api/videos/' + trackId + '?v=2&alt=jsonc';
-  return snip.httpRequestJSON(url, null, function(err, res) {
+  return snip.httpRequestJSON(url, null, function (err, res) {
     if (err || raw) return cb(err, res);
     var data = (res || {}).data;
     if (!data) cb(new Error('invalid youtube reponse: ' + JSON.stringify(res)));
     else {
       var url =
         'http://www.youtube.com/watch?v=' +
-        ('' + trackId).replace(/[^a-z0-9\_\-]/gi, '');
-      exports.fetchMetadataFromYoutubePage(url, function(err, metadata) {
+        ('' + trackId).replace(/[^a-z0-9_-]/gi, '');
+      exports.fetchMetadataFromYoutubePage(url, function (err, metadata) {
         var result = exports.translateTrack(data);
-        for (var i in metadata) result[i] = metadata[i];
+        for (let i in metadata) result[i] = metadata[i];
         cb(null, result);
       });
     }

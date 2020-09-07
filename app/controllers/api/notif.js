@@ -8,7 +8,7 @@ var mongodb = require('../../models/mongodb.js');
 var notifModel = require('../../models/notif');
 //var formidable = require('formidable'); // for POST request handling
 
-exports.handlePostRequest = function(request, postParams, response) {
+exports.handlePostRequest = function (request, postParams, response) {
   request.logToConsole('notif.controller', postParams);
 
   switch (postParams.action) {
@@ -16,10 +16,10 @@ exports.handlePostRequest = function(request, postParams, response) {
       var TEST_USER = {
         _id: '000000000000',
         id: '000000000000',
-        name: 'test user'
+        name: 'test user',
       };
       mongodb.usernames[TEST_USER.id] = TEST_USER;
-      notifModel.subscribedToUser(TEST_USER.id, request.getUid(), function() {
+      notifModel.subscribedToUser(TEST_USER.id, request.getUid(), function () {
         delete mongodb.usernames[TEST_USER.id];
         response.renderJSON({ ok: true });
       });
@@ -37,7 +37,7 @@ exports.handlePostRequest = function(request, postParams, response) {
   }
 };
 
-exports.controller = function(req, reqParams, res) {
+exports.controller = function (req, reqParams, res) {
   //req.logToConsole("notif.controller", reqParams);
   var user = req.checkLogin(/*res*/);
   if (!user) return res.legacyRender(); // replace by render(null) if user not logged
@@ -45,7 +45,7 @@ exports.controller = function(req, reqParams, res) {
   if (req.method.toLowerCase() === 'post') {
     exports.handlePostRequest(req, req.body, res);
   } else
-    notifModel.getUserNotifs(user.id, function(notifs) {
+    notifModel.getUserNotifs(user.id, function (notifs) {
       res.renderJSON(notifs);
     });
 };

@@ -1,19 +1,20 @@
-var assert = require('assert');
-var request = require('request');
+/* global describe, it */
 
-var { URL_PREFIX, ADMIN_USER, TEST_USER } = require('../fixtures.js');
+var assert = require('assert');
+
+var { TEST_USER } = require('../fixtures.js');
 var api = require('../api-client.js');
 
-describe(`post api`, function() {
+describe(`post api`, function () {
   var pId, uId;
   const post = {
     eId: '/yt/XdJVWSqb4Ck',
-    name: 'Lullaby - Jack Johnson and Matt Costa'
+    name: 'Lullaby - Jack Johnson and Matt Costa',
   };
 
-  it(`should allow adding a track`, function(done) {
-    api.loginAs(TEST_USER, function(error, { response, body, jar }) {
-      api.addPost(jar, post, function(error, { response, body }) {
+  it(`should allow adding a track`, function (done) {
+    api.loginAs(TEST_USER, function (error, { response, body, jar }) {
+      api.addPost(jar, post, function (error, { response, body }) {
         assert.ifError(error);
         assert.equal(body.eId, post.eId);
         assert.equal(body.name, post.name);
@@ -25,9 +26,9 @@ describe(`post api`, function() {
     });
   });
 
-  it(`should allow re-adding a track (aka "repost")`, function(done) {
-    api.loginAs(TEST_USER, function(error, { response, body, jar }) {
-      api.addPost(jar, { pId }, function(error, { response, body }) {
+  it(`should allow re-adding a track (aka "repost")`, function (done) {
+    api.loginAs(TEST_USER, function (error, { response, body, jar }) {
+      api.addPost(jar, { pId }, function (error, { response, body }) {
         assert.ifError(error);
         assert(body._id);
         assert.notEqual(body._id, pId);
@@ -44,13 +45,13 @@ describe(`post api`, function() {
   const postInPlaylist = Object.assign({}, post, {
     pl: {
       id: 'create',
-      name: 'my first playlist'
-    }
+      name: 'my first playlist',
+    },
   });
 
-  it(`should allow adding a track to a playlist`, function(done) {
-    api.loginAs(TEST_USER, function(error, { response, body, jar }) {
-      api.addPost(jar, postInPlaylist, function(error, { response, body }) {
+  it(`should allow adding a track to a playlist`, function (done) {
+    api.loginAs(TEST_USER, function (error, { response, body, jar }) {
+      api.addPost(jar, postInPlaylist, function (error, { response, body }) {
         assert.ifError(error);
         assert(body._id);
         assert.equal(body.eId, postInPlaylist.eId);
@@ -62,9 +63,9 @@ describe(`post api`, function() {
     });
   });
 
-  it(`make sure that the playlist was created`, function(done) {
-    api.loginAs(TEST_USER, function(error, { jar }) {
-      api.getUser(jar, {}, function(error, { response, body }) {
+  it(`make sure that the playlist was created`, function (done) {
+    api.loginAs(TEST_USER, function (error, { jar }) {
+      api.getUser(jar, {}, function (error, { response, body }) {
         assert.equal(body.pl.length, 1);
         assert.equal(body.pl[0].id, firstPlaylistIndex);
         assert.equal(body.pl[0].name, postInPlaylist.pl.name);
@@ -75,9 +76,12 @@ describe(`post api`, function() {
     });
   });
 
-  it(`should find 1 track in the playlist`, function(done) {
-    api.loginAs(TEST_USER, function(error, { jar }) {
-      api.getPlaylist(jar, playlistFullId, function(error, { response, body }) {
+  it(`should find 1 track in the playlist`, function (done) {
+    api.loginAs(TEST_USER, function (error, { jar }) {
+      api.getPlaylist(jar, playlistFullId, function (
+        error,
+        { response, body }
+      ) {
         assert.ifError(error);
         assert.equal(body.length, 1);
         assert.equal(body[0].id, playlistFullId);
@@ -88,9 +92,9 @@ describe(`post api`, function() {
     });
   });
 
-  it(`should return 1 track in the playlist`, function(done) {
-    api.loginAs(TEST_USER, function(error, { jar }) {
-      api.getPlaylistTracks(jar, `u/${uId}`, firstPlaylistIndex, function(
+  it(`should return 1 track in the playlist`, function (done) {
+    api.loginAs(TEST_USER, function (error, { jar }) {
+      api.getPlaylistTracks(jar, `u/${uId}`, firstPlaylistIndex, function (
         error,
         { response, body }
       ) {
@@ -102,10 +106,10 @@ describe(`post api`, function() {
     });
   });
 
-  it(`should return 1 track in the playlist, with limit=1000`, function(done) {
-    api.loginAs(TEST_USER, function(error, { jar }) {
+  it(`should return 1 track in the playlist, with limit=1000`, function (done) {
+    api.loginAs(TEST_USER, function (error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000`;
-      api.get(jar, url, function(error, { response, body }) {
+      api.get(jar, url, function (error, { response, body }) {
         assert.equal(body.length, 1);
         assert.equal(body[0].pl.id, firstPlaylistIndex);
         assert.equal(body[0].pl.name, postInPlaylist.pl.name);
@@ -114,11 +118,11 @@ describe(`post api`, function() {
     });
   });
 
-  it(`should return tracks if two limit parameters are provided`, function(done) {
-    api.loginAs(TEST_USER, function(error, { jar }) {
+  it(`should return tracks if two limit parameters are provided`, function (done) {
+    api.loginAs(TEST_USER, function (error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
       // => the `limit` property will be parsed as ["1000","20"] => causing bug #89
-      api.get(jar, url, function(error, { response, body }) {
+      api.get(jar, url, function (error, { response, body }) {
         assert.notEqual(body.length, 0);
         done();
       });
@@ -128,13 +132,13 @@ describe(`post api`, function() {
   // TODO: update post
   // TODO: delete post
 
-  it(`should return the comment data after adding it`, function(done) {
-    api.loginAs(TEST_USER, function(error, { response, body, jar }) {
+  it(`should return the comment data after adding it`, function (done) {
+    api.loginAs(TEST_USER, function (error, { response, body, jar }) {
       const comment = {
         pId,
-        text: 'hello world'
+        text: 'hello world',
       };
-      api.addComment(jar, comment, function(error, { response, body }) {
+      api.addComment(jar, comment, function (error, { response, body }) {
         assert.ifError(error);
         assert.equal(body.pId, comment.pId);
         assert.equal(body.text, comment.text);

@@ -3,7 +3,7 @@ var util = require('util');
 // search functions -- not a controller
 
 function noaccent(chaine) {
-  temp = chaine.replace(/[àâä]/gi, 'a');
+  let temp = chaine.replace(/[àâä]/gi, 'a');
   temp = temp.replace(/[éèêë]/gi, 'e');
   temp = temp.replace(/[îï]/gi, 'i');
   temp = temp.replace(/[ôö]/gi, 'o');
@@ -12,20 +12,20 @@ function noaccent(chaine) {
 }
 
 // must be executed on a name search query before submitting to mongodb
-var normalizeNameSearchQuery = function(queryString) {
+var normalizeNameSearchQuery = function (queryString) {
   var q = noaccent(queryString.trim().toLowerCase());
   var words = q.split(/\W+/);
   var result = [];
 
   // remove empty items
-  for (var i in words) if (words[i].length > 0) result.push(words[i]);
+  for (let i in words) if (words[i].length > 0) result.push(words[i]);
 
   return result;
 };
 
 var timeout;
 
-exports.topicNameSearch = function(
+exports.topicNameSearch = function (
   q,
   resultHandler,
   mongodbModel,
@@ -47,11 +47,11 @@ exports.topicNameSearch = function(
 
   var userResults = [];
 
-  mongodb('user', function(err, usercol) {
+  mongodb('user', function (err, usercol) {
     var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
-    usercol.find(query, { limit: limitUsers }, function(err, cursor) {
-      cursor.each(function(err, item) {
+    usercol.find(query, { limit: limitUsers }, function (err, cursor) {
+      cursor.each(function (err, item) {
         if (item != null) {
           userResults.push({ _id: '/u/' + item.fbId, name: item.name });
           console.log(
@@ -65,7 +65,7 @@ exports.topicNameSearch = function(
         }
       });
 
-      mongodb('topic', function(err, collection) {
+      mongodb('topic', function (err, collection) {
         var cycles = maxCycles;
         var exactResults = [],
           quickResults = [];
@@ -77,10 +77,10 @@ exports.topicNameSearch = function(
         collection.find(
           query,
           { sort: [['s', 'desc']], limit: limitExact },
-          function(err, cursor) {
+          function (err, cursor) {
             var remaining = limitExact;
 
-            var handleNextResult = function(err, item) {
+            var handleNextResult = function (err, item) {
               //console.log("handleNextResult()");
               if (item != null) {
                 console.log(
@@ -105,10 +105,10 @@ exports.topicNameSearch = function(
         collection.find(
           query,
           { /*sort:[['$natural','asc']],*/ limit: limit },
-          function(err, cursor) {
+          function (err, cursor) {
             var remaining = limit;
 
-            var handleNextResult = function(err, item) {
+            var handleNextResult = function (err, item) {
               //console.log("handleNextResult()");
               if (item != null) {
                 console.log(
@@ -128,15 +128,15 @@ exports.topicNameSearch = function(
           }
         );
 
-        var renderer = function() {
+        var renderer = function () {
           clearTimeout(timeout);
           var results = exactResults;
 
           // combine exact and quick results without duplicates
           if (exactResults.length > 0 && quickResults.length > 0)
-            for (var j in quickResults) {
+            for (let j in quickResults) {
               var found = false;
-              for (var i in exactResults)
+              for (let i in exactResults)
                 if (exactResults[i]._id === quickResults[j]._id) {
                   //console.log("found dup " + exactResults[i].name);
                   found = true;
@@ -157,7 +157,7 @@ exports.topicNameSearch = function(
             //console.log(renderTemplate(q,results));
             //response.legacyRender(util.inspect(results));
             resultHandler(results, q);
-            console.log('search: rendering done!');
+            // console.log('search: rendering done!');
           }
         };
         var timeout = setTimeout(renderer, timeoutDuration);

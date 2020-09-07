@@ -1,28 +1,13 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 var util = require('util');
-var colors = require('colors');
 var mongodb = require('mongodb');
 
 var openwhydVersion = require('./package.json').version;
 
-// initialize error monitoring
-var rollbar;
-/*
-if (process.env.NODE_ENV === "production") {
-	var Rollbar = require("rollbar");
-	rollbar = new Rollbar({
-		accessToken: "655e72dc704f43c78f9c1e06b8b45ab0",
-		captureUncaught: true,
-		captureUnhandledRejections: true
-	});
-	rollbar.log("Starting Openwhyd v" + openwhydVersion + ' ...');
-}
-*/
-
 function makeColorConsole(fct, color) {
-  return function() {
-    for (var i in arguments)
+  return function () {
+    for (let i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
     fct(Array.prototype.join.call(arguments, ' ')[color]);
@@ -30,7 +15,7 @@ function makeColorConsole(fct, color) {
 }
 
 function makeErrorLog(fct, type) {
-  return function() {
+  return function () {
     fct(
       type === 'Warning' ? '⚠' : '❌',
       type,
@@ -38,9 +23,6 @@ function makeErrorLog(fct, type) {
       new Date().toUTCString(),
       ...arguments
     );
-    if (rollbar && (type === 'Warning' || type === 'Error')) {
-      rollbar[type.toLowerCase()](Array.prototype.join.call(arguments, ' '));
-    }
   };
 }
 
@@ -87,23 +69,23 @@ var params = (process.appParams = {
     uploadDirName: 'upload_data',
     uAvatarImgDirName: 'uAvatarImg',
     uCoverImgDirName: 'uCoverImg',
-    uPlaylistDirName: 'uPlaylistImg'
-  }
+    uPlaylistDirName: 'uPlaylistImg',
+  },
 });
 
 var FLAGS = {
-  '--no-color': function() {
+  '--no-color': function () {
     process.appParams.color = false;
   },
-  '--fakeEmail': function() {
+  '--fakeEmail': function () {
     params.emailModule = '';
   },
-  '--emailAdminsOnly': function() {
+  '--emailAdminsOnly': function () {
     params.emailModule = 'emailAdminsOnly';
   },
-  '--runner': function() {
+  '--runner': function () {
     /* ignore this parameter from start-stop-daemon -- note: still required? */
-  }
+  },
 };
 
 // when db is read
@@ -114,7 +96,8 @@ function makeMongoUrl(params) {
   const user = params.mongoDbAuthUser;
   const password = params.mongoDbAuthPassword;
   const db = params.mongoDbDatabase; // ?w=0
-  return `mongodb://${user}:${password}@${host}:${port}/${db}`;
+  const auth = user || password ? `${user}:${password}@` : '';
+  return `mongodb://${auth}${host}:${port}/${db}`;
 }
 
 function start() {
@@ -124,20 +107,20 @@ function start() {
   const sessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET.substr(),
     store: new MongoStore({
-      url: makeMongoUrl(params)
+      url: makeMongoUrl(params),
     }),
     cookie: {
-      maxAge: 365 * 24 * 60 * 60 * 1000 // cookies expire in 1 year (provided in milliseconds)
+      maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
     },
     name: 'whydSid',
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
-    saveUninitialized: false // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
+    saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
   var serverOptions = {
     port: params.port,
     appDir: __dirname,
     sessionMiddleware,
-    errorHandler: function(request, params, response, statusCode) {
+    errorHandler: function (request, params, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       console.log('rendering server error page', statusCode);
       require('./app/templates/error.js').renderErrorResponse(
@@ -149,8 +132,8 @@ function start() {
     },
     uploadSettings: {
       uploadDir: params.paths.uploadDirName, // 'upload_data'
-      keepExtensions: true
-    }
+      keepExtensions: true,
+    },
   };
   require('./app/models/logging.js'); // init logging methods (IncomingMessage extensions)
   new myHttp.Application(serverOptions).start();
@@ -165,7 +148,7 @@ async function main() {
   // apply command-line arguments
   if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
-    for (var i = 2; i < process.argv.length; ++i) {
+    for (let i = 2; i < process.argv.length; ++i) {
       var flag = process.argv[i];
       var flagFct = FLAGS[flag];
       if (flagFct) flagFct();
@@ -174,6 +157,7 @@ async function main() {
     }
   }
   if (params.color == true) {
+    require('colors'); // populates .grey, .cyan, etc... on strings, for logging.js and MyController.js
     console.warn = makeErrorLog(
       makeColorConsole(consoleError, 'yellow'),
       'Warning'
@@ -192,7 +176,7 @@ async function main() {
   start();
 }
 
-main().catch(err => {
+main().catch((err) => {
   // in order to prevent UnhandledPromiseRejections, let's catch errors and exit as we should
   console.log('error from main():', err);
   console.error('error from main():', err);

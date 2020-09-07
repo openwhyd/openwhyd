@@ -1,37 +1,69 @@
 <!DOCTYPE html>
 <html>
-<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-	<meta property="og:image" content="http://openwhyd.org/images/logo-black-square-smaller.png">
-	<meta property="og:description" content="Discover and collect music gems from Youtube, Soundcloud, Deezer and more.">
-	<meta property="fb:app_id" content="169250156435902">
-	<meta property="fb:admins" content="510739408">
-	<meta property="og:type" content="website">
-	<meta property="og:url" content="http://openwhyd.org/">
-	<meta http-equiv="REFRESH" content="3;url=https://itunes.apple.com/us/app/whyd-everyones-music-playlist/id874380201">
+  <head
+    prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#"
+  >
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
+    <meta
+      property="og:image"
+      content="http://openwhyd.org/images/logo-black-square-smaller.png"
+    />
+    <meta
+      property="og:description"
+      content="Discover and collect music gems from Youtube, Soundcloud, Deezer and more."
+    />
+    <meta property="fb:app_id" content="169250156435902" />
+    <meta property="fb:admins" content="510739408" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://openwhyd.org/" />
+    <meta
+      http-equiv="REFRESH"
+      content="3;url=https://itunes.apple.com/us/app/whyd-everyones-music-playlist/id874380201"
+    />
 
-  <title>Openwhyd iPhone App - redirecting to the App Store...</title>
+    <title>Openwhyd iPhone App - redirecting to the App Store...</title>
 
-  <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
-  <link href="/favicon.png" rel="icon" type="image/png">
-	<link rel="image_src" href="http://openwhyd.org/images/logo-black-square-smaller.png">
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="/favicon.png" rel="icon" type="image/png" />
+    <link
+      rel="image_src"
+      href="http://openwhyd.org/images/logo-black-square-smaller.png"
+    />
 
-  <script src="/js/whydtr.js"></script>
-</head>
+    <script src="/js/whydtr.js"></script>
+  </head>
 
-<body class="pgRedirect">
-	<p>You are being redirected to <a href="https://itunes.apple.com/us/app/whyd-everyones-music-playlist/id874380201">the App Store</a>...</p>
-	<script>
-  function results(res){
-    var url = (((res || {}).results || [])[0] || {}).trackViewUrl || "https://itunes.apple.com/genre/ios-musique/id6011?mt=8&letter=W";
-    setTimeout(function(){
-      window.location.href = url;
-    }, 2000);
-    document.getElementsByTagName("a")[0].setAttribute("href", url);
-  }
-  results({results:[{trackViewUrl: "https://itunes.apple.com/us/app/whyd-everyones-music-playlist/id874380201"}]});
-  </script>
-  <!--<script src="https://itunes.apple.com/search?term=whyd&amp;media=software&amp;callback=results"></script>-->
-</body>
+  <body class="pgRedirect">
+    <p>
+      You are being redirected to
+      <a
+        href="https://itunes.apple.com/us/app/whyd-everyones-music-playlist/id874380201"
+        >the App Store</a
+      >...
+    </p>
+    <script>
+      function results(res) {
+        var url =
+          (((res || {}).results || [])[0] || {}).trackViewUrl ||
+          'https://itunes.apple.com/genre/ios-musique/id6011?mt=8&letter=W';
+        setTimeout(function () {
+          window.location.href = url;
+        }, 2000);
+        document.getElementsByTagName('a')[0].setAttribute('href', url);
+      }
+      results({
+        results: [
+          {
+            trackViewUrl:
+              'https://itunes.apple.com/us/app/whyd-everyones-music-playlist/id874380201',
+          },
+        ],
+      });
+    </script>
+    <!--<script src="https://itunes.apple.com/search?term=whyd&amp;media=software&amp;callback=results"></script>-->
+  </body>
 </html>

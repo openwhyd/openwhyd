@@ -10,7 +10,7 @@ var feedTemplate = require('../templates/feed.js');
 
 function makeUserList() {
   var userList = [];
-  for (var i in mongodb.usernames /*.slice(0,9)*/)
+  for (let i in mongodb.usernames /*.slice(0,9)*/)
     userList.push(mongodb.usernames[i]);
   return userList;
 }
@@ -37,11 +37,11 @@ function renderAllLibrary(lib) {
   }
 
   if (options.after || options.before)
-    renderFeed(function(feedHtml) {
+    renderFeed(function (feedHtml) {
       lib.render({ html: feedHtml });
     });
   else
-    renderFeed(function(feedHtml) {
+    renderFeed(function (feedHtml) {
       //lib.renderSidebar(/*uidList*/ null, null/*user*/, options, function(sidebarHtml){
       lib.renderPage(
         {

@@ -9,13 +9,13 @@ const getIndex = ({ indexName, appId, apiKey }) =>
 const forEachRecord = ({ indexName, appId, apiKey }, recordHandler) =>
   new Promise((resolve, reject) => {
     const browser = getIndex({ indexName, appId, apiKey }).browseAll();
-    browser.on('result', content =>
-      content.hits.forEach(hit => recordHandler(hit))
+    browser.on('result', (content) =>
+      content.hits.forEach((hit) => recordHandler(hit))
     );
     browser.on('end', () => {
       resolve();
     });
-    browser.on('error', err => {
+    browser.on('error', (err) => {
       reject(err);
     });
   });
@@ -24,7 +24,7 @@ const makeSetFromIndex = ({ indexName, appId, apiKey }) =>
   new Promise((resolve, reject) => {
     const set = new Set();
     const progress = new Progress({ label: 'fetching from algolia...' });
-    forEachRecord({ indexName, appId, apiKey }, hit => {
+    forEachRecord({ indexName, appId, apiKey }, (hit) => {
       set.add(hit.objectID);
       progress.incr();
     })
@@ -32,7 +32,7 @@ const makeSetFromIndex = ({ indexName, appId, apiKey }) =>
         progress.done();
         resolve(set);
       })
-      .catch(err => {
+      .catch((err) => {
         progress.done();
         /does not exist/.test(err.message) ? resolve(set) : reject(err);
       });
@@ -65,5 +65,5 @@ module.exports = {
   getIndex,
   forEachRecord,
   makeSetFromIndex,
-  BatchedAlgoliaIndexer
+  BatchedAlgoliaIndexer,
 };

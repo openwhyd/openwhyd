@@ -19,18 +19,18 @@ var template;
 function loadTemplates(callback) {
   template = templateLoader.loadTemplate(
     'app/templates/recentActivity.html',
-    function() {
+    function () {
       if (callback) callback();
     }
   );
 }
 loadTemplates();
 
-var fetchSubscriptions = function(uid, callback) {
+var fetchSubscriptions = function (uid, callback) {
   var uidList = [];
   //console.log("recentActivity.fetchSubscriptions", uid);
-  followModel.fetchUserSubscriptions(uid, function(subscriptions) {
-    for (var i in subscriptions.subscriptions)
+  followModel.fetchUserSubscriptions(uid, function (subscriptions) {
+    for (let i in subscriptions.subscriptions)
       if (
         subscriptions.subscriptions[i].id &&
         subscriptions.subscriptions[i].id != uid
@@ -51,14 +51,14 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 		}}
 	]); */
   var uidSet = {};
-  for (var i in mySubscriptionsUidList)
+  for (let i in mySubscriptionsUidList)
     uidSet[mySubscriptionsUidList[i]] = true;
   //options = options || {};
   //uidList.push("4d94501d1f78ac091dbc9b4d"); // adrien (for tests)
 
   //console.log("uidList:", uidList);
 
-  activityModel.fetchHistoryFromUidList(uidList, options, function(
+  activityModel.fetchHistoryFromUidList(uidList, options, function (
     activities,
     hasMore
   ) {
@@ -66,7 +66,7 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 
     var usersToPopulate = [],
       postsToPopulate = [];
-    for (var i in activities)
+    for (let i in activities)
       if ((activities[i] || {}).subscription) {
         activities[i].subscription.subscribed =
           uidSet[activities[i].subscription.id];
@@ -76,17 +76,17 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 
     // fetch users and posts from DB
 
-    userModel.fetchUserBios(usersToPopulate, function() {
+    userModel.fetchUserBios(usersToPopulate, function () {
       postModel.fetchPosts(
         { _id: { $in: postsToPopulate } },
         /*params*/ null,
         /*options*/ null,
-        function(posts) {
+        function (posts) {
           // apply fetched data (when not null) to liked posts
           var postSet = {},
             finalActivities = [];
-          for (var i in posts) postSet['' + posts[i]._id] = posts[i];
-          for (var i in activities) {
+          for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+          for (let i in activities) {
             if ((activities[i] || {}).like) {
               if (postSet['' + activities[i].like.pId])
                 activities[i].like.post = postSet['' + activities[i].like.pId];
@@ -103,20 +103,20 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 
 function fetchSuggestedPeople(uidList, cb) {
   //return cb([{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly"}]); // test case
-  postModel.fetchPosts({ uId: { $nin: uidList } }, null, null, function(
+  postModel.fetchPosts({ uId: { $nin: uidList } }, null, null, function (
     allPosts
   ) {
     var userSet = {},
       userList = [];
-    for (var i in allPosts)
+    for (let i in allPosts)
       if (!userSet[allPosts[i].uId])
         userSet[allPosts[i].uId] = {
           id: allPosts[i].uId,
           name: allPosts[i].uNm,
           track: allPosts[i].name,
-          trackUrl: '/c/' + allPosts[i]._id
+          trackUrl: '/c/' + allPosts[i]._id,
         };
-    for (var i in userSet) userList.push(userSet[i]);
+    for (let i in userSet) userList.push(userSet[i]);
     cb(userList);
   });
 }
@@ -125,7 +125,7 @@ function aggregateActivities(acts) {
   //console.log("acts", acts);
   var aggrs = [],
     aggr = {};
-  for (var i in acts) {
+  for (let i in acts) {
     var attrName = (acts[i].type = acts[i].like ? 'like' : 'subscription'),
       sameAuthor = aggr.id == acts[i].id,
       sameActType = aggr.type == acts[i].type;
@@ -143,20 +143,20 @@ function aggregateActivities(acts) {
 
 function renderLikedPosts(activity, cb) {
   if (activity.type == 'like') {
-    var posts = activity.likes.aggregatedItems.map(function(aggr) {
+    var posts = activity.likes.aggregatedItems.map(function (aggr) {
       return postsTemplate.preparePost(aggr.post);
     });
     //if (!posts.length) continue;
     activity.likes.nbTracks =
       posts.length > 1 ? posts.length + ' tracks' : 'one track';
-    postsTemplate.renderPostsAsync(posts, {}, function(postsHtml) {
+    postsTemplate.renderPostsAsync(posts, {}, function (postsHtml) {
       activity.likes.posts = postsHtml;
       cb();
     });
   } else cb();
 }
 
-exports.generateActivityFeed = function(
+exports.generateActivityFeed = function (
   uidList,
   mySubscriptionsUidList,
   reqParams,
@@ -166,23 +166,23 @@ exports.generateActivityFeed = function(
     uidList,
     mySubscriptionsUidList,
     { after: reqParams.after },
-    function(rawActivities, hasMore) {
+    function (rawActivities, hasMore) {
       var activities = aggregateActivities(rawActivities);
 
-      snip.forEachArrayItem(activities, renderLikedPosts, function() {
+      snip.forEachArrayItem(activities, renderLikedPosts, function () {
         cb({
           recentActivity: { items: activities },
           rawFeed: reqParams.after || reqParams.before,
           hasMore: hasMore
             ? { last_id: (rawActivities[rawActivities.length - 1] || {})._id }
-            : null
+            : null,
         });
       });
     }
   );
 };
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('recentActivity.controller', reqParams);
   reqParams = reqParams || {};
   var loggedInUser = request.getUser() || {};
@@ -192,7 +192,7 @@ exports.controller = function(request, reqParams, response) {
 
   function render(html) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
-    console.log('rendering done!');
+    // console.log('rendering done!');
     if (
       loggedInUser &&
       loggedInUser.id &&
@@ -202,21 +202,21 @@ exports.controller = function(request, reqParams, response) {
       analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
   }
 
-  fetchSubscriptions(loggedInUser.id, function(uidList, subscriptions) {
-    exports.generateActivityFeed(uidList, uidList, reqParams, function(
+  fetchSubscriptions(loggedInUser.id, function (uidList) {
+    exports.generateActivityFeed(uidList, uidList, reqParams, function (
       pageVars
     ) {
       if (!pageVars.rawFeed) {
         var fullUidList = uidList.slice(0, uidList.length);
         fullUidList.push(loggedInUser.id);
-        fetchSuggestedPeople(fullUidList, function(userList) {
+        fetchSuggestedPeople(fullUidList, function (userList) {
           if (userList && userList.length)
             pageVars.suggestedUsers = { items: userList };
           var html = template.render(pageVars);
           html = mainTemplate.renderWhydPage({
             bodyClass: 'pgRecentActivity pgWithSideBar',
             loggedUser: loggedInUser,
-            content: html
+            content: html,
           });
           render(html);
         });

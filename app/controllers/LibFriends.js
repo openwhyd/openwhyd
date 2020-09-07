@@ -10,32 +10,15 @@ var followModel = require('../models/follow.js');
 var activityModel = require('../models/activity.js');
 var contestModel = require('../models/plContest.js');
 var feedTemplate = require('../templates/feed.js');
-var snip = require('../snip.js');
 
 var HISTORY_LIMIT = 3;
-var RECOM_PEOPLE_LIMIT = 3;
 
 function fetchSubscriptions(uid, callback) {
   //console.time("LibFriends.fetchSubscriptions");
-  followModel.fetchSubscriptionArray(uid, function(subscriptions) {
+  followModel.fetchSubscriptionArray(uid, function (subscriptions) {
     //console.timeEnd("LibFriends.fetchSubscriptions");
     callback(subscriptions.concat([uid]));
   });
-}
-
-function renderSuggestedPeople(allPosts) {
-  var userSet = {},
-    userList = [];
-  for (var i in allPosts)
-    if (!userSet[allPosts[i].uId])
-      userSet[allPosts[i].uId] = {
-        id: allPosts[i].uId,
-        name: allPosts[i].uNm,
-        track: allPosts[i].name,
-        trackUrl: '/c/' + allPosts[i]._id
-      };
-  for (var i in userSet) userList.push(userSet[i]);
-  return userList.slice(0, RECOM_PEOPLE_LIMIT);
 }
 
 function fetchRecentActivity(uidList, loggedUid, cb) {
@@ -47,12 +30,12 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 	]);
 	return;*/
   var subscribers = [];
-  for (var i in uidList)
+  for (let i in uidList)
     if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
   activityModel.fetchHistoryFromUidList(
     /*uidList*/ subscribers,
     { limit: HISTORY_LIMIT },
-    function(activities) {
+    function (activities) {
       cb(activities /*.slice(0, HISTORY_LIMIT)*/);
     }
   );
@@ -66,12 +49,12 @@ function prepareSidebar(uidList, options, cb) {
 				options.suggestedUsers = { items: userList };
 		*/
     //console.time("fetchRecentActivity");
-    fetchRecentActivity(uidList, options.loggedUser.id, function(activities) {
+    fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
       //console.timeEnd("fetchRecentActivity");
       if (activities && activities.length)
         options.recentActivity = { items: activities };
       //console.time("fetchLast");
-      contestModel.fetchLast(function(contest) {
+      contestModel.fetchLast(function (contest) {
         //console.timeEnd("fetchLast");
         if (config.advertisePlaylistContestOnHome && contest && contest.title)
           options.playlistContest = contest;
@@ -87,15 +70,15 @@ function prepareSidebar(uidList, options, cb) {
 function renderFriendsFeed(options, callback) {
   var params = {
     after: options.after,
-    before: options.before
+    before: options.before,
     //limit:limit
   };
   if (options.limit) params.limit = options.limit;
 
-  fetchSubscriptions(options.loggedUser.id, function(uidList, subscriptions) {
+  fetchSubscriptions(options.loggedUser.id, function (uidList, subscriptions) {
     options.subscriptions = subscriptions;
-    postModel.fetchByAuthors(uidList, params, function(posts) {
-      prepareSidebar(uidList, options, function() {
+    postModel.fetchByAuthors(uidList, params, function (posts) {
+      prepareSidebar(uidList, options, function () {
         // (if necessary), then:
         feedTemplate.renderFeedAsync(posts, options, callback);
       });
@@ -105,12 +88,11 @@ function renderFriendsFeed(options, callback) {
 
 function renderFriendsLibrary(lib) {
   var options = lib.options;
-  var uid = options.loggedUser.id;
   options.bodyClass = 'pgStream pgWithSideBar';
   options.homeFeed = true;
   options.displayPlaylistName = true;
 
-  renderFriendsFeed(options, function(res) {
+  renderFriendsFeed(options, function (res) {
     if (options.format == 'json') lib.renderJson(res);
     else if (options.after || options.before) lib.render({ html: res });
     else {
@@ -119,7 +101,7 @@ function renderFriendsLibrary(lib) {
             '<script>',
             ' window.Whyd.tracking.log("Visit home");',
             '</script>',
-            ''
+            '',
           ].join('\n') + res;
       lib.renderPage({ name: 'Dashboard' }, /*sidebarHtml*/ null, feedHtml);
     }

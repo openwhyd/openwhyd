@@ -32,20 +32,20 @@ var FUNNY_EMAILS = [
   'borntobe@whyd.com',
   'stuck@sea.sos',
   'men@work.au',
-  'love@firstsight.com'
+  'love@firstsight.com',
 ];
 
 var templates = {};
 
-const loadTemplate = path =>
-  new Promise(resolve => templateLoader.loadTemplate(path, resolve));
+const loadTemplate = (path) =>
+  new Promise((resolve) => templateLoader.loadTemplate(path, resolve));
 
-async function loadTemplates(callback) {
+async function loadTemplates() {
   templates = {
     html: await loadTemplate('app/templates/feed.html'),
     embed: await loadTemplate('app/templates/feedEmbed.html'),
     embedv2: await loadTemplate('app/templates/feedEmbedV2.html'),
-    sideBox: await loadTemplate('app/templates/sideBox.html')
+    sideBox: await loadTemplate('app/templates/sideBox.html'),
   };
 }
 
@@ -77,7 +77,7 @@ function prepareFeedVars(posts, options) {
     homeFeed: options.homeFeed,
     streamTitle: options.tabTitle, //options.streamTitle,
     inviteAdEmailPlaceholder:
-      FUNNY_EMAILS[Math.floor(FUNNY_EMAILS.length * Math.random())]
+      FUNNY_EMAILS[Math.floor(FUNNY_EMAILS.length * Math.random())],
     //inviteBox: options.inviteBox
   };
 
@@ -88,7 +88,7 @@ function prepareFeedVars(posts, options) {
       firstPid:
         (options.playlist && posts[0].order != null
           ? parseInt(posts[0].order)
-          : 0) || posts[0]._id
+          : 0) || posts[0]._id,
     };
 
   if (options.playlist) {
@@ -133,7 +133,7 @@ function prepareFeedVars(posts, options) {
     feedVars.similarity = options.similarity;
     if (feedVars.header)
       feedVars.header = {
-        img: options.user.img || '/img/u/' + options.user.id // render.imgUrl("/u/" + options.user.id)
+        img: options.user.img || '/img/u/' + options.user.id, // render.imgUrl("/u/" + options.user.id)
       };
     if (feedVars.user.bio)
       feedVars.user.renderedBio = snip
@@ -151,7 +151,7 @@ function prepareFeedVars(posts, options) {
         : {
             id: '',
             img: '',
-            url: 'javascript:{}'
+            url: 'javascript:{}',
           };
     if (!feedVars.firstTrack.img)
       feedVars.firstTrack.img = '/images/cover-track.png';
@@ -165,8 +165,8 @@ function prepareFeedVars(posts, options) {
   return feedVars;
 }
 
-exports.renderFeedAsync = function(posts, options, callback) {
-  postsTemplate.renderPostsAsync(posts, options, function(postsHtml) {
+exports.renderFeedAsync = function (posts, options, callback) {
+  postsTemplate.renderPostsAsync(posts, options, function (postsHtml) {
     var feedVars = prepareFeedVars(posts, options);
     feedVars.posts = postsHtml;
 
@@ -191,14 +191,14 @@ exports.renderFeedAsync = function(posts, options, callback) {
   });
 };
 
-exports.renderFeedPage = function(user, options) {
+exports.renderFeedPage = function (user, options) {
   options = options || {};
   options.js = options.js || [];
   options.css = options.css || [];
   return mainTemplate.renderWhydPage(options);
 };
 
-exports.renderFeedEmbed = function(feedHtml, options) {
+exports.renderFeedEmbed = function (feedHtml, options) {
   options = options || {};
   options.js = options.js || [];
   options.css = options.css || [];
@@ -208,7 +208,6 @@ exports.renderFeedEmbed = function(feedHtml, options) {
       ? 'feedEmbedV2.css'
       : 'feedEmbed.css'
   );
-  options.js.push('swfobject.js');
   options.js.push('playem-min.js');
   options.js.push('playem-youtube-iframe-patch.js');
   options.js.push('whydPlayer.js');

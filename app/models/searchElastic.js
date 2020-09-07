@@ -12,7 +12,7 @@ var INDEX_PORT = 9200;
 var INDEX_FIELDS = {
   user: { _id: 1, name: 1, email: 1, handle: 1 },
   post: { _id: 1, name: 1, text: 1, uId: 1 },
-  playlist: { _id: 1, name: 1 }
+  playlist: { _id: 1, name: 1 },
 };
 
 function buildReq(method, pathSuffix) {
@@ -20,18 +20,18 @@ function buildReq(method, pathSuffix) {
     method: method || 'GET',
     host: INDEX_HOST,
     port: INDEX_PORT,
-    path: '/' + INDEX_NAME + (pathSuffix || '')
+    path: '/' + INDEX_NAME + (pathSuffix || ''),
   };
 }
 
 function getJson(pathSuffix, cb) {
   return http
-    .request(buildReq('GET', pathSuffix), function(res) {
+    .request(buildReq('GET', pathSuffix), function (res) {
       var json = '';
-      res.addListener('data', function(chunk) {
+      res.addListener('data', function (chunk) {
         json += chunk.toString();
       });
-      res.addListener('end', function() {
+      res.addListener('end', function () {
         try {
           json = JSON.parse(json);
         } catch (err) {
@@ -41,16 +41,15 @@ function getJson(pathSuffix, cb) {
         cb(json);
       });
     })
-    .addListener('error', function(err) {
+    .addListener('error', function (err) {
       console.error('elasticsearch index getJson() socket error:', err);
       cb({ error: err });
     })
     .end();
 }
 
-function postJson(data, cb) {
+function postJson(data = {}, cb) {
   var pathSuffix = '';
-  var data = data || {};
   if (data._type && data._id) {
     pathSuffix += '/' + data._type + '/' + data._id;
     delete data._type;
@@ -75,12 +74,12 @@ function postJson(data, cb) {
   //console.log("[INDEX] search request", data);
 
   return http
-    .request(buildReq('POST', pathSuffix), function(res) {
+    .request(buildReq('POST', pathSuffix), function (res) {
       var json = '';
-      res.addListener('data', function(chunk) {
+      res.addListener('data', function (chunk) {
         json += chunk.toString();
       });
-      res.addListener('end', function() {
+      res.addListener('end', function () {
         //console.log("[INDEX] search response", json);
 
         try {
@@ -92,40 +91,40 @@ function postJson(data, cb) {
         cb(json);
       });
     })
-    .addListener('error', function(err) {
+    .addListener('error', function (err) {
       console.error('elasticsearch index postJson() socket error:', err);
       cb({ error: err });
     })
     .end(data);
 }
 
-exports.countDocs = function(type, cb) {
+exports.countDocs = function (type, cb) {
   console.log('models.search.countDocs():', type);
   // http://localhost:9200/twitter/tweet/_count
-  getJson('/' + type + '/_count', function(response) {
+  getJson('/' + type + '/_count', function (response) {
     cb((response || {}).count);
   });
 };
 
-exports.deleteAllDocs = function(type, cb) {
+exports.deleteAllDocs = function (type, cb) {
   console.log('models.search.deleteAllDocs():', type);
   return http
-    .request(buildReq('DELETE', '/' + type), function(res) {
+    .request(buildReq('DELETE', '/' + type), function (res) {
       cb && res.addListener('end', cb);
     })
-    .addListener('error', function(err) {
+    .addListener('error', function (err) {
       console.error('elasticsearch socket error: ', err);
     })
     .end();
 };
 
-exports.deleteDoc = function(type, id, cb) {
+exports.deleteDoc = function (type, id, cb) {
   console.log('models.search.deleteDoc():', type, id);
   return http
-    .request(buildReq('DELETE', '/' + type + '/' + id), function(res) {
+    .request(buildReq('DELETE', '/' + type + '/' + id), function (res) {
       cb && res.addListener('end', cb);
     })
-    .addListener('error', function(err) {
+    .addListener('error', function (err) {
       console.error('elasticsearch socket error: ', err);
     })
     .end();
@@ -137,9 +136,9 @@ exports.query = function(q, handler) {
 		//console.log("json response", response);
 		if (response && response.hits) {
 			var hits = (response.hits || {}).hits;
-			for (var i in hits) {
+			for (let i in hits) {
 				if (hits[i] && hits[i]._source) {
-					for (var j in hits[i]._source)
+					for (let j in hits[i]._source)
 						hits[i][j] = hits[i]._source[j];
 					delete hits[i]._source
 				}
@@ -151,9 +150,7 @@ exports.query = function(q, handler) {
 	});
 }
 */
-exports.query = function(q, handler) {
-  var q = q || {};
-
+exports.query = function (q = {}, handler) {
   var filter = [];
 
   if (q.uId) filter.push({ term: { uId: q.uId } });
@@ -177,9 +174,9 @@ exports.query = function(q, handler) {
     bool: {
       should: [
         { match: { name: { query: q.q, operator: 'AND' } } },
-        { match: { full: { query: q.q, operator: 'AND' } } }
-      ]
-    }
+        { match: { full: { query: q.q, operator: 'AND' } } },
+      ],
+    },
   };
 
   if (q.uId) query.bool.should.push({ term: { text: q.q } });
@@ -188,25 +185,25 @@ exports.query = function(q, handler) {
     query: {
       filtered: {
         query: query,
-        filter: filter.length ? { and: filter } : []
-      }
+        filter: filter.length ? { and: filter } : [],
+      },
     },
     from: q.from || 0,
     size: q.limit || 50,
     sort: q.sort || [{ _score: 'desc' }],
-    facets: q.facets || {}
+    facets: q.facets || {},
   };
 
   //console.log("query", query/*JSON.stringify(query)*/);
 
-  postJson(query, function(response) {
+  postJson(query, function (response) {
     //console.log("json response", response);
     if (response && response.hits) {
       //console.log("hits", response.hits.hits);
       var hits = (response.hits || {}).hits;
-      for (var i in hits) {
+      for (let i in hits) {
         if (hits[i] && hits[i]._source) {
-          for (var j in hits[i]._source) hits[i][j] = hits[i]._source[j];
+          for (let j in hits[i]._source) hits[i][j] = hits[i]._source[j];
           delete hits[i]._source;
         }
       }
@@ -215,9 +212,9 @@ exports.query = function(q, handler) {
   });
 };
 
-exports.index = function(doc, handler) {
+exports.index = function (doc, handler) {
   //console.log("models.search.index():", doc);
-  postJson(doc, function(response) {
+  postJson(doc, function (response) {
     console.log(
       'models.search.index() => ',
       (response || {}).ok ? 'OK' : 'ERROR'
@@ -226,10 +223,10 @@ exports.index = function(doc, handler) {
   });
 };
 
-exports.indexBulk = function(docs, cb) {
+exports.indexBulk = function (docs, cb) {
   console.log('indexBulk', docs.length, '...');
   var bulkStr = '';
-  for (var i in docs) {
+  for (let i in docs) {
     var u = docs[i],
       meta = {},
       data = {};
@@ -237,7 +234,7 @@ exports.indexBulk = function(docs, cb) {
       console.warn('ignoring empty doc from being indexed in BULK');
       continue;
     }
-    for (var field in u)
+    for (let field in u)
       if (field[0] == '_') meta[field] = u[field];
       else data[field] = u[field];
     bulkStr +=
@@ -250,7 +247,7 @@ function logToConsole(e) {
   console.log('INDEX ERROR: ' + (e || {}).error);
 }
 
-exports.indexTyped = function(type, item, handler) {
+exports.indexTyped = function (type, item, handler) {
   //console.log("models.search.index(): ", item, "...");
   if (!type || !INDEX_FIELDS[type])
     handler || logToConsole({ error: 'indexTyped: unknown type' });
@@ -258,22 +255,22 @@ exports.indexTyped = function(type, item, handler) {
     handler || logToConsole({ error: 'indexTyped: missing parameters' });
   else {
     var doc = { _type: type };
-    for (var f in INDEX_FIELDS[type]) doc[f] = item[f];
+    for (let f in INDEX_FIELDS[type]) doc[f] = item[f];
     this.index(doc, handler);
   }
 };
 
-exports.indexPlaylist = function(uid, plId, plName, handler) {
+exports.indexPlaylist = function (uid, plId, plName, handler) {
   var item = {
     //	_type: "playlist",
     _id: '' + uid + '_' + plId,
-    name: plName
+    name: plName,
   };
   //this.index(item, handler);
   this.indexTyped('playlist', item, handler);
 };
 
-exports.deletePlaylist = function(uid, plId, cb) {
+exports.deletePlaylist = function (uid, plId, cb) {
   this.deleteDoc('playlist', '' + uid + '_' + plId, cb);
 };
 
@@ -282,20 +279,20 @@ exports.deletePlaylist = function(uid, plId, cb) {
 
 // INIT
 
-exports.init = function() {
+exports.init = function () {
   console.log(
     'models.search: initializing ElasticSearch index:',
     INDEX_HOST + ':' + INDEX_PORT + '/' + INDEX_NAME,
     '...'
   );
   try {
-    exports.countDocs('user', function(c) {
+    exports.countDocs('user', function (c) {
       console.log('models.search: found', c, 'users in index');
     });
-    exports.countDocs('post', function(c) {
+    exports.countDocs('post', function (c) {
       console.log('models.search: found', c, 'posts in index');
     });
-    exports.countDocs('playlist', function(c) {
+    exports.countDocs('playlist', function (c) {
       console.log('models.search: found', c, 'playlists in index');
     });
   } catch (e) {

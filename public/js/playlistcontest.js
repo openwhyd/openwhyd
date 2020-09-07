@@ -1,4 +1,6 @@
-$(function() {
+/* global $ */
+
+$(function () {
   function removeAccents(str) {
     return !str
       ? ''

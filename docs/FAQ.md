@@ -7,6 +7,7 @@
 Openwhyd is a platform that our community of music lovers use to discover, play and share music. Its also a good project for developers to gain experience collaborating on a real-world open-source product and improve their programming skills.
 
 If want to know more, read:
+
 - [What is Openwhyd, and what it‘s not](https://medium.com/openwhyd/what-is-openwhyd-and-what-it-s-not-132f956ccb6),
 - [From Whyd to Openwhyd, our story](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
 
@@ -22,7 +23,7 @@ Demo: https://www.youtube.com/watch?v=aZT8VlTV1YY
 
 ### 🇫🇷 Comment ajouter de la musique ?
 
-Pour ajouter un morceau de musique (appelé *track*), Openwhyd propose plusieurs moyens:
+Pour ajouter un morceau de musique (appelé _track_), Openwhyd propose plusieurs moyens:
 
 1. cliquer sur le lien "Add" d'un morceau ajouté par quelqu'un d'autre, ex: depuis [le stream](https://openwhyd.org/stream) (utilisateurs suivis), ou depuis les [hot tracks](https://openwhyd.org/hot);
 2. taper le nom du morceau ou coller l'URL YouTube de ce morceau depuis la barre de recherche d'Openwhyd;
@@ -176,7 +177,7 @@ Openwhyd is a collaborative / open-source project. Contributions of many kinds a
 
 If you're a **developer**:
 
-- Feel free to say *hi!* on any issue or task listed in our [GitHub Project](https://github.com/openwhyd/openwhyd/projects/1);
+- Feel free to say _hi!_ on any issue or task listed in our [GitHub Project](https://github.com/openwhyd/openwhyd/projects/1);
 - Help on replicating, investigating and fixing bugs is particularly appreciated. And beginners are welcome too!
 - Here's some useful documentation for contributors: our [roadmap](ROADMAP.md) and [contribution guide](CONTRIBUTING.md);
 - Also, you can bring your laptop to the next [Hackergarten meetup](https://www.meetup.com/fr-FR/Paris-Hackergarten) (happening in Paris every month), if you want to meet [Adrien](https://github.com/adrienjoly) and contribute on Openwhyd with him.
@@ -187,7 +188,7 @@ Otherwise, you can:
 - [donate](https://opencollective.com/openwhyd/donate) to help us cover Openwhyd's maintenance costs,
 - and/or show Openwhyd to your friends, because it's so much cooler than Spotify! 😎
 
-If you would rather talk to us privately, please come [say *hi*](mailto:contact@openwhyd.org)!
+If you would rather talk to us privately, please come [say _hi_](mailto:contact@openwhyd.org)!
 
 ### Can we organise a party with fellow Openwhyd users?
 
@@ -200,16 +201,17 @@ Good first steps would be to pick a place, a date, and convince at least 10 peop
 ### How to contact Openwhyd's team?
 
 Contact us at contact@openwhyd.org, or through our [Openwhyd Music Lovers Club, on Facebook](https://www.facebook.com/groups/openwhyd/). Our community of volunteers and users will do their best to help!
- 
+
 ## Technical questions / support
 
 ### Track skipping problem / les morceaux sautent / ne s'enchainent pas ?
 
 Try to refresh the page and click again on the track to see if it plays.
-  - If it does not, try opening its source URL to another tab by right-clicking on it, and play it from there.
-    - If it does not play from its original location (e.g. Youtube page), there is nothing we can do, unfortunately...
-    - If it does play from there but not from Openwhyd, it could be caused by geographical limitations (i.e. for technical reasons, the track must be allowed to be streamed in France), or that our player is broken. => Please let us know by sending us the Openwhyd URL of your track.
-  - If it does play after refreshing the Openwhyd page, it could be that your web browser does not allow playback of streaming content in the background (i.e. while doing something else.) In that case, try installing [Openwhyd-electron](https://github.com/openwhyd/openwhyd-electron/releases/) on your computer, by selecting your operating system from the list.
+
+- If it does not, try opening its source URL to another tab by right-clicking on it, and play it from there.
+  - If it does not play from its original location (e.g. Youtube page), there is nothing we can do, unfortunately...
+  - If it does play from there but not from Openwhyd, it could be caused by geographical limitations (i.e. for technical reasons, the track must be allowed to be streamed in France), or that our player is broken. => Please let us know by sending us the Openwhyd URL of your track.
+- If it does play after refreshing the Openwhyd page, it could be that your web browser does not allow playback of streaming content in the background (i.e. while doing something else.) In that case, try installing [Openwhyd-electron](https://github.com/openwhyd/openwhyd-electron/releases/) on your computer, by selecting your operating system from the list.
 
 ### I can't add / bookmark a track from Youtube ...
 
@@ -225,7 +227,7 @@ It could also be that this track is not accessible from France, as explained in 
 
 ### How to export my tracks / comment exporter ma musique en CSV ou JSON ?
 
-🇬🇧 First off, don't worry! Like you, we really care about our 5+ years of music curated with love on Openwhyd! And, whatever happens, we would never let Openwhyd *die* without warning the community beforehand.
+🇬🇧 First off, don't worry! Like you, we really care about our 5+ years of music curated with love on Openwhyd! And, whatever happens, we would never let Openwhyd _die_ without warning the community beforehand.
 
 That being said, it's very easy to download your data at any time: just add the `?format=json&limit=999999` suffix to your Openwhyd profile URL. E.g. `https://openwhyd.org/adrien?format=json&limit=999999`
 
@@ -237,28 +239,28 @@ For more information about how to download data from Openwhyd, read our document
 
 Yes, check [our API documentation](API.md).
 
-### The player says “Embed too small” or something like that, and wont play my music! 
- 
-Yeah, this happens, the embed is about as small as it can be without breaking the rules, but that sometimes means that when people have a zoom on their browser that the window is too small to play the media. Check the “View” tab and set it to 100%, that should fix the problem in most cases. 
- 
+### The player says “Embed too small” or something like that, and wont play my music!
+
+Yeah, this happens, the embed is about as small as it can be without breaking the rules, but that sometimes means that when people have a zoom on their browser that the window is too small to play the media. Check the “View” tab and set it to 100%, that should fix the problem in most cases.
+
 ### Sometimes a track doesn’t play at all, or it says that I have to go to YouTube to view the content.
- 
-Well, it’s true, there is some music that cannot be embedded onto other sites without explicit permission from the rights holders. If we don’t have an agreement in place you have to go to YouTube to watch it. But don’t worry, we are working on a bunch of solutions to that very problem! 
- 
-Other times the player is trying to activate the media but the connection slows down for whatever reason and the play action times out. In this case the player skips to the next song. Try clicking on the song that was skipped, most of the time it will start playing. This problem comes from the fact that with continuous playback there are certain conditions that must be set to make sure that your music doesn’t get stuck on a track that’s acting a little unruly. 
- 
+
+Well, it’s true, there is some music that cannot be embedded onto other sites without explicit permission from the rights holders. If we don’t have an agreement in place you have to go to YouTube to watch it. But don’t worry, we are working on a bunch of solutions to that very problem!
+
+Other times the player is trying to activate the media but the connection slows down for whatever reason and the play action times out. In this case the player skips to the next song. Try clicking on the song that was skipped, most of the time it will start playing. This problem comes from the fact that with continuous playback there are certain conditions that must be set to make sure that your music doesn’t get stuck on a track that’s acting a little unruly.
+
 But overall keep in mind that we support music from a lot of different sources, and these sources are continuously evolving and changing, so we strive to make 99% of tracks work, and we are definitely hitting our goal!
- 
-### When I click on a track it takes me to the Soundcloud page! 
- 
-That happens too, try refreshing the Openwhyd page. 
- 
+
+### When I click on a track it takes me to the Soundcloud page!
+
+That happens too, try refreshing the Openwhyd page.
+
 ### The video plays on top of the notifications panel!
- 
+
 Yeah, that’s because of Flash. Please try again after activating the HTML5 mode of Youtube (http://youtube.com/html5), and contact us if you still experience this issue.
- 
+
 ### Other: I have a problem that you didn’t mention here, what should I do about it?
- 
+
 Contact us at contact@openwhyd.org, or through our [Openwhyd Music Lovers Club, on Facebook](https://www.facebook.com/groups/openwhyd/). Our community of volunteers and users will do their best to help!
- 
-*Never stop jamming!*
+
+_Never stop jamming!_

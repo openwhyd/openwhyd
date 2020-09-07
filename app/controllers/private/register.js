@@ -7,7 +7,6 @@
 var userModel = require('../../models/user.js');
 var followModel = require('../../models/follow.js');
 var emailModel = require('../../models/email.js'); // for validation
-var facebookModel = require('../../models/facebook.js');
 var notifModel = require('../../models/notif.js');
 var contestModel = require('../../models/plContest.js');
 var inviteController = require('../invite.js');
@@ -27,7 +26,7 @@ function follow(user, userToFollow, ctx) {
       uNm: user.name,
       tId: userToFollow.id,
       tNm: userToFollow.name,
-      ctx: ctx
+      ctx: ctx,
     },
     function () {
       console.log('auto follow: ', user.name, userToFollow.name);
@@ -50,20 +49,20 @@ exports.registerInvitedUser = function (request, user, response) {
     'register.registerInvitedUser',
     user
       ? {
-        inviteCode: user.inviteCode,
-        email: user.email,
-        name: user.name,
-        fbUid: user.fbUid,
-        fbTok: user.fbTok,
-        iBy: user.iBy,
-        iPo: user.iPo,
-        iRf: user.iRf,
-        iPg: user.iPg,
-        plC: user.plC, // playlist contest id
-        sTk: user.sTk || '', // signup token (genuine client check)
-        ajax: user.ajax,
-        fbRequest: user.fbRequest
-      }
+          inviteCode: user.inviteCode,
+          email: user.email,
+          name: user.name,
+          fbUid: user.fbUid,
+          fbTok: user.fbTok,
+          iBy: user.iBy,
+          iPo: user.iPo,
+          iRf: user.iRf,
+          iPg: user.iPg,
+          plC: user.plC, // playlist contest id
+          sTk: user.sTk || '', // signup token (genuine client check)
+          ajax: user.ajax,
+          fbRequest: user.fbRequest,
+        }
       : null
   );
 
@@ -138,7 +137,7 @@ exports.registerInvitedUser = function (request, user, response) {
         email: user.email,
         pwd: userModel.md5(user.password),
         arPwd: argon2.hash(user.password).toString('hex'),
-        img: '/images/blank_user.gif' //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
+        img: '/images/blank_user.gif', //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
       };
 
       if (user.iBy) dbUser.iBy = user.iBy; // invited by (user id)
@@ -167,8 +166,6 @@ exports.registerInvitedUser = function (request, user, response) {
         'Oops, your registration failed... Please try again!'
       );
 
-    var inviteSender = user.iBy ? request.getUserFromId(user.iBy) : null;
-
     if (user.fbRequest) userModel.removeInviteByFbRequestIds(user.fbRequest);
     else userModel.removeInvite(user.inviteCode);
 
@@ -180,11 +177,11 @@ exports.registerInvitedUser = function (request, user, response) {
       if (user.ajax) {
         // the cookie is probably still empty, we need to intercepte the cookie header when the middleware injected
         var json = { redirect: url, uId: '' + storedUser._id, cookie: request.session.cookie.data };
-        function renderJSON() {
+        const renderJSON = () => {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
             json
           );
-        }
+        };
         if (user.includeUser) {
           userApi.fetchUserData(storedUser, function (user) {
             json.user = user;
@@ -196,9 +193,9 @@ exports.registerInvitedUser = function (request, user, response) {
 
     // connect users
     if (user.iBy) {
-      var inviteSender = {
+      const inviteSender = {
         id: user.iBy,
-        name: request.getUserNameFromId(user.iBy)
+        name: request.getUserNameFromId(user.iBy),
       };
       follow(storedUser, inviteSender, 'invite');
       follow(inviteSender, storedUser, 'invite');

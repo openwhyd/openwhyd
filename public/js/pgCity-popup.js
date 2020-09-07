@@ -16,11 +16,11 @@ var GGPopup = {
   blurElements: [],
 
   // Init
-  init: function() {
+  init: function () {
     var self = this;
 
     // Listen for ESC key
-    document.addEventListener('keyup', function(e) {
+    document.addEventListener('keyup', function (e) {
       // If press ESC
       if (e.keyCode == 27) {
         // Check if the popup if already opened
@@ -33,7 +33,7 @@ var GGPopup = {
   },
 
   // Create the popup HTML layout
-  createDOM: function(id) {
+  createDOM: function (id) {
     var self = this;
 
     this.id = id;
@@ -44,7 +44,7 @@ var GGPopup = {
 
     var global = document.createElement('div');
     global.id = 'global';
-    global.onclick = function(e) {
+    global.onclick = function (e) {
       if (e.toElement == this) {
         self.close();
       }
@@ -68,7 +68,7 @@ var GGPopup = {
   },
 
   // Display the popup with the HTML in parameter
-  show: function(id, html) {
+  show: function (id, html) {
     // Init
     this.init();
 
@@ -86,13 +86,13 @@ var GGPopup = {
   },
 
   // Update the html content of the popup
-  update: function(html) {
+  update: function (html) {
     var content = this.me().children[0].children[0];
     content.innerHTML = html;
   },
 
   // Close the popup
-  close: function() {
+  close: function () {
     // Unblur background
     if (this.blur) {
       this.unblurBackground();
@@ -109,20 +109,20 @@ var GGPopup = {
   },
 
   // Returns the popup element
-  me: function() {
+  me: function () {
     return document.getElementById(this.id);
   },
 
   // Set the elements to be blurred
-  setBlurred: function(els) {
-    for (var i = 0; i < els.length; i++) {
+  setBlurred: function (els) {
+    for (let i = 0; i < els.length; i++) {
       this.blurElements.push(els[i]);
     }
   },
 
   // Blur the background elements
-  blurBackground: function() {
-    for (var i = 0; i < this.blurElements.length; i++) {
+  blurBackground: function () {
+    for (let i = 0; i < this.blurElements.length; i++) {
       var el = this.blurElements[i];
       var classe = this.blurredClass;
       if (el.className.length > 0) {
@@ -132,8 +132,8 @@ var GGPopup = {
     }
   },
 
-  unblurBackground: function() {
-    for (var i = 0; i < this.blurElements.length; i++) {
+  unblurBackground: function () {
+    for (let i = 0; i < this.blurElements.length; i++) {
       var el = this.blurElements[i];
 
       // Remove blurred class
@@ -142,5 +142,5 @@ var GGPopup = {
 
       el.className = classe;
     }
-  }
+  },
 };

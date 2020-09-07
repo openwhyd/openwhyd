@@ -1,189 +1,191 @@
 <style>
-/* recentActivity page */
+  /* recentActivity page */
 
-.bigBox {
-	overflow: visible;
-}
+  .bigBox {
+    overflow: visible;
+  }
 
-.bigBox.recentActivity ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
+  .bigBox.recentActivity ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-.bigBox.recentActivity li {
-	overflow: auto;
-	position: relative;
-	padding-bottom: 15px;
-	border-bottom: 1px dotted #CCC;
-	margin-bottom: 20px;
-}
+  .bigBox.recentActivity li {
+    overflow: auto;
+    position: relative;
+    padding-bottom: 15px;
+    border-bottom: 1px dotted #ccc;
+    margin-bottom: 20px;
+  }
 
-.bigBox.recentActivity li.like {
-	border-bottom: none;
-}
+  .bigBox.recentActivity li.like {
+    border-bottom: none;
+  }
 
-.bigBox.recentActivity div.thumb {
-	float: left;
-	width: 32px;
-	height: 32px;
-	background-size: cover;
-	margin-right: 10px;
-	border-radius: 16px;
-	-webkit-border-radius: 16px;
-	-moz-border-radius: 16px;
-	cursor: pointer;
-}
+  .bigBox.recentActivity div.thumb {
+    float: left;
+    width: 32px;
+    height: 32px;
+    background-size: cover;
+    margin-right: 10px;
+    border-radius: 16px;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    cursor: pointer;
+  }
 
-.bigBox.recentActivity li > span.activity {
-	float: left;
-	margin-top: 10px;
+  .bigBox.recentActivity li > span.activity {
+    float: left;
+    margin-top: 10px;
+  }
 
-}
+  .bigBox.recentActivity li>span.activity
 
-.bigBox.recentActivity li > span.activity /*>*/ .userName {
-	font-weight: bold;
-	max-width: 165px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	color: #414141;
-}
+	/*>*/
+	.userName {
+    font-weight: bold;
+    max-width: 165px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #414141;
+  }
 
-.bigBox.recentActivity li > span.activity > div {
-	overflow: auto;
-	position: relative;
-	width: 580px;
-	margin-top: 15px;
-}
+  .bigBox.recentActivity li > span.activity > div {
+    overflow: auto;
+    position: relative;
+    width: 580px;
+    margin-top: 15px;
+  }
 
-.bigBox.recentActivity li > span.activity > div > .thumb {
-	position: relative;
+  .bigBox.recentActivity li > span.activity > div > .thumb {
+    position: relative;
+  }
 
-}
+  .bigBox.recentActivity li > span.activity > div > .userSubscribe {
+    top: 0;
+  }
 
-.bigBox.recentActivity li > span.activity > div > .userSubscribe {
-	top: 0;
-}
+  .bigBox.recentActivity li .bio {
+    width: 320px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 
-.bigBox.recentActivity li .bio {
-	width: 320px;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.bigBox.recentActivity li .post {
-	clear: left;
-	margin-bottom: 0;
-	padding-top: 14px;
-	padding-bottom: 14px;
-	border-top:0;
-	border-bottom: 1px dotted #cccccc;
-	margin: 0;
-	width: 625px;
-
-}
-
-.bigBox.recentActivity li > div.post:last-child{
-}
-/*
-.pgRecentActivity #playerContainer > div {
-	top: 13px;
-	left: 17px;
-}
-*/
-
-
+  .bigBox.recentActivity li .post {
+    clear: left;
+    margin-bottom: 0;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    border-top: 0;
+    border-bottom: 1px dotted #cccccc;
+    margin: 0;
+    width: 625px;
+  }
 </style>
-	{{#suggestedUsers}}
+{{#suggestedUsers}}
 <div class="container">
-
-	<div class="rightBar">
-		<script>
-		function clearSuggestedUser(elt) {
-			$(elt).remove();
-		}
-		function subscribeToUserAndClear(elt) {
-			var $li = $(elt);//.closest("li[data-uid]");
-			var uid = $li.attr("data-uid");
-			subscribeToUser(uid, function() {
-				clearSuggestedUser(elt);
-			});
-		}
-		</script>
-		<div class="sideBox suggestedUsers">
-			<div class="head">
-				<h2 class="head-name-tab">Subscribe to these people</h2>
-				<!--<a href="javascript:return false;">See more</a>-->
-			</div>
-			<div class="body">
-				<ul>
-					{{#items}}
-					<li data-uid="{{id}}">
-						<div style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();"></div>
-						<a class="userName" href="/u/{{id}}">{{name}}</a>
-						<span class="subscribe" onclick="subscribeToUserAndClear(this.parentNode)">Subscribe</span>
-						<a class="suggType" href="{{trackUrl}}">♪ {{track}}</a>
-						<span class="remove" onclick="clearSuggestedUser(this.parentNode)">x</span>
-					</li>
-					{{/items}}
-				</ul>
-				<a href="/discover/users">Find people</a>
-				&nbsp;&bull;&nbsp;
-				<a href="/invite">Invite friends</a>
-			</div>
-		</div>
-	</div>
-	{{/suggestedUsers}}
-
-	{{#recentActivity}}
-	{{^rawFeed}}
-	<div class="bigBox recentActivity sub-container">
-		<div class="head">
-			<a href="/stream">Back to stream</a>
-			<h2>Recent activity</h2>
-		</div>
-		<div class="body">
-			<ul>
-	{{/rawFeed}}
-				{{#items}}
-				<li data-uid="{{id}}" class="{{type}}">
-					<div class="thumb" style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();"></div>
-					<span class="activity">
-						<a class="userName" href="/u/{{id}}">{{name}}</a>
-						{{#subscriptions}}
-							&nbsp;subscribed to
-							{{#aggregatedItems}}
-								<div class="subscription">
-									<span class='userSubscribe {{#subscribed}}subscribed{{/subscribed}}' data-uid="{{id}}">{{#subscribed}}Following{{/subscribed}}{{^subscribed}}Follow{{/subscribed}}</span>
-									<div class="thumb" style="background-image:url('/img/u/{{id}}');" onclick="$(this).parent().find('a.userName').click();"></div>
-									<a class="userName" href="/u/{{id}}">{{name}}</a>
-									<div class="bio">{{bio}}</div>
-								</div>
-							{{/aggregatedItems}}
-					</span>
-						{{/subscriptions}}
-						{{#likes}}
-							&nbsp;liked {{nbTracks}}
-					</span>
-							{{{posts}}}
-						{{/likes}}
-				</li>
-				{{/items}}
-				{{#hasMore}}
-					<div class="btnLoadMore" onclick="loadMore()"><div>&nbsp;</div><span>Load more</span></div>
-					<script> window.nextPageUrl = window.location.href + "?after=" + "{{last_id}}"; </script>
-				{{/hasMore}}
-	{{^rawFeed}}
-			</ul>
-		</div>
-	</div>
-	{{/rawFeed}}
-	<script>
-		$(function() {
-			activateSubscribeButton($(".recentActivity .userSubscribe"));
-		});
-	</script>
-	{{/recentActivity}}
+  <div class="rightBar">
+    <script>
+      function clearSuggestedUser(elt) {
+        $(elt).remove();
+      }
+      function subscribeToUserAndClear(elt) {
+        var $li = $(elt); //.closest("li[data-uid]");
+        var uid = $li.attr('data-uid');
+        subscribeToUser(uid, function () {
+          clearSuggestedUser(elt);
+        });
+      }
+    </script>
+    <div class="sideBox suggestedUsers">
+      <div class="head">
+        <h2 class="head-name-tab">Subscribe to these people</h2>
+        <!--<a href="javascript:return false;">See more</a>-->
+      </div>
+      <div class="body">
+        <ul>
+          {{#items}}
+          <li data-uid="{{id}}">
+            <div
+              style="background-image:url('/img/u/{{id}}');"
+              onclick="$(this).parent().find('a.userName').click();"
+            ></div>
+            <a class="userName" href="/u/{{id}}">{{name}}</a>
+            <span
+              class="subscribe"
+              onclick="subscribeToUserAndClear(this.parentNode)"
+              >Subscribe</span
+            >
+            <a class="suggType" href="{{trackUrl}}">♪ {{track}}</a>
+            <span class="remove" onclick="clearSuggestedUser(this.parentNode)"
+              >x</span
+            >
+          </li>
+          {{/items}}
+        </ul>
+        <a href="/discover/users">Find people</a>
+        &nbsp;&bull;&nbsp;
+        <a href="/invite">Invite friends</a>
+      </div>
+    </div>
+  </div>
+  {{/suggestedUsers}} {{#recentActivity}} {{^rawFeed}}
+  <div class="bigBox recentActivity sub-container">
+    <div class="head">
+      <a href="/stream">Back to stream</a>
+      <h2>Recent activity</h2>
+    </div>
+    <div class="body">
+      <ul>
+        {{/rawFeed}} {{#items}}
+        <li data-uid="{{id}}" class="{{type}}">
+          <div
+            class="thumb"
+            style="background-image:url('/img/u/{{id}}');"
+            onclick="$(this).parent().find('a.userName').click();"
+          ></div>
+          <span class="activity">
+            <a class="userName" href="/u/{{id}}">{{name}}</a>
+            {{#subscriptions}} &nbsp;subscribed to {{#aggregatedItems}}
+            <div class="subscription">
+              <span
+                class="userSubscribe {{#subscribed}}subscribed{{/subscribed}}"
+                data-uid="{{id}}"
+                >{{#subscribed}}Following{{/subscribed}}{{^subscribed}}Follow{{/subscribed}}</span
+              >
+              <div
+                class="thumb"
+                style="background-image:url('/img/u/{{id}}');"
+                onclick="$(this).parent().find('a.userName').click();"
+              ></div>
+              <a class="userName" href="/u/{{id}}">{{name}}</a>
+              <div class="bio">{{bio}}</div>
+            </div>
+            {{/aggregatedItems}} {{/subscriptions}} {{#likes}} &nbsp;liked
+            {{nbTracks}}
+          </span>
+          {{{posts}}} {{/likes}}
+        </li>
+        {{/items}} {{#hasMore}}
+        <div class="btnLoadMore" onclick="loadMore()">
+          <div>&nbsp;</div>
+          <span>Load more</span>
+        </div>
+        <script>
+          window.nextPageUrl = window.location.href + '?after=' + '{{last_id}}';
+        </script>
+        {{/hasMore}} {{^rawFeed}}
+      </ul>
+    </div>
+  </div>
+  {{/rawFeed}}
+  <script>
+    $(function () {
+      activateSubscribeButton($('.recentActivity .userSubscribe'));
+    });
+  </script>
+  {{/recentActivity}}
 </div>

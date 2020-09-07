@@ -1,186 +1,199 @@
 #whydBookmarklet {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 1999999999;
-	overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1999999999;
+  overflow: hidden;
 }
 
 #whydBookmarklet * {
-	box-sizing: content-box;	
+  box-sizing: content-box;
 }
 
 #whydBookmarklet img {
-	display: inline;
+  display: inline;
 }
 
 #whydOverlay {
-	position: absolute;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background: #EFEFEF;
-	opacity: 0.99
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #efefef;
+  opacity: 0.99;
 }
 
 #whydHeader {
-	position:absolute;
-	z-index: 2;
-	width: 100%;
-	margin: 0;
-	padding: 9px;
-	height: 31px;
-	background: white;
-	text-align: center;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  margin: 0;
+  padding: 9px;
+  height: 31px;
+  background: white;
+  text-align: center;
 }
 
 #whydHeader > div {
-	position: absolute;
-	top: 14px;
-	left: 14px;
-	cursor: pointer;
-	width: 20px;
-	height: 21px;
-	background-position: top;
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  cursor: pointer;
+  width: 20px;
+  height: 21px;
+  background-position: top;
 }
 
 #whydHeader > div:hover {
-	background-position: bottom;
+  background-position: bottom;
 }
 
 #whydContent {
-	position: absolute;
-	top: 0;
-	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
-	padding: 12px;
-	padding-top: 61px;
-	overflow-y: auto;
-	text-align: center;
+  position: absolute;
+  top: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  padding-top: 61px;
+  overflow-y: auto;
+  text-align: center;
 }
 
 #whydLoading {
-	position: fixed;
-	top: 50%;
-	left: 47.5%;
-	opacity: 0.5;
-	width: 72px;
-	height: 72px;
-	background-image: url('/images/pageloarder.gif');
-	background-color: black;
-	border-radius: 60px;
-	-webkit-border-radius: 60px;
-	-moz-border-radius: 60px;
-	z-index:9999;
+  position: fixed;
+  top: 50%;
+  left: 47.5%;
+  opacity: 0.5;
+  width: 72px;
+  height: 72px;
+  background-image: url('/images/pageloarder.gif');
+  background-color: black;
+  border-radius: 60px;
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  z-index: 9999;
 }
 
 .whydThumb {
-	position: relative;
-	margin-right: 12px;
-	margin-bottom: 12px;
-	width: 296px;
-	height: 296px;
-	display: inline-block;
-	overflow: hidden;
-	cursor: pointer;
-	background-size: cover;
-	background-position: center;
+  position: relative;
+  margin-right: 12px;
+  margin-bottom: 12px;
+  width: 296px;
+  height: 296px;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
 }
 
 .whydGrad {
-	position: absolute;
-	top: 50%;
-	height: 50%;
-	width: 100%;
-	background: linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, #111315 100%));
-	background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
-	background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
+  position: absolute;
+  top: 50%;
+  height: 50%;
+  width: 100%;
+  background: linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
+  background: -webkit-linear-gradient(
+    top,
+    rgba(255, 255, 255, 0) 0%,
+    #111315 100%
+  );
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, rgba(255, 255, 255, 0)),
+    color-stop(100%, #111315 100%)
+  );
+  background: -moz-linear-gradient(
+    top,
+    rgba(255, 255, 255, 0) 0%,
+    #111315 100%
+  );
+  background: -o-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0) 0%, #111315 100%);
 }
 
 .whydThumb > p {
-	position: absolute;
-	width: 272px;
-	bottom: 12px;
-	left: 12px;
-	font-family: "Helvetica-Neue", Helvetica, Arial, Sans-serif;
-	font-size: 14px;
-	font-weight: bold;
-	color: #ffffff;
-	line-height: 18px;
-	margin: 0;
-	text-align: left;
+  position: absolute;
+  width: 272px;
+  bottom: 12px;
+  left: 12px;
+  font-family: 'Helvetica-Neue', Helvetica, Arial, Sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 18px;
+  margin: 0;
+  text-align: left;
 }
 
 .whydSrcLogo {
-	position: absolute;
-	top: 8px;
-	right: 8px;
-	width: 24px;
-	height: 24px;
-	background-size: fit;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  background-size: fit;
 }
 
 .whydCont {
-	opacity:0;
-	visibility:hidden;
-    transition:visibility 0s linear 0.1s,opacity 0.1s linear;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 0.1s, opacity 0.1s linear;
 }
 
 .whydThumb:hover > .whydCont {
-	transition-delay:0.1s;
-	opacity: 0.9;
-	visibility:visible;
-  
+  transition-delay: 0.1s;
+  opacity: 0.9;
+  visibility: visible;
 }
 
 .whydCont > * {
-	position: absolute;
-	width: 100%;
-	height: 100%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .whydCont > .whydContOvr {
-	background: #3177AF;
-	opacity:0.9;
+  background: #3177af;
+  opacity: 0.9;
 }
 
-.whydThumb  .whydAdd {
-	margin-top: 15px;
-	background-repeat: no-repeat;
-	background-position: center;
-	opacity:0;
-	visibility:hidden;
-    transition:visibility 0s linear 0.1s,opacity 0.1s linear, margin 0.1s linear;
+.whydThumb .whydAdd {
+  margin-top: 15px;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 0.1s, opacity 0.1s linear, margin 0.1s linear;
 }
 
-.whydThumb:hover  .whydAdd {
-	margin-top: 0px;
+.whydThumb:hover .whydAdd {
+  margin-top: 0px;
 
-	transition-delay:0.1s;
-	opacity: 1;
-	visibility:visible;
+  transition-delay: 0.1s;
+  opacity: 1;
+  visibility: visible;
 }
 
 .whydSelect {
-	display: none;
-	position: absolute;
-	top: 12px;
-	left: 12px;
-	width: 20px;
-	height: 20px;
-	border-radius: 10px;
-	border: 1px solid #fff;
+  display: none;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid #fff;
 }
 
 .whydSelect:hover {
-	background: gray;
-	/* TODO */
+  background: gray;
+  /* TODO */
 }
 
 /*

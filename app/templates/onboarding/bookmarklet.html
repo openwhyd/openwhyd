@@ -1,405 +1,450 @@
 <style type="text/css">
-	/*<![CDATA[*/
-	body {
-		background: #efefef;
-		font: 12px/16px "Helvetica Neue", Arial, Sans-serif;
-	}
+  /*<![CDATA[*/
+  body {
+    background: #efefef;
+    font: 12px/16px 'Helvetica Neue', Arial, Sans-serif;
+  }
 
-	.container {
-		background-color: #FFF;
-		margin-bottom: 18px;
-		padding-bottom: 20px;
-	}
+  .container {
+    background-color: #fff;
+    margin-bottom: 18px;
+    padding-bottom: 20px;
+  }
 
-	.header {
-		margin-top: 30px;
-		height: 342px;
-		font-family: Varela, "Helvetica Neue", Arial, Sans-serif;
-		text-align: center;
-		background-color: #464748;
-		background: url(/images/pickBookmarklet/background.jpg) no-repeat;
-		border-top-left-radius: 3px;
-		border-top-right-radius: 3px;
-		-webkit-border-top-left-radius: 3px;
-		-webkit-border-top-right-radius: 3px;
-		-moz-border-radius-topleft: 3px;
-		-moz-border-radius-topright: 3px;
-	}
+  .header {
+    margin-top: 30px;
+    height: 342px;
+    font-family: Varela, 'Helvetica Neue', Arial, Sans-serif;
+    text-align: center;
+    background-color: #464748;
+    background: url(/images/pickBookmarklet/background.jpg) no-repeat;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+  }
 
-	.header>h1 {
-		font-size: 34px;
-		margin: 0 auto;
-		padding: 75px 0;
-		color: #FFF;
-		letter-spacing: 1px;
-		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-		font-weight: lighter;
-	}
+  .header > h1 {
+    font-size: 34px;
+    margin: 0 auto;
+    padding: 75px 0;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    font-weight: lighter;
+  }
 
-	.header>a {
-		cursor: move;
-		font-size: 26px;
-		color: #FFF;
-		display: block;
-		background-color: #9FCE67;
-		width: 280px;
-		height: 74px;
-		padding-left: 12px;
-		padding-right: 60px;
-		margin: 0 auto;
-		line-height: 76px;
-		border: 1px solid #384B11;
-		border-radius: 3px;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		background-color: linear-gradient(bottom, #9BC840 24%, #3177AF 81%);
-		background-color: -o-linear-gradient(bottom, #9BC840 24%, #3177AF 81%);
-		background-color: -moz-linear-gradient(bottom, #9BC840 24%, #3177AF 81%);
-		background-color: -webkit-linear-gradient(bottom, #9BC840 24%, #3177AF 81%);
-		background-color: -ms-linear-gradient(bottom, #9BC840 24%, #3177AF 81%);
-		background-color: -webkit-gradient(linear, left bottom, left top, color-stop(0.24, #9BC840), color-stop(0.81, #3177AF));
-		box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
-		-webkit-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
-		-moz-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
-		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-		position: relative;
-		-webkit-background-clip: padding-box;
-		-moz-background-clip: padding-box;
-		-background-clip: padding-box;
-		background-clip: padding-box;
-	}
+  .header > a {
+    cursor: move;
+    font-size: 26px;
+    color: #fff;
+    display: block;
+    background-color: #9fce67;
+    width: 280px;
+    height: 74px;
+    padding-left: 12px;
+    padding-right: 60px;
+    margin: 0 auto;
+    line-height: 76px;
+    border: 1px solid #384b11;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    background-color: linear-gradient(bottom, #9bc840 24%, #3177af 81%);
+    background-color: -o-linear-gradient(bottom, #9bc840 24%, #3177af 81%);
+    background-color: -moz-linear-gradient(bottom, #9bc840 24%, #3177af 81%);
+    background-color: -webkit-linear-gradient(bottom, #9bc840 24%, #3177af 81%);
+    background-color: -ms-linear-gradient(bottom, #9bc840 24%, #3177af 81%);
+    background-color: -webkit-gradient(
+      linear,
+      left bottom,
+      left top,
+      color-stop(0.24, #9bc840),
+      color-stop(0.81, #3177af)
+    );
+    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    position: relative;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    -background-clip: padding-box;
+    background-clip: padding-box;
+  }
 
-	.header>a:hover {
-		color: #FFF;
-		border: 1px solid #384B11;
-		box-shadow: 0px 0px 10px #222222;
-		-webkit-box-shadow: 0px 0px 10px #222222;
-		-moz-box-shadow: 0px 0px 10px #222222;
-	}
+  .header > a:hover {
+    color: #fff;
+    border: 1px solid #384b11;
+    box-shadow: 0px 0px 10px #222222;
+    -webkit-box-shadow: 0px 0px 10px #222222;
+    -moz-box-shadow: 0px 0px 10px #222222;
+  }
 
-	.header>a>span {
-		background-image: url(/images/pickBookmarklet/puce-drag.png);
-		display: block;
-		width: 34px;
-		height: 34px;
-		position: absolute;
-		top: 22px;
-		right: 22px;
-	}
+  .header > a > span {
+    background-image: url(/images/pickBookmarklet/puce-drag.png);
+    display: block;
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    top: 22px;
+    right: 22px;
+  }
 
-	.header>.legend {
-		padding: 0;
-		font-size: 12px;
-		color: #e5e5e5;
-		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-		margin-top: 14px;
-	}
+  .header > .legend {
+    padding: 0;
+    font-size: 12px;
+    color: #e5e5e5;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    margin-top: 14px;
+  }
 
-	/* CONTENT */
+  /* CONTENT */
 
-	.content {
-		clear: both;
-		position: relative;
-		padding: 15px;
-		list-style: none;
-		margin: 0;
-	}
+  .content {
+    clear: both;
+    position: relative;
+    padding: 15px;
+    list-style: none;
+    margin: 0;
+  }
 
-	.content h3 {
-		font-size: 18px;
-		line-height: 32px;
-		margin: 0;
-		font-family: Varela, "Helvetica-Neue", Arial, Sans-serif;
-		font-weight: lighter;
-		margin-bottom: 6px;
-	}
+  .content h3 {
+    font-size: 18px;
+    line-height: 32px;
+    margin: 0;
+    font-family: Varela, 'Helvetica-Neue', Arial, Sans-serif;
+    font-weight: lighter;
+    margin-bottom: 6px;
+  }
 
-	.content>div {
-		padding: 56px 0;
-		position: relative;
-	}
+  .content > div {
+    padding: 56px 0;
+    position: relative;
+  }
 
-	.content>div.introduction,
-	.content>div.howtoinstall {
-		overflow: auto;
-		background: url(/images/pickBookmarklet/separation.png) no-repeat bottom center;
-	}
+  .content > div.introduction,
+  .content > div.howtoinstall {
+    overflow: auto;
+    background: url(/images/pickBookmarklet/separation.png) no-repeat bottom
+      center;
+  }
 
-	.content p {
-		color: #7a7979;
-		margin: 0;
-		display: inline-block;
-		width: 620px;
-		line-height: 20px;
-	}
+  .content p {
+    color: #7a7979;
+    margin: 0;
+    display: inline-block;
+    width: 620px;
+    line-height: 20px;
+  }
 
-	.video {
-		float: right;
-		height: 192px;
-		width: 298px;
-		box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
-		-webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
-		-moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
-		background: url(/images/pickBookmarklet/video-thumb.jpg) no-repeat center center;
-		background-size: cover;
-	}
+  .video {
+    float: right;
+    height: 192px;
+    width: 298px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+    -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+    -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
+    background: url(/images/pickBookmarklet/video-thumb.jpg) no-repeat center
+      center;
+    background-size: cover;
+  }
 
-	.video>a {
-		display: block;
-		width: 298px;
-		height: 192px;
-		background: url(/images/pickBookmarklet/video-play.png) no-repeat center center;
-		opacity: 0.6;
-	}
+  .video > a {
+    display: block;
+    width: 298px;
+    height: 192px;
+    background: url(/images/pickBookmarklet/video-play.png) no-repeat center
+      center;
+    opacity: 0.6;
+  }
 
-	.video>a:hover {
-		opacity: 0.9;
-	}
+  .video > a:hover {
+    opacity: 0.9;
+  }
 
-	/* SERVICES */
+  /* SERVICES */
 
-	.services {
-		margin-bottom: 40px;
-	}
+  .services {
+    margin-bottom: 40px;
+  }
 
-	.services li {
-		float: left;
-		margin: 0 20px 0 0;
-		color: #7a7979;
-		line-height: 78px;
-	}
+  .services li {
+    float: left;
+    margin: 0 20px 0 0;
+    color: #7a7979;
+    line-height: 78px;
+  }
 
-	.services li a {
-		display: block;
-		width: 140px;
-		height: 72px;
-		opacity: 0.6;
-		text-indent: -9999px;
-		background-repeat: no-repeat;
-	}
+  .services li a {
+    display: block;
+    width: 140px;
+    height: 72px;
+    opacity: 0.6;
+    text-indent: -9999px;
+    background-repeat: no-repeat;
+  }
 
-	.services li a:hover {
-		opacity: 1;
-		transition-delay: 0.1s;
-		transition-duration: 0.3s;
-		-webkit-transition-delay: 0.1s;
-		-webkit-transition-duration: 0.3s;
-		-moz-transition-delay: 0.1s;
-		-moz-transition-duration: 0.3s;
-		background-position: 0 -73px;
-	}
+  .services li a:hover {
+    opacity: 1;
+    transition-delay: 0.1s;
+    transition-duration: 0.3s;
+    -webkit-transition-delay: 0.1s;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-delay: 0.1s;
+    -moz-transition-duration: 0.3s;
+    background-position: 0 -73px;
+  }
 
-	.services li .soundcloud {
-		background-image: url(/images/pickBookmarklet/logo-soundcloud.png);
-	}
+  .services li .soundcloud {
+    background-image: url(/images/pickBookmarklet/logo-soundcloud.png);
+  }
 
-	.services li .youtube {
-		background-image: url(/images/pickBookmarklet/logo-youtube.png);
-	}
+  .services li .youtube {
+    background-image: url(/images/pickBookmarklet/logo-youtube.png);
+  }
 
-	.services li .vimeo {
-		background-image: url(/images/pickBookmarklet/logo-vimeo.png);
-	}
+  .services li .vimeo {
+    background-image: url(/images/pickBookmarklet/logo-vimeo.png);
+  }
 
-	.services li .mp3 {
-		background-image: url(/images/pickBookmarklet/logo-mp3.png);
-	}
+  .services li .mp3 {
+    background-image: url(/images/pickBookmarklet/logo-mp3.png);
+  }
 
-	.services .last {
-		margin: 0;
-	}
+  .services .last {
+    margin: 0;
+  }
 
-	/* HOW TO INSTALL */
+  /* HOW TO INSTALL */
 
-	.howtoinstall h3 {
-		position: relative;
-	}
+  .howtoinstall h3 {
+    position: relative;
+  }
 
-	.howtoinstall h3>span.msie8,
-	.howtoinstall h3>span.msie {
-		position: absolute;
-		background: url(/images/pickBookmarklet/icon-navigateur.png)no-repeat;
-		height: 36px;
-		width: 36px;
-		display: inline-block;
-		margin-left: 12px;
-		top: -3px;
-	}
+  .howtoinstall h3 > span.msie8,
+  .howtoinstall h3 > span.msie {
+    position: absolute;
+    background: url(/images/pickBookmarklet/icon-navigateur.png) no-repeat;
+    height: 36px;
+    width: 36px;
+    display: inline-block;
+    margin-left: 12px;
+    top: -3px;
+  }
 
-	.howtoinstall h3>span.chrome {
-		position: absolute;
-		background: url(/images/pickBookmarklet/icon-navigateur.png)no-repeat 0px -74px;
-		height: 36px;
-		width: 36px;
-		display: inline-block;
-		margin-left: 12px;
-		top: -3px;
-	}
+  .howtoinstall h3 > span.chrome {
+    position: absolute;
+    background: url(/images/pickBookmarklet/icon-navigateur.png) no-repeat 0px -74px;
+    height: 36px;
+    width: 36px;
+    display: inline-block;
+    margin-left: 12px;
+    top: -3px;
+  }
 
-	.howtoinstall h3>span.safari {
-		position: absolute;
-		background: url(/images/pickBookmarklet/icon-navigateur.png)no-repeat 0px -37px;
-		height: 36px;
-		width: 36px;
-		display: inline-block;
-		margin-left: 12px;
-		top: -3px;
-	}
+  .howtoinstall h3 > span.safari {
+    position: absolute;
+    background: url(/images/pickBookmarklet/icon-navigateur.png) no-repeat 0px -37px;
+    height: 36px;
+    width: 36px;
+    display: inline-block;
+    margin-left: 12px;
+    top: -3px;
+  }
 
-	.howtoinstall h3>span.firefox {
-		position: absolute;
-		background: url(/images/pickBookmarklet/icon-navigateur.png)no-repeat 0px -112px;
-		height: 36px;
-		width: 36px;
-		display: inline-block;
-		margin-left: 12px;
-		top: -3px;
-	}
+  .howtoinstall h3 > span.firefox {
+    position: absolute;
+    background: url(/images/pickBookmarklet/icon-navigateur.png) no-repeat 0px -112px;
+    height: 36px;
+    width: 36px;
+    display: inline-block;
+    margin-left: 12px;
+    top: -3px;
+  }
 
-	.howtoinstall li {
-		margin: 0 0 10px 0;
-		line-height: 36px;
-		color: #7a7979;
-	}
+  .howtoinstall li {
+    margin: 0 0 10px 0;
+    line-height: 36px;
+    color: #7a7979;
+  }
 
-	.howtoinstall li>.puce1 {
-		background: url(/images/pickBookmarklet/icon-puce.png)no-repeat;
-		display: inline-block;
-		width: 34px;
-		height: 34px;
-		margin-right: 12px;
-	}
+  .howtoinstall li > .puce1 {
+    background: url(/images/pickBookmarklet/icon-puce.png) no-repeat;
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    margin-right: 12px;
+  }
 
-	.howtoinstall li>.puce2 {
-		background: url(/images/pickBookmarklet/icon-puce.png)no-repeat 0 -35px;
-		display: block;
-		width: 34px;
-		height: 34px;
-		float: left;
-		margin-right: 12px;
-	}
+  .howtoinstall li > .puce2 {
+    background: url(/images/pickBookmarklet/icon-puce.png) no-repeat 0 -35px;
+    display: block;
+    width: 34px;
+    height: 34px;
+    float: left;
+    margin-right: 12px;
+  }
 
-	.howtoinstall li>.puce3 {
-		background: url(/images/pickBookmarklet/icon-puce.png)no-repeat 0 -70px;
-		display: block;
-		width: 34px;
-		height: 34px;
-		float: left;
-		margin-right: 12px;
-	}
+  .howtoinstall li > .puce3 {
+    background: url(/images/pickBookmarklet/icon-puce.png) no-repeat 0 -70px;
+    display: block;
+    width: 34px;
+    height: 34px;
+    float: left;
+    margin-right: 12px;
+  }
 
-	.howtoinstall li>.puce4 {
-		background: url(/images/pickBookmarklet/icon-puce.png)no-repeat;
-		display: block;
-		width: 34px;
-		height: 34px;
-		float: left;
-		margin-right: 12px;
-	}
+  .howtoinstall li > .puce4 {
+    background: url(/images/pickBookmarklet/icon-puce.png) no-repeat;
+    display: block;
+    width: 34px;
+    height: 34px;
+    float: left;
+    margin-right: 12px;
+  }
 
-	/*]]>*/
+  /*]]>*/
 </style>
 <div class="container">
-	<div class="header">
-		<h1>Add a track from anywhere with two clicks</h1>
-		<a id="bookmarklet" class="button"
-			onclick="setTimeout(function(){alert('Please drag & drop this button to your browser\'s bookmarks bar')},50); return false;"
-			title="Drop this button to the bookmarks bar of your web browser"
-			href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();">
-			Openwhyd ✚ Track<span class="icon"></span>
-		</a>
-		<p class="legend">Simply drag the green button to your bookmark bar above.</p>
-	</div>
+  <div class="header">
+    <h1>Add a track from anywhere with two clicks</h1>
+    <a
+      id="bookmarklet"
+      class="button"
+      onclick="setTimeout(function(){alert('Please drag & drop this button to your browser\'s bookmarks bar')},50); return false;"
+      title="Drop this button to the bookmarks bar of your web browser"
+      href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();"
+    >
+      Openwhyd ✚ Track<span class="icon"></span>
+    </a>
+    <p class="legend">
+      Simply drag the green button to your bookmark bar above.
+    </p>
+  </div>
 
-	<div class="content">
-		<div class="introduction">
-			<div class="video">
-				<a href="javascript:openVideo()" alt="Watch the video tutorial" title="Watch the video tutorial"></a>
-			</div>
-			<h3>The fastest way to add and share</h3>
-			<p>To instantly add tracks to your Openwhyd stream that you find across the web, from any website, we built the
-				Openwhyd "add track" button. Drag the button to your bookmarks bar to install it, and then you can save the new
-				tracks you find and share immediately from sites like Facebook and music blogs. It's super fast and super
-				simple.</p>
-		</div>
+  <div class="content">
+    <div class="introduction">
+      <div class="video">
+        <a
+          href="javascript:openVideo()"
+          alt="Watch the video tutorial"
+          title="Watch the video tutorial"
+        ></a>
+      </div>
+      <h3>The fastest way to add and share</h3>
+      <p>
+        To instantly add tracks to your Openwhyd stream that you find across the
+        web, from any website, we built the Openwhyd "add track" button. Drag
+        the button to your bookmarks bar to install it, and then you can save
+        the new tracks you find and share immediately from sites like Facebook
+        and music blogs. It's super fast and super simple.
+      </p>
+    </div>
 
-		<div class="howtoinstall">
-			<h3>Instructions:<span class="browserIcon"></span></h3>
-			<ul>
-				<!-- CONDITIONAL PART: depends on the user's web browser -->
-				<li class="instr chrome" style="hidden">
-					<span class="puce1"></span> In Chrome, display your bookmarks bar by clicking
-					<strong>View &gt; Always Show Bookmarks Bar</strong></li>
+    <div class="howtoinstall">
+      <h3>Instructions:<span class="browserIcon"></span></h3>
+      <ul>
+        <!-- CONDITIONAL PART: depends on the user's web browser -->
+        <li class="instr chrome" style="hidden">
+          <span class="puce1"></span> In Chrome, display your bookmarks bar by
+          clicking <strong>View &gt; Always Show Bookmarks Bar</strong>
+        </li>
 
-				<li class="instr firefox" style="hidden">
-					<span class="puce1"></span> In Firefox, display your bookmarks bar by clicking
-					<strong>View &gt; Toolbars &gt; Bookmarks Toolbar</strong></li>
+        <li class="instr firefox" style="hidden">
+          <span class="puce1"></span> In Firefox, display your bookmarks bar by
+          clicking <strong>View &gt; Toolbars &gt; Bookmarks Toolbar</strong>
+        </li>
 
-				<li class="instr safari" style="hidden">
-					<span class="puce1"></span> In Safari, display your bookmarks bar by clicking
-					<strong>View &gt; Show Bookmarks Bar</strong></li>
+        <li class="instr safari" style="hidden">
+          <span class="puce1"></span> In Safari, display your bookmarks bar by
+          clicking <strong>View &gt; Show Bookmarks Bar</strong>
+        </li>
 
-				<li class="instr msie8" style="hidden">
-					<span class="puce1"></span> In Internet Explorer 8, display your bookmarks bar by clicking
-					<strong>Tools &gt; Toolbars &gt; Favorites Bar</strong></li>
+        <li class="instr msie8" style="hidden">
+          <span class="puce1"></span> In Internet Explorer 8, display your
+          bookmarks bar by clicking
+          <strong>Tools &gt; Toolbars &gt; Favorites Bar</strong>
+        </li>
 
-				<li class="instr msie" style="hidden">
-					<span class="puce1"></span> In Internet Explorer, display your bookmarks bar by right-clicking the top grey
-					area
-					of the browser, then click on <strong>Favorites Bar</strong></li>
+        <li class="instr msie" style="hidden">
+          <span class="puce1"></span> In Internet Explorer, display your
+          bookmarks bar by right-clicking the top grey area of the browser, then
+          click on <strong>Favorites Bar</strong>
+        </li>
 
-				<!-- END OF CONDITIONAL PART -->
+        <!-- END OF CONDITIONAL PART -->
 
-				<li><span class="puce2"></span>Drag this button, and drop it in your bookmarks bar</li>
-				<li><span class="puce3"></span>While browsing the web, click on "Openwhyd ✚ Track" whenever you see some music
-					you
-					want to add to your library </li>
+        <li>
+          <span class="puce2"></span>Drag this button, and drop it in your
+          bookmarks bar
+        </li>
+        <li>
+          <span class="puce3"></span>While browsing the web, click on "Openwhyd
+          ✚ Track" whenever you see some music you want to add to your library
+        </li>
 
-				<li class="instr chrome" style="hidden">
-					Or, install our brand new <a
-						href="https://chrome.google.com/webstore/detail/whyd-%E2%9C%9A-track/foohaghobcolamikniehcnnijdjehfjk"
-						target="_blank">Openwhyd Button extension</a> for Chrome.</li>
+        <li class="instr chrome" style="hidden">
+          Or, install our brand new
+          <a
+            href="https://chrome.google.com/webstore/detail/whyd-%E2%9C%9A-track/foohaghobcolamikniehcnnijdjehfjk"
+            target="_blank"
+            >Openwhyd Button extension</a
+          >
+          for Chrome.
+        </li>
+      </ul>
 
-			</ul>
+      <div id="videoModal" style="display: none">
+        <div class="video">
+          <iframe
+            src="//player.vimeo.com/video/59426075"
+            width="560"
+            height="315"
+            frameborder="0"
+            webkitAllowFullScreen
+            mozallowfullscreen
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
 
-			<div id="videoModal" style="display:none;">
-				<div class="video"><iframe src="//player.vimeo.com/video/59426075" width="560" height="315" frameborder="0"
-						webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
-			</div>
-		</div>
-
-		<div class="services">
-			<h3>Works with tracks from</h3>
-			<ul>
-				<li><a href="http://soundcloud.com" class="soundcloud">Soundcloud</a></li>
-				<li><a href="http://youtube.com" class="youtube">Youtube</a></li>
-				<li><a href="http://vimeo.com" class="vimeo">Vimeo</a></li>
-				<li><a href="javascript:{};" class="mp3">MP3</a></li>
-				<li>& many more coming...</li>
-			</ul>
-		</div>
-
-	</div>
+    <div class="services">
+      <h3>Works with tracks from</h3>
+      <ul>
+        <li>
+          <a href="http://soundcloud.com" class="soundcloud">Soundcloud</a>
+        </li>
+        <li><a href="http://youtube.com" class="youtube">Youtube</a></li>
+        <li><a href="http://vimeo.com" class="vimeo">Vimeo</a></li>
+        <li><a href="javascript:{};" class="mp3">MP3</a></li>
+        <li>& many more coming...</li>
+      </ul>
+    </div>
+  </div>
 </div>
 <script>
-	/*<![CDATA[*/
-	// adapt instructions to web browser in use
-	$("li.instr").hide();
-	var b = ["Opera", "MSIE 8.", "MSIE", "Chrome", "Safari", "Firefox"];
-	for (var i in b)
-		if (navigator.userAgent.indexOf(b[i]) != -1) {
-			$(".instr." + b[i].toLowerCase().replace(/[^a-z0-9]+/g, "")).show();
-			$(".browserIcon").attr("class", "browserIcon " + b[i].toLowerCase());
-			break;
-		}
+  /*<![CDATA[*/
+  // adapt instructions to web browser in use
+  $('li.instr').hide();
+  var b = ['Opera', 'MSIE 8.', 'MSIE', 'Chrome', 'Safari', 'Firefox'];
+  for (let i in b)
+    if (navigator.userAgent.indexOf(b[i]) != -1) {
+      $('.instr.' + b[i].toLowerCase().replace(/[^a-z0-9]+/g, '')).show();
+      $('.browserIcon').attr('class', 'browserIcon ' + b[i].toLowerCase());
+      break;
+    }
 
-	function openVideo() {
-		var html = document.getElementById('videoModal').innerHTML;
-		$content = $(html);
-		$vid = $content.find('iframe');
-		var link = $vid.attr('src');
-		$vid.attr('src', link + "?autoplay=1");
-		openHtmlDialog($content);
-	}
-/*]]>*/
+  function openVideo() {
+    var html = document.getElementById('videoModal').innerHTML;
+    $content = $(html);
+    $vid = $content.find('iframe');
+    var link = $vid.attr('src');
+    $vid.attr('src', link + '?autoplay=1');
+    openHtmlDialog($content);
+  }
+  /*]]>*/
 </script>

@@ -1,80 +1,78 @@
-
 <script>
-//<![CDATA[
+  //<![CDATA[
 
- var signup = {
+  var signup = {
+    redirect: '',
+    fields: {
+      name: $('input[name=name]'),
+      email: $('input[name=email]'),
+      password: $('input[name=password]'),
+    },
 
-  redirect :"",
-  fields : {
-    "name": $("input[name=name]"),
-    "email": $("input[name=email]"),
-    "password": $("input[name=password]")
-  },
+    init: function () {
+      $('#popinSignup .fbButton').click(signup.facebookButton);
 
-  init : function(){
-    $("#popinSignup .fbButton").click(signup.facebookButton);
-
-    $("form").iframePostForm ({
-      complete : function (res) {
-
-        res = JSON.parse(res.substring(res.indexOf('{'), res.lastIndexOf('}')+1));
-        console.log("response", res);
-        $(".errorMessage").remove();
-        if (res.error) {
-          for (var fName in signup.fields) {
-            var hasError = res.error.indexOf(fName) != -1;
-            var $field = signup.fields[fName].toggleClass("errorInput", hasError);
-            if (hasError){
-              $("<p class='errorMessage'></p>").text(res.error || "").insertAfter($field);
+      $('form').iframePostForm({
+        complete: function (res) {
+          res = JSON.parse(
+            res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1)
+          );
+          console.log('response', res);
+          $('.errorMessage').remove();
+          if (res.error) {
+            for (let fName in signup.fields) {
+              var hasError = res.error.indexOf(fName) != -1;
+              var $field = signup.fields[fName].toggleClass(
+                'errorInput',
+                hasError
+              );
+              if (hasError) {
+                $("<p class='errorMessage'></p>")
+                  .text(res.error || '')
+                  .insertAfter($field);
+              }
             }
+          } else if (res.redirect) {
+            window.Whyd.tracking.signedUp(res.user);
+            setTimeout(function () {
+              window.location.href = signup.redirect || res.redirect;
+            }, 500);
           }
+        },
+      });
+    },
+
+    facebookButton: function () {
+      fbRegister('email', function (res) {
+        if (!res) {
+          console.log('no fb login');
+        } else if (res.redirect) {
+          //console.log("redirect to ", res.redirect);
+          window.location.href = signup.redirect || res.redirect;
+        } else if (res.fbUser) {
+          // new user
+          const accessToken = res.fbAuthResponse.accessToken;
+
+          signup.fields['name'].val(res.fbUser.name);
+          signup.fields['email'].val(res.fbUser.email);
+
+          // Mandatory for signup but will never be used by
+          // user to login so we setup a password that is impossible
+          // to guess
+          signup.fields['password'].val(accessToken.slice(0, 31));
+          $('input[name=fbUid]').val(res.fbUser.id);
+          $('input[name=fbTok]').val(accessToken);
+          $('#btnSignUp').click();
         }
-        else if (res.redirect) {
-          window.Whyd.tracking.signedUp(res.user);
-          setTimeout(function() {
-            window.location.href = signup.redirect || res.redirect;
-          }, 500);
-        }
-      }
-    });
+      });
+    },
+  };
 
-  },
+  $(document).ready(function () {
+    signup.init();
+  });
 
-
-  facebookButton : function(){
-    fbRegister('email', function(res) {
-      if (!res){
-        console.log("no fb login");
-      }
-      else if (res.redirect){
-        //console.log("redirect to ", res.redirect);
-        window.location.href = signup.redirect || res.redirect;
-      }
-      else if (res.fbUser) { // new user
-        const accessToken = res.fbAuthResponse.accessToken
-
-        signup.fields["name"].val(res.fbUser.name);
-        signup.fields["email"].val(res.fbUser.email);
-        
-        // Mandatory for signup but will never be used by 
-        // user to login so we setup a password that is impossible
-        // to guess
-        signup.fields["password"].val(accessToken.slice(0, 31));
-        $("input[name=fbUid]").val(res.fbUser.id);
-        $("input[name=fbTok]").val(accessToken);
-        $('#btnSignUp').click();
-      };
-    });
-  },
-
-
-}
-
-$(document).ready(function(){
-  signup.init();
-});
-
-//]]>
+  //]]>
 </script>
 
 <div id="popinSignup">
@@ -93,17 +91,24 @@ $(document).ready(function(){
       <input type="hidden" name="fbTok" value="" />
       <input type="hidden" name="iRf" value="{{iRf}}" />
       <input type="hidden" name="iPg" value="{{iPg}}" />
-      {{#redirect}}<input type="hidden" name="redirect" value="{{redirect}}" />{{/redirect}}
-      <input type="text" name="name" value="" placeholder="Full Name">
-      <input type="email" name="email" value="{{email}}" placeholder="Email">
-      <input type="password" name="password" value="" placeholder="Password">
-      <p class="condition">By creating an account, I accept Openwhyd's <a target="_blank" href="/privacy" title="Privacy policy">privacy policy</a>.</p>
+      {{#redirect}}<input
+        type="hidden"
+        name="redirect"
+        value="{{redirect}}"
+      />{{/redirect}}
+      <input type="text" name="name" value="" placeholder="Full Name" />
+      <input type="email" name="email" value="{{email}}" placeholder="Email" />
+      <input type="password" name="password" value="" placeholder="Password" />
+      <p class="condition">
+        By creating an account, I accept Openwhyd's
+        <a target="_blank" href="/privacy" title="Privacy policy"
+          >privacy policy</a
+        >.
+      </p>
       <input type="hidden" name="includeUser" value="1" />
-      <input type="submit" id="btnSignUp" value="Create an account">
+      <input type="submit" id="btnSignUp" value="Create an account" />
     </form>
-
   </div>
-
 </div>
 
 <script src="/api/signup/rTk/7" type="text/javascript" charset="utf-8"></script>

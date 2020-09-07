@@ -12,7 +12,6 @@ var notif = require('../models/notif.js');
 var searchModel = require('../models/search.js');
 var activityModel = require('../models/activity.js');
 var trackModel = require('../models/track.js');
-//var recomModel = require("../models/recom.js");
 var plTagsModel = require('../models/plTags.js');
 var notifModel = require('../models/notif.js');
 
@@ -20,23 +19,26 @@ var config = require('../models/config.js');
 var NB_POSTS = config.nbPostsPerNewsfeedPage;
 
 var playlistSort = {
-  sort: [['order', 'asc'], ['_id', 'desc']]
+  sort: [
+    ['order', 'asc'],
+    ['_id', 'desc'],
+  ],
 };
 
 function processPosts(results) {
-  for (var i in results) results[i].lov = results[i].lov || [];
+  for (let i in results) results[i].lov = results[i].lov || [];
   return results;
 }
 
 // core functions
 
-exports.count = function(q, o, cb) {
+exports.count = function (q, o, cb) {
   mongodb.collections['post'].count(q, o || {}, cb);
 };
 
-exports.forEachPost = function(q, p, handler) {
-  mongodb.collections['post'].find(q, p, function(err, cursor) {
-    cursor.each(function(err, track) {
+exports.forEachPost = function (q, p, handler) {
+  mongodb.collections['post'].find(q, p, function (err, cursor) {
+    cursor.each(function (err, track) {
       if (err)
         // we're done
         console.log('post.forEachPost error:', err);
@@ -66,18 +68,18 @@ function processAdvQuery(query, params, options) {
   }
   if (options.until)
     query._id = {
-      $gt: mongodb.ObjectId(mongodb.dateToHexObjectId(options.until))
+      $gt: mongodb.ObjectId(mongodb.dateToHexObjectId(options.until)),
     };
   if (!params.sort) params.sort = [/*['rTm','desc'],*/ ['_id', 'desc']]; // by default
 }
 
-exports.fetchPosts = function(query, params, options, handler) {
+exports.fetchPosts = function (query, params, options, handler) {
   params = params || {};
   processAdvQuery(query, params, options);
   //console.log("status.fetchPosts, query=", query);
-  mongodb.collections['post'].find(query, params, function(err, cursor) {
+  mongodb.collections['post'].find(query, params, function (err, cursor) {
     if (err) console.error(err);
-    cursor.toArray(function(err, results) {
+    cursor.toArray(function (err, results) {
       if (err)
         console.error(
           'model.fetchPosts ERROR on query',
@@ -97,7 +99,7 @@ exports.fetchPosts = function(query, params, options, handler) {
 
 // more specific functions
 
-exports.fetchAll = function(handler, after, limit) {
+exports.fetchAll = function (handler, after, limit) {
   console.log('post.fetchAll... after=', after);
   exports.fetchPosts(
     {},
@@ -107,21 +109,11 @@ exports.fetchAll = function(handler, after, limit) {
   );
 };
 
-exports.fetchAllUntil = function(date, limit, handler) {
-  console.log('post.fetchAllUntil date=', date);
-  exports.fetchPosts(
-    { _id: { $gt: fakeOid } },
-    {},
-    { limit: limit, until: date },
-    handler
-  );
-};
-
-exports.fetchByAuthorsOld = function(uidList, options, handler) {
+exports.fetchByAuthorsOld = function (uidList, options, handler) {
   console.log('post.fetchByAuthors...');
   var query = {
     uId: { $in: uidList },
-    'repost.uId': { $nin: uidList }
+    'repost.uId': { $nin: uidList },
   };
   exports.fetchPosts(
     query,
@@ -131,7 +123,7 @@ exports.fetchByAuthorsOld = function(uidList, options, handler) {
   );
 };
 
-exports.fetchByAuthors = function(uidList, options, cb) {
+exports.fetchByAuthors = function (uidList, options, cb) {
   //console.time("post.fetchByAuthors2...");
   var posts = [],
     query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
@@ -140,12 +132,12 @@ exports.fetchByAuthors = function(uidList, options, cb) {
   processAdvQuery(query, params, {
     after: options.after,
     before: options.before,
-    limit: options.limit
+    limit: options.limit,
   });
   var limit = params.limit;
   params.limit = undefined; // prevent forEach2 from limiting cursor
   params.q = query;
-  mongodb.forEach2('post', params, function(post, next) {
+  mongodb.forEach2('post', params, function (post, next) {
     if (post && !uidSet[(post.repost || {}).uId]) posts.push(post);
     if (!post || !next || posts.length == limit) {
       //console.timeEnd("post.fetchByAuthors2...");
@@ -156,12 +148,11 @@ exports.fetchByAuthors = function(uidList, options, cb) {
 
 var MAX_OTHER_AUTHORS = 3;
 
-exports.fetchByOtherAuthors = function(uidList, options, cb) {
+exports.fetchByOtherAuthors = function (uidList, options, cb) {
   //console.time("post.fetchByOtherAuthors...");
   var posts = [],
-    query = {},
     uidSet = snip.arrayToSet(uidList);
-  mongodb.forEach2('post', { q: {}, sort: [['_id', 'desc']] }, function(
+  mongodb.forEach2('post', { q: {}, sort: [['_id', 'desc']] }, function (
     post,
     next
   ) {
@@ -173,11 +164,11 @@ exports.fetchByOtherAuthors = function(uidList, options, cb) {
   });
 };
 
-exports.fetchRepostsFromMe = function(uid, options, handler) {
+exports.fetchRepostsFromMe = function (uid, options, handler) {
   console.log('post.fetchRepostsFromMe...');
   var query = {
     uId: { $nin: ['' + uid] },
-    'repost.uId': '' + uid
+    'repost.uId': '' + uid,
   };
   exports.fetchPosts(
     query,
@@ -186,14 +177,14 @@ exports.fetchRepostsFromMe = function(uid, options, handler) {
       after: options.after,
       before: options.before,
       limit: options.limit,
-      until: options.until
+      until: options.until,
     },
     handler
   );
 };
 
-exports.countUserPosts = function(uid, handler) {
-  mongodb.collections['post'].count({ uId: uid, rTo: null }, function(
+exports.countUserPosts = function (uid, handler) {
+  mongodb.collections['post'].count({ uId: uid, rTo: null }, function (
     err,
     result
   ) {
@@ -204,8 +195,8 @@ exports.countUserPosts = function(uid, handler) {
 exports.model = exports;
 
 // used by apiPost (for loves)
-exports.fetchPostById = function(pId, handler) {
-  mongodb.collections['post'].findOne({ _id: ObjectId('' + pId) }, function(
+exports.fetchPostById = function (pId, handler) {
+  mongodb.collections['post'].findOne({ _id: ObjectId('' + pId) }, function (
     err,
     res
   ) {
@@ -214,8 +205,8 @@ exports.fetchPostById = function(pId, handler) {
   });
 };
 
-exports.isPostLovedByUid = function(pId, uId, handler) {
-  exports.fetchPostById(pId, function(post) {
+exports.isPostLovedByUid = function (pId, uId, handler) {
+  exports.fetchPostById(pId, function (post) {
     handler(post ? snip.arrayHas(post.lov, uId) : false, post);
   });
 };
@@ -224,9 +215,9 @@ function setPostLove(collection, pId, uId, state, handler) {
   var update = state
     ? { $push: { lov: '' + uId } }
     : { $pull: { lov: '' + uId } };
-  collection.update({ _id: ObjectId('' + pId) }, update, function(err, res) {
+  collection.update({ _id: ObjectId('' + pId) }, update, function (err) {
     if (err) console.log(err);
-    collection.findOne({ _id: ObjectId('' + pId) }, function(err, post) {
+    collection.findOne({ _id: ObjectId('' + pId) }, function (err, post) {
       if (err) console.log(err);
       console.log(
         'setPostLove -> notif',
@@ -241,25 +232,25 @@ function setPostLove(collection, pId, uId, state, handler) {
       if (state)
         activityModel.addLikeByPost(post, {
           id: uId,
-          name: mongodb.getUserNameFromId(uId)
+          name: mongodb.getUserNameFromId(uId),
         });
       else activityModel.removeLike(pId, uId);
     });
   });
 }
 
-exports.lovePost = function(pId, uId, handler) {
+exports.lovePost = function (pId, uId, handler) {
   console.log('lovePost', pId, uId);
   setPostLove(mongodb.collections['post'], pId, uId, true, handler);
 };
 
-exports.unlovePost = function(pId, uId, handler) {
+exports.unlovePost = function (pId, uId, handler) {
   console.log('unLovePost', pId, uId);
   setPostLove(mongodb.collections['post'], pId, uId, false, handler);
 };
 
-exports.countLovedPosts = function(uid, callback) {
-  db['post'].count({ lov: '' + uid }, function(err, count) {
+exports.countLovedPosts = function (uid, callback) {
+  db['post'].count({ lov: '' + uid }, function (err, count) {
     callback(count);
   });
 };
@@ -271,7 +262,7 @@ function notifyMentionedUsers(post, cb) {
     console.log('notif mentioned users');
     snip.forEachArrayItem(
       mentionedUsers,
-      function(mentionedUid, next) {
+      function (mentionedUid, next) {
         notifModel.mention(post, comment, mentionedUid, next);
       },
       cb
@@ -279,7 +270,7 @@ function notifyMentionedUsers(post, cb) {
   }
 }
 
-exports.savePost = function(postObj, handler) {
+exports.savePost = function (postObj, handler) {
   //console.log("post.savePost: ", postObj);
   var pId = postObj._id;
   function whenDone(error, result) {
@@ -296,7 +287,7 @@ exports.savePost = function(postObj, handler) {
 				//console.log("=> added post to matching engine index");
 			});
 			*/
-      plTagsModel.tagEngine.addPost(result, function() {
+      plTagsModel.tagEngine.addPost(result, function () {
         //console.log("=> added post to tag engine index");
       });
       notifyMentionedUsers(result);
@@ -315,7 +306,7 @@ exports.savePost = function(postObj, handler) {
     mongodb.collections['post'].update(
       { _id: ObjectId('' + pId) },
       update,
-      function(error, result) {
+      function (error) {
         if (error) console.log('update error', error);
         mongodb.collections['post'].findOne(
           { _id: ObjectId('' + pId) },
@@ -324,7 +315,7 @@ exports.savePost = function(postObj, handler) {
       }
     );
   } else
-    mongodb.collections['post'].insertOne(postObj, function(error, result) {
+    mongodb.collections['post'].insertOne(postObj, function (error, result) {
       if (error) console.log('update error', error);
       whenDone(error, error ? {} : result.ops[0]);
     });
@@ -333,20 +324,20 @@ exports.savePost = function(postObj, handler) {
 var fieldsToCopy = {
   name: true,
   eId: true,
-  img: true
+  img: true,
   //	nbP: true
 }; // => not: _id, uId, uNm, text, pl, order, repost, src, lov, nbR, nbP
 
-exports.rePost = function(pId, repostObj, handler) {
+exports.rePost = function (pId, repostObj, handler) {
   //console.log("post.rePost: ", pId, repostObj);
   var collection = mongodb.collections['post'];
-  exports.fetchPostById(pId, function(postObj) {
+  exports.fetchPostById(pId, function (postObj) {
     postObj = postObj || { error: 'post not found' };
     if (postObj.error) {
       handler(postObj);
       return;
     }
-    for (var i in fieldsToCopy)
+    for (let i in fieldsToCopy)
       if (/*repostObj[i] == null &&*/ postObj[i] != null)
         repostObj[i] = postObj[i];
     repostObj.repost = { pId: pId, uId: postObj.uId, uNm: postObj.uNm };
@@ -356,7 +347,7 @@ exports.rePost = function(pId, repostObj, handler) {
     delete repostObj._id;
     if (repostObj.pl && typeof repostObj.pl.id !== 'number')
       repostObj.pl.id = parseInt('' + repostObj.pl.id);
-    collection.insertOne(repostObj, function(error, result) {
+    collection.insertOne(repostObj, function (error, result) {
       //console.log("result", result);
       if (error) console.error('post.rePost() error: ', error);
       result = result.ops[0];
@@ -379,7 +370,7 @@ exports.rePost = function(pId, repostObj, handler) {
 					console.log("=> added post to matching engine index");
 				});
 				*/
-        plTagsModel.tagEngine.addPost(result, function() {
+        plTagsModel.tagEngine.addPost(result, function () {
           console.log('=> added post to tag engine index');
         });
         notifyMentionedUsers(result);
@@ -389,16 +380,16 @@ exports.rePost = function(pId, repostObj, handler) {
   });
 };
 
-exports.deletePost = function(pId, handler, uId) {
+exports.deletePost = function (pId, handler, uId) {
   console.log('post.deletePost: ', pId, uId);
   var collection = mongodb.collections['post'];
   var q = {
-    _id: ObjectId(pId)
+    _id: ObjectId(pId),
   };
   if (uId) q.uId = uId;
-  exports.fetchPostById(pId, function(postObj) {
+  exports.fetchPostById(pId, function (postObj) {
     if (postObj)
-      collection.remove(q, function(error, result) {
+      collection.remove(q, function (error, result) {
         if (error) console.log('post.deletePost() error: ', error);
         searchModel.deleteDoc('post', pId);
         handler(result);
@@ -417,16 +408,16 @@ exports.deletePost = function(pId, handler, uId) {
   });
 };
 
-exports.incrPlayCounter = function(pId, cb) {
+exports.incrPlayCounter = function (pId, cb) {
   var _id = ObjectId('' + pId);
   if (!_id) cb();
   mongodb.collections['post'].update(
     { _id: _id },
     { $inc: { nbP: 1 } },
-    function(err, res) {
+    function (err) {
       if (err) console.log(err);
       //cb && cb(res || err);
-      exports.fetchPostById(pId, function(postObj) {
+      exports.fetchPostById(pId, function (postObj) {
         if (postObj) trackModel.updateByEid(postObj.eId);
         cb && cb(postObj || err);
       });
@@ -436,35 +427,26 @@ exports.incrPlayCounter = function(pId, cb) {
 
 // wrappers for playlists
 
-exports.fetchPlaylistPosts = function(uId, plId, options, handler) {
+exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
   //console.log("fetchPlaylistPosts(uId, plId, options) + order: ", uId, plId, options, playlistSort);
-  var options = options || {};
   options = {
     limit: options.limit,
     after: options.after,
-    before: options.before
+    before: options.before,
   };
   ////console.time("fetchPlaylistPosts");
-  if (uId)
-    exports.fetchPosts(
-      { uId: uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
-      playlistSort,
-      options,
-      handler /*function(){
-			//console.timeEnd("fetchPlaylistPosts");
-			handler.apply(null, arguments);
-		}*/
-    );
-  else
-    exports.fetchPosts(
-      { 'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] } },
-      playlistSort,
-      options,
-      handler
-    );
+  exports.fetchPosts(
+    { uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
+    playlistSort,
+    options,
+    handler /*function(){
+    //console.timeEnd("fetchPlaylistPosts");
+    handler.apply(null, arguments);
+  }*/
+  );
 };
 
-exports.countPlaylistPosts = function(uId, plId, handler) {
+exports.countPlaylistPosts = function (uId, plId, handler) {
   function handle(err, result) {
     handler(result);
   }
@@ -480,44 +462,43 @@ exports.countPlaylistPosts = function(uId, plId, handler) {
     );
 };
 
-exports.setPlaylist = function(uId, plId, plName, handler) {
+exports.setPlaylist = function (uId, plId, plName, handler) {
   console.log('post.setPlaylist', uId, plId, plName);
   var criteria = {
     uId: uId,
-    'pl.id': parseInt(plId)
+    'pl.id': parseInt(plId),
   };
   var update = { $set: { pl: { id: parseInt(plId), name: plName } } };
   mongodb.collections['post'].update(
     criteria,
     update,
     { multi: true },
-    function(err, res) {
+    function (err, res) {
       if (err) console.log(err);
       if (handler) handler(res);
     }
   );
 };
 
-exports.unsetPlaylist = function(uId, plId, handler) {
+exports.unsetPlaylist = function (uId, plId, handler) {
   console.log('post.unsetPlaylist', uId, plId);
   var criteria = {
     uId: uId,
-    'pl.id': parseInt(plId)
+    'pl.id': parseInt(plId),
   };
   var update = { $unset: { pl: 1 } };
   mongodb.collections['post'].update(
     criteria,
     update,
     { multi: true },
-    function(err, res) {
+    function (err, res) {
       if (err) console.log(err);
       if (handler) handler(res);
     }
   );
 };
 
-exports.setPlaylistOrder = function(uId, plId, order, handler) {
-  var order = order || [];
+exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
   console.log(
     'post.setPlaylistOrder(uId, plId, order.length): ',
     uId,
@@ -532,7 +513,7 @@ exports.setPlaylistOrder = function(uId, plId, order, handler) {
       var post = {
         _id: ObjectId('' + order.pop()),
         uId: uId,
-        'pl.id': parseInt(plId)
+        'pl.id': parseInt(plId),
       };
       console.log('moving post ', post._id, ' to pos ', order.length);
       collection.update(post, { $set: { order: order.length } }, next);

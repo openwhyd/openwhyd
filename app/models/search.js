@@ -13,7 +13,7 @@ var searchImpl = config.searchModule ? require('./' + config.searchModule) : {};
 
 var FCTS_REQUIRED = {
   init: 1,
-  query: 1
+  query: 1,
 };
 
 var FCTS_OPTIONAL = {
@@ -24,26 +24,25 @@ var FCTS_OPTIONAL = {
   indexPlaylist: 3,
   deleteDoc: 2,
   deleteAllDocs: 1,
-  deletePlaylist: 2
+  deletePlaylist: 2,
 };
 
 function makeNoImplHandler(methodName, cbPos) {
-  return function() {
-    console.log('models.search: NO IMPLEMENTATION for ' + methodName);
+  return function () {
+    if (config.searchModule)
+      console.log('models.search: NO IMPLEMENTATION for ' + methodName);
     var callback = arguments[cbPos];
     callback && callback();
   };
 }
 
-for (var methodName in FCTS_REQUIRED) {
-  if (!searchImpl[methodName])
-    console.error('models.search: NO IMPLEMENTATION for ' + methodName);
+for (let methodName in FCTS_REQUIRED) {
   exports[methodName] =
     searchImpl[methodName] ||
     makeNoImplHandler(methodName, FCTS_REQUIRED[methodName]);
 }
 
-for (var methodName in FCTS_OPTIONAL)
+for (let methodName in FCTS_OPTIONAL)
   exports[methodName] =
     searchImpl[methodName] ||
     makeNoImplHandler(methodName, FCTS_OPTIONAL[methodName]);

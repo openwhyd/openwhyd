@@ -40,7 +40,7 @@ function parseSignupToken(sTk) {
     hash: sTk.substr(0, 11 + 22),
     date: new Date(parseInt(sTk.substr(0, 11), 16)),
     requestHash: sTk.substr(11, 22),
-    signature: sTk.substr(11 + 22, 11 + 22 + 21)
+    signature: sTk.substr(11 + 22, 11 + 22 + 21),
   };
 }
 
@@ -49,7 +49,7 @@ function parseSignupToken(sTk) {
 //parseInt(hexDate, 16)
 
 // used directly by iOS app, indirectly by web ui (through request token validation)
-exports.makeSignupToken = function(request, date) {
+exports.makeSignupToken = function (request, date) {
   request = realIP(request);
   //console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
   date = date ? new Date(date).getTime() : Date.now();
@@ -70,7 +70,7 @@ exports.makeSignupToken = function(request, date) {
   return hash + sign;
 };
 
-exports.validateSignupToken = function(sTk, request) {
+exports.validateSignupToken = function (sTk, request) {
   request = realIP(request);
   console.log(
     '[genuine.validateSignupToken] request IP:',
@@ -80,13 +80,13 @@ exports.validateSignupToken = function(sTk, request) {
   return {
     authentic: token.signature === signature(token.hash, GENUINE_SIGNUP_SECRET),
     notExpired: Date.now() - token.date < TOKEN_EXPIRY,
-    sameAddr: token.requestHash === hashRequest(request, token.date.getTime())
+    sameAddr: token.requestHash === hashRequest(request, token.date.getTime()),
   };
   // TODO: check request's referer
 };
 
 // used by iOS app and backend of web ui
-exports.checkSignupToken = function(sTk, request) {
+exports.checkSignupToken = function (sTk, request) {
   request = realIP(request);
 
   console.log(
@@ -94,7 +94,7 @@ exports.checkSignupToken = function(sTk, request) {
     request.connection.remoteAddress
   );
   var valid = exports.validateSignupToken(sTk, request);
-  for (var i in valid) {
+  for (let i in valid) {
     // valid contains the following keys: authentic, notExpired, sameAddr
     if (!valid[i]) {
       return false;

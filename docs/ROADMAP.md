@@ -23,6 +23,7 @@ Read more about [the story of Openwhyd](https://medium.com/openwhyd/music-amongs
 Some users and contributors expressed their frustration on a few recurring topics.
 
 Examples:
+
 - Many are waiting for an Android app;
 - Several users reported that the iPhone app is broken;
 - The look and feel could be more modern, especially on the player that can be embedded on external websites;
@@ -44,6 +45,7 @@ Our partners (e.g. festivals, music venues, clubs and magazines that embed Openw
 As [suggested by Serdar](https://github.com/openwhyd/openwhyd/issues/101): before starting to add new features and/or clients (e.g. Android app), we need to consolidate the foundations of the current version. (e.g. bug fixing, documentation, automated tests)
 
 Here's list of proposed directions to modernise Openwhyd's technical architecture, and to ease contributions from developers who want to join our effort:
+
 - Move towards a modular architecture in which the API is separated from our web application; (jQuery-based front-end)
 - A pure API server with 3rd-party authentication (e.g. OAuth), so that any developer can build their own Openwhyd app and allow their users to access their account from those apps.
 - A progressive re-design of Openwhyd’s front-end, implemented using a modern component-based technology stack (e.g. React or Vue.js) and connecting to the new API server.
@@ -70,6 +72,7 @@ Openwhyd used to be called "whyd" (hosted at whyd.com), and was the main product
 For its transformation into an open-source project, Openwhyd's technical infrastructure had to be reworked. Become more mature, robust and accessible to contributors.
 
 To reach version 1.0, contributors have given dozens of hours of their spare time to:
+
 - Write **automated tests** to make sure that Openwhyd’s features keep working as expected after each contribution to its source code;
 - Setup **continuous integration**, so that those tests are run automatically;
 - Remove deprecated modules to prevent **security holes**;

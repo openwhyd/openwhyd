@@ -1,3 +1,180 @@
+## [1.35.3](https://github.com/openwhyd/openwhyd/compare/v1.35.2...v1.35.3) (2020-09-07)
+
+
+### Bug Fixes
+
+* **linter:** Re-enable linting of JS files in VSCode ([#367](https://github.com/openwhyd/openwhyd/issues/367)) ([469e9aa](https://github.com/openwhyd/openwhyd/commit/469e9aa0d440fe4792f7b229c1e8ba6543998498))
+
+## [1.35.2](https://github.com/openwhyd/openwhyd/compare/v1.35.1...v1.35.2) (2020-09-06)
+
+
+### Bug Fixes
+
+* **tests:** Modernize unit tests of Notifications ([#366](https://github.com/openwhyd/openwhyd/issues/366)) ([2233e2d](https://github.com/openwhyd/openwhyd/commit/2233e2dabfdae116ed3fb957c77573d6158788bc)), closes [#212](https://github.com/openwhyd/openwhyd/issues/212)
+
+## [1.35.1](https://github.com/openwhyd/openwhyd/compare/v1.35.0...v1.35.1) (2020-09-06)
+
+
+### Bug Fixes
+
+* **logs:** Remove or clarify old production + unit test logs ([#365](https://github.com/openwhyd/openwhyd/issues/365)) ([b22d871](https://github.com/openwhyd/openwhyd/commit/b22d87132861f57c0ff83634597b28c4c1b69b49))
+
+# [1.35.0](https://github.com/openwhyd/openwhyd/compare/v1.34.23...v1.35.0) (2020-09-06)
+
+
+### Features
+
+* ⚰️ Bury collaborative playlists (never-finished feature) ([#364](https://github.com/openwhyd/openwhyd/issues/364)) ([9a342fa](https://github.com/openwhyd/openwhyd/commit/9a342fa1fdf50282b0ea86d3ad9a1604dcac82ea))
+
+## [1.34.23](https://github.com/openwhyd/openwhyd/compare/v1.34.22...v1.34.23) (2020-09-06)
+
+
+### Bug Fixes
+
+* **logs:** Reduce amount of logging in production ([#363](https://github.com/openwhyd/openwhyd/issues/363)) ([4b5efce](https://github.com/openwhyd/openwhyd/commit/4b5efce5772216afdbe9bee68346ee920445088a))
+
+## [1.34.22](https://github.com/openwhyd/openwhyd/compare/v1.34.21...v1.34.22) (2020-09-05)
+
+
+### Bug Fixes
+
+* **tests:** Test avatar upload ([#362](https://github.com/openwhyd/openwhyd/issues/362)) ([04c4f91](https://github.com/openwhyd/openwhyd/commit/04c4f919e6b0de278faa3623541ba55229c2685e)), closes [#358](https://github.com/openwhyd/openwhyd/issues/358) [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.34.21](https://github.com/openwhyd/openwhyd/compare/v1.34.20...v1.34.21) (2020-09-05)
+
+
+### Bug Fixes
+
+* **logs:** Re-import colors package, to prevent "undefined" entries in logs ([#361](https://github.com/openwhyd/openwhyd/issues/361)) ([14c3032](https://github.com/openwhyd/openwhyd/commit/14c3032083d5c75c5efd1e4d871ffc7c16a02d9f))
+
+## [1.34.20](https://github.com/openwhyd/openwhyd/compare/v1.34.19...v1.34.20) (2020-09-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependencies ([#360](https://github.com/openwhyd/openwhyd/issues/360)) ([3ad78f6](https://github.com/openwhyd/openwhyd/commit/3ad78f64081c6552137d65642d2716a6069688f9))
+
+## [1.34.19](https://github.com/openwhyd/openwhyd/compare/v1.34.18...v1.34.19) (2020-09-05)
+
+
+### Bug Fixes
+
+* **e2e-tests:** Finish migration from Webdriver to Cypress ([#358](https://github.com/openwhyd/openwhyd/issues/358)) ([5eccaa7](https://github.com/openwhyd/openwhyd/commit/5eccaa7)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.34.18](https://github.com/openwhyd/openwhyd/compare/v1.34.17...v1.34.18) (2020-09-01)
+
+
+### Bug Fixes
+
+* **css:** Remove obsolete definitions ([#350](https://github.com/openwhyd/openwhyd/issues/350)) ([44d4445](https://github.com/openwhyd/openwhyd/commit/44d4445))
+
+## [1.34.17](https://github.com/openwhyd/openwhyd/compare/v1.34.16...v1.34.17) (2020-08-30)
+
+
+### Bug Fixes
+
+* **lint:** Fix ESLint & Codacy issues ([#348](https://github.com/openwhyd/openwhyd/issues/348)) ([440dda6](https://github.com/openwhyd/openwhyd/commit/440dda6)), closes [#346](https://github.com/openwhyd/openwhyd/issues/346)
+
+## [1.34.16](https://github.com/openwhyd/openwhyd/compare/v1.34.15...v1.34.16) (2020-08-30)
+
+
+### Bug Fixes
+
+* **clean-up:** Adjust ESLint/Codacy rules + fix some issues ([#346](https://github.com/openwhyd/openwhyd/issues/346)) ([c4d08a9](https://github.com/openwhyd/openwhyd/commit/c4d08a9))
+
+## [1.34.15](https://github.com/openwhyd/openwhyd/compare/v1.34.14...v1.34.15) (2020-08-30)
+
+
+### Bug Fixes
+
+* Cannot add a track from bookmarklet ([#347](https://github.com/openwhyd/openwhyd/issues/347)) ([0c66c52](https://github.com/openwhyd/openwhyd/commit/0c66c52))
+
+## [1.34.14](https://github.com/openwhyd/openwhyd/compare/v1.34.13...v1.34.14) (2020-08-29)
+
+
+### Bug Fixes
+
+* **clean-up:** `npm run lint:fix` to also format HTML files ([#345](https://github.com/openwhyd/openwhyd/issues/345)) ([950d981](https://github.com/openwhyd/openwhyd/commit/950d981)), closes [#300](https://github.com/openwhyd/openwhyd/issues/300)
+
+## [1.34.13](https://github.com/openwhyd/openwhyd/compare/v1.34.12...v1.34.13) (2020-08-29)
+
+
+### Bug Fixes
+
+* **clean-up:** Setup linter and formatting => apply to (almost) all files ([#344](https://github.com/openwhyd/openwhyd/issues/344)) ([224def8](https://github.com/openwhyd/openwhyd/commit/224def8)), closes [#300](https://github.com/openwhyd/openwhyd/issues/300)
+
+## [1.34.12](https://github.com/openwhyd/openwhyd/compare/v1.34.11...v1.34.12) (2020-08-29)
+
+
+### Bug Fixes
+
+* **clean-up:** Remove swfobject and other unused scripts and pages ([#343](https://github.com/openwhyd/openwhyd/issues/343)) ([fb94438](https://github.com/openwhyd/openwhyd/commit/fb94438))
+
+## [1.34.11](https://github.com/openwhyd/openwhyd/compare/v1.34.10...v1.34.11) (2020-08-27)
+
+
+### Bug Fixes
+
+* **deps:** Update ESLint and Prettier + plugins ([#341](https://github.com/openwhyd/openwhyd/issues/341)) ([b8c7728](https://github.com/openwhyd/openwhyd/commit/b8c7728)), closes [/github.com/openwhyd/openwhyd/pull/335#issuecomment-680291284](https://github.com//github.com/openwhyd/openwhyd/pull/335/issues/issuecomment-680291284)
+
+## [1.34.10](https://github.com/openwhyd/openwhyd/compare/v1.34.9...v1.34.10) (2020-08-27)
+
+
+### Bug Fixes
+
+* **tests:** Migrate tests of email notifications from WebDriver to Cypress ([#342](https://github.com/openwhyd/openwhyd/issues/342)) ([c640c4c](https://github.com/openwhyd/openwhyd/commit/c640c4c)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.34.9](https://github.com/openwhyd/openwhyd/compare/v1.34.8...v1.34.9) (2020-08-25)
+
+
+### Bug Fixes
+
+* **tests:** Migrate 2 tests from Webdriver to Cypress ([#335](https://github.com/openwhyd/openwhyd/issues/335)) ([36451d9](https://github.com/openwhyd/openwhyd/commit/36451d9))
+
+## [1.34.8](https://github.com/openwhyd/openwhyd/compare/v1.34.7...v1.34.8) (2020-08-25)
+
+
+### Bug Fixes
+
+* **int:** Codacy still thinks we want double quotes ([#340](https://github.com/openwhyd/openwhyd/issues/340)) ([c59240a](https://github.com/openwhyd/openwhyd/commit/c59240a))
+* **lint:** Expect single quotes ([#339](https://github.com/openwhyd/openwhyd/issues/339)) ([9c46ed6](https://github.com/openwhyd/openwhyd/commit/9c46ed6))
+
+## [1.34.7](https://github.com/openwhyd/openwhyd/compare/v1.34.6...v1.34.7) (2020-08-25)
+
+
+### Bug Fixes
+
+* **lint:** Also lint TypeScripts files ([#338](https://github.com/openwhyd/openwhyd/issues/338)) ([9fcbf97](https://github.com/openwhyd/openwhyd/commit/9fcbf97))
+
+## [1.34.6](https://github.com/openwhyd/openwhyd/compare/v1.34.5...v1.34.6) (2020-08-25)
+
+
+### Bug Fixes
+
+* **CI:** Expect semantic commit message just for PR title ([#337](https://github.com/openwhyd/openwhyd/issues/337)) ([9717160](https://github.com/openwhyd/openwhyd/commit/9717160))
+
+## [1.34.5](https://github.com/openwhyd/openwhyd/compare/v1.34.4...v1.34.5) (2020-08-25)
+
+
+### Bug Fixes
+
+* **CI:** Force cypress v3.8.3 on the Docker Workflow ([#336](https://github.com/openwhyd/openwhyd/issues/336)) ([63a3e1e](https://github.com/openwhyd/openwhyd/commit/63a3e1e)), closes [#333](https://github.com/openwhyd/openwhyd/issues/333)
+
+## [1.34.4](https://github.com/openwhyd/openwhyd/compare/v1.34.3...v1.34.4) (2020-07-11)
+
+
+### Bug Fixes
+
+* **announcement:** look for mobile app developer ([e0fc143](https://github.com/openwhyd/openwhyd/commit/e0fc143))
+
+## [1.34.3](https://github.com/openwhyd/openwhyd/compare/v1.34.2...v1.34.3) (2020-07-11)
+
+
+### Bug Fixes
+
+* **facebook:** remove the `user_friends` scope ([f0ce783](https://github.com/openwhyd/openwhyd/commit/f0ce783)), closes [#330](https://github.com/openwhyd/openwhyd/issues/330)
+* **tests:** disable test that relies on a 3rd-party web page ([00cf365](https://github.com/openwhyd/openwhyd/commit/00cf365))
+
 ## [1.34.2](https://github.com/openwhyd/openwhyd/compare/v1.34.1...v1.34.2) (2020-04-16)
 
 

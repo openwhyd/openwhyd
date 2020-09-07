@@ -1,9 +1,8 @@
-exports.buildController = function(params) {
+exports.buildController = function (params) {
   var logPrefix = params.controllerName + '.controller';
   if (process.appParams.color) logPrefix = logPrefix.yellow;
-  return function(request, reqParams, response) {
+  return function (request, reqParams = {}, response) {
     request.logToConsole(logPrefix, reqParams);
-    var reqParams = reqParams || {};
 
     // make sure an admin is logged, or return an error page
     reqParams.loggedUser = request.getUser();
@@ -51,8 +50,8 @@ exports.buildController = function(params) {
           '<h2>available actions:</h2>',
           '<ul><li>',
           Object.keys(params.actions).join('</li><li>'),
-          '</li></ul>'
-        ].join('\n')
+          '</li></ul>',
+        ].join('\n'),
       });
   };
 };

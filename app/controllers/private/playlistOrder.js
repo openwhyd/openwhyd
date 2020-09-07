@@ -12,14 +12,14 @@ var mainTemplate = require('../../templates/mainTemplate.js');
 var MAX_TRACKS = 1000;
 
 function renderTemplate(params, callback) {
-  templateLoader.loadTemplate('app/templates/feed-trackorder.html', function(
+  templateLoader.loadTemplate('app/templates/feed-trackorder.html', function (
     template
   ) {
     callback(template.render(params));
   });
 }
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   request.logToConsole('playlistOrder.controller', getParams);
 
   function renderWhydPage(html) {
@@ -35,7 +35,7 @@ exports.controller = function(request, getParams, response) {
 
   function render(html) {
     response.legacyRender(renderWhydPage(html), null, {
-      'content-type': 'text/html'
+      'content-type': 'text/html',
     });
   }
 
@@ -61,12 +61,12 @@ exports.controller = function(request, getParams, response) {
     getParams.uId,
     getParams.plId,
     { limit: MAX_TRACKS },
-    function(posts) {
-      for (var i in posts) posts[i] = postsTemplate.preparePost(posts[i]);
+    function (posts) {
+      for (let i in posts) posts[i] = postsTemplate.preparePost(posts[i]);
       var params = {
         uId: getParams.uId,
         plId: getParams.plId,
-        posts: posts
+        posts: posts,
       };
       renderTemplate(params, render);
     }

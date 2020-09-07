@@ -3,8 +3,6 @@
  * @author adrienjoly, whyd
  **/
 
-var url = require('url');
-var querystring = require('querystring');
 var snip = require('../snip.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
@@ -17,10 +15,10 @@ exports.ERRORCODE = {
   404: '404 / not found. There might have been some music here, in the past... Please make sure that this URL is correct.',
   REQ_LOGIN: 'Please login first',
   USER_NOT_FOUND: 'User not found...',
-  POST_NOT_FOUND: "Sorry, we can't find this track... maybe was it deleted?"
+  POST_NOT_FOUND: "Sorry, we can't find this track... maybe was it deleted?",
 };
 
-exports.renderErrorMessage = function(errorMessage, loggedUser) {
+exports.renderErrorMessage = function (errorMessage, loggedUser) {
   var params = {
     loggedUser: loggedUser,
     content:
@@ -28,12 +26,12 @@ exports.renderErrorMessage = function(errorMessage, loggedUser) {
       snip.htmlEntities(
         errorMessage || 'Unexpected error, please go back and try again later.'
       ) +
-      '</div>'
+      '</div>',
   };
   return mainTemplate.renderWhydPage(params);
 };
 
-exports.renderErrorCode = function(errorCode, loggedUser) {
+exports.renderErrorCode = function (errorCode, loggedUser) {
   var err = exports.ERRORCODE[errorCode];
   if (!err) {
     console.error('invalid error code:', errorCode);
@@ -41,7 +39,12 @@ exports.renderErrorCode = function(errorCode, loggedUser) {
   return exports.renderErrorMessage(err, loggedUser);
 };
 
-exports.renderErrorResponse = function(errorObj, response, format, loggedUser) {
+exports.renderErrorResponse = function (
+  errorObj,
+  response,
+  format,
+  loggedUser
+) {
   var statusCode =
     errorObj && typeof errorObj.errorCode === 'number' && errorObj.errorCode;
   //var format = (querystring.parse(url.parse(request.url).query) || {}).format || "";
@@ -56,7 +59,7 @@ exports.renderErrorResponse = function(errorObj, response, format, loggedUser) {
     response.renderHTML(
       renderPage404({
         pageTitle: 'Oops...',
-        loggedUser: loggedUser
+        loggedUser: loggedUser,
       }),
       statusCode
     );

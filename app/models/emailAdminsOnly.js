@@ -9,7 +9,7 @@ var fake = require('./emailFake.js');
 
 //console.log("EMAIL ADMINS ONLY");
 
-exports.email = function(
+exports.email = function (
   emailAddr,
   subject,
   textContent,

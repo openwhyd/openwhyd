@@ -14,25 +14,25 @@ var MAX_TAGS_PER_PLAYLIST = 3;
 
 exports.actions = {
   sendToUsers: notifModel.sendPlaylistToUsers,
-  create: function(p, callback) {
+  create: function (p, callback) {
     userModel.createPlaylist(p.uId, p.name, callback);
     // returns {id, name}
   },
-  rename: function(p, callback) {
+  rename: function (p, callback) {
     userModel.renamePlaylist(p.uId, p.id, p.name, callback);
   },
-  delete: function(p, callback) {
+  delete: function (p, callback) {
     userModel.deletePlaylist(p.uId, p.id, callback);
   },
-  setOrder: function(p, cb) {
+  setOrder: function (p, cb) {
     if (!p || !p.order || !p.id) cb({ error: 'missing parameters' });
     else postModel.setPlaylistOrder(p.uId, p.id, p.order, cb);
   },
-  update: function(p, cb) {
+  update: function (p, cb) {
     if (p && p.img) {
       var imgPath = uploadCtr.config.uPlaylistDir + '/' + p.uId + '_' + p.id;
       uploadCtr.deleteFile(imgPath);
-      userModel.fetchPlaylist(p.uId, p.id, function(pl) {
+      userModel.fetchPlaylist(p.uId, p.id, function (pl) {
         /*
 				if (pl && pl.img && pl.img.indexOf("blank") == -1) {
 					console.log("deleting previous playlist pic: " + pl.img);
@@ -42,16 +42,16 @@ exports.actions = {
 					userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
 				}*/
         if (p.img.indexOf('blank') == -1)
-          uploadCtr.renameTo(p.img, imgPath, function() {
+          uploadCtr.renameTo(p.img, imgPath, function () {
             cb(pl);
           });
         else cb(pl);
       });
     } else cb({ error: 'missing parameters' });
-  }
+  },
 };
 
-exports.handlePostRequest = function(request, reqParams, response) {
+exports.handlePostRequest = function (request, reqParams, response) {
   request.logToConsole('aoi.playlist.handleRequest', reqParams);
 
   // make sure a registered user is logged, or return an error page
@@ -67,7 +67,7 @@ exports.handlePostRequest = function(request, reqParams, response) {
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
 
-  exports.actions[reqParams.action](reqParams, function(res, args) {
+  exports.actions[reqParams.action](reqParams, function (res, args) {
     console.log(reqParams, '=>', res);
     response.legacyRender(
       res,
@@ -84,8 +84,8 @@ function fetchPlaylist(p, cb) {
     plIdSet = {},
     uidList = [];
   var plIds = (typeof p.id == 'object' && p.id.length ? p.id : [p.id]).map(
-    function(plId) {
-      var plId = '' + plId;
+    function (_plId) {
+      const plId = '' + _plId;
       plIdSet[plId] = {};
       uidList.push(plId.split('_')[0]);
       return plId;
@@ -94,15 +94,15 @@ function fetchPlaylist(p, cb) {
   userModel.fetchMulti(
     { _id: { $in: uidList } },
     { fields: { name: 1, pl: 1 } },
-    function(userList) {
+    function (userList) {
       // populate userSet
       var userSet = {};
-      for (var i in userList) userSet['' + userList[i]._id] = userList[i];
+      for (let i in userList) userSet['' + userList[i]._id] = userList[i];
       // populate plIdSet
-      for (var i in plIdSet) {
+      for (let i in plIdSet) {
         var plId = i.split('_');
         var userPl = (userSet[plId[0]] || {}).pl || [];
-        for (var j in userPl)
+        for (let j in userPl)
           if (userPl[j].id == plId[1]) plIdSet[i] = userPl[j];
       }
       // for each playlist, fetch number of tracks
@@ -111,14 +111,14 @@ function fetchPlaylist(p, cb) {
         var plId = plIds[i].split('_');
         if (plId.length != 2) next(i + 1);
         else
-          postModel.countPlaylistPosts(plId[0], plId[1], function(c) {
+          postModel.countPlaylistPosts(plId[0], plId[1], function (c) {
             playlists.push({
               id: '' + plIds[i],
               name: plIdSet[plIds[i]].name,
               uId: plId[0],
               uNm: (userSet[plId[0]] || {}).name,
               plId: plId[1],
-              nbTracks: c
+              nbTracks: c,
             });
             next(i + 1);
           });
@@ -128,7 +128,7 @@ function fetchPlaylist(p, cb) {
 }
 
 function includeTags(playlists, cb) {
-  plTagsModel.getTagEngine(function(tagEngine) {
+  plTagsModel.getTagEngine(function (tagEngine) {
     //var plIdToTags = (tagEngine.plIdToTags || {});
     // for each playlist, fetch number of tracks
     (function next(i) {
@@ -138,20 +138,20 @@ function includeTags(playlists, cb) {
         playlists[i].uId,
         playlists[i].plId,
         { limit: 10, fields: { name: 1, eId: 1 } },
-        function(posts) {
+        function (posts) {
           var tagSet = {};
           playlists[i].lastArtists = [];
-          for (var j in posts) {
+          for (let j in posts) {
             var artist = snip.detectArtistName((posts[j] || {}).name);
             if (artist) playlists[i].lastArtists.push(artist);
-            (tagEngine.getTagsByEid((posts[j] || {}).eId) || []).map(function(
+            (tagEngine.getTagsByEid((posts[j] || {}).eId) || []).map(function (
               tag
             ) {
               tagSet[tag.id] = (tagSet[tag.id] || 0) + tag.c;
             });
           }
           playlists[i].tags = snip.mapToObjArray(tagSet, 'id', 'c');
-          playlists[i].tags = playlists[i].tags.sort(function(a, b) {
+          playlists[i].tags = playlists[i].tags.sort(function (a, b) {
             return b.c - a.c;
           });
           playlists[i].tags = playlists[i].tags.slice(0, MAX_TAGS_PER_PLAYLIST);
@@ -162,16 +162,16 @@ function includeTags(playlists, cb) {
   });
 }
 
-exports.controller = function(request, getParams, response) {
+exports.controller = function (request, getParams, response) {
   getParams = getParams || {};
   getParams.id = getParams.id || getParams._1;
   request.logToConsole('apiPost.controller', getParams);
   if (request.method.toLowerCase() === 'post')
     exports.handlePostRequest(request, request.body, response);
   else if (getParams.id)
-    fetchPlaylist(getParams, function(playlists) {
+    fetchPlaylist(getParams, function (playlists) {
       if (getParams.includeTags)
-        includeTags(playlists, function() {
+        includeTags(playlists, function () {
           response.renderJSON(playlists);
         });
       else response.renderJSON(playlists);

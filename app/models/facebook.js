@@ -5,9 +5,7 @@
  */
 
 var https = require('https');
-var mongodb = require('./mongodb.js');
 var userModel = require('./user.js');
-var followModel = require('./follow.js');
 var querystring = require('querystring');
 
 var host = 'graph.facebook.com';
@@ -16,17 +14,17 @@ const DUMMY_FBFRIENDS = {
   whydFriends: [],
   notOnWhyd: [],
   userSubscriptions: {
-    subscriptions: []
-  }
+    subscriptions: [],
+  },
 };
 
-exports.fetchAccessToken = function(uId, cb) {
-  userModel.fetchByUid(uId, function(user) {
+exports.fetchAccessToken = function (uId, cb) {
+  userModel.fetchByUid(uId, function (user) {
     cb((user || {}).fbTok);
   });
 };
 
-exports.graphApiRequest = function(fbAccessToken, path, params, handler) {
+exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
   console.log('facebookModel.graphApiRequest', path, '...');
   params = params || {};
   //var url = path + "?method=GET&metadata=" + !!params.metadata + "&format=json&access_token=" + fbAccessToken;
@@ -38,16 +36,16 @@ exports.graphApiRequest = function(fbAccessToken, path, params, handler) {
   https
     .request(
       { path: url, host: host, port: 443, method: params.method },
-      function(res) {
-        res.addListener('error', function(err) {
+      function (res) {
+        res.addListener('error', function (err) {
           console.log('facebook request error: ', err);
           if (handler) handler({ error: err });
         });
         var json = '';
-        res.addListener('data', function(chunk) {
+        res.addListener('data', function (chunk) {
           json += chunk.toString();
         });
-        res.addListener('end', function() {
+        res.addListener('end', function () {
           //console.log("facebookModel.graphApiRequest =>", json);
           try {
             json = JSON.parse(json);
@@ -64,7 +62,7 @@ exports.graphApiRequest = function(fbAccessToken, path, params, handler) {
         });
       }
     )
-    .on('error', function(err) {
+    .on('error', function (err) {
       console.log('[ERR] facebook.graphApiRequest ', err);
       console.error('[ERR] facebook.graphApiRequest ', err);
       handler({ error: err });
@@ -72,8 +70,8 @@ exports.graphApiRequest = function(fbAccessToken, path, params, handler) {
     .end();
 };
 
-exports.fetchMe = function(fbAccessToken, handler) {
-  exports.graphApiRequest(fbAccessToken, '/me', {}, function(json) {
+exports.fetchMe = function (fbAccessToken, handler) {
+  exports.graphApiRequest(fbAccessToken, '/me', {}, function (json) {
     //console.log("facebookModel.fetchMe => json: ", Object.keys(json || {}));
     var fbUser = (json || {}).data || json;
     //console.log("facebookModel.fetchMe => fbUser: ", fbUser);
@@ -81,10 +79,10 @@ exports.fetchMe = function(fbAccessToken, handler) {
   });
 };
 
-exports.fetchFbFriendsWithSub = function(loggedUser, fbTok, cb) {
+exports.fetchFbFriendsWithSub = function (loggedUser, fbTok, cb) {
   cb(DUMMY_FBFRIENDS);
 };
 
-exports.fetchCachedFriends = function(uId, fbTok, cb) {
+exports.fetchCachedFriends = function (uId, fbTok, cb) {
   cb(DUMMY_FBFRIENDS);
 };

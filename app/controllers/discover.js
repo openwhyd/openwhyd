@@ -7,25 +7,19 @@ var get = require('../lib/get');
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
-//var recomModel = require("../models/recom.js");
 var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
-var postModel = require('../models/post.js');
-var analytics = require('../models/analytics.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 var TEMPLATE_FILE = 'app/templates/discover.html';
 
 var TAB_CLASSES = {
-  //	"users": "pgDiscoverUsers",
   featured: 'pgDiscoverFeatured',
-  ranking: 'pgDiscoverRankings' // "rankings"
-  //"fbfriends": "pgDiscoverFriends" // DEPRECATED
+  ranking: 'pgDiscoverRankings', // "rankings"
 };
 
 var MAX_TRENDING = 10;
-var MAX_RECOM_USERS = 10;
 var TRENDING_PERIOD = 7 * 24 * 60 * 60 * 1000; // one week
 
 var WHYD_UIDS = snip.objArrayToValueArray(config.whydTeam, 'id');
@@ -39,7 +33,7 @@ function fetchSubscriptions(p, cb) {
   }
 }
 
-var whydUrlRegEx = /href=\"https?:\/\/(?:www\.)?whyd\.com(\/[^"]*)\"/g;
+var whydUrlRegEx = /href="https?:\/\/(?:www\.)?whyd\.com(\/[^"]*)"/g;
 
 function createHtmlElemRegEx(elName) {
   return new RegExp('<' + elName + '(?:[^>]*)?>(.*)</' + elName + '>', 'g');
@@ -50,7 +44,7 @@ function createHtmlElemRegEx2(elName) {
 }
 
 function parseHtmlText(html) {
-  return html.replace(/\<([^\s\>]+)[^\>]*\>([^\<]*)\<\/([^\>]+)\>/gi, '$2'); // remove other html elements
+  return html.replace(/<([^\s>]+)[^>]*>([^<]*)<\/([^>]+)>/gi, '$2'); // remove other html elements
 }
 
 function parseHtmlAttr(html, attr) {
@@ -61,7 +55,7 @@ function detectUserId(path) {
   var splitted = path.split('/');
   if (splitted.length == 3 && splitted[1] == 'u') return splitted[2];
   if (splitted.length == 2)
-    for (var i in mongodb.usernames)
+    for (let i in mongodb.usernames)
       if (
         mongodb.usernames[i].handle &&
         mongodb.usernames[i].handle == splitted[1]
@@ -79,11 +73,11 @@ var processData = {
           var response = {
             title: parseHtmlText(
               parseHtmlText(page.find(createHtmlElemRegEx('h2'))[0])
-            )
+            ),
           };
 
           var links = page.find(whydUrlRegEx);
-          for (var i in links) {
+          for (let i in links) {
             var uId = detectUserId(links[i].replace(whydUrlRegEx, '$1'));
             if (uId && mongodb.usernames[uId]) {
               //console.log(" * ", links[i], uId, mongodb.usernames[uId].name);
@@ -98,7 +92,7 @@ var processData = {
             if (tmp && tmp.length) response.img = parseHtmlAttr(tmp[0], 'src');
           }
 
-          var tmp = page.find(/<p class="date"><a.*>(.*)<\/a><\/p>/);
+          tmp = page.find(/<p class="date"><a.*>(.*)<\/a><\/p>/);
           if (tmp && tmp.length > 1) response.date = tmp[1];
 
           render(response);
@@ -121,7 +115,7 @@ var processData = {
       desc: p.desc,
       uId: p.uId,
       uNm: p.uNm,
-      date: p.date
+      date: p.date,
     };
     mongodb.collections['featured'].insert(post, function (err, result) {
       render(result);
@@ -141,7 +135,7 @@ var processData = {
         { limit: 20, sort: { _id: -1 } },
         function (err, cursor) {
           cursor.toArray(function (err, posts) {
-            for (var i in posts) {
+            for (let i in posts) {
               posts[i].subscribed = subscribed[posts[i].uId];
               if (posts[i].img)
                 posts[i].img = posts[i].img.replace('http:', '');
@@ -161,12 +155,11 @@ var processData = {
         name: (mongodb.usernames[uId] || {}).name,
         nbAdds: 0,
         nbLikes: 0,
-        nbPlays: 0
+        nbPlays: 0,
       };
       users[uId][name] = (users[uId][name] || 0) + (incr || 1);
     }
-    function fetchNextUserStats(cb, i) {
-      var i = i || 0;
+    function fetchNextUserStats(cb, i = 0) {
       if (i == userList.length) cb();
       else {
         var uid = '' + userList[i].id;
@@ -206,7 +199,7 @@ var processData = {
           until: new Date(Date.now() - TRENDING_PERIOD),
           excludeCtx: 'auto', // exclude auto-subscriptions
           excludeTids: WHYD_UIDS,
-          limit: 10000
+          limit: 10000,
         };
         console.log('fetching subscription history... until', options.until);
         followModel.fetchSubscriptionHistory(options, function (act) {
@@ -217,19 +210,11 @@ var processData = {
             '=> date of last activity',
             act[act.length - 1]._id.getTimestamp()
           );
-          for (var i in act)
+          for (let i in act)
             incrementUserCounter('' + act[i].tId, 'nbNewSubscribers');
           cb();
         });
       },
-      /** /
-			function(cb){
-				console.log("removing autosubscribed users...");
-				for (var i in config.autoSubscribeUsers)
-					delete users[config.autoSubscribeUsers[i].id];
-				cb();
-			},
-			/ **/
       function (cb) {
         console.log('scoring and sorting users...');
         userList = snip.mapToObjArray(users).sort(function (a, b) {
@@ -244,16 +229,16 @@ var processData = {
         console.log('fetching subscription status for each user...');
         fetchSubscriptions(p, function (subscr) {
           if (subscr && subscr.subscriptions) {
-            var subscr = snip.arrayToSet(
+            const subscr = snip.arrayToSet(
               snip.objArrayToValueArray(subscr.subscriptions, 'id')
             );
-            for (var i in userList)
+            for (let i in userList)
               userList[i].subscribed = subscr[userList[i].id];
           }
           cb();
         });
       },
-      fetchNextUserStats
+      fetchNextUserStats,
     ];
     (function nextStep() {
       if (!steps.length) {
@@ -262,84 +247,6 @@ var processData = {
       } else steps.shift()(nextStep);
     })();
   },
-  recommendedUsers: function (p, render) {
-    var uId = (p.loggedUser || {}).id;
-    if (!uId) return render({ error: 'please log in first' });
-    function renderUsers(users) {
-      var users = snip.mapToObjArray(users);
-      users.sort(function (a, b) {
-        return b.score - a.score;
-      });
-      if (users.length > MAX_RECOM_USERS)
-        users = users.slice(0, MAX_RECOM_USERS);
-      for (var i in users) {
-        console.log(
-          users[i].name,
-          'posted',
-          (users[i].posted || []).length,
-          'liked',
-          (users[i].liked || []).length,
-          'liker',
-          (users[i].liker || []).length
-        );
-        delete users[i].posted;
-        delete users[i].liked;
-        delete users[i].liker;
-      }
-      userModel.fetchUserBios(users, function () {
-        render({ users: users });
-      });
-    }
-    followModel.fetchUserSubscriptions(uId, function (userSub) {
-      var options = {
-        excludeUids: snip.objArrayToValueArray(
-          userSub.subscriptions || [],
-          'id'
-        )
-      };
-      //recomModel.recomUsersByTracks(uId, options, renderUsers);
-      //recomModel.recomUsersByArtists(uId, options, renderUsers);
-      //recomModel.recomUsersByRareArtists(uId, options, renderUsers);
-    });
-  } /*,
-	"trending": function(p, render) {
-		if (!p || !p.loggedUser)
-			render({error:"incomplete request"});
-		else {
-			p.trendingUsers = [];
-			followModel.fetchUserSubscriptions(p.loggedUser.id, function(userSub) {
-				var followedIdSet = snip.objArrayToSet(userSub.subscriptions, "id", true);
-				var uidList = [/ *p.loggedUser.id* /];
-				var before = new Date(Date.now() - TRENDING_PERIOD);
-				var options = {
-					before: mongodb.dateToHexObjectId(before),
-					limit: 1000
-				};
-				console.log("fetching posts before", before);
-				postModel.fetchPosts({/ *uId:{$nin:uidList}* /}, null, options, function(allPosts) {
-					var userSet = {};
-					for (var i in allPosts) {
-						userSet[allPosts[i].uId] = userSet[allPosts[i].uId] || {
-							id: allPosts[i].uId,
-							name: allPosts[i].name,
-							subscribed: !!followedIdSet[allPosts[i].uId],
-							c: 0
-						};
-						++userSet[allPosts[i].uId].c;
-					}
-					p.trendingUsers = snip.mapToObjArray(userSet);
-					p.trendingUsers.sort(function(a,b) {
-						return b.c - a.c;
-					});
-					userModel.fetchUserBios(p.trendingUsers, function() {
-						if (p.trendingUsers.length > MAX_TRENDING)
-							p.trendingUsers = p.trendingUsers.slice(0, MAX_TRENDING);
-						render(p);
-					});
-				});
-			});
-		}
-	}*/
 };
 
 exports.handleRequest = function (request, reqParams, response) {
@@ -377,9 +284,9 @@ exports.handleRequest = function (request, reqParams, response) {
               isLogged: !!reqParams.loggedUser,
               isAdmin: reqParams.loggedUser
                 ? request.isUserAdmin(reqParams.loggedUser)
-                : false
-            })
-          })
+                : false,
+            }),
+          }),
         });
         //analytics.addVisit(reqParams.loggedUser, request.url);
       });

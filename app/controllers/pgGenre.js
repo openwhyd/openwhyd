@@ -5,7 +5,6 @@
  **/
 
 var snip = require('../snip.js');
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var trackModel = require('../models/track.js');
 var postModel = require('../models/post.js');
@@ -23,11 +22,11 @@ var LIMIT = 20;
 
 function fetchAllPostsByGenre(genre, p, cb) {
   var posts = [];
-  plTagsModel.getTagEngine(function(tagEngine) {
+  plTagsModel.getTagEngine(function (tagEngine) {
     mongodb.forEach2(
       'post',
       { q: p.q, after: p.after, before: p.before, sort: [['_id', 'desc']] },
-      function(post, next) {
+      function (post, next) {
         if (!next || posts.length >= p.limit) cb(posts);
         else {
           var tags = tagEngine.getTagsByEid((post || {}).eId || '');
@@ -46,17 +45,17 @@ function fetchGenreLatest(p, cb) {
     {
       q: { repost: { $exists: false } },
       after: p.after /*, before: p.before*/,
-      limit: LIMIT + 1
+      limit: LIMIT + 1,
     },
-    function(posts) {
+    function (posts) {
       var hasMore = posts && posts.length > LIMIT;
       if (hasMore) posts = posts.slice(0, LIMIT);
       if (p.loggedUser)
-        for (var i in posts)
+        for (let i in posts)
           posts[i].isLoved = snip.arrayHas(posts[i].lov, '' + p.loggedUser.id);
       cb({
         hasMore: hasMore ? { lastPid: posts[LIMIT - 1]._id } : null,
-        posts: posts
+        posts: posts,
       });
     }
   );
@@ -64,13 +63,13 @@ function fetchGenreLatest(p, cb) {
 
 function fetchGenreStream(p, cb) {
   console.log('fetchGenreStream...', p.genre, LIMIT);
-  trackModel.fetchPostsByGenre(p.genre, { limit: LIMIT + 1 }, function(posts) {
+  trackModel.fetchPostsByGenre(p.genre, { limit: LIMIT + 1 }, function (posts) {
     console.log('fetchPostsByGenre => ', posts.length, 'posts');
     var firstIndex = parseInt(p.skip || 0);
     var hasMore =
       posts && posts.length > LIMIT ? { skip: firstIndex + LIMIT } : null; // to do before renderPosts
     if (hasMore) posts = posts.slice(0, LIMIT);
-    for (var i in posts) {
+    for (let i in posts) {
       if (posts[i].rankIncr < 0) posts[i].cssClass = 'rankingUp';
       else if (posts[i].rankIncr > 0) posts[i].cssClass = 'rankingDown';
       if (p.loggedUser)
@@ -78,13 +77,13 @@ function fetchGenreStream(p, cb) {
     }
     cb({
       hasMore: hasMore,
-      posts: posts
+      posts: posts,
     });
   });
 }
 
 function populateUserListData(tagEngine, loggedUid, users, cb) {
-  followModel.fetchSubscriptionSet(loggedUid, function(subscrSet) {
+  followModel.fetchSubscriptionSet(loggedUid, function (subscrSet) {
     (function next(i) {
       if (--i < 0) cb(users);
       else if (!users[i]) {
@@ -92,11 +91,11 @@ function populateUserListData(tagEngine, loggedUid, users, cb) {
         next(i);
       } else {
         var uid = users[i].id;
-        userModel.fetchByUid(uid, function(user) {
-          postModel.countUserPosts(uid, function(nbTracks) {
-            followModel.countSubscribers(uid, function(nbSubscribers) {
-              followModel.countSubscriptions(uid, function(nbSubscriptions) {
-                tagEngine.fetchTagsByUid(uid, function(tags) {
+        userModel.fetchByUid(uid, function (user) {
+          postModel.countUserPosts(uid, function (nbTracks) {
+            followModel.countSubscribers(uid, function (nbSubscribers) {
+              followModel.countSubscriptions(uid, function (nbSubscriptions) {
+                tagEngine.fetchTagsByUid(uid, function (tags) {
                   users[i] = user; //mongodb.getUserFromId(uid);
                   users[i].subscribed = subscrSet[uid];
                   users[i].url = '/u/' + uid;
@@ -116,16 +115,16 @@ function populateUserListData(tagEngine, loggedUid, users, cb) {
 }
 
 function fetchGenreUsers(p, cb) {
-  plTagsModel.getTagEngine(function(tagEngine) {
+  plTagsModel.getTagEngine(function (tagEngine) {
     var users = tagEngine.getUsersByTags([p.genre]) || [];
     if (users.length > 20) users = users.slice(0, 20);
-    populateUserListData(tagEngine, p.loggedUser.id, users, function() {
+    populateUserListData(tagEngine, p.loggedUser.id, users, function () {
       cb({ users: users });
     });
   });
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('pgGenre.controller', reqParams);
 
   var loggedInUser = request.getUser() || {};
@@ -140,12 +139,12 @@ exports.controller = function(request, reqParams, response) {
     data = data || {
       error:
         'Nothing to render! Please send the URL of this page to ' +
-        process.appParams.feedbackEmail
+        process.appParams.feedbackEmail,
     };
     if (data.error) console.log('ERROR: ', data.error);
     if (data.html) {
       response.renderHTML(data.html);
-      console.log('rendering done!');
+      // console.log('rendering done!');
       //if (loggedInUser && loggedInUser.id && !reqParams.after && !reqParams.before)
       //	analytics.addVisit(loggedInUser, request.url/*"/u/"+uid*/);
     } else response.legacyRender(data.json || data.error);
@@ -157,8 +156,8 @@ exports.controller = function(request, reqParams, response) {
         bodyClass: 'pgGenre',
         loggedUser: loggedInUser,
         pageUrl: request.url,
-        content: content
-      })
+        content: content,
+      }),
     });
   }
 
@@ -172,7 +171,7 @@ exports.controller = function(request, reqParams, response) {
     genre: genre,
     skip: reqParams.skip,
     after: reqParams.after,
-    loggedUser: loggedInUser
+    loggedUser: loggedInUser,
   };
 
   var renderingParams = {
@@ -181,34 +180,34 @@ exports.controller = function(request, reqParams, response) {
     genreUrl: '/genre/' + genre.replace(/\s+/g, '-'),
     header: !reqParams.skip && !reqParams.after,
     //rawFeed: !!reqParams.skip,
-    loggedUser: loggedInUser
+    loggedUser: loggedInUser,
   };
 
   // routing to the right sub-controller
 
   if (!genre) render({ error: "hmm... we don't know that genre..." });
   else if (tab == 'hot') {
-    fetchGenreStream(fetchingParams, function(r) {
+    fetchGenreStream(fetchingParams, function (r) {
       renderingParams.tabHot = true;
       renderingParams.showTracks = {
-        posts: postsTemplate.renderPosts(r.posts)
+        posts: postsTemplate.renderPosts(r.posts),
       };
       renderPage(template.render(renderingParams));
     });
   } else if (tab == 'latest') {
-    fetchGenreLatest(fetchingParams, function(r) {
+    fetchGenreLatest(fetchingParams, function (r) {
       renderingParams.tabLatest = true;
       renderingParams.showTracks = {
-        posts: postsTemplate.renderPosts(r.posts)
+        posts: postsTemplate.renderPosts(r.posts),
       };
       renderingParams.hasMore = r.hasMore;
       if (reqParams.after) render({ html: template.render(renderingParams) });
       else renderPage(template.render(renderingParams));
     });
   } else if (tab == 'people') {
-    fetchGenreUsers(fetchingParams, function(r) {
+    fetchGenreUsers(fetchingParams, function (r) {
       renderingParams.showUsers = {
-        items: r.users
+        items: r.users,
       };
       renderPage(template.render(renderingParams));
     });

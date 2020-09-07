@@ -6,16 +6,16 @@
 
 var userModel = require('../../models/user.js');
 
-var getNextFreq = (function() {
+var getNextFreq = (function () {
   var FREQS = [];
-  for (var i in userModel.EM_FREQ_LABEL) FREQS.push(parseInt(i));
+  for (let i in userModel.EM_FREQ_LABEL) FREQS.push(parseInt(i));
   FREQS.sort();
   FREQS.shift(); // remove -1, the "less frequent" value
 
-  return function(f) {
+  return function (f) {
     console.log('detected freq:', f);
     if (f > -1)
-      for (var i in FREQS)
+      for (let i in FREQS)
         if (FREQS[i] > f) {
           console.log('new freq:', FREQS[i]);
           return FREQS[i];
@@ -27,18 +27,18 @@ var getNextFreq = (function() {
 (function tests() {
 	console.log("getNextFreq tests");
 	var cases = [-1, 0, 1, 2, 7, 8];
-	for (var i in cases)
+	for (let i in cases)
 		console.log("case:", cases[i], " => ", getNextFreq(cases[i]));
 })();
 */
 
 var EM_TYPES = [];
-for (var i in userModel.DEFAULT_PREF)
+for (let i in userModel.DEFAULT_PREF)
   if (i.indexOf('em') == 0) EM_TYPES.push(i);
 
 function setNotifFreq(user, freq, cb) {
   var pref = {};
-  for (var i in EM_TYPES) pref[EM_TYPES[i]] = freq;
+  for (let i in EM_TYPES) pref[EM_TYPES[i]] = freq;
   userModel.setPref(user._id || user.id, pref, cb);
 }
 
@@ -46,7 +46,7 @@ function withLink(html) {
   return '<p>' + html + "</p><p><a href='/settings'>Edit your settings</a></p>";
 }
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('unsubscribe.controller', reqParams);
 
   function render(r) {
@@ -63,19 +63,19 @@ exports.controller = function(request, reqParams, response) {
             ? r.pref[reqParams.type]
             : '' + userModel.getEmailNotifsFreq(r)
         ];
-      var html =
+      const html =
         'Starting now, the frequency of email notifications you will receive is set to: ' +
         newFreqlabel;
       response.legacyRender(withLink(html), null, {
-        'content-type': 'text/html'
+        'content-type': 'text/html',
       });
     } else if (r.pref) {
       // user unsubscribed
       var type = userModel.EM_LABEL[reqParams.type] || 'all';
-      var html =
+      const html =
         'You successfully unsubscribed from email notifications: ' + type;
       response.legacyRender(withLink(html), null, {
-        'content-type': 'text/html'
+        'content-type': 'text/html',
       });
     } else {
       response.legacyRender(r);

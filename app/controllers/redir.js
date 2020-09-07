@@ -15,14 +15,14 @@ var PRIVACY_PAGE = config.urlPrefix + '/privacy';
 var REDIRECTIONS = {
   '/about': [
     'https://medium.com/@adrienjoly/music-amongst-other-topics-a4f41657d6d',
-    { title: "Openwhyd's story" }
+    { title: "Openwhyd's story" },
   ],
   '/api': [API_PAGE, { title: 'API Documentation' }],
   '/community': [GITHUB_URL, { title: 'Community' }],
   '/contact': [SUPPORT_PAGE, { title: 'Contact' }],
   '/contribute': [
     FAQ_PAGE + '#id-love-to-contribute-to-openwhyd-how-can-i-help',
-    { title: 'Contribute' }
+    { title: 'Contribute' },
   ],
   '/donate': [DONATE_PAGE, { title: 'Donate' }],
   '/faq': [FAQ_PAGE, { title: 'Frequently Asked Questions' }],
@@ -30,10 +30,10 @@ var REDIRECTIONS = {
   '/sponsor': [DONATE_PAGE, { title: 'Sponsor' }],
   '/support': [SUPPORT_PAGE, { title: 'Support' }],
   '/team': [SUPPORT_PAGE, { title: 'Team' }],
-  '/tos': [PRIVACY_PAGE, { title: 'Terms of Service' }]
+  '/tos': [PRIVACY_PAGE, { title: 'Terms of Service' }],
 };
 
-exports.controller = function(request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   var path = request.url.split('?')[0];
   var [redirUrl, { title } = {}] = REDIRECTIONS[path] || [];
   if (redirUrl) {

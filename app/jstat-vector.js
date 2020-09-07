@@ -1,14 +1,14 @@
-exports.init = function(jStat, Math) {
+exports.init = function (jStat, Math) {
   // for quick reference
   var isFunction = jStat.utils.isFunction,
     // ascending functions for sort
-    ascNum = function(a, b) {
+    ascNum = function (a, b) {
       return a - b;
     };
 
   jStat.extend({
     // sum of an array
-    sum: function(arr) {
+    sum: function (arr) {
       var sum = 0,
         i = arr.length,
         tmp;
@@ -19,7 +19,7 @@ exports.init = function(jStat, Math) {
     },
 
     // sum squared
-    sumsqrd: function(arr) {
+    sumsqrd: function (arr) {
       var sum = 0,
         i = arr.length;
       while (--i >= 0) sum += arr[i] * arr[i];
@@ -27,7 +27,7 @@ exports.init = function(jStat, Math) {
     },
 
     // sum of squared errors of prediction (SSE)
-    sumsqerr: function(arr) {
+    sumsqerr: function (arr) {
       var mean = jStat.mean(arr),
         sum = 0,
         i = arr.length,
@@ -40,7 +40,7 @@ exports.init = function(jStat, Math) {
     },
 
     // product of an array
-    product: function(arr) {
+    product: function (arr) {
       var prod = 1,
         i = arr.length;
       while (--i >= 0) prod *= arr[i];
@@ -48,7 +48,7 @@ exports.init = function(jStat, Math) {
     },
 
     // minimum value of an array
-    min: function(arr) {
+    min: function (arr) {
       var low = arr[0],
         i = 0;
       while (++i < arr.length) if (arr[i] < low) low = arr[i];
@@ -56,7 +56,7 @@ exports.init = function(jStat, Math) {
     },
 
     // maximum value of an array
-    max: function(arr) {
+    max: function (arr) {
       var high = arr[0],
         i = 0;
       while (++i < arr.length) if (arr[i] > high) high = arr[i];
@@ -64,22 +64,22 @@ exports.init = function(jStat, Math) {
     },
 
     // mean value of an array
-    mean: function(arr) {
+    mean: function (arr) {
       return jStat.sum(arr) / arr.length;
     },
 
     // mean squared error (MSE)
-    meansqerr: function(arr) {
+    meansqerr: function (arr) {
       return jStat.sumsqerr(arr) / arr.length;
     },
 
     // geometric mean of an array
-    geomean: function(arr) {
+    geomean: function (arr) {
       return Math.pow(jStat.product(arr), 1 / arr.length);
     },
 
     // median of an array
-    median: function(arr) {
+    median: function (arr) {
       var arrlen = arr.length,
         _arr = arr.slice().sort(ascNum);
       // check if array is even or odd, then return the appropriate
@@ -89,7 +89,7 @@ exports.init = function(jStat, Math) {
     },
 
     // cumulative sum of an array
-    cumsum: function(arr) {
+    cumsum: function (arr) {
       var len = arr.length,
         sums = new Array(len),
         i = 1;
@@ -101,7 +101,7 @@ exports.init = function(jStat, Math) {
     },
 
     // successive differences of a sequence
-    diff: function(arr) {
+    diff: function (arr) {
       var diffs = [],
         arrLen = arr.length,
         i = 1;
@@ -114,7 +114,7 @@ exports.init = function(jStat, Math) {
     // mode of an array
     // if there are multiple modes of an array, return all of them
     // is this the appropriate way of handling it?
-    mode: function(arr) {
+    mode: function (arr) {
       var arrLen = arr.length,
         _arr = arr.slice().sort(ascNum),
         count = 1,
@@ -145,24 +145,24 @@ exports.init = function(jStat, Math) {
     },
 
     // range of an array
-    range: function(arr) {
+    range: function (arr) {
       return jStat.max(arr) - jStat.min(arr);
     },
 
     // variance of an array
     // flag indicates population vs sample
-    variance: function(arr, flag) {
+    variance: function (arr, flag) {
       return jStat.sumsqerr(arr) / (arr.length - (flag ? 1 : 0));
     },
 
     // standard deviation of an array
     // flag indicates population vs sample
-    stdev: function(arr, flag) {
+    stdev: function (arr, flag) {
       return Math.sqrt(jStat.variance(arr, flag));
     },
 
     // mean deviation (mean absolute deviation) of an array
-    meandev: function(arr) {
+    meandev: function (arr) {
       var devSum = 0,
         mean = jStat.mean(arr),
         i = arr.length - 1;
@@ -173,7 +173,7 @@ exports.init = function(jStat, Math) {
     },
 
     // median deviation (median absolute deviation) of an array
-    meddev: function(arr) {
+    meddev: function (arr) {
       var devSum = 0,
         median = jStat.median(arr),
         i = arr.length - 1;
@@ -184,23 +184,23 @@ exports.init = function(jStat, Math) {
     },
 
     // coefficient of variation
-    coeffvar: function(arr) {
+    coeffvar: function (arr) {
       return jStat.stdev(arr) / jStat.mean(arr);
     },
 
     // quartiles of an array
-    quartiles: function(arr) {
+    quartiles: function (arr) {
       var arrlen = arr.length,
         _arr = arr.slice().sort(ascNum);
       return [
         _arr[Math.round(arrlen / 4) - 1],
         _arr[Math.round(arrlen / 2) - 1],
-        _arr[Math.round((arrlen * 3) / 4) - 1]
+        _arr[Math.round((arrlen * 3) / 4) - 1],
       ];
     },
 
     // covariance of two arrays
-    covariance: function(arr1, arr2) {
+    covariance: function (arr1, arr2) {
       var u = jStat.mean(arr1),
         v = jStat.mean(arr2),
         arr1Len = arr1.length,
@@ -213,21 +213,21 @@ exports.init = function(jStat, Math) {
     },
 
     // population correlation coefficient
-    corrcoeff: function(arr1, arr2) {
+    corrcoeff: function (arr1, arr2) {
       return (
         jStat.covariance(arr1, arr2) /
         jStat.stdev(arr1, 1) /
         jStat.stdev(arr2, 1)
       );
-    }
+    },
   });
 
   // extend jStat.fn with methods which don't require arguments and work on columns
-  (function(funcs) {
+  (function (funcs) {
     for (var i = 0; i < funcs.length; i++)
-      (function(passfunc) {
+      (function (passfunc) {
         // if a matrix is passed, automatically assume operation should be done on the columns
-        jStat.fn[passfunc] = function(fullbool, func) {
+        jStat.fn[passfunc] = function (fullbool, func) {
           var arr = [],
             i = 0,
             tmpthis = this;
@@ -238,7 +238,7 @@ exports.init = function(jStat, Math) {
           }
           // check if a callback was passed with the function
           if (func) {
-            setTimeout(function() {
+            setTimeout(function () {
               func.call(tmpthis, jStat.fn[passfunc].call(tmpthis, fullbool));
             }, 15);
             return this;
@@ -264,7 +264,7 @@ exports.init = function(jStat, Math) {
 
   // extend jStat.fn with method for calculating cumulative sums, as it does not run again in case of true
   // if a matrix is passed, automatically assume operation should be done on the columns
-  jStat.fn.cumsum = function(fullbool, func) {
+  jStat.fn.cumsum = function (fullbool, func) {
     var arr = [],
       i = 0,
       tmpthis = this;
@@ -275,7 +275,7 @@ exports.init = function(jStat, Math) {
     }
     // check if a callback was passed with the function
     if (func) {
-      setTimeout(function() {
+      setTimeout(function () {
         func.call(tmpthis, jStat.fn.cumsum.call(tmpthis, fullbool));
       }, 15);
       return this;

@@ -2,12 +2,11 @@ const fs = require('fs');
 const vm = require('vm');
 const {
   emit,
-  mapReduceFromJsonLines
+  mapReduceFromJsonLines,
 } = require('./map-reduce-over-json-lines');
 
 const MONGO_SCRIPT_FILE = process.argv[2];
 const JSON_DUMP_FILE = process.argv[3]; // '../playlog_last.json.log';
-const LOG_PREFIX = '[mongo shell]';
 
 const script = [
   '(async () => {',
@@ -19,13 +18,13 @@ const script = [
     )
     .replace(/emit\(/g, `return (${emit})(`)
     .replace(/db\.([^\.]+)\.mapReduce\(/g, `await mapReduceFromJsonLines(`),
-  '})();'
+  '})();',
 ].join('\n');
 
 const context = {
   module: {}, // to tolerate mentions to module.exports
   mapReduceFromJsonLines: mapReduceFromJsonLines.bind(null, JSON_DUMP_FILE),
-  print: console.log
+  print: console.log,
 };
 
 new vm.Script(script).runInContext(vm.createContext(context));
