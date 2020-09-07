@@ -62,7 +62,8 @@ More generally, make sure to follow these three principles:
 - **public** Frontend assets: images, css, js files 
 - **scripts** Utilities for production and data analatics
 - **test** Integration and unit tests
-*notes* The player code is hosted at [playemJS](https;//github.com/adrienjoly/playemjs)
+
+Note: The player code is hosted at [playemJS](https://github.com/adrienjoly/playemjs).
 
 ## Contact information
 
