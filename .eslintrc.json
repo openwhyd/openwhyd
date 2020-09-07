@@ -9,7 +9,7 @@
   ],
   "plugins": ["prettier", "@typescript-eslint"],
   "parserOptions": {
-    "project": "./tsconfig.json",
+    "project": "tsconfig.json",
     "ecmaVersion": 2019
   },
   "rules": {
