@@ -52,6 +52,19 @@ More generally, make sure to follow these three principles:
 
 - Optimize for search: [Like in the React.js project](https://facebook.github.io/react/contributing/design-principles.html), we want to make it easy for contributors to search for symbols (constants, variables and function names). So don't hesitate to give them verbose/specific names.
 
+## Project Structure
+
+- **app** API endpoints and backend codes
+- **config** Database initialization scripts, http routes, and other configuration files
+- **cypress** End-to-End tests
+- **docs** API documentation and other references documents
+- **misc** Code of browser extension 
+- **public** Frontend assets: images, css, js files 
+- **scripts** Utilities for production and data analatics
+- **test** Integration and unit tests
+
+Note: The player code is hosted at [playemJS](https://github.com/adrienjoly/playemjs).
+
 ## Contact information
 
 You can contact Adrien Joly by email at: `contact at openwhyd dot org`.
