@@ -435,23 +435,15 @@ exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
     before: options.before,
   };
   ////console.time("fetchPlaylistPosts");
-  if (uId)
-    exports.fetchPosts(
-      { uId: uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
-      playlistSort,
-      options,
-      handler /*function(){
-			//console.timeEnd("fetchPlaylistPosts");
-			handler.apply(null, arguments);
-		}*/
-    );
-  else
-    exports.fetchPosts(
-      { 'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] } },
-      playlistSort,
-      options,
-      handler
-    );
+  exports.fetchPosts(
+    { uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
+    playlistSort,
+    options,
+    handler /*function(){
+    //console.timeEnd("fetchPlaylistPosts");
+    handler.apply(null, arguments);
+  }*/
+  );
 };
 
 exports.countPlaylistPosts = function (uId, plId, handler) {

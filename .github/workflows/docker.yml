@@ -31,8 +31,4 @@ jobs:
         run: |
           docker-compose exec -T web npm run test-api
 
-      - name: Run Cypress E2E tests
-        run: |
-          npx cypress@3.8.3 run --config pluginsFile=false # because plugins/index.js requires typescript, which is not installed in this production image
-
 # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36

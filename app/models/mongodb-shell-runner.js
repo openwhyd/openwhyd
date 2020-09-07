@@ -2,6 +2,7 @@ var vm = require('vm');
 var async = require('async');
 var mongodb = require('mongodb');
 
+const PRINT_ACTIVE = false;
 const VERBOSE = false; // true to display debug logs (for diagnostics and testing)
 const LOG_PREFIX = '[mongo shell]';
 
@@ -16,10 +17,11 @@ function buildContext(db, nextCommand, callback) {
 
   var context = {
     print: function () {
-      console.log.apply(
-        console,
-        [LOG_PREFIX].concat(Array.prototype.slice.call(arguments))
-      );
+      PRINT_ACTIVE &&
+        console.log.apply(
+          console,
+          [LOG_PREFIX].concat(Array.prototype.slice.call(arguments))
+        );
       nextCommand();
     },
     db: {

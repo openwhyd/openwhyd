@@ -134,7 +134,7 @@ exports.controller = function (request, reqParams, response) {
       );
     } else if (data.html) {
       response.renderHTML(data.html);
-      console.log('rendering done!');
+      // console.log('rendering done!');
       if (
         loggedInUser &&
         loggedInUser.id &&

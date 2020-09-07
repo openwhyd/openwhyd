@@ -43,7 +43,7 @@ Commands to run all automated tests against the Docker container:
 
 ```sh
 $ docker-compose up --build --detach  # to have openwhyd's web server and database running in the background
-$ npm install                         # will install the necessary test runners (webdriver/selenium)
+$ npm install                         # will install the necessary test runners
 $ npm run docker:test                 # will run the automated tests: unit and end-to-end
 ```
 
@@ -107,7 +107,7 @@ Run unit tests only:
 $ npm run test-unit
 ```
 
-Run all tests, including acceptance tests (webdriver.io-based):
+Run all tests, including acceptance tests (Cypress-based):
 
 ```sh
 # in a terminal session, start Openwhyd's application server

@@ -166,11 +166,19 @@ function makeLink(text /*, url*/) {
 
 // main methods
 
+const extractObjectID = (str) => str.match(/[0-9a-f]{24}/)[0];
+
 exports.clearUserNotifsForPost = function (uId, pId) {
   if (!uId || !pId) return;
   var idList = [pId];
   try {
-    idList.push(mongodb.ObjectID.createFromHexString(pId));
+    idList.push(
+      mongodb.ObjectID.createFromHexString(
+        typeof pId === 'string'
+          ? extractObjectID(pId) // strip the eventual "/u/" prefix or "/reposts" suffix (e.g. in notif-tests.js)
+          : pId
+      )
+    );
   } catch (e) {
     console.error('error in clearUserNotifsForPost:', e);
   }
@@ -190,7 +198,7 @@ exports.clearUserNotifsForPost = function (uId, pId) {
   );
 };
 
-exports.clearUserNotifs = function (uId) {
+exports.clearUserNotifs = function (uId, cb) {
   if (!uId) return;
   db['notif'].find({ uId: uId }, { uId: 1 }, { limit: 1000 }, function (
     err,
@@ -207,9 +215,12 @@ exports.clearUserNotifs = function (uId) {
           db['notif'].update(
             { uId: uId },
             { $pull: { uId: uId } },
-            { multi: true, w: 0 }
+            { multi: true, w: 0 },
+            () => {
+              invalidateUserNotifsCache(uId);
+              cb && cb();
+            }
           );
-          invalidateUserNotifsCache(uId);
         }
       );
     }
@@ -284,7 +295,7 @@ exports.html = function (uId, html, href, img) {
 
 // specific notification methods
 
-exports.love = function (loverUid, post) {
+exports.love = function (loverUid, post, callback) {
   var user = mongodb.usernames['' + loverUid];
   var author = mongodb.usernames['' + post.uId];
   if (!user || !author) return;
@@ -301,7 +312,8 @@ exports.love = function (loverUid, post) {
       $push: { lov: loverUid },
       $inc: { n: 1 },
     },
-    { upsert: true, w: 0 }
+    { upsert: true, w: 0 },
+    callback
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);

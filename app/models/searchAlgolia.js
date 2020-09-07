@@ -239,7 +239,7 @@ exports.query = function (q = {}, cb) {
     else
       searchByType[type](q, function (res) {
         if (res.hits) {
-          console.log('=>', res.hits.length, 'hits');
+          console.log('searchAlgolia.query =>', res.hits.length, 'hits');
           hits = hits.concat(res.hits);
         } else {
           console.error(

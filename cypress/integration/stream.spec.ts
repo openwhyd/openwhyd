@@ -1,5 +1,3 @@
-/// <reference types="Cypress" />
-
 context('Openwhyd stream', () => {
   // TODO: can load next page of the global stream
   it('can load next page of profile when user not logged in', () => {

@@ -1,3 +1,59 @@
+## [1.35.2](https://github.com/openwhyd/openwhyd/compare/v1.35.1...v1.35.2) (2020-09-06)
+
+
+### Bug Fixes
+
+* **tests:** Modernize unit tests of Notifications ([#366](https://github.com/openwhyd/openwhyd/issues/366)) ([2233e2d](https://github.com/openwhyd/openwhyd/commit/2233e2dabfdae116ed3fb957c77573d6158788bc)), closes [#212](https://github.com/openwhyd/openwhyd/issues/212)
+
+## [1.35.1](https://github.com/openwhyd/openwhyd/compare/v1.35.0...v1.35.1) (2020-09-06)
+
+
+### Bug Fixes
+
+* **logs:** Remove or clarify old production + unit test logs ([#365](https://github.com/openwhyd/openwhyd/issues/365)) ([b22d871](https://github.com/openwhyd/openwhyd/commit/b22d87132861f57c0ff83634597b28c4c1b69b49))
+
+# [1.35.0](https://github.com/openwhyd/openwhyd/compare/v1.34.23...v1.35.0) (2020-09-06)
+
+
+### Features
+
+* ⚰️ Bury collaborative playlists (never-finished feature) ([#364](https://github.com/openwhyd/openwhyd/issues/364)) ([9a342fa](https://github.com/openwhyd/openwhyd/commit/9a342fa1fdf50282b0ea86d3ad9a1604dcac82ea))
+
+## [1.34.23](https://github.com/openwhyd/openwhyd/compare/v1.34.22...v1.34.23) (2020-09-06)
+
+
+### Bug Fixes
+
+* **logs:** Reduce amount of logging in production ([#363](https://github.com/openwhyd/openwhyd/issues/363)) ([4b5efce](https://github.com/openwhyd/openwhyd/commit/4b5efce5772216afdbe9bee68346ee920445088a))
+
+## [1.34.22](https://github.com/openwhyd/openwhyd/compare/v1.34.21...v1.34.22) (2020-09-05)
+
+
+### Bug Fixes
+
+* **tests:** Test avatar upload ([#362](https://github.com/openwhyd/openwhyd/issues/362)) ([04c4f91](https://github.com/openwhyd/openwhyd/commit/04c4f919e6b0de278faa3623541ba55229c2685e)), closes [#358](https://github.com/openwhyd/openwhyd/issues/358) [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
+## [1.34.21](https://github.com/openwhyd/openwhyd/compare/v1.34.20...v1.34.21) (2020-09-05)
+
+
+### Bug Fixes
+
+* **logs:** Re-import colors package, to prevent "undefined" entries in logs ([#361](https://github.com/openwhyd/openwhyd/issues/361)) ([14c3032](https://github.com/openwhyd/openwhyd/commit/14c3032083d5c75c5efd1e4d871ffc7c16a02d9f))
+
+## [1.34.20](https://github.com/openwhyd/openwhyd/compare/v1.34.19...v1.34.20) (2020-09-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependencies ([#360](https://github.com/openwhyd/openwhyd/issues/360)) ([3ad78f6](https://github.com/openwhyd/openwhyd/commit/3ad78f64081c6552137d65642d2716a6069688f9))
+
+## [1.34.19](https://github.com/openwhyd/openwhyd/compare/v1.34.18...v1.34.19) (2020-09-05)
+
+
+### Bug Fixes
+
+* **e2e-tests:** Finish migration from Webdriver to Cypress ([#358](https://github.com/openwhyd/openwhyd/issues/358)) ([5eccaa7](https://github.com/openwhyd/openwhyd/commit/5eccaa7)), closes [#199](https://github.com/openwhyd/openwhyd/issues/199)
+
 ## [1.34.18](https://github.com/openwhyd/openwhyd/compare/v1.34.17...v1.34.18) (2020-09-01)
 
 

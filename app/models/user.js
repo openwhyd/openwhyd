@@ -115,15 +115,9 @@ var TESTING_DIGEST = config.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {
   var nb = 0;
-  console.log('Parsing reserved usernames from', routeFile, '...');
+  // console.log('Parsing reserved usernames from', routeFile, '...');
   snip.forEachFileLine(routeFile, function (line) {
-    if (typeof line != 'string')
-      return console.log(
-        '=> Parsed',
-        nb,
-        'handles from:',
-        routeFile /*, " : ", USERNAME_RESERVED*/
-      );
+    if (typeof line != 'string') return; // console.log('=> Parsed', nb, 'handles from:', routeFile);
     line = line.substr(line.indexOf('/') + 1);
     var end = line.search(/[\t/]/);
     if (end > -1) {
@@ -138,15 +132,9 @@ var TESTING_DIGEST = config.digestImmediate;
 
 (function parseHandlesFromTextFile(fileName) {
   var nb = 0;
-  console.log('Parsing reserved usernames from', fileName, '...');
+  // console.log('Parsing reserved usernames from', fileName, '...');
   snip.forEachFileLine(fileName, function (line) {
-    if (typeof line != 'string')
-      return console.log(
-        '=> Parsed',
-        nb,
-        'handles from:',
-        fileName /*, " : ", USERNAME_RESERVED*/
-      );
+    if (typeof line != 'string') return; // console.log('=> Parsed', nb, 'handles from:', fileName);
     if (!line.length || line[0] == '#') return;
     USERNAME_RESERVED[line] = true;
     ++nb;
@@ -233,7 +221,7 @@ function processUsers(list) {
 }
 
 function fetch(q, handler) {
-  snip.console.log('fetching user ', q, '...');
+  // snip.console.log('fetching user ', q, '...');
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   mongodb.collections['user'].findOne(q, function (err, user) {
     if (user) {

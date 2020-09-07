@@ -1,5 +1,3 @@
-/// <reference types="Cypress" />
-
 // This end-to-end / functional test suite covers the happy path,
 // as inspired by https://www.youtube.com/watch?v=aZT8VlTV1YY
 
@@ -55,7 +53,7 @@ context('Openwhyd', () => {
     cy.get('#btnPlay').should('be.visible');
 
     // should play the track
-    cy.get('#btnPlay.playing').should('be.visible');
+    cy.get('#btnPlay.playing', { timeout: 10000 }).should('be.visible');
 
     // should pause the track when the user clicks on the play/pause button
     cy.get('#btnPlay').click();

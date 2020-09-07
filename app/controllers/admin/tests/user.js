@@ -100,7 +100,7 @@ exports.makeTests = function (p) {
         },
       },
       function (res, response) {
-        log('/register result:', res);
+        // log('/register result:', res);
         testVars.registeredUid = res.uId;
         testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
         cb(res.redirect && res.uId);

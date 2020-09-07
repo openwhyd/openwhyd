@@ -105,9 +105,10 @@ exports.controller = function (request, reqParams, response) {
 
   var sendResult = function (error, result) {
     result = result && result._id ? { _id: result._id } : {};
-    if (error) result.error = error;
-    //console.log("follow API error: " + error);
-    console.log('follow API result: ', result);
+    if (error) {
+      result.error = error;
+      console.log('follow API error: ' + error);
+    }
 
     if (reqParams.redirect) response.redirect(reqParams.redirect);
     else response.renderJSON(result);

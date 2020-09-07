@@ -29,15 +29,14 @@ var FCTS_OPTIONAL = {
 
 function makeNoImplHandler(methodName, cbPos) {
   return function () {
-    console.log('models.search: NO IMPLEMENTATION for ' + methodName);
+    if (config.searchModule)
+      console.log('models.search: NO IMPLEMENTATION for ' + methodName);
     var callback = arguments[cbPos];
     callback && callback();
   };
 }
 
 for (let methodName in FCTS_REQUIRED) {
-  if (!searchImpl[methodName])
-    console.error('models.search: NO IMPLEMENTATION for ' + methodName);
   exports[methodName] =
     searchImpl[methodName] ||
     makeNoImplHandler(methodName, FCTS_REQUIRED[methodName]);
