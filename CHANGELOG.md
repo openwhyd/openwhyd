@@ -1,3 +1,10 @@
+## [1.35.3](https://github.com/openwhyd/openwhyd/compare/v1.35.2...v1.35.3) (2020-09-07)
+
+
+### Bug Fixes
+
+* **linter:** Re-enable linting of JS files in VSCode ([#367](https://github.com/openwhyd/openwhyd/issues/367)) ([469e9aa](https://github.com/openwhyd/openwhyd/commit/469e9aa0d440fe4792f7b229c1e8ba6543998498))
+
 ## [1.35.2](https://github.com/openwhyd/openwhyd/compare/v1.35.1...v1.35.2) (2020-09-06)
 
 
