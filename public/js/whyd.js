@@ -12,7 +12,7 @@ window.goToPage = function (url) {
 };
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function () {} };
+if (undefined == window.console) console = { log: function () { } };
 
 /* utility functions */
 
@@ -51,7 +51,7 @@ function extractPostData($post, defaults) {
     .text();
   try {
     text = text.trim(); // trim() not supported on IE8
-  } catch (e) {}
+  } catch (e) { }
   return {
     id: $post.attr('data-pid'), // for askPostShareFB
     pId: $post.attr('data-pid'),
@@ -284,12 +284,12 @@ function onNewPost(whydPost) {
 
   showMessage(
     "Successfully added track to <a target='_blank' href='" +
-      '/u/' +
-      p.uId +
-      (p.pl ? '/playlist/' + p.pl.id : '') +
-      "'>" +
-      encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
-      '</a>'
+    '/u/' +
+    p.uId +
+    (p.pl ? '/playlist/' + p.pl.id : '') +
+    "'>" +
+    encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
+    '</a>'
   );
 
   try {
@@ -338,14 +338,14 @@ function _renderUserInList(user, liHandler) {
         .css(
           'background-image',
           "url('" +
-            (user.img || '/img/u/' + user.id) +
-            "?width=100&amp;height=100')"
+          (user.img || '/img/u/' + user.id) +
+          "?width=100&amp;height=100')"
         )
         .click(
           user.thumbClickHandler ||
-            function () {
-              $(this).parent().find('a.userLink').click();
-            }
+          function () {
+            $(this).parent().find('a.userLink').click();
+          }
         )
     )
     .append(
@@ -402,7 +402,7 @@ function _commentDeleteHandler() {
   var $post = $comment.closest('.post');
   var $html = $(
     '<div><p>Do you want to permanently delete this comment?</p></div>' +
-      '<span class="btnDelete greenButton">Delete</span>'
+    '<span class="btnDelete greenButton">Delete</span>'
   );
   openJqueryDialog($html, 'dlgDeleteComment');
   $('.dlgDeleteComment .btnDelete').click(function () {
@@ -542,7 +542,7 @@ function showSubscriptions(uid) {
 
 /*
 function changePassword() {
-	openRemoteDialog("/html/dlgChangePwd.html", "dlgChangePwd");
+  openRemoteDialog("/html/dlgChangePwd.html", "dlgChangePwd");
 };
 */
 
@@ -754,13 +754,13 @@ function showHelpOverlay() {
     .addClass('help')
     .append(
       '<div class="helpOverlay">' +
-        '<div class="overlay"></div>' +
-        '<div class="container">' +
-        '<div class="content">' +
-        '<h3>Welcome</h3>' +
-        '<p >Here is the Incoming tracks from people you follow to</p>' +
-        '<div class="btnCloseHelp" onclick="hideHelpOverlay()">Ok, Got it</div>' +
-        '</div></div></div>'
+      '<div class="overlay"></div>' +
+      '<div class="container">' +
+      '<div class="content">' +
+      '<h3>Welcome</h3>' +
+      '<p >Here is the Incoming tracks from people you follow to</p>' +
+      '<div class="btnCloseHelp" onclick="hideHelpOverlay()">Ok, Got it</div>' +
+      '</div></div></div>'
     );
   $('.posts a').bind('click', hideHelpOverlay);
 }
@@ -791,20 +791,20 @@ function sharePost(pId) {
       '<div class="pointe"></div>',
       '<div class="sharing">',
       '<iframe class="twitter-share-button twitter-count-horizontal" src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;text=' +
-        encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/) +
-        '&amp;url=' +
-        encodeURIComponent(postUrl) +
-        '&amp;via=open_whyd&amp;original_referer=' +
-        encodeURIComponent(window.location.href) +
-        '" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
+      encodeURIComponent('♫ ' + post.name /*+ " " + postUrl*/) +
+      '&amp;url=' +
+      encodeURIComponent(postUrl) +
+      '&amp;via=open_whyd&amp;original_referer=' +
+      encodeURIComponent(window.location.href) +
+      '" title="Twitter Tweet Button" data-twttr-rendered="true" allowtransparency="true" frameborder="0" scrolling="no"></iframe>',
       '<iframe class="fblikeBtn" src="//www.facebook.com/plugins/like.php?href=' +
-        encodeURIComponent(postUrl) +
-        '&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;font&amp;colorscheme=light&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>',
+      encodeURIComponent(postUrl) +
+      '&amp;layout=button_count&amp;show_faces=false&amp;width=100&amp;action=like&amp;font&amp;colorscheme=light&amp;height=21&amp;appId=169250156435902" scrolling="no" frameborder="0" allowTransparency="true"></iframe>',
       '</div>',
       '<p>Permalink</p>',
       '<input type="text" value="' +
-        postUrl +
-        '" readonly="readonly" onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand(\'Copy\');"></input>',
+      postUrl +
+      '" readonly="readonly" onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand(\'Copy\');"></input>',
       '</div>',
     ].join('\n');
 
@@ -851,11 +851,11 @@ function makeUrl(getParamsObj) {
   wlh = wlh.split('#')[0];
   var hasParams = wlh.indexOf('?') > -1;
   /*
-	if (hasParams && wlh.indexOf("#") > -1 && wlh.indexOf("_suid") > -1) { // finds canonical url from ajax/hash-based urls (e.g. in IE9)
-		wlh = wlh.substr(0, wlh.indexOf("/", 10)) + "/" + wlh.split("#").pop().split("?")[0];
-		hasParams = false;
-	}
-	*/
+  if (hasParams && wlh.indexOf("#") > -1 && wlh.indexOf("_suid") > -1) { // finds canonical url from ajax/hash-based urls (e.g. in IE9)
+    wlh = wlh.substr(0, wlh.indexOf("/", 10)) + "/" + wlh.split("#").pop().split("?")[0];
+    hasParams = false;
+  }
+  */
   if (getParamsObj) {
     wlh += hasParams ? '&' : '?';
     var p = [];
@@ -882,9 +882,9 @@ $(document).ready(function () {
 
   // open first comments of the stream
   /*
-	if ($body.hasClass("pgStream"))
-		toggleComments($(".post").first().attr("data-pid"), true);
-	*/
+  if ($body.hasClass("pgStream"))
+    toggleComments($(".post").first().attr("data-pid"), true);
+  */
   var keyShortcuts = {
     32: function () {
       // space: play/pause
@@ -965,25 +965,25 @@ $(document).ready(function () {
     $notifPanel.toggle();
   });
   /*
-	if ($("#inviteBanner").length) {
-		var navbar_top = 60;
-		window.addEventListener("scroll", function () {
-			var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-			var fixedHeader = scrollTop > navbar_top;
-			$("#header #inviteBanner").toggle(fixedHeader);
-			$("#contentPane #inviteBanner").css({opacity:(navbar_top - scrollTop) / (navbar_top/2)});
-		}, false);
-	}
-	*/
+  if ($("#inviteBanner").length) {
+    var navbar_top = 60;
+    window.addEventListener("scroll", function () {
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      var fixedHeader = scrollTop > navbar_top;
+      $("#header #inviteBanner").toggle(fixedHeader);
+      $("#contentPane #inviteBanner").css({opacity:(navbar_top - scrollTop) / (navbar_top/2)});
+    }, false);
+  }
+  */
 
   // init search bar
 
   var noResultsYet = function (q) {
-    return /*$(*/ [
+    return /*$(*/[
       '<ul class="showAllResults loading">',
       '<li><a href="/search?q=' +
-        encodeURIComponent(q) +
-        '" target="_blank">Show all results...</a></li>',
+      encodeURIComponent(q) +
+      '" target="_blank">Show all results...</a></li>',
       '</ul>',
     ].join('\n') /*).ajaxify()[0]*/;
   };
@@ -1017,13 +1017,13 @@ $(document).ready(function () {
           return !tracks.length
             ? resultsHtml || ''
             : (resultsHtml || '</ul>').replace(
-                '</ul>',
-                '</ul>' +
-                  "<ul class='resultCategory'>" +
-                  '<div>Tracks</div>' +
-                  tracks.map(renderTrack).join('\n') +
-                  '</ul>'
-              );
+              '</ul>',
+              '</ul>' +
+              "<ul class='resultCategory'>" +
+              '<div>Tracks</div>' +
+              tracks.map(renderTrack).join('\n') +
+              '</ul>'
+            );
         }
         if (/^https?\:\/\//.test(query))
           whydPlayer.fetchTrackByUrl(query, function (track) {
@@ -1034,10 +1034,10 @@ $(document).ready(function () {
               track.eId
                 ? prependExternalTracks([track])
                 : '<div class="noResults">' +
-                    "<p>Sorry, we don't recognize this URL...</p>" +
-                    '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
-                    '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
-                    '</div>',
+                "<p>Sorry, we don't recognize this URL...</p>" +
+                '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
+                '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
+                '</div>',
               false
             );
             // TODO: send this URL back to whyd/playemJS team
@@ -1232,12 +1232,12 @@ $(document).ready(function () {
           $menuChildren.filter(activeSelector).removeClass(activeClass);
           $menuChildren = $menuChildren.has(
             'a[href^="' +
-              relativeUrl +
-              '"],a[href^="/' +
-              relativeUrl +
-              '"],a[href^="' +
-              url +
-              '"]'
+            relativeUrl +
+            '"],a[href^="/' +
+            relativeUrl +
+            '"],a[href^="' +
+            url +
+            '"]'
           );
           if ($menuChildren.length === 1) {
             $menuChildren.addClass(activeClass);
@@ -1260,7 +1260,7 @@ $(document).ready(function () {
               .replace('<', '&lt;')
               .replace('>', '&gt;')
               .replace(' & ', ' &amp; ');
-          } catch (Exception) {}
+          } catch (Exception) { }
 
           // Add the scripts
           $scripts.each(function () {
@@ -1386,3 +1386,37 @@ initWhydTooltips('#whydPlayer *[title]', { gravity: 's' });
 initWhydTooltips('#contentPane *[title]');
 
 $("<div id='pageLoader'></div>").appendTo('body');
+
+//sort playlists
+function sortPlaylists(sortType) {
+  const playlistsContainer = document.querySelector('#playlists');
+  const allPlaylists = playlistsContainer.querySelectorAll('.playlist');
+  let playlistsFragment = document.createDocumentFragment();
+  let allPlaylistsObject = {};
+
+  if (allPlaylists.length > 2) {
+    allPlaylists.forEach((playlist, index) => {
+      if (playlist.dataset.playlistname) {
+        if (!playlist.dataset.index) {
+          playlist.setAttribute('data-index', index);
+        }
+
+        if (sortType === 'alphabetize') {
+          allPlaylistsObject[playlist.dataset.playlistname] = playlist;
+        } else if (sortType === 'date') {
+          allPlaylistsObject[playlist.dataset.index] = playlist;
+        }
+      } else {
+        playlistsFragment.appendChild(playlist);
+      }
+    });
+
+    playlistsContainer.innerHTML = '';
+
+    Object.keys(allPlaylistsObject)
+      .sort()
+      .forEach(playlist => playlistsFragment.appendChild(allPlaylistsObject[playlist]));
+
+    playlistsContainer.appendChild(playlistsFragment);
+  }
+}
