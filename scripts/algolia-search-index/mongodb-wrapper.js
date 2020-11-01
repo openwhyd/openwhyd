@@ -81,13 +81,13 @@ const forEachObject = (coll, handler, options = {}) =>
         } else if (obj) {
           progress.incr();
           handler(obj);
-          setTimeout(() => cursor.nextObject(onObject), 0);
+          setTimeout(() => cursor.next(onObject), 0);
         } else {
           progress.done();
           resolve();
         }
       };
-      cursor.nextObject(onObject);
+      cursor.next(onObject);
     });
   });
 

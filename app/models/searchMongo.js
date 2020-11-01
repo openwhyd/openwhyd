@@ -91,11 +91,11 @@ exports.topicNameSearch = function (
                     item.name /* + ", " + item.t*/
                 );
                 exactResults.push(item);
-                if (--remaining > 0) cursor.nextObject(handleNextResult); //recursive call for next objects
+                if (--remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
               } else cursor.queryRun = false;
             };
 
-            cursor.nextObject(handleNextResult); // start gathering results
+            cursor.next(handleNextResult); // start gathering results
           }
         );
 
@@ -119,11 +119,11 @@ exports.topicNameSearch = function (
                     item.name /* + ", " + item.t*/
                 );
                 quickResults.push(item);
-                if (--remaining > 0) cursor.nextObject(handleNextResult); //recursive call for next objects
+                if (--remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
               } else cursor.queryRun = false;
             };
 
-            cursor.nextObject(handleNextResult); // start gathering results
+            cursor.next(handleNextResult); // start gathering results
           }
         );
 

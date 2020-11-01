@@ -132,7 +132,7 @@ exports.forEach2 = function (colName, params, handler) {
     q._id = { $lt: exports.ObjectId('' + params.after) };
   exports.collections[colName].find(q, params, function (err, cursor) {
     (function next() {
-      cursor.nextObject(function (err, item) {
+      cursor.next(function (err, item) {
         if (err) {
           console.error('mongodb.forEach2 ERROR', err);
           handler({ error: err });
