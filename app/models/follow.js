@@ -66,7 +66,10 @@ exports.add = function (followObj, dbHandler) {
   };
   var collection = mongodb.collections[COLNAME];
   //collection.save(obj, dbHandler);
-  collection.update(req, followObj, { upsert: true }, function (err, result) {
+  collection.updateOne(req, followObj, { upsert: true }, function (
+    err,
+    result
+  ) {
     // to avoid duplicates
     if (err) dbHandler(err, result);
     else collection.findOne(req, dbHandler);

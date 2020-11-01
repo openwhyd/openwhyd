@@ -298,7 +298,7 @@ exports.fetchInvitedUsers = function (uid, handler) {
 
 exports.updateAndFetch = function (criteria, update, opts, cb) {
   console.log('models.user.update criteria', criteria);
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     criteria,
     /*{$set:*/ update /*}*/,
     opts || {},
@@ -337,7 +337,7 @@ exports.save = function (pUser, handler) {
     '=> criteria: ',
     criteria
   );
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     criteria,
     { $set: user },
     { upsert: true },
@@ -445,7 +445,7 @@ function insertInvite(obj, handler) {
     return handler && handler();
   }
 
-  mongodb.collections['invite'].update(
+  mongodb.collections['invite'].updateMany(
     criteria,
     { $set: obj },
     { upsert: true, multi: true },
@@ -686,7 +686,7 @@ exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
 
 exports.incrementNotificationCounter = function (uId, handler) {
   //console.log("user.incrementNotificationCounter:", uId);
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     { _id: ObjectId('' + uId) },
     { $inc: { 'pref.pendEN': 1 } },
     function (err, item) {
@@ -717,9 +717,9 @@ exports.setPref = function (uId, pref, handler) {
       cleanPref['pref.nextEN'] = msToDigestTimestamp(
         now + daysToMillisecs(emailFreq)
       );
-      exports.update(uId, { $set: cleanPref }, handler);
+      exports.updateOne(uId, { $set: cleanPref }, handler);
     } else
-      exports.update(
+      exports.updateOne(
         uId,
         { $set: cleanPref, $unset: { 'pref.prevEN': 1, 'pref.nextEN': 1 } },
         handler
@@ -754,12 +754,12 @@ exports.setApTok = function (uId, _apTok, cb) {
 	});
 	*/
   // new policy: one apTok <--> one user.
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateMany(
     { 'apTok.tok': apTok },
     { $unset: { apTok: '' } },
     { multi: 1 },
     function () {
-      mongodb.collections['user'].update(
+      mongodb.collections['user'].updateOne(
         { _id: ObjectId('' + uId) },
         { $set: { apTok: [newApTok] } },
         handleResult
@@ -769,7 +769,7 @@ exports.setApTok = function (uId, _apTok, cb) {
 };
 
 exports.clearApTok = function (uId, cb) {
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     { _id: ObjectId('' + uId) },
     { $unset: { apTok: '' } },
     function (err, success) {
@@ -812,7 +812,7 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
   if (!uId) return cb && cb({ error: 'invalid parameters' });
   else if (!twId)
     // disconnect twitter account
-    mongodb.collections['user'].update(
+    mongodb.collections['user'].updateOne(
       { _id: ObjectId('' + uId) },
       { $unset: { twId: '', twTok: '', twSec: '' } },
       function (err, success) {
@@ -892,14 +892,14 @@ exports.renameUser = function (uid, name, callback) {
         count
       ) {
         console.log('renameUser: processing', count, 'items...');
-        col.update(
+        col.updateMany(
           { uId: uid /*, uNm: oldName*/ },
           { $set: { uNm: name } },
           { multi: true },
           function (err) {
             if (err) console.log('err', err);
             //console.log("-> updated to ", result);
-            col.update(
+            col.updateMany(
               { tId: uid /*, tNm: oldName*/ },
               { $set: { tNm: name } },
               { multi: true },

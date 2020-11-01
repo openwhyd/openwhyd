@@ -117,7 +117,7 @@ function updateNotif(q, p, cb) {
   p.$set = p.$set || {};
   p.$set.t = Math.round(new Date().getTime() / 1000);
   var to = detectTo(p);
-  db['notif'].update(
+  db['notif'].updateOne(
     q,
     p,
     { upsert: true, /*w:0*/ safe: true },
@@ -148,7 +148,7 @@ function pushNotif(to, q, set, push, cb) {
   if (!(push || {}).uId) set.uId = ['' + to];
   var p = { $set: set };
   if (push) p.$push = push;
-  db['notif'].update(
+  db['notif'].updateOne(
     q,
     p,
     { upsert: true, /*w:0*/ safe: true },
@@ -182,7 +182,7 @@ exports.clearUserNotifsForPost = function (uId, pId) {
   } catch (e) {
     console.error('error in clearUserNotifsForPost:', e);
   }
-  db['notif'].update(
+  db['notif'].updateMany(
     { _id: { $in: idList } },
     { $pull: { uId: uId } },
     { safe: true /*w:0*/ },
@@ -212,7 +212,7 @@ exports.clearUserNotifs = function (uId, cb) {
         { multi: true, safe: true },
         function () {
           // ...then, remove the user from remaining records
-          db['notif'].update(
+          db['notif'].updateMany(
             { uId: uId },
             { $pull: { uId: uId } },
             { multi: true, w: 0 },
@@ -299,7 +299,7 @@ exports.love = function (loverUid, post, callback) {
   var user = mongodb.usernames['' + loverUid];
   var author = mongodb.usernames['' + post.uId];
   if (!user || !author) return;
-  db['notif'].update(
+  db['notif'].updateOne(
     { _id: post._id + '/loves' },
     {
       $set: {
@@ -325,7 +325,7 @@ exports.love = function (loverUid, post, callback) {
 exports.unlove = function (loverUid, pId) {
   var criteria = { _id: pId + '/loves' };
   var col = db['notif'];
-  col.update(
+  col.updateOne(
     criteria,
     { $inc: { n: -1 }, $pull: { lov: loverUid } },
     { safe: true },
@@ -335,7 +335,7 @@ exports.unlove = function (loverUid, pId) {
           if (!res.lov || res.lov.length == 0 || res.n < 1)
             col.remove(criteria, { w: 0 });
           else
-            col.update(
+            col.updateOne(
               criteria,
               { $set: { uIdLast: res.lov[res.lov.length - 1] } },
               { w: 0 }
@@ -368,7 +368,7 @@ exports.repost = function (reposterUid, post) {
   var reposter = mongodb.usernames['' + reposterUid];
   var author = mongodb.usernames['' + post.uId];
   if (!reposter || !author) return;
-  db['notif'].update(
+  db['notif'].updateOne(
     { _id: post._id + '/reposts' },
     {
       $set: {
@@ -410,7 +410,7 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
   var sender = mongodb.usernames['' + senderId];
   var favorited = mongodb.usernames['' + favoritedId];
   if (sender && favorited) {
-    db['notif'].update(
+    db['notif'].updateOne(
       { _id: '/u/' + sender.id },
       {
         $set: {

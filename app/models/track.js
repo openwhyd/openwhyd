@@ -72,7 +72,7 @@ var POST_FETCH_OPTIONS = {
 
 function save(track, cb, replace) {
   var op = replace ? track : { $set: track };
-  mongodb.collections['track'].update(
+  mongodb.collections['track'].updateOne(
     { eId: track.eId },
     op,
     { upsert: true },
@@ -423,7 +423,7 @@ exports.snapshotTrackScores = function (cb) {
           );
         }
         ++i;
-        mongodb.collections['track'].update(
+        mongodb.collections['track'].updateOne(
           { _id: track._id },
           { $set: { prev: track.score } },
           next
