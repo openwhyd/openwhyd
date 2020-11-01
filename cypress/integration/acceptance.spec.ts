@@ -27,8 +27,7 @@ context('Openwhyd', () => {
     const track = ((url) => ({
       url,
       name: url.split('/').pop(),
-      eId: '/fi/' + url,
-      encodedId: '/fi/' + encodeURIComponent(url),
+      eId: '/fi/' + encodeURIComponent(url),
     }))(
       'https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3'
     );
@@ -37,7 +36,7 @@ context('Openwhyd', () => {
 
     // should lead to a track page when clicking on the search result
     cy.get('#searchResults li a').first().click();
-    cy.url().should('include', track.encodedId);
+    cy.url().should('include', track.eId);
 
     // should display the name of the track
     cy.get(`a.btnRepost[href*="${track.name}"]`).should('exist');
