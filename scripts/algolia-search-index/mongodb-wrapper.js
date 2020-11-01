@@ -4,7 +4,6 @@ const Progress = require('./Progress');
 var MONGO_OPTIONS = {
   native_parser: true,
   useNewUrlParser: true,
-  useUnifiedTopology: true,
   //strict: false,
   //safe: false,
   w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
@@ -16,7 +15,12 @@ const makeConnUrl = (params) => {
   var authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
   var authPassword = params.mongoDbAuthPassword || process.env.MONGODB_PASS;
   var authStr =
-    authUser && authPassword ? authUser + ':' + authPassword + '@' : '';
+    authUser && authPassword
+      ? encodeURIComponent(authUser) +
+        ':' +
+        encodeURIComponent(authPassword) +
+        '@'
+      : '';
   return 'mongodb://' + authStr + host + ':' + port;
 };
 
@@ -82,13 +86,13 @@ const forEachObject = (coll, handler, options = {}) =>
         } else if (obj) {
           progress.incr();
           handler(obj);
-          setTimeout(() => cursor.nextObject(onObject), 0);
+          setTimeout(() => cursor.next(onObject), 0);
         } else {
           progress.done();
           resolve();
         }
       };
-      cursor.nextObject(onObject);
+      cursor.next(onObject);
     });
   });
 

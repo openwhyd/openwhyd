@@ -66,20 +66,21 @@ async function initDb() {
   console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
 }
 
-const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
+const countEmptyNotifs = (cb) =>
+  db['notif'].countDocuments({ uId: { $size: 0 } }, cb);
 
 const fetchNotifs = (uId) =>
   new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));
 
 async function clearAllNotifs() {
-  await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
+  await notifModel.clearAllNotifs();
   const notifs = await fetchNotifs(ADMIN_USER.id);
   assert(notifs.length === 0, 'failed to clear all notifs');
 }
 
 function makeNotifChecker(expectedCount) {
   return async function checkNotifs(cb) {
-    const notifs = await fetchNotifs(ADMIN_USER.id);
+    const notifs = await notifModel.fetchAllNotifs();
     cb(notifs.length !== expectedCount);
   };
 }
@@ -134,7 +135,7 @@ describe('notifications', function () {
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid
-    await db['notif'].remove({ uId: { $size: 0 } }, { multi: true });
+    await db['notif'].deleteMany({ uId: { $size: 0 } }, { multi: true });
     const count = await countEmptyNotifs();
     assert(count === 0, 'failed to remove notifs with empty uid');
   });

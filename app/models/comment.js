@@ -181,7 +181,7 @@ exports.delete = function (p, cb) {
             cb && cb({ error: 'you are not allowed to delete this comment' });
             return;
           }
-          getCol().remove(q, combineResult(cb));
+          getCol().deleteOne(q, combineResult(cb));
         }
       );
     })

@@ -58,7 +58,8 @@ function buildContext(db, nextCommand, callback) {
         !err && {
           dropIndex: wrapCollectionMethod(col, 'dropIndex', colName),
           ensureIndex: wrapCollectionMethod(col, 'ensureIndex', colName),
-          update: wrapCollectionMethod(col, 'update', colName),
+          updateOne: wrapCollectionMethod(col, 'updateOne', colName),
+          updateMany: wrapCollectionMethod(col, 'updateMany', colName),
         }
       );
     });

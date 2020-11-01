@@ -10,7 +10,7 @@ exports.controller = function (request, reqParams, response) {
   var user = request.checkLogin(response);
   if (!user) return;
 
-  // reset prefs: db.user.update({_id:ObjectId("4d94501d1f78ac091dbc9b4d")},{$unset:{"pref":1}});
+  // reset prefs: db.user.updateOne({_id:ObjectId("4d94501d1f78ac091dbc9b4d")},{$unset:{"pref":1}});
 
   var gilles = {
     id: '4d7fc1969aa9db130e000003',

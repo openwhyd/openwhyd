@@ -13,7 +13,7 @@ var ACTIONS = {
   },
   listBySource: function (p, cb) {
     var list = [];
-    mongodb.collections['track'].count(function (err, total) {
+    mongodb.collections['track'].countDocuments(function (err, total) {
       function whenDone() {
         cb(
           JSON.stringify(
@@ -48,7 +48,7 @@ var ACTIONS = {
     function whenDone() {
       console.log('countPerConfidence', countPerConfidence);
     }
-    mongodb.collections['track'].count(function (err, count) {
+    mongodb.collections['track'].countDocuments(function (err, count) {
       var i = 0;
       cb({ total: count });
       mongodb.forEach2(

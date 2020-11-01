@@ -69,7 +69,7 @@ function refreshIndex(type, cb, preprocess) {
   console.log('index: iterating on collection:', indexCol[type]);
   mongodb.collections[indexCol[type]].find({}, options, function (err, cursor) {
     (function next() {
-      cursor.nextObject(function (err, u) {
+      cursor.next(function (err, u) {
         if (err)
           console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err);
         if (u != null) {
@@ -140,7 +140,7 @@ function countDbUsersAndPlaylists(cb) {
     { fields: { pl: 1 } },
     function (err, cursor) {
       (function nextUser() {
-        cursor.nextObject(function (err, user) {
+        cursor.next(function (err, user) {
           if (!user) cb(result);
           else {
             ++result.dbUsers;
@@ -155,7 +155,10 @@ function countDbUsersAndPlaylists(cb) {
 
 function countItems(cb) {
   countDbUsersAndPlaylists(function (p) {
-    mongodb.collections[indexCol['post']].count(function (err, dbPosts) {
+    mongodb.collections[indexCol['post']].countDocuments(function (
+      err,
+      dbPosts
+    ) {
       p.dbPosts = dbPosts;
       searchModel.countDocs('user', function (idxUsers) {
         p.idxUsers = idxUsers;

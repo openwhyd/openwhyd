@@ -19,7 +19,7 @@ exports.controller = function (request, reqParams, response) {
     const { controller } = require(safeCtrPath);
     controller(request, reqParams, response);
   } catch (err) {
-    console.error('[subdir] no controller found at ' + request.url);
+    console.error('[subdir] error while contacting ' + request.url, err);
     response.notFound();
   }
 };

@@ -58,7 +58,7 @@
     "hogan.js": "3.0.2",
     "htmlparser": "*",
     "iconv": ">=3.0.0",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.1.13",
     "playemjs": "1.0.0",
     "q-set": "^2.0.8",
     "request": "2.88.2"
