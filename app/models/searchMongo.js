@@ -91,7 +91,8 @@ exports.topicNameSearch = function (
                     item.name /* + ", " + item.t*/
                 );
                 exactResults.push(item);
-                if (--remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
+                --remaining;
+                if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
               } else cursor.queryRun = false;
             };
 
@@ -119,7 +120,8 @@ exports.topicNameSearch = function (
                     item.name /* + ", " + item.t*/
                 );
                 quickResults.push(item);
-                if (--remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
+                --remaining;
+                if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
               } else cursor.queryRun = false;
             };
 

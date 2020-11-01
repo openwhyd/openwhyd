@@ -231,7 +231,7 @@ exports.clearUserNotifs = function (uId, cb) {
       }
       cursor.forEach(
         (err, item) => {
-          if (item && item.uId.length == 1) idsToRemove.push(item._id);
+          if (item && item.uId.length === 1) idsToRemove.push(item._id);
         },
         () => whenDone()
       );
