@@ -61,7 +61,7 @@
     "mongodb": "^2.2.33",
     "playemjs": "1.0.0",
     "q-set": "^2.0.8",
-    "request": "^2.88.2"
+    "request": "2.88.2"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
