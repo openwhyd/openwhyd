@@ -24,15 +24,23 @@ context('Openwhyd', () => {
     cy.visit('/');
 
     // should recognize a track when pasting a Youtube URL in the search box
-    cy.get('#q').type('https://www.youtube.com/watch?v=aZT8VlTV1YY');
-    cy.get('#searchResults').contains('Demo');
+    const track = ((url) => ({
+      url,
+      name: url.split('/').pop(),
+      eId: '/fi/' + url,
+      encodedId: '/fi/' + encodeURIComponent(url),
+    }))(
+      'https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3'
+    );
+    cy.get('#q').type(track.url);
+    cy.get('#searchResults').contains(track.name);
 
     // should lead to a track page when clicking on the Youtube search result
     cy.get('#searchResults li a').first().click();
-    cy.url().should('include', '/yt/aZT8VlTV1YY');
+    cy.url().should('include', track.encodedId);
 
     // should display the name of the track
-    cy.get('a.btnRepost[href*="Openwhyd Demo (formerly"]').should('exist');
+    cy.get(`a.btnRepost[href*="${track.name}"]`).should('exist');
 
     // should open a dialog after clicking on the "Add to" button
     cy.contains('Add to').click(); //$('a.btnRepost').click();
@@ -46,10 +54,10 @@ context('Openwhyd', () => {
     // should show the post on the user's profile after clicking the link
     cy.get('a').contains('your tracks').click();
     cy.url().should('include', '/u/');
-    cy.get('.post a[data-eid="/yt/aZT8VlTV1YY"]').should('be.visible');
+    cy.get(`.post a[data-eid*="${track.eId}"]`).should('be.visible');
 
     // should open the playbar after the user clicks on the post
-    cy.get('.post a[data-eid="/yt/aZT8VlTV1YY"]').click();
+    cy.get(`.post a[data-eid*="${track.eId}"]`).click();
     cy.get('#btnPlay').should('be.visible');
 
     // should play the track
