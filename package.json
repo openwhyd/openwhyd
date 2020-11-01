@@ -44,8 +44,6 @@
     "test": "./test"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "@typescript-eslint/parser": "^4.0.1",
     "algoliasearch": "^3.35.1",
     "apn": "1.5.2",
     "argon2": "^0.27.0",
@@ -61,11 +59,12 @@
     "htmlparser": "*",
     "iconv": ">=3.0.0",
     "mongodb": "^2.2.33",
-    "object-sizeof": "^1.6.1",
     "playemjs": "1.0.0",
     "q-set": "^2.0.8"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "all-contributors-cli": "6.17.2",
