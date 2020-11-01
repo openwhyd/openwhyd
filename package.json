@@ -44,8 +44,6 @@
     "test": "./test"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "@typescript-eslint/parser": "^4.0.1",
     "algoliasearch": "^3.35.1",
     "apn": "1.5.2",
     "argon2": "^0.27.0",
@@ -59,9 +57,8 @@
     "formidable": "^1.2.2",
     "hogan.js": "3.0.2",
     "htmlparser": "*",
-    "mongodb": "^2.2.33",
     "iconv": ">=3.0.0",
-    "object-sizeof": "^1.6.1",
+    "mongodb": "^2.2.33",
     "playemjs": "1.0.0",
     "q-set": "^2.0.8",
     "request": "2.88.2"
@@ -69,6 +66,8 @@
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
     "all-contributors-cli": "6.17.2",
     "cypress": "^5.1.0",
     "cypress-file-upload": "^4.1.1",
