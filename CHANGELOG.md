@@ -1,3 +1,10 @@
+## [1.36.1](https://github.com/openwhyd/openwhyd/compare/v1.36.0...v1.36.1) (2020-11-01)
+
+
+### Bug Fixes
+
+* **importer:** Fix navigation and login after importing user data locally ([#373](https://github.com/openwhyd/openwhyd/issues/373)) ([6a1b503](https://github.com/openwhyd/openwhyd/commit/6a1b5030e4c03e3587d18dac27591e1c126369a2))
+
 # [1.36.0](https://github.com/openwhyd/openwhyd/compare/v1.35.3...v1.36.0) (2020-11-01)
 
 
