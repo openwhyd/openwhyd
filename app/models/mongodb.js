@@ -230,14 +230,10 @@ exports.init = function (readyCallback) {
   var options = {
     native_parser: true,
     useNewUrlParser: true,
-    useUnifiedTopology: true,
     //strict: false,
     //safe: false,
     w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
   };
-
-  //var dbserver = new mongodb.Server(host, port, {auto_reconnect:true});
-  //var db = new mongodb.Db(dbName, dbserver, options);
 
   mongodb.MongoClient.connect(url, options, function (err, client) {
     if (err) throw err;
