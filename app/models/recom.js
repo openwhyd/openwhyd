@@ -15,14 +15,6 @@ var postModel = {
   },
 };
 
-var TRACK_MEMORY_USAGE = false;
-
-const nothingToDo = () => {
-  // do nothing
-};
-
-var sizeof = TRACK_MEMORY_USAGE ? require('object-sizeof') : nothingToDo;
-
 function countOccurences(array) {
   var count = {};
   for (let j in array) count[array[j]] = (count[array[j]] || 0) + 1;
@@ -73,7 +65,6 @@ exports.matchingEngine = (function () {
       ready = true;
       // TODO: delete artists that have only 1 reference (useless for matches)
       for (let fct; (fct = whenReady.pop()); fct());
-      if (TRACK_MEMORY_USAGE) printMemUsage();
     }
     if (config.recomPopulation) {
       console.log(
@@ -104,32 +95,8 @@ exports.matchingEngine = (function () {
     else populateIndex(cb);
   }
 
-  var printMemUsage = !TRACK_MEMORY_USAGE
-    ? nothingToDo
-    : function () {
-        console.log('RECOM MEMORY USAGE...');
-        console.log('RECOM MEMORY USAGE, artists:', sizeof(artists));
-        console.log(
-          'RECOM MEMORY USAGE, usersByArtist:',
-          sizeof(usersByArtist)
-        );
-        console.log(
-          'RECOM MEMORY USAGE, artistsByUser:',
-          sizeof(artistsByUser)
-        );
-      };
-
-  if (TRACK_MEMORY_USAGE) printMemUsage();
-
   return {
     init: populateIndex,
-    getMemoryUsage: function () {
-      return {
-        artists: sizeof(artists),
-        usersByArtist: sizeof(usersByArtist),
-        artistsByUser: sizeof(artistsByUser),
-      };
-    },
     getArtistsByUser: function (uid) {
       return artistsByUser['' + uid];
     },
