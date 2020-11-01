@@ -15,7 +15,12 @@ const makeConnUrl = (params) => {
   var authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
   var authPassword = params.mongoDbAuthPassword || process.env.MONGODB_PASS;
   var authStr =
-    authUser && authPassword ? authUser + ':' + authPassword + '@' : '';
+    authUser && authPassword
+      ? encodeURIComponent(authUser) +
+        ':' +
+        encodeURIComponent(authPassword) +
+        '@'
+      : '';
   return 'mongodb://' + authStr + host + ':' + port;
 };
 

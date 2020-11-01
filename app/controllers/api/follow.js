@@ -26,7 +26,7 @@ var follow = function (reqParams, dbHandler) {
       notifModel.subscribedToUser(reqParams.uId, reqParams.tId /*.substr(3)*/);
       break;
     case 'delete':
-      followModel.deleteOne(reqParams.uId, reqParams.tId, dbHandler);
+      followModel.remove(reqParams.uId, reqParams.tId, dbHandler);
       break;
     default:
       dbHandler('bad request');

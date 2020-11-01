@@ -225,7 +225,12 @@ exports.init = function (readyCallback) {
   var authPassword = process.appParams.mongoDbAuthPassword;
 
   var authStr = '';
-  if (authUser && authPassword) authStr = authUser + ':' + authPassword + '@';
+  if (authUser && authPassword)
+    authStr =
+      encodeURIComponent(authUser) +
+      ':' +
+      encodeURIComponent(authPassword) +
+      '@';
 
   var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
