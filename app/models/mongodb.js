@@ -92,7 +92,9 @@ exports.cacheUser = function (user) {
 exports.cacheUsers = function (callback) {
   console.log('Caching users ...');
   userModel = userModel || require('./user.js');
-  userModel.fetchMulti({}, { fields: USER_CACHE_FIELDS }, function (results) {
+  userModel.fetchMulti({}, { projection: USER_CACHE_FIELDS }, function (
+    results
+  ) {
     for (let i in results) exports.cacheUser(results[i]);
     console.log('Caching users: done!');
     if (callback) callback();

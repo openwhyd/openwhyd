@@ -355,7 +355,7 @@ exports.post = function (post) {
       uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
     },
     limit: 100,
-    fields: { uId: true },
+    projection: { uId: true },
   };
   mongodb.forEach2('post', query, function (sameTrack, next) {
     var author = sameTrack && mongodb.usernames[sameTrack.uId];
