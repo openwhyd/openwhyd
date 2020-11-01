@@ -1,3 +1,10 @@
+## [1.36.4](https://github.com/openwhyd/openwhyd/compare/v1.36.3...v1.36.4) (2020-11-01)
+
+
+### Bug Fixes
+
+* **deps:** Update kramdown dependency ([#376](https://github.com/openwhyd/openwhyd/issues/376)) ([7e742eb](https://github.com/openwhyd/openwhyd/commit/7e742ebdf75dd87f3a154d2c3db02b53e1b638d4))
+
 ## [1.36.3](https://github.com/openwhyd/openwhyd/compare/v1.36.2...v1.36.3) (2020-11-01)
 
 
