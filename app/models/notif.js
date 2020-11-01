@@ -182,21 +182,26 @@ exports.clearUserNotifsForPost = function (uId, pId) {
   } catch (e) {
     console.error('error in clearUserNotifsForPost:', e);
   }
-  db['notif'].updateMany(
+  db['notif'].updateOne(
     { _id: { $in: idList } },
     { $pull: { uId: uId } },
     { safe: true /*w:0*/ },
-    function () {
+    function (err) {
+      if (err) console.log(err);
       // remove documents with empty uid
       db['notif'].deleteMany(
         { _id: { $in: idList }, uId: { $size: 0 } },
-        { multi: true, w: 0 }
+        { multi: true /*w: 0*/ },
+        () => invalidateUserNotifsCache(uId)
       );
-      //console.log("notif update callback objects ", objects);
-      invalidateUserNotifsCache(uId);
     }
   );
 };
+
+exports.clearAllNotifs = () =>
+  db['notif'].deleteMany().then(() => {
+    exports.userNotifsCache = {}; // => force fetch on next request
+  });
 
 exports.clearUserNotifs = function (uId, cb) {
   if (!uId) return;
@@ -233,6 +238,8 @@ exports.clearUserNotifs = function (uId, cb) {
     }
   );
 };
+
+exports.fetchAllNotifs = () => db['notif'].find().toArray();
 
 exports.fetchUserNotifs = function (uId, handler) {
   db['notif'].find({ uId: uId }, { sort: ['t', 'desc'] }, function (

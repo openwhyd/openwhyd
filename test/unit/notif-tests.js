@@ -73,14 +73,14 @@ const fetchNotifs = (uId) =>
   new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));
 
 async function clearAllNotifs() {
-  await util.promisify(notifModel.clearUserNotifs)(ADMIN_USER.id);
+  await notifModel.clearAllNotifs();
   const notifs = await fetchNotifs(ADMIN_USER.id);
   assert(notifs.length === 0, 'failed to clear all notifs');
 }
 
 function makeNotifChecker(expectedCount) {
   return async function checkNotifs(cb) {
-    const notifs = await fetchNotifs(ADMIN_USER.id);
+    const notifs = await notifModel.fetchAllNotifs();
     cb(notifs.length !== expectedCount);
   };
 }
