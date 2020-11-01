@@ -264,12 +264,14 @@ exports.fetchMulti = function (q, options, handler) {
 exports.fetchByUid = exports.model = function (uid, handler) {
   if (typeof uid == 'string') uid = ObjectId(uid);
   fetch({ _id: uid }, function (err, user) {
+    if (err) console.error(err);
     handler(user);
   });
 };
 
 exports.fetchByHandle = function (handle, handler) {
   fetch({ handle: handle }, function (err, user) {
+    if (err) console.error(err);
     handler(user);
   });
 };
@@ -283,13 +285,16 @@ exports.fetchByFbUid = function (fbUid, handler) {
 
 exports.fetchByEmail = function (email, handler) {
   fetch({ email: emailModel.normalize(email) }, function (err, user) {
+    if (err) console.error(err);
     handler(user);
   });
 };
 
 exports.fetchInvitedUsers = function (uid, handler) {
   mongodb.collections['user'].find({ iBy: '' + uid }, function (err, cursor) {
+    if (err) console.error(err);
     cursor.toArray(function (err, array) {
+      if (err) console.error(err);
       processUsers(array);
       handler(array);
     });
@@ -345,6 +350,7 @@ exports.save = function (pUser, handler) {
       //console.log("updated user => item ", item);
       if (err) console.log(err);
       fetch(criteria, function (err, user) {
+        if (err) console.error(err);
         //console.log("user stored as ", user);
         if (user) searchModel.indexTyped('user', user);
         mongodb.cacheUser(user);
@@ -455,6 +461,7 @@ function insertInvite(obj, handler) {
     function (err) {
       if (err) console.log(err);
       mongodb.collections['invite'].findOne(criteria, function (err, user) {
+        if (err) console.error(err);
         console.log('user invite stored as ', user);
         if (user && obj.email)
           mongodb.collections['email'].deleteOne(
@@ -954,20 +961,24 @@ exports.fetchPlaylists = function (user, params, cb) {
   var uId = (user || {}).id;
   mongodb.collections['post'].aggregate(
     [{ $match: { uId: uId } }, { $group: { _id: '$pl.id', c: { $sum: 1 } } }],
-    function (err, counts) {
-      var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
-      counts.map(function (counter) {
-        // necessary to make a sum, because playlist ids can be both stored as int and string
-        plCount['' + counter._id] =
-          (plCount['' + counter._id] || 0) + counter.c;
+    function (err, cursor) {
+      if (err) console.error(err);
+      cursor.toArray(function (err, counts) {
+        if (err) console.error(err);
+        var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
+        counts.map(function (counter) {
+          // necessary to make a sum, because playlist ids can be both stored as int and string
+          plCount['' + counter._id] =
+            (plCount['' + counter._id] || 0) + counter.c;
+        });
+        cb(
+          pl.reverse().map(function (p) {
+            p.url = '/u/' + uId + '/playlist/' + p.id;
+            p.nbTracks = plCount['' + p.id] || 0;
+            return p;
+          })
+        );
       });
-      cb(
-        pl.reverse().map(function (p) {
-          p.url = '/u/' + uId + '/playlist/' + p.id;
-          p.nbTracks = plCount['' + p.id] || 0;
-          return p;
-        })
-      );
     }
   );
   /*
