@@ -174,8 +174,14 @@ var processData = {
             { uId: uid },
             { limit: 9999999, fields: { _id: 0, lov: 1, nbP: 1 } },
             function (err, cursor) {
-              cursor.forEach(function (err, f) {
-                if (!f) {
+              cursor.forEach(
+                (err, f) => {
+                  if (f) {
+                    if (f.lov) userList[i].nbLikes += f.lov.length;
+                    if (f.nbP) userList[i].nbPlays += f.nbP;
+                  }
+                },
+                () => {
                   mongodb.collections['post'].countDocuments(
                     { 'repost.uId': uid },
                     function (err, nbAdds) {
@@ -183,11 +189,8 @@ var processData = {
                       fetchNextUserStats(cb, i + 1);
                     }
                   );
-                } else {
-                  if (f.lov) userList[i].nbLikes += f.lov.length;
-                  if (f.nbP) userList[i].nbPlays += f.nbP;
                 }
-              });
+              );
             }
           );
         });

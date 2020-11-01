@@ -51,18 +51,17 @@ exports.topicNameSearch = function (
     var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
     usercol.find(query, { limit: limitUsers }, function (err, cursor) {
-      cursor.forEach(function (err, item) {
-        if (item != null) {
-          userResults.push({ _id: '/u/' + item.fbId, name: item.name });
-          console.log(
-            'user search result: ' +
-              item.fbId +
-              ' : ' +
-              item.name +
-              ', ' +
-              item.img
-          );
-        }
+      cursor.forEach((err, item) => {
+        if (!item) return;
+        userResults.push({ _id: '/u/' + item.fbId, name: item.name });
+        console.log(
+          'user search result: ' +
+            item.fbId +
+            ' : ' +
+            item.name +
+            ', ' +
+            item.img
+        );
       });
 
       mongodb('topic', function (err, collection) {

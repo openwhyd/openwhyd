@@ -224,10 +224,12 @@ exports.clearUserNotifs = function (uId, cb) {
           }
         );
       }
-      cursor.forEach(function (err, item) {
-        if (!item) whenDone();
-        else if (item.uId.length == 1) idsToRemove.push(item._id);
-      });
+      cursor.forEach(
+        (err, item) => {
+          if (item && item.uId.length == 1) idsToRemove.push(item._id);
+        },
+        () => whenDone()
+      );
     }
   );
 };

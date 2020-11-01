@@ -41,11 +41,9 @@ function gatherTrackAnalytics(cb) {
       {},
       { batchSize: 1000, fields: { _id: 0, eId: 1, lov: 1, name: 1 } },
       function (err, cursor) {
-        cursor.forEach(function (err, track) {
+        cursor.forEach((err, track) => {
           ++nb;
-          if (!track)
-            // we're done
-            cb(eIds, nb);
+          if (!track) return;
           else if (!track.eId) console.error('warning: null track eid');
           else {
             eIds[track.eId] = eIds[track.eId] || {
@@ -56,7 +54,12 @@ function gatherTrackAnalytics(cb) {
             eIds[track.eId].posts++;
             eIds[track.eId].likes += (track.lov || []).length;
           }
-        });
+        }),
+          () => {
+            ++nb;
+            // we're done
+            cb(eIds, nb);
+          };
       }
     );
   }

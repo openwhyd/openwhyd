@@ -110,10 +110,12 @@ exports.forEach = function (colName, params, handler, cb, cbParam) {
     delete params.q;
   }
   exports.collections[colName].find(q, params, function (err, cursor) {
-    cursor.forEach(function (err, item) {
-      if (item) handler(item);
-      else if (cb) cb(cbParam);
-    });
+    cursor.forEach(
+      (err, item) => {
+        if (item) handler(item);
+      },
+      cb ? () => cb(cbParam) : undefined
+    );
   });
 };
 

@@ -38,12 +38,13 @@ exports.count = function (q, o, cb) {
 
 exports.forEachPost = function (q, p, handler) {
   mongodb.collections['post'].find(q, p, function (err, cursor) {
-    cursor.forEach(function (err, track) {
-      if (err)
-        // we're done
-        console.log('post.forEachPost error:', err);
-      handler(track);
-    });
+    cursor.forEach(
+      (err, track) => {
+        if (err) console.log('post.forEachPost error:', err);
+        if (track) handler(track);
+      },
+      () => handler() // we're done
+    );
   });
 };
 
