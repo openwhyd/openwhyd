@@ -1,3 +1,10 @@
+## [1.36.3](https://github.com/openwhyd/openwhyd/compare/v1.36.2...v1.36.3) (2020-11-01)
+
+
+### Bug Fixes
+
+* **deps:** Migrate from MongoDB 2.2.36 to 3.1.13 ([#356](https://github.com/openwhyd/openwhyd/issues/356)) ([75fa55c](https://github.com/openwhyd/openwhyd/commit/75fa55ce6e287eed6644f2e29e47e438d1f8e33e))
+
 ## [1.36.2](https://github.com/openwhyd/openwhyd/compare/v1.36.1...v1.36.2) (2020-11-01)
 
 
