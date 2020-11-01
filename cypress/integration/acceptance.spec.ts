@@ -23,7 +23,7 @@ context('Openwhyd', () => {
     cy.loginAsAdmin();
     cy.visit('/');
 
-    // should recognize a track when pasting a Youtube URL in the search box
+    // should recognize a track when pasting the URL of a MP3 file in the search box
     const track = ((url) => ({
       url,
       name: url.split('/').pop(),
@@ -35,7 +35,7 @@ context('Openwhyd', () => {
     cy.get('#q').type(track.url);
     cy.get('#searchResults').contains(track.name);
 
-    // should lead to a track page when clicking on the Youtube search result
+    // should lead to a track page when clicking on the search result
     cy.get('#searchResults li a').first().click();
     cy.url().should('include', track.encodedId);
 
