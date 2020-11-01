@@ -731,9 +731,9 @@ exports.setPref = function (uId, pref, handler) {
       cleanPref['pref.nextEN'] = msToDigestTimestamp(
         now + daysToMillisecs(emailFreq)
       );
-      exports.updateOne(uId, { $set: cleanPref }, handler);
+      exports.update(uId, { $set: cleanPref }, handler);
     } else
-      exports.updateOne(
+      exports.update(
         uId,
         { $set: cleanPref, $unset: { 'pref.prevEN': 1, 'pref.nextEN': 1 } },
         handler
