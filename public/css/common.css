@@ -1154,6 +1154,57 @@ ul#tabSelector {
   bottom: 12px;
 }
 
+/* sort filter */
+.sort-playlists {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 0 0 12px;
+  position: relative;
+}
+
+.sort-icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.sort-title {
+  font-size: 12px;
+  margin: 0 0 0 4px;
+}
+
+.sort-menu {
+  display: none;
+  background: white;
+  position: absolute;
+  top: 46px;
+  padding: 5px;
+  margin: -3px 0 0 -40px;
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(24, 27, 31, 0.26);
+}
+
+.sort-playlists:hover .sort-menu {
+  display: inline-block;
+  margin-left: -9px;
+  z-index: 11;
+  left: 0;
+}
+
+.sort-menu-item {
+  display: block;
+  text-decoration: none;
+  padding: 13px;
+  margin: 2px;
+  color: #181b1f;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.sort-menu-item:hover {
+  color: #fff;
+  background: #3177af;
+}
+
 body.userTracks #tabSelector > a.filter {
   display: block;
   width: auto;
