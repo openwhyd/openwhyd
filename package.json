@@ -59,12 +59,11 @@
     "formidable": "^1.2.2",
     "hogan.js": "3.0.2",
     "htmlparser": "*",
-    "mongodb": "^2.2.33",
     "iconv": ">=3.0.0",
+    "mongodb": "^2.2.33",
     "object-sizeof": "^1.6.1",
     "playemjs": "1.0.0",
-    "q-set": "^2.0.8",
-    "request": "2.88.2"
+    "q-set": "^2.0.8"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
