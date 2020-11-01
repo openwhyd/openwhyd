@@ -87,8 +87,8 @@ var fileGenerators = {
   },
 
   nbTracksInPlaylists: function (p, cb) {
-    mongodb.collections['post'].count({}, function (err, nbTracks) {
-      mongodb.collections['post'].count(
+    mongodb.collections['post'].countDocuments({}, function (err, nbTracks) {
+      mongodb.collections['post'].countDocuments(
         { 'pl.id': { $exists: true } },
         function (err, nbTracksInPlaylists) {
           cb(

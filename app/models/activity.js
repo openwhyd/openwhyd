@@ -38,7 +38,7 @@ exports.add = function (d, callback) {
 };
 
 exports.remove = function (q, callback) {
-  getCol().remove(q, function (err, result) {
+  getCol().deleteOne(q, function (err, result) {
     callback && callback(result || err);
   });
 };
@@ -47,7 +47,7 @@ exports.remove = function (q, callback) {
 
 /*
 exports.countUserLikes = function(uid, callback) {
-	getCol().count({"like.pId":{$exists: true}, "id":""+uid}, function(err, count) {
+	getCol().countDocuments({"like.pId":{$exists: true}, "id":""+uid}, function(err, count) {
 		callback(count);
 	});
 }
@@ -124,5 +124,5 @@ exports.addLikeByPid = function (pId, liker, callback) {
 };
 
 exports.removeLike = function (pId, likerUid, callback) {
-  exports.remove({ 'like.pId': pId, id: '' + likerUid }, callback);
+  exports.deleteOne({ 'like.pId': pId, id: '' + likerUid }, callback);
 };

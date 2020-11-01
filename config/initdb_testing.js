@@ -5,7 +5,7 @@
 
 print('upserting openwhyd testing users ...');
 
-db.user.update(
+db.user.updateOne(
   { _id: ObjectId('000000000000000000000001') },
   {
     $set: {
@@ -24,7 +24,7 @@ db.user.update(
   { upsert: true }
 );
 
-db.user.update(
+db.user.updateOne(
   { _id: ObjectId('000000000000000000000002') },
   {
     $set: {

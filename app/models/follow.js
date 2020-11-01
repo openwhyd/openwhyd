@@ -66,7 +66,10 @@ exports.add = function (followObj, dbHandler) {
   };
   var collection = mongodb.collections[COLNAME];
   //collection.save(obj, dbHandler);
-  collection.update(req, followObj, { upsert: true }, function (err, result) {
+  collection.updateOne(req, followObj, { upsert: true }, function (
+    err,
+    result
+  ) {
     // to avoid duplicates
     if (err) dbHandler(err, result);
     else collection.findOne(req, dbHandler);
@@ -74,7 +77,7 @@ exports.add = function (followObj, dbHandler) {
 };
 
 exports.remove = function (uId, tId, dbHandler) {
-  mongodb.collections[COLNAME].remove({ uId: uId, tId: tId }, dbHandler);
+  mongodb.collections[COLNAME].deleteOne({ uId: uId, tId: tId }, dbHandler);
 };
 
 exports.fetch = function (q, options, callback) {
@@ -82,7 +85,7 @@ exports.fetch = function (q, options, callback) {
 };
 
 exports.remove = function (uId, tId, dbHandler) {
-  mongodb.collections[COLNAME].remove({ uId: uId, tId: tId }, dbHandler);
+  mongodb.collections[COLNAME].deleteOne({ uId: uId, tId: tId }, dbHandler);
 };
 
 // wraps a cb(result) callback into a cb(err,res) callback
@@ -93,11 +96,17 @@ function wrapCallback(cb) {
 }
 
 exports.countSubscriptions = function (uId, cb) {
-  mongodb.collections[COLNAME].count({ uId: '' + uId }, wrapCallback(cb));
+  mongodb.collections[COLNAME].countDocuments(
+    { uId: '' + uId },
+    wrapCallback(cb)
+  );
 };
 
 exports.countSubscribers = function (uId, cb) {
-  mongodb.collections[COLNAME].count({ tId: '' + uId }, wrapCallback(cb));
+  mongodb.collections[COLNAME].countDocuments(
+    { tId: '' + uId },
+    wrapCallback(cb)
+  );
 };
 
 exports.fetchUserSubscriptions = function (uid, callback) {
