@@ -1,3 +1,15 @@
+# [1.36.0](https://github.com/openwhyd/openwhyd/compare/v1.35.3...v1.36.0) (2020-11-01)
+
+
+### Bug Fixes
+
+* **tests:** Workaround "quota exceeded" errors from YouTube API ([#374](https://github.com/openwhyd/openwhyd/issues/374)) ([53807af](https://github.com/openwhyd/openwhyd/commit/53807af0e0c9733e94cebf9dff8df8ee9be8c4cb))
+
+
+### Features
+
+* Add alphabetical order to playlists page ([#372](https://github.com/openwhyd/openwhyd/issues/372)) ([9ce65ac](https://github.com/openwhyd/openwhyd/commit/9ce65ac8fd95f57f0732e191979ea104ab5b6a62)), closes [#371](https://github.com/openwhyd/openwhyd/issues/371)
+
 ## [1.35.3](https://github.com/openwhyd/openwhyd/compare/v1.35.2...v1.35.3) (2020-09-07)
 
 
