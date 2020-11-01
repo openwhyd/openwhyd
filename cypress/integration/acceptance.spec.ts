@@ -179,12 +179,13 @@ context('Openwhyd', () => {
   });
 
   it('should allow users to search external tracks', function () {
-    // should find a youtube track with id that starts with underscore
     cy.visit('/');
-    cy.get('#q').click().type('http://www.youtube.com/watch?v=_BU841qpQsI');
-    const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
+    cy.get('#q')
+      .click()
+      .type('https://soundcloud.com/harissaquartet/no-service');
+    const searchResult = `a[onclick="window.goToPage('/sc/harissaquartet/no-service');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')
-      .should('have.text', 'Los Van Van - Llegada'); // an empty string would mean that no metadata was fetched, caused to https://github.com/openwhyd/openwhyd/issues/102
+      .should('have.text', 'Harissa - No Service');
   });
 });
