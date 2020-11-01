@@ -135,7 +135,7 @@ describe('notifications', function () {
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid
-    await db['notif'].remove({ uId: { $size: 0 } }, { multi: true });
+    await db['notif'].deleteMany({ uId: { $size: 0 } }, { multi: true });
     const count = await countEmptyNotifs();
     assert(count === 0, 'failed to remove notifs with empty uid');
   });

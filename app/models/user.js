@@ -377,7 +377,7 @@ exports.delete = function (criteria, handler) {
           }
         })();
       // delete user
-      mongodb.collections['user'].remove(criteria, function (err, item) {
+      mongodb.collections['user'].deleteOne(criteria, function (err, item) {
         if (err) console.error(err);
         else console.log('removed users', criteria);
         searchModel.deleteDoc('user', '' + criteria._id);
@@ -400,7 +400,10 @@ exports.fetchEmail = function (email, callback) {
 };
 
 exports.deleteEmails = function (emailArray, callback) {
-  mongodb.collections['email'].remove({ _id: { $in: emailArray } }, callback);
+  mongodb.collections['email'].deleteMany(
+    { _id: { $in: emailArray } },
+    callback
+  );
 };
 
 exports.storeEmail = function (email) {
@@ -454,9 +457,12 @@ function insertInvite(obj, handler) {
       mongodb.collections['invite'].findOne(criteria, function (err, user) {
         console.log('user invite stored as ', user);
         if (user && obj.email)
-          mongodb.collections['email'].remove({ _id: obj.email }, function () {
-            if (handler) handler(user);
-          });
+          mongodb.collections['email'].deleteOne(
+            { _id: obj.email },
+            function () {
+              if (handler) handler(user);
+            }
+          );
         else if (handler) handler(user);
       });
     }
@@ -478,19 +484,20 @@ exports.inviteFbUserBy = function (fbId, senderId, handler) {
 
 exports.removeInvite = function (inviteCode, handler) {
   var id = typeof inviteCode == 'string' ? ObjectId(inviteCode) : inviteCode;
-  mongodb.collections['invite'].remove({ _id: id }, function (err) {
+  mongodb.collections['invite'].deleteOne({ _id: id }, function (err) {
     console.log(err || 'removed invite ' + id);
     if (handler) handler({ _id: id });
   });
 };
 
 exports.removeInviteByEmail = function (emailList, handler) {
-  mongodb.collections['invite'].remove({ email: { $in: emailList } }, function (
-    err
-  ) {
-    console.log(err || 'removed invites ' + emailList);
-    if (handler) handler({ emailList: emailList });
-  });
+  mongodb.collections['invite'].deleteMany(
+    { email: { $in: emailList } },
+    function (err) {
+      console.log(err || 'removed invites ' + emailList);
+      if (handler) handler({ emailList: emailList });
+    }
+  );
 };
 
 // playlist management

@@ -38,7 +38,7 @@ exports.add = function (d, callback) {
 };
 
 exports.remove = function (q, callback) {
-  getCol().remove(q, function (err, result) {
+  getCol().deleteOne(q, function (err, result) {
     callback && callback(result || err);
   });
 };
@@ -124,5 +124,5 @@ exports.addLikeByPid = function (pId, liker, callback) {
 };
 
 exports.removeLike = function (pId, likerUid, callback) {
-  exports.remove({ 'like.pId': pId, id: '' + likerUid }, callback);
+  exports.deleteOne({ 'like.pId': pId, id: '' + likerUid }, callback);
 };

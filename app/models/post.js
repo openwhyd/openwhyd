@@ -389,7 +389,7 @@ exports.deletePost = function (pId, handler, uId) {
   if (uId) q.uId = uId;
   exports.fetchPostById(pId, function (postObj) {
     if (postObj)
-      collection.remove(q, function (error, result) {
+      collection.deleteOne(q, function (error, result) {
         if (error) console.log('post.deletePost() error: ', error);
         searchModel.deleteDoc('post', pId);
         handler(result);

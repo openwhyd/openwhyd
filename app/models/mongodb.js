@@ -178,7 +178,7 @@ exports.clearCollections = async function () {
     throw new Error('allowed on test database only');
   } else {
     for (const name in exports.collections) {
-      await exports.collections[name].remove({}, { multi: true });
+      await exports.collections[name].deleteMany({}, { multi: true });
     }
   }
 };

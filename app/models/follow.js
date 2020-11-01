@@ -77,7 +77,7 @@ exports.add = function (followObj, dbHandler) {
 };
 
 exports.remove = function (uId, tId, dbHandler) {
-  mongodb.collections[COLNAME].remove({ uId: uId, tId: tId }, dbHandler);
+  mongodb.collections[COLNAME].deleteOne({ uId: uId, tId: tId }, dbHandler);
 };
 
 exports.fetch = function (q, options, callback) {
@@ -85,7 +85,7 @@ exports.fetch = function (q, options, callback) {
 };
 
 exports.remove = function (uId, tId, dbHandler) {
-  mongodb.collections[COLNAME].remove({ uId: uId, tId: tId }, dbHandler);
+  mongodb.collections[COLNAME].deleteOne({ uId: uId, tId: tId }, dbHandler);
 };
 
 // wraps a cb(result) callback into a cb(err,res) callback

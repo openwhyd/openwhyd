@@ -188,7 +188,7 @@ exports.clearUserNotifsForPost = function (uId, pId) {
     { safe: true /*w:0*/ },
     function () {
       // remove documents with empty uid
-      db['notif'].remove(
+      db['notif'].deleteMany(
         { _id: { $in: idList }, uId: { $size: 0 } },
         { multi: true, w: 0 }
       );
@@ -207,7 +207,7 @@ exports.clearUserNotifs = function (uId, cb) {
     var idsToRemove = [];
     function whenDone() {
       // delete records that were only associated to that user
-      db['notif'].remove(
+      db['notif'].deleteMany(
         { _id: { $in: idsToRemove } },
         { multi: true, safe: true },
         function () {
@@ -333,7 +333,7 @@ exports.unlove = function (loverUid, pId) {
       col.findOne(criteria, function (err, res) {
         if (res) {
           if (!res.lov || res.lov.length == 0 || res.n < 1)
-            col.remove(criteria, { w: 0 });
+            col.deleteOne(criteria, { w: 0 });
           else
             col.updateOne(
               criteria,
