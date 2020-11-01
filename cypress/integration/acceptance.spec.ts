@@ -54,10 +54,10 @@ context('Openwhyd', () => {
     // should show the post on the user's profile after clicking the link
     cy.get('a').contains('your tracks').click();
     cy.url().should('include', '/u/');
-    cy.get(`.post a[data-eid*="${track.eId}"]`).should('be.visible');
+    cy.get(`.post a.thumb[href^="${track.url}"]`).should('be.visible');
 
     // should open the playbar after the user clicks on the post
-    cy.get(`.post a[data-eid*="${track.eId}"]`).click();
+    cy.get(`.post a.thumb[href^="${track.url}"]`).click();
     cy.get('#btnPlay').should('be.visible');
 
     // should play the track
