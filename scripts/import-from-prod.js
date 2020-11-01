@@ -13,7 +13,11 @@ const ObjectID = (id) => mongodb.ObjectID.createFromHexString(id);
 // Parameters
 const url = 'mongodb://localhost:27117';
 const dbName = 'openwhyd_test';
-const username = process.env[2] || 'test'; // default profile: https://openwhyd.org/test
+const username = process.argv[2] || 'test'; // default profile: https://openwhyd.org/test
+const password = {
+  plain: 'admin',
+  md5: '21232f297a57a5a743894a0e4a801fc3',
+};
 
 const connectToDb = ({ url, dbName }) =>
   new Promise((resolve, reject) =>
@@ -23,59 +27,66 @@ const connectToDb = ({ url, dbName }) =>
     })
   );
 
+const fetchUserProfile = ({ username }) =>
+  new Promise((resolve, reject) => {
+    const url = `https://openwhyd.org/api/user/${username}?format=json`;
+    console.log(`fetching profile from ${url} ...`);
+    request(url, (err, _, body) =>
+      err ? reject(err) : resolve(JSON.parse(body))
+    );
+  });
+
 const fetchUserData = ({ username }) =>
   new Promise((resolve, reject) => {
     const url = `https://openwhyd.org/${username}?format=json`;
     console.log(`fetching tracks from ${url} ...`);
-    request(url, function (error, response, body) {
-      if (error) {
-        reject(error);
-      } else {
-        resolve({
-          posts: JSON.parse(body).map((post) => ({
-            ...post,
-            _id: ObjectID(post._id),
-          })),
-        });
-      }
-    });
+    request(url, (err, _, body) =>
+      err
+        ? reject(err)
+        : resolve({
+            posts: JSON.parse(body).map((post) => ({
+              ...post,
+              _id: ObjectID(post._id),
+            })),
+          })
+    );
   });
 
-function genUserFromPost({ post }) {
-  return {
-    _id: ObjectID(post.uId),
-    id: post.uId,
-    name: post.uNm,
-  };
-}
-
-const insertUser = ({ db, user }) =>
+const upsertUser = ({ db, user }) =>
   new Promise((resolve, reject) => {
-    db.collection('user').insertOne(user, function (err, r) {
-      if (err) reject(err);
-      else resolve();
-    });
+    const { _id, ...userData } = user;
+    db.collection('user').updateOne(
+      { _id: ObjectID(_id) },
+      { $set: { ...userData, pwd: password.md5 } },
+      { upsert: true },
+      (err) => (err ? reject(err) : resolve())
+    );
   });
 
 const insertPosts = ({ db, posts }) =>
   new Promise((resolve, reject) => {
-    db.collection('post').insertMany(posts, function (err, r) {
-      if (err) reject(err);
-      else resolve();
-    });
+    db.collection('post').insertMany(posts, (err) =>
+      err ? reject(err) : resolve()
+    );
   });
 
 (async () => {
   console.log(`connecting to ${url}/${dbName} ...`);
   const { db, client } = await connectToDb({ url, dbName });
+  const user = await fetchUserProfile({ username });
+  await upsertUser({ db, user });
   const { posts } = await fetchUserData({ username }); // or require(`./../${username}.json`);
   console.log(`imported ${posts.length} posts`);
-  const user = genUserFromPost({ post: posts[0] });
-  // console.log('genUserFromPost =>', user);
-  // await insertUser({ db, user }); // may cause E11000 duplicate key error collection: openwhyd_test.user, after seeding the db
-  console.log('inserted user');
   await insertPosts({ db, posts });
+  // refresh openwhyd's in-memory cache of users, to allow this user to login
+  await new Promise((resolve, reject) =>
+    request.post('http://localhost:8080/testing/refresh', (err) =>
+      err ? reject(err) : resolve()
+    )
+  );
   client.close();
+  console.log(`inserted user => http://localhost:8080/${username}`);
+  console.log(`login id: ${username}, password: ${password.plain}`);
 })().catch((err) => {
   console.error(err);
   process.exit(1);
