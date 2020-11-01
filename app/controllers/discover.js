@@ -174,7 +174,7 @@ var processData = {
             { uId: uid },
             { limit: 9999999, fields: { _id: 0, lov: 1, nbP: 1 } },
             function (err, cursor) {
-              cursor.each(function (err, f) {
+              cursor.forEach(function (err, f) {
                 if (!f) {
                   mongodb.collections['post'].countDocuments(
                     { 'repost.uId': uid },

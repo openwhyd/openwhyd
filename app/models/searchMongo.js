@@ -51,7 +51,7 @@ exports.topicNameSearch = function (
     var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
     usercol.find(query, { limit: limitUsers }, function (err, cursor) {
-      cursor.each(function (err, item) {
+      cursor.forEach(function (err, item) {
         if (item != null) {
           userResults.push({ _id: '/u/' + item.fbId, name: item.name });
           console.log(

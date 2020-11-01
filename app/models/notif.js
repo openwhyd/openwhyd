@@ -224,7 +224,7 @@ exports.clearUserNotifs = function (uId, cb) {
           }
         );
       }
-      cursor.each(function (err, item) {
+      cursor.forEach(function (err, item) {
         if (!item) whenDone();
         else if (item.uId.length == 1) idsToRemove.push(item._id);
       });

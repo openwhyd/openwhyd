@@ -5,7 +5,7 @@ var snip = require('../snip.js');
 var postModel = {
   forEachPost: function (q, p, handler) {
     mongodb.collections['post'].find(q, p, function (err, cursor) {
-      cursor.each(function (err, track) {
+      cursor.forEach(function (err, track) {
         if (err)
           // we're done
           console.log('recom.forEachPost error:', err);

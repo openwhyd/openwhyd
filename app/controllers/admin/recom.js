@@ -41,7 +41,7 @@ function gatherTrackAnalytics(cb) {
       {},
       { batchSize: 1000, fields: { _id: 0, eId: 1, lov: 1, name: 1 } },
       function (err, cursor) {
-        cursor.each(function (err, track) {
+        cursor.forEach(function (err, track) {
           ++nb;
           if (!track)
             // we're done
