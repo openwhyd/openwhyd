@@ -1,4 +1,4 @@
-/* playemjs 1.0.0-rc.2, commit: 663eb200b5f688025fa0d188394969917f6af210 */
+/* playemjs 1.0.0, commit: f0fc497fb2bdca23fd3a6095e320d1529efaea6d */
 
 // configuration
 
@@ -2179,6 +2179,7 @@ function YoutubePlayer(){
           type : "video",
           maxResults : limit,
         }).execute(function(res){
+          if (res.error) throw res.error; // e.g. 403 / "quota exceeded" error
           results = res.items.map(translateResult);
           cb(results);
         });
@@ -2188,6 +2189,7 @@ function YoutubePlayer(){
           'id': query,
           'part': 'snippet,contentDetails,statistics'
         }).execute(function(res){
+          if (res.error) throw res.error; // e.g. 403 / "quota exceeded" error
           results = res.items.map(translateResult);
           cb(results);
         });
