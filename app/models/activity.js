@@ -47,7 +47,7 @@ exports.remove = function (q, callback) {
 
 /*
 exports.countUserLikes = function(uid, callback) {
-	getCol().count({"like.pId":{$exists: true}, "id":""+uid}, function(err, count) {
+	getCol().countDocuments({"like.pId":{$exists: true}, "id":""+uid}, function(err, count) {
 		callback(count);
 	});
 }

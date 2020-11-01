@@ -95,7 +95,7 @@ function remove(q, cb) {
 exports.countTracksWithField = function (fieldName, cb) {
   var q = {};
   q[fieldName] = { $exists: 1 };
-  mongodb.collections['track'].count(q, cb);
+  mongodb.collections['track'].countDocuments(q, cb);
 };
 
 /* fetch top hot tracks, without processing */
@@ -410,7 +410,7 @@ exports.updateAndPopulateMetadata = function (eId, cb, force) {
 // maintenance functions
 
 exports.snapshotTrackScores = function (cb) {
-  mongodb.collections['track'].count(function (err, count) {
+  mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
     mongodb.forEach2('track', { fields: { score: 1 } }, function (track, next) {
       if (!track) cb();
@@ -434,7 +434,7 @@ exports.snapshotTrackScores = function (cb) {
 };
 
 exports.refreshTrackCollection = function (cb) {
-  mongodb.collections['track'].count(function (err, count) {
+  mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
     mongodb.forEach2('track', { fields: { _id: 0, eId: 1 } }, function (
       track,
@@ -450,7 +450,7 @@ exports.refreshTrackCollection = function (cb) {
 };
 
 exports.populateTrackMetadata = function (cb, force) {
-  mongodb.collections['track'].count(function (err, count) {
+  mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
     mongodb.forEach2(
       'track',

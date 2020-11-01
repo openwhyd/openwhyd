@@ -61,7 +61,7 @@ exports.controller = function (request, reqParams, response) {
 
   /*	
 	var countRecomFollows = function (callback) {
-		mongodb.collections['follow'].count({recom:true}, function(err,count) {
+		mongodb.collections['follow'].countDocuments({recom:true}, function(err,count) {
 			report["Number of recommended topics followed"] = count;
 			report["Average number of recommended topics followed by user"] = count / users.length;
 			callback();

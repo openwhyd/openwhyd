@@ -33,7 +33,7 @@ function processPosts(results) {
 // core functions
 
 exports.count = function (q, o, cb) {
-  mongodb.collections['post'].count(q, o || {}, cb);
+  mongodb.collections['post'].countDocuments(q, o || {}, cb);
 };
 
 exports.forEachPost = function (q, p, handler) {
@@ -184,7 +184,7 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
 };
 
 exports.countUserPosts = function (uid, handler) {
-  mongodb.collections['post'].count({ uId: uid, rTo: null }, function (
+  mongodb.collections['post'].countDocuments({ uId: uid, rTo: null }, function (
     err,
     result
   ) {
@@ -250,7 +250,7 @@ exports.unlovePost = function (pId, uId, handler) {
 };
 
 exports.countLovedPosts = function (uid, callback) {
-  db['post'].count({ lov: '' + uid }, function (err, count) {
+  db['post'].countDocuments({ lov: '' + uid }, function (err, count) {
     callback(count);
   });
 };
@@ -451,12 +451,12 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
     handler(result);
   }
   if (uId)
-    db['post'].count(
+    db['post'].countDocuments(
       { uId: uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
       handle
     );
   else
-    db['post'].count(
+    db['post'].countDocuments(
       { 'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] } },
       handle
     );

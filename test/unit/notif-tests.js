@@ -66,7 +66,8 @@ async function initDb() {
   console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
 }
 
-const countEmptyNotifs = (cb) => db['notif'].count({ uId: { $size: 0 } }, cb);
+const countEmptyNotifs = (cb) =>
+  db['notif'].countDocuments({ uId: { $size: 0 } }, cb);
 
 const fetchNotifs = (uId) =>
   new Promise((resolve) => notifModel.getUserNotifs(uId, resolve));

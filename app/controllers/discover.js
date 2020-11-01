@@ -164,7 +164,7 @@ var processData = {
       else {
         var uid = '' + userList[i].id;
         console.log('fetchNextUserStats', i, uid);
-        mongodb.collections['follow'].count({ tId: uid }, function (
+        mongodb.collections['follow'].countDocuments({ tId: uid }, function (
           err,
           nbSubscribers
         ) {
@@ -176,7 +176,7 @@ var processData = {
             function (err, cursor) {
               cursor.each(function (err, f) {
                 if (!f) {
-                  mongodb.collections['post'].count(
+                  mongodb.collections['post'].countDocuments(
                     { 'repost.uId': uid },
                     function (err, nbAdds) {
                       userList[i].nbAdds += nbAdds;

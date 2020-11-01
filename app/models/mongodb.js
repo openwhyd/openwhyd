@@ -160,7 +160,7 @@ exports.cacheCollections = function (callback) {
             });
           };
         })();
-        collections[i].count(queryHandler);
+        collections[i].countDocuments(queryHandler);
       }
     }
   });

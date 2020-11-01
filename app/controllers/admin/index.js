@@ -155,7 +155,10 @@ function countDbUsersAndPlaylists(cb) {
 
 function countItems(cb) {
   countDbUsersAndPlaylists(function (p) {
-    mongodb.collections[indexCol['post']].count(function (err, dbPosts) {
+    mongodb.collections[indexCol['post']].countDocuments(function (
+      err,
+      dbPosts
+    ) {
       p.dbPosts = dbPosts;
       searchModel.countDocs('user', function (idxUsers) {
         p.idxUsers = idxUsers;

@@ -93,11 +93,17 @@ function wrapCallback(cb) {
 }
 
 exports.countSubscriptions = function (uId, cb) {
-  mongodb.collections[COLNAME].count({ uId: '' + uId }, wrapCallback(cb));
+  mongodb.collections[COLNAME].countDocuments(
+    { uId: '' + uId },
+    wrapCallback(cb)
+  );
 };
 
 exports.countSubscribers = function (uId, cb) {
-  mongodb.collections[COLNAME].count({ tId: '' + uId }, wrapCallback(cb));
+  mongodb.collections[COLNAME].countDocuments(
+    { tId: '' + uId },
+    wrapCallback(cb)
+  );
 };
 
 exports.fetchUserSubscriptions = function (uid, callback) {

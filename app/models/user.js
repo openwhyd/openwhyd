@@ -887,7 +887,10 @@ exports.renameUser = function (uid, name, callback) {
       if (!(col = cols.pop())) return whenDone();
       console.log('renameUser: processing collection', col, '...');
       col = mongodb.collections[col];
-      col.count({ $or: [{ uId: uid }, { tId: uid }] }, function (err, count) {
+      col.countDocuments({ $or: [{ uId: uid }, { tId: uid }] }, function (
+        err,
+        count
+      ) {
         console.log('renameUser: processing', count, 'items...');
         col.update(
           { uId: uid /*, uNm: oldName*/ },
