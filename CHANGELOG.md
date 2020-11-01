@@ -1,3 +1,10 @@
+## [1.36.2](https://github.com/openwhyd/openwhyd/compare/v1.36.1...v1.36.2) (2020-11-01)
+
+
+### Bug Fixes
+
+* **deps:** Clean-up dependencies ([#375](https://github.com/openwhyd/openwhyd/issues/375)) ([2ab1f9e](https://github.com/openwhyd/openwhyd/commit/2ab1f9eed29b79b621c8422c27949db8ca46644b))
+
 ## [1.36.1](https://github.com/openwhyd/openwhyd/compare/v1.36.0...v1.36.1) (2020-11-01)
 
 
