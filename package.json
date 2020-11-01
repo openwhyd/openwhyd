@@ -59,7 +59,7 @@
     "formidable": "^1.2.2",
     "hogan.js": "3.0.2",
     "htmlparser": "*",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.1.13",
     "iconv": ">=3.0.0",
     "object-sizeof": "^1.6.1",
     "playemjs": "1.0.0",
