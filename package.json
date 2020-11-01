@@ -62,7 +62,7 @@
     "mongodb": "^2.2.33",
     "iconv": ">=3.0.0",
     "object-sizeof": "^1.6.1",
-    "playemjs": "1.0.0-rc.2",
+    "playemjs": "1.0.0",
     "q-set": "^2.0.8",
     "request": "2.88.2"
   },
