@@ -712,37 +712,54 @@ body.home #searchResults {
 }
 
 /********************* LANDING ****************************/
-body.home #header {
+body.visitor.pgStream #header,
+body.visitor.pgHotTracks #header {
   background: #e5e5e5 url(/images/HomepageBackgroundPicture.jpg) no-repeat;
   background-size: cover;
   height: 550px;
   position: relative;
 }
 
-body.home #header .container {
+body.visitor.pgStream #header .container,
+body.visitor.pgHotTracks #header .container {
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
   height: 55px;
 }
 
-body.home #header #logo {
+body.visitor.pgStream #header #logo,
+body.visitor.pgHotTracks #header #logo {
   background-image: url(/images/logo-white.png);
 }
 
-body.home #header #searchBar {
+body.visitor.pgStream #header #navbar > a#tabStream,
+body.visitor.pgHotTracks #header #navbar > a#tabHot {
+  color: #fdfdfd;
+  border-color: #fdfdfd;
+}
+
+body.visitor.pgStream #header #navbar > a#tabHot,
+body.visitor.pgHotTracks #header #navbar > a#tabStream {
+  color: #fdfdfd;
+}
+
+body.visitor.pgStream #header #homeHeader,
+body.visitor.pgHotTracks #header #homeHeader {
   margin: 251px 200px;
   position: absolute;
   text-align: center;
   width: 580px;
 }
 
-body.home #header #searchBar h1 {
-  color: white;
+body.visitor.pgStream #header #homeHeader h1,
+body.visitor.pgHotTracks #header #homeHeader h1 {
+  color: #fdfdfd;
   font-size: 28px;
   margin: 10px 0;
   display: block;
 }
 
-body.home #header #searchBar p {
+body.visitor.pgStream #header #homeHeader p,
+body.visitor.pgHotTracks #header #homeHeader p {
   color: #cbced2;
   font-size: 16px;
   font-family: 'AvenirNext-Medium', Helvetica, Arial, Sans-serif;
@@ -751,39 +768,32 @@ body.home #header #searchBar p {
   display: block;
 }
 
-body.home input.search-input {
-  background-image: url(/images/HomepageIconSearch.png);
-  background-position: 10px 50%;
-  width: 530px !important;
-  height: 52px;
-  padding-left: 45px;
+body.visitor.pgStream input.search-input,
+body.visitor.pgHotTracks input.search-input {
+  background-color: rgba(239, 239, 239, 128);
 }
 
-body.home input.search-input:focus {
-  box-shadow: none;
-}
-
-body.home #logBox a {
-  border-color: white;
-  color: white;
+body.visitor.pgStream #logBox a,
+body.visitor.pgHotTracks #logBox a {
+  border-color: #fdfdfd;
+  color: #fdfdfd;
   float: none;
 }
 
-body.home #logBox #get-app {
-  background-position: 7px -39px;
-}
-
-body.home #contentPane {
+body.visitor.pgStream #contentPane,
+body.visitor.pgHotTracks #contentPane {
   margin-top: 30px;
 }
 
-body.home .post > .stats {
+body.visitor.pgStream .post > .stats,
+body.visitor.pgHotTracks .post > .stats {
   cursor: default;
   height: 18px;
   overflow: hidden;
 }
 
-body.home .post > .stats:hover {
+body.visitor.pgStream .post > .stats:hover,
+body.visitor.pgHotTracks .post > .stats:hover {
   background-color: transparent;
 }
 
