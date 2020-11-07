@@ -699,17 +699,6 @@ body.home #searchResults {
   color: white;
 }
 
-#logBox #get-app {
-  background-image: url(/images/icon-navbar-applestore.png);
-  background-repeat: no-repeat;
-  background-position: 7px -1px;
-  padding-left: 27px;
-}
-
-#logBox #get-app:hover {
-  background-position: 7px -39px;
-}
-
 #logBox #signup {
   background-color: #3177af;
   border-color: #3177af;
@@ -723,37 +712,54 @@ body.home #searchResults {
 }
 
 /********************* LANDING ****************************/
-body.home #header {
+body.visitor.pgStream #header,
+body.visitor.pgHotTracks #header {
   background: #e5e5e5 url(/images/HomepageBackgroundPicture.jpg) no-repeat;
   background-size: cover;
   height: 550px;
   position: relative;
 }
 
-body.home #header .container {
+body.visitor.pgStream #header .container,
+body.visitor.pgHotTracks #header .container {
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
   height: 55px;
 }
 
-body.home #header #logo {
+body.visitor.pgStream #header #logo,
+body.visitor.pgHotTracks #header #logo {
   background-image: url(/images/logo-white.png);
 }
 
-body.home #header #searchBar {
+body.visitor.pgStream #header #navbar > a#tabStream,
+body.visitor.pgHotTracks #header #navbar > a#tabHot {
+  color: #fdfdfd;
+  border-color: #fdfdfd;
+}
+
+body.visitor.pgStream #header #navbar > a#tabHot,
+body.visitor.pgHotTracks #header #navbar > a#tabStream {
+  color: #fdfdfd;
+}
+
+body.visitor.pgStream #header #homeHeader,
+body.visitor.pgHotTracks #header #homeHeader {
   margin: 251px 200px;
   position: absolute;
   text-align: center;
   width: 580px;
 }
 
-body.home #header #searchBar h1 {
-  color: white;
+body.visitor.pgStream #header #homeHeader h1,
+body.visitor.pgHotTracks #header #homeHeader h1 {
+  color: #fdfdfd;
   font-size: 28px;
   margin: 10px 0;
   display: block;
 }
 
-body.home #header #searchBar p {
+body.visitor.pgStream #header #homeHeader p,
+body.visitor.pgHotTracks #header #homeHeader p {
   color: #cbced2;
   font-size: 16px;
   font-family: 'AvenirNext-Medium', Helvetica, Arial, Sans-serif;
@@ -762,49 +768,33 @@ body.home #header #searchBar p {
   display: block;
 }
 
-body.home input.search-input {
-  background-image: url(/images/HomepageIconSearch.png);
-  background-position: 10px 50%;
-  width: 530px !important;
-  height: 52px;
-  padding-left: 45px;
+body.visitor.pgStream input.search-input,
+body.visitor.pgHotTracks input.search-input {
+  background-color: rgba(239, 239, 239, 128);
 }
 
-body.home input.search-input:focus {
-  box-shadow: none;
-}
-
-body.home #logBox a {
-  border-color: white;
-  color: white;
+body.visitor.pgStream #logBox a,
+body.visitor.pgHotTracks #logBox a {
+  border-color: #fdfdfd;
+  color: #fdfdfd;
   float: none;
 }
 
-body.home #logBox #get-app {
-  background-position: 7px -39px;
-}
-
-body.home #contentPane {
+body.visitor.pgStream #contentPane,
+body.visitor.pgHotTracks #contentPane {
   margin-top: 30px;
 }
 
-body.home .post > .stats {
+body.visitor.pgStream .post > .stats,
+body.visitor.pgHotTracks .post > .stats {
   cursor: default;
   height: 18px;
   overflow: hidden;
 }
 
-body.home .post > .stats:hover {
+body.visitor.pgStream .post > .stats:hover,
+body.visitor.pgHotTracks .post > .stats:hover {
   background-color: transparent;
-}
-
-#header #inviteBanner > a {
-  padding: 8px 8px;
-  font-size: 12px;
-  font-family: 'AvenirNext-DemiBold', Helvetica, Arial, Sans-serif;
-  font-weight: bold;
-  border: 1px solid #3f3f3f;
-  background-clip: padding-box;
 }
 
 /* user dropdown menu */
@@ -2202,44 +2192,6 @@ body #contentPane {
   margin-top: 70px;
 }
 
-#speakerLandingBox .body {
-  background-color: black;
-  background-image: url('/images/box_speaker_landing2.png');
-  background-repeat: no-repeat;
-  background-position: center 10px;
-  height: 340px;
-  padding: 0;
-  text-align: center;
-}
-
-#speakerLandingBox h2 {
-  color: white;
-  margin-top: 160px;
-  font-size: 16px;
-  font-weight: normal;
-  font-family: 'AvenirNext-DemiBold', Helvetica, Arial, Sans-serif;
-}
-
-#speakerLandingBox p {
-  font-size: 14px;
-  margin: 0 40px;
-  line-height: 24px;
-  color: #b3b3b3;
-}
-
-#speakerLandingBox a {
-  font-family: 'AvenirNext-DemiBold', Helvetica, Arial, Sans-serif;
-  color: white;
-  border-radius: 2px;
-  margin-top: 25px;
-  font-size: 13px;
-  display: inline-block;
-  background-color: #323134;
-  padding: 12px 25px 10px 25px;
-}
-#speakerLandingBox a:hover {
-  background-color: #5c5a60;
-}
 .rightBar > .sideBox > .head {
   position: relative;
   background: white;

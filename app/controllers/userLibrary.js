@@ -176,12 +176,8 @@ exports.controller = function (request, reqParams, response) {
     else if (reqParams.format == 'json')
       return render({ errorCode: 'REQ_LOGIN' });
     else {
-      loggingTemplate.renderLandingPage(loggedInUser, reqParams, function (
-        html
-      ) {
-        response.renderHTML(html);
-      });
-      return;
+      lib.options.bodyClass = 'home';
+      return renderAllLibrary(lib);
     }
   } else if (path == '/me') {
     if (request.checkLogin(response, reqParams.format))

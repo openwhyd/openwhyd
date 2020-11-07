@@ -96,21 +96,6 @@
     </div>
     {{/playlistContest}}
 
-    <!--
-		<div class="sideBox">
-			<div class="head">
-				<h2>Invite your Friends</h2>
-				<a href="/invite">Invite more</a>
-			</div>
-			<form class="body inviteAd">
-				<div class="fld">
-					<input type="text" name="email" placeholder="e.g. {{inviteAdEmailPlaceholder}}">
-				</div>
-				<input type="submit" class="userSubscribe" value="Invite">
-			</form>
-		</div>
-		-->
-
     <script
       src="/js/feed-rightbar.js"
       type="text/javascript"
@@ -370,9 +355,7 @@
       <a href="/stream" style="float: right; margin-top: 22px"
         >Back to Stream</a
       >
-      {{/isUserLogged}}
-      <h2>Full Stream</h2>
-      {{/globalFeed}} {{#homeFeed}}
+      {{/isUserLogged}} {{/globalFeed}} {{#homeFeed}}
       <!--<a href="/all" style="float:right; margin-top: 22px;">Switch to Full Stream</a>-->
       <!-- <a href="/hot" class="lnkHotTracks"><img src="/images/icon-fire-small.png">Hot Tracks</a> -->
       <h2 class="head-name-tab">Stream</h2>

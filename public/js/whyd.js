@@ -964,17 +964,6 @@ $(document).ready(function () {
     refreshNotifPanel();
     $notifPanel.toggle();
   });
-  /*
-  if ($("#inviteBanner").length) {
-    var navbar_top = 60;
-    window.addEventListener("scroll", function () {
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      var fixedHeader = scrollTop > navbar_top;
-      $("#header #inviteBanner").toggle(fixedHeader);
-      $("#contentPane #inviteBanner").css({opacity:(navbar_top - scrollTop) / (navbar_top/2)});
-    }, false);
-  }
-  */
 
   // init search bar
 
