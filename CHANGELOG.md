@@ -1,3 +1,43 @@
+## [1.36.4](https://github.com/openwhyd/openwhyd/compare/v1.36.3...v1.36.4) (2020-11-01)
+
+
+### Bug Fixes
+
+* **deps:** Update kramdown dependency ([#376](https://github.com/openwhyd/openwhyd/issues/376)) ([7e742eb](https://github.com/openwhyd/openwhyd/commit/7e742ebdf75dd87f3a154d2c3db02b53e1b638d4))
+
+## [1.36.3](https://github.com/openwhyd/openwhyd/compare/v1.36.2...v1.36.3) (2020-11-01)
+
+
+### Bug Fixes
+
+* **deps:** Migrate from MongoDB 2.2.36 to 3.1.13 ([#356](https://github.com/openwhyd/openwhyd/issues/356)) ([75fa55c](https://github.com/openwhyd/openwhyd/commit/75fa55ce6e287eed6644f2e29e47e438d1f8e33e))
+
+## [1.36.2](https://github.com/openwhyd/openwhyd/compare/v1.36.1...v1.36.2) (2020-11-01)
+
+
+### Bug Fixes
+
+* **deps:** Clean-up dependencies ([#375](https://github.com/openwhyd/openwhyd/issues/375)) ([2ab1f9e](https://github.com/openwhyd/openwhyd/commit/2ab1f9eed29b79b621c8422c27949db8ca46644b))
+
+## [1.36.1](https://github.com/openwhyd/openwhyd/compare/v1.36.0...v1.36.1) (2020-11-01)
+
+
+### Bug Fixes
+
+* **importer:** Fix navigation and login after importing user data locally ([#373](https://github.com/openwhyd/openwhyd/issues/373)) ([6a1b503](https://github.com/openwhyd/openwhyd/commit/6a1b5030e4c03e3587d18dac27591e1c126369a2))
+
+# [1.36.0](https://github.com/openwhyd/openwhyd/compare/v1.35.3...v1.36.0) (2020-11-01)
+
+
+### Bug Fixes
+
+* **tests:** Workaround "quota exceeded" errors from YouTube API ([#374](https://github.com/openwhyd/openwhyd/issues/374)) ([53807af](https://github.com/openwhyd/openwhyd/commit/53807af0e0c9733e94cebf9dff8df8ee9be8c4cb))
+
+
+### Features
+
+* Add alphabetical order to playlists page ([#372](https://github.com/openwhyd/openwhyd/issues/372)) ([9ce65ac](https://github.com/openwhyd/openwhyd/commit/9ce65ac8fd95f57f0732e191979ea104ab5b6a62)), closes [#371](https://github.com/openwhyd/openwhyd/issues/371)
+
 ## [1.35.3](https://github.com/openwhyd/openwhyd/compare/v1.35.2...v1.35.3) (2020-09-07)
 
 

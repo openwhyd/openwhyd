@@ -57,7 +57,9 @@ const runSeq = (functions) =>
 
 const getCollCounts = ({ name, coll }) =>
   new Promise((resolve, reject) =>
-    coll.count((err, count) => (err ? reject(err) : resolve({ name, count })))
+    coll.countDocuments((err, count) =>
+      err ? reject(err) : resolve({ name, count })
+    )
   );
 
 const getIndexCounts = ({ indexName }) =>

@@ -33,17 +33,18 @@ function processPosts(results) {
 // core functions
 
 exports.count = function (q, o, cb) {
-  mongodb.collections['post'].count(q, o || {}, cb);
+  mongodb.collections['post'].countDocuments(q, o || {}, cb);
 };
 
 exports.forEachPost = function (q, p, handler) {
   mongodb.collections['post'].find(q, p, function (err, cursor) {
-    cursor.each(function (err, track) {
-      if (err)
-        // we're done
-        console.log('post.forEachPost error:', err);
-      handler(track);
-    });
+    cursor.forEach(
+      (err, track) => {
+        if (err) console.log('post.forEachPost error:', err);
+        if (track) handler(track);
+      },
+      () => handler() // we're done
+    );
   });
 };
 
@@ -184,7 +185,7 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
 };
 
 exports.countUserPosts = function (uid, handler) {
-  mongodb.collections['post'].count({ uId: uid, rTo: null }, function (
+  mongodb.collections['post'].countDocuments({ uId: uid, rTo: null }, function (
     err,
     result
   ) {
@@ -215,7 +216,7 @@ function setPostLove(collection, pId, uId, state, handler) {
   var update = state
     ? { $push: { lov: '' + uId } }
     : { $pull: { lov: '' + uId } };
-  collection.update({ _id: ObjectId('' + pId) }, update, function (err) {
+  collection.updateOne({ _id: ObjectId('' + pId) }, update, function (err) {
     if (err) console.log(err);
     collection.findOne({ _id: ObjectId('' + pId) }, function (err, post) {
       if (err) console.log(err);
@@ -250,7 +251,7 @@ exports.unlovePost = function (pId, uId, handler) {
 };
 
 exports.countLovedPosts = function (uid, callback) {
-  db['post'].count({ lov: '' + uid }, function (err, count) {
+  db['post'].countDocuments({ lov: '' + uid }, function (err, count) {
     callback(count);
   });
 };
@@ -303,7 +304,7 @@ exports.savePost = function (postObj, handler) {
       delete update.$set.pl;
       update.$unset = { pl: 1 };
     }
-    mongodb.collections['post'].update(
+    mongodb.collections['post'].updateOne(
       { _id: ObjectId('' + pId) },
       update,
       function (error) {
@@ -354,7 +355,7 @@ exports.rePost = function (pId, repostObj, handler) {
       if (repostObj.uId != repostObj.repost.uId) {
         notif.repost(repostObj.uId, postObj);
         notif.post(postObj);
-        collection.update(
+        collection.updateOne(
           { _id: ObjectId('' + pId) },
           { $inc: { nbR: 1 } },
           { w: 0 }
@@ -389,12 +390,12 @@ exports.deletePost = function (pId, handler, uId) {
   if (uId) q.uId = uId;
   exports.fetchPostById(pId, function (postObj) {
     if (postObj)
-      collection.remove(q, function (error, result) {
+      collection.deleteOne(q, function (error, result) {
         if (error) console.log('post.deletePost() error: ', error);
         searchModel.deleteDoc('post', pId);
         handler(result);
         if (postObj.repost)
-          collection.update(
+          collection.updateOne(
             { _id: ObjectId('' + postObj.repost.pId) },
             { $inc: { nbR: -1 } },
             { w: 0 }
@@ -411,7 +412,7 @@ exports.deletePost = function (pId, handler, uId) {
 exports.incrPlayCounter = function (pId, cb) {
   var _id = ObjectId('' + pId);
   if (!_id) cb();
-  mongodb.collections['post'].update(
+  mongodb.collections['post'].updateOne(
     { _id: _id },
     { $inc: { nbP: 1 } },
     function (err) {
@@ -451,12 +452,12 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
     handler(result);
   }
   if (uId)
-    db['post'].count(
+    db['post'].countDocuments(
       { uId: uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
       handle
     );
   else
-    db['post'].count(
+    db['post'].countDocuments(
       { 'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] } },
       handle
     );
@@ -469,7 +470,7 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
     'pl.id': parseInt(plId),
   };
   var update = { $set: { pl: { id: parseInt(plId), name: plName } } };
-  mongodb.collections['post'].update(
+  mongodb.collections['post'].updateMany(
     criteria,
     update,
     { multi: true },
@@ -487,7 +488,7 @@ exports.unsetPlaylist = function (uId, plId, handler) {
     'pl.id': parseInt(plId),
   };
   var update = { $unset: { pl: 1 } };
-  mongodb.collections['post'].update(
+  mongodb.collections['post'].updateMany(
     criteria,
     update,
     { multi: true },
@@ -516,7 +517,7 @@ exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
         'pl.id': parseInt(plId),
       };
       console.log('moving post ', post._id, ' to pos ', order.length);
-      collection.update(post, { $set: { order: order.length } }, next);
+      collection.updateOne(post, { $set: { order: order.length } }, next);
     }
   }
   next();

@@ -264,12 +264,14 @@ exports.fetchMulti = function (q, options, handler) {
 exports.fetchByUid = exports.model = function (uid, handler) {
   if (typeof uid == 'string') uid = ObjectId(uid);
   fetch({ _id: uid }, function (err, user) {
+    if (err) console.error(err);
     handler(user);
   });
 };
 
 exports.fetchByHandle = function (handle, handler) {
   fetch({ handle: handle }, function (err, user) {
+    if (err) console.error(err);
     handler(user);
   });
 };
@@ -283,13 +285,16 @@ exports.fetchByFbUid = function (fbUid, handler) {
 
 exports.fetchByEmail = function (email, handler) {
   fetch({ email: emailModel.normalize(email) }, function (err, user) {
+    if (err) console.error(err);
     handler(user);
   });
 };
 
 exports.fetchInvitedUsers = function (uid, handler) {
   mongodb.collections['user'].find({ iBy: '' + uid }, function (err, cursor) {
+    if (err) console.error(err);
     cursor.toArray(function (err, array) {
+      if (err) console.error(err);
       processUsers(array);
       handler(array);
     });
@@ -298,7 +303,7 @@ exports.fetchInvitedUsers = function (uid, handler) {
 
 exports.updateAndFetch = function (criteria, update, opts, cb) {
   console.log('models.user.update criteria', criteria);
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     criteria,
     /*{$set:*/ update /*}*/,
     opts || {},
@@ -337,7 +342,7 @@ exports.save = function (pUser, handler) {
     '=> criteria: ',
     criteria
   );
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     criteria,
     { $set: user },
     { upsert: true },
@@ -345,6 +350,7 @@ exports.save = function (pUser, handler) {
       //console.log("updated user => item ", item);
       if (err) console.log(err);
       fetch(criteria, function (err, user) {
+        if (err) console.error(err);
         //console.log("user stored as ", user);
         if (user) searchModel.indexTyped('user', user);
         mongodb.cacheUser(user);
@@ -377,7 +383,7 @@ exports.delete = function (criteria, handler) {
           }
         })();
       // delete user
-      mongodb.collections['user'].remove(criteria, function (err, item) {
+      mongodb.collections['user'].deleteOne(criteria, function (err, item) {
         if (err) console.error(err);
         else console.log('removed users', criteria);
         searchModel.deleteDoc('user', '' + criteria._id);
@@ -400,7 +406,10 @@ exports.fetchEmail = function (email, callback) {
 };
 
 exports.deleteEmails = function (emailArray, callback) {
-  mongodb.collections['email'].remove({ _id: { $in: emailArray } }, callback);
+  mongodb.collections['email'].deleteMany(
+    { _id: { $in: emailArray } },
+    callback
+  );
 };
 
 exports.storeEmail = function (email) {
@@ -445,18 +454,22 @@ function insertInvite(obj, handler) {
     return handler && handler();
   }
 
-  mongodb.collections['invite'].update(
+  mongodb.collections['invite'].updateMany(
     criteria,
     { $set: obj },
     { upsert: true, multi: true },
     function (err) {
       if (err) console.log(err);
       mongodb.collections['invite'].findOne(criteria, function (err, user) {
+        if (err) console.error(err);
         console.log('user invite stored as ', user);
         if (user && obj.email)
-          mongodb.collections['email'].remove({ _id: obj.email }, function () {
-            if (handler) handler(user);
-          });
+          mongodb.collections['email'].deleteOne(
+            { _id: obj.email },
+            function () {
+              if (handler) handler(user);
+            }
+          );
         else if (handler) handler(user);
       });
     }
@@ -478,19 +491,20 @@ exports.inviteFbUserBy = function (fbId, senderId, handler) {
 
 exports.removeInvite = function (inviteCode, handler) {
   var id = typeof inviteCode == 'string' ? ObjectId(inviteCode) : inviteCode;
-  mongodb.collections['invite'].remove({ _id: id }, function (err) {
+  mongodb.collections['invite'].deleteOne({ _id: id }, function (err) {
     console.log(err || 'removed invite ' + id);
     if (handler) handler({ _id: id });
   });
 };
 
 exports.removeInviteByEmail = function (emailList, handler) {
-  mongodb.collections['invite'].remove({ email: { $in: emailList } }, function (
-    err
-  ) {
-    console.log(err || 'removed invites ' + emailList);
-    if (handler) handler({ emailList: emailList });
-  });
+  mongodb.collections['invite'].deleteMany(
+    { email: { $in: emailList } },
+    function (err) {
+      console.log(err || 'removed invites ' + emailList);
+      if (handler) handler({ emailList: emailList });
+    }
+  );
 };
 
 // playlist management
@@ -686,7 +700,7 @@ exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
 
 exports.incrementNotificationCounter = function (uId, handler) {
   //console.log("user.incrementNotificationCounter:", uId);
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     { _id: ObjectId('' + uId) },
     { $inc: { 'pref.pendEN': 1 } },
     function (err, item) {
@@ -754,12 +768,12 @@ exports.setApTok = function (uId, _apTok, cb) {
 	});
 	*/
   // new policy: one apTok <--> one user.
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateMany(
     { 'apTok.tok': apTok },
     { $unset: { apTok: '' } },
     { multi: 1 },
     function () {
-      mongodb.collections['user'].update(
+      mongodb.collections['user'].updateOne(
         { _id: ObjectId('' + uId) },
         { $set: { apTok: [newApTok] } },
         handleResult
@@ -769,7 +783,7 @@ exports.setApTok = function (uId, _apTok, cb) {
 };
 
 exports.clearApTok = function (uId, cb) {
-  mongodb.collections['user'].update(
+  mongodb.collections['user'].updateOne(
     { _id: ObjectId('' + uId) },
     { $unset: { apTok: '' } },
     function (err, success) {
@@ -812,7 +826,7 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
   if (!uId) return cb && cb({ error: 'invalid parameters' });
   else if (!twId)
     // disconnect twitter account
-    mongodb.collections['user'].update(
+    mongodb.collections['user'].updateOne(
       { _id: ObjectId('' + uId) },
       { $unset: { twId: '', twTok: '', twSec: '' } },
       function (err, success) {
@@ -887,16 +901,19 @@ exports.renameUser = function (uid, name, callback) {
       if (!(col = cols.pop())) return whenDone();
       console.log('renameUser: processing collection', col, '...');
       col = mongodb.collections[col];
-      col.count({ $or: [{ uId: uid }, { tId: uid }] }, function (err, count) {
+      col.countDocuments({ $or: [{ uId: uid }, { tId: uid }] }, function (
+        err,
+        count
+      ) {
         console.log('renameUser: processing', count, 'items...');
-        col.update(
+        col.updateMany(
           { uId: uid /*, uNm: oldName*/ },
           { $set: { uNm: name } },
           { multi: true },
           function (err) {
             if (err) console.log('err', err);
             //console.log("-> updated to ", result);
-            col.update(
+            col.updateMany(
               { tId: uid /*, tNm: oldName*/ },
               { $set: { tNm: name } },
               { multi: true },
@@ -944,20 +961,24 @@ exports.fetchPlaylists = function (user, params, cb) {
   var uId = (user || {}).id;
   mongodb.collections['post'].aggregate(
     [{ $match: { uId: uId } }, { $group: { _id: '$pl.id', c: { $sum: 1 } } }],
-    function (err, counts) {
-      var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
-      counts.map(function (counter) {
-        // necessary to make a sum, because playlist ids can be both stored as int and string
-        plCount['' + counter._id] =
-          (plCount['' + counter._id] || 0) + counter.c;
+    function (err, cursor) {
+      if (err) console.error(err);
+      cursor.toArray(function (err, counts) {
+        if (err) console.error(err);
+        var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
+        counts.map(function (counter) {
+          // necessary to make a sum, because playlist ids can be both stored as int and string
+          plCount['' + counter._id] =
+            (plCount['' + counter._id] || 0) + counter.c;
+        });
+        cb(
+          pl.reverse().map(function (p) {
+            p.url = '/u/' + uId + '/playlist/' + p.id;
+            p.nbTracks = plCount['' + p.id] || 0;
+            return p;
+          })
+        );
       });
-      cb(
-        pl.reverse().map(function (p) {
-          p.url = '/u/' + uId + '/playlist/' + p.id;
-          p.nbTracks = plCount['' + p.id] || 0;
-          return p;
-        })
-      );
     }
   );
   /*

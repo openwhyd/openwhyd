@@ -92,7 +92,9 @@ exports.cacheUser = function (user) {
 exports.cacheUsers = function (callback) {
   console.log('Caching users ...');
   userModel = userModel || require('./user.js');
-  userModel.fetchMulti({}, { fields: USER_CACHE_FIELDS }, function (results) {
+  userModel.fetchMulti({}, { projection: USER_CACHE_FIELDS }, function (
+    results
+  ) {
     for (let i in results) exports.cacheUser(results[i]);
     console.log('Caching users: done!');
     if (callback) callback();
@@ -108,10 +110,12 @@ exports.forEach = function (colName, params, handler, cb, cbParam) {
     delete params.q;
   }
   exports.collections[colName].find(q, params, function (err, cursor) {
-    cursor.each(function (err, item) {
-      if (item) handler(item);
-      else if (cb) cb(cbParam);
-    });
+    cursor.forEach(
+      (err, item) => {
+        if (item) handler(item);
+      },
+      cb ? () => cb(cbParam) : undefined
+    );
   });
 };
 
@@ -128,7 +132,7 @@ exports.forEach2 = function (colName, params, handler) {
     q._id = { $lt: exports.ObjectId('' + params.after) };
   exports.collections[colName].find(q, params, function (err, cursor) {
     (function next() {
-      cursor.nextObject(function (err, item) {
+      cursor.next(function (err, item) {
         if (err) {
           console.error('mongodb.forEach2 ERROR', err);
           handler({ error: err });
@@ -160,7 +164,7 @@ exports.cacheCollections = function (callback) {
             });
           };
         })();
-        collections[i].count(queryHandler);
+        collections[i].countDocuments(queryHandler);
       }
     }
   });
@@ -176,7 +180,7 @@ exports.clearCollections = async function () {
     throw new Error('allowed on test database only');
   } else {
     for (const name in exports.collections) {
-      await exports.collections[name].remove({}, { multi: true });
+      await exports.collections[name].deleteMany({}, { multi: true });
     }
   }
 };
@@ -221,7 +225,12 @@ exports.init = function (readyCallback) {
   var authPassword = process.appParams.mongoDbAuthPassword;
 
   var authStr = '';
-  if (authUser && authPassword) authStr = authUser + ':' + authPassword + '@';
+  if (authUser && authPassword)
+    authStr =
+      encodeURIComponent(authUser) +
+      ':' +
+      encodeURIComponent(authPassword) +
+      '@';
 
   var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
@@ -230,14 +239,10 @@ exports.init = function (readyCallback) {
   var options = {
     native_parser: true,
     useNewUrlParser: true,
-    useUnifiedTopology: true,
     //strict: false,
     //safe: false,
     w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
   };
-
-  //var dbserver = new mongodb.Server(host, port, {auto_reconnect:true});
-  //var db = new mongodb.Db(dbName, dbserver, options);
 
   mongodb.MongoClient.connect(url, options, function (err, client) {
     if (err) throw err;

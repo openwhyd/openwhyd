@@ -51,18 +51,17 @@ exports.topicNameSearch = function (
     var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
     usercol.find(query, { limit: limitUsers }, function (err, cursor) {
-      cursor.each(function (err, item) {
-        if (item != null) {
-          userResults.push({ _id: '/u/' + item.fbId, name: item.name });
-          console.log(
-            'user search result: ' +
-              item.fbId +
-              ' : ' +
-              item.name +
-              ', ' +
-              item.img
-          );
-        }
+      cursor.forEach((err, item) => {
+        if (!item) return;
+        userResults.push({ _id: '/u/' + item.fbId, name: item.name });
+        console.log(
+          'user search result: ' +
+            item.fbId +
+            ' : ' +
+            item.name +
+            ', ' +
+            item.img
+        );
       });
 
       mongodb('topic', function (err, collection) {
@@ -92,11 +91,12 @@ exports.topicNameSearch = function (
                     item.name /* + ", " + item.t*/
                 );
                 exactResults.push(item);
-                if (--remaining > 0) cursor.nextObject(handleNextResult); //recursive call for next objects
+                --remaining;
+                if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
               } else cursor.queryRun = false;
             };
 
-            cursor.nextObject(handleNextResult); // start gathering results
+            cursor.next(handleNextResult); // start gathering results
           }
         );
 
@@ -120,11 +120,12 @@ exports.topicNameSearch = function (
                     item.name /* + ", " + item.t*/
                 );
                 quickResults.push(item);
-                if (--remaining > 0) cursor.nextObject(handleNextResult); //recursive call for next objects
+                --remaining;
+                if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
               } else cursor.queryRun = false;
             };
 
-            cursor.nextObject(handleNextResult); // start gathering results
+            cursor.next(handleNextResult); // start gathering results
           }
         );
 
