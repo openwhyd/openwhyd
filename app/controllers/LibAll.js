@@ -20,7 +20,8 @@ function renderAllLibrary(lib) {
   //options.displayAuthors = true;
   options.displayPlaylistName = true;
   options.follows = { people: makeUserList(), followers: [] };
-  options.bodyClass = 'pgStream pgFullStream pgWithSideBar';
+  options.bodyClass =
+    'pgStream pgFullStream pgWithSideBar ' + (options.bodyClass || '');
   options.globalFeed = true;
 
   function renderFeed(callback) {
