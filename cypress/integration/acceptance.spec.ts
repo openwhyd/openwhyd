@@ -1,5 +1,3 @@
-/// <reference types="Cypress" />
-
 // This end-to-end / functional test suite covers the happy path,
 // as inspired by https://www.youtube.com/watch?v=aZT8VlTV1YY
 
@@ -25,16 +23,23 @@ context('Openwhyd', () => {
     cy.loginAsAdmin();
     cy.visit('/');
 
-    // should recognize a track when pasting a Youtube URL in the search box
-    cy.get('#q').type('https://www.youtube.com/watch?v=aZT8VlTV1YY');
-    cy.get('#searchResults').contains('Demo');
+    // should recognize a track when pasting the URL of a MP3 file in the search box
+    const track = ((url) => ({
+      url,
+      name: url.split('/').pop(),
+      eId: '/fi/' + encodeURIComponent(url),
+    }))(
+      'https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3'
+    );
+    cy.get('#q').type(track.url);
+    cy.get('#searchResults').contains(track.name);
 
-    // should lead to a track page when clicking on the Youtube search result
+    // should lead to a track page when clicking on the search result
     cy.get('#searchResults li a').first().click();
-    cy.url().should('include', '/yt/aZT8VlTV1YY');
+    cy.url().should('include', track.eId);
 
     // should display the name of the track
-    cy.get('a.btnRepost[href*="Openwhyd Demo (formerly"]').should('exist');
+    cy.get(`a.btnRepost[href*="${track.name}"]`).should('exist');
 
     // should open a dialog after clicking on the "Add to" button
     cy.contains('Add to').click(); //$('a.btnRepost').click();
@@ -48,14 +53,14 @@ context('Openwhyd', () => {
     // should show the post on the user's profile after clicking the link
     cy.get('a').contains('your tracks').click();
     cy.url().should('include', '/u/');
-    cy.get('.post a[data-eid="/yt/aZT8VlTV1YY"]').should('be.visible');
+    cy.get(`.post a.thumb[href^="${track.url}"]`).should('be.visible');
 
     // should open the playbar after the user clicks on the post
-    cy.get('.post a[data-eid="/yt/aZT8VlTV1YY"]').click();
+    cy.get(`.post a.thumb[href^="${track.url}"]`).click();
     cy.get('#btnPlay').should('be.visible');
 
     // should play the track
-    cy.get('#btnPlay.playing').should('be.visible');
+    cy.get('#btnPlay.playing', { timeout: 10000 }).should('be.visible');
 
     // should pause the track when the user clicks on the play/pause button
     cy.get('#btnPlay').click();
@@ -173,12 +178,13 @@ context('Openwhyd', () => {
   });
 
   it('should allow users to search external tracks', function () {
-    // should find a youtube track with id that starts with underscore
     cy.visit('/');
-    cy.get('#q').click().type('http://www.youtube.com/watch?v=_BU841qpQsI');
-    const searchResult = `a[onclick="window.goToPage('/yt/_BU841qpQsI');return false;"]`;
+    cy.get('#q')
+      .click()
+      .type('https://soundcloud.com/harissaquartet/no-service');
+    const searchResult = `a[onclick="window.goToPage('/sc/harissaquartet/no-service');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')
-      .should('have.text', 'Los Van Van - Llegada'); // an empty string would mean that no metadata was fetched, caused to https://github.com/openwhyd/openwhyd/issues/102
+      .should('have.text', 'Harissa - No Service');
   });
 });

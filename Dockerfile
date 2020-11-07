@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 # Install app dependencies
 
 COPY ./package*.json /usr/src/app/
-RUN npm install --prefer-offline --no-audit --production
+RUN npm install --no-audit --production
 
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
 # RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js

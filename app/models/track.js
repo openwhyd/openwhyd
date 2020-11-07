@@ -72,7 +72,7 @@ var POST_FETCH_OPTIONS = {
 
 function save(track, cb, replace) {
   var op = replace ? track : { $set: track };
-  mongodb.collections['track'].update(
+  mongodb.collections['track'].updateOne(
     { eId: track.eId },
     op,
     { upsert: true },
@@ -85,8 +85,8 @@ function save(track, cb, replace) {
 }
 
 function remove(q, cb) {
-  mongodb.collections['track'].remove(q, function (error, result) {
-    console.log('=> removed hot track:', result);
+  mongodb.collections['track'].deleteOne(q, function (error, result) {
+    console.log('=> removed hot track:', q);
     if (error) console.error('track.remove() error: ' + error.stack);
     if (cb) cb(result);
   });
@@ -95,7 +95,7 @@ function remove(q, cb) {
 exports.countTracksWithField = function (fieldName, cb) {
   var q = {};
   q[fieldName] = { $exists: 1 };
-  mongodb.collections['track'].count(q, cb);
+  mongodb.collections['track'].countDocuments(q, cb);
 };
 
 /* fetch top hot tracks, without processing */
@@ -410,13 +410,20 @@ exports.updateAndPopulateMetadata = function (eId, cb, force) {
 // maintenance functions
 
 exports.snapshotTrackScores = function (cb) {
-  mongodb.collections['track'].count(function (err, count) {
+  mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
     mongodb.forEach2('track', { fields: { score: 1 } }, function (track, next) {
       if (!track) cb();
       else {
-        console.log('snapshotTrackScores', ++i, '/', count);
-        mongodb.collections['track'].update(
+        if (count < 1000) {
+          console.log(`snapshotTrackScores ${i + 1} / ${count}`);
+        } else if (count % 1000 === 0) {
+          console.log(
+            `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`
+          );
+        }
+        ++i;
+        mongodb.collections['track'].updateOne(
           { _id: track._id },
           { $set: { prev: track.score } },
           next
@@ -427,7 +434,7 @@ exports.snapshotTrackScores = function (cb) {
 };
 
 exports.refreshTrackCollection = function (cb) {
-  mongodb.collections['track'].count(function (err, count) {
+  mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
     mongodb.forEach2('track', { fields: { _id: 0, eId: 1 } }, function (
       track,
@@ -443,7 +450,7 @@ exports.refreshTrackCollection = function (cb) {
 };
 
 exports.populateTrackMetadata = function (cb, force) {
-  mongodb.collections['track'].count(function (err, count) {
+  mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
     mongodb.forEach2(
       'track',

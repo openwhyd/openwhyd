@@ -43,7 +43,7 @@ Commands to run all automated tests against the Docker container:
 
 ```sh
 $ docker-compose up --build --detach  # to have openwhyd's web server and database running in the background
-$ npm install                         # will install the necessary test runners (webdriver/selenium)
+$ npm install                         # will install the necessary test runners
 $ npm run docker:test                 # will run the automated tests: unit and end-to-end
 ```
 
@@ -52,14 +52,11 @@ $ npm run docker:test                 # will run the automated tests: unit and e
 If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
 
 ```sh
-$ npm run docker:seed               # will clear the database and create the admin user
-$ node scripts/import-from-prod.js  # will import 21 posts from https://openwhyd.org/test
+$ npm run docker:seed                   # will clear the database
+$ node scripts/import-from-prod.js test # will import 21 posts from https://openwhyd.org/test
 ```
 
-After that, you will be able to sign in as an administrator using the following credentials:
-
-- username: `admin`
-- password: `admin`
+After that, you will be able to sign in as an administrator using the credentials returned by the script.
 
 The data imported can be seen from http://localhost:8080/all
 
@@ -107,7 +104,7 @@ Run unit tests only:
 $ npm run test-unit
 ```
 
-Run all tests, including acceptance tests (webdriver.io-based):
+Run all tests, including acceptance tests (Cypress-based):
 
 ```sh
 # in a terminal session, start Openwhyd's application server

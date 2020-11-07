@@ -143,7 +143,7 @@ function submitNotif(recipient, type, immediateNotifHandler, noNotifHandler) {
     );
   //console.log("notifEmails.submitNotif, type:", type, (recipient.pref || {})[type]);
   if (recipient.pref && recipient.pref[type] == -1) {
-    console.log('no email notification will be sent (disabled by user)');
+    // console.log('no email notification will be sent (disabled by user)');
     noNotifHandler && noNotifHandler();
   } else if (recipient.pref && recipient.pref[type] > 0) {
     userModel.incrementNotificationCounter(recipient._id, noNotifHandler);

@@ -134,9 +134,6 @@ GET    /bc/{eId}                       -> controllers.postViewer
 GET    /bc/{eId}/{_1}                  -> controllers.postViewer
 GET    /bc/{eId}/{_1}/{_2}             -> controllers.postViewer
 
-GET    /playlist/{id}                  -> controllers.collabPl
-GET    /playlist/{id}/contributors     -> controllers.collabPl
-
 GET    /api/{_subCtr}                  -> controllers.subdir
 POST   /api/{_subCtr}                  -> controllers.subdir
 GET    /api/{_subCtr}/{_1}             -> controllers.subdir

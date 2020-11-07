@@ -11,7 +11,7 @@
   "dependencies": {
     "algoliasearch": "^3.24.11",
     "dotenv": "^5.0.0",
-    "mongodb": "^2.2.34",
+    "mongodb": "^3.1.13",
     "node-ask": "^1.0.1"
   },
   "devDependencies": {

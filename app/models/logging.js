@@ -109,7 +109,7 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
       // https://developers.facebook.com/docs/authentication/signed_request/
       try {
         let cookie = cookies[i].split('.')[1];
-        cookie = new Buffer(cookie /*|| ""*/, 'base64').toString('ascii');
+        cookie = Buffer.from(cookie /*|| ""*/, 'base64').toString('ascii');
         cookie = JSON.parse(cookie);
         console.log('found secure facebook cookie'); //, cookie);
         return cookie;

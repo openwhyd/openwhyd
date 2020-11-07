@@ -227,8 +227,7 @@ exports.preparePost = function (post, options) {
 
   if (options.displayPlaylistName && post.pl) {
     newPost.pl = post.pl;
-    if (post.pl.collabId) newPost.pl.plUrl = '/playlist/' + post.pl.collabId;
-    else newPost.pl.plUrl = '/u/' + post.uId + '/playlist/' + post.pl.id;
+    newPost.pl.plUrl = '/u/' + post.uId + '/playlist/' + post.pl.id;
   } // we displaying a playlist => provide order of each track
   else newPost.order = { n: post.order };
 

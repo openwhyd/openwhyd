@@ -173,5 +173,3 @@ describe('track matcher', function () {
     );
   });
 });
-
-// Webdriver API documentation: http://webdriver.io/api.html

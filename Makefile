@@ -10,7 +10,7 @@ restart: ## Restart the production server without downtime.
 	@cd scripts && ./restart.sh
 
 restart-to-latest: ## Restart the production server to its latest version, without downtime.
-	@git checkout -- package-lock.json && git pull && npm i && cd scripts && ./restart.sh
+	@git checkout -- package-lock.json && git pull && npm install --prefer-offline --no-audit --production && cd scripts && ./restart.sh
 
 lint: fetch-deps ## Run ESLint
 	@npm run lint 

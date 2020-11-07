@@ -1,5 +1,7 @@
 /* global Cypress, cy */
 
+import 'cypress-file-upload';
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -34,7 +36,8 @@ Cypress.Commands.add('loginAsAdmin', () => {
 Cypress.Commands.add('postDummyTracks', (count) => {
   const makeTrack = (i) => ({
     name: `Fake track #${i}`,
-    eId: '/yt/Wch3gJG2GJ4', //1-second video, from YouTube
+    eId:
+      '/fi/https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3',
     img: '/images/cover-track.png',
   });
   for (let i = 0; i < count; ++i) {

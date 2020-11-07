@@ -53,10 +53,9 @@ function WhydPost(embedRef) {
   this.setContext = function (ctx) {
     this.postData.ctx = ctx;
   };
-  this.setPlaylist = function (id, name, collabId) {
+  this.setPlaylist = function (id, name) {
     this.postData.pl = { name: name };
-    if (collabId) this.postData.pl.collabId = collabId;
-    else this.postData.pl.id = id;
+    this.postData.pl.id = id;
   };
   this.submit = function (shareOnFb, onPostComplete) {
     //console.log("submitting post: ", postData);
@@ -111,7 +110,7 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
     $head.text(datatext).append($arrow);
     hideMenu();
   }
-  function addPlaylist(name, id, collabId) {
+  function addPlaylist(name, id) {
     var $li = $('<li>').attr('data-plid', id).text(name).appendTo($ul);
     $ul.find('li').unbind().click(selectPlaylist);
     return $li;
@@ -133,23 +132,7 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
     $ul.find('li').unbind().click(selectPlaylist);
   }
   bindItems();
-  return {
-    /*
-		populate: function() {
-			$.ajax({
-				type: "GET",
-				url: "/api/user",
-				success: function(user){
-					if (user && user.pl)
-						for (let i in user.pl)
-							addPlaylist(user.pl[i].name, user.pl[i].id, user.pl[i].collabId);
-					bindItems();
-				}
-			});
-		},
-		*/
-    bindItems: bindItems,
-  };
+  return { bindItems };
 }
 
 //================ DESCRIPTION FIELD (ui component)
@@ -287,8 +270,7 @@ function initPostBox(params) {
       );
     var url = '/u/' + posted.uId;
     if (posted.pl) {
-      if (posted.pl.collabId != null) url = '/playlist/' + posted.pl.collabId;
-      else url += '/playlist/' + posted.pl.id;
+      url += '/playlist/' + posted.pl.id;
     }
     if (window.showMessage) {
       var plName = posted.pl ? posted.pl.name : 'your tracks';

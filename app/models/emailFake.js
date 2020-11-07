@@ -17,15 +17,16 @@ exports.email = function (
   userName,
   callback
 ) {
+  /*
   console.log('FAKE EMAIL', {
     to: emailAddr,
     subject: subject,
     text: textContent,
     html: !!htmlContent,
   });
+  */
   setTimeout(function () {
     var result = 'FAKE EMAIL => success';
-    console.log(result);
     if (callback) callback(result);
   }, fakeDeliveryDuration);
 };

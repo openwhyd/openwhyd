@@ -25,7 +25,7 @@ exports.controller = function (request, reqParams, response) {
       title: title,
       images: images,
     };
-    console.log('contentType result:', result);
+    // console.log('contentType result:', result);
     response.legacyRender(result);
   }
 

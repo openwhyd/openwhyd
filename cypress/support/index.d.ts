@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 // To let TypeScript compiler know that we have added a custom command and have IntelliSense working
 // (see https://github.com/cypress-io/cypress-example-todomvc#cypress-intellisense)
 
