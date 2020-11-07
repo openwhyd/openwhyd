@@ -699,17 +699,6 @@ body.home #searchResults {
   color: white;
 }
 
-#logBox #get-app {
-  background-image: url(/images/icon-navbar-applestore.png);
-  background-repeat: no-repeat;
-  background-position: 7px -1px;
-  padding-left: 27px;
-}
-
-#logBox #get-app:hover {
-  background-position: 7px -39px;
-}
-
 #logBox #signup {
   background-color: #3177af;
   border-color: #3177af;
@@ -796,15 +785,6 @@ body.home .post > .stats {
 
 body.home .post > .stats:hover {
   background-color: transparent;
-}
-
-#header #inviteBanner > a {
-  padding: 8px 8px;
-  font-size: 12px;
-  font-family: 'AvenirNext-DemiBold', Helvetica, Arial, Sans-serif;
-  font-weight: bold;
-  border: 1px solid #3f3f3f;
-  background-clip: padding-box;
 }
 
 /* user dropdown menu */
