@@ -28,6 +28,20 @@ context('Openwhyd bookmarklet', () => {
     });
   });
 
+  it.only('can import the cover art of a Bandcamp track', () => {
+    cy.visit('https://harissa.bandcamp.com/track/rooftop');
+
+    cy.window().then(injectBookmarklet);
+
+    // should list more than 1 track
+    cy.get('.whydThumb').should('have.length.above', 1);
+
+    // should list the main track of the page
+    cy.get('.whydThumb').first().should('contain.text', 'Harissa - Rooftop');
+    cy.get('#whydContent').should('contain.html', '1382233458'); // ar_id
+    cy.get('.whydThumb').first().click();
+  });
+
   it('can be opened twice from the same youtube page', () => {
     cy.visit('http://localhost:8080/html/test-resources/youtube-videos.html');
 
