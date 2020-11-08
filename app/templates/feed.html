@@ -323,12 +323,14 @@
       </div>
       {{/ownProfile}} {{/isUserLogged}} {{/user}} {{^user}} {{#globalFeed}}
       {{#isUserLogged}}
-      <a href="/stream" style="float: right; margin-top: 22px"
+      <a
+        href="/stream"
+        style="float: right; margin-top: 20px; margin-right: 20px"
         >Back to Stream</a
       >
-      {{/isUserLogged}} {{/globalFeed}} {{#homeFeed}}
-      <!--<a href="/all" style="float:right; margin-top: 22px;">Switch to Full Stream</a>-->
-      <!-- <a href="/hot" class="lnkHotTracks"><img src="/images/icon-fire-small.png">Hot Tracks</a> -->
+      {{/isUserLogged}}
+      <h2 class="head-name-tab">Recent tracks from all users</h2>
+      {{/globalFeed}} {{#homeFeed}}
       <h2 class="head-name-tab">Stream</h2>
       {{/homeFeed}}
       <!--	<h2>{{streamTitle}}</h2> -->
