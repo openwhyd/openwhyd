@@ -85,7 +85,7 @@ function makeBookmarklet(window, urlPrefix = '') {
     }
 
     // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
-    return function detectPlayableStreams(url, cb, element) {
+    return function detectPlayableStreams(url, cb, element = {}) {
       // 1. find the matching player and track identifier
       var playerId = getPlayerId(url);
       var player = playerId && players[playerId];
@@ -100,12 +100,20 @@ function makeBookmarklet(window, urlPrefix = '') {
       // 3. store the identifier, with and without stream URL, to prevent duplicates
       eidSet[parts[0]] = true;
       eidSet[eid] = true;
-      if (!player || !player.fetchMetadata) return cb({ eId: eid }); // quit if we can't enrich the metadata
+      if (element.artist && element.title) {
+        return cb({
+          eId: eid,
+          title: `${element.artist} - ${element.title}`,
+          sourceId: playerId,
+          sourceLabel: (player || {}).label,
+        });
+      } else if (!player || !player.fetchMetadata) {
+        return cb({ eId: eid }); // quit if we can't enrich the metadata
+      }
 
       // 4. try to return the track with enriched metadata
       player.fetchMetadata(url, function (track) {
         if (!track) return cb();
-        element = element || {};
         track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of the DETECTORS
         track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
         track.sourceId = playerId;
@@ -182,7 +190,6 @@ function makeBookmarklet(window, urlPrefix = '') {
         toDetect = bc.trackinfo.map(function (tr) {
           if (tr.file) {
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
-            debugger;
             return {
               id: 'coucou',
               href: streamUrl,
