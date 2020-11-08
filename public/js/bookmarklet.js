@@ -1,3 +1,18 @@
+var __assign =
+  (this && this.__assign) ||
+  function () {
+    __assign =
+      Object.assign ||
+      function (t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s)
+            if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+      };
+    return __assign.apply(this, arguments);
+  };
 /**
  * openwhyd bookmarklet
  * @author adrienjoly
@@ -368,12 +383,12 @@ if (typeof exports !== 'undefined') {
   (window._initWhydBk = function () {
     // prevents bug in firefox 3
     if (undefined == window.console)
-      window.console = {
+      window.console = __assign(__assign({}, window.console), {
         log: function () {},
         info: function () {},
         error: function () {},
         warn: function () {},
-      };
+      });
     console.log('-= openwhyd bookmarklet v2.6.1 =-');
     var FILENAME = '/js/bookmarklet.js';
     var CSS_FILEPATH = '/css/bookmarklet.css';
@@ -391,8 +406,8 @@ if (typeof exports !== 'undefined') {
       delete window.onkeydownBackup;
       delete window.closeWhydBk;
     };
-    window.document.onkeydown = function (e) {
-      if ((e || event).keyCode == 27) window.closeWhydBk();
+    window.document.onkeydown = function (event) {
+      if (event.key === 'Esc') window.closeWhydBk();
     };
     // utility functions
     function findScriptHost(scriptPathName) {
@@ -404,15 +419,13 @@ if (typeof exports !== 'undefined') {
       }
     }
     function getSelText() {
-      var SelText = '';
       if (window.getSelection) {
-        SelText = window.getSelection();
+        return window.getSelection();
       } else if (window.document.getSelection) {
-        SelText = window.document.getSelection();
+        return window.document.getSelection();
       } else if (window.document.selection) {
-        SelText = window.document.selection.createRange().text;
+        return window.document.selection.createRange().text;
       }
-      return SelText;
     }
     function include(src, cb) {
       var inc, timer;

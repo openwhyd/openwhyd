@@ -11,6 +11,14 @@ interface Window {
   DeezerPlayer;
   BandcampPlayer;
   JamendoPlayer;
+  closeWhydBk;
+  onkeydownBackup;
+  _initWhydBk;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface Document {
+  selection;
 }
 
 /**
@@ -399,6 +407,7 @@ if (typeof exports !== 'undefined') {
     // prevents bug in firefox 3
     if (undefined == window.console)
       window.console = {
+        ...window.console,
         log: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
         info: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
         error: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
@@ -428,8 +437,8 @@ if (typeof exports !== 'undefined') {
       delete window.closeWhydBk;
     };
 
-    window.document.onkeydown = function (e) {
-      if ((e || event).keyCode == 27) window.closeWhydBk();
+    window.document.onkeydown = (event) => {
+      if (event.key === 'Esc') window.closeWhydBk();
     };
 
     // utility functions
@@ -444,15 +453,13 @@ if (typeof exports !== 'undefined') {
     }
 
     function getSelText() {
-      let SelText = '';
       if (window.getSelection) {
-        SelText = window.getSelection();
+        return window.getSelection();
       } else if (window.document.getSelection) {
-        SelText = window.document.getSelection();
+        return window.document.getSelection();
       } else if (window.document.selection) {
-        SelText = window.document.selection.createRange().text;
+        return window.document.selection.createRange().text;
       }
-      return SelText;
     }
 
     function include(src, cb?) {
