@@ -33,7 +33,7 @@ const makeWindow = ({ url = '', title = '', elementsByTagName = {} }) => ({
   },
 });
 
-const detectTracksAsPromise = ({ window, urlDetectors = [] }) =>
+const detectTracksAsPromise = ({ window, urlPrefix, urlDetectors = [] }) =>
   new Promise((resolve) => {
     const tracks = [];
     bookmarklet.detectTracks({
@@ -44,6 +44,7 @@ const detectTracksAsPromise = ({ window, urlDetectors = [] }) =>
         finish: () => resolve(tracks),
       },
       urlDetectors,
+      urlPrefix,
     });
   });
 
@@ -65,6 +66,28 @@ describe('bookmarklet', () => {
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
     assert.equal(results[0].searchQuery, window.document.title);
+  });
+
+  it.only('should return the default cover art with right prefix, for a MP3 file', async () => {
+    const window = makeWindow({
+      elementsByTagName: {
+        a: [
+          {
+            href: 'https://test.com/music.mp3',
+            textContent: `a random MP3 file`,
+          },
+        ],
+      },
+    });
+    const urlPrefix = 'https://openwhyd.org';
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [bookmarklet.makeFileDetector()],
+      urlPrefix,
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    assert.equal(results[0].img, `${urlPrefix}/images/cover-audiofile.png`);
   });
 
   it('should return the track title from a Spotify page', async () => {
