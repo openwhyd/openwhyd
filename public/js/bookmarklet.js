@@ -611,7 +611,7 @@ if (typeof exports !== 'undefined') {
       this.addThumb = function (thumb) {
         thumb.id = 'whydThumb' + this.nbTracks++;
         thumb = imageToHD(thumb);
-        thumb.onclick = thumb.onclick || showForm(thumb);
+        thumb.onclick = thumb.onclick || (() => showForm(thumb));
         contentDiv.appendChild(renderThumb(thumb));
       };
 
@@ -620,7 +620,7 @@ if (typeof exports !== 'undefined') {
         this.addThumb({
           title: searchQuery || 'Search Openwhyd',
           sourceLogo: urlPrefix + '/images/icon-search-from-bk.png',
-          onclick: showSearch(searchQuery),
+          onclick: () => showSearch(searchQuery),
         });
       };
 
