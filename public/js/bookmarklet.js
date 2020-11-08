@@ -85,7 +85,7 @@ function makeBookmarklet(window, urlPrefix = '') {
     }
 
     // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
-    return function detectPlayableStreams(url, cb, element) {
+    return function detectPlayableStreams(url, cb, element = {}) {
       // 1. find the matching player and track identifier
       var playerId = getPlayerId(url);
       var player = playerId && players[playerId];
@@ -100,12 +100,21 @@ function makeBookmarklet(window, urlPrefix = '') {
       // 3. store the identifier, with and without stream URL, to prevent duplicates
       eidSet[parts[0]] = true;
       eidSet[eid] = true;
-      if (!player || !player.fetchMetadata) return cb({ eId: eid }); // quit if we can't enrich the metadata
+      if (element.artist && element.title) {
+        return cb({
+          eId: eid,
+          title: `${element.artist} - ${element.title}`,
+          img: element.img,
+          sourceId: playerId,
+          sourceLabel: (player || {}).label,
+        });
+      } else if (!player || !player.fetchMetadata) {
+        return cb({ eId: eid }); // quit if we can't enrich the metadata
+      }
 
       // 4. try to return the track with enriched metadata
       player.fetchMetadata(url, function (track) {
         if (!track) return cb();
-        element = element || {};
         track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of the DETECTORS
         track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
         track.sourceId = playerId;
@@ -186,7 +195,9 @@ function makeBookmarklet(window, urlPrefix = '') {
               href: streamUrl,
               eId: bcPrefix + tr.title_link.split('/').pop() + '#' + streamUrl,
               name: bc.artist + ' - ' + tr.title,
-              img: bc.artFullsizeUrl || bc.artThumbURL,
+              img: bc.art_id
+                ? `https://f4.bcbits.com/img/a${bc.art_id}_16.jpg`
+                : undefined,
               artist: bc.artist,
               title: tr.title,
             };
@@ -241,7 +252,8 @@ function makeBookmarklet(window, urlPrefix = '') {
         remainingUrlDetectors.shift()(
           url,
           function (track) {
-            if (track && track.id) cb(track);
+            if (track) cb(track);
+            // Note: previously, the condition above was track && track.id, for some reason 🤷‍♂️
             else processNext();
           },
           element // TODO: refactor makeFileDetector() and makeStreamDetector() to pass element param before callback
