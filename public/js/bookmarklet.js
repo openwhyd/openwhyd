@@ -13,11 +13,7 @@ var __assign =
       };
     return __assign.apply(this, arguments);
   };
-/**
- * openwhyd bookmarklet
- * @author adrienjoly
- * https://github.com/openwhyd/openwhyd
- **/
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function makeBookmarklet() {
   var detectedTracks = 0;
   // Helpers
