@@ -181,13 +181,14 @@ function makeBookmarklet(window, urlPrefix) {
       var toDetect = [];
       var bc = window.TralbumData;
       if (bc) {
-        var bcPrefix = '/bc/' + bc.url.split('//')[1].split('.')[0] + '/';
+        var bcPrefix_1 = '/bc/' + bc.url.split('//')[1].split('.')[0] + '/';
         toDetect = bc.trackinfo.map(function (tr) {
           if (tr.file) {
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
             return {
               href: streamUrl,
-              eId: bcPrefix + tr.title_link.split('/').pop() + '#' + streamUrl,
+              eId:
+                bcPrefix_1 + tr.title_link.split('/').pop() + '#' + streamUrl,
               name: bc.artist + ' - ' + tr.title,
               img: bc.art_id
                 ? 'https://f4.bcbits.com/img/a' + bc.art_id + '_16.jpg'
@@ -447,18 +448,18 @@ if (typeof exports !== 'undefined') {
     function imageToHD(track) {
       if (track.img) {
         if (track.eId.substr(1, 2) == 'yt') {
-          var img =
+          var img_1 =
             'https://img.youtube.com/vi/' +
             track.eId.substr(4).split('?')[0] +
             '/hqdefault.jpg';
-          var i = new Image();
-          i.onload = function () {
-            if (i.height >= 120) {
+          var i_1 = new Image();
+          i_1.onload = function () {
+            if (i_1.height >= 120) {
               window.document.getElementById(track.id).style.backgroundImage =
-                'url(' + img + ')';
+                'url(' + img_1 + ')';
             }
           };
-          i.src = img;
+          i_1.src = img_1;
         } else if (track.eId.substr(1, 2) == 'sc')
           track.img = track.img.replace('-large', '-t300x300');
         else if (track.eId.indexOf('/dz/') == 0)
