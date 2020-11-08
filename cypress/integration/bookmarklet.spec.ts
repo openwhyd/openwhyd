@@ -9,10 +9,6 @@ context('Openwhyd bookmarklet', () => {
     win.document.body.appendChild(
       win.document.createElement('script')
     ).src = `${Cypress.config().baseUrl}/js/bookmarklet.js?${Date.now()}`;
-
-    document.body.appendChild(
-      document.createElement('script')
-    ).src = `http://localhost:8080/js/bookmarklet.js?${Date.now()}`;
   };
 
   beforeEach('login', () => {
