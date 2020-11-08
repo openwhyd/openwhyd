@@ -24,20 +24,22 @@ exports.loadTemplate = function (fileName, callback, forceReload) {
 
   var instance = {};
 
-  fs.readFile(fileName, 'utf-8', function (err, data) {
-    if (err) console.log('template.templateLoader ERROR ', err, err.stack);
-    instance.template = hogan.compile(data);
-    instance.render = function (params) {
-      try {
-        return this.template.render(params); //.replace(RE_AVATAR_URL, getFinalAvatarUrl);
-      } catch (err) {
-        console.log('template.templateLoader ERROR ', err, err.stack);
-        return null;
-      }
-    };
-    templateCache[fileName] = instance;
-    if (callback) callback(instance, err);
-  });
+  // Note: loading templates synchronously is bad... but:
+  // - because most of the code is not async-friendly, async loading causes crashes;
+  // - in the rend, we should rely on express' res.send() to render templates.
+  //   (see https://github.com/openwhyd/openwhyd/issues/379)
+  const data = fs.readFileSync(fileName, 'utf-8');
+  instance.template = hogan.compile(data);
+  instance.render = function (params) {
+    try {
+      return this.template.render(params); //.replace(RE_AVATAR_URL, getFinalAvatarUrl);
+    } catch (err) {
+      console.log('template.templateLoader ERROR ', err, err.stack);
+      return null;
+    }
+  };
+  templateCache[fileName] = instance;
+  if (callback) callback(instance);
 
   return instance;
 };
