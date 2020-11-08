@@ -1,3 +1,10 @@
+## [1.37.5](https://github.com/openwhyd/openwhyd/compare/v1.37.4...v1.37.5) (2020-11-08)
+
+
+### Bug Fixes
+
+* **bookmarklet:** Split bookmarklet.js into separate TypeScript files ([#384](https://github.com/openwhyd/openwhyd/issues/384)) ([a1d03dc](https://github.com/openwhyd/openwhyd/commit/a1d03dc8e64395b2f23e52304d01866861b7e2f6)), closes [#381](https://github.com/openwhyd/openwhyd/issues/381)
+
 ## [1.37.4](https://github.com/openwhyd/openwhyd/compare/v1.37.3...v1.37.4) (2020-11-08)
 
 
