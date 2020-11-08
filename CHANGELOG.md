@@ -1,3 +1,10 @@
+## [1.37.3](https://github.com/openwhyd/openwhyd/compare/v1.37.2...v1.37.3) (2020-11-08)
+
+
+### Bug Fixes
+
+* **bookmarklet:** Detect cover art from Bandcamp page ([#377](https://github.com/openwhyd/openwhyd/issues/377)) ([e5bd75b](https://github.com/openwhyd/openwhyd/commit/e5bd75b02689a16981a0222c04e6a89f62b2101b))
+
 ## [1.37.2](https://github.com/openwhyd/openwhyd/compare/v1.37.1...v1.37.2) (2020-11-08)
 
 
