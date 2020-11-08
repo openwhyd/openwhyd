@@ -1,3 +1,10 @@
+## [1.37.4](https://github.com/openwhyd/openwhyd/compare/v1.37.3...v1.37.4) (2020-11-08)
+
+
+### Bug Fixes
+
+* **docker:** Make Docker build faster ([#383](https://github.com/openwhyd/openwhyd/issues/383)) ([04b82c5](https://github.com/openwhyd/openwhyd/commit/04b82c58ec42c90e231cd4a1dbfad79e5c0175a9))
+
 ## [1.37.3](https://github.com/openwhyd/openwhyd/compare/v1.37.2...v1.37.3) (2020-11-08)
 
 
