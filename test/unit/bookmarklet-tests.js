@@ -68,7 +68,7 @@ describe('bookmarklet', () => {
     assert.equal(results[0].searchQuery, window.document.title);
   });
 
-  it.only('should return the default cover art with right prefix, for a MP3 file', async () => {
+  it('should return the default cover art with right prefix, for a MP3 file', async () => {
     const window = makeWindow({
       elementsByTagName: {
         a: [
