@@ -33,7 +33,6 @@ function makeBookmarklet() {
         (element ? element.title || getNodeText(element) : null) ||
         decodeURIComponent(fileName);
       eidSet[url] = true;
-      console.log('detectMusicFiles', url);
       cb({
         id: url,
         title: title.replace(/^\s+|\s+$/g, ''),
@@ -220,7 +219,6 @@ function makeBookmarklet() {
       (function processNext() {
         if (!remainingUrlDetectors.length) return cb();
         const trackDetector = remainingUrlDetectors.shift();
-        console.log({ trackDetector });
         trackDetector(
           url,
           function (track) {
