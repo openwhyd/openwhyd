@@ -378,11 +378,11 @@ if (typeof exports !== 'undefined') {
   (window._initWhydBk = function () {
     // prevents bug in firefox 3
     if (undefined == window.console)
-      console = {
-        log: function () {},
-        info: function () {},
-        error: function () {},
-        warn: function () {},
+      window.console = {
+        log: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        info: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        error: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        warn: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
       };
 
     console.log('-= openwhyd bookmarklet v2.6 =-');
@@ -524,8 +524,7 @@ if (typeof exports !== 'undefined') {
         '</div>',
       ].join('\n');
 
-      function showForm() {
-        var thumb = this;
+      function showForm(thumb) {
         var text = getSelText();
         var href =
           urlPrefix +
@@ -549,8 +548,7 @@ if (typeof exports !== 'undefined') {
         window.closeWhydBk();
       }
 
-      function showSearch() {
-        var searchQuery = this;
+      function showSearch(searchQuery) {
         var whydPop = window.open(
           urlPrefix + '/search?q=' + encodeURIComponent(searchQuery),
           'whydSearch'
@@ -613,7 +611,7 @@ if (typeof exports !== 'undefined') {
       this.addThumb = function (thumb) {
         thumb.id = 'whydThumb' + this.nbTracks++;
         thumb = imageToHD(thumb);
-        thumb.onclick = thumb.onclick || showForm.bind(thumb);
+        thumb.onclick = thumb.onclick || showForm(thumb);
         contentDiv.appendChild(renderThumb(thumb));
       };
 
@@ -622,7 +620,7 @@ if (typeof exports !== 'undefined') {
         this.addThumb({
           title: searchQuery || 'Search Openwhyd',
           sourceLogo: urlPrefix + '/images/icon-search-from-bk.png',
-          onclick: showSearch.bind(searchQuery),
+          onclick: showSearch(searchQuery),
         });
       };
 
