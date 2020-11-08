@@ -1,15 +1,20 @@
-FROM node:10.16.3-slim
+# Stage-1 dependencies
+FROM node:10.16.3 as dep
 
-# Install Make and Python (for node-gyp and argon2)
-RUN apt-get -y install build-essential python graphicsmagick
+# Install and build app dependencies
+WORKDIR /usr/src/app
+COPY ./package*.json /usr/src/app/
+RUN npm install --no-audit --production
+
+# Stage-2 final image
+FROM node:10.16.3-slim
 
 # Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
-
-COPY ./package*.json /usr/src/app/
-RUN npm install --no-audit --production
+# Fetch app dependencies built in stage-1
+COPY --from=dep /usr/src/app/node_modules ./node_modules
+RUN ["npm", "rebuild", "-q"]
 
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
 # RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js
