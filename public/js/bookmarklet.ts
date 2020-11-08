@@ -1,4 +1,17 @@
-/* global SoundCloudPlayer, VimeoPlayer, DailymotionPlayer, DeezerPlayer, BandcampPlayer, JamendoPlayer */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface Window {
+  SOUNDCLOUD_CLIENT_ID;
+  DEEZER_APP_ID;
+  DEEZER_CHANNEL_URL;
+  JAMENDO_CLIENT_ID;
+  YOUTUBE_API_KEY;
+  SoundCloudPlayer;
+  VimeoPlayer;
+  DailymotionPlayer;
+  DeezerPlayer;
+  BandcampPlayer;
+  JamendoPlayer;
+}
 
 /**
  * openwhyd bookmarklet
@@ -442,7 +455,7 @@ if (typeof exports !== 'undefined') {
       return SelText;
     }
 
-    function include(src, cb) {
+    function include(src, cb?) {
       let inc, timer;
       if (src.split(/[#?]/)[0].split('.').pop().toLowerCase() == 'css') {
         inc = window.document.createElement('link');
@@ -564,7 +577,7 @@ if (typeof exports !== 'undefined') {
         window.closeWhydBk();
       }
 
-      function elt(attrs, children) {
+      function elt(attrs, children = []) {
         const div = window.document.createElement(attrs.tagName || 'div');
         if (attrs.tagName) delete attrs.tagName;
         if (attrs.img) {
@@ -650,19 +663,19 @@ if (typeof exports !== 'undefined') {
         // playem-all.js must be loaded at that point
         callback({
           // yt: new YoutubePlayer(...) should be replaced by bookmarklet.YOUTUBE_PLAYER, to save API quota (see #262)
-          sc: new SoundCloudPlayer({}),
-          vi: new VimeoPlayer({}),
-          dm: new DailymotionPlayer({}),
-          dz: new DeezerPlayer({}),
-          bc: new BandcampPlayer({}),
-          ja: new JamendoPlayer({}),
+          sc: new window.SoundCloudPlayer({}),
+          vi: new window.VimeoPlayer({}),
+          dm: new window.DailymotionPlayer({}),
+          dz: new window.DeezerPlayer({}),
+          bc: new window.BandcampPlayer({}),
+          ja: new window.JamendoPlayer({}),
         });
       });
     }
 
     // Start up
 
-    var urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
+    const urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
       urlSuffix = '?' + new Date().getTime();
 
     console.info('loading bookmarklet stylesheet...');
@@ -673,7 +686,7 @@ if (typeof exports !== 'undefined') {
       : 'playem-all.js';
     const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
-      const bookmarklet = makeBookmarklet(window, urlPrefix, urlSuffix);
+      const bookmarklet = makeBookmarklet(window, urlPrefix);
       const allPlayers = Object.assign(
         {
           yt: bookmarklet.YOUTUBE_PLAYER, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
@@ -682,7 +695,7 @@ if (typeof exports !== 'undefined') {
       );
       bookmarklet.detectTracks({
         window,
-        ui: new BkUi(),
+        ui: BkUi(),
         urlDetectors: [
           bookmarklet.makeFileDetector(),
           bookmarklet.makeStreamDetector(allPlayers),

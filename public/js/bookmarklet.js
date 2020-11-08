@@ -1,4 +1,3 @@
-/* global SoundCloudPlayer, VimeoPlayer, DailymotionPlayer, DeezerPlayer, BandcampPlayer, JamendoPlayer */
 /**
  * openwhyd bookmarklet
  * @author adrienjoly
@@ -530,6 +529,9 @@ if (typeof exports !== 'undefined') {
         window.closeWhydBk();
       }
       function elt(attrs, children) {
+        if (children === void 0) {
+          children = [];
+        }
         var div = window.document.createElement(attrs.tagName || 'div');
         if (attrs.tagName) delete attrs.tagName;
         if (attrs.img) {
@@ -612,12 +614,12 @@ if (typeof exports !== 'undefined') {
         // playem-all.js must be loaded at that point
         callback({
           // yt: new YoutubePlayer(...) should be replaced by bookmarklet.YOUTUBE_PLAYER, to save API quota (see #262)
-          sc: new SoundCloudPlayer({}),
-          vi: new VimeoPlayer({}),
-          dm: new DailymotionPlayer({}),
-          dz: new DeezerPlayer({}),
-          bc: new BandcampPlayer({}),
-          ja: new JamendoPlayer({}),
+          sc: new window.SoundCloudPlayer({}),
+          vi: new window.VimeoPlayer({}),
+          dm: new window.DailymotionPlayer({}),
+          dz: new window.DeezerPlayer({}),
+          bc: new window.BandcampPlayer({}),
+          ja: new window.JamendoPlayer({}),
         });
       });
     }
@@ -632,7 +634,7 @@ if (typeof exports !== 'undefined') {
       : 'playem-all.js';
     var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
-      var bookmarklet = makeBookmarklet(window, urlPrefix, urlSuffix);
+      var bookmarklet = makeBookmarklet(window, urlPrefix);
       var allPlayers = Object.assign(
         {
           yt: bookmarklet.YOUTUBE_PLAYER,
@@ -641,7 +643,7 @@ if (typeof exports !== 'undefined') {
       );
       bookmarklet.detectTracks({
         window: window,
-        ui: new BkUi(),
+        ui: BkUi(),
         urlDetectors: [
           bookmarklet.makeFileDetector(),
           bookmarklet.makeStreamDetector(allPlayers),
