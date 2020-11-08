@@ -1,7 +1,6 @@
 #!/bin/sh
 
 OUTPUT_FILE="public/js/bookmarklet.js"
-HEADER=''
 
 npx tsc --outFile "${OUTPUT_FILE}" public/js/bookmarklet*.ts
 TRANSPILED_CODE=$(cat "${OUTPUT_FILE}")
