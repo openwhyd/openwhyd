@@ -21,11 +21,8 @@ interface Document {
   selection;
 }
 
-if (typeof exports !== 'undefined') {
-  // loading from node.js
-  module.exports = makeBookmarklet(); // will return detectTracks() and other functions
-} else {
-  // running from web browser
+if (typeof exports === 'undefined') {
+  // running from web browser only, not from Node.js
   (window._initWhydBk = function () {
     // prevents bug in firefox 3
     if (undefined == window.console)
@@ -292,7 +289,7 @@ if (typeof exports !== 'undefined') {
       include(playemUrl, function () {
         // playem-all.js must be loaded at that point
         callback({
-          // yt: new YoutubePlayer(...) should be replaced by bookmarklet.YOUTUBE_PLAYER, to save API quota (see #262)
+          // yt: new YoutubePlayer(...) should be replaced by openwhydYouTubeExtractor, to save API quota (see #262)
           sc: new window.SoundCloudPlayer({}),
           vi: new window.VimeoPlayer({}),
           dm: new window.DailymotionPlayer({}),
@@ -319,7 +316,7 @@ if (typeof exports !== 'undefined') {
       const bookmarklet = makeBookmarklet();
       const allPlayers = Object.assign(
         {
-          yt: bookmarklet.YOUTUBE_PLAYER, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
+          yt: openwhydYouTubeExtractor, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
         },
         players
       );

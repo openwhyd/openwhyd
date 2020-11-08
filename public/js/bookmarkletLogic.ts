@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function makeBookmarklet() {
   let detectedTracks = 0;
 
@@ -42,31 +41,6 @@ function makeBookmarklet() {
       });
     };
   }
-
-  const YOUTUBE_PLAYER = {
-    getEid: function (url) {
-      // code imported from playem-all
-      if (
-        /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
-          url
-        ) ||
-        /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
-        /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||
-        /youtube.googleapis.com\/v\/([a-zA-Z0-9_-]+)/.test(url)
-      )
-        return RegExp.lastParen;
-    },
-    fetchMetadata: function (url, callback) {
-      const id = this.getEid(url);
-      callback({
-        id: id,
-        eId: '/yt/' + id,
-        img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
-        url: 'https://www.youtube.com/watch?v=' + id,
-        playerLabel: 'Youtube',
-      });
-    },
-  };
 
   // players = { playerId -> { getEid(), fetchMetadata() } }
   // returns detectPlayableStreams(url, callback, element)
@@ -369,9 +343,12 @@ function makeBookmarklet() {
   }
 
   return {
-    YOUTUBE_PLAYER,
     detectTracks,
     makeFileDetector,
     makeStreamDetector,
   };
+}
+
+if (typeof exports !== 'undefined') {
+  exports.makeBookmarklet = makeBookmarklet;
 }

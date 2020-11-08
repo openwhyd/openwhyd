@@ -13,7 +13,6 @@ var __assign =
       };
     return __assign.apply(this, arguments);
   };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function makeBookmarklet() {
   var detectedTracks = 0;
   // Helpers
@@ -52,30 +51,6 @@ function makeBookmarklet() {
       });
     };
   }
-  var YOUTUBE_PLAYER = {
-    getEid: function (url) {
-      // code imported from playem-all
-      if (
-        /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
-          url
-        ) ||
-        /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
-        /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||
-        /youtube.googleapis.com\/v\/([a-zA-Z0-9_-]+)/.test(url)
-      )
-        return RegExp.lastParen;
-    },
-    fetchMetadata: function (url, callback) {
-      var id = this.getEid(url);
-      callback({
-        id: id,
-        eId: '/yt/' + id,
-        img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
-        url: 'https://www.youtube.com/watch?v=' + id,
-        playerLabel: 'Youtube',
-      });
-    },
-  };
   // players = { playerId -> { getEid(), fetchMetadata() } }
   // returns detectPlayableStreams(url, callback, element)
   function makeStreamDetector(players) {
@@ -369,17 +344,43 @@ function makeBookmarklet() {
     })();
   }
   return {
-    YOUTUBE_PLAYER: YOUTUBE_PLAYER,
     detectTracks: detectTracks,
     makeFileDetector: makeFileDetector,
     makeStreamDetector: makeStreamDetector,
   };
 }
 if (typeof exports !== 'undefined') {
-  // loading from node.js
-  module.exports = makeBookmarklet(); // will return detectTracks() and other functions
-} else {
-  // running from web browser
+  exports.makeBookmarklet = makeBookmarklet;
+}
+var openwhydYouTubeExtractor = {
+  getEid: function (url) {
+    // code imported from playem-all
+    if (
+      /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
+        url
+      ) ||
+      /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
+      /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||
+      /youtube.googleapis.com\/v\/([a-zA-Z0-9_-]+)/.test(url)
+    )
+      return RegExp.lastParen;
+  },
+  fetchMetadata: function (url, callback) {
+    var id = this.getEid(url);
+    callback({
+      id: id,
+      eId: '/yt/' + id,
+      img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
+      url: 'https://www.youtube.com/watch?v=' + id,
+      playerLabel: 'Youtube',
+    });
+  },
+};
+if (typeof exports !== 'undefined') {
+  exports.openwhydYouTubeExtractor = openwhydYouTubeExtractor;
+}
+if (typeof exports === 'undefined') {
+  // running from web browser only, not from Node.js
   (window._initWhydBk = function () {
     // prevents bug in firefox 3
     if (undefined == window.console)
@@ -626,7 +627,7 @@ if (typeof exports !== 'undefined') {
       include(playemUrl, function () {
         // playem-all.js must be loaded at that point
         callback({
-          // yt: new YoutubePlayer(...) should be replaced by bookmarklet.YOUTUBE_PLAYER, to save API quota (see #262)
+          // yt: new YoutubePlayer(...) should be replaced by openwhydYouTubeExtractor, to save API quota (see #262)
           sc: new window.SoundCloudPlayer({}),
           vi: new window.VimeoPlayer({}),
           dm: new window.DailymotionPlayer({}),
@@ -650,7 +651,7 @@ if (typeof exports !== 'undefined') {
       var bookmarklet = makeBookmarklet();
       var allPlayers = Object.assign(
         {
-          yt: bookmarklet.YOUTUBE_PLAYER,
+          yt: openwhydYouTubeExtractor,
         },
         players
       );

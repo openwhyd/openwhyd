@@ -9,4 +9,5 @@
  */
 
 import './bookmarkletLogic';
+import './bookmarkletYouTube';
 import './bookmarkletUI';

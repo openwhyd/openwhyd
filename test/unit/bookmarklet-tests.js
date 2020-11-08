@@ -1,7 +1,12 @@
 /* global describe, it, before, after */
 
 const assert = require('assert');
-const bookmarklet = require('./../../public/js/bookmarklet.js');
+const {
+  makeBookmarklet,
+  openwhydYouTubeExtractor,
+} = require('./../../public/js/bookmarklet.js');
+
+const bookmarklet = makeBookmarklet();
 
 const YOUTUBE_VIDEO = {
   id: 'uWB8plk9sXk',
@@ -122,7 +127,7 @@ describe('bookmarklet', () => {
       elementsByTagName: YOUTUBE_VIDEO.elementsByTagName,
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -149,7 +154,7 @@ describe('bookmarklet', () => {
       },
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -176,7 +181,7 @@ describe('bookmarklet', () => {
       },
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -198,7 +203,7 @@ describe('bookmarklet', () => {
       elementsByTagName: YOUTUBE_VIDEO.elementsByTagName,
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -300,7 +305,7 @@ describe('bookmarklet', () => {
       const { url } = YOUTUBE_VIDEO;
       const playerId = 'yt';
       const detectors = {
-        [playerId]: { getEid: bookmarklet.YOUTUBE_PLAYER.getEid },
+        [playerId]: { getEid: openwhydYouTubeExtractor.getEid },
       };
       const detectStreams = bookmarklet.makeStreamDetector(detectors);
       const track = await new Promise((cb) => detectStreams(url, cb));
