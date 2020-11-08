@@ -28,7 +28,7 @@ context('Openwhyd bookmarklet', () => {
     });
   });
 
-  it.only('can import the cover art of a Bandcamp track', () => {
+  it('can import the cover art of a Bandcamp track', () => {
     cy.visit('https://harissa.bandcamp.com/track/rooftop');
 
     cy.window().then(injectBookmarklet);
@@ -41,6 +41,9 @@ context('Openwhyd bookmarklet', () => {
     cy.get('#whydContent').should('contain.html', '1382233458'); // ar_id
     cy.get('.whydThumb').first().click();
   });
+
+  // TODO: check that the cover art is still visible after posting
+  // TODO: check that we don't end up with dozens of "Search Openwhyd" results, in the bookmarlet
 
   it('can be opened twice from the same youtube page', () => {
     cy.visit('http://localhost:8080/html/test-resources/youtube-videos.html');

@@ -104,6 +104,7 @@ function makeBookmarklet(window, urlPrefix = '') {
         return cb({
           eId: eid,
           title: `${element.artist} - ${element.title}`,
+          img: element.img,
           sourceId: playerId,
           sourceLabel: (player || {}).label,
         });
@@ -191,7 +192,6 @@ function makeBookmarklet(window, urlPrefix = '') {
           if (tr.file) {
             var streamUrl = tr.file[Object.keys(tr.file)[0]];
             return {
-              id: 'coucou',
               href: streamUrl,
               eId: bcPrefix + tr.title_link.split('/').pop() + '#' + streamUrl,
               name: bc.artist + ' - ' + tr.title,
@@ -252,7 +252,8 @@ function makeBookmarklet(window, urlPrefix = '') {
         remainingUrlDetectors.shift()(
           url,
           function (track) {
-            if (track && track.id) cb(track);
+            if (track) cb(track);
+            // Note: previously, the condition above was track && track.id, for some reason 🤷‍♂️
             else processNext();
           },
           element // TODO: refactor makeFileDetector() and makeStreamDetector() to pass element param before callback
