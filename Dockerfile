@@ -1,14 +1,17 @@
 FROM node:10.16.3-slim
 
-# Install Make and Python (for node-gyp and argon2)
-RUN apt-get update
-RUN apt-get -y install build-essential python graphicsmagick
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  g++ \
+  gcc \
+  libc6-dev \
+  make \
+  python \
+  graphicsmagick \
+  && rm -rf /var/lib/apt/lists/*
 
-# Create app directory
+# Install and build app dependencies
 WORKDIR /usr/src/app
-
-# Install app dependencies
-
 COPY ./package*.json /usr/src/app/
 RUN npm install --no-audit --production
 
