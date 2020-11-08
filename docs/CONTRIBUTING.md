@@ -58,8 +58,8 @@ More generally, make sure to follow these three principles:
 - **config** Database initialization scripts, http routes, and other configuration files
 - **cypress** End-to-End tests
 - **docs** API documentation and other references documents
-- **misc** Code of browser extension 
-- **public** Frontend assets: images, css, js files 
+- **misc** Code of browser extension
+- **public** Frontend assets: images, css, js files
 - **scripts** Utilities for production and data analatics
 - **test** Integration and unit tests
 
