@@ -1,7 +1,12 @@
-/* global describe, it */
+/* global describe, it, before, after */
 
 const assert = require('assert');
-const bookmarklet = require('./../../public/js/bookmarklet.js');
+const {
+  makeBookmarklet,
+  openwhydYouTubeExtractor,
+} = require('./../../public/js/bookmarklet.js');
+
+const bookmarklet = makeBookmarklet();
 
 const YOUTUBE_VIDEO = {
   id: 'uWB8plk9sXk',
@@ -33,20 +38,18 @@ const makeWindow = ({ url = '', title = '', elementsByTagName = {} }) => ({
   },
 });
 
-const detectTracksAsPromise = ({ window, urlDetectors = [] }) =>
+const detectTracksAsPromise = ({ window, urlPrefix, urlDetectors = [] }) =>
   new Promise((resolve) => {
     const tracks = [];
     bookmarklet.detectTracks({
       window,
       ui: {
-        get nbTracks() {
-          return tracks.length;
-        },
         addThumb: (track) => tracks.push(track),
         addSearchThumb: (track) => tracks.push(track),
         finish: () => resolve(tracks),
       },
       urlDetectors,
+      urlPrefix,
     });
   });
 
@@ -54,12 +57,12 @@ describe('bookmarklet', () => {
   before(() => {
     // disable console.info() calls from bookmarklet, to reduce noise in tests output
     this.consoleBackup = console;
-    console = { ...console, info() {} };
+    console = { ...console, info() {} }; // eslint-disable-line no-global-assign, @typescript-eslint/no-empty-function
   });
 
   after(() => {
     // restore console
-    console = this.consoleBackup;
+    console = this.consoleBackup; // eslint-disable-line no-global-assign
   });
 
   it('should return a search link when no tracks were found on the page', async () => {
@@ -68,6 +71,28 @@ describe('bookmarklet', () => {
     assert.equal(typeof results, 'object');
     assert.equal(results.length, 1);
     assert.equal(results[0].searchQuery, window.document.title);
+  });
+
+  it('should return the default cover art with right prefix, for a MP3 file', async () => {
+    const window = makeWindow({
+      elementsByTagName: {
+        a: [
+          {
+            href: 'https://test.com/music.mp3',
+            textContent: `a random MP3 file`,
+          },
+        ],
+      },
+    });
+    const urlPrefix = 'https://openwhyd.org';
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [bookmarklet.makeFileDetector()],
+      urlPrefix,
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    assert.equal(results[0].img, `${urlPrefix}/images/cover-audiofile.png`);
   });
 
   it('should return the track title from a Spotify page', async () => {
@@ -102,7 +127,7 @@ describe('bookmarklet', () => {
       elementsByTagName: YOUTUBE_VIDEO.elementsByTagName,
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -129,7 +154,7 @@ describe('bookmarklet', () => {
       },
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -156,7 +181,7 @@ describe('bookmarklet', () => {
       },
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -178,7 +203,7 @@ describe('bookmarklet', () => {
       elementsByTagName: YOUTUBE_VIDEO.elementsByTagName,
     });
     const playerId = 'yt';
-    const detectors = { [playerId]: bookmarklet.YOUTUBE_PLAYER };
+    const detectors = { [playerId]: openwhydYouTubeExtractor };
     const results = await detectTracksAsPromise({
       window,
       urlDetectors: [bookmarklet.makeStreamDetector(detectors)],
@@ -280,7 +305,7 @@ describe('bookmarklet', () => {
       const { url } = YOUTUBE_VIDEO;
       const playerId = 'yt';
       const detectors = {
-        [playerId]: { getEid: bookmarklet.YOUTUBE_PLAYER.getEid },
+        [playerId]: { getEid: openwhydYouTubeExtractor.getEid },
       };
       const detectStreams = bookmarklet.makeStreamDetector(detectors);
       const track = await new Promise((cb) => detectStreams(url, cb));
