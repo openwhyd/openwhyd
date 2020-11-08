@@ -1,6 +1,9 @@
 # Stage-1 dependencies
 FROM node:10.16.3 as dep
 
+# Install dependencies for node-gyp and argon2
+RUN apk add --no-cache python
+
 # Install and build app dependencies
 WORKDIR /usr/src/app
 COPY ./package*.json /usr/src/app/
@@ -8,6 +11,9 @@ RUN npm install --no-audit --production
 
 # Stage-2 final image
 FROM node:10.16.3-slim
+
+# Install runtime dependencies
+RUN apk add --no-cache graphicsmagick
 
 # Create app directory
 WORKDIR /usr/src/app
