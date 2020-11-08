@@ -102,6 +102,7 @@ exports.Application = class Application {
   getExpressApp() {
     if (this._expressApp) return this._expressApp;
     const app = express();
+    // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
