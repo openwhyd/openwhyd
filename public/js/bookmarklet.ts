@@ -27,7 +27,7 @@ interface Document {
  * https://github.com/openwhyd/openwhyd
  **/
 
-function makeBookmarklet(window, urlPrefix = '') {
+function makeBookmarklet() {
   let detectedTracks = 0;
 
   // Helpers
@@ -62,10 +62,11 @@ function makeBookmarklet(window, urlPrefix = '') {
         (element ? element.title || getNodeText(element) : null) ||
         decodeURIComponent(fileName);
       eidSet[url] = true;
+      console.log('detectMusicFiles', url);
       cb({
         id: url,
         title: title.replace(/^\s+|\s+$/g, ''),
-        img: urlPrefix + '/images/cover-audiofile.png',
+        img: '/images/cover-audiofile.png',
       });
     };
   }
@@ -264,7 +265,7 @@ function makeBookmarklet(window, urlPrefix = '') {
     },
   ];
 
-  function detectTracks({ window, ui, urlDetectors }) {
+  function detectTracks({ window, ui, urlDetectors, urlPrefix }) {
     // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
     // TODO: decouple from ui <= let caller provide one handler to be called for each detected track
 
@@ -272,7 +273,9 @@ function makeBookmarklet(window, urlPrefix = '') {
       const remainingUrlDetectors = urlDetectors.slice();
       (function processNext() {
         if (!remainingUrlDetectors.length) return cb();
-        remainingUrlDetectors.shift()(
+        const trackDetector = remainingUrlDetectors.shift();
+        console.log({ trackDetector });
+        trackDetector(
           url,
           function (track) {
             if (track) cb(track);
@@ -383,6 +386,9 @@ function makeBookmarklet(window, urlPrefix = '') {
         detectEmbed(elt, function (track) {
           if (track) {
             detectedTracks++;
+            if (track.img && track.img[0] === '/') {
+              track.img = urlPrefix + track.img;
+            }
             ui.addThumb(track);
           } else searchThumbs.push(elt);
           processNext();
@@ -693,7 +699,7 @@ if (typeof exports !== 'undefined') {
       : 'playem-all.js';
     const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
-      const bookmarklet = makeBookmarklet(window, urlPrefix);
+      const bookmarklet = makeBookmarklet();
       const allPlayers = Object.assign(
         {
           yt: bookmarklet.YOUTUBE_PLAYER, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
@@ -707,6 +713,7 @@ if (typeof exports !== 'undefined') {
           bookmarklet.makeFileDetector(),
           bookmarklet.makeStreamDetector(allPlayers),
         ],
+        urlPrefix,
       });
     });
   })();

@@ -18,10 +18,7 @@ var __assign =
  * @author adrienjoly
  * https://github.com/openwhyd/openwhyd
  **/
-function makeBookmarklet(window, urlPrefix) {
-  if (urlPrefix === void 0) {
-    urlPrefix = '';
-  }
+function makeBookmarklet() {
   var detectedTracks = 0;
   // Helpers
   function getNodeText(node) {
@@ -51,10 +48,11 @@ function makeBookmarklet(window, urlPrefix) {
         (element ? element.title || getNodeText(element) : null) ||
         decodeURIComponent(fileName);
       eidSet[url] = true;
+      console.log('detectMusicFiles', url);
       cb({
         id: url,
         title: title.replace(/^\s+|\s+$/g, ''),
-        img: urlPrefix + '/images/cover-audiofile.png',
+        img: '/images/cover-audiofile.png',
       });
     };
   }
@@ -253,12 +251,15 @@ function makeBookmarklet(window, urlPrefix) {
     // TODO: decouple from ui <= let caller provide one handler to be called for each detected track
     var window = _a.window,
       ui = _a.ui,
-      urlDetectors = _a.urlDetectors;
+      urlDetectors = _a.urlDetectors,
+      urlPrefix = _a.urlPrefix;
     function detectTrack(url, element, cb) {
       var remainingUrlDetectors = urlDetectors.slice();
       (function processNext() {
         if (!remainingUrlDetectors.length) return cb();
-        remainingUrlDetectors.shift()(
+        var trackDetector = remainingUrlDetectors.shift();
+        console.log({ trackDetector: trackDetector });
+        trackDetector(
           url,
           function (track) {
             if (track) cb(track);
@@ -362,6 +363,9 @@ function makeBookmarklet(window, urlPrefix) {
         detectEmbed(elt, function (track) {
           if (track) {
             detectedTracks++;
+            if (track.img && track.img[0] === '/') {
+              track.img = urlPrefix + track.img;
+            }
             ui.addThumb(track);
           } else searchThumbs.push(elt);
           processNext();
@@ -647,7 +651,7 @@ if (typeof exports !== 'undefined') {
       : 'playem-all.js';
     var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
-      var bookmarklet = makeBookmarklet(window, urlPrefix);
+      var bookmarklet = makeBookmarklet();
       var allPlayers = Object.assign(
         {
           yt: bookmarklet.YOUTUBE_PLAYER,
@@ -661,6 +665,7 @@ if (typeof exports !== 'undefined') {
           bookmarklet.makeFileDetector(),
           bookmarklet.makeStreamDetector(allPlayers),
         ],
+        urlPrefix: urlPrefix,
       });
     });
   })();
