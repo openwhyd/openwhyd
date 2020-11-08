@@ -1,3 +1,10 @@
+## [1.37.2](https://github.com/openwhyd/openwhyd/compare/v1.37.1...v1.37.2) (2020-11-08)
+
+
+### Bug Fixes
+
+* **379:** Load templates synchronously, to prevent crash on CI ([#382](https://github.com/openwhyd/openwhyd/issues/382)) ([06260a9](https://github.com/openwhyd/openwhyd/commit/06260a9429fa14e9a62a027eee93d4ee4370e602)), closes [#379](https://github.com/openwhyd/openwhyd/issues/379)
+
 ## [1.37.1](https://github.com/openwhyd/openwhyd/compare/v1.37.0...v1.37.1) (2020-11-08)
 
 
