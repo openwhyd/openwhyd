@@ -39,9 +39,6 @@ const detectTracksAsPromise = ({ window, urlDetectors = [] }) =>
     bookmarklet.detectTracks({
       window,
       ui: {
-        get nbTracks() {
-          return tracks.length;
-        },
         addThumb: (track) => tracks.push(track),
         addSearchThumb: (track) => tracks.push(track),
         finish: () => resolve(tracks),

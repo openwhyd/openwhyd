@@ -7,6 +7,8 @@
  **/
 
 function makeBookmarklet(window, urlPrefix = '') {
+  let detectedTracks = 0;
+
   // Helpers
 
   function getNodeText(node) {
@@ -284,11 +286,14 @@ function makeBookmarklet(window, urlPrefix = '') {
 
     function whenDone(searchThumbs) {
       searchThumbs.map(function (searchThumb) {
+        detectedTracks++;
         ui.addSearchThumb(searchThumb);
       });
       console.info('finished detecting tracks!');
-      if (!ui.nbTracks)
+      if (detectedTracks === 0) {
+        detectedTracks++;
         ui.addSearchThumb({ searchQuery: window.document.title });
+      }
       ui.finish();
     }
 
@@ -355,8 +360,10 @@ function makeBookmarklet(window, urlPrefix = '') {
       if (!elt) whenDone(searchThumbs);
       else
         detectEmbed(elt, function (track) {
-          if (track) ui.addThumb(track);
-          else searchThumbs.push(elt);
+          if (track) {
+            detectedTracks++;
+            ui.addThumb(track);
+          } else searchThumbs.push(elt);
           processNext();
         });
     })();
@@ -385,7 +392,7 @@ if (typeof exports !== 'undefined') {
         warn: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
       };
 
-    console.log('-= openwhyd bookmarklet v2.6 =-');
+    console.log('-= openwhyd bookmarklet v2.6.1 =-');
 
     var FILENAME = '/js/bookmarklet.js';
     var CSS_FILEPATH = '/css/bookmarklet.css';
