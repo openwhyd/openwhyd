@@ -96,21 +96,6 @@
     </div>
     {{/playlistContest}}
 
-    <!--
-		<div class="sideBox">
-			<div class="head">
-				<h2>Invite your Friends</h2>
-				<a href="/invite">Invite more</a>
-			</div>
-			<form class="body inviteAd">
-				<div class="fld">
-					<input type="text" name="email" placeholder="e.g. {{inviteAdEmailPlaceholder}}">
-				</div>
-				<input type="submit" class="userSubscribe" value="Invite">
-			</form>
-		</div>
-		-->
-
     <script
       src="/js/feed-rightbar.js"
       type="text/javascript"
@@ -194,37 +179,8 @@
           >
         </li>
       </ul>
-      <p>
-        Openwhyd is maintained collaboratively,<br />under the MIT License.
-        <a
-          id="barelog-trigger"
-          href="#"
-          style="position: relative; padding-right: 22px"
-          >What's new?</a
-        ><span id="headway-changelog-badge" />
-      </p>
+      <p>Openwhyd is maintained collaboratively,<br />under the MIT License.</p>
     </div>
-
-    <!-- this script activates the "What's new?" link -->
-    <script>
-      (function (b, a, r, e, l, o, g) {
-        (o = a.createElement(r)), (g = a.getElementsByTagName(r)[0]);
-        o.async = 1;
-        o.src = e;
-        g.parentNode.insertBefore(o, g);
-        o.addEventListener('load', function () {
-          setTimeout(function () {
-            Barelog(options);
-          }, 50);
-        });
-      })(window, document, 'script', 'https://cdn.productfeed.app/widget.js');
-
-      var options = {
-        id: 't8nrxyyfogwt',
-        trigger: '#productfeed-trigger',
-      };
-    </script>
-    <!-- end of "What's new?" link -->
   </div>
   <!-- END RIGHT BAR-->
   {{/user}} {{#playlist}}{{#inContest}}
@@ -370,9 +326,7 @@
       <a href="/stream" style="float: right; margin-top: 22px"
         >Back to Stream</a
       >
-      {{/isUserLogged}}
-      <h2>Full Stream</h2>
-      {{/globalFeed}} {{#homeFeed}}
+      {{/isUserLogged}} {{/globalFeed}} {{#homeFeed}}
       <!--<a href="/all" style="float:right; margin-top: 22px;">Switch to Full Stream</a>-->
       <!-- <a href="/hot" class="lnkHotTracks"><img src="/images/icon-fire-small.png">Hot Tracks</a> -->
       <h2 class="head-name-tab">Stream</h2>

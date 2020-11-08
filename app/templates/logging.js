@@ -19,29 +19,6 @@ exports.refreshTemplates = function (callback) {
 
 exports.refreshTemplates();
 
-exports.renderLandingPage = function (loggedUser, form, callback) {
-  var templateParams = {
-    urlPrefix: config.urlPrefix,
-    loggedUser: loggedUser,
-  };
-
-  var whydPageParams = {
-    loggedUser: loggedUser,
-    js: [],
-    css: [],
-    endOfBody: [].join('\n'),
-    bodyClass: 'home',
-  };
-
-  mainTemplate.renderAsyncWhydPageFromTemplateFile(
-    'public/html/landingOpen.html',
-    templateParams,
-    whydPageParams,
-    callback,
-    true
-  );
-};
-
 exports.renderLoginPage = function (form) {
   var params = {
     urlPrefix: config.urlPrefix,

@@ -260,24 +260,24 @@ exports.renderHeader = function (user, content, params) {
       '   </a>',
       uid ? '<div id="notifIcon">0</div><div id="notifPanel"></div>' : '',
       '  </div>',
+      '  <div id="navbar">',
+      '   <a target="_top" id="tabStream" href="/">Stream</a>',
+      '   <a target="_top" id="tabHot" href="/hot">Hot Tracks</a>',
+      //		'   <a target="_top" id="tabProfile" href="/u/'+user.id+'">Profile</a>',
+      //	'   <a target="_top" id="tabDiscover" href="/discover/users">Discover</a>',
+      '  </div>',
+      '  <div id="searchBar">',
+      '   <div class="searchForm" id="searchForm">', //<form id="searchForm" method="get" action="'+render.urlPrefix+'/search">',
+      '    <input name="q" class="q search-input" id="q" type="text" value="' +
+        uiSnippets.htmlEntities(params.q) +
+        '" placeholder="Search for a song, artist, genre, etc" autocomplete="off" />',
+      //	'    <input type="button" id="searchClear" />',
+      '   </div>', //</form>',
+      '   <div class="searchResults" id="searchResults"></div>',
+      '  </div>',
     ].concat(
       uid
         ? [
-            '  <div id="navbar">',
-            '   <a target="_top" id="tabStream" href="/">Stream</a>',
-            '   <a target="_top" id="tabHot" href="/hot">Hot Tracks</a>',
-            //		'   <a target="_top" id="tabProfile" href="/u/'+user.id+'">Profile</a>',
-            //	'   <a target="_top" id="tabDiscover" href="/discover/users">Discover</a>',
-            '  </div>',
-            '  <div id="searchBar">',
-            '   <div class="searchForm" id="searchForm">', //<form id="searchForm" method="get" action="'+render.urlPrefix+'/search">',
-            '    <input name="q" class="q search-input" id="q" type="text" value="' +
-              uiSnippets.htmlEntities(params.q) +
-              '" placeholder="Search for a song, artist, genre, etc" autocomplete="off" />',
-            //	'    <input type="button" id="searchClear" />',
-            '   </div>', //</form>',
-            '   <div class="searchResults" id="searchResults"></div>',
-            '  </div>',
             '  <div id="navLinks">',
 
             '   <div id="loginDiv">',
@@ -309,19 +309,11 @@ exports.renderHeader = function (user, content, params) {
             '  </div>',
           ]
         : [
-            '  <div id="searchBar">',
-            '  <h1>Openwhyd: The community of music lovers</h1>',
-            '	 <p>Discover and collect music gems from Youtube, Soundcloud, Deezer and more</p>',
-            '   <div class="searchForm" id="searchForm">', //<form id="searchForm" method="get" action="'+render.urlPrefix+'/search">',
-            '    <input name="q" class="q search-input" id="q" type="text" value="' +
-              uiSnippets.htmlEntities(params.q) +
-              '" placeholder="Search for a song, artist, genre, etc" autocomplete="off" />',
-            //	'    <input type="button" id="searchClear" />',
-            '   </div>', //</form>',
-            '   <div class="searchResults" id="searchResults"></div>',
+            '  <div id="homeHeader">',
+            '   <h1>Openwhyd: The community of music lovers</h1>',
+            '	  <p>Discover and collect music gems from Youtube, Soundcloud, Deezer and more</p>',
             '  </div>',
             '  <div id="logBox">',
-            '   <a id="get-app" href="https://itunes.apple.com/fr/app/whyd-everyones-music-playlist/id874380201" target="_blank">Get App</a>',
             '   <a id="signin" href="/login">Login</a>',
             '   <a id="signup" onclick="login();">Sign up</a>',
             '  </div>',

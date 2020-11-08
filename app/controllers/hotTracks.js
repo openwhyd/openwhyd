@@ -42,8 +42,6 @@ var template;
 exports.controller = function (request, reqParams, response) {
   reqParams = reqParams || {};
   var loggedInUser = request.getUser() || {};
-  //if (!loggedInUser.id)
-  //	return response.temporaryRedirect("/");
 
   function render(html) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
