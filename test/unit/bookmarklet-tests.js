@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, before, after */
 
 const assert = require('assert');
 const bookmarklet = require('./../../public/js/bookmarklet.js');
@@ -54,12 +54,12 @@ describe('bookmarklet', () => {
   before(() => {
     // disable console.info() calls from bookmarklet, to reduce noise in tests output
     this.consoleBackup = console;
-    console = { ...console, info() {} };
+    console = { ...console, info() {} }; // eslint-disable-line no-global-assign, @typescript-eslint/no-empty-function
   });
 
   after(() => {
     // restore console
-    console = this.consoleBackup;
+    console = this.consoleBackup; // eslint-disable-line no-global-assign
   });
 
   it('should return a search link when no tracks were found on the page', async () => {
