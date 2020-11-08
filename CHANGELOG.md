@@ -1,3 +1,10 @@
+## [1.37.1](https://github.com/openwhyd/openwhyd/compare/v1.37.0...v1.37.1) (2020-11-08)
+
+
+### Bug Fixes
+
+* Remove Barelog / Productfeed ([#380](https://github.com/openwhyd/openwhyd/issues/380)) ([3115c01](https://github.com/openwhyd/openwhyd/commit/3115c01bca576e2f7be6b6c9cfa77462df57867f))
+
 # [1.37.0](https://github.com/openwhyd/openwhyd/compare/v1.36.4...v1.37.0) (2020-11-07)
 
 
