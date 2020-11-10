@@ -1,6 +1,5 @@
 /**
- * pgGenre controller
- * renders genre pages
+ * pgApp controller
  * @author adrienjoly, whyd
  **/
 
