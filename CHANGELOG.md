@@ -1,3 +1,10 @@
+## [1.37.7](https://github.com/openwhyd/openwhyd/compare/v1.37.6...v1.37.7) (2020-11-10)
+
+
+### Bug Fixes
+
+* Remove slow routes ([#386](https://github.com/openwhyd/openwhyd/issues/386)) ([0ac5e41](https://github.com/openwhyd/openwhyd/commit/0ac5e41889ff8ea70afbc026bc52b2b1737ab8b0)), closes [#318](https://github.com/openwhyd/openwhyd/issues/318) [#202](https://github.com/openwhyd/openwhyd/issues/202) [#144](https://github.com/openwhyd/openwhyd/issues/144) [/github.com/openwhyd/openwhyd/issues/318#issuecomment-724748867](https://github.com//github.com/openwhyd/openwhyd/issues/318/issues/issuecomment-724748867)
+
 ## [1.37.6](https://github.com/openwhyd/openwhyd/compare/v1.37.5...v1.37.6) (2020-11-08)
 
 
