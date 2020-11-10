@@ -14,7 +14,6 @@ var loggingTemplate = require('../templates/logging.js');
 var renderAllLibrary = require('./LibAll.js').render;
 var renderUserLibrary = require('./LibUser.js').render;
 var renderFriendsLibrary = require('./LibFriends.js').render;
-var renderStyleStream = require('./LibStyle.js').render;
 
 var tabParams = [
   'showPlaylists',
@@ -191,9 +190,8 @@ exports.controller = function (request, reqParams, response) {
             )
           );
       });
-  } else if (path == '/all') return renderAllLibrary(lib);
-  else if (reqParams.style) {
-    renderStyleStream(lib, reqParams.style);
+  } else if (path == '/all') {
+    return renderAllLibrary(lib);
   } else if (reqParams.playlistId) {
     // temporarily reversed redirection logic
     // FROM /u/id/playlist/xxx -> /handle/playlist/xxx TO /handle/playlist/xxx -> /u/id/playlist/xxx
