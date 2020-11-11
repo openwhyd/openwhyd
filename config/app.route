@@ -35,13 +35,6 @@ GET    /tos                            -> controllers.redir
 GET    /register                       -> controllers.private.register
 POST   /register                       -> controllers.private.register
 
-GET    /paris                          -> controllers.api.city
-GET    /paris/                         -> controllers.api.city
-GET    /madrid                         -> controllers.api.city
-GET    /madrid/                        -> controllers.api.city
-GET    /london                         -> controllers.api.city
-GET    /london/                        -> controllers.api.city
-
 GET    /upload_data/{id}               -> controllers.uploadedFile
 GET    /uAvatarImg/{uAvatarImg}        -> controllers.uploadedFile
 GET    /uCoverImg/{uCoverImg}          -> controllers.uploadedFile
