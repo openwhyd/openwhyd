@@ -42,11 +42,6 @@ GET    /madrid/                        -> controllers.api.city
 GET    /london                         -> controllers.api.city
 GET    /london/                        -> controllers.api.city
 
-GET    /playlistcontest                -> controllers.playlistcontest
-POST   /playlistcontest                -> controllers.playlistcontest
-GET    /playlistcontest/{uri}          -> controllers.playlistcontest
-GET    /playlistcontest/{uri}/{action} -> controllers.playlistcontest
-
 GET    /upload_data/{id}               -> controllers.uploadedFile
 GET    /uAvatarImg/{uAvatarImg}        -> controllers.uploadedFile
 GET    /uCoverImg/{uCoverImg}          -> controllers.uploadedFile

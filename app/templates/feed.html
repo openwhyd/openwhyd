@@ -79,22 +79,7 @@
         <a href="/button">Use it now!</a>
       </div>
     </div>
-    {{/hideBkAd}}{{/userPrefs}} {{#playlistContest}}
-    <div class="sideBox" id="plContestAd">
-      <div class="head">
-        <h2>Playlist contest</h2>
-      </div>
-      <div class="body">
-        <div
-          class="thumb"
-          style="background-image:url('/img/u/{{uId}}?width=80&amp;height=80');"
-        ></div>
-        <p>Participate in the <strong>{{title}}</strong> going on right now!</p>
-        <!--playlist contest-->
-        <p><a href="{{url}}">Jump in!</a></p>
-      </div>
-    </div>
-    {{/playlistContest}} {{/isUserLogged}} {{#recentActivity}}
+    {{/hideBkAd}}{{/userPrefs}} {{/isUserLogged}} {{#recentActivity}}
     <div class="sideBox recentActivity">
       <div class="head">
         <h2>Recent activity</h2>
@@ -148,74 +133,39 @@
     </div>
   </div>
   <!-- END RIGHT BAR-->
-  {{/user}} {{#playlist}}{{#inContest}}
-  <div class="playlistContestHeader">
-    <div
-      class="thumb"
-      style="background-image:url('/img/u/{{uId}}?width=100&amp;height=100');"
-    ></div>
-    Hey! This is an official entry in the <strong>{{title}}</strong>. If you
-    like the music, vote for it by sharing! <br />Want to make your own entry?
-    Check out the details <a href="{{url}}">here</a>.
-    <!-- playlist contest -->
-  </div>
-  {{/inContest}}{{/playlist}}
-
+  {{/user}}
   <section class="sub-container">
     <div>
       {{#playlist}}
       <div class="sharing">
-        {{#inContest}}
-        <div class="btnVote">Vote</div>
-        <div class="dlgVote" style="display: none">
-          <div class="pointe"></div>
-          {{/inContest}}
-          <!--
+        <!--
 					<a name="fb_share" type="button"></a>
 					<script src="//static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
 					<a href="//twitter.com/share" class="twitter-share-button" data-count="none" data-via="open_whyd" >Tweet</a>
 					<script src="//platform.twitter.com/widgets.js" type="text/javascript"></script>
 				-->
-          <iframe
-            class="twitter-share-button twitter-count-horizontal"
-            src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;via=open_whyd&amp;text={{{urlEncodedTweet}}}"
-            title="Twitter Tweet Button"
-            data-twttr-rendered="true"
-            allowtransparency="true"
-            frameborder="0"
-            scrolling="no"
-          ></iframe>
-          <iframe
-            class="fblikeBtn"
-            src="//www.facebook.com/plugins/like.php?href={{urlEncoded}}&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=169250156435902"
-            scrolling="no"
-            frameborder="0"
-            allowTransparency="true"
-          ></iframe>
-          <!--<fb:like id="fblike" href="{{url}}" send="false" layout="button_count" width="450" show_faces="false"></fb:like>
+        <iframe
+          class="twitter-share-button twitter-count-horizontal"
+          src="//platform.twitter.com/widgets/tweet_button.1347008535.html#_=1347354227175&amp;count=horizontal&amp;id=twitter-widget-0&amp;lang=en&amp;size=m&amp;via=open_whyd&amp;text={{{urlEncodedTweet}}}"
+          title="Twitter Tweet Button"
+          data-twttr-rendered="true"
+          allowtransparency="true"
+          frameborder="0"
+          scrolling="no"
+        ></iframe>
+        <iframe
+          class="fblikeBtn"
+          src="//www.facebook.com/plugins/like.php?href={{urlEncoded}}&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21&amp;appId=169250156435902"
+          scrolling="no"
+          frameborder="0"
+          allowTransparency="true"
+        ></iframe>
+        <!--<fb:like id="fblike" href="{{url}}" send="false" layout="button_count" width="450" show_faces="false"></fb:like>
 				<script>
 				/*$("#fblike").attr("href", window.location.href);*/
 				FB.XFBML.parse(document.getElementById('fblike'));
 			</script>
 		-->
-          {{#inContest}}
-        </div>
-        <script>
-          var $dlg = $('.dlgVote');
-          var $btn = $('.btnVote').click(function (e) {
-            $btn.addClass('active');
-            var offset = $btn.offset();
-            offset.top += 36;
-            offset.left -= 131;
-            //$(".votePopin").remove();
-            window.onDialogClose = function () {
-              $btn.removeClass('active');
-              delete window.onDialogClose;
-            };
-            openHtmlDialog($dlg);
-          });
-        </script>
-        {{/inContest}}
       </div>
       {{^ownProfile}}
       <h1>{{name}}</h1>

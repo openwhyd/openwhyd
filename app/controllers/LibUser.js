@@ -10,7 +10,6 @@ var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
-var contestModel = require('../models/plContest.js');
 var activityModel = require('../models/activity.js');
 var activityController = require('../controllers/recentActivity.js');
 var feedTemplate = require('../templates/feed.js');
@@ -248,41 +247,33 @@ function fetchAndRenderPlaylist(options, callback, process) {
       options.user.name;
   }
   if (!options.playlist) callback('meh... this playlist does not exist!');
-  else
-    contestModel.fetchByTitle((options.playlist || {}).name, function (
-      contest
-    ) {
-      var prevId = null;
-      for (let p = options.user.pl.length - 1; p > -1; --p) {
-        var pl = options.user.pl[p];
-        if (!pl) continue;
-        if (pl.id == options.playlistId) {
-          if (prevId !== null)
-            options.prevPageInList =
-              '/u/' + options.uid + '/playlist/' + prevId;
-          for (--p; p > -1; --p) {
-            if (options.user.pl[p]) {
-              options.nextPageInList =
-                '/u/' + options.uid + '/playlist/' + options.user.pl[p].id;
-              break;
-            }
+  else {
+    var prevId = null;
+    for (let p = options.user.pl.length - 1; p > -1; --p) {
+      var pl = options.user.pl[p];
+      if (!pl) continue;
+      if (pl.id == options.playlistId) {
+        if (prevId !== null)
+          options.prevPageInList = '/u/' + options.uid + '/playlist/' + prevId;
+        for (--p; p > -1; --p) {
+          if (options.user.pl[p]) {
+            options.nextPageInList =
+              '/u/' + options.uid + '/playlist/' + options.user.pl[p].id;
+            break;
           }
-          break;
         }
-        prevId = pl.id;
+        break;
       }
+      prevId = pl.id;
+    }
 
-      if (options.playlist && contest && contest.title) {
-        options.playlist.inContest = contest;
-        options.bodyClass += ' inContest';
-      }
-      postModel.fetchPlaylistPosts(
-        options.uid,
-        options.playlistId,
-        options.fetchParams,
-        process
-      );
-    });
+    postModel.fetchPlaylistPosts(
+      options.uid,
+      options.playlistId,
+      options.fetchParams,
+      process
+    );
+  }
 }
 
 function fetchAndRenderProfile(options, callback, process) {

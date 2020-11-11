@@ -50,7 +50,6 @@ var params = (process.appParams = {
   // workers and general site logic
   searchModule: 'searchAlgolia', // "searchElastic"  // "" => no search index
   //	recomPopulation: true, // populate recommendation index at startup
-  advertisePlaylistContestOnHome: false, // jamendo playlist contest
 
   // email notification preferences
   emailModule: 'emailSendgrid', // "DISABLED"/"null" => fake email sending
