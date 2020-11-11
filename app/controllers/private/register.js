@@ -57,7 +57,6 @@ exports.registerInvitedUser = function (request, user, response) {
           iPo: user.iPo,
           iRf: user.iRf,
           iPg: user.iPg,
-          plC: user.plC, // playlist contest id
           sTk: user.sTk || '', // signup token (genuine client check)
           ajax: user.ajax,
           fbRequest: user.fbRequest,

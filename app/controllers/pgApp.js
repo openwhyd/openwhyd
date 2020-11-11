@@ -23,7 +23,7 @@ var apps = {
 
 function renderSignupPage(p, cb) {
   console.log('app signup => rendering register page...');
-  //var html = invitePage.renderInvitePage(sender, p.loggedUser, app.uId, null, null, user.fbRequestIds, reqParams.plC);
+  //var html = invitePage.renderInvitePage(sender, p.loggedUser, app.uId, null, null, user.fbRequestIds);
   var html = invitePage.renderSignupPage({
     loggedUser: p.loggedUser,
     inviteCode: p.app.uId, // => new user is invited by the app's user profile

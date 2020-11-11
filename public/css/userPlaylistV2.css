@@ -251,31 +251,3 @@
 .userPlaylistV2 .container .shortcut-playlist > span > strong {
   margin: 0 10px;
 }
-
-/* PLAYLIST CONTEST */
-
-/* playlist contest header */
-
-.userPlaylistV2 .playlistContestHeader {
-  margin-top: 30px;
-  position: relative;
-  background-color: white;
-  padding: 50px;
-  padding-left: 140px;
-  color: #999;
-  line-height: 18px;
-}
-
-.userPlaylistV2 .playlistContestHeader > .thumb {
-  position: absolute;
-  top: 14px;
-  left: 16px;
-  width: 100px;
-  height: 100px;
-  background-size: cover;
-  background-position: 50% 50%;
-}
-
-.userPlaylistV2 .playlistContestHeader .divVote {
-  float: right;
-}

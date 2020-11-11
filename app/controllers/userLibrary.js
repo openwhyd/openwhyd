@@ -193,20 +193,9 @@ exports.controller = function (request, reqParams, response) {
   } else if (path == '/all') {
     return renderAllLibrary(lib);
   } else if (reqParams.playlistId) {
-    // temporarily reversed redirection logic
-    // FROM /u/id/playlist/xxx -> /handle/playlist/xxx TO /handle/playlist/xxx -> /u/id/playlist/xxx
-    // so that every fb-likable page always have the same URL (for 2012 playlist contest)
-
-    if (reqParams.handle)
-      userModel.fetchByHandle(reqParams.handle, function (user) {
-        if (user)
-          redirectTo(path.replace('/' + reqParams.handle, '/u/' + user._id));
-        else render({ errorCode: 'USER_NOT_FOUND' });
-      });
-    else if (reqParams.id)
-      userModel.fetchByUid(reqParams.id, function (user) {
-        renderUserLibrary(lib, user);
-      });
+    userModel.fetchByUid(reqParams.id, function (user) {
+      renderUserLibrary(lib, user);
+    });
   } else if (reqParams.handle)
     userModel.fetchByHandle(reqParams.handle, function (user) {
       renderUserLibrary(lib, user);
