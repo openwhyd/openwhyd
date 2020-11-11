@@ -825,15 +825,6 @@ font-family: Helvetica, Arial, Sans-serif;
   height: 1px;
 }
 
-.pgStream .boxCityPage {
-  display: block;
-  background-image: url('/images/london-home-button.png');
-  height: 150px;
-  border-radius: 5px;
-  margin-bottom: 24px;
-  margin-right: 2px;
-}
-
 .pgStream #iphoneAppAd {
   display: none;
 }
