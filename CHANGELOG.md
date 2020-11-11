@@ -1,3 +1,10 @@
+## [1.40.2](https://github.com/openwhyd/openwhyd/compare/v1.40.1...v1.40.2) (2020-11-11)
+
+
+### Bug Fixes
+
+* Various hotfixes ([#392](https://github.com/openwhyd/openwhyd/issues/392)) ([96d17bb](https://github.com/openwhyd/openwhyd/commit/96d17bbadead687384800e5ca804e7f148dbe45a))
+
 ## [1.40.1](https://github.com/openwhyd/openwhyd/compare/v1.40.0...v1.40.1) (2020-11-11)
 
 
