@@ -8,7 +8,6 @@ var userModel = require('../../models/user.js');
 var followModel = require('../../models/follow.js');
 var emailModel = require('../../models/email.js'); // for validation
 var notifModel = require('../../models/notif.js');
-var contestModel = require('../../models/plContest.js');
 var inviteController = require('../invite.js');
 var userApi = require('../../controllers/api/user.js');
 var htmlRedirect = require('../../templates/logging.js').htmlRedirect;
@@ -198,27 +197,12 @@ exports.registerInvitedUser = function (request, user, response) {
       notifModel.inviteAccepted(user.iBy, storedUser);
     }
 
-    if (user.plContest)
-      userModel.createPlaylist(storedUser._id, user.plContest.title, function (
-        playlist
-      ) {
-        loginAndRedirectTo('/u/' + storedUser._id + '/playlist/' + playlist.id);
-      });
-    else {
-      loginAndRedirectTo(onboardingUrl || '/');
-    }
+    loginAndRedirectTo(onboardingUrl || '/');
   }
 
   if (user.iBy || checkInvites)
     inviteController.checkInviteCode(request, user, response, function () {
-      if (user.plC)
-        contestModel.fetchById(user.plC, function (plContest) {
-          if (!plContest)
-            console.error('plcontest not found when trying to signup');
-          else user.plContest = plContest;
-          registerUser();
-        });
-      else registerUser();
+      registerUser();
     });
   else registerUser();
 };

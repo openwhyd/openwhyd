@@ -4,11 +4,9 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
 var postModel = require('../models/post.js');
 var followModel = require('../models/follow.js');
 var activityModel = require('../models/activity.js');
-var contestModel = require('../models/plContest.js');
 var feedTemplate = require('../templates/feed.js');
 
 var HISTORY_LIMIT = 3;
@@ -49,12 +47,7 @@ function prepareSidebar(uidList, options, cb) {
       if (activities && activities.length)
         options.recentActivity = { items: activities };
       //console.time("fetchLast");
-      contestModel.fetchLast(function (contest) {
-        //console.timeEnd("fetchLast");
-        if (config.advertisePlaylistContestOnHome && contest && contest.title)
-          options.playlistContest = contest;
-        cb();
-      });
+      cb();
     });
   } else cb();
 }

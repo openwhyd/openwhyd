@@ -2342,15 +2342,6 @@ body #contentPane {
   opacity: 0.8;
 }
 
-.rightBar #plContestAd .thumb {
-  float: left;
-  width: 43px;
-  height: 43px;
-  background-size: cover;
-  background-position: 50% 50%;
-  margin-right: 15px;
-}
-
 .rightBar .body.inviteAd {
   position: relative;
 }
@@ -3744,39 +3735,6 @@ body.playing_Deezer #whydPlayer #btnFullscreen > div {
 
 #sharePopin input:focus {
   outline: none;
-}
-
-/* vote button + popin (for playlist contest) */
-
-body.userPlaylist.inContest .feedHeader > .sharing {
-  overflow: visible;
-}
-
-.btnVote {
-  padding: 8px;
-  font-size: 12px;
-  font-family: 'AvenirNext-DemiBold', Helvetica, Arial, Sans-serif;
-  font-weight: bold;
-  color: #cbced2;
-  padding-left: 30px;
-  background: url('/images/icon-vote.png');
-  background-repeat: no-repeat;
-  background-position: 8px center;
-  cursor: pointer;
-  border: 1px solid #c2c2c2;
-  background-color: #f4f4f4;
-  background-color: linear-gradient(
-    to bottom,
-    #f4f4f4 0%,
-    #e9e9e9 100%
-  ); /* W3C */
-  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.12);
-  border-radius: 3px;
-}
-
-.btnVote.active {
-  background-color: #dfdfdf;
-  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.36);
 }
 
 /* tooltips (from ui.css) */

@@ -14,7 +14,6 @@ db.createCollection('follow');
 db.createCollection('post');
 db.createCollection('activity');
 db.createCollection('track');
-db.createCollection('plContest');
 db.createCollection('comment');
 
 // print('indexing post collection...');
@@ -49,11 +48,6 @@ db.activity.ensureIndex({ 'like.pId': 1 }, { sparse: true });
 // print('indexing track collection...');
 db.track.ensureIndex({ eId: 1 });
 db.track.ensureIndex({ score: 1 });
-
-// print('indexing plContest collection...');
-db.plContest.ensureIndex({ uri: 1 });
-db.plContest.ensureIndex({ title: 1 });
-db.plContest.dropIndex({ pId: 1 }); // to solve the accidental index made in previous version of this file
 
 // print('indexing comment collection...');
 db.comment.ensureIndex({ pId: 1 });

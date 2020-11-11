@@ -1,52 +1,5 @@
 {{#header}} {{#playlist}}
 <div class="container">
-  {{#inContest}}
-
-  <div class="playlistContestHeader">
-    <div class="divVote">
-      <div class="btnVote">Vote</div>
-      <div class="dlgVote" style="display: none">
-        <div class="pointe"></div>
-        <p>1 Share = 1 Vote</p>
-        <div class="sharing"></div>
-      </div>
-      <script>
-        var $dlg = $('.dlgVote');
-        var $btn = $('.btnVote').click(function (e) {
-          $btn.addClass('active');
-          var offset = $btn.offset();
-          offset.top += 50;
-          offset.left -= 20;
-
-          window.onDialogClose = function () {
-            $btn.removeClass('active');
-            delete window.onDialogClose;
-          };
-
-          if ($('.dlgVote').css('display') == 'block') {
-            $('.dlgVote').hide();
-            $btn.removeClass('active');
-          } else {
-            $dlg.show();
-            $dlg.offset(offset);
-          }
-        });
-        $(document).ready(function () {
-          $('.feedHeader .sharing iframe').appendTo('.dlgVote .sharing');
-        });
-      </script>
-    </div>
-
-    <div
-      class="thumb"
-      style="background-image:url('/img/u/{{uId}}?width=100&amp;height=100');"
-    ></div>
-    Hey! This is an official entry in the <strong>{{title}}</strong> playlist
-    contest. If you like the music, vote for it by sharing! <br />Want to make
-    your own entry? Check out the details <a href="{{url}}">here</a>.
-  </div>
-  {{/inContest}}
-
   <div class="feedHeader">
     <div
       class="thumb"
