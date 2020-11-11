@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/openwhyd/openwhyd/compare/v1.38.0...v1.39.0) (2020-11-11)
+
+
+### Features
+
+* Remove "Playlist Contest" ([#388](https://github.com/openwhyd/openwhyd/issues/388)) ([39bd559](https://github.com/openwhyd/openwhyd/commit/39bd5593bc491ffdcf3ceadc04eb9b8fd8769390)), closes [#318](https://github.com/openwhyd/openwhyd/issues/318)
+
 # [1.38.0](https://github.com/openwhyd/openwhyd/compare/v1.37.7...v1.38.0) (2020-11-11)
 
 
