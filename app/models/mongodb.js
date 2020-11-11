@@ -234,7 +234,9 @@ exports.init = function (readyCallback) {
 
   var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
-  console.log('Connecting to ' + url + '...');
+  console.log(
+    `Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`
+  );
 
   var options = {
     native_parser: true,
