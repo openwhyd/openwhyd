@@ -12,7 +12,7 @@ window.goToPage = function (url) {
 };
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function () {} };
+if (undefined == window.console) console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 /* utility functions */
 

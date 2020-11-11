@@ -12,7 +12,7 @@ describe('hypemachine / mp3 detector', function () {
     var controller = require('../../app/controllers/api/contentExtractor.js')
       .controller;
     var fakeRequest = {
-      logToConsole: function () {},
+      logToConsole: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
       checkLogin: function () {
         return { id: 1, name: 'fake' };
       },
@@ -21,6 +21,7 @@ describe('hypemachine / mp3 detector', function () {
       detect: function (url, title, cb) {
         var params = { url: url };
         if (title) params.title = title;
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         console.log = function () {}; // prevent controller from writing to stdout
         controller(fakeRequest, params, {
           render: function (r) {

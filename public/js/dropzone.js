@@ -432,7 +432,7 @@
           ? Emitter
           : require('emitter');
 
-      noop = function () {};
+      noop = function () {}; // eslint-disable-line @typescript-eslint/no-empty-function
 
       Dropzone = (function (_super) {
         __extends(Dropzone, _super);

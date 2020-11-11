@@ -136,7 +136,7 @@ function ContentEmbed() {
         }
       );
     }
-    var BandcampPlayer = BandcampPlayer || function () {};
+    var BandcampPlayer = BandcampPlayer || function () {}; // eslint-disable-line @typescript-eslint/no-empty-function
     return {
       whydPrefix: 'bc',
       label: 'Bandcamp',

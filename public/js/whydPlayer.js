@@ -21,7 +21,7 @@ var MAX_POSTS_TO_SHUFFLE = 200;
 
 // utility functions
 
-if (undefined == window.console) console = { log: function () {} };
+if (undefined == window.console) console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 function EventEmitter() {
   this._eventListeners = {};

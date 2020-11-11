@@ -16,7 +16,7 @@ var DEBUG = false, // for soundmanager
   console.log('-= openwhyd embed script =-');
 
   // prevents bug in firefox 3
-  window.console = window.console || { log: function () {} };
+  window.console = window.console || { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
   // minimal template engine, http://mir.aculo.us/2011/03/09/little-helpers-a-tweet-sized-javascript-templating-engine/
   function t(s, d) {
@@ -53,7 +53,7 @@ var DEBUG = false, // for soundmanager
       var timer,
         interval = 100,
         retries = 10;
-      function check() {
+      const check = () => {
         var loaded =
           inc.readyState &&
           (inc.readyState == 'loaded' ||
@@ -63,7 +63,7 @@ var DEBUG = false, // for soundmanager
           timer = timer ? clearInterval(timer) : null;
           callback && callback({ loaded: loaded });
         }
-      }
+      };
       timer = callback ? setInterval(check, interval) : undefined;
       inc.onload = inc.onreadystatechange = check;
       try {

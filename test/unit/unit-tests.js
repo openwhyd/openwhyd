@@ -125,6 +125,7 @@ describe('"img" package', function () {
       console.error(e);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     console.log = function () {}; // prevent ContentEmbed from printing to the console
     var img = require('../../app/lib/my-img');
     img.makeThumb(imgOutput, thumbOutput, thumbWidth, thumbHeight, function () {

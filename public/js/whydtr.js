@@ -111,6 +111,7 @@ window.Whyd.tracking =
     // init
 
     if (!runsLocally) injectGoogleAnalytics();
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     else window.ga = function () {}; //console.log.bind(console, "[GA]"); // fake google analytics
 
     // exported methods
