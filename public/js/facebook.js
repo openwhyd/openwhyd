@@ -133,8 +133,8 @@ function fbLogin(perms, cb) {
     perms,
     function (fbId, fbAuthResponse) {
       if (!fbId) {
-        return console.log('no fb login');
         cb({ error: 'no fb login' });
+        return console.log('no fb login');
       }
       // try to logging in using fbUid and fb cookie
       var $fbForm = $('#fbForm').remove();
@@ -177,8 +177,8 @@ function fbRegister(perms, cb) {
     perms,
     function (fbId, fbAuthResponse) {
       if (!fbId) {
-        return console.log('no fb login');
         cb({ error: 'no fb login' });
+        return console.log('no fb login');
       }
 
       const options = {
@@ -199,41 +199,6 @@ function fbRegister(perms, cb) {
     },
     true
   );
-}
-
-// request-based invite
-function fbInvite(fbUser) {
-  // if coming from fbLogin, update the fbId of logged in user
-  if (fbUser)
-    $.ajax({ type: 'GET', url: '/api/user', data: { fbId: fbUser.id } });
-  fbSafeCall(function () {
-    FB.ui(
-      { method: 'apprequests', message: 'Show me your interests on whyd!' },
-      function (response) {
-        console.log(response);
-        // old requests 1.0 format
-        if (response && response.request_ids)
-          invitedToConversation(
-            null,
-            { fbRequestIds: response.request_ids },
-            window.user.name + ' invited you to join whyd',
-            function (params) {
-              console.log('sent!');
-            }
-          );
-        else if (response && response.request && response.to)
-          invitedToConversation(
-            null,
-            { fbRequestIds: response.request, fbTo: response.to },
-            window.user.name + ' invited you to join whyd',
-            function (params) {
-              console.log('sent!');
-            }
-          );
-        else console.log('invalid response');
-      }
-    );
-  });
 }
 
 window.fbAsyncInit = function () {
