@@ -40,7 +40,7 @@ exports.ObjectId = function (v) {
   try {
     return exports.ObjectID.createFromHexString('' + v);
   } catch (e) {
-    console.warn('invalid mongodb object id:' + v);
+    console.warn(`invalid mongodb object id: ${v} (${typeof v})`);
     return 'invalid_id';
   }
 };
