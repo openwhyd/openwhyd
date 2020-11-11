@@ -32,7 +32,7 @@ exports.fetch = function (q, options, callback) {
 
 exports.add = function (d, callback) {
   if (d && d.like && d.like.pId) d.like.pId = '' + d.like.pId;
-  getCol().insert(d, function (err, result) {
+  getCol().insertOne(d, function (err, result) {
     callback && callback(result || err);
   });
 };
@@ -124,5 +124,5 @@ exports.addLikeByPid = function (pId, liker, callback) {
 };
 
 exports.removeLike = function (pId, likerUid, callback) {
-  exports.deleteOne({ 'like.pId': pId, id: '' + likerUid }, callback);
+  exports.remove({ 'like.pId': pId, id: '' + likerUid }, callback);
 };

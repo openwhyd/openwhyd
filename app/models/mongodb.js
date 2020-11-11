@@ -40,7 +40,7 @@ exports.ObjectId = function (v) {
   try {
     return exports.ObjectID.createFromHexString('' + v);
   } catch (e) {
-    console.warn('invalid mongodb object id:' + v);
+    console.warn(`invalid mongodb object id: ${v} (${typeof v})`);
     return 'invalid_id';
   }
 };
@@ -234,7 +234,9 @@ exports.init = function (readyCallback) {
 
   var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
-  console.log('Connecting to ' + url + '...');
+  console.log(
+    `Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`
+  );
 
   var options = {
     native_parser: true,
