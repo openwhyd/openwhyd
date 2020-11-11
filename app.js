@@ -122,14 +122,16 @@ function start() {
     port: params.port,
     appDir: __dirname,
     sessionMiddleware,
-    errorHandler: function (request, params, response, statusCode) {
+    errorHandler: function (req, params, response, statusCode) {
       // to render 404 and 401 error pages from server/router
-      console.log('rendering server error page', statusCode);
+      console.log(
+        `rendering server error page ${statusCode} for ${req.method} ${req.path}`
+      );
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
         response,
         (params || {}).format,
-        request.getUser()
+        req.getUser()
       );
     },
     uploadSettings: {
