@@ -28,10 +28,10 @@ if (typeof exports === 'undefined') {
     if (undefined == window.console)
       window.console = {
         ...window.console,
-        log: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
-        info: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
-        error: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
-        warn: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
+        log: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        info: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        error: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        warn: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
       };
 
     console.log('-= openwhyd bookmarklet v2.6.1 =-');
@@ -211,7 +211,7 @@ if (typeof exports === 'undefined') {
           div.style.backgroundImage = 'url(' + attrs.img + ')';
           delete attrs.img;
         }
-        for (const i in attrs) div.setAttribute(i, attrs[i]);
+        for (const a in attrs) div.setAttribute(a, attrs[a]);
         for (let i = 0; i < (children || []).length; ++i)
           div.appendChild(children[i]);
         return div;
@@ -313,7 +313,9 @@ if (typeof exports === 'undefined') {
       : 'playem-all.js';
     const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
-      const bookmarklet = makeBookmarklet();
+      const bookmarklet = makeBookmarklet({
+        pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
+      });
       const allPlayers = Object.assign(
         {
           yt: openwhydYouTubeExtractor, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
@@ -323,10 +325,7 @@ if (typeof exports === 'undefined') {
       bookmarklet.detectTracks({
         window,
         ui: BkUi(),
-        urlDetectors: [
-          bookmarklet.makeFileDetector(),
-          bookmarklet.makeStreamDetector(allPlayers),
-        ],
+        urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)], // defined in bookmarkletUrlDetectors.ts
         urlPrefix,
       });
     });
