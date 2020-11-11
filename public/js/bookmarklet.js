@@ -23,73 +23,6 @@ function makeBookmarklet(_a) {
     }
     return src;
   }
-  // Track detectors
-  function makeFileDetector() {
-    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
-    return function detectMusicFiles(url, cb, element) {
-      var fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
-      if (eidSet[url] || !fileName) return cb();
-      var title =
-        (element ? element.title || getNodeText(element) : null) ||
-        decodeURIComponent(fileName);
-      eidSet[url] = true;
-      cb({
-        id: url,
-        title: title.replace(/^\s+|\s+$/g, ''),
-        img: '/images/cover-audiofile.png',
-      });
-    };
-  }
-  // players = { playerId -> { getEid(), fetchMetadata() } }
-  // returns detectPlayableStreams(url, callback, element)
-  function makeStreamDetector(players) {
-    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
-    function getPlayerId(url) {
-      for (var i in players) {
-        var player = players[i];
-        var eId = player.getEid(url);
-        if (eId) return i;
-      }
-    }
-    // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
-    return function detectPlayableStreams(url, cb, element) {
-      if (element === void 0) {
-        element = {};
-      }
-      // 1. find the matching player and track identifier
-      var playerId = getPlayerId(url);
-      var player = playerId && players[playerId];
-      var eid = player && '/' + playerId + '/' + player.getEid(url);
-      if (!eid || eidSet[eid]) return cb();
-      // 2. extract the (optional) stream URL from the identifier
-      var parts = eid.split('#');
-      var streamUrl = /^https?:\/\//.test(parts[1] || '') && parts[1];
-      if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
-      // 3. store the identifier, with and without stream URL, to prevent duplicates
-      eidSet[parts[0]] = true;
-      eidSet[eid] = true;
-      if (element.artist && element.title) {
-        return cb({
-          eId: eid,
-          title: element.artist + ' - ' + element.title,
-          img: element.img,
-          sourceId: playerId,
-          sourceLabel: (player || {}).label,
-        });
-      } else if (!player || !player.fetchMetadata) {
-        return cb({ eId: eid }); // quit if we can't enrich the metadata
-      }
-      // 4. try to return the track with enriched metadata
-      player.fetchMetadata(url, function (track) {
-        if (!track) return cb();
-        track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of pageDetectors
-        track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
-        track.sourceId = playerId;
-        track.sourceLabel = player.label;
-        cb(track);
-      });
-    };
-  }
   function detectTracks(_a) {
     // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
     // TODO: decouple from ui <= let caller provide one handler to be called for each detected track
@@ -109,7 +42,7 @@ function makeBookmarklet(_a) {
             // Note: previously, the condition above was track && track.id, for some reason 🤷‍♂️
             else processNext();
           },
-          element // TODO: refactor makeFileDetector() and makeStreamDetector() to pass element param before callback
+          element
         );
       })();
     }
@@ -217,8 +150,6 @@ function makeBookmarklet(_a) {
   }
   return {
     detectTracks: detectTracks,
-    makeFileDetector: makeFileDetector,
-    makeStreamDetector: makeStreamDetector,
   };
 }
 if (typeof exports !== 'undefined') {
@@ -640,14 +571,87 @@ if (typeof exports === 'undefined') {
       bookmarklet.detectTracks({
         window: window,
         ui: BkUi(),
-        urlDetectors: [
-          bookmarklet.makeFileDetector(),
-          bookmarklet.makeStreamDetector(allPlayers),
-        ],
+        urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)],
         urlPrefix: urlPrefix,
       });
     });
   })();
+}
+// Track detectors
+// TODO: refactor makeFileDetector() and makeStreamDetector() to pass element param before callback
+function makeFileDetector() {
+  var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
+  return function detectMusicFiles(url, cb, element) {
+    var fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
+    if (eidSet[url] || !fileName) return cb();
+    var getNodeText = function (node) {
+      return (node.innerText || node.textContent || '').trim().split('\n')[0];
+    }; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
+    // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
+    var title =
+      (element ? element.title || getNodeText(element) : null) ||
+      decodeURIComponent(fileName);
+    eidSet[url] = true;
+    cb({
+      id: url,
+      title: title.replace(/^\s+|\s+$/g, ''),
+      img: '/images/cover-audiofile.png',
+    });
+  };
+}
+// players = { playerId -> { getEid(), fetchMetadata() } }
+// returns detectPlayableStreams(url, callback, element)
+function makeStreamDetector(players) {
+  var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
+  function getPlayerId(url) {
+    for (var i in players) {
+      var player = players[i];
+      var eId = player.getEid(url);
+      if (eId) return i;
+    }
+  }
+  // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
+  return function detectPlayableStreams(url, cb, element) {
+    if (element === void 0) {
+      element = {};
+    }
+    // 1. find the matching player and track identifier
+    var playerId = getPlayerId(url);
+    var player = playerId && players[playerId];
+    var eid = player && '/' + playerId + '/' + player.getEid(url);
+    if (!eid || eidSet[eid]) return cb();
+    // 2. extract the (optional) stream URL from the identifier
+    var parts = eid.split('#');
+    var streamUrl = /^https?:\/\//.test(parts[1] || '') && parts[1];
+    if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
+    // 3. store the identifier, with and without stream URL, to prevent duplicates
+    eidSet[parts[0]] = true;
+    eidSet[eid] = true;
+    if (element.artist && element.title) {
+      return cb({
+        eId: eid,
+        title: element.artist + ' - ' + element.title,
+        img: element.img,
+        sourceId: playerId,
+        sourceLabel: (player || {}).label,
+      });
+    } else if (!player || !player.fetchMetadata) {
+      return cb({ eId: eid }); // quit if we can't enrich the metadata
+    }
+    // 4. try to return the track with enriched metadata
+    player.fetchMetadata(url, function (track) {
+      if (!track) return cb();
+      track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of pageDetectors
+      track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
+      track.sourceId = playerId;
+      track.sourceLabel = player.label;
+      cb(track);
+    });
+  };
+}
+if (typeof exports !== 'undefined') {
+  exports.makeFileDetector = makeFileDetector;
+  exports.makeStreamDetector = makeStreamDetector;
 }
 var openwhydYouTubeExtractor = {
   getEid: function (url) {

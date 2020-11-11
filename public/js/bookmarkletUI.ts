@@ -326,10 +326,7 @@ if (typeof exports === 'undefined') {
       bookmarklet.detectTracks({
         window,
         ui: BkUi(),
-        urlDetectors: [
-          bookmarklet.makeFileDetector(),
-          bookmarklet.makeStreamDetector(allPlayers),
-        ],
+        urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)],
         urlPrefix,
       });
     });
