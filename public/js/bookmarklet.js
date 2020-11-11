@@ -296,10 +296,10 @@ if (typeof exports === 'undefined') {
     // prevents bug in firefox 3
     if (undefined == window.console)
       window.console = __assign(__assign({}, window.console), {
-        log: function () {},
-        info: function () {},
-        error: function () {},
-        warn: function () {},
+        log: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        info: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        error: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        warn: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
       });
     console.log('-= openwhyd bookmarklet v2.6.1 =-');
     var FILENAME = '/js/bookmarklet.js';
@@ -463,7 +463,7 @@ if (typeof exports === 'undefined') {
           div.style.backgroundImage = 'url(' + attrs.img + ')';
           delete attrs.img;
         }
-        for (var i in attrs) div.setAttribute(i, attrs[i]);
+        for (var a in attrs) div.setAttribute(a, attrs[a]);
         for (var i = 0; i < (children || []).length; ++i)
           div.appendChild(children[i]);
         return div;
