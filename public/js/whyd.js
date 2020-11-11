@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, openRemoteDialog, whydPlayer, fbAction, fbLike, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
 
 var MAX_NB_MENTIONS = 6;
 
@@ -12,7 +12,7 @@ window.goToPage = function (url) {
 };
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
+if (undefined == window.console) window.console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 /* utility functions */
 
@@ -36,9 +36,8 @@ function getPostById(pId, callback) {
   callback($('.post[data-pid=' + pId + ']'));
 }
 
-function extractPostData($post, defaults) {
-  var defaults = defaults || {};
-  var $post = $post || $(this);
+function extractPostData($post, defaults = {}) {
+  $post = $post || $(this);
   var $author = $post.find('.author > a').first();
   var uId = $author.attr('href') || defaults.uId;
   var text = $post
@@ -88,7 +87,7 @@ function submitSearchQuery(q, cb) {
   });
 }
 
-function removePost(pId) {
+window.removePost = function (pId) {
   $.ajax({
     type: 'POST',
     url: '/api/post',
@@ -102,7 +101,7 @@ function removePost(pId) {
       whydPlayer.populateTracks();
     },
   });
-}
+};
 
 function deleteComment(cId, cb) {
   $.ajax({
@@ -134,7 +133,7 @@ function addComment(pId, text, cb) {
   });
 }
 
-function subscribeToUser(uId, cb) {
+window.subscribeToUser = function (uId, cb) {
   $.ajax({
     type: 'GET',
     url: '/api/follow',
@@ -144,7 +143,7 @@ function subscribeToUser(uId, cb) {
       window.Whyd.tracking.log('Followed', uId);
     },
   });
-}
+};
 
 function switchSubscription() {
   var $button = $(this).hasClass('userSubscribe')
@@ -198,7 +197,7 @@ window.searchExternalTracks = (function () {
 
 /* main ui functions and dialogs */
 
-function toggleLovePost(pId) {
+window.toggleLovePost = function (pId) {
   if (!window.user || !window.user.id)
     //return window.location.href = "/";
     //return alert("Please sign in first!")
@@ -231,16 +230,9 @@ function toggleLovePost(pId) {
     }
     $.post('/api/post', { action: 'toggleLovePost', pId: pId }, updateButton);
   });
-}
+};
 
-function contactUs() {
-  var e = 'hello' + '@' + 'whyd' + '.' + 'com';
-  openHtmlDialog(
-    '<div class="dlgContactUs"><a href="mailto:' + e + '">' + e + '</a></div>'
-  );
-}
-
-function loadMore(params, cb) {
+window.loadMore = function (params, cb) {
   var $button = $('.btnLoadMore').last();
   $button.addClass('loading');
   var $frame = $button.parent();
@@ -258,7 +250,7 @@ function loadMore(params, cb) {
       });
     });
   });
-}
+};
 
 function loadTop() {
   var $firstPost = $('.posts > .post').first();
@@ -374,7 +366,7 @@ function _renderUserList(users, liHandler) {
 function _showUserListDlg(users, title) {
   if (!users || users.length == 0) return;
   var plural = (users || []).length > 1;
-  var title = title.replace('(s)', plural ? 's' : '');
+  title = title.replace('(s)', plural ? 's' : '');
   openJqueryDialog(
     _renderUserList(users),
     'dlgUserList',
@@ -382,9 +374,9 @@ function _showUserListDlg(users, title) {
   );
 }
 
-var RE_MENTION = /\@\[([^\]]*)\]\(user:([^\)]*)\)/gi;
+var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
-var regexUrl2 = /(\b(https?|ftp|file):\/\/([^\/\s]*)[^\s]*)/gi;
+var regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 function replaceURLWithHTMLLinks(text) {
   return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
@@ -428,7 +420,7 @@ function _renderComment(c) {
   return $com.ajaxify ? $com.ajaxify() : $com;
 }
 
-function updatePostStats($post, $ext) {
+function updatePostStats($post /*, $ext*/) {
   //var $ext = $post.find(".stats") || $ext ;
 
   var nbComments = $post.find('.comment').length;
@@ -518,65 +510,59 @@ function toggleComments(pId, toggle) {
   });
 }
 
-function showPostLovers(pId) {
+window.showPostLovers = function (pId) {
   _fetchPostInfo(pId, 'lovers', function (users) {
     _showUserListDlg(users, 'People loved this track');
   });
-}
+};
 
-function showReposts(pId) {
+window.showReposts = function (pId) {
   _fetchPostInfo(pId, 'reposts', function (users) {
     _showUserListDlg(users, 'People also added this track');
   });
-}
+};
 
-function showSubscribers(uid) {
+window.showSubscribers = function (uid) {
   _fetchUserInfo(uid || window.pageUser.id, 'followers', function (users) {
     _showUserListDlg(users, 'Follower(s)');
   });
-}
+};
 
-function showSubscriptions(uid) {
+window.showSubscriptions = function (uid) {
   _fetchUserInfo(uid || window.pageUser.id, 'following', function (users) {
     _showUserListDlg(users, 'Following(s)');
   });
-}
-
-/*
-function changePassword() {
-  openRemoteDialog("/html/dlgChangePwd.html", "dlgChangePwd");
 };
-*/
 
-function showEditProfileDlg() {
+window.showEditProfileDlg = function () {
   openRemoteDialog('/html/dlgEditProfile.html', 'dlgEditProfile');
   $('.btnEditProfile').removeClass('active');
-}
+};
 
-function showEditProfileCoverDlg() {
+window.showEditProfileCoverDlg = function () {
   openRemoteDialog('/html/dlgEditProfileCover.html', 'dlgEditProfileCover');
   $('.btnEditProfile').removeClass('active');
-}
+};
 
-function dlgCreatePlaylist() {
+window.dlgCreatePlaylist = function () {
   delete window.pagePlaylist;
   openRemoteDialog('/html/dlgEditPlaylist.html', 'dlgEditPlaylist');
-}
+};
 
-function dlgEditPlaylist() {
+window.dlgEditPlaylist = function () {
   openRemoteDialog('/html/dlgEditPlaylist.html', 'dlgEditPlaylist', function (
     $dlg
   ) {
     //console.log("window.pagePlaylist", window.pagePlaylist);
     $dlg.find('h1').text('Edit playlist');
   });
-}
+};
 
-function modalPostBox(onPosted) {
+window.modalPostBox = function (/*onPosted*/) {
   alert('To add a track, use the search bar at the top of the page.');
-}
+};
 
-function modalRepostBox(trackOrPid, onPosted) {
+function modalRepostBox(trackOrPid /*onPosted*/) {
   var url = '/post',
     params = window.whydCtx ? ['ctx=' + window.whydCtx] : [];
   if (typeof trackOrPid == 'string') url += '/' + trackOrPid /*+'/add'*/;
@@ -595,13 +581,13 @@ function modalRepostBox(trackOrPid, onPosted) {
   );
 }
 
-function modalPostEditBox(pId, onPosted) {
+window.modalPostEditBox = function (pId /*, onPosted*/) {
   var url = '/post/' + pId + '/edit';
   openRemoteDialog(url, 'dlgPostBox dlgRepostBox', function ($box) {
     $box.prepend('<h1>Edit this track</h1>');
     $box.find('#contentThumb').addClass('loading');
   });
-}
+};
 
 /* notifs */
 
@@ -694,7 +680,7 @@ var refreshNotifPanel = function () {
   $notifPanel.html(content + '</ul>').ajaxify();
 };
 
-function clearNotif(pId) {
+window.clearNotif = function (pId) {
   $.ajax({
     type: 'POST',
     url: '/api/notif',
@@ -704,9 +690,9 @@ function clearNotif(pId) {
   $('#notifPanel li').each(function () {
     if ($(this).attr('data-pid') == pId) $(this).remove();
   });
-}
+};
 
-function clearNotifs() {
+window.clearNotifs = function () {
   $.ajax({
     type: 'POST',
     url: '/api/notif',
@@ -714,29 +700,29 @@ function clearNotifs() {
     complete: fetchNotifs,
   });
   $notifPanel.hide();
-}
+};
 
-function openNotif(pId) {
+window.openNotif = function (/*pId*/) {
   $notifPanel.hide();
   //clearNotif(pId);
-}
+};
 
 /* bio update */
 
-function submitBio() {
+window.submitBio = function () {
   var bio = $('.bio');
   bio.parent().addClass('submitting');
   $.ajax({
     type: 'GET',
     url: '/api/user',
     data: { bio: bio.val() },
-    complete: function (data) {
+    complete: function (/*data*/) {
       setTimeout(function () {
         bio.parent().removeClass('submitting');
       }, 500);
     },
   });
-}
+};
 
 /* help overlay */
 
@@ -769,7 +755,7 @@ function showHelpOverlay() {
 
 /* share dialog */
 
-function sharePost(pId) {
+window.sharePost = function (pId) {
   getPostById(pId, function ($post) {
     var post = extractPostData(
       $post /*, {uId:window.pageTopic.mid, uNm:window.pageTopic.name}*/
@@ -829,24 +815,24 @@ function sharePost(pId) {
     }
 
     try {
-      var post = extractPostData($post);
+      post = extractPostData($post);
       window.Whyd.tracking.log('Clicked share button', post.id);
     } catch (e) {
       console.log('error', e, e.stack);
     }
   });
-}
+};
 
 /* repost dialog */
 
-function publishPost(pId) {
+window.publishPost = function (pId) {
   if (!window.user || !window.user.id) return login();
   modalRepostBox(pId, onNewPost); //onRepostComplete
-}
+};
 
 /* main init */
 
-function makeUrl(getParamsObj) {
+window.makeUrl = function (getParamsObj) {
   var wlh = window.getCurrentUrl
     ? window.getCurrentUrl()
     : window.location.href;
@@ -866,7 +852,7 @@ function makeUrl(getParamsObj) {
     wlh += p.join('&');
   }
   return wlh;
-}
+};
 
 function onPageLoad() {
   var $body = $('body');
@@ -880,13 +866,6 @@ function onPageLoad() {
 }
 
 $(document).ready(function () {
-  var $body = $('body');
-
-  // open first comments of the stream
-  /*
-  if ($body.hasClass("pgStream"))
-    toggleComments($(".post").first().attr("data-pid"), true);
-  */
   var keyShortcuts = {
     32: function () {
       // space: play/pause
@@ -958,7 +937,7 @@ $(document).ready(function () {
   $notifPanel = $('#notifPanel');
   $notifIcon = $('#notifIcon');
 
-  var notifInterval = window.setInterval(fetchNotifs, notifUpdateInterval);
+  window.setInterval(fetchNotifs, notifUpdateInterval);
   fetchNotifs();
 
   $notifIcon.click(function () {
@@ -1016,7 +995,7 @@ $(document).ready(function () {
                   '</ul>'
               );
         }
-        if (/^https?\:\/\//.test(query))
+        if (/^https?:\/\//.test(query))
           whydPlayer.fetchTrackByUrl(query, function (track) {
             console.log('detected track by url:', track);
             track = track || {};
@@ -1069,7 +1048,7 @@ $(document).ready(function () {
 });
 
 // AJAXIFY https://gist.github.com/854622
-(function (window, undefined) {
+(function (window /*, undefined*/) {
   // Prepare our Variables
   var History = window.History,
     $ = window.jQuery,
@@ -1102,7 +1081,7 @@ $(document).ready(function () {
     }
 
     // Internal Helper
-    $.expr[':'].internal = function (obj, index, meta, stack) {
+    $.expr[':'].internal = function (obj /*, index, meta, stack*/) {
       // Prepare
       var $this = $(obj),
         url = $this.attr('href') || '',
@@ -1120,12 +1099,12 @@ $(document).ready(function () {
     var documentHtml = function (html) {
       // Prepare
       var result = String(html)
-        .replace(/<\!DOCTYPE[^>]*>/i, '')
+        .replace(/<!DOCTYPE[^>]*>/i, '')
         .replace(
-          /<(html|head|body|title|meta|script)([\s\>])/gi,
+          /<(html|head|body|title|meta|script)([\s>])/gi,
           '<div class="document-$1"$2'
         )
-        .replace(/<\/(html|head|body|title|meta|script)\>/gi, '</div>');
+        .replace(/<\/(html|head|body|title|meta|script)>/gi, '</div>');
 
       // Return
       return result;
@@ -1195,7 +1174,7 @@ $(document).ready(function () {
       // Ajax Request the Traditional Page
       $.ajax({
         url: url,
-        success: function (data, textStatus, jqXHR) {
+        success: function (data) {
           // Prepare
           var $data = $(documentHtml(data)),
             $dataHead = $data.find('.document-head:first'),
@@ -1340,7 +1319,7 @@ $(document).ready(function () {
         if (window.location.href == url) loadPage({});
         else {
           // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
-          var httpPos = url.substr(4).search(/https?\:\/\//); // 4 because it could be a relative URL prefixed by /fi/
+          var httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
           if (httpPos != -1) {
             httpPos += 4;
             url =
@@ -1381,7 +1360,7 @@ initWhydTooltips('#contentPane *[title]');
 $("<div id='pageLoader'></div>").appendTo('body');
 
 //sort playlists
-function sortPlaylists(sortType) {
+window.sortPlaylists = function (sortType) {
   const playlistsContainer = document.querySelector('#playlists');
   const allPlaylists = playlistsContainer.querySelectorAll('.playlist');
   let playlistsFragment = document.createDocumentFragment();
@@ -1414,4 +1393,4 @@ function sortPlaylists(sortType) {
 
     playlistsContainer.appendChild(playlistsFragment);
   }
-}
+};
