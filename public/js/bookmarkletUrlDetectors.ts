@@ -1,8 +1,19 @@
 // Track detectors
 
+type UrlDetector = (
+  url: string,
+  callback: (FuzzyTrack?) => void,
+  element: Partial<HTMLElement> & {
+    artist?: string;
+    title?: string;
+    img?: string;
+    name?: string; // element.name could have been extracted from the page by one of pageDetectors
+  }
+) => void;
+
 // TODO: refactor makeFileDetector() and makeStreamDetector() to pass element param before callback
 
-function makeFileDetector() {
+function makeFileDetector(): UrlDetector {
   const eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
   return function detectMusicFiles(url, cb, element) {
     const fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
@@ -24,7 +35,7 @@ function makeFileDetector() {
 
 // players = { playerId -> { getEid(), fetchMetadata() } }
 // returns detectPlayableStreams(url, callback, element)
-function makeStreamDetector(players) {
+function makeStreamDetector(players): UrlDetector {
   const eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
   function getPlayerId(url) {
     for (const i in players) {
