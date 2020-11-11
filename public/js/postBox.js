@@ -415,6 +415,8 @@ function initPostBox(params) {
   $(document).ajaxComplete(function () {
     try {
       FB.XFBML.parse();
-    } catch (ex) {}
+    } catch (ex) {
+      console.error(ex);
+    }
   });
 }

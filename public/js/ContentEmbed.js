@@ -1,3 +1,5 @@
+/* global $, showMessage */
+
 /**
  * ContentEmbed
  * a class for embedding content from openwhyd and other web sites: youtube, dailymotion, vimeo, soundcloud...
@@ -5,9 +7,10 @@
  */
 
 // DEPRECATED: The track detection and metadata retrieval functionalities are to be replaced by PlayemJS
+// TODO: Remove this file
 
 function ContentEmbed() {
-  var generalUrl = /\/\/[-A-Z0-9+&@#$*'()\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]/gi; // \b(?:https?|ftp|file):
+  var generalUrl = /\/\/[-A-Z0-9+&@#$*'()/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]/gi; // \b(?:https?|ftp|file):
   var scClientId = 'eb257e698774349c22b0b727df0238ad';
   var JAMENDO_CLIENT_ID = '2c9a11b9';
 
@@ -46,7 +49,9 @@ function ContentEmbed() {
           try {
             var errors = data.headers.error_message + data.headers.warnings;
             if (errors) console.log(errors);
-          } catch (e) {}
+          } catch (e) {
+            console.error(e);
+          }
           data = data.results[0];
           embedRef.name = data.artist_name + ' - ' + data.name;
           embedRef.img = data.album_image;
@@ -63,7 +68,7 @@ function ContentEmbed() {
     var API_KEY = 'vatnajokull';
     var API_PREFIX = '//api.bandcamp.com/api';
     var API_SUFFIX = '&key=' + API_KEY + '&callback=?';
-    var REGEX = /([a-zA-Z0-9_\-]+).bandcamp\.com\/track\/([a-zA-Z0-9_\-]+)/;
+    var REGEX = /([a-zA-Z0-9_-]+).bandcamp\.com\/track\/([a-zA-Z0-9_-]+)/;
     function detect(url, cb) {
       url = url.split('#')[0].split('//').pop();
       var matches = url.match(REGEX);
@@ -131,7 +136,7 @@ function ContentEmbed() {
         }
       );
     }
-    var BandcampPlayer = BandcampPlayer || function () {};
+    var BandcampPlayer = BandcampPlayer || function () {}; // eslint-disable-line @typescript-eslint/no-empty-function
     return {
       whydPrefix: 'bc',
       label: 'Bandcamp',
@@ -140,7 +145,7 @@ function ContentEmbed() {
       getHref: function (embedRef) {
         return embedRef.url;
       },
-      renderImg: function (embedRef, callback) {
+      renderImg: function (embedRef) {
         return '<img src="' + embedRef.img + '" />';
       },
       play: function (embedRef, options, cb) {
@@ -172,7 +177,7 @@ function ContentEmbed() {
     getHref: function (embedRef) {
       return embedRef.url;
     },
-    renderImg: function (embedRef, callback) {
+    renderImg: function (embedRef) {
       return '<img src="' + embedRef.img + '" />';
     },
   };
@@ -218,7 +223,7 @@ function ContentEmbed() {
           if (regexs[i].test(url)) return cb({ url: url, videoId: RegExp.$1 });
         cb();
       },
-      getHref: function (embedRef) {
+      getHref: function () {
         return this.url;
       },
       renderImg: function (embedRef) {
@@ -248,7 +253,7 @@ function ContentEmbed() {
     'sp',
     'Spotify',
     '//embed.spotify.com/oembed/?url=',
-    [/spotify\.com\/track\/(\w+)/i, /spotify\:track\:(\w+)/i]
+    [/spotify\.com\/track\/(\w+)/i, /spotify:track:(\w+)/i]
   );
 
   // test: spotify:track:6NmXV4o6bmp704aPGyTVVG => https://open.spotify.com/track/4VGLw2x6oTDc9krhyP0MVP
@@ -258,7 +263,7 @@ function ContentEmbed() {
     label: 'Youtube',
     //regex: /https?\:\/\/(?:www\.)?youtu(?:\.)?be(?:\.com)?\/(?:(?:.*)?[\?\&]v=|v\/)?([a-zA-Z0-9_\-]+)/,
     //regex: /https?\:\/\/(?:www\.)?youtu(?:\.)?be(?:\.com)?\/(?:(?:.*)?[\?\&]v=|v\/|embed\/|\/)?([a-zA-Z0-9_\-]+)/,
-    regex: /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/,
+    regex: /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/,
     detect: function (url, cb) {
       var m = url.match(this.regex);
       cb(
@@ -272,7 +277,7 @@ function ContentEmbed() {
     getHref: function (embedRef) {
       return 'https://www.youtube.com/v/' + embedRef.videoId;
     },
-    renderImg: function (embedRef, callback) {
+    renderImg: function (embedRef) {
       return '<img src="' + embedRef.img + '" title="' + embedRef.name + '" />';
     },
     require: function (embedRef, callback) {
@@ -293,8 +298,7 @@ function ContentEmbed() {
         }
       );
     },
-    render: function (embedRef, options, callback) {
-      var options = options || embedDefaults;
+    render: function (embedRef, options = embedDefaults, callback) {
       var url =
         'https://youtube.com/embed/' +
         embedRef.videoId +
@@ -316,13 +320,15 @@ function ContentEmbed() {
   var soundcloudEmbed = {
     whydPrefix: 'sc',
     label: 'Soundcloud',
-    regex: /soundcloud\.com\/([\w-_\/]+)/, // https?:\/\/(?:www\.)?
-    regexShort: /snd\.sc\/([\w-_\/]+)/, // https?:\/\/
+    regex: /soundcloud\.com\/([\w-_/]+)/, // https?:\/\/(?:www\.)?
+    regexShort: /snd\.sc\/([\w-_/]+)/, // https?:\/\/
     detect: function (url, cb) {
       if (url.split('?')[0].indexOf('/sets/') > -1) {
         try {
           showMessage('Soundcloud Sets are not supported yet', true);
-        } catch (e) {}
+        } catch (e) {
+          console.error(e);
+        }
         cb();
         return;
       }
@@ -337,12 +343,12 @@ function ContentEmbed() {
 				});*/ else if (
         url.indexOf('soundcloud.com/player') != -1
       ) {
-        var url = /url=([^&]*)/.exec(url);
+        var finalUrl = /url=([^&]*)/.exec(url);
         cb(
-          !url || url.length != 2
+          !finalUrl || finalUrl.length != 2
             ? null
             : {
-                url: decodeURIComponent(url[1]),
+                url: decodeURIComponent(finalUrl[1]),
               }
         );
       } else cb();
@@ -350,7 +356,7 @@ function ContentEmbed() {
     getHref: function (embedRef) {
       return embedRef.url;
     },
-    renderImg: function (embedRef, callback) {
+    renderImg: function (embedRef) {
       return '<img src="' + embedRef.img + '" />';
     },
     require: function (embedRef, callback) {
@@ -361,7 +367,7 @@ function ContentEmbed() {
         '&client_id=' +
         scClientId +
         '&callback=?';
-      $.getJSON(url, function (data, status) {
+      $.getJSON(url, function (data) {
         if (!data || !data.id) return callback();
         embedRef.name = data.title;
         embedRef.id =
@@ -377,8 +383,7 @@ function ContentEmbed() {
         callback(embedRef);
       });
     },
-    render: function (embedRef, options, callback) {
-      var options = options || embedDefaults;
+    render: function (embedRef, options = embedDefaults, callback) {
       var scId = embedRef.id.split('#').pop();
       var url =
         'https://w.soundcloud.com/player/?url=' +
@@ -399,7 +404,7 @@ function ContentEmbed() {
   var vimeoEmbed = {
     whydPrefix: 'vi',
     label: 'Vimeo',
-    regex: /vimeo\.com\/(clip\:)?(\d+)/, // https?:\/\/(?:www\.)? // http://stackoverflow.com/questions/2662485/simple-php-regex-question
+    regex: /vimeo\.com\/(clip:)?(\d+)/, // https?:\/\/(?:www\.)? // http://stackoverflow.com/questions/2662485/simple-php-regex-question
     detect: function (url, cb) {
       var m = url.match(this.regex);
       cb(
@@ -413,7 +418,7 @@ function ContentEmbed() {
     getHref: function (embedRef) {
       return 'https://vimeo.com/' + embedRef.videoId;
     },
-    renderImg: function (embedRef, callback) {
+    renderImg: function (embedRef) {
       return '<img src="' + embedRef.img + '" />';
     },
     require: function (embedRef, callback) {
@@ -431,8 +436,7 @@ function ContentEmbed() {
         }
       );
     },
-    render: function (embedRef, options, callback) {
-      var options = options || embedDefaults;
+    render: function (embedRef, options = embedDefaults, callback) {
       var url =
         'https://player.vimeo.com/video/' +
         embedRef.videoId +
@@ -468,10 +472,10 @@ function ContentEmbed() {
     getHref: function (embedRef) {
       return embedRef.url; //'http://www.dailymotion.com/swf/' + embedRef.videoId;
     },
-    renderImg: function (embedRef, callback) {
+    renderImg: function (embedRef) {
       return (
         '<img src="https://www.dailymotion.com/thumbnail/video/' +
-        videoId +
+        embedRef.videoId +
         '" />'
       );
     },
@@ -487,7 +491,7 @@ function ContentEmbed() {
           //console.log(data)
           embedRef.img = data.thumbnail_url; //.replace("_preview_medium", "_preview_large");
           embedRef.name = data.title;
-          embedRef.url = /src=\"([^\"]*)\"/.exec(data.html).pop();
+          embedRef.url = /src="([^"]*)"/.exec(data.html).pop();
           if (embedRef.url)
             embedRef.videoId = decodeURIComponent(embedRef.url)
               .split('/')
@@ -542,7 +546,7 @@ function ContentEmbed() {
       }
       function detectNext(i) {
         if (i == embedDetectors.length) return fallback();
-        var detectorName = Object.keys(embedTypes)[i];
+        // var detectorName = Object.keys(embedTypes)[i];
         //console.log(detectorName, "...");
         embedDetectors[i].detect(url, function (embedRef) {
           //console.log(detectorName, "->", embedRef);
@@ -613,4 +617,6 @@ function ContentEmbed() {
 
 try {
   module.exports = ContentEmbed;
-} catch (e) {}
+} catch (e) {
+  /* do nothing */
+}

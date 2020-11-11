@@ -1,4 +1,4 @@
-/* global $, showMessage */
+/* global $, showMessage, chrome, openHtmlDialog */
 
 function ajaxQuery(data, cb) {
   var $body = $('body').addClass('loading');
@@ -13,7 +13,7 @@ function ajaxQuery(data, cb) {
     },
     error: function (error) {
       $body.removeClass('loading');
-      showMessage(json.error);
+      showMessage(error);
       if (!cb || !cb({ error: error })) throw error;
     },
   });
@@ -198,7 +198,7 @@ function initOnbButton() {
       console.log('trying to install chrome extension', e.target.href);
       chrome.webstore.install(
         e.target.href,
-        function () {},
+        function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
         function () {
           console.log('failed => opening chrome web store in a new tab...');
           //goToPage(e.href);

@@ -432,7 +432,7 @@
           ? Emitter
           : require('emitter');
 
-      noop = function () {};
+      noop = function () {}; // eslint-disable-line @typescript-eslint/no-empty-function
 
       Dropzone = (function (_super) {
         __extends(Dropzone, _super);
@@ -1568,7 +1568,9 @@
           if (doc.createEventObject && root.doScroll) {
             try {
               top = !win.frameElement;
-            } catch (_error) {}
+            } catch (error) {
+              console.error(error);
+            }
             if (top) {
               poll();
             }

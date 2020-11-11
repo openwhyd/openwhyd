@@ -1,3 +1,5 @@
+/* global $, Playem, loadMore, showMessage, toggleLovePost, publishPost, goToPage */
+
 /**
  * openwhyd player
  * @author adrienjoly
@@ -21,7 +23,7 @@ var MAX_POSTS_TO_SHUFFLE = 200;
 
 // utility functions
 
-if (undefined == window.console) console = { log: function () {} };
+if (undefined == window.console) window.console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 function EventEmitter() {
   this._eventListeners = {};
@@ -44,68 +46,9 @@ function inheritEventEmitter(object) {
   for (let i in eventEmitter) object[i] = eventEmitter[i];
 }
 
-// from snip.js
-var extractTrackMetaFromTitle = (function () {
-  var reQuotes = /\"[^\")]*\"/g,
-    reSeparator = /-+\s+/g,
-    reOnlyDigits = /^\d+$/;
-  var cleanTrackName = function (str) {
-    return !str
-      ? ''
-      : str
-          .trim()
-          .replace(/^\d+([\-\.\/\\]\d+)+\s+/, '') // remove prefixing date
-          .replace(/^\d+[\.]+\s+/, '') // remove prefixing track number
-          .replace(/^\#\d+\s+/, '') // remove prefixing rank
-          .replace(/\([^\)]*\)/g, '') // remove parentheses
-          .replace(/\[[^\]]*\]/g, '') // remove brackets
-          .replace(/\s+/, ' ') // remove extra/duplicate whitespace
-          .trim();
-  };
-  var removeAccents = function (str) {
-    return !str
-      ? ''
-      : str
-          .replace(/[àâä]/gi, 'a')
-          .replace(/[éèêë]/gi, 'e')
-          .replace(/[îï]/gi, 'i')
-          .replace(/[ôö]/gi, 'o')
-          .replace(/[ùûü]/gi, 'u');
-  };
-  var normalizeArtistName = function (artistName) {
-    return removeAccents(artistName.trim().toLowerCase()).replace(
-      /[^a-z0.1]/g,
-      ''
-    ); // remove non alpha characters
-  };
-  var detectArtistName = function (trackName) {
-    var quoted = trackName.match(reQuotes) || [];
-    var splitted = (trackName || '')
-      .replace(reQuotes, ' - ')
-      .split(reSeparator);
-    // remove track title (last item of the string, or quoted items)
-    splitted.length = splitted.length - (quoted.length || 1);
-    for (let i in splitted) {
-      var normalized = normalizeArtistName(splitted[i]);
-      if (normalized && !reOnlyDigits.test(normalized))
-        return splitted[i].trim();
-    }
-    return null;
-  };
-  return function (title) {
-    title = cleanTrackName(title);
-    var artist = detectArtistName(title);
-    return {
-      artist: artist,
-      title: title.replace(artist, '').replace(reSeparator, ''),
-    };
-  };
-})();
-
 /////////////////////////////////////////////////////////////////////////////////
 
-function ProgressBar(p) {
-  var p = p || {};
+function ProgressBar(p = {}) {
   var updateBarOnDrag = p.updateBarOnDrag;
   this.value = p.value || 0;
   var $progressTrack = p.progressTrack;
@@ -114,7 +57,6 @@ function ProgressBar(p) {
   var draggingCursor = false;
   $progressTrack.mousedown(function (e) {
     //console.log("progresstrack.mousedown", e, $progressTrack);
-    var start_x = e.pageX;
     var min_x = $progressTrack.offset().left + 3;
     var width = $progressTrack.width();
     var offset_x = Math.min(width, Math.max(0, e.pageX - min_x));
@@ -141,7 +83,7 @@ function ProgressBar(p) {
     return false;
   });
   this.setValue = function (newValue) {
-    if (NaN != newValue) {
+    if (!isNaN(newValue)) {
       this.value = Math.min(1, Math.max(0, newValue));
       $progressBar.css('width', 100 * this.value + '%');
       if (!draggingCursor) {
@@ -220,7 +162,7 @@ function WhydPlayer() {
   var $trackSrc = $('#trackSrc');
 
   function setState(state, $post) {
-    var loading = state == 'loading';
+    // var loading = state == 'loading';
     isPlaying = state == 'playing';
 
     $body.toggleClass('playing', isPlaying);
@@ -250,18 +192,18 @@ function WhydPlayer() {
   if (typeof document.hasFocus === 'function' && !USING_ELECTRON) {
     var hadFocus = true,
       wasPlaying = false;
-    function updateFocusState() {
+    const updateFocusState = () => {
       var hasFocus = document.hasFocus();
       //console.log('updateFocusState', hadFocus, '->', hasFocus);
       if (hasFocus !== hadFocus) {
         if (!hasFocus) {
           // user just left Openwhyd => page lost focus
           wasPlaying = isPlaying;
-          if (isPlaying) playem.pause();
+          if (isPlaying) window.playem.pause();
         } else if (hasFocus) {
           // user just came back to Openwhyd
           if (wasPlaying) {
-            playem.resume();
+            window.playem.resume();
             window.showMessage &&
               showMessage(
                 'Want to play music in the background?' +
@@ -273,7 +215,7 @@ function WhydPlayer() {
         }
         hadFocus = hasFocus;
       }
-    }
+    };
     updateFocusState();
     setInterval(updateFocusState, 500);
   }
@@ -293,7 +235,7 @@ function WhydPlayer() {
       }
     },
     onChange: function (pos) {
-      playem.seekTo(pos);
+      window.playem.seekTo(pos);
       setProgress(pos);
     },
   });
@@ -305,7 +247,7 @@ function WhydPlayer() {
   }
 
   function setProgress(progress) {
-    if (progress && NaN != progress && currentTrack.trackDuration) {
+    if (progress && !isNaN(progress) && currentTrack.trackDuration) {
       progressBar.setValue(progress);
       $progressTimer.text(
         formatTime(currentTrack.trackDuration * progress) +
@@ -321,14 +263,14 @@ function WhydPlayer() {
     var $volumeBtn = $('.volume').click(function () {
       setVolume(volumeBar.value > 0.01 ? 0 : prevVolumeLevel);
     });
-    function setVolume(pos) {
-      playem.setVolume(pos);
+    const setVolume = (pos) => {
+      window.playem.setVolume(pos);
       volumeBar.setValue(pos);
       $volumeBtn.toggleClass('mute', pos < 0.01);
       $volumeBtn.toggleClass('half', pos < 0.5);
       if (pos > 0.1) prevVolumeLevel = pos;
       return pos;
-    }
+    };
     var volumeBar = new ProgressBar({
       value: 1.0,
       updateBarOnDrag: true,
@@ -351,9 +293,9 @@ function WhydPlayer() {
   };
 
   function addTrackByEid(eId, metadata) {
-    var eId = '' + eId;
+    eId = '' + eId;
     var src = (shortcuts[eId.substr(0, 4)] || eId.substr(0, 4)) + eId.substr(4);
-    var track = playem.addTrackByUrl(src, metadata);
+    var track = window.playem.addTrackByUrl(src, metadata);
     if (!track.player) {
       console.warn('addTrackByEid, track was not recognized:', track);
       $(metadata.post).addClass('disabled');
@@ -365,30 +307,27 @@ function WhydPlayer() {
     var post = e.parentNode;
     var authorHtml = ($(post).find('.author') || [])[0];
     var title = (post.getElementsByTagName('h2') || [])[0];
-    var track = addTrackByEid(
-      e.dataset ? e.dataset.eid : e.getAttribute('data-eid'),
-      {
-        title: title ? title.innerHTML : null,
-        url: e.getAttribute('href'),
-        authorHtml: authorHtml ? authorHtml.innerHTML : null,
-        post: post,
-        img: $(post).find('.thumb > img').first().attr('src'),
-        pid: $(post).attr('data-pid'),
-        eid: $(post).attr('data-eid'),
-        isLoved: !!(post.dataset
-          ? post.dataset.loved
-          : post.getAttribute('data-loved')),
-      }
-    );
+    addTrackByEid(e.dataset ? e.dataset.eid : e.getAttribute('data-eid'), {
+      title: title ? title.innerHTML : null,
+      url: e.getAttribute('href'),
+      authorHtml: authorHtml ? authorHtml.innerHTML : null,
+      post: post,
+      img: $(post).find('.thumb > img').first().attr('src'),
+      pid: $(post).attr('data-pid'),
+      eid: $(post).attr('data-eid'),
+      isLoved: !!(post.dataset
+        ? post.dataset.loved
+        : post.getAttribute('data-loved')),
+    });
   }
 
   function populateTracksFromPosts() {
     console.log('populating track list...');
-    playem.clearQueue();
+    window.playem.clearQueue();
     var posts = $('.post:visible');
     for (let i = 0; i < posts.length; ++i)
       addTrackFromAnchor(posts[i].getElementsByTagName('a')[0]);
-    var playQueue = playem.getQueue();
+    var playQueue = window.playem.getQueue();
     if (isShuffle && playQueue && playQueue.length) shuffleArray(playQueue);
     //console.log("shuffled?", isShuffle, playQueue.length, playQueue.map(function(a){return a.index;}));
     return playQueue;
@@ -407,7 +346,7 @@ function WhydPlayer() {
   }
 
   function playTrack(index) {
-    playem.play(index);
+    window.playem.play(index);
   }
 
   function logTrackPlay() {
@@ -445,53 +384,9 @@ function WhydPlayer() {
     }
   }
 
-  function replaceTrackWith(currentIndex, eId, cb) {
-    addTrackByEid(eId, currentTrack.metadata);
-    var queue = playem.getQueue();
-    var altTrack = (queue[currentIndex] = queue.pop());
-    altTrack.index = currentIndex;
-    cb(altTrack);
-  }
-
-  function playTrackFromAlternativeSource(eId) {
-    var currentIndex = currentTrack.index;
-    console.log('switching to', eId, '...');
-    replaceTrackWith(currentIndex, eId, function (altTrack) {
-      /*
-			var fbk = {
-				eId: "/dz/" + altTrack.trackId,
-			};
-			if (altTrack.player.isLogged())
-				fbk.dCo = true;
-			// TODO: add fbk.dPm if it's a deezer premium account
-			altTrack.metadata.logData = {
-				err: logData.err,
-				fbk: fbk,
-			};
-			*/
-      playTrack(currentIndex); // logData will be submitted when onPlay or onError is received
-    });
-  }
-
-  function fetchTrackMetadata(eId, cb, complete) {
-    console.log('fetching metadata and alternatives for eId', eId, '...');
-    $.getJSON((complete ? '/api/metadataExtractor' : '/api/track') + eId, cb);
-  }
-
-  function playTrackFromFirstAlternativeSource(eId) {
-    fetchTrackMetadata(eId, function (track) {
-      console.log('found', track.alt || 0, 'alternatives');
-      for (let i in track.alt) {
-        var newEid = track.alt[i];
-        if (newEid != eId && shortcuts[newEid.substr(0, 4)])
-          return playTrackFromAlternativeSource(newEid);
-        else console.log('skipping', newEid, '...');
-      }
-    });
-  }
+  // TODO: remove /api/metadataExtractor
 
   // handlers for events coming from Playem
-
   var playemEventHandlers = {
     onError: function (e) {
       if (currentTrack.metadata.logData) logTrackPlay();
@@ -523,8 +418,8 @@ function WhydPlayer() {
         err: e || {}, // TODO: check that format is correct
       };
       logTrackPlay();
-      if (playem.getQueue().length > 1) playem.next();
-      else playem.stop();
+      if (window.playem.getQueue().length > 1) window.playem.next();
+      else window.playem.stop();
     },
     onReady: function () {
       // hide the player after init
@@ -545,7 +440,9 @@ function WhydPlayer() {
       $trackNumber.text(track.index + 1 + '. ');
       try {
         $trackTitle.ajaxify();
-      } catch (e) {}
+      } catch (e) {
+        console.error(e);
+      }
       $('#trackThumb').css(
         'background-image',
         "url('" + track.metadata.img + "')"
@@ -608,7 +505,9 @@ function WhydPlayer() {
         var playerName;
         try {
           playerName = arguments[0].playerName;
-        } catch (e) {}
+        } catch (e) {
+          console.error(e);
+        }
         var log = evtName + (playerName ? ' (' + playerName + ')' : '');
         if (log != lastLog) {
           console.log('%cevt: ' + log, 'color:#888');
@@ -640,7 +539,7 @@ function WhydPlayer() {
   // init playem object, based on DOM elements
 
   for (let i in playemEventHandlers)
-    playem.on(i, wrapLogger(i, playemEventHandlers[i]));
+    window.playem.on(i, wrapLogger(i, playemEventHandlers[i]));
 
   var genericHolder = document.createElement('div');
   genericHolder.id = 'genericholder';
@@ -652,8 +551,8 @@ function WhydPlayer() {
     playerContainer: genericHolder,
   };
 
-  var inProduction = window.location.href.indexOf('//openwhyd.org') > -1;
-  var inTest = window.location.href.indexOf('//whyd.fr') > -1; // pre-production
+  // var inProduction = window.location.href.indexOf('//openwhyd.org') > -1;
+  // var inTest = window.location.href.indexOf('//whyd.fr') > -1; // pre-production
 
   var PLAYERS = {
       // yt: inProduction ? 'YoutubeIframePlayer' : (inTest?'YoutubeIframePlayer':'YoutubeIframePlayer'),
@@ -670,7 +569,7 @@ function WhydPlayer() {
     players = [];
 
   for (let prefix in PLAYERS)
-    players[prefix] = playem.addPlayer(
+    players[prefix] = window.playem.addPlayer(
       window[PLAYERS[prefix]],
       defaultDefaultParams
     );
@@ -706,12 +605,12 @@ function WhydPlayer() {
         var player = players[playerId];
         var eId = player.getEid(url);
         if (eId) {
-          function returnTrack(track) {
+          const returnTrack = (track) => {
             track = track || {};
             track.playerLabel = player.label;
             track.eId = track.eId || '/' + playerId + '/' + (track.id || eId);
             cb(track);
-          }
+          };
           if (!player.fetchMetadata) {
             returnTrack();
           } else {
@@ -721,37 +620,6 @@ function WhydPlayer() {
         }
       }
       cb();
-    },
-    playFirstAlt: function () {
-      var eId = $(currentTrack.metadata.post)
-        .find('[data-eid]')
-        .attr('data-eid');
-      playTrackFromFirstAlternativeSource(eId);
-    },
-    switchSource: function (sourceId) {
-      var eId = $(currentTrack.metadata.post)
-        .find('[data-eid]')
-        .attr('data-eid');
-      fetchTrackMetadata(
-        eId,
-        function (res) {
-          if (sourceId)
-            playTrackFromAlternativeSource(
-              '/' + sourceId + '/' + res.mappings[sourceId].id
-            );
-          else if (res && res.mappings) {
-            console.log('found the following mappings:');
-            for (let src in res.mappings)
-              console.log(
-                '-',
-                src,
-                ':',
-                Math.floor(res.mappings[src].c * 100) + '%'
-              );
-          }
-        },
-        true
-      );
     },
     toggleShuffle: function (value) {
       if (value != undefined && value == isShuffle) return isShuffle;
@@ -771,18 +639,18 @@ function WhydPlayer() {
       return currentTrack;
     },
     pause: function () {
-      if (currentTrack && isPlaying) playem.pause();
+      if (currentTrack && isPlaying) window.playem.pause();
     },
     playPause: function () {
       if (!currentTrack) self.playAll();
       else if (isPlaying) self.pause();
-      else playem.resume();
+      else window.playem.resume();
     },
     next: function () {
-      playem.next();
+      window.playem.next();
     },
     prev: function () {
-      playem.prev();
+      window.playem.prev();
     },
     playAll: function (postNode) {
       isShuffle = false;
@@ -826,7 +694,7 @@ function WhydPlayer() {
       self.refresh();
     },
     setVolume: function (vol) {
-      playem.setVolume(vol);
+      window.playem.setVolume(vol);
     },
   };
 
@@ -853,41 +721,4 @@ function WhydPlayer() {
     window.whydPlayer.playAll();
 
   console.log('Playem is ready!');
-
-  // enable media keys for controlling the player, using sway.fm chrome extension
-  /*
-	// disabled this code, as the URL does not exist anymore and the chrome extension
-	// does not seem to work either: https://chrome.google.com/webstore/detail/media-keys-by-swayfm/icckhjgjjompfgoiidainoapgjepncej/reviews
-	loader.includeJS("https://s3.amazonaws.com/SwayFM/UnityShim.js", function() {
-		console.log("Loading sway.fm...")
-		var unity = UnityMusicShim();
-		unity.setSupports({
-		  playpause: true,
-		  next: true,
-		  previous: true
-		  //favorite: true
-		});
-		unity.setCallbackObject({
-		  pause: window.whydPlayer.playPause,
-		  next: window.whydPlayer.next,
-		  previous: window.whydPlayer.prev
-		  //favorite: window.whydPlayer.like()
-		});
-		function makeStateProxy(props){
-			props = props || {};
-			return function(track) {
-				var trackMeta = extractTrackMetaFromTitle($("<p>" + track.metadata.title + "</p>").text());
-				unity.sendState({
-				  playing: props.playing,
-				  title: trackMeta.title,
-				  artist: trackMeta.artist,
-				  //favorite: false,
-				  albumArt: track.metadata.img
-				});
-			};
-		}
-		window.whydPlayer.on("play", makeStateProxy({playing: true}));
-		window.whydPlayer.on("pause", makeStateProxy({playing: false}));
-	});
-	*/
 })();

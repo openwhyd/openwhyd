@@ -26,10 +26,6 @@
     eventHandlers = {},
     parameters = {};
 
-  try {
-    console.log('ORIGIN', ORIGIN);
-  } catch (e) {}
-
   // initialize iframe DOM
   var body = document.getElementsByTagName('body')[0];
   body.innerHTML = '<div id="player"></div>';

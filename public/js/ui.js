@@ -1,7 +1,7 @@
 /* global $ */
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function () {} };
+if (undefined == window.console) window.console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 // === Popup dialogs / video overlays ===
 
@@ -110,7 +110,7 @@ function adaptToWindowSize() {
 // LOGGING FUNCTIONS
 
 function WhydLogging() {
-  var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
+  var emailCheck = /^[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
   //var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/;
 
   this.validateField = {

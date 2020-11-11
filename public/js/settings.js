@@ -96,7 +96,9 @@ $(function () {
     val = val.toLowerCase();
     try {
       val = val.trim();
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
     $handle.val(val);
     if (val == '') return 0;
     var valid = /^[a-z0-9]+[a-z0-9_\-\.]+[a-z0-9]+$/i.test(val);
