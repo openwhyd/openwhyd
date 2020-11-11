@@ -1,7 +1,7 @@
 /* global $ */
 
 // prevents bug in firefox 3
-if (undefined == window.console) console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
+if (undefined == window.console) window.console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 // === Popup dialogs / video overlays ===
 
