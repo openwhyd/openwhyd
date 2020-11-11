@@ -21,7 +21,6 @@ exports.refreshTemplates();
 
 var FIELDS = [
   'inviteCode',
-  'plC', // playlist contest
   'iPo', // post/track from which user was invited
   'fbRequest', // id of facebook request used to invite
   'email',
@@ -71,7 +70,6 @@ exports.renderInvitePage = function (
   iPo,
   email,
   fbRequest,
-  plC,
   redirect
 ) {
   var params = {};
@@ -102,8 +100,6 @@ exports.renderInvitePage = function (
   }
 
   if (inviteCode) params.inviteCode = inviteCode;
-
-  if (plC) params.plC = plC;
 
   if (iPo) params.iPo = iPo;
 

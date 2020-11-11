@@ -263,7 +263,6 @@ Parameters:
 - **iBy**: (string, optional) id of the user who invited the visitor to sign up to Openwhyd. the invited visitor will be automatically subscribed to the inviter, and the inviter will be notified upon his friend's sign up.
 - **iPg:** (string, optional) URL of the page from which the sign up was initiated (for analytics)
 - **iRf**: (string, optional) referrer of the sign up page (origin of the visitor, for analytics)
-- **plC**: (string, optional) id of the playlist contest that brought the visitor to sign up to Openwhyd, for participating to the contest. => a playlist is created, to participate to this contest.
 - **<s>iPo</s>**<s>: (string, deprecated) id of the post from which the visitor was invited => was used to redirect to that post upon successful sign up.</s>
 
 Response: (JSON, _if ajax parameter was set to true_)

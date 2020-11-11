@@ -64,7 +64,6 @@ exports.renderRegisterPage = function (request, reqParams, response) {
     error: reqParams.error,
     iBy: reqParams.iBy, // invited by user iBy
     iPo: reqParams.iPo, // from post iPo (legacy)
-    plC: reqParams.plC, // playlist contest id => will skip autofollow/onboarding and redirect to playlist page
   });
 
   function render(user = {}) {
@@ -77,7 +76,6 @@ exports.renderRegisterPage = function (request, reqParams, response) {
       user.pId,
       reqParams.email || user.email || '',
       user.fbRequestIds,
-      reqParams.plC,
       reqParams.redirect
     );
     response.legacyRender(registrationPage, null, {

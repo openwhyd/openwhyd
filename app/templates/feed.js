@@ -61,7 +61,6 @@ function prepareFeedVars(posts, options) {
     userPrefs: (options.loggedUser || {}).pref || {},
     loggedUser: options.loggedUser,
     isUserLogged: options.loggedUser && options.loggedUser.id,
-    playlistContest: options.playlistContest,
     header: !options.after && !options.before,
     emptyFeed:
       posts.length == 0 && !options.before
