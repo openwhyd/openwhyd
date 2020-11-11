@@ -1,3 +1,5 @@
+/* global soundManager */
+
 /**
  * openwhyd embed script
  * @author adrienjoly, whyd

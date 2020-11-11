@@ -1,4 +1,4 @@
-/* global $, showMessage */
+/* global $, showMessage, chrome, openHtmlDialog */
 
 function ajaxQuery(data, cb) {
   var $body = $('body').addClass('loading');
@@ -13,7 +13,7 @@ function ajaxQuery(data, cb) {
     },
     error: function (error) {
       $body.removeClass('loading');
-      showMessage(json.error);
+      showMessage(error);
       if (!cb || !cb({ error: error })) throw error;
     },
   });

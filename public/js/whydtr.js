@@ -1,3 +1,5 @@
+/* global ga */
+
 // openwhyd tracking
 
 window.Whyd = window.Whyd || {};
