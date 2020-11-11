@@ -17,99 +17,13 @@ var __assign =
       };
     return __assign.apply(this, arguments);
   };
-function makeBookmarklet() {
-  var detectedTracks = 0;
-  // Helpers
-  function getNodeText(node) {
-    return (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
-    // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
-  }
-  function unwrapFacebookLink(src) {
-    // e.g. http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DKhXn0anD1lE&h=AAQFjMJBoAQFTPOP4HzFCv0agQUHB6Un31ArdmwvxzZxofA
-    var fbLink =
-      src && typeof src.split === 'function'
-        ? src.split('facebook.com/l.php?u=')
-        : [];
-    if (fbLink.length > 1) {
-      fbLink = decodeURIComponent(fbLink.pop().split('&').shift());
-      var result = fbLink.indexOf('//www.facebook.com/') == -1 ? fbLink : src;
-      return result;
-    }
-    return src;
-  }
-  // Track detectors
-  function makeFileDetector() {
-    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
-    return function detectMusicFiles(url, cb, element) {
-      var fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
-      if (eidSet[url] || !fileName) return cb();
-      var title =
-        (element ? element.title || getNodeText(element) : null) ||
-        decodeURIComponent(fileName);
-      eidSet[url] = true;
-      cb({
-        id: url,
-        title: title.replace(/^\s+|\s+$/g, ''),
-        img: '/images/cover-audiofile.png',
-      });
-    };
-  }
-  // players = { playerId -> { getEid(), fetchMetadata() } }
-  // returns detectPlayableStreams(url, callback, element)
-  function makeStreamDetector(players) {
-    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
-    function getPlayerId(url) {
-      for (var i in players) {
-        var player = players[i];
-        var eId = player.getEid(url);
-        if (eId) return i;
-      }
-    }
-    // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
-    return function detectPlayableStreams(url, cb, element) {
-      if (element === void 0) {
-        element = {};
-      }
-      // 1. find the matching player and track identifier
-      var playerId = getPlayerId(url);
-      var player = playerId && players[playerId];
-      var eid = player && '/' + playerId + '/' + player.getEid(url);
-      if (!eid || eidSet[eid]) return cb();
-      // 2. extract the (optional) stream URL from the identifier
-      var parts = eid.split('#');
-      var streamUrl = /^https?:\/\//.test(parts[1] || '') && parts[1];
-      if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
-      // 3. store the identifier, with and without stream URL, to prevent duplicates
-      eidSet[parts[0]] = true;
-      eidSet[eid] = true;
-      if (element.artist && element.title) {
-        return cb({
-          eId: eid,
-          title: element.artist + ' - ' + element.title,
-          img: element.img,
-          sourceId: playerId,
-          sourceLabel: (player || {}).label,
-        });
-      } else if (!player || !player.fetchMetadata) {
-        return cb({ eId: eid }); // quit if we can't enrich the metadata
-      }
-      // 4. try to return the track with enriched metadata
-      player.fetchMetadata(url, function (track) {
-        if (!track) return cb();
-        track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of the DETECTORS
-        track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
-        track.sourceId = playerId;
-        track.sourceLabel = player.label;
-        cb(track);
-      });
-    };
-  }
-  // Each detector is called once per web page and returns a list of Query, DomElement and/or Track objects.
-  // - Query objects must have a searchQuery field. They will be passed as-is to ui.addSearchThumb()
-  // - DomElement objects must have a href or src field.
-  // - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
-  // TODO: simplify/homogenize return types
-  var DETECTORS = [
+// Each detector is called once per web page and returns a list of Query, DomElement and/or Track objects.
+// - Query objects must have a searchQuery field. They will be passed as-is to ui.addSearchThumb()
+// - DomElement objects must have a href or src field.
+// - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
+// TODO: simplify/homogenize return types
+function makePageDetectors() {
+  return [
     function detectYouTubePageTrack(window) {
       if (/ - YouTube$/.test(window.document.title) === false) return null;
       var videoElement = window.document.getElementsByTagName(
@@ -128,6 +42,10 @@ function makeBookmarklet() {
     },
     function detectPandoraTrack(window) {
       if (window.location.href.indexOf('pandora.com') == -1) return null;
+      var getNodeText = function (node) {
+        return (node.innerText || node.textContent || '').trim().split('\n')[0];
+      }; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
+      // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
       var artist = getNodeText(
           window.document.getElementsByClassName('playerBarArtist')[0] || {}
         ),
@@ -220,6 +138,100 @@ function makeBookmarklet() {
       return results;
     },
   ];
+}
+if (typeof exports !== 'undefined') {
+  exports.pageDetectors = makePageDetectors();
+} else {
+  window.openwhydBkPageDetectors = makePageDetectors();
+}
+function makeBookmarklet(_a) {
+  var pageDetectors = _a.pageDetectors;
+  var detectedTracks = 0;
+  // Helpers
+  function getNodeText(node) {
+    return (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
+    // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
+  }
+  function unwrapFacebookLink(src) {
+    // e.g. http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DKhXn0anD1lE&h=AAQFjMJBoAQFTPOP4HzFCv0agQUHB6Un31ArdmwvxzZxofA
+    var fbLink =
+      src && typeof src.split === 'function'
+        ? src.split('facebook.com/l.php?u=')
+        : [];
+    if (fbLink.length > 1) {
+      fbLink = decodeURIComponent(fbLink.pop().split('&').shift());
+      var result = fbLink.indexOf('//www.facebook.com/') == -1 ? fbLink : src;
+      return result;
+    }
+    return src;
+  }
+  // Track detectors
+  function makeFileDetector() {
+    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
+    return function detectMusicFiles(url, cb, element) {
+      var fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
+      if (eidSet[url] || !fileName) return cb();
+      var title =
+        (element ? element.title || getNodeText(element) : null) ||
+        decodeURIComponent(fileName);
+      eidSet[url] = true;
+      cb({
+        id: url,
+        title: title.replace(/^\s+|\s+$/g, ''),
+        img: '/images/cover-audiofile.png',
+      });
+    };
+  }
+  // players = { playerId -> { getEid(), fetchMetadata() } }
+  // returns detectPlayableStreams(url, callback, element)
+  function makeStreamDetector(players) {
+    var eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
+    function getPlayerId(url) {
+      for (var i in players) {
+        var player = players[i];
+        var eId = player.getEid(url);
+        if (eId) return i;
+      }
+    }
+    // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
+    return function detectPlayableStreams(url, cb, element) {
+      if (element === void 0) {
+        element = {};
+      }
+      // 1. find the matching player and track identifier
+      var playerId = getPlayerId(url);
+      var player = playerId && players[playerId];
+      var eid = player && '/' + playerId + '/' + player.getEid(url);
+      if (!eid || eidSet[eid]) return cb();
+      // 2. extract the (optional) stream URL from the identifier
+      var parts = eid.split('#');
+      var streamUrl = /^https?:\/\//.test(parts[1] || '') && parts[1];
+      if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
+      // 3. store the identifier, with and without stream URL, to prevent duplicates
+      eidSet[parts[0]] = true;
+      eidSet[eid] = true;
+      if (element.artist && element.title) {
+        return cb({
+          eId: eid,
+          title: element.artist + ' - ' + element.title,
+          img: element.img,
+          sourceId: playerId,
+          sourceLabel: (player || {}).label,
+        });
+      } else if (!player || !player.fetchMetadata) {
+        return cb({ eId: eid }); // quit if we can't enrich the metadata
+      }
+      // 4. try to return the track with enriched metadata
+      player.fetchMetadata(url, function (track) {
+        if (!track) return cb();
+        track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of pageDetectors
+        track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
+        track.sourceId = playerId;
+        track.sourceLabel = player.label;
+        cb(track);
+      });
+    };
+  }
   function detectTracks(_a) {
     // an urlDetector must callback with a track Object (with fields: {id, eId, title, img}) as parameter, if detected
     // TODO: decouple from ui <= let caller provide one handler to be called for each detected track
@@ -314,7 +326,7 @@ function makeBookmarklet() {
       };
     })();
     console.info('1/2 parse page...');
-    DETECTORS.map(function (detectFct) {
+    pageDetectors.map(function (detectFct) {
       var results = detectFct(window) || [];
       console.info('-----' + detectFct.name, '=>', results.length);
       results.map(function (result) {
@@ -650,7 +662,9 @@ if (typeof exports === 'undefined') {
       : 'playem-all.js';
     var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
-      var bookmarklet = makeBookmarklet();
+      var bookmarklet = makeBookmarklet({
+        pageDetectors: window.openwhydBkPageDetectors,
+      });
       var allPlayers = Object.assign(
         {
           yt: openwhydYouTubeExtractor,

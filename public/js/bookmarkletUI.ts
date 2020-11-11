@@ -14,6 +14,7 @@ interface Window {
   closeWhydBk;
   onkeydownBackup;
   _initWhydBk;
+  openwhydBkPageDetectors; // defined in bookmarkletPageDetectors.ts
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -313,7 +314,9 @@ if (typeof exports === 'undefined') {
       : 'playem-all.js';
     const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
-      const bookmarklet = makeBookmarklet();
+      const bookmarklet = makeBookmarklet({
+        pageDetectors: window.openwhydBkPageDetectors,
+      });
       const allPlayers = Object.assign(
         {
           yt: openwhydYouTubeExtractor, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)

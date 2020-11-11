@@ -4,6 +4,7 @@
 // Then, run tests:
 // $ npx mocha test/unit/bookmarklet-tests.js && \
 //   . ./.env-docker && npx cypress run --spec cypress/integration/bookmarklet.spec.ts
+import './bookmarkletPageDetectors';
 import './bookmarkletLogic';
 import './bookmarkletYouTube';
 import './bookmarkletUI';

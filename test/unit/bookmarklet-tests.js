@@ -3,10 +3,11 @@
 const assert = require('assert');
 const {
   makeBookmarklet,
+  pageDetectors,
   openwhydYouTubeExtractor,
 } = require('./../../public/js/bookmarklet.js');
 
-const bookmarklet = makeBookmarklet();
+const bookmarklet = makeBookmarklet({ pageDetectors });
 
 const YOUTUBE_VIDEO = {
   id: 'uWB8plk9sXk',
