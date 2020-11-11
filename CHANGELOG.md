@@ -1,3 +1,10 @@
+# [1.38.0](https://github.com/openwhyd/openwhyd/compare/v1.37.7...v1.38.0) (2020-11-11)
+
+
+### Features
+
+* Remove Discover page + suggested users ([#387](https://github.com/openwhyd/openwhyd/issues/387)) ([7df753e](https://github.com/openwhyd/openwhyd/commit/7df753ec6891a1d6125869b0a67d2f05ea8dca29)), closes [#318](https://github.com/openwhyd/openwhyd/issues/318)
+
 ## [1.37.7](https://github.com/openwhyd/openwhyd/compare/v1.37.6...v1.37.7) (2020-11-10)
 
 
