@@ -14,7 +14,6 @@ db.createCollection('follow');
 db.createCollection('post');
 db.createCollection('activity');
 db.createCollection('track');
-db.createCollection('featured');
 db.createCollection('plContest');
 db.createCollection('comment');
 

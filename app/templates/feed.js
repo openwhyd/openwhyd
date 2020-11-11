@@ -71,7 +71,6 @@ function prepareFeedVars(posts, options) {
     ownProfile: options.ownProfile,
     libRootUrl: '/stream',
     subscriptions: options.subscriptions, // = {nbSubscribers, nbSubscriptions}
-    suggestedUsers: options.suggestedUsers,
     recentActivity: options.recentActivity,
     globalFeed: options.globalFeed,
     homeFeed: options.homeFeed,

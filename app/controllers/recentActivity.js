@@ -101,26 +101,6 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
   });
 }
 
-function fetchSuggestedPeople(uidList, cb) {
-  //return cb([{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly"}]); // test case
-  postModel.fetchPosts({ uId: { $nin: uidList } }, null, null, function (
-    allPosts
-  ) {
-    var userSet = {},
-      userList = [];
-    for (let i in allPosts)
-      if (!userSet[allPosts[i].uId])
-        userSet[allPosts[i].uId] = {
-          id: allPosts[i].uId,
-          name: allPosts[i].uNm,
-          track: allPosts[i].name,
-          trackUrl: '/c/' + allPosts[i]._id,
-        };
-    for (let i in userSet) userList.push(userSet[i]);
-    cb(userList);
-  });
-}
-
 function aggregateActivities(acts) {
   //console.log("acts", acts);
   var aggrs = [],
@@ -209,20 +189,15 @@ exports.controller = function (request, reqParams, response) {
       if (!pageVars.rawFeed) {
         var fullUidList = uidList.slice(0, uidList.length);
         fullUidList.push(loggedInUser.id);
-        fetchSuggestedPeople(fullUidList, function (userList) {
-          if (userList && userList.length)
-            pageVars.suggestedUsers = { items: userList };
-          var html = template.render(pageVars);
-          html = mainTemplate.renderWhydPage({
+        render(
+          mainTemplate.renderWhydPage({
             bodyClass: 'pgRecentActivity pgWithSideBar',
             loggedUser: loggedInUser,
-            content: html,
-          });
-          render(html);
-        });
+            content: template.render(pageVars),
+          })
+        );
       } else {
-        var html = template.render(pageVars);
-        render(html);
+        render(template.render(pageVars));
       }
     });
   });
