@@ -1,3 +1,10 @@
+## [1.40.3](https://github.com/openwhyd/openwhyd/compare/v1.40.2...v1.40.3) (2020-11-11)
+
+
+### Bug Fixes
+
+* **bookmarklet:** Extract pageDetectors and urlDetectors to separate files ([#393](https://github.com/openwhyd/openwhyd/issues/393)) ([b0711b2](https://github.com/openwhyd/openwhyd/commit/b0711b297f9c88cfe17164a5d3f0e1516e7e7fa3)), closes [#381](https://github.com/openwhyd/openwhyd/issues/381)
+
 ## [1.40.2](https://github.com/openwhyd/openwhyd/compare/v1.40.1...v1.40.2) (2020-11-11)
 
 
