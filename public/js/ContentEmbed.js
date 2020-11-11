@@ -46,7 +46,9 @@ function ContentEmbed() {
           try {
             var errors = data.headers.error_message + data.headers.warnings;
             if (errors) console.log(errors);
-          } catch (e) {}
+          } catch (e) {
+            console.error(e);
+          }
           data = data.results[0];
           embedRef.name = data.artist_name + ' - ' + data.name;
           embedRef.img = data.album_image;
@@ -322,7 +324,9 @@ function ContentEmbed() {
       if (url.split('?')[0].indexOf('/sets/') > -1) {
         try {
           showMessage('Soundcloud Sets are not supported yet', true);
-        } catch (e) {}
+        } catch (e) {
+          console.error(e);
+        }
         cb();
         return;
       }
@@ -613,4 +617,6 @@ function ContentEmbed() {
 
 try {
   module.exports = ContentEmbed;
-} catch (e) {}
+} catch (e) {
+  /* do nothing */
+}

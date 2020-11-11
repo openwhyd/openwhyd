@@ -1568,7 +1568,9 @@
           if (doc.createEventObject && root.doScroll) {
             try {
               top = !win.frameElement;
-            } catch (_error) {}
+            } catch (error) {
+              console.error(error);
+            }
             if (top) {
               poll();
             }

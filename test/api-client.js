@@ -76,7 +76,9 @@ exports.get = function (jar, url, callback) {
   ) {
     try {
       body = JSON.parse(body);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
     callback(error, { response, body, jar });
   });
 };

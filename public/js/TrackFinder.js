@@ -24,7 +24,9 @@ window.$ =
         var res = undefined;
         try {
           res = JSON.parse(this.responseText);
-        } catch (e) {}
+        } catch (e) {
+          console.error(e);
+        }
         cb(res, this);
       };
       r.open('get', src, true);

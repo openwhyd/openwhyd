@@ -545,7 +545,9 @@ function WhydPlayer() {
       $trackNumber.text(track.index + 1 + '. ');
       try {
         $trackTitle.ajaxify();
-      } catch (e) {}
+      } catch (e) {
+        console.error(e);
+      }
       $('#trackThumb').css(
         'background-image',
         "url('" + track.metadata.img + "')"
@@ -608,7 +610,9 @@ function WhydPlayer() {
         var playerName;
         try {
           playerName = arguments[0].playerName;
-        } catch (e) {}
+        } catch (e) {
+          console.error(e);
+        }
         var log = evtName + (playerName ? ' (' + playerName + ')' : '');
         if (log != lastLog) {
           console.log('%cevt: ' + log, 'color:#888');

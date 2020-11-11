@@ -121,7 +121,9 @@ describe('"img" package', function () {
     var thumbOutput = 'uniqueHash_thumb.jpg';
     try {
       fs.unlinkSync(thumbOutput);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
 
     console.log = function () {}; // prevent ContentEmbed from printing to the console
     var img = require('../../app/lib/my-img');

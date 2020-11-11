@@ -51,7 +51,9 @@ function extractPostData($post, defaults) {
     .text();
   try {
     text = text.trim(); // trim() not supported on IE8
-  } catch (e) {}
+  } catch (e) {
+    console.error(e);
+  }
   return {
     id: $post.attr('data-pid'), // for askPostShareFB
     pId: $post.attr('data-pid'),
@@ -1249,7 +1251,9 @@ $(document).ready(function () {
               .replace('<', '&lt;')
               .replace('>', '&gt;')
               .replace(' & ', ' &amp; ');
-          } catch (Exception) {}
+          } catch (err) {
+            console.error(err);
+          }
 
           // Add the scripts
           $scripts.each(function () {
