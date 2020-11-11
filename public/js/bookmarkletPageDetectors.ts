@@ -1,9 +1,38 @@
 // Each detector is called once per web page and returns a list of Query, DomElement and/or Track objects.
-// - Query objects must have a searchQuery field. They will be passed as-is to ui.addSearchThumb()
-// - DomElement objects must have a href or src field.
-// - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
-// TODO: simplify/homogenize return types
-const openwhydBkPageDetectors = [
+
+type PageDetector = (window: Window) => (Track | DomElement | Query)[];
+
+// DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
+type Track = {
+  id: string;
+  src: string;
+  name: string;
+};
+type DomElement = Anchor | Embed;
+type Anchor = { href: string };
+type Embed = { src: string };
+
+// Query objects are passed as-is to ui.addSearchThumb()
+type Query = { searchQuery: string };
+
+interface Window {
+  dzPlayer: { getSongId() }; // found on deezer pages
+  TralbumData: {
+    // found on bandcamp pages
+    url: string;
+    artist: string;
+    trackinfo: BandcampTrack[];
+    art_id: string;
+  };
+}
+
+type BandcampTrack = {
+  title: string;
+  title_link: string;
+  file: Record<string, string>;
+};
+
+const openwhydBkPageDetectors: PageDetector[] = [
   function detectYouTubePageTrack(window) {
     if (/ - YouTube$/.test(window.document.title) === false) return null;
     const videoElement = window.document.getElementsByTagName(
@@ -83,11 +112,11 @@ const openwhydBkPageDetectors = [
       if (toDetect.length) return toDetect;
     }
     // list Bandcamp track URLs
-    let bandcampPageUrl =
+    const bandcampPageUrlEl =
       window.document.querySelector &&
       window.document.querySelector('meta[property="og:url"]');
-    if (!bandcampPageUrl) return [];
-    bandcampPageUrl = bandcampPageUrl.getAttribute('content');
+    if (!bandcampPageUrlEl) return [];
+    let bandcampPageUrl = bandcampPageUrlEl.getAttribute('content');
     if (bandcampPageUrl.indexOf('bandcamp.com/track/') != -1)
       toDetect.push({ src: bandcampPageUrl });
     else {

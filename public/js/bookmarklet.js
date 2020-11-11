@@ -156,10 +156,6 @@ if (typeof exports !== 'undefined') {
   exports.makeBookmarklet = makeBookmarklet;
 }
 // Each detector is called once per web page and returns a list of Query, DomElement and/or Track objects.
-// - Query objects must have a searchQuery field. They will be passed as-is to ui.addSearchThumb()
-// - DomElement objects must have a href or src field.
-// - DomElement and Track objects will be passed to urlDetectors, to complete their metadata if needed.
-// TODO: simplify/homogenize return types
 var openwhydBkPageDetectors = [
   function detectYouTubePageTrack(window) {
     if (/ - YouTube$/.test(window.document.title) === false) return null;
@@ -241,11 +237,11 @@ var openwhydBkPageDetectors = [
       if (toDetect.length) return toDetect;
     }
     // list Bandcamp track URLs
-    var bandcampPageUrl =
+    var bandcampPageUrlEl =
       window.document.querySelector &&
       window.document.querySelector('meta[property="og:url"]');
-    if (!bandcampPageUrl) return [];
-    bandcampPageUrl = bandcampPageUrl.getAttribute('content');
+    if (!bandcampPageUrlEl) return [];
+    var bandcampPageUrl = bandcampPageUrlEl.getAttribute('content');
     if (bandcampPageUrl.indexOf('bandcamp.com/track/') != -1)
       toDetect.push({ src: bandcampPageUrl });
     else {

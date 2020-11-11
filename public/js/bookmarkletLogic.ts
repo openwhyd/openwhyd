@@ -1,4 +1,4 @@
-function makeBookmarklet({ pageDetectors }) {
+function makeBookmarklet({ pageDetectors }: { pageDetectors: PageDetector[] }) {
   let detectedTracks = 0;
 
   // Helpers
