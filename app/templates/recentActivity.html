@@ -85,54 +85,8 @@
     width: 625px;
   }
 </style>
-{{#suggestedUsers}}
 <div class="container">
-  <div class="rightBar">
-    <script>
-      function clearSuggestedUser(elt) {
-        $(elt).remove();
-      }
-      function subscribeToUserAndClear(elt) {
-        var $li = $(elt); //.closest("li[data-uid]");
-        var uid = $li.attr('data-uid');
-        subscribeToUser(uid, function () {
-          clearSuggestedUser(elt);
-        });
-      }
-    </script>
-    <div class="sideBox suggestedUsers">
-      <div class="head">
-        <h2 class="head-name-tab">Subscribe to these people</h2>
-        <!--<a href="javascript:return false;">See more</a>-->
-      </div>
-      <div class="body">
-        <ul>
-          {{#items}}
-          <li data-uid="{{id}}">
-            <div
-              style="background-image:url('/img/u/{{id}}');"
-              onclick="$(this).parent().find('a.userName').click();"
-            ></div>
-            <a class="userName" href="/u/{{id}}">{{name}}</a>
-            <span
-              class="subscribe"
-              onclick="subscribeToUserAndClear(this.parentNode)"
-              >Subscribe</span
-            >
-            <a class="suggType" href="{{trackUrl}}">♪ {{track}}</a>
-            <span class="remove" onclick="clearSuggestedUser(this.parentNode)"
-              >x</span
-            >
-          </li>
-          {{/items}}
-        </ul>
-        <a href="/discover/users">Find people</a>
-        &nbsp;&bull;&nbsp;
-        <a href="/invite">Invite friends</a>
-      </div>
-    </div>
-  </div>
-  {{/suggestedUsers}} {{#recentActivity}} {{^rawFeed}}
+  {{#recentActivity}} {{^rawFeed}}
   <div class="bigBox recentActivity sub-container">
     <div class="head">
       <a href="/stream">Back to stream</a>

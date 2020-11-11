@@ -102,34 +102,7 @@
       charset="utf-8"
     ></script>
 
-    {{#suggestedUsers}}
-    <div class="sideBox suggestedUsers">
-      <div class="head">
-        <h2>Subscribe to these people</h2>
-        <a href="/discover/users">Discover more</a>
-      </div>
-      <div class="body">
-        <ul>
-          {{#items}}
-          <li data-uid="{{id}}">
-            <div
-              style="background-image:url('/img/u/{{id}}');"
-              onclick="$(this).parent().find('a.userName').click();"
-            ></div>
-            <a class="userName" href="/u/{{id}}">{{name}}</a>
-            <span
-              class="subscribe"
-              onclick="subscribeToUserAndClear(this.parentNode)"
-              >Subscribe</span
-            >
-            <a class="suggType" href="{{trackUrl}}">♪ {{track}}</a>
-            <!--<span class="remove" onclick="clearSuggestedUser(this.parentNode)">x</span>-->
-          </li>
-          {{/items}}
-        </ul>
-      </div>
-    </div>
-    {{/suggestedUsers}} {{/isUserLogged}} {{#recentActivity}}
+    {{/isUserLogged}} {{#recentActivity}}
     <div class="sideBox recentActivity">
       <div class="head">
         <h2>Recent activity</h2>

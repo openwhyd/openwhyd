@@ -2281,13 +2281,6 @@ body #contentPane {
   color: #357bd1;
 }
 
-.rightBar > .sideBox.suggestedUsers li > .userName {
-  float: left;
-  position: relative;
-  color: #424242;
-  font-size: 12px;
-}
-
 .rightBar > .sideBox li > .subscribe {
   font-size: 12px;
   margin-left: 8px;

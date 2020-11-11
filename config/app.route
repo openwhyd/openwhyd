@@ -90,13 +90,6 @@ GET    /pick/{step}/                   -> controllers.onboarding
 GET    /consent                        -> controllers.consent
 POST   /consent                        -> controllers.consent
 
-GET    /discover                       -> controllers.discover
-POST   /discover                       -> controllers.discover
-GET    /discover/{tab}                 -> controllers.discover
-POST   /discover/{tab}                 -> controllers.discover
-GET    /discover/{tab}/                -> controllers.discover
-POST   /discover/{tab}/                -> controllers.discover
-
 GET    /login                          -> controllers.api.login
 POST   /login                          -> controllers.api.login
 GET    /facebookLogin                  -> controllers.api.facebookLogin
