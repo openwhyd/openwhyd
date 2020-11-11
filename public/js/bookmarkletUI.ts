@@ -14,7 +14,6 @@ interface Window {
   closeWhydBk;
   onkeydownBackup;
   _initWhydBk;
-  openwhydBkPageDetectors; // defined in bookmarkletPageDetectors.ts
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -315,7 +314,7 @@ if (typeof exports === 'undefined') {
     const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
       const bookmarklet = makeBookmarklet({
-        pageDetectors: window.openwhydBkPageDetectors,
+        pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
       });
       const allPlayers = Object.assign(
         {
@@ -326,7 +325,7 @@ if (typeof exports === 'undefined') {
       bookmarklet.detectTracks({
         window,
         ui: BkUi(),
-        urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)],
+        urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)], // defined in bookmarkletUrlDetectors.ts
         urlPrefix,
       });
     });

@@ -556,7 +556,7 @@ if (typeof exports === 'undefined') {
     var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
       var bookmarklet = makeBookmarklet({
-        pageDetectors: window.openwhydBkPageDetectors,
+        pageDetectors: openwhydBkPageDetectors,
       });
       var allPlayers = Object.assign(
         {
