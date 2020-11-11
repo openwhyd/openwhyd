@@ -1,3 +1,10 @@
+## [1.40.1](https://github.com/openwhyd/openwhyd/compare/v1.40.0...v1.40.1) (2020-11-11)
+
+
+### Bug Fixes
+
+* **codacy:** Fix code quality issues listed by Codacy ([#391](https://github.com/openwhyd/openwhyd/issues/391)) ([df00b67](https://github.com/openwhyd/openwhyd/commit/df00b679c01c70aa63a49a18970c01db0093f334)), closes [17325385#l49](https://github.com/17325385/issues/l49)
+
 # [1.40.0](https://github.com/openwhyd/openwhyd/compare/v1.39.1...v1.40.0) (2020-11-11)
 
 
