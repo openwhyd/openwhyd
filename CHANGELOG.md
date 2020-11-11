@@ -1,3 +1,10 @@
+# [1.40.0](https://github.com/openwhyd/openwhyd/compare/v1.39.1...v1.40.0) (2020-11-11)
+
+
+### Features
+
+* Remove "City" pages ([#390](https://github.com/openwhyd/openwhyd/issues/390)) ([9c20c0f](https://github.com/openwhyd/openwhyd/commit/9c20c0fd3acc45a775137bc0b50923ddc5fd8108)), closes [#318](https://github.com/openwhyd/openwhyd/issues/318)
+
 ## [1.39.1](https://github.com/openwhyd/openwhyd/compare/v1.39.0...v1.39.1) (2020-11-11)
 
 
