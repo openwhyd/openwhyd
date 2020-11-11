@@ -660,7 +660,7 @@ var openwhydYouTubeExtractor = {
       /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||
       /youtube.googleapis.com\/v\/([a-zA-Z0-9_-]+)/.test(url)
     )
-      return RegExp.lastParen;
+      return RegExp['$+']; //.lastParen;
   },
   fetchMetadata: function (url, callback) {
     var id = this.getEid(url);
