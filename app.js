@@ -1,5 +1,7 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
+require('dd-trace').init(); // datadog APM
+
 var util = require('util');
 var mongodb = require('mongodb');
 
