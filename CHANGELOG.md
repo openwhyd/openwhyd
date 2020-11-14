@@ -1,3 +1,10 @@
+## [1.40.4](https://github.com/openwhyd/openwhyd/compare/v1.40.3...v1.40.4) (2020-11-14)
+
+
+### Bug Fixes
+
+* **monitoring:** add Datadog APM ([626bd9c](https://github.com/openwhyd/openwhyd/commit/626bd9cd3942a3c13e8725e7b769d6d1771a6cc5))
+
 ## [1.40.3](https://github.com/openwhyd/openwhyd/compare/v1.40.2...v1.40.3) (2020-11-11)
 
 
