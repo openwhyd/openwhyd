@@ -554,6 +554,41 @@ function WhydPlayer() {
   // var inProduction = window.location.href.indexOf('//openwhyd.org') > -1;
   // var inTest = window.location.href.indexOf('//whyd.fr') > -1; // pre-production
 
+  try {
+    window.BandcampPatchedPlayer = function () {
+      console.info('init BandcampPatchedPlayer');
+      return window.BandcampPlayer.apply(this, arguments);
+    };
+    window.BandcampPatchedPlayer.prototype = window.BandcampPlayer.prototype;
+    window.BandcampPatchedPlayer.prototype.play = function (id) {
+      $.ajax({
+        type: 'GET',
+        url: '/api/bandcampExtractor',
+        data: { eId: `/bc/${id}` },
+        success: ({ streamURL, error } = {}) => {
+          if (error) {
+            console.warn('bandcampExtractor error response:', error);
+            this.clientCall('onError', self, {
+              source: 'BandcampPatchedPlayer',
+              error,
+            });
+          } else {
+            this.playStreamUrl(streamURL);
+          }
+        },
+        error: (err) => {
+          console.error('bandcampExtractor error:', err);
+          this.clientCall('onError', self, {
+            source: 'BandcampPatchedPlayer',
+            error: err.message || err,
+          });
+        },
+      });
+    };
+  } catch (err) {
+    console.warn('failed to initialize BandcampPatchedPlayer:', err);
+  }
+
   var PLAYERS = {
       // yt: inProduction ? 'YoutubeIframePlayer' : (inTest?'YoutubeIframePlayer':'YoutubeIframePlayer'),
       yt: 'YoutubeIframePlayer',
@@ -562,7 +597,9 @@ function WhydPlayer() {
       vi: 'VimeoPlayer',
       dz: 'DeezerPlayer',
       ja: 'JamendoPlayer',
-      bc: 'BandcampPlayer',
+      bc: window.BandcampPatchedPlayer
+        ? 'BandcampPatchedPlayer'
+        : 'BandcampPlayer',
       fi: 'AudioFilePlayer',
       sp: 'SpotifyPlayer',
     },

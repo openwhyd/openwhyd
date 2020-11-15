@@ -21,7 +21,7 @@ var EXTRACTORS = {
 
 // TODO: implement metadata resolution for these sources:
 var IGNORED_EXTRACTORS = {
-  bc: true, // bancamp
+  bc: true, // bandcamp
   dm: true, // dailymotion
   vi: true, // vimeo
   ja: true, // jamendo

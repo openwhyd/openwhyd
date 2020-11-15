@@ -82,7 +82,7 @@ exports.getMp3FromPostUrl = function (postUrl, title, callback) {
     if (err) {
       callback(err, null);
     } else {
-      for (let i = 0, mp3; (mp3 = mp3s[i]); i++) {
+      for (const mp3 of mp3s) {
         if (mp3.endsWith(encodeURI(title) + '.mp3')) {
           callback(null, mp3);
           return;
