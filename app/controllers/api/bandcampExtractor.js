@@ -20,7 +20,6 @@ function htmlDecode(str) {
     .replace(/&quot;/g, '"');
 }
 
-
 exports.controller = async function (req, reqParams = {}, res) {
   req.logToConsole('bandcampExtractor.controller', reqParams);
 
