@@ -10,31 +10,7 @@ var BASE_REG = /<base[^<>]+href\s*=\s*"([^"]*)"[^<>]*>/;
 var OG_IMAGE_REG = /<meta[^<>]+property\s*=\s*"og:image"[^<>]+content\s*=\s*"([^"]*)"[^<>]*>/;
 var IMAGE_REG = /<img[^<>]+src\s*=\s*"[^"]*"/gi;
 var IMAGE_URL_REG = /<img[^<>]+src\s*=\s*"([^"]*)"/i;
-var MP3_REG = /<a\s+[^<>]*href\s*=\s*"[^"]*\.mp3"/gi;
-var MP3_URL_REG = /<a\s+[^<>]*href\s*=\s*"([^"]*\.mp3)"/i;
-//var EMBED_REG = /<a\s+[^<>]*href\s*=\s*"[^"]*\.mp3"/gi;
-var EMBED_REG = /<(iframe|object|embed|a)?\s+[^<>]*(href|src|data)\s*=\s*"([^"]*)"/gi;
 var CONTENT_TYPE_REG = /([^\s;]+)/;
-
-//------------------------------------------------------------------------------
-
-function ContentEmbedWrapper() {
-  var ContentEmbed = require('../../../public/js/ContentEmbed.js');
-  this.embed = ContentEmbed();
-}
-
-ContentEmbedWrapper.prototype.extractEmbedRef = function (url, callback) {
-  /*var timeout = setTimeout(function(){
-    console.log("ContentEmbedWrapper.extractEmbedRef timeout");
-    callback({error:"timeout", url: url});
-  }, 5000);*/
-  this.embed.extractEmbedRef(url, function (embedRef) {
-    //clearTimeout(timeout);
-    callback(embedRef);
-  });
-};
-
-var embedDetector = new ContentEmbedWrapper();
 
 //==============================================================================
 function Page(host, path, text) {
@@ -80,73 +56,6 @@ Page.prototype.getImages = function () {
   for (i = 0; (img = imgs[i]); i++)
     if (imgsUniq.indexOf(img) === -1) imgsUniq.push(img);
   return imgsUniq;
-};
-
-//==============================================================================
-Page.prototype.getMp3s = function () {
-  var mp3s = this.text.match(MP3_REG) || [];
-  var mp3sUniq = [];
-  var base = BASE_REG.test(this.text) ? RegExp.$1 : null;
-  var i, len, mp3;
-  for (i = 0, len = mp3s.length; i < len; i++) {
-    mp3 = mp3s[i].match(MP3_URL_REG)[1];
-    if (mp3.substr(0, 7) !== 'http://') {
-      if (base) mp3 = path.normalize(base + '/' + mp3);
-      else
-        mp3 =
-          'http://' +
-          path.normalize(
-            mp3.charAt(0) === '/'
-              ? this.host + '/' + mp3
-              : this.host + '/' + this.path + '/' + mp3
-          );
-    }
-    mp3s[i] = mp3;
-  }
-  for (i = 0; (mp3 = mp3s[i]); i++)
-    if (mp3sUniq.indexOf(mp3) === -1) mp3sUniq.push(mp3);
-  return mp3sUniq;
-};
-
-//==============================================================================
-Page.prototype.extractEmbeds = function (cb) {
-  var embedUrls = [];
-  //console.log("looking for embeds in html page", this.text);
-  // step 1: parse embed urls from the html page
-  var embed = true;
-  while (embed) {
-    embed = EMBED_REG.exec(this.text);
-    if (embed && embed.length) {
-      embed.shift(); // first item of the array: wholeElement
-      embed.shift(); // second item of the array: elementName
-      while (embed.length > 1) {
-        embed.shift(); // attr
-        const val = embed.shift();
-        if (val && embedUrls.indexOf(val) === -1) {
-          embedUrls.push(val);
-          //console.log("detected", elementName, attr, val);
-        }
-      }
-    }
-  }
-  var embedRefs = [],
-    remaining = embedUrls.length;
-  if (!remaining) return cb(embedRefs);
-  // step 2: extract recognized embeds from urls
-  for (let i in embedUrls)
-    embedDetector.extractEmbedRef(embedUrls[i], function (embedRef) {
-      //console.log("url", url/*, embedRef*/);
-      if (embedRef && embedRef.id)
-        embedRefs.push({
-          id: embedRef.id,
-          name:
-            embedRef.name && embedRef.name != 'undefined'
-              ? embedRef.name
-              : null,
-          url: embedRef.url,
-        });
-      if (!--remaining) return cb(embedRefs);
-    });
 };
 
 //==============================================================================
@@ -279,5 +188,4 @@ getPage.ContentType = function (address, callback) {
 };
 
 //==============================================================================
-getPage.ContentEmbedWrapper = ContentEmbedWrapper;
 module.exports = getPage;
