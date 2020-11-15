@@ -123,13 +123,6 @@ getPage.Images = function (address, callback) {
 };
 
 //==============================================================================
-getPage.Mp3s = function (address, callback) {
-  return getPage(address, function (err, page) {
-    err ? callback(err) : callback(null, page.getMp3s());
-  });
-};
-
-//==============================================================================
 getPage.Request = function (address, callback) {
   var urlObj = url.parse(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
