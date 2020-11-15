@@ -348,7 +348,6 @@ exports.renderWhydPage = function (params = {}) {
         'jquery.mentionsInput.js',
         'ui.js',
         'whyd.js', // topicBrowser.js
-        //	"ContentEmbed.js", // definitely replaced by playemjs, at last! :-)
       ]
   )
     .concat(['playem-' + playemFile + '.js'])
