@@ -23,9 +23,9 @@ function htmlDecode(str) {
 exports.controller = async function (req, reqParams = {}, res) {
   req.logToConsole('bandcampExtractor.controller', reqParams);
 
-  // make sure it's only callable from openwhyd.org
+  // make sure the API was called from our own domain/host
   const ref = req.getReferer();
-  if (typeof ref !== 'string' || !ref.includes(config.urlPrefix)) {
+  if (typeof ref !== 'string' || !sameDomain(ref, config.urlPrefix)) {
     res.badRequest();
     return;
   }
@@ -59,3 +59,5 @@ const fetch = (url) =>
       error ? reject(error) : resolve({ response, body })
     )
   );
+
+const sameDomain = (url1, url2) => new URL(url1).host === new URL(url2).host;
