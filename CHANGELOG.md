@@ -1,3 +1,10 @@
+## [1.40.6](https://github.com/openwhyd/openwhyd/compare/v1.40.5...v1.40.6) (2020-11-15)
+
+
+### Bug Fixes
+
+* Check that the API was called from our own domain ([#395](https://github.com/openwhyd/openwhyd/issues/395)) ([68bc33c](https://github.com/openwhyd/openwhyd/commit/68bc33c953d4b5d297958698d6a5bff1c90517a5))
+
 ## [1.40.5](https://github.com/openwhyd/openwhyd/compare/v1.40.4...v1.40.5) (2020-11-15)
 
 
