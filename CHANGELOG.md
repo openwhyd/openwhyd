@@ -1,3 +1,10 @@
+## [1.40.5](https://github.com/openwhyd/openwhyd/compare/v1.40.4...v1.40.5) (2020-11-15)
+
+
+### Bug Fixes
+
+* **bandcamp:** Fetch the stream URL from the track's page ([#394](https://github.com/openwhyd/openwhyd/issues/394)) ([439304f](https://github.com/openwhyd/openwhyd/commit/439304fa85d92cdfc144e5e0ac859768eafef1ef)), closes [#117](https://github.com/openwhyd/openwhyd/issues/117)
+
 ## [1.40.4](https://github.com/openwhyd/openwhyd/compare/v1.40.3...v1.40.4) (2020-11-14)
 
 
