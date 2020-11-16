@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/openwhyd/openwhyd/compare/v1.40.6...v1.41.0) (2020-11-16)
+
+
+### Features
+
+* **player:** Enable background playback ([#396](https://github.com/openwhyd/openwhyd/issues/396)) ([dbaa420](https://github.com/openwhyd/openwhyd/commit/dbaa42053ecfb168393653f1c1bcb65110ec4ef4))
+
 ## [1.40.6](https://github.com/openwhyd/openwhyd/compare/v1.40.5...v1.40.6) (2020-11-15)
 
 
