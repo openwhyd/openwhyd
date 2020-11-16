@@ -1,3 +1,10 @@
+## [1.41.1](https://github.com/openwhyd/openwhyd/compare/v1.41.0...v1.41.1) (2020-11-16)
+
+
+### Bug Fixes
+
+* **player:** Cancel background playback again ([758e998](https://github.com/openwhyd/openwhyd/commit/758e998f23677ed7fdd22c3cd95b71d9733f5aca)), closes [#132](https://github.com/openwhyd/openwhyd/issues/132)
+
 # [1.41.0](https://github.com/openwhyd/openwhyd/compare/v1.40.6...v1.41.0) (2020-11-16)
 
 
