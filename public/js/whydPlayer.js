@@ -758,10 +758,4 @@ function WhydPlayer() {
     window.whydPlayer.playAll();
 
   console.log('Playem is ready!');
-
-  try {
-    document.hasFocus = () => true; // cf https://github.com/openwhyd/openwhyd/issues/132#issuecomment-414131182
-  } catch (err) {
-    console.warn('failed to enable background playback:', err);
-  }
 })();
