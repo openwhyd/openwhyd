@@ -29,8 +29,9 @@ function getMp3s() {
     }
     mp3s[i] = mp3;
   }
-  for (i = 0; (mp3 = mp3s[i]); i++)
+  for (const mp3 of mp3s) {
     if (mp3sUniq.indexOf(mp3) === -1) mp3sUniq.push(mp3);
+  }
   return mp3sUniq;
 }
 
