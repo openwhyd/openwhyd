@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/app
   docker:
-    - image: circleci/node:10.16.3-browsers
+    - image: circleci/node:12.19.1-browsers
       environment:
         ## this enables colors in the output
         TERM: xterm
