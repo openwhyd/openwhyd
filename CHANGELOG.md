@@ -1,3 +1,10 @@
+## [1.42.3](https://github.com/openwhyd/openwhyd/compare/v1.42.2...v1.42.3) (2020-11-21)
+
+
+### Bug Fixes
+
+* **ui:** Never-ending refresh of full stream ([#401](https://github.com/openwhyd/openwhyd/issues/401)) ([9cfa33c](https://github.com/openwhyd/openwhyd/commit/9cfa33c50d31f3f20a165d575580c440aea73cea)), closes [#397](https://github.com/openwhyd/openwhyd/issues/397)
+
 ## [1.42.2](https://github.com/openwhyd/openwhyd/compare/v1.42.1...v1.42.2) (2020-11-21)
 
 
