@@ -36,7 +36,7 @@
     "lint": "eslint app"
   },
   "engines": {
-    "node": "10.16.3"
+    "node": "12.19.1"
   },
   "directories": {
     "src": "./app",

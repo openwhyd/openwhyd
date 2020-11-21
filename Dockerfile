@@ -1,4 +1,4 @@
-FROM node:10.16.3-slim
+FROM node:12.19.1-slim
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
