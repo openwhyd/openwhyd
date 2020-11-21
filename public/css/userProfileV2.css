@@ -807,13 +807,6 @@ left: 17px;
 
 /* SUBSCRIPTIONS/SUBSCRIBERS TAB */
 
-.userSubscribers #contentPane #mainPanel .posts,
-.userSubscriptions #contentPane #mainPanel .posts {
-  /*width: 960px;
-	padding: 10px;
-	box-shadow: none;*/
-}
-
 .userProfileV2 ul#subscriptions {
   list-style: none;
   padding: 0;
@@ -979,27 +972,6 @@ box-shadow:inset 0 1px 2px rgba(29,29,29,0.4),0px 1px 2px 0px rgba(0,0,0,0.25);
   top: 90px;
   color: #fff;
   right: 0;
-}
-
-.userProfileV2 #profileHead .tags {
-  display: none;
-  position: absolute;
-  top: 110px;
-  right: 0;
-  font-size: 10px;
-  width: 320px;
-  text-align: right;
-}
-
-.userProfileV2 #profileHead .tags .tag {
-  display: inline-block;
-  background: rgb(186, 210, 235);
-  color: black;
-  margin-left: 4px;
-  margin-bottom: 3px;
-  text-shadow: none;
-  border-radius: 3px;
-  padding: 2px;
 }
 
 .userProfileV2 .feedHeader #userSubscriptions,

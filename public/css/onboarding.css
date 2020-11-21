@@ -156,10 +156,6 @@
   padding-right: 0;
 }
 
-/*.pgOnboarding.stepPeople .whitePanel {
-	padding: 20px;
-}*/
-
 /* step 1 */
 
 .pgOnboarding #genreGallery {
@@ -210,13 +206,13 @@
   background-color: rgba(49, 119, 175, 0.8);
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  -webkit-transition: background-color 2s;
+  transition: background-color 2s;
 }
 
 .pgOnboarding #genreGallery li:hover div {
   display: block;
   background-image: url('/images/OnboardingIconGenreValidateHover.png');
-  -webkit-transition: background-color 2s;
+  transition: background-color 2s;
 }
 
 .pgOnboarding #genreGallery li.selected div {
@@ -246,69 +242,12 @@
 .pgOnboarding .userList .user:nth-child(2n) {
   margin: 0;
 }
-/*
-.pgOnboarding .userList > li .userSubscribe {
-	right: 0;
-	top: 20px;
-	color: #4A4A4A;
-	border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	background-image: -o-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: -moz-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: -webkit-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: -ms-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: linear-gradient(-180deg, #FAFAFA 0%, #EDEDED 100%);
-	border: 1px solid #d0d0d0;
-}
-*/
-/*.pgOnboarding .userList > li .userSubscribe.subscribed {
-	right: 0;
-	top: 20px;
-	color: #878787;
-	border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border: 1px solid #dbdbdb;
-	background: transparent;
-	box-shadow: none;
-}
-*/
-/*
-.pgOnboarding .userList li:first-child .userSubscribe,
-.pgOnboarding .userList li:nth-child(2) .userSubscribe {
-	margin-top: 0px;
-	top: 0;
-}
-*/
 
 .pgOnboarding .userList > li:nth-child(1),
 .pgOnboarding .userList > li:nth-child(2) {
   border-top: none;
 }
 
-/*.pgOnboarding .userList > li .thumb {
-	position:relative;
-	float: left;
-	width: 100px;
-	height: 100px;
-	background-size: cover;
-	background-position: 50% 50%;
-	margin-right: 20px;
-}
-*/
-/*.pgOnboarding .userList > li.fbFriend .thumb div {
-	position: absolute;
-	width: 20px;
-	height: 20px;
-	right: -2px;
-	bottom: -2px;
-	background: url('/images/icon-facebook.png') -1px -1px;
-	border: 2px solid white;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-}*/
 .pgOnboarding .userList > li p {
   width: 310px;
   overflow: hidden;
@@ -332,25 +271,7 @@
   color: #333;
   color: #4a4a4a;
 }
-/*.pgOnboarding .userList > li .tags {
-	margin-top: 10px;
-	font-size: 11px;
-	overflow: hidden;
-	height: 18px;
-	padding: 0;
-	color: #ccc;
-}*/
-/*.pgOnboarding .userList > li .tag {
-	display: inline-block;
-	color: #868686;
-	margin-right: 4px;
-	margin-bottom: 3px;
-	padding: 2px;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-}
-*/
+
 /* step 3 */
 
 .pgOnboarding.stepButton .modeExt,
@@ -365,9 +286,6 @@
   border-top-right-radius: 0;
   text-align: center;
   font-size: 14px;
-}
-
-.pgOnboarding.stepButton .modeBk {
 }
 
 .pgOnboarding.stepButton .whitePanel.topBkPanel.modeExt {
@@ -462,11 +380,7 @@
     color-stop(0.81, rgb(169, 208, 90))
   );
   box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.18);
-  -moz-box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.18);
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding-box;
-  -background-clip: padding-box;
+  background-clip: padding-box;
   padding: 20px 26px 20px 52px;
   margin-right: 10px;
 }

@@ -6,7 +6,6 @@
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var postModel = require('../models/post.js');
-var plTagsModel = require('../models/plTags.js');
 var commentModel = require('../models/comment.js');
 var templateLoader = require('../templates/templateLoader.js');
 var template = templateLoader.loadTemplate('app/templates/posts.html');
@@ -193,11 +192,6 @@ exports.preparePost = function (post, options) {
     ownPost: post.uId == loggedUser.id,
     cssClass: post.cssClass || '',
     score: post.score,
-    tags:
-      plTagsModel.tagEngine.getTagsByEid(post.eId) ||
-      [] /*.map(function(tag){
-			return {name: tag.id + " (" + tag.c + ")"};
-		})*/,
   };
 
   //if (options.customImgHandler)

@@ -31,50 +31,12 @@ function disableLink() {
 
 $('.homeLink').each(disableLink);
 
-// step: genres
-
-function initOnbGenres() {
-  try {
-    window.Whyd.tracking.log('Visit genre selection page');
-  } catch (e) {
-    console.log('mixpanel', e, e.stack);
-  }
-  $('#genreGallery li').each(function () {
-    $(this)
-      .append('<div>')
-      .click(function () {
-        $(this).toggleClass('selected');
-        $('#btnNext').toggle(!!$('#genreGallery li.selected').length);
-      });
-  });
-  $('#btnNext').click(function (e) {
-    e.preventDefault();
-    var tags = $('#genreGallery li.selected')
-      .map(function () {
-        return $(this).find('p').text().replace('Electronic', 'Electro');
-      })
-      .get();
-    $('input[name=genres]').val(tags.join(',')).parent().submit();
-    return false;
-  });
-}
-
 // step: people
 
-function initOnbPeople(genres) {
+window.initOnbPeople = function () {
   var $userList = $('.userList');
 
   function renderUserInList(user) {
-    var tags = (user.tags || []).map(function (tag) {
-      //return $("<a class='tag'>").attr("href", tag.url).text(tag.id + " (" + tag.c + ")");
-      return $('<li class="tag" class="user">').text(
-        tag.id.replace('Electro', 'Electronic')
-      );
-    });
-    if (tags.length)
-      tags = tags.reduce(function ($tags, $nextTag) {
-        return $tags.add('<span>&bull;&nbsp;</span>').add($nextTag);
-      });
     var $li = $('<li>')
       .attr({
         'data-id': user.id,
@@ -92,7 +54,6 @@ function initOnbPeople(genres) {
       .append($("<p class='username'>").text(user.name));
 
     $li.append($("<p class='userbio'>").text(user.bio));
-    $li.append($("<ul class='tags'>").append(tags));
 
     //_createSubscribeButton(user, $li);
     if (!window.user || window.user.id != user.id)
@@ -118,7 +79,7 @@ function initOnbPeople(genres) {
   }
 
   function fetchRecomUsers(cb) {
-    ajaxQuery({ ajax: 'people', genres: genres }, function (recomUsers) {
+    ajaxQuery({ ajax: 'people' }, function (recomUsers) {
       //console.log("recomUsers", recomUsers);
       if (recomUsers && recomUsers.length) {
         $('h1').text(
@@ -150,14 +111,13 @@ function initOnbPeople(genres) {
       //goToPage("/pick/button");
       window.location.href = '/pick/button';
     });
-    //$("input[name=genres]").val(tags.join(",")).parent().submit();
     return false;
   });
-}
+};
 
 // step: button
 
-function initOnbButton() {
+window.initOnbButton = function () {
   function toggleMode(e) {
     e && e.preventDefault();
     $('.modeBk, .modeExt').toggle();
@@ -230,4 +190,4 @@ function initOnbButton() {
     );
     return false;
   });
-}
+};

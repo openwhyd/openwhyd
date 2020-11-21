@@ -1,9 +1,8 @@
 /**
  * track model
  * - maintained by post model: updateByEid()
- * - read by hot tracks controller: fetchPostsByGenre(), fetchPostsBySubscription()
- * - read by genre page controller: fetchPostsByGenre()
- * - read by notif template: fetchPostsByGenre()
+ * - read by hot tracks controller: fetchPosts()
+ * - read by notif template: fetchPosts()
  * @author adrienjoly, whyd
  **/
 
@@ -37,8 +36,6 @@
 var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId;
 var snip = require('../snip.js');
-var plTagsModel = require('./plTags.js');
-var postModel = require('./post.js');
 var metadataResolver = require('../models/metadataResolver.js');
 
 var FIELDS_TO_SUM = {
@@ -177,69 +174,6 @@ exports.fetchPosts = function (params, handler) {
         tracks[i] = mergePostData(track, post, firstIndex + parseInt(i));
       }
       handler(tracks, { postsByEid: postsByEid });
-    });
-  });
-};
-
-exports.fetchPostsByGenres = function (genres, p, cb) {
-  if (!genres || !genres.length) return exports.fetchPosts(p, cb);
-  var genreSet = snip.arrayToSet(genres);
-  var posts = [];
-  var toSkip = (p.skip = parseInt(p.skip || 0)); // TODO: find a more optimal solution (less db queries)
-  plTagsModel.getTagEngine(function (tagEngine) {
-    mongodb.forEach2('track', { sort: [['score', 'desc']] }, function (
-      track,
-      next
-    ) {
-      if (!next || posts.length >= p.limit) cb(posts);
-      else {
-        var tags = tagEngine.getTagsByEid((track || {}).eId || '');
-        if (tags && tags.length && genreSet[tags[0].id]) {
-          postModel.fetchPostById(track.pId, function (post) {
-            if (post && --toSkip < 0) {
-              posts.push(mergePostData(track, post));
-            }
-            next();
-          });
-        } else next();
-      }
-    });
-  });
-};
-
-exports.fetchPostsByGenre = function (genre, p, cb) {
-  if (!genre) exports.fetchPosts(p, cb);
-  else exports.fetchPostsByGenres([genre], p, cb);
-};
-
-exports.fetchPostsFromSubscriptions = function (uidList, p, cb) {
-  var posts = [];
-  if (!uidList || !uidList.length) return cb(posts);
-  var toSkip = (p.skip = parseInt(p.skip || 0)); // TODO: find a more optimal solution (less db queries)
-  var ranking = 0;
-  plTagsModel.getTagEngine(function (tagEngine) {
-    mongodb.forEach2('track', { sort: [['score', 'desc']] }, function (
-      track,
-      next
-    ) {
-      ++ranking;
-      if (!next || posts.length >= p.limit) cb(posts);
-      else {
-        var query = {
-          eId: track.eId,
-          uId: { $in: uidList },
-          'repost.uId': { $nin: uidList },
-        };
-        postModel.fetchPosts(query, {}, {}, function (postArray) {
-          if (postArray && postArray.length && --toSkip < 0) {
-            var post = mergePostData(track, postArray[0]);
-            post.tags = tagEngine.getTagsByEid((track || {}).eId || '');
-            post.rank = ranking;
-            posts.push(post);
-          }
-          next();
-        });
-      }
     });
   });
 };

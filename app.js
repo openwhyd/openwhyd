@@ -145,7 +145,6 @@ function start() {
   new myHttp.Application(serverOptions).start();
   require('./app/workers/notifEmails.js'); // start digest worker
   require('./app/workers/hotSnapshot.js'); // start hot tracks snapshot worker
-  require('./app/models/plTags.js').getTagEngine(); // index tags for tracks and users
 }
 
 // startup

@@ -86,7 +86,7 @@ context('Openwhyd', () => {
     });
     cy.get('input[type="submit"]').click();
 
-    // should suggest people to follow after picking genres
+    // should suggest people to follow
     cy.url().should('include', '/pick/people');
 
     // should suggest to install the extension after picking people

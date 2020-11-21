@@ -5,57 +5,8 @@ var hotTracks = {
 
   limit: 5,
 
-  genre_index: 0,
-
-  current_genre: undefined,
-
-  genres: [
-    { name: 'All', key: 'all' },
-    { name: 'Electro', key: 'electro' },
-    { name: 'Hip hop', key: 'hiphop' },
-    { name: 'Pop', key: 'pop' },
-    { name: 'Indie', key: 'indie' },
-    { name: 'Folk', key: 'folk' },
-    { name: 'Rock', key: 'rock' },
-    { name: 'Punk', key: 'punk' },
-    { name: 'Metal', key: 'metal' },
-    { name: 'Blues', key: 'blues' },
-    { name: 'R&B', key: 'r-b' },
-    { name: 'Soul', key: 'soul' },
-    { name: 'Jazz', key: 'jazz' },
-    { name: 'Classical', key: 'classical' },
-    { name: 'Reggae', key: 'reggae' },
-    { name: 'Latin', key: 'latin' },
-    { name: 'World', key: 'world' },
-  ],
-
   init: function () {
-    hotTracks.loadGenre(hotTracks.genre_index);
-  },
-
-  loadGenre: function (genre_index) {
-    if (hotTracks.current_genre != undefined) {
-      $('body').addClass('loading');
-    }
     hotTracks.skip = 0;
-    hotTracks.current_genre = hotTracks.genres[genre_index];
-    //DISPLAY GENRES
-
-    genreList = hotTracks.genres.map(function (object, i) {
-      cssClass = object.key == hotTracks.current_genre.key ? 'selected' : '';
-      return (
-        '<li class=' +
-        cssClass +
-        "><a  onclick='hotTracks.loadGenre(" +
-        i +
-        ")'>" +
-        object.name +
-        '</a></li>'
-      );
-    });
-
-    $('#genres').html(genreList);
-    $('.genreSelector').html(' / ' + hotTracks.current_genre.name);
 
     hotTracks.loadTracks(function () {
       $('.post:eq(0) .thumb').append('<div class="medal">1</div>');
@@ -70,16 +21,14 @@ var hotTracks = {
     }
 
     $.getJSON(
-      '/hot/' +
-        hotTracks.current_genre.key +
-        '?format=json&skip=' +
+      '/hot/all?format=json&skip=' +
         hotTracks.skip +
         '&limit=' +
         hotTracks.limit,
       function (data) {
         var content = '';
 
-        content = data.tracks.map(function (track, i) {
+        content = data.tracks.map(function (track) {
           return hotTracks.templating(hotTracks.template, track);
         });
 
