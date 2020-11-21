@@ -1,3 +1,10 @@
+## [1.42.1](https://github.com/openwhyd/openwhyd/compare/v1.42.0...v1.42.1) (2020-11-21)
+
+
+### Bug Fixes
+
+* **nodejs:** Switch to Node.js 12 ([#400](https://github.com/openwhyd/openwhyd/issues/400)) ([50eb966](https://github.com/openwhyd/openwhyd/commit/50eb9660c9d1238719ea852e4f7d39193bbf4897))
+
 # [1.42.0](https://github.com/openwhyd/openwhyd/compare/v1.41.1...v1.42.0) (2020-11-21)
 
 
