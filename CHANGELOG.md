@@ -1,3 +1,10 @@
+# [1.42.0](https://github.com/openwhyd/openwhyd/compare/v1.41.1...v1.42.0) (2020-11-21)
+
+
+### Features
+
+* Remove genres from onboarding and hot tracks ([#399](https://github.com/openwhyd/openwhyd/issues/399)) ([0dc8ed5](https://github.com/openwhyd/openwhyd/commit/0dc8ed5a6f09e8d380e3a2b3b8fae581148d1c20)), closes [#397](https://github.com/openwhyd/openwhyd/issues/397)
+
 ## [1.41.1](https://github.com/openwhyd/openwhyd/compare/v1.41.0...v1.41.1) (2020-11-16)
 
 
