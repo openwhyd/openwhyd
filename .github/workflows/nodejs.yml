@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12.19.1
       - name: check npm cache
         uses: actions/cache@v1
         with:
@@ -118,7 +118,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12.19.1
       - name: check npm cache
         uses: actions/cache@v1
         with:
