@@ -140,33 +140,31 @@ exports.generateRegWelcome = function (user, inviteSender) {
 };
 
 exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
-  const [suggestedUsers, hotPosts] = Promise.all([
-    getSuggestedUsers(),
-    new Promise((resolve) =>
-      trackModel.fetchPosts({ limit: MAX_HOT_TRACKS }, resolve)
-    ),
-  ]);
-  const hotUsers = suggestedUsers
-    .slice(0, MAX_RECOM_USERS)
-    .map((user = {}) => ({
-      ...user,
-      bio:
-        (user.bio || '').length > MAX_BIO_LENGTH
-          ? user.bio.substr(0, MAX_BIO_LENGTH) + '...'
-          : user.bio,
-    }));
-  var p = {
-    hotTracks: hotPosts,
-    hotUsers1: hotUsers.splice(0, 2),
-    hotUsers2: hotUsers.slice(0, 2),
-    urlPrefix: config.urlPrefix, //"http://proto.whyd.com";
-    imgPath: config.urlPrefix + '/images/email',
-    unsubUrl: 'http://dev.whyd.com/unsuscribe-emails-welcome/' + user.id, // TODO: fix the unsubscribe URL
-  };
-  cb({
-    subject: 'Welcome to Openwhyd, ' + user.name + '!',
-    bodyText: exports.generateRegWelcome(user, inviteSender).bodyText,
-    bodyHtml: renderTemplateFile('welcome', p),
+  getSuggestedUsers().then((suggestedUsers) => {
+    trackModel.fetchPosts({ limit: MAX_HOT_TRACKS }, (hotPosts) => {
+      const hotUsers = suggestedUsers
+        .slice(0, MAX_RECOM_USERS)
+        .map((user = {}) => ({
+          ...user,
+          bio:
+            (user.bio || '').length > MAX_BIO_LENGTH
+              ? user.bio.substr(0, MAX_BIO_LENGTH) + '...'
+              : user.bio,
+        }));
+      var p = {
+        hotTracks: hotPosts,
+        hotUsers1: hotUsers.splice(0, 2),
+        hotUsers2: hotUsers.slice(0, 2),
+        urlPrefix: config.urlPrefix, //"http://proto.whyd.com";
+        imgPath: config.urlPrefix + '/images/email',
+        unsubUrl: 'http://dev.whyd.com/unsuscribe-emails-welcome/' + user.id, // TODO: fix the unsubscribe URL
+      };
+      cb({
+        subject: 'Welcome to Openwhyd, ' + user.name + '!',
+        bodyText: exports.generateRegWelcome(user, inviteSender).bodyText,
+        bodyHtml: renderTemplateFile('welcome', p),
+      });
+    });
   });
 };
 
