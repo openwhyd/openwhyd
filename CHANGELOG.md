@@ -1,3 +1,10 @@
+## [1.42.2](https://github.com/openwhyd/openwhyd/compare/v1.42.1...v1.42.2) (2020-11-21)
+
+
+### Bug Fixes
+
+* **makefile:** "/bin/sh: 1: nvm: not found" ([93b53b1](https://github.com/openwhyd/openwhyd/commit/93b53b10908512a116ae04216552c9ccb8795aed))
+
 ## [1.42.1](https://github.com/openwhyd/openwhyd/compare/v1.42.0...v1.42.1) (2020-11-21)
 
 
