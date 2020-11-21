@@ -17,7 +17,6 @@ var mongodb = require('../../models/mongodb.js');
 var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
 var emailModel = require('../../models/email.js');
-var plTagsModel = require('../../models/plTags.js');
 var followModel = require('../../models/follow.js');
 var versionModel = require('../../models/version.js');
 var notifEmails = require('../../models/notifEmails.js');
@@ -244,28 +243,6 @@ function countUserSubscr(user, cb) {
   });
 }
 
-function includeTags(user, cb) {
-  var uId = '' + user._id;
-  plTagsModel.getTagEngine(function (tagEngine) {
-    tagEngine.fetchTagsByUid(uId, function (tags) {
-      user.tags = tags;
-      postModel.fetchPosts(
-        { uId: '' + uId },
-        { fields: { name: 1 } },
-        { limit: 10 },
-        function (posts) {
-          user.lastArtists = [];
-          for (let i in posts) {
-            var artist = snip.detectArtistName((posts[i] || {}).name);
-            if (artist) user.lastArtists.push(artist);
-          }
-          cb(user);
-        }
-      );
-    });
-  });
-}
-
 function countUserPosts(user, cb) {
   postModel.countUserPosts(user.id, function (res) {
     user.nbPosts = res;
@@ -313,7 +290,6 @@ function fetchUserById(uId, options, cb) {
       var getters = [
         ['getVersion', appendVersions],
         ['includeSubscr', countUserSubscr],
-        ['includeTags', includeTags],
       ];
       (function next() {
         var item = getters.shift();

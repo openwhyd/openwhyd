@@ -9,8 +9,6 @@
 
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
-var plTagsModel = require('../models/plTags.js');
-var facebookModel = require('../models/facebook.js');
 var followModel = require('../models/follow.js');
 var analytics = require('../models/analytics.js');
 var notifModel = require('../models/notif.js');
@@ -19,8 +17,9 @@ var notifEmails = require('../models/notifEmails.js');
 var TEMPLATE_FILE = 'app/templates/onboarding.html';
 var mainTemplate = require('../templates/mainTemplate.js');
 var templateLoader = require('../templates/templateLoader.js');
+const { getSuggestedUsers } = require('../models/featuredUsers.js');
 
-var MAX_RECOM_USERS = 10;
+// var MAX_RECOM_USERS = 10;
 
 var templates = {
   'bookmarklet-legacy': 'app/templates/onboarding/bookmarklet.html', // old version (still bound to openwhyd.org/bookmarklet and openwhyd.org/button)
@@ -37,48 +36,9 @@ function makeTemplateRenderer(cb) {
   };
 }
 
-function fetchUserData(recomUsers, _pickedTags, cb) {
-  plTagsModel.getTagEngine(function (tagEngine) {
-    userModel.fetchUserBios(recomUsers, function () {
-      var i = recomUsers.length;
-      (function next() {
-        if (--i < 0) cb(recomUsers);
-        else
-          tagEngine.fetchTagsByUid(recomUsers[i].id, function (tags) {
-            recomUsers[i].tags = tags.slice(0, 3);
-            next();
-          });
-      })();
-    });
-  });
-}
-
-function fetchUsersByTags(tags, cb) {
-  plTagsModel.getTagEngine(function (tagEngine) {
-    cb(tagEngine.getUsersByTags(tags).slice(0, MAX_RECOM_USERS));
-  });
-}
-
 var processAjax = {
-  fbFriends: function (p, cb) {
-    // DEPRECATED => will return dummy data
-    facebookModel.fetchAccessToken(p.loggedUser.id, function (fbTok) {
-      facebookModel.fetchFbFriendsWithSub(
-        p.loggedUser,
-        p.fbTok || fbTok,
-        function (res) {
-          var fbFriends = (res || {}).whydFriends || [];
-          cb(fbFriends);
-        }
-      );
-    });
-  },
-  people: function (p, cb) {
-    var tags = (p.genres || '').split(',');
-    console.log('fetchpeople...', tags);
-    fetchUsersByTags(tags, function (recomUsers) {
-      fetchUserData(recomUsers, tags, cb);
-    });
+  people: function (_, cb) {
+    getSuggestedUsers().then(cb);
   },
   follow: function (p, cb) {
     userModel.fetchByUid(p.loggedUser.id, function (user) {
@@ -111,20 +71,11 @@ var processAjax = {
 };
 
 var processStep = {
-  genres: function (p, render) {
-    (p.css = p.css || []).push('onboarding.css');
-    p.bodyClass = 'pgOnboarding stepGenres minimalHeader';
-    p.stepGenres = true;
-    render(p);
-  },
   people: function (p, render) {
     (p.css = p.css || []).push('onboarding.css');
     p.bodyClass = 'pgOnboarding stepPeople minimalHeader';
     p.stepPeople = true;
     render(p);
-    userModel.update(p.loggedUser.id, {
-      $set: { 'onb.tags': p.genres.split(',') },
-    });
   },
   button: function (p, render) {
     (p.css = p.css || []).push('onboarding.css');
@@ -162,8 +113,6 @@ exports.controller = function (request, getParams, response) {
   // make sure user is logged in
   if (!(p.loggedUser = request.checkLogin(response))) return;
   p.pageUrl = request.url;
-  p.genres = plTagsModel.extractGenreTags(p.genres || '').join(','); // sanitize genres
-  console.log('sanitized genres', p.genres);
   handleRequest(p, function (r) {
     if (!r || r.error) {
       r = r || {};

@@ -153,17 +153,6 @@ function fetchSimilarity(options, cb) {
 		});
 	}
 }
-
-function fetchTags (options, cb) {
-	plTagsModel.getTagEngine(function(tagEngine){
-		tagEngine.fetchTagsByUid(options.user.id, function(tags){
-			//var tags = plTagsModel.tagEngine.getTagsByUid(options.user.id);
-			//console.log("TAGS", tags);
-			options.user.tags = tags;
-			cb();
-		});
-	});
-}
 */
 // PAGE RENDERING
 
@@ -590,7 +579,7 @@ function renderUserLibrary(lib, user) {
       fetchPlaylists,
       /*fetchSubscriptions,*/ fetchStats,
       fetchLikes,
-      fetchNbTracks /*fetchSimilarity, fetchTags*/,
+      fetchNbTracks /*fetchSimilarity*/,
     ].concat(fcts);
   //if (options.showSubscribers || options.showSubscriptions || options.showActivity)
   //	fcts = [fetchSubscriptions].concat(fcts);

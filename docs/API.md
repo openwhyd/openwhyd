@@ -277,21 +277,20 @@ This endpoint is called between the sign up of the new user ("register" endpoint
 
 The aim of the onboarding process is to prevent the new user from seeing an empty stream on his first visit. In order to do that, the user is invited to:
 
-1.  pick one or more genres that he enjoys listening to
-2.  follow a list of recommended openwhyd users, based on the genres he picked
+1.  ~pick one or more genres that he enjoys listening to~
+2.  follow a list of recommended openwhyd users~, based on the genres he picked~
 3.  install the "whyd button" (bookmarklet) in order to ease the process of adding tracks
 
-List of valid genre tags: electro, hip hop, indie, folk, rock, punk, metal, blues, r&b, soul, jazz, classical, reggae, pop, latin, world
+~List of valid genre tags: electro, hip hop, indie, folk, rock, punk, metal, blues, r&b, soul, jazz, classical, reggae, pop, latin, world~
 
 Note: user must be logged in to use this endpoint.
 
 `POST /onboarding`
-<undefined><li>**Action 1: fetch recommended openwhyd users, based on a list of genres**</li></undefined>
+<undefined><li>**Action 1: fetch recommended openwhyd users**</li></undefined>
 
 Parameters:
 
 - **ajax="people"**
-- **genres: **(string) one (or more) genres that the user picked. (e.g. "punk")
 
 Response: (JSON)
 
@@ -331,7 +330,6 @@ Parameters:
 - **countPosts** (boolean, optional) if set to true and `id` is provided, the `nbPosts` attribute will be returned
 - **countLikes** (boolean, optional) if set to true and `id` is provided, the `nbLikes` attribute will be returned
 - **includeSubscr**: (boolean, optional) if set to true, `nbSubscribers` and `nbSubscriptions` will be returned
-- **includeTags**: (boolean, optional) if set to true, `tags` and `lastArtists` will be returned
 
 Response: (JSON)
 
@@ -348,7 +346,6 @@ Response: (JSON)
 - nbPosts: (if `countPosts` set to true and `id` provided) number of tracks posted by this user
 - nbLikes: (if `countLikes` set to true and `id` provided) number of tracks liked by this user
 - nbSubscriptions: (if `includeSubscr` set to true) number of subscriptions of this user
-- **tags**: (if `includeTags` set to true) an array of tag objects associated to the user, based on his posts
 - **lastArtists**: (if `includeTags` set to true) an array of artist names, extracted from the user's last posts
 - fbId: id of the facebook user connected to this account
 - fbTok: last session token received from connecting to facebook (used for fb requests)
@@ -369,9 +366,9 @@ Response: (JSON)
   - yt: youtube handle
   - home: home page
 
-- onb: (object) onboarding data
+- ~onb: (object) onboarding data~
 
-  - tags: (array) list of genre tags (e.g. "Rock") that the user selected
+  - ~tags: (array) list of genre tags (e.g. "Rock") that the user selected~
 
 - pl: (array) list of user's playlist
 
@@ -746,7 +743,7 @@ Return:
 
 #### HOT TRACKS
 
-`GET /hot/[:genre]`
+`GET /hot`
 
 _Parameters:_
 
@@ -797,7 +794,6 @@ Return (JSON):
 _Parameters:_
 
 - **id**: complete playlist identifier (format = `<uid>_<playlist_number>`)
-- **includeTags**: (boolean, optional) if set to true, will return `tags` and `lastArtists` fields
 
 Returns: a JSON array of playlists containing the following fields:
 
@@ -806,8 +802,6 @@ Returns: a JSON array of playlists containing the following fields:
 - **uId**: identifier of the user who made that playlist
 - **uNm**: name of the user who made that playlist
 - **nbTracks**: number of tracks in that playlist
-- **tags**: (if `includeTags` set to true) an array of tag objects associated to the user, based on the first tracks of the playlist
-- **lastArtists**: (if `includeTags` set to true) an array of artist names, extracted from the first tracks of the playlist
 
 #### Create a playlist
 

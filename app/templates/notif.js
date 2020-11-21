@@ -6,11 +6,10 @@
 
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js'); // for getting user data
-var userModel = require('../models/user.js');
 var trackModel = require('../models/track.js');
-var plTagsModel = require('../models/plTags.js');
 var templateLoader = require('../templates/templateLoader.js');
 var NotifDigest = require('../templates/notifDigest.js').NotifDigest;
+const { getSuggestedUsers } = require('../models/featuredUsers.js');
 
 // CONSTANTS
 
@@ -141,46 +140,30 @@ exports.generateRegWelcome = function (user, inviteSender) {
 };
 
 exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
-  (function (cb) {
-    userModel.fetchByUid(user.id, function (user) {
-      user = user || {};
-      var genres = (user.onb || {}).tags || [];
-      console.log('genres', genres);
-      trackModel.fetchPostsByGenres(
-        genres,
-        { limit: MAX_HOT_TRACKS },
-        function (hotPosts) {
-          plTagsModel.getTagEngine(function (tagEngine) {
-            var hotUsers = tagEngine
-              .getUsersByTags(genres)
-              .slice(0, MAX_RECOM_USERS);
-            if (inviteSender) hotUsers.unshift(inviteSender);
-            userModel.fetchUserBios(hotUsers, function () {
-              for (let i in hotUsers)
-                if (((hotUsers[i] || {}).bio || '').length > MAX_BIO_LENGTH)
-                  hotUsers[i].bio =
-                    hotUsers[i].bio.substr(0, MAX_BIO_LENGTH) + '...';
-              cb(user, hotPosts, hotUsers);
-            });
-          });
-        }
-      );
-    });
-  })(function (user, hotPosts, hotUsers) {
-    //for(var i=0; i<4; ++i) hotUsers.push({name:"coucou" + i});
-    var p = {
-      hotTracks: hotPosts,
-      hotUsers1: hotUsers.splice(0, 2),
-      hotUsers2: hotUsers.slice(0, 2),
-      urlPrefix: config.urlPrefix, //"http://proto.whyd.com";
-      imgPath: config.urlPrefix + '/images/email',
-      unsubUrl: 'http://dev.whyd.com/unsuscribe-emails-welcome/' + user.id,
-    };
-
-    cb({
-      subject: 'Welcome to Openwhyd, ' + user.name + '!',
-      bodyText: exports.generateRegWelcome(user, inviteSender).bodyText,
-      bodyHtml: renderTemplateFile('welcome', p),
+  getSuggestedUsers().then((suggestedUsers) => {
+    trackModel.fetchPosts({ limit: MAX_HOT_TRACKS }, (hotPosts) => {
+      const hotUsers = suggestedUsers
+        .slice(0, MAX_RECOM_USERS)
+        .map((user = {}) => ({
+          ...user,
+          bio:
+            (user.bio || '').length > MAX_BIO_LENGTH
+              ? user.bio.substr(0, MAX_BIO_LENGTH) + '...'
+              : user.bio,
+        }));
+      var p = {
+        hotTracks: hotPosts,
+        hotUsers1: hotUsers.splice(0, 2),
+        hotUsers2: hotUsers.slice(0, 2),
+        urlPrefix: config.urlPrefix, //"http://proto.whyd.com";
+        imgPath: config.urlPrefix + '/images/email',
+        unsubUrl: 'http://dev.whyd.com/unsuscribe-emails-welcome/' + user.id, // TODO: fix the unsubscribe URL
+      };
+      cb({
+        subject: 'Welcome to Openwhyd, ' + user.name + '!',
+        bodyText: exports.generateRegWelcome(user, inviteSender).bodyText,
+        bodyHtml: renderTemplateFile('welcome', p),
+      });
     });
   });
 };

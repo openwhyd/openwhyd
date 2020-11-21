@@ -2531,26 +2531,6 @@ ul .user .userbio {
   overflow: hidden;
 }
 
-ul .user .tags {
-  margin: 10px 0;
-  overflow: hidden;
-  height: 18px;
-  padding: 0;
-  color: #a5acb1;
-  font-size: 12px;
-}
-
-ul .user .tags span {
-  font-size: 8px;
-}
-
-ul .user .tag {
-  display: inline-block;
-  margin-right: 4px;
-  margin-bottom: 3px;
-  padding: 2px;
-}
-
 ul .user h2 {
   font-size: 14px;
   margin: 19px 0 5px 0;
@@ -2796,18 +2776,6 @@ body.pgWithSideBar .post > h2 {
   margin-left: 4px;
   margin-right: 3px;
   background-position: 0 2px;
-}
-
-.post .tags {
-  display: none;
-}
-
-.post .tags .tag {
-  background: rgb(186, 210, 235);
-  color: white;
-  margin-right: 8px;
-  border-radius: 3px;
-  padding: 2px;
 }
 
 /* content */

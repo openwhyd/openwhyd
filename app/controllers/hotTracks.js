@@ -8,28 +8,9 @@ var snip = require('../snip.js');
 var config = require('../models/config.js');
 var analytics = require('../models/analytics.js');
 var trackModel = require('../models/track.js');
-var plTagsModel = require('../models/plTags.js');
-var followModel = require('../models/follow.js');
 var postsTemplate = require('../templates/posts.js');
 var templateLoader = require('../templates/templateLoader.js');
 var mainTemplate = require('../templates/mainTemplate.js');
-
-function makeGenreList(selectedGenre) {
-  var set = {
-    all: {
-      name: 'All',
-      url: '/hot',
-    },
-  };
-  plTagsModel.ORDERED_GENRES.map(function (genre) {
-    set[genre.name] = {
-      name: genre.name,
-      url: '/hot/' + genre.id,
-    };
-  });
-  (set[selectedGenre || 'all'] || {}).selected = true;
-  return snip.values(set);
-}
 
 var template;
 (function loadTemplates(callback) {
@@ -69,7 +50,6 @@ exports.controller = function (request, reqParams, response) {
     if (reqParams.format == 'json')
       response.legacyRender({
         hasMore: hasMore ? { skip: firstIndex + reqParams.limit } : false,
-        genre: genre || 'All',
         tracks: posts,
       });
     else {
@@ -84,8 +64,6 @@ exports.controller = function (request, reqParams, response) {
           var pageVars = {
             hasMore: hasMore ? { skip: firstIndex + reqParams.limit } : null, // to do before renderPosts
             rawFeed: !!reqParams.skip, //reqParams.after || reqParams.before,
-            genre: genre || 'All',
-            genres: makeGenreList(genre), //GENRE_LIST,
             posts: postsHtml,
           };
           var html = template.render(pageVars);
@@ -102,14 +80,5 @@ exports.controller = function (request, reqParams, response) {
   }
 
   var params = { skip: reqParams.skip, limit: reqParams.limit + 1 };
-
-  if (reqParams.genre == 'subscribed' && loggedInUser.id) {
-    followModel.fetchSubscriptionArray(loggedInUser.id, function (uidList) {
-      trackModel.fetchPostsFromSubscriptions(uidList, params, renderHotTracks);
-    });
-  } else {
-    var genre =
-      (plTagsModel.extractGenreTags(reqParams.genre || '') || []).shift() || '';
-    trackModel.fetchPostsByGenre(genre, params, renderHotTracks);
-  }
+  trackModel.fetchPosts(params, renderHotTracks);
 };

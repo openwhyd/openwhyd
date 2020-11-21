@@ -12,7 +12,6 @@ var notif = require('../models/notif.js');
 var searchModel = require('../models/search.js');
 var activityModel = require('../models/activity.js');
 var trackModel = require('../models/track.js');
-var plTagsModel = require('../models/plTags.js');
 var notifModel = require('../models/notif.js');
 
 var config = require('../models/config.js');
@@ -288,9 +287,6 @@ exports.savePost = function (postObj, handler) {
 				//console.log("=> added post to matching engine index");
 			});
 			*/
-      plTagsModel.tagEngine.addPost(result, function () {
-        //console.log("=> added post to tag engine index");
-      });
       notifyMentionedUsers(result);
     }
     handler(result);
@@ -371,9 +367,6 @@ exports.rePost = function (pId, repostObj, handler) {
 					console.log("=> added post to matching engine index");
 				});
 				*/
-        plTagsModel.tagEngine.addPost(result, function () {
-          console.log('=> added post to tag engine index');
-        });
         notifyMentionedUsers(result);
       }
       handler(result);

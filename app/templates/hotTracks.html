@@ -1,14 +1,10 @@
 {{^rawFeed}}
 <div class="container">
   <div id="filterSelector">
-    <h2 class="head-name-tab">Select a genre</h2>
-
     <ul>
-      {{#genres}}
-      <li class="{{#selected}}selected{{/selected}}">
-        <a href="{{url}}">{{name}}</a>
+      <li class="selected">
+        <a href="#">All</a>
       </li>
-      {{/genres}}
     </ul>
     <div id="sideFooter">
       <ul>
@@ -37,9 +33,7 @@
   <div class="sub-container">
     <h2 class="head-name-tab">
       Hot Tracks
-      <span class="genreSelector"
-        >/ {{#genre}}{{genre}}{{/genre}}{{^genre}}All{{/genre}}</span
-      >
+      <span class="genreSelector">/ All</span>
     </h2>
     <div class="posts">
       {{/rawFeed}} {{{posts}}} {{#hasMore}}

@@ -1,11 +1,9 @@
 // usage: run from http://localhost:8080/admin/test
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var async = require('async');
 var snip = require('../../../snip.js');
 var config = require('../../../models/config.js'); // {urlPrefix:"http://localhost:8000"};
 var userModel = require('../../../models/user.js');
-var postModel = require('../../../models/post.js');
 
 var TEST_USER = {
   name: 'test user',
@@ -581,96 +579,6 @@ exports.makeTests = function (p) {
     END_TEST,
   ];
 
-  var TESTS_ONBOARDING = [
-    BEGIN_TEST,
-    [
-      '(loading) wait for tag library...',
-      function (cb) {
-        require('../../../models/plTags.js').getTagEngine(function (plTags) {
-          var nbUsers = Object.keys((plTags || {}).uidToTagSet || {}).length;
-          console.log('nbUsers', nbUsers);
-          cb(nbUsers > 0);
-        });
-      },
-    ],
-    [
-      'fetch at least one suggested user, based on genre tags',
-      function (cb) {
-        jsonPost(
-          '/onboarding',
-          {
-            cookie: testVars.cookie,
-            body: {
-              ajax: 'people',
-              genres: 'Electro,Indie,Reggae,World',
-            },
-          },
-          function (data) {
-            var users = data || [],
-              sum = 0;
-            for (let i in users) sum += users[i].score;
-            var avgScore = sum / users.length;
-            console.log('avgScore', avgScore);
-            cb((data || []).length > 0);
-          }
-        );
-      },
-    ],
-    [
-      'check that suggested users have posted less than 2 weeks ago',
-      function (cb) {
-        var TWO_WEEKS = 2 * 7 * 24 * 60 * 60 * 1000,
-          now = Date.now();
-        function fetchLastPost(uId, cb) {
-          postModel.fetchPosts({ uId: uId }, {}, { limit: 1 }, function (
-            posts
-          ) {
-            cb(null, (posts || []).shift());
-          });
-        }
-        function wasPostedWithin(delay, post) {
-          return post && now - post._id.getTimestamp() < delay;
-        }
-        function sum(a, b) {
-          return a + b;
-        }
-        function processUsers(users) {
-          users = users || [];
-          async.mapSeries(
-            users,
-            function (user, cb) {
-              fetchLastPost(user.id, cb);
-            },
-            function (err, res) {
-              var withinTwoWeeks = res
-                .map(wasPostedWithin.bind(null, TWO_WEEKS))
-                .reduce(sum);
-              console.log(
-                'suggested users who posted within the last two weeks:',
-                withinTwoWeeks,
-                '/',
-                users.length
-              );
-              cb(withinTwoWeeks == users.length);
-            }
-          );
-        }
-        jsonPost(
-          '/onboarding',
-          {
-            cookie: testVars.cookie,
-            body: {
-              ajax: 'people',
-              genres: 'Electro,Indie,Reggae,World',
-            },
-          },
-          processUsers
-        );
-      },
-    ],
-    END_TEST,
-  ];
-
   /*
 		["set adrien's apple push notification token", function(cb){
 			jsonPost("/api/user", { body: { "apTok": "07e3570a 8393f53e b868f627 766ea900 88c243a2 4f842051 769ad757 4ed10d7b" } }, function(res){
@@ -695,7 +603,6 @@ exports.makeTests = function (p) {
     TESTS_USERDATA,
     TESTS_LOGIN,
     TESTS_RESETPASSWORD,
-    TESTS_ONBOARDING,
   ].reduce(function (a, b) {
     return a.concat(b);
   });

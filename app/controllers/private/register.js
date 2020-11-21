@@ -15,7 +15,7 @@ var genuine = require('../../genuine.js');
 const argon2 = require('argon2');
 
 var ENFORCE_GENUINE_SIGNUP_FROM_IOS = false; // TODO: set to true, after x-real-ip header is set by the nginx proxy
-var onboardingUrl = '/pick/genres';
+var onboardingUrl = '/pick/button';
 var checkInvites = false;
 
 function follow(user, userToFollow, ctx) {

@@ -76,7 +76,7 @@ context('Openwhyd', () => {
     cy.visit('/');
     cy.title().should('include', 'Openwhyd');
 
-    // should lead new user to genre selection page
+    // should inviter user to enter name, email and password
     cy.visit('/');
     cy.get('#signup').click();
     cy.fixture('users.js').then(({ testUser }) => {
@@ -85,22 +85,16 @@ context('Openwhyd', () => {
       cy.get('input[name="password"]').type(testUser.pwd);
     });
     cy.get('input[type="submit"]').click();
-    cy.url().should('include', '/pick/genres');
 
-    // should suggest people to follow after picking genres
-    cy.get('#genreGallery li').as('genres');
-    cy.contains('Indie').click();
-    cy.contains('Rock').click();
-    cy.contains('Punk').click();
-    cy.contains('Next').click();
-    cy.url().should('include', '/pick/people');
+    // should suggest people to follow
+    // cy.url().should('include', '/pick/people');
+    // cy.contains('Next').click();
 
-    // should suggest to install the extension after picking people
-    cy.contains('Next').click();
+    // should suggest to install the extension
     cy.url().should('include', '/pick/button');
+    cy.contains('Next').click();
 
     // should lead new user to the gdpr consent page, after installing extension
-    cy.contains('Next').click();
     cy.url().should('include', '/consent');
 
     // should lead to the welcome page, after giving consent

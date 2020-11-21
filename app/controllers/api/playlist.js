@@ -3,14 +3,10 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../../snip.js');
 var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
 var notifModel = require('../../models/notif.js');
-var plTagsModel = require('../../models/plTags.js');
 var uploadCtr = require('../uploadedFile.js');
-
-var MAX_TAGS_PER_PLAYLIST = 3;
 
 exports.actions = {
   sendToUsers: notifModel.sendPlaylistToUsers,
@@ -127,41 +123,6 @@ function fetchPlaylist(p, cb) {
   );
 }
 
-function includeTags(playlists, cb) {
-  plTagsModel.getTagEngine(function (tagEngine) {
-    //var plIdToTags = (tagEngine.plIdToTags || {});
-    // for each playlist, fetch number of tracks
-    (function next(i) {
-      if (i >= playlists.length) return cb(playlists);
-      //playlists[i].tags = plIdToTags[playlists[i].id].map(function(tag){ return {id: tag}; });
-      postModel.fetchPlaylistPosts(
-        playlists[i].uId,
-        playlists[i].plId,
-        { limit: 10, fields: { name: 1, eId: 1 } },
-        function (posts) {
-          var tagSet = {};
-          playlists[i].lastArtists = [];
-          for (let j in posts) {
-            var artist = snip.detectArtistName((posts[j] || {}).name);
-            if (artist) playlists[i].lastArtists.push(artist);
-            (tagEngine.getTagsByEid((posts[j] || {}).eId) || []).map(function (
-              tag
-            ) {
-              tagSet[tag.id] = (tagSet[tag.id] || 0) + tag.c;
-            });
-          }
-          playlists[i].tags = snip.mapToObjArray(tagSet, 'id', 'c');
-          playlists[i].tags = playlists[i].tags.sort(function (a, b) {
-            return b.c - a.c;
-          });
-          playlists[i].tags = playlists[i].tags.slice(0, MAX_TAGS_PER_PLAYLIST);
-          next(i + 1);
-        }
-      );
-    })(0);
-  });
-}
-
 exports.controller = function (request, getParams, response) {
   getParams = getParams || {};
   getParams.id = getParams.id || getParams._1;
@@ -170,11 +131,7 @@ exports.controller = function (request, getParams, response) {
     exports.handlePostRequest(request, request.body, response);
   else if (getParams.id)
     fetchPlaylist(getParams, function (playlists) {
-      if (getParams.includeTags)
-        includeTags(playlists, function () {
-          response.renderJSON(playlists);
-        });
-      else response.renderJSON(playlists);
+      response.renderJSON(playlists);
     });
   else response.badRequest();
 };
