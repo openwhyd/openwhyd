@@ -87,14 +87,14 @@ context('Openwhyd', () => {
     cy.get('input[type="submit"]').click();
 
     // should suggest people to follow
-    cy.url().should('include', '/pick/people');
+    // cy.url().should('include', '/pick/people');
+    // cy.contains('Next').click();
 
-    // should suggest to install the extension after picking people
-    cy.contains('Next').click();
+    // should suggest to install the extension
     cy.url().should('include', '/pick/button');
+    cy.contains('Next').click();
 
     // should lead new user to the gdpr consent page, after installing extension
-    cy.contains('Next').click();
     cy.url().should('include', '/consent');
 
     // should lead to the welcome page, after giving consent
