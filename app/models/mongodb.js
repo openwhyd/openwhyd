@@ -135,7 +135,7 @@ exports.forEach2 = function (colName, params, handler) {
       cursor.next(function (err, item) {
         if (err) {
           console.error('mongodb.forEach2 ERROR', err);
-          handler({ error: err }, undefined);
+          handler({ error: err }, undefined, cursor.close.bind(cursor));
           cursor.close();
         } else {
           handler(item, item ? next : undefined, cursor.close.bind(cursor));

@@ -138,12 +138,16 @@ exports.fetchByAuthors = function (uidList, options, cb) {
   params.limit = undefined; // prevent forEach2 from limiting cursor
   params.q = query;
   mongodb.forEach2('post', params, function (post, next, closeCursor) {
-    if (post && !uidSet[(post.repost || {}).uId]) posts.push(post);
+    if (post && !post.error && !uidSet[(post.repost || {}).uId]) {
+      posts.push(post);
+    }
     if (!post || !next || posts.length == limit) {
       //console.timeEnd("post.fetchByAuthors2...");
       cb(processPosts(posts));
       closeCursor();
-    } else next();
+    } else {
+      next();
+    }
   });
 };
 
