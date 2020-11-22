@@ -690,62 +690,6 @@ exports.HttpRequestCache = function (cache) {
   };
 };
 
-exports.HttpRequestFileCache = function (fileName) {
-  exports.HttpRequestCache.apply(this);
-  try {
-    // try to restore from file, if it exists
-    this.cache.restore(
-      JSON.parse(fs.readFileSync(fileName, { encoding: 'utf8' }))
-    );
-  } catch (e) {
-    console.error(e);
-  }
-  this.save = function () {
-    fs.writeFileSync(fileName, JSON.stringify(this.cache.dump()), {
-      encoding: 'utf8',
-    });
-  };
-};
-/*
-// testing HttpRequestCache
-console.log("\n\n");
-var cache = new exports.HttpRequestCache();
-cache.httpRequest("http://google.com", null, function(err, data){
-	console.log(err || data.length);
-	cache.httpRequest("http://google.com", null, function(err, data){
-		console.log(err || data.length);
-		var dump = cache.cache.dump();
-		console.log("dump", dump);
-		cache = new exports.HttpRequestCache();
-		console.log("new cache dump", cache.cache.dump());
-		cache.cache.restore(dump);
-		console.log("new cache restored", cache.cache.dump());
-		cache.httpRequest("http://google.com", null, function(err, data){ console.log(err || data.length); });
-		console.log("\n\n");
-	});
-});
-*/
-/*
-// testing HttpRequestFileCache
-console.log("\n\n");
-var FILENAME = "./httpCache.json";
-try { fs.unlinkSync(FILENAME); } catch(e) { };
-var cache = new exports.HttpRequestFileCache(FILENAME);
-cache.httpRequest("http://google.com", null, function(err, data){
-	console.log(err || data.length);
-	cache.httpRequest("http://google.com", null, function(err, data){
-		console.log(err || data.length);
-		var dump = cache.cache.dump();
-		console.log("dump", dump);
-		cache.save();
-		cache = new exports.HttpRequestFileCache(FILENAME);
-		console.log("new cache restored", cache.cache.dump());
-		cache.httpRequest("http://google.com", null, function(err, data){ console.log(err || data.length); });
-		console.log("\n\n");
-	});
-});
-*/
-
 // =========================================================================
 /**
  * simple implementation of an async event emitter
