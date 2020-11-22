@@ -107,6 +107,11 @@ jobs:
           node_modules/.bin/cypress run
       - name: Get coverage data
         run: npm run test:coverage
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: .nyc_output
 
   release:
     name: Release
