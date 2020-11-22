@@ -34,24 +34,27 @@ function renderMarkdownLine(mdLine) {
     .replace(/<\/(li|h1)><\/p>$/, '</$1>');
 }
 
-var templatePerLang = Object.keys(filePerLang).reduce(function (
-  templatePerLang,
-  langId
-) {
-  var html = fs
-    .readFileSync(filePerLang[langId], { encoding: 'utf8' })
-    .toString()
-    .split('\n')
-    .filter(removeEmptyLine)
-    .map(renderMarkdownLine)
-    .join('\n');
-  var langObj = {};
-  langObj[langId] = html;
-  return Object.assign({}, templatePerLang, langObj);
-},
-{});
+const promisedTemplatePerLang = Object.entries(filePerLang).reduce(
+  (acc, [langId, langTemplate]) => {
+    const promisedHtml = fs.promises
+      .readFile(langTemplate, { encoding: 'utf8' })
+      .then((res) =>
+        res
+          .toString()
+          .split('\n')
+          .filter(removeEmptyLine)
+          .map(renderMarkdownLine)
+          .join('\n')
+      );
+    return {
+      ...acc,
+      [langId]: promisedHtml,
+    };
+  },
+  {}
+);
 
-function renderPageContent(params) {
+async function renderPageContent(params) {
   var safeRedirect = snip.sanitizeJsStringInHtml(params.redirect || '/');
   // credits: flag icons by Freepik, https://www.flaticon.com/packs/countrys-flags
   return [
@@ -61,13 +64,13 @@ function renderPageContent(params) {
     '    <img alt="French / Français" id="lang-fr" src="/images/lang-fr.svg">',
     '  </div>',
     '  <form class="whitePanel lang-en" action="/consent" method="POST">',
-    templatePerLang.en,
+    await promisedTemplatePerLang.en,
     '    <input type="hidden" name="lang" value="en">',
     '    <input type="hidden" name="redirect" value="' + safeRedirect + '">',
     '    <input disabled class="consent-submit" type="submit">',
     '  </form>',
     '  <form class="whitePanel lang-fr" action="/consent" method="POST">',
-    templatePerLang.fr,
+    await promisedTemplatePerLang.fr,
     '    <input type="hidden" name="lang" value="fr">',
     '    <input type="hidden" name="redirect" value="' + safeRedirect + '">',
     '    <input disabled class="consent-submit" type="submit">',
@@ -93,7 +96,7 @@ function renderPageContent(params) {
   ].join('\n');
 }
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   var isPost = request.method.toLowerCase() === 'post';
   var p = (isPost ? request.body : getParams) || {};
   request.logToConsole('consent.controller ' + request.method, p);
@@ -142,7 +145,7 @@ exports.controller = function (request, getParams, response) {
   } else {
     (p.css = p.css || []).push('consent.css');
     p.bodyClass = 'pgConsent';
-    p.content = renderPageContent(p);
+    p.content = await renderPageContent(p);
     p.redirect = ''; // to avoid redirection loops
     render(p);
   }
