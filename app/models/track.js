@@ -346,9 +346,15 @@ exports.updateAndPopulateMetadata = function (eId, cb, force) {
 exports.snapshotTrackScores = function (cb) {
   mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
-    mongodb.forEach2('track', { fields: { score: 1 } }, function (track, next) {
-      if (!track) cb();
-      else {
+    mongodb.forEach2('track', { fields: { score: 1 } }, function (
+      track,
+      next,
+      closeCursor
+    ) {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
         if (count < 1000) {
           console.log(`snapshotTrackScores ${i + 1} / ${count}`);
         } else if (count % 1000 === 0) {
