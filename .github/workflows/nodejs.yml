@@ -105,6 +105,8 @@ jobs:
         run: |
           source env-vars-testing.sh
           node_modules/.bin/cypress run
+      - name: Get coverage data
+        run: npm run test:coverage
 
   release:
     name: Release

@@ -17,6 +17,7 @@
 
 /// <reference types="./" />
 
+import '@cypress/code-coverage/support';
 import './commands';
 
 beforeEach(function () {
