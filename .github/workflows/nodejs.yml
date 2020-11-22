@@ -97,7 +97,7 @@ jobs:
       - name: Start Openwhyd server
         run: |
           source env-vars-testing.sh
-          npm start --mongoDbDatabase openwhyd_test &
+          npm run start:coverage --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: Run Cypress tests
         env:
