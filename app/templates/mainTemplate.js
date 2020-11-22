@@ -8,7 +8,6 @@ var fs = require('fs');
 var util = require('util');
 var snip = require('../snip.js');
 var uiSnippets = snip;
-var templateLoader = require('../templates/templateLoader.js');
 var config = require('../models/config.js');
 var render = { urlPrefix: '' };
 
@@ -414,36 +413,3 @@ var params = {
 */
 
 // MINIMAL EXAMPLE OF USE: /admin/testMainTemplate.js
-
-exports.makeWhydPageFromFile = function (path, params) {
-  params = params || {};
-  params.content = fs.readFileSync(path, 'utf8');
-  return exports.renderWhydPage(params);
-};
-
-exports.makeWhydPageRendererFromFile = function (path) {
-  var content = fs.readFileSync(path, 'utf8');
-  return function (params) {
-    params = params || {};
-    params.content = content;
-    return exports.renderWhydPage(params);
-  };
-};
-
-exports.renderAsyncWhydPageFromTemplateFile = function (
-  templateFilePath,
-  templateParams,
-  whydPageParams,
-  cb,
-  forceReload
-) {
-  templateLoader.loadTemplate(
-    templateFilePath,
-    function (template) {
-      whydPageParams = whydPageParams || {};
-      whydPageParams.content = template.render(templateParams);
-      cb(exports.renderWhydPage(whydPageParams));
-    },
-    forceReload
-  );
-};

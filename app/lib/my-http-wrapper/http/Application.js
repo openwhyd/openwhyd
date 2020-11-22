@@ -53,7 +53,7 @@ const makeBodyParser = (uploadSettings) =>
     });
   };
 
-const makeStatsUpdater = ({ accessLogFile }) =>
+const makeStatsUpdater = () =>
   function statsUpdater(req, res, next) {
     const startDate = new Date();
     const userId = (req.session || {}).whydUid;
@@ -61,10 +61,9 @@ const makeStatsUpdater = ({ accessLogFile }) =>
 
     sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
 
-    // whenever a request is slow to respond, append log entry to _accessLogFile
+    // log whenever a request is slow to respond
     res.on('finish', () => {
       appendSlowQueryToAccessLog({
-        accessLogFile,
         startDate,
         req,
         userId,
@@ -93,7 +92,6 @@ exports.Application = class Application {
     this._appDir = options.appDir + '/app';
     this._publicDir = options.appDir + '/public';
     this._routeFile = options.appDir + '/config/app.route';
-    this._accessLogFile = options.appDir + '/access.log';
     this._port = options.port;
     this._expressApp = null; // will be lazy-loaded by getExpressApp()
     this._uploadSettings = options.uploadSettings;
@@ -107,7 +105,7 @@ exports.Application = class Application {
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     this._sessionMiddleware && app.use(this._sessionMiddleware);
-    app.use(makeStatsUpdater({ accessLogFile: this._accessLogFile }));
+    app.use(makeStatsUpdater());
     attachLegacyRoutesFromFile(app, this._appDir, this._routeFile);
     app.use(makeNotFound(this._errorHandler));
     return (this._expressApp = app);
@@ -181,13 +179,7 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile) {
   });
 }
 
-function appendSlowQueryToAccessLog({
-  accessLogFile,
-  startDate,
-  req,
-  userId,
-  userAgent,
-}) {
+function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
   const duration = Date.now() - startDate;
   if (duration < LOG_THRESHOLD) return;
   const logLine = [
@@ -198,5 +190,5 @@ function appendSlowQueryToAccessLog({
   ];
   if (userId) logLine.push('uid=' + userId);
   if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
-  fs.appendFileSync(accessLogFile, logLine.join(' ') + '\n');
+  console.error('slow request:', logLine.join(' '));
 }

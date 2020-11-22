@@ -24,7 +24,7 @@ exports.config.uPlaylistPath =
 const NO_IMAGE_PATH = exports.config.whydPath + '/public/images/no_image.png';
 
 // create upload dirs
-var dirMode = 0755;
+var dirMode = 0755; // eslint-disable-line no-octal
 var dirsToCreate = [
   exports.config.uploadPath,
   exports.config.uAvatarImgPath,
@@ -69,13 +69,11 @@ exports.actualFilePath = function (filepath) {
 };
 
 exports.deleteFile = function (_filepath) {
-  try {
-    const filepath = exports.actualFilePath(_filepath);
-    console.log('deleting ' + filepath);
-    fs.unlinkSync(filepath);
-  } catch (e) {
-    console.log(e, e.stack);
-  }
+  const filepath = exports.actualFilePath(_filepath);
+  console.log('deleting ' + filepath);
+  return fs.promises
+    .unlink(filepath)
+    .catch((err) => console.log(err, err.stack));
 };
 
 exports.renameTo = function (filename, toFilename, callback) {
