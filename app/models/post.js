@@ -141,24 +141,6 @@ exports.fetchByAuthors = function (uidList, options, cb) {
     if (post && !uidSet[(post.repost || {}).uId]) posts.push(post);
     if (!post || !next || posts.length == limit) {
       //console.timeEnd("post.fetchByAuthors2...");
-    } else next();
-  });
-};
-
-var MAX_OTHER_AUTHORS = 3;
-
-exports.fetchByOtherAuthors = function (uidList, options, cb) {
-  //console.time("post.fetchByOtherAuthors...");
-  var posts = [],
-    uidSet = snip.arrayToSet(uidList);
-  mongodb.forEach2('post', { q: {}, sort: [['_id', 'desc']] }, function (
-    post,
-    next
-  ) {
-    if (post && !uidSet[post.uId]) posts.push(post);
-    if (!post || !next || posts.length == MAX_OTHER_AUTHORS) {
-      //console.timeEnd("post.fetchByOtherAuthors...");
-      cb(processPosts(posts)); // TODO: close cursor
       cb(processPosts(posts));
       closeCursor();
     } else next();
