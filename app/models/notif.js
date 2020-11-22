@@ -368,9 +368,13 @@ exports.post = function (post) {
     projection: { uId: true },
   };
   mongodb.forEach2('post', query, function (sameTrack, next) {
-    var author = sameTrack && mongodb.usernames[sameTrack.uId];
-    if (author) notifEmails.sendPostedSameTrack(author, next);
-    else if (next) next();
+    var author =
+      sameTrack && !sameTrack.error && mongodb.usernames[sameTrack.uId];
+    if (author) {
+      notifEmails.sendPostedSameTrack(author, next);
+    } else if (next) {
+      next();
+    }
   });
 };
 
