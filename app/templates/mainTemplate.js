@@ -415,15 +415,6 @@ var params = {
 
 // MINIMAL EXAMPLE OF USE: /admin/testMainTemplate.js
 
-exports.makeWhydPageRendererFromFile = function (path) {
-  var content = fs.readFileSync(path, 'utf8');
-  return function (params) {
-    params = params || {};
-    params.content = content;
-    return exports.renderWhydPage(params);
-  };
-};
-
 exports.renderAsyncWhydPageFromTemplateFile = function (
   templateFilePath,
   templateParams,

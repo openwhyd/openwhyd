@@ -3,12 +3,17 @@
  * @author adrienjoly, whyd
  **/
 
+const fs = require('fs');
 var snip = require('../snip.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
-var renderPage404 = mainTemplate.makeWhydPageRendererFromFile(
-  'public/html/404.html'
-);
+const page404Html = fs.readFileSync('public/html/404.html', 'utf8');
+
+const renderPage404 = (params) =>
+  mainTemplate.renderWhydPage({
+    ...params,
+    content: page404Html,
+  });
 
 exports.ERRORCODE = {
   401: 'Unauthorized. Please login before accessing this page.',
