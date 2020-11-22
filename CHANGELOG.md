@@ -1,3 +1,10 @@
+## [1.42.5](https://github.com/openwhyd/openwhyd/compare/v1.42.4...v1.42.5) (2020-11-22)
+
+
+### Bug Fixes
+
+* **perf:** Close MongoDB cursors after calling forEach2() ([#405](https://github.com/openwhyd/openwhyd/issues/405)) ([3f1ec06](https://github.com/openwhyd/openwhyd/commit/3f1ec06710a3628d0252ecf2adf4b72a270ab823))
+
 ## [1.42.4](https://github.com/openwhyd/openwhyd/compare/v1.42.3...v1.42.4) (2020-11-22)
 
 
