@@ -137,11 +137,10 @@ exports.fetchByAuthors = function (uidList, options, cb) {
   var limit = params.limit;
   params.limit = undefined; // prevent forEach2 from limiting cursor
   params.q = query;
-  mongodb.forEach2('post', params, function (post, next) {
+  mongodb.forEach2('post', params, function (post, next, closeCursor) {
     if (post && !uidSet[(post.repost || {}).uId]) posts.push(post);
     if (!post || !next || posts.length == limit) {
       //console.timeEnd("post.fetchByAuthors2...");
-      cb(processPosts(posts)); // TODO: close cursor
     } else next();
   });
 };
@@ -160,6 +159,8 @@ exports.fetchByOtherAuthors = function (uidList, options, cb) {
     if (!post || !next || posts.length == MAX_OTHER_AUTHORS) {
       //console.timeEnd("post.fetchByOtherAuthors...");
       cb(processPosts(posts)); // TODO: close cursor
+      cb(processPosts(posts));
+      closeCursor();
     } else next();
   });
 };
