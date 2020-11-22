@@ -42,28 +42,36 @@ exports.renderErrorCode = function (errorCode, loggedUser) {
 exports.renderErrorResponse = function (
   errorObj,
   response,
-  format,
+  format = 'html',
   loggedUser
 ) {
   var statusCode =
     errorObj && typeof errorObj.errorCode === 'number' && errorObj.errorCode;
   //var format = (querystring.parse(url.parse(request.url).query) || {}).format || "";
-  if ((format || '').toLowerCase() == 'json') {
+  if (format.toLowerCase() == 'json') {
     errorObj.error = errorObj.error || exports.ERRORCODE[errorObj.errorCode];
     response.renderJSON(errorObj, statusCode);
   } else if (
     errorObj.errorCode == 404 ||
     errorObj.errorCode == 'USER_NOT_FOUND'
-  )
-    //response.sendFile("public/html/404.html");
-    response.renderHTML(
-      renderPage404({
-        pageTitle: 'Oops...',
-        loggedUser: loggedUser,
-      }),
-      statusCode
-    );
-  else if (errorObj.errorCode)
+  ) {
+    response.status(404);
+    if (format === 'html') {
+      //response.sendFile("public/html/404.html");
+      response.renderHTML(
+        renderPage404({
+          pageTitle: 'Oops...',
+          loggedUser: loggedUser,
+        }),
+        statusCode
+      );
+      // TODO: response.render('404', { url: req.url });
+    } else if (format === 'json') {
+      response.send({ error: 'Not found' });
+    } else {
+      response.type('txt').send('Not found');
+    }
+  } else if (errorObj.errorCode)
     response.renderHTML(
       exports.renderErrorCode(errorObj.errorCode, loggedUser),
       statusCode
