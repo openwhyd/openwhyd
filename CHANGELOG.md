@@ -1,3 +1,10 @@
+## [1.42.6](https://github.com/openwhyd/openwhyd/compare/v1.42.5...v1.42.6) (2020-11-22)
+
+
+### Bug Fixes
+
+* **tests:** Track test coverage data using nyc ([#406](https://github.com/openwhyd/openwhyd/issues/406)) ([1a57c2e](https://github.com/openwhyd/openwhyd/commit/1a57c2ecf6fe1b0921ab788acda39c3b21d882e0))
+
 ## [1.42.5](https://github.com/openwhyd/openwhyd/compare/v1.42.4...v1.42.5) (2020-11-22)
 
 
