@@ -59,12 +59,6 @@ function listMissingUsers(uids, cb) {
 }
 
 var fileGenerators = {
-  populateTrackMetadata: function (p, cb) {
-    trackModel.populateTrackMetadata(function (r) {
-      console.log('populateTrackMetadata => ', r || { ok: 'done' });
-    });
-    cb('populating track metadata...');
-  },
   refreshTrackCollection: function (p, cb) {
     trackModel.refreshTrackCollection(function (r) {
       console.log('refreshTrackCollection => ', r || { ok: 'done' });

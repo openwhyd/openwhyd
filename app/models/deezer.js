@@ -73,44 +73,5 @@ exports.fetchTrackMetadata = function (_trackId, cb, raw) {
   );
 };
 
-/*
-var METADATA_MAPPING = {
-	"art": "artistName",
-	"tit": "trackTitle"
-};
-
-exports.getDeezerId = function(p, cb){
-	console.log("getting deezer track id", p.eId);
-	function returnMetaOr(orCb){
-		return function(tr) {
-			var meta = tr.meta || {};
-			if (meta.dz) {
-				console.log("found dz meta");
-				cb(tr);
-			}
-			else if (meta.art && meta.tit) {
-				var q = snip.filterFields(meta, METADATA_MAPPING);
-				console.log("querying dz...", q);
-				deezerApi.searchTracks(q, function(dzRes){
-					console.log("dz response => dzRes");
-					tr.dzRes = dzRes;
-					cb(tr);
-				});
-			}
-			else if (orCb)
-				orCb(tr);
-			else
-				cb(tr);
-		};
-	}
-	trackModel.fetchTrackByEid(p.eId, returnMetaOr(function(tr){
-		console.log("missing metadata => update metadata...");
-		trackModel.updateAndPopulateMetadata(p.eId, returnMetaOr(), true);
-	}));
-},
-*/
-// searchTracks({trackTitle:"the monster", artistName:"eminem"}, console.log); // =>
-// fetchTrackInfo(17782324, console.log);
-
 exports.searchTracks = searchTracks;
 exports.fetchTrackInfo = fetchTrackInfo;

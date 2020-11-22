@@ -266,7 +266,6 @@ exports.savePost = function (postObj, handler) {
     if (result) {
       if (Array.isArray(result)) result = result[0];
       searchModel.indexTyped('post', result);
-      //trackModel.updateAndPopulateMetadata(result.eId); // Notice: Cross platform player metadata extraction was shut down on 7/1/2015
       result.isNew = !pId;
       if (result.isNew) notif.post(result);
       /*
@@ -348,7 +347,6 @@ exports.rePost = function (pId, repostObj, handler) {
         //searchModel.indexPost(result);
         result = result[0];
         searchModel.indexTyped('post', result);
-        //trackModel.updateAndPopulateMetadata(result.eId); // Notice: Cross platform player metadata extraction was shut down on 7/1/2015
         /*
 				recomModel.matchingEngine.addPost(result, function() {
 					console.log("=> added post to matching engine index");
