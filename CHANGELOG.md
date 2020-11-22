@@ -1,3 +1,10 @@
+## [1.42.4](https://github.com/openwhyd/openwhyd/compare/v1.42.3...v1.42.4) (2020-11-22)
+
+
+### Bug Fixes
+
+* **perf:** Reduce use of synchronous IO calls ([#404](https://github.com/openwhyd/openwhyd/issues/404)) ([2cb41b3](https://github.com/openwhyd/openwhyd/commit/2cb41b3f6e4d3bd3a4fca2a67c71d1de6603bbc3))
+
 ## [1.42.3](https://github.com/openwhyd/openwhyd/compare/v1.42.2...v1.42.3) (2020-11-21)
 
 
