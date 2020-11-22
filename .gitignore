@@ -3,6 +3,8 @@
 .idea
 .DS_Store
 node_modules
+.nyc_output
+coverage
 
 /docs/.jekyll-metadata
 /docs/_site
