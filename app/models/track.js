@@ -378,10 +378,13 @@ exports.refreshTrackCollection = function (cb) {
     var i = 0;
     mongodb.forEach2('track', { fields: { _id: 0, eId: 1 } }, function (
       track,
-      next
+      next,
+      closeCursor
     ) {
-      if (!track) cb();
-      else {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
         console.log('refreshHotTracksCache', ++i, '/', count);
         exports.updateByEid(track.eId, next, true);
       }
