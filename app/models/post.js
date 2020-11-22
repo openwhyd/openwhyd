@@ -137,30 +137,17 @@ exports.fetchByAuthors = function (uidList, options, cb) {
   var limit = params.limit;
   params.limit = undefined; // prevent forEach2 from limiting cursor
   params.q = query;
-  mongodb.forEach2('post', params, function (post, next) {
-    if (post && !uidSet[(post.repost || {}).uId]) posts.push(post);
+  mongodb.forEach2('post', params, function (post, next, closeCursor) {
+    if (post && !post.error && !uidSet[(post.repost || {}).uId]) {
+      posts.push(post);
+    }
     if (!post || !next || posts.length == limit) {
       //console.timeEnd("post.fetchByAuthors2...");
-      cb(processPosts(posts)); // TODO: close cursor
-    } else next();
-  });
-};
-
-var MAX_OTHER_AUTHORS = 3;
-
-exports.fetchByOtherAuthors = function (uidList, options, cb) {
-  //console.time("post.fetchByOtherAuthors...");
-  var posts = [],
-    uidSet = snip.arrayToSet(uidList);
-  mongodb.forEach2('post', { q: {}, sort: [['_id', 'desc']] }, function (
-    post,
-    next
-  ) {
-    if (post && !uidSet[post.uId]) posts.push(post);
-    if (!post || !next || posts.length == MAX_OTHER_AUTHORS) {
-      //console.timeEnd("post.fetchByOtherAuthors...");
-      cb(processPosts(posts)); // TODO: close cursor
-    } else next();
+      cb(processPosts(posts));
+      closeCursor();
+    } else {
+      next();
+    }
   });
 };
 
@@ -279,7 +266,6 @@ exports.savePost = function (postObj, handler) {
     if (result) {
       if (Array.isArray(result)) result = result[0];
       searchModel.indexTyped('post', result);
-      //trackModel.updateAndPopulateMetadata(result.eId); // Notice: Cross platform player metadata extraction was shut down on 7/1/2015
       result.isNew = !pId;
       if (result.isNew) notif.post(result);
       /*
@@ -361,7 +347,6 @@ exports.rePost = function (pId, repostObj, handler) {
         //searchModel.indexPost(result);
         result = result[0];
         searchModel.indexTyped('post', result);
-        //trackModel.updateAndPopulateMetadata(result.eId); // Notice: Cross platform player metadata extraction was shut down on 7/1/2015
         /*
 				recomModel.matchingEngine.addPost(result, function() {
 					console.log("=> added post to matching engine index");

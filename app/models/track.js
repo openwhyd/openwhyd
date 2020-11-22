@@ -192,8 +192,7 @@ function fetchPostsByEid(eId, cb) {
   });
 }
 
-// called when a track is updated/deleted by a user,
-// or called by updateAndPopulateMetadata() when a track is posted by a user
+// called when a track is updated/deleted by a user
 exports.updateByEid = function (eId, cb, replace, additionalFields) {
   var since = Date.now() - HOT_TRACK_TIME_WINDOW;
   console.log('track.updateByEid: ', eId);
@@ -282,73 +281,20 @@ exports.fetchConciseMetadataForEid = function (eId, cb) {
   });
 };
 
-function hasGoodMetadata(conciseTrack) {
-  var meta = (conciseTrack || {}).meta || {};
-  return meta.tit && meta.art && meta.dur;
-}
-
-function hasAltMappings(conciseTrack) {
-  return ((conciseTrack || {}).alt || []).length;
-}
-
-function flattenObjectProperties(obj, path = [], res = {}) {
-  for (let f in obj) {
-    path.push(f);
-    if (typeof obj[f] == 'object' && !obj[f].splice)
-      flattenObjectProperties(obj[f], path, res);
-    else res[path.join('.')] = obj[f];
-    path.pop();
-  }
-  return res;
-}
-// TEST: console.log("\n\n", flattenObjectProperties({a:{b:1,c:"coucou",d:[1,2,3]}}));
-
-// called in place of updateByEid(), when a track is posted by a user
-// populates meta{t,art,tit,c} and alternative source mapping/identifiers
-exports.updateAndPopulateMetadata = function (eId, cb, force) {
-  console.log('updateAndPopulateMetadata...', eId);
-  exports.fetchTrackByEid(eId, function (track) {
-    if (!force && hasAltMappings(track) && hasGoodMetadata(track)) {
-      console.log(
-        'good metadata and alternative mappings already found for this track => skipping metadata extraction'
-      );
-      return exports.updateByEid(eId, cb, false);
-    }
-    exports.fetchConciseMetadataForEid(eId, function (finalMeta) {
-      finalMeta = finalMeta || {};
-      //console.log("metadata result", finalMeta);
-      if (finalMeta.error) {
-        if (finalMeta.error.indexOf('404 - Not Found') == -1)
-          console.error(
-            'updateAndPopulateMetadata',
-            finalMeta.error || 'null error in updateAndPopulateMetadata()'
-          );
-        cb && cb(finalMeta);
-        return;
-      }
-      if (finalMeta.meta) {
-        var updates = flattenObjectProperties({ meta: finalMeta.meta });
-        delete finalMeta.meta;
-        for (let key in updates) finalMeta[key] = updates[key];
-      }
-      if (!hasAltMappings(finalMeta)) delete finalMeta.alt;
-      // TODO: complete mappings, when possible
-      if (Object.keys(finalMeta).length > 0) {
-        finalMeta['meta.t'] = Date.now();
-        exports.updateByEid(eId, cb, false, finalMeta);
-      } else cb && cb(finalMeta);
-    });
-  });
-};
-
 // maintenance functions
 
 exports.snapshotTrackScores = function (cb) {
   mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
-    mongodb.forEach2('track', { fields: { score: 1 } }, function (track, next) {
-      if (!track) cb();
-      else {
+    mongodb.forEach2('track', { fields: { score: 1 } }, function (
+      track,
+      next,
+      closeCursor
+    ) {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
         if (count < 1000) {
           console.log(`snapshotTrackScores ${i + 1} / ${count}`);
         } else if (count % 1000 === 0) {
@@ -372,38 +318,17 @@ exports.refreshTrackCollection = function (cb) {
     var i = 0;
     mongodb.forEach2('track', { fields: { _id: 0, eId: 1 } }, function (
       track,
-      next
+      next,
+      closeCursor
     ) {
-      if (!track) cb();
-      else {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
         console.log('refreshHotTracksCache', ++i, '/', count);
         exports.updateByEid(track.eId, next, true);
       }
     });
-  });
-};
-
-exports.populateTrackMetadata = function (cb, force) {
-  mongodb.collections['track'].countDocuments(function (err, count) {
-    var i = 0;
-    mongodb.forEach2(
-      'track',
-      { fields: { _id: 0, eId: 1, name: 1 } },
-      function (track, next) {
-        if (!track) cb();
-        else {
-          console.log(
-            'updateAndPopulateMetadata',
-            ++i,
-            '/',
-            count,
-            track.eId,
-            track.name
-          );
-          exports.updateAndPopulateMetadata(track.eId, next, force);
-        }
-      }
-    );
   });
 };
 
