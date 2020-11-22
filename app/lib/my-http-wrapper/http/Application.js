@@ -100,6 +100,15 @@ exports.Application = class Application {
   getExpressApp() {
     if (this._expressApp) return this._expressApp;
     const app = express();
+    // `GET /__coverage__` will return coverage data for nyc
+    /* istanbul ignore next */
+    if (global.__coverage__) {
+      app.get('/__coverage__', (_, res) => {
+        res.json({
+          coverage: global.__coverage__ || null,
+        });
+      });
+    }
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
     app.use(express.static(this._publicDir));

@@ -2,6 +2,8 @@
 .env
 .port
 .DS_Store
+/.nyc_output
+/coverage
 /node_modules
 */*/node_modules
 */*/*.log

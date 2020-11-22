@@ -21,12 +21,14 @@
     "forever:start": "mv appd.out prev.out; mv appd.err prev.err; npx forever --outFile appd.out --errFile appd.err --minUptime 1000 --spinSleepTime 500 --number 100000 start app.js $@",
     "forever:restart": "npm run forever:stop; npm run forever:start $@;",
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
+    "start:coverage": "npx nyc --silent node app.js --fakeEmail --digestInterval -1 $@",
     "test-reset": "node test/reset-test-db.js",
     "test-api": "npm run test-reset && npx mocha test/api/*.js --exit",
     "test-unit": "npx mocha test/unit/*.js --exit",
     "test:cypress:dev": "node_modules/.bin/cypress open",
     "test:cypress": "node_modules/.bin/cypress run",
     "test": ". ./env-vars-testing.sh && npm run test-unit && npm run test-api && npm run test:cypress",
+    "test:coverage": "npx nyc report --reporter=text-summary",
     "docker:seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
     "docker:run": "npm run docker:seed && docker-compose exec web npm run $@",
     "docker:test:cypress:dev": ". ./.env-docker && npm run test:cypress:dev",
@@ -66,6 +68,7 @@
     "request": "2.88.2"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.8.4",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
@@ -77,6 +80,7 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "mocha": "8.1.3",
+    "nyc": "^15.1.0",
     "prettier": "^2.1.1",
     "semantic-release": "^17.2.3",
     "typescript": "^4.0.2"
