@@ -118,7 +118,7 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@master
         with:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
-          coverage-reports: coverage/lcov.info
+          coverage-reports: /home/runner/work/openwhyd/openwhyd/coverage/lcov.info
 
   release:
     name: Release
