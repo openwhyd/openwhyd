@@ -95,6 +95,8 @@ jobs:
       - name: install cypress
         run: node_modules/.bin/cypress install
       - name: Start Openwhyd server
+        env:
+          CI: true
         run: |
           source env-vars-testing.sh
           npm run start:coverage --mongoDbDatabase openwhyd_test &
@@ -108,7 +110,7 @@ jobs:
       - name: Get coverage data
         run: |
           # npm run test:coverage
-          npx nyc report --reporter=lcov --include="**/*.ts" --exclude="**/*.js" # stores the coverage report in ./coverage/lcov.info
+          npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v2
         with:
@@ -118,7 +120,7 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@master
         with:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
-          coverage-reports: /home/runner/work/openwhyd/openwhyd/coverage/lcov.info
+          coverage-reports: coverage/lcov.info
 
   release:
     name: Release
