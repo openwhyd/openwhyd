@@ -524,22 +524,41 @@ if (typeof exports === 'undefined') {
       };
       return this;
     }
+    // Additional detectors
+    function initPlayemPlayers(playemUrl, callback) {
+      include(playemUrl, function () {
+        // playem-all.js must be loaded at that point
+        callback({
+          yt: openwhydYouTubeExtractor,
+          sc: new window.SoundCloudPlayer({}),
+          vi: new window.VimeoPlayer({}),
+          dm: new window.DailymotionPlayer({}),
+          dz: new window.DeezerPlayer({}),
+          bc: new window.BandcampPlayer({}),
+          ja: new window.JamendoPlayer({}),
+        });
+      });
+    }
     // Start up
     var urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
       urlSuffix = '?' + new Date().getTime();
     console.info('loading bookmarklet stylesheet...');
     include(urlPrefix + CSS_FILEPATH + urlSuffix);
-    var bookmarklet = makeBookmarklet({
-      pageDetectors: openwhydBkPageDetectors,
-    });
-    var allPlayers = {
-      yt: openwhydYouTubeExtractor,
-    };
-    bookmarklet.detectTracks({
-      window: window,
-      ui: BkUi(),
-      urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)],
-      urlPrefix: urlPrefix,
+    console.info('loading PlayemJS...');
+    var playemFile = /openwhyd\.org/.test(urlPrefix)
+      ? 'playem-min.js'
+      : 'playem-all.js';
+    var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
+    initPlayemPlayers(playemUrl, function (players) {
+      var bookmarklet = makeBookmarklet({
+        pageDetectors: openwhydBkPageDetectors,
+      });
+      bookmarklet.detectTracks({
+        window: window,
+        ui: BkUi(),
+        urlDetectors: [makeFileDetector(), makeStreamDetector(players)],
+        urlPrefix: urlPrefix,
+      });
     });
   })();
 }

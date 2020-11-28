@@ -1,10 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Window {
-  SOUNDCLOUD_CLIENT_ID;
-  DEEZER_APP_ID;
-  DEEZER_CHANNEL_URL;
-  JAMENDO_CLIENT_ID;
-  YOUTUBE_API_KEY;
   SoundCloudPlayer;
   VimeoPlayer;
   DailymotionPlayer;
@@ -278,6 +273,23 @@ if (typeof exports === 'undefined') {
       return this;
     }
 
+    // Additional detectors
+
+    function initPlayemPlayers(playemUrl, callback) {
+      include(playemUrl, function () {
+        // playem-all.js must be loaded at that point
+        callback({
+          yt: openwhydYouTubeExtractor, // new YoutubePlayer(...) was replaced to save API quota (see #262)
+          sc: new window.SoundCloudPlayer({}),
+          vi: new window.VimeoPlayer({}),
+          dm: new window.DailymotionPlayer({}),
+          dz: new window.DeezerPlayer({}),
+          bc: new window.BandcampPlayer({}),
+          ja: new window.JamendoPlayer({}),
+        });
+      });
+    }
+
     // Start up
 
     const urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
@@ -285,17 +297,21 @@ if (typeof exports === 'undefined') {
 
     console.info('loading bookmarklet stylesheet...');
     include(urlPrefix + CSS_FILEPATH + urlSuffix);
-    const bookmarklet = makeBookmarklet({
-      pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
-    });
-    const allPlayers = {
-      yt: openwhydYouTubeExtractor, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
-    };
-    bookmarklet.detectTracks({
-      window,
-      ui: BkUi(),
-      urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)], // defined in bookmarkletUrlDetectors.ts
-      urlPrefix,
+    console.info('loading PlayemJS...');
+    const playemFile = /openwhyd\.org/.test(urlPrefix)
+      ? 'playem-min.js'
+      : 'playem-all.js';
+    const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
+    initPlayemPlayers(playemUrl, function (players) {
+      const bookmarklet = makeBookmarklet({
+        pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
+      });
+      bookmarklet.detectTracks({
+        window,
+        ui: BkUi(),
+        urlDetectors: [makeFileDetector(), makeStreamDetector(players)], // defined in bookmarkletUrlDetectors.ts
+        urlPrefix,
+      });
     });
   })();
 }
