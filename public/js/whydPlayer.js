@@ -377,7 +377,6 @@ function WhydPlayer() {
           $nbPlays.text((parseInt($nbPlays.text()) || 0) + 1).show();
         },
       });
-      //fbAction("listen", "/c/" + currentTrack.metadata.pid, "track");
       currentTrack.metadata.tStart = new Date();
       // also send to google analytics
       window.Whyd.tracking.logTrackPlay(currentTrack.metadata.pid);

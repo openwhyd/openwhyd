@@ -1,4 +1,4 @@
-/* global $, openRemoteDialog, whydPlayer, fbAction, fbLike, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
+/* global $, openRemoteDialog, whydPlayer, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
 
 var MAX_NB_MENTIONS = 6;
 
@@ -219,9 +219,6 @@ window.toggleLovePost = function (pId) {
         } catch (e) {
           console.log('error', e, e.stack);
         }
-        if (fbAction)
-          //fbAction("love", "/c/" + pId, "track" /*$post.cTy*/);
-          fbLike('/c/' + pId);
       } else $button.removeClass('selected').text('Like');
       var $counter = $post.find('.nbLoves > span');
       var nbLoves = parseInt($counter.first().text()) + (result.loved ? 1 : -1);

@@ -1,111 +1,54 @@
-/* global $, FB, user, showMessage */
+/* global $ */
+
+const globals = window;
 
 var href = window.location.href + '/';
 
-var namespace, fbId;
+var fbId;
 if (href.indexOf('openwhyd.org/') > 0) {
-  namespace = 'whydapp';
+  // namespace = 'whydapp';
   fbId = '169250156435902';
-} else if (href.indexOf('whyd.fr/') > 0) {
+} /*else if (href.indexOf('whyd.fr/') > 0) {
   // pre-production
   namespace = 'whyd-test';
   fbId = '1059973490696893';
-} else {
-  namespace = 'whyd-dev';
+} */ else {
+  // namespace = 'whyd-dev';
   fbId = '118010211606360';
 }
 
-var facebookPerms = 'public_profile,email'; // 'user_friends,user_interests,user_likes,email,publish_stream';
-var FB_ACTION_URI_PREFIX = href.substr(0, href.indexOf('/', 10)); //"http://openwhyd.org";
+var facebookPerms = 'public_profile,email';
 
 var whenFbReadyQueue = [];
 
-function whenFbReady(fct) {
+globals.whenFbReady = function (fct) {
   whenFbReadyQueue.push(fct);
-}
+};
 
-function fbSafeCall(fct, failFct) {
-  if (!window.FB) {
-    showMessage('Unable to connect to Facebook. Did you block it?', true);
+const fbSafeCall = function (fct, failFct) {
+  if (!globals.FB) {
+    globals.showMessage(
+      'Unable to connect to Facebook. Did you block it?',
+      true
+    );
     if (failFct) failFct();
   } else fct();
-}
+};
 
-function fbIsLogged(cb) {
-  if (window.FB)
-    FB.getLoginStatus(function (response) {
+globals.fbIsLogged = function (cb) {
+  if (globals.FB)
+    globals.FB.getLoginStatus(function (response) {
       cb(
         response.status === 'connected' &&
-          window.user.fbId == response.authResponse.userID
+          globals.user.fbId == response.authResponse.userID
       );
     }, true);
   else if (cb) cb(false);
-}
-
-function fbPost(url, callback) {
-  console.log('fbPost', url);
-  if (window.FB)
-    FB.api(url, 'post', function (response) {
-      console.log('fbPost response:', response);
-      if (callback) callback(response);
-    });
-  else if (callback) callback();
-}
-
-var verbToPrefName = {
-  add: 'ogAdd',
-  repost: 'ogAdd',
-  like: 'ogLik',
-  listen: 'ogPla',
 };
 
-function fbIsActionPermitted(verb) {
-  return (
-    verb &&
-    verbToPrefName[verb] &&
-    user &&
-    user.pref &&
-    user.pref[verbToPrefName[verb]]
-  );
-}
-
-function fbAction(verb, uri, type, callback) {
-  //console.log("fbAction", verb, uri, fbIsActionPermitted(verb));
-  fbIsLogged(function (loggedIn) {
-    if (loggedIn && fbIsActionPermitted(verb)) {
-      var url =
-        verb == 'listen'
-          ? '/me/music.listens?song=' +
-            FB_ACTION_URI_PREFIX +
-            uri.replace('/c/', '/post/')
-          : '/me/' +
-            namespace +
-            ':' +
-            verb +
-            '?' +
-            (type || 'website') +
-            '=' +
-            FB_ACTION_URI_PREFIX +
-            uri;
-      fbPost(url, callback);
-    } else if (callback) callback();
-  });
-}
-
-function fbLike(uri, callback) {
-  fbIsLogged(function (loggedIn) {
-    if (loggedIn && fbIsActionPermitted('like'))
-      fbPost(
-        '/me/og.likes' + '?object=' + FB_ACTION_URI_PREFIX + uri,
-        callback
-      );
-    else if (callback) callback();
-  });
-}
-
-function fbAuth(perms, cb, dontLink) {
+globals.fbAuth = function (perms, cb, dontLink) {
   fbSafeCall(function () {
-    FB.login(
+    globals.FB.login(
       function (response) {
         console.log('fb response', response);
         response = response || {};
@@ -126,10 +69,10 @@ function fbAuth(perms, cb, dontLink) {
       { scope: facebookPerms + (perms ? ',' + perms : '') }
     );
   }, cb);
-}
+};
 
-function fbLogin(perms, cb) {
-  fbAuth(
+globals.fbLogin = function (perms, cb) {
+  globals.fbAuth(
     perms,
     function (fbId, fbAuthResponse) {
       if (!fbId) {
@@ -170,10 +113,10 @@ function fbLogin(perms, cb) {
     },
     true
   );
-}
+};
 
-function fbRegister(perms, cb) {
-  fbAuth(
+globals.fbRegister = function (perms, cb) {
+  globals.fbAuth(
     perms,
     function (fbId, fbAuthResponse) {
       if (!fbId) {
@@ -186,7 +129,7 @@ function fbRegister(perms, cb) {
         access_token: fbAuthResponse.authResponse.accessToken,
       };
 
-      FB.api('/me', options, (response) => {
+      globals.FB.api('/me', options, (response) => {
         cb({
           fbAuthResponse: fbAuthResponse.authResponse, // fbTok
           fbUser: {
@@ -199,10 +142,10 @@ function fbRegister(perms, cb) {
     },
     true
   );
-}
+};
 
-window.fbAsyncInit = function () {
-  FB.init({
+globals.fbAsyncInit = function () {
+  globals.FB.init({
     appId: fbId,
     version: 'v2.3',
     status: true,
@@ -210,21 +153,21 @@ window.fbAsyncInit = function () {
     oauth: true,
     xfbml: true,
   });
-  window.whenFbReady = function (fct) {
+  globals.whenFbReady = function (fct) {
     fct();
   };
   while (whenFbReadyQueue.length) whenFbReadyQueue.shift()();
 };
 
-whenFbReady(function () {
+globals.whenFbReady(function () {
   console.log('watching fb events');
-  FB.Event.subscribe('edge.create', function (targetUrl) {
-    window.Whyd.tracking.logSocial('facebook', 'like', targetUrl);
+  globals.FB.Event.subscribe('edge.create', function (targetUrl) {
+    globals.Whyd.tracking.logSocial('facebook', 'like', targetUrl);
   });
-  FB.Event.subscribe('message.send', function (sharedUrl) {
+  globals.FB.Event.subscribe('message.send', function (sharedUrl) {
     //var pId = sharedUrl.split("/").pop();
     //console.log("facebook invitation was sent", pId);
-    window.Whyd.tracking.logSocial('facebook', 'message', sharedUrl);
+    globals.Whyd.tracking.logSocial('facebook', 'message', sharedUrl);
   });
 });
 

@@ -58,7 +58,7 @@ function WhydPost(embedRef) {
     if (collabId) this.postData.pl.collabId = collabId;
     else this.postData.pl.id = id;
   };
-  this.submit = function (shareOnFb, onPostComplete) {
+  this.submit = function (onPostComplete) {
     //console.log("submitting post: ", postData);
     $.ajax({
       type: 'POST',
@@ -68,7 +68,6 @@ function WhydPost(embedRef) {
         console.log('posted:', post);
         that.storedPost = post;
         if (onPostComplete) onPostComplete(post._id, that /*postData*/);
-        if (shareOnFb && fbAction) fbAction('add', '/c/' + post._id, 'track');
       },
     });
   };
@@ -326,7 +325,7 @@ function initPostBox(params) {
         console.log('WhydTextWithMentions RESULT:', text);
         if ($titleInput.length) whydPost.setName($titleInput.val());
         whydPost.setText(text);
-        whydPost.submit(true, onPostSuccess);
+        whydPost.submit(onPostSuccess);
       }
     );
   }
