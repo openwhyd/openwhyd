@@ -1,6 +1,6 @@
 /* global $, chrome */
 
-window.initOnbButton = function () {
+(function () {
   function toggleMode(e) {
     e && e.preventDefault();
     $('.modeBk, .modeExt').toggle();
@@ -63,4 +63,4 @@ window.initOnbButton = function () {
       $('.browserIcon').attr('class', 'browserIcon ' + b[i].toLowerCase());
       break;
     }
-};
+})();

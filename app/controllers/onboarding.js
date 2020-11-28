@@ -10,14 +10,16 @@ var templateLoader = require('../templates/templateLoader.js');
 
 exports.controller = function (request, getParams, response) {
   request.logToConsole('onboarding.controller', getParams);
+  var loggedUser = request.getUser() || {};
   templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
     const p = {
       pageUrl: request.url,
+      loggedUser: loggedUser,
       css: ['onboarding.css'],
-      bodyClass: 'pgOnboarding minimalHeader',
+      bodyClass: 'pgOnboarding',
+      content: template.render(),
     };
-    p.content = template.render(p);
-    response.renderHTML(mainTemplate.renderWhydPage(p)); // p.content
-    analytics.addVisit(p.loggedUser, p.pageUrl);
+    response.renderHTML(mainTemplate.renderWhydPage(p));
+    analytics.addVisit(loggedUser, request.url);
   });
 };

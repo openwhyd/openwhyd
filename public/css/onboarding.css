@@ -1,12 +1,3 @@
-.pgOnboarding #header {
-  text-align: center;
-}
-
-.pgOnboarding #headCenter {
-  display: inline-block !important;
-  float: none !important;
-}
-
 .pgOnboarding .loading {
   width: 200px;
   height: 100px;

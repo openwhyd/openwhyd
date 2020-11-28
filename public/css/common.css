@@ -503,14 +503,6 @@ body.pgHotTracks #header #navbar > a#tabHot {
   padding: 2px 0 0 0;
 }
 
-body.minimalHeader #header > div > * {
-  display: none;
-}
-
-body.minimalHeader #header > div > #headCenter {
-  display: block;
-}
-
 /* search */
 
 #header #searchBar {
