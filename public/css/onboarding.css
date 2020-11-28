@@ -5,42 +5,6 @@
   text-align: center;
 }
 
-.pgOnboarding #progress {
-  width: 180px;
-  margin: 40px auto;
-  overflow: auto;
-  color: #cbced2;
-}
-
-.pgOnboarding #btnNext {
-  position: absolute;
-  top: 86px;
-  right: 0;
-  width: 71px;
-  background: #3177af;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  height: 32px;
-  font-size: 13px;
-  font-weight: bold;
-  text-align: center;
-  color: white;
-  line-height: 35px;
-}
-
-.pgOnboarding #btnNext:hover {
-  background-color: #62a1d3;
-}
-
-.pgOnboarding #btnNext:hover {
-  background-position: 0 -46px;
-}
-
-.pgOnboarding #btnNext:active {
-  background-position: 0 -92px;
-}
-
 .pgOnboarding h1 {
   margin-top: 60px;
   margin-bottom: 40px;
