@@ -104,7 +104,6 @@ exports.controller = function (request, reqParams, response) {
   reqParams.showSubscribers = path.endsWith('/subscribers');
   reqParams.showSubscriptions = path.endsWith('/subscriptions');
   reqParams.pageUrl = request.url;
-  reqParams.welcome = reqParams.welcome || path.endsWith('/welcome');
 
   function render(data, mimeType) {
     if (mimeType)
@@ -163,14 +162,7 @@ exports.controller = function (request, reqParams, response) {
     response.temporaryRedirect(path, paramsObj);
   }
 
-  //if (path == "/welcome")
-  //	response.temporaryRedirect("/stream?welcome=1", reqParams);
-
-  if (
-    path == '/' ||
-    request.url.indexOf('/stream') > -1 ||
-    request.url.indexOf('/welcome') > -1
-  ) {
+  if (path == '/' || request.url.indexOf('/stream') > -1) {
     if (loggedInUser && loggedInUser.id) return renderFriendsLibrary(lib);
     else if (reqParams.format == 'json')
       return render({ errorCode: 'REQ_LOGIN' });

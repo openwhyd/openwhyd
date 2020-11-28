@@ -48,7 +48,6 @@ POST   /search                         -> controllers.private.search
 GET    /wsYoutube                      -> controllers.private.wsYoutube
 POST   /wsYoutube                      -> controllers.private.wsYoutube
 
-GET    /welcome                        -> controllers.userLibrary
 GET    /all                            -> controllers.userLibrary
 GET    /stream                         -> controllers.userLibrary
 GET    /recent                         -> controllers.recentActivity

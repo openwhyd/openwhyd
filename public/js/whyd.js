@@ -721,35 +721,6 @@ window.submitBio = function () {
   });
 };
 
-/* help overlay */
-
-function hideHelpOverlay() {
-  console.log('hide overlay');
-  $('.posts a').unbind('click', hideHelpOverlay);
-  $('.helpOverlay').animate({ opacity: 0 }, function () {
-    $(this).remove();
-    $('body').removeClass('help');
-  });
-  window.Whyd.tracking.log('Finished onboarding');
-}
-
-function showHelpOverlay() {
-  if ($('body').hasClass('visitor')) return;
-  $('body')
-    .addClass('help')
-    .append(
-      '<div class="helpOverlay">' +
-        '<div class="overlay"></div>' +
-        '<div class="container">' +
-        '<div class="content">' +
-        '<h3>Welcome</h3>' +
-        '<p >Here is the Incoming tracks from people you follow to</p>' +
-        '<div class="btnCloseHelp" onclick="hideHelpOverlay()">Ok, Got it</div>' +
-        '</div></div></div>'
-    );
-  $('.posts a').bind('click', hideHelpOverlay);
-}
-
 /* share dialog */
 
 window.sharePost = function (pId) {
@@ -853,12 +824,7 @@ window.makeUrl = function (getParamsObj) {
 
 function onPageLoad() {
   var $body = $('body');
-  if (
-    window.location.href.indexOf('/welcome') ==
-    window.location.href.length - 8
-  )
-    showHelpOverlay();
-  else if ($body.hasClass('pgPost'))
+  if ($body.hasClass('pgPost'))
     toggleComments($('.post').first().attr('data-pid'), true);
 }
 
