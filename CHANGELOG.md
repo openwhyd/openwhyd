@@ -1,3 +1,13 @@
+## [1.42.7](https://github.com/openwhyd/openwhyd/compare/v1.42.6...v1.42.7) (2020-11-28)
+
+
+### Bug Fixes
+
+* **clean:** Remove the "whyd badge" + "Goodies" tab from Settings page ([614b0b0](https://github.com/openwhyd/openwhyd/commit/614b0b0708fcb3b298e8157f4dcc4d69ea7e974b))
+* **clean:** Remove unused assets from /public/images/welcome ([4ae5950](https://github.com/openwhyd/openwhyd/commit/4ae595078cbf9ccfb2e5bfbddb3c478eba3796ef))
+* **sidebox:** Invite to join our community on Facebook ([6096795](https://github.com/openwhyd/openwhyd/commit/609679558f592277263e85b22b9b85255c256f70))
+* **test:** "CypressError: Timed out retrying: `cy.scrollTo()` failed because this element is not scrollable" ([9f1e449](https://github.com/openwhyd/openwhyd/commit/9f1e4490d75ba643f3fd53b04632896c64107452))
+
 ## [1.42.6](https://github.com/openwhyd/openwhyd/compare/v1.42.5...v1.42.6) (2020-11-22)
 
 
