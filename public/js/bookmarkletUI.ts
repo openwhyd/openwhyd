@@ -278,28 +278,6 @@ if (typeof exports === 'undefined') {
       return this;
     }
 
-    // Additional detectors
-
-    function initPlayemPlayers(playemUrl, callback) {
-      window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
-      window.DEEZER_APP_ID = 190482;
-      window.DEEZER_CHANNEL_URL = urlPrefix + '/html/deezer.channel.html';
-      window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
-      window.YOUTUBE_API_KEY = '';
-      include(playemUrl, function () {
-        // playem-all.js must be loaded at that point
-        callback({
-          // yt: new YoutubePlayer(...) should be replaced by openwhydYouTubeExtractor, to save API quota (see #262)
-          sc: new window.SoundCloudPlayer({}),
-          vi: new window.VimeoPlayer({}),
-          dm: new window.DailymotionPlayer({}),
-          dz: new window.DeezerPlayer({}),
-          bc: new window.BandcampPlayer({}),
-          ja: new window.JamendoPlayer({}),
-        });
-      });
-    }
-
     // Start up
 
     const urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
@@ -307,27 +285,17 @@ if (typeof exports === 'undefined') {
 
     console.info('loading bookmarklet stylesheet...');
     include(urlPrefix + CSS_FILEPATH + urlSuffix);
-    console.info('loading PlayemJS...');
-    const playemFile = /openwhyd\.org/.test(urlPrefix)
-      ? 'playem-min.js'
-      : 'playem-all.js';
-    const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
-    initPlayemPlayers(playemUrl, function (players) {
-      const bookmarklet = makeBookmarklet({
-        pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
-      });
-      const allPlayers = Object.assign(
-        {
-          yt: openwhydYouTubeExtractor, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
-        },
-        players
-      );
-      bookmarklet.detectTracks({
-        window,
-        ui: BkUi(),
-        urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)], // defined in bookmarkletUrlDetectors.ts
-        urlPrefix,
-      });
+    const bookmarklet = makeBookmarklet({
+      pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
+    });
+    const allPlayers = {
+      yt: openwhydYouTubeExtractor, // alternative to YoutubePlayer from PlayemJS, to save API quota (see #262)
+    };
+    bookmarklet.detectTracks({
+      window,
+      ui: BkUi(),
+      urlDetectors: [makeFileDetector(), makeStreamDetector(allPlayers)], // defined in bookmarkletUrlDetectors.ts
+      urlPrefix,
     });
   })();
 }
