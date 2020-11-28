@@ -503,14 +503,6 @@ body.pgHotTracks #header #navbar > a#tabHot {
   padding: 2px 0 0 0;
 }
 
-body.minimalHeader #header > div > * {
-  display: none;
-}
-
-body.minimalHeader #header > div > #headCenter {
-  display: block;
-}
-
 /* search */
 
 #header #searchBar {
@@ -1270,125 +1262,6 @@ body.filterMode #filterBox > div {
   padding: 15px;
   border-top: 1px solid #f4f4f4;
   color: #5f5f5f;
-}
-
-/* help overlay */
-
-.helpOverlay {
-  display: none;
-}
-
-body.help .helpOverlay {
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 5;
-}
-
-body.help .sub-container {
-  z-index: 10;
-  position: relative;
-}
-
-body.help .head-name-tab {
-  border-bottom: 1px solid #f6f8f9;
-  margin-bottom: 0;
-}
-
-body.help .helpOverlay > div.overlay {
-  position: absolute;
-  background: #262626;
-  opacity: 0.96;
-  width: 100%;
-  height: 100%;
-}
-
-body.help .helpOverlay div.content {
-  position: absolute;
-  width: 240px;
-  height: 133px;
-  background: white;
-  margin: 0 auto;
-  right: 0;
-  top: 233px;
-  padding: 15px;
-  border-radius: 3px;
-}
-body.help .helpOverlay div.content:before {
-  content: url(/images/OnboardingIconTipModal.png);
-  width: 12px;
-  height: 24px;
-  margin-left: -27px;
-  position: absolute;
-}
-
-body.help .helpOverlay h3 {
-  color: #181b1f;
-  font-size: 16px;
-  margin-top: 5px;
-}
-
-body.help .helpOverlay p {
-  color: #333d45;
-  font-size: 14px;
-}
-
-body.help .helpOverlay p.help1 {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 300px;
-  background: url(/images/help/arrow-right-onboarding.png) no-repeat 110px 0px;
-  padding-top: 110px;
-}
-
-body.help .helpOverlay .btnCloseHelp {
-  width: 108px;
-  background: #3177af;
-  color: white;
-  font-size: 13px;
-  font-family: 'AvenirNext-DemiBold', Helvetica, Arial, Sans-serif;
-  font-weight: bold;
-  text-align: center;
-  border-radius: 3px;
-  margin-top: 18px;
-  height: 32px;
-  line-height: 32px;
-  cursor: pointer;
-}
-
-body.help .helpOverlay .btnCloseHelp:hover {
-  background-color: #62a1d3;
-}
-
-body.help .helpOverlay .btnAdd {
-  position: absolute;
-  top: 7px;
-  right: 0;
-  z-index: 6;
-  height: 34px;
-  line-height: 34px;
-  padding-left: 30px;
-  padding-right: 10px;
-  color: white;
-}
-
-body.help .helpOverlay .btnAdd div {
-  position: absolute;
-  left: 5px;
-  width: 21px;
-  background: url('/images/icon-add-small.png') no-repeat 50% 50%;
-}
-
-body.help .feedHeader {
-  z-index: 6;
-}
-
-body.help .posts {
-  z-index: 6;
 }
 
 /* feed header */
@@ -2910,6 +2783,25 @@ body.pgWithSideBar .post > h2 {
 }
 
 /* newsfeed */
+
+.addPost {
+  margin: 0 15px;
+  padding: 12px 0;
+  line-height: 40px;
+  text-align: center;
+}
+
+.addPost a {
+  display: block;
+  border: 1px dashed #d1d1d1;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.addPost:hover a {
+  border: 1px dashed #bfbfbf;
+  background-color: #fafafa;
+}
 
 .emptyFeed {
   clear: both;

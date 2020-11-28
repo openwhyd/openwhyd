@@ -18,7 +18,6 @@ services:
       - '8080:8080'
     depends_on:
       - mongo
-    entrypoint: ['npm', 'run', 'start:coverage']
     environment:
       # From env-vars-testing.sh not working in Dockerfile
       # And with Docker mongo link

@@ -16,8 +16,7 @@
         display: block;
         width: 280px;
         height: 192px;
-        background: url(/images/pickBookmarklet/video-play.png) no-repeat center
-          center;
+        background: url(/images/video-play.png) no-repeat center center;
         opacity: 0.6;
       }
 
@@ -229,6 +228,9 @@
       {{/isUserLogged}}
       <h2 class="head-name-tab">Recent tracks from all users</h2>
       {{/globalFeed}} {{#homeFeed}}
+      <a href="/all" style="float: right; margin-top: 20px; margin-right: 20px"
+        >Other recent tracks</a
+      >
       <h2 class="head-name-tab">Stream</h2>
       {{/homeFeed}}
       <!--	<h2>{{streamTitle}}</h2> -->
@@ -278,31 +280,13 @@
         <h2><a href="{{url}}">{{name}}</a></h2>
         <span>{{nbTracks}} tracks</span>
       </div>
-      {{/items}} {{/showPlaylists}} {{^showPlaylists}} {{{posts}}}
-      {{#emptyFeed}} {{#ownProfile}}
-      <div class="emptyFeed post">
-        <a class="fakePost" href="javascript:modalPostBox(onNewPost)">
-          <div class="grayOverlay"></div>
-          <div class="addButton">
-            <div id="btnAdd" class="btnAdd">
-              <div></div>
-            </div>
-            <span>Add a track</span>
-          </div>
-        </a>
-        <a class="fakePost" href="javascript:modalPostBox(onNewPost)">
-          <div class="grayOverlay"></div>
-          <div class="addButton">
-            <div id="btnAdd" class="btnAdd">
-              <div></div>
-            </div>
-            <span>Add a track</span>
-          </div>
-        </a>
+      {{/items}} {{/showPlaylists}} {{^showPlaylists}}
+
+      <div class="addPost">
+        <a href="javascript:modalPostBox(onNewPost)"> Add a track </a>
       </div>
-      {{/ownProfile}} {{^ownProfile}}
-      <div class="emptyFeed">No posts yet...</div>
-      {{/ownProfile}} {{/emptyFeed}} {{#hasMore}}
+      <!--<div class="post"></div>-->
+      {{{posts}}} {{#hasMore}}
       <div class="btnLoadMore" onclick="loadMore()">
         <div>&nbsp;</div>
         <span>Load more</span>

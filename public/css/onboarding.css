@@ -1,110 +1,8 @@
-.pgOnboarding #header {
-  text-align: center;
-}
-
-.pgOnboarding #headCenter {
-  display: inline-block !important;
-  float: none !important;
-}
-
 .pgOnboarding .loading {
   width: 200px;
   height: 100px;
   margin: 0 auto;
   text-align: center;
-}
-
-.pgOnboarding #progress {
-  width: 180px;
-  margin: 40px auto;
-  overflow: auto;
-  color: #cbced2;
-}
-
-.pgOnboarding #progress > div {
-  float: left;
-}
-
-.pgOnboarding #progress > div > div {
-  float: left;
-  width: 17px;
-  height: 17px;
-  border: 1px solid #cbced2;
-  margin-right: 8px;
-  border-radius: 9px;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-}
-
-.pgOnboarding #progress > div > div > span {
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  line-height: 18px;
-  font-size: 10px;
-}
-
-.pgOnboarding #progress p {
-  display: none;
-  white-space: nowrap;
-  float: left;
-  line-height: 22px;
-  margin-right: 8px;
-}
-
-.pgOnboarding.stepPeople #progress #progress1 > div,
-.pgOnboarding.stepButton #progress #progress1 > div,
-.pgOnboarding.stepButton #progress #progress2 > div {
-  border-color: transparent;
-  background: url('/images/OnboardingIconStepValidate.png') no-repeat;
-}
-
-.pgOnboarding.stepPeople #progress #progress1 span,
-.pgOnboarding.stepButton #progress #progress1 span,
-.pgOnboarding.stepButton #progress #progress2 span {
-  display: none;
-}
-
-.pgOnboarding.stepGenres #progress #progress1 p,
-.pgOnboarding.stepPeople #progress #progress2 p,
-.pgOnboarding.stepButton #progress #progress3 p {
-  display: block;
-}
-
-.pgOnboarding #btnNext {
-  position: absolute;
-  top: 86px;
-  right: 0;
-  width: 71px;
-  background: #3177af;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  height: 32px;
-  font-size: 13px;
-  font-weight: bold;
-  text-align: center;
-  color: white;
-  line-height: 35px;
-}
-
-.pgOnboarding #btnNext:hover {
-  background-color: #62a1d3;
-}
-
-/*.pgOnboarding.stepButton #btnNext {
-	background-image: url('/images/btn-onb-jumpin.png');
-	width: 97px;
-	height: 45px;
-}*/
-
-.pgOnboarding #btnNext:hover {
-  background-position: 0 -46px;
-}
-
-.pgOnboarding #btnNext:active {
-  background-position: 0 -92px;
 }
 
 .pgOnboarding h1 {
@@ -151,135 +49,14 @@
   padding: 20px;
 }
 
-.pgOnboarding.stepGenres .whitePanel {
-  padding: 20px 15px 5px 15px;
-  padding-right: 0;
-}
-
-/* step 1 */
-
-.pgOnboarding #genreGallery {
-  list-style: none;
-}
-
-.pgOnboarding #genreGallery li {
-  position: relative;
-  float: left;
-  width: 226px;
-  height: 158px;
-  text-align: center;
-  margin-right: 15px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  background-size: cover;
-}
-
-.pgOnboarding #genreGallery li:nth-child(4n) {
-  margin-right: 0px;
-}
-
-.pgOnboarding #genreGallery li:nth-child(4n) {
-  margin-right: 0px;
-}
-
-.pgOnboarding #genreGallery li p {
-  margin-top: 120px;
-  width: 100%;
-}
-
-.pgOnboarding #genreGallery li p span {
-  padding: 8px 12px;
-  font-size: 16px;
-  text-transform: uppercase;
-  font-weight: bold;
-  color: white;
-  letter-spacing: 1px;
-}
-
-.pgOnboarding #genreGallery li div {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(49, 119, 175, 0.8);
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  transition: background-color 2s;
-}
-
-.pgOnboarding #genreGallery li:hover div {
-  display: block;
-  background-image: url('/images/OnboardingIconGenreValidateHover.png');
-  transition: background-color 2s;
-}
-
-.pgOnboarding #genreGallery li.selected div {
-  display: block;
-  background-color: rgba(49, 119, 175, 0.7);
-  background-image: url('/images/OnboardingIconGenreValidate.png');
-}
-
-/* step 2 */
-
-.pgOnboarding.stepPeople .whitePanel {
-  padding: 0;
-}
-
-.pgOnboarding .userList .user {
-  float: left;
-  position: relative;
-  margin: 0 90px 0 15px;
-  margin-bottom: 20px;
-  padding: 0;
-  width: 430px;
-  padding-top: 20px;
-  border-top: 1px dotted #ccc;
-  border-bottom: 0;
-}
-
-.pgOnboarding .userList .user:nth-child(2n) {
-  margin: 0;
-}
-
-.pgOnboarding .userList > li:nth-child(1),
-.pgOnboarding .userList > li:nth-child(2) {
-  border-top: none;
-}
-
-.pgOnboarding .userList > li p {
-  width: 310px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.pgOnboarding .userList > li p.username {
-  width: 220px;
-  font-weight: bold;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #4a4a4a;
-}
-.pgOnboarding .userList > li .stats {
-  color: #999;
-  font-size: 10px;
-}
-.pgOnboarding .userList > li p.userbio {
-  font-size: 12px;
-  margin-top: 10px;
-  color: #333;
-  color: #4a4a4a;
-}
-
 /* step 3 */
 
-.pgOnboarding.stepButton .modeExt,
-.pgOnboarding.stepButton .modeBk {
+.pgOnboarding .modeExt,
+.pgOnboarding .modeBk {
   display: none;
 }
 
-.pgOnboarding.stepButton .whitePanel {
+.pgOnboarding .whitePanel {
   margin-top: 0;
   background: url('/images/backgroundBookmarklet.jpg') no-repeat;
   border-top-left-radius: 0;
@@ -288,7 +65,7 @@
   font-size: 14px;
 }
 
-.pgOnboarding.stepButton .whitePanel.topBkPanel.modeExt {
+.pgOnboarding .whitePanel.topBkPanel.modeExt {
   padding: 20px 20px 20px 386px !important;
   background: url('/images/screenfast-extension.png') no-repeat bottom left;
   background-color: #fff;
@@ -300,7 +77,7 @@
 }
 
 /* BOOKMARKLET TOP */
-.pgOnboarding.stepButton .whitePanel.topBkPanel.modeBk {
+.pgOnboarding .whitePanel.topBkPanel.modeBk {
   padding: 20px 20px 20px 20px !important;
   background: #fff url('/images/screenfast-bookmarklet.jpg') no-repeat bottom
     right !important;
@@ -312,15 +89,13 @@
   text-align: left;
 }
 
-.pgOnboarding.stepButton
-  .whitePanel.topBkPanel.modeBk
-  > .installbookmarkletBlock {
+.pgOnboarding .whitePanel.topBkPanel.modeBk > .installbookmarkletBlock {
   padding-top: 44px;
   width: 500px;
   background: url('/images/smallArrowBookmarklet.png') no-repeat 1px 146px;
 }
 
-.pgOnboarding.stepButton
+.pgOnboarding
   .whitePanel.topBkPanel.modeBk
   > .installbookmarkletBlock
   > .btnBookmarklet {
@@ -329,7 +104,7 @@
   margin: 0 0 10px 6px;
 }
 
-.pgOnboarding.stepButton
+.pgOnboarding
   .whitePanel.topBkPanel.modeBk
   > .installbookmarkletBlock
   > .btnBookmarklet
@@ -385,20 +160,13 @@
   margin-right: 10px;
 }
 
-.pgOnboarding.stepButton
-  .whitePanel.topBkPanel.modeBk
-  > .installbookmarkletBlock
-  > p {
+.pgOnboarding .whitePanel.topBkPanel.modeBk > .installbookmarkletBlock > p {
   font-size: 14px;
   line-height: 21px;
   color: #4f4f4f;
 }
 
-.pgOnboarding.stepButton
-  .whitePanel.topBkPanel.modeBk
-  > .installbookmarkletBlock
-  > p
-  > a {
+.pgOnboarding .whitePanel.topBkPanel.modeBk > .installbookmarkletBlock > p > a {
   font-weight: bold;
 }
 
@@ -420,43 +188,43 @@
   left: 16px;
 }
 
-.pgOnboarding.stepButton .whitePanel.modeExt {
+.pgOnboarding .whitePanel.modeExt {
   padding: 20px 20px 0 20px !important;
   overflow: hidden;
 }
 
-.pgOnboarding.stepButton .whitePanel {
+.pgOnboarding .whitePanel {
   padding: 20px 20px 0 20px !important;
 }
 
-.pgOnboarding.stepButton .topBkPanel > .installExtensionBlock {
+.pgOnboarding .topBkPanel > .installExtensionBlock {
   padding-top: 50px;
   padding-left: 56px;
 }
 
-.pgOnboarding.stepButton .modeExt {
+.pgOnboarding .modeExt {
   display: none;
 }
 
-.pgOnboarding.stepButton .topBkPanel > * {
+.pgOnboarding .topBkPanel > * {
   display: inline-block;
   vertical-align: middle;
   margin: 0;
 }
 
-.pgOnboarding.stepButton .whitePanel > h2 {
+.pgOnboarding .whitePanel > h2 {
   color: #fff;
   font-size: 20px;
   padding: 20px 0 20px 0;
 }
 
-.pgOnboarding.stepButton .whitePanel > p {
+.pgOnboarding .whitePanel > p {
   color: #b6c2d4 !important;
   line-height: 21px !important;
   padding-bottom: 20px;
 }
 
-.pgOnboarding.stepButton .whitePanel > .work {
+.pgOnboarding .whitePanel > .work {
   margin: 0 auto 50px auto;
   width: 400px;
   padding: 10px 0 10px 20px;
@@ -466,7 +234,7 @@
   -moz-border-radius: 2px;
 }
 
-.pgOnboarding.stepButton .whitePanel > .work > p {
+.pgOnboarding .whitePanel > .work > p {
   display: inline-block;
   float: left;
   margin-top: 16px;
@@ -476,18 +244,18 @@
   line-height: 12px !important;
 }
 
-.pgOnboarding.stepButton .whitePanel > .work > ul {
+.pgOnboarding .whitePanel > .work > ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.pgOnboarding.stepButton .whitePanel > .work > ul > li {
+.pgOnboarding .whitePanel > .work > ul > li {
   float: left;
   margin-right: 10px;
 }
 
-.pgOnboarding.stepButton .whitePanel > .work > ul > li.special {
+.pgOnboarding .whitePanel > .work > ul > li.special {
   margin-right: 0px;
 }
 
@@ -500,7 +268,7 @@
 /* BIG SCREEN INSTRUCTION */
 
 /* NORMAL */
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal {
+.pgOnboarding .whitePanel > .howToUseButtonNormal {
   position: relative;
   width: 928px;
   height: 542px;
@@ -512,7 +280,7 @@
   -moz-border-radius-topleft: 3px;
   -moz-border-radius-topright: 3px;
 }
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > div.step1 {
+.pgOnboarding .whitePanel > .howToUseButtonNormal > div.step1 {
   border: none;
   text-align: center;
   position: absolute;
@@ -522,7 +290,7 @@
   height: 100%;
   cursor: pointer;
 }
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > div.step1 > img {
+.pgOnboarding .whitePanel > .howToUseButtonNormal > div.step1 > img {
   border: none;
   position: absolute;
   left: 0;
@@ -530,11 +298,7 @@
   z-index: 1;
 }
 
-.pgOnboarding.stepButton
-  .whitePanel
-  > .howToUseButtonNormal
-  > div.step1
-  > span {
+.pgOnboarding .whitePanel > .howToUseButtonNormal > div.step1 > span {
   display: block;
   padding: 20px 10px 20px 52px;
   background: #4082b6 url('/images/iconSeeHowToUse.png') no-repeat 21px 22px;
@@ -553,28 +317,16 @@
   z-index: 2;
 }
 
-.pgOnboarding.stepButton .whitePanel > .howToUseButtonNormal > .step2 {
+.pgOnboarding .whitePanel > .howToUseButtonNormal > .step2 {
   height: 542px;
 }
 
-.pgOnboarding.stepButton
-  .whitePanel
-  > .howToUseButtonNormal
-  > .step2
-  > p.indication1,
-.pgOnboarding.stepButton
-  .whitePanel
-  > .howToUseButtonNormal
-  > .step2
-  > p.indication2 {
+.pgOnboarding .whitePanel > .howToUseButtonNormal > .step2 > p.indication1,
+.pgOnboarding .whitePanel > .howToUseButtonNormal > .step2 > p.indication2 {
   color: #ffffff !important;
 }
 
-.pgOnboarding.stepButton
-  .whitePanel
-  > .howToUseButtonNormal
-  > .step2
-  > p.indication1 {
+.pgOnboarding .whitePanel > .howToUseButtonNormal > .step2 > p.indication1 {
   position: absolute;
   top: 72px;
   right: 10px;
@@ -584,7 +336,7 @@
   padding-top: 52px;
 }
 
-.pgOnboarding.stepButton
+.pgOnboarding
   .whitePanel
   > .howToUseButtonNormal
   > .step2
@@ -597,11 +349,7 @@
   padding-top: 52px;
 }
 
-.pgOnboarding.stepButton
-  .whitePanel
-  > .howToUseButtonNormal
-  > .step2
-  > p.indication2 {
+.pgOnboarding .whitePanel > .howToUseButtonNormal > .step2 > p.indication2 {
   position: absolute;
   top: 280px;
   right: 88px;
@@ -611,7 +359,7 @@
   background: url('/images/iconIndication2.png') no-repeat;
 }
 
-.pgOnboarding.stepButton
+.pgOnboarding
   .whitePanel
   > .howToUseButtonNormal
   > .step2
@@ -624,20 +372,17 @@
   background: url('/images/iconIndicationBookmarklet2.png') no-repeat 135px 0;
 }
 
-.pgOnboarding.stepButton .topBkPanel > .installExtensionBlock > p {
+.pgOnboarding .topBkPanel > .installExtensionBlock > p {
   color: #357ed6;
   line-height: 21px;
 }
 
-.pgOnboarding.stepButton .topBkPanel > .installExtensionBlock > p a {
+.pgOnboarding .topBkPanel > .installExtensionBlock > p a {
   color: #357ed6;
   font-weight: bold;
 }
 
-.pgOnboarding.stepButton
-  .topBkPanel
-  > .installExtensionBlock
-  > #btnInstallChromeExt {
+.pgOnboarding .topBkPanel > .installExtensionBlock > #btnInstallChromeExt {
   padding: 20px 40px;
   /*margin-right: 10px;*/
   margin: 0;
@@ -647,11 +392,11 @@
 }
 
 /* sectionHowToInstall */
-.pgOnboarding.stepButton .sectionHowToInstall {
+.pgOnboarding .sectionHowToInstall {
   background: #ffffff !important;
 }
 
-.pgOnboarding.stepButton .sectionHowToInstall h2 {
+.pgOnboarding .sectionHowToInstall h2 {
   color: #535559;
 }
 
@@ -735,73 +480,4 @@
   > #bookmarklet
   > span {
   display: none;
-}
-
-/*
-.pgOnboarding .howtoinstall li
-
-.pgOnboarding .howtoinstall li > .puce1 {
-	background: url(/images/pickBookmarklet/icon-puce.png)no-repeat;
-	display: inline-block;
-	width: 34px;
-	height: 34px;
-	float: left;
-	margin-right: 12px;
-}
-
-.pgOnboarding .howtoinstall li > .puce2 {
-	background: url(/images/pickBookmarklet/icon-puce.png)no-repeat 0 -35px;
-	display: block;
-	width: 34px;
-	height: 34px;
-	float: left;
-	margin-right: 12px;
-}
-
-.pgOnboarding .howtoinstall li > .puce3 {
-	background: url(/images/pickBookmarklet/icon-puce.png)no-repeat 0 -70px;
-	display: block;
-	width: 34px;
-	height: 34px;
-	float: left;
-	margin-right: 12px;
-}
-
-.pgOnboarding .howtoinstall li > .puce4 {
-	background: url(/images/pickBookmarklet/icon-puce.png)no-repeat;
-	display: block;
-	width: 34px;
-	height: 34px;
-	float: left;
-	margin-right: 12px;
-}*/
-.pgOnboarding.stepButton .video {
-  display: block;
-  width: 468px;
-  height: 263px;
-  background: #ccc url(/images/pickBookmarklet/video-thumb.jpg) no-repeat;
-  margin: 40px auto;
-  clear: both;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
-  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
-  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.43);
-}
-
-.pgOnboarding.stepButton .video > a {
-  display: block;
-  width: 468px;
-  height: 263px;
-  background: url(/images/pickBookmarklet/video-play-big.png) no-repeat center
-    center;
-  opacity: 0.6;
-}
-
-.pgOnboarding.stepButton .video > a:hover {
-  opacity: 0.9;
-}
-
-.pgOnboarding .reassure-txt {
-  font-style: italic;
-  color: #535559 !important;
-  margin-top: 10px;
 }
