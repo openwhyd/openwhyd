@@ -20,6 +20,6 @@ exports.controller = function (request, getParams, response) {
       content: template.render(),
     };
     response.renderHTML(mainTemplate.renderWhydPage(p));
-    analytics.addVisit(loggedUser, request.url);
+    analytics.addVisit(loggedUser.id, request.url);
   });
 };
