@@ -21,15 +21,9 @@ const { getSuggestedUsers } = require('../models/featuredUsers.js');
 
 // var MAX_RECOM_USERS = 10;
 
-var templates = {
-  'bookmarklet-legacy': 'app/templates/onboarding/bookmarklet.html', // old version (still bound to openwhyd.org/bookmarklet and openwhyd.org/button)
-};
-
 function makeTemplateRenderer(cb) {
   return function (p) {
-    templateLoader.loadTemplate(templates[p.step] || TEMPLATE_FILE, function (
-      template
-    ) {
+    templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
       p.content = template.render(p);
       cb(p);
     });
@@ -83,9 +77,6 @@ var processStep = {
     p.stepButton = true;
     render(p);
   },
-  'bookmarklet-legacy': function (p, render) {
-    render(p);
-  },
 };
 
 function handleRequest(p, cb) {
@@ -94,7 +85,7 @@ function handleRequest(p, cb) {
   } else {
     var lastUrlWord = p.pageUrl.split('?')[0].split('/')[1];
     if (lastUrlWord == 'bookmarklet' || lastUrlWord == 'button')
-      p.step = 'bookmarklet-legacy';
+      p.step = 'button';
 
     var processor = processStep[p.step];
     if (!processor) cb({ error: 'unknown step' });
@@ -111,7 +102,7 @@ exports.controller = function (request, getParams, response) {
     (request.method.toLowerCase() === 'post' ? request.body : getParams) || {};
   request.logToConsole('onboarding.controller ' + request.method, p);
   // make sure user is logged in
-  if (!(p.loggedUser = request.checkLogin(response))) return;
+  if (!(p.loggedUser = request.checkLogin(response))) return; // TODO: remove this.
   p.pageUrl = request.url;
   handleRequest(p, function (r) {
     if (!r || r.error) {
