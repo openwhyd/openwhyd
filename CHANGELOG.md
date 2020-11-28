@@ -1,3 +1,10 @@
+# [1.43.0](https://github.com/openwhyd/openwhyd/compare/v1.42.7...v1.43.0) (2020-11-28)
+
+
+### Features
+
+* **facebook:** Remove calls to Facebook Opengraph ([#407](https://github.com/openwhyd/openwhyd/issues/407)) ([156593d](https://github.com/openwhyd/openwhyd/commit/156593d617066cfaa1d4abb8281b560b91193789))
+
 ## [1.42.7](https://github.com/openwhyd/openwhyd/compare/v1.42.6...v1.42.7) (2020-11-28)
 
 
