@@ -120,7 +120,7 @@ context('Openwhyd', () => {
     cy.visit('/');
 
     // should display a pop-in dialog when clicking the "Add to" button of that track
-    cy.scrollTo('bottom');
+    cy.scrollTo('bottom', { ensureScrollable: false });
     cy.get('.post')
       .last() // because Cypress is scrolling down for some reason, making the first one unreachable. see https://github.com/cypress-io/cypress/issues/2353
       .contains('Add to')
