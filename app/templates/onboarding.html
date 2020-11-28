@@ -2,7 +2,6 @@
 <div class="container">
   <div id="progress"></div>
 
-  {{#stepButton}}
   <a id="btnNext" href="/welcome" class="no-ajaxy">Next</a>
   <h1>
     Save songs from YouTube, SoundCloud and other websites straight to Openwhyd
@@ -260,13 +259,11 @@
 		</div>-->
   </div>
 
-  {{/stepButton}}
-
   <script type="text/javascript" src="/js/onboarding.js"></script>
   <script>
     /*<![CDATA[*/
     $(document).ready(function () {
-      /*{{#stepButton}}*/ initOnbButton(); /*{{/stepButton}}*/
+      initOnbButton();
     });
     /*]]>*/
   </script>

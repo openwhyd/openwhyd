@@ -1,7 +1,6 @@
 /**
  * onboarding controller
- * handles the onboarding process (for new users)
- * @author adrienjoly, whyd
+ * explains how to install the bookmarklet or chrome extension
  */
 
 var analytics = require('../models/analytics.js');
@@ -15,8 +14,7 @@ exports.controller = function (request, getParams, response) {
     const p = {
       pageUrl: request.url,
       css: ['onboarding.css'],
-      bodyClass: 'pgOnboarding stepButton minimalHeader',
-      stepButton: true,
+      bodyClass: 'pgOnboarding minimalHeader',
     };
     p.content = template.render(p);
     response.renderHTML(mainTemplate.renderWhydPage(p)); // p.content
