@@ -1,3 +1,12 @@
+## [1.43.1](https://github.com/openwhyd/openwhyd/compare/v1.43.0...v1.43.1) (2020-11-28)
+
+
+### Bug Fixes
+
+* **bookmaklet:** Transpile changes form [#408](https://github.com/openwhyd/openwhyd/issues/408) to JS ([59f6f98](https://github.com/openwhyd/openwhyd/commit/59f6f9847ca55c0aed62fabe12253a698867e3e3))
+* **bookmarklet:** Re-add PlayemJS in bookmarklet ([#408](https://github.com/openwhyd/openwhyd/issues/408)), for track detection ([8fd1a3e](https://github.com/openwhyd/openwhyd/commit/8fd1a3ee34018210b0e7ecc5e0baf9bf223f2f8c))
+* **bookmarklet:** Remove PlayemJS from bookmarklet ([#408](https://github.com/openwhyd/openwhyd/issues/408)) ([7296b21](https://github.com/openwhyd/openwhyd/commit/7296b2115a231ac3210d453caf3673a2fdd29c71)), closes [#272](https://github.com/openwhyd/openwhyd/issues/272) [#262](https://github.com/openwhyd/openwhyd/issues/262) [#192](https://github.com/openwhyd/openwhyd/issues/192) [#190](https://github.com/openwhyd/openwhyd/issues/190) [#143](https://github.com/openwhyd/openwhyd/issues/143) [#132](https://github.com/openwhyd/openwhyd/issues/132) [#128](https://github.com/openwhyd/openwhyd/issues/128) [#16](https://github.com/openwhyd/openwhyd/issues/16)
+
 # [1.43.0](https://github.com/openwhyd/openwhyd/compare/v1.42.7...v1.43.0) (2020-11-28)
 
 
