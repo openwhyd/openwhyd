@@ -17,9 +17,6 @@ var notifEmails = require('../models/notifEmails.js');
 var TEMPLATE_FILE = 'app/templates/onboarding.html';
 var mainTemplate = require('../templates/mainTemplate.js');
 var templateLoader = require('../templates/templateLoader.js');
-const { getSuggestedUsers } = require('../models/featuredUsers.js');
-
-// var MAX_RECOM_USERS = 10;
 
 function makeTemplateRenderer(cb) {
   return function (p) {
@@ -31,9 +28,6 @@ function makeTemplateRenderer(cb) {
 }
 
 var processAjax = {
-  people: function (_, cb) {
-    getSuggestedUsers().then(cb);
-  },
   follow: function (p, cb) {
     userModel.fetchByUid(p.loggedUser.id, function (user) {
       console.log('onboarding, sending welcome email', user.email, user.iBy);
@@ -65,12 +59,6 @@ var processAjax = {
 };
 
 var processStep = {
-  people: function (p, render) {
-    (p.css = p.css || []).push('onboarding.css');
-    p.bodyClass = 'pgOnboarding stepPeople minimalHeader';
-    p.stepPeople = true;
-    render(p);
-  },
   button: function (p, render) {
     (p.css = p.css || []).push('onboarding.css');
     p.bodyClass = 'pgOnboarding stepButton minimalHeader';
@@ -101,16 +89,13 @@ exports.controller = function (request, getParams, response) {
   var p =
     (request.method.toLowerCase() === 'post' ? request.body : getParams) || {};
   request.logToConsole('onboarding.controller ' + request.method, p);
-  // make sure user is logged in
-  if (!(p.loggedUser = request.checkLogin(response))) return; // TODO: remove this.
   p.pageUrl = request.url;
-  handleRequest(p, function (r) {
-    if (!r || r.error) {
-      r = r || {};
+  handleRequest(p, function (r = {}) {
+    if (!r.error) {
       console.log(r.error);
-      //response.temporaryRedirect("/welcome");
-    } else if (r.content) r.html = mainTemplate.renderWhydPage(r);
-
+    } else if (r.content) {
+      r.html = mainTemplate.renderWhydPage(r);
+    }
     if (r.redirect) response.temporaryRedirect(r.redirect);
     else if (r.html) response.renderHTML(r.html);
     else response.renderJSON(r);

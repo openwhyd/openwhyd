@@ -1,33 +1,8 @@
 <!--<link href="/css/onboarding.css" rel="stylesheet" type="text/css" />-->
 <div class="container">
-  <div id="progress">
-    <div id="progress1">
-      <div><span>1</span></div>
-      <p>Genres</p>
-    </div>
-    <div id="progress2">
-      <div><span>2</span></div>
-      <p>Music lovers</p>
-    </div>
-    <div id="progress3">
-      <div><span>3</span></div>
-      <p>Button</p>
-    </div>
-  </div>
+  <div id="progress"></div>
 
-  {{#stepPeople}}
-  <a
-    id="btnNext"
-    href="javascript:return false;"
-    style="display: none"
-    class="no-ajaxy"
-    >Next</a
-  >
-  <h1>Looking for relevant music lovers...</h1>
-  <div class="whitePanel" id="recomUsers" style="display: none">
-    <ul class="userList"></ul>
-  </div>
-  {{/stepPeople}} {{#stepButton}}
+  {{#stepButton}}
   <a id="btnNext" href="/welcome" class="no-ajaxy">Next</a>
   <h1>
     Save songs from YouTube, SoundCloud and other websites straight to Openwhyd
@@ -291,7 +266,6 @@
   <script>
     /*<![CDATA[*/
     $(document).ready(function () {
-      /*{{#stepPeople}}*/ initOnbPeople(); /*{{/stepPeople}}*/
       /*{{#stepButton}}*/ initOnbButton(); /*{{/stepButton}}*/
     });
     /*]]>*/

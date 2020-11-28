@@ -21,57 +21,6 @@
   color: #cbced2;
 }
 
-.pgOnboarding #progress > div {
-  float: left;
-}
-
-.pgOnboarding #progress > div > div {
-  float: left;
-  width: 17px;
-  height: 17px;
-  border: 1px solid #cbced2;
-  margin-right: 8px;
-  border-radius: 9px;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-}
-
-.pgOnboarding #progress > div > div > span {
-  display: block;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  line-height: 18px;
-  font-size: 10px;
-}
-
-.pgOnboarding #progress p {
-  display: none;
-  white-space: nowrap;
-  float: left;
-  line-height: 22px;
-  margin-right: 8px;
-}
-
-.pgOnboarding.stepPeople #progress #progress1 > div,
-.pgOnboarding.stepButton #progress #progress1 > div,
-.pgOnboarding.stepButton #progress #progress2 > div {
-  border-color: transparent;
-  background: url('/images/OnboardingIconStepValidate.png') no-repeat;
-}
-
-.pgOnboarding.stepPeople #progress #progress1 span,
-.pgOnboarding.stepButton #progress #progress1 span,
-.pgOnboarding.stepButton #progress #progress2 span {
-  display: none;
-}
-
-.pgOnboarding.stepGenres #progress #progress1 p,
-.pgOnboarding.stepPeople #progress #progress2 p,
-.pgOnboarding.stepButton #progress #progress3 p {
-  display: block;
-}
-
 .pgOnboarding #btnNext {
   position: absolute;
   top: 86px;
@@ -92,12 +41,6 @@
 .pgOnboarding #btnNext:hover {
   background-color: #62a1d3;
 }
-
-/*.pgOnboarding.stepButton #btnNext {
-	background-image: url('/images/btn-onb-jumpin.png');
-	width: 97px;
-	height: 45px;
-}*/
 
 .pgOnboarding #btnNext:hover {
   background-position: 0 -46px;
@@ -149,127 +92,6 @@
 
 .pgOnboarding .whitePanel {
   padding: 20px;
-}
-
-.pgOnboarding.stepGenres .whitePanel {
-  padding: 20px 15px 5px 15px;
-  padding-right: 0;
-}
-
-/* step 1 */
-
-.pgOnboarding #genreGallery {
-  list-style: none;
-}
-
-.pgOnboarding #genreGallery li {
-  position: relative;
-  float: left;
-  width: 226px;
-  height: 158px;
-  text-align: center;
-  margin-right: 15px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  background-size: cover;
-}
-
-.pgOnboarding #genreGallery li:nth-child(4n) {
-  margin-right: 0px;
-}
-
-.pgOnboarding #genreGallery li:nth-child(4n) {
-  margin-right: 0px;
-}
-
-.pgOnboarding #genreGallery li p {
-  margin-top: 120px;
-  width: 100%;
-}
-
-.pgOnboarding #genreGallery li p span {
-  padding: 8px 12px;
-  font-size: 16px;
-  text-transform: uppercase;
-  font-weight: bold;
-  color: white;
-  letter-spacing: 1px;
-}
-
-.pgOnboarding #genreGallery li div {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(49, 119, 175, 0.8);
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  transition: background-color 2s;
-}
-
-.pgOnboarding #genreGallery li:hover div {
-  display: block;
-  background-image: url('/images/OnboardingIconGenreValidateHover.png');
-  transition: background-color 2s;
-}
-
-.pgOnboarding #genreGallery li.selected div {
-  display: block;
-  background-color: rgba(49, 119, 175, 0.7);
-  background-image: url('/images/OnboardingIconGenreValidate.png');
-}
-
-/* step 2 */
-
-.pgOnboarding.stepPeople .whitePanel {
-  padding: 0;
-}
-
-.pgOnboarding .userList .user {
-  float: left;
-  position: relative;
-  margin: 0 90px 0 15px;
-  margin-bottom: 20px;
-  padding: 0;
-  width: 430px;
-  padding-top: 20px;
-  border-top: 1px dotted #ccc;
-  border-bottom: 0;
-}
-
-.pgOnboarding .userList .user:nth-child(2n) {
-  margin: 0;
-}
-
-.pgOnboarding .userList > li:nth-child(1),
-.pgOnboarding .userList > li:nth-child(2) {
-  border-top: none;
-}
-
-.pgOnboarding .userList > li p {
-  width: 310px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.pgOnboarding .userList > li p.username {
-  width: 220px;
-  font-weight: bold;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #4a4a4a;
-}
-.pgOnboarding .userList > li .stats {
-  color: #999;
-  font-size: 10px;
-}
-.pgOnboarding .userList > li p.userbio {
-  font-size: 12px;
-  margin-top: 10px;
-  color: #333;
-  color: #4a4a4a;
 }
 
 /* step 3 */
