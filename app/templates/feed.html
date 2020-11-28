@@ -277,31 +277,13 @@
         <h2><a href="{{url}}">{{name}}</a></h2>
         <span>{{nbTracks}} tracks</span>
       </div>
-      {{/items}} {{/showPlaylists}} {{^showPlaylists}} {{{posts}}}
-      {{#emptyFeed}} {{#ownProfile}}
-      <div class="emptyFeed post">
-        <a class="fakePost" href="javascript:modalPostBox(onNewPost)">
-          <div class="grayOverlay"></div>
-          <div class="addButton">
-            <div id="btnAdd" class="btnAdd">
-              <div></div>
-            </div>
-            <span>Add a track</span>
-          </div>
-        </a>
-        <a class="fakePost" href="javascript:modalPostBox(onNewPost)">
-          <div class="grayOverlay"></div>
-          <div class="addButton">
-            <div id="btnAdd" class="btnAdd">
-              <div></div>
-            </div>
-            <span>Add a track</span>
-          </div>
-        </a>
+      {{/items}} {{/showPlaylists}} {{^showPlaylists}}
+
+      <div class="addPost">
+        <a href="javascript:modalPostBox(onNewPost)"> Add a track </a>
       </div>
-      {{/ownProfile}} {{^ownProfile}}
-      <div class="emptyFeed">No posts yet...</div>
-      {{/ownProfile}} {{/emptyFeed}} {{#hasMore}}
+      <!--<div class="post"></div>-->
+      {{{posts}}} {{#hasMore}}
       <div class="btnLoadMore" onclick="loadMore()">
         <div>&nbsp;</div>
         <span>Load more</span>

@@ -2792,6 +2792,25 @@ body.pgWithSideBar .post > h2 {
 
 /* newsfeed */
 
+.addPost {
+  margin: 0 15px;
+  padding: 12px 0;
+  line-height: 40px;
+  text-align: center;
+}
+
+.addPost a {
+  display: block;
+  border: 1px dashed #d1d1d1;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.addPost:hover a {
+  border: 1px dashed #bfbfbf;
+  background-color: #fafafa;
+}
+
 .emptyFeed {
   clear: both;
   display: block;
