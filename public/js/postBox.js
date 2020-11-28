@@ -5,6 +5,8 @@
  * @author adrienjoly, whyd
  **/
 
+const globals = window;
+
 //================ UTILITY FUNCTIONS
 
 function htmlEntities(str) {
@@ -13,14 +15,6 @@ function htmlEntities(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
-}
-
-function htmlDecode(str) {
-  return String(str)
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"');
 }
 
 //================ WHYD POST CLASS (to submit posts)
@@ -58,7 +52,7 @@ function WhydPost(embedRef) {
     if (collabId) this.postData.pl.collabId = collabId;
     else this.postData.pl.id = id;
   };
-  this.submit = function (shareOnFb, onPostComplete) {
+  this.submit = function (onPostComplete) {
     //console.log("submitting post: ", postData);
     $.ajax({
       type: 'POST',
@@ -68,7 +62,6 @@ function WhydPost(embedRef) {
         console.log('posted:', post);
         that.storedPost = post;
         if (onPostComplete) onPostComplete(post._id, that /*postData*/);
-        if (shareOnFb && fbAction) fbAction('add', '/c/' + post._id, 'track');
       },
     });
   };
@@ -77,13 +70,13 @@ function WhydPost(embedRef) {
 //================ PLAYLIST SELECTOR (ui component)
 
 function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
-  var $selPlaylist = $selPlaylist || $('#selPlaylist');
+  $selPlaylist = $selPlaylist || $('#selPlaylist');
   var $ul = $selPlaylist.find('ul');
   var $head = $selPlaylist.find('span').first();
   var $arrow = $head.find('span');
 
   // select default playlist (to override playlist of original author, when reposted)
-  whydPost.setPlaylist('null', 'full stream');
+  globals.whydPost.setPlaylist('null', 'full stream');
 
   var $playlistMenu = $selPlaylist.find('.content');
   var $playlistHead = $selPlaylist.find('span.head');
@@ -117,7 +110,7 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
     var $li = $(this);
     $ul.find('li').removeClass('selected');
     $li.addClass('selected');
-    whydPost.setPlaylist(
+    globals.whydPost.setPlaylist(
       $li.attr('data-plid'),
       $li.text(),
       $li.attr('data-collabid')
@@ -226,8 +219,8 @@ function initPostBox(params) {
 
   function tellMixpanel(whydPost) {
     try {
-      var submitted = whydPost.postData,
-        stored = whydPost.storedPost;
+      var submitted = globals.whydPost.postData,
+        stored = globals.whydPost.storedPost;
       window.Whyd.tracking.log(
         'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
         stored._id
@@ -240,7 +233,7 @@ function initPostBox(params) {
   }
 
   function onPostSuccess(postId, whydPost) {
-    var posted = whydPost.storedPost;
+    var posted = globals.whydPost.storedPost;
     tellMixpanel(whydPost);
     if (addingFromBookmarklet) {
       /* from bookmarklet: display confirmation screen + link to post */
@@ -266,7 +259,7 @@ function initPostBox(params) {
       $confirm.find('a').first().attr('href', url);
     } else {
       /* from openwhyd ui: close dialog and show message with link to playlist */
-      avgrundClose();
+      globals.avgrundClose();
       if (!posted) {
         (window.showMessage || alert)(
           'Oops; an error occurred... Please try again!',
@@ -281,11 +274,11 @@ function initPostBox(params) {
       }
       if (window.showMessage) {
         var plName = posted.pl ? posted.pl.name : 'your tracks';
-        showMessage(
+        globals.showMessage(
           "Successfully added track to <a target='_blank' href='" +
             url +
             "'>" +
-            encodeHtmlEntities(plName) +
+            globals.encodeHtmlEntities(plName) +
             '</a>'
         );
       } else if (url) window.location.href = url;
@@ -295,17 +288,24 @@ function initPostBox(params) {
 
   function onTrack(embedRef) {
     console.log('onTrack:', embedRef);
-    whydPost = new WhydPost();
-    whydPost.setEmbedRef(embedRef);
-    if (params.ctx) whydPost.setContext(params.ctx);
-    if (reposting) whydPost.setRepostPid(params.pId);
+    globals.whydPost = new WhydPost();
+    globals.whydPost.setEmbedRef(embedRef);
+    if (params.ctx) globals.whydPost.setContext(params.ctx);
+    if (reposting) globals.whydPost.setRepostPid(params.pId);
     else if (editingPost) {
-      whydPost.set_id(params.pId);
+      globals.whydPost.set_id(params.pId);
       if (params.pl)
-        whydPost.setPlaylist(params.pl.id, params.pl.name /*, "{{collabId}}"*/);
+        globals.whydPost.setPlaylist(
+          params.pl.id,
+          params.pl.name /*, "{{collabId}}"*/
+        );
     }
 
-    new WhydPlaylistSelector(whydPost, null, whydPost.postData.pl).bindItems();
+    new WhydPlaylistSelector(
+      globals.whydPost,
+      null,
+      globals.whydPost.postData.pl
+    ).bindItems();
 
     $('#contentSource')
       .text('Source: ' + embedRef.playerLabel)
@@ -324,9 +324,9 @@ function initPostBox(params) {
       function (text) {
         // sample text: "pouet @[adrien](user:4ecb6ec933d9308badd7b7b4) test"
         console.log('WhydTextWithMentions RESULT:', text);
-        if ($titleInput.length) whydPost.setName($titleInput.val());
-        whydPost.setText(text);
-        whydPost.submit(true, onPostSuccess);
+        if ($titleInput.length) globals.whydPost.setName($titleInput.val());
+        globals.whydPost.setText(text);
+        globals.whydPost.submit(onPostSuccess);
       }
     );
   }
@@ -334,14 +334,14 @@ function initPostBox(params) {
   function makePlayemStreamDetector(eidSet) {
     var players = {
       // playem-all.js must be loaded at that point
-      yt: new YoutubePlayer({}),
-      sc: new SoundCloudPlayer({}),
-      vi: new VimeoPlayer({}),
-      dm: new DailymotionPlayer({}),
-      dz: new DeezerPlayer({}),
-      bc: new BandcampPlayer({}),
-      ja: new JamendoPlayer({}),
-      fi: new AudioFilePlayer({}),
+      yt: new globals.YoutubePlayer({}),
+      sc: new globals.SoundCloudPlayer({}),
+      vi: new globals.VimeoPlayer({}),
+      dm: new globals.DailymotionPlayer({}),
+      dz: new globals.DeezerPlayer({}),
+      bc: new globals.BandcampPlayer({}),
+      ja: new globals.JamendoPlayer({}),
+      fi: new globals.AudioFilePlayer({}),
       // TODO: make sure that the list of players is always up to date
     };
     function getPlayerId(url) {
@@ -374,7 +374,7 @@ function initPostBox(params) {
   $(function () {
     // todo: make sure that playemjs is loaded and ready to use
     // todo: in editPost case: populate track object and display using post metadata, instead of fetching
-    makePlayemStreamDetector()(params.embed.replace(/\&amp\;/g, '&'), function (
+    makePlayemStreamDetector()(params.embed.replace(/&amp;/g, '&'), function (
       track
     ) {
       console.log('postEdit detected track:', track);
@@ -395,7 +395,7 @@ function initPostBox(params) {
     });
 
     $('#lnkDeletePost').click(function () {
-      avgrundClose();
+      globals.avgrundClose();
       window.setTimeout(function () {
         var html =
           '<div><div style="background-image:url(\'' +
@@ -407,14 +407,14 @@ function initPostBox(params) {
           '<span class="btnDelete greenButton" onclick="avgrundClose();removePost(\'' +
           params.pId +
           '\');">Delete</span>';
-        openJqueryDialog($(html), 'dlgDeletePost', 'Delete this post');
+        globals.openJqueryDialog($(html), 'dlgDeletePost', 'Delete this post');
       }, 600);
     });
   });
 
   $(document).ajaxComplete(function () {
     try {
-      FB.XFBML.parse();
+      globals.FB.XFBML.parse();
     } catch (ex) {
       console.error(ex);
     }

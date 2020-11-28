@@ -57,7 +57,7 @@ function WhydPost(embedRef) {
     this.postData.pl = { name: name };
     this.postData.pl.id = id;
   };
-  this.submit = function (shareOnFb, onPostComplete) {
+  this.submit = function (onPostComplete) {
     //console.log("submitting post: ", postData);
     $.ajax({
       type: 'POST',
@@ -67,7 +67,6 @@ function WhydPost(embedRef) {
         console.log('posted:', post);
         that.storedPost = post;
         if (onPostComplete) onPostComplete(post._id, that /*postData*/);
-        if (shareOnFb && fbAction) fbAction('add', '/c/' + post._id, 'track');
       },
       error: function (cause) {
         console.log('post error:', cause);
@@ -327,7 +326,7 @@ function initPostBox(params) {
           //					whydPost.setName($titleInput.val());
           whydPost.setText(text);
           $body.addClass('loading');
-          whydPost.submit(true, onPostSuccess);
+          whydPost.submit(onPostSuccess);
         });
       });
     setTimeout(function () {

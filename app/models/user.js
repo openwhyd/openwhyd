@@ -10,7 +10,6 @@ var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
 var emailModel = require('../models/email.js');
 var postModel = require('../models/post.js');
 var searchModel = require('../models/search.js');
-var fbModel = require('../models/facebook.js');
 var snip = require('../snip.js');
 
 var crypto = require('crypto');
@@ -58,11 +57,6 @@ var USER_FIELDS = {
 var defaultPref = (exports.DEFAULT_PREF = {
   // ui preferences
   hideBkAd: false, // hide the "add bookmaklet" side box on home page
-  // facebook opengraph prefs:
-  ogLik: true, // like track
-  ogAdd: true, // add track
-  ogPla: false, // play track
-  ogCPl: true, // create playlist
 
   // email notification freq (7=weekly, 1=daily, 0=instantly, -1=never)
   emLik: -1, // "like" notif (default: never)
@@ -114,7 +108,6 @@ exports.EM_LABEL = {
 var TESTING_DIGEST = config.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {
-  var nb = 0;
   // console.log('Parsing reserved usernames from', routeFile, '...');
   snip.forEachFileLine(routeFile, function (line) {
     if (typeof line != 'string') return; // console.log('=> Parsed', nb, 'handles from:', routeFile);
@@ -124,20 +117,17 @@ var TESTING_DIGEST = config.digestImmediate;
       var handle = line.substr(0, end);
       if (handle.indexOf('{') == -1) {
         USERNAME_RESERVED[handle] = true;
-        ++nb;
       }
     }
   });
 })('config/app.route');
 
 (function parseHandlesFromTextFile(fileName) {
-  var nb = 0;
   // console.log('Parsing reserved usernames from', fileName, '...');
   snip.forEachFileLine(fileName, function (line) {
     if (typeof line != 'string') return; // console.log('=> Parsed', nb, 'handles from:', fileName);
     if (!line.length || line[0] == '#') return;
     USERNAME_RESERVED[line] = true;
-    ++nb;
   });
 })('config/reservedwords.txt');
 
@@ -547,45 +537,7 @@ exports.createPlaylist = function (uId, name, handler) {
     exports.save(user, function () {
       console.log('created playlist:', pl.name, pl.id);
       searchModel.indexPlaylist(uId, pl.id, pl.name);
-      //handler(pl);
-
-      if (user.fbTok && user.pref && user.pref.ogCPl)
-        try {
-          console.log('publishing to fb opengraph...');
-          var params = {
-            method: 'POST',
-            playlist: config.urlPrefix + '/u/' + uId + '/playlist/' + pl.id,
-          };
-          fbModel.graphApiRequest(
-            user.fbTok,
-            '/me/music.playlists',
-            params,
-            function (result) {
-              //console.log("opengraph playlist =>", result);
-              if (result && result.id)
-                exports.setPlaylist(
-                  uId,
-                  pl.id,
-                  { fbId: result.id },
-                  function () {
-                    console.log('=> done updating playlist', pl);
-                    handler(pl);
-                  }
-                );
-              else {
-                exports.setPlaylist(uId, pl.id, {}, function () {
-                  console.log('user.createPlaylist failed opengraph request');
-                  console.log('=> done updating playlist', pl);
-                  handler(pl);
-                });
-              }
-            }
-          );
-        } catch (e) {
-          console.log('createplaylist error: ', e);
-          handler(pl);
-        }
-      else handler(pl);
+      handler(pl);
     });
   });
 };

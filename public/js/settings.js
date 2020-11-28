@@ -1,6 +1,8 @@
 /* global $ */
 
 $(function () {
+  const globals = window;
+
   $('#tabSelector a').click(function () {
     $('#tabSelector a.selected').removeClass('selected');
     $(this).addClass('selected');
@@ -31,9 +33,8 @@ $(function () {
       .closest('form')
       .find('input[type=submit]')
       .addClass('loading');
-    submitChange(data, function (res) {
+    submitChange(data, function (res = {}) {
       $btn.removeClass('loading');
-      var res = res || {};
       console.log('res', res);
       if (res.error)
         $field
@@ -61,8 +62,8 @@ $(function () {
   function onDeleteConfirm() {
     $.post('/api/user', { action: 'delete' }, function (response) {
       console.log('response', response);
-      avgrundClose();
-      showMessage(response);
+      globals.avgrundClose();
+      globals.showMessage(response);
     });
   }
 
@@ -87,7 +88,11 @@ $(function () {
         .unbind('click')
         .click(onDeleteConfirm);
     });
-    openJqueryDialog($html, 'dlgDeletePost', 'Delete your openwhyd account');
+    globals.openJqueryDialog(
+      $html,
+      'dlgDeletePost',
+      'Delete your openwhyd account'
+    );
   });
 
   function validateUsername() {
@@ -101,7 +106,7 @@ $(function () {
     }
     $handle.val(val);
     if (val == '') return 0;
-    var valid = /^[a-z0-9]+[a-z0-9_\-\.]+[a-z0-9]+$/i.test(val);
+    var valid = /^[a-z0-9]+[a-z0-9_\-.]+[a-z0-9]+$/i.test(val);
     if (valid) $('#url > span').text(val);
     return valid ? 1 : -1;
   }
@@ -150,7 +155,7 @@ $(function () {
     submitFieldChange({ pref: pref }, $pref, function (res) {
       var ok = res && res.pref;
       $pref.toggleClass(ok ? 'ok' : 'error');
-      if (res && res.pref && window.user) window.user.pref = res.pref;
+      if (res && res.pref && globals.user) globals.user.pref = res.pref;
       cb && cb(ok);
     });
   }
@@ -166,7 +171,7 @@ $(function () {
       var step = accountSteps.shift();
       if (step) step(next);
       else
-        showMessage(
+        globals.showMessage(
           allOk
             ? 'Your changes were successfully applied'
             : 'Please fix your settings and try again',
@@ -176,7 +181,7 @@ $(function () {
   });
 
   var $fbConn = $('#fbConn').addClass('loading');
-  whenFbReady(function () {
+  globals.whenFbReady(function () {
     function toggleFbPrefs(connected) {
       $fbConn
         .toggle(!connected)
@@ -191,11 +196,11 @@ $(function () {
         .unbind()
         .click(function (e) {
           e.preventDefault();
-          showMessage('Still loading, please wait...');
+          globals.showMessage('Still loading, please wait...');
         });
-      fbAuth('', toggleFbPrefs);
+      globals.fbAuth('', toggleFbPrefs);
     }
-    fbIsLogged(toggleFbPrefs);
+    globals.fbIsLogged(toggleFbPrefs);
   });
 
   // lastfm
@@ -215,10 +220,10 @@ $(function () {
         .unbind()
         .click(lastFmConn);
       $lastFmPref.toggle(!!connected);
-      if (connected && window.user.lastFm)
+      if (connected && globals.user.lastFm)
         $('#lastFmProfile')
-          .text(window.user.lastFm.name)
-          .attr('href', 'http://lastfm.com/user/' + window.user.lastFm.name);
+          .text(globals.user.lastFm.name)
+          .attr('href', 'http://lastfm.com/user/' + globals.user.lastFm.name);
     }
 
     function lastFmConn(e) {
@@ -228,7 +233,7 @@ $(function () {
         .unbind()
         .click(function (e) {
           e.preventDefault();
-          showMessage('Still loading, please wait...');
+          globals.showMessage('Still loading, please wait...');
         });
       var popup = window.open(
         href,
@@ -236,13 +241,13 @@ $(function () {
         'height=600,width=800,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
       );
       popup.focus();
-      window.lastFmCallback = function (session) {
+      globals.lastFmCallback = function (session) {
         console.log(session, typeof session);
         if (session && session.sk && session.name) {
-          window.user.lastFm = session;
+          globals.user.lastFm = session;
           toggleLastFmConnection(true);
         } else {
-          delete window.user.lastFm;
+          delete globals.user.lastFm;
           toggleLastFmConnection(false);
         }
         popup.close();
@@ -252,13 +257,13 @@ $(function () {
     $lastFmConn.click(lastFmConn);
 
     toggleLastFmConnection(
-      window.user.lastFm && window.user.lastFm.name && window.user.lastFm.sk
+      globals.user.lastFm && globals.user.lastFm.name && globals.user.lastFm.sk
     );
   })();
 
   // DEEZER CONNECTION
   (function () {
-    $deezerConBtn = $('#deezerProfile');
+    const $deezerConBtn = $('#deezerProfile');
 
     var SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
       IS_LOGGED = false,
@@ -272,7 +277,7 @@ $(function () {
     }
 
     // load DZ SDK INTO SCOPE
-    loader.includeJS(SDK_URL, function () {
+    globals.loader.includeJS(SDK_URL, function () {
       IS_READY = true;
     });
 
@@ -291,20 +296,20 @@ $(function () {
     // initialize the oAuth client and triggers user's login popup
     function initAuth() {
       if (IS_READY == false) {
-        showMessage(
+        globals.showMessage(
           'Something went wrong.. Please try again, reload your page.',
           IS_LOGGED
         );
       } else {
-        DZ.init({
-          appId: DEEZER_APP_ID,
-          channelUrl: DEEZER_CHANNEL_URL,
+        globals.DZ.init({
+          appId: globals.DEEZER_APP_ID,
+          channelUrl: globals.DEEZER_CHANNEL_URL,
         });
 
-        DZ.getLoginStatus(function (response) {
+        globals.DZ.getLoginStatus(function (response) {
           if (response.authResponse) {
             IS_LOGGED = true;
-            showMessage(
+            globals.showMessage(
               'You are already logged into your Deezer account.',
               !IS_LOGGED
             );
@@ -315,16 +320,16 @@ $(function () {
 
     function auth() {
       if (IS_LOGGED == false) {
-        DZ.login(
+        globals.DZ.login(
           function (response) {
             if (response.userID) {
               IS_LOGGED = true;
-              showMessage(
+              globals.showMessage(
                 'Login successful. Your Deezer tracks will be full length from now on!',
                 !IS_LOGGED
               );
             } else {
-              showMessage(
+              globals.showMessage(
                 'We could not establish a connection to a Deezer Account, please try again.',
                 IS_LOGGED
               );
@@ -382,7 +387,7 @@ $(function () {
         $pwdForm,
         function (res) {
           $pwdForm.find('.fld').toggleClass(!res.error ? 'ok' : 'error');
-          showMessage(
+          globals.showMessage(
             res.error || 'Your password was successfully set',
             !!res.error
           );
@@ -454,8 +459,8 @@ $(function () {
     submitFieldChange({ pref: pref }, $pref, function (res) {
       var ok = res && res.pref;
       $pref.toggleClass(ok ? 'ok' : 'error');
-      if (ok && window.user) window.user.pref = res.pref;
-      showMessage(
+      if (ok && globals.user) globals.user.pref = res.pref;
+      globals.showMessage(
         ok
           ? 'Your changes were successfully applied'
           : 'Oops, something went wrong! Please try again',
