@@ -68,10 +68,6 @@ DELETE /invite/{inviteCode}            -> controllers.invite
 
 GET    /button                         -> controllers.onboarding
 GET    /bookmarklet                    -> controllers.onboarding
-POST   /onboarding                     -> controllers.onboarding
-POST   /pick/{step}                    -> controllers.onboarding
-GET    /pick/{step}                    -> controllers.onboarding
-GET    /pick/{step}/                   -> controllers.onboarding
 GET    /consent                        -> controllers.consent
 POST   /consent                        -> controllers.consent
 

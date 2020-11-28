@@ -5,8 +5,6 @@ var assert = require('assert');
 var { TEST_USER } = require('../fixtures.js');
 var api = require('../api-client.js');
 
-// TODO: POST /onboarding endpoints
-
 describe(`user api -- getting user data`, function () {
   it(`gets user profile data`, function (done) {
     const url =

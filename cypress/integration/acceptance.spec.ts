@@ -86,24 +86,17 @@ context('Openwhyd', () => {
     });
     cy.get('input[type="submit"]').click();
 
-    // should suggest people to follow
-    // cy.url().should('include', '/pick/people');
-    // cy.contains('Next').click();
-
-    // should suggest to install the extension
-    cy.url().should('include', '/pick/button');
-    cy.contains('Next').click();
-
     // should lead new user to the gdpr consent page, after installing extension
     cy.url().should('include', '/consent');
 
-    // should lead to the welcome page, after giving consent
+    // should ask for consent consent
     cy.get('input[type="checkbox"]').first().click();
     cy.get('form').first().submit();
-    cy.url().should('include', '/welcome');
 
-    // should display user name after skipping the welcome tutorial
-    cy.contains(`Ok, Got it`);
+    // should lead to stream
+    cy.location('pathname').should('equal', '/');
+
+    // should display user name
     cy.fixture('users.js').then(({ testUser }) => {
       cy.get('#loginDiv .username').should('have.text', testUser.username);
     });
