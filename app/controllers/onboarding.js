@@ -4,92 +4,22 @@
  * @author adrienjoly, whyd
  */
 
-// testing phase 3: send welcome email
-// $ curl -v --data "ajax=follow" --cookie "whydSid=4j8OSWWYknxyPlmGmgqURg12AiBoKDQpqt4iU610PT9nKkIkRdlMgHWF9kFMsQEvU" http://openwhyd.org/onboarding
-
-var mongodb = require('../models/mongodb.js');
-var followModel = require('../models/follow.js');
 var analytics = require('../models/analytics.js');
-var notifModel = require('../models/notif.js');
-
 var TEMPLATE_FILE = 'app/templates/onboarding.html';
 var mainTemplate = require('../templates/mainTemplate.js');
 var templateLoader = require('../templates/templateLoader.js');
 
-function makeTemplateRenderer(cb) {
-  return function (p) {
-    templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
-      p.content = template.render(p);
-      cb(p);
-    });
-  };
-}
-
-var processAjax = {
-  follow: function (p, cb) {
-    console.log('onboarding, following uids:', p.uids);
-    var uids = (p.uids || '').split(',');
-    (function next() {
-      var uid = uids.pop();
-      if (uid)
-        followModel.add(
-          {
-            uId: p.loggedUser.id,
-            uNm: p.loggedUser.name,
-            tId: uid,
-            tNm: mongodb.getUserNameFromId(uid),
-            ctx: 'onb', // onb = onboarding context
-          },
-          function () {
-            console.log('onboarding, followed uid', uid);
-            notifModel.subscribedToUser(p.loggedUser.id, uid, next);
-          }
-        );
-    })();
-    cb({ ok: true });
-  },
-};
-
-var processStep = {
-  button: function (p, render) {
-    (p.css = p.css || []).push('onboarding.css');
-    p.bodyClass = 'pgOnboarding stepButton minimalHeader';
-    p.stepButton = true;
-    render(p);
-  },
-};
-
-function handleRequest(p, cb) {
-  if (p.ajax && processAjax[p.ajax]) {
-    processAjax[p.ajax](p, cb);
-  } else {
-    var lastUrlWord = p.pageUrl.split('?')[0].split('/')[1];
-    if (lastUrlWord == 'bookmarklet' || lastUrlWord == 'button')
-      p.step = 'button';
-
-    var processor = processStep[p.step];
-    if (!processor) cb({ error: 'unknown step' });
-    //cb({redirect:"/"});
-    else {
-      processor(p, makeTemplateRenderer(cb));
-      analytics.addVisit(p.loggedUser, p.pageUrl);
-    }
-  }
-}
-
 exports.controller = function (request, getParams, response) {
-  var p =
-    (request.method.toLowerCase() === 'post' ? request.body : getParams) || {};
-  request.logToConsole('onboarding.controller ' + request.method, p);
-  p.pageUrl = request.url;
-  handleRequest(p, function (r = {}) {
-    if (!r.error) {
-      console.log(r.error);
-    } else if (r.content) {
-      r.html = mainTemplate.renderWhydPage(r);
-    }
-    if (r.redirect) response.temporaryRedirect(r.redirect);
-    else if (r.html) response.renderHTML(r.html);
-    else response.renderJSON(r);
+  request.logToConsole('onboarding.controller', getParams);
+  templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
+    const p = {
+      pageUrl: request.url,
+      css: ['onboarding.css'],
+      bodyClass: 'pgOnboarding stepButton minimalHeader',
+      stepButton: true,
+    };
+    p.content = template.render(p);
+    response.renderHTML(mainTemplate.renderWhydPage(p)); // p.content
+    analytics.addVisit(p.loggedUser, p.pageUrl);
   });
 };
