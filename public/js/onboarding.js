@@ -1,6 +1,8 @@
 /* global $, chrome */
 
 (function () {
+  console.log('rendering "bookmarklet" page from onboarding process');
+
   function toggleMode(e) {
     e && e.preventDefault();
     $('.modeBk, .modeExt').toggle();
