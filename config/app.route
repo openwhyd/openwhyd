@@ -41,9 +41,6 @@ GET    /uCoverImg/{uCoverImg}          -> controllers.uploadedFile
 GET    /uPlaylistImg/{uPlaylistImg}    -> controllers.uploadedFile
 GET    /img/{type}/{id}                -> controllers.uploadedFile
 
-GET    /btn                            -> controllers.btn
-GET    /btn/{type}                     -> controllers.btn
-
 GET    /config.json                    -> controllers.private.config
 GET    /search                         -> controllers.private.search
 POST   /search                         -> controllers.private.search

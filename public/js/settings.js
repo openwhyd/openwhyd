@@ -463,33 +463,4 @@ $(function () {
       );
     });
   });
-
-  // == "goodies" tab ==
-
-  var $goodiesCode = $('#tabGoodies textarea');
-  var $goodiesSteps = $('#tabGoodies > div.disabled');
-  var $goodiesBtns = $('#tabGoodies .content > div');
-  $goodiesBtns.each(function (i, btn) {
-    var $btn = $(btn);
-    var width = $btn.attr('data-width');
-    var src =
-      '//openwhyd.org/btn/profile?uId=' +
-      window.user.id +
-      (width ? '&width=' + width : '');
-    var html =
-      '<iframe src="' +
-      encodeURI(src) +
-      '" width="' +
-      (width || '180') +
-      '" height="' +
-      (width || '20') +
-      '"' +
-      ' frameborder="0" allowtransparency="true" scrolling="no"></iframe>';
-    $btn.click(function () {
-      $goodiesCode.val(html);
-      $goodiesSteps.removeClass('disabled');
-      $goodiesBtns.removeClass('selected');
-      $btn.addClass('selected');
-    });
-  });
 });
