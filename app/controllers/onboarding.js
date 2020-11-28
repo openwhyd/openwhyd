@@ -8,11 +8,9 @@
 // $ curl -v --data "ajax=follow" --cookie "whydSid=4j8OSWWYknxyPlmGmgqURg12AiBoKDQpqt4iU610PT9nKkIkRdlMgHWF9kFMsQEvU" http://openwhyd.org/onboarding
 
 var mongodb = require('../models/mongodb.js');
-var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
 var analytics = require('../models/analytics.js');
 var notifModel = require('../models/notif.js');
-var notifEmails = require('../models/notifEmails.js');
 
 var TEMPLATE_FILE = 'app/templates/onboarding.html';
 var mainTemplate = require('../templates/mainTemplate.js');
@@ -29,12 +27,6 @@ function makeTemplateRenderer(cb) {
 
 var processAjax = {
   follow: function (p, cb) {
-    userModel.fetchByUid(p.loggedUser.id, function (user) {
-      console.log('onboarding, sending welcome email', user.email, user.iBy);
-      var inviteSender = user.iBy ? mongodb.getUserFromId(user.iBy) : null;
-      notifEmails.sendRegWelcomeAsync(user, inviteSender);
-    });
-
     console.log('onboarding, following uids:', p.uids);
     var uids = (p.uids || '').split(',');
     (function next() {

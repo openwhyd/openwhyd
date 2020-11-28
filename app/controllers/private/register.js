@@ -13,6 +13,8 @@ var userApi = require('../../controllers/api/user.js');
 var htmlRedirect = require('../../templates/logging.js').htmlRedirect;
 var genuine = require('../../genuine.js');
 const argon2 = require('argon2');
+const notifEmails = require('../../models/notifEmails.js');
+const mongodb = require('../../models/mongodb.js');
 
 var ENFORCE_GENUINE_SIGNUP_FROM_IOS = false; // TODO: set to true, after x-real-ip header is set by the nginx proxy
 var onboardingUrl = '/';
@@ -183,6 +185,12 @@ exports.registerInvitedUser = function (request, user, response) {
           });
         } else renderJSON(json);
       } else response.renderHTML(htmlRedirect(url));
+
+      console.log('sending welcome email', storedUser.email, storedUser.iBy);
+      const inviteSender = storedUser.iBy
+        ? mongodb.getUserFromId(storedUser.iBy)
+        : null;
+      notifEmails.sendRegWelcomeAsync(storedUser, inviteSender);
     }
 
     // connect users
