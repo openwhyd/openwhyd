@@ -1,3 +1,10 @@
+# [1.44.0](https://github.com/openwhyd/openwhyd/compare/v1.43.1...v1.44.0) (2020-11-28)
+
+
+### Features
+
+* **onboarding:** Simplify onboarding process ([#409](https://github.com/openwhyd/openwhyd/issues/409)) ([ec40c7d](https://github.com/openwhyd/openwhyd/commit/ec40c7de7eedc35662398b5cc9045e90e9253e00)), closes [#163](https://github.com/openwhyd/openwhyd/issues/163)
+
 ## [1.43.1](https://github.com/openwhyd/openwhyd/compare/v1.43.0...v1.43.1) (2020-11-28)
 
 
