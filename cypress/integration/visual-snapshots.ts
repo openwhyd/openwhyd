@@ -28,6 +28,11 @@ context('Visual Snapshots', () => {
     cy.contains('/ All'); // in the header of the list of tracks
     cy.eyesCheckWindow('visitor on /hot');
 
+    cy.contains('Sign up').click();
+    cy.contains('Create an account'); // title of the modal dialog
+    cy.eyesCheckWindow('visitor on /#signup');
+    cy.get('body').type('{esc}'); // press "escape", to close the modal
+
     cy.contains('Login').click();
     cy.location('pathname').should('equal', '/login');
     cy.contains('No account yet?'); // below the sign in form
