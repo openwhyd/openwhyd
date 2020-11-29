@@ -37,5 +37,18 @@ context('Visual Snapshots', () => {
     cy.location('pathname').should('equal', '/login');
     cy.contains('No account yet?'); // below the sign in form
     cy.eyesCheckWindow('visitor on /login');
+
+    // TODO: open a profile page (currently broken)
+
+    // TODO: open the /button page (currently broken)
+
+    // TODO: make the following test work: navigate back to home page, from the login page
+    // cy.go('back'); // does not work, for some reason...
+    // cy.window().then((window) => window.history.back()); // does not work either...
+    // cy.get('#logo').click(); // even worse: this displays a "Whoops, there is no test to run" error page from Cypress!
+    // TODO: try cy.window().invoke("history").invoke("back")
+    // cy.location('pathname').should('equal', '/');
+    // cy.contains('Recent tracks from all users'); // in the header of the list of tracks
+    // cy.eyesCheckWindow('visitor on / (back navigation)');
   });
 });
