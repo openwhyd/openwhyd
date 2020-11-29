@@ -68,6 +68,7 @@
     "request": "2.88.2"
   },
   "devDependencies": {
+    "@applitools/eyes-cypress": "^3.15.5",
     "@cypress/code-coverage": "^3.8.4",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/git": "^9.0.0",
