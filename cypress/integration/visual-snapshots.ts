@@ -29,7 +29,7 @@ context('Visual Snapshots', () => {
     cy.eyesCheckWindow('visitor on /hot');
 
     cy.contains('Sign up').click();
-    cy.contains('Create an account'); // title of the modal dialog
+    cy.contains('Create an account').should('be.visible'); // title of the modal dialog
     cy.eyesCheckWindow('visitor on /#signup');
     cy.get('body').type('{esc}'); // press "escape", to close the modal
 
