@@ -95,11 +95,32 @@ var htmlHeading = [
 ];
 
 exports.makeAnalyticsHeading = function (user) {
+  const errorTracking = `
+  <script>
+  (function(h,o,u,n,d) {
+    h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+    d=o.createElement(u);d.async=1;d.src=n
+    n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+  })(window,document,'script','https://www.datadoghq-browser-agent.com/datadog-rum.js','DD_RUM')
+  DD_RUM.onReady(function() {
+    DD_RUM.init({
+      clientToken: 'pub8eeb8858448e59bbb3db9e58371cc3d2',
+      applicationId: '5897e862-9942-4dd4-98a7-87a51a93fb91',
+      site: 'datadoghq.com',
+      service: 'openwhyd.org',
+      //  env: 'production',
+      //  version: '1.0.0',
+      sampleRate: 100,
+      trackInteractions: true,
+    })
+  })
+  </script>`;
   // only render opengraph preferences (in order to avoid rendering a date object for nextEmail/nextEN)
   var userPrefs = {};
   for (let i in (user || {}).pref)
     if (i.indexOf('og') == 0) userPrefs[i] = user.pref[i];
   return [
+    ...errorTracking.split('\n'), // --> https://app.datadoghq.com/rum
     '<script>',
     '  window.user = ' +
       (!user

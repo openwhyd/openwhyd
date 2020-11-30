@@ -1,3 +1,10 @@
+## [1.44.1](https://github.com/openwhyd/openwhyd/compare/v1.44.0...v1.44.1) (2020-11-29)
+
+
+### Bug Fixes
+
+* **debug:** Track front-end errors with Datadog RUM ([#412](https://github.com/openwhyd/openwhyd/issues/412)) ([f4719e7](https://github.com/openwhyd/openwhyd/commit/f4719e7b26f64b2d5e4203f8c1195a440476db3f))
+
 # [1.44.0](https://github.com/openwhyd/openwhyd/compare/v1.43.1...v1.44.0) (2020-11-28)
 
 
