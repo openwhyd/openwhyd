@@ -1,3 +1,10 @@
+## [1.44.2](https://github.com/openwhyd/openwhyd/compare/v1.44.1...v1.44.2) (2020-11-30)
+
+
+### Bug Fixes
+
+* **ui:** Sort playlist feature bug ([#415](https://github.com/openwhyd/openwhyd/issues/415)) ([aec724d](https://github.com/openwhyd/openwhyd/commit/aec724d51d0a7abe600c10dabc0a26c5441131b7)), closes [#411](https://github.com/openwhyd/openwhyd/issues/411)
+
 ## [1.44.1](https://github.com/openwhyd/openwhyd/compare/v1.44.0...v1.44.1) (2020-11-29)
 
 
