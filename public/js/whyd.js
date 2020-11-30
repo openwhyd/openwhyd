@@ -1328,16 +1328,21 @@ window.sortPlaylists = function (sortType) {
   const allPlaylists = playlistsContainer.querySelectorAll('.playlist');
   let playlistsFragment = document.createDocumentFragment();
   let allPlaylistsObject = {};
+  let sortedPlaylistObjectKeys = [];
 
   if (allPlaylists.length > 2) {
     allPlaylists.forEach((playlist, index) => {
       if (playlist.dataset.playlistname) {
+        //store playlist name in a variable and add index to create a unique key in allPlaylistsObject
+        const playlistNameKey =
+          playlist.dataset.playlistname.toLowerCase() + index;
+
         if (!playlist.dataset.index) {
           playlist.setAttribute('data-index', index);
         }
 
         if (sortType === 'alphabetize') {
-          allPlaylistsObject[playlist.dataset.playlistname] = playlist;
+          allPlaylistsObject[playlistNameKey] = playlist;
         } else if (sortType === 'date') {
           allPlaylistsObject[playlist.dataset.index] = playlist;
         }
@@ -1348,11 +1353,20 @@ window.sortPlaylists = function (sortType) {
 
     playlistsContainer.innerHTML = '';
 
-    Object.keys(allPlaylistsObject)
-      .sort()
-      .forEach((playlist) =>
-        playlistsFragment.appendChild(allPlaylistsObject[playlist])
+    if (sortType === 'date') {
+      sortedPlaylistObjectKeys = Object.keys(allPlaylistsObject).sort(
+        //if sorting by date first convert index key string to a number with '+' then compare to sort in ascending order.
+        function (firstPlaylistIndex, secondPlaylistIndex) {
+          return +firstPlaylistIndex - +secondPlaylistIndex;
+        }
       );
+    } else {
+      sortedPlaylistObjectKeys = Object.keys(allPlaylistsObject).sort();
+    }
+
+    sortedPlaylistObjectKeys.forEach((playlist) =>
+      playlistsFragment.appendChild(allPlaylistsObject[playlist])
+    );
 
     playlistsContainer.appendChild(playlistsFragment);
   }
