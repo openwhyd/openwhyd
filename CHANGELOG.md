@@ -1,3 +1,11 @@
+## [1.44.3](https://github.com/openwhyd/openwhyd/compare/v1.44.2...v1.44.3) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** add [@compiuta](https://github.com/compiuta) + remove dep to all-contributors ([91156b8](https://github.com/openwhyd/openwhyd/commit/91156b8694f38fd69ad08675df69e7f95f3650cb))
+* **README:** Make README more concise ([42e0295](https://github.com/openwhyd/openwhyd/commit/42e02955bef4e2b65cd5bccd24a32d83e1873709))
+
 ## [1.44.2](https://github.com/openwhyd/openwhyd/compare/v1.44.1...v1.44.2) (2020-11-30)
 
 
