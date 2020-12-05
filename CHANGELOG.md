@@ -1,3 +1,10 @@
+## [1.44.6](https://github.com/openwhyd/openwhyd/compare/v1.44.5...v1.44.6) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** Add Jeff Hsr ([de606be](https://github.com/openwhyd/openwhyd/commit/de606be36ef30a620bd4027f3b7060951b96b3db))
+
 ## [1.44.5](https://github.com/openwhyd/openwhyd/compare/v1.44.4...v1.44.5) (2020-12-05)
 
 
