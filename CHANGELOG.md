@@ -1,3 +1,10 @@
+## [1.44.5](https://github.com/openwhyd/openwhyd/compare/v1.44.4...v1.44.5) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** Add @Salayna, [@wen-chan](https://github.com/wen-chan), [@agathe-vaisse](https://github.com/agathe-vaisse) and [@i](https://github.com/i)NeoO ([7497a5d](https://github.com/openwhyd/openwhyd/commit/7497a5d2c07583871caf7944b4d7a1084b89903f))
+
 ## [1.44.4](https://github.com/openwhyd/openwhyd/compare/v1.44.3...v1.44.4) (2020-12-05)
 
 
