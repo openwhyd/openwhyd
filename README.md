@@ -102,6 +102,7 @@ These are the wonderful people whose time and sweat have made Openwhyd's heart b
     <td align="center"><a href="https://github.com/wen-chan"><img src="https://avatars3.githubusercontent.com/u/67481364?v=4?s=98" width="98px;" alt=""/><br /><sub><b>wen-chan</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=wen-chan" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/agathe-vaisse"><img src="https://avatars2.githubusercontent.com/u/25689895?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Agathe Vaisse</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=agathe-vaisse" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/iNeoO"><img src="https://avatars1.githubusercontent.com/u/8982189?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Valère</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=iNeoO" title="Code">💻</a></td>
+    <td align="center"><a href="https://openwhyd.org/blindmanwatchin"><img src="https://openwhyd.org/img/u/52dde4ba7e91c862b2b36827?s=98" width="98px;" alt=""/><br /><sub><b>Jeff Hsr</b></sub></a><br /><a href="#content" title="Content">🖋</a></td>
   </tr>
 </table>
 
