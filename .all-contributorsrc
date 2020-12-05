@@ -284,6 +284,42 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "Salayna",
+      "name": "Salayna Doukoure",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/30622947?v=4",
+      "profile": "https://github.com/Salayna",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "wen-chan",
+      "name": "wen-chan",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/67481364?v=4",
+      "profile": "https://github.com/wen-chan",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "agathe-vaisse",
+      "name": "Agathe Vaisse",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/25689895?v=4",
+      "profile": "https://github.com/agathe-vaisse",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "iNeoO",
+      "name": "Valère",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/8982189?v=4",
+      "profile": "https://github.com/iNeoO",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoType": "github",

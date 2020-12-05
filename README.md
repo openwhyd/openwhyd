@@ -97,6 +97,12 @@ These are the wonderful people whose time and sweat have made Openwhyd's heart b
     <td align="center"><a href="https://github.com/namanbiyani"><img src="https://avatars2.githubusercontent.com/u/43063269?v=4?s=98" width="98px;" alt=""/><br /><sub><b>namanbiyani</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=namanbiyani" title="Code">💻</a></td>
     <td align="center"><a href="https://compiuta.site/"><img src="https://avatars1.githubusercontent.com/u/13477167?v=4?s=98" width="98px;" alt=""/><br /><sub><b>compiuta</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/issues?q=author%3Acompiuta" title="Bug reports">🐛</a> <a href="https://github.com/openwhyd/openwhyd/commits?author=compiuta" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/Salayna"><img src="https://avatars1.githubusercontent.com/u/30622947?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Salayna Doukoure</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=Salayna" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/wen-chan"><img src="https://avatars3.githubusercontent.com/u/67481364?v=4?s=98" width="98px;" alt=""/><br /><sub><b>wen-chan</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=wen-chan" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/agathe-vaisse"><img src="https://avatars2.githubusercontent.com/u/25689895?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Agathe Vaisse</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=agathe-vaisse" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/iNeoO"><img src="https://avatars1.githubusercontent.com/u/8982189?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Valère</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=iNeoO" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
