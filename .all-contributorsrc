@@ -274,7 +274,18 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "compiuta",
+      "name": "compiuta",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/13477167?v=4",
+      "profile": "https://compiuta.site/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
-  "repoType": "github"
+  "repoType": "github",
+  "commitConvention": "none"
 }
