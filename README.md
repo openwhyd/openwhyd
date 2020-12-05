@@ -2,32 +2,20 @@
 
 # Openwhyd
 
-> Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
+> 💎 Like Pinterest, for Music. Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
 
-Openwhyd is:
-
-- an independent music curation service freely available at [openwhyd.org](https://openwhyd.org);
-- a community of music lovers who enjoy taking their time to find the best tracks and videos for their collection;
-- a collaborative / open-source project maintained by passionate volunteers. You too can contribute!
-
-## Openwhyd.org
-
-Music libraries like Spotify and Apple Music make it easy to play and collect music that is released officially by music labels.
-
-**Openwhyd**, on the other hand, allows music lovers to discover, play and collect _any_ musical gem that is available on the most popular streaming platforms, including:
+Openwhyd is a music curation service freely available at [openwhyd.org](https://openwhyd.org). It was designed for music lovers who enjoy taking their time to find the best tracks and videos for their collection, including:
 
 - music videos, bootlegs and specific live performances,
 - fresh tracks from new and/or local artists,
 - DJ sets and rare remixes,
-- or any song that can be found and streamed online.
-
-**Free to use at [openwhyd.org](https://openwhyd.org), and [on your iPhone](https://openwhyd.org/iphone).**
-
-Demo video:
+- or any song that can be found and streamed online, and may not be found on Spotify, Apple Music or other music services.
 
 [![Openwhyd Demo Video](./docs/img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY 'Openwhyd Demo Video')
 
-### Features
+Initially known as [whyd.com](https://whyd.com), the development of this product started in 2012. It became open-source in 2016. Read the full story [from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
+
+## Features
 
 - Playlists: made of tracks from **various sources**: Youtube, Soundcloud, Bandcamp, Deezer...
 - Button: Add a track from **any web page**, in a few clicks, using our Google Chrome extension and bookmarklet
@@ -36,39 +24,15 @@ Demo video:
 - Search: Add descriptions to your track, to make them **easier to find** when you need them
 - Integration: Embed your playlists on your blog or website, so your visitors can listen to it directly.
 
-👋 A question, a problem? Check out [our Roadmap](docs/ROADMAP.md) and [our FAQ](docs/FAQ.md).
-
-### Communication
-
-We strive to keep Openwhyd up and running for [our community of music lovers](https://www.facebook.com/groups/openwhyd/). We occasionally feature tasty playlists on [@open_whyd](https://twitter.com/open_whyd) (Twitter) and on [our Facebook page](https://facebook.com/openwhyd).
-
-In order to attract users and contributors, [Adrien Joly](https://github.com/adrienjoly) regularly promotes the project and helps developers who want to get involved. Here is a list of talks he gave to present Openwhyd:
-
-- [Le développement durable appliqué au code, de Whyd à Openwhyd](https://www.youtube.com/watch?v=MA5weD7giNU) (Nov 15, 2018, CTO Pizza Live)
-- [Openwhyd, a startup product given to its community of users](https://docs.google.com/presentation/d/1bahmSwu9P5vhcTanWEmQ72OXD5_xqcxwQY4MvWnJlXU) (Oct 16, 2018, GitHub Universe Meetup @ Algolia)
-- [Présentation d'Openwhyd, app web de curation musicale ouverte aux contributeurs](https://adrienjoly.com/slides/openwhyd-2017) (Oct 25, 2017, Meetup Node.js Paris)
-
-💪 You want to get involved? Check out our [Support Openwhyd](#support-openwhyd) section for more info.
+👋 A question, a problem? Check out [our FAQ](docs/FAQ.md) and/or [chat with our community of music lovers](https://www.facebook.com/groups/openwhyd/).
 
 ## Development
 
-### Status
-
-Initially known as [whyd.com](https://whyd.com), the development of this product started in 2012, and was lead by [Adrien Joly](https://github.com/adrienjoly). It became open-source in 2016. Read the full story [from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
-
-Since 2016, Adrien Joly has been taking care of Openwhyd's domain name, infrastructure and data on his spare time.
-
-The project is **open to contributions**. Check out our [Support Openwhyd](#support-openwhyd) section for more info. Beginners are welcome too! 🤗
-
-<!--
-- Latest stats, analytics and demographics: [Openwhyd data report, mid-october 2017](https://infograph.venngage.com/publish/c74df49b-2d2f-48bc-b9cb-5bc1f5908c37) 🔥
--->
-
 ### Tech stack
 
-- [Node.js](https://nodejs.org/) + [Express](https://expressjs.com/) + [MongoDB](https://www.mongodb.com/)
-- HTML + CSS + jQuery
-- [PlayemJS](https://github.com/adrienjoly/playemjs) for streaming tracks continuously
+- Back-end: [Node.js](https://nodejs.org/) + [MongoDB](https://www.mongodb.com/) + [Express](https://expressjs.com/)
+- Front-end: HTML + CSS + jQuery
+- Streaming: [PlayemJS](https://github.com/adrienjoly/playemjs)
 
 ### Setup and usage
 
@@ -83,23 +47,13 @@ $ open localhost:8080
 
 More info about **Setup and Usage**: [INSTALL.md](docs/INSTALL.md).
 
-If you want to run it directly with `docker-compose`, checkout [Openwhyd on Docker Hub](https://hub.docker.com/r/openwhyd/openwhyd).
+<!-- If you want to run it directly with `docker-compose`, checkout [Openwhyd on Docker Hub](https://hub.docker.com/r/openwhyd/openwhyd).
 
-If you want to deploy Openwhyd to a server, you can follow our guide: [How to deploy on DigitalOcean](docs/howto-deploy-on-digitalocean.md).
+If you want to deploy Openwhyd to a server, you can follow our guide: [How to deploy on DigitalOcean](docs/howto-deploy-on-digitalocean.md). -->
 
-## Support Openwhyd
+🤗 The project is **open to contributions**. Check out [our FAQ](docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help) for more info.
 
-There are several ways you can help Openwhyd! 💓
-
-- If you're a **developer**, you can [contribute to our current challenges](docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help). (beginners are welcome too!)
-
-- If you're a **user**, you can join and start discussions in [our Facebook group](https://www.facebook.com/groups/openwhyd/), [donate](https://opencollective.com/openwhyd/donate), and/or show Openwhyd to your friends.
-
-- If you have **other skills** you'd like to contribute to Openwhyd, come [say hi](https://github.com/openwhyd/openwhyd/issues/new?title=Hi,+I+want+to+help!)!
-
-Thank you in advance for your kindness! 🤗
-
-### Contributors
+## Contributors
 
 These are the wonderful people whose time and sweat have made Openwhyd's heart beat since 2012! 💓 ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
 
@@ -113,11 +67,11 @@ These are the wonderful people whose time and sweat have made Openwhyd's heart b
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind are welcome!
 
-Sorry if we forgot anyone... If you would like to appear on that list (or ask for an update), please [let us know](https://github.com/openwhyd/openwhyd/issues/new?title=Please+add+me+as+a+contributor), or propose a PR after running `npm run add-contrib` (as explained [there](https://www.npmjs.com/package/all-contributors-cli)).
+To update that list, please propose a PR after running `npm run add-contrib` (as explained [there](https://www.npmjs.com/package/all-contributors-cli)) or [contact us](mailto:contact@openwhyd.org).
 
-### Backers
+## Backers
 
 Support us with a monthly donation and help us keep Openwhyd alive. [[Become a backer](https://opencollective.com/openwhyd#backer)]
 
@@ -152,7 +106,7 @@ Support us with a monthly donation and help us keep Openwhyd alive. [[Become a b
 <a href="https://opencollective.com/openwhyd/backer/28/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/28/avatar.svg"></a>
 <a href="https://opencollective.com/openwhyd/backer/29/website" target="_blank"><img src="https://opencollective.com/openwhyd/backer/29/avatar.svg"></a>
 
-### Sponsors
+## Sponsors
 
 Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/openwhyd#sponsor)]
 
