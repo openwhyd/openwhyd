@@ -1,3 +1,10 @@
+## [1.44.4](https://github.com/openwhyd/openwhyd/compare/v1.44.3...v1.44.4) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** Fix broken avatars ([d096c3f](https://github.com/openwhyd/openwhyd/commit/d096c3f9a3762daa368e4c93fe64e59318d0ffe9))
+
 ## [1.44.3](https://github.com/openwhyd/openwhyd/compare/v1.44.2...v1.44.3) (2020-12-05)
 
 
