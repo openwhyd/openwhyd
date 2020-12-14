@@ -1,3 +1,39 @@
+## [1.44.6](https://github.com/openwhyd/openwhyd/compare/v1.44.5...v1.44.6) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** Add Jeff Hsr ([de606be](https://github.com/openwhyd/openwhyd/commit/de606be36ef30a620bd4027f3b7060951b96b3db))
+
+## [1.44.5](https://github.com/openwhyd/openwhyd/compare/v1.44.4...v1.44.5) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** Add @Salayna, [@wen-chan](https://github.com/wen-chan), [@agathe-vaisse](https://github.com/agathe-vaisse) and [@i](https://github.com/i)NeoO ([7497a5d](https://github.com/openwhyd/openwhyd/commit/7497a5d2c07583871caf7944b4d7a1084b89903f))
+
+## [1.44.4](https://github.com/openwhyd/openwhyd/compare/v1.44.3...v1.44.4) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** Fix broken avatars ([d096c3f](https://github.com/openwhyd/openwhyd/commit/d096c3f9a3762daa368e4c93fe64e59318d0ffe9))
+
+## [1.44.3](https://github.com/openwhyd/openwhyd/compare/v1.44.2...v1.44.3) (2020-12-05)
+
+
+### Bug Fixes
+
+* **contributors:** add [@compiuta](https://github.com/compiuta) + remove dep to all-contributors ([91156b8](https://github.com/openwhyd/openwhyd/commit/91156b8694f38fd69ad08675df69e7f95f3650cb))
+* **README:** Make README more concise ([42e0295](https://github.com/openwhyd/openwhyd/commit/42e02955bef4e2b65cd5bccd24a32d83e1873709))
+
+## [1.44.2](https://github.com/openwhyd/openwhyd/compare/v1.44.1...v1.44.2) (2020-11-30)
+
+
+### Bug Fixes
+
+* **ui:** Sort playlist feature bug ([#415](https://github.com/openwhyd/openwhyd/issues/415)) ([aec724d](https://github.com/openwhyd/openwhyd/commit/aec724d51d0a7abe600c10dabc0a26c5441131b7)), closes [#411](https://github.com/openwhyd/openwhyd/issues/411)
+
 ## [1.44.1](https://github.com/openwhyd/openwhyd/compare/v1.44.0...v1.44.1) (2020-11-29)
 
 

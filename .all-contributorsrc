@@ -52,7 +52,7 @@
     },
     {
       "name": "Tony Hymes",
-      "avatar_url": "https://pbs.twimg.com/profile_images/708991890046246912/TrUSqpzo_400x400.jpg",
+      "avatar_url": "https://unavatar.now.sh/twitter/tonyhymes",
       "profile": "https://twitter.com/tonyhymes",
       "contributions": [
         "talk",
@@ -114,7 +114,7 @@
     },
     {
       "name": "Constance Betinyani",
-      "avatar_url": "http://static8.viadeo-static.com/ukTJaFEht8_7xghQiybGR5b-XS0=/300x300/member/002141lujf3ta0qu%3Fts%3D1383075404000",
+      "avatar_url": "https://image-uviadeo.journaldunet.com/image/450/1338899985/1559660.jpg",
       "profile": "https://www.linkedin.com/in/constance-betinyani-30b8b95a/",
       "contributions": [
         "blog",
@@ -142,8 +142,8 @@
     {
       "login": "ElBurritoPodrido",
       "name": "Henri Lieutaud",
-      "avatar_url": "https://pbs.twimg.com/profile_images/465242079145099264/NXppNjIg_400x400.png",
-      "profile": "https://github.com/ElBurritoPodrido",
+      "avatar_url": "https://unavatar.now.sh/twitter/henrilieutaud",
+      "profile": "https://twitter.com/henrilieutaud",
       "contributions": [
         "ideas"
       ]
@@ -182,7 +182,7 @@
     {
       "login": "nicolasleger",
       "name": "Nicolas Leger",
-      "avatar_url": "https://media.licdn.com/dms/image/C5603AQFMhpwwbDWWzQ/profile-displayphoto-shrink_800_800/0?e=1546473600&v=beta&t=bijrXeAQKSJoCRybxCoyVgkS0GF_h3GucQVLXu5TKik",
+      "avatar_url": "https://unavatar.now.sh/github/nicolasleger",
       "profile": "https://github.com/nicolasleger",
       "contributions": [
         "infra",
@@ -232,7 +232,7 @@
     {
       "login": "kadiks",
       "name": "Jénaïc Cambré",
-      "avatar_url": "http://jenaiccambre.com/static/jenaic_cambre.7ab05dc2.jpg",
+      "avatar_url": "https://unavatar.now.sh/twitter/kadiks",
       "profile": "http://www.kadiks.net",
       "contributions": [
         "question"
@@ -249,7 +249,7 @@
     {
       "login": "uLan08",
       "name": "Patrick Rainier Juen",
-      "avatar_url": "https://media.licdn.com/dms/image/C4D03AQH19-cggJnutA/profile-displayphoto-shrink_800_800/0?e=1546473600&v=beta&t=fHtEddqYGfuvvn7x4gKeSeLaot89o6OYFn5FFF54cIw",
+      "avatar_url": "https://unavatar.now.sh/github/uLan08",
       "profile": "https://github.com/uLan08",
       "contributions": [
         "code",
@@ -274,7 +274,62 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "compiuta",
+      "name": "compiuta",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/13477167?v=4",
+      "profile": "https://compiuta.site/",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "Salayna",
+      "name": "Salayna Doukoure",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/30622947?v=4",
+      "profile": "https://github.com/Salayna",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "wen-chan",
+      "name": "wen-chan",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/67481364?v=4",
+      "profile": "https://github.com/wen-chan",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "agathe-vaisse",
+      "name": "Agathe Vaisse",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/25689895?v=4",
+      "profile": "https://github.com/agathe-vaisse",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "iNeoO",
+      "name": "Valère",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/8982189?v=4",
+      "profile": "https://github.com/iNeoO",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "name": "Jeff Hsr",
+      "avatar_url": "https://openwhyd.org/img/u/52dde4ba7e91c862b2b36827",
+      "profile": "https://openwhyd.org/blindmanwatchin",
+      "contributions": [
+        "content"
+      ]
     }
   ],
-  "repoType": "github"
+  "repoType": "github",
+  "commitConvention": "none"
 }
