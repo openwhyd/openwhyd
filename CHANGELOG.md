@@ -1,3 +1,10 @@
+## [1.44.7](https://github.com/openwhyd/openwhyd/compare/v1.44.6...v1.44.7) (2020-12-14)
+
+
+### Bug Fixes
+
+* **tests:** Track visual regressions ([#413](https://github.com/openwhyd/openwhyd/issues/413)) ([7c48ba0](https://github.com/openwhyd/openwhyd/commit/7c48ba0c262a9aac4984f090a7a868241420d745))
+
 ## [1.44.6](https://github.com/openwhyd/openwhyd/compare/v1.44.5...v1.44.6) (2020-12-05)
 
 
