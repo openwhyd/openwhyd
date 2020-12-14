@@ -104,6 +104,7 @@ jobs:
       - name: Run Cypress tests
         env:
           CI: true
+          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
         run: |
           source env-vars-testing.sh
           node_modules/.bin/cypress run
@@ -153,7 +154,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           npm run semantic-release
-      - id: create_docker_tags
+      - name: Create Docker tags
+        id: create_docker_tags
         run: |
           echo "::set-output name=tags::latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)"
           # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
