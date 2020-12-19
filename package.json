@@ -21,7 +21,7 @@
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
     "start:coverage": "npx nyc --silent node app.js --fakeEmail --digestInterval -1 $@",
     "test-reset": "node test/reset-test-db.js",
-    "test-api": "npm run test-reset && npx mocha test/api/*.js --exit",
+    "test-api": "npx mocha test/api/*.js --serial --exit",
     "test-unit": "npx mocha test/unit/*.js --exit",
     "test:cypress:dev": "node_modules/.bin/cypress open",
     "test:cypress": "node_modules/.bin/cypress run",
