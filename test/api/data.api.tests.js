@@ -131,7 +131,7 @@ describe(`Data Export API`, () => {
     });
 
     it(`of given user handle, as a list of links`, async () => {
-      const plUrl = `${URL_PREFIX}/${user.handle}/playlist/0`;
+      const plUrl = `${URL_PREFIX}/u/${user.id}/playlist/0`;
       const { body } = await reqGet(`${plUrl}?format=links`);
       assert.strictEqual(body, track.url);
     });
