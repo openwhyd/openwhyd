@@ -12,6 +12,7 @@
     id: '000000000000000000000002',
     email: 'dummy@openwhyd.org',
     name: 'dummy',
+    handle: 'dummy',
     username: 'dummy',
     password: 'admin',
     pwd: 'admin',

@@ -138,6 +138,17 @@ context('Openwhyd', () => {
     cy.url().should('include', '/u/');
     cy.get('.post').should('have.length', 1);
     cy.get('.post a[data-eid]').should('be.visible');
+
+    // should see the playlist listed
+    cy.visit('/me'); // go back to user profile
+    cy.get('#tabSelector a').contains('Playlists').click(); // navigate thru sidebar
+    cy.url().should('include', '/playlists');
+    cy.contains('test playlist');
+
+    // should also access the playlists page using user handle URL
+    cy.visit('/dummy/playlists');
+    cy.url().should('include', '/playlists');
+    cy.contains('test playlist');
   });
 
   it('should allow user to manipulate comments', function () {

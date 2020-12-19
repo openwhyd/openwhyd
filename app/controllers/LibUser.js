@@ -276,7 +276,7 @@ function fetchAndRenderProfile(options, callback, process) {
     options.bodyClass += ' userPlaylists';
     options.playlists = [...playlists].reverse(); // clone before reversing
     options.showPlaylists = { items: renderPlaylists(options) };
-    process(playlists);
+    process([]); // no posts // TODO: is this call necessary ?
     //});
   } else if (options.showLikes) {
     options.tabTitle = 'Likes';
@@ -558,6 +558,8 @@ function renderUserLibrary(lib, user) {
           .join('\n'),
         'text/text'
       );
+    } else if (options.showPlaylists && options.format == 'json') {
+      lib.renderJson(options.playlists);
     } else if (options.format == 'json') {
       lib.renderJson(feed);
     } else if (options.after || options.before) {
