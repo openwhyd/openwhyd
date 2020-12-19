@@ -269,15 +269,14 @@ function fetchAndRenderProfile(options, callback, process) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
-    var playlists = options.user.pl;
+    const playlists = options.user.pl;
     //userModel.fetchPlaylists(options.user, {}, function(playlists) { // includes number of tracks per pl
     options.pageTitle = 'Playlists by ' + options.user.name;
     options.tabTitle = 'Playlists';
     options.bodyClass += ' userPlaylists';
-    options.playlists = playlists.reverse();
-    playlists = playlists.reverse();
+    options.playlists = [...playlists].reverse(); // clone before reversing
     options.showPlaylists = { items: renderPlaylists(options) };
-    process(options.playlists);
+    process(playlists);
     //});
   } else if (options.showLikes) {
     options.tabTitle = 'Likes';
