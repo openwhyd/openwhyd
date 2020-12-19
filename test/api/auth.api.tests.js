@@ -1,9 +1,9 @@
-/* global describe, it */
+/* global describe, it, before */
 
 var { promisify } = require('util');
 var assert = require('assert');
 
-var { ADMIN_USER, TEST_USER } = require('../fixtures.js');
+var { ADMIN_USER, TEST_USER, cleanup } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
 const get = promisify(apiClient.get);
@@ -21,12 +21,14 @@ const genSecureUser = (() => {
   });
 })();
 
+before(cleanup);
+
 describe('auth api', () => {
   describe('login with email', () => {
     it('succeeds', async () => {
       const { response, body } = await loginAs(ADMIN_USER);
       const cookies = ((response.headers || {})['set-cookie'] || []).join(' ');
-      assert(/whydSid\=/.test(cookies));
+      assert(/whydSid=/.test(cookies));
       assert(body.redirect);
     });
 
