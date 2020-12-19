@@ -27,16 +27,13 @@ describe(`user api -- setting user data`, function () {
   before(cleanup); // to prevent side effects between tests
 
   it(`updates the user's name`, function (done) {
-    api.loginAs(ADMIN_USER, function (error, { response, body, jar }) {
+    api.loginAs(ADMIN_USER, function (error, { body, jar }) {
       assert.ifError(body.error);
       assert(body.redirect);
-      api.getUser(jar, {}, function (error, { response, body }) {
+      api.getUser(jar, {}, function (error, { body }) {
         assert.equal(body.name, ADMIN_USER.name);
         const newName = 'renamed user';
-        api.setUser(jar, { name: newName }, function (
-          error,
-          { response, body }
-        ) {
+        api.setUser(jar, { name: newName }, function (error, { body }) {
           assert.equal(body.name, newName);
           done();
         });

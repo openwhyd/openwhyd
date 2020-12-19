@@ -28,7 +28,7 @@ describe('auth api', () => {
     it('succeeds', async () => {
       const { response, body } = await loginAs(ADMIN_USER);
       const cookies = ((response.headers || {})['set-cookie'] || []).join(' ');
-      assert(/whydSid\=/.test(cookies));
+      assert(/whydSid=/.test(cookies));
       assert(body.redirect);
     });
 
