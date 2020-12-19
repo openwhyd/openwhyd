@@ -1,3 +1,10 @@
+## [1.44.11](https://github.com/openwhyd/openwhyd/compare/v1.44.10...v1.44.11) (2020-12-19)
+
+
+### Bug Fixes
+
+* **api:** [retry] Regression on Data Export API + side effects between API tests ([#419](https://github.com/openwhyd/openwhyd/issues/419)) ([35e05a1](https://github.com/openwhyd/openwhyd/commit/35e05a1284364965ff0c0cec76b7a50ab1897c67)), closes [#418](https://github.com/openwhyd/openwhyd/issues/418)
+
 ## [1.44.10](https://github.com/openwhyd/openwhyd/compare/v1.44.9...v1.44.10) (2020-12-19)
 
 
