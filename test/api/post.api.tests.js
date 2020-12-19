@@ -1,11 +1,13 @@
-/* global describe, it */
+/* global describe, it, before */
 
 var assert = require('assert');
 
-var { TEST_USER } = require('../fixtures.js');
+var { TEST_USER, cleanup } = require('../fixtures.js');
 var api = require('../api-client.js');
 
 describe(`post api`, function () {
+  before(cleanup); // to prevent side effects between tests
+
   var pId, uId;
   const post = {
     eId: '/yt/XdJVWSqb4Ck',
