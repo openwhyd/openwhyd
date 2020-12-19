@@ -1,3 +1,10 @@
+## [1.44.10](https://github.com/openwhyd/openwhyd/compare/v1.44.9...v1.44.10) (2020-12-19)
+
+
+### Reverts
+
+* Revert "fix(api): Regression on Data Export API + side effects between API tests (#418)" ([679cbd7](https://github.com/openwhyd/openwhyd/commit/679cbd752d0c8d8c025b019d022d6d22d060189b)), closes [#418](https://github.com/openwhyd/openwhyd/issues/418)
+
 ## [1.44.9](https://github.com/openwhyd/openwhyd/compare/v1.44.8...v1.44.9) (2020-12-19)
 
 
