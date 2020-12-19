@@ -1,3 +1,10 @@
+## [1.44.8](https://github.com/openwhyd/openwhyd/compare/v1.44.7...v1.44.8) (2020-12-19)
+
+
+### Bug Fixes
+
+* **tests:** Clean up the database between each API test suite ([#417](https://github.com/openwhyd/openwhyd/issues/417)) ([d7ff64e](https://github.com/openwhyd/openwhyd/commit/d7ff64e5dccd8e930e4872a307f781efebd2586f))
+
 ## [1.44.7](https://github.com/openwhyd/openwhyd/compare/v1.44.6...v1.44.7) (2020-12-14)
 
 
