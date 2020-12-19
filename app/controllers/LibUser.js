@@ -277,7 +277,7 @@ function fetchAndRenderProfile(options, callback, process) {
     options.playlists = playlists.reverse();
     playlists = playlists.reverse();
     options.showPlaylists = { items: renderPlaylists(options) };
-    process([]);
+    process(options.playlists);
     //});
   } else if (options.showLikes) {
     options.tabTitle = 'Likes';
