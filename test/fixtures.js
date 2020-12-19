@@ -2,11 +2,23 @@ const childProcess = require('child_process');
 
 exports.URL_PREFIX = 'http://localhost:8080';
 
+// inserted by config/initdb_testing.js
 exports.ADMIN_USER = {
   id: '000000000000000000000001',
   email: process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org',
   name: 'admin',
   username: 'admin',
+  password: 'admin',
+  pwd: 'admin',
+  md5: '21232f297a57a5a743894a0e4a801fc3',
+};
+
+// inserted by config/initdb_testing.js
+exports.DUMMY_USER = {
+  id: '000000000000000000000002',
+  email: 'dummy@openwhyd.org',
+  name: 'dummy',
+  handle: 'dummy',
   password: 'admin',
   pwd: 'admin',
   md5: '21232f297a57a5a743894a0e4a801fc3',
