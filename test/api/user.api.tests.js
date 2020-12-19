@@ -72,8 +72,8 @@ describe(`data export api -- getting user data`, () => {
   });
 
   describe(`provides playlist tracks`, () => {
-    const plUrl = `${URL_PREFIX}/u/${user.id}/playlist/0`;
     it(`of given user id, as JSON`, async () => {
+      const plUrl = `${URL_PREFIX}/u/${user.id}/playlist/0`;
       const { body } = await reqGet(`${plUrl}?format=json`);
       const parsedBody = JSON.parse(body) || {};
       assert.strictEqual(parsedBody.error, undefined);
@@ -82,6 +82,22 @@ describe(`data export api -- getting user data`, () => {
     });
 
     it(`of given user id, as a list of links`, async () => {
+      const plUrl = `${URL_PREFIX}/u/${user.id}/playlist/0`;
+      const { body } = await reqGet(`${plUrl}?format=links`);
+      assert.strictEqual(body, track.url);
+    });
+
+    it(`of given username, as JSON`, async () => {
+      const plUrl = `${URL_PREFIX}/${user.username}/playlist/0`;
+      const { body } = await reqGet(`${plUrl}?format=json`);
+      const parsedBody = JSON.parse(body) || {};
+      assert.strictEqual(parsedBody.error, undefined);
+      assert.strictEqual(parsedBody.length, 1);
+      assert.strictEqual(parsedBody[0].name, track.name);
+    });
+
+    it(`of given username, as a list of links`, async () => {
+      const plUrl = `${URL_PREFIX}/${user.username}/playlist/0`;
       const { body } = await reqGet(`${plUrl}?format=links`);
       assert.strictEqual(body, track.url);
     });
