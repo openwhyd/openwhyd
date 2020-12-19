@@ -184,6 +184,10 @@ exports.controller = function (request, reqParams, response) {
       });
   } else if (path == '/all') {
     return renderAllLibrary(lib);
+  } else if (reqParams.playlistId) {
+    userModel.fetchByUid(reqParams.id, function (user) {
+      renderUserLibrary(lib, user);
+    });
   } else if (reqParams.handle)
     userModel.fetchByHandle(reqParams.handle, function (user) {
       renderUserLibrary(lib, user);
@@ -197,7 +201,5 @@ exports.controller = function (request, reqParams, response) {
         redirectTo(path.replace('/u/' + reqParams.id, '/' + user.handle));
       else renderUserLibrary(lib, user);
     });
-  } else {
-    response.badRequest();
-  }
+  } else response.badRequest();
 };

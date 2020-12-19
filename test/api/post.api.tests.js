@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 
-var { DUMMY_USER, cleanup } = require('../fixtures.js');
+var { ADMIN_USER, cleanup } = require('../fixtures.js');
 var api = require('../api-client.js');
 
 describe(`post api`, function () {
@@ -15,7 +15,7 @@ describe(`post api`, function () {
   };
 
   it(`should allow adding a track`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       api.addPost(jar, post, function (error, { body }) {
         assert.ifError(error);
         assert.equal(body.eId, post.eId);
@@ -29,7 +29,7 @@ describe(`post api`, function () {
   });
 
   it(`should allow re-adding a track (aka "repost")`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       api.addPost(jar, { pId }, function (error, { body }) {
         assert.ifError(error);
         assert(body._id);
@@ -52,7 +52,7 @@ describe(`post api`, function () {
   });
 
   it(`should allow adding a track to a playlist`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       api.addPost(jar, postInPlaylist, function (error, { body }) {
         assert.ifError(error);
         assert(body._id);
@@ -66,7 +66,7 @@ describe(`post api`, function () {
   });
 
   it(`make sure that the playlist was created`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       api.getUser(jar, {}, function (error, { body }) {
         assert.equal(body.pl.length, 1);
         assert.equal(body.pl[0].id, firstPlaylistIndex);
@@ -79,7 +79,7 @@ describe(`post api`, function () {
   });
 
   it(`should find 1 track in the playlist`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       api.getPlaylist(jar, playlistFullId, function (error, { body }) {
         assert.ifError(error);
         assert.equal(body.length, 1);
@@ -92,7 +92,7 @@ describe(`post api`, function () {
   });
 
   it(`should return 1 track in the playlist`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       api.getPlaylistTracks(jar, `u/${uId}`, firstPlaylistIndex, function (
         error,
         { body }
@@ -106,7 +106,7 @@ describe(`post api`, function () {
   });
 
   it(`should return 1 track in the playlist, with limit=1000`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000`;
       api.get(jar, url, function (error, { body }) {
         assert.equal(body.length, 1);
@@ -118,7 +118,7 @@ describe(`post api`, function () {
   });
 
   it(`should return tracks if two limit parameters are provided`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
       // => the `limit` property will be parsed as ["1000","20"] => causing bug #89
       api.get(jar, url, function (error, { body }) {
@@ -132,7 +132,7 @@ describe(`post api`, function () {
   // TODO: delete post
 
   it(`should return the comment data after adding it`, function (done) {
-    api.loginAs(DUMMY_USER, function (error, { jar }) {
+    api.loginAs(ADMIN_USER, function (error, { jar }) {
       const comment = {
         pId,
         text: 'hello world',
