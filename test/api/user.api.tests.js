@@ -24,6 +24,8 @@ const addTrackToPlaylist = (user, plName, post) =>
   });
 
 describe(`data export api -- getting user data`, () => {
+  // API documentation: https://openwhyd.github.io/openwhyd/API.html#openwhyd-data-export-api
+
   before(cleanup); // to prevent side effects between tests
 
   // add a playlist with one track
@@ -103,6 +105,8 @@ describe(`data export api -- getting user data`, () => {
 });
 
 describe(`user api -- getting user data`, function () {
+  // API documentation: https://openwhyd.github.io/openwhyd/API.html#openwhyd-user-api
+
   before(cleanup); // to prevent side effects between tests
 
   it(`gets user profile data`, function (done) {
