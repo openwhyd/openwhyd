@@ -29,16 +29,32 @@ describe(`data export api -- getting user data`, () => {
   // add a playlist with one track
   const user = ADMIN_USER;
   const plName = 'my first playlist';
-  const track = { name: 'my first track' };
-  before(() => addTrackToPlaylist(user, plName, track));
+  const track = {
+    name: 'my first track',
+    eId: '/yt/59MdiE1IsBY',
+    url: '//youtube.com/watch?v=59MdiE1IsBY',
+  };
+  before(function () {
+    this.timeout(4000);
+    return addTrackToPlaylist(user, plName, track);
+  });
 
-  it(`provides profile tracks of given user id`, async () => {
+  it(`provides profile tracks of given user id, as JSON`, async () => {
     const { body } = await reqGet(`${URL_PREFIX}/u/${user.id}?format=json`);
     const parsedBody = JSON.parse(body);
     assert.strictEqual(typeof parsedBody, 'object');
     assert.strictEqual(parsedBody.error, undefined);
     assert.strictEqual(parsedBody.length, 1);
     assert.strictEqual(parsedBody[0].name, track.name);
+  });
+
+  it(`provides profile tracks of given user id, as a list of links`, async () => {
+    const { response, body } = await reqGet(
+      `${URL_PREFIX}/u/${user.id}?format=links`
+    );
+    console.log(body);
+    assert.strictEqual(response.statusCode, 200);
+    assert.strictEqual(body, track.url);
   });
 });
 

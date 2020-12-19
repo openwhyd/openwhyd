@@ -22,7 +22,8 @@ exports.TEST_USER = {
 };
 
 // Call this before each test to prevent side effects between tests
-exports.cleanup = (done) => {
+exports.cleanup = function (done) {
+  this.timeout(4000);
   console.warn('🧹 Cleaning up test db...');
   const process = childProcess.fork('test/reset-test-db.js');
   process.on('close', () => done());
