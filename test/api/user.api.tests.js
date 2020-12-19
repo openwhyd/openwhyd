@@ -1,8 +1,46 @@
 /* global describe, it, before */
 
-var assert = require('assert');
-var { ADMIN_USER, cleanup } = require('../fixtures.js');
-var api = require('../api-client.js');
+const assert = require('assert');
+const request = require('request');
+
+const { URL_PREFIX, ADMIN_USER, cleanup } = require('../fixtures.js');
+const api = require('../api-client.js');
+
+const reqGet = (url) =>
+  new Promise((resolve, reject) =>
+    request.get({ url }, (err, response, body) =>
+      err ? reject(err) : resolve({ response, body })
+    )
+  );
+
+const addTrackToPlaylist = (user, plName, post) =>
+  new Promise((resolve, reject) => {
+    const postInPlaylist = { ...post, pl: { id: 'create', name: plName } };
+    api.loginAs(ADMIN_USER, (error, { jar }) => {
+      api.addPost(jar, postInPlaylist, (error, res) =>
+        error ? reject(error) : resolve(res)
+      );
+    });
+  });
+
+describe(`data export api -- getting user data`, () => {
+  before(cleanup); // to prevent side effects between tests
+
+  // add a playlist with one track
+  const user = ADMIN_USER;
+  const plName = 'my first playlist';
+  const track = { name: 'my first track' };
+  before(() => addTrackToPlaylist(user, plName, track));
+
+  it(`provides profile tracks of given user id`, async () => {
+    const { body } = await reqGet(`${URL_PREFIX}/u/${user.id}?format=json`);
+    const parsedBody = JSON.parse(body);
+    assert.strictEqual(typeof parsedBody, 'object');
+    assert.strictEqual(parsedBody.error, undefined);
+    assert.strictEqual(parsedBody.length, 1);
+    assert.strictEqual(parsedBody[0].name, track.name);
+  });
+});
 
 describe(`user api -- getting user data`, function () {
   before(cleanup); // to prevent side effects between tests
