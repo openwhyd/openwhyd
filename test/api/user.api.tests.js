@@ -41,19 +41,29 @@ describe(`data export api -- getting user data`, () => {
 
   it(`provides profile tracks of given user id, as JSON`, async () => {
     const { body } = await reqGet(`${URL_PREFIX}/u/${user.id}?format=json`);
-    const parsedBody = JSON.parse(body);
-    assert.strictEqual(typeof parsedBody, 'object');
+    const parsedBody = JSON.parse(body) || {};
     assert.strictEqual(parsedBody.error, undefined);
     assert.strictEqual(parsedBody.length, 1);
     assert.strictEqual(parsedBody[0].name, track.name);
   });
 
   it(`provides profile tracks of given user id, as a list of links`, async () => {
-    const { response, body } = await reqGet(
-      `${URL_PREFIX}/u/${user.id}?format=links`
+    const { body } = await reqGet(`${URL_PREFIX}/u/${user.id}?format=links`);
+    assert.strictEqual(body, track.url);
+  });
+
+  it(`provides profile tracks of given username, as JSON`, async () => {
+    const { body } = await reqGet(`${URL_PREFIX}/${user.username}?format=json`);
+    const parsedBody = JSON.parse(body) || {};
+    assert.strictEqual(parsedBody.error, undefined);
+    assert.strictEqual(parsedBody.length, 1);
+    assert.strictEqual(parsedBody[0].name, track.name);
+  });
+
+  it(`provides profile tracks of given username, as a list of links`, async () => {
+    const { body } = await reqGet(
+      `${URL_PREFIX}/${user.username}?format=links`
     );
-    console.log(body);
-    assert.strictEqual(response.statusCode, 200);
     assert.strictEqual(body, track.url);
   });
 });
