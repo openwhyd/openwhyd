@@ -432,12 +432,12 @@ function fetchAndRenderProfile(options, callback, process) {
   }
 }
 
-var bareFormats = { json: true, links: true };
+var bareFormats = new Set(['json', 'links']);
 
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
 
-  var process = bareFormats[options.format]
+  var process = bareFormats.has(options.format)
     ? callback
     : function (posts) {
         if (!options.format && !options.embedW) {
