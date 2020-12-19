@@ -71,6 +71,42 @@ describe(`Data Export API`, () => {
     });
   });
 
+  describe.only(`provides list of playlists`, () => {
+    it.only(`of given user id, as JSON`, async () => {
+      const plUrl = `${URL_PREFIX}/u/${user.id}/playlists`;
+      const { body } = await reqGet(`${plUrl}?format=json`);
+      // console.log(body); // TODO
+      const parsedBody = JSON.parse(body) || {};
+      assert.strictEqual(parsedBody.error, undefined);
+      assert.strictEqual(parsedBody.length, 1);
+      assert.strictEqual(parsedBody[0].name, plName);
+    });
+
+    it(`of given user id, as list`, async () => {
+      const plUrl = `${URL_PREFIX}/u/${user.id}/playlists`;
+      const { body } = await reqGet(`${plUrl}?format=list`);
+      // console.log(body); // TODO
+      assert.strictEqual(body, plName);
+    });
+
+    it(`of given user handle, as JSON`, async () => {
+      const plUrl = `${URL_PREFIX}/${user.handle}/playlists`;
+      const { body } = await reqGet(`${plUrl}?format=json`);
+      // console.log(body); // TODO
+      const parsedBody = JSON.parse(body) || {};
+      assert.strictEqual(parsedBody.error, undefined);
+      assert.strictEqual(parsedBody.length, 1);
+      assert.strictEqual(parsedBody[0].name, plName);
+    });
+
+    it(`of given user handle, as list`, async () => {
+      const plUrl = `${URL_PREFIX}/${user.handle}/playlists`;
+      const { body } = await reqGet(`${plUrl}?format=list`);
+      // console.log(body); // TODO
+      assert.strictEqual(body, plName);
+    });
+  });
+
   describe(`provides playlist tracks`, () => {
     it(`of given user id, as JSON`, async () => {
       const plUrl = `${URL_PREFIX}/u/${user.id}/playlist/0`;
