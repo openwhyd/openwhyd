@@ -1,9 +1,9 @@
-/* global describe, it */
+/* global describe, it, before */
 
 var { promisify } = require('util');
 var assert = require('assert');
 
-var { ADMIN_USER, TEST_USER } = require('../fixtures.js');
+var { ADMIN_USER, TEST_USER, cleanup } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
 const get = promisify(apiClient.get);
@@ -20,6 +20,8 @@ const genSecureUser = (() => {
     password: `mySecurePassword${number}`,
   });
 })();
+
+before(cleanup);
 
 describe('auth api', () => {
   describe('login with email', () => {

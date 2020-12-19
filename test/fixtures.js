@@ -1,3 +1,5 @@
+const childProcess = require('child_process');
+
 exports.URL_PREFIX = 'http://localhost:8080';
 
 exports.ADMIN_USER = {
@@ -17,4 +19,11 @@ exports.TEST_USER = {
   pwd: 'test-user',
   password: 'test-user', // for the /register api endpoint
   md5: '42b27efc1480b4fe6d7eaa5eec47424d',
+};
+
+// Call this before each test to prevent side effects between tests
+exports.cleanup = (done) => {
+  console.warn('🧹 Cleaning up test db...');
+  const process = childProcess.fork('test/reset-test-db.js');
+  process.on('close', () => done());
 };
