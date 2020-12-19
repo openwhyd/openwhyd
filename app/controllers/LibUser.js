@@ -550,7 +550,7 @@ function renderUserLibrary(lib, user) {
         safeCallback + '(' + JSON.stringify(feed) + ')',
         'application/javascript'
       );
-    } else if (options.format == 'links')
+    } else if (options.format == 'links') {
       lib.renderOther(
         feed
           .map(function (p) {
@@ -559,9 +559,11 @@ function renderUserLibrary(lib, user) {
           .join('\n'),
         'text/text'
       );
-    else if (options.format == 'json') lib.renderJson(feed);
-    else if (options.after || options.before) lib.render({ html: feed });
-    else
+    } else if (options.format == 'json') {
+      lib.renderJson(feed);
+    } else if (options.after || options.before) {
+      lib.render({ html: feed });
+    } else
       lib.renderPage(
         user,
         null /*sidebarHtml*/,
