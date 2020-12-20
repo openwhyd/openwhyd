@@ -126,6 +126,7 @@ function start() {
     saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
   var serverOptions = {
+    urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
     sessionMiddleware,

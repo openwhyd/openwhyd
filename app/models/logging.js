@@ -24,7 +24,7 @@ const genReqLogLine = ({ head, method, path, params, suffix }) =>
 http.IncomingMessage.prototype.logToConsole = function (suffix, params) {
   console.log(
     ...genReqLogLine({
-      head: '=== ' + new Date().toUTCString(),
+      head: '▶ ' + new Date().toISOString(),
       method: this.method,
       path: this.url.split('?'),
       params:
