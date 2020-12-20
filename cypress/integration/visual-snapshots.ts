@@ -38,9 +38,13 @@ context('Visual Snapshots', () => {
     cy.contains('No account yet?'); // below the sign in form
     cy.eyesCheckWindow('visitor on /login');
 
-    // TODO: open a profile page (currently broken)
+    cy.visit('/dummy');
+    cy.contains('No tracks yet...');
+    cy.eyesCheckWindow('visitor on /dummy (user profile)');
 
-    // TODO: open the /button page (currently broken)
+    cy.visit('/button');
+    cy.contains('Openwhyd "add track" button');
+    cy.eyesCheckWindow('visitor on /button (bookmarklet)');
 
     // TODO: make the following test work: navigate back to home page, from the login page
     // cy.go('back'); // does not work, for some reason...
