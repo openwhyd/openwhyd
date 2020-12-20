@@ -1,3 +1,10 @@
+## [1.44.13](https://github.com/openwhyd/openwhyd/compare/v1.44.12...v1.44.13) (2020-12-20)
+
+
+### Bug Fixes
+
+* **UI:** Broken Profile UI when not logged in ([#421](https://github.com/openwhyd/openwhyd/issues/421)) ([b9ac0b3](https://github.com/openwhyd/openwhyd/commit/b9ac0b313a905d889e0400ab5bfdfc878df62704)), closes [#410](https://github.com/openwhyd/openwhyd/issues/410)
+
 ## [1.44.12](https://github.com/openwhyd/openwhyd/compare/v1.44.11...v1.44.12) (2020-12-20)
 
 
