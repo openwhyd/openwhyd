@@ -75,8 +75,8 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
           form.action == 'login' &&
           (ignorePassword || dbUser.pwd == form.md5)
         ) {
-          console.log('ok, user logged in as: ' + dbUser.name);
-          console.log('form.fbUid', form.fbUid);
+          // console.log('ok, user logged in as: ' + dbUser.name);
+          // console.log('form.fbUid', form.fbUid);
           if (form.fbUid)
             userModel.update(dbUser._id, {
               $set: {

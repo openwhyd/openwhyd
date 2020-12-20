@@ -19,19 +19,12 @@ function check() {
     now.getHours() == HOUR &&
     now.getMinutes() == MIN
   ) {
-    console.log(
-      '[HOT SNAPSHOT WORKER] ===',
-      now,
-      '=> refreshing hot track trends...'
-    );
+    console.log('[hot-tracks] ===', now, '=> refreshing hot track trends...');
     trackModel.snapshotTrackScores(function (r) {
-      console.log(
-        '[HOT SNAPSHOT WORKER] snapshotTrackScores => ',
-        r || { ok: 'done' }
-      );
+      console.log('[hot-tracks] snapshotTrackScores => ', r || { ok: 'done' });
     });
   }
 }
 
-console.log('[HOT SNAPSHOT WORKER] Starting with interval ...');
+console.log('[hot-tracks] Starting with interval ...');
 setInterval(check, CHECK_INTERVAL);

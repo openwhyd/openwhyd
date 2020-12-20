@@ -1,6 +1,8 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
-require('dd-trace').init(); // datadog APM
+if (!process.env.DISABLE_DATADOG) {
+  require('dd-trace').init(); // datadog APM
+}
 
 var util = require('util');
 var mongodb = require('mongodb');
@@ -50,7 +52,10 @@ var params = (process.appParams = {
   genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
 
   // workers and general site logic
-  searchModule: 'searchAlgolia', // "searchElastic"  // "" => no search index
+  searchModule:
+    process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_API_KEY
+      ? 'searchAlgolia'
+      : '', // "searchElastic"  // "" => no search index
   //	recomPopulation: true, // populate recommendation index at startup
 
   // email notification preferences
@@ -121,13 +126,14 @@ function start() {
     saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
   var serverOptions = {
+    urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
     sessionMiddleware,
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       console.log(
-        `rendering server error page ${statusCode} for ${req.method} ${req.path}`
+        `[app] rendering server error page ${statusCode} for ${req.method} ${req.path}`
       );
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
@@ -179,7 +185,7 @@ async function main() {
   } else {
     process.appParams.color = false;
   }
-  console.log('Starting web server with params:', params);
+  console.log(`[app] Starting Openwhyd v${params.version}`);
   const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
   await util.promisify(mongodb.init)();
   await mongodb.initCollections();
@@ -188,7 +194,7 @@ async function main() {
 
 main().catch((err) => {
   // in order to prevent UnhandledPromiseRejections, let's catch errors and exit as we should
-  console.log('error from main():', err);
-  console.error('error from main():', err);
+  console.log('[app] error from main():', err);
+  console.error('[app] error from main():', err);
   process.exit(1);
 });

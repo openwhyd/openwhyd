@@ -36,7 +36,7 @@ exports.makeTests = function (p) {
         //console.time("fetchByAuthors_v1");
         postModel.fetchByAuthorsOld(testVars.uidList, OPTIONS, function (res) {
           //console.timeEnd("fetchByAuthors_v1");
-          console.log('=> fetchedByAuthorsOld: ', res.length, 'posts');
+          // console.log('=> fetchedByAuthorsOld: ', res.length, 'posts');
           testVars.hashedResult = hashPosts(res);
           cb(true);
         });
@@ -48,7 +48,7 @@ exports.makeTests = function (p) {
         //console.time("fetchByAuthors_v2");
         postModel.fetchByAuthors(testVars.uidList, OPTIONS, function (res) {
           //console.timeEnd("fetchByAuthors_v2");
-          console.log('=> fetchedByAuthors:', res.length, 'posts');
+          // console.log('=> fetchedByAuthors:', res.length, 'posts');
           cb(testVars.hashedResult === hashPosts(res));
         });
       },

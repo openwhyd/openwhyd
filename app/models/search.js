@@ -6,8 +6,8 @@
 var config = require('./config.js');
 
 if (config.searchModule)
-  console.log('loading SEARCH module: ' + config.searchModule + '...');
-else console.log('models.search: DISABLED (see config.enableSearchIndex)');
+  console.log('[search] Loading module: ' + config.searchModule + '...');
+else console.log('[search] DISABLED (see config.enableSearchIndex)');
 
 var searchImpl = config.searchModule ? require('./' + config.searchModule) : {};
 
@@ -30,7 +30,7 @@ var FCTS_OPTIONAL = {
 function makeNoImplHandler(methodName, cbPos) {
   return function () {
     if (config.searchModule)
-      console.log('models.search: NO IMPLEMENTATION for ' + methodName);
+      console.log('[search] NO IMPLEMENTATION for ' + methodName);
     var callback = arguments[cbPos];
     callback && callback();
   };

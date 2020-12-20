@@ -184,7 +184,7 @@ exports.renderFeedAsync = function (posts, options, callback) {
           templates['html']
         ).render(feedVars)
       );
-    console.log('renderFeedAsync => ' + posts.length + ' posts');
+    // console.log('renderFeedAsync => ' + posts.length + ' posts');
     //});
   });
 };

@@ -101,7 +101,7 @@ exports.fetch = function (params, handler) {
   params.sort = params.sort || [['score', 'desc']];
   mongodb.collections['track'].find({}, params, function (err, cursor) {
     cursor.toArray(function (err, results) {
-      console.log('=> fetched ' + results.length + ' tracks');
+      // console.log('=> fetched ' + results.length + ' tracks');
       if (handler) handler(results);
     });
   });

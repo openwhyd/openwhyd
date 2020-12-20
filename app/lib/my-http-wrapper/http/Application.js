@@ -63,6 +63,9 @@ const makeStatsUpdater = () =>
 
     // log whenever a request is slow to respond
     res.on('finish', () => {
+      const reqId = `${startDate.toISOString()} ${req.method} ${req.path}`;
+      const duration = Date.now() - startDate;
+      console.log(`◀ ${reqId} responds ${res.statusCode} after ${duration} ms`);
       appendSlowQueryToAccessLog({
         startDate,
         req,
@@ -93,6 +96,7 @@ exports.Application = class Application {
     this._publicDir = options.appDir + '/public';
     this._routeFile = options.appDir + '/config/app.route';
     this._port = options.port;
+    this._urlPrefix = options.urlPrefix;
     this._expressApp = null; // will be lazy-loaded by getExpressApp()
     this._uploadSettings = options.uploadSettings;
   }
@@ -122,9 +126,10 @@ exports.Application = class Application {
 
   start() {
     this._isRunning = true;
-    this.expressServer = this.getExpressApp().listen(this._port, () =>
-      console.log('Server running at http://127.0.0.1:' + this._port + '/')
-    );
+    this.expressServer = this.getExpressApp().listen(this._port, () => {
+      const url = this._urlPrefix || `http://127.0.0.1:${this._port}/`;
+      console.log(`[Application] Server running at ${url}`);
+    });
   }
 
   stop() {

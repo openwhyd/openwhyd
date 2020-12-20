@@ -40,7 +40,7 @@ exports.ObjectId = function (v) {
   try {
     return exports.ObjectID.createFromHexString('' + v);
   } catch (e) {
-    console.warn(`invalid mongodb object id: ${v} (${typeof v})`);
+    console.warn(`[db] invalid mongodb object id: ${v} (${typeof v})`);
     return 'invalid_id';
   }
 };
@@ -79,9 +79,8 @@ exports.getPublicProfileFromId = function (uid) {
 };
 
 exports.cacheUser = function (user) {
-  if (!user) return console.log('WARNING: trying to cache a null user!');
+  if (!user) return console.log('[db] WARNING: trying to cache a null user!');
   user.id = '' + (user._id || user.id);
-  //console.log("Caching user: ", user);
   exports.usernames[user.id] = exports.usernames[user.id] || {};
   exports.usernames[user.id].id = user.id;
   for (let i in user)
@@ -90,13 +89,11 @@ exports.cacheUser = function (user) {
 };
 
 exports.cacheUsers = function (callback) {
-  console.log('Caching users ...');
   userModel = userModel || require('./user.js');
   userModel.fetchMulti({}, { projection: USER_CACHE_FIELDS }, function (
     results
   ) {
     for (let i in results) exports.cacheUser(results[i]);
-    console.log('Caching users: done!');
     if (callback) callback();
   });
 };
@@ -134,7 +131,7 @@ exports.forEach2 = function (colName, params, handler) {
     (function next() {
       cursor.next(function (err, item) {
         if (err) {
-          console.error('mongodb.forEach2 ERROR', err);
+          console.error('[db] mongodb.forEach2 ERROR', err);
           handler({ error: err }, undefined, cursor.close.bind(cursor));
           cursor.close();
         } else {
@@ -147,12 +144,11 @@ exports.forEach2 = function (colName, params, handler) {
 
 exports.cacheCollections = function (callback) {
   function finishInit() {
-    console.log('MongoDB model is now ready for queries!');
     callback.call(module.exports, null, exports._db);
   }
   // diagnostics and collection caching
   exports._db.collections(function (err, collections) {
-    if (err) console.log('MongoDB Error : ' + err);
+    if (err) console.log('[db] MongoDB Error : ' + err);
     else {
       if (0 == collections.length) finishInit();
       var remaining = collections.length;
@@ -160,7 +156,7 @@ exports.cacheCollections = function (callback) {
         var queryHandler = (function () {
           var table = collections[i].collectionName;
           return function (err, result) {
-            console.log(' - found table: ' + table + ' : ' + result + ' rows');
+            // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
             exports._db.collection(table, function (err, col) {
               exports.collections[table] = col;
               if (0 == --remaining) finishInit();
@@ -201,7 +197,7 @@ exports.initCollections = function ({ addTestData } = {}) {
     async.eachSeries(
       dbInitScripts,
       function (initScript, nextScript) {
-        console.log('Applying db init script:', initScript, '...');
+        console.log('[db] Applying db init script:', initScript, '...');
         exports.runShellScript(fs.readFileSync(initScript), function (err) {
           if (err) throw err;
           nextScript();
@@ -211,7 +207,9 @@ exports.initCollections = function ({ addTestData } = {}) {
         if (err) reject(err);
         // all db init scripts were interpreted => continue app init
         exports.cacheCollections(function () {
+          console.log('[db] ready for queries => now caching users...');
           exports.cacheUsers(function () {
+            console.log('[db] done caching users');
             resolve();
           });
         });
@@ -238,7 +236,7 @@ exports.init = function (readyCallback) {
   var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
   console.log(
-    `Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`
+    `[db] Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`
   );
 
   var options = {
@@ -255,10 +253,10 @@ exports.init = function (readyCallback) {
     exports._db = client.db(dbName);
 
     exports._db.addListener('error', function (e) {
-      console.log('MongoDB model async error: ', e);
+      console.log('[db] MongoDB model async error: ', e);
     });
 
-    console.log('Successfully connected to ' + url);
+    console.log('[db] Successfully connected to ' + url);
     readyCallback.call(module.exports, null, exports._db);
   });
 };

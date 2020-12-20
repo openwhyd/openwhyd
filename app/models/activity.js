@@ -71,17 +71,17 @@ exports.fetchHistoryFromUidList = function (uidList, options, callback) {
     var hasMore = activities && activities.length > limit;
     if (hasMore) activities = activities.slice(0, limit);
     //console.log("filtered likes with subscr:", activities);
-    console.log(
-      '=> reduced to',
-      activities.length,
-      'activities, hasmore:',
-      hasMore
-    );
+    // console.log(
+    //   '=> reduced to',
+    //   activities.length,
+    //   'activities, hasmore:',
+    //   hasMore
+    // );
     callback(activities, hasMore);
   }
   exports.fetch(q, options, function (activities) {
     //console.log("likes:", activities);
-    console.log('=> fetched', activities.length, 'likes');
+    // console.log('=> fetched', activities.length, 'likes');
     if (options.likesOnly) return whenDone(activities);
     options.fromUId = uidList;
     //followModel.fetchUsersSubscriptionsHistory(uidList, options, function(subscriptions) {

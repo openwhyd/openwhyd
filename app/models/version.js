@@ -21,7 +21,7 @@ exports.updateVersions = function (cb) {
     VERSIONS_CACHE.iphoneAppVer = countJsonFiles(files) - 1;
     fs.stat('public/html/decode.html', function (err, res) {
       VERSIONS_CACHE.decodeVer = new Date((res || {}).mtime).getTime();
-      console.log('current iPhone versions:', VERSIONS_CACHE);
+      // console.log('current iPhone versions:', VERSIONS_CACHE);
       cb && cb(VERSIONS_CACHE);
     });
   });
