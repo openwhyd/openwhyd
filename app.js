@@ -50,7 +50,10 @@ var params = (process.appParams = {
   genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
 
   // workers and general site logic
-  searchModule: 'searchAlgolia', // "searchElastic"  // "" => no search index
+  searchModule:
+    process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_API_KEY
+      ? 'searchAlgolia'
+      : '', // "searchElastic"  // "" => no search index
   //	recomPopulation: true, // populate recommendation index at startup
 
   // email notification preferences

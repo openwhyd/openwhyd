@@ -42,5 +42,5 @@ services:
       - SENDGRID_API_FROM_NAME=test
       - LAST_FM_API_KEY=
       - LAST_FM_API_SECRET=
-      - ALGOLIA_APP_ID=92V0H5YVG2
-      - ALGOLIA_API_KEY=73a425b6febceeead7790841482574c9
+      - ALGOLIA_APP_ID=
+      - ALGOLIA_API_KEY=
