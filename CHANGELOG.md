@@ -1,3 +1,10 @@
+## [1.44.12](https://github.com/openwhyd/openwhyd/compare/v1.44.11...v1.44.12) (2020-12-20)
+
+
+### Bug Fixes
+
+* **logs:** 🧹 Clean-up and harmonize logs ([#420](https://github.com/openwhyd/openwhyd/issues/420)) ([50ca37a](https://github.com/openwhyd/openwhyd/commit/50ca37a8fab2932a9afa5b8ecf6c5f2925e6742d))
+
 ## [1.44.11](https://github.com/openwhyd/openwhyd/compare/v1.44.10...v1.44.11) (2020-12-19)
 
 
