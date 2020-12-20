@@ -155,7 +155,8 @@ exports.cacheCollections = function (callback) {
       for (let i in collections) {
         var queryHandler = (function () {
           var table = collections[i].collectionName;
-          return function (err, result) {
+          return function (err) {
+            if (err) console.error(`[db] cacheCollections error:`, err);
             // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
             exports._db.collection(table, function (err, col) {
               exports.collections[table] = col;

@@ -734,8 +734,13 @@ body.visitor.pgHotTracks #header #navbar > a#tabStream {
   color: #fdfdfd;
 }
 
+#header #homeHeader {
+  display: none;
+}
+
 body.visitor.pgStream #header #homeHeader,
 body.visitor.pgHotTracks #header #homeHeader {
+  display: block;
   margin: 251px 200px;
   position: absolute;
   text-align: center;

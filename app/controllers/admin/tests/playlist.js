@@ -78,9 +78,7 @@ exports.makeTests = function (p) {
         req(
           '/api/playlist',
           { body: { action: 'delete', id: testVars.pl.id } },
-          function (res) {
-            cb(true);
-          }
+          () => cb(true)
         );
       },
     ],
