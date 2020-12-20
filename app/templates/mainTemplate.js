@@ -95,7 +95,9 @@ var htmlHeading = [
 ];
 
 exports.makeAnalyticsHeading = function (user) {
-  const errorTracking = `
+  const errorTracking = process.env.DISABLE_DATADOG
+    ? ''
+    : `
   <script>
   (function(h,o,u,n,d) {
     h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}

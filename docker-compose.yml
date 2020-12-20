@@ -44,3 +44,4 @@ services:
       - LAST_FM_API_SECRET=
       - ALGOLIA_APP_ID=
       - ALGOLIA_API_KEY=
+      - DISABLE_DATADOG=true
