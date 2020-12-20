@@ -91,7 +91,7 @@ exports.fetchPosts = function (query, params, options, handler) {
         );
       results = results || [];
       processPosts(results);
-      console.log('=> fetched ' + results.length + ' posts');
+      // console.log('=> fetched ' + results.length + ' posts');
       handler(results);
     });
   });

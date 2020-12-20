@@ -72,10 +72,10 @@ exports.makeSignupToken = function (request, date) {
 
 exports.validateSignupToken = function (sTk, request) {
   request = realIP(request);
-  console.log(
-    '[genuine.validateSignupToken] request IP:',
-    request.connection.remoteAddress
-  );
+  // console.log(
+  //   '[genuine.validateSignupToken] request IP:',
+  //   request.connection.remoteAddress
+  // );
   var token = parseSignupToken(sTk);
   return {
     authentic: token.signature === signature(token.hash, GENUINE_SIGNUP_SECRET),
@@ -89,10 +89,10 @@ exports.validateSignupToken = function (sTk, request) {
 exports.checkSignupToken = function (sTk, request) {
   request = realIP(request);
 
-  console.log(
-    '[genuine.checkSignupToken] request IP:',
-    request.connection.remoteAddress
-  );
+  // console.log(
+  //   '[genuine.checkSignupToken] request IP:',
+  //   request.connection.remoteAddress
+  // );
   var valid = exports.validateSignupToken(sTk, request);
   for (let i in valid) {
     // valid contains the following keys: authentic, notExpired, sameAddr

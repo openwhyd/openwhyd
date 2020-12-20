@@ -132,7 +132,7 @@ function start() {
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       console.log(
-        `rendering server error page ${statusCode} for ${req.method} ${req.path}`
+        `[app] rendering server error page ${statusCode} for ${req.method} ${req.path}`
       );
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
@@ -184,7 +184,7 @@ async function main() {
   } else {
     process.appParams.color = false;
   }
-  console.log('Starting web server with params:', params);
+  console.log(`[app] Starting Openwhyd v${params.version}`);
   const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
   await util.promisify(mongodb.init)();
   await mongodb.initCollections();
@@ -193,7 +193,7 @@ async function main() {
 
 main().catch((err) => {
   // in order to prevent UnhandledPromiseRejections, let's catch errors and exit as we should
-  console.log('error from main():', err);
-  console.error('error from main():', err);
+  console.log('[app] error from main():', err);
+  console.error('[app] error from main():', err);
   process.exit(1);
 });

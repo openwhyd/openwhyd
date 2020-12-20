@@ -30,14 +30,14 @@ function processUser(u, cb) {
     includeSameTracks: !!cleanPref['emSam'],
     includeSubscribers: !!cleanPref['emSub'],
   };
-  console.log('[DIGEST WORKER] ' + u._id + ':', JSON.stringify(options));
+  console.log('[notif] ' + u._id + ':', JSON.stringify(options));
 
   function done() {
     // set next digest date
     cleanPref.pendEN = 0; // reset the notification counter
     userModel.setPref(u._id, cleanPref, function (updatedUser) {
       console.log(
-        '[DIGEST WORKER] ' + u._id + ' => next digest date: ',
+        '[notif] ' + u._id + ' => next digest date: ',
         ((updatedUser || {}).pref || {}).nextEN
       );
       cb();
@@ -46,7 +46,7 @@ function processUser(u, cb) {
 
   // render and send digest (if not empty)
   if (freq > 0) {
-    var renderingLabel = '[DIGEST WORKER] ' + u._id + ' rendering';
+    var renderingLabel = '[notif] ' + u._id + ' rendering';
     console.log(renderingLabel, '...');
     console.time(renderingLabel);
     digest.fetchAndGenerateNotifDigest(u, options, function (email) {
@@ -59,18 +59,13 @@ function processUser(u, cb) {
           email.bodyHtml,
           u.name,
           function (r) {
-            console.log(
-              '[DIGEST WORKER] ' + u._id + ' => digest email result:',
-              r
-            );
+            console.log('[notif] ' + u._id + ' => digest email result:', r);
             done();
           }
         );
       else {
         console.log(
-          '[DIGEST WORKER] ' +
-            u._id +
-            ' => NO NEW NOTIFICATION since last digest'
+          '[notif] ' + u._id + ' => NO NEW NOTIFICATION since last digest'
         );
         done();
       }
@@ -80,11 +75,11 @@ function processUser(u, cb) {
 
 function worker(cb) {
   var now = new Date();
-  var label = '[DIGEST WORKER] notifEmails.worker #' + now.getTime();
+  var label = '[notif] notifEmails.worker #' + now.getTime();
   console.time(label);
   userModel.fetchEmailNotifsToSend(now, function (users) {
     console.timeEnd(label);
-    console.log('[DIGEST WORKER] users to notify by email: ', users.length);
+    console.log('[notif] users to notify by email: ', users.length);
     (function next() {
       if (users && users.length) processUser(users.pop(), next);
       else if (cb) cb();
@@ -122,9 +117,9 @@ function oneAtATime(fct, msg) {
 
 if (DIGEST_INTERVAL < 0)
   console.log(
-    '[DIGEST WORKER] config.digestInterval is NULL or NEGATIVE => digest worker is disabled'
+    '[notif] config.digestInterval is NULL or NEGATIVE => digest worker is disabled'
   );
 else if (!timer) {
-  console.log('[DIGEST WORKER] Starting with interval', DIGEST_INTERVAL, '...');
+  console.log('[notif] Starting with interval', DIGEST_INTERVAL, '...');
   timer = setInterval(oneAtATime(worker), DIGEST_INTERVAL);
 }

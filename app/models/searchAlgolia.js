@@ -138,7 +138,7 @@ var searchIndex = new Search();
 
 var searchByType = {
   user: function (q, cb) {
-    console.log('search users', q);
+    console.log('[search] search users', q);
     var options = extractOptions(q);
     return searchIndex.search(
       'users',
@@ -152,7 +152,7 @@ var searchByType = {
     //     => { q: 'pouet' }
   },
   track: function (q, cb) {
-    console.log('search tracks', q);
+    console.log('[search] search tracks', q);
     var options = extractOptions(q);
     return searchIndex.search(
       'tracks',
@@ -169,7 +169,7 @@ var searchByType = {
     );
   },
   post: function (q, cb) {
-    console.log('search posts', q);
+    console.log('[search] search posts', q);
     var options = extractOptions(q);
     if (q.uId) {
       q = {
@@ -213,7 +213,7 @@ var searchByType = {
     }
   },
   playlist: function (q, cb) {
-    console.log('search playlists', q);
+    console.log('[search] search playlists', q);
     var options = extractOptions(q);
     return searchIndex.search(
       'playlists',
@@ -239,11 +239,15 @@ exports.query = function (q = {}, cb) {
     else
       searchByType[type](q, function (res) {
         if (res.hits) {
-          console.log('searchAlgolia.query =>', res.hits.length, 'hits');
+          console.log(
+            '[search] searchAlgolia.query =>',
+            res.hits.length,
+            'hits'
+          );
           hits = hits.concat(res.hits);
         } else {
           console.error(
-            'algolia error for ' +
+            '[search] algolia error for ' +
               JSON.stringify(q, null, 2) +
               ' => ' +
               JSON.stringify(res, null, 2)
@@ -255,11 +259,11 @@ exports.query = function (q = {}, cb) {
 };
 
 function logToConsole(e) {
-  console.log('INDEX ERROR: ' + (e || {}).error);
+  console.log('[search] INDEX ERROR: ' + (e || {}).error);
 }
 
 function indexTypedDocs(type, items, callback) {
-  console.log('indexTypedDocs', type, items.length, '...');
+  console.log('[search] indexTypedDocs', type, items.length, '...');
   if (!type || !INDEX_NAME_BY_TYPE[type]) {
     callback && callback(new Error('indexTyped: unknown type'));
   } else {
@@ -277,7 +281,7 @@ function indexTypedDocs(type, items, callback) {
     getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function (err) {
       if (err) {
         console.error(
-          'algolia error when indexing ' +
+          '[search] algolia error when indexing ' +
             items.length +
             ' ' +
             type +
@@ -286,7 +290,7 @@ function indexTypedDocs(type, items, callback) {
         );
       } else {
         console.log(
-          'algolia indexTyped ' + type + ' => indexed',
+          '[search] algolia indexTyped ' + type + ' => indexed',
           items.length,
           'documents'
         );
@@ -316,7 +320,7 @@ exports.countDocs = function (type, callback) {
         }).entries
       );
     } catch (e) {
-      console.error(err || e);
+      console.error('[search]', err || e);
       callback(null);
     }
   });
@@ -324,19 +328,19 @@ exports.countDocs = function (type, callback) {
 
 exports.deleteAllDocs = function (type, callback) {
   getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err) {
-    console.log('algolia deleteAllDocs =>', err || 'ok');
+    console.log('[search] algolia deleteAllDocs =>', err || 'ok');
     callback && callback(); // TODO: check if parameters are required or not
   });
 };
 
 exports.indexBulk = function (docs, callback) {
-  console.log('indexBulk', docs.length, '...');
+  console.log('[search] indexBulk', docs.length, '...');
   var docsPerType = {};
   docs.forEach(function (doc) {
     docsPerType[doc._type] = (docsPerType[doc._type] || []).concat([doc]);
   });
   var typeToBeIndexed = Object.keys(docsPerType).find(function (type) {
-    console.log('docsPerType', type, ':', docsPerType[type].length);
+    console.log('[search] docsPerType', type, ':', docsPerType[type].length);
     return docsPerType[type].length > 0;
   });
   // TODO: also index from other types
@@ -355,5 +359,5 @@ exports.indexBulk = function (docs, callback) {
 // INIT
 
 exports.init = function () {
-  //console.log("models.search: using Algolia Search index");
+  //console.log("[search] using Algolia Search index");
 };

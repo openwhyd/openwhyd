@@ -34,8 +34,6 @@ if (gmVersion) {
   }
 }
 
-console.log('my.img:USE_GRAPHICS_MAGICK =', USE_GRAPHICS_MAGICK);
-
 exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
   imgUrl = url.parse(imgUrl);
   http.get({ host: imgUrl.host, path: imgUrl.pathname, port: 80 }, function (
@@ -47,11 +45,11 @@ exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
       data += chunk;
     });
     res.on('end', function () {
-      console.log('done');
+      console.log('[my.img] done');
       fs.writeFile(imgOutput, data, 'binary', function (err) {
         if (err) {
           if (errorListener) errorListener(err);
-          else console.error(err);
+          else console.error('[my.img]', err);
         } else if (endListener) endListener();
       });
     });
@@ -83,7 +81,7 @@ if (USE_GRAPHICS_MAGICK) {
     endListener
   ) {
     var execCallback = function (error, stdout, stderr) {
-      console.log('exec convert => ', error, stdout, stderr);
+      console.log('[my.img] exec convert => ', error, stdout, stderr);
       if (endListener) endListener(error, stdout, stderr);
     };
     if (width && height)

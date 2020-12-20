@@ -36,13 +36,16 @@ function getJson(pathSuffix, cb) {
           json = JSON.parse(json);
         } catch (err) {
           json = { error: err };
-          console.log(err);
+          console.log('[search]', err);
         }
         cb(json);
       });
     })
     .addListener('error', function (err) {
-      console.error('elasticsearch index getJson() socket error:', err);
+      console.error(
+        '[search] elasticsearch index getJson() socket error:',
+        err
+      );
       cb({ error: err });
     })
     .end();
@@ -59,7 +62,7 @@ function postJson(data = {}, cb) {
     pathSuffix += '/_bulk';
     data = data._bulkStr;
     console.log(
-      'search.postJson BULK',
+      '[search] search.postJson BULK',
       pathSuffix,
       ':',
       data.length,
@@ -67,11 +70,11 @@ function postJson(data = {}, cb) {
     );
   } else {
     if (data.query) pathSuffix += '/_search';
-    console.log('search.postJson', pathSuffix, Object.keys(data));
+    console.log('[search] search.postJson', pathSuffix, Object.keys(data));
     data = data && typeof data == 'object' ? JSON.stringify(data) : data;
   }
 
-  //console.log("[INDEX] search request", data);
+  //console.log("[search] search request", data);
 
   return http
     .request(buildReq('POST', pathSuffix), function (res) {
@@ -80,26 +83,29 @@ function postJson(data = {}, cb) {
         json += chunk.toString();
       });
       res.addListener('end', function () {
-        //console.log("[INDEX] search response", json);
+        //console.log("[search] search response", json);
 
         try {
           json = JSON.parse(json);
         } catch (err) {
           json = { error: err };
-          console.error(err);
+          console.error('[search]', err);
         }
         cb(json);
       });
     })
     .addListener('error', function (err) {
-      console.error('elasticsearch index postJson() socket error:', err);
+      console.error(
+        '[search] elasticsearch index postJson() socket error:',
+        err
+      );
       cb({ error: err });
     })
     .end(data);
 }
 
 exports.countDocs = function (type, cb) {
-  console.log('models.search.countDocs():', type);
+  console.log('[search] models.search.countDocs():', type);
   // http://localhost:9200/twitter/tweet/_count
   getJson('/' + type + '/_count', function (response) {
     cb((response || {}).count);
@@ -107,25 +113,25 @@ exports.countDocs = function (type, cb) {
 };
 
 exports.deleteAllDocs = function (type, cb) {
-  console.log('models.search.deleteAllDocs():', type);
+  console.log('[search] models.search.deleteAllDocs():', type);
   return http
     .request(buildReq('DELETE', '/' + type), function (res) {
       cb && res.addListener('end', cb);
     })
     .addListener('error', function (err) {
-      console.error('elasticsearch socket error: ', err);
+      console.error('[search] elasticsearch socket error: ', err);
     })
     .end();
 };
 
 exports.deleteDoc = function (type, id, cb) {
-  console.log('models.search.deleteDoc():', type, id);
+  console.log('[search] models.search.deleteDoc():', type, id);
   return http
     .request(buildReq('DELETE', '/' + type + '/' + id), function (res) {
       cb && res.addListener('end', cb);
     })
     .addListener('error', function (err) {
-      console.error('elasticsearch socket error: ', err);
+      console.error('[search] elasticsearch socket error: ', err);
     })
     .end();
 };
@@ -133,7 +139,7 @@ exports.deleteDoc = function (type, id, cb) {
 exports.query = function(q, handler) {
 	var q = ((""+q).trim().replace(/ +/g," ")+" ").split(" ").join("* ");
 	getJson("/_search" + "?q=" + encodeURIComponent(q), function(response) {
-		//console.log("json response", response);
+		//console.log("[search] json response", response);
 		if (response && response.hits) {
 			var hits = (response.hits || {}).hits;
 			for (let i in hits) {
@@ -158,7 +164,7 @@ exports.query = function (q = {}, handler) {
 
   if (q._type) filter.push({ term: { _type: q._type } });
 
-  //console.log("filter", filter)
+  //console.log("[search] filter", filter)
 
   /*
 	var query = {
@@ -194,12 +200,12 @@ exports.query = function (q = {}, handler) {
     facets: q.facets || {},
   };
 
-  //console.log("query", query/*JSON.stringify(query)*/);
+  //console.log("[search] query", query/*JSON.stringify(query)*/);
 
   postJson(query, function (response) {
-    //console.log("json response", response);
+    //console.log("[search] json response", response);
     if (response && response.hits) {
-      //console.log("hits", response.hits.hits);
+      //console.log("[search] hits", response.hits.hits);
       var hits = (response.hits || {}).hits;
       for (let i in hits) {
         if (hits[i] && hits[i]._source) {
@@ -213,25 +219,22 @@ exports.query = function (q = {}, handler) {
 };
 
 exports.index = function (doc, handler) {
-  //console.log("models.search.index():", doc);
+  //console.log("[search] index():", doc);
   postJson(doc, function (response) {
-    console.log(
-      'models.search.index() => ',
-      (response || {}).ok ? 'OK' : 'ERROR'
-    );
+    console.log('[search] index() => ', (response || {}).ok ? 'OK' : 'ERROR');
     handler && handler(response);
   });
 };
 
 exports.indexBulk = function (docs, cb) {
-  console.log('indexBulk', docs.length, '...');
+  console.log('[search] indexBulk', docs.length, '...');
   var bulkStr = '';
   for (let i in docs) {
     var u = docs[i],
       meta = {},
       data = {};
     if (!u) {
-      console.warn('ignoring empty doc from being indexed in BULK');
+      console.warn('[search] ignoring empty doc from being indexed in BULK');
       continue;
     }
     for (let field in u)
@@ -244,11 +247,11 @@ exports.indexBulk = function (docs, cb) {
 };
 
 function logToConsole(e) {
-  console.log('INDEX ERROR: ' + (e || {}).error);
+  console.log('[search] INDEX ERROR: ' + (e || {}).error);
 }
 
 exports.indexTyped = function (type, item, handler) {
-  //console.log("models.search.index(): ", item, "...");
+  //console.log("[search] indexTyped(): ", item, "...");
   if (!type || !INDEX_FIELDS[type])
     handler || logToConsole({ error: 'indexTyped: unknown type' });
   else if (!item || !item._id || !item.name)
@@ -281,21 +284,21 @@ exports.deletePlaylist = function (uid, plId, cb) {
 
 exports.init = function () {
   console.log(
-    'models.search: initializing ElasticSearch index:',
+    '[search] initializing ElasticSearch index:',
     INDEX_HOST + ':' + INDEX_PORT + '/' + INDEX_NAME,
     '...'
   );
   try {
     exports.countDocs('user', function (c) {
-      console.log('models.search: found', c, 'users in index');
+      console.log('[search] found', c, 'users in index');
     });
     exports.countDocs('post', function (c) {
-      console.log('models.search: found', c, 'posts in index');
+      console.log('[search] found', c, 'posts in index');
     });
     exports.countDocs('playlist', function (c) {
-      console.log('models.search: found', c, 'playlists in index');
+      console.log('[search] found', c, 'playlists in index');
     });
   } catch (e) {
-    console.error(e, 'error init search index');
+    console.error('[search]', e, 'error init search index');
   }
 };

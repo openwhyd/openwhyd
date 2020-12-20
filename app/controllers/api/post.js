@@ -153,7 +153,7 @@ exports.actions = {
       userModel.createPlaylist(p.uId, q.pl.name, function (playlist) {
         if (playlist) {
           q.pl.id = playlist.id;
-          console.log('playlist was created', q.pl);
+          // console.log('playlist was created', q.pl);
         }
         actualInsert();
       });

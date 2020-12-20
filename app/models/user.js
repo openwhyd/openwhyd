@@ -326,12 +326,12 @@ exports.save = function (pUser, handler) {
   var user = pUser;
   delete user._id;
   if (user.name) user.n = exports.normalizeName(user.name);
-  console.log(
-    'models.user.save : ',
-    Object.keys(user),
-    '=> criteria: ',
-    criteria
-  );
+  // console.log(
+  //   'models.user.save : ',
+  //   Object.keys(user),
+  //   '=> criteria: ',
+  //   criteria
+  // );
   mongodb.collections['user'].updateOne(
     criteria,
     { $set: user },
@@ -526,7 +526,7 @@ exports.hasPlaylistNameByUid = function (uId, name, cb) {
 };
 
 exports.createPlaylist = function (uId, name, handler) {
-  console.log('user.createPlaylist', uId, name);
+  // console.log('user.createPlaylist', uId, name);
   fetch({ _id: uId }, function (err, user) {
     user.pl = user.pl || [];
     var pl = {
@@ -535,7 +535,7 @@ exports.createPlaylist = function (uId, name, handler) {
     };
     user.pl.push(pl);
     exports.save(user, function () {
-      console.log('created playlist:', pl.name, pl.id);
+      // console.log('created playlist:', pl.name, pl.id);
       searchModel.indexPlaylist(uId, pl.id, pl.name);
       handler(pl);
     });

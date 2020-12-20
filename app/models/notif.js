@@ -51,7 +51,7 @@ function pushToMobileTokens(toUser, text, payload) {
     payload.badge = countUserNotifs(notifs);
     (toUser.apTok || []).map(function (device) {
       console.log(
-        '[notif] sending to user',
+        '[notif] sending to iOS user',
         toUser.id || '' + toUser._id,
         'tok:',
         device.tok
