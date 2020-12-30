@@ -12,26 +12,24 @@ jobs:
   tests:
     name: Automated tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     services:
       mongodb:
         image: docker://mongo:3.4
         ports:
           - 27017:27017
     steps:
-      - uses: actions/checkout@v1
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: 12.19.1
-      - name: check npm cache
-        uses: actions/cache@v1
+      - name: use npm cache
+        uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
+            ${{ runner.os }}-node-
       - name: npm install
         env:
           CI: true
@@ -63,37 +61,34 @@ jobs:
   cypress:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     services:
       mongodb:
         image: docker://mongo:3.4
         ports:
           - 27017:27017
+    strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving the Dashboard hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      fail-fast: false
+      matrix:
+        # run 3 copies of the current job in parallel
+        containers: [1, 2, 3]
     steps:
-      - uses: docker://cypress/base:10
-      - uses: actions/checkout@v1
-      - name: check npm cache
-        uses: actions/cache@v1
+      - uses: actions/checkout@v2
+      - name: use npm cache
+        uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-cypress-build-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-cypress-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-cypress-build-
+            ${{ runner.os }}-node-
       - name: npm install
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
-      - name: check cypress cache
-        uses: actions/cache@v1
-        with:
-          path: /home/runner/.cache/Cypress
-          key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
-            ${{ runner.OS }}-cypress-cache-
-      - name: install cypress
-        run: node_modules/.bin/cypress install
       - name: Start Openwhyd server
         env:
           CI: true
@@ -102,12 +97,20 @@ jobs:
           npm run start:coverage --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: Run Cypress tests
+        uses: cypress-io/github-action@v2.7.2
+        with:
+          start: source env-vars-testing.sh
+          config-file: cypress.json
+          record: true
+          parallel: true
         env:
           CI: true
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
-        run: |
-          source env-vars-testing.sh
-          node_modules/.bin/cypress run
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_DASHBOARD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Get coverage data
         run: |
           # npm run test:coverage
@@ -129,31 +132,26 @@ jobs:
       - tests
       - cypress
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: 12.19.1
-      - name: check npm cache
-        uses: actions/cache@v1
+      - name: use npm cache
+        uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
-      - name: npm install
+            ${{ runner.os }}-node-
+      - run: npm install --prefer-offline --no-audit
         env:
           CI: true
-        run: npm install --prefer-offline --no-audit
-      - name: Semantic Release
+      - run: npm run semantic-release
         env:
           CI: true
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          npm run semantic-release
       - name: Create Docker tags
         id: create_docker_tags
         run: |
@@ -166,3 +164,21 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           tags: ${{ steps.create_docker_tags.outputs.tags }}
+
+  docker:
+    # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
+    name: Docker tests
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and start services
+        run: docker-compose up --build --detach
+      - name: Init database for tests
+        run: |
+          docker-compose exec -T web npm run test-reset
+          docker-compose restart web
+          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
+      - name: Run unit tests
+        run: docker-compose exec -T web npm run test-unit
+      - name: Run API tests
+        run: docker-compose exec -T web npm run test-api
