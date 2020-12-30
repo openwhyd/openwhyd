@@ -1,4 +1,4 @@
-name: Docker
+name: CI
 
 on:
   # Run tests on Pull Requests that target master
@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    name: Docker tests
     runs-on: ubuntu-latest
 
     steps:
