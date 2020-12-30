@@ -31,7 +31,6 @@ services:
       - MONGODB_PORT=27117
       - MONGODB_USER=
       - MONGODB_PASS=
-      - SENDGRID_API_USER=
       - SENDGRID_API_KEY=
       - SENDGRID_API_FROM_EMAIL=test@openwhyd.org
       - SENDGRID_API_FROM_NAME=test
