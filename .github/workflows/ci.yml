@@ -27,11 +27,10 @@ jobs:
       - name: check npm cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
+            ${{ runner.os }}-node-
       - name: npm install
         env:
           CI: true
@@ -75,11 +74,10 @@ jobs:
       - name: check npm cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-cypress-build-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-cypress-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-cypress-build-
+            ${{ runner.os }}-node-
       - name: npm install
         env:
           CI: true
@@ -88,10 +86,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /home/runner/.cache/Cypress
-          key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-cypress-cache-${{ env.cache-name }}-
-            ${{ runner.OS }}-cypress-cache-
+            ${{ runner.os }}-cypress-cache-
       - name: install cypress
         run: node_modules/.bin/cypress install
       - name: Start Openwhyd server
@@ -139,11 +136,10 @@ jobs:
       - name: check npm cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
+            ${{ runner.os }}-node-
       - name: npm install
         env:
           CI: true
