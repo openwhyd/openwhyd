@@ -1,3 +1,10 @@
+## [1.44.15](https://github.com/openwhyd/openwhyd/compare/v1.44.14...v1.44.15) (2020-12-30)
+
+
+### Bug Fixes
+
+* **env:** Remove SENDGRID_API_USER env var ([#423](https://github.com/openwhyd/openwhyd/issues/423)) ([b91635e](https://github.com/openwhyd/openwhyd/commit/b91635ecc67be409813fd9f6814dd380594c4cac)), closes [#422](https://github.com/openwhyd/openwhyd/issues/422)
+
 ## [1.44.14](https://github.com/openwhyd/openwhyd/compare/v1.44.13...v1.44.14) (2020-12-30)
 
 
