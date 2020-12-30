@@ -169,24 +169,16 @@ jobs:
     # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
     name: Docker tests
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v2
-
       - name: Build and start services
-        run: |
-          docker-compose up --build --detach
-
+        run: docker-compose up --build --detach
       - name: Init database for tests
         run: |
           docker-compose exec -T web npm run test-reset
           docker-compose restart web
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
-
       - name: Run unit tests
-        run: |
-          docker-compose exec -T web npm run test-unit
-
+        run: docker-compose exec -T web npm run test-unit
       - name: Run API tests
-        run: |
-          docker-compose exec -T web npm run test-api
+        run: docker-compose exec -T web npm run test-api
