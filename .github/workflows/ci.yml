@@ -19,13 +19,13 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 12.19.1
       - name: check npm cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
@@ -71,9 +71,9 @@ jobs:
           - 27017:27017
     steps:
       - uses: docker://cypress/base:10
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: check npm cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ runner.OS }}-cypress-build-${{ hashFiles('**/package-lock.json') }}
@@ -85,7 +85,7 @@ jobs:
           CI: true
         run: npm install --prefer-offline --no-audit
       - name: check cypress cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: /home/runner/.cache/Cypress
           key: ${{ runner.OS }}-cypress-cache-${{ hashFiles('**/package-lock.json') }}
@@ -131,13 +131,13 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: 12.19.1
       - name: check npm cache
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
