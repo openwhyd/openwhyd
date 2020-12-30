@@ -20,11 +20,10 @@ jobs:
           - 27017:27017
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: actions/setup-node@v2
         with:
           node-version: 12.19.1
-      - name: check npm cache
+      - name: use npm cache
         uses: actions/cache@v2
         with:
           path: ~/.npm
@@ -62,7 +61,7 @@ jobs:
   cypress:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     services:
       mongodb:
         image: docker://mongo:3.4
@@ -71,7 +70,7 @@ jobs:
     steps:
       - uses: docker://cypress/base:10
       - uses: actions/checkout@v2
-      - name: check npm cache
+      - name: use npm cache
         uses: actions/cache@v2
         with:
           path: ~/.npm
@@ -82,7 +81,7 @@ jobs:
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
-      - name: check cypress cache
+      - name: use cypress cache
         uses: actions/cache@v2
         with:
           path: /home/runner/.cache/Cypress
@@ -129,27 +128,23 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2
         with:
           node-version: 12.19.1
-      - name: check npm cache
+      - name: use npm cache
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: npm install
+      - run: npm install --prefer-offline --no-audit
         env:
           CI: true
-        run: npm install --prefer-offline --no-audit
-      - name: Semantic Release
+      - run: npm run semantic-release
         env:
           CI: true
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          npm run semantic-release
       - name: Create Docker tags
         id: create_docker_tags
         run: |
