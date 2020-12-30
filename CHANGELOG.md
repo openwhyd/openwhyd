@@ -1,3 +1,10 @@
+## [1.44.14](https://github.com/openwhyd/openwhyd/compare/v1.44.13...v1.44.14) (2020-12-30)
+
+
+### Bug Fixes
+
+* **email:** Use API key for Sendgrid auth ([#422](https://github.com/openwhyd/openwhyd/issues/422)) ([116bef9](https://github.com/openwhyd/openwhyd/commit/116bef9653c5168c702d4f39f23c154490d3f7e1))
+
 ## [1.44.13](https://github.com/openwhyd/openwhyd/compare/v1.44.12...v1.44.13) (2020-12-20)
 
 
