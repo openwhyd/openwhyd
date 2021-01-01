@@ -1,3 +1,11 @@
+## [1.44.16](https://github.com/openwhyd/openwhyd/compare/v1.44.15...v1.44.16) (2021-01-01)
+
+
+### Bug Fixes
+
+* **CI:** "You're not authorized to push to this branch" ([6457bcb](https://github.com/openwhyd/openwhyd/commit/6457bcb41739b279ceaeaba07af260d5274987b9))
+* **CI:** Optimize CI workflow ([#424](https://github.com/openwhyd/openwhyd/issues/424)) ([627e6cc](https://github.com/openwhyd/openwhyd/commit/627e6cc81dc214211509443beb851c531a684727))
+
 ## [1.44.15](https://github.com/openwhyd/openwhyd/compare/v1.44.14...v1.44.15) (2020-12-30)
 
 
