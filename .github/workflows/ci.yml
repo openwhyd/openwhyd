@@ -135,6 +135,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          # to prevent "You're not authorized to push to this branch"
+          persist-credentials: false
       - uses: actions/setup-node@v2
         with:
           node-version: 12.19.1
