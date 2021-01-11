@@ -1,3 +1,10 @@
+## [1.44.17](https://github.com/openwhyd/openwhyd/compare/v1.44.16...v1.44.17) (2021-01-11)
+
+
+### Bug Fixes
+
+* **deps:** update Nokogiri and jekyll & npm dependencies ([#426](https://github.com/openwhyd/openwhyd/issues/426)) ([8cac2cd](https://github.com/openwhyd/openwhyd/commit/8cac2cd39938df1c97e42b0dc1aaff55fa3f98c4))
+
 ## [1.44.16](https://github.com/openwhyd/openwhyd/compare/v1.44.15...v1.44.16) (2021-01-01)
 
 
