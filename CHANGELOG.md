@@ -1,3 +1,10 @@
+## [1.44.18](https://github.com/openwhyd/openwhyd/compare/v1.44.17...v1.44.18) (2021-01-17)
+
+
+### Bug Fixes
+
+* **deps:** Update mongodb 3.1.13 --> 3.6.3 ([#427](https://github.com/openwhyd/openwhyd/issues/427)) ([bf7e3e2](https://github.com/openwhyd/openwhyd/commit/bf7e3e22fba389e78f2cfd620c9e961886c715cb))
+
 ## [1.44.17](https://github.com/openwhyd/openwhyd/compare/v1.44.16...v1.44.17) (2021-01-11)
 
 
