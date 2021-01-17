@@ -142,6 +142,7 @@ jobs:
         with:
           node-version: 12.19.1
       - name: use npm cache
+        if: github.event_name == 'push'
         uses: actions/cache@v2
         with:
           path: ~/.npm
@@ -152,7 +153,8 @@ jobs:
         if: github.event_name == 'push'
       - name: npx semantic-release
         run: |
-          npm install \
+          # we install just semantic-release and its plugins, without considering package.json
+          npm --prefix "/" install --global --no-save \
             @semantic-release/changelog@5.0.1 \
             @semantic-release/git@9.0.0 \
             && npx semantic-release@17.3.1
