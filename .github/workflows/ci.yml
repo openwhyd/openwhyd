@@ -149,8 +149,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: npm install --prefer-offline --no-audit
-        env:
-          CI: true
+        if: github.event_name == 'push'
       - run: npm run semantic-release
         env:
           CI: true
