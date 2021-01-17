@@ -150,7 +150,12 @@ jobs:
             ${{ runner.os }}-node-
       - run: npm install --prefer-offline --no-audit
         if: github.event_name == 'push'
-      - run: npx semantic-release
+      - name: npx semantic-release
+        run: |
+          npm install \
+            @semantic-release/changelog@5.0.1 \
+            @semantic-release/git@9.0.0 \
+            && npx semantic-release@17.3.1
         env:
           CI: true
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
