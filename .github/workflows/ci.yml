@@ -9,6 +9,32 @@ on:
       - master
 
 jobs:
+  linter:
+    name: Code linter
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12.19.1
+      - name: use npm cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: npm run lint:fix
+        run: |
+          npm run lint:fix
+          echo ℹ️  If this test fails, run `npm run lint:fix` and commit the changes.
+          exit $(git diff | wc -l)
+
   tests:
     name: Automated tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
