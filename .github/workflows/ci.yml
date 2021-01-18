@@ -105,7 +105,10 @@ jobs:
           parallel: true
         env:
           CI: true
+          # env vars for visual tests (driven by Cypress)
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
+          APPLITOOLS_BATCH_ID: ${{ github.sha }}
+          APPLITOOLS_SERVER_URL: 'eyesapi.applitools.com'
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_DASHBOARD_KEY }}
           # Recommended: pass the GitHub token lets this action correctly
