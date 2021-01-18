@@ -1,3 +1,10 @@
+## [1.44.19](https://github.com/openwhyd/openwhyd/compare/v1.44.18...v1.44.19) (2021-01-18)
+
+
+### Bug Fixes
+
+* **ci:** Don't npm install unless we publish to Docker Hub ([#431](https://github.com/openwhyd/openwhyd/issues/431)) ([b66eb8b](https://github.com/openwhyd/openwhyd/commit/b66eb8b8cc353a848d9b25ea6c81bf5f47335d81))
+
 ## [1.44.18](https://github.com/openwhyd/openwhyd/compare/v1.44.17...v1.44.18) (2021-01-17)
 
 
