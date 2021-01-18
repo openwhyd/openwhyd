@@ -99,7 +99,6 @@ jobs:
       - name: Run Cypress tests
         uses: cypress-io/github-action@v2.7.2
         with:
-          start: source env-vars-testing.sh
           config-file: cypress.json
           record: true
           parallel: true
