@@ -558,6 +558,7 @@ input.search-input:focus {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
   border-radius: 3px;
   background-clip: padding-box;
+  z-index: 1;
 }
 
 #searchResults ul {
