@@ -1,6 +1,7 @@
 public/js/*-min.js
 public/js/*.min.js
 public/js/*jquery*.js
+public/js/dropzone.js
 public/js/md5.js
 public/js/mustache.js
 public/js/playem-all.js
