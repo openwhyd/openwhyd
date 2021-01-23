@@ -56,18 +56,20 @@ exports.sendRegWelcome = function (storedUser, inviteSender) {
 };
 
 exports.sendRegWelcomeAsync = function (storedUser, inviteSender, cb) {
-  notifTemplate.generateRegWelcomeAsync(storedUser, inviteSender, function (
-    email
-  ) {
-    emailModel.email(
-      storedUser.email,
-      email.subject,
-      email.bodyText,
-      email.bodyHtml,
-      undefined,
-      cb
-    );
-  });
+  notifTemplate.generateRegWelcomeAsync(
+    storedUser,
+    inviteSender,
+    function (email) {
+      emailModel.email(
+        storedUser.email,
+        email.subject,
+        email.bodyText,
+        email.bodyHtml,
+        undefined,
+        cb
+      );
+    }
+  );
 };
 
 // 5) when the friend registered => "Your friend just accepted your invitation to whyd"

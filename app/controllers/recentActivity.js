@@ -58,47 +58,49 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 
   //console.log("uidList:", uidList);
 
-  activityModel.fetchHistoryFromUidList(uidList, options, function (
-    activities,
-    hasMore
-  ) {
-    // extract users and posts to fetch from DB
+  activityModel.fetchHistoryFromUidList(
+    uidList,
+    options,
+    function (activities, hasMore) {
+      // extract users and posts to fetch from DB
 
-    var usersToPopulate = [],
-      postsToPopulate = [];
-    for (let i in activities)
-      if ((activities[i] || {}).subscription) {
-        activities[i].subscription.subscribed =
-          uidSet[activities[i].subscription.id];
-        usersToPopulate.push(activities[i].subscription);
-      } else if ((activities[i] || {}).like)
-        postsToPopulate.push(ObjectId('' + activities[i].like.pId));
+      var usersToPopulate = [],
+        postsToPopulate = [];
+      for (let i in activities)
+        if ((activities[i] || {}).subscription) {
+          activities[i].subscription.subscribed =
+            uidSet[activities[i].subscription.id];
+          usersToPopulate.push(activities[i].subscription);
+        } else if ((activities[i] || {}).like)
+          postsToPopulate.push(ObjectId('' + activities[i].like.pId));
 
-    // fetch users and posts from DB
+      // fetch users and posts from DB
 
-    userModel.fetchUserBios(usersToPopulate, function () {
-      postModel.fetchPosts(
-        { _id: { $in: postsToPopulate } },
-        /*params*/ null,
-        /*options*/ null,
-        function (posts) {
-          // apply fetched data (when not null) to liked posts
-          var postSet = {},
-            finalActivities = [];
-          for (let i in posts) postSet['' + posts[i]._id] = posts[i];
-          for (let i in activities) {
-            if ((activities[i] || {}).like) {
-              if (postSet['' + activities[i].like.pId])
-                activities[i].like.post = postSet['' + activities[i].like.pId];
-              else continue; // do not keep null posts
+      userModel.fetchUserBios(usersToPopulate, function () {
+        postModel.fetchPosts(
+          { _id: { $in: postsToPopulate } },
+          /*params*/ null,
+          /*options*/ null,
+          function (posts) {
+            // apply fetched data (when not null) to liked posts
+            var postSet = {},
+              finalActivities = [];
+            for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+            for (let i in activities) {
+              if ((activities[i] || {}).like) {
+                if (postSet['' + activities[i].like.pId])
+                  activities[i].like.post =
+                    postSet['' + activities[i].like.pId];
+                else continue; // do not keep null posts
+              }
+              finalActivities.push(activities[i]);
             }
-            finalActivities.push(activities[i]);
+            cb(finalActivities, hasMore);
           }
-          cb(finalActivities, hasMore);
-        }
-      );
-    });
-  });
+        );
+      });
+    }
+  );
 }
 
 function aggregateActivities(acts) {
@@ -183,22 +185,25 @@ exports.controller = function (request, reqParams, response) {
   }
 
   fetchSubscriptions(loggedInUser.id, function (uidList) {
-    exports.generateActivityFeed(uidList, uidList, reqParams, function (
-      pageVars
-    ) {
-      if (!pageVars.rawFeed) {
-        var fullUidList = uidList.slice(0, uidList.length);
-        fullUidList.push(loggedInUser.id);
-        render(
-          mainTemplate.renderWhydPage({
-            bodyClass: 'pgRecentActivity pgWithSideBar',
-            loggedUser: loggedInUser,
-            content: template.render(pageVars),
-          })
-        );
-      } else {
-        render(template.render(pageVars));
+    exports.generateActivityFeed(
+      uidList,
+      uidList,
+      reqParams,
+      function (pageVars) {
+        if (!pageVars.rawFeed) {
+          var fullUidList = uidList.slice(0, uidList.length);
+          fullUidList.push(loggedInUser.id);
+          render(
+            mainTemplate.renderWhydPage({
+              bodyClass: 'pgRecentActivity pgWithSideBar',
+              loggedUser: loggedInUser,
+              content: template.render(pageVars),
+            })
+          );
+        } else {
+          render(template.render(pageVars));
+        }
       }
-    });
+    );
   });
 };

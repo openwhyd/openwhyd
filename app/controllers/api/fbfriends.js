@@ -21,12 +21,14 @@ exports.handleRequest = function (request, reqParams, response) {
     console.log('fbTok in db + param', fbTok, reqParams.fbAccessToken);
 
     if (reqParams.fetchUsersToInvite) {
-      facebookModel.fetchCachedFriends(loggedUser.id, fbTok, function (
-        fbfriends
-      ) {
-        var list = (fbfriends || {}).notOnWhyd || [];
-        response.legacyRender({ fbfriends: list });
-      });
+      facebookModel.fetchCachedFriends(
+        loggedUser.id,
+        fbTok,
+        function (fbfriends) {
+          var list = (fbfriends || {}).notOnWhyd || [];
+          response.legacyRender({ fbfriends: list });
+        }
+      );
     } else
       facebookModel.fetchFbFriendsWithSub(
         loggedUser,

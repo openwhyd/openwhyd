@@ -35,13 +35,15 @@ function getBrowserVersionFromUserAgent(ua) {
 }
 
 function fetchSubscribedUsers(uidList, uid, cb) {
-  followModel.fetch({ uId: uid, tId: { $in: uidList } }, null, function (
-    results
-  ) {
-    var uidSet = {};
-    for (let i in results) uidSet[results[i].tId] = results[i];
-    cb(uidSet);
-  });
+  followModel.fetch(
+    { uId: uid, tId: { $in: uidList } },
+    null,
+    function (results) {
+      var uidSet = {};
+      for (let i in results) uidSet[results[i].tId] = results[i];
+      cb(uidSet);
+    }
+  );
 }
 
 var publicActions = {
@@ -66,26 +68,29 @@ var publicActions = {
   },
 
   reposts: function (p, callback) {
-    postModel.fetchPosts({ 'repost.pId': p.pId }, null, null, function (
-      results
-    ) {
-      var reposts = [];
-      if (results) {
-        var repostUids = [];
-        for (let i in results) repostUids.push(results[i].uId);
-        fetchSubscribedUsers(repostUids, p.uId, function (subscrUidSet) {
-          for (let i in results)
-            reposts.push({
-              id: /*"/u/"+*/ results[i].uId,
-              name: (mongodb.usernames[results[i].uId] || {}).name,
-              subscribed: !!subscrUidSet[results[i].uId],
+    postModel.fetchPosts(
+      { 'repost.pId': p.pId },
+      null,
+      null,
+      function (results) {
+        var reposts = [];
+        if (results) {
+          var repostUids = [];
+          for (let i in results) repostUids.push(results[i].uId);
+          fetchSubscribedUsers(repostUids, p.uId, function (subscrUidSet) {
+            for (let i in results)
+              reposts.push({
+                id: /*"/u/"+*/ results[i].uId,
+                name: (mongodb.usernames[results[i].uId] || {}).name,
+                subscribed: !!subscrUidSet[results[i].uId],
+              });
+            userModel.fetchUserBios(reposts, function () {
+              callback(reposts);
             });
-          userModel.fetchUserBios(reposts, function () {
-            callback(reposts);
           });
-        });
-      } else callback(reposts);
-    });
+        } else callback(reposts);
+      }
+    );
   },
 };
 

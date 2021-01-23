@@ -30,14 +30,15 @@ function search(trackMetadata, cb) {
     if (!extractors.length) return cb(null, res);
     var extr = extractors.shift();
     console.log('searching', extr.name, '...');
-    metadataResolver.searchBestMatches(extr.api, trackMetadata, function (
-      err,
-      hits
-    ) {
-      console.log(extr.name, '=>', err || (hits || [])[0]);
-      res[extr.name] = err || (hits || [])[0];
-      next();
-    });
+    metadataResolver.searchBestMatches(
+      extr.api,
+      trackMetadata,
+      function (err, hits) {
+        console.log(extr.name, '=>', err || (hits || [])[0]);
+        res[extr.name] = err || (hits || [])[0];
+        next();
+      }
+    );
   })();
 }
 

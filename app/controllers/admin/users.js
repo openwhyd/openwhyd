@@ -126,11 +126,13 @@ exports.handleRequest = function (request, reqParams, response) {
   if (reqParams.action && handlers[reqParams.action])
     handlers[reqParams.action](reqParams, renderResult);
   else
-    userModel.fetchMulti({}, { sort: [['_id', 'desc']], limit: 600 }, function (
-      users
-    ) {
-      renderResult({ html: renderTemplate(/*mongodb.usernames*/ users) });
-    });
+    userModel.fetchMulti(
+      {},
+      { sort: [['_id', 'desc']], limit: 600 },
+      function (users) {
+        renderResult({ html: renderTemplate(/*mongodb.usernames*/ users) });
+      }
+    );
 };
 
 exports.controller = function (request, getParams, response) {

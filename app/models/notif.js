@@ -242,37 +242,38 @@ exports.clearUserNotifs = function (uId, cb) {
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
 
 exports.fetchUserNotifs = function (uId, handler) {
-  db['notif'].find({ uId: uId }, { sort: ['t', 'desc'] }, function (
-    err,
-    cursor
-  ) {
-    cursor.toArray(function (err, results) {
-      var notifs = [];
-      for (let i in results) {
-        var n = 0;
-        if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
-        else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
-        var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
-        notifs.push({
-          type: results[i].type,
-          pId: '' + results[i]._id,
-          track: {
-            eId: results[i].eId,
-            name: results[i].name,
-            img: config.imgUrl(results[i].img),
-          },
-          t: new Date(results[i].t * 1000),
-          lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
-          n: n,
-          img: results[i].img,
-          html: results[i].html,
-          href: results[i].href,
-        });
-      }
-      cacheUserNotifs(uId, notifs);
-      if (handler) handler(notifs);
-    });
-  });
+  db['notif'].find(
+    { uId: uId },
+    { sort: ['t', 'desc'] },
+    function (err, cursor) {
+      cursor.toArray(function (err, results) {
+        var notifs = [];
+        for (let i in results) {
+          var n = 0;
+          if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
+          else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
+          var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
+          notifs.push({
+            type: results[i].type,
+            pId: '' + results[i]._id,
+            track: {
+              eId: results[i].eId,
+              name: results[i].name,
+              img: config.imgUrl(results[i].img),
+            },
+            t: new Date(results[i].t * 1000),
+            lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
+            n: n,
+            img: results[i].img,
+            html: results[i].html,
+            href: results[i].href,
+          });
+        }
+        cacheUserNotifs(uId, notifs);
+        if (handler) handler(notifs);
+      });
+    }
+  );
 };
 
 exports.getUserNotifs = function (uid, handler) {

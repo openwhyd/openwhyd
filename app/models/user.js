@@ -224,15 +224,16 @@ function fetch(q, handler) {
 }
 
 exports.fetchAll = function (handler) {
-  mongodb.collections['user'].find({}, { sort: [['_id', 'desc']] }, function (
-    err,
-    cursor
-  ) {
-    cursor.toArray(function (err, array) {
-      processUsers(array);
-      handler(array);
-    });
-  });
+  mongodb.collections['user'].find(
+    {},
+    { sort: [['_id', 'desc']] },
+    function (err, cursor) {
+      cursor.toArray(function (err, array) {
+        processUsers(array);
+        handler(array);
+      });
+    }
+  );
 };
 
 exports.fetchMulti = function (q, options, handler) {
@@ -310,12 +311,14 @@ exports.updateAndFetch = function (criteria, update, opts, cb) {
 
 // used for updating fb id/token, settings prefs, unsubscribing from newsletter, and delete cvrImg
 exports.update = function (uid, update, handler) {
-  exports.updateAndFetch({ _id: ObjectId('' + uid) }, update, null, function (
-    err,
-    user
-  ) {
-    handler && handler(user);
-  });
+  exports.updateAndFetch(
+    { _id: ObjectId('' + uid) },
+    update,
+    null,
+    function (err, user) {
+      handler && handler(user);
+    }
+  );
 };
 
 exports.save = function (pUser, handler) {
@@ -853,31 +856,31 @@ exports.renameUser = function (uid, name, callback) {
       if (!(col = cols.pop())) return whenDone();
       console.log('renameUser: processing collection', col, '...');
       col = mongodb.collections[col];
-      col.countDocuments({ $or: [{ uId: uid }, { tId: uid }] }, function (
-        err,
-        count
-      ) {
-        console.log('renameUser: processing', count, 'items...');
-        col.updateMany(
-          { uId: uid /*, uNm: oldName*/ },
-          { $set: { uNm: name } },
-          { multi: true },
-          function (err) {
-            if (err) console.log('err', err);
-            //console.log("-> updated to ", result);
-            col.updateMany(
-              { tId: uid /*, tNm: oldName*/ },
-              { $set: { tNm: name } },
-              { multi: true },
-              function (err) {
-                if (err) console.log('err', err);
-                //console.log("-> updated to ", result);
-                next();
-              }
-            );
-          }
-        );
-      });
+      col.countDocuments(
+        { $or: [{ uId: uid }, { tId: uid }] },
+        function (err, count) {
+          console.log('renameUser: processing', count, 'items...');
+          col.updateMany(
+            { uId: uid /*, uNm: oldName*/ },
+            { $set: { uNm: name } },
+            { multi: true },
+            function (err) {
+              if (err) console.log('err', err);
+              //console.log("-> updated to ", result);
+              col.updateMany(
+                { tId: uid /*, tNm: oldName*/ },
+                { $set: { tNm: name } },
+                { multi: true },
+                function (err) {
+                  if (err) console.log('err', err);
+                  //console.log("-> updated to ", result);
+                  next();
+                }
+              );
+            }
+          );
+        }
+      );
     })();
 };
 

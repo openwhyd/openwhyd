@@ -38,47 +38,49 @@ function fetchLikedPostSet(uid, options, cb) {
     likersPerPost = {},
     likersPerTrack = {};
   if (!options.includeLikes) return cb(likersPerTrack);
-  activityModel.fetchLikersOfUser(uid, { until: options.until }, function (
-    activities
-  ) {
-    for (let i in activities) {
-      var pId = '' + activities[i].like.pId;
-      postsToPopulate.push(ObjectId(pId));
-      likersPerPost[pId] = likersPerPost[pId] || [];
-      if (activities[i].id != uid)
-        // (remove self-likes)
-        likersPerPost[pId].push({
-          id: activities[i].id,
-          name: activities[i].name,
-        });
-    }
-    // fetch existing posts from DB
-    postModel.fetchPosts(
-      { _id: { $in: postsToPopulate } },
-      /*params*/ null,
-      /*options*/ null,
-      function (posts) {
-        for (let i in posts) {
-          if (posts[i] && likersPerPost['' + posts[i]._id])
-            likersPerTrack[posts[i].eId] = {
-              id: '' + posts[i]._id,
-              name: posts[i].name,
-              likes:
-                /*encapsulateList(*/ likersPerPost['' + posts[i]._id] /*)*/,
-            };
-        }
-        // delete records of deleted posts (stored as arrays of likers instead of encapsulated objects)
-        for (let i in likersPerTrack)
-          if (
-            !likersPerTrack[i] ||
-            !likersPerTrack[i].likes ||
-            !likersPerTrack[i].likes.length
-          )
-            delete likersPerTrack[i];
-        cb((options.data.likersPerPost = likersPerTrack));
+  activityModel.fetchLikersOfUser(
+    uid,
+    { until: options.until },
+    function (activities) {
+      for (let i in activities) {
+        var pId = '' + activities[i].like.pId;
+        postsToPopulate.push(ObjectId(pId));
+        likersPerPost[pId] = likersPerPost[pId] || [];
+        if (activities[i].id != uid)
+          // (remove self-likes)
+          likersPerPost[pId].push({
+            id: activities[i].id,
+            name: activities[i].name,
+          });
       }
-    );
-  });
+      // fetch existing posts from DB
+      postModel.fetchPosts(
+        { _id: { $in: postsToPopulate } },
+        /*params*/ null,
+        /*options*/ null,
+        function (posts) {
+          for (let i in posts) {
+            if (posts[i] && likersPerPost['' + posts[i]._id])
+              likersPerTrack[posts[i].eId] = {
+                id: '' + posts[i]._id,
+                name: posts[i].name,
+                likes:
+                  /*encapsulateList(*/ likersPerPost['' + posts[i]._id] /*)*/,
+              };
+          }
+          // delete records of deleted posts (stored as arrays of likers instead of encapsulated objects)
+          for (let i in likersPerTrack)
+            if (
+              !likersPerTrack[i] ||
+              !likersPerTrack[i].likes ||
+              !likersPerTrack[i].likes.length
+            )
+              delete likersPerTrack[i];
+          cb((options.data.likersPerPost = likersPerTrack));
+        }
+      );
+    }
+  );
 }
 
 function fetchRepostedTrackSet(uid, options, cb) {

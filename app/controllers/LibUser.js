@@ -201,16 +201,17 @@ function renderFriends(friends) {
 }
 
 function populateUsers(subscr, options, cb) {
-  followModel.fetchSubscriptionArray(options.loggedUser.id, function (
-    mySubscr
-  ) {
-    var subscrSet = snip.arrayToSet(mySubscr);
-    for (let i in subscr)
-      if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
-    userModel.fetchUserBios(subscr, function () {
-      cb(renderFriends(subscr));
-    });
-  });
+  followModel.fetchSubscriptionArray(
+    options.loggedUser.id,
+    function (mySubscr) {
+      var subscrSet = snip.arrayToSet(mySubscr);
+      for (let i in subscr)
+        if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
+      userModel.fetchUserBios(subscr, function () {
+        cb(renderFriends(subscr));
+      });
+    }
+  );
 }
 
 function fetchAndRenderPlaylist(options, callback, process) {
@@ -292,45 +293,46 @@ function fetchAndRenderProfile(options, callback, process) {
     options.tabTitle = 'Activity';
     options.bodyClass += ' userActivity';
     options.pageTitle = options.user.name + "'s recent activity";
-    followModel.fetchUserSubscriptions(options.loggedUser.id, function (
-      mySubscr
-    ) {
-      //console.log("mySubscr.subscriptions", mySubscr.subscriptions);
-      var mySubscrUidList = snip.objArrayToValueArray(
-        mySubscr.subscriptions,
-        'id'
-      );
-      activityController.generateActivityFeed(
-        [options.user.id],
-        mySubscrUidList,
-        options,
-        function (result) {
-          for (let i in result.recentActivity.items)
-            if (result.recentActivity.items[i].subscriptions) {
-              result.recentActivity.items[i].subscribedUsers =
-                result.recentActivity.items[i].subscriptions;
-              delete result.recentActivity.items[i].subscriptions;
+    followModel.fetchUserSubscriptions(
+      options.loggedUser.id,
+      function (mySubscr) {
+        //console.log("mySubscr.subscriptions", mySubscr.subscriptions);
+        var mySubscrUidList = snip.objArrayToValueArray(
+          mySubscr.subscriptions,
+          'id'
+        );
+        activityController.generateActivityFeed(
+          [options.user.id],
+          mySubscrUidList,
+          options,
+          function (result) {
+            for (let i in result.recentActivity.items)
+              if (result.recentActivity.items[i].subscriptions) {
+                result.recentActivity.items[i].subscribedUsers =
+                  result.recentActivity.items[i].subscriptions;
+                delete result.recentActivity.items[i].subscriptions;
+              }
+            //console.log("ACTIVITY result", result.recentActivity);
+            options.showActivity = result.recentActivity;
+            if (result.hasMore)
+              options.hasMore = { lastPid: result.hasMore.last_id };
+            else {
+              var creation = mongodb.ObjectId(options.user.id);
+              options.showActivity.items.push({
+                _id: creation,
+                other: { text: 'joined whyd' },
+                //						ago: uiSnippets.renderTimestamp(new Date() - creation.getTimestamp())
+              });
             }
-          //console.log("ACTIVITY result", result.recentActivity);
-          options.showActivity = result.recentActivity;
-          if (result.hasMore)
-            options.hasMore = { lastPid: result.hasMore.last_id };
-          else {
-            var creation = mongodb.ObjectId(options.user.id);
-            options.showActivity.items.push({
-              _id: creation,
-              other: { text: 'joined whyd' },
-              //						ago: uiSnippets.renderTimestamp(new Date() - creation.getTimestamp())
-            });
+            for (let i in options.showActivity.items)
+              options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
+                new Date() - options.showActivity.items[i]._id.getTimestamp()
+              );
+            process([]);
           }
-          for (let i in options.showActivity.items)
-            options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
-              new Date() - options.showActivity.items[i]._id.getTimestamp()
-            );
-          process([]);
-        }
-      );
-    });
+        );
+      }
+    );
   } else if (options.showSubscribers) {
     options.tabTitle = 'Followers';
 

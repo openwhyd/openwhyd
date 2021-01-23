@@ -87,12 +87,14 @@ exports.renderSearchPage = function (results, reqParams, cb) {
     results.nbUsers = (results.users || []).length;
     results.nbPlaylists = (results.playlists || []).length;
     if (results.posts)
-      exports.renderPosts(results.posts, reqParams.loggedUser, function (
-        postsHtml
-      ) {
-        results.postsHtml = postsHtml;
-        render();
-      });
+      exports.renderPosts(
+        results.posts,
+        reqParams.loggedUser,
+        function (postsHtml) {
+          results.postsHtml = postsHtml;
+          render();
+        }
+      );
   } else render();
 };
 

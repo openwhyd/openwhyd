@@ -182,14 +182,15 @@ exports.fetchPosts = function (params, handler) {
 
 function fetchPostsByEid(eId, cb) {
   var criteria = { eId: eId && Array.isArray(eId) ? { $in: eId } : eId };
-  mongodb.collections['post'].find(criteria, POST_FETCH_OPTIONS, function (
-    err,
-    cursor
-  ) {
-    cursor.toArray(function (err, posts) {
-      cb(posts);
-    });
-  });
+  mongodb.collections['post'].find(
+    criteria,
+    POST_FETCH_OPTIONS,
+    function (err, cursor) {
+      cursor.toArray(function (err, posts) {
+        cb(posts);
+      });
+    }
+  );
 }
 
 // called when a track is updated/deleted by a user
@@ -286,49 +287,49 @@ exports.fetchConciseMetadataForEid = function (eId, cb) {
 exports.snapshotTrackScores = function (cb) {
   mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
-    mongodb.forEach2('track', { fields: { score: 1 } }, function (
-      track,
-      next,
-      closeCursor
-    ) {
-      if (!track || track.error) {
-        cb();
-        closeCursor();
-      } else {
-        if (count < 1000) {
-          console.log(`snapshotTrackScores ${i + 1} / ${count}`);
-        } else if (count % 1000 === 0) {
-          console.log(
-            `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`
+    mongodb.forEach2(
+      'track',
+      { fields: { score: 1 } },
+      function (track, next, closeCursor) {
+        if (!track || track.error) {
+          cb();
+          closeCursor();
+        } else {
+          if (count < 1000) {
+            console.log(`snapshotTrackScores ${i + 1} / ${count}`);
+          } else if (count % 1000 === 0) {
+            console.log(
+              `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`
+            );
+          }
+          ++i;
+          mongodb.collections['track'].updateOne(
+            { _id: track._id },
+            { $set: { prev: track.score } },
+            next
           );
         }
-        ++i;
-        mongodb.collections['track'].updateOne(
-          { _id: track._id },
-          { $set: { prev: track.score } },
-          next
-        );
       }
-    });
+    );
   });
 };
 
 exports.refreshTrackCollection = function (cb) {
   mongodb.collections['track'].countDocuments(function (err, count) {
     var i = 0;
-    mongodb.forEach2('track', { fields: { _id: 0, eId: 1 } }, function (
-      track,
-      next,
-      closeCursor
-    ) {
-      if (!track || track.error) {
-        cb();
-        closeCursor();
-      } else {
-        console.log('refreshHotTracksCache', ++i, '/', count);
-        exports.updateByEid(track.eId, next, true);
+    mongodb.forEach2(
+      'track',
+      { fields: { _id: 0, eId: 1 } },
+      function (track, next, closeCursor) {
+        if (!track || track.error) {
+          cb();
+          closeCursor();
+        } else {
+          console.log('refreshHotTracksCache', ++i, '/', count);
+          exports.updateByEid(track.eId, next, true);
+        }
       }
-    });
+    );
   });
 };
 

@@ -88,12 +88,13 @@ exports.renderRegisterPage = function (request, reqParams, response) {
     exports.checkInviteCode({ url: request.url }, reqParams, response, render);
   // signup pop-in
   else if (reqParams.popin) {
-    templateLoader.loadTemplate('app/templates/popinSignup.html', function (
-      template
-    ) {
-      var page = template.render(reqParams);
-      response.renderHTML(page);
-    });
+    templateLoader.loadTemplate(
+      'app/templates/popinSignup.html',
+      function (template) {
+        var page = template.render(reqParams);
+        response.renderHTML(page);
+      }
+    );
   } else {
     //console.log("inviteCode parameter is required");
     response.redirect('/#signup');
@@ -168,13 +169,17 @@ var submitInvites = function (request, reqParams, response) {
     });
   } else if (reqParams.fbId)
     // === invite facebook friend
-    users.inviteFbUserBy(reqParams.fbId, '' + loggedUser._id, function (
-      invite
-    ) {
-      response.legacyRender(
-        !invite ? null : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id }
-      );
-    });
+    users.inviteFbUserBy(
+      reqParams.fbId,
+      '' + loggedUser._id,
+      function (invite) {
+        response.legacyRender(
+          !invite
+            ? null
+            : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id }
+        );
+      }
+    );
   else response.badRequest();
 };
 

@@ -290,19 +290,21 @@ exports.controller = function (request, reqParams = {}, response) {
         //console.log("myResults", myResults);
         fetchTheirPosts(q, uid, function (theirResults) {
           //console.log("theirResults", myResults);
-          processPosts((theirResults || {}).hits, { uid: uid }, function (
-            theirPosts
-          ) {
-            processPosts((myResults || {}).hits, {}, function (myPosts) {
-              cb({
-                q: q,
-                results: {
-                  myPosts: myPosts,
-                  theirPosts: theirPosts,
-                },
+          processPosts(
+            (theirResults || {}).hits,
+            { uid: uid },
+            function (theirPosts) {
+              processPosts((myResults || {}).hits, {}, function (myPosts) {
+                cb({
+                  q: q,
+                  results: {
+                    myPosts: myPosts,
+                    theirPosts: theirPosts,
+                  },
+                });
               });
-            });
-          });
+            }
+          );
         });
       });
   }
