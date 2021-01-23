@@ -32,7 +32,14 @@ jobs:
       - name: npm run lint:fix
         run: |
           npm run lint:fix
+          git status
           echo ℹ️  If this test fails, run `npm run lint:fix` and commit the changes.
+          exit $(git diff | wc -l)
+      - name: npm run lint:format
+        run: |
+          npm run lint:format
+          git status
+          echo ℹ️  If this test fails, run `npm run lint:format` and commit the changes.
           exit $(git diff | wc -l)
 
   tests:

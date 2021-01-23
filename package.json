@@ -32,7 +32,8 @@
     "docker:test:cypress:dev": ". ./.env-docker && npm run test:cypress:dev",
     "docker:test:cypress": ". ./.env-docker && npm run test:cypress",
     "docker:test": "npm run docker:run test-unit && npm run docker:run test-api && npm run docker:test:cypress",
-    "lint:fix": "eslint app --fix; prettier . --write",
+    "lint:format": "prettier . --write",
+    "lint:fix": "eslint app --fix",
     "lint": "eslint app"
   },
   "engines": {
