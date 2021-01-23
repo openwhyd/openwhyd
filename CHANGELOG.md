@@ -1,3 +1,10 @@
+## [1.44.25](https://github.com/openwhyd/openwhyd/compare/v1.44.24...v1.44.25) (2021-01-23)
+
+
+### Bug Fixes
+
+* **deps:** Update eslint and prettier ([#429](https://github.com/openwhyd/openwhyd/issues/429)) ([a4fe26b](https://github.com/openwhyd/openwhyd/commit/a4fe26b9792081c8d9175155605abd228adc54dc))
+
 ## [1.44.24](https://github.com/openwhyd/openwhyd/compare/v1.44.23...v1.44.24) (2021-01-23)
 
 
