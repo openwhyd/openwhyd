@@ -1,3 +1,10 @@
+## [1.44.24](https://github.com/openwhyd/openwhyd/compare/v1.44.23...v1.44.24) (2021-01-23)
+
+
+### Bug Fixes
+
+* **deps:** Update applitools to 3.18.5 ([#437](https://github.com/openwhyd/openwhyd/issues/437)) ([dd1837d](https://github.com/openwhyd/openwhyd/commit/dd1837d7b01d11acd5f8f99cf149e7c2f422d4b6))
+
 ## [1.44.23](https://github.com/openwhyd/openwhyd/compare/v1.44.22...v1.44.23) (2021-01-23)
 
 
