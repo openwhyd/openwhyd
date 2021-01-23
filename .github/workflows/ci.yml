@@ -29,6 +29,12 @@ jobs:
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
+      - name: npm run lint:typescript
+        run: |
+          npm run lint:typescript
+          git status
+          echo ℹ️  If this test fails, run `npm run lint:typescript` and commit the changes.
+          exit $(git diff | wc -l)
       - name: npm run lint:fix
         run: |
           npm run lint:fix

@@ -32,6 +32,7 @@
     "docker:test:cypress:dev": ". ./.env-docker && npm run test:cypress:dev",
     "docker:test:cypress": ". ./.env-docker && npm run test:cypress",
     "docker:test": "npm run docker:run test-unit && npm run docker:run test-api && npm run docker:test:cypress",
+    "lint:typescript": "npx tsc --noEmit",
     "lint:format": "prettier . --write",
     "lint:fix": "eslint app --fix",
     "lint": "eslint app"
@@ -69,6 +70,7 @@
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.18.2",
     "@cypress/code-coverage": "^3.9.1",
+    "@types/node": "^14.14.22",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
     "cypress": "^5.1.0",
