@@ -1,3 +1,10 @@
+## [1.44.21](https://github.com/openwhyd/openwhyd/compare/v1.44.20...v1.44.21) (2021-01-23)
+
+
+### Bug Fixes
+
+* **ci:** Add APPLITOOLS_BATCH_ID env var ([#432](https://github.com/openwhyd/openwhyd/issues/432)) ([816e7ff](https://github.com/openwhyd/openwhyd/commit/816e7ff1fad0165f3e1fde3d877044cfccfe34d8))
+
 ## [1.44.20](https://github.com/openwhyd/openwhyd/compare/v1.44.19...v1.44.20) (2021-01-23)
 
 
