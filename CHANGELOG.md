@@ -1,3 +1,38 @@
+## [1.44.22](https://github.com/openwhyd/openwhyd/compare/v1.44.21...v1.44.22) (2021-01-23)
+
+
+### Bug Fixes
+
+* **ci:** Revert Applitools configuration for GitHub integration ([#436](https://github.com/openwhyd/openwhyd/issues/436)) ([aaa04f6](https://github.com/openwhyd/openwhyd/commit/aaa04f62540a832d2ef9331c016ba6b7d9074575)), closes [#432](https://github.com/openwhyd/openwhyd/issues/432)
+
+## [1.44.21](https://github.com/openwhyd/openwhyd/compare/v1.44.20...v1.44.21) (2021-01-23)
+
+
+### Bug Fixes
+
+* **ci:** Add APPLITOOLS_BATCH_ID env var ([#432](https://github.com/openwhyd/openwhyd/issues/432)) ([816e7ff](https://github.com/openwhyd/openwhyd/commit/816e7ff1fad0165f3e1fde3d877044cfccfe34d8))
+
+## [1.44.20](https://github.com/openwhyd/openwhyd/compare/v1.44.19...v1.44.20) (2021-01-23)
+
+
+### Bug Fixes
+
+* **UI:** Search results blocked by header, when visiting the home page ([#435](https://github.com/openwhyd/openwhyd/issues/435)) ([13745d5](https://github.com/openwhyd/openwhyd/commit/13745d501c0f3d55741e58688cf090b8747eeaa2))
+
+## [1.44.19](https://github.com/openwhyd/openwhyd/compare/v1.44.18...v1.44.19) (2021-01-18)
+
+
+### Bug Fixes
+
+* **ci:** Don't npm install unless we publish to Docker Hub ([#431](https://github.com/openwhyd/openwhyd/issues/431)) ([b66eb8b](https://github.com/openwhyd/openwhyd/commit/b66eb8b8cc353a848d9b25ea6c81bf5f47335d81))
+
+## [1.44.18](https://github.com/openwhyd/openwhyd/compare/v1.44.17...v1.44.18) (2021-01-17)
+
+
+### Bug Fixes
+
+* **deps:** Update mongodb 3.1.13 --> 3.6.3 ([#427](https://github.com/openwhyd/openwhyd/issues/427)) ([bf7e3e2](https://github.com/openwhyd/openwhyd/commit/bf7e3e22fba389e78f2cfd620c9e961886c715cb))
+
 ## [1.44.17](https://github.com/openwhyd/openwhyd/compare/v1.44.16...v1.44.17) (2021-01-11)
 
 
