@@ -171,25 +171,25 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
 };
 
 exports.countUserPosts = function (uid, handler) {
-  mongodb.collections['post'].countDocuments({ uId: uid, rTo: null }, function (
-    err,
-    result
-  ) {
-    handler(result);
-  });
+  mongodb.collections['post'].countDocuments(
+    { uId: uid, rTo: null },
+    function (err, result) {
+      handler(result);
+    }
+  );
 };
 
 exports.model = exports;
 
 // used by apiPost (for loves)
 exports.fetchPostById = function (pId, handler) {
-  mongodb.collections['post'].findOne({ _id: ObjectId('' + pId) }, function (
-    err,
-    res
-  ) {
-    if (err) console.log(err);
-    handler(res);
-  });
+  mongodb.collections['post'].findOne(
+    { _id: ObjectId('' + pId) },
+    function (err, res) {
+      if (err) console.log(err);
+      handler(res);
+    }
+  );
 };
 
 exports.isPostLovedByUid = function (pId, uId, handler) {

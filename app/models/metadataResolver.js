@@ -209,12 +209,12 @@ exports.getTrackMapping = function (expectedSourceId, trackMetadata, cb) {
     var resolver = MAPPING_RESOLVERS[i];
     var dests = resolver[0].split('->').pop();
     if (dests.indexOf(expectedSourceId) != -1)
-      return resolver[1]({ metadata: trackMetadata, mappings: {} }, function (
-        err,
-        track
-      ) {
-        cb(err, ((track || {}).mappings || {})[expectedSourceId]);
-      });
+      return resolver[1](
+        { metadata: trackMetadata, mappings: {} },
+        function (err, track) {
+          cb(err, ((track || {}).mappings || {})[expectedSourceId]);
+        }
+      );
   }
   cb();
 };

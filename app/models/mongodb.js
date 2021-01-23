@@ -90,12 +90,14 @@ exports.cacheUser = function (user) {
 
 exports.cacheUsers = function (callback) {
   userModel = userModel || require('./user.js');
-  userModel.fetchMulti({}, { projection: USER_CACHE_FIELDS }, function (
-    results
-  ) {
-    for (let i in results) exports.cacheUser(results[i]);
-    if (callback) callback();
-  });
+  userModel.fetchMulti(
+    {},
+    { projection: USER_CACHE_FIELDS },
+    function (results) {
+      for (let i in results) exports.cacheUser(results[i]);
+      if (callback) callback();
+    }
+  );
 };
 
 exports.forEach = function (colName, params, handler, cb, cbParam) {

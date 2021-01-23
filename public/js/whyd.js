@@ -547,12 +547,14 @@ window.dlgCreatePlaylist = function () {
 };
 
 window.dlgEditPlaylist = function () {
-  openRemoteDialog('/html/dlgEditPlaylist.html', 'dlgEditPlaylist', function (
-    $dlg
-  ) {
-    //console.log("window.pagePlaylist", window.pagePlaylist);
-    $dlg.find('h1').text('Edit playlist');
-  });
+  openRemoteDialog(
+    '/html/dlgEditPlaylist.html',
+    'dlgEditPlaylist',
+    function ($dlg) {
+      //console.log("window.pagePlaylist", window.pagePlaylist);
+      $dlg.find('h1').text('Edit playlist');
+    }
+  );
 };
 
 window.modalPostBox = function (/*onPosted*/) {

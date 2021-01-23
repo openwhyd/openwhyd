@@ -42,16 +42,17 @@ describe('hypemachine / mp3 detector', function () {
   }
 
   function genSearchTest(q) {
-    it('finds a match on hypemachine from the title "' + q + '"', function (
-      done
-    ) {
-      //console.log('(hypem.search) query:', q, '...');
-      hypem.search(q, function (err, results) {
-        assert.ifError(err);
-        assert(objToArray(results).length);
-        done();
-      });
-    });
+    it(
+      'finds a match on hypemachine from the title "' + q + '"',
+      function (done) {
+        //console.log('(hypem.search) query:', q, '...');
+        hypem.search(q, function (err, results) {
+          assert.ifError(err);
+          assert(objToArray(results).length);
+          done();
+        });
+      }
+    );
   }
 
   function genSearchMp3Test(q) {

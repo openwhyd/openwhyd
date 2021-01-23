@@ -1,5 +1,7 @@
 /* global $ */
 
+const globals = window;
+
 /**
  * post box for openwhyd music
  * @author adrienjoly, whyd
@@ -25,7 +27,7 @@ function htmlDecode(str) {
 
 //================ WHYD POST CLASS (to submit posts)
 
-function WhydPost(embedRef) {
+function WhydPost(/*embedRef*/) {
   var that = this;
   this.postData = {
     action: 'insert',
@@ -85,7 +87,7 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
   var $arrow = $head.find('span');
   var $playlistMenu = $selPlaylist.find('.content');
   var $form = $selPlaylist.find('form');
-  function hideMenu(e) {
+  function hideMenu(/*e*/) {
     // only hide if e is null, or if a playlist was clicked (avoid playlist menu head and form)
     // if (!e || !($head[0] == e.target || $head[0] == e.target.parentNode
     // 		|| $form[0] == e.target.parentNode)){
@@ -183,13 +185,13 @@ function WhydTextWithMentions(textArea) {
 
 //================ javascript code moved from postEdit.html
 
-function initPostBox(params) {
+globals.initPostBox = function (params) {
   var addingFromBookmarklet = params.mode === 'addFromBookmarklet';
   var editingPost = params.mode === 'editPost';
   var reposting = params.mode === 'repost';
 
   function initWhydPost(embedRef) {
-    whydPost = new WhydPost();
+    const whydPost = new WhydPost();
     whydPost.setEmbedRef(embedRef);
     // select default playlist (to override playlist of original author, when reposted)
     whydPost.setPlaylist('null', 'full stream');
@@ -206,12 +208,12 @@ function initPostBox(params) {
     try {
       var submitted = whydPost.postData,
         stored = whydPost.storedPost;
-      window.Whyd.tracking.log(
+      globals.Whyd.tracking.log(
         'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
         stored._id
       );
       if ((submitted.pl || {}).id == 'create')
-        window.Whyd.tracking.log('Created playlist', stored.pl.id);
+        globals.Whyd.tracking.log('Created playlist', stored.pl.id);
     } catch (e) {
       console.warn('error', e, e.stack);
     }
@@ -220,7 +222,7 @@ function initPostBox(params) {
   var $body = $('body');
 
   function close() {
-    if (window.avgrundClose) avgrundClose();
+    if (globals.avgrundClose) globals.avgrundClose();
     else window.close();
     // TODO: also close bookmarklet overlay
   }
@@ -261,9 +263,9 @@ function initPostBox(params) {
 
   // for openwhyd ui (add/edit/repost)
   function closeAndShowTrack(posted) {
-    avgrundClose();
+    globals.avgrundClose();
     if (!posted)
-      return (window.showMessage || alert)(
+      return (globals.showMessage || alert)(
         'Oops; an error occurred... Please try again!',
         true
       );
@@ -271,13 +273,13 @@ function initPostBox(params) {
     if (posted.pl) {
       url += '/playlist/' + posted.pl.id;
     }
-    if (window.showMessage) {
+    if (globals.showMessage) {
       var plName = posted.pl ? posted.pl.name : 'your tracks';
-      showMessage(
+      globals.showMessage(
         "Successfully added track to <a target='_blank' href='" +
           url +
           "'>" +
-          encodeHtmlEntities(plName) +
+          globals.encodeHtmlEntities(plName) +
           '</a>'
       );
     } else if (url) window.location.href = url;
@@ -318,7 +320,7 @@ function initPostBox(params) {
     var descBox = new WhydTextWithMentions(document.getElementById('text'));
     $('#btnSubmit')
       .unbind()
-      .click(function (e) {
+      .click(function (/*e*/) {
         descBox.getTextWithMentions(function (text) {
           // sample text: "pouet @[adrien](user:4ecb6ec933d9308badd7b7b4) test"
           console.log('WhydTextWithMentions RESULT:', text);
@@ -334,17 +336,17 @@ function initPostBox(params) {
     }, 200);
   }
 
-  function makePlayemStreamDetector(eidSet) {
+  function makePlayemStreamDetector(/*eidSet*/) {
     var players = {
       // playem-all.js must be loaded at that point
-      yt: new YoutubePlayer({}),
-      sc: new SoundCloudPlayer({}),
-      vi: new VimeoPlayer({}),
-      dm: new DailymotionPlayer({}),
-      dz: new DeezerPlayer({}),
-      bc: new BandcampPlayer({}),
-      ja: new JamendoPlayer({}),
-      fi: new AudioFilePlayer({}),
+      yt: new globals.YoutubePlayer({}),
+      sc: new globals.SoundCloudPlayer({}),
+      vi: new globals.VimeoPlayer({}),
+      dm: new globals.DailymotionPlayer({}),
+      dz: new globals.DeezerPlayer({}),
+      bc: new globals.BandcampPlayer({}),
+      ja: new globals.JamendoPlayer({}),
+      fi: new globals.AudioFilePlayer({}),
       // TODO: make sure that the list of players is always up to date
     };
     function getPlayerId(url) {
@@ -407,26 +409,27 @@ function initPostBox(params) {
     $body.removeClass('failed');
     // todo: make sure that playemjs is loaded and ready to use
     // todo: in editPost case: populate track object and display using post metadata, instead of fetching
-    makePlayemStreamDetector()(params.embed.replace(/\&amp\;/g, '&'), function (
-      track
-    ) {
-      console.log('postBox detected track:', track);
-      if ((track || {}).eId) {
-        track.src = params.src;
-        track.name = $('#contentTitle').text(); // || $("#contentTitleInput").val();
-        if (!track.name || track.name == 'undefined')
-          // weak equality necessary because of text()
-          track.name = track.title;
-      } else track = {};
-      populateTrackUi(track);
-    });
+    makePlayemStreamDetector()(
+      params.embed.replace(/&amp;/g, '&'),
+      function (track) {
+        console.log('postBox detected track:', track);
+        if ((track || {}).eId) {
+          track.src = params.src;
+          track.name = $('#contentTitle').text(); // || $("#contentTitleInput").val();
+          if (!track.name || track.name == 'undefined')
+            // weak equality necessary because of text()
+            track.name = track.title;
+        } else track = {};
+        populateTrackUi(track);
+      }
+    );
     /*
 		$("#lnkDeletePost").unbind().click(function() {
-			avgrundClose();
+			globals.avgrundClose();
 			window.setTimeout(function(){
 				var html = '<div><div style="background-image:url(\'' + params.img + '\');"></div>'
 					+ '<span>' + params.title + '</span></div>' // TODO: sanitize title?
-			  		+ '<span class="btnDelete greenButton" onclick="avgrundClose();removePost(\'' + params.pId + '\');">Delete</span>';
+			  		+ '<span class="btnDelete greenButton" onclick="window.avgrundClose();removePost(\'' + params.pId + '\');">Delete</span>';
 				openJqueryDialog($(html), "dlgDeletePost", "Delete this post");
 			}, 600);
 		});
@@ -439,9 +442,9 @@ function initPostBox(params) {
 
   $(document).ajaxComplete(function () {
     try {
-      FB.XFBML.parse();
+      globals.FB.XFBML.parse();
     } catch (ex) {
       console.error(ex);
     }
   });
-}
+};

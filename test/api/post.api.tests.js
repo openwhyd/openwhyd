@@ -93,15 +93,17 @@ describe(`post api`, function () {
 
   it(`should return 1 track in the playlist`, function (done) {
     api.loginAs(DUMMY_USER, function (error, { jar }) {
-      api.getPlaylistTracks(jar, `u/${uId}`, firstPlaylistIndex, function (
-        error,
-        { body }
-      ) {
-        assert.equal(body.length, 1);
-        assert.equal(body[0].pl.id, firstPlaylistIndex);
-        assert.equal(body[0].pl.name, postInPlaylist.pl.name);
-        done();
-      });
+      api.getPlaylistTracks(
+        jar,
+        `u/${uId}`,
+        firstPlaylistIndex,
+        function (error, { body }) {
+          assert.equal(body.length, 1);
+          assert.equal(body[0].pl.id, firstPlaylistIndex);
+          assert.equal(body[0].pl.name, postInPlaylist.pl.name);
+          done();
+        }
+      );
     });
   });
 

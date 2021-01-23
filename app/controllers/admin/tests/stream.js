@@ -21,13 +21,14 @@ exports.makeTests = function (p) {
       'fetchSubscriptionArray',
       function fetchSubscriptions(cb) {
         //console.time("fetchSubscriptionArray");
-        followModel.fetchSubscriptionArray(p.loggedUser.id, function (
-          subscriptions
-        ) {
-          testVars.uidList = subscriptions.concat([p.loggedUser.id]);
-          //console.timeEnd("fetchSubscriptionArray");
-          cb(true);
-        });
+        followModel.fetchSubscriptionArray(
+          p.loggedUser.id,
+          function (subscriptions) {
+            testVars.uidList = subscriptions.concat([p.loggedUser.id]);
+            //console.timeEnd("fetchSubscriptionArray");
+            cb(true);
+          }
+        );
       },
     ],
     [

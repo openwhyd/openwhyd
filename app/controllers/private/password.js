@@ -51,13 +51,14 @@ exports.renderForgotPage = function (request, reqParams, response, error) {
     redirect: reqParams.redirect || '',
   };
 
-  templateLoader.loadTemplate('app/templates/passwordForgot.html', function (
-    template
-  ) {
-    response.legacyRender(template.render(vars), null, {
-      'content-type': 'text/html',
-    });
-  });
+  templateLoader.loadTemplate(
+    'app/templates/passwordForgot.html',
+    function (template) {
+      response.legacyRender(template.render(vars), null, {
+        'content-type': 'text/html',
+      });
+    }
+  );
 };
 
 /**
@@ -87,13 +88,14 @@ exports.renderPasswordPage = function (request, reqParams, response, error) {
 
     //var html = Mustache.to_html(htmlTemplate, vars);
     //response.legacyRender(html, null, {'content-type': 'text/html'});
-    templateLoader.loadTemplate('app/templates/passwordSet.html', function (
-      template
-    ) {
-      response.legacyRender(template.render(vars), null, {
-        'content-type': 'text/html',
-      });
-    });
+    templateLoader.loadTemplate(
+      'app/templates/passwordSet.html',
+      function (template) {
+        response.legacyRender(template.render(vars), null, {
+          'content-type': 'text/html',
+        });
+      }
+    );
   });
 };
 
@@ -141,28 +143,29 @@ exports.resetPassword = function (request, reqParams, response) {
   //	return exports.renderPasswordPage(request, reqParams, response, "Your password contains invalid characters");
 
   exports.checkResetCode(request, reqParams, response, function (user) {
-    users.save({ _id: user._id, pwd: md5(reqParams.password) }, function (
-      storedUser
-    ) {
-      if (!storedUser)
-        return exports.renderPasswordPage(
-          request,
-          reqParams,
-          response,
-          'Oops, your request failed... Please try again!'
-        );
+    users.save(
+      { _id: user._id, pwd: md5(reqParams.password) },
+      function (storedUser) {
+        if (!storedUser)
+          return exports.renderPasswordPage(
+            request,
+            reqParams,
+            response,
+            'Oops, your request failed... Please try again!'
+          );
 
-      console.log('password reset ok');
-      notifEmails.sendPasswordUpdated(storedUser._id, storedUser.email);
+        console.log('password reset ok');
+        notifEmails.sendPasswordUpdated(storedUser._id, storedUser.email);
 
-      if (reqParams.redirect) return response.redirect(reqParams.redirect);
-      else
-        return response.legacyRender(
-          'Your password was successfully updated! You can now login there: ' +
-            config.urlPrefix
-        );
-      //, null, {'content-type': 'text/html'});
-    });
+        if (reqParams.redirect) return response.redirect(reqParams.redirect);
+        else
+          return response.legacyRender(
+            'Your password was successfully updated! You can now login there: ' +
+              config.urlPrefix
+          );
+        //, null, {'content-type': 'text/html'});
+      }
+    );
   });
 };
 

@@ -259,25 +259,27 @@ var fileGenerators = {
       return [snip.normalizeArtistName(band)];
     });
     console.log('bands', bands);
-    recomModel.matchingEngine.fetchUsersByArtists(bands, null, function (
-      users
-    ) {
-      const processedUsers = snip.mapToObjArray(users).map(function (user) {
-        var artists = countOccurences(user.posted || []);
-        user.score = artists.length;
-        user.artists = artists
-          .map(function (artist) {
-            return artist.id + ' (' + artist.c + ')';
-          })
-          .join(', ');
-        delete user.posted;
-        return user;
-      });
-      processedUsers.sort(function (a, b) {
-        return b.score - a.score;
-      });
-      cb(processedUsers);
-    });
+    recomModel.matchingEngine.fetchUsersByArtists(
+      bands,
+      null,
+      function (users) {
+        const processedUsers = snip.mapToObjArray(users).map(function (user) {
+          var artists = countOccurences(user.posted || []);
+          user.score = artists.length;
+          user.artists = artists
+            .map(function (artist) {
+              return artist.id + ' (' + artist.c + ')';
+            })
+            .join(', ');
+          delete user.posted;
+          return user;
+        });
+        processedUsers.sort(function (a, b) {
+          return b.score - a.score;
+        });
+        cb(processedUsers);
+      }
+    );
   },
   'bandsToUsers.tsv': function (p, cb) {
     fileGenerators['bandsToUsers.json'](p, function (users) {

@@ -241,11 +241,13 @@ exports.makeTests = function (p) {
       'fetch user using API (logged as admin)',
       function (cb) {
         fetchTestUser(function (testUser) {
-          jsonGet('/api/user/' + testVars.registeredUid, {}, function (
-            apiUser
-          ) {
-            cb(testUser._id === apiUser._id);
-          });
+          jsonGet(
+            '/api/user/' + testVars.registeredUid,
+            {},
+            function (apiUser) {
+              cb(testUser._id === apiUser._id);
+            }
+          );
         });
       },
     ],

@@ -42,18 +42,19 @@ var publicActions = {
       followModel.fetchUserSubscriptions(p.id, function (sub) {
         userModel.fetchUserBios(sub.subscriptions, function () {
           if (p.loggedUser && p.loggedUser.id != p.id)
-            followModel.fetchUserSubscriptions(p.loggedUser.id, function (
-              mySub
-            ) {
-              cb(
-                sub
-                  ? addUserInfo(
-                      sub.subscriptions,
-                      mySub ? mySub.subscriptions : []
-                    )
-                  : null
-              );
-            });
+            followModel.fetchUserSubscriptions(
+              p.loggedUser.id,
+              function (mySub) {
+                cb(
+                  sub
+                    ? addUserInfo(
+                        sub.subscriptions,
+                        mySub ? mySub.subscriptions : []
+                      )
+                    : null
+                );
+              }
+            );
           else
             cb(
               sub
@@ -72,18 +73,19 @@ var publicActions = {
       followModel.fetchUserSubscriptions(p.id, function (sub) {
         userModel.fetchUserBios(sub.subscribers, function () {
           if (p.loggedUser && p.loggedUser.id != p.id)
-            followModel.fetchUserSubscriptions(p.loggedUser.id, function (
-              mySub
-            ) {
-              cb(
-                sub
-                  ? addUserInfo(
-                      sub.subscribers,
-                      mySub ? mySub.subscriptions : []
-                    )
-                  : null
-              );
-            });
+            followModel.fetchUserSubscriptions(
+              p.loggedUser.id,
+              function (mySub) {
+                cb(
+                  sub
+                    ? addUserInfo(
+                        sub.subscribers,
+                        mySub ? mySub.subscriptions : []
+                      )
+                    : null
+                );
+              }
+            );
           else
             cb(
               sub

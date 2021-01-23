@@ -12,11 +12,12 @@ var mainTemplate = require('../../templates/mainTemplate.js');
 var MAX_TRACKS = 1000;
 
 function renderTemplate(params, callback) {
-  templateLoader.loadTemplate('app/templates/feed-trackorder.html', function (
-    template
-  ) {
-    callback(template.render(params));
-  });
+  templateLoader.loadTemplate(
+    'app/templates/feed-trackorder.html',
+    function (template) {
+      callback(template.render(params));
+    }
+  );
 }
 
 exports.controller = function (request, getParams, response) {

@@ -44,15 +44,16 @@ function fetchArray(query = {}, options, callback) {
     // is ObjectId
     query.tId = '' + query.tId;
   //console.log("follow.fetchArray", query, "...");
-  mongodb.collections[COLNAME].find(query, options || {}, function (
-    err,
-    cursor
-  ) {
-    cursor.toArray(function (err, results) {
-      //console.log("=> ", results.length, "follow items");
-      callback(results);
-    });
-  });
+  mongodb.collections[COLNAME].find(
+    query,
+    options || {},
+    function (err, cursor) {
+      cursor.toArray(function (err, results) {
+        //console.log("=> ", results.length, "follow items");
+        callback(results);
+      });
+    }
+  );
 }
 
 exports.get = function (followObj, dbHandler) {
@@ -66,14 +67,16 @@ exports.add = function (followObj, dbHandler) {
   };
   var collection = mongodb.collections[COLNAME];
   //collection.save(obj, dbHandler);
-  collection.updateOne(req, followObj, { upsert: true }, function (
-    err,
-    result
-  ) {
-    // to avoid duplicates
-    if (err) dbHandler(err, result);
-    else collection.findOne(req, dbHandler);
-  });
+  collection.updateOne(
+    req,
+    followObj,
+    { upsert: true },
+    function (err, result) {
+      // to avoid duplicates
+      if (err) dbHandler(err, result);
+      else collection.findOne(req, dbHandler);
+    }
+  );
 };
 
 exports.remove = function (uId, tId, dbHandler) {
@@ -114,27 +117,33 @@ exports.fetchUserSubscriptions = function (uid, callback) {
     subscriptions: [],
     subscribers: [],
   };
-  fetchArray({ uId: uid }, { sort: [['_id', 'desc']] }, function (
-    subscriptions
-  ) {
-    result.subscriptions = transformSubscriptionArray(subscriptions);
-    fetchArray({ tId: uid }, { sort: [['_id', 'desc']] }, function (
-      subscribers
-    ) {
-      result.subscribers = transformSubscriberArray(subscribers);
-      callback(result);
-    });
-  });
+  fetchArray(
+    { uId: uid },
+    { sort: [['_id', 'desc']] },
+    function (subscriptions) {
+      result.subscriptions = transformSubscriptionArray(subscriptions);
+      fetchArray(
+        { tId: uid },
+        { sort: [['_id', 'desc']] },
+        function (subscribers) {
+          result.subscribers = transformSubscriberArray(subscribers);
+          callback(result);
+        }
+      );
+    }
+  );
 };
 
 // HELPERS
 
 exports.fetchSubscriptionSet = function (uid, callback) {
-  fetchArray({ uId: uid }, { fields: { _id: 0, tId: 1 } }, function (
-    subscriptions
-  ) {
-    callback(snip.objArrayToSet(subscriptions, 'tId'));
-  });
+  fetchArray(
+    { uId: uid },
+    { fields: { _id: 0, tId: 1 } },
+    function (subscriptions) {
+      callback(snip.objArrayToSet(subscriptions, 'tId'));
+    }
+  );
 };
 
 exports.fetchSubscriptionArray = function (uid, cb) {

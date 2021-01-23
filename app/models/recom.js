@@ -175,29 +175,31 @@ exports.matchingEngine = (function () {
 
 /** returns a similarity scored and the list of common artists **/
 exports.computeUserSimilarity = function (uId1, uId2, cb) {
-  exports.matchingEngine.fetchCommonArtistsForTwoUsers(uId1, uId2, function (
-    common
-  ) {
-    //console.log("common", common);
-    var nbArtists =
-      (exports.matchingEngine.getArtistsByUser(uId1) || []).length / 2;
-    common = snip
-      .mapToObjArray(common, 'id', 'c')
-      .sort(function (a, b) {
-        return b.c - a.c;
-      })
-      .map(function (artist) {
-        return {
-          id: artist.id,
-          name: exports.matchingEngine.getArtistName(artist.id),
-          c: artist.c,
-        };
+  exports.matchingEngine.fetchCommonArtistsForTwoUsers(
+    uId1,
+    uId2,
+    function (common) {
+      //console.log("common", common);
+      var nbArtists =
+        (exports.matchingEngine.getArtistsByUser(uId1) || []).length / 2;
+      common = snip
+        .mapToObjArray(common, 'id', 'c')
+        .sort(function (a, b) {
+          return b.c - a.c;
+        })
+        .map(function (artist) {
+          return {
+            id: artist.id,
+            name: exports.matchingEngine.getArtistName(artist.id),
+            c: artist.c,
+          };
+        });
+      cb({
+        artists: common,
+        score: common.length / nbArtists,
       });
-    cb({
-      artists: common,
-      score: common.length / nbArtists,
-    });
-  });
+    }
+  );
 };
 
 /** returns a scored list of recommended users, based on common artists **/

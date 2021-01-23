@@ -106,16 +106,19 @@ function makeAddDlg(reqParams, playlists, user, cb) {
 		render(p);
 	});
 	*/
-  postModel.fetchPosts({ eId: eId, uId: user.id }, {}, { limit: 1 }, function (
-    posts
-  ) {
-    if (posts && posts.length && posts[0])
-      p.trackPresenceMsg =
-        'You already added this track, ' +
-        snip.renderTimestamp(new Date() - posts[0]._id.getTimestamp()) +
-        ' ago.';
-    cb(null, p);
-  });
+  postModel.fetchPosts(
+    { eId: eId, uId: user.id },
+    {},
+    { limit: 1 },
+    function (posts) {
+      if (posts && posts.length && posts[0])
+        p.trackPresenceMsg =
+          'You already added this track, ' +
+          snip.renderTimestamp(new Date() - posts[0]._id.getTimestamp()) +
+          ' ago.';
+      cb(null, p);
+    }
+  );
 }
 
 /**

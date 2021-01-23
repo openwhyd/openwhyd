@@ -4,6 +4,7 @@ CHANGELOG.md
 tipsy.css
 jquery*.js
 playem-all.js
+public/js/dropzone.js
 public/js/soundmanager2.js
 public/press/js/sliderz.v1.js
 docs/_site/*.html

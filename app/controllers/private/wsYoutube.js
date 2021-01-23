@@ -19,26 +19,27 @@ exports.requestVideos = function (query, handler) {
     encodeURIComponent(query);
   //console.log("requesting: "+host+url+"...");
   http
-    .request({ path: url, host: host, port: 80, method: 'GET' }, function (
-      res
-    ) {
-      var json = '';
-      res.addListener('data', function (chunk) {
-        json += chunk.toString();
-      });
-      res.addListener('end', function () {
-        json = JSON.parse(json);
-        var results = json.data.items || [];
-        console.log(
-          'wsYoutube: ' +
-            query +
-            ' => ' +
-            (results ? results.length : 0) +
-            ' videos'
-        );
-        handler(results);
-      });
-    })
+    .request(
+      { path: url, host: host, port: 80, method: 'GET' },
+      function (res) {
+        var json = '';
+        res.addListener('data', function (chunk) {
+          json += chunk.toString();
+        });
+        res.addListener('end', function () {
+          json = JSON.parse(json);
+          var results = json.data.items || [];
+          console.log(
+            'wsYoutube: ' +
+              query +
+              ' => ' +
+              (results ? results.length : 0) +
+              ' videos'
+          );
+          handler(results);
+        });
+      }
+    )
     .on('error', function (err) {
       console.log('[ERR] wsYoutube.requestVideos ', err);
       console.error('[ERR] wsYoutube.requestVideos ', err);

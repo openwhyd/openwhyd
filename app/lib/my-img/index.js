@@ -36,24 +36,25 @@ if (gmVersion) {
 
 exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
   imgUrl = url.parse(imgUrl);
-  http.get({ host: imgUrl.host, path: imgUrl.pathname, port: 80 }, function (
-    res
-  ) {
-    var data = '';
-    res.setEncoding('binary');
-    res.on('data', function (chunk) {
-      data += chunk;
-    });
-    res.on('end', function () {
-      console.log('[my.img] done');
-      fs.writeFile(imgOutput, data, 'binary', function (err) {
-        if (err) {
-          if (errorListener) errorListener(err);
-          else console.error('[my.img]', err);
-        } else if (endListener) endListener();
+  http.get(
+    { host: imgUrl.host, path: imgUrl.pathname, port: 80 },
+    function (res) {
+      var data = '';
+      res.setEncoding('binary');
+      res.on('data', function (chunk) {
+        data += chunk;
       });
-    });
-  });
+      res.on('end', function () {
+        console.log('[my.img] done');
+        fs.writeFile(imgOutput, data, 'binary', function (err) {
+          if (err) {
+            if (errorListener) errorListener(err);
+            else console.error('[my.img]', err);
+          } else if (endListener) endListener();
+        });
+      });
+    }
+  );
 };
 
 if (USE_GRAPHICS_MAGICK) {

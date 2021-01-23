@@ -6,74 +6,74 @@ var TIME_OUT = 3000;
 
 //==============================================================================
 exports.search = function (query, callback) {
-  get(HYPEM_SEARCH_URL.replace('QUERY', encodeURI(query)), function (
-    err,
-    page
-  ) {
-    var data;
-    if (err) {
-      callback(err, null);
-    } else {
-      try {
-        data = JSON.parse(page.text);
-        if (data) delete data.version;
-        callback(null, data);
-      } catch (e) {
-        callback(e);
+  get(
+    HYPEM_SEARCH_URL.replace('QUERY', encodeURI(query)),
+    function (err, page) {
+      var data;
+      if (err) {
+        callback(err, null);
+      } else {
+        try {
+          data = JSON.parse(page.text);
+          if (data) delete data.version;
+          callback(null, data);
+        } catch (e) {
+          callback(e);
+        }
       }
     }
-  });
+  );
 };
 
 //==============================================================================
 exports.searchMp3s = function (query, callback) {
-  get(HYPEM_SEARCH_URL.replace('QUERY', encodeURI(query)), function (
-    err,
-    page
-  ) {
-    var count = 0;
-    var mp3s = [];
-    var data, i, callbackCalled;
+  get(
+    HYPEM_SEARCH_URL.replace('QUERY', encodeURI(query)),
+    function (err, page) {
+      var count = 0;
+      var mp3s = [];
+      var data, i, callbackCalled;
 
-    function getMp3(data) {
-      count++;
-      get
-        .Mp3s(data.posturl, function (err, mp3Urls) {
-          if (!err && mp3Urls.length > 0) {
-            for (let i = 0, url; (url = mp3Urls[i]); i++) {
-              if (url.endsWith(encodeURI(data.title) + '.mp3')) {
-                data.mp3 = url;
-                mp3s.push(data);
+      function getMp3(data) {
+        count++;
+        get
+          .Mp3s(data.posturl, function (err, mp3Urls) {
+            if (!err && mp3Urls.length > 0) {
+              for (let i = 0, url; (url = mp3Urls[i]); i++) {
+                if (url.endsWith(encodeURI(data.title) + '.mp3')) {
+                  data.mp3 = url;
+                  mp3s.push(data);
+                }
               }
             }
-          }
-          if (--count <= 0) {
-            !callbackCalled && callback(null, mp3s);
+            if (--count <= 0) {
+              !callbackCalled && callback(null, mp3s);
+              callbackCalled = true;
+            }
+          })
+          .setTimeout(TIME_OUT, function () {
+            try {
+              this.abort();
+            } catch (e) {
+              console.log(e.stack);
+            }
+            if (--count <= 0) {
+              !callbackCalled && callback(null, mp3s);
+            }
             callbackCalled = true;
-          }
-        })
-        .setTimeout(TIME_OUT, function () {
-          try {
-            this.abort();
-          } catch (e) {
-            console.log(e.stack);
-          }
-          if (--count <= 0) {
-            !callbackCalled && callback(null, mp3s);
-          }
-          callbackCalled = true;
-        });
-    }
+          });
+      }
 
-    if (err) {
-      callback(err);
-    } else {
-      data = JSON.parse(page.text);
-      for (i = 0; i < NB_RESULTS_PER_PAGE; i++) {
-        if (data[i]) getMp3(data[i]);
+      if (err) {
+        callback(err);
+      } else {
+        data = JSON.parse(page.text);
+        for (i = 0; i < NB_RESULTS_PER_PAGE; i++) {
+          if (data[i]) getMp3(data[i]);
+        }
       }
     }
-  });
+  );
 };
 
 //==============================================================================

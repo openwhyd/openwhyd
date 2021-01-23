@@ -57,12 +57,12 @@ exports.isUserFollowing = function (
   followingMid,
   handler /*, fbAccessToken*/
 ) {
-  follow({ action: 'get', uId: uid, tId: followingMid }, function (
-    error,
-    result
-  ) {
-    handler(result);
-  });
+  follow(
+    { action: 'get', uId: uid, tId: followingMid },
+    function (error, result) {
+      handler(result);
+    }
+  );
 };
 
 var PUBLIC_ACTIONS = {
