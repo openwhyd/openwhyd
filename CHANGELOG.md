@@ -1,3 +1,10 @@
+## [1.44.22](https://github.com/openwhyd/openwhyd/compare/v1.44.21...v1.44.22) (2021-01-23)
+
+
+### Bug Fixes
+
+* **ci:** Revert Applitools configuration for GitHub integration ([#436](https://github.com/openwhyd/openwhyd/issues/436)) ([aaa04f6](https://github.com/openwhyd/openwhyd/commit/aaa04f62540a832d2ef9331c016ba6b7d9074575)), closes [#432](https://github.com/openwhyd/openwhyd/issues/432)
+
 ## [1.44.21](https://github.com/openwhyd/openwhyd/compare/v1.44.20...v1.44.21) (2021-01-23)
 
 
