@@ -6,7 +6,6 @@ context('Visual Snapshots', () => {
       appName: 'Openwhyd',
       testName: 'Visual Snapshots',
       browser: { width: 1000, height: 660 }, // cf https://docs.cypress.io/api/commands/viewport.html#Defaults
-      showLogs: true,
     });
     // TODO: insert a few tracks, to also check regressions on the rendering of those tracks
   });
