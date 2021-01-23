@@ -1,3 +1,10 @@
+## [1.44.20](https://github.com/openwhyd/openwhyd/compare/v1.44.19...v1.44.20) (2021-01-23)
+
+
+### Bug Fixes
+
+* **UI:** Search results blocked by header, when visiting the home page ([#435](https://github.com/openwhyd/openwhyd/issues/435)) ([13745d5](https://github.com/openwhyd/openwhyd/commit/13745d501c0f3d55741e58688cf090b8747eeaa2))
+
 ## [1.44.19](https://github.com/openwhyd/openwhyd/compare/v1.44.18...v1.44.19) (2021-01-18)
 
 
