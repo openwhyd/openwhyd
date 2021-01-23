@@ -1,3 +1,10 @@
+## [1.44.23](https://github.com/openwhyd/openwhyd/compare/v1.44.22...v1.44.23) (2021-01-23)
+
+
+### Bug Fixes
+
+* **ci:** Detect TS errors and check code quality & formatting in CI ([#430](https://github.com/openwhyd/openwhyd/issues/430)) ([c4b4dee](https://github.com/openwhyd/openwhyd/commit/c4b4dee6a656b2f87ba28d48b8f42e21a3cadf62))
+
 ## [1.44.22](https://github.com/openwhyd/openwhyd/compare/v1.44.21...v1.44.22) (2021-01-23)
 
 
