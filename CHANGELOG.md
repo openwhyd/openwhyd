@@ -1,3 +1,10 @@
+## [1.44.26](https://github.com/openwhyd/openwhyd/compare/v1.44.25...v1.44.26) (2021-01-23)
+
+
+### Bug Fixes
+
+* **deps:** Cypress 6.3.0 ([#428](https://github.com/openwhyd/openwhyd/issues/428)) ([ca64506](https://github.com/openwhyd/openwhyd/commit/ca64506184e3b3a85c858ff7a2a80df642a95135)), closes [/docs.cypress.io/guides/references/changelog.html#6-3-0](https://github.com//docs.cypress.io/guides/references/changelog.html/issues/6-3-0)
+
 ## [1.44.25](https://github.com/openwhyd/openwhyd/compare/v1.44.24...v1.44.25) (2021-01-23)
 
 
