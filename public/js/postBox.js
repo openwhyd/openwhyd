@@ -374,25 +374,26 @@ function initPostBox(params) {
   $(function () {
     // todo: make sure that playemjs is loaded and ready to use
     // todo: in editPost case: populate track object and display using post metadata, instead of fetching
-    makePlayemStreamDetector()(params.embed.replace(/&amp;/g, '&'), function (
-      track
-    ) {
-      console.log('postEdit detected track:', track);
-      if (!(track || {}).eId) {
-        // TODO: make a ui that prevents from adding the invalid track
-        $('#btnSubmit').hide();
-        return (window.showMessage || alert)(
-          'Oops; an error occurred... Please try again!',
-          true
-        );
+    makePlayemStreamDetector()(
+      params.embed.replace(/&amp;/g, '&'),
+      function (track) {
+        console.log('postEdit detected track:', track);
+        if (!(track || {}).eId) {
+          // TODO: make a ui that prevents from adding the invalid track
+          $('#btnSubmit').hide();
+          return (window.showMessage || alert)(
+            'Oops; an error occurred... Please try again!',
+            true
+          );
+        }
+        track.src = params.src;
+        track.name = $('#contentTitle').text() || $('#contentTitleInput').val();
+        if (!track.name || track.name == 'undefined')
+          // weak equality necessary because of text()
+          track.name = track.title;
+        onTrack(track);
       }
-      track.src = params.src;
-      track.name = $('#contentTitle').text() || $('#contentTitleInput').val();
-      if (!track.name || track.name == 'undefined')
-        // weak equality necessary because of text()
-        track.name = track.title;
-      onTrack(track);
-    });
+    );
 
     $('#lnkDeletePost').click(function () {
       globals.avgrundClose();

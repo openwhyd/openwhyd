@@ -407,19 +407,20 @@ function initPostBox(params) {
     $body.removeClass('failed');
     // todo: make sure that playemjs is loaded and ready to use
     // todo: in editPost case: populate track object and display using post metadata, instead of fetching
-    makePlayemStreamDetector()(params.embed.replace(/\&amp\;/g, '&'), function (
-      track
-    ) {
-      console.log('postBox detected track:', track);
-      if ((track || {}).eId) {
-        track.src = params.src;
-        track.name = $('#contentTitle').text(); // || $("#contentTitleInput").val();
-        if (!track.name || track.name == 'undefined')
-          // weak equality necessary because of text()
-          track.name = track.title;
-      } else track = {};
-      populateTrackUi(track);
-    });
+    makePlayemStreamDetector()(
+      params.embed.replace(/\&amp\;/g, '&'),
+      function (track) {
+        console.log('postBox detected track:', track);
+        if ((track || {}).eId) {
+          track.src = params.src;
+          track.name = $('#contentTitle').text(); // || $("#contentTitleInput").val();
+          if (!track.name || track.name == 'undefined')
+            // weak equality necessary because of text()
+            track.name = track.title;
+        } else track = {};
+        populateTrackUi(track);
+      }
+    );
     /*
 		$("#lnkDeletePost").unbind().click(function() {
 			avgrundClose();

@@ -69,18 +69,17 @@ exports.signupAs = function signupAs(user, callback) {
 // HTTP request wrappers
 
 exports.get = function (jar, url, callback) {
-  request.get({ jar, url: `${URL_PREFIX}${url}` }, function (
-    error,
-    response,
-    body
-  ) {
-    try {
-      body = JSON.parse(body);
-    } catch (e) {
-      console.error(e);
+  request.get(
+    { jar, url: `${URL_PREFIX}${url}` },
+    function (error, response, body) {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        console.error(e);
+      }
+      callback(error, { response, body, jar });
     }
-    callback(error, { response, body, jar });
-  });
+  );
 };
 
 // USER
