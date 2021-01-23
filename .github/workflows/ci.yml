@@ -175,6 +175,7 @@ jobs:
         with:
           node-version: 12.19.1
       - name: use npm cache
+        if: github.event_name == 'push'
         uses: actions/cache@v2
         with:
           path: ~/.npm
@@ -182,9 +183,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: npm install --prefer-offline --no-audit
-        env:
-          CI: true
-      - run: npm run semantic-release
+        if: github.event_name == 'push'
+      - name: npx semantic-release
+        run: |
+          # we install just semantic-release and its plugins, without considering package.json
+          mkdir "tmp-release"
+          npm --prefix "tmp-release" install --no-save \
+            "semantic-release@17.3.1" \
+            "@semantic-release/changelog@5.0.1" \
+            "@semantic-release/git@9.0.0" \
+            && $(npm --prefix "tmp-release" bin)/semantic-release
+          rm -rf "tmp-release"
         env:
           CI: true
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
