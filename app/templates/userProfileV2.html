@@ -22,16 +22,21 @@
 
   <div id="profileTop" class="wrapper">
     <div class="feedHeader container">
-      <div class="avatar" style="background-image:url('{{img}}?width=100&amp;height=100')"></div>
+      <div
+        class="avatar"
+        style="background-image:url('{{img}}?width=100&amp;height=100')"
+      ></div>
       <h1>{{name}}</h1>
 
       <div id="userStats">
         <a id="userSubscriptions" href="/u/{{id}}/subscriptions">
           {{#subscriptions}}<span>{{nbSubscriptions}}</span>
-          following{{/subscriptions}}</a>
+          following{{/subscriptions}}</a
+        >
         <a id="userSubscribers" href="/u/{{id}}/subscribers">
           {{#subscriptions}}<span>{{nbSubscribers}}</span>
-          followers{{/subscriptions}}</a>
+          followers{{/subscriptions}}</a
+        >
       </div>
 
       <p class="bio">{{{renderedBio}}}</p>
@@ -88,10 +93,13 @@
         });
       </script>
       {{/ownProfile}} {{^ownProfile}}
-      <div class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}" data-uid="{{id}}"
+      <div
+        class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
+        data-uid="{{id}}"
         onclick="$(this).each(switchSubscription)"
         onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
-        onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';">
+        onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';"
+      >
         {{#isSubscribed}}Following{{/isSubscribed}}
         {{^isSubscribed}}Follow{{/isSubscribed}}
       </div>
@@ -110,7 +118,10 @@
       </a>
     </li>
     <li>
-      <a href="/u/{{id}}/playlists" class="{{#showPlaylists}}selected{{/showPlaylists}}">
+      <a
+        href="/u/{{id}}/playlists"
+        class="{{#showPlaylists}}selected{{/showPlaylists}}"
+      >
         Playlists <span class="number-stats">{{nbPlaylists}}</span>
       </a>
     </li>
@@ -120,14 +131,24 @@
       </a>
     </li>
     <li>
-      <a href="/u/{{id}}/subscriptions" class="{{#showSubscriptions}}selected{{/showSubscriptions}}">
-        Following {{#subscriptions}}<span class="number-stats">{{nbSubscriptions}}</span>
+      <a
+        href="/u/{{id}}/subscriptions"
+        class="{{#showSubscriptions}}selected{{/showSubscriptions}}"
+      >
+        Following {{#subscriptions}}<span class="number-stats"
+          >{{nbSubscriptions}}</span
+        >
         {{/subscriptions}}
       </a>
     </li>
     <li>
-      <a href="/u/{{id}}/subscribers" class="{{#showSubscribers}}selected{{/showSubscribers}}">
-        Followers {{#subscriptions}}<span class="number-stats">{{nbSubscribers}}</span>
+      <a
+        href="/u/{{id}}/subscribers"
+        class="{{#showSubscribers}}selected{{/showSubscribers}}"
+      >
+        Followers {{#subscriptions}}<span class="number-stats"
+          >{{nbSubscribers}}</span
+        >
         {{/subscriptions}}
       </a>
     </li>
@@ -142,25 +163,38 @@
         <span>{{streamTitle}}</span>
 
         {{#showPlaylists}}
-        <div class="sort-playlists" {{^items}}style="display:none" {{/items}}>
+        <div class="sort-playlists" style="{{^items}}display:none{{/items}}">
           <div class="sort-icon-container">
-            <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+            >
               <path
                 d="M2 3h12a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2zm0 4h12a1 1 0 0 1 0 2H2a1 1 0 1 1 0-2zm0 4h12a1 1 0 0 1 0 2H2a1 1 0 0 1 0-2z"
-                id="a" />
+                id="a"
+              />
             </svg>
             <span class="sort-title">Sort By</span>
           </div>
           <div class="sort-menu">
-            <a href="javascript:sortPlaylists('alphabetize');" class="sort-menu-item"
-              data-sortOption="">Alphabetically</a>
-            <a href="javascript:sortPlaylists('date');" class="sort-menu-item" data-sortOption="">Date</a>
+            <a
+              href="javascript:sortPlaylists('alphabetize');"
+              class="sort-menu-item"
+              data-sortOption=""
+              >Alphabetically</a
+            >
+            <a
+              href="javascript:sortPlaylists('date');"
+              class="sort-menu-item"
+              data-sortOption=""
+              >Date</a
+            >
           </div>
         </div>
-        {{/showPlaylists}}
-
-        {{#showTracks}} {{^emptyFeed}}
+        {{/showPlaylists}} {{#showTracks}} {{^emptyFeed}}
         <a href="" id="btnFilter" title="Filter"></a>
         {{/emptyFeed}} {{/showTracks}}
       </h2>
@@ -208,7 +242,10 @@
         {{/ownProfile}} {{#items}}
         <li class="playlist" data-playlistName="{{name}}">
           <a href=" {{url}}">
-            <div class="thumb" style="background-image:url('{{img}}?localOnly=1');">
+            <div
+              class="thumb"
+              style="background-image:url('{{img}}?localOnly=1');"
+            >
               <img class="blur" src="{{img}}?remoteOnly=1" />
               <div class="cover-playlist-vinyle"></div>
             </div>
@@ -232,10 +269,16 @@
 
             {{#subscribedUsers}} &nbsp;subscribed to {{#aggregatedItems}}
             <div class="subscription">
-              <span class="userSubscribe {{#subscribed}}subscribed{{/subscribed}}"
-                data-uid="{{id}}">{{#subscribed}}Following{{/subscribed}}{{^subscribed}}Follow{{/subscribed}}</span>
-              <div class="thumb" style="background-image:url('/img/u/{{id}}');"
-                onclick="$(this).parent().find('a.userName').click();"></div>
+              <span
+                class="userSubscribe {{#subscribed}}subscribed{{/subscribed}}"
+                data-uid="{{id}}"
+                >{{#subscribed}}Following{{/subscribed}}{{^subscribed}}Follow{{/subscribed}}</span
+              >
+              <div
+                class="thumb"
+                style="background-image:url('/img/u/{{id}}');"
+                onclick="$(this).parent().find('a.userName').click();"
+              ></div>
               <a class="userName" href="/u/{{id}}">{{name}}</a>
               <div class="bio">{{bio}}</div>
             </div>
@@ -264,7 +307,11 @@
       <ul id="subscriptions">
         {{#items}}
         <li class="user" data-id="{{id}}" data-subscribed="{{subscribed}}">
-          <a href="{{url}}" class="thumb" style="background-image:url('{{img}}?width=100&amp;height=100');"></a>
+          <a
+            href="{{url}}"
+            class="thumb"
+            style="background-image:url('{{img}}?width=100&amp;height=100');"
+          ></a>
           <a href="{{url}}" class="username">{{name}}</a>
           <div class="userbio">{{bio}}</div>
           <!--{{#lastTrack}}<p>Last track: <span>{{name}}</span></p>{{/lastTrack}} -->
@@ -303,7 +350,11 @@
       <ul id="subscriptions">
         {{#items}}
         <li class="user" data-id="{{id}}" data-subscribed="{{subscribed}}">
-          <a href="{{url}}" class="thumb" style="background-image:url('{{img}}?width=100&amp;height=100');">
+          <a
+            href="{{url}}"
+            class="thumb"
+            style="background-image:url('{{img}}?width=100&amp;height=100');"
+          >
           </a>
           <a href="{{url}}" class="username">{{name}}</a>
           <div class="userbio">{{bio}}</div>
@@ -324,7 +375,7 @@
           });
           try {
             $subscr.first().add($subscr.get(1)).css({ border: 0, padding: 0 });
-          } catch (e) { }
+          } catch (e) {}
         });
       </script>
 
@@ -364,7 +415,11 @@
 </div>
 <!-- /container -->
 {{#showTracks}}
-<script src="/js/feed-filter.js" type="text/javascript" charset="utf-8"></script>
+<script
+  src="/js/feed-filter.js"
+  type="text/javascript"
+  charset="utf-8"
+></script>
 {{/showTracks}} {{#header}} {{#ownProfile}}
 <script src="/js/feed-edit.js" type="text/javascript" charset="utf-8"></script>
 {{/ownProfile}} {{/header}}

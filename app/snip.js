@@ -797,7 +797,7 @@ exports.Worker = function (options) {
     --jobs;
     if (!jobs) interval = clearInterval(interval);
     console.log('removed job: ' + job);
-    delete job;
+    delete job; /* eslint-disable-line no-delete-var */
   }
   function Job(id) {
     this.toString = function () {
