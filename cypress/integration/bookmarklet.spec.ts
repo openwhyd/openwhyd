@@ -46,7 +46,7 @@ context('Openwhyd bookmarklet', () => {
     // should list the main track of the page
     cy.get('#whydContent').should(
       'contain.html',
-      'juanchov182/thievery-corporation-meu'
+      'juanchov182/thievery-corporation-meu' // Note: id is found in the data-eid attribute of the thumb element
     );
     cy.get('.whydThumb')
       .first()
@@ -104,7 +104,7 @@ context('Openwhyd bookmarklet', () => {
     cy.get('.whydThumb').should('have.length.above', 1);
 
     // should list the main track of the page
-    cy.get('#whydContent').should('contain.html', VIDEO.id);
+    cy.get('#whydContent').should('contain.html', VIDEO.id); // Note: id is found in the image URL, and also in data-eid
     cy.get('.whydThumb').first().should('contain.text', VIDEO.name);
     cy.get('.whydThumb').first().click();
   });

@@ -487,6 +487,7 @@ if (typeof exports === 'undefined') {
           {
             id: thumb.id,
             class: 'whydThumb',
+            'data-eid': thumb.eId,
             img: thumb.img || urlPrefix + '/images/cover-track.png',
           },
           [
