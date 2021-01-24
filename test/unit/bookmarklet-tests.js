@@ -172,6 +172,41 @@ describe('bookmarklet', () => {
     assert.equal(track.sourceId, playerId);
   });
 
+  it(`should return a track with metadata from a page that lists a SoundCloud track as a link`, async () => {
+    const SOUNDCLOUD_TRACK = {
+      title: 'thievery corporation - meu destino (my destiny)',
+      id: 'juanchov182/thievery-corporation-meu',
+      url: 'https://soundcloud.com/juanchov182/thievery-corporation-meu',
+    };
+    const window = makeWindow({
+      elementsByTagName: {
+        a: [
+          {
+            href: SOUNDCLOUD_TRACK.url,
+            textContent: SOUNDCLOUD_TRACK.title,
+          },
+        ],
+      },
+    });
+    const playerId = 'sc';
+    const detectors = {
+      [playerId]: {
+        getEid: () => SOUNDCLOUD_TRACK.id,
+        fetchMetadata: (url, callback) => callback({}),
+      },
+    };
+    const results = await detectTracksAsPromise({
+      window,
+      urlDetectors: [makeStreamDetector(detectors)],
+    });
+    assert.equal(typeof results, 'object');
+    assert.equal(results.length, 1);
+    const track = results[0];
+    assert.equal(track.title, SOUNDCLOUD_TRACK.title);
+    assert.equal(track.eId, `/${playerId}/${SOUNDCLOUD_TRACK.id}`);
+    assert.equal(track.sourceId, playerId);
+  });
+
   it(`should return a track with the expected name when that track was found as a link from a YouTube page`, async () => {
     const window = makeWindow({
       elementsByTagName: {
