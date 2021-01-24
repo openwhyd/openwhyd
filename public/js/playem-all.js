@@ -1,4 +1,4 @@
-/* playemjs 1.0.0, commit: f0fc497fb2bdca23fd3a6095e320d1529efaea6d */
+/* playemjs 1.1.0, commit: 33eb4c30fdaa21bbf1fc2ce51c7e1d3652d4790f */
 
 // configuration
 
@@ -1589,6 +1589,11 @@ function SoundCloudPlayer(){
 
   function fetchMetadata(url, cb){
     var splitted, params, trackId, method;
+    if (!window.SOUNDCLOUD_CLIENT_ID) {
+      console.error("error: SOUNDCLOUD_CLIENT_ID is not set => fetchMetadata() will not call Soundcloud's API");
+      cb();
+      return;
+    }
     url = unwrapUrl(url);
     splitted = url.split("?");
     params = splitted.length > 1 ? splitted[1] + "&" : ""; // might include a secret_token
@@ -1596,9 +1601,9 @@ function SoundCloudPlayer(){
     method = (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) ? "loadJSONP" : "loadJSON";
     if (trackId)
       loader[method]("https://api.soundcloud.com/tracks/" + trackId + ".json?" + params
-        + "client_id=" + SOUNDCLOUD_CLIENT_ID, cb);
+        + "client_id=" + window.SOUNDCLOUD_CLIENT_ID, cb);
     else
-      loader[method](RESOLVE_URL + "?client_id=" + SOUNDCLOUD_CLIENT_ID
+      loader[method](RESOLVE_URL + "?client_id=" + window.SOUNDCLOUD_CLIENT_ID
         + "&url=" + encodeURIComponent("http://" + url.replace(/^(https?\:)?\/\//, "")), cb);
   }
 
