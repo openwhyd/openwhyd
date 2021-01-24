@@ -1,3 +1,10 @@
+## [1.44.28](https://github.com/openwhyd/openwhyd/compare/v1.44.27...v1.44.28) (2021-01-24)
+
+
+### Bug Fixes
+
+* **#433:** Soundcloud track detection from bookmarklet ([#440](https://github.com/openwhyd/openwhyd/issues/440)) ([01ceadf](https://github.com/openwhyd/openwhyd/commit/01ceadfd2dc7cc44d20e0d5f3c0c10f33dfc6546)), closes [#433](https://github.com/openwhyd/openwhyd/issues/433) [#433](https://github.com/openwhyd/openwhyd/issues/433)
+
 ## [1.44.27](https://github.com/openwhyd/openwhyd/compare/v1.44.26...v1.44.27) (2021-01-24)
 
 
