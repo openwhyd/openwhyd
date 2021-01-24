@@ -615,15 +615,15 @@ function makeStreamDetector(players) {
     eidSet[parts[0]] = true;
     eidSet[eid] = true;
     var detectedTrack = {
-        eId: eid,
+      eId: eid,
       sourceId: playerId,
       sourceLabel: player.label,
     };
     if (element.artist && element.title) {
       return cb(
         __assign(__assign({}, detectedTrack), {
-        title: element.artist + ' - ' + element.title,
-        img: element.img,
+          title: element.artist + ' - ' + element.title,
+          img: element.img,
         })
       );
     }
