@@ -33,6 +33,30 @@ context('Openwhyd bookmarklet', () => {
     });
   });
 
+  it('can detect a track from a soundcloud page', () => {
+    cy.visit(
+      'http://localhost:8080/html/test-resources/soundcloud-tracks.html'
+    );
+
+    cy.window().then(injectBookmarklet);
+
+    // should list more than 1 track
+    cy.get('.whydThumb').should('have.length.above', 1);
+
+    // should list the main track of the page
+    cy.get('#whydContent').should(
+      'contain.html',
+      'juanchov182/thievery-corporation-meu'
+    );
+    cy.get('.whydThumb')
+      .first()
+      .should(
+        'contain.text',
+        'thievery corporation - meu destino (my destiny)'
+      );
+    cy.get('.whydThumb').first().click();
+  });
+
   it('can import the cover art of a Bandcamp track', () => {
     cy.visit('https://harissa.bandcamp.com/track/rooftop');
 
