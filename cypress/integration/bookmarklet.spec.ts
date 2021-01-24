@@ -18,6 +18,7 @@ context('Openwhyd bookmarklet', () => {
       'window.jQuery', // Deezer failing to find window.jQuery
       `Cannot read property 'style' of null`, // TODO: fix this error
       'YOUTUBE_API_KEY is not defined', // TODO: fix this error
+      'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota', // Note: this error was witnessed in CI
     ];
     Cypress.on('uncaught:exception', (err) => {
       if (skippedErrors.some((errMsg) => err.message.includes(errMsg))) {
