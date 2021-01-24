@@ -12,11 +12,20 @@ context('Openwhyd bookmarklet', () => {
   };
 
   beforeEach('login', () => {
-    Cypress.on('uncaught:exception', () => {
-      // We prevent the following uncaught exceptions from failing the test:
-      // - YouTube failing to load "/cast/sdk/libs/sender/1.0/cast_framework.js"
-      // - Deezer failing to find window.jQuery
-      return false; // prevents Cypress from failing the test
+    // We prevent the following uncaught exceptions from failing the test:
+    const skippedErrors = [
+      'cast_framework.js', // YouTube failing to load "/cast/sdk/libs/sender/1.0/cast_framework.js"
+      'window.jQuery', // Deezer failing to find window.jQuery
+      `Cannot read property 'style' of null`, // TODO: fix this error
+      'YOUTUBE_API_KEY is not defined', // TODO: fix this error
+      'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota', // Note: this error was witnessed in CI
+    ];
+    Cypress.on('uncaught:exception', (err) => {
+      if (skippedErrors.some((errMsg) => err.message.includes(errMsg))) {
+        return false; // prevents Cypress from failing the test
+      } else {
+        return true;
+      }
     });
 
     cy.fixture('users.js').then(({ dummy }) => {

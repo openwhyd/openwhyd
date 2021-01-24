@@ -1,6 +1,6 @@
 /* global $ */
 
-const globals = window;
+window.globals = window;
 
 /**
  * post box for openwhyd music
