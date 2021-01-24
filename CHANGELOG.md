@@ -1,3 +1,10 @@
+## [1.44.27](https://github.com/openwhyd/openwhyd/compare/v1.44.26...v1.44.27) (2021-01-24)
+
+
+### Bug Fixes
+
+* **bookmarklet:** "Identifier 'globals' has already been declared" when adding a track ([#439](https://github.com/openwhyd/openwhyd/issues/439)) ([e5e148d](https://github.com/openwhyd/openwhyd/commit/e5e148d2925ba57960ad3845b21c9442fa3ebfa2)), closes [/github.com/openwhyd/openwhyd/pull/429/files#diff-d0670720fd54d514c34d0215269319d1cc83b4fcca7113085edd1040a262febcR3](https://github.com//github.com/openwhyd/openwhyd/pull/429/files/issues/diff-d0670720fd54d514c34d0215269319d1cc83b4fcca7113085edd1040a262febcR3)
+
 ## [1.44.26](https://github.com/openwhyd/openwhyd/compare/v1.44.25...v1.44.26) (2021-01-23)
 
 
