@@ -1,3 +1,10 @@
+## [1.44.29](https://github.com/openwhyd/openwhyd/compare/v1.44.28...v1.44.29) (2021-02-07)
+
+
+### Bug Fixes
+
+* **bandcamp:** De-duplicate stream URLs from Bandcamp ([#444](https://github.com/openwhyd/openwhyd/issues/444)) ([f5d5d35](https://github.com/openwhyd/openwhyd/commit/f5d5d35315bc500d2f0f046663b80432b4875161))
+
 ## [1.44.28](https://github.com/openwhyd/openwhyd/compare/v1.44.27...v1.44.28) (2021-01-24)
 
 
