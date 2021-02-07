@@ -30,11 +30,12 @@ describe(`follow api`, () => {
   });
 
   it(`allows a user to follow another user`, async () => {
-    const { response } = await getAsUser(DUMMY_USER, '/api/follow', {
+    const { response, body } = await getAsUser(DUMMY_USER, '/api/follow', {
       action: 'insert',
       tId: ADMIN_USER.id,
     });
-    assert.is(response.statusCode, 200);
+    console.log({ statusCode: response.statusCode, body });
+    assert.strictEqual(response.statusCode, 200);
     // TODO: then, check in the db that the user was really followed
   });
 });
