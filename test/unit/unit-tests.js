@@ -122,7 +122,7 @@ describe('"img" package', function () {
     try {
       fs.unlinkSync(thumbOutput);
     } catch (e) {
-      console.error(e);
+      console.error(e.message);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
