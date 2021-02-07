@@ -1,3 +1,10 @@
+## [1.44.30](https://github.com/openwhyd/openwhyd/compare/v1.44.29...v1.44.30) (2021-02-07)
+
+
+### Bug Fixes
+
+* **api:** Follow API returns 404 ([#443](https://github.com/openwhyd/openwhyd/issues/443)) ([0e62b44](https://github.com/openwhyd/openwhyd/commit/0e62b4455e5d8171b28622d69be9902b93a9ae29)), closes [#441](https://github.com/openwhyd/openwhyd/issues/441)
+
 ## [1.44.29](https://github.com/openwhyd/openwhyd/compare/v1.44.28...v1.44.29) (2021-02-07)
 
 
