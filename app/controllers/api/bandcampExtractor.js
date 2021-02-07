@@ -4,8 +4,10 @@ var config = require('../../models/config.js');
 const RE_EID = /^\/bc\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/;
 const RE_STREAM_URL = /https:\/\/[^.]+\.bcbits\.com\/stream\/[^;"]*/g;
 
+const dedup = (array) => [...new Set(array).keys()];
+
 exports.extractBandcampStreamURLs = (plainText) =>
-  plainText.match(RE_STREAM_URL);
+  dedup(plainText.match(RE_STREAM_URL));
 
 exports.extractBandcampStreamURLsFromHTML = (html) => {
   const withDecodedEntities = htmlDecode(html);
