@@ -1,3 +1,12 @@
+## [1.44.32](https://github.com/openwhyd/openwhyd/compare/v1.44.31...v1.44.32) (2021-02-08)
+
+
+### Bug Fixes
+
+* Login broken in production ([6df09f3](https://github.com/openwhyd/openwhyd/commit/6df09f39385bcae915282833bebe458934c122a6))
+* Login broken in production (2) ([f4cb5e0](https://github.com/openwhyd/openwhyd/commit/f4cb5e09295fba8344c78695e9884ea9b1b2fcad))
+* Try to re-enable sameSite cookies ([c724637](https://github.com/openwhyd/openwhyd/commit/c72463779114106af77c57d49654bc56b0e0cd2e))
+
 ## [1.44.31](https://github.com/openwhyd/openwhyd/compare/v1.44.30...v1.44.31) (2021-02-08)
 
 
