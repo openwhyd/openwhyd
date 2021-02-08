@@ -1,3 +1,10 @@
+## [1.44.31](https://github.com/openwhyd/openwhyd/compare/v1.44.30...v1.44.31) (2021-02-08)
+
+
+### Bug Fixes
+
+* **security:** Enable secure and sameSite for session cookies ([#445](https://github.com/openwhyd/openwhyd/issues/445)) ([bdf1d8a](https://github.com/openwhyd/openwhyd/commit/bdf1d8a16c4a229b8d5122c400b9b7275b334f6a))
+
 ## [1.44.30](https://github.com/openwhyd/openwhyd/compare/v1.44.29...v1.44.30) (2021-02-07)
 
 
