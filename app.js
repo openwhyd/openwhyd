@@ -120,7 +120,7 @@ function start() {
     }),
     cookie: {
       maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
-      secure: true, // cookie will be accessible only when website if opened over HTTPS
+      secure: process.appParams.startsWith('https://'), // if true, cookie will be accessible only when website if opened over HTTPS
       sameSite: 'strict',
     },
     name: 'whydSid',
