@@ -1,3 +1,10 @@
+## [1.44.34](https://github.com/openwhyd/openwhyd/compare/v1.44.33...v1.44.34) (2021-05-01)
+
+
+### Bug Fixes
+
+* Upgrade Node.js from v12.19.1 to v14.16.1 (LTS) ([#449](https://github.com/openwhyd/openwhyd/issues/449)) ([4aca8f9](https://github.com/openwhyd/openwhyd/commit/4aca8f93b4752e264c21aa13db89481741e44ae5))
+
 ## [1.44.33](https://github.com/openwhyd/openwhyd/compare/v1.44.32...v1.44.33) (2021-05-01)
 
 
