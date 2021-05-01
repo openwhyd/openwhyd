@@ -1,3 +1,11 @@
+## [1.44.38](https://github.com/openwhyd/openwhyd/compare/v1.44.37...v1.44.38) (2021-05-01)
+
+
+### Bug Fixes
+
+* **lint:** Re-format codeql-analysis.yml ([f52a62e](https://github.com/openwhyd/openwhyd/commit/f52a62e19461967e3c0675b34b7751e3f65df502))
+* **security:** Make GitHub track security issues ([e4b19c2](https://github.com/openwhyd/openwhyd/commit/e4b19c285eb4f79b641f841ac2b4f0db23d29cea))
+
 ## [1.44.37](https://github.com/openwhyd/openwhyd/compare/v1.44.36...v1.44.37) (2021-05-01)
 
 
