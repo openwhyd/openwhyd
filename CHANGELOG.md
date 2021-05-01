@@ -1,3 +1,10 @@
+## [1.44.36](https://github.com/openwhyd/openwhyd/compare/v1.44.35...v1.44.36) (2021-05-01)
+
+
+### Bug Fixes
+
+* **prod:** Simplify (re)start scripts, thanks to pm2 ([f5d314d](https://github.com/openwhyd/openwhyd/commit/f5d314d569b8f8edabfe8b59af4310f8fc83846d))
+
 ## [1.44.35](https://github.com/openwhyd/openwhyd/compare/v1.44.34...v1.44.35) (2021-05-01)
 
 
