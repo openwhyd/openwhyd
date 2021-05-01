@@ -27,7 +27,7 @@ fi
 # Start Openwhyd's server
 NEW_UID="openwhyd_$NEW_PORT"
 PREV_UID="openwhyd_$PREV_PORT"
-$ROOT_DIR/scripts/start.sh $NEW_PORT # will start app.js using forever
+$ROOT_DIR/scripts/start.sh $NEW_PORT # will start app.js using pm2
 
 echo "⏲  Waiting for Openwhyd..."
 retries=0
@@ -46,7 +46,7 @@ do
 
     if [ $retries -ge $MAX_RETRY ]; then
         echo "⚠️  App is not responding. Killing it..."
-        npx forever stop 0
+        npx pm2 stop 0
         # [TODO] Something like this would be better:
         # cd $ROOT_DIR && npm stop -- $NEW_UID
         echo "❌  Deployment failed."
@@ -63,7 +63,7 @@ sudo service nginx restart
 
 echo "🌇  Stopping previous instance of Openwhyd..."
 # Stop old server. Index 0 is always the oldest process.
-npx forever stop 0
+npx pm2 stop 0
 
 # TODO: only do this if there was an oldest process,
 # otherwise it will kill the server it just started!

@@ -12,6 +12,6 @@ fi
 
 # Start new server
 echo "🌄  Starting Openwhyd with WHYD_PORT=$PORT..."
-cd $ROOT_DIR && source env-vars-local.sh && WHYD_PORT=$PORT npm run forever:start -- --no-color &
+cd $ROOT_DIR && source env-vars-local.sh && WHYD_PORT=$PORT npx pm2 start app.js
 
 # TODO: find a way to identify that instance, e.g. -- "--uid openwhyd_$PORT"
