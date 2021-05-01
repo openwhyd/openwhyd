@@ -12,16 +12,49 @@ context('Openwhyd bookmarklet', () => {
   };
 
   beforeEach('login', () => {
-    Cypress.on('uncaught:exception', () => {
-      // We prevent the following uncaught exceptions from failing the test:
-      // - YouTube failing to load "/cast/sdk/libs/sender/1.0/cast_framework.js"
-      // - Deezer failing to find window.jQuery
-      return false; // prevents Cypress from failing the test
+    // We prevent the following uncaught exceptions from failing the test:
+    const skippedErrors = [
+      'cast_framework.js', // YouTube failing to load "/cast/sdk/libs/sender/1.0/cast_framework.js"
+      'window.jQuery', // Deezer failing to find window.jQuery
+      `Cannot read property 'style' of null`, // TODO: fix this error
+      'YOUTUBE_API_KEY is not defined', // TODO: fix this error
+      'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota', // Note: this error was witnessed in CI
+    ];
+    Cypress.on('uncaught:exception', (err) => {
+      if (skippedErrors.some((errMsg) => err.message.includes(errMsg))) {
+        return false; // prevents Cypress from failing the test
+      } else {
+        return true;
+      }
     });
 
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
     });
+  });
+
+  it('can detect a track from a soundcloud page', () => {
+    cy.visit(
+      'http://localhost:8080/html/test-resources/soundcloud-tracks.html'
+    );
+
+    cy.window().then(injectBookmarklet);
+
+    // should list more than 1 track
+    cy.get('.whydThumb').should('have.length.above', 1);
+
+    // should list the main track of the page
+    cy.get('#whydContent').should(
+      'contain.html',
+      'juanchov182/thievery-corporation-meu' // Note: id is found in the data-eid attribute of the thumb element
+    );
+    cy.get('.whydThumb')
+      .first()
+      .should(
+        'contain.text',
+        'thievery corporation - meu destino (my destiny)'
+      );
+    cy.get('.whydThumb').first().click();
   });
 
   it('can import the cover art of a Bandcamp track', () => {
@@ -71,7 +104,7 @@ context('Openwhyd bookmarklet', () => {
     cy.get('.whydThumb').should('have.length.above', 1);
 
     // should list the main track of the page
-    cy.get('#whydContent').should('contain.html', VIDEO.id);
+    cy.get('#whydContent').should('contain.html', VIDEO.id); // Note: id is found in the image URL, and also in data-eid
     cy.get('.whydThumb').first().should('contain.text', VIDEO.name);
     cy.get('.whydThumb').first().click();
   });

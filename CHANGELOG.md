@@ -1,3 +1,47 @@
+## [1.44.32](https://github.com/openwhyd/openwhyd/compare/v1.44.31...v1.44.32) (2021-02-08)
+
+
+### Bug Fixes
+
+* Login broken in production ([6df09f3](https://github.com/openwhyd/openwhyd/commit/6df09f39385bcae915282833bebe458934c122a6))
+* Login broken in production (2) ([f4cb5e0](https://github.com/openwhyd/openwhyd/commit/f4cb5e09295fba8344c78695e9884ea9b1b2fcad))
+* Try to re-enable sameSite cookies ([c724637](https://github.com/openwhyd/openwhyd/commit/c72463779114106af77c57d49654bc56b0e0cd2e))
+
+## [1.44.31](https://github.com/openwhyd/openwhyd/compare/v1.44.30...v1.44.31) (2021-02-08)
+
+
+### Bug Fixes
+
+* **security:** Enable secure and sameSite for session cookies ([#445](https://github.com/openwhyd/openwhyd/issues/445)) ([bdf1d8a](https://github.com/openwhyd/openwhyd/commit/bdf1d8a16c4a229b8d5122c400b9b7275b334f6a))
+
+## [1.44.30](https://github.com/openwhyd/openwhyd/compare/v1.44.29...v1.44.30) (2021-02-07)
+
+
+### Bug Fixes
+
+* **api:** Follow API returns 404 ([#443](https://github.com/openwhyd/openwhyd/issues/443)) ([0e62b44](https://github.com/openwhyd/openwhyd/commit/0e62b4455e5d8171b28622d69be9902b93a9ae29)), closes [#441](https://github.com/openwhyd/openwhyd/issues/441)
+
+## [1.44.29](https://github.com/openwhyd/openwhyd/compare/v1.44.28...v1.44.29) (2021-02-07)
+
+
+### Bug Fixes
+
+* **bandcamp:** De-duplicate stream URLs from Bandcamp ([#444](https://github.com/openwhyd/openwhyd/issues/444)) ([f5d5d35](https://github.com/openwhyd/openwhyd/commit/f5d5d35315bc500d2f0f046663b80432b4875161))
+
+## [1.44.28](https://github.com/openwhyd/openwhyd/compare/v1.44.27...v1.44.28) (2021-01-24)
+
+
+### Bug Fixes
+
+* **#433:** Soundcloud track detection from bookmarklet ([#440](https://github.com/openwhyd/openwhyd/issues/440)) ([01ceadf](https://github.com/openwhyd/openwhyd/commit/01ceadfd2dc7cc44d20e0d5f3c0c10f33dfc6546)), closes [#433](https://github.com/openwhyd/openwhyd/issues/433) [#433](https://github.com/openwhyd/openwhyd/issues/433)
+
+## [1.44.27](https://github.com/openwhyd/openwhyd/compare/v1.44.26...v1.44.27) (2021-01-24)
+
+
+### Bug Fixes
+
+* **bookmarklet:** "Identifier 'globals' has already been declared" when adding a track ([#439](https://github.com/openwhyd/openwhyd/issues/439)) ([e5e148d](https://github.com/openwhyd/openwhyd/commit/e5e148d2925ba57960ad3845b21c9442fa3ebfa2)), closes [/github.com/openwhyd/openwhyd/pull/429/files#diff-d0670720fd54d514c34d0215269319d1cc83b4fcca7113085edd1040a262febcR3](https://github.com//github.com/openwhyd/openwhyd/pull/429/files/issues/diff-d0670720fd54d514c34d0215269319d1cc83b4fcca7113085edd1040a262febcR3)
+
 ## [1.44.26](https://github.com/openwhyd/openwhyd/compare/v1.44.25...v1.44.26) (2021-01-23)
 
 

@@ -120,6 +120,8 @@ function start() {
     }),
     cookie: {
       maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
+      // secure: process.appParams.urlPrefix.startsWith('https://'), // if true, cookie will be accessible only when website if opened over HTTPS
+      sameSite: 'strict',
     },
     name: 'whydSid',
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave

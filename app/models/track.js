@@ -71,7 +71,7 @@ function save(track, cb, replace) {
   var op = replace ? track : { $set: track };
   mongodb.collections['track'].updateOne(
     { eId: track.eId },
-    op,
+    op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
     { upsert: true },
     function (error, result) {
       //console.log("=> saved hot track:", result);

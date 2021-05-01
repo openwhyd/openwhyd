@@ -50,37 +50,43 @@ function makeStreamDetector(players): UrlDetector {
     // 1. find the matching player and track identifier
     const playerId = getPlayerId(url);
     const player = playerId && players[playerId];
-    const eid = player && '/' + playerId + '/' + player.getEid(url);
+    const trackId = player && player.getEid(url);
+    const eid = trackId && `/${playerId}/${trackId.replace(/^\//, '')}`; // TODO: get rid of the removal of leading slash character, after fixing playem's soundcloud.getEid()
     if (!eid || eidSet[eid]) return cb();
 
     // 2. extract the (optional) stream URL from the identifier
     const parts = eid.split('#');
-    const streamUrl = /^https?:\/\//.test(parts[1] || '') && parts[1];
+    const streamUrl = parts[1] && /^https?:\/\//.test(parts[1]);
     if (eidSet[parts[0]] && !streamUrl) return cb(); // i.e. store if new, overwrite if new occurence contains a streamUrl
 
     // 3. store the identifier, with and without stream URL, to prevent duplicates
     eidSet[parts[0]] = true;
     eidSet[eid] = true;
+    const detectedTrack = {
+      eId: eid,
+      sourceId: playerId,
+      sourceLabel: player.label,
+    };
     if (element.artist && element.title) {
       return cb({
-        eId: eid,
+        ...detectedTrack,
         title: `${element.artist} - ${element.title}`,
         img: element.img,
-        sourceId: playerId,
-        sourceLabel: (player || {}).label,
       });
-    } else if (!player || !player.fetchMetadata) {
-      return cb({ eId: eid }); // quit if we can't enrich the metadata
+    }
+    if (!player.fetchMetadata) {
+      return cb(detectedTrack); // quit if we can't enrich the metadata
     }
 
     // 4. try to return the track with enriched metadata
     player.fetchMetadata(url, function (track) {
-      if (!track) return cb();
-      track.title = track.title || element.name; // i.e. element.name could have been extracted from the page by one of pageDetectors
-      track.eId = track.eId || eid.substr(0, 4) + track.id; // || eid;
-      track.sourceId = playerId;
-      track.sourceLabel = player.label;
-      cb(track);
+      if (!track || !Object.keys(track).length) return cb(detectedTrack);
+      cb({
+        ...detectedTrack,
+        ...track,
+        title: track.title || element.name, // i.e. element.name could have been extracted from the page by one of pageDetectors
+        eId: track.eId || eid.substr(0, 4) + track.id, // || eid;
+      });
     });
   };
 }

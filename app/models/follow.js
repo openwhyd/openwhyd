@@ -69,7 +69,7 @@ exports.add = function (followObj, dbHandler) {
   //collection.save(obj, dbHandler);
   collection.updateOne(
     req,
-    followObj,
+    { $set: followObj },
     { upsert: true },
     function (err, result) {
       // to avoid duplicates
