@@ -1,3 +1,10 @@
+## [1.44.35](https://github.com/openwhyd/openwhyd/compare/v1.44.34...v1.44.35) (2021-05-01)
+
+
+### Bug Fixes
+
+* **prod:** Switch from forever to PM2 ([e34c535](https://github.com/openwhyd/openwhyd/commit/e34c535a4d2a301aeb1428d9400927d4a7a40c69)), closes [#151](https://github.com/openwhyd/openwhyd/issues/151)
+
 ## [1.44.34](https://github.com/openwhyd/openwhyd/compare/v1.44.33...v1.44.34) (2021-05-01)
 
 
