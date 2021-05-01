@@ -215,6 +215,7 @@ function populateUsers(subscr, options, cb) {
 }
 
 function fetchAndRenderPlaylist(options, callback, process) {
+  // TODO: remove process => use callback only
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
   for (let i in options.user.pl)
@@ -267,6 +268,7 @@ function fetchAndRenderPlaylist(options, callback, process) {
 }
 
 function fetchAndRenderProfile(options, callback, process) {
+  // TODO: remove process => use callback only
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
