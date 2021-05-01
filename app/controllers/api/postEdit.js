@@ -139,7 +139,7 @@ exports.controller = function (request, reqParams, response) {
     templateLoader.loadTemplate(
       reqParams.v == 2
         ? 'app/templates/postEditV2.html'
-        : 'app/templates/postEdit.html',
+        : 'app/templates/postEdit.html', // TODO: effacer postEdit.html et postBox.js
       function (template) {
         response.renderHTML(template.render(params));
       }

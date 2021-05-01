@@ -422,7 +422,7 @@ if (typeof exports === 'undefined') {
         var text = getSelText();
         var href =
           urlPrefix +
-          '/post?v=2&' +
+          '/post?v=2&' + // TODO: remove version number
           'embed=' +
           (thumb.eId
             ? '1&eId=' + encodeURIComponent(thumb.eId)
