@@ -1,3 +1,10 @@
+## [1.44.37](https://github.com/openwhyd/openwhyd/compare/v1.44.36...v1.44.37) (2021-05-01)
+
+
+### Bug Fixes
+
+* **deps:** update kramdown ([acd0419](https://github.com/openwhyd/openwhyd/commit/acd0419d32a8b71a8099543572d7108e3a28cc09))
+
 ## [1.44.36](https://github.com/openwhyd/openwhyd/compare/v1.44.35...v1.44.36) (2021-05-01)
 
 
