@@ -37,9 +37,6 @@
     "lint:fix": "eslint app --fix",
     "lint": "eslint app"
   },
-  "engines": {
-    "node": "12.19.1"
-  },
   "directories": {
     "src": "./app",
     "config": "./config",

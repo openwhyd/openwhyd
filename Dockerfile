@@ -1,4 +1,5 @@
-FROM node:12.19.1-slim
+FROM node:14.16.1-slim
+# note: keep nodejs version above in sync with the one in .nvmrc
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
