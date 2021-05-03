@@ -1,3 +1,10 @@
+## [1.44.39](https://github.com/openwhyd/openwhyd/compare/v1.44.38...v1.44.39) (2021-05-03)
+
+
+### Bug Fixes
+
+* **security:** Remove unsafe redirect ([#450](https://github.com/openwhyd/openwhyd/issues/450)) ([5683263](https://github.com/openwhyd/openwhyd/commit/5683263fa5a6caaa1a1aaf6797ecf183caea1ea6))
+
 ## [1.44.38](https://github.com/openwhyd/openwhyd/compare/v1.44.37...v1.44.38) (2021-05-01)
 
 
