@@ -13,6 +13,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   graphicsmagick \
   && rm -rf /var/lib/apt/lists/*
 
+# Allow openwhyd server (running as "node" user) to create files (e.g. playlog.json.log) in /usr/src/app
+RUN mkdir -p /usr/src/app
+# RUN chown node:node /usr/src/app
+
 # Install and build app dependencies
 WORKDIR /usr/src/app
 COPY --chown=node:node ./package*.json /usr/src/app/
@@ -23,9 +27,6 @@ RUN npm ci --only=production --no-audit
 
 # Bundle app source
 COPY --chown=node:node ./ /usr/src/app
-
-# Allow openwhyd server (running as "node" user) to create files in that directory (e.g. playlog.json.log)
-RUN chown node:node /usr/src/app
 
 EXPOSE 8080
 
