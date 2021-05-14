@@ -5,6 +5,7 @@ ENV NODE_ENV production
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+  dumb-init \
   g++ \
   gcc \
   libc6-dev \
@@ -29,5 +30,8 @@ RUN chown node:node /usr/src/app
 
 EXPOSE 8080
 
+# let's not run node as "root" user
 USER node
-CMD [ "npm", "start" ]
+
+# dumb-init is invoked with PID 1, then spawns node as another process whilst ensuring that all signals are proxied to it
+CMD [ "dumb-init", "node", "app.js", "--fakeEmail", "--digestInterval -1" ]
