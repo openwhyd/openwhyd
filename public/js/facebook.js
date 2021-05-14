@@ -8,13 +8,9 @@ var fbId;
 if (href.indexOf('openwhyd.org/') > 0) {
   // namespace = 'whydapp';
   fbId = '169250156435902';
-} /*else if (href.indexOf('whyd.fr/') > 0) {
-  // pre-production
-  namespace = 'whyd-test';
-  fbId = '1059973490696893';
-} */ else {
+} else {
   // namespace = 'whyd-dev';
-  fbId = '118010211606360';
+  fbId = '1573219269412628';
 }
 
 var facebookPerms = 'public_profile,email';
@@ -147,10 +143,8 @@ globals.fbRegister = function (perms, cb) {
 globals.fbAsyncInit = function () {
   globals.FB.init({
     appId: fbId,
-    version: 'v2.3',
-    status: true,
+    version: 'v10.0',
     cookie: true,
-    oauth: true,
     xfbml: true,
   });
   globals.whenFbReady = function (fct) {
@@ -172,17 +166,14 @@ globals.whenFbReady(function () {
 });
 
 // Load the SDK Asynchronously
-(function (d) {
-  /*if (!d.getElementById("fb-root"))
-		d.getElementsByTagName('body')[0].appendChild(d.createElement('div')).id = "fb-root";*/
+(function (d, s, id) {
   var js,
-    id = 'facebook-jssdk';
+    fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {
     return;
   }
-  js = d.createElement('script');
+  js = d.createElement(s);
   js.id = id;
-  js.async = true;
-  js.src = '//connect.facebook.net/en_US/sdk.js';
-  d.getElementsByTagName('head')[0].appendChild(js);
-})(document);
+  js.src = 'https://connect.facebook.net/en_US/sdk.js';
+  fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'facebook-jssdk');

@@ -94,8 +94,14 @@ exports.runScriptOnDatabase = function (script, db, callback) {
   async.eachSeries(
     commands,
     function (command, nextCommand) {
-      command = command.trim();
-      if (!command || /^\/\//.test(command) || /^\/\*.*\*\/$/.test(command)) {
+      const cleaned = command
+        .split(/[\r\n]+/g) // split lines
+        .map((line) => line.replace(/\/\/.*/, '')) // remove // comments
+        .join(' ') // join lines as one
+        .replace(/[\r\n]+/g, '') // remove line breaks, so that multiple lines of comments == ""
+        .replace(/\/\*.*\*\//g, '') // remove /**/ comments
+        .trim();
+      if (!cleaned) {
         VERBOSE && console.log(LOG_PREFIX, 'IGN', command);
         nextCommand();
       } else {

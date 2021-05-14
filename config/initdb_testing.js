@@ -1,3 +1,5 @@
+/* globals db, ObjectId */
+
 // Usage: this file should be run by runShellScript() or by mongo's CLI:
 // $ mongo openwhyd_data initdb_testing.js
 

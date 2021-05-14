@@ -32,7 +32,7 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
   params.access_token = fbAccessToken;
   params.metadata = !!params.metadata;
   params.method = params.method || 'GET';
-  var url = '/v2.3' + path + '?' + querystring.stringify(params);
+  var url = path + '?' + querystring.stringify(params);
   https
     .request(
       { path: url, host: host, port: 443, method: params.method },

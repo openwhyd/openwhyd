@@ -202,8 +202,8 @@ exports.initCollections = function ({ addTestData } = {}) {
       function (initScript, nextScript) {
         console.log('[db] Applying db init script:', initScript, '...');
         exports.runShellScript(fs.readFileSync(initScript), function (err) {
-          if (err) throw err;
-          nextScript();
+          if (err) console.error(err);
+          nextScript(err);
         });
       },
       function (err) {

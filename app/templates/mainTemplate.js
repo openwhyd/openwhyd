@@ -20,14 +20,9 @@ if (isProduction) {
   //console.log('- Production - ');
   fbId = '169250156435902';
   playemFile = 'min';
-} else if (config.urlPrefix.indexOf('whyd.fr') > 0) {
-  // pre-production
-  //console.log('- Test - ');
-  fbId = '1059973490696893';
-  playemFile = 'all';
 } else {
   //console.log('- Local - ');
-  fbId = '118010211606360';
+  fbId = '1573219269412628';
   playemFile = 'all';
 }
 
