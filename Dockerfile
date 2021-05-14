@@ -24,6 +24,9 @@ RUN npm ci --only=production --no-audit
 # Bundle app source
 COPY --chown=node:node ./ /usr/src/app
 
+# Allow "node" user to create files in that directory (e.g. playlog.json.log)
+RUN chown node /usr/src/app
+
 EXPOSE 8080
 
 USER node
