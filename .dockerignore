@@ -1,7 +1,11 @@
+.dockerignore
+.gitignore
 .git
 .env
 .port
 .DS_Store
+Dockerfile
+npm-debug.log
 /.nyc_output
 /coverage
 /node_modules
@@ -12,7 +16,8 @@
 /*.out
 /*.pid
 /*.err
-/env-vars-*.sh
+/*.conf
+/env-vars-*.*
 /errorShots
 /uAvatarImg
 /uCoverImg
