@@ -9,14 +9,14 @@ var snip = require('../snip.js');
 
 var playlogStream = fs.createWriteStream('./playlog.json.log', {
   flags: 'a', // append
-  mode: 0o640, // file permissions: user can read+write, group can read
+  // mode: 0o640, // file permissions: user can read+write, group can read
   encoding: 'utf8',
   autoClose: true,
 });
 
 var visitStream = fs.createWriteStream('./visits.json.log', {
   flags: 'a', // append
-  mode: 0o640, // file permissions: user can read+write, group can read
+  // mode: 0o640, // file permissions: user can read+write, group can read
   encoding: 'utf8',
   autoClose: true,
 });
