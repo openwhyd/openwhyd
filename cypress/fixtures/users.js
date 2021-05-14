@@ -1,4 +1,5 @@
 ({
+  // TODO: make sure that this data remains in sync with what's add in the db, in initdb_testing.js
   admin: {
     id: '000000000000000000000001',
     email: process.env.WHYD_ADMIN_EMAIL || 'test@openwhyd.org',
