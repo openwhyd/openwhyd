@@ -124,18 +124,17 @@ exports.Application = class Application {
     return (this._expressApp = app);
   }
 
-  start() {
+  start(callback) {
     this._isRunning = true;
-    this.expressServer = this.getExpressApp().listen(this._port, () => {
-      const url = this._urlPrefix || `http://127.0.0.1:${this._port}/`;
-      console.log(`[Application] Server running at ${url}`);
-    });
+    this.expressServer = this.getExpressApp().listen(this._port, callback);
   }
 
-  stop() {
+  stop(callback) {
     if (this._isRunning) {
-      this.expressServer.close();
+      this.expressServer.close(callback);
       this._isRunning = false;
+    } else if (callback) {
+      callback();
     }
   }
 };
