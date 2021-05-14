@@ -25,8 +25,7 @@ RUN npm ci --only=production --no-audit
 COPY --chown=node:node ./ /usr/src/app
 
 # Allow openwhyd server (running as "node" user) to create files (e.g. playlog.json.log) in /usr/src/app
-RUN touch /usr/src/app/playlog.json.log
-RUN chown -R node:node /usr/src/app
+RUN chown node:node /usr/src/app
 
 EXPOSE 8080
 
