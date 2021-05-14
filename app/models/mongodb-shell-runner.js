@@ -2,8 +2,8 @@ var vm = require('vm');
 var async = require('async');
 var mongodb = require('mongodb');
 
-const PRINT_ACTIVE = true;
-const VERBOSE = true; // true to display debug logs (for diagnostics and testing)
+const PRINT_ACTIVE = false;
+const VERBOSE = false; // true to display debug logs (for diagnostics and testing)
 const LOG_PREFIX = '[mongo shell]';
 
 function buildContext(db, nextCommand, callback) {
@@ -101,7 +101,6 @@ exports.runScriptOnDatabase = function (script, db, callback) {
         .replace(/[\r\n]+/g, '') // remove line breaks, so that multiple lines of comments == ""
         .replace(/\/\*.*\*\//g, '') // remove /**/ comments
         .trim();
-      console.log('CLEANED', `[${cleaned}]`);
       if (!cleaned) {
         VERBOSE && console.log(LOG_PREFIX, 'IGN', command);
         nextCommand();
