@@ -13,9 +13,9 @@ services:
   web:
     restart: 'always'
     build: .
-    volumes:
-      - ./:/usr/src/app
-      - /usr/src/app/node_modules
+    # volumes:
+    # - ./:/usr/src/app
+    # - /usr/src/app/node_modules
     ports:
       - '8080:8080'
     depends_on:

@@ -13,20 +13,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   graphicsmagick \
   && rm -rf /var/lib/apt/lists/*
 
-# Allow openwhyd server (running as "node" user) to create files (e.g. playlog.json.log) in /home/node/app
-RUN mkdir -p /home/node/app
-# RUN chown node:node /home/node/app
-
 # Install and build app dependencies
-WORKDIR /home/node/app
-COPY --chown=node:node ./package*.json /home/node/app/
+WORKDIR /usr/src/app
+COPY --chown=node:node ./package*.json /usr/src/app/
 RUN npm ci --only=production --no-audit
 
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
-# RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /home/node/app/node_modules/bson/ext/index.js
+# RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js
 
 # Bundle app source
-COPY --chown=node:node ./ /home/node/app
+COPY --chown=node:node ./ /usr/src/app
+
+# Allow openwhyd server (running as "node" user) to create files (e.g. playlog.json.log) in /usr/src/app
+RUN touch /usr/src/app/playlog.json.log
+RUN chown -R node:node /usr/src/app
 
 EXPOSE 8080
 
