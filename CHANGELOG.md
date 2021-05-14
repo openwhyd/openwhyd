@@ -1,3 +1,10 @@
+## [1.44.40](https://github.com/openwhyd/openwhyd/compare/v1.44.39...v1.44.40) (2021-05-14)
+
+
+### Bug Fixes
+
+* **fb:** Update Facebook login SDK ([#454](https://github.com/openwhyd/openwhyd/issues/454)) ([987ce00](https://github.com/openwhyd/openwhyd/commit/987ce00063c7e36268a88211908b3168e285c526)), closes [#370](https://github.com/openwhyd/openwhyd/issues/370)
+
 ## [1.44.39](https://github.com/openwhyd/openwhyd/compare/v1.44.38...v1.44.39) (2021-05-03)
 
 
