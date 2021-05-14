@@ -41,4 +41,4 @@ RUN chown node:node /usr/src/app
 EXPOSE 8080
 
 # dumb-init is invoked with PID 1, then spawns node as another process whilst ensuring that all signals are proxied to it
-CMD [ "dumb-init", "node", "app.js", "--fakeEmail", "--digestInterval -1" ]
+CMD [ "dumb-init", "node", "app.js", "--fakeEmail", "--digestInterval", "-1" ]
