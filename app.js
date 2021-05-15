@@ -155,9 +155,23 @@ function start() {
     },
   };
   require('./app/models/logging.js'); // init logging methods (IncomingMessage extensions)
-  new myHttp.Application(serverOptions).start();
+  const appServer = new myHttp.Application(serverOptions);
+  appServer.start(() => {
+    const url = params.urlPrefix || `http://127.0.0.1:${params.port}/`;
+    console.log(`[app] Server running at ${url}`);
+  });
   require('./app/workers/notifEmails.js'); // start digest worker
   require('./app/workers/hotSnapshot.js'); // start hot tracks snapshot worker
+
+  function closeGracefully(signal) {
+    console.warn(`[app] ${signal} signal received: closing server...`);
+    appServer.stop((err) => {
+      console.warn(`[app] server.close => ${err || 'OK'}`);
+      process.exit(err ? 1 : 0);
+    });
+  }
+  process.on('SIGTERM', closeGracefully);
+  process.on('SIGINT', closeGracefully);
 }
 
 // startup

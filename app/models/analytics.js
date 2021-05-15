@@ -4,17 +4,16 @@
  **/
 
 var fs = require('fs');
-//var mongodb = require("./mongodb.js");
 var snip = require('../snip.js');
 
 var playlogStream = fs.createWriteStream('./playlog.json.log', {
-  flags: 'a',
+  flags: 'a', // append
   encoding: 'utf8',
   autoClose: true,
 });
 
 var visitStream = fs.createWriteStream('./visits.json.log', {
-  flags: 'a',
+  flags: 'a', // append
   encoding: 'utf8',
   autoClose: true,
 });
