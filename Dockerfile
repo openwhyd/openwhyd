@@ -27,9 +27,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ENV NODE_ENV production
 
-# let's not run node as "root" user
-USER node
-
 # Bundle app source
 WORKDIR /usr/src/app
 COPY --chown=node:node --from=build /usr/src/app/node_modules /usr/src/app/node_modules
@@ -37,6 +34,7 @@ COPY --chown=node:node ./ /usr/src/app
 
 # Allow openwhyd server (running as "node" user) to create files (e.g. playlog.json.log) in /usr/src/app
 RUN chown node:node /usr/src/app
+USER node
 
 EXPOSE 8080
 
