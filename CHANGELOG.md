@@ -1,3 +1,10 @@
+## [1.44.41](https://github.com/openwhyd/openwhyd/compare/v1.44.40...v1.44.41) (2021-05-15)
+
+
+### Bug Fixes
+
+* **docker:** Apply OWASP recommendations ([#455](https://github.com/openwhyd/openwhyd/issues/455)) ([5507606](https://github.com/openwhyd/openwhyd/commit/5507606b4cb4116a8b26cfbbe9381a858204821b))
+
 ## [1.44.40](https://github.com/openwhyd/openwhyd/compare/v1.44.39...v1.44.40) (2021-05-14)
 
 
