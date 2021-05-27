@@ -530,7 +530,8 @@ input.search-input {
   position: relative;
   z-index: 1;
   padding: 0 5px 0 28px;
-  background-image: url(/images/icon-search-general.png);
+  /* background-image: url(/images/icon-search-general.png); */
+  background-image: url('/images/plus-add-track-from-search.png');
   background-repeat: no-repeat;
   background-position: 7px 50%;
   border-radius: 2px;
