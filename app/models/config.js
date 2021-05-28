@@ -77,7 +77,7 @@ var PLAYERS = {
   },
   dz: {
     name: 'Deezer',
-    urlPrefix: '//www.deezer.com/track/',
+    urlPrefix: '//www.deezer.com/',
   },
   sp: {
     name: 'Spotify',

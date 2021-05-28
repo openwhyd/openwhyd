@@ -1,3 +1,10 @@
+## [1.44.42](https://github.com/openwhyd/openwhyd/compare/v1.44.41...v1.44.42) (2021-05-28)
+
+
+### Bug Fixes
+
+* **#458:** Support Deezer track URLs with a locale/country prefix ([#460](https://github.com/openwhyd/openwhyd/issues/460)) ([f8f94a6](https://github.com/openwhyd/openwhyd/commit/f8f94a67bc21111065f357bd8d7518683600cec6)), closes [#458](https://github.com/openwhyd/openwhyd/issues/458)
+
 ## [1.44.41](https://github.com/openwhyd/openwhyd/compare/v1.44.40...v1.44.41) (2021-05-15)
 
 
