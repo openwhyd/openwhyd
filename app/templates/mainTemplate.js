@@ -287,7 +287,7 @@ exports.renderHeader = function (user, content, params) {
       '   <div class="searchForm" id="searchForm">', //<form id="searchForm" method="get" action="'+render.urlPrefix+'/search">',
       '    <input name="q" class="q search-input" id="q" type="text" value="' +
         uiSnippets.htmlEntities(params.q) +
-        '" placeholder="Paste a YouTube / Soundcloud / Bandcamp / Deezer / MP3 track URL here" autocomplete="off" />',
+        '" placeholder="Paste a YouTube / Soundcloud / Bandcamp / Deezer URL" autocomplete="off" />',
       //	'    <input type="button" id="searchClear" />',
       '   </div>', //</form>',
       '   <div class="searchResults" id="searchResults"></div>',
