@@ -1,4 +1,4 @@
-/* playemjs 1.1.0, commit: 33eb4c30fdaa21bbf1fc2ce51c7e1d3652d4790f */
+/* playemjs 1.2.0, commit: 2d97f954eacf4199e796d7488ebbd2b47e3ccb28 */
 
 // configuration
 
@@ -1047,7 +1047,7 @@ function DeezerPlayer(){
   // CONSTANTS
   var SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
       IS_LOGGED = false,
-      URL_REG = /(deezer\.com\/track|\/dz)\/(\d+)/,
+      URL_REG = /(deezer\.com\/(?:fr\/)?track|\/dz)\/(\d+)/,
       EVENT_MAP = {
         player_play: 'onPlaying',
         player_paused: 'onPaused',
