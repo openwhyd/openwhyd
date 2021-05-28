@@ -1,3 +1,10 @@
+## [1.44.43](https://github.com/openwhyd/openwhyd/compare/v1.44.42...v1.44.43) (2021-05-28)
+
+
+### Bug Fixes
+
+* **ui:** Improve text of search bar placeholder for new users ([#461](https://github.com/openwhyd/openwhyd/issues/461)) ([c8be106](https://github.com/openwhyd/openwhyd/commit/c8be106017fd7a355ec2c85c99acff37ec70172d))
+
 ## [1.44.42](https://github.com/openwhyd/openwhyd/compare/v1.44.41...v1.44.42) (2021-05-28)
 
 
