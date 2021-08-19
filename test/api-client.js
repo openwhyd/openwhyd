@@ -34,10 +34,8 @@ exports.loginAs = function loginAs(user, callback) {
     assert.ifError(error); // TODO: pass to callback
     assert.equal(res.response.statusCode, 200); // TODO: pass to callback
     const jar = extractCookieJar(res.response);
-    if (!jar.getCookieString(URL_PREFIX)) {
-      error = error || new Error('cookie was not set'); // TODO: also check in signupAs
-    }
-    callback(error, Object.assign({}, res, { jar }));
+    const loggedIn = !!jar.getCookieString(URL_PREFIX); // TODO: also check in signupAs
+    callback(error, Object.assign({}, res, { jar, loggedIn }));
   });
 };
 
