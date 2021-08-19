@@ -196,6 +196,6 @@ context('Openwhyd', () => {
     const searchResult = `a[onclick="window.goToPage('/fi/https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')
-      .should('have.text', 'mpthreetest');
+      .should('have.text', 'mpthreetest.mp3');
   });
 });
