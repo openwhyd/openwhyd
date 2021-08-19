@@ -175,7 +175,8 @@ context('Openwhyd', () => {
     // TODO: it(`should disappear after being deleted`, function() {
   });
 
-  it('should allow users to search external tracks', function () {
+  // TODO: fix this test, cf https://github.com/openwhyd/openwhyd/pull/469#issue-974599017
+  it.skip('should allow users to lookup soundcloud tracks', function () {
     cy.visit('/');
     cy.get('#q')
       .click()
@@ -184,5 +185,18 @@ context('Openwhyd', () => {
     cy.get(searchResult)
       .should('be.visible')
       .should('have.text', 'Harissa - No Service');
+  });
+
+  it('should allow users to lookup mp3 tracks', function () {
+    cy.visit('/');
+    cy.get('#q')
+      .click()
+      .type(
+        'https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3'
+      );
+    const searchResult = `a[onclick="window.goToPage('/fi/https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3');return false;"]`;
+    cy.get(searchResult)
+      .should('be.visible')
+      .should('have.text', 'mpthreetest.mp3');
   });
 });

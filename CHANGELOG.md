@@ -1,3 +1,17 @@
+## [1.44.45](https://github.com/openwhyd/openwhyd/compare/v1.44.44...v1.44.45) (2021-08-19)
+
+
+### Bug Fixes
+
+* **tests:** extract getRaw() helper, to allow fetching HTML pages ([#468](https://github.com/openwhyd/openwhyd/issues/468)) ([bd730d9](https://github.com/openwhyd/openwhyd/commit/bd730d959c7f3b990f65a9fdecb95a2ebc67d10b))
+
+## [1.44.44](https://github.com/openwhyd/openwhyd/compare/v1.44.43...v1.44.44) (2021-08-19)
+
+
+### Bug Fixes
+
+* **tests:** lookup external tracks ([#469](https://github.com/openwhyd/openwhyd/issues/469)) ([5169df2](https://github.com/openwhyd/openwhyd/commit/5169df2bc03419286f6413a4176ad1dc1dd60c75)), closes [#465](https://github.com/openwhyd/openwhyd/issues/465)
+
 ## [1.44.43](https://github.com/openwhyd/openwhyd/compare/v1.44.42...v1.44.43) (2021-05-28)
 
 
