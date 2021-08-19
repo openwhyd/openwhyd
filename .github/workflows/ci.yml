@@ -88,6 +88,12 @@ jobs:
           source env-vars-testing.sh
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+      - name: Approval tests
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npx ava test/approval.tests.js
       - name: Unit tests
         env:
           CI: true
