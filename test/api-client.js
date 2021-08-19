@@ -31,12 +31,11 @@ exports.logout = function logout(jar, callback) {
 exports.loginAs = function loginAs(user, callback) {
   const url = `/login?action=login&ajax=1&email=${user.email}&md5=${user.md5}`;
   exports.get(null, url, function (error, res) {
-    assert.ifError(error);
-    assert.equal(res.response.statusCode, 200);
-    callback(
-      error,
-      Object.assign({}, res, { jar: extractCookieJar(res.response) })
-    );
+    assert.ifError(error); // TODO: pass error to callback
+    assert.equal(res.response.statusCode, 200); // TODO: pass error to callback
+    const jar = extractCookieJar(res.response);
+    const loggedIn = !!jar.getCookieString(URL_PREFIX);
+    callback(error, Object.assign({}, res, { jar, loggedIn }));
   });
 };
 
@@ -56,13 +55,11 @@ exports.signupAs = function signupAs(user, callback) {
       ),
     },
     function (error, response, body) {
-      assert.ifError(error);
-      assert.equal(response.statusCode, 200);
-      callback(error, {
-        response,
-        body,
-        jar: extractCookieJar(response),
-      });
+      assert.ifError(error); // TODO: pass error to callback
+      assert.equal(response.statusCode, 200); // TODO: pass error to callback
+      const jar = extractCookieJar(response);
+      const loggedIn = !!jar.getCookieString(URL_PREFIX);
+      callback(error, { response, body, jar, loggedIn });
     }
   );
 };
