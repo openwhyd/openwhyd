@@ -1,3 +1,10 @@
+## [1.44.46](https://github.com/openwhyd/openwhyd/compare/v1.44.45...v1.44.46) (2021-08-19)
+
+
+### Bug Fixes
+
+* **tests:** also disable Datadog on local testing env, to match docker env ([a0c5684](https://github.com/openwhyd/openwhyd/commit/a0c5684995ac45aa40c7342ae991d33c0fac57cd))
+
 ## [1.44.45](https://github.com/openwhyd/openwhyd/compare/v1.44.44...v1.44.45) (2021-08-19)
 
 
