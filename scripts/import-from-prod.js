@@ -11,8 +11,9 @@ const mongodb = require('mongodb');
 const ObjectID = (id) => mongodb.ObjectID.createFromHexString(id);
 
 // Parameters
-const url = 'mongodb://localhost:27117';
-const dbName = 'openwhyd_test';
+const { MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
+const url = `mongodb://${MONGODB_HOST || 'localhost'}:${MONGODB_PORT || 27117}`;
+const dbName = MONGODB_DATABASE || 'openwhyd_test';
 const username = process.argv[2] || 'test'; // default profile: https://openwhyd.org/test
 const password = {
   plain: 'admin',
