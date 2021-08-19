@@ -31,12 +31,13 @@ exports.logout = function logout(jar, callback) {
 exports.loginAs = function loginAs(user, callback) {
   const url = `/login?action=login&ajax=1&email=${user.email}&md5=${user.md5}`;
   exports.get(null, url, function (error, res) {
-    assert.ifError(error);
-    assert.equal(res.response.statusCode, 200);
-    callback(
-      error,
-      Object.assign({}, res, { jar: extractCookieJar(res.response) })
-    );
+    assert.ifError(error); // TODO: pass to callback
+    assert.equal(res.response.statusCode, 200); // TODO: pass to callback
+    const jar = extractCookieJar(res.response);
+    if (!jar.getCookieString(URL_PREFIX)) {
+      error = error || new Error('cookie was not set'); // TODO: also check in signupAs
+    }
+    callback(error, Object.assign({}, res, { jar }));
   });
 };
 
