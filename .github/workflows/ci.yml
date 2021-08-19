@@ -89,6 +89,8 @@ jobs:
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: Approval tests
+        env:
+          MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
         run: |
           source env-vars-testing.sh
           node scripts/import-from-prod.js adrien
