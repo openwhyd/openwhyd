@@ -50,6 +50,49 @@ jobs:
           echo ℹ️  If this test fails, run `npm run lint:format` and commit the changes.
           exit $(git diff | wc -l)
 
+  approval-tests:
+    name: Approval tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27017:27017
+    steps:
+      - uses: actions/checkout@v2
+      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
+        id: nvmrc
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+      - name: use npm cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Initialize database
+        env:
+          CI: true
+        run: |
+          source env-vars-testing.sh
+          npm run test-reset
+      - name: Start Openwhyd server
+        run: |
+          source env-vars-testing.sh
+          npm start --mongoDbDatabase openwhyd_test &
+          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
+      - name: Approval tests
+        run: |
+          source env-vars-testing.sh
+          npx ava test/approval.tests.js
+
   tests:
     name: Automated tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -88,12 +131,6 @@ jobs:
           source env-vars-testing.sh
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: Approval tests
-        env:
-          CI: true
-        run: |
-          source env-vars-testing.sh
-          npx ava test/approval.tests.js
       - name: Unit tests
         env:
           CI: true
