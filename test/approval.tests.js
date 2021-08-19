@@ -16,15 +16,23 @@ const MONGODB_URL =
 
 const getPage = promisify(openwhyd.getRaw);
 
-test.before(async () => {
+test.before(async (t) => {
   const users = await readMongoDocuments(__dirname + '/approval.users.json');
   const posts = await readMongoDocuments(__dirname + '/approval.posts.json');
   await insertTestData(MONGODB_URL, users, posts);
   await refreshOpenwhydCache();
+  t.context.user = users[0];
 });
 
 test('Visitor, Home, page 1, HTML', async (t) => {
   const { body } = await getPage(null, '/');
+  t.snapshot(body);
+});
+
+test('User, Home, page 1, HTML', async (t) => {
+  const { jar, loggedIn } = await promisify(openwhyd.loginAs)(t.context.user);
+  t.true(loggedIn);
+  const { body } = await getPage(jar, '/');
   t.snapshot(body);
 });
 
