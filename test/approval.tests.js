@@ -12,3 +12,8 @@ test('Visitor, Home, page 1, HTML', async (t) => {
   const { body } = await getPage(null, '/');
   t.snapshot(body);
 });
+
+test('Visitor, Profile, page 1, HTML', async (t) => {
+  const { body } = await getPage(null, '/adrien');
+  t.snapshot(body);
+});
