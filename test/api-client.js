@@ -79,12 +79,13 @@ exports.getRaw = function (jar, url, callback) {
 
 exports.get = function (jar, url, callback) {
   exports.getRaw(jar, url, function (error, { response, body }) {
+    let parsedBody = undefined;
     try {
-      body = JSON.parse(body);
+      parsedBody = JSON.parse(body);
     } catch (e) {
-      console.error(e);
+      error = error | e;
     }
-    callback(error, { response, body, jar });
+    callback(error, { response, body: parsedBody, jar });
   });
 };
 
