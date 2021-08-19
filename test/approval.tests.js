@@ -17,3 +17,11 @@ test('Visitor, Profile, page 1, HTML', async (t) => {
   const { body } = await getPage(null, '/adrien');
   t.snapshot(body);
 });
+
+test('Visitor, Profile, page 2, HTML', async (t) => {
+  const { body } = await getPage(
+    null,
+    '/adrien?after=600ec1c703e2014e630c8137' // TODO: include test data in test instead of importing tracks from production , to prevent tests from breaking after tracks are added on adrien's profile
+  );
+  t.snapshot(body);
+});
