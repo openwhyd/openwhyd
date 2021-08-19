@@ -1,3 +1,10 @@
+## [1.44.47](https://github.com/openwhyd/openwhyd/compare/v1.44.46...v1.44.47) (2021-08-19)
+
+
+### Bug Fixes
+
+* **tests:** allow to override mongodb URL in import-from-prod.js ([1da673f](https://github.com/openwhyd/openwhyd/commit/1da673fff523f1f4e4cbb07b8b11136bf5cb134a))
+
 ## [1.44.46](https://github.com/openwhyd/openwhyd/compare/v1.44.45...v1.44.46) (2021-08-19)
 
 
