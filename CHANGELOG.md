@@ -1,3 +1,10 @@
+## [1.44.44](https://github.com/openwhyd/openwhyd/compare/v1.44.43...v1.44.44) (2021-08-19)
+
+
+### Bug Fixes
+
+* **tests:** lookup external tracks ([#469](https://github.com/openwhyd/openwhyd/issues/469)) ([5169df2](https://github.com/openwhyd/openwhyd/commit/5169df2bc03419286f6413a4176ad1dc1dd60c75)), closes [#465](https://github.com/openwhyd/openwhyd/issues/465)
+
 ## [1.44.43](https://github.com/openwhyd/openwhyd/compare/v1.44.42...v1.44.43) (2021-05-28)
 
 
