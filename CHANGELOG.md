@@ -1,3 +1,10 @@
+## [1.44.48](https://github.com/openwhyd/openwhyd/compare/v1.44.47...v1.44.48) (2021-08-19)
+
+
+### Bug Fixes
+
+* **tests:** add db-helpers ([86d16f7](https://github.com/openwhyd/openwhyd/commit/86d16f710a3808eb7192f1b7c3a5d3734696682d))
+
 ## [1.44.47](https://github.com/openwhyd/openwhyd/compare/v1.44.46...v1.44.47) (2021-08-19)
 
 
