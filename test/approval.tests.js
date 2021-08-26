@@ -16,7 +16,9 @@ const MONGODB_URL =
 
 async function getCleanedPageBody(cookieJar, path) {
   const { body } = await promisify(openwhyd.getRaw)(cookieJar, path);
-  return body.replace(/src="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, 'src="$1"'); // remove openwhyd version from paths to html resources, to reduce noise in diff
+  return body
+    .replace(/src="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, 'src="$1"') // remove openwhyd version from paths to html resources, to reduce noise in diff
+    .replace(/>\d+ (day|month|year)s?( ago)?/g, '>(age)'); // remove age of posts, because it depends on the time when tests are run
 }
 
 test.before(async (t) => {
