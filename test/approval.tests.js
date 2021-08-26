@@ -14,7 +14,10 @@ const {
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 
-const getPage = promisify(openwhyd.getRaw);
+async function getCleanedPageBody(cookieJar, path) {
+  const { body } = await promisify(openwhyd.getRaw)(cookieJar, path);
+  return body.replace(/src="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, 'src="$1"'); // remove openwhyd version from paths to html resources, to reduce noise in diff
+}
 
 test.before(async (t) => {
   const users = await readMongoDocuments(__dirname + '/approval.users.json');
@@ -25,24 +28,24 @@ test.before(async (t) => {
 });
 
 test('Visitor, Home, page 1, HTML', async (t) => {
-  const { body } = await getPage(null, '/');
+  const body = await getCleanedPageBody(null, '/');
   t.snapshot(body);
 });
 
 test('User, Home, page 1, HTML', async (t) => {
   const { jar, loggedIn } = await promisify(openwhyd.loginAs)(t.context.user);
   t.true(loggedIn);
-  const { body } = await getPage(jar, '/');
+  const body = await getCleanedPageBody(jar, '/');
   t.snapshot(body);
 });
 
 test('Visitor, Profile, page 1, HTML', async (t) => {
-  const { body } = await getPage(null, '/adrien');
+  const body = await getCleanedPageBody(null, '/adrien');
   t.snapshot(body);
 });
 
 test('Visitor, Profile, page 2, HTML', async (t) => {
-  const { body } = await getPage(
+  const body = await getCleanedPageBody(
     null,
     '/adrien?after=600ec1c703e2014e630c8137'
   );
