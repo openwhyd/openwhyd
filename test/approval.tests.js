@@ -29,16 +29,18 @@ test.before(async (t) => {
   t.context.user = users[0];
 });
 
-test('Visitor, Home, page 1, HTML', async (t) => {
-  const body = await getCleanedPageBody(null, '/');
-  t.snapshot(body);
-});
+const personaLabels = ['Visitor', 'User'];
 
-test('User, Home, page 1, HTML', async (t) => {
-  const { jar, loggedIn } = await promisify(openwhyd.loginAs)(t.context.user);
-  t.true(loggedIn);
-  const body = await getCleanedPageBody(jar, '/');
-  t.snapshot(body);
+personaLabels.forEach((persona) => {
+  test(`${persona}, Home, page 1, HTML`, async (t) => {
+    const { jar, loggedIn } =
+      persona === 'Visitor'
+        ? await promisify(openwhyd.logout)(null)
+        : await promisify(openwhyd.loginAs)(t.context.user);
+    if (persona === 'User') t.true(loggedIn);
+    const body = await getCleanedPageBody(jar, '/');
+    t.snapshot(body);
+  });
 });
 
 test('Visitor, Profile, page 1, HTML', async (t) => {
