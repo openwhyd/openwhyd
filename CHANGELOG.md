@@ -1,3 +1,10 @@
+## [1.44.49](https://github.com/openwhyd/openwhyd/compare/v1.44.48...v1.44.49) (2021-08-19)
+
+
+### Bug Fixes
+
+* **tests:** loginAs() and signupAs() inform if cookie was set ([#473](https://github.com/openwhyd/openwhyd/issues/473)) ([d82f699](https://github.com/openwhyd/openwhyd/commit/d82f699315f233ca93700f6109e5c5af01b9f404))
+
 ## [1.44.48](https://github.com/openwhyd/openwhyd/compare/v1.44.47...v1.44.48) (2021-08-19)
 
 
