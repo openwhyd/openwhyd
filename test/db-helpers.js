@@ -9,13 +9,15 @@ async function readMongoDocuments(file) {
   return eval(await fs.promises.readFile(file, 'utf-8'));
 }
 
-async function insertTestData(url, users, posts) {
+async function insertTestData(url, docsPerCollection) {
   const mongoClient = await mongodb.MongoClient.connect(url);
   const db = mongoClient.db();
-  await db.collection('user').deleteMany({});
-  await db.collection('post').deleteMany({});
-  await db.collection('user').insertMany(users);
-  await db.collection('post').insertMany(posts);
+  await Promise.all(
+    Object.keys(docsPerCollection).map(async (collection) => {
+      await db.collection(collection).deleteMany({});
+      await db.collection(collection).insertMany(docsPerCollection[collection]);
+    })
+  );
   await mongoClient.close();
 }
 
