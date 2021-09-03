@@ -37,7 +37,10 @@ test.before(async (t) => {
   t.context.user = users[0];
 });
 
-const personaLabels = ['Visitor', 'User'];
+const personas = [
+  { label: 'Visitor', userId: undefined },
+  { label: 'User: Adrien', userId: '4d94501d1f78ac091dbc9b4d' },
+];
 const formats = ['HTML', 'JSON'];
 const routes = [
   { label: 'Home, page 1', path: '/' },
@@ -86,18 +89,19 @@ const routes = [
     label: 'Unknown Profile',
     path: '/u/000000000000000000000003',
   },
+  // TODO: listes vides du point de vue de son utilisateur propriétaire
   // TODO: écran de création de playlist
 ];
 
 formats.forEach((format) => {
   routes.forEach((route) => {
-    personaLabels.forEach((persona) => {
-      test(`${persona}, ${route.label}, ${format}`, async (t) => {
+    personas.forEach((persona) => {
+      test(`${persona.label}, ${route.label}, ${format}`, async (t) => {
         const { jar, loggedIn } =
-          persona === 'Visitor'
+          persona.label === 'Visitor'
             ? await promisify(openwhyd.logout)(null)
-            : await promisify(openwhyd.loginAs)(t.context.user);
-        if (persona === 'User') t.true(loggedIn); // just to make sure that login worked as expected
+            : await promisify(openwhyd.loginAs)(t.context.user); // TODO: use userId
+        if (persona.userId) t.true(loggedIn); // just to make sure that login worked as expected
         const path =
           format === 'JSON'
             ? route.jsonPath ||
