@@ -416,5 +416,23 @@
     "lov": ["518b5a447e91c862b2adea1a"],
     "nbP": 3,
     "nbR": 1
+  },
+  {
+    "_id": ObjectId("60eca407a9727659af9d1a9c"),
+    "uId": "000000000000000000000001",
+    "uNm": "Admin",
+    "text": "",
+    "pl": { "name": "Punk", "id": 13 },
+    "name": "Fishbone - Skankin' To The Beat",
+    "eId": "/yt/CywetPs8MZE",
+    "img": "https://i.ytimg.com/vi/CywetPs8MZE/0.jpg",
+    "repost": {
+      "pId": "5568dede0f253b6519ffa8e5",
+      "uId": "548332e0e04b7b4fca818ec3",
+      "uNm": "MAUREL"
+    },
+    "lov": [],
+    "nbR": 0,
+    "nbP": 0
   }
 ]
