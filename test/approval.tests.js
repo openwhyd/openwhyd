@@ -43,7 +43,11 @@ const routes = [
   { label: 'Profile - liked tracks', path: '/adrien/likes' },
   { label: 'Profile - playlists', path: '/adrien/playlists' },
   { label: 'Profile - playlist 1', path: '/adrien/playlist/1' },
-  { label: 'Profile - subscriptions', path: '/adrien/subscriptions' },
+  {
+    label: 'Profile - subscriptions',
+    path: '/adrien/subscriptions',
+    jsonPath: '/api/follow/fetchFollowing/4d94501d1f78ac091dbc9b4d',
+  },
   {
     label: 'Profile - subscribers',
     path: '/adrien/subscribers',
