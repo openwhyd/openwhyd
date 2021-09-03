@@ -96,7 +96,10 @@ const routes = [
     label: 'Unknown Profile',
     path: '/u/000000000000000000000004',
   },
-  // TODO: écran de création de playlist
+  {
+    label: 'Playlist creation',
+    path: '/adrien/playlist/create',
+  },
 ];
 
 formats.forEach((format) => {
