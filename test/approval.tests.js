@@ -15,10 +15,14 @@ const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 
 async function getCleanedPageBody(body) {
-  return body
-    .replace(/(src|href)="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, '$1="$2"') // remove openwhyd version from paths to html resources, to reduce noise in diff
-    .replace(/>[a-zA-Z]+ \d{4}/g, '>(age)') // remove date of posts, because it depends on the time when tests are run
-    .replace(/>\d+ (day|month|year)s?( ago)?/g, '>(age)'); // remove age of posts, because it depends on the time when tests are run
+  try {
+    return JSON.parse(body);
+  } catch (err) {
+    return body
+      .replace(/(src|href)="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, '$1="$2"') // remove openwhyd version from paths to html resources, to reduce noise in diff
+      .replace(/>[a-zA-Z]+ \d{4}/g, '>(age)') // remove date of posts, because it depends on the time when tests are run
+      .replace(/>\d+ (day|month|year)s?( ago)?/g, '>(age)'); // remove age of posts, because it depends on the time when tests are run
+  }
 }
 
 test.before(async (t) => {
@@ -64,6 +68,10 @@ const routes = [
     label: 'Empty Profile - playlists',
     path: '/u/000000000000000000000002/playlists',
   },
+  {
+    label: 'Empty Profile - playlist 1',
+    path: '/u/000000000000000000000002/playlist/1',
+  },
   // TODO: listes vides, ex: profil sans tracks ni followers
   // TODO: écran de création de playlist
 ];
@@ -83,11 +91,7 @@ formats.forEach((format) => {
               route.path.replace(/\?|$/, `?format=${format.toLowerCase()}&`)
             : route.path;
         const { body } = await promisify(openwhyd.getRaw)(jar, path);
-        const cleanedBody =
-          body.trim().charAt(0) === '<' // HTML body
-            ? await getCleanedPageBody(body)
-            : JSON.parse(body);
-        t.snapshot(cleanedBody);
+        t.snapshot(await getCleanedPageBody(body));
       });
     });
   });
