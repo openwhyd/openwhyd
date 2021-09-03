@@ -33,6 +33,7 @@ const personaLabels = ['Visitor', 'User'];
 const formats = ['HTML', 'JSON'];
 const routes = [
   { label: 'Home, page 1', path: '/' },
+  { label: 'Home, page 2', path: '/?after=600ec1c703e2014e630c8137' },
   { label: 'Profile, page 1', path: '/adrien' },
   { label: 'Profile, page 2', path: '/adrien?after=600ec1c703e2014e630c8137' },
 ];
