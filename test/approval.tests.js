@@ -26,21 +26,21 @@ async function getCleanedPageBody(body) {
 }
 
 test.before(async (t) => {
-  // import test data
-  const users = await readMongoDocuments(__dirname + '/approval.users.json');
-  await insertTestData(MONGODB_URL, {
-    user: users,
+  const testDataCollections = {
+    user: await readMongoDocuments(__dirname + '/approval.users.json'),
     post: await readMongoDocuments(__dirname + '/approval.posts.json'),
     follow: await readMongoDocuments(__dirname + '/approval.follows.json'),
-  });
+  };
+  await insertTestData(MONGODB_URL, testDataCollections);
   await refreshOpenwhydCache();
-  t.context.user = users[0];
+  t.context.getUser = (id) =>
+    testDataCollections.user.find(({ _id }) => id === _id.toString());
 });
 
 const personas = [
   { label: 'Visitor', userId: undefined },
   { label: 'User: Adrien', userId: '4d94501d1f78ac091dbc9b4d' },
-  // { label: 'User: A New User', userId: '000000000000000000000003' }, // TODO
+  { label: 'User: A New User', userId: '000000000000000000000003' },
 ];
 const formats = ['HTML', 'JSON'];
 const routes = [
@@ -103,11 +103,12 @@ formats.forEach((format) => {
   routes.forEach((route) => {
     personas.forEach((persona) => {
       test(`${persona.label}, ${route.label}, ${format}`, async (t) => {
-        const { jar, loggedIn } =
+        const { userId } = persona;
+        const { jar, loggedIn, response } =
           persona.label === 'Visitor'
             ? await promisify(openwhyd.logout)(null)
-            : await promisify(openwhyd.loginAs)(t.context.user); // TODO: use userId
-        if (persona.userId) t.true(loggedIn); // just to make sure that login worked as expected
+            : await promisify(openwhyd.loginAs)(t.context.getUser(userId));
+        if (userId && !loggedIn) t.fail(`login failed: ${response.body}`); // just to make sure that login worked as expected
         const path =
           format === 'JSON'
             ? route.jsonPath ||
