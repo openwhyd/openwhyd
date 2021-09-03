@@ -66,26 +66,29 @@ const routes = [
   },
   { label: 'All tracks, page 1', path: '/all' }, // TODO: fix the rendering of that page in JSON format
   { label: 'All tracks, page 2', path: '/all?after=601d160ea7db502dd31d204e' },
-  { label: 'Empty Profile, page 1', path: '/u/000000000000000000000003' },
   {
-    label: 'Empty Profile - liked tracks',
+    label: "A New User's Profile, page 1",
+    path: '/u/000000000000000000000003',
+  },
+  {
+    label: "A New User's Profile - liked tracks",
     path: '/u/000000000000000000000003/likes',
   },
   {
-    label: 'Empty Profile - playlists',
+    label: "A New User's Profile - playlists",
     path: '/u/000000000000000000000003/playlists',
   },
   {
-    label: 'Empty Profile - playlist 1',
+    label: "A New User's Profile - playlist 1",
     path: '/u/000000000000000000000003/playlist/1',
   },
   {
-    label: 'Empty Profile - subscriptions',
+    label: "A New User's Profile - subscriptions",
     path: '/u/000000000000000000000003/subscriptions',
     jsonPath: '/api/follow/fetchFollowing/000000000000000000000003',
   },
   {
-    label: 'Empty Profile - subscribers',
+    label: "A New User's Profile - subscribers",
     path: '/u/000000000000000000000003/subscribers',
     jsonPath: '/api/follow/fetchFollowers/000000000000000000000003',
   },
