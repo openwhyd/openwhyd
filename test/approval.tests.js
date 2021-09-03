@@ -44,6 +44,7 @@ const routes = [
   { label: 'Profile - playlists', path: '/adrien/playlists' },
   { label: 'Profile - playlist 1', path: '/adrien/playlist/1' },
   { label: 'Profile - subscriptions', path: '/adrien/subscriptions' },
+  { label: 'Profile - subscribers', path: '/adrien/subscribers' },
   // TODO: profil utilisateur: ... abonnés
   // TODO: contenus partagés par d'autres utilisateurs (cf `LibAll.js` et `LibFriends.js`)
   // TODO: listes vides, ex: profil sans tracks ni followers
