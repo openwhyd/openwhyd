@@ -86,7 +86,7 @@ jobs:
       - name: Start Openwhyd server
         run: |
           source env-vars-testing.sh
-          npm start --mongoDbDatabase openwhyd_test &
+          npm run start:coverage --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: Approval tests
         env:
@@ -94,6 +94,19 @@ jobs:
         run: |
           source env-vars-testing.sh
           npx ava test/approval.tests.js
+      - name: Get coverage data
+        run: |
+          npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: .nyc_output
+      - name: Upload coverage to codacy
+        uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
+          coverage-reports: coverage/lcov.info
 
   tests:
     name: Automated tests
@@ -199,20 +212,20 @@ jobs:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get coverage data
-        run: |
-          # npm run test:coverage
-          npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
-      - name: Save code coverage results
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-coverage-report
-          path: .nyc_output
-      - name: Upload coverage to codacy
-        uses: codacy/codacy-coverage-reporter-action@master
-        with:
-          project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
-          coverage-reports: coverage/lcov.info
+      # - name: Get coverage data
+      #   run: |
+      #     # npm run test:coverage
+      #     npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
+      # - name: Save code coverage results
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: code-coverage-report
+      #     path: .nyc_output
+      # - name: Upload coverage to codacy
+      #   uses: codacy/codacy-coverage-reporter-action@master
+      #   with:
+      #     project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
+      #     coverage-reports: coverage/lcov.info
 
   release:
     name: Release
