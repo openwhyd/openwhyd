@@ -39,7 +39,8 @@ const routes = [
   { label: 'Profile - liked tracks', path: '/adrien/likes' },
   { label: 'Profile - playlists', path: '/adrien/playlists' },
   { label: 'Profile - playlist 1', path: '/adrien/playlist/1' },
-  // TODO: profil utilisateur: ... playlist, historique, abonnés et abonnements
+  { label: 'Profile - subscriptions', path: '/adrien/subscriptions' },
+  // TODO: profil utilisateur: ... abonnés
   // TODO: contenus partagés par d'autres utilisateurs (cf `LibAll.js` et `LibFriends.js`)
   // TODO: écran de création de playlist
 ];
