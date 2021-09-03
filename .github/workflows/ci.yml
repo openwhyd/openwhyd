@@ -240,10 +240,18 @@ jobs:
         with:
           name: approval-code-coverage-report
           path: coverage-approval/
+      - name: Merge coverage reports
+        run: |
+          mkdir .nyc_output
+          mkdir coverage-reports
+          cp coverage-cypress/.nyc_output/*.json coverage-reports
+          cp coverage-approval/.nyc_output/*.json coverage-reports
+          npx nyc merge coverage-reports .nyc_output/merged-coverage.json
+          npx nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
         with:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
-          coverage-reports: coverage-cypress//coverage/lcov.info, coverage-approval/coverage/lcov.info
+          coverage-reports: coverage/lcov.info
 
   release:
     name: Release
