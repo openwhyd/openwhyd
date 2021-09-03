@@ -1,3 +1,10 @@
+## [1.44.50](https://github.com/openwhyd/openwhyd/compare/v1.44.49...v1.44.50) (2021-09-03)
+
+
+### Bug Fixes
+
+* **tests:** Allow importing test data for any db collection ([884def1](https://github.com/openwhyd/openwhyd/commit/884def1c71c748655bc294e2b3084c627973a848))
+
 ## [1.44.49](https://github.com/openwhyd/openwhyd/compare/v1.44.48...v1.44.49) (2021-08-19)
 
 

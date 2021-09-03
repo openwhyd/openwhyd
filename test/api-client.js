@@ -29,7 +29,8 @@ exports.logout = function logout(jar, callback) {
 };
 
 exports.loginAs = function loginAs(user, callback) {
-  const url = `/login?action=login&ajax=1&email=${user.email}&md5=${user.md5}`;
+  const email = encodeURIComponent(user.email);
+  const url = `/login?action=login&ajax=1&email=${email}&md5=${user.md5}`;
   exports.get(null, url, function (error, res) {
     assert.ifError(error); // TODO: pass error to callback
     assert.equal(res.response.statusCode, 200); // TODO: pass error to callback
