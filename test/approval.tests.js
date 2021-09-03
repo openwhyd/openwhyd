@@ -31,22 +31,29 @@ test.before(async (t) => {
 });
 
 const personaLabels = ['Visitor', 'User'];
+const formats = ['HTML', 'JSON'];
 const routes = [
   { label: 'Home, page 1', path: '/' },
   { label: 'Profile, page 1', path: '/adrien' },
   { label: 'Profile, page 2', path: '/adrien?after=600ec1c703e2014e630c8137' },
 ];
 
-routes.forEach((route) => {
-  personaLabels.forEach((persona) => {
-    test(`${persona}, ${route.label}, HTML`, async (t) => {
-      const { jar, loggedIn } =
-        persona === 'Visitor'
-          ? await promisify(openwhyd.logout)(null)
-          : await promisify(openwhyd.loginAs)(t.context.user);
-      if (persona === 'User') t.true(loggedIn); // just to make sure that login worked as expected
-      const body = await getCleanedPageBody(jar, route.path);
-      t.snapshot(body);
+formats.forEach((format) => {
+  routes.forEach((route) => {
+    personaLabels.forEach((persona) => {
+      test(`${persona}, ${route.label}, ${format}`, async (t) => {
+        const { jar, loggedIn } =
+          persona === 'Visitor'
+            ? await promisify(openwhyd.logout)(null)
+            : await promisify(openwhyd.loginAs)(t.context.user);
+        if (persona === 'User') t.true(loggedIn); // just to make sure that login worked as expected
+        const path =
+          format === 'HTML'
+            ? route.path
+            : route.path.replace(/\?|$/, `?format=${format.toLowerCase()}&`);
+        const body = await getCleanedPageBody(jar, path);
+        t.snapshot(body);
+      });
     });
   });
 });
