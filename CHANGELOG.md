@@ -1,3 +1,10 @@
+## [1.44.51](https://github.com/openwhyd/openwhyd/compare/v1.44.50...v1.44.51) (2021-09-03)
+
+
+### Bug Fixes
+
+* **tests:** Login to support email addresses with a `+` character ([0f8c2c4](https://github.com/openwhyd/openwhyd/commit/0f8c2c4e55e5a73610c767065d8ab92e36f7fe30))
+
 ## [1.44.50](https://github.com/openwhyd/openwhyd/compare/v1.44.49...v1.44.50) (2021-09-03)
 
 
