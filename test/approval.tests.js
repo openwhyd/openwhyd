@@ -55,6 +55,7 @@ const routes = [
   },
   { label: 'All tracks, page 1', path: '/all' }, // TODO: fix the rendering of that page in JSON format
   { label: 'All tracks, page 2', path: '/all?after=601d160ea7db502dd31d204e' },
+  { label: 'Empty Profile, page 1', path: '/u/000000000000000000000002' },
   // TODO: listes vides, ex: profil sans tracks ni followers
   // TODO: écran de création de playlist
 ];
