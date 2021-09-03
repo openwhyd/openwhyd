@@ -44,8 +44,11 @@ const routes = [
   { label: 'Profile - playlists', path: '/adrien/playlists' },
   { label: 'Profile - playlist 1', path: '/adrien/playlist/1' },
   { label: 'Profile - subscriptions', path: '/adrien/subscriptions' },
-  { label: 'Profile - subscribers', path: '/adrien/subscribers' },
-  // TODO: profil utilisateur: ... abonnés
+  {
+    label: 'Profile - subscribers',
+    path: '/adrien/subscribers',
+    jsonPath: '/api/follow/fetchFollowers/4d94501d1f78ac091dbc9b4d',
+  },
   // TODO: contenus partagés par d'autres utilisateurs (cf `LibAll.js` et `LibFriends.js`)
   // TODO: listes vides, ex: profil sans tracks ni followers
   // TODO: écran de création de playlist
@@ -61,9 +64,10 @@ formats.forEach((format) => {
             : await promisify(openwhyd.loginAs)(t.context.user);
         if (persona === 'User') t.true(loggedIn); // just to make sure that login worked as expected
         const path =
-          format === 'HTML'
-            ? route.path
-            : route.path.replace(/\?|$/, `?format=${format.toLowerCase()}&`);
+          format === 'JSON'
+            ? route.jsonPath ||
+              route.path.replace(/\?|$/, `?format=${format.toLowerCase()}&`)
+            : route.path;
         const { body } = await promisify(openwhyd.getRaw)(jar, path);
         const cleanedBody =
           format === 'HTML' ? await getCleanedPageBody(body) : JSON.parse(body);
