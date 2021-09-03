@@ -40,6 +40,7 @@ test.before(async (t) => {
 const personas = [
   { label: 'Visitor', userId: undefined },
   { label: 'User: Adrien', userId: '4d94501d1f78ac091dbc9b4d' },
+  // { label: 'User: A New User', userId: '000000000000000000000003' }, // TODO
 ];
 const formats = ['HTML', 'JSON'];
 const routes = [
@@ -62,32 +63,32 @@ const routes = [
   },
   { label: 'All tracks, page 1', path: '/all' }, // TODO: fix the rendering of that page in JSON format
   { label: 'All tracks, page 2', path: '/all?after=601d160ea7db502dd31d204e' },
-  { label: 'Empty Profile, page 1', path: '/u/000000000000000000000002' },
+  { label: 'Empty Profile, page 1', path: '/u/000000000000000000000003' },
   {
     label: 'Empty Profile - liked tracks',
-    path: '/u/000000000000000000000002/likes',
+    path: '/u/000000000000000000000003/likes',
   },
   {
     label: 'Empty Profile - playlists',
-    path: '/u/000000000000000000000002/playlists',
+    path: '/u/000000000000000000000003/playlists',
   },
   {
     label: 'Empty Profile - playlist 1',
-    path: '/u/000000000000000000000002/playlist/1',
+    path: '/u/000000000000000000000003/playlist/1',
   },
   {
-    label: 'Profile with no subscriptions',
-    path: '/u/000000000000000000000001/subscriptions',
-    jsonPath: '/api/follow/fetchFollowing/000000000000000000000001',
+    label: 'Empty Profile - subscriptions',
+    path: '/u/000000000000000000000003/subscriptions',
+    jsonPath: '/api/follow/fetchFollowing/000000000000000000000003',
   },
   {
-    label: 'Profile with no subscribers',
-    path: '/u/000000000000000000000002/subscribers',
-    jsonPath: '/api/follow/fetchFollowers/000000000000000000000002',
+    label: 'Empty Profile - subscribers',
+    path: '/u/000000000000000000000003/subscribers',
+    jsonPath: '/api/follow/fetchFollowers/000000000000000000000003',
   },
   {
     label: 'Unknown Profile',
-    path: '/u/000000000000000000000003',
+    path: '/u/000000000000000000000004',
   },
   // TODO: listes vides du point de vue de son utilisateur propriétaire
   // TODO: écran de création de playlist

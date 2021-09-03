@@ -400,5 +400,9 @@
   {
     "_id": ObjectId("000000000000000000000002"),
     "name": "A Subscriber"
+  },
+  {
+    "_id": ObjectId("000000000000000000000003"),
+    "name": "A New User"
   }
 ]
