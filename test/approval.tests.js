@@ -72,6 +72,20 @@ const routes = [
     label: 'Empty Profile - playlist 1',
     path: '/u/000000000000000000000002/playlist/1',
   },
+  {
+    label: 'Profile with no subscriptions',
+    path: '/u/000000000000000000000001/subscriptions',
+    jsonPath: '/api/follow/fetchFollowing/000000000000000000000001',
+  },
+  // {
+  //   label: 'Empty Profile - subscribers',
+  //   path: '/u/000000000000000000000002/subscribers',
+  //   jsonPath: '/api/follow/fetchFollowers/000000000000000000000002',
+  // },
+  // {
+  //   label: 'Unknown Profile',
+  //   path: '/u/000000000000000000000003',
+  // },
   // TODO: listes vides, ex: profil sans tracks ni followers
   // TODO: écran de création de playlist
 ];
