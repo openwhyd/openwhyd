@@ -82,11 +82,10 @@ const routes = [
     path: '/u/000000000000000000000002/subscribers',
     jsonPath: '/api/follow/fetchFollowers/000000000000000000000002',
   },
-  // {
-  //   label: 'Unknown Profile',
-  //   path: '/u/000000000000000000000003',
-  // },
-  // TODO: listes vides, ex: profil sans tracks ni followers
+  {
+    label: 'Unknown Profile',
+    path: '/u/000000000000000000000003',
+  },
   // TODO: écran de création de playlist
 ];
 
