@@ -46,18 +46,21 @@ const formats = ['HTML', 'JSON'];
 const routes = [
   { label: 'Home, page 1', path: '/' },
   { label: 'Home, page 2', path: '/?after=601d160ea7db502dd31d204e' },
-  { label: 'Profile, page 1', path: '/adrien' },
-  { label: 'Profile, page 2', path: '/adrien?after=600ec1c703e2014e630c8137' },
-  { label: 'Profile - liked tracks', path: '/adrien/likes' },
-  { label: 'Profile - playlists', path: '/adrien/playlists' },
-  { label: 'Profile - playlist 1', path: '/adrien/playlist/1' },
+  { label: "Adrien's Profile, page 1", path: '/adrien' },
   {
-    label: 'Profile - subscriptions',
+    label: "Adrien's Profile, page 2",
+    path: '/adrien?after=600ec1c703e2014e630c8137',
+  },
+  { label: "Adrien's Profile - liked tracks", path: '/adrien/likes' },
+  { label: "Adrien's Profile - playlists", path: '/adrien/playlists' },
+  { label: "Adrien's Profile - playlist 1", path: '/adrien/playlist/1' },
+  {
+    label: "Adrien's Profile - subscriptions",
     path: '/adrien/subscriptions',
     jsonPath: '/api/follow/fetchFollowing/4d94501d1f78ac091dbc9b4d',
   },
   {
-    label: 'Profile - subscribers',
+    label: "Adrien's Profile - subscribers",
     path: '/adrien/subscribers',
     jsonPath: '/api/follow/fetchFollowers/4d94501d1f78ac091dbc9b4d',
   },
@@ -90,7 +93,6 @@ const routes = [
     label: 'Unknown Profile',
     path: '/u/000000000000000000000004',
   },
-  // TODO: listes vides du point de vue de son utilisateur propriétaire
   // TODO: écran de création de playlist
 ];
 
