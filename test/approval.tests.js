@@ -16,8 +16,9 @@ const MONGODB_URL =
 
 async function getCleanedPageBody(cookieJar, path) {
   const { body } = await promisify(openwhyd.getRaw)(cookieJar, path);
+  console.warn(1, { body });
   return body
-    .replace(/src="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, 'src="$1"') // remove openwhyd version from paths to html resources, to reduce noise in diff
+    .replace(/(src|href)="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, '$1="$2"') // remove openwhyd version from paths to html resources, to reduce noise in diff
     .replace(/>\d+ (day|month|year)s?( ago)?/g, '>(age)'); // remove age of posts, because it depends on the time when tests are run
 }
 
@@ -36,8 +37,8 @@ const routes = [
   { label: 'Profile, page 2', path: '/adrien?after=600ec1c703e2014e630c8137' },
 ];
 
-personaLabels.forEach((persona) => {
-  routes.forEach((route) => {
+routes.forEach((route) => {
+  personaLabels.forEach((persona) => {
     test(`${persona}, ${route.label}, HTML`, async (t) => {
       const { jar, loggedIn } =
         persona === 'Visitor'
@@ -45,6 +46,7 @@ personaLabels.forEach((persona) => {
           : await promisify(openwhyd.loginAs)(t.context.user);
       if (persona === 'User') t.true(loggedIn); // just to make sure that login worked as expected
       const body = await getCleanedPageBody(jar, route.path);
+      console.warn(2, { body });
       t.snapshot(body);
     });
   });
