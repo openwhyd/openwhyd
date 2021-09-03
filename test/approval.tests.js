@@ -14,8 +14,7 @@ const {
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 
-async function getCleanedPageBody(cookieJar, path) {
-  const { body } = await promisify(openwhyd.getRaw)(cookieJar, path);
+async function getCleanedPageBody(body) {
   return body
     .replace(/(src|href)="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, '$1="$2"') // remove openwhyd version from paths to html resources, to reduce noise in diff
     .replace(/>[a-zA-Z]+ \d{4}/g, '>(age)') // remove date of posts, because it depends on the time when tests are run
@@ -51,8 +50,10 @@ formats.forEach((format) => {
           format === 'HTML'
             ? route.path
             : route.path.replace(/\?|$/, `?format=${format.toLowerCase()}&`);
-        const body = await getCleanedPageBody(jar, path);
-        t.snapshot(body);
+        const { body } = await promisify(openwhyd.getRaw)(jar, path);
+        const cleanedBody =
+          format === 'HTML' ? await getCleanedPageBody(body) : JSON.parse(body);
+        t.snapshot(cleanedBody);
       });
     });
   });
