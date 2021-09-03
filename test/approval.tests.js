@@ -22,9 +22,13 @@ async function getCleanedPageBody(body) {
 }
 
 test.before(async (t) => {
+  // import test data
   const users = await readMongoDocuments(__dirname + '/approval.users.json');
-  const posts = await readMongoDocuments(__dirname + '/approval.posts.json');
-  await insertTestData(MONGODB_URL, users, posts);
+  await insertTestData(MONGODB_URL, {
+    user: users,
+    post: await readMongoDocuments(__dirname + '/approval.posts.json'),
+    follow: await readMongoDocuments(__dirname + '/approval.follows.json'),
+  });
   await refreshOpenwhydCache();
   t.context.user = users[0];
 });
@@ -42,6 +46,7 @@ const routes = [
   { label: 'Profile - subscriptions', path: '/adrien/subscriptions' },
   // TODO: profil utilisateur: ... abonnés
   // TODO: contenus partagés par d'autres utilisateurs (cf `LibAll.js` et `LibFriends.js`)
+  // TODO: listes vides, ex: profil sans tracks ni followers
   // TODO: écran de création de playlist
 ];
 
