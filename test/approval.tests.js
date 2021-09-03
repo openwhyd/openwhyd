@@ -53,7 +53,8 @@ const routes = [
     path: '/adrien/subscribers',
     jsonPath: '/api/follow/fetchFollowers/4d94501d1f78ac091dbc9b4d',
   },
-  // TODO: contenus partagés par d'autres utilisateurs (cf `LibAll.js` et `LibFriends.js`)
+  { label: 'All tracks, page 1', path: '/all' }, // TODO: fix the rendering of that page in JSON format
+  { label: 'All tracks, page 2', path: '/all?after=601d160ea7db502dd31d204e' },
   // TODO: listes vides, ex: profil sans tracks ni followers
   // TODO: écran de création de playlist
 ];
@@ -74,7 +75,9 @@ formats.forEach((format) => {
             : route.path;
         const { body } = await promisify(openwhyd.getRaw)(jar, path);
         const cleanedBody =
-          format === 'HTML' ? await getCleanedPageBody(body) : JSON.parse(body);
+          body.trim().charAt(0) === '<' // HTML body
+            ? await getCleanedPageBody(body)
+            : JSON.parse(body);
         t.snapshot(cleanedBody);
       });
     });
