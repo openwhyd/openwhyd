@@ -16,9 +16,9 @@ const MONGODB_URL =
 
 async function getCleanedPageBody(cookieJar, path) {
   const { body } = await promisify(openwhyd.getRaw)(cookieJar, path);
-  console.warn(1, { body });
   return body
     .replace(/(src|href)="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, '$1="$2"') // remove openwhyd version from paths to html resources, to reduce noise in diff
+    .replace(/>[a-zA-Z]+ \d{4}/g, '>(age)') // remove date of posts, because it depends on the time when tests are run
     .replace(/>\d+ (day|month|year)s?( ago)?/g, '>(age)'); // remove age of posts, because it depends on the time when tests are run
 }
 
@@ -46,7 +46,6 @@ routes.forEach((route) => {
           : await promisify(openwhyd.loginAs)(t.context.user);
       if (persona === 'User') t.true(loggedIn); // just to make sure that login worked as expected
       const body = await getCleanedPageBody(jar, route.path);
-      console.warn(2, { body });
       t.snapshot(body);
     });
   });
