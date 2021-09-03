@@ -36,6 +36,10 @@ const routes = [
   { label: 'Home, page 2', path: '/?after=600ec1c703e2014e630c8137' },
   { label: 'Profile, page 1', path: '/adrien' },
   { label: 'Profile, page 2', path: '/adrien?after=600ec1c703e2014e630c8137' },
+  { label: 'Profile - liked tracks', path: '/adrien/likes' },
+  // TODO: profil utilisateur: ... playlist, historique, abonnés et abonnements
+  // TODO: contenus partagés par d'autres utilisateurs (cf `LibAll.js` et `LibFriends.js`)
+  // TODO: écran de création de playlist
 ];
 
 formats.forEach((format) => {
