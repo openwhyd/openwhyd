@@ -88,6 +88,11 @@ LibraryController.prototype.renderOther = function (data, mimeType) {
   this.render(data, mimeType);
 };
 
+/**
+ * @param {import('express').Request} request
+ * @param {import('express').Request['query']} reqParams
+ * @param {import('express').Response} response
+ */
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('userLibrary.controller', reqParams);
 
