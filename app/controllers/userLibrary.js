@@ -15,43 +15,47 @@ var renderAllLibrary = require('./LibAll.js').render;
 var renderUserLibrary = require('./LibUser.js').render;
 var renderFriendsLibrary = require('./LibFriends.js').render;
 
-var tabParams = [
-  'showPlaylists',
-  'showLikes',
-  'showActivity',
-  'showSubscribers',
-  'showSubscriptions',
-];
-var paramsToInclude = [
-  'after',
-  'before',
-  'limit',
-  'playlistId',
-  'embedW',
-  'format',
-  'pageUrl',
-  'callback',
-].concat(tabParams);
-
+/**
+ * @param {{
+ *   loggedUser: { id: unknown, isAdmin:boolean } | undefined
+ *   showPlaylists: boolean
+ *   showLikes: boolean
+ *   showActivity: boolean
+ *   showSubscribers: boolean
+ *   showSubscriptions: boolean
+ *   pageUrl: string
+ *   format: 'json' | 'html'
+ *   id: string | undefined
+ *   handle: string | undefined
+ *   embedW: unknown
+ *   after: unknown
+ *   before: unknown
+ *   limit: unknown
+ *   playlistId: unknown
+ *   callback: unknown
+ * }} reqParams
+ * @param {*} render
+ */
 function LibraryController(reqParams, render) {
-  reqParams = reqParams || {};
   this.render = render;
   this.options = {
-    loggedUser:
-      reqParams.loggedUser ||
-      {} /*,
-		after: reqParams.after,
-		before: reqParams.before,
-		limit: reqParams.limit,
-		playlistId: reqParams.playlistId,
-		showPlaylists: reqParams.showPlaylists,
-		showLikes: reqParams.showLikes,
-		embedW: reqParams.embedW,
-		format: reqParams.format,
-		pageUrl: reqParams.pageUrl*/,
+    loggedUser: reqParams.loggedUser || {},
+
+    showPlaylists: reqParams.showPlaylists,
+    showLikes: reqParams.showLikes,
+    showActivity: reqParams.showActivity,
+    showSubscribers: reqParams.showSubscribers,
+    showSubscriptions: reqParams.showSubscriptions,
+
+    after: reqParams.after,
+    before: reqParams.before,
+    limit: reqParams.limit,
+    playlistId: reqParams.playlistId,
+    embedW: reqParams.embedW,
+    format: reqParams.format,
+    pageUrl: reqParams.pageUrl,
+    callback: reqParams.callback,
   };
-  for (let i in paramsToInclude)
-    this.options[paramsToInclude[i]] = reqParams[paramsToInclude[i]];
   if (typeof this.options.limit == 'string')
     this.options.limit = parseInt(this.options.limit);
   if (this.options.callback) this.options.format = 'json';
@@ -104,7 +108,7 @@ exports.controller = function (request, reqParams, response) {
   var path = request.url.split('?')[0];
 
   /** @type {{
-   *    loggedUser: typeof loggedInUser
+   *    loggedUser: { id: unknown, isAdmin:boolean } | undefined
    *    showPlaylists: boolean
    *    showLikes: boolean
    *    showActivity: boolean
@@ -115,6 +119,11 @@ exports.controller = function (request, reqParams, response) {
    *    id: string | undefined
    *    handle: string | undefined
    *    embedW: unknown
+   *   after: unknown
+   *   before: unknown
+   *   limit: unknown
+   *   playlistId: unknown
+   *   callback: unknown
    *  }} */
   const params = {
     loggedUser: loggedInUser,
@@ -128,6 +137,11 @@ exports.controller = function (request, reqParams, response) {
     id: typeof reqParams.id === 'string' ? reqParams.id : undefined, // user id of the profile to display
     handle: typeof reqParams.handle === 'string' ? reqParams.handle : undefined, // user handle of the profile to display
     embedW: reqParams.embedW, // width of the embedded player to render, if requested
+    after: reqParams.after,
+    before: reqParams.before,
+    limit: reqParams.limit,
+    playlistId: reqParams.playlistId,
+    callback: reqParams.callback,
   };
 
   function render(data, mimeType) {
