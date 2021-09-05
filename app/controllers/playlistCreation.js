@@ -18,23 +18,22 @@ exports.controller = async function (request, reqParams, response) {
   const options = {
     bodyClass: ' userPlaylistV2',
     customFeedTemplate: templateLoader.loadTemplate(
-      // TODO: rely on express to render template
       'app/templates/userPlaylistV2.html'
     ),
-    pageUrl: request.url.replace('/adrien', '/u/4d94501d1f78ac091dbc9b4d'), // TODO: get rid of the replace()
+    pageUrl: request.url.replace('/adrien', `/u/${user.id}`),
     pageTitle: 'new playlist',
-    pageImage: config.urlPrefix + '/img/playlist/' + user.id + '_create',
-    loggedUser: request.getUser() || {},
+    pageImage: `${config.urlPrefix}/img/playlist/${user.id}_create`,
+    loggedUser: { ...request.getUser() },
     user,
     playlist: {
       id: 'create',
-      name: /*(reqParams || {}).name ||*/ 'Playlist #' + user.pl.length,
+      name: `Playlist #${user.pl.length}`,
     },
   };
 
   const trackingHtml = [
     '<script>',
-    ' window.Whyd.tracking.log("Visit profile", "' + user.id + '");',
+    ` window.Whyd.tracking.log("Visit profile", "${user.id}");`,
     '</script>',
   ].join('\n');
 
