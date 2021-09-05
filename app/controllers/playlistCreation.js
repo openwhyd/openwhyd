@@ -5,6 +5,11 @@ const feedTemplate = require('../templates/feed.js');
 exports.controller = async function (request, reqParams, response) {
   request.logToConsole('playlistCreation.controller', reqParams);
 
+  if (reqParams.format === 'json') {
+    response.send([]);
+    return;
+  }
+
   const user = await new Promise((resolve) =>
     userModel.fetchByHandle(reqParams.handle, resolve)
   );
