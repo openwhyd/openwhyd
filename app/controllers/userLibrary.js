@@ -88,47 +88,22 @@ LibraryController.prototype.renderOther = function (data, mimeType) {
   this.render(data, mimeType);
 };
 
-/**
- * @param {import('express').Request} request
- * @param {import('express').Request['query']} reqParams
- * @param {import('express').Response} response
- */
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('userLibrary.controller', reqParams);
 
-  /** @type {{ id: unknown, isAdmin:boolean } | undefined} */
-  var loggedInUser = reqParams.loggedUser || request.getUser() || {};
+  reqParams = reqParams || {};
+  var loggedInUser = (reqParams.loggedUser = request.getUser() || {});
   if (loggedInUser && loggedInUser.id)
-    loggedInUser.isAdmin = request.isUserAdmin(loggedInUser);
+    reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
 
   var path = request.url.split('?')[0];
-
-  /** @type {{
-   *    loggedUser: typeof loggedInUser
-   *    showPlaylists: boolean
-   *    showLikes: boolean
-   *    showActivity: boolean
-   *    showSubscribers: boolean
-   *    showSubscriptions: boolean
-   *    pageUrl: string
-   *    format: 'json' | 'html'
-   *    id: string | undefined
-   *    handle: string | undefined
-   *    embedW: unknown
-   *  }} */
-  const params = {
-    loggedUser: loggedInUser,
-    showPlaylists: path.endsWith('/playlists'),
-    showLikes: path.endsWith('/likes'),
-    showActivity: path.endsWith('/activity'),
-    showSubscribers: path.endsWith('/subscribers'),
-    showSubscriptions: path.endsWith('/subscriptions'),
-    pageUrl: request.url,
-    format: reqParams.format == 'json' ? 'json' : 'html',
-    id: typeof reqParams.id === 'string' ? reqParams.id : undefined, // user id of the profile to display
-    handle: typeof reqParams.handle === 'string' ? reqParams.handle : undefined, // user handle of the profile to display
-    embedW: reqParams.embedW, // width of the embedded player to render, if requested
-  };
+  //console.log("path", path)
+  reqParams.showPlaylists = path.endsWith('/playlists');
+  reqParams.showLikes = path.endsWith('/likes');
+  reqParams.showActivity = path.endsWith('/activity');
+  reqParams.showSubscribers = path.endsWith('/subscribers');
+  reqParams.showSubscriptions = path.endsWith('/subscriptions');
+  reqParams.pageUrl = request.url;
 
   function render(data, mimeType) {
     if (mimeType)
@@ -158,13 +133,18 @@ exports.controller = function (request, reqParams, response) {
     } else if (data.html) {
       response.renderHTML(data.html);
       // console.log('rendering done!');
-      if (loggedInUser && loggedInUser.id && !params.after && !params.before)
+      if (
+        loggedInUser &&
+        loggedInUser.id &&
+        !reqParams.after &&
+        !reqParams.before
+      )
         analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
     } else if (typeof data == 'object') response.renderJSON(data.json || data);
     else response.legacyRender(data.error);
   }
 
-  var lib = new LibraryController(params, render);
+  var lib = new LibraryController(reqParams, render);
 
   function redirectTo(path) {
     var paramsObj = {},
@@ -184,36 +164,37 @@ exports.controller = function (request, reqParams, response) {
 
   if (path == '/' || request.url.indexOf('/stream') > -1) {
     if (loggedInUser && loggedInUser.id) return renderFriendsLibrary(lib);
-    else if (params.format == 'json') return render({ errorCode: 'REQ_LOGIN' });
+    else if (reqParams.format == 'json')
+      return render({ errorCode: 'REQ_LOGIN' });
     else {
       lib.options.bodyClass = 'home';
       return renderAllLibrary(lib);
     }
   } else if (path == '/me') {
-    if (request.checkLogin(response, params.format))
+    if (request.checkLogin(response, reqParams.format))
       userModel.fetchByUid(loggedInUser.id, function (user) {
         if (!user) render({ errorCode: 'USER_NOT_FOUND' });
         else
           redirectTo(
             path.replace(
               '/me',
-              user.handle ? '/' + user.handle : '/u/' + params.id
+              user.handle ? '/' + user.handle : '/u/' + reqParams.id
             )
           );
       });
   } else if (path == '/all') {
     return renderAllLibrary(lib);
-  } else if (params.handle)
-    userModel.fetchByHandle(params.handle, function (user) {
+  } else if (reqParams.handle)
+    userModel.fetchByHandle(reqParams.handle, function (user) {
       renderUserLibrary(lib, user);
     });
-  else if (params.id) {
-    if (!mongodb.isObjectId(params.id))
+  else if (reqParams.id) {
+    if (!mongodb.isObjectId(reqParams.id))
       return render({ errorCode: 'USER_NOT_FOUND' });
-    userModel.fetchByUid(params.id, function (user) {
+    userModel.fetchByUid(reqParams.id, function (user) {
       if (!user) render({ errorCode: 'USER_NOT_FOUND' });
-      else if (user.handle && !params.embedW)
-        redirectTo(path.replace('/u/' + params.id, '/' + user.handle));
+      else if (user.handle && !reqParams.embedW)
+        redirectTo(path.replace('/u/' + reqParams.id, '/' + user.handle));
       else renderUserLibrary(lib, user);
     });
   } else {
