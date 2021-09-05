@@ -97,8 +97,12 @@ const routes = [
     path: '/u/000000000000000000000004',
   },
   {
-    label: 'Playlist creation',
+    label: "Adrien's Profile - Playlist creation",
     path: '/adrien/playlist/create',
+  },
+  {
+    label: "A New User's Profile - Playlist creation",
+    path: '/u/000000000000000000000003/playlist/create',
   },
 ];
 
