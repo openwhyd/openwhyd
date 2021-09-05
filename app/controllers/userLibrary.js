@@ -114,6 +114,7 @@ exports.controller = function (request, reqParams, response) {
    *    format: 'json' | 'html'
    *    id: string | undefined
    *    handle: string | undefined
+   *    embedW: unknown
    *  }} */
   const params = {
     loggedUser: loggedInUser,
@@ -126,6 +127,7 @@ exports.controller = function (request, reqParams, response) {
     format: reqParams.format == 'json' ? 'json' : 'html',
     id: typeof reqParams.id === 'string' ? reqParams.id : undefined, // user id of the profile to display
     handle: typeof reqParams.handle === 'string' ? reqParams.handle : undefined, // user handle of the profile to display
+    embedW: reqParams.embedW, // width of the embedded player to render, if requested
   };
 
   function render(data, mimeType) {
@@ -210,8 +212,8 @@ exports.controller = function (request, reqParams, response) {
       return render({ errorCode: 'USER_NOT_FOUND' });
     userModel.fetchByUid(params.id, function (user) {
       if (!user) render({ errorCode: 'USER_NOT_FOUND' });
-      else if (user.handle && !reqParams.embedW)
-        redirectTo(path.replace('/u/' + reqParams.id, '/' + user.handle));
+      else if (user.handle && !params.embedW)
+        redirectTo(path.replace('/u/' + params.id, '/' + user.handle));
       else renderUserLibrary(lib, user);
     });
   } else {
