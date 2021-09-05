@@ -44,58 +44,58 @@ const personas = [
 ];
 const formats = ['HTML', 'JSON'];
 const routes = [
-  // { label: 'Home, page 1', path: '/' },
-  // { label: 'Home, page 2', path: '/?after=601d160ea7db502dd31d204e' },
-  // { label: "Adrien's Profile, page 1", path: '/adrien' },
-  // {
-  //   label: "Adrien's Profile, page 2",
-  //   path: '/adrien?after=600ec1c703e2014e630c8137',
-  // },
-  // { label: "Adrien's Profile - liked tracks", path: '/adrien/likes' },
-  // { label: "Adrien's Profile - playlists", path: '/adrien/playlists' },
-  // { label: "Adrien's Profile - playlist 1", path: '/adrien/playlist/1' },
-  // {
-  //   label: "Adrien's Profile - subscriptions",
-  //   path: '/adrien/subscriptions',
-  //   jsonPath: '/api/follow/fetchFollowing/4d94501d1f78ac091dbc9b4d',
-  // },
-  // {
-  //   label: "Adrien's Profile - subscribers",
-  //   path: '/adrien/subscribers',
-  //   jsonPath: '/api/follow/fetchFollowers/4d94501d1f78ac091dbc9b4d',
-  // },
-  // { label: 'All tracks, page 1', path: '/all' }, // TODO: fix the rendering of that page in JSON format
-  // { label: 'All tracks, page 2', path: '/all?after=601d160ea7db502dd31d204e' },
-  // {
-  //   label: "A New User's Profile, page 1",
-  //   path: '/u/000000000000000000000003',
-  // },
-  // {
-  //   label: "A New User's Profile - liked tracks",
-  //   path: '/u/000000000000000000000003/likes',
-  // },
-  // {
-  //   label: "A New User's Profile - playlists",
-  //   path: '/u/000000000000000000000003/playlists',
-  // },
-  // {
-  //   label: "A New User's Profile - playlist 1",
-  //   path: '/u/000000000000000000000003/playlist/1',
-  // },
-  // {
-  //   label: "A New User's Profile - subscriptions",
-  //   path: '/u/000000000000000000000003/subscriptions',
-  //   jsonPath: '/api/follow/fetchFollowing/000000000000000000000003',
-  // },
-  // {
-  //   label: "A New User's Profile - subscribers",
-  //   path: '/u/000000000000000000000003/subscribers',
-  //   jsonPath: '/api/follow/fetchFollowers/000000000000000000000003',
-  // },
-  // {
-  //   label: 'Unknown Profile',
-  //   path: '/u/000000000000000000000004',
-  // },
+  { label: 'Home, page 1', path: '/' },
+  { label: 'Home, page 2', path: '/?after=601d160ea7db502dd31d204e' },
+  { label: "Adrien's Profile, page 1", path: '/adrien' },
+  {
+    label: "Adrien's Profile, page 2",
+    path: '/adrien?after=600ec1c703e2014e630c8137',
+  },
+  { label: "Adrien's Profile - liked tracks", path: '/adrien/likes' },
+  { label: "Adrien's Profile - playlists", path: '/adrien/playlists' },
+  { label: "Adrien's Profile - playlist 1", path: '/adrien/playlist/1' },
+  {
+    label: "Adrien's Profile - subscriptions",
+    path: '/adrien/subscriptions',
+    jsonPath: '/api/follow/fetchFollowing/4d94501d1f78ac091dbc9b4d',
+  },
+  {
+    label: "Adrien's Profile - subscribers",
+    path: '/adrien/subscribers',
+    jsonPath: '/api/follow/fetchFollowers/4d94501d1f78ac091dbc9b4d',
+  },
+  { label: 'All tracks, page 1', path: '/all' }, // TODO: fix the rendering of that page in JSON format
+  { label: 'All tracks, page 2', path: '/all?after=601d160ea7db502dd31d204e' },
+  {
+    label: "A New User's Profile, page 1",
+    path: '/u/000000000000000000000003',
+  },
+  {
+    label: "A New User's Profile - liked tracks",
+    path: '/u/000000000000000000000003/likes',
+  },
+  {
+    label: "A New User's Profile - playlists",
+    path: '/u/000000000000000000000003/playlists',
+  },
+  {
+    label: "A New User's Profile - playlist 1",
+    path: '/u/000000000000000000000003/playlist/1',
+  },
+  {
+    label: "A New User's Profile - subscriptions",
+    path: '/u/000000000000000000000003/subscriptions',
+    jsonPath: '/api/follow/fetchFollowing/000000000000000000000003',
+  },
+  {
+    label: "A New User's Profile - subscribers",
+    path: '/u/000000000000000000000003/subscribers',
+    jsonPath: '/api/follow/fetchFollowers/000000000000000000000003',
+  },
+  {
+    label: 'Unknown Profile',
+    path: '/u/000000000000000000000004',
+  },
   {
     label: 'Playlist creation',
     path: '/adrien/playlist/create',
