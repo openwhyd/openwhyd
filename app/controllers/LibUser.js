@@ -224,13 +224,7 @@ function fetchAndRenderPlaylist(options, callback, process) {
       break;
     }
   if (options.playlistId == 'create') {
-    options.playlist = {
-      id: 'create',
-      name:
-        /*(options.reqParams || {}).name ||*/ 'Playlist #' +
-        options.user.pl.length,
-    };
-    options.pageTitle = 'new playlist';
+    // moved to playlistCreation.js
   } else {
     options.pageTitle =
       ((options.playlist || {}).name || 'a playlist') +
