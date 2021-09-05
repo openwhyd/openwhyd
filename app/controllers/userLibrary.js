@@ -111,6 +111,7 @@ exports.controller = function (request, reqParams, response) {
    *    showSubscribers: boolean,
    *    showSubscriptions: boolean,
    *    pageUrl: string,
+   *    format: 'json' | 'html'
    *  }} */
   const params = {
     loggedUser: loggedInUser,
@@ -120,6 +121,7 @@ exports.controller = function (request, reqParams, response) {
     showSubscribers: path.endsWith('/subscribers'),
     showSubscriptions: path.endsWith('/subscriptions'),
     pageUrl: request.url,
+    format: reqParams.format == 'json' ? 'json' : 'html',
   };
 
   function render(data, mimeType) {
@@ -176,14 +178,13 @@ exports.controller = function (request, reqParams, response) {
 
   if (path == '/' || request.url.indexOf('/stream') > -1) {
     if (loggedInUser && loggedInUser.id) return renderFriendsLibrary(lib);
-    else if (reqParams.format == 'json')
-      return render({ errorCode: 'REQ_LOGIN' });
+    else if (params.format == 'json') return render({ errorCode: 'REQ_LOGIN' });
     else {
       lib.options.bodyClass = 'home';
       return renderAllLibrary(lib);
     }
   } else if (path == '/me') {
-    if (request.checkLogin(response, reqParams.format))
+    if (request.checkLogin(response, params.format))
       userModel.fetchByUid(loggedInUser.id, function (user) {
         if (!user) render({ errorCode: 'USER_NOT_FOUND' });
         else
