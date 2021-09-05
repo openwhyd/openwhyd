@@ -96,19 +96,31 @@ LibraryController.prototype.renderOther = function (data, mimeType) {
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('userLibrary.controller', reqParams);
 
-  reqParams = reqParams || {};
-  var loggedInUser = (reqParams.loggedUser = request.getUser() || {});
+  /** @type {{ id: unknown, isAdmin:boolean } | undefined} */
+  var loggedInUser = reqParams.loggedUser || request.getUser() || {};
   if (loggedInUser && loggedInUser.id)
-    reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
+    loggedInUser.isAdmin = request.isUserAdmin(loggedInUser);
 
   var path = request.url.split('?')[0];
-  //console.log("path", path)
-  reqParams.showPlaylists = path.endsWith('/playlists');
-  reqParams.showLikes = path.endsWith('/likes');
-  reqParams.showActivity = path.endsWith('/activity');
-  reqParams.showSubscribers = path.endsWith('/subscribers');
-  reqParams.showSubscriptions = path.endsWith('/subscriptions');
-  reqParams.pageUrl = request.url;
+
+  /** @type {{
+   *    loggedUser: typeof loggedInUser
+   *    showPlaylists: boolean
+   *    showLikes: boolean,
+   *    showActivity: boolean,
+   *    showSubscribers: boolean,
+   *    showSubscriptions: boolean,
+   *    pageUrl: string,
+   *  }} */
+  const params = {
+    loggedUser: loggedInUser,
+    showPlaylists: path.endsWith('/playlists'),
+    showLikes: path.endsWith('/likes'),
+    showActivity: path.endsWith('/activity'),
+    showSubscribers: path.endsWith('/subscribers'),
+    showSubscriptions: path.endsWith('/subscriptions'),
+    pageUrl: request.url,
+  };
 
   function render(data, mimeType) {
     if (mimeType)
@@ -138,18 +150,13 @@ exports.controller = function (request, reqParams, response) {
     } else if (data.html) {
       response.renderHTML(data.html);
       // console.log('rendering done!');
-      if (
-        loggedInUser &&
-        loggedInUser.id &&
-        !reqParams.after &&
-        !reqParams.before
-      )
+      if (loggedInUser && loggedInUser.id && !params.after && !params.before)
         analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
     } else if (typeof data == 'object') response.renderJSON(data.json || data);
     else response.legacyRender(data.error);
   }
 
-  var lib = new LibraryController(reqParams, render);
+  var lib = new LibraryController(params, render);
 
   function redirectTo(path) {
     var paramsObj = {},
