@@ -113,6 +113,7 @@ exports.controller = function (request, reqParams, response) {
    *    pageUrl: string
    *    format: 'json' | 'html'
    *    id: string | undefined
+   *    handle: string | undefined
    *  }} */
   const params = {
     loggedUser: loggedInUser,
@@ -124,6 +125,7 @@ exports.controller = function (request, reqParams, response) {
     pageUrl: request.url,
     format: reqParams.format == 'json' ? 'json' : 'html',
     id: typeof reqParams.id === 'string' ? reqParams.id : undefined, // user id of the profile to display
+    handle: typeof reqParams.handle === 'string' ? reqParams.handle : undefined, // user handle of the profile to display
   };
 
   function render(data, mimeType) {
@@ -199,8 +201,8 @@ exports.controller = function (request, reqParams, response) {
       });
   } else if (path == '/all') {
     return renderAllLibrary(lib);
-  } else if (reqParams.handle)
-    userModel.fetchByHandle(reqParams.handle, function (user) {
+  } else if (params.handle)
+    userModel.fetchByHandle(params.handle, function (user) {
       renderUserLibrary(lib, user);
     });
   else if (params.id) {
