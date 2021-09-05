@@ -12,23 +12,11 @@ exports.controller = async function (request, reqParams, response) {
     return;
   }
 
-  let user;
-
-  if (reqParams.handle) {
-    user = await new Promise((resolve) =>
-      userModel.fetchByHandle(reqParams.handle, resolve)
-    );
-  } else if (reqParams.id) {
-    user = await new Promise((resolve) =>
-      userModel.fetchByUid(reqParams.id, resolve)
-    );
-    if (user.handle) {
-      const path = request.url
-        .split('?')[0]
-        .replace('/u/' + reqParams.id, '/' + user.handle);
-      return response.temporaryRedirect(path, {});
-    }
-  }
+  const user = await new Promise((resolve) =>
+    reqParams.handle
+      ? userModel.fetchByHandle(reqParams.handle, resolve)
+      : userModel.fetchByUid(reqParams.id, resolve)
+  );
 
   if (!user)
     return errorTemplate.renderErrorResponse(
@@ -37,6 +25,13 @@ exports.controller = async function (request, reqParams, response) {
       reqParams.format,
       request.getUser()
     );
+
+  if (reqParams.id && user.handle) {
+    const path = request.url
+      .split('?')[0]
+      .replace(`/u/${reqParams.id}`, `/${user.handle}`);
+    return response.temporaryRedirect(path, {});
+  }
 
   const options = {
     bodyClass: ' userPlaylistV2',
