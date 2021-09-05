@@ -106,12 +106,13 @@ exports.controller = function (request, reqParams, response) {
   /** @type {{
    *    loggedUser: typeof loggedInUser
    *    showPlaylists: boolean
-   *    showLikes: boolean,
-   *    showActivity: boolean,
-   *    showSubscribers: boolean,
-   *    showSubscriptions: boolean,
-   *    pageUrl: string,
+   *    showLikes: boolean
+   *    showActivity: boolean
+   *    showSubscribers: boolean
+   *    showSubscriptions: boolean
+   *    pageUrl: string
    *    format: 'json' | 'html'
+   *    id: string | undefined
    *  }} */
   const params = {
     loggedUser: loggedInUser,
@@ -122,6 +123,7 @@ exports.controller = function (request, reqParams, response) {
     showSubscriptions: path.endsWith('/subscriptions'),
     pageUrl: request.url,
     format: reqParams.format == 'json' ? 'json' : 'html',
+    id: typeof reqParams.id === 'string' ? reqParams.id : undefined, // user id of the profile to display
   };
 
   function render(data, mimeType) {
@@ -191,7 +193,7 @@ exports.controller = function (request, reqParams, response) {
           redirectTo(
             path.replace(
               '/me',
-              user.handle ? '/' + user.handle : '/u/' + reqParams.id
+              user.handle ? '/' + user.handle : '/u/' + params.id
             )
           );
       });
@@ -201,10 +203,10 @@ exports.controller = function (request, reqParams, response) {
     userModel.fetchByHandle(reqParams.handle, function (user) {
       renderUserLibrary(lib, user);
     });
-  else if (reqParams.id) {
-    if (!mongodb.isObjectId(reqParams.id))
+  else if (params.id) {
+    if (!mongodb.isObjectId(params.id))
       return render({ errorCode: 'USER_NOT_FOUND' });
-    userModel.fetchByUid(reqParams.id, function (user) {
+    userModel.fetchByUid(params.id, function (user) {
       if (!user) render({ errorCode: 'USER_NOT_FOUND' });
       else if (user.handle && !reqParams.embedW)
         redirectTo(path.replace('/u/' + reqParams.id, '/' + user.handle));
