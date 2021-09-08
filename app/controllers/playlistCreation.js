@@ -4,12 +4,16 @@ const feedTemplate = require('../templates/feed.js');
 const templateLoader = require('../templates/templateLoader.js');
 const errorTemplate = require('../templates/error.js');
 
+const createPlaylistTemplate = templateLoader.loadTemplate(
+  'app/templates/userPlaylistV2.html'
+);
+
+// Note: The specificity of the rendering of this feature resides in its template, therefore ...
+// TODO: remove the rendering boilerplate from here, e.g. delegate it to a middleware
 async function renderPage(user, canonicalPageUrl, loggedUser) {
   const options = {
     bodyClass: ' userPlaylistV2',
-    customFeedTemplate: templateLoader.loadTemplate(
-      'app/templates/userPlaylistV2.html'
-    ),
+    customFeedTemplate: createPlaylistTemplate,
     pageUrl: canonicalPageUrl,
     pageTitle: 'new playlist',
     pageImage: `${config.urlPrefix}/img/playlist/${user.id}_create`,
