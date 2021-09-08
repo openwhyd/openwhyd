@@ -1,14 +1,16 @@
+/// <reference types="node" />
+
 declare namespace NodeJS {
-  type TypedEnvVars = {
+  export interface ProcessEnv {
     NODE_ENV: 'development' | 'production' | undefined;
-  };
+  }
 
   type AppParams = {
     urlPrefix: string;
   };
 
   export interface Process {
-    env: TypedEnvVars;
+    env: ProcessEnv;
     appParams: AppParams;
   }
 }
