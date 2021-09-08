@@ -42,11 +42,8 @@ async function renderPage(user, canonicalPageUrl, loggedUser) {
 }
 
 exports.controller = async function (request, reqParams, response) {
-  request.logToConsole('playlistCreation.controller', reqParams);
-
   if (reqParams.format === 'json') {
-    response.send([]);
-    return;
+    return response.send([]);
   }
 
   const loggedUser = { ...request.getUser() };
