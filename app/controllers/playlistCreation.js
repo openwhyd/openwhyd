@@ -1,10 +1,13 @@
 // @ts-check
 
-const config = require('../models/config.js');
+/// <reference path="../../app.d.ts" />
+
 const userModel = require('../models/user.js');
 const feedTemplate = require('../templates/feed.js');
 const templateLoader = require('../templates/templateLoader.js');
 const errorTemplate = require('../templates/error.js');
+
+const config = process.appParams;
 
 const createPlaylistTemplate = templateLoader.loadTemplate(
   'app/templates/userPlaylistV2.html'
