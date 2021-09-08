@@ -1,3 +1,5 @@
+// @ts-check
+
 const config = require('../models/config.js');
 const userModel = require('../models/user.js');
 const feedTemplate = require('../templates/feed.js');
