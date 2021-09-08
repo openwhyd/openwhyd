@@ -227,34 +227,33 @@ function fetchAndRenderPlaylist(options, callback, process) {
     ((options.playlist || {}).name || 'a playlist') +
     ' by ' +
     options.user.name;
-  if (!options.playlist) callback('meh... this playlist does not exist!');
-  else {
-    var prevId = null;
-    for (let p = options.user.pl.length - 1; p > -1; --p) {
-      var pl = options.user.pl[p];
-      if (!pl) continue;
-      if (pl.id == options.playlistId) {
-        if (prevId !== null)
-          options.prevPageInList = '/u/' + options.uid + '/playlist/' + prevId;
-        for (--p; p > -1; --p) {
-          if (options.user.pl[p]) {
-            options.nextPageInList =
-              '/u/' + options.uid + '/playlist/' + options.user.pl[p].id;
-            break;
-          }
+  if (!options.playlist)
+    return callback('meh... this playlist does not exist!');
+  var prevId = null;
+  for (let p = options.user.pl.length - 1; p > -1; --p) {
+    var pl = options.user.pl[p];
+    if (!pl) continue;
+    if (pl.id == options.playlistId) {
+      if (prevId !== null)
+        options.prevPageInList = '/u/' + options.uid + '/playlist/' + prevId;
+      for (--p; p > -1; --p) {
+        if (options.user.pl[p]) {
+          options.nextPageInList =
+            '/u/' + options.uid + '/playlist/' + options.user.pl[p].id;
+          break;
         }
-        break;
       }
-      prevId = pl.id;
+      break;
     }
-
-    postModel.fetchPlaylistPosts(
-      options.uid,
-      options.playlistId,
-      options.fetchParams,
-      process
-    );
+    prevId = pl.id;
   }
+
+  postModel.fetchPlaylistPosts(
+    options.uid,
+    options.playlistId,
+    options.fetchParams,
+    process
+  );
 }
 
 function fetchAndRenderProfile(options, callback, process) {
