@@ -4,6 +4,39 @@ const feedTemplate = require('../templates/feed.js');
 const templateLoader = require('../templates/templateLoader.js');
 const errorTemplate = require('../templates/error.js');
 
+async function renderPage(user, canonicalPageUrl, loggedUser) {
+  const options = {
+    bodyClass: ' userPlaylistV2',
+    customFeedTemplate: templateLoader.loadTemplate(
+      'app/templates/userPlaylistV2.html'
+    ),
+    pageUrl: canonicalPageUrl,
+    pageTitle: 'new playlist',
+    pageImage: `${config.urlPrefix}/img/playlist/${user.id}_create`,
+    loggedUser,
+    user,
+    playlist: {
+      id: 'create',
+      name: `Playlist #${(user.pl || []).length}`,
+    },
+  };
+
+  const trackingHtml = [
+    '<script>',
+    ` window.Whyd.tracking.log("Visit profile", "${user.id}");`,
+    '</script>',
+  ].join('\n');
+
+  const feedHtml = await new Promise((resolve) =>
+    feedTemplate.renderFeedAsync([], options, resolve)
+  );
+
+  return feedTemplate.renderFeedPage(user, {
+    ...options,
+    content: trackingHtml + feedHtml,
+  });
+}
+
 exports.controller = async function (request, reqParams, response) {
   request.logToConsole('playlistCreation.controller', reqParams);
 
@@ -35,38 +68,11 @@ exports.controller = async function (request, reqParams, response) {
     return response.temporaryRedirect(path, {});
   }
 
-  const options = {
-    bodyClass: ' userPlaylistV2',
-    customFeedTemplate: templateLoader.loadTemplate(
-      'app/templates/userPlaylistV2.html'
-    ),
-    pageUrl: user.handle
-      ? request.url.replace(`/${user.handle}`, `/u/${user.id}`)
-      : request.url,
-    pageTitle: 'new playlist',
-    pageImage: `${config.urlPrefix}/img/playlist/${user.id}_create`,
-    loggedUser,
-    user,
-    playlist: {
-      id: 'create',
-      name: `Playlist #${(user.pl || []).length}`,
-    },
-  };
+  const canonicalPageUrl = user.handle
+    ? request.url.replace(`/${user.handle}`, `/u/${user.id}`)
+    : request.url;
 
-  const trackingHtml = [
-    '<script>',
-    ` window.Whyd.tracking.log("Visit profile", "${user.id}");`,
-    '</script>',
-  ].join('\n');
-
-  const feedHtml = await new Promise((resolve) =>
-    feedTemplate.renderFeedAsync([], options, resolve)
-  );
-
-  const pageHtml = feedTemplate.renderFeedPage(user, {
-    ...options,
-    content: trackingHtml + feedHtml,
-  });
+  const pageHtml = await renderPage(user, canonicalPageUrl, loggedUser);
 
   response.send(pageHtml);
 };
