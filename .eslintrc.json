@@ -20,6 +20,7 @@
     {
       "files": ["*.js"],
       "rules": {
+        "@typescript-eslint/triple-slash-reference": "off",
         "@typescript-eslint/no-var-requires": "off"
       }
     }
