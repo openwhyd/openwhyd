@@ -223,14 +223,10 @@ function fetchAndRenderPlaylist(options, callback, process) {
       options.playlist = options.user.pl[i];
       break;
     }
-  if (options.playlistId == 'create') {
-    // moved to playlistCreation.js
-  } else {
-    options.pageTitle =
-      ((options.playlist || {}).name || 'a playlist') +
-      ' by ' +
-      options.user.name;
-  }
+  options.pageTitle =
+    ((options.playlist || {}).name || 'a playlist') +
+    ' by ' +
+    options.user.name;
   if (!options.playlist) callback('meh... this playlist does not exist!');
   else {
     var prevId = null;
