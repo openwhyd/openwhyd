@@ -12,6 +12,8 @@ exports.controller = async function (request, reqParams, response) {
     return;
   }
 
+  const loggedUser = { ...request.getUser() };
+
   const user = await new Promise((resolve) =>
     reqParams.handle
       ? userModel.fetchByHandle(reqParams.handle, resolve)
@@ -23,7 +25,7 @@ exports.controller = async function (request, reqParams, response) {
       { errorCode: 'USER_NOT_FOUND' },
       response,
       reqParams.format,
-      request.getUser()
+      loggedUser
     );
 
   if (reqParams.id && user.handle) {
@@ -43,7 +45,7 @@ exports.controller = async function (request, reqParams, response) {
       : request.url,
     pageTitle: 'new playlist',
     pageImage: `${config.urlPrefix}/img/playlist/${user.id}_create`,
-    loggedUser: { ...request.getUser() },
+    loggedUser,
     user,
     playlist: {
       id: 'create',
