@@ -1,9 +1,90 @@
 const userLibrary = require('./userLibrary');
-const renderUserLibrary = require('./LibUser.js').render;
+const {
+  renderUserLinks,
+  generateMixpanelCode,
+  fetchAndRender,
+  fetchPlaylists,
+  fetchStats,
+  fetchLikes,
+  fetchNbTracks,
+} = require('./LibUser');
+const config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var analytics = require('../models/analytics.js');
 var errorTemplate = require('../templates/error.js');
+
+function renderUserLibrary(lib, user) {
+  var options = lib.options;
+
+  if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
+
+  options.pageUrl = options.pageUrl.replace(
+    '/' + user.handle,
+    '/u/' + user._id
+  );
+
+  options.uid = '' + user._id;
+  options.user = user;
+  options.displayPlaylistName = !options.playlistId;
+
+  if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
+
+  function renderResponse(feed) {
+    if (options.callback) {
+      var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
+      lib.renderOther(
+        safeCallback + '(' + JSON.stringify(feed) + ')',
+        'application/javascript'
+      );
+    } else if (options.format == 'links') {
+      lib.renderOther(
+        feed
+          .map(function (p) {
+            return config.translateEidToUrl((p || {}).eId);
+          })
+          .join('\n'),
+        'text/text'
+      );
+    } else if (options.showPlaylists && options.format == 'json') {
+      lib.renderJson(options.playlists);
+    } else if (options.format == 'json') {
+      lib.renderJson(feed);
+    } else if (options.after || options.before) {
+      lib.render({ html: feed });
+    } else
+      lib.renderPage(
+        user,
+        null /*sidebarHtml*/,
+        generateMixpanelCode(options) + feed
+      );
+  }
+
+  // add final rendering functions at queue of the call chain
+  var fcts = [fetchAndRender, renderResponse];
+
+  // prepend required fetching operations in head of the call chain
+  if (!options.after && !options.before)
+    // main tab: tracks (full layout to render, with sidebar)
+    fcts = [
+      fetchPlaylists,
+      /*fetchSubscriptions,*/ fetchStats,
+      fetchLikes,
+      fetchNbTracks /*fetchSimilarity*/,
+    ].concat(fcts);
+  //if (options.showSubscribers || options.showSubscriptions || options.showActivity)
+  //	fcts = [fetchSubscriptions].concat(fcts);
+
+  // run the call chain
+  (function next(res) {
+    var fct = fcts.shift();
+    //console.time(fct.name);
+    fct(res || options, function (res) {
+      //console.timeEnd(fct.name);
+      next(res || options);
+    });
+  })();
+}
 
 exports.controller = function (request, reqParams, response) {
   // return userLibrary.controller(request, reqParams, response);

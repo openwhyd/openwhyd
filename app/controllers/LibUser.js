@@ -38,12 +38,16 @@ function fetchPlaylists(options, callback) {
   });
 }
 
+exports.fetchPlaylists = fetchPlaylists;
+
 function fetchLikes(options, callback) {
   postModel.countLovedPosts(options.user.id, function (count) {
     options.user.nbLikes = count;
     callback();
   });
 }
+
+exports.fetchLikes = fetchLikes;
 
 function fetchStats(options, callback) {
   followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
@@ -63,6 +67,8 @@ function fetchStats(options, callback) {
   });
 }
 
+exports.fetchStats = fetchStats;
+
 function fetchNbTracks(options, callback) {
   postModel.countUserPosts(options.user.id, function (nbPosts) {
     options.user.nbTracks =
@@ -70,6 +76,8 @@ function fetchNbTracks(options, callback) {
     callback();
   });
 }
+
+exports.fetchNbTracks = fetchNbTracks;
 
 // used to render the sidebar
 function fetchActivity(options, cb) {
@@ -163,6 +171,8 @@ function generateMixpanelCode(options) {
     '</script>',
   ].join('\n');
 }
+
+exports.generateMixpanelCode = generateMixpanelCode;
 
 function renderPlaylists(options, maxNb) {
   //console.log("renderplaylists", options.user.pl)
@@ -483,6 +493,8 @@ function fetchAndRender(options, callback) {
   );
 }
 
+exports.fetchAndRender = fetchAndRender;
+
 // MAIN FUNCTION
 
 var LNK_URL_PREFIX = {
@@ -529,6 +541,8 @@ function renderUserLinks(lnk) {
       renderedUrl: lnk.home.split('//').pop().split('/').shift(), //uiSnippets.shortenURLs(lnk.home).replace("...", "")
     };
 }
+
+exports.renderUserLinks = renderUserLinks;
 
 function renderUserLibrary(lib, user) {
   var options = lib.options;
