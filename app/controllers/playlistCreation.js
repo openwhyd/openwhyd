@@ -26,6 +26,8 @@ exports.controller = function (request, reqParams, response) {
 
   const loggedInUser = (reqParams.loggedUser = request.getUser() || {});
 
+  reqParams.pageUrl = request.url;
+
   function render(data, mimeType) {
     if (mimeType)
       return response.legacyRender(data, null, { 'content-type': mimeType });
