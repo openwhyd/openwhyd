@@ -127,6 +127,8 @@ GET    /apps                           -> controllers.pgApp
 GET    /app/{appId}                    -> controllers.pgApp
 GET    /app/{appId}/{action}           -> controllers.pgApp
 
+GET    /u/{id}/playlist/create         -> controllers.playlistCreation
+
 GET    /me                             -> controllers.userLibrary
 GET    /u/{id}                         -> controllers.userLibrary
 GET    /u/{id}/likes                   -> controllers.userLibrary
