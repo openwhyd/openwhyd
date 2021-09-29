@@ -8,6 +8,22 @@ var errorTemplate = require('../templates/error.js');
 exports.controller = function (request, reqParams, response) {
   // return userLibrary.controller(request, reqParams, response);
 
+  function redirectTo(path) {
+    var paramsObj = {},
+      paramsToKeep = [
+        'after',
+        'before',
+        'embedW',
+        'format',
+        'limit',
+        'callback',
+      ];
+    for (let i in paramsToKeep)
+      if (reqParams[paramsToKeep[i]])
+        paramsObj[paramsToKeep[i]] = reqParams[paramsToKeep[i]];
+    response.temporaryRedirect(path, paramsObj);
+  }
+
   const loggedInUser = (reqParams.loggedUser = request.getUser() || {});
 
   function render(data, mimeType) {
