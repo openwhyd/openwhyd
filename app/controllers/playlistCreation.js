@@ -2,6 +2,8 @@
 
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
+var analytics = require('../models/analytics.js');
+var errorTemplate = require('../templates/error.js');
 
 exports.controller = function (request, reqParams, response) {
   // return userLibrary.controller(request, reqParams, response);
