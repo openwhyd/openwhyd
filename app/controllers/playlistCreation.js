@@ -65,8 +65,13 @@ exports.controller = function (request, reqParams, response) {
     else response.legacyRender(data.error);
   }
 
-  if (reqParams.id) {
-    const lib = new userLibrary.LibraryController(reqParams, render);
+  const lib = new userLibrary.LibraryController(reqParams, render);
+
+  if (reqParams.handle)
+    userModel.fetchByHandle(reqParams.handle, function (user) {
+      renderUserLibrary(lib, user);
+    });
+  else if (reqParams.id) {
     const path = request.url.split('?')[0];
     if (!mongodb.isObjectId(reqParams.id))
       return render({ errorCode: 'USER_NOT_FOUND' });
