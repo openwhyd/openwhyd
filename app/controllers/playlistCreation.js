@@ -66,6 +66,7 @@ exports.controller = function (request, reqParams, response) {
   }
 
   if (reqParams.id) {
+    const path = request.url.split('?')[0];
     if (!mongodb.isObjectId(reqParams.id))
       return render({ errorCode: 'USER_NOT_FOUND' });
     userModel.fetchByUid(reqParams.id, function (user) {
