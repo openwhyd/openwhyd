@@ -8,6 +8,8 @@ var errorTemplate = require('../templates/error.js');
 exports.controller = function (request, reqParams, response) {
   // return userLibrary.controller(request, reqParams, response);
 
+  const loggedInUser = (reqParams.loggedUser = request.getUser() || {});
+
   function render(data, mimeType) {
     if (mimeType)
       return response.legacyRender(data, null, { 'content-type': mimeType });
