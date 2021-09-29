@@ -26,6 +26,7 @@ exports.controller = function (request, reqParams, response) {
 
   const loggedInUser = (reqParams.loggedUser = request.getUser() || {});
 
+  reqParams.playlistId = 'create';
   reqParams.pageUrl = request.url;
 
   function render(data, mimeType) {
