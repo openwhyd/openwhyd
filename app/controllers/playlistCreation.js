@@ -1,5 +1,5 @@
-// const userLibrary = require('./userLibrary');
-
+const userLibrary = require('./userLibrary');
+const renderUserLibrary = require('./LibUser.js').render;
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var analytics = require('../models/analytics.js');
@@ -66,6 +66,7 @@ exports.controller = function (request, reqParams, response) {
   }
 
   if (reqParams.id) {
+    const lib = new userLibrary.LibraryController(reqParams, render);
     const path = request.url.split('?')[0];
     if (!mongodb.isObjectId(reqParams.id))
       return render({ errorCode: 'USER_NOT_FOUND' });

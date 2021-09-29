@@ -201,3 +201,5 @@ exports.controller = function (request, reqParams, response) {
     response.badRequest();
   }
 };
+
+exports.LibraryController = LibraryController;
