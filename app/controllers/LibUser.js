@@ -231,10 +231,13 @@ function fetchAndRender(options) {
     options.bodyClass = '';
     preparePaginationParameters(options);
 
-    // will pass a list of tracks to process() or an error message to callback()
-    (options.playlistId
-      ? preparePlaylistPageRendering
-      : prepareOtherPageRendering)(options, (errorMsg, tracks) => {
+    const pageGenerator = {
+      prepareTemplateData: options.playlistId
+        ? preparePlaylistPageRendering
+        : prepareOtherPageRendering,
+    };
+
+    pageGenerator.prepareTemplateData(options, (errorMsg, tracks) => {
       if (errorMsg) return resolve(errorMsg);
       if (bareFormats.has(options.format)) return resolve(tracks);
       renderHtml(options, tracks, resolve);
