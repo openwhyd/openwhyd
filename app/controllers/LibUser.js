@@ -197,23 +197,22 @@ async function prepareActivitiesSidebar(options) {
     limit: MAX_FRIENDS,
     fields: { _id: 0, tId: 1 },
   };
-  options.friends = await fetchFriends(options, params, ownProfile);
+  options.friends = await fetchSubscriptions(options, params, ownProfile);
 }
 
-const fetchFriends = (options, params, ownProfile) =>
-  new Promise((resolve) => {
-    followModel.fetch({ uId: options.user.id }, params, function (subscr) {
-      if (subscr.length || ownProfile) {
-        for (let i in subscr) subscr[i] = { id: subscr[i].tId };
-        userModel.fetchUserBios(subscr, function () {
-          resolve({
-            url: '/u/' + options.user.id + '/subscriptions',
-            items: renderFriends(subscr),
-          });
-        });
-      } else resolve();
-    });
-  });
+const fetchSubscriptions = async (options, params, ownProfile) => {
+  const subscr = new Promise((resolve) =>
+    followModel.fetch({ uId: options.user.id }, params, resolve)
+  );
+  if (subscr.length || ownProfile) {
+    for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+    await new Promise((resolve) => userModel.fetchUserBios(subscr, resolve));
+    return {
+      url: '/u/' + options.user.id + '/subscriptions',
+      items: renderFriends(subscr),
+    };
+  }
+};
 
 function prepareSubscriptionsPageRendering(options, callback) {
   options.tabTitle = 'Following';
