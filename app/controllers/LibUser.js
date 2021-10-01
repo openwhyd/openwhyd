@@ -4,6 +4,8 @@
  * @author adrienjoly, whyd
  **/
 
+// @ts-check
+
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
@@ -169,6 +171,7 @@ function populateUsers(subscr, options, cb) {
 }
 
 function fetchAndRenderPlaylist(options, callback) {
+  // 1. populate page template parameters
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
   for (let i in options.user.pl)
@@ -188,6 +191,8 @@ function fetchAndRenderPlaylist(options, callback) {
       ' by ' +
       options.user.name;
   }
+
+  // 2. fetch and render list of tracks
   if (!options.playlist) callback('meh... this playlist does not exist!');
   else {
     var prevId = null;
