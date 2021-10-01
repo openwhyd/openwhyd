@@ -77,42 +77,41 @@ async function fetchActivity(options) {
       resolve
     )
   );
-  return new Promise((resolve) => {
-    if (activities.length < MAX_HISTORY)
-      activities.push({
-        _id: mongodb.ObjectId(options.user.id),
-        other: { text: 'joined whyd' },
-      });
-    var postsToPopulate = [];
-    for (let i in activities)
-      if (activities[i]) {
-        activities[i].ago = uiSnippets.renderTimestamp(
-          new Date() - activities[i]._id.getTimestamp()
-        );
-        if (activities[i].like)
-          postsToPopulate.push(mongodb.ObjectId('' + activities[i].like.pId));
-      }
+  if (activities.length < MAX_HISTORY)
+    activities.push({
+      _id: mongodb.ObjectId(options.user.id),
+      other: { text: 'joined whyd' },
+    });
+  var postsToPopulate = [];
+  for (let i in activities)
+    if (activities[i]) {
+      activities[i].ago = uiSnippets.renderTimestamp(
+        new Date() - activities[i]._id.getTimestamp()
+      );
+      if (activities[i].like)
+        postsToPopulate.push(mongodb.ObjectId('' + activities[i].like.pId));
+    }
 
+  const posts = await new Promise((resolve) =>
     postModel.fetchPosts(
       { _id: { $in: postsToPopulate } },
       /*params*/ null,
       /*options*/ null,
-      function (posts) {
-        var postSet = {};
-        options.activity = [];
-        for (let i in posts) postSet['' + posts[i]._id] = posts[i];
-        for (let i in activities) {
-          if ((activities[i] || {}).like) {
-            if (postSet['' + activities[i].like.pId])
-              activities[i].like.post = postSet['' + activities[i].like.pId];
-            else continue; // do not keep null posts
-          }
-          options.activity.push(activities[i]);
-        }
-        resolve();
-      }
-    );
-  });
+      resolve
+    )
+  );
+
+  var postSet = {};
+  options.activity = [];
+  for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+  for (let i in activities) {
+    if ((activities[i] || {}).like) {
+      if (postSet['' + activities[i].like.pId])
+        activities[i].like.post = postSet['' + activities[i].like.pId];
+      else continue; // do not keep null posts
+    }
+    options.activity.push(activities[i]);
+  }
 }
 
 // PAGE RENDERING
