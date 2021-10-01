@@ -102,7 +102,7 @@ async function fetchActivity(options) {
   );
 
   var postSet = {};
-  options.activity = [];
+  const activity = [];
   for (let i in posts) postSet['' + posts[i]._id] = posts[i];
   for (let i in activities) {
     if ((activities[i] || {}).like) {
@@ -110,8 +110,9 @@ async function fetchActivity(options) {
         activities[i].like.post = postSet['' + activities[i].like.pId];
       else continue; // do not keep null posts
     }
-    options.activity.push(activities[i]);
+    activity.push(activities[i]);
   }
+  return activity;
 }
 
 // PAGE RENDERING
@@ -275,8 +276,9 @@ async function prepareUserTracksPageRendering(options) {
 
 function prepareActivitiesSidebar(options) {
   return fetchActivity(options).then(
-    () =>
+    (activity) =>
       new Promise((resolve) => {
+        options.activity = activity;
         // => populates options.activity
         var ownProfile = options.user.id == (options.loggedUser || {}).id;
         // render playlists
