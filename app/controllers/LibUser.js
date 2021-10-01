@@ -268,36 +268,39 @@ function prepareUserTracksPageRendering(options, callback) {
     // no page rendering required
     proceed();
   else {
-    // SIDEBAR
-    fetchActivity(options, function () {
-      // => populates options.activity
-      var ownProfile = options.user.id == (options.loggedUser || {}).id;
-      // render playlists
-      if ((options.user.pl || []).length || ownProfile)
-        options.playlists = {
-          url: '/u/' + options.user.id + '/playlists',
-          items: renderPlaylists(options, MAX_PLAYLISTS_SIDE),
-        };
-      // fetch and render friends
-      var params = {
-        sort: { _id: -1 },
-        limit: MAX_FRIENDS,
-        fields: { _id: 0, tId: 1 },
-      };
-      followModel.fetch({ uId: options.user.id }, params, function (subscr) {
-        if (subscr.length || ownProfile) {
-          for (let i in subscr) subscr[i] = { id: subscr[i].tId };
-          userModel.fetchUserBios(subscr, function () {
-            options.friends = {
-              url: '/u/' + options.user.id + '/subscriptions',
-              items: renderFriends(subscr),
-            };
-            proceed();
-          });
-        } else proceed();
-      });
-    });
+    prepareActivitiesSidebar(options, proceed);
   }
+}
+
+function prepareActivitiesSidebar(options, proceed) {
+  fetchActivity(options, function () {
+    // => populates options.activity
+    var ownProfile = options.user.id == (options.loggedUser || {}).id;
+    // render playlists
+    if ((options.user.pl || []).length || ownProfile)
+      options.playlists = {
+        url: '/u/' + options.user.id + '/playlists',
+        items: renderPlaylists(options, MAX_PLAYLISTS_SIDE),
+      };
+    // fetch and render friends
+    var params = {
+      sort: { _id: -1 },
+      limit: MAX_FRIENDS,
+      fields: { _id: 0, tId: 1 },
+    };
+    followModel.fetch({ uId: options.user.id }, params, function (subscr) {
+      if (subscr.length || ownProfile) {
+        for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+        userModel.fetchUserBios(subscr, function () {
+          options.friends = {
+            url: '/u/' + options.user.id + '/subscriptions',
+            items: renderFriends(subscr),
+          };
+          proceed();
+        });
+      } else proceed();
+    });
+  });
 }
 
 function prepareSubscriptionsPageRendering(options, callback) {
