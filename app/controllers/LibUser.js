@@ -172,25 +172,7 @@ function populateUsers(subscr, options, cb) {
 
 function fetchAndRenderPlaylist(options, callback) {
   // 1. populate page template parameters
-  options.bodyClass += ' userPlaylistV2';
-  options.user.pl = options.user.pl || [];
-  for (let i in options.user.pl)
-    if (options.user.pl[i] && options.user.pl[i].id == options.playlistId) {
-      options.playlist = options.user.pl[i];
-      break;
-    }
-  if (options.playlistId == 'create') {
-    options.playlist = {
-      id: 'create',
-      name: 'Playlist #' + options.user.pl.length,
-    };
-    options.pageTitle = 'new playlist';
-  } else {
-    options.pageTitle =
-      ((options.playlist || {}).name || 'a playlist') +
-      ' by ' +
-      options.user.name;
-  }
+  populatePlaylistPageTemplateParameters(options);
 
   // 2. fetch and render list of tracks
   if (!options.playlist) callback('meh... this playlist does not exist!');
@@ -220,6 +202,27 @@ function fetchAndRenderPlaylist(options, callback) {
       options.fetchParams,
       (tracks) => callback(null, tracks)
     );
+  }
+}
+
+function populatePlaylistPageTemplateParameters(options) {
+  options.bodyClass += ' userPlaylistV2';
+  options.user.pl = options.user.pl || [];
+  for (let i in options.user.pl)
+    if (options.user.pl[i] && options.user.pl[i].id == options.playlistId) {
+      options.playlist = options.user.pl[i];
+    }
+  if (options.playlistId == 'create') {
+    options.playlist = {
+      id: 'create',
+      name: 'Playlist #' + options.user.pl.length,
+    };
+    options.pageTitle = 'new playlist';
+  } else {
+    options.pageTitle =
+      ((options.playlist || {}).name || 'a playlist') +
+      ' by ' +
+      options.user.name;
   }
 }
 
