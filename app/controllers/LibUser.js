@@ -31,7 +31,7 @@ var MAX_SUBSCRIPTIONS = 50;
 // DATA FETCHING HELPERS
 
 function fetchPlaylists(options) {
-  return Promise((resolve) => {
+  return new Promise((resolve) => {
     userModel.fetchPlaylists(options.user, {}, function (playlists) {
       options.user.pl = playlists;
       resolve();
@@ -40,7 +40,7 @@ function fetchPlaylists(options) {
 }
 
 function fetchLikes(options) {
-  return Promise((resolve) => {
+  return new Promise((resolve) => {
     postModel.countLovedPosts(options.user.id, function (count) {
       options.user.nbLikes = count;
       resolve();
@@ -49,7 +49,7 @@ function fetchLikes(options) {
 }
 
 function fetchStats(options) {
-  return Promise((resolve) => {
+  return new Promise((resolve) => {
     followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
       followModel.countSubscribers(options.user.id, function (nbSubscribers) {
         options.subscriptions = {
@@ -69,7 +69,7 @@ function fetchStats(options) {
 }
 
 function fetchNbTracks(options) {
-  return Promise((resolve) => {
+  return new Promise((resolve) => {
     postModel.countUserPosts(options.user.id, function (nbPosts) {
       options.user.nbTracks =
         nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
