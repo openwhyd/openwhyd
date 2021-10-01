@@ -423,17 +423,19 @@ function preparePlaylistsPageRendering(options, callback) {
   callback(null, []);
 }
 
-function fetchAndRender(options, callback) {
-  options.bodyClass = '';
-  preparePaginationParameters(options);
+function fetchAndRender(options) {
+  return new Promise((resolve) => {
+    options.bodyClass = '';
+    preparePaginationParameters(options);
 
-  // will pass a list of tracks to process() or an error message to callback()
-  (options.playlistId
-    ? preparePlaylistPageRendering
-    : prepareOtherPageRendering)(options, (errorMsg, tracks) => {
-    if (errorMsg) return callback(errorMsg);
-    if (bareFormats.has(options.format)) return callback(tracks);
-    renderHtml(options, tracks, callback);
+    // will pass a list of tracks to process() or an error message to callback()
+    (options.playlistId
+      ? preparePlaylistPageRendering
+      : prepareOtherPageRendering)(options, (errorMsg, tracks) => {
+      if (errorMsg) return resolve(errorMsg);
+      if (bareFormats.has(options.format)) return resolve(tracks);
+      renderHtml(options, tracks, resolve);
+    });
   });
 }
 
@@ -544,11 +546,9 @@ function renderUserLibrary(lib, user) {
 
   // add final rendering functions at queue of the call chain
   var fcts = [
-    () => {
-      fetchAndRender(
-        options,
-        (tracks) => renderResponse(lib, options, tracks) // reponds through lib.render*()
-      );
+    async () => {
+      const tracks = await fetchAndRender(options);
+      renderResponse(lib, options, tracks); // reponds through lib.render*()
     },
   ];
 
