@@ -247,29 +247,33 @@ function prepareOtherPageRendering(options, callback) {
   } else if (options.showSubscriptions) {
     prepareSubscriptionsPageRendering(options, callback);
   } else {
-    prepareUserTracksPageRendering(options, callback);
+    prepareUserTracksPageRendering(options).then((tracks) =>
+      callback(null, tracks)
+    );
   }
 }
 
 var bareFormats = new Set(['json', 'links']);
 
-function prepareUserTracksPageRendering(options, callback) {
-  options.tabTitle = 'Tracks';
+function prepareUserTracksPageRendering(options) {
+  return new Promise((resolve) => {
+    options.tabTitle = 'Tracks';
 
-  options.bodyClass += ' userTracks';
-  options.showTracks = true;
-  options.pageTitle = options.user.name + "'s tracks";
-  const proceed = () =>
-    postModel.fetchByAuthors([options.uid], options.fetchParams, (tracks) =>
-      callback(null, tracks)
-    );
+    options.bodyClass += ' userTracks';
+    options.showTracks = true;
+    options.pageTitle = options.user.name + "'s tracks";
+    const proceed = () =>
+      postModel.fetchByAuthors([options.uid], options.fetchParams, (tracks) =>
+        resolve(tracks)
+      );
 
-  if (options.after || options.before)
-    // no page rendering required
-    proceed();
-  else {
-    prepareActivitiesSidebar(options).then(proceed);
-  }
+    if (options.after || options.before)
+      // no page rendering required
+      proceed();
+    else {
+      prepareActivitiesSidebar(options).then(proceed);
+    }
+  });
 }
 
 function prepareActivitiesSidebar(options) {
