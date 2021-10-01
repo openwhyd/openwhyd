@@ -51,6 +51,7 @@ function renderFriends(friends) {
   return friends;
 }
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 async function prepareUserTracksPageRendering(options) {
   options.tabTitle = 'Tracks';
 
@@ -67,6 +68,7 @@ async function prepareUserTracksPageRendering(options) {
   );
 }
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 async function prepareActivitiesSidebar(options) {
   options.activity = await fetchActivity(options);
   // => populates options.activity
@@ -92,6 +94,7 @@ async function prepareActivitiesSidebar(options) {
   }
 }
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 function prepareSubscriptionsPageRendering(options, callback) {
   options.tabTitle = 'Following';
 
@@ -120,6 +123,7 @@ function prepareSubscriptionsPageRendering(options, callback) {
   });
 }
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 function prepareSubscribersPageRendering(options, callback) {
   options.tabTitle = 'Followers';
 
@@ -148,6 +152,7 @@ function prepareSubscribersPageRendering(options, callback) {
   });
 }
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 function prepareActivityPageRendering(options, callback) {
   options.tabTitle = 'Activity';
   options.bodyClass += ' userActivity';
@@ -159,6 +164,7 @@ function prepareActivityPageRendering(options, callback) {
   });
 }
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 function prepareLikesPageRendering(options, callback) {
   options.tabTitle = 'Likes';
   options.bodyClass += ' userLikes';

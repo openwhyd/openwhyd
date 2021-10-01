@@ -45,14 +45,22 @@ const LNK_URL_PREFIX = {
  *  showActivity: unknown,
  *  showSubscribers: unknown,
  *  showSubscriptions: unknown,
+ *  after: string | undefined,
+ *  before: string | undefined,
  * }} PageGeneratorInput */
 
 /** @typedef {{
  *  bodyClass: string,
  *  pageTitle: string,
  *  pageImage: string,
- *  playlist: Playlist | undefined,
+ *  tabTitle: string | undefined,
+ *  showTracks: boolean | undefined,
  *  nbPlaylists: number,
+ *  playlist: Playlist | undefined,
+ *  playlists: { url: string, items: Array<{}> } | undefined,
+ *  friends: { url: string, items: Array<{}> } | undefined,
+ *  activity: Array<unknown>,
+ *  hasMore: { lastPid: number } | undefined,
  *  prevPageInList: string | undefined,
  *  nextPageInList: string | undefined,
  *  fetchParams: unknown,
