@@ -418,24 +418,6 @@ function preparePlaylistsPageRendering(options, callback) {
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
 
-  var process = bareFormats.has(options.format)
-    ? callback
-    : function (posts) {
-        if (!options.format && !options.embedW) {
-          if (options.playlistId)
-            options.pageImage =
-              config.urlPrefix +
-              '/img/playlist/' +
-              options.user.id +
-              '_' +
-              options.playlistId;
-          options.customFeedTemplate = options.playlistId
-            ? playlistTemplateV2
-            : profileTemplateV2;
-        }
-        feedTemplate.renderFeedAsync(posts, options, callback);
-      };
-
   preparePaginationParameters(options);
 
   // will pass a list of tracks to process() or an error message to callback()
@@ -443,7 +425,22 @@ function fetchAndRender(options, callback) {
     ? preparePlaylistPageRendering
     : prepareOtherPageRendering)(options, (errorMsg, tracks) => {
     if (errorMsg) return callback(errorMsg);
-    process(tracks);
+    if (bareFormats.has(options.format)) return callback(tracks);
+
+    // render the tracks to HTML
+    if (!options.format && !options.embedW) {
+      if (options.playlistId)
+        options.pageImage =
+          config.urlPrefix +
+          '/img/playlist/' +
+          options.user.id +
+          '_' +
+          options.playlistId;
+      options.customFeedTemplate = options.playlistId
+        ? playlistTemplateV2
+        : profileTemplateV2;
+    }
+    feedTemplate.renderFeedAsync(tracks, options, callback);
   });
 }
 
