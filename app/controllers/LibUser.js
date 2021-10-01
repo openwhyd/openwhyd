@@ -69,52 +69,50 @@ function fetchNbTracks(options) {
 }
 
 // used to render the sidebar
-function fetchActivity(options) {
-  return new Promise((resolve) =>
+async function fetchActivity(options) {
+  const activities = await new Promise((resolve) =>
     activityModel.fetchHistoryFromUidList(
       [options.user.id],
       { limit: MAX_HISTORY },
-      function (activities) {
-        if (activities.length < MAX_HISTORY)
-          activities.push({
-            _id: mongodb.ObjectId(options.user.id),
-            other: { text: 'joined whyd' },
-          });
-        var postsToPopulate = [];
-        for (let i in activities)
-          if (activities[i]) {
-            activities[i].ago = uiSnippets.renderTimestamp(
-              new Date() - activities[i]._id.getTimestamp()
-            );
-            if (activities[i].like)
-              postsToPopulate.push(
-                mongodb.ObjectId('' + activities[i].like.pId)
-              );
-          }
-
-        postModel.fetchPosts(
-          { _id: { $in: postsToPopulate } },
-          /*params*/ null,
-          /*options*/ null,
-          function (posts) {
-            var postSet = {};
-            options.activity = [];
-            for (let i in posts) postSet['' + posts[i]._id] = posts[i];
-            for (let i in activities) {
-              if ((activities[i] || {}).like) {
-                if (postSet['' + activities[i].like.pId])
-                  activities[i].like.post =
-                    postSet['' + activities[i].like.pId];
-                else continue; // do not keep null posts
-              }
-              options.activity.push(activities[i]);
-            }
-            resolve();
-          }
-        );
-      }
+      resolve
     )
   );
+  return new Promise((resolve) => {
+    if (activities.length < MAX_HISTORY)
+      activities.push({
+        _id: mongodb.ObjectId(options.user.id),
+        other: { text: 'joined whyd' },
+      });
+    var postsToPopulate = [];
+    for (let i in activities)
+      if (activities[i]) {
+        activities[i].ago = uiSnippets.renderTimestamp(
+          new Date() - activities[i]._id.getTimestamp()
+        );
+        if (activities[i].like)
+          postsToPopulate.push(mongodb.ObjectId('' + activities[i].like.pId));
+      }
+
+    postModel.fetchPosts(
+      { _id: { $in: postsToPopulate } },
+      /*params*/ null,
+      /*options*/ null,
+      function (posts) {
+        var postSet = {};
+        options.activity = [];
+        for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+        for (let i in activities) {
+          if ((activities[i] || {}).like) {
+            if (postSet['' + activities[i].like.pId])
+              activities[i].like.post = postSet['' + activities[i].like.pId];
+            else continue; // do not keep null posts
+          }
+          options.activity.push(activities[i]);
+        }
+        resolve();
+      }
+    );
+  });
 }
 
 // PAGE RENDERING
