@@ -170,7 +170,7 @@ function populateUsers(subscr, options, cb) {
   );
 }
 
-function fetchAndRenderPlaylist(options, callback) {
+function preparePlaylistPageRendering(options, callback) {
   // 1. populate page template parameters
   populatePlaylistPageTemplateParameters(options);
 
@@ -431,9 +431,10 @@ function fetchAndRender(options, callback) {
   }
 
   // will pass a list of tracks to process() or an error message to callback()
-  (options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(
-    options,
-    (errorMsg, tracks) => (errorMsg ? callback(errorMsg) : process(tracks))
+  (options.playlistId
+    ? preparePlaylistPageRendering
+    : fetchAndRenderProfile)(options, (errorMsg, tracks) =>
+    errorMsg ? callback(errorMsg) : process(tracks)
   );
 }
 
