@@ -556,13 +556,10 @@ async function populateSidebarAndAdditionalPageElements(options) {
     await Promise.all([
       (async () => (options.user.pl = await fetchPlaylists(options)))(),
       (async () =>
-        (options.subscriptions.nbSubscribers = await countSubscribers(
-          options
-        )))(),
-      (async () =>
-        (options.subscriptions.nbSubscriptions = await countSubscriptions(
-          options
-        )))(),
+        (options.subscriptions = {
+          nbSubscribers: await countSubscribers(options),
+          nbSubscriptions: await countSubscriptions(options),
+        }))(),
       (async () =>
         (options.user.isSubscribed = await fetchIsSubscribed(options)))(),
       (async () => (options.user.nbLikes = await fetchLikes(options)))(),
