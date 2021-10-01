@@ -7,9 +7,6 @@
 var config = require('../models/config.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
-var feedTemplate = require('../templates/feed.js');
-
-var templateLoader = require('../templates/templateLoader.js');
 const {
   fetchActivity,
   fetchActivityFeed,
@@ -22,6 +19,9 @@ const {
   fetchSubscriptions,
   populateFriendsData,
 } = require('./LibUserData');
+
+var feedTemplate = require('../templates/feed.js');
+var templateLoader = require('../templates/templateLoader.js');
 var profileTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userProfileV2.html'
 );
