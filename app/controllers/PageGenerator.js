@@ -20,13 +20,19 @@ const LNK_URL_PREFIX = {
 };
 
 /** @typedef {{
- *  id: string,
+ *  id?: string | undefined,
  *  name: string,
+ *  url?: string | undefined,
+ *  class?: string | undefined,
+ *  img?: string | undefined,
  * }} Playlist */
 
 /** @typedef {{
  *  format: string | undefined,
  *  embedW: string | undefined,
+ *  loggedUser: {
+ *    id: string,
+ *  } | undefined,
  *  user: {
  *    id: string,
  *    name: string,

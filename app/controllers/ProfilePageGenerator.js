@@ -20,6 +20,7 @@ var MAX_PLAYLISTS_SIDE = 4;
 var MAX_FRIENDS = 6;
 var MAX_SUBSCRIPTIONS = 50;
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 function renderPlaylists(options, maxNb) {
   var playlists = options.user.pl || [];
   if (maxNb) {
