@@ -231,13 +231,15 @@ function fetchAndRender(options) {
     options.bodyClass = '';
     preparePaginationParameters(options);
 
-    const pageGenerator = {
-      prepareTemplateData: options.playlistId
-        ? preparePlaylistPageRendering
-        : prepareOtherPageRendering,
-    };
+    const pageGenerator = options.playlistId
+      ? {
+          prepareTemplateData: preparePlaylistPageRendering.bind(null, options),
+        }
+      : {
+          prepareTemplateData: prepareOtherPageRendering.bind(null, options),
+        };
 
-    pageGenerator.prepareTemplateData(options, (errorMsg, tracks) => {
+    pageGenerator.prepareTemplateData((errorMsg, tracks) => {
       if (errorMsg) return resolve(errorMsg);
       if (bareFormats.has(options.format)) return resolve(tracks);
       renderHtml(options, tracks, resolve);
