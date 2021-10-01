@@ -539,7 +539,7 @@ function renderResponse(lib, options, feed) {
     );
 }
 
-function renderUserLibrary(lib, user) {
+async function renderUserLibrary(lib, user) {
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
 
   const options = populateCommonTemplateParameters(lib, user);
@@ -565,7 +565,7 @@ function renderUserLibrary(lib, user) {
   // run the call chain
   (function next(res) {
     var fct = fcts.shift();
-    fct(res || options, function (res) {
+    fct(res || options).then(function (res) {
       next(res || options);
     });
   })();
