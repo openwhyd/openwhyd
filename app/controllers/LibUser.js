@@ -551,22 +551,16 @@ exports.render = renderUserLibrary;
 
 async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
-    await Promise.all([
-      (async () => (options.user.pl = await fetchPlaylists(options)))(),
-      (async () =>
-        (options.subscriptions = {
-          nbSubscribers: await countSubscribers(options),
-          nbSubscriptions: await countSubscriptions(options),
-        }))(),
-      (async () =>
-        (options.user.isSubscribed = await fetchIsSubscribed(options)))(),
-      (async () => (options.user.nbLikes = await fetchLikes(options)))(),
-      (async () => {
-        const nbPosts = await fetchNbTracks(options);
-        options.user.nbTracks =
-          nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
-      })(),
-    ]);
+    options.user.pl = await fetchPlaylists(options);
+    options.subscriptions = {
+      nbSubscribers: await countSubscribers(options),
+      nbSubscriptions: await countSubscriptions(options),
+    };
+    options.user.isSubscribed = await fetchIsSubscribed(options);
+    options.user.nbLikes = await fetchLikes(options);
+    const nbPosts = await fetchNbTracks(options);
+    options.user.nbTracks =
+      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
   }
 }
 
