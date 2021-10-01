@@ -425,7 +425,6 @@ function preparePlaylistsPageRendering(options, callback) {
 
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
-
   preparePaginationParameters(options);
 
   // will pass a list of tracks to process() or an error message to callback()
@@ -434,14 +433,7 @@ function fetchAndRender(options, callback) {
     : prepareOtherPageRendering)(options, (errorMsg, tracks) => {
     if (errorMsg) return callback(errorMsg);
     if (bareFormats.has(options.format)) return callback(tracks);
-
-    // render the tracks to HTML
-    if (!options.format && !options.embedW) {
-      options.customFeedTemplate = options.playlistId
-        ? playlistTemplateV2
-        : profileTemplateV2;
-    }
-    feedTemplate.renderFeedAsync(tracks, options, callback);
+    renderHtml(options, tracks, callback);
   });
 }
 
@@ -454,6 +446,15 @@ var LNK_URL_PREFIX = {
   yt: 'youtube.com/user/',
   igrm: 'instagram.com/',
 };
+
+function renderHtml(options, tracks, callback) {
+  if (!options.format && !options.embedW) {
+    options.customFeedTemplate = options.playlistId
+      ? playlistTemplateV2
+      : profileTemplateV2;
+  }
+  feedTemplate.renderFeedAsync(tracks, options, callback);
+}
 
 function preparePaginationParameters(options) {
   options.fetchParams = {
