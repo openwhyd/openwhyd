@@ -64,25 +64,21 @@ class PlaylistPageGenerator extends PageGenerator {
     }
   }
 
-  preparePlaylistPageRendering() {
-    return new Promise((resolve, reject) => {
-      const options = this.options;
-      // 1. populate page template parameters
-      this.populatePlaylistPageTemplateParameters();
+  async preparePlaylistPageRendering() {
+    this.populatePlaylistPageTemplateParameters();
 
-      // 2. fetch and render list of tracks
-      if (!options.playlist)
-        reject(new Error('meh... this playlist does not exist!'));
-      else {
-        this.populateNextAndPrevPlaylistPageUrl();
-        postModel.fetchPlaylistPosts(
-          options.uid,
-          options.playlistId,
-          options.fetchParams,
-          (tracks) => resolve(tracks)
-        );
-      }
-    });
+    if (!this.options.playlist)
+      throw new Error('meh... this playlist does not exist!');
+
+    this.populateNextAndPrevPlaylistPageUrl();
+    return new Promise((resolve) =>
+      postModel.fetchPlaylistPosts(
+        this.options.uid,
+        this.options.playlistId,
+        this.options.fetchParams,
+        (tracks) => resolve(tracks)
+      )
+    );
   }
 
   prepareTemplateData = () => this.preparePlaylistPageRendering();
