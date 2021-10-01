@@ -177,31 +177,34 @@ function fetchAndRenderPlaylist(options, callback) {
   // 2. fetch and render list of tracks
   if (!options.playlist) callback('meh... this playlist does not exist!');
   else {
-    var prevId = null;
-    for (let p = options.user.pl.length - 1; p > -1; --p) {
-      var pl = options.user.pl[p];
-      if (!pl) continue;
-      if (pl.id == options.playlistId) {
-        if (prevId !== null)
-          options.prevPageInList = '/u/' + options.uid + '/playlist/' + prevId;
-        for (--p; p > -1; --p) {
-          if (options.user.pl[p]) {
-            options.nextPageInList =
-              '/u/' + options.uid + '/playlist/' + options.user.pl[p].id;
-            break;
-          }
-        }
-        break;
-      }
-      prevId = pl.id;
-    }
-
+    populateNextAndPrevPlaylistPageUrl(options);
     postModel.fetchPlaylistPosts(
       options.uid,
       options.playlistId,
       options.fetchParams,
       (tracks) => callback(null, tracks)
     );
+  }
+}
+
+function populateNextAndPrevPlaylistPageUrl(options) {
+  var prevId = null;
+  for (let p = options.user.pl.length - 1; p > -1; --p) {
+    var pl = options.user.pl[p];
+    if (!pl) continue;
+    if (pl.id == options.playlistId) {
+      if (prevId !== null)
+        options.prevPageInList = '/u/' + options.uid + '/playlist/' + prevId;
+      for (--p; p > -1; --p) {
+        if (options.user.pl[p]) {
+          options.nextPageInList =
+            '/u/' + options.uid + '/playlist/' + options.user.pl[p].id;
+          break;
+        }
+      }
+      break;
+    }
+    prevId = pl.id;
   }
 }
 
