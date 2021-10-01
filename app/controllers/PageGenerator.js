@@ -19,8 +19,11 @@ const LNK_URL_PREFIX = {
   igrm: 'instagram.com/',
 };
 
+/** @typedef {{}} PageGeneratorOptions */
+
 class PageGenerator {
   constructor(user, options) {
+    /** @type {PageGeneratorOptions} */
     this.options = options;
     options.bodyClass = '';
     this.populateCommonTemplateParameters(user);
