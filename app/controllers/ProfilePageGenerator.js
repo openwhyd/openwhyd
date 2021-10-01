@@ -177,6 +177,7 @@ function prepareLikesPageRendering(options, callback) {
   );
 }
 
+/** @param {import('./PageGenerator.js').PageGeneratorOptions} options */
 function preparePlaylistsPageRendering(options, callback) {
   const playlists = options.user.pl;
   options.pageTitle = 'Playlists by ' + options.user.name;
