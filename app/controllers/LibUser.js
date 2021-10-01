@@ -32,10 +32,7 @@ var MAX_SUBSCRIPTIONS = 50;
 
 function fetchPlaylists(options) {
   return new Promise((resolve) => {
-    userModel.fetchPlaylists(options.user, {}, function (playlists) {
-      options.user.pl = playlists;
-      resolve();
-    });
+    userModel.fetchPlaylists(options.user, {}, resolve);
   });
 }
 
@@ -562,7 +559,7 @@ exports.render = renderUserLibrary;
 async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
     await Promise.all([
-      fetchPlaylists(options),
+      (async () => (options.user.pl = await fetchPlaylists(options)))(),
       fetchStats(options),
       fetchLikes(options),
       fetchNbTracks(options),
