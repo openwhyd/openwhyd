@@ -4,8 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-// @ts-check
-
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
