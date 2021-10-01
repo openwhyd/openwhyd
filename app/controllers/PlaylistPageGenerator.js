@@ -64,27 +64,28 @@ class PlaylistPageGenerator extends PageGenerator {
     }
   }
 
-  preparePlaylistPageRendering(callback) {
-    const options = this.options;
-    // 1. populate page template parameters
-    this.populatePlaylistPageTemplateParameters();
+  preparePlaylistPageRendering() {
+    return new Promise((resolve, reject) => {
+      const options = this.options;
+      // 1. populate page template parameters
+      this.populatePlaylistPageTemplateParameters();
 
-    // 2. fetch and render list of tracks
-    if (!options.playlist)
-      callback(new Error('meh... this playlist does not exist!'));
-    else {
-      this.populateNextAndPrevPlaylistPageUrl();
-      postModel.fetchPlaylistPosts(
-        options.uid,
-        options.playlistId,
-        options.fetchParams,
-        (tracks) => callback(null, tracks)
-      );
-    }
+      // 2. fetch and render list of tracks
+      if (!options.playlist)
+        reject(new Error('meh... this playlist does not exist!'));
+      else {
+        this.populateNextAndPrevPlaylistPageUrl();
+        postModel.fetchPlaylistPosts(
+          options.uid,
+          options.playlistId,
+          options.fetchParams,
+          (tracks) => resolve(tracks)
+        );
+      }
+    });
   }
 
-  prepareTemplateData = () =>
-    util.promisify(this.preparePlaylistPageRendering).bind(this)();
+  prepareTemplateData = () => this.preparePlaylistPageRendering();
 
   getCustomFeedTemplate = () => playlistTemplateV2;
 }
