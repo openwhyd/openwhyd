@@ -31,46 +31,42 @@ var MAX_SUBSCRIPTIONS = 50;
 // DATA FETCHING HELPERS
 
 function fetchPlaylists(options) {
-  return new Promise((resolve) => {
-    userModel.fetchPlaylists(options.user, {}, resolve);
-  });
+  return new Promise((resolve) =>
+    userModel.fetchPlaylists(options.user, {}, resolve)
+  );
 }
 
 function fetchLikes(options) {
-  return new Promise((resolve) => {
-    postModel.countLovedPosts(options.user.id, function (count) {
-      options.user.nbLikes = count;
-      resolve();
-    });
-  });
+  return new Promise((resolve) =>
+    postModel.countLovedPosts(options.user.id, resolve)
+  );
 }
 
 function fetchStats(options) {
   return new Promise((resolve) => {
     followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
       followModel.countSubscribers(options.user.id, function (nbSubscribers) {
-        options.subscriptions = {
+        resolve({
           nbSubscriptions: nbSubscriptions,
           nbSubscribers: nbSubscribers,
-        };
-        followModel.get(
-          { uId: options.loggedUser.id, tId: options.user.id },
-          function (err, res) {
-            options.user.isSubscribed = !!res;
-            resolve();
-          }
-        );
+        });
       });
     });
   });
 }
 
+const fetchIsSubscribed = (options) =>
+  new Promise((resolve) =>
+    followModel.get(
+      { uId: options.loggedUser.id, tId: options.user.id },
+      (err, res) => resolve(!!res)
+    )
+  );
+
 function fetchNbTracks(options) {
   return new Promise((resolve) => {
     postModel.countUserPosts(options.user.id, function (nbPosts) {
-      options.user.nbTracks =
-        nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
-      resolve();
+      resolve(nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts);
     });
   });
 }
@@ -560,9 +556,11 @@ async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
     await Promise.all([
       (async () => (options.user.pl = await fetchPlaylists(options)))(),
-      fetchStats(options),
-      fetchLikes(options),
-      fetchNbTracks(options),
+      (async () => (options.subscriptions = await fetchStats(options)))(),
+      (async () =>
+        (options.user.isSubscribed = await fetchIsSubscribed(options)))(),
+      (async () => (options.user.nbLikes = await fetchLikes(options)))(),
+      (async () => (options.user.nbTracks = await fetchNbTracks(options)))(),
     ]);
   }
 }
