@@ -29,21 +29,18 @@ class PageGenerator {
     }
   }
 
-  renderHtml(options, tracks, callback) {
-    if (!options.format && !options.embedW) {
-      options.customFeedTemplate = this.getCustomFeedTemplate();
+  renderHtml(tracks, callback) {
+    if (!this.options.format && !this.options.embedW) {
+      this.options.customFeedTemplate = this.getCustomFeedTemplate();
     }
-    feedTemplate.renderFeedAsync(tracks, options, callback);
+    feedTemplate.renderFeedAsync(tracks, this.options, callback);
   }
 
   async fetchAndRender() {
-    const pageGenerator = this;
     try {
-      const tracks = await pageGenerator.prepareTemplateData();
-      if (bareFormats.has(pageGenerator.options.format)) return tracks;
-      return new Promise((resolve) =>
-        this.renderHtml(pageGenerator.options, tracks, resolve)
-      );
+      const tracks = await this.prepareTemplateData();
+      if (bareFormats.has(this.options.format)) return tracks;
+      return new Promise((resolve) => this.renderHtml(tracks, resolve));
     } catch (errorMsg) {
       return errorMsg;
     }

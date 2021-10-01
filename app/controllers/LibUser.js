@@ -80,9 +80,7 @@ async function populateSidebarAndAdditionalPageElements(options) {
   }
 }
 
-function populateCommonTemplateParameters(lib, user) {
-  var options = lib.options;
-
+function populateCommonTemplateParameters(options, user) {
   options.pageUrl = options.pageUrl.replace(
     '/' + user.handle,
     '/u/' + user._id
@@ -129,7 +127,7 @@ function renderResponse(lib, options, feed) {
 async function renderUserLibrary(lib, user) {
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
 
-  const options = populateCommonTemplateParameters(lib, user);
+  const options = populateCommonTemplateParameters(lib.options, user);
 
   await populateSidebarAndAdditionalPageElements(options);
 
