@@ -1,3 +1,5 @@
+// @ts-check
+
 const { PageGenerator } = require('./PageGenerator.js');
 var config = require('../models/config.js');
 var postModel = require('../models/post.js');
@@ -55,7 +57,7 @@ class PlaylistPageGenerator extends PageGenerator {
     }
     if (!options.format && !options.embedW && options.playlist) {
       options.pageImage =
-        config.urlPrefix +
+        config['urlPrefix'] +
         '/img/playlist/' +
         options.user.id +
         '_' +
