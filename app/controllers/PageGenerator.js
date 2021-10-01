@@ -34,6 +34,11 @@ const LNK_URL_PREFIX = {
  *  },
  *  uid: string,
  *  playlistId: string | undefined,
+ *  showPlaylists: unknown,
+ *  showLikes: unknown,
+ *  showActivity: unknown,
+ *  showSubscribers: unknown,
+ *  showSubscriptions: unknown,
  * }} PageGeneratorInput */
 
 /** @typedef {{
@@ -41,6 +46,7 @@ const LNK_URL_PREFIX = {
  *  pageTitle: string,
  *  pageImage: string,
  *  playlist: Playlist | undefined,
+ *  nbPlaylists: number,
  *  prevPageInList: string | undefined,
  *  nextPageInList: string | undefined,
  *  fetchParams: unknown,

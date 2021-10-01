@@ -1,3 +1,5 @@
+// @ts-check
+
 const util = require('util');
 const { PageGenerator } = require('./PageGenerator.js');
 var followModel = require('../models/follow.js');
