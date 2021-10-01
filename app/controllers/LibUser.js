@@ -16,8 +16,6 @@ const {
 const { PlaylistPageGenerator } = require('./PlaylistPageGenerator');
 const { ProfilePageGenerator } = require('./ProfilePageGenerator');
 
-var feedTemplate = require('../templates/feed.js');
-
 var LNK_URL_PREFIX = {
   fb: 'facebook.com/',
   tw: 'twitter.com/',
@@ -25,8 +23,6 @@ var LNK_URL_PREFIX = {
   yt: 'youtube.com/user/',
   igrm: 'instagram.com/',
 };
-
-var bareFormats = new Set(['json', 'links']);
 
 function generateMixpanelCode(options) {
   return [
@@ -69,13 +65,6 @@ function renderUserLinks(lnk) {
     };
 }
 
-function renderHtml(options, tracks, callback) {
-  if (!options.format && !options.embedW) {
-    options.customFeedTemplate = this.getCustomFeedTemplate();
-  }
-  feedTemplate.renderFeedAsync(tracks, options, callback);
-}
-
 async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
     options.user.pl = await fetchPlaylists(options);
@@ -105,18 +94,6 @@ function populateCommonTemplateParameters(lib, user) {
 
   if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
   return options;
-}
-
-async function fetchAndRender(pageGenerator) {
-  try {
-    const tracks = await pageGenerator.prepareTemplateData();
-    if (bareFormats.has(pageGenerator.options.format)) return tracks;
-    return new Promise((resolve) =>
-      renderHtml.call(pageGenerator, pageGenerator.options, tracks, resolve)
-    );
-  } catch (errorMsg) {
-    return errorMsg;
-  }
 }
 
 function renderResponse(lib, options, feed) {
@@ -160,7 +137,7 @@ async function renderUserLibrary(lib, user) {
     ? new PlaylistPageGenerator(options)
     : new ProfilePageGenerator(options);
 
-  const tracks = await fetchAndRender(pageGenerator);
+  const tracks = await pageGenerator.fetchAndRender();
 
   renderResponse(lib, options, tracks); // reponds through lib.render*()
 }
