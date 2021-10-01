@@ -266,6 +266,10 @@ function prepareActivityPageRendering(options, callback) {
   options.tabTitle = 'Activity';
   options.bodyClass += ' userActivity';
   options.pageTitle = options.user.name + "'s recent activity";
+  fetchActivityFeed(options, callback);
+}
+
+function fetchActivityFeed(options, callback) {
   followModel.fetchUserSubscriptions(
     options.loggedUser.id,
     function (mySubscr) {
