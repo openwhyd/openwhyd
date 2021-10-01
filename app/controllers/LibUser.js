@@ -552,31 +552,18 @@ async function renderUserLibrary(lib, user) {
 
   const options = populateCommonTemplateParameters(lib, user);
 
-  // add final rendering functions at queue of the call chain
-  var fcts = [
-    async () => {
-      const tracks = await fetchAndRender(options);
-      renderResponse(lib, options, tracks); // reponds through lib.render*()
-    },
-  ];
-
   // prepend required fetching operations in head of the call chain
-  if (!options.after && !options.before)
+  if (!options.after && !options.before) {
     // main tab: tracks (full layout to render, with sidebar)
-    fcts = [
-      fetchPlaylists,
-      /*fetchSubscriptions,*/ fetchStats,
-      fetchLikes,
-      fetchNbTracks /*fetchSimilarity*/,
-    ].concat(fcts);
-
-  // run the call chain
-  (function next(res) {
-    var fct = fcts.shift();
-    fct(res || options).then(function (res) {
-      next(res || options);
-    });
-  })();
+    await Promise.all([
+      fetchPlaylists(options),
+      fetchStats(options),
+      fetchLikes(options),
+      fetchNbTracks(options),
+    ]);
+  }
+  const tracks = await fetchAndRender(options);
+  renderResponse(lib, options, tracks); // reponds through lib.render*()
 }
 
 exports.render = renderUserLibrary;
