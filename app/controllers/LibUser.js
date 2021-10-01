@@ -441,9 +441,10 @@ function fetchAndRender(options, callback) {
   // will pass a list of tracks to process() or an error message to callback()
   (options.playlistId
     ? preparePlaylistPageRendering
-    : prepareOtherPageRendering)(options, (errorMsg, tracks) =>
-    errorMsg ? callback(errorMsg) : process(tracks)
-  );
+    : prepareOtherPageRendering)(options, (errorMsg, tracks) => {
+    if (errorMsg) return callback(errorMsg);
+    process(tracks);
+  });
 }
 
 // MAIN FUNCTION
