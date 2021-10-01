@@ -168,8 +168,7 @@ function populateUsers(subscr, options, cb) {
   );
 }
 
-function fetchAndRenderPlaylist(options, callback, process) {
-  // TODO: remove process => use callback only
+function fetchAndRenderPlaylist(options, callback) {
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
   for (let i in options.user.pl)
@@ -214,13 +213,12 @@ function fetchAndRenderPlaylist(options, callback, process) {
       options.uid,
       options.playlistId,
       options.fetchParams,
-      process
+      (tracks) => callback(null, tracks)
     );
   }
 }
 
-function fetchAndRenderProfile(options, callback, process) {
-  // TODO: remove process => use callback only
+function fetchAndRenderProfile(options, callback) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
@@ -230,7 +228,7 @@ function fetchAndRenderProfile(options, callback, process) {
     options.bodyClass += ' userPlaylists';
     options.playlists = [...playlists].reverse(); // clone before reversing
     options.showPlaylists = { items: renderPlaylists(options) };
-    process([]); // no posts // TODO: is this call necessary ?
+    callback(null, []); // no posts
   } else if (options.showLikes) {
     options.tabTitle = 'Likes';
     options.bodyClass += ' userLikes';
@@ -239,7 +237,7 @@ function fetchAndRenderProfile(options, callback, process) {
       { lov: options.uid },
       /*params*/ null,
       { after: options.after },
-      process
+      (tracks) => callback(null, tracks)
     );
   } else if (options.showActivity) {
     options.tabTitle = 'Activity';
@@ -277,7 +275,7 @@ function fetchAndRenderProfile(options, callback, process) {
               options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
                 new Date() - options.showActivity.items[i]._id.getTimestamp()
               );
-            process([]);
+            callback(null, []);
           }
         );
       }
@@ -305,7 +303,7 @@ function fetchAndRenderProfile(options, callback, process) {
         options.showSubscribers = {
           items: subscr,
         };
-        process([]);
+        callback(null, []);
       });
     });
   } else if (options.showSubscriptions) {
@@ -331,7 +329,7 @@ function fetchAndRenderProfile(options, callback, process) {
         options.showSubscriptions = {
           items: subscr,
         };
-        process([]);
+        callback(null, []);
       });
     });
   } else {
@@ -341,7 +339,9 @@ function fetchAndRenderProfile(options, callback, process) {
     options.showTracks = true;
     options.pageTitle = options.user.name + "'s tracks";
     const proceed = () =>
-      postModel.fetchByAuthors([options.uid], options.fetchParams, process);
+      postModel.fetchByAuthors([options.uid], options.fetchParams, (tracks) =>
+        callback(null, tracks)
+      );
 
     if (options.after || options.before)
       // no page rendering required
@@ -422,8 +422,7 @@ function fetchAndRender(options, callback) {
   // will pass a list of tracks to process() or an error message to callback()
   (options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(
     options,
-    callback,
-    process
+    (errorMsg, tracks) => (errorMsg ? callback(errorMsg) : process(tracks))
   );
 }
 
