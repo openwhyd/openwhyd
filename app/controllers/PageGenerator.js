@@ -72,7 +72,7 @@ class PageGenerator {
     options.displayPlaylistName = !options.playlistId;
 
     if (options.user && options.user.lnk)
-      this.renderUserLinks(options.user.lnk);
+      PageGenerator.renderUserLinks(options.user.lnk);
   }
 
   preparePaginationParameters() {
