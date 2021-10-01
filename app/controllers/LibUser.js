@@ -18,37 +18,6 @@ const { ProfilePageGenerator } = require('./ProfilePageGenerator');
 
 var feedTemplate = require('../templates/feed.js');
 
-// PAGE RENDERING
-
-function generateMixpanelCode(options) {
-  return [
-    '<script>',
-    ' window.Whyd.tracking.log("Visit profile", "' + options.uid + '");',
-    '</script>',
-  ].join('\n');
-}
-
-var bareFormats = new Set(['json', 'links']);
-
-function fetchAndRender(options) {
-  return new Promise((resolve) => {
-    options.bodyClass = '';
-    preparePaginationParameters(options);
-
-    const pageGenerator = options.playlistId
-      ? new PlaylistPageGenerator(options)
-      : new ProfilePageGenerator(options);
-
-    pageGenerator.prepareTemplateData((errorMsg, tracks) => {
-      if (errorMsg) return resolve(errorMsg);
-      if (bareFormats.has(options.format)) return resolve(tracks);
-      renderHtml.call(pageGenerator, options, tracks, resolve);
-    });
-  });
-}
-
-// MAIN FUNCTION
-
 var LNK_URL_PREFIX = {
   fb: 'facebook.com/',
   tw: 'twitter.com/',
@@ -57,29 +26,14 @@ var LNK_URL_PREFIX = {
   igrm: 'instagram.com/',
 };
 
-function renderHtml(options, tracks, callback) {
-  if (!options.format && !options.embedW) {
-    options.customFeedTemplate = this.getCustomFeedTemplate();
-  }
-  feedTemplate.renderFeedAsync(tracks, options, callback);
-}
+var bareFormats = new Set(['json', 'links']);
 
-function preparePaginationParameters(options) {
-  options.fetchParams = {
-    after: options.after,
-    before: options.before,
-    limit: options.limit,
-  };
-  if (options.embedW)
-    options.fetchParams.limit = config.nbTracksPerPlaylistEmbed;
-  else if (options.limit && typeof options.limit !== 'number') {
-    if (typeof options.limit === 'string')
-      options.fetchParams.limit = parseInt(options.limit);
-    else if (typeof options.limit === 'object' && options.limit.push)
-      options.fetchParams.limit = parseInt(options.limit.pop());
-    // keep only the last value
-    // see https://github.com/openwhyd/openwhyd/issues/89
-  }
+function generateMixpanelCode(options) {
+  return [
+    '<script>',
+    ' window.Whyd.tracking.log("Visit profile", "' + options.uid + '");',
+    '</script>',
+  ].join('\n');
 }
 
 function renderUserLinks(lnk) {
@@ -113,6 +67,79 @@ function renderUserLinks(lnk) {
       url: lnk.home,
       renderedUrl: lnk.home.split('//').pop().split('/').shift(),
     };
+}
+
+function renderHtml(options, tracks, callback) {
+  if (!options.format && !options.embedW) {
+    options.customFeedTemplate = this.getCustomFeedTemplate();
+  }
+  feedTemplate.renderFeedAsync(tracks, options, callback);
+}
+
+function preparePaginationParameters(options) {
+  options.fetchParams = {
+    after: options.after,
+    before: options.before,
+    limit: options.limit,
+  };
+  if (options.embedW)
+    options.fetchParams.limit = config.nbTracksPerPlaylistEmbed;
+  else if (options.limit && typeof options.limit !== 'number') {
+    if (typeof options.limit === 'string')
+      options.fetchParams.limit = parseInt(options.limit);
+    else if (typeof options.limit === 'object' && options.limit.push)
+      options.fetchParams.limit = parseInt(options.limit.pop());
+    // keep only the last value
+    // see https://github.com/openwhyd/openwhyd/issues/89
+  }
+}
+
+async function populateSidebarAndAdditionalPageElements(options) {
+  if (!options.after && !options.before) {
+    options.user.pl = await fetchPlaylists(options);
+    options.subscriptions = {
+      nbSubscribers: await countSubscribers(options),
+      nbSubscriptions: await countSubscriptions(options),
+    };
+    options.user.isSubscribed = await fetchIsSubscribed(options);
+    options.user.nbLikes = await fetchLikes(options);
+    const nbPosts = await fetchNbTracks(options);
+    options.user.nbTracks =
+      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
+  }
+}
+
+function populateCommonTemplateParameters(lib, user) {
+  var options = lib.options;
+
+  options.pageUrl = options.pageUrl.replace(
+    '/' + user.handle,
+    '/u/' + user._id
+  );
+
+  options.uid = '' + user._id;
+  options.user = user;
+  options.displayPlaylistName = !options.playlistId;
+
+  if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
+  return options;
+}
+
+function fetchAndRender(options) {
+  return new Promise((resolve) => {
+    options.bodyClass = '';
+    preparePaginationParameters(options);
+
+    const pageGenerator = options.playlistId
+      ? new PlaylistPageGenerator(options)
+      : new ProfilePageGenerator(options);
+
+    pageGenerator.prepareTemplateData((errorMsg, tracks) => {
+      if (errorMsg) return resolve(errorMsg);
+      if (bareFormats.has(options.format)) return resolve(tracks);
+      renderHtml.call(pageGenerator, options, tracks, resolve);
+    });
+  });
 }
 
 function renderResponse(lib, options, feed) {
@@ -156,34 +183,3 @@ async function renderUserLibrary(lib, user) {
 }
 
 exports.render = renderUserLibrary;
-
-async function populateSidebarAndAdditionalPageElements(options) {
-  if (!options.after && !options.before) {
-    options.user.pl = await fetchPlaylists(options);
-    options.subscriptions = {
-      nbSubscribers: await countSubscribers(options),
-      nbSubscriptions: await countSubscriptions(options),
-    };
-    options.user.isSubscribed = await fetchIsSubscribed(options);
-    options.user.nbLikes = await fetchLikes(options);
-    const nbPosts = await fetchNbTracks(options);
-    options.user.nbTracks =
-      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
-  }
-}
-
-function populateCommonTemplateParameters(lib, user) {
-  var options = lib.options;
-
-  options.pageUrl = options.pageUrl.replace(
-    '/' + user.handle,
-    '/u/' + user._id
-  );
-
-  options.uid = '' + user._id;
-  options.user = user;
-  options.displayPlaylistName = !options.playlistId;
-
-  if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
-  return options;
-}
