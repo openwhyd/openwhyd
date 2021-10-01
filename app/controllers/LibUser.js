@@ -19,15 +19,12 @@ const {
   fetchSubscriptions,
   populateFriendsData,
 } = require('./LibUserData');
-const { preparePlaylistPageRendering } = require('./LibUserPlaylist');
+const { PlaylistPageGenerator } = require('./LibUserPlaylist');
 
 var feedTemplate = require('../templates/feed.js');
 var templateLoader = require('../templates/templateLoader.js');
 var profileTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userProfileV2.html'
-);
-var playlistTemplateV2 = templateLoader.loadTemplate(
-  'app/templates/userPlaylistV2.html'
 );
 
 var MAX_PLAYLISTS_SIDE = 4;
@@ -231,26 +228,23 @@ function fetchAndRender(options) {
     options.bodyClass = '';
     preparePaginationParameters(options);
 
-    class PlaylistPageGenerator {
-      prepareTemplateData = preparePlaylistPageRendering.bind(this, options);
-      getCustomFeedTemplate = () => playlistTemplateV2;
-      renderHtml = renderHtml.bind(this, options);
-    }
-
     class OtherPageGenerator {
-      prepareTemplateData = prepareOtherPageRendering.bind(this, options);
+      constructor(options) {
+        this.options = options;
+      }
+      prepareTemplateData = (callback) =>
+        prepareOtherPageRendering(this.options, callback);
       getCustomFeedTemplate = () => profileTemplateV2;
-      renderHtml = renderHtml.bind(this, options);
     }
 
     const pageGenerator = options.playlistId
-      ? new PlaylistPageGenerator()
-      : new OtherPageGenerator();
+      ? new PlaylistPageGenerator(options)
+      : new OtherPageGenerator(options);
 
     pageGenerator.prepareTemplateData((errorMsg, tracks) => {
       if (errorMsg) return resolve(errorMsg);
       if (bareFormats.has(options.format)) return resolve(tracks);
-      pageGenerator.renderHtml(tracks, resolve);
+      renderHtml.call(pageGenerator, options, tracks, resolve);
     });
   });
 }

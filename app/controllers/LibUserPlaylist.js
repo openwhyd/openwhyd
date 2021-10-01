@@ -1,5 +1,9 @@
 var config = require('../models/config.js');
 var postModel = require('../models/post.js');
+var templateLoader = require('../templates/templateLoader.js');
+var playlistTemplateV2 = templateLoader.loadTemplate(
+  'app/templates/userPlaylistV2.html'
+);
 
 function preparePlaylistPageRendering(options, callback) {
   // 1. populate page template parameters
@@ -66,3 +70,14 @@ function populatePlaylistPageTemplateParameters(options) {
       options.playlistId;
   }
 }
+
+class PlaylistPageGenerator {
+  constructor(options) {
+    this.options = options;
+  }
+  prepareTemplateData = (callback) =>
+    preparePlaylistPageRendering(this.options, callback);
+  getCustomFeedTemplate = () => playlistTemplateV2;
+}
+
+exports.PlaylistPageGenerator = PlaylistPageGenerator;
