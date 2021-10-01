@@ -12,7 +12,8 @@ class PlaylistPageGenerator extends PageGenerator {
     super(user, options);
   }
 
-  populateNextAndPrevPlaylistPageUrl(options) {
+  populateNextAndPrevPlaylistPageUrl() {
+    const options = this.options;
     var prevId = null;
     for (let p = options.user.pl.length - 1; p > -1; --p) {
       var pl = options.user.pl[p];
@@ -33,7 +34,8 @@ class PlaylistPageGenerator extends PageGenerator {
     }
   }
 
-  populatePlaylistPageTemplateParameters(options) {
+  populatePlaylistPageTemplateParameters() {
+    const options = this.options;
     options.bodyClass += ' userPlaylistV2';
     options.user.pl = options.user.pl || [];
     for (let i in options.user.pl)
@@ -62,14 +64,15 @@ class PlaylistPageGenerator extends PageGenerator {
     }
   }
 
-  preparePlaylistPageRendering(options, callback) {
+  preparePlaylistPageRendering(callback) {
+    const options = this.options;
     // 1. populate page template parameters
-    this.populatePlaylistPageTemplateParameters(options);
+    this.populatePlaylistPageTemplateParameters();
 
     // 2. fetch and render list of tracks
     if (!options.playlist) callback('meh... this playlist does not exist!');
     else {
-      this.populateNextAndPrevPlaylistPageUrl(options);
+      this.populateNextAndPrevPlaylistPageUrl();
       postModel.fetchPlaylistPosts(
         options.uid,
         options.playlistId,
@@ -80,7 +83,8 @@ class PlaylistPageGenerator extends PageGenerator {
   }
 
   prepareTemplateData = () =>
-    util.promisify(this.preparePlaylistPageRendering).bind(this)(this.options);
+    util.promisify(this.preparePlaylistPageRendering).bind(this)();
+
   getCustomFeedTemplate = () => playlistTemplateV2;
 }
 
