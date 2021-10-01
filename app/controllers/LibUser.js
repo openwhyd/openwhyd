@@ -507,43 +507,43 @@ function renderUserLinks(lnk) {
     };
 }
 
+function renderResponse(lib, options, feed) {
+  if (options.callback) {
+    var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
+    lib.renderOther(
+      safeCallback + '(' + JSON.stringify(feed) + ')',
+      'application/javascript'
+    );
+  } else if (options.format == 'links') {
+    lib.renderOther(
+      feed
+        .map(function (p) {
+          return config.translateEidToUrl((p || {}).eId);
+        })
+        .join('\n'),
+      'text/text'
+    );
+  } else if (options.showPlaylists && options.format == 'json') {
+    lib.renderJson(options.playlists);
+  } else if (options.format == 'json') {
+    lib.renderJson(feed);
+  } else if (options.after || options.before) {
+    lib.render({ html: feed });
+  } else
+    lib.renderPage(
+      options.user,
+      null /*sidebarHtml*/,
+      generateMixpanelCode(options) + feed
+    );
+}
+
 function renderUserLibrary(lib, user) {
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
 
   const options = populateCommonTemplateParameters(lib, user);
 
-  function renderResponse(feed) {
-    if (options.callback) {
-      var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
-      lib.renderOther(
-        safeCallback + '(' + JSON.stringify(feed) + ')',
-        'application/javascript'
-      );
-    } else if (options.format == 'links') {
-      lib.renderOther(
-        feed
-          .map(function (p) {
-            return config.translateEidToUrl((p || {}).eId);
-          })
-          .join('\n'),
-        'text/text'
-      );
-    } else if (options.showPlaylists && options.format == 'json') {
-      lib.renderJson(options.playlists);
-    } else if (options.format == 'json') {
-      lib.renderJson(feed);
-    } else if (options.after || options.before) {
-      lib.render({ html: feed });
-    } else
-      lib.renderPage(
-        user,
-        null /*sidebarHtml*/,
-        generateMixpanelCode(options) + feed
-      );
-  }
-
   // add final rendering functions at queue of the call chain
-  var fcts = [fetchAndRender, renderResponse];
+  var fcts = [fetchAndRender, renderResponse.bind(null, lib, options)];
 
   // prepend required fetching operations in head of the call chain
   if (!options.after && !options.before)
