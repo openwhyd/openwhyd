@@ -255,25 +255,24 @@ function prepareOtherPageRendering(options, callback) {
 
 var bareFormats = new Set(['json', 'links']);
 
-function prepareUserTracksPageRendering(options) {
+async function prepareUserTracksPageRendering(options) {
   options.tabTitle = 'Tracks';
 
   options.bodyClass += ' userTracks';
   options.showTracks = true;
   options.pageTitle = options.user.name + "'s tracks";
-  const proceed = () =>
-    new Promise((resolve) =>
-      postModel.fetchByAuthors([options.uid], options.fetchParams, (tracks) =>
-        resolve(tracks)
-      )
-    );
 
-  if (options.after || options.before)
+  if (options.after || options.before) {
     // no page rendering required
-    return proceed();
-  else {
-    return prepareActivitiesSidebar(options).then(proceed);
+  } else {
+    await prepareActivitiesSidebar(options);
   }
+
+  return new Promise((resolve) =>
+    postModel.fetchByAuthors([options.uid], options.fetchParams, (tracks) =>
+      resolve(tracks)
+    )
+  );
 }
 
 function prepareActivitiesSidebar(options) {
