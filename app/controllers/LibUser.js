@@ -558,6 +558,7 @@ async function renderUserLibrary(lib, user) {
 }
 
 exports.render = renderUserLibrary;
+
 async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
     await Promise.all([
