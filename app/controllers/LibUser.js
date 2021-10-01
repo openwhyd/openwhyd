@@ -231,15 +231,21 @@ function fetchAndRender(options) {
     options.bodyClass = '';
     preparePaginationParameters(options);
 
+    class PlaylistPageGenerator {
+      prepareTemplateData = preparePlaylistPageRendering.bind(this, options);
+      getCustomFeedTemplate = () => playlistTemplateV2;
+      renderHtml = renderHtml.bind(this, options);
+    }
+
+    class OtherPageGenerator {
+      prepareTemplateData = prepareOtherPageRendering.bind(this, options);
+      getCustomFeedTemplate = () => profileTemplateV2;
+      renderHtml = renderHtml.bind(this, options);
+    }
+
     const pageGenerator = options.playlistId
-      ? {
-          prepareTemplateData: preparePlaylistPageRendering.bind(null, options),
-          renderHtml: renderHtml.bind(null, options),
-        }
-      : {
-          prepareTemplateData: prepareOtherPageRendering.bind(null, options),
-          renderHtml: renderHtml.bind(null, options),
-        };
+      ? new PlaylistPageGenerator()
+      : new OtherPageGenerator();
 
     pageGenerator.prepareTemplateData((errorMsg, tracks) => {
       if (errorMsg) return resolve(errorMsg);
@@ -261,9 +267,7 @@ var LNK_URL_PREFIX = {
 
 function renderHtml(options, tracks, callback) {
   if (!options.format && !options.embedW) {
-    options.customFeedTemplate = options.playlistId
-      ? playlistTemplateV2
-      : profileTemplateV2;
+    options.customFeedTemplate = this.getCustomFeedTemplate();
   }
   feedTemplate.renderFeedAsync(tracks, options, callback);
 }
