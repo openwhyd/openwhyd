@@ -266,12 +266,15 @@ function prepareActivityPageRendering(options, callback) {
   options.tabTitle = 'Activity';
   options.bodyClass += ' userActivity';
   options.pageTitle = options.user.name + "'s recent activity";
-  fetchActivityFeed(options, () => {
+  fetchActivityFeed(options, (err, activityFeed) => {
+    options.showActivity = activityFeed.showActivity;
+    options.hasMore = activityFeed.hasMore;
     callback(null, []);
   });
 }
 
 function fetchActivityFeed(options, callback) {
+  const output = {};
   followModel.fetchUserSubscriptions(
     options.loggedUser.id,
     function (mySubscr) {
@@ -290,21 +293,21 @@ function fetchActivityFeed(options, callback) {
                 result.recentActivity.items[i].subscriptions;
               delete result.recentActivity.items[i].subscriptions;
             }
-          options.showActivity = result.recentActivity;
+          output.showActivity = result.recentActivity;
           if (result.hasMore)
-            options.hasMore = { lastPid: result.hasMore.last_id };
+            output.hasMore = { lastPid: result.hasMore.last_id };
           else {
             var creation = mongodb.ObjectId(options.user.id);
-            options.showActivity.items.push({
+            output.showActivity.items.push({
               _id: creation,
               other: { text: 'joined whyd' },
             });
           }
-          for (let i in options.showActivity.items)
-            options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
-              new Date() - options.showActivity.items[i]._id.getTimestamp()
+          for (let i in output.showActivity.items)
+            output.showActivity.items[i].ago = uiSnippets.renderTimestamp(
+              new Date() - output.showActivity.items[i]._id.getTimestamp()
             );
-          callback(null, []);
+          callback(null, output);
         }
       );
     }
