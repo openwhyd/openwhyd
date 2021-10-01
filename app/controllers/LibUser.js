@@ -419,6 +419,7 @@ function fetchAndRender(options, callback) {
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
 
+  // will pass a list of tracks to process() or an error message to callback()
   (options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(
     options,
     callback,
