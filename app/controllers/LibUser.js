@@ -197,7 +197,7 @@ async function prepareActivitiesSidebar(options) {
     limit: MAX_FRIENDS,
     fields: { _id: 0, tId: 1 },
   };
-  return fetchFriends(options, params, ownProfile);
+  options.friends = await fetchFriends(options, params, ownProfile);
 }
 
 const fetchFriends = (options, params, ownProfile) =>
@@ -206,11 +206,10 @@ const fetchFriends = (options, params, ownProfile) =>
       if (subscr.length || ownProfile) {
         for (let i in subscr) subscr[i] = { id: subscr[i].tId };
         userModel.fetchUserBios(subscr, function () {
-          options.friends = {
+          resolve({
             url: '/u/' + options.user.id + '/subscriptions',
             items: renderFriends(subscr),
-          };
-          resolve();
+          });
         });
       } else resolve();
     });
