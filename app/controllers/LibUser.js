@@ -69,46 +69,51 @@ function fetchNbTracks(options) {
 }
 
 // used to render the sidebar
-function fetchActivity(options, cb) {
-  activityModel.fetchHistoryFromUidList(
-    [options.user.id],
-    { limit: MAX_HISTORY },
-    function (activities) {
-      if (activities.length < MAX_HISTORY)
-        activities.push({
-          _id: mongodb.ObjectId(options.user.id),
-          other: { text: 'joined whyd' },
-        });
-      var postsToPopulate = [];
-      for (let i in activities)
-        if (activities[i]) {
-          activities[i].ago = uiSnippets.renderTimestamp(
-            new Date() - activities[i]._id.getTimestamp()
-          );
-          if (activities[i].like)
-            postsToPopulate.push(mongodb.ObjectId('' + activities[i].like.pId));
-        }
-
-      postModel.fetchPosts(
-        { _id: { $in: postsToPopulate } },
-        /*params*/ null,
-        /*options*/ null,
-        function (posts) {
-          var postSet = {};
-          options.activity = [];
-          for (let i in posts) postSet['' + posts[i]._id] = posts[i];
-          for (let i in activities) {
-            if ((activities[i] || {}).like) {
-              if (postSet['' + activities[i].like.pId])
-                activities[i].like.post = postSet['' + activities[i].like.pId];
-              else continue; // do not keep null posts
-            }
-            options.activity.push(activities[i]);
+function fetchActivity(options) {
+  return new Promise((resolve) =>
+    activityModel.fetchHistoryFromUidList(
+      [options.user.id],
+      { limit: MAX_HISTORY },
+      function (activities) {
+        if (activities.length < MAX_HISTORY)
+          activities.push({
+            _id: mongodb.ObjectId(options.user.id),
+            other: { text: 'joined whyd' },
+          });
+        var postsToPopulate = [];
+        for (let i in activities)
+          if (activities[i]) {
+            activities[i].ago = uiSnippets.renderTimestamp(
+              new Date() - activities[i]._id.getTimestamp()
+            );
+            if (activities[i].like)
+              postsToPopulate.push(
+                mongodb.ObjectId('' + activities[i].like.pId)
+              );
           }
-          cb();
-        }
-      );
-    }
+
+        postModel.fetchPosts(
+          { _id: { $in: postsToPopulate } },
+          /*params*/ null,
+          /*options*/ null,
+          function (posts) {
+            var postSet = {};
+            options.activity = [];
+            for (let i in posts) postSet['' + posts[i]._id] = posts[i];
+            for (let i in activities) {
+              if ((activities[i] || {}).like) {
+                if (postSet['' + activities[i].like.pId])
+                  activities[i].like.post =
+                    postSet['' + activities[i].like.pId];
+                else continue; // do not keep null posts
+              }
+              options.activity.push(activities[i]);
+            }
+            resolve();
+          }
+        );
+      }
+    )
   );
 }
 
@@ -272,35 +277,36 @@ async function prepareUserTracksPageRendering(options) {
 }
 
 function prepareActivitiesSidebar(options) {
-  return new Promise((resolve) =>
-    fetchActivity(options, function () {
-      // => populates options.activity
-      var ownProfile = options.user.id == (options.loggedUser || {}).id;
-      // render playlists
-      if ((options.user.pl || []).length || ownProfile)
-        options.playlists = {
-          url: '/u/' + options.user.id + '/playlists',
-          items: renderPlaylists(options, MAX_PLAYLISTS_SIDE),
+  return fetchActivity(options).then(
+    () =>
+      new Promise((resolve) => {
+        // => populates options.activity
+        var ownProfile = options.user.id == (options.loggedUser || {}).id;
+        // render playlists
+        if ((options.user.pl || []).length || ownProfile)
+          options.playlists = {
+            url: '/u/' + options.user.id + '/playlists',
+            items: renderPlaylists(options, MAX_PLAYLISTS_SIDE),
+          };
+        // fetch and render friends
+        var params = {
+          sort: { _id: -1 },
+          limit: MAX_FRIENDS,
+          fields: { _id: 0, tId: 1 },
         };
-      // fetch and render friends
-      var params = {
-        sort: { _id: -1 },
-        limit: MAX_FRIENDS,
-        fields: { _id: 0, tId: 1 },
-      };
-      followModel.fetch({ uId: options.user.id }, params, function (subscr) {
-        if (subscr.length || ownProfile) {
-          for (let i in subscr) subscr[i] = { id: subscr[i].tId };
-          userModel.fetchUserBios(subscr, function () {
-            options.friends = {
-              url: '/u/' + options.user.id + '/subscriptions',
-              items: renderFriends(subscr),
-            };
-            resolve();
-          });
-        } else resolve();
-      });
-    })
+        followModel.fetch({ uId: options.user.id }, params, function (subscr) {
+          if (subscr.length || ownProfile) {
+            for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+            userModel.fetchUserBios(subscr, function () {
+              options.friends = {
+                url: '/u/' + options.user.id + '/subscriptions',
+                items: renderFriends(subscr),
+              };
+              resolve();
+            });
+          } else resolve();
+        });
+      })
   );
 }
 
