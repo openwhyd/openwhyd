@@ -262,16 +262,12 @@ async function prepareUserTracksPageRendering(options) {
   options.showTracks = true;
   options.pageTitle = options.user.name + "'s tracks";
 
-  if (options.after || options.before) {
-    // no page rendering required
-  } else {
+  if (!options.after && !options.before) {
     await prepareActivitiesSidebar(options);
   }
 
   return new Promise((resolve) =>
-    postModel.fetchByAuthors([options.uid], options.fetchParams, (tracks) =>
-      resolve(tracks)
-    )
+    postModel.fetchByAuthors([options.uid], options.fetchParams, resolve)
   );
 }
 
