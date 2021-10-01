@@ -1,3 +1,4 @@
+const util = require('util');
 const { PageGenerator } = require('./PageGenerator.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
@@ -201,8 +202,8 @@ class ProfilePageGenerator extends PageGenerator {
   constructor(options) {
     super(options);
   }
-  prepareTemplateData = (callback) =>
-    prepareOtherPageRendering(this.options, callback);
+  prepareTemplateData = () =>
+    util.promisify(prepareOtherPageRendering)(this.options);
   getCustomFeedTemplate = () => profileTemplateV2;
 }
 

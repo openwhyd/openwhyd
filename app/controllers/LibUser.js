@@ -107,14 +107,16 @@ function populateCommonTemplateParameters(lib, user) {
   return options;
 }
 
-function fetchAndRender(pageGenerator) {
-  return new Promise((resolve) => {
-    pageGenerator.prepareTemplateData((errorMsg, tracks) => {
-      if (errorMsg) return resolve(errorMsg);
-      if (bareFormats.has(pageGenerator.options.format)) return resolve(tracks);
-      renderHtml.call(pageGenerator, pageGenerator.options, tracks, resolve);
-    });
-  });
+async function fetchAndRender(pageGenerator) {
+  try {
+    const tracks = await pageGenerator.prepareTemplateData();
+    if (bareFormats.has(pageGenerator.options.format)) return tracks;
+    return new Promise((resolve) =>
+      renderHtml.call(pageGenerator, pageGenerator.options, tracks, resolve)
+    );
+  } catch (errorMsg) {
+    return errorMsg;
+  }
 }
 
 function renderResponse(lib, options, feed) {

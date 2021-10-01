@@ -1,3 +1,4 @@
+const util = require('util');
 const { PageGenerator } = require('./PageGenerator.js');
 var config = require('../models/config.js');
 var postModel = require('../models/post.js');
@@ -76,8 +77,8 @@ class PlaylistPageGenerator extends PageGenerator {
   constructor(options) {
     super(options);
   }
-  prepareTemplateData = (callback) =>
-    preparePlaylistPageRendering(this.options, callback);
+  prepareTemplateData = () =>
+    util.promisify(preparePlaylistPageRendering)(this.options);
   getCustomFeedTemplate = () => playlistTemplateV2;
 }
 
