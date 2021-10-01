@@ -74,8 +74,8 @@ function populatePlaylistPageTemplateParameters(options) {
 }
 
 class PlaylistPageGenerator extends PageGenerator {
-  constructor(options) {
-    super(options);
+  constructor(user, options) {
+    super(user, options);
   }
   prepareTemplateData = () =>
     util.promisify(preparePlaylistPageRendering)(this.options);

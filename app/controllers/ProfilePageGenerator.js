@@ -199,8 +199,8 @@ function prepareOtherPageRendering(options, callback) {
 }
 
 class ProfilePageGenerator extends PageGenerator {
-  constructor(options) {
-    super(options);
+  constructor(user, options) {
+    super(user, options);
   }
   prepareTemplateData = () =>
     util.promisify(prepareOtherPageRendering)(this.options);

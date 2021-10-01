@@ -11,11 +11,68 @@ const {
 
 const bareFormats = new Set(['json', 'links']);
 
+const LNK_URL_PREFIX = {
+  fb: 'facebook.com/',
+  tw: 'twitter.com/',
+  sc: 'soundcloud.com/',
+  yt: 'youtube.com/user/',
+  igrm: 'instagram.com/',
+};
+
 class PageGenerator {
-  constructor(options) {
+  constructor(user, options) {
     this.options = options;
     options.bodyClass = '';
+    this.populateCommonTemplateParameters(user);
     this.preparePaginationParameters();
+  }
+
+  static renderUserLinks(lnk) {
+    // clean social links
+    for (let i in lnk) lnk[i] = ('' + lnk[i]).trim();
+
+    // for each social link, detect username and rebuild URL
+    for (let i in LNK_URL_PREFIX)
+      if (lnk[i]) {
+        var parts = lnk[i].split('?').shift().split('/');
+        lnk[i] = ''; // by default, if no username was found
+        var username = '';
+        while (!(username = parts.pop()));
+        lnk[i] = LNK_URL_PREFIX[i] + username; //parts[j];
+      }
+
+    // make sure URLs are valid
+    for (let i in lnk)
+      if (lnk[i]) {
+        var lnkBody = '//' + lnk[i].split('//').pop();
+        if (i == 'home') {
+          var isHttps = lnk[i].match(/^https:\/\//);
+          lnk[i] = (isHttps ? 'https' : 'http') + ':' + lnkBody;
+        } else {
+          lnk[i] = lnkBody;
+        }
+      } else delete lnk[i];
+
+    if (lnk.home)
+      lnk.home = {
+        url: lnk.home,
+        renderedUrl: lnk.home.split('//').pop().split('/').shift(),
+      };
+  }
+
+  populateCommonTemplateParameters(user) {
+    const options = this.options;
+    options.pageUrl = options.pageUrl.replace(
+      '/' + user.handle,
+      '/u/' + user._id
+    );
+
+    options.uid = '' + user._id;
+    options.user = user;
+    options.displayPlaylistName = !options.playlistId;
+
+    if (options.user && options.user.lnk)
+      this.renderUserLinks(options.user.lnk);
   }
 
   preparePaginationParameters() {
