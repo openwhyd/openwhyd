@@ -4,6 +4,7 @@ var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
 var activityModel = require('../models/activity.js');
+var activityController = require('../controllers/recentActivity.js');
 var uiSnippets = require('../templates/uiSnippets.js');
 
 const MAX_HISTORY = 3;
@@ -104,4 +105,45 @@ exports.fetchActivity = async (options) => {
     activity.push(activities[i]);
   }
   return activity;
+};
+
+exports.fetchActivityFeed = (options, callback) => {
+  followModel.fetchUserSubscriptions(
+    options.loggedUser.id,
+    function (mySubscr) {
+      var mySubscrUidList = snip.objArrayToValueArray(
+        mySubscr.subscriptions,
+        'id'
+      );
+      activityController.generateActivityFeed(
+        [options.user.id],
+        mySubscrUidList,
+        options,
+        function (result) {
+          for (let i in result.recentActivity.items)
+            if (result.recentActivity.items[i].subscriptions) {
+              result.recentActivity.items[i].subscribedUsers =
+                result.recentActivity.items[i].subscriptions;
+              delete result.recentActivity.items[i].subscriptions;
+            }
+          const activity = result.recentActivity;
+          if (!result.hasMore) {
+            var creation = mongodb.ObjectId(options.user.id);
+            activity.items.push({
+              _id: creation,
+              other: { text: 'joined whyd' },
+            });
+          }
+          for (let i in activity.items)
+            activity.items[i].ago = uiSnippets.renderTimestamp(
+              new Date() - activity.items[i]._id.getTimestamp()
+            );
+          callback(null, {
+            activity,
+            hasMore: result.hasMore && { lastPid: result.hasMore.last_id },
+          });
+        }
+      );
+    }
+  );
 };
