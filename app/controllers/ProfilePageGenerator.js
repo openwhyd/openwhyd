@@ -178,30 +178,29 @@ function preparePlaylistsPageRendering(options, callback) {
   callback(null, []);
 }
 
-function prepareOtherPageRendering(options) {
-  options.bodyClass += ' userProfileV2';
-  options.nbPlaylists = (options.user.pl || []).length;
-  if (options.showPlaylists) {
-    return util.promisify(preparePlaylistsPageRendering)(options);
-  } else if (options.showLikes) {
-    return util.promisify(prepareLikesPageRendering)(options);
-  } else if (options.showActivity) {
-    return util.promisify(prepareActivityPageRendering)(options);
-  } else if (options.showSubscribers) {
-    return util.promisify(prepareSubscribersPageRendering)(options);
-  } else if (options.showSubscriptions) {
-    return util.promisify(prepareSubscriptionsPageRendering)(options);
-  } else {
-    return prepareUserTracksPageRendering(options);
-  }
-}
-
 class ProfilePageGenerator extends PageGenerator {
   constructor(user, options) {
     super(user, options);
   }
 
-  prepareTemplateData = () => prepareOtherPageRendering(this.options);
+  async prepareTemplateData() {
+    const options = this.options;
+    options.bodyClass += ' userProfileV2';
+    options.nbPlaylists = (options.user.pl || []).length;
+    if (options.showPlaylists) {
+      return util.promisify(preparePlaylistsPageRendering)(options);
+    } else if (options.showLikes) {
+      return util.promisify(prepareLikesPageRendering)(options);
+    } else if (options.showActivity) {
+      return util.promisify(prepareActivityPageRendering)(options);
+    } else if (options.showSubscribers) {
+      return util.promisify(prepareSubscribersPageRendering)(options);
+    } else if (options.showSubscriptions) {
+      return util.promisify(prepareSubscriptionsPageRendering)(options);
+    } else {
+      return prepareUserTracksPageRendering(options);
+    }
+  }
 
   getCustomFeedTemplate = () => profileTemplateV2;
 }
