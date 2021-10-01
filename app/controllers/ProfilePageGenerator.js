@@ -178,24 +178,21 @@ function preparePlaylistsPageRendering(options, callback) {
   callback(null, []);
 }
 
-function prepareOtherPageRendering(callback) {
-  const options = this.options;
+function prepareOtherPageRendering(options) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
-    preparePlaylistsPageRendering(options, callback);
+    return util.promisify(preparePlaylistsPageRendering)(options);
   } else if (options.showLikes) {
-    prepareLikesPageRendering(options, callback);
+    return util.promisify(prepareLikesPageRendering)(options);
   } else if (options.showActivity) {
-    prepareActivityPageRendering(options, callback);
+    return util.promisify(prepareActivityPageRendering)(options);
   } else if (options.showSubscribers) {
-    prepareSubscribersPageRendering(options, callback);
+    return util.promisify(prepareSubscribersPageRendering)(options);
   } else if (options.showSubscriptions) {
-    prepareSubscriptionsPageRendering(options, callback);
+    return util.promisify(prepareSubscriptionsPageRendering)(options);
   } else {
-    prepareUserTracksPageRendering(options).then((tracks) =>
-      callback(null, tracks)
-    );
+    return prepareUserTracksPageRendering(options);
   }
 }
 
@@ -203,8 +200,8 @@ class ProfilePageGenerator extends PageGenerator {
   constructor(user, options) {
     super(user, options);
   }
-  prepareTemplateData = () =>
-    util.promisify(prepareOtherPageRendering).bind(this)();
+
+  prepareTemplateData = () => prepareOtherPageRendering(this.options);
 
   getCustomFeedTemplate = () => profileTemplateV2;
 }
