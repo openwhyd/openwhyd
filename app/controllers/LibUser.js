@@ -23,6 +23,7 @@ const {
   fetchIsSubscribed,
   fetchLikes,
   fetchNbTracks,
+  populateFriendsData,
 } = require('./LibUserData');
 var profileTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userProfileV2.html'
@@ -73,20 +74,6 @@ function renderFriends(friends) {
     friends[i].img = '/img/u/' + friends[i].id;
   }
   return friends;
-}
-
-function populateFriendsData(subscr, options, cb) {
-  followModel.fetchSubscriptionArray(
-    options.loggedUser.id,
-    function (mySubscr) {
-      var subscrSet = snip.arrayToSet(mySubscr);
-      for (let i in subscr)
-        if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
-      userModel.fetchUserBios(subscr, function () {
-        cb(subscr);
-      });
-    }
-  );
 }
 
 function preparePlaylistPageRendering(options, callback) {

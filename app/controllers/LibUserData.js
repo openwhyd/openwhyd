@@ -1,3 +1,4 @@
+var snip = require('../snip.js');
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
@@ -33,6 +34,20 @@ exports.fetchIsSubscribed = (options) =>
 
 exports.fetchNbTracks = (options) =>
   new Promise((resolve) => postModel.countUserPosts(options.user.id, resolve));
+
+exports.populateFriendsData = (subscr, options, cb) => {
+  followModel.fetchSubscriptionArray(
+    options.loggedUser.id,
+    function (mySubscr) {
+      var subscrSet = snip.arrayToSet(mySubscr);
+      for (let i in subscr)
+        if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
+      userModel.fetchUserBios(subscr, function () {
+        cb(subscr);
+      });
+    }
+  );
+};
 
 exports.fetchActivity = async (options) => {
   const activities = await new Promise((resolve) =>
