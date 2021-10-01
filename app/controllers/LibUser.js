@@ -42,17 +42,16 @@ function fetchLikes(options) {
   );
 }
 
-function fetchStats(options) {
-  return new Promise((resolve) => {
-    followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
-      followModel.countSubscribers(options.user.id, function (nbSubscribers) {
-        resolve({
-          nbSubscriptions: nbSubscriptions,
-          nbSubscribers: nbSubscribers,
-        });
-      });
-    });
-  });
+function countSubscriptions(options) {
+  return new Promise((resolve) =>
+    followModel.countSubscriptions(options.user.id, resolve)
+  );
+}
+
+function countSubscribers(options) {
+  return new Promise((resolve) =>
+    followModel.countSubscribers(options.user.id, resolve)
+  );
 }
 
 const fetchIsSubscribed = (options) =>
@@ -64,11 +63,11 @@ const fetchIsSubscribed = (options) =>
   );
 
 function fetchNbTracks(options) {
-  return new Promise((resolve) => {
-    postModel.countUserPosts(options.user.id, function (nbPosts) {
-      resolve(nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts);
-    });
-  });
+  return new Promise((resolve) =>
+    postModel.countUserPosts(options.user.id, (nbPosts) =>
+      resolve(nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts)
+    )
+  );
 }
 
 // used to render the sidebar
@@ -556,7 +555,14 @@ async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
     await Promise.all([
       (async () => (options.user.pl = await fetchPlaylists(options)))(),
-      (async () => (options.subscriptions = await fetchStats(options)))(),
+      (async () =>
+        (options.subscriptions.nbSubscribers = await countSubscribers(
+          options
+        )))(),
+      (async () =>
+        (options.subscriptions.nbSubscriptions = await countSubscriptions(
+          options
+        )))(),
       (async () =>
         (options.user.isSubscribed = await fetchIsSubscribed(options)))(),
       (async () => (options.user.nbLikes = await fetchLikes(options)))(),
