@@ -30,43 +30,51 @@ var MAX_SUBSCRIPTIONS = 50;
 
 // DATA FETCHING HELPERS
 
-function fetchPlaylists(options, callback) {
-  userModel.fetchPlaylists(options.user, {}, function (playlists) {
-    options.user.pl = playlists;
-    callback();
-  });
-}
-
-function fetchLikes(options, callback) {
-  postModel.countLovedPosts(options.user.id, function (count) {
-    options.user.nbLikes = count;
-    callback();
-  });
-}
-
-function fetchStats(options, callback) {
-  followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
-    followModel.countSubscribers(options.user.id, function (nbSubscribers) {
-      options.subscriptions = {
-        nbSubscriptions: nbSubscriptions,
-        nbSubscribers: nbSubscribers,
-      };
-      followModel.get(
-        { uId: options.loggedUser.id, tId: options.user.id },
-        function (err, res) {
-          options.user.isSubscribed = !!res;
-          callback();
-        }
-      );
+function fetchPlaylists(options) {
+  return Promise((resolve) => {
+    userModel.fetchPlaylists(options.user, {}, function (playlists) {
+      options.user.pl = playlists;
+      resolve();
     });
   });
 }
 
-function fetchNbTracks(options, callback) {
-  postModel.countUserPosts(options.user.id, function (nbPosts) {
-    options.user.nbTracks =
-      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
-    callback();
+function fetchLikes(options) {
+  return Promise((resolve) => {
+    postModel.countLovedPosts(options.user.id, function (count) {
+      options.user.nbLikes = count;
+      resolve();
+    });
+  });
+}
+
+function fetchStats(options) {
+  return Promise((resolve) => {
+    followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
+      followModel.countSubscribers(options.user.id, function (nbSubscribers) {
+        options.subscriptions = {
+          nbSubscriptions: nbSubscriptions,
+          nbSubscribers: nbSubscribers,
+        };
+        followModel.get(
+          { uId: options.loggedUser.id, tId: options.user.id },
+          function (err, res) {
+            options.user.isSubscribed = !!res;
+            resolve();
+          }
+        );
+      });
+    });
+  });
+}
+
+function fetchNbTracks(options) {
+  return Promise((resolve) => {
+    postModel.countUserPosts(options.user.id, function (nbPosts) {
+      options.user.nbTracks =
+        nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
+      resolve();
+    });
   });
 }
 
