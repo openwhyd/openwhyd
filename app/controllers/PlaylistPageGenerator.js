@@ -21,7 +21,7 @@ function preparePlaylistPageRendering(options, callback) {
     );
   }
 }
-exports.preparePlaylistPageRendering = preparePlaylistPageRendering;
+
 function populateNextAndPrevPlaylistPageUrl(options) {
   var prevId = null;
   for (let p = options.user.pl.length - 1; p > -1; --p) {
