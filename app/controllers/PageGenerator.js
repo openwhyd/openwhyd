@@ -123,8 +123,8 @@ class PageGenerator {
       const tracks = await this.prepareTemplateData();
       if (bareFormats.has(this.options.format)) return tracks;
       return new Promise((resolve) => this.renderHtml(tracks, resolve));
-    } catch (errorMsg) {
-      return errorMsg;
+    } catch (error) {
+      return error.message;
     }
   }
 }

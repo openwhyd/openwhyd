@@ -70,7 +70,8 @@ class PlaylistPageGenerator extends PageGenerator {
     this.populatePlaylistPageTemplateParameters();
 
     // 2. fetch and render list of tracks
-    if (!options.playlist) callback('meh... this playlist does not exist!');
+    if (!options.playlist)
+      callback(new Error('meh... this playlist does not exist!'));
     else {
       this.populateNextAndPrevPlaylistPageUrl();
       postModel.fetchPlaylistPosts(
