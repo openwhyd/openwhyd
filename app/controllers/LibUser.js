@@ -266,7 +266,9 @@ function prepareActivityPageRendering(options, callback) {
   options.tabTitle = 'Activity';
   options.bodyClass += ' userActivity';
   options.pageTitle = options.user.name + "'s recent activity";
-  fetchActivityFeed(options, callback);
+  fetchActivityFeed(options, () => {
+    callback(null, []);
+  });
 }
 
 function fetchActivityFeed(options, callback) {
