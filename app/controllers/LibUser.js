@@ -552,9 +552,14 @@ async function renderUserLibrary(lib, user) {
 
   const options = populateCommonTemplateParameters(lib, user);
 
-  // prepend required fetching operations in head of the call chain
+  await populateSidebarAndAdditionalPageElements(options);
+  const tracks = await fetchAndRender(options);
+  renderResponse(lib, options, tracks); // reponds through lib.render*()
+}
+
+exports.render = renderUserLibrary;
+async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
-    // main tab: tracks (full layout to render, with sidebar)
     await Promise.all([
       fetchPlaylists(options),
       fetchStats(options),
@@ -562,11 +567,8 @@ async function renderUserLibrary(lib, user) {
       fetchNbTracks(options),
     ]);
   }
-  const tracks = await fetchAndRender(options);
-  renderResponse(lib, options, tracks); // reponds through lib.render*()
 }
 
-exports.render = renderUserLibrary;
 function populateCommonTemplateParameters(lib, user) {
   var options = lib.options;
 
