@@ -75,7 +75,7 @@ function renderFriends(friends) {
   return friends;
 }
 
-function populateUsers(subscr, options, cb) {
+function populateFriendsData(subscr, options, cb) {
   followModel.fetchSubscriptionArray(
     options.loggedUser.id,
     function (mySubscr) {
@@ -83,7 +83,7 @@ function populateUsers(subscr, options, cb) {
       for (let i in subscr)
         if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
       userModel.fetchUserBios(subscr, function () {
-        cb(renderFriends(subscr));
+        cb(subscr);
       });
     }
   );
@@ -248,9 +248,9 @@ function prepareSubscriptionsPageRendering(options, callback) {
       subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
     }
     for (let i in subscr) subscr[i] = { id: subscr[i].tId };
-    populateUsers(subscr, options, function (subscr) {
+    populateFriendsData(subscr, options, function (subscr) {
       options.showSubscriptions = {
-        items: subscr,
+        items: renderFriends(subscr),
       };
       callback(null, []);
     });
@@ -276,9 +276,9 @@ function prepareSubscribersPageRendering(options, callback) {
       subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
     }
     for (let i in subscr) subscr[i] = { id: subscr[i].uId };
-    populateUsers(subscr, options, function (subscr) {
+    populateFriendsData(subscr, options, function (subscr) {
       options.showSubscribers = {
-        items: subscr,
+        items: renderFriends(subscr),
       };
       callback(null, []);
     });
