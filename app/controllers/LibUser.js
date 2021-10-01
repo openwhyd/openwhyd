@@ -234,15 +234,17 @@ function fetchAndRender(options) {
     const pageGenerator = options.playlistId
       ? {
           prepareTemplateData: preparePlaylistPageRendering.bind(null, options),
+          renderHtml: renderHtml.bind(null, options),
         }
       : {
           prepareTemplateData: prepareOtherPageRendering.bind(null, options),
+          renderHtml: renderHtml.bind(null, options),
         };
 
     pageGenerator.prepareTemplateData((errorMsg, tracks) => {
       if (errorMsg) return resolve(errorMsg);
       if (bareFormats.has(options.format)) return resolve(tracks);
-      renderHtml(options, tracks, resolve);
+      pageGenerator.renderHtml(tracks, resolve);
     });
   });
 }
