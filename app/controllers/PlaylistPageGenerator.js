@@ -1,4 +1,3 @@
-const util = require('util');
 const { PageGenerator } = require('./PageGenerator.js');
 var config = require('../models/config.js');
 var postModel = require('../models/post.js');
@@ -64,7 +63,7 @@ class PlaylistPageGenerator extends PageGenerator {
     }
   }
 
-  async preparePlaylistPageRendering() {
+  async prepareTemplateData() {
     this.populatePlaylistPageTemplateParameters();
 
     if (!this.options.playlist)
@@ -80,8 +79,6 @@ class PlaylistPageGenerator extends PageGenerator {
       )
     );
   }
-
-  prepareTemplateData = () => this.preparePlaylistPageRendering();
 
   getCustomFeedTemplate = () => playlistTemplateV2;
 }

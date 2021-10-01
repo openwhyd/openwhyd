@@ -178,7 +178,8 @@ function preparePlaylistsPageRendering(options, callback) {
   callback(null, []);
 }
 
-function prepareOtherPageRendering(options, callback) {
+function prepareOtherPageRendering(callback) {
+  const options = this.options;
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
@@ -203,7 +204,8 @@ class ProfilePageGenerator extends PageGenerator {
     super(user, options);
   }
   prepareTemplateData = () =>
-    util.promisify(prepareOtherPageRendering)(this.options);
+    util.promisify(prepareOtherPageRendering).bind(this)();
+
   getCustomFeedTemplate = () => profileTemplateV2;
 }
 
