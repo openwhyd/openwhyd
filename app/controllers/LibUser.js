@@ -256,24 +256,24 @@ function prepareOtherPageRendering(options, callback) {
 var bareFormats = new Set(['json', 'links']);
 
 function prepareUserTracksPageRendering(options) {
-  return new Promise((resolve) => {
-    options.tabTitle = 'Tracks';
+  options.tabTitle = 'Tracks';
 
-    options.bodyClass += ' userTracks';
-    options.showTracks = true;
-    options.pageTitle = options.user.name + "'s tracks";
-    const proceed = () =>
+  options.bodyClass += ' userTracks';
+  options.showTracks = true;
+  options.pageTitle = options.user.name + "'s tracks";
+  const proceed = () =>
+    new Promise((resolve) =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, (tracks) =>
         resolve(tracks)
-      );
+      )
+    );
 
-    if (options.after || options.before)
-      // no page rendering required
-      proceed();
-    else {
-      prepareActivitiesSidebar(options).then(proceed);
-    }
-  });
+  if (options.after || options.before)
+    // no page rendering required
+    return proceed();
+  else {
+    return prepareActivitiesSidebar(options).then(proceed);
+  }
 }
 
 function prepareActivitiesSidebar(options) {
