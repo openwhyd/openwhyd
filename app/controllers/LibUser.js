@@ -543,7 +543,14 @@ function renderUserLibrary(lib, user) {
   const options = populateCommonTemplateParameters(lib, user);
 
   // add final rendering functions at queue of the call chain
-  var fcts = [fetchAndRender, renderResponse.bind(null, lib, options)];
+  var fcts = [
+    () => {
+      fetchAndRender(
+        options,
+        (tracks) => renderResponse(lib, options, tracks) // reponds through lib.render*()
+      );
+    },
+  ];
 
   // prepend required fetching operations in head of the call chain
   if (!options.after && !options.before)
