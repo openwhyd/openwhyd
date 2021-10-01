@@ -80,7 +80,7 @@ class PlaylistPageGenerator extends PageGenerator {
   }
 
   prepareTemplateData = () =>
-    util.promisify(this.preparePlaylistPageRendering)(this.options);
+    util.promisify(this.preparePlaylistPageRendering).bind(this)(this.options);
   getCustomFeedTemplate = () => playlistTemplateV2;
 }
 
