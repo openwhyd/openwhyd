@@ -35,6 +35,17 @@ exports.fetchIsSubscribed = (options) =>
 exports.fetchNbTracks = (options) =>
   new Promise((resolve) => postModel.countUserPosts(options.user.id, resolve));
 
+exports.fetchSubscriptions = async (options, params, ownProfile) => {
+  const subscr = new Promise((resolve) =>
+    followModel.fetch({ uId: options.user.id }, params, resolve)
+  );
+  if (subscr.length || ownProfile) {
+    for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+    await new Promise((resolve) => userModel.fetchUserBios(subscr, resolve));
+    return subscr;
+  }
+};
+
 exports.populateFriendsData = (subscr, options, cb) => {
   followModel.fetchSubscriptionArray(
     options.loggedUser.id,

@@ -7,7 +7,6 @@
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
-var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
 var activityController = require('../controllers/recentActivity.js');
@@ -23,6 +22,7 @@ const {
   fetchIsSubscribed,
   fetchLikes,
   fetchNbTracks,
+  fetchSubscriptions,
   populateFriendsData,
 } = require('./LibUserData');
 var profileTemplateV2 = templateLoader.loadTemplate(
@@ -205,17 +205,6 @@ async function prepareActivitiesSidebar(options) {
     };
   }
 }
-
-const fetchSubscriptions = async (options, params, ownProfile) => {
-  const subscr = new Promise((resolve) =>
-    followModel.fetch({ uId: options.user.id }, params, resolve)
-  );
-  if (subscr.length || ownProfile) {
-    for (let i in subscr) subscr[i] = { id: subscr[i].tId };
-    await new Promise((resolve) => userModel.fetchUserBios(subscr, resolve));
-    return subscr;
-  }
-};
 
 function prepareSubscriptionsPageRendering(options, callback) {
   options.tabTitle = 'Following';
