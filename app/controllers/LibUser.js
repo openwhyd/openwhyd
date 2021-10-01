@@ -107,16 +107,12 @@ function populateCommonTemplateParameters(lib, user) {
   return options;
 }
 
-function fetchAndRender(options) {
+function fetchAndRender(pageGenerator) {
   return new Promise((resolve) => {
-    const pageGenerator = options.playlistId
-      ? new PlaylistPageGenerator(options)
-      : new ProfilePageGenerator(options);
-
     pageGenerator.prepareTemplateData((errorMsg, tracks) => {
       if (errorMsg) return resolve(errorMsg);
-      if (bareFormats.has(options.format)) return resolve(tracks);
-      renderHtml.call(pageGenerator, options, tracks, resolve);
+      if (bareFormats.has(pageGenerator.options.format)) return resolve(tracks);
+      renderHtml.call(pageGenerator, pageGenerator.options, tracks, resolve);
     });
   });
 }
@@ -157,7 +153,13 @@ async function renderUserLibrary(lib, user) {
   const options = populateCommonTemplateParameters(lib, user);
 
   await populateSidebarAndAdditionalPageElements(options);
-  const tracks = await fetchAndRender(options);
+
+  const pageGenerator = options.playlistId
+    ? new PlaylistPageGenerator(options)
+    : new ProfilePageGenerator(options);
+
+  const tracks = await fetchAndRender(pageGenerator);
+
   renderResponse(lib, options, tracks); // reponds through lib.render*()
 }
 
