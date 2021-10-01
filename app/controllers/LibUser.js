@@ -508,20 +508,9 @@ function renderUserLinks(lnk) {
 }
 
 function renderUserLibrary(lib, user) {
-  var options = lib.options;
-
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
 
-  options.pageUrl = options.pageUrl.replace(
-    '/' + user.handle,
-    '/u/' + user._id
-  );
-
-  options.uid = '' + user._id;
-  options.user = user;
-  options.displayPlaylistName = !options.playlistId;
-
-  if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
+  const options = populateCommonTemplateParameters(lib, user);
 
   function renderResponse(feed) {
     if (options.callback) {
@@ -576,3 +565,18 @@ function renderUserLibrary(lib, user) {
 }
 
 exports.render = renderUserLibrary;
+function populateCommonTemplateParameters(lib, user) {
+  var options = lib.options;
+
+  options.pageUrl = options.pageUrl.replace(
+    '/' + user.handle,
+    '/u/' + user._id
+  );
+
+  options.uid = '' + user._id;
+  options.user = user;
+  options.displayPlaylistName = !options.playlistId;
+
+  if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
+  return options;
+}
