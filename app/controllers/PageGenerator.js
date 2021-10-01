@@ -21,19 +21,29 @@ const LNK_URL_PREFIX = {
 
 /** @typedef {{
  *  id: string,
+ *  name: string,
  * }} Playlist */
 
 /** @typedef {{
+ *  format: string | undefined,
+ *  embedW: string | undefined,
  *  user: {
- *    pl: Array<Playlist>
+ *    id: string,
+ *    name: string,
+ *    pl: Array<Playlist>,
  *  },
  *  uid: string,
  *  playlistId: string | undefined,
  * }} PageGeneratorInput */
 
 /** @typedef {{
+ *  bodyClass: string,
+ *  pageTitle: string,
+ *  pageImage: string,
+ *  playlist: Playlist | undefined,
  *  prevPageInList: string | undefined,
  *  nextPageInList: string | undefined,
+ *  fetchParams: unknown,
  * }} PageGeneratorOutput */
 
 /** @typedef { PageGeneratorInput & PageGeneratorOutput } PageGeneratorOptions */
