@@ -64,9 +64,7 @@ const fetchIsSubscribed = (options) =>
 
 function fetchNbTracks(options) {
   return new Promise((resolve) =>
-    postModel.countUserPosts(options.user.id, (nbPosts) =>
-      resolve(nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts)
-    )
+    postModel.countUserPosts(options.user.id, resolve)
   );
 }
 
@@ -563,7 +561,11 @@ async function populateSidebarAndAdditionalPageElements(options) {
       (async () =>
         (options.user.isSubscribed = await fetchIsSubscribed(options)))(),
       (async () => (options.user.nbLikes = await fetchLikes(options)))(),
-      (async () => (options.user.nbTracks = await fetchNbTracks(options)))(),
+      (async () => {
+        const nbPosts = await fetchNbTracks(options);
+        options.user.nbTracks =
+          nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
+      })(),
     ]);
   }
 }
