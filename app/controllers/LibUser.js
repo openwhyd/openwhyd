@@ -227,11 +227,11 @@ function populatePlaylistPageTemplateParameters(options) {
   }
 }
 
-function fetchAndRenderProfile(options, callback) {
+function prepareOtherPageRendering(options, callback) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
-    preparePlaylistsPageRendering(options, callback); // no posts
+    preparePlaylistsPageRendering(options, callback);
   } else if (options.showLikes) {
     prepareLikesPageRendering(options, callback);
   } else if (options.showActivity) {
@@ -441,7 +441,7 @@ function fetchAndRender(options, callback) {
   // will pass a list of tracks to process() or an error message to callback()
   (options.playlistId
     ? preparePlaylistPageRendering
-    : fetchAndRenderProfile)(options, (errorMsg, tracks) =>
+    : prepareOtherPageRendering)(options, (errorMsg, tracks) =>
     errorMsg ? callback(errorMsg) : process(tracks)
   );
 }
