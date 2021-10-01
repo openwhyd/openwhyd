@@ -1,3 +1,4 @@
+const { PageGenerator } = require('./PageGenerator.js');
 var config = require('../models/config.js');
 var postModel = require('../models/post.js');
 var templateLoader = require('../templates/templateLoader.js');
@@ -71,9 +72,9 @@ function populatePlaylistPageTemplateParameters(options) {
   }
 }
 
-class PlaylistPageGenerator {
+class PlaylistPageGenerator extends PageGenerator {
   constructor(options) {
-    this.options = options;
+    super(options);
   }
   prepareTemplateData = (callback) =>
     preparePlaylistPageRendering(this.options, callback);

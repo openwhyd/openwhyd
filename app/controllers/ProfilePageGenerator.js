@@ -1,3 +1,4 @@
+const { PageGenerator } = require('./PageGenerator.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
 const {
@@ -196,9 +197,9 @@ function prepareOtherPageRendering(options, callback) {
   }
 }
 
-class ProfilePageGenerator {
+class ProfilePageGenerator extends PageGenerator {
   constructor(options) {
-    this.options = options;
+    super(options);
   }
   prepareTemplateData = (callback) =>
     prepareOtherPageRendering(this.options, callback);

@@ -76,24 +76,6 @@ function renderHtml(options, tracks, callback) {
   feedTemplate.renderFeedAsync(tracks, options, callback);
 }
 
-function preparePaginationParameters(options) {
-  options.fetchParams = {
-    after: options.after,
-    before: options.before,
-    limit: options.limit,
-  };
-  if (options.embedW)
-    options.fetchParams.limit = config.nbTracksPerPlaylistEmbed;
-  else if (options.limit && typeof options.limit !== 'number') {
-    if (typeof options.limit === 'string')
-      options.fetchParams.limit = parseInt(options.limit);
-    else if (typeof options.limit === 'object' && options.limit.push)
-      options.fetchParams.limit = parseInt(options.limit.pop());
-    // keep only the last value
-    // see https://github.com/openwhyd/openwhyd/issues/89
-  }
-}
-
 async function populateSidebarAndAdditionalPageElements(options) {
   if (!options.after && !options.before) {
     options.user.pl = await fetchPlaylists(options);
@@ -127,9 +109,6 @@ function populateCommonTemplateParameters(lib, user) {
 
 function fetchAndRender(options) {
   return new Promise((resolve) => {
-    options.bodyClass = '';
-    preparePaginationParameters(options);
-
     const pageGenerator = options.playlistId
       ? new PlaylistPageGenerator(options)
       : new ProfilePageGenerator(options);
