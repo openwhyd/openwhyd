@@ -175,16 +175,6 @@ function preparePlaylistPageRendering(options, callback) {
   // 2. fetch and render list of tracks
   if (!options.playlist) callback('meh... this playlist does not exist!');
   else {
-    if (!options.format && !options.embedW) {
-      if (options.playlistId)
-        options.pageImage =
-          config.urlPrefix +
-          '/img/playlist/' +
-          options.user.id +
-          '_' +
-          options.playlistId;
-    }
-
     populateNextAndPrevPlaylistPageUrl(options);
     postModel.fetchPlaylistPosts(
       options.uid,
@@ -234,6 +224,14 @@ function populatePlaylistPageTemplateParameters(options) {
       ((options.playlist || {}).name || 'a playlist') +
       ' by ' +
       options.user.name;
+  }
+  if (!options.format && !options.embedW && options.playlist) {
+    options.pageImage =
+      config.urlPrefix +
+      '/img/playlist/' +
+      options.user.id +
+      '_' +
+      options.playlistId;
   }
 }
 
