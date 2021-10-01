@@ -19,7 +19,24 @@ const LNK_URL_PREFIX = {
   igrm: 'instagram.com/',
 };
 
-/** @typedef {{}} PageGeneratorOptions */
+/** @typedef {{
+ *  id: string,
+ * }} Playlist */
+
+/** @typedef {{
+ *  user: {
+ *    pl: Array<Playlist>
+ *  },
+ *  uid: string,
+ *  playlistId: string | undefined,
+ * }} PageGeneratorInput */
+
+/** @typedef {{
+ *  prevPageInList: string | undefined,
+ *  nextPageInList: string | undefined,
+ * }} PageGeneratorOutput */
+
+/** @typedef { PageGeneratorInput & PageGeneratorOutput } PageGeneratorOptions */
 
 class PageGenerator {
   constructor(user, options) {
