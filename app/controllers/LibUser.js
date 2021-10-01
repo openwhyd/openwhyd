@@ -5,14 +5,6 @@
  **/
 
 var config = require('../models/config.js');
-const {
-  fetchPlaylists,
-  countSubscribers,
-  countSubscriptions,
-  fetchIsSubscribed,
-  fetchLikes,
-  fetchNbTracks,
-} = require('./LibUserData');
 const { PlaylistPageGenerator } = require('./PlaylistPageGenerator');
 const { ProfilePageGenerator } = require('./ProfilePageGenerator');
 
@@ -65,21 +57,6 @@ function renderUserLinks(lnk) {
     };
 }
 
-async function populateSidebarAndAdditionalPageElements(options) {
-  if (!options.after && !options.before) {
-    options.user.pl = await fetchPlaylists(options);
-    options.subscriptions = {
-      nbSubscribers: await countSubscribers(options),
-      nbSubscriptions: await countSubscriptions(options),
-    };
-    options.user.isSubscribed = await fetchIsSubscribed(options);
-    options.user.nbLikes = await fetchLikes(options);
-    const nbPosts = await fetchNbTracks(options);
-    options.user.nbTracks =
-      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
-  }
-}
-
 function populateCommonTemplateParameters(options, user) {
   options.pageUrl = options.pageUrl.replace(
     '/' + user.handle,
@@ -128,8 +105,6 @@ async function renderUserLibrary(lib, user) {
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
 
   const options = populateCommonTemplateParameters(lib.options, user);
-
-  await populateSidebarAndAdditionalPageElements(options);
 
   const pageGenerator = options.playlistId
     ? new PlaylistPageGenerator(options)

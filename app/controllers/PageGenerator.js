@@ -1,5 +1,13 @@
 const config = require('../models/config.js');
 var feedTemplate = require('../templates/feed.js');
+const {
+  fetchPlaylists,
+  countSubscribers,
+  countSubscriptions,
+  fetchIsSubscribed,
+  fetchLikes,
+  fetchNbTracks,
+} = require('./LibUserData');
 
 const bareFormats = new Set(['json', 'links']);
 
@@ -29,6 +37,22 @@ class PageGenerator {
     }
   }
 
+  async populateSidebarAndAdditionalPageElements() {
+    const options = this.options;
+    if (!options.after && !options.before) {
+      options.user.pl = await fetchPlaylists(options);
+      options.subscriptions = {
+        nbSubscribers: await countSubscribers(options),
+        nbSubscriptions: await countSubscriptions(options),
+      };
+      options.user.isSubscribed = await fetchIsSubscribed(options);
+      options.user.nbLikes = await fetchLikes(options);
+      const nbPosts = await fetchNbTracks(options);
+      options.user.nbTracks =
+        nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
+    }
+  }
+
   renderHtml(tracks, callback) {
     if (!this.options.format && !this.options.embedW) {
       this.options.customFeedTemplate = this.getCustomFeedTemplate();
@@ -38,6 +62,7 @@ class PageGenerator {
 
   async fetchAndRender() {
     try {
+      await this.populateSidebarAndAdditionalPageElements();
       const tracks = await this.prepareTemplateData();
       if (bareFormats.has(this.options.format)) return tracks;
       return new Promise((resolve) => this.renderHtml(tracks, resolve));
