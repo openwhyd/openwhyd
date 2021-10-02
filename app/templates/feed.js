@@ -55,6 +55,11 @@ loadTemplates();
 
 class FeedRenderingOptions {
   constructor(options) {
+    const ownProfile =
+      options.user &&
+      options.user.id &&
+      options.user.id == options.loggedUser.id;
+
     /** @type {{
      *    title: unknown,
      *    user: { id: unknown, name: unknown, img: unknown, bio: unknown, renderedBio: unknown, nbTracks: unknown, nbPosts: unknown, nbLikes: unknown }
@@ -87,6 +92,8 @@ class FeedRenderingOptions {
      *  }} */
     this.options = {
       ...options,
+      ownProfile,
+      bodyClass: (options.bodyClass || '') + (ownProfile ? ' ownProfile' : ''),
     };
   }
 
@@ -95,11 +102,7 @@ class FeedRenderingOptions {
   }
 
   isOwnProfile() {
-    return (
-      this.options.user &&
-      this.options.user.id &&
-      this.options.user.id == this.options.loggedUser.id
-    );
+    return this.options.ownProfile;
   }
 
   getPostsRenderingOptions() {
@@ -107,9 +110,6 @@ class FeedRenderingOptions {
       // TODO: return just what is needed by renderPostsAsync()
       ...this.options,
       isOwnProfile: this.isOwnProfile.bind(this),
-      getBodyClass: () =>
-        (this.options.bodyClass || '') +
-        (this.isOwnProfile() ? ' ownProfile' : ''),
     };
   }
 }
