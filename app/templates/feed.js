@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * userLibraryFeed template
  * renders a gallery/feed/timeline of posts, for a given user's category
@@ -51,7 +53,15 @@ async function loadTemplates() {
 
 loadTemplates();
 
-function prepareFeedVars(posts, options) {
+class FeedRenderingOptions {
+  constructor(options) {
+    this.options = options;
+  }
+}
+
+/** @param {FeedRenderingOptions} renderingOptions */
+function prepareFeedVars(posts, renderingOptions) {
+  const options = renderingOptions.options;
   options.bodyClass =
     (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : '');
 
@@ -165,7 +175,8 @@ function prepareFeedVars(posts, options) {
 
 exports.renderFeedAsync = function (posts, options, callback) {
   postsTemplate.renderPostsAsync(posts, options, function (postsHtml) {
-    var feedVars = prepareFeedVars(posts, options);
+    const feedRenderingOptions = new FeedRenderingOptions(options || {});
+    var feedVars = prepareFeedVars(posts, feedRenderingOptions);
     feedVars.posts = postsHtml;
 
     //loadTemplates(function(){
