@@ -63,7 +63,7 @@ class FeedRenderingOptions {
     /** @type {{
      *    title: unknown,
      *    user: { id: unknown, name: unknown, img: unknown, bio: unknown, renderedBio: unknown, nbTracks: unknown, nbPosts: unknown, nbLikes: unknown }
-     *    ownProfile: unknown
+     *    ownProfile: boolean
      *    subscriptions: unknown
      *    recentActivity: unknown
      *    nbPosts: unknown
@@ -103,14 +103,6 @@ class FeedRenderingOptions {
 
   isOwnProfile() {
     return this.options.ownProfile;
-  }
-
-  getPostsRenderingOptions() {
-    return {
-      // TODO: return just what is needed by renderPostsAsync()
-      ...this.options,
-      isOwnProfile: this.isOwnProfile.bind(this),
-    };
   }
 }
 
@@ -228,8 +220,7 @@ function prepareFeedVars(posts, renderingOptions) {
 
 exports.renderFeedAsync = function (posts, options, callback) {
   const feedRenderOpts = new FeedRenderingOptions(options || {});
-  const postsRenderOpts = feedRenderOpts.getPostsRenderingOptions();
-  postsTemplate.renderPostsAsync(posts, postsRenderOpts, function (postsHtml) {
+  postsTemplate.renderPostsAsync(posts, feedRenderOpts, function (postsHtml) {
     var feedVars = prepareFeedVars(posts, feedRenderOpts);
     feedVars.posts = postsHtml;
 
