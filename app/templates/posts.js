@@ -255,7 +255,6 @@ exports.renderPosts = function (posts, options) {
 
 /** @param {{
  *    isOwnProfile: () => boolean
- *    getBodyClass: () => string
  * }} options */
 exports.renderPostsAsync = function (posts, options, callback) {
   posts = posts || [];
