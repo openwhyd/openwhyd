@@ -88,6 +88,10 @@ class FeedRenderingOptions {
       ...options,
     };
   }
+
+  shouldRenderWholePageLayout() {
+    return !this.options.after && !this.options.before;
+  }
 }
 
 /** @param {FeedRenderingOptions} renderingOptions */
@@ -100,7 +104,7 @@ function prepareFeedVars(posts, renderingOptions) {
     userPrefs: (options.loggedUser || {}).pref || {},
     loggedUser: options.loggedUser,
     isUserLogged: options.loggedUser && options.loggedUser.id,
-    header: !options.after && !options.before,
+    header: renderingOptions.shouldRenderWholePageLayout(),
     emptyFeed:
       posts.length == 0 && !options.before
         ? { ownProfile: options.ownProfile }
