@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * Html-based template for rendering a feed of posts
  * @author adrienjoly, whyd
@@ -251,9 +253,11 @@ exports.renderPosts = function (posts, options) {
   });
 };
 
+
+/** @param {{
+ * }} options */
 exports.renderPostsAsync = function (posts, options, callback) {
   posts = posts || [];
-  options = options || {};
   options.loggedUser =
     options.loggedUser ||
     {
