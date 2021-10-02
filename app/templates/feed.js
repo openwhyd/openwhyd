@@ -55,6 +55,35 @@ loadTemplates();
 
 class FeedRenderingOptions {
   constructor(options) {
+    /** @type {{
+     *    title: unknown,
+     *    user: { id: unknown, name: unknown, img: unknown, bio: unknown, renderedBio: unknown, nbTracks: unknown, nbPosts: unknown, nbLikes: unknown }
+     *    ownProfile: unknown
+     *    subscriptions: unknown
+     *    recentActivity: unknown
+     *    nbPosts: unknown
+     *    globalFeed: unknown
+     *    homeFeed: unknown
+     *    tabTitle: unknown
+     *    loggedUser: { pref: unknown, id: unknown }
+     *    before: unknown
+     *    hasMore: unknown
+     *    playlist: { name: unknown }
+     *    nextPageInList: unknown
+     *    prevPageInList: unknown
+     *    friends: unknown
+     *    activity: unknown
+     *    playlists: unknown
+     *    nbPlaylists: unknown
+     *    showTracks: unknown
+     *    showPlaylists: unknown
+     *    showLikes: unknown
+     *    showActivity: unknown
+     *    showSubscribers: unknown
+     *    showSubscriptions: unknown
+     *    similarity: unknown
+     *    embedW: unknown
+     *  }} */
     this.options = {
       ...options,
     };
