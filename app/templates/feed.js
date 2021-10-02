@@ -55,7 +55,7 @@ loadTemplates();
 
 class FeedRenderingOptions {
   constructor(options) {
-    this.options = options;
+    this.options = { ...options };
   }
 }
 
