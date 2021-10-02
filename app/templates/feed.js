@@ -83,6 +83,7 @@ class FeedRenderingOptions {
      *    showSubscriptions: unknown
      *    similarity: unknown
      *    embedW: unknown
+     *    bodyClass: unknown
      *  }} */
     this.options = {
       ...options,
@@ -106,6 +107,9 @@ class FeedRenderingOptions {
       // TODO: return just what is needed by renderPostsAsync()
       ...this.options,
       isOwnProfile: this.isOwnProfile.bind(this),
+      getBodyClass: () =>
+        (this.options.bodyClass || '') +
+        (this.isOwnProfile() ? ' ownProfile' : ''),
     };
   }
 }
