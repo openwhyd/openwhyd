@@ -57,8 +57,6 @@ class FeedRenderingOptions {
   constructor(options) {
     this.options = {
       ...options,
-      bodyClass:
-        (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : ''),
     };
   }
 }

@@ -261,6 +261,8 @@ exports.renderPostsAsync = function (posts, options, callback) {
     };
   options.ownProfile =
     options.user && options.user.id && options.user.id == options.loggedUser.id;
+  options.bodyClass =
+    (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : '');
 
   var maxPosts =
     options.limit || (options.embedW ? MAX_POSTS_EMBED : MAX_POSTS);
