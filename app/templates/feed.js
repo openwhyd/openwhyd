@@ -55,15 +55,17 @@ loadTemplates();
 
 class FeedRenderingOptions {
   constructor(options) {
-    this.options = { ...options };
+    this.options = {
+      ...options,
+      bodyClass:
+        (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : ''),
+    };
   }
 }
 
 /** @param {FeedRenderingOptions} renderingOptions */
 function prepareFeedVars(posts, renderingOptions) {
   const options = renderingOptions.options;
-  options.bodyClass =
-    (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : '');
 
   var feedVars = {
     sideBox: templates['sideBox'].render(),
