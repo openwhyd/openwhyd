@@ -253,20 +253,43 @@ exports.renderPosts = function (posts, options) {
   });
 };
 
+/*
+ *    title: unknown,
+ *    user: { id: unknown, name: unknown, img: unknown, bio: unknown, renderedBio: unknown, nbTracks: unknown, nbPosts: unknown, nbLikes: unknown }
+ *    ownProfile: unknown
+ *    subscriptions: unknown
+ *    recentActivity: unknown
+ *    nbPosts: unknown
+ *    globalFeed: unknown
+ *    homeFeed: unknown
+ *    tabTitle: unknown
+ *    before: unknown
+ *    hasMore: unknown
+ *    playlist: { name: unknown }
+ *    nextPageInList: unknown
+ *    prevPageInList: unknown
+ *    friends: unknown
+ *    activity: unknown
+ *    playlists: unknown
+ *    nbPlaylists: unknown
+ *    showTracks: unknown
+ *    showPlaylists: unknown
+ *    showLikes: unknown
+ *    showActivity: unknown
+ *    showSubscribers: unknown
+ *    showSubscriptions: unknown
+ *    similarity: unknown
+ *    embedW: unknown
+ *    loggedUser: { pref: unknown, id: unknown }
+ */
 
 /** @param {{
+ *    isOwnProfile: () => boolean
  * }} options */
 exports.renderPostsAsync = function (posts, options, callback) {
   posts = posts || [];
-  options.loggedUser =
-    options.loggedUser ||
-    {
-      /*id:-1*/
-    };
-  options.ownProfile =
-    options.user && options.user.id && options.user.id == options.loggedUser.id;
   options.bodyClass =
-    (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : '');
+    (options.bodyClass || '') + (options.isOwnProfile() ? ' ownProfile' : '');
 
   var maxPosts =
     options.limit || (options.embedW ? MAX_POSTS_EMBED : MAX_POSTS);
@@ -305,7 +328,7 @@ exports.renderPostsAsync = function (posts, options, callback) {
             customTemplateFile: options.customTemplateFile,
             customImgHandler: options.customImgHandler,
             templateVars: options.templateVars,
-            ownProfile: options.ownProfile,
+            ownProfile: options.isOwnProfile(),
             displayVia: !!options.embedW,
             displayPlaylistName: options.displayPlaylistName,
           },

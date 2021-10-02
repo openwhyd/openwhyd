@@ -93,8 +93,20 @@ class FeedRenderingOptions {
     return !this.options.after && !this.options.before;
   }
 
+  isOwnProfile() {
+    return (
+      this.options.user &&
+      this.options.user.id &&
+      this.options.user.id == this.options.loggedUser.id
+    );
+  }
+
   getPostsRenderingOptions() {
-    return this.options; // TODO: return just what is needed by renderPostsAsync()
+    return {
+      // TODO: return just what is needed by renderPostsAsync()
+      ...this.options,
+      isOwnProfile: this.isOwnProfile.bind(this),
+    };
   }
 }
 
@@ -111,10 +123,10 @@ function prepareFeedVars(posts, renderingOptions) {
     header: renderingOptions.shouldRenderWholePageLayout(),
     emptyFeed:
       posts.length == 0 && !options.before
-        ? { ownProfile: options.ownProfile }
+        ? { ownProfile: renderingOptions.isOwnProfile() }
         : null,
     nbPosts: options.nbPosts || (options.user ? options.user.nbPosts : null),
-    ownProfile: options.ownProfile,
+    ownProfile: renderingOptions.isOwnProfile(),
     libRootUrl: '/stream',
     subscriptions: options.subscriptions, // = {nbSubscribers, nbSubscriptions}
     recentActivity: options.recentActivity,
