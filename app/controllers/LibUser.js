@@ -566,8 +566,8 @@ function renderUserLibrary(lib, user) {
       lib.renderJson(options.playlists);
     } else if (options.format == 'json') {
       lib.renderJson(feed);
-    } else if (options.after || options.before) {
-      lib.render({ html: feed });
+      // } else if (options.after || options.before) {
+      //   lib.render({ html: feed });
     } else
       lib.renderPage(
         user,
