@@ -92,6 +92,10 @@ class FeedRenderingOptions {
   shouldRenderWholePageLayout() {
     return !this.options.after && !this.options.before;
   }
+
+  getPostsRenderingOptions() {
+    return this.options; // TODO: return just what is needed by renderPostsAsync()
+  }
 }
 
 /** @param {FeedRenderingOptions} renderingOptions */
@@ -207,9 +211,10 @@ function prepareFeedVars(posts, renderingOptions) {
 }
 
 exports.renderFeedAsync = function (posts, options, callback) {
-  postsTemplate.renderPostsAsync(posts, options, function (postsHtml) {
-    const feedRenderingOptions = new FeedRenderingOptions(options || {});
-    var feedVars = prepareFeedVars(posts, feedRenderingOptions);
+  const feedRenderOpts = new FeedRenderingOptions(options || {});
+  const postsRenderOpts = feedRenderOpts.getPostsRenderingOptions();
+  postsTemplate.renderPostsAsync(posts, postsRenderOpts, function (postsHtml) {
+    var feedVars = prepareFeedVars(posts, feedRenderOpts);
     feedVars.posts = postsHtml;
 
     //loadTemplates(function(){
