@@ -396,10 +396,10 @@ function fetchAndRenderProfile(options, callback, process) {
     const proceed = () =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, process);
 
-    if (options.after || options.before)
+    /*if (options.after || options.before)
       // no page rendering required
       proceed();
-    else {
+    else*/ {
       // SIDEBAR
       //console.time("LibUser.fetchActivity");
       fetchActivity(options, function () {
