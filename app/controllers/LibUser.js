@@ -349,9 +349,10 @@ function fetchAndRenderProfile(options, callback, process) {
     };
     followModel.fetch({ tId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
-        options.hasMore = {
-          lastPid: params.skip + MAX_SUBSCRIPTIONS,
-        };
+        feedTemplate.populateNextPageUrl(
+          options,
+          params.skip + MAX_SUBSCRIPTIONS
+        );
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
       for (let i in subscr) subscr[i] = { id: subscr[i].uId };
@@ -375,9 +376,10 @@ function fetchAndRenderProfile(options, callback, process) {
     };
     followModel.fetch({ uId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
-        options.hasMore = {
-          lastPid: params.skip + MAX_SUBSCRIPTIONS,
-        };
+        feedTemplate.populateNextPageUrl(
+          options,
+          params.skip + MAX_SUBSCRIPTIONS
+        );
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
       for (let i in subscr) subscr[i] = { id: subscr[i].tId };
