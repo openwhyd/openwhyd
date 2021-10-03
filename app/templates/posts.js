@@ -268,12 +268,12 @@ exports.renderPostsAsync = function (posts, options, callback) {
   if (hasMore) {
     posts = posts.slice(0, maxPosts);
     var lastPost = posts[posts.length - 1];
-    options.hasMore = {
-      lastPid:
-        options.playlist && !isNaN(lastPost.order)
-          ? lastPost.order
-          : lastPost._id,
-    };
+    const lastPid =
+      options.playlist && !isNaN(lastPost.order)
+        ? lastPost.order
+        : lastPost._id;
+    const feedTemplate = require('../templates/feed.js'); // TODO: remove circular dependency
+    feedTemplate.populateNextPageUrl(options, lastPid);
   }
 
   function prepareAndRender(posts, options, cb) {
