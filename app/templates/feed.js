@@ -216,3 +216,5 @@ exports.renderFeedEmbed = function (feedHtml, options) {
 function mustRenderWholeProfilePage(options) {
   return !options.after && !options.before;
 }
+
+exports.mustRenderWholeProfilePage = mustRenderWholeProfilePage;

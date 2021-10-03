@@ -40,7 +40,10 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 }
 
 function prepareSidebar(uidList, options, cb) {
-  if (!options.after && !options.before && options.format != 'json') {
+  if (
+    feedTemplate.mustRenderWholeProfilePage(options) &&
+    options.format != 'json'
+  ) {
     //console.time("fetchRecentActivity");
     fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
       //console.timeEnd("fetchRecentActivity");
