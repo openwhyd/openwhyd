@@ -27,7 +27,7 @@ function fetchLikes(options) {
   );
 }
 
-function fetchStats(options) {
+function fetchSubscriptions(options) {
   return new Promise((resolve) =>
     followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
       followModel.countSubscribers(options.user.id, function (nbSubscribers) {
@@ -35,15 +35,21 @@ function fetchStats(options) {
           nbSubscriptions: nbSubscriptions,
           nbSubscribers: nbSubscribers,
         };
-        followModel.get(
-          { uId: options.loggedUser.id, tId: options.user.id },
-          function (err, res) {
-            options.user.isSubscribed = !!res;
-            resolve();
-          }
-        );
+        resolve();
       });
     })
+  );
+}
+
+function isSubscribed(options) {
+  return new Promise((resolve) =>
+    followModel.get(
+      { uId: options.loggedUser.id, tId: options.user.id },
+      function (err, res) {
+        options.user.isSubscribed = !!res;
+        resolve();
+      }
+    )
   );
 }
 
@@ -195,7 +201,8 @@ async function renderUserLibrary(lib, user) {
   if (feedOptions.mustRenderWholeProfilePage(options)) {
     // main tab: tracks (full layout to render, with sidebar)
     options.user.pl = await fetchPlaylists(options);
-    await fetchStats(options);
+    await fetchSubscriptions(options);
+    await isSubscribed(options);
     options.user.nbLikes = await fetchLikes(options);
     const nbPosts = await fetchNbTracks(options);
     options.user.nbTracks =
