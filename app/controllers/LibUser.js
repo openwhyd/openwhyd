@@ -17,8 +17,8 @@ const profileRenderer = require('./LibUserProfile.js');
 
 function fetchPlaylists(options, callback) {
   userModel.fetchPlaylists(options.user, {}, function (playlists) {
-    options.user.pl = playlists;
-    callback();
+    playlists;
+    callback(playlists);
   });
 }
 
@@ -196,7 +196,9 @@ async function renderUserLibrary(lib, user) {
 
   if (feedOptions.mustRenderWholeProfilePage(options)) {
     // main tab: tracks (full layout to render, with sidebar)
-    await new Promise((resolve) => fetchPlaylists(options, resolve));
+    options.user.pl = await new Promise((resolve) =>
+      fetchPlaylists(options, resolve)
+    );
     await new Promise((resolve) => fetchStats(options, resolve));
     await new Promise((resolve) => fetchLikes(options, resolve));
     await new Promise((resolve) => fetchNbTracks(options, resolve));
