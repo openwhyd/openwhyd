@@ -105,7 +105,7 @@ function fetchActivity(options, cb) {
   );
 }
 
-exports.prepareProfileRendering = function (options) {
+exports.prepareRendering = function (options) {
   options.customFeedTemplate = profileTemplateV2;
 };
 

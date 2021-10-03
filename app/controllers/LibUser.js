@@ -74,9 +74,8 @@ function fetchAndRender(options, callback) {
     ? callback
     : function (posts) {
         if (!options.format && !options.embedW) {
-          if (options.playlistId)
-            playlistRenderer.preparePlaylistRendering(options);
-          else profileRenderer.prepareProfileRendering(options);
+          if (options.playlistId) playlistRenderer.prepareRendering(options);
+          else profileRenderer.prepareRendering(options);
         }
         feedTemplate.renderFeedAsync(posts, options, callback);
       };

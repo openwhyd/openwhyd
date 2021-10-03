@@ -6,7 +6,7 @@ var playlistTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userPlaylistV2.html'
 );
 
-exports.preparePlaylistRendering = function (options) {
+exports.prepareRendering = function (options) {
   options.pageImage =
     config.urlPrefix +
     '/img/playlist/' +
