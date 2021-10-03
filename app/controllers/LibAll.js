@@ -37,7 +37,7 @@ function renderAllLibrary(lib) {
     );
   }
 
-  if (options.after || options.before)
+  if (!feedTemplate.mustRenderWholeProfilePage(options))
     renderFeed(function (feedHtml) {
       lib.render({ html: feedHtml });
     });

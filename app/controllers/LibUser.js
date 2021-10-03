@@ -396,7 +396,7 @@ function fetchAndRenderProfile(options, callback, process) {
     const proceed = () =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, process);
 
-    if (options.after || options.before)
+    if (!feedTemplate.mustRenderWholeProfilePage(options))
       // no page rendering required
       proceed();
     else {
@@ -566,7 +566,7 @@ function renderUserLibrary(lib, user) {
       lib.renderJson(options.playlists);
     } else if (options.format == 'json') {
       lib.renderJson(feed);
-    } else if (options.after || options.before) {
+    } else if (!feedTemplate.mustRenderWholeProfilePage(options)) {
       lib.render({ html: feed });
     } else
       lib.renderPage(

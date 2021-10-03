@@ -82,7 +82,8 @@ function renderFriendsLibrary(lib) {
 
   renderFriendsFeed(options, function (res) {
     if (options.format == 'json') lib.renderJson(res);
-    else if (options.after || options.before) lib.render({ html: res });
+    else if (!feedTemplate.mustRenderWholeProfilePage(options))
+      lib.render({ html: res });
     else {
       var /*options.mixpanelCode*/ feedHtml =
           [
