@@ -10,14 +10,8 @@ var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
 var feedTemplate = require('../templates/feed.js');
 const feedOptions = require('../templates/feedOptions.js');
-const {
-  preparePlaylistRendering,
-  fetchAndRenderPlaylist,
-} = require('./LibUserPlaylist.js');
-const {
-  prepareProfileRendering,
-  fetchAndRenderProfile,
-} = require('./LibUserProfile.js');
+const playlistRenderer = require('./LibUserPlaylist.js');
+const profileRenderer = require('./LibUserProfile.js');
 
 // DATA FETCHING HELPERS
 
@@ -80,8 +74,9 @@ function fetchAndRender(options, callback) {
     ? callback
     : function (posts) {
         if (!options.format && !options.embedW) {
-          if (options.playlistId) preparePlaylistRendering(options);
-          else prepareProfileRendering(options);
+          if (options.playlistId)
+            playlistRenderer.preparePlaylistRendering(options);
+          else profileRenderer.prepareProfileRendering(options);
         }
         feedTemplate.renderFeedAsync(posts, options, callback);
       };
@@ -102,11 +97,9 @@ function fetchAndRender(options, callback) {
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
 
-  (options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(
-    options,
-    callback,
-    process
-  );
+  (options.playlistId
+    ? playlistRenderer.fetchAndRenderPlaylist
+    : profileRenderer.fetchAndRenderProfile)(options, callback, process);
 }
 
 // MAIN FUNCTION
