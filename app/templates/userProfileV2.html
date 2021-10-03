@@ -388,7 +388,7 @@
       <!-- COMMON ENDING CODE -->
 
       {{#hasMore}}
-      <div class="btnLoadMore" onclick="loadMore()">
+      <div class="btnLoadMore" onclick="loadMore(); return false;" href="{{nextWholePageUrl}}">
         <div>&nbsp;</div>
         <span>Load more</span>
       </div>
