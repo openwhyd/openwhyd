@@ -17,8 +17,6 @@ var MAX_FRIENDS = 6;
 var MAX_SUBSCRIPTIONS = 50;
 var MAX_HISTORY = 3;
 
-exports.profileTemplateV2 = profileTemplateV2;
-
 function renderFriends(friends) {
   for (let i in friends) {
     friends[i].url = '/u/' + friends[i].id;
@@ -106,6 +104,10 @@ function fetchActivity(options, cb) {
     }
   );
 }
+
+exports.prepareProfileRendering = function (options) {
+  options.customFeedTemplate = profileTemplateV2;
+};
 
 exports.fetchAndRenderProfile = function (options, callback, process) {
   // TODO: remove process => use callback only

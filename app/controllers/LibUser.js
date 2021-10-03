@@ -11,12 +11,11 @@ var postModel = require('../models/post.js');
 var feedTemplate = require('../templates/feed.js');
 const feedOptions = require('../templates/feedOptions.js');
 const {
-  playlistTemplateV2,
   preparePlaylistRendering,
   fetchAndRenderPlaylist,
 } = require('./LibUserPlaylist.js');
 const {
-  profileTemplateV2,
+  prepareProfileRendering,
   fetchAndRenderProfile,
 } = require('./LibUserProfile.js');
 
@@ -82,7 +81,7 @@ function fetchAndRender(options, callback) {
     : function (posts) {
         if (!options.format && !options.embedW) {
           if (options.playlistId) preparePlaylistRendering(options);
-          else options.customFeedTemplate = profileTemplateV2;
+          else prepareProfileRendering(options);
         }
         feedTemplate.renderFeedAsync(posts, options, callback);
       };
