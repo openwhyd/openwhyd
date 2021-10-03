@@ -21,37 +21,43 @@ function fetchPlaylists(options) {
   );
 }
 
-function fetchLikes(options, callback) {
-  postModel.countLovedPosts(options.user.id, function (count) {
-    options.user.nbLikes = count;
-    callback();
-  });
+function fetchLikes(options) {
+  return new Promise((resolve) =>
+    postModel.countLovedPosts(options.user.id, function (count) {
+      options.user.nbLikes = count;
+      resolve();
+    })
+  );
 }
 
-function fetchStats(options, callback) {
-  followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
-    followModel.countSubscribers(options.user.id, function (nbSubscribers) {
-      options.subscriptions = {
-        nbSubscriptions: nbSubscriptions,
-        nbSubscribers: nbSubscribers,
-      };
-      followModel.get(
-        { uId: options.loggedUser.id, tId: options.user.id },
-        function (err, res) {
-          options.user.isSubscribed = !!res;
-          callback();
-        }
-      );
-    });
-  });
+function fetchStats(options) {
+  return new Promise((resolve) =>
+    followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
+      followModel.countSubscribers(options.user.id, function (nbSubscribers) {
+        options.subscriptions = {
+          nbSubscriptions: nbSubscriptions,
+          nbSubscribers: nbSubscribers,
+        };
+        followModel.get(
+          { uId: options.loggedUser.id, tId: options.user.id },
+          function (err, res) {
+            options.user.isSubscribed = !!res;
+            resolve();
+          }
+        );
+      });
+    })
+  );
 }
 
-function fetchNbTracks(options, callback) {
-  postModel.countUserPosts(options.user.id, function (nbPosts) {
-    options.user.nbTracks =
-      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
-    callback();
-  });
+function fetchNbTracks(options) {
+  return new Promise((resolve) =>
+    postModel.countUserPosts(options.user.id, function (nbPosts) {
+      options.user.nbTracks =
+        nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
+      resolve();
+    })
+  );
 }
 
 // PAGE RENDERING
@@ -196,9 +202,9 @@ async function renderUserLibrary(lib, user) {
   if (feedOptions.mustRenderWholeProfilePage(options)) {
     // main tab: tracks (full layout to render, with sidebar)
     options.user.pl = await fetchPlaylists(options);
-    await new Promise((resolve) => fetchStats(options, resolve));
-    await new Promise((resolve) => fetchLikes(options, resolve));
-    await new Promise((resolve) => fetchNbTracks(options, resolve));
+    await fetchStats(options);
+    await fetchLikes(options);
+    await fetchNbTracks(options);
   }
 
   const res = await new Promise((resolve) => fetchAndRender(options, resolve));
