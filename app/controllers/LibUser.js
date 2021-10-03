@@ -84,7 +84,9 @@ function fetchAndRender(options, callback) {
     if (!options.format && !options.embedW) {
       renderer.prepareRendering(options);
     }
-    feedTemplate.renderFeedAsync(posts, options, callback);
+    feedTemplate.renderFeedAsync(posts, options, (renderedFeed) =>
+      callback(renderedFeed)
+    );
   });
 }
 
