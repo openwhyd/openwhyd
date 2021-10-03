@@ -97,9 +97,7 @@ function fetchAndRender(options, callback) {
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
 
-  (options.playlistId
-    ? playlistRenderer.fetchAndRenderPlaylist
-    : profileRenderer.fetchAndRenderProfile)(options, callback, process);
+  renderer.fetchAndRender(options, callback, process);
 }
 
 // MAIN FUNCTION

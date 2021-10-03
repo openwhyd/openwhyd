@@ -109,7 +109,7 @@ exports.prepareRendering = function (options) {
   options.customFeedTemplate = profileTemplateV2;
 };
 
-exports.fetchAndRenderProfile = function (options, callback, process) {
+exports.fetchAndRender = function (options, callback, process) {
   // TODO: remove process => use callback only
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;

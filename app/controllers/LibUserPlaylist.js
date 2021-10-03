@@ -16,7 +16,7 @@ exports.prepareRendering = function (options) {
   options.customFeedTemplate = playlistTemplateV2;
 };
 
-exports.fetchAndRenderPlaylist = function (options, callback, process) {
+exports.fetchAndRender = function (options, callback, process) {
   // TODO: remove process => use callback only
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
