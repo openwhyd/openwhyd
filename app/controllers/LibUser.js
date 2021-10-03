@@ -67,27 +67,29 @@ function generateMixpanelCode(options) {
 
 var bareFormats = new Set(['json', 'links']);
 
-function fetchAndRender(options, callback) {
+function fetchAndRender(options) {
   options.bodyClass = '';
 
   const renderer = options.playlistId ? playlistRenderer : profileRenderer;
 
   options.fetchParams = preparePaginationParameters(options);
 
-  renderer.fetchAndRender(options, (error, posts) => {
-    if (error) {
-      return callback(error);
-    }
-    if (bareFormats.has(options.format)) {
-      return callback(posts);
-    }
-    if (!options.format && !options.embedW) {
-      renderer.prepareRendering(options);
-    }
-    feedTemplate.renderFeedAsync(posts, options, (renderedFeed) =>
-      callback(renderedFeed)
-    );
-  });
+  return new Promise((resolve) =>
+    renderer.fetchAndRender(options, (error, posts) => {
+      if (error) {
+        return resolve(error);
+      }
+      if (bareFormats.has(options.format)) {
+        return resolve(posts);
+      }
+      if (!options.format && !options.embedW) {
+        renderer.prepareRendering(options);
+      }
+      feedTemplate.renderFeedAsync(posts, options, (renderedFeed) =>
+        resolve(renderedFeed)
+      );
+    })
+  );
 }
 
 // MAIN FUNCTION
@@ -207,7 +209,7 @@ async function renderUserLibrary(lib, user) {
       nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
   }
 
-  const res = await new Promise((resolve) => fetchAndRender(options, resolve));
+  const res = await fetchAndRender(options);
   await new Promise((resolve) => renderResponse(res, resolve));
 }
 
