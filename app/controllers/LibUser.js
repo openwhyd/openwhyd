@@ -20,9 +20,7 @@ var templateLoader = require('../templates/templateLoader.js');
 var profileTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userProfileV2.html'
 );
-var playlistTemplateV2 = templateLoader.loadTemplate(
-  'app/templates/userPlaylistV2.html'
-);
+const { playlistTemplateV2 } = require('./LibUserPlaylist.js');
 
 var MAX_PLAYLISTS_SIDE = 4;
 var MAX_FRIENDS = 6;
@@ -170,6 +168,7 @@ function populateUsers(subscr, options, cb) {
 }
 
 function fetchAndRenderPlaylist(options, callback, process) {
+  // TODO: move to LibUserPlaylist.js
   // TODO: remove process => use callback only
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
