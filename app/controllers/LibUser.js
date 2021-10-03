@@ -70,12 +70,13 @@ var bareFormats = new Set(['json', 'links']);
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
 
+  const renderer = options.playlistId ? playlistRenderer : profileRenderer;
+
   var process = bareFormats.has(options.format)
     ? callback
     : function (posts) {
         if (!options.format && !options.embedW) {
-          if (options.playlistId) playlistRenderer.prepareRendering(options);
-          else profileRenderer.prepareRendering(options);
+          renderer.prepareRendering(options);
         }
         feedTemplate.renderFeedAsync(posts, options, callback);
       };
