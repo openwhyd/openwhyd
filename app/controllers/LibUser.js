@@ -55,14 +55,22 @@ function fetchNbTracks(options) {
   );
 }
 
-// PAGE RENDERING
-
-function generateMixpanelCode(options) {
-  return [
-    '<script>',
-    ' window.Whyd.tracking.log("Visit profile", "' + options.uid + '");',
-    '</script>',
-  ].join('\n');
+function preparePaginationParameters(options) {
+  const fetchParams = {
+    after: options.after,
+    before: options.before,
+    limit: options.limit,
+  };
+  if (options.embedW) fetchParams.limit = config.nbTracksPerPlaylistEmbed;
+  else if (options.limit && typeof options.limit !== 'number') {
+    if (typeof options.limit === 'string')
+      fetchParams.limit = parseInt(options.limit);
+    else if (typeof options.limit === 'object' && options.limit.push)
+      fetchParams.limit = parseInt(options.limit.pop());
+    // keep only the last value
+    // see https://github.com/openwhyd/openwhyd/issues/89
+  }
+  return fetchParams;
 }
 
 var bareFormats = new Set(['json', 'links']);
@@ -92,7 +100,15 @@ function fetchAndRender(options) {
   );
 }
 
-// MAIN FUNCTION
+// PAGE RENDERING
+
+function generateMixpanelCode(options) {
+  return [
+    '<script>',
+    ' window.Whyd.tracking.log("Visit profile", "' + options.uid + '");',
+    '</script>',
+  ].join('\n');
+}
 
 var LNK_URL_PREFIX = {
   fb: 'facebook.com/',
@@ -101,24 +117,6 @@ var LNK_URL_PREFIX = {
   yt: 'youtube.com/user/',
   igrm: 'instagram.com/',
 };
-
-function preparePaginationParameters(options) {
-  const fetchParams = {
-    after: options.after,
-    before: options.before,
-    limit: options.limit,
-  };
-  if (options.embedW) fetchParams.limit = config.nbTracksPerPlaylistEmbed;
-  else if (options.limit && typeof options.limit !== 'number') {
-    if (typeof options.limit === 'string')
-      fetchParams.limit = parseInt(options.limit);
-    else if (typeof options.limit === 'object' && options.limit.push)
-      fetchParams.limit = parseInt(options.limit.pop());
-    // keep only the last value
-    // see https://github.com/openwhyd/openwhyd/issues/89
-  }
-  return fetchParams;
-}
 
 function renderUserLinks(lnk) {
   // clean social links
@@ -182,6 +180,8 @@ function renderResponse(lib, feed, options) {
       generateMixpanelCode(options) + feed
     );
 }
+
+// MAIN FUNCTION
 
 async function renderUserLibrary(lib, user) {
   var options = lib.options;
