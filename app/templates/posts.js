@@ -269,6 +269,7 @@ exports.renderPostsAsync = function (posts, options, callback) {
     posts = posts.slice(0, maxPosts);
     var lastPost = posts[posts.length - 1];
     options.hasMore = {
+      // TODO: pass URL to whole profile page here
       lastPid:
         options.playlist && !isNaN(lastPost.order)
           ? lastPost.order
