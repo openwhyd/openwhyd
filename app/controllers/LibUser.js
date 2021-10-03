@@ -153,6 +153,36 @@ function renderUserLinks(lnk) {
     };
 }
 
+function renderResponse(lib, feed, options) {
+  if (options.callback) {
+    var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
+    lib.renderOther(
+      safeCallback + '(' + JSON.stringify(feed) + ')',
+      'application/javascript'
+    );
+  } else if (options.format == 'links') {
+    lib.renderOther(
+      feed
+        .map(function (p) {
+          return config.translateEidToUrl((p || {}).eId);
+        })
+        .join('\n'),
+      'text/text'
+    );
+  } else if (options.showPlaylists && options.format == 'json') {
+    lib.renderJson(options.playlists);
+  } else if (options.format == 'json') {
+    lib.renderJson(feed);
+  } else if (!feedOptions.mustRenderWholeProfilePage(options)) {
+    lib.render({ html: feed });
+  } else
+    lib.renderPage(
+      options.user,
+      null /*sidebarHtml*/,
+      generateMixpanelCode(options) + feed
+    );
+}
+
 async function renderUserLibrary(lib, user) {
   var options = lib.options;
 
@@ -168,36 +198,6 @@ async function renderUserLibrary(lib, user) {
 
   if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
 
-  function renderResponse(feed) {
-    if (options.callback) {
-      var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
-      lib.renderOther(
-        safeCallback + '(' + JSON.stringify(feed) + ')',
-        'application/javascript'
-      );
-    } else if (options.format == 'links') {
-      lib.renderOther(
-        feed
-          .map(function (p) {
-            return config.translateEidToUrl((p || {}).eId);
-          })
-          .join('\n'),
-        'text/text'
-      );
-    } else if (options.showPlaylists && options.format == 'json') {
-      lib.renderJson(options.playlists);
-    } else if (options.format == 'json') {
-      lib.renderJson(feed);
-    } else if (!feedOptions.mustRenderWholeProfilePage(options)) {
-      lib.render({ html: feed });
-    } else
-      lib.renderPage(
-        user,
-        null /*sidebarHtml*/,
-        generateMixpanelCode(options) + feed
-      );
-  }
-
   if (feedOptions.mustRenderWholeProfilePage(options)) {
     // main tab: tracks (full layout to render, with sidebar)
     options.user.pl = await fetchPlaylists(options);
@@ -210,7 +210,7 @@ async function renderUserLibrary(lib, user) {
   }
 
   const res = await fetchAndRender(options);
-  renderResponse(res); // calls lib.render*(), depending on options
+  renderResponse(lib, res, options); // calls lib.render*(), depending on options
 }
 
 exports.render = renderUserLibrary;
