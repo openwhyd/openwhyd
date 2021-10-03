@@ -155,7 +155,6 @@ function renderUserLibrary(lib, user) {
 
   options.uid = '' + user._id;
   options.user = user;
-  options.displayPlaylistName = !options.playlistId;
 
   if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
 

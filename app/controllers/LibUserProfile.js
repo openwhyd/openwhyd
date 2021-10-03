@@ -107,6 +107,7 @@ function fetchActivity(options, cb) {
 
 exports.prepareRendering = function (options) {
   options.customFeedTemplate = profileTemplateV2;
+  options.displayPlaylistName = true;
 };
 
 exports.fetchAndRender = function (options, callback, process) {
