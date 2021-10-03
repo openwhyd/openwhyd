@@ -72,15 +72,6 @@ function fetchAndRender(options, callback) {
 
   const renderer = options.playlistId ? playlistRenderer : profileRenderer;
 
-  var process = bareFormats.has(options.format)
-    ? callback
-    : function (posts) {
-        if (!options.format && !options.embedW) {
-          renderer.prepareRendering(options);
-        }
-        feedTemplate.renderFeedAsync(posts, options, callback);
-      };
-
   options.fetchParams = {
     after: options.after,
     before: options.before,
@@ -97,7 +88,18 @@ function fetchAndRender(options, callback) {
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
 
-  renderer.fetchAndRender(options, callback, process);
+  renderer.fetchAndRender(
+    options,
+    callback,
+    bareFormats.has(options.format)
+      ? callback
+      : function (posts) {
+          if (!options.format && !options.embedW) {
+            renderer.prepareRendering(options);
+          }
+          feedTemplate.renderFeedAsync(posts, options, callback);
+        }
+  );
 }
 
 // MAIN FUNCTION
