@@ -6,6 +6,7 @@ var postModel = require('../models/post.js');
 var activityModel = require('../models/activity.js');
 var activityController = require('../controllers/recentActivity.js');
 var feedTemplate = require('../templates/feed.js');
+var postsTemplate = require('../templates/posts.js');
 var uiSnippets = require('../templates/uiSnippets.js');
 
 var templateLoader = require('../templates/templateLoader.js');
@@ -158,9 +159,10 @@ exports.fetchAndRender = function (options, callback) {
               }
             //console.log("ACTIVITY result", result.recentActivity);
             options.showActivity = result.recentActivity;
-            if (result.hasMore)
-              options.hasMore = { lastPid: result.hasMore.last_id };
-            else {
+            if (result.hasMore) {
+              const lastPid = result.hasMore.last_id;
+              postsTemplate.populateNextPageUrl(options, lastPid);
+            } else {
               var creation = mongodb.ObjectId(options.user.id);
               options.showActivity.items.push({
                 _id: creation,
@@ -190,9 +192,8 @@ exports.fetchAndRender = function (options, callback) {
     };
     followModel.fetch({ tId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
-        options.hasMore = {
-          lastPid: params.skip + MAX_SUBSCRIPTIONS,
-        };
+        const lastPid = params.skip + MAX_SUBSCRIPTIONS;
+        postsTemplate.populateNextPageUrl(options, lastPid);
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
       for (let i in subscr) subscr[i] = { id: subscr[i].uId };
@@ -216,9 +217,8 @@ exports.fetchAndRender = function (options, callback) {
     };
     followModel.fetch({ uId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
-        options.hasMore = {
-          lastPid: params.skip + MAX_SUBSCRIPTIONS,
-        };
+        const lastPid = params.skip + MAX_SUBSCRIPTIONS;
+        postsTemplate.populateNextPageUrl(options, lastPid);
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
       for (let i in subscr) subscr[i] = { id: subscr[i].tId };
