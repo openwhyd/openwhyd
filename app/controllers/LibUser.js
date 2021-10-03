@@ -90,15 +90,16 @@ function fetchAndRender(options, callback) {
 
   renderer.fetchAndRender(
     options,
-    callback,
-    bareFormats.has(options.format)
-      ? callback
-      : function (posts) {
-          if (!options.format && !options.embedW) {
-            renderer.prepareRendering(options);
-          }
-          feedTemplate.renderFeedAsync(posts, options, callback);
-        }
+    (errorOrPosts) => callback(errorOrPosts),
+    (posts) => {
+      if (bareFormats.has(options.format)) {
+        return callback(posts);
+      }
+      if (!options.format && !options.embedW) {
+        renderer.prepareRendering(options);
+      }
+      feedTemplate.renderFeedAsync(posts, options, callback);
+    }
   );
 }
 
