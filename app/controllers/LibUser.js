@@ -5,55 +5,12 @@
  **/
 
 var config = require('../models/config.js');
-var userModel = require('../models/user.js');
-var followModel = require('../models/follow.js');
-var postModel = require('../models/post.js');
 var feedTemplate = require('../templates/feed.js');
 const feedOptions = require('../templates/feedOptions.js');
 const playlistRenderer = require('./LibUserPlaylist.js');
 const profileRenderer = require('./LibUserProfile.js');
 
 // DATA FETCHING HELPERS
-
-function fetchPlaylists(options) {
-  return new Promise((resolve) =>
-    userModel.fetchPlaylists(options.user, {}, resolve)
-  );
-}
-
-function fetchLikes(options) {
-  return new Promise((resolve) =>
-    postModel.countLovedPosts(options.user.id, resolve)
-  );
-}
-
-function fetchSubscriptions(options) {
-  return new Promise((resolve) =>
-    followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
-      followModel.countSubscribers(options.user.id, function (nbSubscribers) {
-        resolve({
-          nbSubscriptions: nbSubscriptions,
-          nbSubscribers: nbSubscribers,
-        });
-      });
-    })
-  );
-}
-
-function isSubscribed(options) {
-  return new Promise((resolve) =>
-    followModel.get(
-      { uId: options.loggedUser.id, tId: options.user.id },
-      (err, res) => resolve(res)
-    )
-  );
-}
-
-function fetchNbTracks(options) {
-  return new Promise((resolve) =>
-    postModel.countUserPosts(options.user.id, resolve)
-  );
-}
 
 function preparePaginationParameters(options) {
   const fetchParams = {
@@ -200,13 +157,7 @@ async function renderUserLibrary(lib, user) {
 
   if (feedOptions.mustRenderWholeProfilePage(options)) {
     // main tab: tracks (full layout to render, with sidebar)
-    options.user.pl = await fetchPlaylists(options);
-    options.subscriptions = await fetchSubscriptions(options);
-    options.user.isSubscribed = !!(await isSubscribed(options));
-    options.user.nbLikes = await fetchLikes(options);
-    const nbPosts = await fetchNbTracks(options);
-    options.user.nbTracks =
-      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
+    await feedOptions.populateWholeProfilePage(options);
   }
 
   const res = await fetchAndRender(options);
