@@ -316,9 +316,10 @@ function fetchAndRenderProfile(options, callback, process) {
               }
             //console.log("ACTIVITY result", result.recentActivity);
             options.showActivity = result.recentActivity;
-            if (result.hasMore)
-              options.hasMore = { lastPid: result.hasMore.last_id };
-            else {
+            if (result.hasMore) {
+              const lastPid = result.hasMore.last_id;
+              populateNextPageUrl(options, lastPid);
+            } else {
               var creation = mongodb.ObjectId(options.user.id);
               options.showActivity.items.push({
                 _id: creation,
@@ -436,6 +437,10 @@ function fetchAndRenderProfile(options, callback, process) {
 }
 
 var bareFormats = new Set(['json', 'links']);
+
+function populateNextPageUrl(options, lastPid) {
+  options.hasMore = { lastPid };
+}
 
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
