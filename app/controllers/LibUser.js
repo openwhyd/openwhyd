@@ -88,19 +88,18 @@ function fetchAndRender(options, callback) {
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
 
-  renderer.fetchAndRender(
-    options,
-    (error, posts) => callback(error),
-    (posts) => {
-      if (bareFormats.has(options.format)) {
-        return callback(posts);
-      }
-      if (!options.format && !options.embedW) {
-        renderer.prepareRendering(options);
-      }
-      feedTemplate.renderFeedAsync(posts, options, callback);
+  renderer.fetchAndRender(options, (error, posts) => {
+    if (error) {
+      return callback(error);
     }
-  );
+    if (bareFormats.has(options.format)) {
+      return callback(posts);
+    }
+    if (!options.format && !options.embedW) {
+      renderer.prepareRendering(options);
+    }
+    feedTemplate.renderFeedAsync(posts, options, callback);
+  });
 }
 
 // MAIN FUNCTION
