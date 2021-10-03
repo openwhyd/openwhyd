@@ -90,7 +90,7 @@ function fetchAndRender(options, callback) {
 
   renderer.fetchAndRender(
     options,
-    (error, posts) => callback(error || posts),
+    (error, posts) => callback(error),
     (posts) => {
       if (bareFormats.has(options.format)) {
         return callback(posts);
