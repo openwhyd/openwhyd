@@ -9,6 +9,7 @@ var postModel = require('../models/post.js');
 var commentModel = require('../models/comment.js');
 var templateLoader = require('../templates/templateLoader.js');
 var template = templateLoader.loadTemplate('app/templates/posts.html');
+const feedOptions = require('../templates/feedOptions.js');
 
 var getUserNameFromId = require('../models/mongodb.js').getUserNameFromId;
 
@@ -272,8 +273,7 @@ exports.renderPostsAsync = function (posts, options, callback) {
       options.playlist && !isNaN(lastPost.order)
         ? lastPost.order
         : lastPost._id;
-    const feedTemplate = require('../templates/feed.js'); // TODO: remove circular dependency
-    feedTemplate.populateNextPageUrl(options, lastPid);
+    feedOptions.populateNextPageUrl(options, lastPid);
   }
 
   function prepareAndRender(posts, options, cb) {

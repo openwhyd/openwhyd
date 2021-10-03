@@ -8,6 +8,7 @@ var config = require('../models/config.js');
 var postsTemplate = require('../templates/posts.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 var templateLoader = require('../templates/templateLoader.js');
+const feedOptions = require('../templates/feedOptions.js');
 
 var FUNNY_EMAILS = [
   'steve.jobs@heaven.org',
@@ -61,7 +62,7 @@ function prepareFeedVars(posts, options) {
     userPrefs: (options.loggedUser || {}).pref || {},
     loggedUser: options.loggedUser,
     isUserLogged: options.loggedUser && options.loggedUser.id,
-    header: mustRenderWholeProfilePage(options),
+    header: feedOptions.mustRenderWholeProfilePage(options),
     emptyFeed:
       posts.length == 0 && !options.before
         ? { ownProfile: options.ownProfile }
@@ -212,15 +213,3 @@ exports.renderFeedEmbed = function (feedHtml, options) {
   options.js.push('jquery.tinyscrollbar.min.js'); // http://baijs.nl/tinyscrollbar/
   return mainTemplate.renderWhydFrame(feedHtml, options);
 };
-
-function mustRenderWholeProfilePage(options) {
-  return !options.after && !options.before;
-}
-
-exports.mustRenderWholeProfilePage = mustRenderWholeProfilePage;
-
-function populateNextPageUrl(options, lastPid) {
-  options.hasMore = { lastPid };
-}
-
-exports.populateNextPageUrl = populateNextPageUrl;

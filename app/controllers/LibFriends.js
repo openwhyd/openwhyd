@@ -8,6 +8,7 @@ var postModel = require('../models/post.js');
 var followModel = require('../models/follow.js');
 var activityModel = require('../models/activity.js');
 var feedTemplate = require('../templates/feed.js');
+const feedOptions = require('../templates/feedOptions.js');
 
 var HISTORY_LIMIT = 3;
 
@@ -41,7 +42,7 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 
 function prepareSidebar(uidList, options, cb) {
   if (
-    feedTemplate.mustRenderWholeProfilePage(options) &&
+    feedOptions.mustRenderWholeProfilePage(options) &&
     options.format != 'json'
   ) {
     //console.time("fetchRecentActivity");
@@ -82,7 +83,7 @@ function renderFriendsLibrary(lib) {
 
   renderFriendsFeed(options, function (res) {
     if (options.format == 'json') lib.renderJson(res);
-    else if (!feedTemplate.mustRenderWholeProfilePage(options))
+    else if (!feedOptions.mustRenderWholeProfilePage(options))
       lib.render({ html: res });
     else {
       var /*options.mixpanelCode*/ feedHtml =

@@ -7,6 +7,7 @@
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
 var feedTemplate = require('../templates/feed.js');
+var feedOptions = require('../templates/feedOptions.js');
 
 function makeUserList() {
   var userList = [];
@@ -37,7 +38,7 @@ function renderAllLibrary(lib) {
     );
   }
 
-  if (!feedTemplate.mustRenderWholeProfilePage(options))
+  if (!feedOptions.mustRenderWholeProfilePage(options))
     renderFeed(function (feedHtml) {
       lib.render({ html: feedHtml });
     });

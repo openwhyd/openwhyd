@@ -13,6 +13,7 @@ var postModel = require('../models/post.js');
 var activityModel = require('../models/activity.js');
 var activityController = require('../controllers/recentActivity.js');
 var feedTemplate = require('../templates/feed.js');
+const feedOptions = require('../templates/feedOptions.js');
 var uiSnippets = require('../templates/uiSnippets.js');
 
 var templateLoader = require('../templates/templateLoader.js');
@@ -318,7 +319,7 @@ function fetchAndRenderProfile(options, callback, process) {
             options.showActivity = result.recentActivity;
             if (result.hasMore) {
               const lastPid = result.hasMore.last_id;
-              feedTemplate.populateNextPageUrl(options, lastPid);
+              feedOptions.populateNextPageUrl(options, lastPid);
             } else {
               var creation = mongodb.ObjectId(options.user.id);
               options.showActivity.items.push({
@@ -349,7 +350,7 @@ function fetchAndRenderProfile(options, callback, process) {
     };
     followModel.fetch({ tId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
-        feedTemplate.populateNextPageUrl(
+        feedOptions.populateNextPageUrl(
           options,
           params.skip + MAX_SUBSCRIPTIONS
         );
@@ -376,7 +377,7 @@ function fetchAndRenderProfile(options, callback, process) {
     };
     followModel.fetch({ uId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
-        feedTemplate.populateNextPageUrl(
+        feedOptions.populateNextPageUrl(
           options,
           params.skip + MAX_SUBSCRIPTIONS
         );
@@ -399,7 +400,7 @@ function fetchAndRenderProfile(options, callback, process) {
     const proceed = () =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, process);
 
-    if (!feedTemplate.mustRenderWholeProfilePage(options))
+    if (!feedOptions.mustRenderWholeProfilePage(options))
       // no page rendering required
       proceed();
     else {
@@ -569,7 +570,7 @@ function renderUserLibrary(lib, user) {
       lib.renderJson(options.playlists);
     } else if (options.format == 'json') {
       lib.renderJson(feed);
-    } else if (!feedTemplate.mustRenderWholeProfilePage(options)) {
+    } else if (!feedOptions.mustRenderWholeProfilePage(options)) {
       lib.render({ html: feed });
     } else
       lib.renderPage(
@@ -583,7 +584,7 @@ function renderUserLibrary(lib, user) {
   var fcts = [fetchAndRender, renderResponse];
 
   // prepend required fetching operations in head of the call chain
-  if (feedTemplate.mustRenderWholeProfilePage(options))
+  if (feedOptions.mustRenderWholeProfilePage(options))
     // main tab: tracks (full layout to render, with sidebar)
     fcts = [
       fetchPlaylists,
