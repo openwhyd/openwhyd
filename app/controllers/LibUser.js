@@ -19,11 +19,7 @@ const {
   playlistTemplateV2,
   fetchAndRenderPlaylist,
 } = require('./LibUserPlaylist.js');
-
-var templateLoader = require('../templates/templateLoader.js');
-var profileTemplateV2 = templateLoader.loadTemplate(
-  'app/templates/userProfileV2.html'
-);
+const { profileTemplateV2 } = require('./LibUserProfile.js');
 
 var MAX_PLAYLISTS_SIDE = 4;
 var MAX_FRIENDS = 6;
