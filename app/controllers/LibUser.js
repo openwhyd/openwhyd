@@ -210,7 +210,7 @@ async function renderUserLibrary(lib, user) {
   }
 
   const res = await fetchAndRender(options);
-  await new Promise((resolve) => renderResponse(res, resolve));
+  renderResponse(res); // calls lib.render*(), depending on options
 }
 
 exports.render = renderUserLibrary;
