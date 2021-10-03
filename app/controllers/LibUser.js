@@ -15,12 +15,15 @@ var activityController = require('../controllers/recentActivity.js');
 var feedTemplate = require('../templates/feed.js');
 const feedOptions = require('../templates/feedOptions.js');
 var uiSnippets = require('../templates/uiSnippets.js');
+const {
+  playlistTemplateV2,
+  fetchAndRenderPlaylist,
+} = require('./LibUserPlaylist.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var profileTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userProfileV2.html'
 );
-const { playlistTemplateV2 } = require('./LibUserPlaylist.js');
 
 var MAX_PLAYLISTS_SIDE = 4;
 var MAX_FRIENDS = 6;
@@ -165,58 +168,6 @@ function populateUsers(subscr, options, cb) {
       });
     }
   );
-}
-
-function fetchAndRenderPlaylist(options, callback, process) {
-  // TODO: move to LibUserPlaylist.js
-  // TODO: remove process => use callback only
-  options.bodyClass += ' userPlaylistV2';
-  options.user.pl = options.user.pl || [];
-  for (let i in options.user.pl)
-    if (options.user.pl[i] && options.user.pl[i].id == options.playlistId) {
-      options.playlist = options.user.pl[i];
-      break;
-    }
-  if (options.playlistId == 'create') {
-    options.playlist = {
-      id: 'create',
-      name: 'Playlist #' + options.user.pl.length,
-    };
-    options.pageTitle = 'new playlist';
-  } else {
-    options.pageTitle =
-      ((options.playlist || {}).name || 'a playlist') +
-      ' by ' +
-      options.user.name;
-  }
-  if (!options.playlist) callback('meh... this playlist does not exist!');
-  else {
-    var prevId = null;
-    for (let p = options.user.pl.length - 1; p > -1; --p) {
-      var pl = options.user.pl[p];
-      if (!pl) continue;
-      if (pl.id == options.playlistId) {
-        if (prevId !== null)
-          options.prevPageInList = '/u/' + options.uid + '/playlist/' + prevId;
-        for (--p; p > -1; --p) {
-          if (options.user.pl[p]) {
-            options.nextPageInList =
-              '/u/' + options.uid + '/playlist/' + options.user.pl[p].id;
-            break;
-          }
-        }
-        break;
-      }
-      prevId = pl.id;
-    }
-
-    postModel.fetchPlaylistPosts(
-      options.uid,
-      options.playlistId,
-      options.fetchParams,
-      process
-    );
-  }
 }
 
 function fetchAndRenderProfile(options, callback, process) {
