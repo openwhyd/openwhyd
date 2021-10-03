@@ -3,6 +3,7 @@
  * @author adrienjoly, whyd
  **/
 
+const { URL } = require('url');
 var snip = require('../snip.js');
 var config = require('../models/config.js');
 var postModel = require('../models/post.js');
@@ -268,12 +269,18 @@ exports.renderPostsAsync = function (posts, options, callback) {
   if (hasMore) {
     posts = posts.slice(0, maxPosts);
     var lastPost = posts[posts.length - 1];
+    const lastPid =
+      options.playlist && !isNaN(lastPost.order)
+        ? lastPost.order
+        : lastPost._id;
+
+    const pageUrl = new URL(options.pageUrl, config.urlPrefix);
+    pageUrl.searchParams.append('after', lastPid);
+    pageUrl.searchParams.append('wholePage', true);
+
     options.hasMore = {
-      // TODO: pass URL to whole profile page here
-      lastPid:
-        options.playlist && !isNaN(lastPost.order)
-          ? lastPost.order
-          : lastPost._id,
+      lastPid,
+      nextWholePageUrl: pageUrl.toString(),
     };
   }
 
