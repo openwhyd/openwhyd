@@ -23,10 +23,7 @@ function fetchPlaylists(options) {
 
 function fetchLikes(options) {
   return new Promise((resolve) =>
-    postModel.countLovedPosts(options.user.id, function (count) {
-      options.user.nbLikes = count;
-      resolve();
-    })
+    postModel.countLovedPosts(options.user.id, resolve)
   );
 }
 
@@ -52,11 +49,7 @@ function fetchStats(options) {
 
 function fetchNbTracks(options) {
   return new Promise((resolve) =>
-    postModel.countUserPosts(options.user.id, function (nbPosts) {
-      options.user.nbTracks =
-        nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
-      resolve();
-    })
+    postModel.countUserPosts(options.user.id, resolve)
   );
 }
 
@@ -203,8 +196,10 @@ async function renderUserLibrary(lib, user) {
     // main tab: tracks (full layout to render, with sidebar)
     options.user.pl = await fetchPlaylists(options);
     await fetchStats(options);
-    await fetchLikes(options);
-    await fetchNbTracks(options);
+    options.user.nbLikes = await fetchLikes(options);
+    const nbPosts = await fetchNbTracks(options);
+    options.user.nbTracks =
+      nbPosts > 9999 ? Math.floor(nbPosts / 1000) + 'k' : nbPosts;
   }
 
   const res = await new Promise((resolve) => fetchAndRender(options, resolve));
