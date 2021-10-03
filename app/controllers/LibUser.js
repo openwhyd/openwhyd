@@ -318,7 +318,7 @@ function fetchAndRenderProfile(options, callback, process) {
             options.showActivity = result.recentActivity;
             if (result.hasMore) {
               const lastPid = result.hasMore.last_id;
-              populateNextPageUrl(options, lastPid);
+              feedTemplate.populateNextPageUrl(options, lastPid);
             } else {
               var creation = mongodb.ObjectId(options.user.id);
               options.showActivity.items.push({
@@ -437,10 +437,6 @@ function fetchAndRenderProfile(options, callback, process) {
 }
 
 var bareFormats = new Set(['json', 'links']);
-
-function populateNextPageUrl(options, lastPid) {
-  options.hasMore = { lastPid };
-}
 
 function fetchAndRender(options, callback) {
   options.bodyClass = '';

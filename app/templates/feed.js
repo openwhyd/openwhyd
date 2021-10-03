@@ -218,3 +218,9 @@ function mustRenderWholeProfilePage(options) {
 }
 
 exports.mustRenderWholeProfilePage = mustRenderWholeProfilePage;
+
+function populateNextPageUrl(options, lastPid) {
+  options.hasMore = { lastPid };
+}
+
+exports.populateNextPageUrl = populateNextPageUrl;
