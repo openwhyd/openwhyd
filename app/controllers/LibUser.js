@@ -149,7 +149,7 @@ function renderUserLinks(lnk) {
     };
 }
 
-function renderUserLibrary(lib, user) {
+async function renderUserLibrary(lib, user) {
   var options = lib.options;
 
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
@@ -198,10 +198,11 @@ function renderUserLibrary(lib, user) {
   var fcts = [fetchAndRender, renderResponse];
 
   // prepend required fetching operations in head of the call chain
-  if (feedOptions.mustRenderWholeProfilePage(options))
+  if (feedOptions.mustRenderWholeProfilePage(options)) {
     // main tab: tracks (full layout to render, with sidebar)
-    fcts = [fetchPlaylists, fetchStats, fetchLikes, fetchNbTracks].concat(fcts);
-
+    await new Promise((resolve) => fetchPlaylists(options, resolve));
+    fcts = [fetchStats, fetchLikes, fetchNbTracks].concat(fcts);
+  }
   // run the call chain
   (function next(res) {
     var fct = fcts.shift();
