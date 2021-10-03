@@ -12,6 +12,7 @@ var feedTemplate = require('../templates/feed.js');
 const feedOptions = require('../templates/feedOptions.js');
 const {
   playlistTemplateV2,
+  preparePlaylistRendering,
   fetchAndRenderPlaylist,
 } = require('./LibUserPlaylist.js');
 const {
@@ -80,16 +81,8 @@ function fetchAndRender(options, callback) {
     ? callback
     : function (posts) {
         if (!options.format && !options.embedW) {
-          if (options.playlistId)
-            options.pageImage =
-              config.urlPrefix +
-              '/img/playlist/' +
-              options.user.id +
-              '_' +
-              options.playlistId;
-          options.customFeedTemplate = options.playlistId
-            ? playlistTemplateV2
-            : profileTemplateV2;
+          if (options.playlistId) preparePlaylistRendering(options);
+          else options.customFeedTemplate = profileTemplateV2;
         }
         feedTemplate.renderFeedAsync(posts, options, callback);
       };

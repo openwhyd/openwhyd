@@ -1,3 +1,4 @@
+var config = require('../models/config.js');
 var postModel = require('../models/post.js');
 
 var templateLoader = require('../templates/templateLoader.js');
@@ -6,6 +7,16 @@ var playlistTemplateV2 = templateLoader.loadTemplate(
 );
 
 exports.playlistTemplateV2 = playlistTemplateV2;
+
+exports.preparePlaylistRendering = function (options) {
+  options.pageImage =
+    config.urlPrefix +
+    '/img/playlist/' +
+    options.user.id +
+    '_' +
+    options.playlistId;
+  options.customFeedTemplate = playlistTemplateV2;
+};
 
 exports.fetchAndRenderPlaylist = function (options, callback, process) {
   // TODO: remove process => use callback only
