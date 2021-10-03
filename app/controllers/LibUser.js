@@ -21,9 +21,9 @@ function preparePaginationParameters(options) {
   if (options.embedW) fetchParams.limit = config.nbTracksPerPlaylistEmbed;
   else if (options.limit && typeof options.limit !== 'number') {
     if (typeof options.limit === 'string')
-      fetchParams.limit = parseInt(options.limit);
+      fetchParams.limit = parseInt(options.limit, 10);
     else if (typeof options.limit === 'object' && options.limit.push)
-      fetchParams.limit = parseInt(options.limit.pop());
+      fetchParams.limit = parseInt(options.limit.pop(), 10);
     // keep only the last value
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
