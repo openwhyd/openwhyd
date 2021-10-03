@@ -24,7 +24,6 @@ var playlistTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userPlaylistV2.html'
 );
 
-//var NEW_PROFILE = true;
 var MAX_PLAYLISTS_SIDE = 4;
 var MAX_FRIENDS = 6;
 var MAX_HISTORY = 3;
@@ -115,50 +114,11 @@ function fetchActivity(options, cb) {
     }
   );
 }
-/*
-var scoreClasses = [
-	[80, "Holy shit!!!"],
-	[50, "Great match!"],
-	[20, "Not too bad!"],
-	[10, "Well, it's a good start..."],
-	[0, "Meh"]
-];
 
-function getScoreClass(score){
-	for(var i in scoreClasses) {
-		if (score >= scoreClasses[i][0])
-			return scoreClasses[i][1];
-	}
-}
-
-function fetchSimilarity(options, cb) {
-	if (options.user.isSubscribed || !options.loggedUser || options.loggedUser.id == options.user.id)
-		cb();
-	else {
-		recomModel.computeUserSimilarity(options.loggedUser.id, options.user.id, function(sim){
-			//console.log("similarity", sim);
-			if (!sim || !sim.score)
-				return cb();
-			var pct = Math.min(100, sim.score * 100);
-			var nbArtists = sim.artists.length;
-			var artists = (sim.artists.length > 3 ? sim.artists.slice(0, 3) : sim.artists).map(function(a){
-				return a.name;
-			});
-			nbArtists -= artists.length;
-			options.similarity = {
-				pct: pct,
-				label: getScoreClass(pct),
-				text: "You both like: " + artists.join(", ") + (nbArtists > 0 ? " + " + nbArtists + " other artists..." : "")
-			}
-			cb();
-		});
-	}
-}
-*/
 // PAGE RENDERING
 
 function generateMixpanelCode(options) {
-  return /*options.uid == options.loggedUser.id ? "" :*/ [
+  return [
     '<script>',
     ' window.Whyd.tracking.log("Visit profile", "' + options.uid + '");',
     '</script>',
@@ -166,11 +126,9 @@ function generateMixpanelCode(options) {
 }
 
 function renderPlaylists(options, maxNb) {
-  //console.log("renderplaylists", options.user.pl)
   var playlists = options.user.pl || [];
   if (maxNb) {
     if (playlists.length > maxNb) playlists = playlists.slice(0, maxNb);
-    //playlists.length-maxNb, playlists.length);
     else if (playlists.length < maxNb) {
       if (options.loggedUser && options.user.id == options.loggedUser.id)
         playlists.push({
@@ -179,17 +137,13 @@ function renderPlaylists(options, maxNb) {
           img: '#',
           name: 'Create a playlist',
         });
-      //while(playlists.length < maxNb)
-      //	playlists.push({url:"javascript:;"});
     }
   }
   for (let i in playlists)
     if (playlists[i].id !== undefined) {
-      //playlists[i].url = "/u/" + options.user.id + "/playlist/" + playlists[i].id;
       playlists[i].img =
         '/img/playlist/' + options.user.id + '_' + playlists[i].id;
     }
-  //console.log("renderplaylists => ", playlists)
   return playlists;
 }
 
@@ -227,9 +181,7 @@ function fetchAndRenderPlaylist(options, callback, process) {
   if (options.playlistId == 'create') {
     options.playlist = {
       id: 'create',
-      name:
-        /*(options.reqParams || {}).name ||*/ 'Playlist #' +
-        options.user.pl.length,
+      name: 'Playlist #' + options.user.pl.length,
     };
     options.pageTitle = 'new playlist';
   } else {
@@ -274,14 +226,12 @@ function fetchAndRenderProfile(options, callback, process) {
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
     const playlists = options.user.pl;
-    //userModel.fetchPlaylists(options.user, {}, function(playlists) { // includes number of tracks per pl
     options.pageTitle = 'Playlists by ' + options.user.name;
     options.tabTitle = 'Playlists';
     options.bodyClass += ' userPlaylists';
     options.playlists = [...playlists].reverse(); // clone before reversing
     options.showPlaylists = { items: renderPlaylists(options) };
     process([]); // no posts // TODO: is this call necessary ?
-    //});
   } else if (options.showLikes) {
     options.tabTitle = 'Likes';
     options.bodyClass += ' userLikes';
@@ -299,7 +249,6 @@ function fetchAndRenderProfile(options, callback, process) {
     followModel.fetchUserSubscriptions(
       options.loggedUser.id,
       function (mySubscr) {
-        //console.log("mySubscr.subscriptions", mySubscr.subscriptions);
         var mySubscrUidList = snip.objArrayToValueArray(
           mySubscr.subscriptions,
           'id'
@@ -315,7 +264,6 @@ function fetchAndRenderProfile(options, callback, process) {
                   result.recentActivity.items[i].subscriptions;
                 delete result.recentActivity.items[i].subscriptions;
               }
-            //console.log("ACTIVITY result", result.recentActivity);
             options.showActivity = result.recentActivity;
             if (result.hasMore) {
               const lastPid = result.hasMore.last_id;
@@ -325,7 +273,6 @@ function fetchAndRenderProfile(options, callback, process) {
               options.showActivity.items.push({
                 _id: creation,
                 other: { text: 'joined whyd' },
-                //						ago: uiSnippets.renderTimestamp(new Date() - creation.getTimestamp())
               });
             }
             for (let i in options.showActivity.items)
@@ -405,10 +352,8 @@ function fetchAndRenderProfile(options, callback, process) {
       proceed();
     else {
       // SIDEBAR
-      //console.time("LibUser.fetchActivity");
       fetchActivity(options, function () {
         // => populates options.activity
-        //console.timeEnd("LibUser.fetchActivity");
         var ownProfile = options.user.id == (options.loggedUser || {}).id;
         // render playlists
         if ((options.user.pl || []).length || ownProfile)
@@ -459,7 +404,6 @@ function fetchAndRender(options, callback) {
             ? playlistTemplateV2
             : profileTemplateV2;
         }
-        //console.timeEnd("LibFriends.fetchAndRender");
         feedTemplate.renderFeedAsync(posts, options, callback);
       };
 
@@ -479,7 +423,6 @@ function fetchAndRender(options, callback) {
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
 
-  //console.time("LibFriends.fetchAndRender");
   (options.playlistId ? fetchAndRenderPlaylist : fetchAndRenderProfile)(
     options,
     callback,
@@ -508,11 +451,7 @@ function renderUserLinks(lnk) {
       lnk[i] = ''; // by default, if no username was found
       var username = '';
       while (!(username = parts.pop()));
-      //for (let j=parts.length-1; j>-1; --j)
-      //	if (parts[j]) {
-      lnk[i] = LNK_URL_PREFIX[i] + username; //parts[j];
-      //break;
-      //	}
+      lnk[i] = LNK_URL_PREFIX[i] + username;
     }
 
   // make sure URLs are valid
@@ -530,7 +469,7 @@ function renderUserLinks(lnk) {
   if (lnk.home)
     lnk.home = {
       url: lnk.home,
-      renderedUrl: lnk.home.split('//').pop().split('/').shift(), //uiSnippets.shortenURLs(lnk.home).replace("...", "")
+      renderedUrl: lnk.home.split('//').pop().split('/').shift(),
     };
 }
 
@@ -586,21 +525,12 @@ function renderUserLibrary(lib, user) {
   // prepend required fetching operations in head of the call chain
   if (feedOptions.mustRenderWholeProfilePage(options))
     // main tab: tracks (full layout to render, with sidebar)
-    fcts = [
-      fetchPlaylists,
-      /*fetchSubscriptions,*/ fetchStats,
-      fetchLikes,
-      fetchNbTracks /*fetchSimilarity*/,
-    ].concat(fcts);
-  //if (options.showSubscribers || options.showSubscriptions || options.showActivity)
-  //	fcts = [fetchSubscriptions].concat(fcts);
+    fcts = [fetchPlaylists, fetchStats, fetchLikes, fetchNbTracks].concat(fcts);
 
   // run the call chain
   (function next(res) {
     var fct = fcts.shift();
-    //console.time(fct.name);
     fct(res || options, function (res) {
-      //console.timeEnd(fct.name);
       next(res || options);
     });
   })();
