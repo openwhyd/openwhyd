@@ -1,6 +1,8 @@
 // Functions used during the population and rendering of user profile pages,
 // gathered here to centralize common logic and clarify their intended behavior.
 
+const { URL } = require('url');
+var config = require('../models/config.js');
 var userModel = require('../models/user.js');
 var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
@@ -65,7 +67,7 @@ exports.populateWholeProfilePage = async function (options) {
  * @returns true if the profile page must be rendered completely, i.e. with header and side bars.
  */
 exports.mustRenderWholeProfilePage = function (options) {
-  return !options.after && !options.before;
+  return options.wholePage || (!options.after && !options.before);
 };
 
 /**
@@ -73,5 +75,11 @@ exports.mustRenderWholeProfilePage = function (options) {
  * @param {string} lastPid - identifier of the last track of the current page.
  */
 exports.populateNextPageUrl = function (options, lastPid) {
-  options.hasMore = { lastPid };
+  const pageUrl = new URL(options.pageUrl, config.urlPrefix);
+  pageUrl.searchParams.append('after', lastPid);
+  pageUrl.searchParams.append('wholePage', true);
+  options.hasMore = {
+    lastPid,
+    nextWholePageUrl: pageUrl.toString(),
+  };
 };
