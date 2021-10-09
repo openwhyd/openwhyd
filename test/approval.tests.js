@@ -4,11 +4,11 @@
 
 const test = require('ava');
 const { promisify } = require('util');
-const openwhyd = require('./api-client');
 const {
+  loadEnvVars,
+  startOpenwhydServer,
   readMongoDocuments,
   insertTestData,
-  refreshOpenwhydCache,
 } = require('./db-helpers');
 
 const MONGODB_URL =
@@ -26,15 +26,28 @@ async function getCleanedPageBody(body) {
 }
 
 test.before(async (t) => {
+  // insert test data
   const testDataCollections = {
     user: await readMongoDocuments(__dirname + '/approval.users.json'),
     post: await readMongoDocuments(__dirname + '/approval.posts.json'),
     follow: await readMongoDocuments(__dirname + '/approval.follows.json'),
   };
   await insertTestData(MONGODB_URL, testDataCollections);
-  await refreshOpenwhydCache();
+  // start server on test environment
+  const env = {
+    ...(await loadEnvVars('./env-vars-testing.conf')),
+    MONGODB_PORT: '27117', // port exposed by docker container
+    TZ: 'UTC',
+  };
+  process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
+  t.context.serverProcess = await startOpenwhydServer(env);
+  t.context.openwhyd = require('./api-client');
   t.context.getUser = (id) =>
     testDataCollections.user.find(({ _id }) => id === _id.toString());
+});
+
+test.after((t) => {
+  t.context.serverProcess.kill();
 });
 
 const personas = [
@@ -106,10 +119,17 @@ const routes = [
   },
 ];
 
+// test(`coucou`, async (t) => {
+//   const user = t.context.getUser(personas[1].userId);
+//   const { jar, loggedIn, response } = await t.context.openwhyd.loginAs(user);
+//   t.true(loggedIn);
+// });
+
 formats.forEach((format) => {
   routes.forEach((route) => {
     personas.forEach((persona) => {
       test(`${persona.label}, ${route.label}, ${format}`, async (t) => {
+        const { openwhyd } = t.context;
         const { userId } = persona;
         const { jar, loggedIn, response } =
           persona.label === 'Visitor'
