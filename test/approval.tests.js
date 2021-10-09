@@ -4,12 +4,15 @@
 
 const test = require('ava');
 const { promisify } = require('util');
-const openwhyd = require('./api-client');
 const {
+  loadEnvVars,
+  startOpenwhydServer,
+  refreshOpenwhydCache,
   readMongoDocuments,
   insertTestData,
-  refreshOpenwhydCache,
 } = require('./db-helpers');
+
+const START_WITH_ENV_FILE = process.env.START_WITH_ENV_FILE;
 
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
@@ -32,9 +35,29 @@ test.before(async (t) => {
     follow: await readMongoDocuments(__dirname + '/approval.follows.json'),
   };
   await insertTestData(MONGODB_URL, testDataCollections);
-  await refreshOpenwhydCache();
+
+  if (START_WITH_ENV_FILE) {
+    const env = {
+      ...(await loadEnvVars(START_WITH_ENV_FILE)),
+      MONGODB_PORT: '27117', // port exposed by docker container
+      TZ: 'UTC',
+    };
+    process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
+    t.context.serverProcess = await startOpenwhydServer(env);
+  } else {
+    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
+    await refreshOpenwhydCache();
+  }
+
+  t.context.openwhyd = require('./api-client');
   t.context.getUser = (id) =>
     testDataCollections.user.find(({ _id }) => id === _id.toString());
+});
+
+test.after((t) => {
+  if (t.context.serverProcess) {
+    t.context.serverProcess.kill('SIGINT');
+  }
 });
 
 const personas = [
@@ -110,6 +133,7 @@ formats.forEach((format) => {
   routes.forEach((route) => {
     personas.forEach((persona) => {
       test(`${persona.label}, ${route.label}, ${format}`, async (t) => {
+        const { openwhyd } = t.context;
         const { userId } = persona;
         const { jar, loggedIn, response } =
           persona.label === 'Visitor'

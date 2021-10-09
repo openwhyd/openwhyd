@@ -1,3 +1,24 @@
+## [1.44.54](https://github.com/openwhyd/openwhyd/compare/v1.44.53...v1.44.54) (2021-10-09)
+
+
+### Bug Fixes
+
+* **tests:** Log errors when running approval tests ([#485](https://github.com/openwhyd/openwhyd/issues/485)) ([da43c20](https://github.com/openwhyd/openwhyd/commit/da43c20f6205c1de303f64014cfdf25f768ab994))
+
+## [1.44.53](https://github.com/openwhyd/openwhyd/compare/v1.44.52...v1.44.53) (2021-10-09)
+
+
+### Bug Fixes
+
+* **tests:** Make approval tests run faster ([#484](https://github.com/openwhyd/openwhyd/issues/484)) ([3a79399](https://github.com/openwhyd/openwhyd/commit/3a79399f9ef490aa34906a2b3f47d6a9f404fb0a))
+
+## [1.44.52](https://github.com/openwhyd/openwhyd/compare/v1.44.51...v1.44.52) (2021-10-09)
+
+
+### Bug Fixes
+
+* **tests:** Get rid of Mongo's DeprecationWarning on approval tests ([143f0f5](https://github.com/openwhyd/openwhyd/commit/143f0f5369a7c478c71a750c0e210aa328969f00))
+
 ## [1.44.51](https://github.com/openwhyd/openwhyd/compare/v1.44.50...v1.44.51) (2021-09-03)
 
 

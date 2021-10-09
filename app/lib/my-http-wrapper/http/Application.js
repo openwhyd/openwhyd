@@ -5,7 +5,7 @@ const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
 
-const LOG_THRESHOLD = 500;
+const LOG_THRESHOLD = process.env.LOG_REQ_THRESHOLD_MS || 500;
 
 // From Response.js
 
