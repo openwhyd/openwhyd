@@ -9,6 +9,10 @@
     // force prettier on html files specifically, to avoid issue #300
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "search.exclude": {
+    "**/node_modules": true,
+    "/slides": true
+  },
   "markdown.preview.fontSize": 24,
   "markdown.styles": ["slides/slides.css"],
   // from https://staltz.com/your-ide-as-a-presentation-tool.html
