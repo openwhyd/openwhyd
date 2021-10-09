@@ -1,3 +1,10 @@
+## [1.44.55](https://github.com/openwhyd/openwhyd/compare/v1.44.54...v1.44.55) (2021-10-09)
+
+
+### Bug Fixes
+
+* **tests:** Let the server run after approval tests ([#488](https://github.com/openwhyd/openwhyd/issues/488)) ([3e59421](https://github.com/openwhyd/openwhyd/commit/3e59421d145fc6080c5cd0edb7cee9aee3beffb5))
+
 ## [1.44.54](https://github.com/openwhyd/openwhyd/compare/v1.44.53...v1.44.54) (2021-10-09)
 
 
