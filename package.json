@@ -20,7 +20,7 @@
     "test-reset": "node test/reset-test-db.js",
     "test-api": "npx mocha test/api/*.js --serial --exit",
     "test-unit": "npx mocha test/unit/*.js --exit",
-    "test-approval": "START_WITH_ENV_FILE='./env-vars-testing.conf' ava test/approval.tests.js $@",
+    "test-approval": "npx kill-port --port 8080 >/dev/null; DONT_KILL=1 START_WITH_ENV_FILE='./env-vars-testing.conf' ava test/approval.tests.js $@",
     "test-approval-debug": "npm run test-approval -- --fail-fast --serial",
     "test:cypress:dev": "node_modules/.bin/cypress open",
     "test:cypress": "node_modules/.bin/cypress run",
