@@ -1,3 +1,10 @@
+## [1.44.54](https://github.com/openwhyd/openwhyd/compare/v1.44.53...v1.44.54) (2021-10-09)
+
+
+### Bug Fixes
+
+* **tests:** Log errors when running approval tests ([#485](https://github.com/openwhyd/openwhyd/issues/485)) ([da43c20](https://github.com/openwhyd/openwhyd/commit/da43c20f6205c1de303f64014cfdf25f768ab994))
+
 ## [1.44.53](https://github.com/openwhyd/openwhyd/compare/v1.44.52...v1.44.53) (2021-10-09)
 
 
