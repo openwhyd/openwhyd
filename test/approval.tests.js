@@ -119,12 +119,6 @@ const routes = [
   },
 ];
 
-// test(`coucou`, async (t) => {
-//   const user = t.context.getUser(personas[1].userId);
-//   const { jar, loggedIn, response } = await t.context.openwhyd.loginAs(user);
-//   t.true(loggedIn);
-// });
-
 formats.forEach((format) => {
   routes.forEach((route) => {
     personas.forEach((persona) => {
