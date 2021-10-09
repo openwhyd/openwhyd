@@ -11,8 +11,10 @@ const {
   insertTestData,
 } = require('./db-helpers');
 
+const MONGODB_PORT = process.env.MONGODB_PORT || '27117'; // default: port exposed by docker container
 const MONGODB_URL =
-  process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
+  process.env.MONGODB_URL ||
+  `mongodb://localhost:${MONGODB_PORT}/openwhyd_test`;
 
 async function getCleanedPageBody(body) {
   try {
@@ -36,7 +38,7 @@ test.before(async (t) => {
   // start server on test environment
   const env = {
     ...(await loadEnvVars('./env-vars-testing.conf')),
-    MONGODB_PORT: '27117', // port exposed by docker container
+    MONGODB_PORT: MONGODB_PORT,
     TZ: 'UTC',
   };
   process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
