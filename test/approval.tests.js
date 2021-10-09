@@ -1,32 +1,18 @@
-// Before running these tests, make sure that:
-// - Openwhyd is running on port 8080 (`$ docker-compose up --build`)
-// - Its database is empty but initialized
+// Run with: $ npm run test-approval
 
 const test = require('ava');
 const { promisify } = require('util');
 const {
-  loadEnvVars,
-  startOpenwhydServer,
-  refreshOpenwhydCache,
   readMongoDocuments,
   insertTestData,
-} = require('./db-helpers');
+  getCleanedPageBody,
+  startOpenwhydServer,
+} = require('./approval-tests-helpers');
 
-const START_WITH_ENV_FILE = process.env.START_WITH_ENV_FILE;
+const { DONT_KILL, START_WITH_ENV_FILE } = process.env;
 
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
-
-async function getCleanedPageBody(body) {
-  try {
-    return JSON.parse(body);
-  } catch (err) {
-    return body
-      .replace(/(src|href)="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, '$1="$2"') // remove openwhyd version from paths to html resources, to reduce noise in diff
-      .replace(/>[a-zA-Z]+ \d{4}/g, '>(age)') // remove date of posts, because it depends on the time when tests are run
-      .replace(/>\d+ (day|month|year)s?( ago)?/g, '>(age)'); // remove age of posts, because it depends on the time when tests are run
-  }
-}
 
 test.before(async (t) => {
   const testDataCollections = {
@@ -36,26 +22,14 @@ test.before(async (t) => {
   };
   await insertTestData(MONGODB_URL, testDataCollections);
 
-  if (START_WITH_ENV_FILE) {
-    const env = {
-      ...(await loadEnvVars(START_WITH_ENV_FILE)),
-      MONGODB_PORT: '27117', // port exposed by docker container
-      TZ: 'UTC',
-    };
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
-    t.context.serverProcess = await startOpenwhydServer(env);
-  } else {
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
-    await refreshOpenwhydCache();
-  }
-
+  t.context.serverProcess = await startOpenwhydServer(START_WITH_ENV_FILE);
   t.context.openwhyd = require('./api-client');
   t.context.getUser = (id) =>
     testDataCollections.user.find(({ _id }) => id === _id.toString());
 });
 
 test.after((t) => {
-  if (t.context.serverProcess) {
+  if (t.context.serverProcess && !DONT_KILL) {
     t.context.serverProcess.kill('SIGINT');
   }
 });
@@ -65,7 +39,9 @@ const personas = [
   { label: 'User: Adrien', userId: '4d94501d1f78ac091dbc9b4d' },
   { label: 'User: A New User', userId: '000000000000000000000003' },
 ];
+
 const formats = ['HTML', 'JSON'];
+
 const routes = [
   { label: 'Home, page 1', path: '/' },
   { label: 'Home, page 2', path: '/?after=601d160ea7db502dd31d204e' },
@@ -134,12 +110,16 @@ formats.forEach((format) => {
     personas.forEach((persona) => {
       test(`${persona.label}, ${route.label}, ${format}`, async (t) => {
         const { openwhyd } = t.context;
+        // 1. login (or logout) and make sure that it worked as expected
         const { userId } = persona;
         const { jar, loggedIn, response } =
           persona.label === 'Visitor'
             ? await promisify(openwhyd.logout)(null)
             : await promisify(openwhyd.loginAs)(t.context.getUser(userId));
-        if (userId && !loggedIn) t.fail(`login failed: ${response.body}`); // just to make sure that login worked as expected
+        if (userId && !loggedIn) {
+          t.fail(`login failed: ${response.body}`);
+        }
+        // 2. test that the response is still the same
         const path =
           format === 'JSON'
             ? route.jsonPath ||

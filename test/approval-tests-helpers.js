@@ -37,6 +37,17 @@ async function insertTestData(url, docsPerCollection) {
   await mongoClient.close();
 }
 
+async function getCleanedPageBody(body) {
+  try {
+    return JSON.parse(body);
+  } catch (err) {
+    return body
+      .replace(/(src|href)="(.*\.[a-z]{2,3})\?\d+\.\d+\.\d+"/g, '$1="$2"') // remove openwhyd version from paths to html resources, to reduce noise in diff
+      .replace(/>[a-zA-Z]+ \d{4}/g, '>(age)') // remove date of posts, because it depends on the time when tests are run
+      .replace(/>\d+ (day|month|year)s?( ago)?/g, '>(age)'); // remove age of posts, because it depends on the time when tests are run
+  }
+}
+
 const errPrinter = ((blocklist) => {
   return (chunk) => {
     const message = chunk.toString();
@@ -51,7 +62,7 @@ const errPrinter = ((blocklist) => {
   'please install graphicsmagick',
 ]);
 
-async function startOpenwhydServer(env) {
+async function startOpenwhydServerWith(env) {
   const serverProcess = childProcess.fork(
     './app.js',
     ['--fakeEmail', '--digestInterval', '-1'],
@@ -67,10 +78,26 @@ async function refreshOpenwhydCache(urlPrefix = 'http://localhost:8080') {
   await promisify(request.post)(urlPrefix + '/testing/refresh');
 }
 
+async function startOpenwhydServer(envFileForProgamaticStart) {
+  if (envFileForProgamaticStart) {
+    const env = {
+      ...(await loadEnvVars(envFileForProgamaticStart)),
+      MONGODB_PORT: '27117', // port exposed by docker container
+      TZ: 'UTC',
+    };
+    process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
+    return await startOpenwhydServerWith(env);
+  } else {
+    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
+    await refreshOpenwhydCache();
+  }
+}
+
 module.exports = {
   loadEnvVars,
   readMongoDocuments,
   insertTestData,
+  getCleanedPageBody,
   startOpenwhydServer,
   refreshOpenwhydCache,
 };
