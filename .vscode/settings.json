@@ -9,6 +9,7 @@
     // force prettier on html files specifically, to avoid issue #300
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "markdown.preview.fontSize": 24,
   // from https://staltz.com/your-ide-as-a-presentation-tool.html
   "workbench.colorTheme": "GitHub Light Default",
   "workbench.colorCustomizations": {
