@@ -38,11 +38,10 @@ async function insertTestData(url, docsPerCollection) {
 }
 
 async function startOpenwhydServer(env) {
-  const serverProcess = childProcess.fork(
-    './app.js',
-    ['--fakeEmail', '--digestInterval', '-1'],
-    { env, silent: true }
-  );
+  const serverProcess = childProcess.fork('npm', ['run', 'start:coverage'], {
+    env,
+    silent: true,
+  });
   await waitOn({ resources: [`http://localhost:${env.WHYD_PORT}`] });
   return serverProcess;
 }
