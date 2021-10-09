@@ -11,3 +11,5 @@
 - variable `lastPid` est affectée à nombreux endroits
 
 - `TODO`s et code mort
+
+[→](09-stratégie.md)

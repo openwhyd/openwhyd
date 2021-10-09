@@ -7,3 +7,5 @@
 > Je veux pouvoir en ouvrir la page suivante
 >
 > dans un onglet séparé
+
+[→](06-approche.md)

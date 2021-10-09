@@ -13,3 +13,5 @@ Stratégie:
 5. 🧶 dénouer le code
 
 6. 🎯 intégrer la fonctionnalité demandée
+
+[→](10-prevenir-régressions.md)

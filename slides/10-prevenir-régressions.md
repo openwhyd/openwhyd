@@ -7,3 +7,5 @@
 - _Approval tests_: figer réponse de chaque route HTTP
 
 - Paramètres: persona × route × format
+
+[→](11-flot.md)

@@ -3,3 +3,5 @@
 > "Legacy Code is valuable code you’re afraid to change"
 >
 > <small>(Nicolas Carlo & Alex Bolboaca)</small>
+
+[→](04-def-tech-debt.md)

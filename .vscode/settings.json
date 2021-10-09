@@ -10,6 +10,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "markdown.preview.fontSize": 24,
+  "markdown.styles": ["slides/slides.css"],
   // from https://staltz.com/your-ide-as-a-presentation-tool.html
   "workbench.colorTheme": "GitHub Light Default",
   "workbench.colorCustomizations": {

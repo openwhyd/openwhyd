@@ -12,3 +12,5 @@ Flot de données:
 🔽 public/css/common.css
 🔍 test/snapshots/approval.tests.js.md
 ```
+
+[→](12-conseils.md)
