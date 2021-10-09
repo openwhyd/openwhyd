@@ -83,11 +83,17 @@ jobs:
         run: |
           source env-vars-testing.sh
           npm run test-reset
+      - name: Start Openwhyd server
+        run: |
+          source env-vars-testing.sh
+          npm run start:coverage --mongoDbDatabase openwhyd_test &
+          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: Approval tests
         env:
-          MONGODB_PORT: '27017'
+          MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
         run: |
-          npm run test-approval # starts Openwhyd programmatically
+          source env-vars-testing.sh
+          npx ava test/approval.tests.js
       - name: Get coverage data
         run: |
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
