@@ -8,5 +8,23 @@
   "[html]": {
     // force prettier on html files specifically, to avoid issue #300
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  // from https://staltz.com/your-ide-as-a-presentation-tool.html
+  "workbench.colorTheme": "GitHub Light Default",
+  "workbench.colorCustomizations": {
+    "editor.findMatchBackground": "#ff91004d",
+    "editor.lineHighlightBackground": "#f0f0f0",
+    "editor.selectionBackground": "#aaeeff"
+  },
+  "workbench.statusBar.visible": false,
+  "workbench.activityBar.visible": true,
+  "explorer.openEditors.visible": 0,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "none",
+  "editor.fontFamily": "SF Mono",
+  "editor.fontWeight": "400",
+  "editor.fontSize": 18,
+  "terminal.integrated.fontFamily": "monospace",
+  "terminal.integrated.fontWeight": "800",
+  "terminal.integrated.fontSize": 16
 }
