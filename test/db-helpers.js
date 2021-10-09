@@ -10,7 +10,9 @@ async function readMongoDocuments(file) {
 }
 
 async function insertTestData(url, docsPerCollection) {
-  const mongoClient = await mongodb.MongoClient.connect(url);
+  const mongoClient = await mongodb.MongoClient.connect(url, {
+    useUnifiedTopology: true,
+  });
   const db = mongoClient.db();
   await Promise.all(
     Object.keys(docsPerCollection).map(async (collection) => {
