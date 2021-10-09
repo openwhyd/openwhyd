@@ -91,8 +91,6 @@ jobs:
       - name: Get coverage data
         run: |
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
-          killall node
-          sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
           npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v2
