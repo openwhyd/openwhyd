@@ -56,7 +56,7 @@ test.before(async (t) => {
 
 test.after((t) => {
   if (t.context.serverProcess) {
-    t.context.serverProcess.kill();
+    t.context.serverProcess.kill('SIGINT');
   }
 });
 

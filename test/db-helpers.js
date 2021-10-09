@@ -37,12 +37,27 @@ async function insertTestData(url, docsPerCollection) {
   await mongoClient.close();
 }
 
+const errPrinter = ((blocklist) => {
+  return (chunk) => {
+    const message = chunk.toString();
+    if (!blocklist.some((term) => message.includes(term)))
+      console.error(message);
+  };
+})([
+  'closing server',
+  'deprecated',
+  'gm: command not found',
+  'convert: command not found',
+  'please install graphicsmagick',
+]);
+
 async function startOpenwhydServer(env) {
   const serverProcess = childProcess.fork(
     './app.js',
     ['--fakeEmail', '--digestInterval', '-1'],
     { env, silent: true }
   );
+  serverProcess.stderr.on('data', errPrinter);
   await waitOn({ resources: [`http://localhost:${env.WHYD_PORT}`] });
   return serverProcess;
 }
