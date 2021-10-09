@@ -1,3 +1,10 @@
+## [1.44.52](https://github.com/openwhyd/openwhyd/compare/v1.44.51...v1.44.52) (2021-10-09)
+
+
+### Bug Fixes
+
+* **tests:** Get rid of Mongo's DeprecationWarning on approval tests ([143f0f5](https://github.com/openwhyd/openwhyd/commit/143f0f5369a7c478c71a750c0e210aa328969f00))
+
 ## [1.44.51](https://github.com/openwhyd/openwhyd/compare/v1.44.50...v1.44.51) (2021-09-03)
 
 
