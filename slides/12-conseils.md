@@ -7,7 +7,7 @@ Conseils:
 3. 🔍 observer et planifier
 4. ✨ rendre facile la modification demandée
 5. 🎯 intégrer la modification demandée
-6. 🧶 dénouer itérativement
+6. 🧶 améliorer itérativement
 7. ✅ écrire des tests unitaires
 
 [→](01.md)

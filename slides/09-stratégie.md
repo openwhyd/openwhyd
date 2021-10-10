@@ -6,12 +6,8 @@ Stratégie:
 
 2. 🧹 supprimer le code mort
 
-3. ✨ centraliser la décision de profil complet ou pas
+3. ✨ centraliser la logique à modifier
 
-4. ✨ centraliser les variables de pagination
-
-5. 🧶 dénouer le code
-
-6. 🎯 intégrer la fonctionnalité demandée
+4. 🧶 améliorer le code
 
 [→](10-prevenir-régressions.md)

@@ -1,0 +1,14 @@
+# https://bramp.github.io/js-sequence-diagrams/
+
+userLibrary->LibUser: renderUserLibrary()
+LibUser->LibUser: fetchAndRenderProfile() \n | fetchAndRenderPlaylist()
+LibUser->feedTemplate: renderFeedAsync()
+feedTemplate->postsTemplate: renderPostsAsync()
+postsTemplate-->feedTemplate: rendered posts
+feedTemplate->feedTemplate: prepareFeedVars()
+feedTemplate->userProfileV2.html \n | userPlaylistV2.html: render()
+userProfileV2.html \n | userPlaylistV2.html-->LibUser: rendered profile or playlist
+LibUser->userLibrary: renderJson() \n | render() \n | renderPage()
+userLibrary->feedTemplate: renderFeedPage()
+feedTemplate->mainTemplate: renderWhydPage()
+mainTemplate-->userLibrary: rendered page

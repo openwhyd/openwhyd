@@ -1,13 +1,17 @@
-<div style="height:200px">&nbsp;</div>
+![](assets/sequence.svg)
 
-🔍 Observations:
-
-- `userProfileV2.html` → bouton "load more"
-
-- `renderUserLibrary()` → choix du template
-
-- variables `header` et `after` → profil complet ou pas
-
-- `fetchAndRenderProfile()` et `renderUserLibrary()` → données
+<style>img { display: block; margin: 0 auto; }</style>
 
 [→](08-pièges.md)
+
+<!--
+🔍 Observations:
+
+- `userProfileV2.html` définit bouton "load more"
+
+- ... sélectionné et populé par `controllers/LibUser.js`
+
+- ... rendu (complet ou pas) par `templates/feed.js`
+
+- ... en fonction de `header` et `options.after`
+-->

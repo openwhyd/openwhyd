@@ -21,4 +21,4 @@ if (!options.after && !options.before)
 })();
 ```
 
-[→](03-def-legacy.md)
+[→](02.md)
