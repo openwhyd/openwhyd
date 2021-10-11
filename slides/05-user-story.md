@@ -1,6 +1,6 @@
 <div style="height:200px">&nbsp;</div>
 
-✋ User story à implémenter:
+🎯 User story à implémenter:
 
 > En tant que visiteur d'un profil Openwhyd
 >
@@ -8,4 +8,4 @@
 >
 > dans un onglet séparé
 
-[→](06-approche.md)
+[→](06-pistes.md)

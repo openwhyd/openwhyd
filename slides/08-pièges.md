@@ -4,12 +4,12 @@
 
 - fichiers très longs
 
-- logique difficile à lire: _callback hell_ et blocs conditionnels
-
 - paramètre `after` est lu à nombreux endroits
 
-- variable `lastPid` est affectée à nombreux endroits
+- logique difficile à lire: _callback hell_ et blocs conditionnels
+
+- enchainement d'opérations _fait maison_
 
 - `TODO`s et code mort
 
-[→](09-stratégie.md)
+[→](09-prevenir-régressions.md)
