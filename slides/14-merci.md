@@ -1,12 +1,12 @@
 # Merci !
 
-Accès au code legacy:
+Accès au code + références:
 
 ![](assets/qrcode.png)
 
 Contact: `adrien.joly@shodo.io`
 
-Twitter: @adrienjoly
+Twitter: `@adrienjoly`
 
 Merci à Julien Topçu et les Shodoers pour leur aide ! ❤️
 
