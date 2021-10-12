@@ -12,4 +12,4 @@
 
 - `TODO`s et code commenté
 
-[→](09-prevenir-régressions.md)
+[→](08-scope.md)

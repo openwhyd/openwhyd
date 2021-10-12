@@ -8,4 +8,4 @@
 
 - le rendu du profil est piloté par `controllers/LibUser.js`, entre autres...
 
-[→](07-diagseq.md)
+[→](07-pièges.md)
