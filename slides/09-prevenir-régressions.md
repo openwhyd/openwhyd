@@ -4,7 +4,7 @@
 
 - Périmètre: contrôleur `userLibrary`
 
-- _Approval tests_: figer réponse de chaque route HTTP
+- **Approval tests**: figer réponse de chaque route HTTP
 
 - Paramètres: persona × route × format
 

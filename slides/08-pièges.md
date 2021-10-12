@@ -10,6 +10,6 @@
 
 - enchainement d'opérations _fait maison_
 
-- `TODO`s et code mort
+- `TODO`s et code commenté
 
 [→](09-prevenir-régressions.md)
