@@ -11,7 +11,7 @@
   },
   "search.exclude": {
     "**/node_modules": true,
-    "/slides": true
+    "slides": true
   },
   "markdown.preview.fontSize": 24,
   "markdown.styles": ["slides/assets/slides.css"],
