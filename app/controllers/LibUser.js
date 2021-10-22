@@ -15,11 +15,12 @@ const profileRenderer = require('./LibUserProfile.js');
 
 // DATA FETCHING HELPERS
 
-function fetchPlaylists(options, callback) {
-  userModel.fetchPlaylists(options.user, {}, function (playlists) {
-    options.user.pl = playlists;
-    callback();
-  });
+function fetchPlaylists(options) {
+  return new Promise((resolve) =>
+    userModel.fetchPlaylists(options.user, {}, function (playlists) {
+      resolve(playlists);
+    })
+  );
 }
 
 function fetchLikes(options, callback) {
@@ -196,7 +197,7 @@ async function renderUserLibrary(lib, user) {
 
   // prepend required fetching operations in head of the call chain
   if (feedTemplate.shouldRenderWholeProfilePage(options)) {
-    await new Promise((resolve) => fetchPlaylists(options, resolve));
+    options.user.pl = await fetchPlaylists(options);
     await new Promise((resolve) => fetchStats(options, resolve));
     await new Promise((resolve) => fetchLikes(options, resolve));
     await new Promise((resolve) => fetchNbTracks(options, resolve));
