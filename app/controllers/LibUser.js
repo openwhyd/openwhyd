@@ -354,7 +354,7 @@ function fetchAndRenderProfile(options, callback, process) {
     const proceed = () =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, process);
 
-    if (options.after || options.before)
+    if (!feedTemplate.shouldRenderWholeProfilePage(options))
       // no page rendering required
       proceed();
     else {
@@ -524,7 +524,7 @@ function renderUserLibrary(lib, user) {
       lib.renderJson(options.playlists);
     } else if (options.format == 'json') {
       lib.renderJson(feed);
-    } else if (options.after || options.before) {
+    } else if (!feedTemplate.shouldRenderWholeProfilePage(options)) {
       lib.render({ html: feed });
     } else
       lib.renderPage(
@@ -538,7 +538,7 @@ function renderUserLibrary(lib, user) {
   var fcts = [fetchAndRender, renderResponse];
 
   // prepend required fetching operations in head of the call chain
-  if (!options.after && !options.before)
+  if (feedTemplate.shouldRenderWholeProfilePage(options))
     // main tab: tracks (full layout to render, with sidebar)
     fcts = [
       fetchPlaylists,
