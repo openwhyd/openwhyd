@@ -110,8 +110,7 @@ function populateUsers(subscr, options, cb) {
   );
 }
 
-exports.fetchAndRender = function (options, callback, process) {
-  // TODO: remove process => use callback only
+exports.fetchAndRender = function (options, callback) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
@@ -122,7 +121,7 @@ exports.fetchAndRender = function (options, callback, process) {
     options.bodyClass += ' userPlaylists';
     options.playlists = [...playlists].reverse(); // clone before reversing
     options.showPlaylists = { items: renderPlaylists(options) };
-    process([]); // no posts // TODO: is this call necessary ?
+    callback(null, []); // no posts // TODO: is this call necessary ?
     //});
   } else if (options.showLikes) {
     options.tabTitle = 'Likes';
@@ -132,7 +131,7 @@ exports.fetchAndRender = function (options, callback, process) {
       { lov: options.uid },
       /*params*/ null,
       { after: options.after },
-      process
+      (posts) => callback(null, posts)
     );
   } else if (options.showActivity) {
     options.tabTitle = 'Activity';
@@ -173,7 +172,7 @@ exports.fetchAndRender = function (options, callback, process) {
               options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
                 new Date() - options.showActivity.items[i]._id.getTimestamp()
               );
-            process([]);
+            callback(null, []);
           }
         );
       }
@@ -201,7 +200,7 @@ exports.fetchAndRender = function (options, callback, process) {
         options.showSubscribers = {
           items: subscr,
         };
-        process([]);
+        callback(null, []);
       });
     });
   } else if (options.showSubscriptions) {
@@ -227,7 +226,7 @@ exports.fetchAndRender = function (options, callback, process) {
         options.showSubscriptions = {
           items: subscr,
         };
-        process([]);
+        callback(null, []);
       });
     });
   } else {
@@ -237,7 +236,9 @@ exports.fetchAndRender = function (options, callback, process) {
     options.showTracks = true;
     options.pageTitle = options.user.name + "'s tracks";
     const proceed = () =>
-      postModel.fetchByAuthors([options.uid], options.fetchParams, process);
+      postModel.fetchByAuthors([options.uid], options.fetchParams, (posts) =>
+        callback(null, posts)
+      );
 
     if (!feedTemplate.shouldRenderWholeProfilePage(options))
       // no page rendering required
