@@ -194,9 +194,6 @@ async function renderUserLibrary(lib, user) {
       );
   }
 
-  // add final rendering functions at queue of the call chain
-  var fcts = [fetchAndRender, renderResponse];
-
   // prepend required fetching operations in head of the call chain
   if (feedTemplate.shouldRenderWholeProfilePage(options)) {
     await new Promise((resolve) => fetchPlaylists(options, resolve));
@@ -204,14 +201,8 @@ async function renderUserLibrary(lib, user) {
     await new Promise((resolve) => fetchLikes(options, resolve));
     await new Promise((resolve) => fetchNbTracks(options, resolve));
   }
-
-  // run the call chain
-  (function next(res) {
-    var fct = fcts.shift();
-    fct(res || options, function (res) {
-      next(res || options);
-    });
-  })();
+  const feed = await new Promise((resolve) => fetchAndRender(options, resolve));
+  renderResponse(feed);
 }
 
 exports.render = renderUserLibrary;
