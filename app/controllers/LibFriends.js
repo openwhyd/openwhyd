@@ -40,7 +40,10 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 }
 
 function prepareSidebar(uidList, options, cb) {
-  if (!options.after && !options.before && options.format != 'json') {
+  if (
+    feedTemplate.shouldRenderWholeProfilePage(options) &&
+    options.format != 'json'
+  ) {
     //console.time("fetchRecentActivity");
     fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
       //console.timeEnd("fetchRecentActivity");
@@ -79,7 +82,8 @@ function renderFriendsLibrary(lib) {
 
   renderFriendsFeed(options, function (res) {
     if (options.format == 'json') lib.renderJson(res);
-    else if (options.after || options.before) lib.render({ html: res });
+    else if (!feedTemplate.shouldRenderWholeProfilePage(options))
+      lib.render({ html: res });
     else {
       var /*options.mixpanelCode*/ feedHtml =
           [

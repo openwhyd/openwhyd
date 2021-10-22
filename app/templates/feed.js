@@ -61,7 +61,7 @@ function prepareFeedVars(posts, options) {
     userPrefs: (options.loggedUser || {}).pref || {},
     loggedUser: options.loggedUser,
     isUserLogged: options.loggedUser && options.loggedUser.id,
-    header: !options.after && !options.before,
+    header: exports.shouldRenderWholeProfilePage(options),
     emptyFeed:
       posts.length == 0 && !options.before
         ? { ownProfile: options.ownProfile }
@@ -211,4 +211,10 @@ exports.renderFeedEmbed = function (feedHtml, options) {
   options.js.push('whydPlayer.js');
   options.js.push('jquery.tinyscrollbar.min.js'); // http://baijs.nl/tinyscrollbar/
   return mainTemplate.renderWhydFrame(feedHtml, options);
+};
+
+exports.shouldRenderWholeProfilePage = function shouldRenderWholeProfilePage(
+  options
+) {
+  return !options.after && !options.before;
 };
