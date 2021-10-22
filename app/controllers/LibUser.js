@@ -70,19 +70,17 @@ var bareFormats = new Set(['json', 'links']);
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
 
-  var process = bareFormats.has(options.format)
-    ? callback
-    : function (posts) {
-        if (!options.format && !options.embedW) {
-          renderer.prepareTemplate(options);
-        }
-        feedTemplate.renderFeedAsync(posts, options, callback);
-      };
-
   populatePaginationParameters(options);
 
   const renderer = options.playlistId ? playlistRenderer : profileRenderer;
-  renderer.fetchAndRender(options, callback, process);
+  renderer.fetchAndRender(options, (err, posts) => {
+    if (err) return callback(err);
+    if (bareFormats.has(options.format)) return callback(posts);
+    if (!options.format && !options.embedW) {
+      renderer.prepareTemplate(options);
+    }
+    feedTemplate.renderFeedAsync(posts, options, callback);
+  });
 }
 
 // MAIN FUNCTION
