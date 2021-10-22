@@ -114,46 +114,7 @@ function fetchActivity(options, cb) {
     }
   );
 }
-/*
-var scoreClasses = [
-	[80, "Holy shit!!!"],
-	[50, "Great match!"],
-	[20, "Not too bad!"],
-	[10, "Well, it's a good start..."],
-	[0, "Meh"]
-];
 
-function getScoreClass(score){
-	for(var i in scoreClasses) {
-		if (score >= scoreClasses[i][0])
-			return scoreClasses[i][1];
-	}
-}
-
-function fetchSimilarity(options, cb) {
-	if (options.user.isSubscribed || !options.loggedUser || options.loggedUser.id == options.user.id)
-		cb();
-	else {
-		recomModel.computeUserSimilarity(options.loggedUser.id, options.user.id, function(sim){
-			//console.log("similarity", sim);
-			if (!sim || !sim.score)
-				return cb();
-			var pct = Math.min(100, sim.score * 100);
-			var nbArtists = sim.artists.length;
-			var artists = (sim.artists.length > 3 ? sim.artists.slice(0, 3) : sim.artists).map(function(a){
-				return a.name;
-			});
-			nbArtists -= artists.length;
-			options.similarity = {
-				pct: pct,
-				label: getScoreClass(pct),
-				text: "You both like: " + artists.join(", ") + (nbArtists > 0 ? " + " + nbArtists + " other artists..." : "")
-			}
-			cb();
-		});
-	}
-}
-*/
 // PAGE RENDERING
 
 function generateMixpanelCode(options) {
@@ -165,7 +126,6 @@ function generateMixpanelCode(options) {
 }
 
 function renderPlaylists(options, maxNb) {
-  //console.log("renderplaylists", options.user.pl)
   var playlists = options.user.pl || [];
   if (maxNb) {
     if (playlists.length > maxNb) playlists = playlists.slice(0, maxNb);
@@ -178,8 +138,6 @@ function renderPlaylists(options, maxNb) {
           img: '#',
           name: 'Create a playlist',
         });
-      //while(playlists.length < maxNb)
-      //	playlists.push({url:"javascript:;"});
     }
   }
   for (let i in playlists)
