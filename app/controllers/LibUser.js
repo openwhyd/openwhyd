@@ -13,14 +13,6 @@ var feedTemplate = require('../templates/feed.js');
 const playlistRenderer = require('./LibUserPlaylist.js');
 const profileRenderer = require('./LibUserProfile.js');
 
-var templateLoader = require('../templates/templateLoader.js');
-var profileTemplateV2 = templateLoader.loadTemplate(
-  'app/templates/userProfileV2.html'
-);
-var playlistTemplateV2 = templateLoader.loadTemplate(
-  'app/templates/userPlaylistV2.html'
-);
-
 // DATA FETCHING HELPERS
 
 function fetchPlaylists(options, callback) {
@@ -89,9 +81,7 @@ function fetchAndRender(options, callback) {
               options.user.id +
               '_' +
               options.playlistId;
-          options.customFeedTemplate = options.playlistId
-            ? playlistTemplateV2
-            : profileTemplateV2;
+          renderer.prepareTemplate(options);
         }
         //console.timeEnd("LibFriends.fetchAndRender");
         feedTemplate.renderFeedAsync(posts, options, callback);
