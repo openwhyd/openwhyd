@@ -8,6 +8,11 @@ var activityController = require('../controllers/recentActivity.js');
 var feedTemplate = require('../templates/feed.js');
 var uiSnippets = require('../templates/uiSnippets.js');
 
+var templateLoader = require('../templates/templateLoader.js');
+var profileTemplateV2 = templateLoader.loadTemplate(
+  'app/templates/userProfileV2.html'
+);
+
 //var NEW_PROFILE = true;
 var MAX_PLAYLISTS_SIDE = 4;
 var MAX_FRIENDS = 6;
@@ -271,4 +276,8 @@ exports.fetchAndRender = function (options, callback, process) {
       });
     }
   }
+};
+
+exports.prepareTemplate = function (options) {
+  options.customFeedTemplate = profileTemplateV2;
 };

@@ -1,5 +1,10 @@
 var postModel = require('../models/post.js');
 
+var templateLoader = require('../templates/templateLoader.js');
+var playlistTemplateV2 = templateLoader.loadTemplate(
+  'app/templates/userPlaylistV2.html'
+);
+
 exports.fetchAndRender = function (options, callback, process) {
   // TODO: remove process => use callback only
   options.bodyClass += ' userPlaylistV2';
@@ -51,4 +56,8 @@ exports.fetchAndRender = function (options, callback, process) {
       process
     );
   }
+};
+
+exports.prepareTemplate = function (options) {
+  options.customFeedTemplate = playlistTemplateV2;
 };
