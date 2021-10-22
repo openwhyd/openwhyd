@@ -97,6 +97,23 @@ function fetchAndRender(options, callback) {
         feedTemplate.renderFeedAsync(posts, options, callback);
       };
 
+  populatePaginationParameters(options);
+
+  const renderer = options.playlistId ? playlistRenderer : profileRenderer;
+  renderer.fetchAndRender(options, callback, process);
+}
+
+// MAIN FUNCTION
+
+var LNK_URL_PREFIX = {
+  fb: 'facebook.com/',
+  tw: 'twitter.com/',
+  sc: 'soundcloud.com/',
+  yt: 'youtube.com/user/',
+  igrm: 'instagram.com/',
+};
+
+function populatePaginationParameters(options) {
   options.fetchParams = {
     after: options.after,
     before: options.before,
@@ -112,21 +129,7 @@ function fetchAndRender(options, callback) {
     // keep only the last value
     // see https://github.com/openwhyd/openwhyd/issues/89
   }
-
-  //console.time("LibFriends.fetchAndRender");
-  const renderer = options.playlistId ? playlistRenderer : profileRenderer;
-  renderer.fetchAndRender(options, callback, process);
 }
-
-// MAIN FUNCTION
-
-var LNK_URL_PREFIX = {
-  fb: 'facebook.com/',
-  tw: 'twitter.com/',
-  sc: 'soundcloud.com/',
-  yt: 'youtube.com/user/',
-  igrm: 'instagram.com/',
-};
 
 function renderUserLinks(lnk) {
   // clean social links
