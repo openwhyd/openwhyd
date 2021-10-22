@@ -148,6 +148,36 @@ function renderUserLinks(lnk) {
     };
 }
 
+function renderResponse(feed, options, lib, user) {
+  if (options.callback) {
+    var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
+    lib.renderOther(
+      safeCallback + '(' + JSON.stringify(feed) + ')',
+      'application/javascript'
+    );
+  } else if (options.format == 'links') {
+    lib.renderOther(
+      feed
+        .map(function (p) {
+          return config.translateEidToUrl((p || {}).eId);
+        })
+        .join('\n'),
+      'text/text'
+    );
+  } else if (options.showPlaylists && options.format == 'json') {
+    lib.renderJson(options.playlists);
+  } else if (options.format == 'json') {
+    lib.renderJson(feed);
+  } else if (!feedTemplate.shouldRenderWholeProfilePage(options)) {
+    lib.render({ html: feed });
+  } else
+    lib.renderPage(
+      user,
+      null /*sidebarHtml*/,
+      generateMixpanelCode(options) + feed
+    );
+}
+
 async function renderUserLibrary(lib, user) {
   var options = lib.options;
 
@@ -164,36 +194,6 @@ async function renderUserLibrary(lib, user) {
 
   if (options.user && options.user.lnk) renderUserLinks(options.user.lnk);
 
-  function renderResponse(feed) {
-    if (options.callback) {
-      var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
-      lib.renderOther(
-        safeCallback + '(' + JSON.stringify(feed) + ')',
-        'application/javascript'
-      );
-    } else if (options.format == 'links') {
-      lib.renderOther(
-        feed
-          .map(function (p) {
-            return config.translateEidToUrl((p || {}).eId);
-          })
-          .join('\n'),
-        'text/text'
-      );
-    } else if (options.showPlaylists && options.format == 'json') {
-      lib.renderJson(options.playlists);
-    } else if (options.format == 'json') {
-      lib.renderJson(feed);
-    } else if (!feedTemplate.shouldRenderWholeProfilePage(options)) {
-      lib.render({ html: feed });
-    } else
-      lib.renderPage(
-        user,
-        null /*sidebarHtml*/,
-        generateMixpanelCode(options) + feed
-      );
-  }
-
   // prepend required fetching operations in head of the call chain
   if (feedTemplate.shouldRenderWholeProfilePage(options)) {
     await new Promise((resolve) => fetchPlaylists(options, resolve));
@@ -202,7 +202,7 @@ async function renderUserLibrary(lib, user) {
     await new Promise((resolve) => fetchNbTracks(options, resolve));
   }
   const feed = await new Promise((resolve) => fetchAndRender(options, resolve));
-  renderResponse(feed);
+  renderResponse(feed, options, lib, user);
 }
 
 exports.render = renderUserLibrary;
