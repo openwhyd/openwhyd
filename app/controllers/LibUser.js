@@ -74,16 +74,8 @@ function fetchAndRender(options, callback) {
     ? callback
     : function (posts) {
         if (!options.format && !options.embedW) {
-          if (options.playlistId)
-            options.pageImage =
-              config.urlPrefix +
-              '/img/playlist/' +
-              options.user.id +
-              '_' +
-              options.playlistId;
           renderer.prepareTemplate(options);
         }
-        //console.timeEnd("LibFriends.fetchAndRender");
         feedTemplate.renderFeedAsync(posts, options, callback);
       };
 

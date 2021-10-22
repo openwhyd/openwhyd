@@ -1,3 +1,4 @@
+var config = require('../models/config.js');
 var postModel = require('../models/post.js');
 
 var templateLoader = require('../templates/templateLoader.js');
@@ -60,4 +61,10 @@ exports.fetchAndRender = function (options, callback, process) {
 
 exports.prepareTemplate = function (options) {
   options.customFeedTemplate = playlistTemplateV2;
+  options.pageImage =
+    config.urlPrefix +
+    '/img/playlist/' +
+    options.user.id +
+    '_' +
+    options.playlistId;
 };
