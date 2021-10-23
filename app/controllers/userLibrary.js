@@ -30,6 +30,7 @@ var paramsToInclude = [
   'embedW',
   'format',
   'pageUrl',
+  'wholePage',
   'callback',
 ].concat(tabParams);
 
@@ -154,6 +155,7 @@ exports.controller = function (request, reqParams, response) {
         'embedW',
         'format',
         'limit',
+        'wholePage',
         'callback',
       ];
     for (let i in paramsToKeep)
