@@ -213,8 +213,10 @@ exports.renderFeedEmbed = function (feedHtml, options) {
   return mainTemplate.renderWhydFrame(feedHtml, options);
 };
 
-exports.shouldRenderWholeProfilePage = function shouldRenderWholeProfilePage(
-  options
-) {
-  return !options.after && !options.before;
+/**
+ * @param {*} options - rendering options transiting from the API to template renderers.
+ * @returns true if the profile page must be rendered completely, i.e. with header and side bars.
+ */
+exports.shouldRenderWholeProfilePage = function (options) {
+  return options.wholePage || (!options.after && !options.before);
 };
