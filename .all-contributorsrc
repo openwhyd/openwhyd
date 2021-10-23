@@ -328,6 +328,24 @@
       "contributions": [
         "content"
       ]
+    },
+    {
+      "login": "alightsleeper",
+      "name": "Dheeru Pennepalli",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6707588?v=4",
+      "profile": "https://github.com/alightsleeper",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "has12zen",
+      "name": "has12zen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/57583693?v=4",
+      "profile": "https://github.com/has12zen",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "repoType": "github",

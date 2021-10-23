@@ -103,6 +103,8 @@ These are the wonderful people whose time and sweat have made Openwhyd's heart b
     <td align="center"><a href="https://github.com/agathe-vaisse"><img src="https://avatars2.githubusercontent.com/u/25689895?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Agathe Vaisse</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=agathe-vaisse" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/iNeoO"><img src="https://avatars1.githubusercontent.com/u/8982189?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Valère</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=iNeoO" title="Code">💻</a></td>
     <td align="center"><a href="https://openwhyd.org/blindmanwatchin"><img src="https://openwhyd.org/img/u/52dde4ba7e91c862b2b36827?s=98" width="98px;" alt=""/><br /><sub><b>Jeff Hsr</b></sub></a><br /><a href="#content" title="Content">🖋</a></td>
+    <td align="center"><a href="https://github.com/alightsleeper"><img src="https://avatars.githubusercontent.com/u/6707588?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Dheeru Pennepalli</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=alightsleeper" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/has12zen"><img src="https://avatars.githubusercontent.com/u/57583693?v=4?s=98" width="98px;" alt=""/><br /><sub><b>has12zen</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=has12zen" title="Code">💻</a></td>
   </tr>
 </table>
 
