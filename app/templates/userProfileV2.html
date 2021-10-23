@@ -388,10 +388,14 @@
       <!-- COMMON ENDING CODE -->
 
       {{#hasMore}}
-      <div class="btnLoadMore" onclick="loadMore()">
+      <a
+        class="btnLoadMore no-ajaxy"
+        onclick="event.preventDefault(); loadMore();"
+        href="{{nextWholePageUrl}}"
+      >
         <div>&nbsp;</div>
         <span>Load more</span>
-      </div>
+      </a>
       {{/hasMore}} {{#user}}
       <script>
         $(function () {

@@ -2861,6 +2861,7 @@ body.pgWithSideBar .post > h2 {
 }
 
 .btnLoadMore {
+  display: block;
   color: #cbced2;
   font-size: 13px;
   font-family: 'AvenirNext-DemiBold', Helvetica, Arial, Sans-serif;
