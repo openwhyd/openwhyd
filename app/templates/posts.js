@@ -268,12 +268,11 @@ exports.renderPostsAsync = function (posts, options, callback) {
   if (hasMore) {
     posts = posts.slice(0, maxPosts);
     var lastPost = posts[posts.length - 1];
-    options.hasMore = {
-      lastPid:
-        options.playlist && !isNaN(lastPost.order)
-          ? lastPost.order
-          : lastPost._id,
-    };
+    const lastPid =
+      options.playlist && !isNaN(lastPost.order)
+        ? lastPost.order
+        : lastPost._id;
+    exports.populateNextPageUrl(options, lastPid);
   }
 
   function prepareAndRender(posts, options, cb) {
@@ -308,4 +307,18 @@ exports.renderPostsAsync = function (posts, options, callback) {
       }
     });
   });
+};
+
+/**
+ * @param {*} options - rendering options transiting from the API to template renderers.
+ * @param {string} lastPid - identifier of the last track of the current page.
+ */
+exports.populateNextPageUrl = function (options, lastPid) {
+  const pageUrl = new URL(options.pageUrl, config.urlPrefix);
+  pageUrl.searchParams.append('after', lastPid);
+  pageUrl.searchParams.append('wholePage', true);
+  options.hasMore = {
+    lastPid,
+    nextWholePageUrl: pageUrl.toString(),
+  };
 };
