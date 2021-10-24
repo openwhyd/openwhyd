@@ -16,9 +16,9 @@ const MONGODB_URL =
 
 test.before(async (t) => {
   const testDataCollections = {
-    user: await readMongoDocuments(__dirname + '/approval.users.json'),
-    post: await readMongoDocuments(__dirname + '/approval.posts.json'),
-    follow: await readMongoDocuments(__dirname + '/approval.follows.json'),
+    user: await readMongoDocuments(__dirname + '/approval.users.json.js'),
+    post: await readMongoDocuments(__dirname + '/approval.posts.json.js'),
+    follow: await readMongoDocuments(__dirname + '/approval.follows.json.js'),
   };
   await insertTestData(MONGODB_URL, testDataCollections);
 
