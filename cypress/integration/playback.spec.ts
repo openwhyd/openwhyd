@@ -11,7 +11,7 @@ context('Playback', () => {
     // should play the track
     cy.get('#btnPlay.playing', { timeout: 10000 }).should('be.visible');
 
-    cy.wait(1000);
+    cy.wait(1000); // TODO: get rid of this. cf https://github.com/openwhyd/openwhyd/pull/495/commits/7c0eddc9dc9e60fa163624d356837e1a111018d1
 
     // should pause the track when the user clicks on the play/pause button
     cy.get('#btnPlay').click();
