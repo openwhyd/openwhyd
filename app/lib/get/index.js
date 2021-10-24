@@ -7,7 +7,8 @@ var iconv = require('iconv'); //'iconv-jp'
 var CHARSET_REG = /<meta[^<>]+charset\s*=\s*(?:"([^<>"]+)"|([^<>"\s]+))[^<>]*>/;
 var TITLE_REG = /<title>([^<>]*)<\/title>/;
 var BASE_REG = /<base[^<>]+href\s*=\s*"([^"]*)"[^<>]*>/;
-var OG_IMAGE_REG = /<meta[^<>]+property\s*=\s*"og:image"[^<>]+content\s*=\s*"([^"]*)"[^<>]*>/;
+var OG_IMAGE_REG =
+  /<meta[^<>]+property\s*=\s*"og:image"[^<>]+content\s*=\s*"([^"]*)"[^<>]*>/;
 var IMAGE_REG = /<img[^<>]+src\s*=\s*"[^"]*"/gi;
 var IMAGE_URL_REG = /<img[^<>]+src\s*=\s*"([^"]*)"/i;
 var CONTENT_TYPE_REG = /([^\s;]+)/;

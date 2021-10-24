@@ -32,8 +32,7 @@ var playerHtmlCode = fs.readFileSync('app/templates/whydPlayer.html', 'utf8');
 
 exports.defaultPageMeta = {
   img: config.urlPrefix + '/images/logo-black-square-smaller.png',
-  desc:
-    'Discover and collect music gems from Youtube, Soundcloud, Deezer and more',
+  desc: 'Discover and collect music gems from Youtube, Soundcloud, Deezer and more',
 };
 
 function makeMetaHead(options = {}) {
@@ -350,22 +349,23 @@ exports.renderWhydPage = function (params = {}) {
       ? ''
       : ' – Discover and collect the best music tracks from the web');
 
-  params.js = (params.noDefaultJs
-    ? []
-    : [
-        'jquery.avgrund.js',
-        'jquery.tipsy.js', // replaces tooltip.js
-        'quickSearch.js',
-        //	"md5.js",
+  params.js = (
+    params.noDefaultJs
+      ? []
+      : [
+          'jquery.avgrund.js',
+          'jquery.tipsy.js', // replaces tooltip.js
+          'quickSearch.js',
+          //	"md5.js",
 
-        'jquery.iframe-post-form.min.js',
-        'jquery.placeholder.min.js',
-        'underscore-min.js', // for jquery.mentionsInput.js
-        'jquery.elastic.js', // for jquery.mentionsInput.js
-        'jquery.mentionsInput.js',
-        'ui.js',
-        'whyd.js', // topicBrowser.js
-      ]
+          'jquery.iframe-post-form.min.js',
+          'jquery.placeholder.min.js',
+          'underscore-min.js', // for jquery.mentionsInput.js
+          'jquery.elastic.js', // for jquery.mentionsInput.js
+          'jquery.mentionsInput.js',
+          'ui.js',
+          'whyd.js', // topicBrowser.js
+        ]
   )
     .concat(['playem-' + playemFile + '.js'])
     .concat([

@@ -254,8 +254,7 @@ exports.handleRequest = function (request, reqParams, response) {
 		else if (reqParams.title == "registered users" && reqParams.action == "delete" && emails.length) {
 			console.log("delete user ", emails[0]);
 			userModel.delete({email:emails[0]}, fetchAndRender);
-		}*/ else
-      response.badRequest();
+		}*/ else response.badRequest();
   } else fetchAndRender();
 };
 
