@@ -255,8 +255,15 @@ http.ServerResponse.prototype.renderText = function (json, statusCode) {
   );
 };
 
+// TODO: this function is overrided by Express => delete it to prevent ambiguity
 http.ServerResponse.prototype.redirect = function (url) {
   return this.renderHTML(loggingTemplate.htmlRedirect(url));
+};
+
+http.ServerResponse.prototype.safeRedirect = function (url) {
+  const fullURL = new URL(url, config.urlPrefix);
+  if (!fullURL.toString().startsWith(config.urlPrefix)) return this.forbidden();
+  this.redirect(url);
 };
 
 http.ServerResponse.prototype.redirectWithTracking = function (url, title) {
