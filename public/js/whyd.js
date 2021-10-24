@@ -1189,9 +1189,7 @@ $(document).ready(function () {
           // Update the title
           document.title = $data.find('.document-title:first').text();
           try {
-            document.getElementsByTagName(
-              'title'
-            )[0].innerHTML = document.title
+            document.getElementsByTagName('title')[0].innerHTML = document.title
               .replace('<', '&lt;')
               .replace('>', '&gt;')
               .replace(' & ', ' &amp; ');

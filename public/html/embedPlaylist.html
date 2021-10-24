@@ -113,9 +113,8 @@ if you see this, please select another size preference</textarea
   /*<![CDATA[*/
   (function () {
     function generateEmbed(w, h) {
-      var plurl = window.location.href.split(
-        '?'
-      )[0]; /*.replace("http://", "https://")*/
+      var plurl =
+        window.location.href.split('?')[0]; /*.replace("http://", "https://")*/
       plurl = plurl + '?format=embedV2&amp;embedW=' + w; //'?embedW=' + w;
       var code =
         '<iframe width="' +

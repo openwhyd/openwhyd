@@ -159,9 +159,8 @@ if (typeof exports !== 'undefined') {
 var openwhydBkPageDetectors = [
   function detectYouTubePageTrack(window) {
     if (/ - YouTube$/.test(window.document.title) === false) return null;
-    var videoElement = window.document.getElementsByTagName(
-      'ytd-watch-flexy'
-    )[0];
+    var videoElement =
+      window.document.getElementsByTagName('ytd-watch-flexy')[0];
     if (!videoElement) return null;
     var videoId = videoElement.getAttribute('video-id');
     if (!videoId || window.location.href.indexOf(videoId) == -1) return null;
@@ -294,7 +293,8 @@ if (typeof exports === 'undefined') {
       window.console = __assign(__assign({}, window.console), {
         log: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
         info: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
-        error: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        error:
+          function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
         warn: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
       });
     console.log('-= openwhyd bookmarklet v2.6.1 =-');

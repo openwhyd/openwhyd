@@ -38,9 +38,7 @@ function LibraryController(reqParams, render) {
   reqParams = reqParams || {};
   this.render = render;
   this.options = {
-    loggedUser:
-      reqParams.loggedUser ||
-      {} /*,
+    loggedUser: reqParams.loggedUser || {} /*,
 		after: reqParams.after,
 		before: reqParams.before,
 		limit: reqParams.limit,

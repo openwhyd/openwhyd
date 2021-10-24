@@ -24,7 +24,7 @@ exports.config.uPlaylistPath =
 const NO_IMAGE_PATH = exports.config.whydPath + '/public/images/no_image.png';
 
 // create upload dirs
-var dirMode = 0755; // eslint-disable-line no-octal
+var dirMode = 0o755;
 var dirsToCreate = [
   exports.config.uploadPath,
   exports.config.uAvatarImgPath,

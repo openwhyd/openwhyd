@@ -10,8 +10,7 @@ var DESTINATIONS = {
     {
       title: 'Download Openwhyd',
       img: 'https://openwhyd.github.io/openwhyd-electron/screenshot.png',
-      desc:
-        'Discover and collect music gems from Youtube, Soundcloud, Deezer and more. Can now be installed on your favorite OS, to play music in the background.',
+      desc: 'Discover and collect music gems from Youtube, Soundcloud, Deezer and more. Can now be installed on your favorite OS, to play music in the background.',
     },
   ],
 };

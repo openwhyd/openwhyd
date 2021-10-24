@@ -101,8 +101,7 @@ describe('bookmarklet', () => {
   it('should return the track title from a Spotify page', async () => {
     const songTitle = 'Dummy Song';
     const window = makeWindow({
-      url:
-        'https://open.spotify.com/album/0EX4lJA3CFaKIvjFJyYIpe?highlight=spotify:track:0P41Qf51RcEWId6W6RykV4',
+      url: 'https://open.spotify.com/album/0EX4lJA3CFaKIvjFJyYIpe?highlight=spotify:track:0P41Qf51RcEWId6W6RykV4',
       title: `${songTitle} - Spotify`,
     });
     const results = await detectTracksAsPromise({ window });

@@ -9,8 +9,8 @@ describe('hypemachine / mp3 detector', function () {
 
   function ContentDetector() {
     console.logBackup = console.log;
-    var controller = require('../../app/controllers/api/contentExtractor.js')
-      .controller;
+    var controller =
+      require('../../app/controllers/api/contentExtractor.js').controller;
     var fakeRequest = {
       logToConsole: function () {}, // eslint-disable-line @typescript-eslint/no-empty-function
       checkLogin: function () {

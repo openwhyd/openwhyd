@@ -74,7 +74,8 @@ exports.removeAccents = function (str) {
 };
 
 //var regexUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-var regexUrl = /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
+var regexUrl =
+  /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
 var regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 exports.replaceURLWithHTMLLinks = function (text) {
@@ -797,13 +798,15 @@ exports.Worker = function (options) {
     --jobs;
     if (!jobs) interval = clearInterval(interval);
     console.log('removed job: ' + job);
-    delete job; /* eslint-disable-line no-delete-var */
   }
   function Job(id) {
     this.toString = function () {
       return id;
     };
-    this.done = removeJob.bind(this, this);
+    this.done = () => {
+      removeJob(this);
+      delete this;
+    };
     this.wrapCallback = (callback) => {
       return function () {
         if (this && this.done) {
@@ -823,6 +826,7 @@ exports.Worker = function (options) {
         'destroyed a job that was still running 1 minute after launch'
       );
       removeJob(this);
+      delete this;
     }, options.expiry || 60000);
     addJob(this);
     return this;

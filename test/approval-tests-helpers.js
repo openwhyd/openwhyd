@@ -20,7 +20,7 @@ const loadEnvVars = async (file) => {
 async function readMongoDocuments(file) {
   const ISODate = (d) => new Date(d);
   const ObjectId = (id) => mongodb.ObjectID.createFromHexString(id);
-  return eval(await readFile(file));
+  return require(file)({ ObjectId, ISODate });
 }
 
 async function insertTestData(url, docsPerCollection) {

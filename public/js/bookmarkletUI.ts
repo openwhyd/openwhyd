@@ -25,7 +25,8 @@ if (typeof exports === 'undefined') {
         ...window.console,
         log: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
         info: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
-        error: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        error:
+          function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
         warn: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
       };
 
