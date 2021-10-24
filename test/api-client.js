@@ -87,6 +87,13 @@ exports.get = function (jar, url, callback) {
   });
 };
 
+exports.postRaw = function (jar, url, body, callback) {
+  request.post(
+    { jar, url: `${URL_PREFIX}${url}`, body, json: typeof body === 'object' },
+    (error, response, body) => callback(error, { response, body })
+  );
+};
+
 // USER
 
 /*

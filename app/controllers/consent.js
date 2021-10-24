@@ -112,7 +112,7 @@ exports.controller = async function (request, getParams, response) {
       r.html = mainTemplate.renderWhydPage(r);
     }
     // call the adequate renderer
-    if (r.redirect) response.redirect(r.redirect);
+    if (r.redirect) response.safeRedirect(r.redirect);
     else if (r.html) response.renderHTML(r.html);
     else response.renderJSON(r);
     // and track visit to that page
