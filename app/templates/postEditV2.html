@@ -12,10 +12,8 @@
       /* playem init */
       window.SOUNDCLOUD_CLIENT_ID = 'eb257e698774349c22b0b727df0238ad';
       window.DEEZER_APP_ID = 190482;
-      window.DEEZER_CHANNEL_URL = '{{urlPrefix}}/html/deezer.channel.html'.replace(
-        /^http\:/,
-        'https:'
-      );
+      window.DEEZER_CHANNEL_URL =
+        '{{urlPrefix}}/html/deezer.channel.html'.replace(/^http\:/, 'https:');
       window.JAMENDO_CLIENT_ID = 'c9cb2a0a';
       window.YOUTUBE_API_KEY = /openwhyd\.org/.test('{{urlPrefix}}')
         ? 'AIzaSyBPFDetynnoI-Lw_8oQ3urekTo_w-edJPQ' // associated to google project "openwhyd-2", see https://github.com/openwhyd/openwhyd/issues/262
@@ -125,8 +123,7 @@
     <script>
       /*<![CDATA[*/
       initPostBox({
-        mode:
-          '{{^embedded}}addFromBookmarklet{{/embedded}}{{#editPost}}editPost{{/editPost}}{{#repost}}repost{{/repost}}',
+        mode: '{{^embedded}}addFromBookmarklet{{/embedded}}{{#editPost}}editPost{{/editPost}}{{#repost}}repost{{/repost}}',
         ctx: '{{ctx}}',
         pId: '{{pId}}',
         embed: '{{{embed}}}',

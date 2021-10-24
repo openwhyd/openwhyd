@@ -14,8 +14,7 @@ db.user.updateOne(
       email: 'test@openwhyd.org',
       handle: 'admin',
       name: 'admin',
-      img:
-        '/images/blank_user.gif' /* needed for "has default avatar" e2e test */,
+      img: '/images/blank_user.gif' /* needed for "has default avatar" e2e test */,
       pwd: '21232f297a57a5a743894a0e4a801fc3' /* password = "admin" */,
       'consent.lang': 'en',
     },

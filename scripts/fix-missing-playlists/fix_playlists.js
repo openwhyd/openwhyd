@@ -378,8 +378,7 @@ db.user.update(
         { id: 40, name: 'Singles Awareness Day [2015]' },
         {
           id: 42,
-          name:
-            '10 Tracks To Add To Your Party Playlist V.1 (Mardi Gras Edition) ',
+          name: '10 Tracks To Add To Your Party Playlist V.1 (Mardi Gras Edition) ',
         },
         { id: 43, name: 'March 2015' },
         { id: 44, name: 'April 2015' },

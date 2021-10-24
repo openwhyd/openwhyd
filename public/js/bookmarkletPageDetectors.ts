@@ -35,9 +35,8 @@ type BandcampTrack = {
 const openwhydBkPageDetectors: PageDetector[] = [
   function detectYouTubePageTrack(window) {
     if (/ - YouTube$/.test(window.document.title) === false) return null;
-    const videoElement = window.document.getElementsByTagName(
-      'ytd-watch-flexy'
-    )[0];
+    const videoElement =
+      window.document.getElementsByTagName('ytd-watch-flexy')[0];
     if (!videoElement) return null;
     const videoId = videoElement.getAttribute('video-id');
     if (!videoId || window.location.href.indexOf(videoId) == -1) return null;

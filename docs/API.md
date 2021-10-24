@@ -78,8 +78,7 @@ Example:
     uNm: 'Adrien Joly',
     text: '',
     name: 'Mitski - Your Best American Girl',
-    eId:
-      '/sc/deadoceans/mitski-your-best-american-girl-3#https://api.soundcloud.com/tracks/249475048',
+    eId: '/sc/deadoceans/mitski-your-best-american-girl-3#https://api.soundcloud.com/tracks/249475048',
     img: 'https://i1.sndcdn.com/artworks-000149087394-z2wpob-t500x500.jpg',
     nbP: 6,
     nbR: 1,

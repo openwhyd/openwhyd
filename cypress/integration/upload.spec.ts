@@ -15,10 +15,9 @@ context('upload', () => {
     cy.request(`/images/blank_user.gif`).then((response) => {
       defaultImageBody = response.body;
     });
-    cy.request(
-      `/img/u/${userId}?_t=${new Date().getTime()}`
-    ).should((response) =>
-      expect(response.body.length).to.equal(defaultImageBody.length)
+    cy.request(`/img/u/${userId}?_t=${new Date().getTime()}`).should(
+      (response) =>
+        expect(response.body.length).to.equal(defaultImageBody.length)
     );
 
     // open the "edit profile" dialog
@@ -35,10 +34,9 @@ context('upload', () => {
     cy.wait(1000); // to wait for the dialog to close and page to refresh
 
     // check that the user's profile image was updated
-    cy.request(
-      `/img/u/${userId}?_t=${new Date().getTime()}`
-    ).should((response) =>
-      expect(response.body.length).not.to.equal(defaultImageBody.length)
+    cy.request(`/img/u/${userId}?_t=${new Date().getTime()}`).should(
+      (response) =>
+        expect(response.body.length).not.to.equal(defaultImageBody.length)
     );
   });
 });

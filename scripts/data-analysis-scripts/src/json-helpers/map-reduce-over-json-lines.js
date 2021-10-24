@@ -29,7 +29,11 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
     let reduced = {};
     const limitReached = !opts.limit
       ? () => false
-      : ((remaining = opts.limit) => () => remaining-- <= 0)();
+      : (
+          (remaining = opts.limit) =>
+          () =>
+            remaining-- <= 0
+        )();
     const inTimeRange = !opts.query
       ? () => true
       : (object) => {
