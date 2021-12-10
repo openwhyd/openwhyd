@@ -502,13 +502,13 @@ if (typeof exports === 'undefined') {
       var contentDiv = window.document.getElementById('whydContent');
       this.addThumb = function (thumb) {
         thumb.id = 'whydThumb' + this.nbTracks++;
-        thumb = imageToHD(thumb);
         thumb.onclick =
           thumb.onclick ||
           function () {
             return showForm(thumb);
           };
         contentDiv.appendChild(renderThumb(thumb));
+        thumb = imageToHD(thumb);
       };
       this.addSearchThumb = function (track) {
         var searchQuery = track.searchQuery || track.name || track.title;
