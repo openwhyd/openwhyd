@@ -262,7 +262,8 @@ http.ServerResponse.prototype.redirect = function (url) {
 
 http.ServerResponse.prototype.safeRedirect = function (url) {
   const fullURL = new URL(url, config.urlPrefix);
-  if (!fullURL.toString().startsWith(config.urlPrefix)) return this.forbidden();
+  if (`${fullURL.protocol}//${fullURL.host}` !== config.urlPrefix)
+    return this.forbidden();
   this.redirect(url);
 };
 
