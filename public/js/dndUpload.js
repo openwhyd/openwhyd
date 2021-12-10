@@ -55,7 +55,7 @@ function DndUpload(options) {
     formData.append('file', files[0]);
     handler('post', files[0]);
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
+    xhr.open('POST', url, true);
     xhr.onload = function (e2) {
       handler('progress', 1);
       handler('complete', e2.target.response);
