@@ -2915,7 +2915,6 @@ body.pgWithSideBar .post > h2 {
   transition: top 0.5s;
   position: absolute;
   text-align: center;
-  background: url(/images/spinnerbackloadmore.png) no-repeat;
   top: 11px;
   left: 220px;
   width: 16px;
