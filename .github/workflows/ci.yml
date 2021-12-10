@@ -236,7 +236,7 @@ jobs:
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
-          # cp coverage-cypress/.nyc_output/*.json coverage-reports
+          cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-approval/.nyc_output/*.json coverage-reports
           npx nyc merge coverage-reports .nyc_output/merged-coverage.json
           npx nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
