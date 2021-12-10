@@ -596,7 +596,7 @@ function AudioFilePlayer(){
     this.soundOptions.url = vars.trackId.replace(/^\/fi\//, ""); // remove eId prefix /fi/ if necessary
     this.trackInfo = {};
     if (this.widget) {
-      this.pause();
+      try { this.pause(); } catch (e) { console.error(e); }
       this.widget = null;
       delete this.widget;
     }
@@ -1397,7 +1397,7 @@ function JamendoPlayer(){
     this.soundOptions.url = "//api.jamendo.com/v3.0/tracks/file?client_id=" + JAMENDO_CLIENT_ID + "&action=stream&audioformat=mp32&id=" + vars.trackId;
     this.trackInfo = {};
     if (this.widget) {
-      this.pause();
+      try { this.pause(); } catch (e) { console.error(e); }
       this.widget = null;
       delete this.widget;
     }
