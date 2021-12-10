@@ -376,15 +376,14 @@ if (typeof exports === 'undefined') {
           i_1.onload = function () {
             if (i_1.height >= 120) {
               const oldImage = window.document.getElementById(track.id);
-              console.log(
-                'trying to update oldImage',
-                track,
-                track.id,
-                oldImage,
-                img_1
-              );
               if (oldImage)
                 oldImage.style.backgroundImage = 'url(' + img_1 + ')';
+              else
+                console.warn('failed to improve quality of thumb', {
+                  track,
+                  elementToReplace: oldImage,
+                  newImgUrl: img_1,
+                });
             }
           };
           i_1.src = img_1;
