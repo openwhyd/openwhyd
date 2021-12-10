@@ -1,4 +1,4 @@
-FROM node:16.13.1-slim@sha256:a90559e3f4aa2a9a05b73ee94cb0051c97d31dde42c3bc2867a0960671ede797 AS build
+FROM node:16.13.1-slim@sha256:89c35ab13ee6afcb650384b62f6ee270c3921b4930f642cf8947440adfedc3a1 AS build
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -16,7 +16,7 @@ RUN npm ci --only=production --no-audit
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
 # RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js
 
-FROM node:16.13.1-slim@sha256:a90559e3f4aa2a9a05b73ee94cb0051c97d31dde42c3bc2867a0960671ede797
+FROM node:16.13.1-slim@sha256:89c35ab13ee6afcb650384b62f6ee270c3921b4930f642cf8947440adfedc3a1
 # note: keep nodejs version above in sync with the one in .nvmrc + don't forget to append the corresponding sha256 hash
 
 # Install runtime dependencies
