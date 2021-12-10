@@ -1,5 +1,6 @@
 module.exports = (on, config) => {
   require('@cypress/code-coverage/task')(on, config); // eslint-disable-line @typescript-eslint/no-var-requires
+  require('cypress-log-to-output').install(on);
 
   // add other tasks to be registered here
 

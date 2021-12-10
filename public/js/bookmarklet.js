@@ -375,8 +375,16 @@ if (typeof exports === 'undefined') {
           var i_1 = new Image();
           i_1.onload = function () {
             if (i_1.height >= 120) {
-              window.document.getElementById(track.id).style.backgroundImage =
-                'url(' + img_1 + ')';
+              const oldImage = window.document.getElementById(track.id);
+              console.log(
+                'trying to update oldImage',
+                track,
+                track.id,
+                oldImage,
+                img_1
+              );
+              if (oldImage)
+                oldImage.style.backgroundImage = 'url(' + img_1 + ')';
             }
           };
           i_1.src = img_1;
@@ -502,13 +510,13 @@ if (typeof exports === 'undefined') {
       var contentDiv = window.document.getElementById('whydContent');
       this.addThumb = function (thumb) {
         thumb.id = 'whydThumb' + this.nbTracks++;
+        thumb = imageToHD(thumb);
         thumb.onclick =
           thumb.onclick ||
           function () {
             return showForm(thumb);
           };
         contentDiv.appendChild(renderThumb(thumb));
-        thumb = imageToHD(thumb);
       };
       this.addSearchThumb = function (track) {
         var searchQuery = track.searchQuery || track.name || track.title;
