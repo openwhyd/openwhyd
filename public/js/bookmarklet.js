@@ -375,8 +375,15 @@ if (typeof exports === 'undefined') {
           var i_1 = new Image();
           i_1.onload = function () {
             if (i_1.height >= 120) {
-              window.document.getElementById(track.id).style.backgroundImage =
-                'url(' + img_1 + ')';
+              const oldImage = window.document.getElementById(track.id);
+              if (oldImage)
+                oldImage.style.backgroundImage = 'url(' + img_1 + ')';
+              else
+                console.warn('failed to improve quality of thumb', {
+                  track,
+                  elementToReplace: oldImage,
+                  newImgUrl: img_1,
+                });
             }
           };
           i_1.src = img_1;

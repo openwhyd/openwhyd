@@ -1,4 +1,4 @@
-/* playemjs 1.2.0, commit: 2d97f954eacf4199e796d7488ebbd2b47e3ccb28 */
+/* playemjs 1.2.2, commit: 4bb031ea2d812d2c865d11fa15bff481a9f922b6 */
 
 // configuration
 
@@ -596,7 +596,7 @@ function AudioFilePlayer(){
     this.soundOptions.url = vars.trackId.replace(/^\/fi\//, ""); // remove eId prefix /fi/ if necessary
     this.trackInfo = {};
     if (this.widget) {
-      this.pause();
+      try { this.pause(); } catch (err) { console.warn("[playemjs] audiofile.embed() failed to pause()", err) }
       this.widget = null;
       delete this.widget;
     }
@@ -1397,7 +1397,7 @@ function JamendoPlayer(){
     this.soundOptions.url = "//api.jamendo.com/v3.0/tracks/file?client_id=" + JAMENDO_CLIENT_ID + "&action=stream&audioformat=mp32&id=" + vars.trackId;
     this.trackInfo = {};
     if (this.widget) {
-      this.pause();
+      try { this.pause(); } catch (err) { console.warn("[playemjs] jamendo.embed() failed to pause()", err) }
       this.widget = null;
       delete this.widget;
     }

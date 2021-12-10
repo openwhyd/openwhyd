@@ -500,12 +500,20 @@ function WhydPlayer() {
     var lastLog = null;
     return function (evtName, handler) {
       return function () {
-        //console.log.apply(console, [ Date.now(), evtName ].concat(Array.prototype.slice.call(arguments)));
+        console.debug(
+          '[wrapLogger]',
+          Date.now(),
+          evtName,
+          ...Array.prototype.slice.call(arguments)
+        );
         var playerName;
         try {
           playerName = arguments[0].playerName;
         } catch (e) {
-          console.error(e);
+          console.error('[wrapLogger] error:', e.message, {
+            evtName,
+            arguments: Array.prototype.slice.call(arguments),
+          });
         }
         var log = evtName + (playerName ? ' (' + playerName + ')' : '');
         if (log != lastLog) {
