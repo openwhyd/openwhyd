@@ -192,7 +192,7 @@ jobs:
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           config-file: cypress.json
-          browser: chrome
+          browser: 'electron' # use 'chrome' to include browser console in cypress logs
           record: true
           parallel: true
 
