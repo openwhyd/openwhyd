@@ -3154,7 +3154,6 @@ body.reduced #playerContainer {
 #whydPlayer #btnRepost,
 #whydPlayer #btnLike,
 #whydPlayer #btnComment,
-#whydPlayer #btnVideo,
 #whydPlayer #btnFullscreen,
 #whydPlayer #btnShuffle {
   outline: none;
@@ -3165,7 +3164,6 @@ body.reduced #playerContainer {
 #whydPlayer #btnRepost,
 #whydPlayer #btnLike,
 #whydPlayer #btnComment,
-#whydPlayer #btnVideo,
 #whydPlayer #btnFullscreen,
 #whydPlayer #btnShuffle {
   background: none;
@@ -3179,7 +3177,6 @@ body.reduced #playerContainer {
 #whydPlayer #btnRepost div,
 #whydPlayer #btnLike div,
 #whydPlayer #btnComment div,
-#whydPlayer #btnVideo div,
 #whydPlayer #btnFullscreen div,
 #whydPlayer #btnShuffle div {
   height: 16px;
@@ -3195,9 +3192,6 @@ body.reduced #playerContainer {
 #whydPlayer #btnComment div {
   background-image: url('/images/btn-player-comment.png');
 }
-#whydPlayer #btnVideo div {
-  background-image: url('/images/btn-player-video.png');
-}
 #whydPlayer #btnFullscreen div {
   background-image: url('/images/btn-player-fullscreen.png');
 }
@@ -3212,7 +3206,6 @@ body.isShuffle #whydPlayer #btnShuffle div {
 #whydPlayer #btnRepost:hover div,
 #whydPlayer #btnLike:hover div,
 #whydPlayer #btnComment:hover div,
-#whydPlayer #btnVideo:hover div,
 #whydPlayer #btnFullscreen:hover div,
 #whydPlayer #btnShuffle:hover div {
   background-position: 0px -17px;
@@ -3221,7 +3214,6 @@ body.isShuffle #whydPlayer #btnShuffle div {
 #whydPlayer #btnRepost:active div,
 #whydPlayer #btnLike:active div,
 #whydPlayer #btnComment:active div,
-#whydPlayer #btnVideo:active div,
 #whydPlayer #btnFullscreen:active div,
 body #whydPlayer #btnShuffle:active div {
   background-position: 0px -34px;
@@ -3237,22 +3229,8 @@ body #whydPlayer #btnShuffle:active div {
   padding-left: 10px;
 }
 
-#whydPlayer #btnVideo div {
-  background-position: 0px -34px;
-}
-
-body.playing_Bandcamp #whydPlayer #btnVideo div,
-body.playing_SoundCloud #whydPlayer #btnVideo div,
-body.playing_Deezer #whydPlayer #btnVideo div,
-body.reduced #whydPlayer #btnVideo div {
-  background-position: 0px 0px;
-}
-
-body.playing_Bandcamp #whydPlayer #btnVideo > div,
 body.playing_Bandcamp #whydPlayer #btnFullscreen > div,
-body.playing_SoundCloud #whydPlayer #btnVideo > div,
 body.playing_SoundCloud #whydPlayer #btnFullscreen > div,
-body.playing_Deezer #whydPlayer #btnVideo > div,
 body.playing_Deezer #whydPlayer #btnFullscreen > div {
   opacity: 0.2;
 }
