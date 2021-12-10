@@ -68,7 +68,7 @@ jobs:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
-          env-file: env-vars-testing.sh
+          env-file: env-vars-testing.conf
       - name: use npm cache
         uses: actions/cache@v2
         with:
@@ -124,7 +124,7 @@ jobs:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
-          env-file: env-vars-testing.sh
+          env-file: env-vars-testing.conf
       - name: use npm cache
         uses: actions/cache@v2
         with:
@@ -182,7 +182,7 @@ jobs:
             ${{ runner.os }}-node-
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
-          env-file: env-vars-testing.sh
+          env-file: env-vars-testing.conf
       - name: npm install
         env:
           CI: true
