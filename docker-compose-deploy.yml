@@ -13,28 +13,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    env_file:
+      - 'env-vars-testing.conf'
     environment:
-      # From env-vars-testing.sh not working in Dockerfile
-      # And with Docker mongo link
-      - WHYD_GENUINE_SIGNUP_SECRET=whatever
-      - WHYD_SESSION_SECRET=whatever
-      - WHYD_DEV_APNS_PASSPHRASE=whatever
-      - WHYD_APNS_PASSPHRASE=whatever
-      - WHYD_ADMIN_OBJECTID=000000000000000000000001
-      - WHYD_ADMIN_NAME=admin
-      - WHYD_ADMIN_EMAIL=test@openwhyd.org
-      - WHYD_CONTACT_EMAIL=test@openwhyd.org
-      - WHYD_URL_PREFIX=http://localhost:8080
-      - WHYD_PORT=8080
-      - MONGODB_DATABASE=openwhyd_test
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27117
-      - MONGODB_USER=
-      - MONGODB_PASS=
-      - SENDGRID_API_KEY=
-      - SENDGRID_API_FROM_EMAIL=test@openwhyd.org
-      - SENDGRID_API_FROM_NAME=test
-      - LAST_FM_API_KEY=
-      - LAST_FM_API_SECRET=
-      - ALGOLIA_APP_ID=
-      - ALGOLIA_API_KEY=
