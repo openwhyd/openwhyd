@@ -43,5 +43,14 @@ describe('security', () => {
       });
       assert.equal(response.statusCode, 403); // forbidden
     });
+
+    it('should NOT allow redirect to a disguised domain', async () => {
+      const { jar } = await loginAs(ADMIN_USER);
+      const { response } = await postRaw(jar, `/consent`, {
+        lang: 'en',
+        redirect: `${URL_PREFIX}@google.com`,
+      });
+      assert.equal(response.statusCode, 403); // forbidden
+    });
   });
 });
