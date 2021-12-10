@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install and build app dependencies
 WORKDIR /usr/src/app
 COPY --chown=node:node ./package*.json /usr/src/app/
+RUN mkdir -p public/js/
 RUN npm ci --only=production --no-audit
 
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
