@@ -192,8 +192,10 @@ jobs:
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           config-file: cypress.json
+          browser: chrome
           record: true
           parallel: true
+
         env:
           CI: true
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
