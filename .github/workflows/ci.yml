@@ -66,6 +66,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: env-vars-testing.sh
       - name: use npm cache
         uses: actions/cache@v2
         with:
@@ -80,20 +83,15 @@ jobs:
       - name: Initialize database
         env:
           CI: true
-        run: |
-          source env-vars-testing.sh
-          npm run test-reset
+        run: npm run test-reset
       - name: Start Openwhyd server
         run: |
-          source env-vars-testing.sh
           npm run start:coverage --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: Approval tests
         env:
           MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
-        run: |
-          source env-vars-testing.sh
-          npx ava test/approval.tests.js
+        run: npx ava test/approval.tests.js
       - name: Get coverage data
         run: |
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
@@ -124,6 +122,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: env-vars-testing.sh
       - name: use npm cache
         uses: actions/cache@v2
         with:
@@ -138,26 +139,19 @@ jobs:
       - name: Initialize database
         env:
           CI: true
-        run: |
-          source env-vars-testing.sh
-          npm run test-reset
+        run: npm run test-reset
       - name: Start Openwhyd server
         run: |
-          source env-vars-testing.sh
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: Unit tests
         env:
           CI: true
-        run: |
-          source env-vars-testing.sh
-          npm run test-unit
+        run: npm run test-unit
       - name: API tests
         env:
           CI: true
-        run: |
-          source env-vars-testing.sh
-          npm run test-api
+        run: npm run test-api
 
   cypress:
     name: Cypress E2E tests
@@ -186,6 +180,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: env-vars-testing.sh
       - name: npm install
         env:
           CI: true
@@ -193,7 +190,7 @@ jobs:
       - name: Run Cypress tests against Openwhyd server
         uses: cypress-io/github-action@v2.7.2
         with:
-          start: source env-vars-testing.sh && npm run start:coverage --mongoDbDatabase openwhyd_test
+          start: npm run start:coverage --mongoDbDatabase openwhyd_test
           config-file: cypress.json
           record: true
           parallel: true
