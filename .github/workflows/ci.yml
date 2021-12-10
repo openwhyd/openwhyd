@@ -190,17 +190,10 @@ jobs:
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
-      - name: Start Openwhyd server
-        env:
-          CI: true
-        run: |
-          source env-vars-testing.sh
-          npm run start:coverage --mongoDbDatabase openwhyd_test &
-          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: Run Cypress tests
+      - name: Run Cypress tests against Openwhyd server
         uses: cypress-io/github-action@v2.7.2
         with:
-          start: source env-vars-testing.sh
+          start: source env-vars-testing.sh && npm run start:coverage --mongoDbDatabase openwhyd_test
           config-file: cypress.json
           record: true
           parallel: true
