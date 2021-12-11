@@ -501,19 +501,16 @@ function WhydPlayer() {
     return function (evtName, handler) {
       return function () {
         console.debug(
-          '[wrapLogger]',
-          Date.now(),
-          evtName,
-          ...Array.prototype.slice.call(arguments)
+          `[wrapLogger] ${evtName} - ${Array.prototype.join.call(
+            arguments,
+            ' '
+          )}`
         );
         var playerName;
         try {
           playerName = arguments[0].playerName;
         } catch (e) {
-          console.error('[wrapLogger] error:', e.message, {
-            evtName,
-            arguments: Array.prototype.slice.call(arguments),
-          });
+          console.error(`[wrapLogger] ${evtName} - error: ${e.message}`);
         }
         var log = evtName + (playerName ? ' (' + playerName + ')' : '');
         if (log != lastLog) {
