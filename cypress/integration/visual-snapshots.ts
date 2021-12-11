@@ -14,19 +14,28 @@ context('Visual Snapshots', () => {
     cy.eyesClose();
   });
 
-  it('visitor', () => {
+  it('visitor on home page', () => {
     cy.visit('/'); // Home page (full stream)
     cy.eyesCheckWindow('visitor on /');
 
     cy.contains('Got it!').click(); // Remove cookie banner
     cy.eyesCheckWindow('visitor on / (discarded cookie banner)');
+  });
 
-    cy.contains('Hot Tracks').click();
+  it('visitor on hot tracks', () => {
+    cy.visit('/hot');
+    cy.contains('Got it!').click(); // Remove cookie banner
+
     // cy.get('#pageLoader').should('have.css', { opacity: 0.5 });
     cy.location('pathname').should('equal', '/hot');
     // cy.get('#pageLoader').should('have.css', { opacity: 0 });
     cy.contains('/ All'); // in the header of the list of tracks
     cy.eyesCheckWindow('visitor on /hot');
+  });
+
+  it('visitor signs up then logs in from hot tracks', () => {
+    cy.visit('/hot');
+    cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('Sign up').click();
     cy.contains('Create an account').should('be.visible'); // title of the modal dialog
@@ -37,12 +46,20 @@ context('Visual Snapshots', () => {
     cy.location('pathname').should('equal', '/login');
     cy.contains('No account yet?'); // below the sign in form
     cy.eyesCheckWindow('visitor on /login');
+  });
 
+  it('visitor on a new user profile', () => {
     cy.visit('/dummy');
+    cy.contains('Got it!').click(); // Remove cookie banner
+
     cy.contains('No tracks yet...');
     cy.eyesCheckWindow('visitor on /dummy (user profile)');
+  });
 
+  it('visitor on the button install page', () => {
     cy.visit('/button');
+    cy.contains('Got it!').click(); // Remove cookie banner
+
     cy.contains('Openwhyd "add track" button');
     cy.eyesCheckWindow('visitor on /button (bookmarklet)');
 
