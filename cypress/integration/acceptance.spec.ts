@@ -199,6 +199,6 @@ context('Openwhyd', () => {
     const searchResult = `a[onclick="window.goToPage('/fi/https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')
-      .should('have.text', 'mpthreetest.mp3');
+      .should('have.text', 'file_example_MP3_700KB.mp3');
   });
 });
