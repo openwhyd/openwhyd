@@ -7,5 +7,12 @@
   "retries": {
     "runMode": 2,
     "openMode": 0
-  }
+  },
+  "defaultCommandTimeout": 4000,
+  "execTimeout": 60000,
+  "taskTimeout": 60000,
+  "pageLoadTimeout": 60000,
+  "requestTimeout": 5000,
+  "responseTimeout": 30000,
+  "slowTestThreshold": 10000
 }
