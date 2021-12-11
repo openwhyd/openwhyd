@@ -145,11 +145,6 @@ window.Whyd.tracking =
       this._log('event', action); // redundant event, just for the sequence diagram there: for https://www.google.com/analytics/web/#report/content-engagement-flow/a23759101w46480794p46730353/%3F_.useg%3Dbuiltin1%2Cbuiltin2%26_r.engageMode%3Devents%26_r.screen%3D%2F/
     };
 
-    this.logSocial = function (network, action, url) {
-      this.log('Social: ' + network + ' ' + action, url);
-      this._log('social', network, action, url);
-    };
-
     this.logTrackPlay = function (pId) {
       // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
       this.log('play', pId);
