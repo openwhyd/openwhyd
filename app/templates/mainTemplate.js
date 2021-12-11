@@ -301,7 +301,9 @@ exports.renderHeader = function (user, content, params) {
             '     <div class="image" style="background-image:url(' +
               (user.img || '/img/u/' + user.id) +
               ');"></div>',
-            '			<strong class="username">' + user.name + '</strong>',
+            '			<strong class="username">' +
+              uiSnippets.htmlEntities(user.name) +
+              '</strong>',
             //	'      <img src="/img/u/'+user.id+'" />', // /images/icon-userconfig-menu.png
             '    </a>',
             '    <div class="puce">',
