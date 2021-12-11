@@ -29,7 +29,7 @@ context('Openwhyd', () => {
       name: url.split('/').pop(),
       eId: '/fi/' + encodeURIComponent(url),
     }))(
-      'https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3'
+      'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3'
     );
     cy.get('#q').type(track.url);
     cy.get('#searchResults').contains(track.name);
@@ -194,9 +194,9 @@ context('Openwhyd', () => {
     cy.get('#q')
       .click()
       .type(
-        'https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3'
+        'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3'
       );
-    const searchResult = `a[onclick="window.goToPage('/fi/https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3');return false;"]`;
+    const searchResult = `a[onclick="window.goToPage('/fi/https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')
       .should('have.text', 'mpthreetest.mp3');
