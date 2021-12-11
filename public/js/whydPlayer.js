@@ -496,27 +496,21 @@ function WhydPlayer() {
     },
   };
 
+  // log events from Playem before handling them
   var wrapLogger = (function () {
-    var lastLog = null;
+    // var lastLog = null;
     return function (evtName, handler) {
-      return function () {
-        console.debug(
-          `[wrapLogger] ${evtName} - ${Array.prototype.join.call(
-            arguments,
-            ' '
-          )}`
-        );
-        var playerName;
-        try {
-          playerName = arguments[0].playerName;
-        } catch (e) {
-          console.error(`[wrapLogger] ${evtName} - error: ${e.message}`);
-        }
-        var log = evtName + (playerName ? ' (' + playerName + ')' : '');
-        if (log != lastLog) {
-          console.log('%cevt: ' + log, 'color:#888');
-          lastLog = log;
-        }
+      return function (data) {
+        console.debug(`[wrapLogger] ${evtName}`, data);
+        // var playerName;
+        // try {
+        //   playerName = data.playerName;
+        // } catch (e) {}
+        // var log = evtName + (playerName ? ' (' + playerName + ')' : '');
+        // if (log != lastLog) {
+        //   console.log('%cevt: ' + log, 'color:#888');
+        //   lastLog = log;
+        // }
         handler.apply(null, arguments);
       };
     };
@@ -542,8 +536,11 @@ function WhydPlayer() {
 
   // init playem object, based on DOM elements
 
-  for (let i in playemEventHandlers)
-    window.playem.on(i, wrapLogger(i, playemEventHandlers[i]));
+  for (let evtName in playemEventHandlers)
+    window.playem.on(
+      evtName,
+      wrapLogger(evtName, playemEventHandlers[evtName])
+    );
 
   var genericHolder = document.createElement('div');
   genericHolder.id = 'genericholder';
