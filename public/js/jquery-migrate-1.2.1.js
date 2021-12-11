@@ -201,7 +201,7 @@ jQuery.fn.init = function( selector, context, rootjQuery ) {
 			(match = rquickExpr.exec( jQuery.trim( selector ) )) && match[ 0 ] ) {
 		// This is an HTML string according to the "old" rules; is it still?
 		if ( selector.charAt( 0 ) !== "<" ) {
-			migrateWarn("$(html) HTML strings must start with '<' character");
+			migrateWarn("$(html) HTML strings must start with '<' character, got: " + selector);
 		}
 		if ( match[ 3 ] ) {
 			migrateWarn("$(html) HTML text after last tag is ignored");
