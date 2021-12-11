@@ -153,18 +153,6 @@ globals.fbAsyncInit = function () {
   while (whenFbReadyQueue.length) whenFbReadyQueue.shift()();
 };
 
-globals.whenFbReady(function () {
-  console.log('watching fb events');
-  globals.FB.Event.subscribe('edge.create', function (targetUrl) {
-    globals.Whyd.tracking.logSocial('facebook', 'like', targetUrl);
-  });
-  globals.FB.Event.subscribe('message.send', function (sharedUrl) {
-    //var pId = sharedUrl.split("/").pop();
-    //console.log("facebook invitation was sent", pId);
-    globals.Whyd.tracking.logSocial('facebook', 'message', sharedUrl);
-  });
-});
-
 // Load the SDK Asynchronously
 (function (d, s, id) {
   var js,
