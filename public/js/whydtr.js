@@ -32,7 +32,7 @@ window.Whyd.tracking =
     // private functions
 
     function injectGoogleAnalytics() {
-      console.log('injecting google analytics');
+      // console.log('injecting google analytics');
       (function (i, s, o, g, r, a, m) {
         i['GoogleAnalyticsObject'] = r;
         (i[r] =
@@ -65,7 +65,7 @@ window.Whyd.tracking =
     }
 
     function gaSet(dim, val) {
-      console.log('[GA] set', dim, ':', val);
+      // console.log('[GA] set', dim, ':', val);
       try {
         ga('set', dim, val);
       } catch (e) {
@@ -132,7 +132,7 @@ window.Whyd.tracking =
     };
 
     this._log = function (type, category, action, value) {
-      console.log('[GA] send', arguments);
+      // console.log('[GA] send', arguments);
       try {
         ga('send', type, category, action, value);
       } catch (e) {

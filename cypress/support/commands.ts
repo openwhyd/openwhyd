@@ -36,7 +36,7 @@ Cypress.Commands.add('loginAsAdmin', () => {
 Cypress.Commands.add('postDummyTracks', (count) => {
   const makeTrack = (i) => ({
     name: `Fake track #${i}`,
-    eId: '/fi/https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3',
+    eId: '/fi/https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3',
     img: '/images/cover-track.png',
   });
   for (let i = 0; i < count; ++i) {
