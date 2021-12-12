@@ -19,8 +19,14 @@ lint: fetch-deps ## Run ESLint
 test: fetch-deps lint ## Run the tests.
 	@npm test
 
+ci: ## Run automated tests defined in GitHub Actions CI workflow.
+	@echo '{"head_commit": {"message": "build latest"}}' >github_event.tmp
+	@act --job tests --platform "ubuntu-20.04=lucasalt/act_base:latest" --container-architecture linux/amd64 -s GITHUB_TOKEN=${GITHUB_TOKEN} -e github_event.tmp
+	@rm -f github_event.tmp
+  # TODO: run other jobs too.
+
 help: ## This help.
 	@echo 'Available targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-.PHONY: fetch-deps dev lint test help
+.PHONY: fetch-deps dev lint test help ci
