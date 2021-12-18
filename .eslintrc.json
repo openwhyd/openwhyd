@@ -11,11 +11,28 @@
     "project": "tsconfig.json",
     "ecmaVersion": 2019
   },
+  "ignorePatterns": "public/press/js/jquery-1.10.2.min.js",
   "rules": {
     "prettier/prettier": "error",
     "no-inner-declarations": ["warn", "functions"]
   },
   "overrides": [
+    {
+      "files": [
+        "config/**/*.js",
+        "misc/**/*.js",
+        "public/**/*.js",
+        "scripts/**/*.js",
+        "test/**/*.js"
+      ],
+      "rules": {
+        "no-undef": "warn",
+        "no-redeclare": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-this-alias": "warn"
+      }
+    },
     {
       "files": ["*.js"],
       "rules": {
