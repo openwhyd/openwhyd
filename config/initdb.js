@@ -1,3 +1,5 @@
+/* globals db */
+
 // Usage: this file should be run by mongo's CLI:
 // $ mongo openwhyd_data whydDB/initdb.js
 
