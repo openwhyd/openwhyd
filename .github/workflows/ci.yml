@@ -17,16 +17,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
         id: nvmrc
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
-      - name: use npm cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
       - name: npm install
         env:
           CI: true
@@ -63,19 +57,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
         id: nvmrc
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: use npm cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       - name: npm install
         env:
           CI: true
@@ -119,19 +107,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
         id: nvmrc
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: use npm cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       - name: npm install
         env:
           CI: true
@@ -173,13 +155,10 @@ jobs:
         containers: [1, 2, 3]
     steps:
       - uses: actions/checkout@v2
-      - name: use npm cache
-        uses: actions/cache@v2
+      - uses: actions/setup-node@v2.2.0
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
@@ -259,17 +238,10 @@ jobs:
           persist-credentials: false
       - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
         id: nvmrc
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
-      - name: use npm cache
-        if: github.event_name == 'push'
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
       - run: npm install --prefer-offline --no-audit
         if: github.event_name == 'push'
       - name: npx semantic-release
