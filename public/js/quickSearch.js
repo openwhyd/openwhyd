@@ -161,10 +161,10 @@ function QuickSearch(searchForm, options) {
         else window.location.href = a.href;
       } else if (options.noMoreResultsOnEnter || params.noMoreResultsOnEnter) {
         // do nothing
-      } else if (!params.noMoreResults)
+      } else if (!params.noMoreResults) {
         window.location.href =
           '/search?q=' + encodeURIComponent(searchField.value);
-      else {
+      } else {
         cancelQuery();
         hideResults();
       }
