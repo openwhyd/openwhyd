@@ -1,5 +1,7 @@
 /* global soundManager */
 
+const global = window;
+
 /**
  * openwhyd embed script
  * @author adrienjoly, whyd
@@ -191,8 +193,8 @@ var DEBUG = false, // for soundmanager
         playerContainer: playerContainer,
       };
     include(urlPrefix + '/js/playem-min.js', function () {
-      playem = new Playem();
-      PLAYERS.map(function (pl) {
+      playem = new global.Playem();
+      PLAYERS.forEach(function (pl) {
         //console.log("Init " + pl + " player...");
         playem.addPlayer(window[pl + 'Player'], PLAYER_PARAMS);
       });
