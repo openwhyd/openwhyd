@@ -4,10 +4,6 @@
   "video": false,
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:8080",
-  "retries": {
-    "runMode": 2,
-    "openMode": 0
-  },
   "defaultCommandTimeout": 4000,
   "execTimeout": 60000,
   "taskTimeout": 60000,
