@@ -67,7 +67,7 @@ function makeBookmarklet(_a) {
       });
     }
     function whenDone(searchThumbs) {
-      searchThumbs.map(function (searchThumb) {
+      searchThumbs.forEach(function (searchThumb) {
         detectedTracks++;
         ui.addSearchThumb(searchThumb);
       });

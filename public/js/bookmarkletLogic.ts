@@ -65,7 +65,7 @@ function makeBookmarklet({ pageDetectors }: { pageDetectors: PageDetector[] }) {
     }
 
     function whenDone(searchThumbs) {
-      searchThumbs.map(function (searchThumb) {
+      searchThumbs.forEach(function (searchThumb) {
         detectedTracks++;
         ui.addSearchThumb(searchThumb);
       });

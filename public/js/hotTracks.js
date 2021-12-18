@@ -1,5 +1,7 @@
 /* global $ */
 
+const global = window;
+
 var hotTracks = {
   skip: 0,
 
@@ -76,12 +78,12 @@ var hotTracks = {
 
     item.hasComments = 'display:none';
 
-    item.trackUrl = translateEidToUrl(item.eId);
+    item.trackUrl = global.translateEidToUrl(item.eId);
 
     for (let p in item) {
       template = template.replace(
         new RegExp('{' + p + '}', 'g'),
-        htmlEntities(item[p])
+        global.htmlEntities(item[p])
       );
     }
 
@@ -205,7 +207,7 @@ var PLAYERS = {
   },
 };
 
-getPlayerMeta = function (eId, src) {
+global.getPlayerMeta = function (eId, src) {
   if (eId && eId.length && eId[0] == '/') {
     var playerId = eId.split('/')[1];
     var player = PLAYERS[playerId];
@@ -222,23 +224,23 @@ getPlayerMeta = function (eId, src) {
   }
 };
 
-translateEidToUrl = function (eId) {
-  return (getPlayerMeta(eId) || {}).contentUrl || eId;
+global.translateEidToUrl = function (eId) {
+  return (global.getPlayerMeta(eId) || {}).contentUrl || eId;
 };
 
 /********************* TIME AGO ***************************/
 
-timeFromPost = function (post) {
+global.timeFromPost = function (post) {
   var timeString = post._id.substring(0, 8);
   var timestamp = parseInt(timeString, 16) * 1000;
-  return timeAgoWithString(timestamp);
+  return global.timeAgoWithString(timestamp);
 };
 
 /*
  * @param timestamp
  * @return date string
  */
-timeAgoWithString = function (timestamp) {
+global.timeAgoWithString = function (timestamp) {
   var MONTHS_SHORT = [
     'Jan',
     'Feb',
@@ -262,7 +264,7 @@ timeAgoWithString = function (timestamp) {
     { 'year(s)': 12 },
   ];
 
-  padNumber = function (str, n) {
+  const padNumber = function (str, n) {
     var ret = '' + str;
     while (ret.length < n) {
       // pad with leading zeroes
@@ -271,15 +273,15 @@ timeAgoWithString = function (timestamp) {
     return ret;
   };
 
-  renderTime = function (t) {
+  const renderTime = function (t) {
     var t = new Date(t);
     return t.getHours() + ':' + padNumber(t.getMinutes(), 2);
   };
 
-  renderTimestamp = function (timestamp) {
+  const renderTimestamp = function (timestamp) {
     var t = timestamp / 1000,
       lastScale = 'second(s)';
-    for (i in timeScales) {
+    for (const i in timeScales) {
       var scaleTitle;
       for (scaleTitle in timeScales[i]);
       var scaleVal = timeScales[i][scaleTitle];
@@ -293,7 +295,7 @@ timeAgoWithString = function (timestamp) {
     return rounded + ' ' + lastScale.replace(/\(s\)/g, rounded > 1 ? 's' : '');
   };
 
-  renderShortMonthYear = function (t) {
+  const renderShortMonthYear = function (t) {
     var t = new Date(t);
     var sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
     return MONTHS_SHORT[t.getMonth()] + (sameYear ? '' : ' ' + t.getFullYear());
@@ -322,4 +324,4 @@ $(document).ready(function () {
   hotTracks.init();
   $('#searchForm input').focus();
 });
-window.whydCtx = 'hot';
+global.whydCtx = 'hot';

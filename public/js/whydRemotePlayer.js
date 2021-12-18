@@ -42,12 +42,14 @@
   document.body.appendChild(css);
 
   // parse parameters
-  (window.location.href.split('?').pop() || '').split('&').map(function (p) {
-    var splitted = p.split('=');
-    parameters[splitted[0]] = splitted[1];
-  });
+  (window.location.href.split('?').pop() || '')
+    .split('&')
+    .forEach(function (p) {
+      var splitted = p.split('=');
+      parameters[splitted[0]] = splitted[1];
+    });
 
-  EVENTS.map(function (evt) {
+  EVENTS.forEach(function (evt) {
     eventHandlers[evt] = function () {
       //console.log("[iframe] youtube evt -> parent:", evt, arguments);
       post(evt, arguments);

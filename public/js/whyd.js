@@ -567,7 +567,7 @@ function modalRepostBox(trackOrPid /*onPosted*/) {
   if (typeof trackOrPid == 'string') url += '/' + trackOrPid /*+'/add'*/;
   // ?pid='+pId; //postData.pId+'&embed='+postData.eId+'&text='+postData.text;
   else if (trackOrPid.eId)
-    ['eId', 'title', 'img'].map(function (field) {
+    ['eId', 'title', 'img'].forEach(function (field) {
       params.push(field + '=' + encodeURIComponent(trackOrPid[field]));
     });
   openRemoteDialog(
