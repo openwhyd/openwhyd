@@ -10,7 +10,7 @@
     "url": "https://github.com/openwhyd/openwhyd.git"
   },
   "scripts": {
-    "build:bookmarklet": "scripts/transpile-bookmarklet.sh",
+    "build": "scripts/transpile-bookmarklet.sh",
     "doc:serve": "cd docs && gem install bundler && bundle install && bundle exec jekyll serve --incremental",
     "semantic-release": "semantic-release",
     "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
