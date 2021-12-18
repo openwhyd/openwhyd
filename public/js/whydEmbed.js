@@ -106,7 +106,7 @@ var DEBUG = false, // for soundmanager
           .split('?')
           .pop()
           .split('&')
-          .map(function (p) {
+          .forEach(function (p) {
             p = p.split('=');
             params[p[0]] = p[1];
           });

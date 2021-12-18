@@ -53,7 +53,7 @@ exports.renderSignupPage = function (p) {
     },
   };
 
-  FIELDS.map(function (field) {
+  FIELDS.forEach(function (field) {
     params[field] = p[field];
   });
 

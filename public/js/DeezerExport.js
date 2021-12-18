@@ -1,4 +1,8 @@
-DeezerExport = (function () {
+/*globals DZ*/
+
+const global = window;
+
+global.DeezerExport = (function () {
   var INIT_PARAMS = {
     appId: '128545',
     channelUrl: window.location.href.replace(

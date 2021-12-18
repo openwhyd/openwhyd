@@ -52,13 +52,13 @@ apnConnection.on('transmitted', function (data, dest) {
   );
 });
 
-['transmissionError', 'disconnected'].map(function (evt) {
+['transmissionError', 'disconnected'].forEach(function (evt) {
   apnConnection.on(evt, function () {
     console.log('[APNS]', evt, 'event:', arguments);
   });
 });
 
-['error', 'socketError', 'timeout', 'cacheTooSmall'].map(function (evt) {
+['error', 'socketError', 'timeout', 'cacheTooSmall'].forEach(function (evt) {
   apnConnection.on(evt, function () {
     console.error('[APNS]', evt, 'event:', arguments);
   });
