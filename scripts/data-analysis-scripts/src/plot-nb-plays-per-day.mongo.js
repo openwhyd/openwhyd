@@ -35,5 +35,5 @@ var opts = {
   //limit: 100000 // => runs in 2 seconds from db
 };
 
-/*var results =*/ db.playlog.mapReduce(map, reduce, opts).results;
-//print(results.map(res => [ res._id, JSON.stringify(res.value) ]).join('\n'));
+var results = db.playlog.mapReduce(map, reduce, opts).results;
+print(results.map((res) => [res._id, JSON.stringify(res.value)]).join('\n'));
