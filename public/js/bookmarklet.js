@@ -257,7 +257,7 @@ var openwhydBkPageDetectors = [
   },
   function parseDomElements(window) {
     var results = [];
-    ['iframe', 'object', 'embed', 'a', 'audio', 'source'].map(function (
+    ['iframe', 'object', 'embed', 'a', 'audio', 'source'].forEach(function (
       elName
     ) {
       results = results.concat(
