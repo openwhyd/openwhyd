@@ -1,3 +1,5 @@
+/* globals $ */
+
 // AJAX functions
 
 window.$ =

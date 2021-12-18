@@ -1,3 +1,5 @@
+/* globals $ */
+
 /**
  * ajax upload module
  * @author adrienjoly, whyd
