@@ -139,7 +139,7 @@ var PLAYERS = {
     extractId: function (url) {
       return (
         url.match(
-          /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/
+          /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/
         ) || []
       ).pop();
     },

@@ -61,7 +61,7 @@ function YoutubeIframePlayer() {
 
   Player.prototype.getEid = function (url) {
     if (
-      /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
+      /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
         url
       ) ||
       /\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||

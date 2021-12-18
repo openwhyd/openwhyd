@@ -657,7 +657,7 @@ var openwhydYouTubeExtractor = {
   getEid: function (url) {
     // code imported from playem-all
     if (
-      /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
+      /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
         url
       ) ||
       /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
