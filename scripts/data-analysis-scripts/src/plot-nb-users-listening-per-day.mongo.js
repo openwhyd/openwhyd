@@ -1,3 +1,5 @@
+/* globals db, load, makeMapWith, emit, renderDate */
+
 load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
 
 const OUTPUT_COLLECTION = 'plot-nb-users-listening-per-day';
@@ -31,5 +33,5 @@ var opts = {
   //limit: 100000 // => runs in 4 seconds
 };
 
-var results = db.playlog.mapReduce(map, reduce, opts).results;
+/*var results =*/ db.playlog.mapReduce(map, reduce, opts).results;
 //print(results.map(res => [ res._id, res.value.users.length ]).join('\n'));

@@ -1,3 +1,5 @@
+/* globals db, load, makeMapWith, emit, renderDate */
+
 load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
 
 const OUTPUT_COLLECTION = 'plot-nb-play-errors-per-day';
@@ -7,7 +9,7 @@ const map = makeMapWith(renderDate, function mapTemplate() {
   // => emit same kind of output as reduce()'s
   var failed = this.err ? 1 : 0;
   var val = { total: 1, total_err: failed };
-  var getPlayerId = (eId) => (/^\/(\w\w)\//.exec(this.eId) || [])[1];
+  var getPlayerId = (/*eId*/) => (/^\/(\w\w)\//.exec(this.eId) || [])[1];
   var isUrl = (eId) => eId.substr(0, 8).indexOf('//') !== -1;
   var playerId = getPlayerId(this.eId) || (isUrl(this.eId) ? 'fi' : 'xx');
   val[playerId] = 1;

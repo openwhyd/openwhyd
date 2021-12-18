@@ -1,3 +1,5 @@
+/* globals db, emit, printjson */
+
 // usage: $ mongo openwhyd_dump list-error-types-per-player.mongo.js
 
 const OUTPUT_COLLECTION = 'list-error-types-per-player';
