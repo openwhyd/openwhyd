@@ -1,5 +1,7 @@
 /* global soundManager */
 
+const global = window;
+
 /**
  * openwhyd embed script
  * @author adrienjoly, whyd
@@ -28,11 +30,7 @@ var DEBUG = false, // for soundmanager
 
   // function to include other resources
   function include(src, callback) {
-    var ext = src
-      .split(/[\#\?]/)[0]
-      .split('.')
-      .pop()
-      .toLowerCase();
+    var ext = src.split(/[#?]/)[0].split('.').pop().toLowerCase();
     var inc;
     if (ext == 'css') {
       inc = document.createElement('link');
@@ -145,7 +143,7 @@ var DEBUG = false, // for soundmanager
       },
       setCurrentTrack: function (metadata) {
         this.videoElement.style.backgroundImage =
-          'url(' + metadata.img.replace(/[\"\'\(\)\<\>]/gi, '') + ')';
+          'url(' + metadata.img.replace(/["'()<>]/gi, '') + ')';
       },
     };
     // private functions
@@ -191,8 +189,8 @@ var DEBUG = false, // for soundmanager
         playerContainer: playerContainer,
       };
     include(urlPrefix + '/js/playem-min.js', function () {
-      playem = new Playem();
-      PLAYERS.map(function (pl) {
+      playem = new global.Playem();
+      PLAYERS.forEach(function (pl) {
         //console.log("Init " + pl + " player...");
         playem.addPlayer(window[pl + 'Player'], PLAYER_PARAMS);
       });

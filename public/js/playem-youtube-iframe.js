@@ -6,11 +6,6 @@ function YoutubeIframePlayer() {
 }
 
 (function () {
-  console.log(
-    '_____----_________----_________----_________----_________----____',
-    embedVars
-  );
-
   var //IFRAME_HOST = "http://box.jie.fr", IFRAME_PATH = "/track.html",
     //IFRAME_HOST = "http://bestofmusics.tumblr.com", IFRAME_PATH = "",
     //IFRAME_HOST =  window.location.protocol + "//discman2k.appspot.com", IFRAME_PATH = "/prod.html",
@@ -66,11 +61,11 @@ function YoutubeIframePlayer() {
 
   Player.prototype.getEid = function (url) {
     if (
-      /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
+      /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
         url
       ) ||
-      /\/yt\/([a-zA-Z0-9_\-]+)/.test(url) ||
-      /youtube\.com\/attribution_link\?.*v\%3D([^ \%]+)/.test(url)
+      /\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
+      /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url)
     )
       return RegExp.lastParen;
   };

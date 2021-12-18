@@ -191,7 +191,7 @@ switch (process.argv[2]) {
     console.warn(
       'no parameter => will dry run and ask for confirmation before reindexing'
     );
-  case 'dry-run':
+  case 'dry-run' /* eslint-disable-line no-fallthrough */:
     console.warn(
       'dry-run mode => will dry run and exit without updating indexes'
     );

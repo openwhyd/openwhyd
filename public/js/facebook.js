@@ -1,6 +1,6 @@
 /* global $ */
 
-const globals = window;
+window.globals = window;
 
 var href = window.location.href + '/';
 
