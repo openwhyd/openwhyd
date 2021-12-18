@@ -387,7 +387,7 @@ h3 {
 .background-problem > .wrapp > p {
   color: #353535;
   padding: 60px 0 120px 0;
-  background: url(puzzle.png) 50%no-repeat;
+  background: url(puzzle.png) 50% no-repeat;
 }
 
 .solution {
@@ -407,7 +407,7 @@ h3 {
 
 .solution p {
   color: #fff;
-  background: url(etoile.png) 50%no-repeat;
+  background: url(etoile.png) 50% no-repeat;
   padding: 80px 0;
 }
 
