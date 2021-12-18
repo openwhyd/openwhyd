@@ -375,12 +375,12 @@ if (typeof exports === 'undefined') {
           var i_1 = new Image();
           i_1.onload = function () {
             if (i_1.height >= 120) {
-              const oldImage = window.document.getElementById(track.id);
+              var oldImage = window.document.getElementById(track.id);
               if (oldImage)
                 oldImage.style.backgroundImage = 'url(' + img_1 + ')';
               else
                 console.warn('failed to improve quality of thumb', {
-                  track,
+                  track: track,
                   elementToReplace: oldImage,
                   newImgUrl: img_1,
                 });
@@ -429,7 +429,7 @@ if (typeof exports === 'undefined') {
         var text = getSelText();
         var href =
           urlPrefix +
-          '/post?v=2&' + // TODO: remove version number
+          '/post?v=2&' +
           'embed=' +
           (thumb.eId
             ? '1&eId=' + encodeURIComponent(thumb.eId)
