@@ -11,7 +11,10 @@
     "project": "tsconfig.json",
     "ecmaVersion": 2019
   },
-  "ignorePatterns": "public/press/js/jquery-1.10.2.min.js",
+  "ignorePatterns": [
+    "public/press/js/jquery-1.10.2.min.js",
+    "public/press/js/sliderz.v1.js"
+  ],
   "rules": {
     "prettier/prettier": "error",
     "no-inner-declarations": ["warn", "functions"]
