@@ -160,8 +160,8 @@ function QuickSearch(searchForm, options) {
         if (options.onResultClick) return options.onResultClick(a.href, a);
         else window.location.href = a.href;
       } else if (options.noMoreResultsOnEnter || params.noMoreResultsOnEnter) {
-      } // do nothing
-      else if (!params.noMoreResults)
+        // do nothing
+      } else if (!params.noMoreResults)
         window.location.href =
           '/search?q=' + encodeURIComponent(searchField.value);
       else {
@@ -207,7 +207,7 @@ function QuickSearch(searchForm, options) {
 
   this.cancelQuery = function () {
     cancelQuery();
-    searchClear && toggle(searchClear, 'loading', false);
+    searchClear && toggle(searchClear, 'loading', false); // TODO: call toggleClass() instead
   };
 
   this.search = function (q) {

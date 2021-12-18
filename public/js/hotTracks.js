@@ -66,7 +66,7 @@ var hotTracks = {
       }
     }
 
-    item.agoTimestamp = timeFromPost(item);
+    item.agoTimestamp = global.timeFromPost(item);
 
     //STATS
     if (item.nbR <= 0) {
@@ -139,7 +139,7 @@ var PLAYERS = {
     extractId: function (url) {
       return (
         url.match(
-          /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/
+          /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/
         ) || []
       ).pop();
     },
@@ -153,7 +153,7 @@ var PLAYERS = {
           ? (url.match(/url=([^&]*)/) || []).pop()
           : null) ||
         (
-          url.match(/https?:\/\/(?:www\.)?soundcloud\.com\/([\w-_\/]+)/) || []
+          url.match(/https?:\/\/(?:www\.)?soundcloud\.com\/([\w-_/]+)/) || []
         ).pop()
       );
     },
@@ -174,7 +174,7 @@ var PLAYERS = {
     urlPrefix: '//vimeo.com/',
     extractId: function (url) {
       return (
-        url.match(/https?:\/\/(?:www\.)?vimeo\.com\/(clip\:)?(\d+)/) || []
+        url.match(/https?:\/\/(?:www\.)?vimeo\.com\/(clip:)?(\d+)/) || []
       ).pop();
     },
   },

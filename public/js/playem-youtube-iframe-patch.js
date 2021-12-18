@@ -12,7 +12,7 @@ function YoutubeIframePlayer() {
 (function () {
   var isLocal =
     window.location.href.indexOf('http://localhost:') == 0 ||
-    /^https?\:\/\/(\w+)\.openwhyd\.(\w+)(\:8080)?\//.test(window.location.href);
+    /^https?:\/\/(\w+)\.openwhyd\.(\w+)(:8080)?\//.test(window.location.href);
 
   var IFRAME_HOST = isLocal
       ? window.location.href.substr(0, window.location.href.indexOf('/', 10))
@@ -76,11 +76,11 @@ function YoutubeIframePlayer() {
 
   Player.prototype.getEid = function (url) {
     if (
-      /(youtube\.com\/(v\/|embed\/|(?:.*)?[\?\&]v=)|youtu\.be\/)([a-zA-Z0-9_\-]+)/.test(
+      /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
         url
       ) ||
-      /\/yt\/([a-zA-Z0-9_\-]+)/.test(url) ||
-      /youtube\.com\/attribution_link\?.*v\%3D([^ \%]+)/.test(url)
+      /\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
+      /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url)
     )
       return RegExp.lastParen;
   };
