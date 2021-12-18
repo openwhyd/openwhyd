@@ -1,9 +1,9 @@
-// usage: run from http://localhost:8080/admin/test
+// Info: moved from app/controllers/admin/tests, for security reasons.
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var snip = require('../../../snip.js');
-var config = require('../../../models/config.js'); // {urlPrefix:"http://localhost:8000"};
-var userModel = require('../../../models/user.js');
+var snip = require('../../app/snip.js');
+var config = require('../../app/models/config.js'); // {urlPrefix:"http://localhost:8000"};
+var userModel = require('../../app/models/user.js');
 
 var TEST_USER = {
   name: 'test user',
