@@ -109,6 +109,12 @@ exports.sanitizeJsStringInHtml = function (str) {
   return exports.htmlEntities(exports.addSlashes(str || ''));
 };
 
+exports.getSafeOpenwhydURL = function (url, safeUrlPrefix) {
+  const fullURL = new URL(url, safeUrlPrefix);
+  if (`${fullURL.protocol}//${fullURL.host}` !== safeUrlPrefix) return false;
+  else return fullURL;
+};
+
 var timeScales = [
   { 'minute(s)': 60 },
   { 'hour(s)': 60 },
