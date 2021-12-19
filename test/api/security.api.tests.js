@@ -8,7 +8,6 @@ const apiClient = require('../api-client.js');
 
 const postRaw = promisify(apiClient.postRaw);
 const loginAs = promisify(apiClient.loginAs);
-const apiGet = promisify(apiClient.get);
 
 before(cleanup);
 
