@@ -28,24 +28,3 @@ beforeEach(function () {
   // Safety: this function will work only against the "openwhyd_test" database.
   // => otherwise, it fail throw and prevent tests from running.
 });
-
-// from https://github.com/cypress-io/cypress/issues/2938#issuecomment-549565158
-Cypress.on('window:before:load', function (window) {
-  const original = window.EventTarget.prototype.addEventListener;
-
-  window.EventTarget.prototype.addEventListener = function () {
-    // eslint-disable-next-line prefer-rest-params
-    if (arguments && arguments[0] === 'beforeunload') {
-      return;
-    }
-    // eslint-disable-next-line prefer-rest-params
-    return original.apply(this, arguments);
-  };
-
-  Object.defineProperty(window, 'onbeforeunload', {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    get: function () {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    set: function () {},
-  });
-});
