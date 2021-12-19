@@ -8,11 +8,28 @@ const apiClient = require('../api-client.js');
 
 const postRaw = promisify(apiClient.postRaw);
 const loginAs = promisify(apiClient.loginAs);
+const apiGet = promisify(apiClient.get);
 
 before(cleanup);
 
 describe('security', () => {
-  describe('Open Redirect', () => {
+  describe('Open Redirect from /login', () => {
+    it('should allow redirect to /stream', async () => {
+      const target = `/stream`;
+      const { response } = await postRaw(null, `/login`, {
+        action: 'login',
+        email: ADMIN_USER.email,
+        md5: ADMIN_USER.md5,
+        redirect: target,
+      });
+      assert.match(
+        response.body,
+        new RegExp(`<script>window.location.href="${target}";</script>`)
+      );
+    });
+  });
+
+  describe('Open Redirect from /consent', () => {
     it('should allow redirect to /stream', async () => {
       const target = `/stream`;
       const { jar } = await loginAs(ADMIN_USER);
