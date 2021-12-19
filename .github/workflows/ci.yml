@@ -182,13 +182,13 @@ jobs:
           parallel: true
         env:
           CI: true
-          DEBUG: 'cypress:*'
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # DEBUG: 'cypress:*'
       - name: Get coverage data
         run: |
           # npm run test:coverage
