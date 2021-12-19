@@ -46,7 +46,6 @@ exports.controller = function (req, reqParams, res) {
     exports.handlePostRequest(req, req.body, res);
   } else
     notifModel.getUserNotifs(user.id, function (notifs) {
-      console.log('rendering JSON notifs', typeof notifs, notifs);
       res.renderJSON(notifs);
     });
 };
