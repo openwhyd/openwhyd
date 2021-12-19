@@ -1,13 +1,13 @@
 {
   "projectId": "8mw8bh",
-  "screenshotOnRunFailure": false,
-  "video": false,
+  "screenshotOnRunFailure": true,
+  "video": true,
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:8080",
-  "defaultCommandTimeout": 4000,
+  "defaultCommandTimeout": 8000,
   "execTimeout": 60000,
   "taskTimeout": 60000,
-  "pageLoadTimeout": 60000,
+  "pageLoadTimeout": 120000,
   "requestTimeout": 5000,
   "responseTimeout": 30000,
   "slowTestThreshold": 10000
