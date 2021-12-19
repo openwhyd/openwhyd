@@ -55,6 +55,20 @@ describe('security', () => {
         `page body should NOT include redirect to ${target}`
       );
     });
+
+    it('should NOT allow script element in redirect URL', async () => {
+      const target = `<script>alert(document.cookie)</script>`;
+      const { response } = await postRaw(null, `/login`, {
+        action: 'login',
+        email: ADMIN_USER.email,
+        md5: ADMIN_USER.md5,
+        redirect: target,
+      });
+      assert(
+        response.body.includes(`window.location.href="${target}"`) === false,
+        `page body should NOT include redirect to ${target}`
+      );
+    });
   });
 
   describe('Open Redirect from /consent', () => {
