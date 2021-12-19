@@ -22,9 +22,24 @@ describe('security', () => {
         md5: ADMIN_USER.md5,
         redirect: target,
       });
-      assert.match(
-        response.body,
-        new RegExp(`<script>window.location.href="${target}";</script>`)
+      assert(
+        response.body.includes(target) === true,
+        `page body should include redirect to ${target}`
+      );
+    });
+
+    it('should NOT allow javascript in redirect URL', async () => {
+      const target = `javascript:alert()`;
+      const { response } = await postRaw(null, `/login`, {
+        action: 'login',
+        email: ADMIN_USER.email,
+        md5: ADMIN_USER.md5,
+        redirect: target,
+      });
+      console.log(response.body);
+      assert(
+        response.body.includes(target) === false,
+        `page body should NOT include redirect to ${target}`
       );
     });
   });
