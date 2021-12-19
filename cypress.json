@@ -1,7 +1,7 @@
 {
   "projectId": "8mw8bh",
-  "screenshotOnRunFailure": false,
-  "video": false,
+  "screenshotOnRunFailure": true,
+  "video": true,
   "chromeWebSecurity": false,
   "baseUrl": "http://localhost:8080",
   "defaultCommandTimeout": 8000,
