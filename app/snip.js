@@ -110,6 +110,7 @@ exports.sanitizeJsStringInHtml = function (str) {
 };
 
 exports.getSafeOpenwhydURL = function (url, safeUrlPrefix) {
+  if (typeof url !== 'string' || url.includes('<script')) return false;
   const fullURL = new URL(url, safeUrlPrefix);
   if (`${fullURL.protocol}//${fullURL.host}` !== safeUrlPrefix) return false;
   else return fullURL;
