@@ -1,6 +1,8 @@
 /**
  * login controller, to authenticate users
  */
+const snip = require('../../snip.js');
+const config = require('../../models/config.js');
 var emailModel = require('../../models/email.js');
 var userModel = require('../../models/user.js');
 var notifEmails = require('../../models/notifEmails.js');
@@ -60,7 +62,12 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
     userModel[form.email.indexOf('@') > -1 ? 'fetchByEmail' : 'fetchByHandle'](
       form.email,
       function (dbUser) {
-        if (!dbUser) {
+        if (
+          form.redirect &&
+          snip.getSafeOpenwhydURL(form.redirect, config.urlPrefix) === false
+        ) {
+          form.error = 'Unsafe redirect target';
+        } else if (!dbUser) {
           form.error = "Are you sure? We don't recognize your email address!";
         } else if (form.action == 'forgot') {
           notifEmails.sendPasswordReset(dbUser._id, dbUser.pwd, form.redirect);

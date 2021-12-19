@@ -23,7 +23,7 @@ describe('security', () => {
         redirect: target,
       });
       assert(
-        response.body.includes(target) === true,
+        response.body.includes(`window.location.href="${target}"`) === true,
         `page body should include redirect to ${target}`
       );
     });
@@ -36,9 +36,8 @@ describe('security', () => {
         md5: ADMIN_USER.md5,
         redirect: target,
       });
-      console.log(response.body);
       assert(
-        response.body.includes(target) === false,
+        response.body.includes(`window.location.href="${target}"`) === false,
         `page body should NOT include redirect to ${target}`
       );
     });
