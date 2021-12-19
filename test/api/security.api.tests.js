@@ -28,6 +28,20 @@ describe('security', () => {
       );
     });
 
+    it('should NOT allow redirect to other domain', async () => {
+      const target = `https://google.com`;
+      const { response } = await postRaw(null, `/login`, {
+        action: 'login',
+        email: ADMIN_USER.email,
+        md5: ADMIN_USER.md5,
+        redirect: target,
+      });
+      assert(
+        response.body.includes(`window.location.href="${target}"`) === false,
+        `page body should NOT include redirect to ${target}`
+      );
+    });
+
     it('should NOT allow javascript in redirect URL', async () => {
       const target = `javascript:alert()`;
       const { response } = await postRaw(null, `/login`, {
