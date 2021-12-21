@@ -11,11 +11,19 @@ exports.controller = async function (request, getParams, response) {
   if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
     return response.forbidden(new Error('allowed on test database only'));
   }
-  try {
+  response.renderJSON({ ok: true });
+  console.warn(`[reset.controller] stopping server...`);
+  process.appServer.stop(async (err) => {
+    console.error(
+      `[reset.controller] error when stopping server: ${err.message}`
+    );
+    console.warn(`[reset.controller] resetting db...`);
     await mongodb.clearCollections();
+    console.warn(`[reset.controller] adding test data...`);
     await mongodb.initCollections({ addTestData: true });
-    response.renderJSON({ ok: true });
-  } catch (err) {
-    response.renderJSON({ error: err.message });
-  }
+    console.warn(`[reset.controller] restarting server...`);
+    process.appServer.start(() => {
+      console.warn(`[reset.controller] server is back online!`);
+    });
+  });
 };

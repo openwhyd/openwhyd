@@ -156,6 +156,7 @@ function start() {
   };
   require('./app/models/logging.js'); // init logging methods (IncomingMessage extensions)
   const appServer = new myHttp.Application(serverOptions);
+  process.appServer = appServer;
   appServer.start(() => {
     const url = params.urlPrefix || `http://127.0.0.1:${params.port}/`;
     console.log(`[app] Server running at ${url}`);
