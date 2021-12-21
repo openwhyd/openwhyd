@@ -28,3 +28,9 @@ beforeEach(function () {
   // Safety: this function will work only against the "openwhyd_test" database.
   // => otherwise, it fail throw and prevent tests from running.
 });
+
+afterEach(function () {
+  // after each test, go to a page where the server is not polled (e.g. notifications),
+  // in order to prevent timeouts that may be caused when after calling cy.resetDb() from the following test.
+  cy.visit('/404');
+});
