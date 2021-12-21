@@ -12,6 +12,7 @@ exports.controller = async function (request, getParams, response) {
     return response.forbidden(new Error('allowed on test database only'));
   }
   response.renderJSON({ ok: true });
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   console.warn(`[reset.controller] stopping server...`);
   process.appServer.stop(async (err) => {
     console.error(
