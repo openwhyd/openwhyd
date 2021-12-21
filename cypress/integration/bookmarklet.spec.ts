@@ -57,9 +57,11 @@ context('Openwhyd bookmarklet', () => {
     cy.get('.whydThumb').first().click();
   });
 
-  it.skip('can import the cover art of a Bandcamp track', () => {
-    // TODO: make this work from local page, to make it compatible with `cy.visit('/404')`
-    cy.visit('https://harissa.bandcamp.com/track/rooftop');
+  it('can import the cover art of a Bandcamp track', () => {
+    // original URL: https://harissa.bandcamp.com/track/rooftop
+    cy.visit(
+      'http://localhost:8080/html/test-resources/bandcamp-track-page.html'
+    );
 
     cy.window().then(injectBookmarklet);
 
