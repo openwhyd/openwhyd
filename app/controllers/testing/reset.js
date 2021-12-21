@@ -15,9 +15,11 @@ exports.controller = async function (request, getParams, response) {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   console.warn(`[reset.controller] stopping server...`);
   process.appServer.stop(async (err) => {
-    console.error(
-      `[reset.controller] error when stopping server: ${err.message}`
-    );
+    if (err) {
+      console.error(
+        `[reset.controller] error when stopping server: ${err.message}`
+      );
+    }
     console.warn(`[reset.controller] resetting db...`);
     await mongodb.clearCollections();
     console.warn(`[reset.controller] adding test data...`);
