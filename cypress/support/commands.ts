@@ -18,9 +18,9 @@ import 'cypress-file-upload';
 Cypress.Commands.add('resetDb', () => {
   cy.request('POST', `/testing/reset`, {
     timeout: 10000,
-    failOnStatusCode: false,
-    retryOnStatusCodeFailure: false,
-    retryOnNetworkFailure: false,
+    failOnStatusCode: true,
+    retryOnStatusCodeFailure: true,
+    retryOnNetworkFailure: true,
   });
 });
 
