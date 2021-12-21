@@ -32,7 +32,7 @@ beforeEach(function () {
 afterEach(function () {
   // after each test, go to a page where the server is not polled (e.g. notifications),
   // in order to prevent timeouts that may be caused when after calling cy.resetDb() from the following test.
-  cy.visit('/404');
+  cy.visit('/download');
   // cy.window().then((win) => {
   //   win.location.pathname = '/404';
   // });
