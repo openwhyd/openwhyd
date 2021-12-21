@@ -22,7 +22,8 @@ import '@applitools/eyes-cypress/commands';
 import './commands';
 
 before(() => {
-  cy.intercept('GET', '/api/notif', {
+  // mock the /api/notif endpoint, to prevent tests from timing out because of dangling calls to that endpoint, preventing the "load" event from firing.
+  cy.intercept('GET', '/api/notif*', {
     statusCode: 200,
     body: [],
   });
