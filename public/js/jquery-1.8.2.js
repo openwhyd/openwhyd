@@ -7601,6 +7601,8 @@ jQuery.extend({
 	// Main method
 	ajax: function( url, options ) {
 
+    console.debug(`jquery182-ajax to ${JSON.stringify(url)}`)
+
 		// If url is an object, simulate pre-1.5 signature
 		if ( typeof url === "object" ) {
 			options = url;
