@@ -899,12 +899,12 @@ $(document).ready(function () {
 
   // init notifications
 
-  var notifUpdateInterval = 20000;
+  // var notifUpdateInterval = 20000;
   $notifPanel = $('#notifPanel');
   $notifIcon = $('#notifIcon');
 
-  window.setInterval(fetchNotifs, notifUpdateInterval);
-  fetchNotifs();
+  // window.setInterval(fetchNotifs, notifUpdateInterval); // TODO
+  // fetchNotifs(); // TODO
 
   $notifIcon.click(function () {
     if ($(this).text() == 0) return $notifPanel.hide();
