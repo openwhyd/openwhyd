@@ -28,6 +28,11 @@ beforeEach(function () {
     body: [],
   });
 
+  cy.intercept('GET', 'https://cdns-files.deezer.com/js/min/dz.js', {
+    statusCode: 200,
+    body: '',
+  });
+
   // reset the db before each it() test, across all files no matter what,
   // as recommended in https://docs.cypress.io/guides/references/best-practices.html#State-reset-should-go-before-each-test
   cy.resetDb();
