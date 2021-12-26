@@ -21,14 +21,6 @@ import '@cypress/code-coverage/support';
 import '@applitools/eyes-cypress/commands';
 import './commands';
 
-before(() => {
-  // mock the /api/notif endpoint, to prevent tests from timing out because of dangling calls to that endpoint, preventing the "load" event from firing.
-  cy.intercept('GET', '/api/notif*', {
-    statusCode: 200,
-    body: [],
-  });
-});
-
 beforeEach(function () {
   // mock the /api/notif endpoint, to prevent tests from timing out because of dangling calls to that endpoint, preventing the "load" event from firing.
   cy.intercept('GET', '/api/notif*', {
@@ -46,13 +38,4 @@ beforeEach(function () {
   cy.resetDb();
   // Safety: this function will work only against the "openwhyd_test" database.
   // => otherwise, it fail throw and prevent tests from running.
-});
-
-afterEach(function () {
-  // after each test, go to a page where the server is not polled (e.g. notifications),
-  // in order to prevent timeouts that may be caused when after calling cy.resetDb() from the following test.
-  cy.visit('/download');
-  // cy.window().then((win) => {
-  //   win.location.pathname = '/404';
-  // });
 });
