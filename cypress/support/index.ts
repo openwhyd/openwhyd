@@ -17,7 +17,7 @@
 
 /// <reference types="./" />
 
-import '@cypress/code-coverage/support';
+// import '@cypress/code-coverage/support';
 import '@applitools/eyes-cypress/commands';
 import './commands';
 
