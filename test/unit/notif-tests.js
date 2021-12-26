@@ -10,7 +10,9 @@ process.appParams = {
 };
 
 const consoleBackup = console.log;
-console.log = () => {}; // prevent mongodb from adding noise to stdout
+console.log = () => {
+  // prevent mongodb from adding noise to stdout
+};
 
 const util = require('util');
 const assert = require('assert');
@@ -120,7 +122,7 @@ function testAllNotifs(u) {
 
 async function addAllNotifs() {
   var NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
-  for (let u in USERS) nbNotifs = testAllNotifs(u);
+  for (let u in USERS) /*nbNotifs =*/ testAllNotifs(u);
   await pollUntil(makeNotifChecker(NOTIF_COUNT));
 }
 

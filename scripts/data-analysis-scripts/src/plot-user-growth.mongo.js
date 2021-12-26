@@ -1,3 +1,5 @@
+/* globals db, load, makeMapWith, emit, renderDate */
+
 load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
 
 // notice: MongoDB will not call the reduce function for a key that has only a single value

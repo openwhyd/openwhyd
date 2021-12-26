@@ -17,13 +17,13 @@ var facebookPerms = 'public_profile,email';
 
 var whenFbReadyQueue = [];
 
-globals.whenFbReady = function (fct) {
+window.globals.whenFbReady = function (fct) {
   whenFbReadyQueue.push(fct);
 };
 
 const fbSafeCall = function (fct, failFct) {
-  if (!globals.FB) {
-    globals.showMessage(
+  if (!window.globals.FB) {
+    window.globals.showMessage(
       'Unable to connect to Facebook. Did you block it?',
       true
     );
@@ -31,20 +31,20 @@ const fbSafeCall = function (fct, failFct) {
   } else fct();
 };
 
-globals.fbIsLogged = function (cb) {
-  if (globals.FB)
-    globals.FB.getLoginStatus(function (response) {
+window.globals.fbIsLogged = function (cb) {
+  if (window.globals.FB)
+    window.globals.FB.getLoginStatus(function (response) {
       cb(
         response.status === 'connected' &&
-          globals.user.fbId == response.authResponse.userID
+          window.globals.user.fbId == response.authResponse.userID
       );
     }, true);
   else if (cb) cb(false);
 };
 
-globals.fbAuth = function (perms, cb, dontLink) {
+window.globals.fbAuth = function (perms, cb, dontLink) {
   fbSafeCall(function () {
-    globals.FB.login(
+    window.globals.FB.login(
       function (response) {
         console.log('fb response', response);
         response = response || {};
@@ -67,8 +67,8 @@ globals.fbAuth = function (perms, cb, dontLink) {
   }, cb);
 };
 
-globals.fbLogin = function (perms, cb) {
-  globals.fbAuth(
+window.globals.fbLogin = function (perms, cb) {
+  window.globals.fbAuth(
     perms,
     function (fbId, fbAuthResponse) {
       if (!fbId) {
@@ -111,8 +111,8 @@ globals.fbLogin = function (perms, cb) {
   );
 };
 
-globals.fbRegister = function (perms, cb) {
-  globals.fbAuth(
+window.globals.fbRegister = function (perms, cb) {
+  window.globals.fbAuth(
     perms,
     function (fbId, fbAuthResponse) {
       if (!fbId) {
@@ -125,7 +125,7 @@ globals.fbRegister = function (perms, cb) {
         access_token: fbAuthResponse.authResponse.accessToken,
       };
 
-      globals.FB.api('/me', options, (response) => {
+      window.globals.FB.api('/me', options, (response) => {
         cb({
           fbAuthResponse: fbAuthResponse.authResponse, // fbTok
           fbUser: {
@@ -140,14 +140,14 @@ globals.fbRegister = function (perms, cb) {
   );
 };
 
-globals.fbAsyncInit = function () {
-  globals.FB.init({
+window.globals.fbAsyncInit = function () {
+  window.globals.FB.init({
     appId: fbId,
     version: 'v10.0',
     cookie: true,
     xfbml: true,
   });
-  globals.whenFbReady = function (fct) {
+  window.globals.whenFbReady = function (fct) {
     fct();
   };
   while (whenFbReadyQueue.length) whenFbReadyQueue.shift()();
