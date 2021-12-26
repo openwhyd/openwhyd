@@ -28,3 +28,9 @@ beforeEach(function () {
   // Safety: this function will work only against the "openwhyd_test" database.
   // => otherwise, it fail throw and prevent tests from running.
 });
+
+afterEach(function () {
+  return cy.window().then(({ document }) => {
+    document.removeChild(document.documentElement);
+  });
+});
