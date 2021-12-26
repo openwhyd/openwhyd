@@ -175,7 +175,7 @@ jobs:
       - name: Run Cypress tests against Openwhyd server
         uses: cypress-io/github-action@v2.7.2
         with:
-          start: npm run start:coverage --mongoDbDatabase openwhyd_test
+          start: 'npm run start:coverage --mongoDbDatabase openwhyd_test 1>&2'
           config-file: cypress.json
           browser: 'chromium' # to include browser console in cypress logs
           record: true
