@@ -22,6 +22,12 @@ import '@applitools/eyes-cypress/commands';
 import './commands';
 
 beforeEach(function () {
+  // mock the /api/notif endpoint, to prevent tests from timing out because of dangling calls to that endpoint, preventing the "load" event from firing.
+  cy.intercept('GET', '/api/notif*', {
+    statusCode: 200,
+    body: [],
+  });
+
   // reset the db before each it() test, across all files no matter what,
   // as recommended in https://docs.cypress.io/guides/references/best-practices.html#State-reset-should-go-before-each-test
   cy.resetDb();
