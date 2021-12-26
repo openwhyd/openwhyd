@@ -193,13 +193,6 @@ jobs:
         run: |
           # npm run test:coverage
           npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
-      - name: Save code coverage results
-        uses: actions/upload-artifact@v2
-        with:
-          name: cypress-code-coverage-report
-          path: |
-            .nyc_output
-            coverage
       # NOTE: screenshots will be generated only if E2E test failed
       - uses: actions/upload-artifact@v2
         if: failure()
@@ -216,15 +209,9 @@ jobs:
   coverage:
     name: Send coverage reports to Codacy
     needs:
-      - cypress
       - approval-tests
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: cypress-code-coverage-report
-          path: coverage-cypress/
       - uses: actions/download-artifact@v2
         with:
           name: approval-code-coverage-report
@@ -233,7 +220,6 @@ jobs:
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
-          cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-approval/.nyc_output/*.json coverage-reports
           npx nyc merge coverage-reports .nyc_output/merged-coverage.json
           npx nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
