@@ -608,6 +608,7 @@ var fetchNotifs = function () {
   $.ajax({
     type: 'GET',
     url: '/api/notif',
+    dataType: 'json',
     cache: false,
     success: function (notifs) {
       lastNotifData = notifs;
