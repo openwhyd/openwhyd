@@ -176,6 +176,7 @@ jobs:
         uses: cypress-io/github-action@v2.7.2
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
+          wait-on: 'http://localhost:8080'
           config-file: cypress.json
           browser: 'chromium' # to include browser console in cypress logs
           record: true
@@ -188,7 +189,7 @@ jobs:
           # Recommended: pass the GitHub token lets this action correctly
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # DEBUG: 'cypress:*'
+          # DEBUG: 'cypress:server:socket-base'
       - name: Get coverage data
         run: |
           # npm run test:coverage

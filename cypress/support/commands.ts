@@ -17,10 +17,11 @@ import 'cypress-file-upload';
 
 Cypress.Commands.add('resetDb', () => {
   cy.request('POST', `/testing/reset`, {
-    timeout: 20000,
+    timeout: 5000,
     retryOnStatusCodeFailure: true,
     retryOnNetworkFailure: true,
   });
+  cy.wait(1000);
 });
 
 Cypress.Commands.add('logout', () => {
