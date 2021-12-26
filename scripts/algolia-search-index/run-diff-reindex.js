@@ -96,7 +96,7 @@ class DiffIndexer {
 }
 
 const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     algoliaUtils
       .makeSetFromIndex({ appId, apiKey, indexName })
       .then((alreadyIndexed) => {

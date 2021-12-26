@@ -1,3 +1,5 @@
+/* globals YoutubePlayer */
+
 // this script is loaded by YoutubePlayerIframe.html / YoutubePlayerIframeLocal.html,
 // which is loaded in an iframe by playem-youtube-iframe-patch.js
 

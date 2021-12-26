@@ -1,3 +1,5 @@
+/* globals $, TestRunner */
+
 (function () {
   var DEFAULT_TOKEN = '';
 

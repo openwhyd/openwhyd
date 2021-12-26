@@ -20,7 +20,7 @@ describe('snip.httpRequest', function () {
     '&part=snippet&key=' +
     YOUTUBE_API_KEY;
 
-  function handler(err, res) {
+  function handler(/*err, res*/) {
     //console.log("log", "http response:", res.error || res);
   }
 

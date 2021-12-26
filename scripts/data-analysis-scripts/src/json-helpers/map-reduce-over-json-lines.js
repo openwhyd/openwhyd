@@ -24,7 +24,7 @@ const promoteObject = (object) => ({
 
 // equivalent to db.<collection>.mapReduce(map, reduce, opts);
 const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     let ignoreTheRest = false;
     let reduced = {};
     const limitReached = !opts.limit
