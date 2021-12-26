@@ -16,11 +16,12 @@ import 'cypress-file-upload';
 // Note: please document these commands in index.d.ts.
 
 Cypress.Commands.add('resetDb', () => {
-  return cy.request('POST', `/testing/reset`, {
-    timeout: 20000,
+  cy.request('POST', `/testing/reset`, {
+    timeout: 5000,
     retryOnStatusCodeFailure: true,
     retryOnNetworkFailure: true,
   });
+  cy.wait(1000);
 });
 
 Cypress.Commands.add('logout', () => {
