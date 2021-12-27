@@ -2,12 +2,13 @@
 <html lang="en">
   <head>
     <title>Openwhyd is redirecting...</title>
-    <meta http-equiv="REFRESH" content="3;url={{ url }}" />
   </head>
   <body>
     You are being redirected to: <a href="{{ url }}">{{ url }}</a>...
     <script>
-      window.location.href = '{{ url }}';
+      setTimeout(() => {
+        window.location.href = '{{ url }}';
+      }, 1000);
     </script>
   </body>
 </html>
