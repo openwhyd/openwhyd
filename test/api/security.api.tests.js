@@ -22,7 +22,9 @@ describe('security', () => {
         redirect: target,
       });
       assert(
-        response.body.includes(`window.location.href="${target}"`) === true,
+        response.body.includes(
+          `window.location.href = '${URL_PREFIX}${target}'`
+        ) === true,
         `page body should include redirect to ${target}`
       );
     });

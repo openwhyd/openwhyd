@@ -4,17 +4,19 @@
  * @author adrienjoly, whyd
  */
 
+const snip = require('../snip.js');
 var config = require('../models/config.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var loginTemplate = null;
+var redirectTemplate = null;
 
 exports.refreshTemplates = function (callback) {
-  loginTemplate = templateLoader.loadTemplate(
-    'app/templates/loginPage.html',
-    callback
-  );
+  const path = 'app/templates';
+  loginTemplate = templateLoader.loadTemplate(`${path}/loginPage.html`);
+  redirectTemplate = templateLoader.loadTemplate(`${path}/redirectPage.html`);
+  if (callback) callback();
 };
 
 exports.refreshTemplates();
@@ -52,20 +54,11 @@ exports.htmlCloseWindow = function () {
 };
 
 exports.htmlRedirect = function (url) {
-  return url == 'closeWindow'
-    ? exports.htmlCloseWindow()
-    : [
-        '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">',
-        '<html>',
-        '<head>',
-        '<title>Openwhyd is redirecting...</title>',
-        '<meta http-equiv="REFRESH" content="3;url=' + url + '"></HEAD>',
-        '<BODY>',
-        'You are being redirected to: <a href="' + url + '">' + url + '</a>...',
-        '<script>window.location.href="' + url + '";</script>',
-        '</BODY>',
-        '</HTML>',
-      ].join('\n');
+  if (url == 'closeWindow') return exports.htmlCloseWindow();
+  const safeUrl = snip.getSafeOpenwhydURL(url, config.urlPrefix);
+  if (safeUrl === false)
+    return `⚠ Unsafe redirect URL: ${snip.htmlEntities(url)}`;
+  return redirectTemplate.render({ url: safeUrl });
 };
 
 exports.renderRedirectPageWithTracking = function (url, title) {
