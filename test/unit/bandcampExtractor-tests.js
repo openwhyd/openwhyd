@@ -1,6 +1,7 @@
 /* global describe, it */
 
 var assert = require('assert');
+const fs = require('fs');
 const request = require('request');
 var {
   extractBandcampStreamURLs,
@@ -30,7 +31,10 @@ describe('bandcampExtractor', function () {
     const expectedHostname = 'bcbits.com';
     const expectedSearchParams = ['p', 't', 'token', 'ts'];
     // run test
-    const { body } = await fetch('https://harissa.bandcamp.com/track/rooftop');
+    const body = await fs.promises.readFile(
+      'public/html/test-resources/bandcamp-track-page-2.html', // from https://harissa.bandcamp.com/track/rooftop
+      'utf8'
+    );
     const matches = extractBandcampStreamURLsFromHTML(body);
     assert.strictEqual(matches.length, expectedMatches);
     const url = new URL(matches[0]);
