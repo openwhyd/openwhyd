@@ -69,6 +69,35 @@ context('Openwhyd', () => {
     cy.get('#btnPlay').should('not.have.class', 'playing');
   });
 
+  it('should allow user to delete a track', function () {
+    // requirement: one track should be accessible from the user's stream
+    cy.fixture('users.js').then(({ dummy }) => {
+      cy.login(dummy);
+    });
+    cy.postDummyTracks(1);
+    cy.visit('/me');
+
+    // should list a track
+    cy.get('.post').should('have.length', 1);
+    cy.get('.post a[data-eid]').should('be.visible');
+
+    // should display the edition dialog
+    cy.get('.postEdit a').first().click({ force: true });
+    cy.get('.dlgPostBox').should('have.length', 1).should('be.visible');
+    cy.get('.dlgPostBox #lnkDeletePost').contains('Delete this track').click();
+
+    // should display the post delete dialog
+    cy.get('div.dlgDeletePost')
+      .should('have.length', 1)
+      .should('be.visible')
+      .contains('Delete this post');
+    cy.get('.dlgDeletePost .btnDelete').contains('Delete').click();
+
+    // should list no track
+    cy.get('.dlgDeletePost').should('not.be.visible');
+    cy.get('.post').should('have.length', 0);
+  });
+
   it('should allow a visitor to sign up and follow the onboarding process', function () {
     // should not let visitors access admin endpoints
     cy.visit('/admin/config/config.json');
