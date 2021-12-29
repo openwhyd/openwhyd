@@ -1,3 +1,5 @@
+/* globals YoutubePlayer */
+
 // this script is loaded by YoutubePlayerIframe.html / YoutubePlayerIframeLocal.html,
 // which is loaded in an iframe by playem-youtube-iframe-patch.js
 
@@ -9,7 +11,7 @@
   // ORIGIN should match the domain on which openwhyd is running
   var ORIGIN =
       wlh.indexOf('http://localhost:') == 0 ||
-      /^https?\:\/\/(\w+)\.openwhyd\.(\w+)(\:8080)?\//.test(wlh)
+      /^https?:\/\/(\w+)\.openwhyd\.(\w+)(:8080)?\//.test(wlh)
         ? wlh.substr(0, wlh.indexOf('/', 10))
         : window.location.protocol + '//openwhyd.org', // domain of the iframe's expected host
     EVENTS = [

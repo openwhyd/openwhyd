@@ -96,7 +96,7 @@ class DiffIndexer {
 }
 
 const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     algoliaUtils
       .makeSetFromIndex({ appId, apiKey, indexName })
       .then((alreadyIndexed) => {
@@ -191,7 +191,7 @@ switch (process.argv[2]) {
     console.warn(
       'no parameter => will dry run and ask for confirmation before reindexing'
     );
-  case 'dry-run':
+  case 'dry-run' /* eslint-disable-line no-fallthrough */:
     console.warn(
       'dry-run mode => will dry run and exit without updating indexes'
     );

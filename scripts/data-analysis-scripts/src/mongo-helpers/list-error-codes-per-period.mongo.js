@@ -1,3 +1,5 @@
+/* globals db, load, makeMapWith, emit, RENDER_FCT, WEEK, OUTPUT_COLLECTION, makeDateRangeQuery, today */
+
 // usage: $ mongo openwhyd_dump --eval "const RENDER_FCT = renderDate, OUTPUT_COLLECTION = 'list-error-codes-per-day';" list-error-codes-per-period.mongo.js
 
 load('./mongo-helpers/date-range.mongo.js'); // exports makeDateRangeQuery()

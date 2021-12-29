@@ -257,7 +257,7 @@ var openwhydBkPageDetectors = [
   },
   function parseDomElements(window) {
     var results = [];
-    ['iframe', 'object', 'embed', 'a', 'audio', 'source'].map(function (
+    ['iframe', 'object', 'embed', 'a', 'audio', 'source'].forEach(function (
       elName
     ) {
       results = results.concat(
@@ -657,7 +657,7 @@ var openwhydYouTubeExtractor = {
   getEid: function (url) {
     // code imported from playem-all
     if (
-      /(youtube\.com\/(v\/|embed\/|(?:.*)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
+      /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
         url
       ) ||
       /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||

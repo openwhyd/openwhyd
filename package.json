@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.45.7",
+  "version": "1.45.13",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -33,8 +33,8 @@
     "docker:test": "npm run docker:run test-unit && npm run docker:run test-api && npm run docker:test:cypress",
     "lint:typescript": "npx tsc --noEmit",
     "lint:format": "prettier . --write",
-    "lint:fix": "eslint app --fix",
-    "lint": "eslint app"
+    "lint:fix": "eslint . --fix",
+    "lint": "eslint ."
   },
   "directories": {
     "src": "./app",
@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.23.4",
-    "@cypress/code-coverage": "^3.9.11",
+    "@cypress/code-coverage": "^3.9.12",
     "@types/node": "^16.11.4",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
@@ -81,6 +81,9 @@
     "prettier": "^2.4.1",
     "typescript": "^4.4.4",
     "wait-on": "^6.0.0"
+  },
+  "resolutions": {
+    "istanbul-lib-coverage": "^3.2.0"
   },
   "release": {
     "branch": "master",

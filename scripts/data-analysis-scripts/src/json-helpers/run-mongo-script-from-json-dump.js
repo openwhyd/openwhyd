@@ -13,11 +13,11 @@ const script = [
   fs
     .readFileSync(MONGO_SCRIPT_FILE)
     .toString()
-    .replace(/load\([\'\"]([^\)]+)[\'\"]\)/g, (instr, file) =>
+    .replace(/load\(['"]([^)]+)['"]\)/g, (instr, file) =>
       fs.readFileSync(file).toString()
     )
     .replace(/emit\(/g, `return (${emit})(`)
-    .replace(/db\.([^\.]+)\.mapReduce\(/g, `await mapReduceFromJsonLines(`),
+    .replace(/db\.([^.]+)\.mapReduce\(/g, `await mapReduceFromJsonLines(`),
   '})();',
 ].join('\n');
 

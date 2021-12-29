@@ -185,7 +185,7 @@ function WhydTextWithMentions(textArea) {
 
 //================ javascript code moved from postEdit.html
 
-globals.initPostBox = function (params) {
+window.globals.initPostBox = function (params) {
   var addingFromBookmarklet = params.mode === 'addFromBookmarklet';
   var editingPost = params.mode === 'editPost';
   var reposting = params.mode === 'repost';
@@ -208,12 +208,12 @@ globals.initPostBox = function (params) {
     try {
       var submitted = whydPost.postData,
         stored = whydPost.storedPost;
-      globals.Whyd.tracking.log(
+      window.globals.Whyd.tracking.log(
         'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
         stored._id
       );
       if ((submitted.pl || {}).id == 'create')
-        globals.Whyd.tracking.log('Created playlist', stored.pl.id);
+        window.globals.Whyd.tracking.log('Created playlist', stored.pl.id);
     } catch (e) {
       console.warn('error', e, e.stack);
     }
@@ -222,7 +222,7 @@ globals.initPostBox = function (params) {
   var $body = $('body');
 
   function close() {
-    if (globals.avgrundClose) globals.avgrundClose();
+    if (window.globals.avgrundClose) window.globals.avgrundClose();
     else window.close();
     // TODO: also close bookmarklet overlay
   }
@@ -263,9 +263,9 @@ globals.initPostBox = function (params) {
 
   // for openwhyd ui (add/edit/repost)
   function closeAndShowTrack(posted) {
-    globals.avgrundClose();
+    window.globals.avgrundClose();
     if (!posted)
-      return (globals.showMessage || alert)(
+      return (window.globals.showMessage || alert)(
         'Oops; an error occurred... Please try again!',
         true
       );
@@ -273,13 +273,13 @@ globals.initPostBox = function (params) {
     if (posted.pl) {
       url += '/playlist/' + posted.pl.id;
     }
-    if (globals.showMessage) {
+    if (window.globals.showMessage) {
       var plName = posted.pl ? posted.pl.name : 'your tracks';
-      globals.showMessage(
+      window.globals.showMessage(
         "Successfully added track to <a target='_blank' href='" +
           url +
           "'>" +
-          globals.encodeHtmlEntities(plName) +
+          window.globals.encodeHtmlEntities(plName) +
           '</a>'
       );
     } else if (url) window.location.href = url;
@@ -339,14 +339,14 @@ globals.initPostBox = function (params) {
   function makePlayemStreamDetector(/*eidSet*/) {
     var players = {
       // playem-all.js must be loaded at that point
-      yt: new globals.YoutubePlayer({}),
-      sc: new globals.SoundCloudPlayer({}),
-      vi: new globals.VimeoPlayer({}),
-      dm: new globals.DailymotionPlayer({}),
-      dz: new globals.DeezerPlayer({}),
-      bc: new globals.BandcampPlayer({}),
-      ja: new globals.JamendoPlayer({}),
-      fi: new globals.AudioFilePlayer({}),
+      yt: new window.globals.YoutubePlayer({}),
+      sc: new window.globals.SoundCloudPlayer({}),
+      vi: new window.globals.VimeoPlayer({}),
+      dm: new window.globals.DailymotionPlayer({}),
+      dz: new window.globals.DeezerPlayer({}),
+      bc: new window.globals.BandcampPlayer({}),
+      ja: new window.globals.JamendoPlayer({}),
+      fi: new window.globals.AudioFilePlayer({}),
       // TODO: make sure that the list of players is always up to date
     };
     function getPlayerId(url) {
@@ -425,7 +425,7 @@ globals.initPostBox = function (params) {
     );
     /*
 		$("#lnkDeletePost").unbind().click(function() {
-			globals.avgrundClose();
+			window.globals.avgrundClose();
 			window.setTimeout(function(){
 				var html = '<div><div style="background-image:url(\'' + params.img + '\');"></div>'
 					+ '<span>' + params.title + '</span></div>' // TODO: sanitize title?
@@ -442,7 +442,7 @@ globals.initPostBox = function (params) {
 
   $(document).ajaxComplete(function () {
     try {
-      globals.FB.XFBML.parse();
+      window.globals.FB.XFBML.parse();
     } catch (ex) {
       console.error(ex);
     }

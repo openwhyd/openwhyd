@@ -3,6 +3,7 @@
 const mongodb = require('../../models/mongodb.js');
 
 exports.controller = async function (request, getParams, response) {
+  // Important: After calling this `/testing/reset` route, other pending HTTP requests may never return.
   request.logToConsole('reset.controller', request.method);
   if (request.method.toLowerCase() !== 'post') {
     return response.badRequest();

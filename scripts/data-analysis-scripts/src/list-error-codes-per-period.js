@@ -6,16 +6,16 @@ const {
 } = require('./json-helpers/map-reduce-over-json-lines');
 
 const {
-  DAY,
+  // DAY,
   WEEK,
-  MONTH,
-  YEAR,
+  // MONTH,
+  // YEAR,
   today,
   makeDateRangeQuery,
 } = require('./mongo-helpers/date-range.mongo.js');
 const {
-  renderDate,
-  renderWeek,
+  // renderDate,
+  // renderWeek,
   makeMapWith,
 } = require('./mongo-helpers/period-aggregator.mongo.js');
 
