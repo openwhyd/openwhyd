@@ -34,9 +34,7 @@ context('Openwhyd bookmarklet', () => {
   });
 
   it('can detect a track from a soundcloud page', () => {
-    cy.visit(
-      'http://localhost:8080/html/test-resources/soundcloud-tracks.html'
-    );
+    cy.visit('/html/test-resources/soundcloud-tracks.html');
 
     cy.window().then(injectBookmarklet);
 
@@ -58,7 +56,8 @@ context('Openwhyd bookmarklet', () => {
   });
 
   it('can import the cover art of a Bandcamp track', () => {
-    cy.visit('https://harissa.bandcamp.com/track/rooftop');
+    // original URL: https://harissa.bandcamp.com/track/rooftop
+    cy.visit('/html/test-resources/bandcamp-track-page.html');
 
     cy.window().then(injectBookmarklet);
 
@@ -75,7 +74,7 @@ context('Openwhyd bookmarklet', () => {
   // TODO: check that we don't end up with dozens of "Search Openwhyd" results, in the bookmarlet
 
   it('can be opened twice from the same youtube page', () => {
-    cy.visit('http://localhost:8080/html/test-resources/youtube-videos.html');
+    cy.visit('/html/test-resources/youtube-videos.html');
 
     cy.window().then(injectBookmarklet);
 
@@ -96,7 +95,7 @@ context('Openwhyd bookmarklet', () => {
   });
 
   it('can pick a track from a youtube page', () => {
-    cy.visit('http://localhost:8080/html/test-resources/youtube-videos.html');
+    cy.visit('/html/test-resources/youtube-videos.html');
 
     cy.window().then(injectBookmarklet);
 
