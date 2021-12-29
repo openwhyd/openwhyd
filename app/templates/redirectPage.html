@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html lang="en">
+  <head>
+    <title>Openwhyd is redirecting...</title>
+  </head>
+  <body>
+    You are being redirected to: <a href="{{ url }}">{{ url }}</a>...
+    <script>
+      setTimeout(() => {
+        window.location.href = '{{ url }}';
+      }, 1000);
+    </script>
+  </body>
+</html>
