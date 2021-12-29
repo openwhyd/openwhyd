@@ -136,15 +136,10 @@ exports.controller = function (request, reqParams, response) {
 
   function render(error, params) {
     if (error) return response.renderHTML(error);
-    if (reqParams.v !== 2) {
-      console.warn(
-        new Error(
-          'rendering postEditV2.html instead of deprecated template postEdit.html'
-        )
-      );
-    }
     templateLoader.loadTemplate(
-      'app/templates/postEditV2.html',
+      reqParams.v == 2
+        ? 'app/templates/postEditV2.html'
+        : 'app/templates/postEdit.html', // TODO: effacer postEdit.html et postBox.js
       function (template) {
         response.renderHTML(template.render(params));
       }
