@@ -1,0 +1,348 @@
+/* commons */
+
+img {
+  border: none;
+}
+
+button {
+  display: block; /* for firefox compat */
+}
+
+a {
+  color: #2477bc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* bookmarklet form */
+
+body {
+  background: #f8f8f8;
+  width: 480px;
+  margin: 0 auto;
+  padding: 5px;
+  padding-top: 12px;
+  overflow-x: hidden;
+  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+}
+
+/* embed thumb */
+
+#contentThumb {
+  float: left;
+  margin-right: 30px;
+}
+
+#contentThumb > div {
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+#contentThumb > div > div {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+}
+
+#contentThumb > div > div > img {
+  width: 120px;
+}
+
+/* embed data */
+
+#contentData > p#contentTitle {
+  font-size: 16px;
+  color: #525252;
+  text-decoration: ite;
+  margin: 0;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+#contentData > span#contentSource {
+  font-size: 14px;
+  color: #777;
+  font-style: italic;
+}
+
+#trackPresenceMsg {
+  font-size: 11px;
+  color: #a5acb1;
+  margin-top: 14px;
+}
+
+/* description form */
+
+#postForm {
+  clear: both;
+  float: left;
+  position: relative;
+  width: 350px;
+}
+
+.shareField {
+  width: 460px;
+  border: 1px solid #a0a0a0;
+  border-radius: 3px;
+  height: 40px;
+  padding: 5px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.15),
+    0 1px 0 rgba(255, 255, 255, 1);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.15),
+    0 1px 0 rgba(255, 255, 255, 1);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.15),
+    0 1px 0 rgba(255, 255, 255, 1);
+  margin-bottom: 30px;
+}
+
+#btnSubmit {
+  background: #3177af;
+  padding: 15px 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  margin: 10px 0 0 0;
+}
+
+#contentSource.youtube {
+  background: url('/images/icon-youtube.png') no-repeat top right;
+  padding-right: 20px;
+}
+
+#contentSource.soundcloud {
+  background: url('/images/icon-soundcloud.png') no-repeat top right;
+  padding-right: 20px;
+}
+
+.greenButton {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  /*display: block;*/
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  text-align: center;
+  background: #9bc840;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#9bc840),
+    to(#3177af)
+  );
+  background: -moz-linear-gradient(top, #9bc840, #3177af);
+  border: 1px solid #89b333;
+  color: white;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+}
+
+#selPlaylist > div form > input.greenButton {
+  margin-left: 10px;
+  border: none;
+  padding: 8px;
+}
+
+/* confirmation screen */
+
+#confirmationScreen {
+  display: none;
+  text-align: center;
+  padding-top: 50px;
+}
+
+#confirmationScreen > span {
+  font-size: 20px;
+  color: #333;
+}
+
+#confirmationScreen > p {
+  margin-top: 30px;
+}
+
+#confirmationScreen > p > a {
+  border: 1px #999 solid;
+  background: #ccc url('/images/icon-newtab.png') no-repeat 8px 8px;
+  color: white;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  padding-left: 35px;
+  font-size: 14px;
+  /*font-weight: bold;*/
+  border-radius: 3px;
+}
+
+#confirmationScreen > p > a:hover {
+  text-decoration: none;
+}
+
+#confirmationScreen > div {
+  border-top: 1px solid #ccc;
+  padding-top: 40px;
+  margin-top: 50px;
+  width: 100%;
+}
+
+#confirmationScreen > div > span {
+  color: #555;
+}
+
+#confirmationScreen > div > div {
+  position: relative;
+  padding-top: 20px;
+  width: 140px;
+  margin: 0 auto;
+}
+
+#confirmationScreen > div > div > .twitter-share-button {
+  position: absolute;
+  left: 0px;
+}
+
+#confirmationScreen > div > div > .fb-like {
+  position: absolute;
+  right: 0px;
+  width: 50px;
+}
+
+/* remove fb like flyout, usually clipped by iframe */
+#confirmationScreen .fb_edge_widget_with_comment > span > iframe {
+  height: 20px !important;
+}
+
+/* query.mentionsInput.css */
+
+.mentions-input-box {
+  position: relative;
+  background: #fff;
+}
+
+.mentions-input-box > * {
+  width: 100%;
+  display: block;
+  padding: 8px;
+  outline: 0;
+  resize: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 15px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.mentions-input-box textarea {
+  position: relative;
+  border: 1px solid #dcdcdc;
+  height: 18px;
+  overflow: hidden;
+  background: transparent;
+  color: #5f5f5f;
+}
+
+.mentions-input-box > .mentions-autocomplete-list {
+  display: none;
+  background: #fff;
+  border: 1px solid #b2b2b2;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: auto;
+  padding: 0;
+  z-index: 10000;
+  margin-top: -2px;
+}
+
+.mentions-input-box .mentions-autocomplete-list ul {
+  margin: 0;
+  padding: 5px 0;
+}
+
+.mentions-input-box .mentions-autocomplete-list li {
+  background-color: #fff;
+  padding: 5px 10px;
+  margin: 0;
+  width: auto;
+  height: 26px;
+  line-height: 26px;
+  overflow: hidden;
+  cursor: pointer;
+  list-style: none;
+  white-space: nowrap;
+  color: #3f6191;
+  font-weight: bold;
+}
+
+.mentions-input-box .mentions-autocomplete-list li > img,
+.mentions-input-box .mentions-autocomplete-list li > div.icon {
+  width: 26px;
+  height: 26px;
+  float: left;
+  margin-right: 7px;
+  -moz-background-origin: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+
+.mentions-input-box .mentions-autocomplete-list li em {
+  font-weight: bold;
+  font-style: none;
+}
+
+.mentions-input-box .mentions-autocomplete-list li.active {
+  background-color: #417bd1;
+  border-radius: 0;
+  color: #fff;
+}
+
+.mentions-input-box .mentions-autocomplete-list li b {
+}
+
+.mentions-input-box .mentions {
+  position: absolute;
+  left: 1px;
+  right: 0;
+  top: 1px;
+  bottom: 0;
+  padding: 8px;
+  color: #fff;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.mentions-input-box .mentions > div {
+  color: #fff;
+  white-space: pre-wrap;
+  width: 100%;
+  height: 100%;
+  line-height: 15px;
+}
+
+.mentions-input-box .mentions > div > strong {
+  font-weight: normal;
+  background: #d8dfea;
+}
+
+.mentions-input-box .mentions > div > strong > span {
+  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+}
