@@ -32,7 +32,7 @@ describe('bandcampExtractor', function () {
     const expectedSearchParams = ['p', 't', 'token', 'ts'];
     // run test
     const body = await fs.promises.readFile(
-      'public/html/test-resources/bandcamp-track-page-2.html', // from https://harissa.bandcamp.com/track/rooftop
+      'public/html/test-resources/bandcamp-track-page.html', // from https://harissa.bandcamp.com/track/rooftop
       'utf8'
     );
     const matches = extractBandcampStreamURLsFromHTML(body);
