@@ -24,14 +24,11 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   afterAll(async () => {
     await mongoClient.close();
+    server?.kill('SIGKILL');
   });
 
   beforeEach(async () => {
-    if (server?.kill) {
-      server.kill('SIGKILL');
-      server = null;
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
+    server?.kill('SIGKILL');
     await db.collection('user').deleteMany({});
     await db.collection('track').deleteMany({});
   });
@@ -41,9 +38,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       { name: 'a regular track', score: 1 },
       { name: 'a popular track', score: 2 },
     ]);
-    console.log(2);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
-    console.log(3);
     const { body } = await httpClient.get({ url: `${server.URL}/hot` });
     expect(body).toMatchSnapshot();
     // Note: the request above does not mutate data => no need to snapshot the state of the "tracks" table.
