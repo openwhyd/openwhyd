@@ -33,8 +33,9 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   beforeEach(async () => {
     server?.kill('SIGKILL');
-    await db.collection('user').deleteMany({});
-    await db.collection('track').deleteMany({});
+    await db.collection('user').deleteMany({}); // clear users
+    await db.collection('post').deleteMany({}); // clear posts
+    await db.collection('track').deleteMany({}); // clear tracks
   });
 
   it('renders ranked tracks', async () => {
@@ -92,7 +93,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
     expect(indentJSON(json.body)).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
-    const tracksCollection = await db.collection('tracks').find({}).toArray();
+    const tracksCollection = await db.collection('track').find({}).toArray();
     expect(indentJSON(tracksCollection)).toMatchSnapshot();
   });
 });
