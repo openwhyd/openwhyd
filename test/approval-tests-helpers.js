@@ -19,7 +19,7 @@ const loadEnvVars = async (file) => {
 
 const httpClient = {
   get({ url, cookies }) {
-    return promisify(request.post)({ uri: url, jar: cookies }).then(
+    return promisify(request.get)({ uri: url, jar: cookies }).then(
       ({ body, jar }) => ({ body, cookies: jar })
     );
   },
