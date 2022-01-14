@@ -1,4 +1,5 @@
 // Run with: $ npm run test-approval-hot-tracks
+//   ... or: $ npm run test-approval-hot-tracks -- --updateSnapshot
 
 const {
   httpClient,
