@@ -102,17 +102,20 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       body: { action: 'insert', eId: '/yt/track_A' },
       cookies: userSession[0].cookies,
     });
+    const postId = JSON.parse(post.body)._id;
+    const cleanJSON = (body) =>
+      body.replaceAll(postId, '61e1adfea49d3bced4f8c183');
     // user 1 likes track A
     await httpClient.post({
-      url: `${server.URL}/api/post/${JSON.parse(post.body)._id}`,
+      url: `${server.URL}/api/post/${postId}`,
       body: { action: 'toggleLovePost' },
       cookies: userSession[1].cookies,
     });
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
-    expect(indentJSON(json.body)).toMatchSnapshot();
+    expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
     const tracksCollection = await db.collection('track').find({}).toArray();
-    expect(indentJSON(tracksCollection)).toMatchSnapshot();
+    expect(cleanJSON(indentJSON(tracksCollection))).toMatchSnapshot();
   });
 
   it.todo(
