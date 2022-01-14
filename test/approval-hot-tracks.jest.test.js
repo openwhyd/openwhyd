@@ -73,6 +73,10 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       },
     ];
     await db.collection('user').insertMany(users);
+    await db.collection('track').insertMany([
+      { eId: '/yt/track_A', score: 0 },
+      { eId: '/yt/track_B', score: 0 },
+    ]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = [
       await httpClient.get({
@@ -86,20 +90,20 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       // user 0 posts track A
       await httpClient.post({
         url: `${server.URL}/api/post`,
-        body: { action: 'insert', eId: 'track_A' },
+        body: { action: 'insert', eId: '/yt/track_A' },
         cookies: userSession[0].cookies,
       }),
       // user 0 posts track B
       await httpClient.post({
         url: `${server.URL}/api/post`,
-        body: { action: 'insert', eId: 'track_B' },
+        body: { action: 'insert', eId: '/yt/track_B' },
         cookies: userSession[0].cookies,
       }),
     ];
     // user 1 reposts track A
-    await httpClient.post({
+    const repost = await httpClient.post({
       url: `${server.URL}/api/post`,
-      body: { action: 'insert', pId: posts[0].pId },
+      body: { action: 'insert', pId: JSON.parse(posts[0].body)._id },
       cookies: userSession[1].cookies,
     });
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });

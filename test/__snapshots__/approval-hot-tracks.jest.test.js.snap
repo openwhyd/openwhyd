@@ -449,8 +449,32 @@ var JAMENDO_CLIENT_ID = \\"2c9a11b9\\";
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 1`] = `
 "{
   hasMore: false,
-  tracks: []
+  tracks: [
+    {
+      _id: '61e1ab64dd7506c5289a777d',
+      eId: '/yt/track_B',
+      score: 0
+    },
+    {
+      _id: '61e1ab64dd7506c5289a777c',
+      eId: '/yt/track_A',
+      score: 0
+    }
+  ]
 }"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `"[]"`;
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `
+"[
+  {
+    _id: 61e1ab64dd7506c5289a777c,
+    eId: '/yt/track_A',
+    score: 0
+  },
+  {
+    _id: 61e1ab64dd7506c5289a777d,
+    eId: '/yt/track_B',
+    score: 0
+  }
+]"
+`;
