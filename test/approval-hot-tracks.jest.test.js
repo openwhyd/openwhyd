@@ -62,13 +62,13 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   it("updates the score of a track when it's liked", async () => {
     const users = [
       {
-        // _id: ObjectId('61e19a3f078b4c9934e72ce1'),
+        _id: ObjectId('61e19a3f078b4c9934e72ce1'),
         name: 'user 0',
         email: 'user0@test.com',
         pwd: '21232f297a57a5a743894a0e4a801fc3',
       },
       {
-        // _id: ObjectId('61e19a3f078b4c9934e72ce2'),
+        _id: ObjectId('61e19a3f078b4c9934e72ce2'),
         name: 'user 1',
         email: 'user1@test.com',
         pwd: '21232f297a57a5a743894a0e4a801fc3',
