@@ -451,12 +451,12 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
   hasMore: false,
   tracks: [
     {
-      _id: '61e1ab64dd7506c5289a777d',
+      _id: '61e19a3f078b4c9934e72ce7',
       eId: '/yt/track_B',
       score: 0
     },
     {
-      _id: '61e1ab64dd7506c5289a777c',
+      _id: '61e19a3f078b4c9934e72ce6',
       eId: '/yt/track_A',
       score: 0
     }
@@ -467,12 +467,12 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `
 "[
   {
-    _id: 61e1ab64dd7506c5289a777c,
+    _id: 61e19a3f078b4c9934e72ce6,
     eId: '/yt/track_A',
     score: 0
   },
   {
-    _id: 61e1ab64dd7506c5289a777d,
+    _id: 61e19a3f078b4c9934e72ce7,
     eId: '/yt/track_B',
     score: 0
   }

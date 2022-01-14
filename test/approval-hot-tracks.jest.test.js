@@ -74,8 +74,16 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     ];
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany([
-      { eId: '/yt/track_A', score: 0 },
-      { eId: '/yt/track_B', score: 0 },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce6'),
+        eId: '/yt/track_A',
+        score: 0,
+      },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce7'),
+        eId: '/yt/track_B',
+        score: 0,
+      },
     ]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = [
