@@ -129,7 +129,7 @@ async function startOpenwhydServerWith(env) {
 }
 
 /* refresh openwhyd's in-memory cache of users, to allow this user to login */
-async function refreshOpenwhydCache(urlPrefix = 'http://localhost:8080') {
+async function refreshOpenwhydCache(urlPrefix) {
   await promisify(request.post)(urlPrefix + '/testing/refresh');
 }
 
@@ -141,10 +141,12 @@ async function startOpenwhydServer(envFileForProgamaticStart) {
       TZ: 'UTC',
     };
     process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
-    return await startOpenwhydServerWith(env);
+    return await startOpenwhydServerWith(env); // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
   } else {
     process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
-    await refreshOpenwhydCache();
+    const URL = 'http://localhost:8080';
+    await refreshOpenwhydCache(URL);
+    return { URL };
   }
 }
 
@@ -158,5 +160,4 @@ module.exports = {
   indentJSON,
   getCleanedPageBody,
   startOpenwhydServer,
-  refreshOpenwhydCache,
 };
