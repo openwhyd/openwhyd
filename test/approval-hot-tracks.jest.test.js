@@ -61,14 +61,26 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   it("updates the score of a track when it's reposted", async () => {
     const users = [
-      { id: 0, name: 'user 0', pwd: '123' },
-      { id: 1, name: 'user 1', pwd: '456' },
+      {
+        name: 'user 0',
+        email: 'user0@test.com',
+        pwd: '21232f297a57a5a743894a0e4a801fc3',
+      },
+      {
+        name: 'user 1',
+        email: 'user1@test.com',
+        pwd: '21232f297a57a5a743894a0e4a801fc3',
+      },
     ];
     await db.collection('user').insertMany(users);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = [
-      await httpClient.post({ url: `${server.URL}/api/login`, body: users[0] }),
-      await httpClient.post({ url: `${server.URL}/api/login`, body: users[1] }),
+      await httpClient.get({
+        url: `${server.URL}/login?action=login&ajax=1&email=${users[0].email}&md5=${users[0].pwd}`,
+      }),
+      await httpClient.get({
+        url: `${server.URL}/login?action=login&ajax=1&email=${users[1].email}&md5=${users[1].pwd}`,
+      }),
     ];
     const posts = [
       // user 0 posts track A

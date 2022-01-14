@@ -17,10 +17,21 @@ const loadEnvVars = async (file) => {
   return envVars;
 };
 
+function extractCookieJar(headers, origin) {
+  const jar = request.jar();
+  if (((headers || {})['set-cookie'] || []).length) {
+    jar.setCookie(request.cookie(headers['set-cookie'][0]), origin);
+  }
+  return jar;
+}
+
 const httpClient = {
   get({ url, cookies }) {
     return promisify(request.get)({ uri: url, jar: cookies }).then(
-      ({ body, jar }) => ({ body, cookies: jar })
+      ({ body, headers }) => ({
+        body,
+        cookies: extractCookieJar(headers, new URL(url).origin),
+      })
     );
   },
   post({ url, body, headers, cookies }) {
@@ -37,7 +48,10 @@ const httpClient = {
       body,
       headers,
       jar: cookies,
-    }).then(({ body, jar }) => ({ body, cookies: jar }));
+    }).then(({ body, headers }) => ({
+      body,
+      cookies: extractCookieJar(headers, new URL(url).origin),
+    }));
   },
 };
 
