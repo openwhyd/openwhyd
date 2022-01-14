@@ -66,7 +66,7 @@ async function insertTestData(url, docsPerCollection) {
   await mongoClient.close();
 }
 
-async function getCleanedPageBody(body) {
+function getCleanedPageBody(body) {
   try {
     return JSON.parse(body);
   } catch (err) {

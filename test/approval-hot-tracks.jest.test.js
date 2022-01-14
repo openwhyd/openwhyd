@@ -6,6 +6,7 @@ const {
   ObjectId,
   connectToMongoDB,
   startOpenwhydServer,
+  getCleanedPageBody,
 } = require('./approval-tests-helpers');
 
 const { START_WITH_ENV_FILE } = process.env;
@@ -52,7 +53,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
     expect(json.body).toMatchSnapshot();
     const html = await httpClient.get({ url: `${server.URL}/hot` });
-    expect(html.body).toMatchSnapshot();
+    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
     // Note: the request above does not mutate data => no need to snapshot the state of the "tracks" table.
   });
 

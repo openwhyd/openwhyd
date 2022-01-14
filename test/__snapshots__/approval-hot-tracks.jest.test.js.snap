@@ -37,7 +37,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 };
   window.playTrack = window.playTrack || function(){};
 </script>
-<script src=\\"/js/whydtr.js?1.46.1\\"></script>
+<script src=\\"/js/whydtr.js\\"></script>
 <link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"/css/cookieconsent2-3.0.3.min.css\\" />
 <script src=\\"/js/cookieconsent2-3.0.3.min.js\\"></script>
 <script>
@@ -49,12 +49,12 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   });
 </script>
     <title>Openwhyd – Discover and collect the best music tracks from the web</title>
-    <link href=\\"/css/common.css?1.46.1\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
-    <link href=\\"/css/browse.css?1.46.1\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
-    <link href=\\"/css/tipsy.css?1.46.1\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
-    <link href=\\"/css/userProfileV2.css?1.46.1\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
-    <link href=\\"/css/userPlaylistV2.css?1.46.1\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
-    <link href=\\"/css/dlgEditProfileCover.css?1.46.1\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/common.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/browse.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/tipsy.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/userProfileV2.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/userPlaylistV2.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/dlgEditProfileCover.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
     <script src=\\"/js/jquery-1.10.2.min.js\\"></script>
     <script src=\\"/js/jquery-migrate-1.2.1.js\\"></script>
     <script type=\\"text/javascript\\" src=\\"/js/jquery.history.js\\"></script>
@@ -168,7 +168,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       </p>
 
   <span class=\\"ago\\" datetime=\\"1642175039000\\">
-    <a href=\\"/c/61e19a3f078b4c9934e72ce5\\">8 minutes</a>
+    <a href=\\"/c/61e19a3f078b4c9934e72ce5\\">10 minutes</a>
   </span>
 
   <div class=\\"stats\\">
@@ -264,7 +264,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       </p>
 
   <span class=\\"ago\\" datetime=\\"1642175039000\\">
-    <a href=\\"/c/61e19a3f078b4c9934e72ce4\\">8 minutes</a>
+    <a href=\\"/c/61e19a3f078b4c9934e72ce4\\">10 minutes</a>
   </span>
 
   <div class=\\"stats\\">
@@ -410,22 +410,22 @@ var SOUNDCLOUD_CLIENT_ID = \\"eb257e698774349c22b0b727df0238ad\\";
 var YOUTUBE_API_KEY = \\"AIzaSyBzqb519R--gKZ9cXgbqE5bMM85yNTXJfo\\";
 var JAMENDO_CLIENT_ID = \\"2c9a11b9\\";
 </script>
-    <script src=\\"/js/jquery.avgrund.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/jquery.tipsy.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/quickSearch.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/jquery.iframe-post-form.min.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/jquery.placeholder.min.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/underscore-min.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/jquery.elastic.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/jquery.mentionsInput.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/ui.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/whyd.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/playem-all.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/playem-youtube-iframe-patch.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/whydPlayer.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/dndUpload.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/WhydImgUpload.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
-    <script src=\\"/js/facebook.js?1.46.1\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.avgrund.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.tipsy.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/quickSearch.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.iframe-post-form.min.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.placeholder.min.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/underscore-min.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.elastic.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.mentionsInput.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/ui.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/whyd.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/playem-all.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/playem-youtube-iframe-patch.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/whydPlayer.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/dndUpload.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/WhydImgUpload.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/facebook.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
   </body>
 </html>"
 `;
