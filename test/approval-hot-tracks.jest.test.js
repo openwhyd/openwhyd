@@ -40,8 +40,10 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       { name: 'a popular track', score: 2 },
     ]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
-    const { body } = await httpClient.get({ url: `${server.URL}/hot` });
-    expect(body).toMatchSnapshot();
+    const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
+    expect(json.body).toMatchSnapshot();
+    const html = await httpClient.get({ url: `${server.URL}/hot` });
+    expect(html.body).toMatchSnapshot();
     // Note: the request above does not mutate data => no need to snapshot the state of the "tracks" table.
   });
 

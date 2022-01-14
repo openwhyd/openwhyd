@@ -1,6 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks 1`] = `
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks 1`] = `"{\\"hasMore\\":false,\\"tracks\\":[{\\"_id\\":\\"61e19998577cc1985f782223\\",\\"name\\":\\"a popular track\\",\\"score\\":2},{\\"_id\\":\\"61e19998577cc1985f782222\\",\\"name\\":\\"a regular track\\",\\"score\\":1}]}"`;
+
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks 2`] = `
 "<!DOCTYPE html>
 <html lang=\\"en\\">
   <head prefix=\\"og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#\\">
@@ -130,12 +132,12 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     <div class=\\"posts\\">
        <div
   class=\\"post \\"
-  data-pid=\\"61e198d87837e69592f066f8\\"
+  data-pid=\\"61e19998577cc1985f782223\\"
   data-score=\\"2\\"
   data-order=\\"\\"
   data-initialpid=\\"\\"
   data-loved=\\"\\"
-  data-time=\\"1642174680000\\"
+  data-time=\\"1642174872000\\"
 >
   <div class=\\"playBar\\"></div>
 
@@ -153,9 +155,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 
   <h2>
     <a
-      href=\\"/c/61e198d87837e69592f066f8\\"
+      href=\\"/c/61e19998577cc1985f782223\\"
       class=\\"no-ajaxy\\"
-      onclick=\\"toggleComments('61e198d87837e69592f066f8');return false;\\"
+      onclick=\\"toggleComments('61e19998577cc1985f782223');return false;\\"
       >a popular track</a
     >
   </h2>
@@ -165,60 +167,60 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     <a href=\\"/u/\\"></a>  
       </p>
 
-  <span class=\\"ago\\" datetime=\\"1642174680000\\">
-    <a href=\\"/c/61e198d87837e69592f066f8\\">1 second</a>
+  <span class=\\"ago\\" datetime=\\"1642174872000\\">
+    <a href=\\"/c/61e19998577cc1985f782223\\">2 seconds</a>
   </span>
 
   <div class=\\"stats\\">
     <span
       class=\\"nbReposts\\"
       style=\\"display:none;\\"
-      onclick=\\"javascript:showReposts('61e198d87837e69592f066f8')\\"
+      onclick=\\"javascript:showReposts('61e19998577cc1985f782223')\\"
     >
       <span>0</span>
     </span>
     <span
       class=\\"nbLoves\\"
       style=\\"display:none;\\"
-      onclick=\\"javascript:showPostLovers('61e198d87837e69592f066f8')\\"
+      onclick=\\"javascript:showPostLovers('61e19998577cc1985f782223')\\"
     >
       <span>0</span>
     </span>
     <span
       class=\\"nbComments\\"
       style=\\"display:none;\\"
-      onclick=\\"toggleComments('61e198d87837e69592f066f8');\\"
+      onclick=\\"toggleComments('61e19998577cc1985f782223');\\"
     >
       <span>0</span>
     </span>
   </div>
 
   <div class=\\"btns\\">
-    <a class=\\"btnRepost\\" href=\\"javascript:publishPost('61e198d87837e69592f066f8');\\"> Add to </a>
+    <a class=\\"btnRepost\\" href=\\"javascript:publishPost('61e19998577cc1985f782223');\\"> Add to </a>
     <span>&middot;</span>
     <a
       class=\\"btnLike \\"
-      href=\\"javascript:toggleLovePost('61e198d87837e69592f066f8');\\"
+      href=\\"javascript:toggleLovePost('61e19998577cc1985f782223');\\"
     >
        Like
     </a>
     <span>&middot;</span>
-    <a class=\\"btnComment\\" href=\\"javascript:toggleComments('61e198d87837e69592f066f8');\\">
+    <a class=\\"btnComment\\" href=\\"javascript:toggleComments('61e19998577cc1985f782223');\\">
       Comment
     </a>
     <span>&middot;</span>
-    <a class=\\"btnShare\\" href=\\"javascript:sharePost('61e198d87837e69592f066f8');\\">
+    <a class=\\"btnShare\\" href=\\"javascript:sharePost('61e19998577cc1985f782223');\\">
       <span> Share </span>
     </a>
     <span class=\\"postEdit\\">
       <span>&middot;</span>
-      <a onclick=\\"modalPostEditBox('61e198d87837e69592f066f8')\\"> Edit </a>
+      <a onclick=\\"modalPostEditBox('61e19998577cc1985f782223')\\"> Edit </a>
     </span>
   </div>
 
   <div class=\\"ext hidden\\">
     <p>
-      15:38 - 14 Jan 2022      </p>
+      15:41 - 14 Jan 2022      </p>
 
     <form class=\\"comments\\">
     </form>
@@ -226,12 +228,12 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 </div>
 <div
   class=\\"post \\"
-  data-pid=\\"61e198d87837e69592f066f7\\"
+  data-pid=\\"61e19998577cc1985f782222\\"
   data-score=\\"1\\"
   data-order=\\"\\"
   data-initialpid=\\"\\"
   data-loved=\\"\\"
-  data-time=\\"1642174680000\\"
+  data-time=\\"1642174872000\\"
 >
   <div class=\\"playBar\\"></div>
 
@@ -249,9 +251,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 
   <h2>
     <a
-      href=\\"/c/61e198d87837e69592f066f7\\"
+      href=\\"/c/61e19998577cc1985f782222\\"
       class=\\"no-ajaxy\\"
-      onclick=\\"toggleComments('61e198d87837e69592f066f7');return false;\\"
+      onclick=\\"toggleComments('61e19998577cc1985f782222');return false;\\"
       >a regular track</a
     >
   </h2>
@@ -261,60 +263,60 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     <a href=\\"/u/\\"></a>  
       </p>
 
-  <span class=\\"ago\\" datetime=\\"1642174680000\\">
-    <a href=\\"/c/61e198d87837e69592f066f7\\">1 second</a>
+  <span class=\\"ago\\" datetime=\\"1642174872000\\">
+    <a href=\\"/c/61e19998577cc1985f782222\\">2 seconds</a>
   </span>
 
   <div class=\\"stats\\">
     <span
       class=\\"nbReposts\\"
       style=\\"display:none;\\"
-      onclick=\\"javascript:showReposts('61e198d87837e69592f066f7')\\"
+      onclick=\\"javascript:showReposts('61e19998577cc1985f782222')\\"
     >
       <span>0</span>
     </span>
     <span
       class=\\"nbLoves\\"
       style=\\"display:none;\\"
-      onclick=\\"javascript:showPostLovers('61e198d87837e69592f066f7')\\"
+      onclick=\\"javascript:showPostLovers('61e19998577cc1985f782222')\\"
     >
       <span>0</span>
     </span>
     <span
       class=\\"nbComments\\"
       style=\\"display:none;\\"
-      onclick=\\"toggleComments('61e198d87837e69592f066f7');\\"
+      onclick=\\"toggleComments('61e19998577cc1985f782222');\\"
     >
       <span>0</span>
     </span>
   </div>
 
   <div class=\\"btns\\">
-    <a class=\\"btnRepost\\" href=\\"javascript:publishPost('61e198d87837e69592f066f7');\\"> Add to </a>
+    <a class=\\"btnRepost\\" href=\\"javascript:publishPost('61e19998577cc1985f782222');\\"> Add to </a>
     <span>&middot;</span>
     <a
       class=\\"btnLike \\"
-      href=\\"javascript:toggleLovePost('61e198d87837e69592f066f7');\\"
+      href=\\"javascript:toggleLovePost('61e19998577cc1985f782222');\\"
     >
        Like
     </a>
     <span>&middot;</span>
-    <a class=\\"btnComment\\" href=\\"javascript:toggleComments('61e198d87837e69592f066f7');\\">
+    <a class=\\"btnComment\\" href=\\"javascript:toggleComments('61e19998577cc1985f782222');\\">
       Comment
     </a>
     <span>&middot;</span>
-    <a class=\\"btnShare\\" href=\\"javascript:sharePost('61e198d87837e69592f066f7');\\">
+    <a class=\\"btnShare\\" href=\\"javascript:sharePost('61e19998577cc1985f782222');\\">
       <span> Share </span>
     </a>
     <span class=\\"postEdit\\">
       <span>&middot;</span>
-      <a onclick=\\"modalPostEditBox('61e198d87837e69592f066f7')\\"> Edit </a>
+      <a onclick=\\"modalPostEditBox('61e19998577cc1985f782222')\\"> Edit </a>
     </span>
   </div>
 
   <div class=\\"ext hidden\\">
     <p>
-      15:38 - 14 Jan 2022      </p>
+      15:41 - 14 Jan 2022      </p>
 
     <form class=\\"comments\\">
     </form>
