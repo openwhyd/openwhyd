@@ -47,9 +47,10 @@ async function connectToMongoDB(url) {
   });
 }
 
+const ObjectId = (id) => mongodb.ObjectID.createFromHexString(id);
+
 async function readMongoDocuments(file) {
   const ISODate = (d) => new Date(d);
-  const ObjectId = (id) => mongodb.ObjectID.createFromHexString(id);
   return require(file)({ ObjectId, ISODate });
 }
 
@@ -125,6 +126,7 @@ async function startOpenwhydServer(envFileForProgamaticStart) {
 module.exports = {
   loadEnvVars,
   httpClient,
+  ObjectId,
   connectToMongoDB,
   readMongoDocuments,
   insertTestData,

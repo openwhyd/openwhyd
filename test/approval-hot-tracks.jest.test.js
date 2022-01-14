@@ -3,6 +3,7 @@
 
 const {
   httpClient,
+  ObjectId,
   connectToMongoDB,
   startOpenwhydServer,
 } = require('./approval-tests-helpers');
@@ -36,8 +37,16 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   it('renders ranked tracks', async () => {
     await db.collection('track').insertMany([
-      { name: 'a regular track', score: 1 },
-      { name: 'a popular track', score: 2 },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        name: 'a regular track',
+        score: 1,
+      },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        name: 'a popular track',
+        score: 2,
+      },
     ]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
