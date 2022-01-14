@@ -446,30 +446,49 @@ var JAMENDO_CLIENT_ID = \\"2c9a11b9\\";
 </html>"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 1`] = `
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's liked 1`] = `
 "{
   hasMore: false,
   tracks: [
     {
-      _id: '61e19a3f078b4c9934e72ce7',
-      eId: '/yt/track_B',
-      score: 0
+      _id: '61e1ad0a7a5921cae698004f',
+      eId: '/yt/track_A',
+      img: null,
+      lov: [
+        '61e1ad09413c48cad549cd89'
+      ],
+      name: null,
+      nbL: 1,
+      nbP: 0,
+      nbR: 1,
+      rankIncr: null,
+      score: 100,
+      text: '',
+      trackId: '61e19a3f078b4c9934e72ce6',
+      uId: '61e1ad09413c48cad549cd88',
+      uNm: 'user 0'
     },
     {
-      _id: '61e19a3f078b4c9934e72ce6',
-      eId: '/yt/track_A',
+      _id: '61e19a3f078b4c9934e72ce7',
+      eId: '/yt/track_B',
       score: 0
     }
   ]
 }"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's liked 2`] = `
 "[
   {
     _id: 61e19a3f078b4c9934e72ce6,
     eId: '/yt/track_A',
-    score: 0
+    img: null,
+    name: null,
+    nbL: 1,
+    nbP: 0,
+    nbR: 1,
+    pId: 61e1ad0a7a5921cae698004f,
+    score: 100
   },
   {
     _id: 61e19a3f078b4c9934e72ce7,
