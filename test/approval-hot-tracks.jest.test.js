@@ -6,6 +6,7 @@ const {
   ObjectId,
   connectToMongoDB,
   startOpenwhydServer,
+  indentJSON,
   getCleanedPageBody,
 } = require('./approval-tests-helpers');
 
@@ -51,7 +52,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     ]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
-    expect(json.body).toMatchSnapshot();
+    expect(indentJSON(json.body)).toMatchSnapshot();
     const html = await httpClient.get({ url: `${server.URL}/hot` });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
     // Note: the request above does not mutate data => no need to snapshot the state of the "tracks" table.
@@ -89,9 +90,9 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       cookies: userSession[1].cookies,
     });
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
-    expect(json.body).toMatchSnapshot();
+    expect(indentJSON(json.body)).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
     const tracksCollection = await db.collection('tracks').find({}).toArray();
-    expect(tracksCollection).toMatchSnapshot();
+    expect(indentJSON(tracksCollection)).toMatchSnapshot();
   });
 });

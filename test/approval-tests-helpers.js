@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { promisify } = require('util');
+const { promisify, ...util } = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
 const childProcess = require('child_process');
@@ -66,6 +66,17 @@ async function insertTestData(url, docsPerCollection) {
   await mongoClient.close();
 }
 
+function indentJSON(json) {
+  return util.inspect(typeof json === 'string' ? JSON.parse(json) : json, {
+    sorted: true,
+    compact: false,
+    depth: Infinity,
+    breakLength: Infinity,
+    maxArrayLength: Infinity,
+    maxStringLength: Infinity,
+  });
+}
+
 function getCleanedPageBody(body) {
   try {
     return JSON.parse(body);
@@ -130,6 +141,7 @@ module.exports = {
   connectToMongoDB,
   readMongoDocuments,
   insertTestData,
+  indentJSON,
   getCleanedPageBody,
   startOpenwhydServer,
   refreshOpenwhydCache,

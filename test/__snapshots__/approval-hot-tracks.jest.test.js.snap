@@ -1,6 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks 1`] = `"{\\"hasMore\\":false,\\"tracks\\":[{\\"_id\\":\\"61e19a3f078b4c9934e72ce5\\",\\"name\\":\\"a popular track\\",\\"score\\":2},{\\"_id\\":\\"61e19a3f078b4c9934e72ce4\\",\\"name\\":\\"a regular track\\",\\"score\\":1}]}"`;
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks 1`] = `
+"{
+  hasMore: false,
+  tracks: [
+    {
+      _id: '61e19a3f078b4c9934e72ce5',
+      name: 'a popular track',
+      score: 2
+    },
+    {
+      _id: '61e19a3f078b4c9934e72ce4',
+      name: 'a regular track',
+      score: 1
+    }
+  ]
+}"
+`;
 
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks 2`] = `
 "<!DOCTYPE html>
@@ -430,6 +446,11 @@ var JAMENDO_CLIENT_ID = \\"2c9a11b9\\";
 </html>"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 1`] = `"{\\"hasMore\\":false,\\"tracks\\":[]}"`;
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 1`] = `
+"{
+  hasMore: false,
+  tracks: []
+}"
+`;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `Array []`;
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `"[]"`;
