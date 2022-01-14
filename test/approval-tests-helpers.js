@@ -23,11 +23,21 @@ const httpClient = {
       ({ body, jar }) => ({ body, cookies: jar })
     );
   },
-  post({ url, body, cookies }) {
-    if (typeof body === 'object') body = JSON.stringify(body);
-    return promisify(request.post)({ uri: url, body, jar: cookies }).then(
-      ({ body, jar }) => ({ body, cookies: jar })
-    );
+  post({ url, body, headers, cookies }) {
+    if (typeof body === 'object') {
+      body = JSON.stringify(body);
+      headers = {
+        ...headers,
+        'content-type': 'application/json',
+        'content-length': body.length,
+      };
+    }
+    return promisify(request.post)({
+      uri: url,
+      body,
+      headers,
+      jar: cookies,
+    }).then(({ body, jar }) => ({ body, cookies: jar }));
   },
 };
 
