@@ -17,6 +17,26 @@ const loadEnvVars = async (file) => {
   return envVars;
 };
 
+const httpClient = {
+  get({ url, cookies }) {
+    return promisify(request.post)({ uri: url, jar: cookies }).then(
+      ({ body, jar }) => ({ body, cookies: jar })
+    );
+  },
+  post({ url, body, cookies }) {
+    if (typeof body === 'object') body = JSON.stringify(body);
+    return promisify(request.post)({ uri: url, body, jar: cookies }).then(
+      ({ body, jar }) => ({ body, cookies: jar })
+    );
+  },
+};
+
+async function connectToMongoDB(url) {
+  return await mongodb.MongoClient.connect(url, {
+    useUnifiedTopology: true,
+  });
+}
+
 async function readMongoDocuments(file) {
   const ISODate = (d) => new Date(d);
   const ObjectId = (id) => mongodb.ObjectID.createFromHexString(id);
@@ -24,9 +44,7 @@ async function readMongoDocuments(file) {
 }
 
 async function insertTestData(url, docsPerCollection) {
-  const mongoClient = await mongodb.MongoClient.connect(url, {
-    useUnifiedTopology: true,
-  });
+  const mongoClient = await connectToMongoDB(url);
   const db = mongoClient.db();
   await Promise.all(
     Object.keys(docsPerCollection).map(async (collection) => {
@@ -69,7 +87,8 @@ async function startOpenwhydServerWith(env) {
     { env, silent: true }
   );
   serverProcess.stderr.on('data', errPrinter);
-  await waitOn({ resources: [`http://localhost:${env.WHYD_PORT}`] });
+  serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
+  await waitOn({ resources: [serverProcess.URL] });
   return serverProcess;
 }
 
@@ -95,6 +114,8 @@ async function startOpenwhydServer(envFileForProgamaticStart) {
 
 module.exports = {
   loadEnvVars,
+  httpClient,
+  connectToMongoDB,
   readMongoDocuments,
   insertTestData,
   getCleanedPageBody,
