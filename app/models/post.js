@@ -342,6 +342,7 @@ exports.rePost = function (pId, repostObj, handler) {
           { $inc: { nbR: 1 } },
           { w: 0 }
         );
+        trackModel.updateByEid(postObj.eId);
       }
       if (result && result.length) {
         //searchModel.indexPost(result);
