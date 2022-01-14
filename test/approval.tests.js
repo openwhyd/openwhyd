@@ -29,7 +29,7 @@ test.before(async (t) => {
 });
 
 test.after((t) => {
-  if (t.context.serverProcess && !DONT_KILL) {
+  if (t.context.serverProcess?.kill && !DONT_KILL) {
     t.context.serverProcess.kill('SIGINT');
   }
 });
