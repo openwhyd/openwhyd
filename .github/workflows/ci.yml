@@ -86,6 +86,10 @@ jobs:
         env:
           MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
         run: npx ava test/approval.tests.js
+      - name: Approval tests for Hot Tracks
+        env:
+          MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
+        run: jest --runInBand test/approval-hot-tracks.jest.test.js
       - name: Get coverage data
         run: |
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
