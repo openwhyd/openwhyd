@@ -168,7 +168,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       </p>
 
   <span class=\\"ago\\" datetime=\\"1642175039000\\">
-    <a href=\\"/c/61e19a3f078b4c9934e72ce5\\">10 minutes</a>
+    <a href=\\"/c/61e19a3f078b4c9934e72ce5\\">(age)</a>
   </span>
 
   <div class=\\"stats\\">
@@ -264,7 +264,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       </p>
 
   <span class=\\"ago\\" datetime=\\"1642175039000\\">
-    <a href=\\"/c/61e19a3f078b4c9934e72ce4\\">10 minutes</a>
+    <a href=\\"/c/61e19a3f078b4c9934e72ce4\\">(age)</a>
   </span>
 
   <div class=\\"stats\\">
