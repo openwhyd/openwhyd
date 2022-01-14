@@ -78,10 +78,8 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       body: { action: 'insert', pId: posts[0].pId },
       cookies: userSession[1].cookies,
     });
-    const { body } = await httpClient.get({
-      url: `${server.URL}/hot?format=json`,
-    });
-    expect(body).toMatchSnapshot();
+    const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
+    expect(json.body).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
     const tracksCollection = await db.collection('tracks').find({}).toArray();
     expect(tracksCollection).toMatchSnapshot();
