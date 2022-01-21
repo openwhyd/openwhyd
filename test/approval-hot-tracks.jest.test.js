@@ -166,7 +166,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     const cleanJSON = (body) =>
       body.replaceAll(postId, '61e1adfea49d3bced4f8c183');
     // user 1 reposts track A
-    const repost = await httpClient.post({
+    await httpClient.post({
       url: `${server.URL}/api/post`,
       body: { action: 'insert', pId: postId },
       cookies: userSession[1].cookies,
