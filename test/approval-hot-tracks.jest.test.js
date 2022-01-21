@@ -163,6 +163,6 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
     const tracksCollection = await db.collection('track').find({}).toArray();
-    expect(cleanJSON(indentJSON(tracksCollection))).toMatchSnapshot(); // TODO: write test to make sure that the score is different
+    expect(cleanJSON(indentJSON(tracksCollection))).toMatchSnapshot();
   });
 });
