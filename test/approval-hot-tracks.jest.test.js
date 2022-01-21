@@ -43,6 +43,15 @@ const tracks = [
   },
 ];
 
+const loginUsers = (server, users) =>
+  Promise.all(
+    users.map(({ email, pwd }) =>
+      httpClient.get({
+        url: `${server.URL}/login?action=login&ajax=1&email=${email}&md5=${pwd}`,
+      })
+    )
+  );
+
 describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () => {
   let mongoClient;
   let db;
@@ -92,13 +101,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
-    const userSession = await Promise.all(
-      users.map((user) =>
-        httpClient.get({
-          url: `${server.URL}/login?action=login&ajax=1&email=${user.email}&md5=${user.pwd}`,
-        })
-      )
-    );
+    const userSession = await loginUsers(server, users);
     // user 0 posts track A
     const post = await httpClient.post({
       url: `${server.URL}/api/post`,
@@ -124,13 +127,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
-    const userSession = await Promise.all(
-      users.map((user) =>
-        httpClient.get({
-          url: `${server.URL}/login?action=login&ajax=1&email=${user.email}&md5=${user.pwd}`,
-        })
-      )
-    );
+    const userSession = await loginUsers(server, users);
     // user 0 posts track A
     const post = await httpClient.post({
       url: `${server.URL}/api/post`,
