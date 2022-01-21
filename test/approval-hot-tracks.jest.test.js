@@ -171,8 +171,6 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       body: { action: 'insert', pId: postId },
       cookies: userSession[1].cookies,
     });
-    console.log('repost', repost.body);
-    // TODO: make sure that track model is always picking the same post (either the initial one or its repost)
     await new Promise((resolve) => setTimeout(resolve, 3000)); // give time for track model to take the repost into account
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
     expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
