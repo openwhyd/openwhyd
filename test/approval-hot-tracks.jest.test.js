@@ -52,6 +52,15 @@ const loginUsers = (server, users) =>
     )
   );
 
+async function postTrack(server, userSession, { _id, ...trackData }) {
+  const { body } = await httpClient.post({
+    url: `${server.URL}/api/post`,
+    body: { action: 'insert', ...trackData },
+    cookies: userSession.cookies,
+  });
+  return JSON.parse(body);
+}
+
 describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () => {
   let mongoClient;
   let db;
@@ -103,16 +112,11 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = await loginUsers(server, users);
     // user 0 posts track A
-    const post = await httpClient.post({
-      url: `${server.URL}/api/post`,
-      body: { action: 'insert', eId: tracks[0].eId },
-      cookies: userSession[0].cookies,
-    });
-    const postId = JSON.parse(post.body)._id;
-    const cleanJSON = (body) => body.replaceAll(postId, '__posted_track_id__');
+    const { _id } = await postTrack(server, userSession[0], tracks[0]);
+    const cleanJSON = (body) => body.replaceAll(_id, '__posted_track_id__');
     // user 1 likes track A
     await httpClient.post({
-      url: `${server.URL}/api/post/${postId}`,
+      url: `${server.URL}/api/post/${_id}`,
       body: { action: 'toggleLovePost' },
       cookies: userSession[1].cookies,
     });
@@ -129,17 +133,12 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = await loginUsers(server, users);
     // user 0 posts track A
-    const post = await httpClient.post({
-      url: `${server.URL}/api/post`,
-      body: { action: 'insert', eId: tracks[0].eId },
-      cookies: userSession[0].cookies,
-    });
-    const postId = JSON.parse(post.body)._id;
-    const cleanJSON = (body) => body.replaceAll(postId, '__posted_track_id__');
+    const { _id } = await postTrack(server, userSession[0], tracks[0]);
+    const cleanJSON = (body) => body.replaceAll(_id, '__posted_track_id__');
     // user 1 reposts track A
     await httpClient.post({
       url: `${server.URL}/api/post`,
-      body: { action: 'insert', pId: postId },
+      body: { action: 'insert', pId: _id },
       cookies: userSession[1].cookies,
     });
     await new Promise((resolve) => setTimeout(resolve, 3000)); // give time for track model to take the repost into account
