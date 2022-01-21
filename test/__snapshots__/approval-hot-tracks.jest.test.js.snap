@@ -451,7 +451,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
   hasMore: false,
   tracks: [
     {
-      _id: '61e1adfea49d3bced4f8c183',
+      _id: '__new_post_id__',
       eId: '/yt/track_A',
       img: null,
       lov: [
@@ -487,7 +487,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
     nbL: 1,
     nbP: 0,
     nbR: 1,
-    pId: 61e1adfea49d3bced4f8c183,
+    pId: __new_post_id__,
     score: 100
   },
   {
@@ -503,7 +503,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
   hasMore: false,
   tracks: [
     {
-      _id: '61e1adfea49d3bced4f8c183',
+      _id: '__new_post_id__',
       eId: '/yt/track_A',
       img: null,
       name: null,
@@ -536,7 +536,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
     nbL: 0,
     nbP: 0,
     nbR: 2,
-    pId: 61e1adfea49d3bced4f8c183,
+    pId: __new_post_id__,
     score: 200
   },
   {

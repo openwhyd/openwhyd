@@ -15,6 +15,32 @@ const { START_WITH_ENV_FILE } = process.env;
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 
+const user0 = {
+  _id: ObjectId('61e19a3f078b4c9934e72ce1'),
+  name: 'user 0',
+  email: 'user0@test.com',
+  pwd: '21232f297a57a5a743894a0e4a801fc3',
+};
+
+const user1 = {
+  _id: ObjectId('61e19a3f078b4c9934e72ce2'),
+  name: 'user 1',
+  email: 'user1@test.com',
+  pwd: '21232f297a57a5a743894a0e4a801fc3',
+};
+
+const track0 = {
+  _id: ObjectId('61e19a3f078b4c9934e72ce6'),
+  eId: '/yt/track_A',
+  score: 0,
+};
+
+const track1 = {
+  _id: ObjectId('61e19a3f078b4c9934e72ce7'),
+  eId: '/yt/track_B',
+  score: 0,
+};
+
 describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () => {
   let mongoClient;
   let db;
@@ -61,33 +87,9 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   it("updates the score of a track when it's liked", async () => {
-    const users = [
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce1'),
-        name: 'user 0',
-        email: 'user0@test.com',
-        pwd: '21232f297a57a5a743894a0e4a801fc3',
-      },
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce2'),
-        name: 'user 1',
-        email: 'user1@test.com',
-        pwd: '21232f297a57a5a743894a0e4a801fc3',
-      },
-    ];
+    const users = [user0, user1];
     await db.collection('user').insertMany(users);
-    await db.collection('track').insertMany([
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce6'),
-        eId: '/yt/track_A',
-        score: 0,
-      },
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce7'),
-        eId: '/yt/track_B',
-        score: 0,
-      },
-    ]);
+    await db.collection('track').insertMany([track0, track1]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = [
       await httpClient.get({
@@ -104,8 +106,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       cookies: userSession[0].cookies,
     });
     const postId = JSON.parse(post.body)._id;
-    const cleanJSON = (body) =>
-      body.replaceAll(postId, '61e1adfea49d3bced4f8c183');
+    const cleanJSON = (body) => body.replaceAll(postId, '__new_post_id__');
     // user 1 likes track A
     await httpClient.post({
       url: `${server.URL}/api/post/${postId}`,
@@ -120,33 +121,9 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   it("updates the score of a track when it's reposted", async () => {
-    const users = [
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce1'),
-        name: 'user 0',
-        email: 'user0@test.com',
-        pwd: '21232f297a57a5a743894a0e4a801fc3',
-      },
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce2'),
-        name: 'user 1',
-        email: 'user1@test.com',
-        pwd: '21232f297a57a5a743894a0e4a801fc3',
-      },
-    ];
+    const users = [user0, user1];
     await db.collection('user').insertMany(users);
-    await db.collection('track').insertMany([
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce6'),
-        eId: '/yt/track_A',
-        score: 0,
-      },
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce7'),
-        eId: '/yt/track_B',
-        score: 0,
-      },
-    ]);
+    await db.collection('track').insertMany([track0, track1]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = [
       await httpClient.get({
@@ -163,8 +140,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       cookies: userSession[0].cookies,
     });
     const postId = JSON.parse(post.body)._id;
-    const cleanJSON = (body) =>
-      body.replaceAll(postId, '61e1adfea49d3bced4f8c183');
+    const cleanJSON = (body) => body.replaceAll(postId, '__new_post_id__');
     // user 1 reposts track A
     await httpClient.post({
       url: `${server.URL}/api/post`,
