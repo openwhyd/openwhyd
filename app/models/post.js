@@ -337,15 +337,11 @@ exports.rePost = function (pId, repostObj, handler) {
       if (repostObj.uId != repostObj.repost.uId) {
         notif.repost(repostObj.uId, postObj);
         notif.post(postObj);
-        collection
-          .updateOne(
-            { _id: ObjectId('' + pId) },
-            { $inc: { nbR: 1 } },
-            { w: 0 }
-          )
-          .then(() => {
-            trackModel.updateByEid(postObj.eId);
-          });
+        collection.updateOne(
+          { _id: ObjectId('' + pId) },
+          { $inc: { nbR: 1 } },
+          { w: 0 }
+        );
       }
       if (result && result.length) {
         //searchModel.indexPost(result);
