@@ -55,6 +55,7 @@ const loginUsers = (server, users) =>
     )
   );
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function postTrack(server, userSession, { _id, ...trackData }) {
   const { body } = await httpClient.post({
     url: `${server.URL}/api/post`,
