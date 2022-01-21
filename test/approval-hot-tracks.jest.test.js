@@ -87,22 +87,21 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   it("updates the score of a track when it's liked", async () => {
-    const users = [user0, user1];
-    await db.collection('user').insertMany(users);
+    await db.collection('user').insertMany([user0, user1]);
     await db.collection('track').insertMany([track0, track1]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = [
       await httpClient.get({
-        url: `${server.URL}/login?action=login&ajax=1&email=${users[0].email}&md5=${users[0].pwd}`,
+        url: `${server.URL}/login?action=login&ajax=1&email=${user0.email}&md5=${user0.pwd}`,
       }),
       await httpClient.get({
-        url: `${server.URL}/login?action=login&ajax=1&email=${users[1].email}&md5=${users[1].pwd}`,
+        url: `${server.URL}/login?action=login&ajax=1&email=${user1.email}&md5=${user1.pwd}`,
       }),
     ];
     // user 0 posts track A
     const post = await httpClient.post({
       url: `${server.URL}/api/post`,
-      body: { action: 'insert', eId: '/yt/track_A' },
+      body: { action: 'insert', eId: track0.eId },
       cookies: userSession[0].cookies,
     });
     const postId = JSON.parse(post.body)._id;
@@ -121,22 +120,21 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   it("updates the score of a track when it's reposted", async () => {
-    const users = [user0, user1];
-    await db.collection('user').insertMany(users);
+    await db.collection('user').insertMany([user0, user1]);
     await db.collection('track').insertMany([track0, track1]);
     server = await startOpenwhydServer(START_WITH_ENV_FILE);
     const userSession = [
       await httpClient.get({
-        url: `${server.URL}/login?action=login&ajax=1&email=${users[0].email}&md5=${users[0].pwd}`,
+        url: `${server.URL}/login?action=login&ajax=1&email=${user0.email}&md5=${user0.pwd}`,
       }),
       await httpClient.get({
-        url: `${server.URL}/login?action=login&ajax=1&email=${users[1].email}&md5=${users[1].pwd}`,
+        url: `${server.URL}/login?action=login&ajax=1&email=${user1.email}&md5=${user1.pwd}`,
       }),
     ];
     // user 0 posts track A
     const post = await httpClient.post({
       url: `${server.URL}/api/post`,
-      body: { action: 'insert', eId: '/yt/track_A' },
+      body: { action: 'insert', eId: track0.eId },
       cookies: userSession[0].cookies,
     });
     const postId = JSON.parse(post.body)._id;
