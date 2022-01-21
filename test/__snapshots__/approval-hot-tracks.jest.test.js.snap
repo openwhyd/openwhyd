@@ -503,19 +503,25 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
   hasMore: false,
   tracks: [
     {
-      _id: '61e1adfea49d3bced4f8c183',
+      _id: '61eab88ceb89c004e4861360',
       eId: '/yt/track_A',
       img: null,
+      lov: [],
       name: null,
       nbL: 0,
       nbP: 0,
       nbR: 2,
       rankIncr: null,
+      repost: {
+        pId: '61e1adfea49d3bced4f8c183',
+        uId: '61e19a3f078b4c9934e72ce1',
+        uNm: 'user 0'
+      },
       score: 200,
       text: '',
       trackId: '61e19a3f078b4c9934e72ce6',
-      uId: '61e19a3f078b4c9934e72ce1',
-      uNm: 'user 0'
+      uId: '61e19a3f078b4c9934e72ce2',
+      uNm: 'user 1'
     },
     {
       _id: '61e19a3f078b4c9934e72ce7',
@@ -536,7 +542,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
     nbL: 0,
     nbP: 0,
     nbR: 2,
-    pId: 61e1adfea49d3bced4f8c183,
+    pId: 61eab88ceb89c004e4861360,
     score: 200
   },
   {
