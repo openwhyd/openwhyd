@@ -140,29 +140,4 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     const tracksCollection = await db.collection('track').find({}).toArray();
     expect(cleanJSON(indentJSON(tracksCollection))).toMatchSnapshot();
   });
-
-  it("updates the score of a track when it's reposted", async () => {
-    await db.collection('user').insertMany(users);
-    await db.collection('track').insertMany(tracks);
-    server = await startOpenwhydServer({
-      startWithEnv: START_WITH_ENV_FILE,
-      port: PORT,
-    });
-    const userSession = await loginUsers(server, users);
-    // user 0 posts track A
-    const { _id } = await postTrack(server, userSession[0], tracks[0]);
-    const cleanJSON = (body) => body.replaceAll(_id, '__posted_track_id__');
-    // user 1 reposts track A
-    await httpClient.post({
-      url: `${server.URL}/api/post`,
-      body: { action: 'insert', pId: _id },
-      cookies: userSession[1].cookies,
-    });
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // give time for track model to take the repost into account
-    const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
-    expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
-    // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
-    const tracksCollection = await db.collection('track').find({}).toArray();
-    expect(cleanJSON(indentJSON(tracksCollection))).toMatchSnapshot(); // TODO: write test to make sure that the score is different
-  });
 });
