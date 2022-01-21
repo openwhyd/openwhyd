@@ -34,7 +34,8 @@ context('upload', () => {
     cy.wait(1000); // to wait for the dialog to close and page to refresh
 
     // check that the user's profile image was updated
-    cy.request(`/img/u/${userId}?_t=${new Date().getTime()}`).should(
+    cy.request(`/img/u/${userId}?_t=${new Date().getTime() + 1}`).should(
+      // note: above, we increase the timestamp to prevent cache from returning the previous response
       (response) =>
         expect(response.body.length).not.to.equal(defaultImageBody.length)
     );
