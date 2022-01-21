@@ -120,6 +120,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       body: { action: 'toggleLovePost' },
       cookies: userSession[1].cookies,
     });
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // give time for track model to take the like into account
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
     expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
@@ -141,7 +142,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       body: { action: 'insert', pId: _id },
       cookies: userSession[1].cookies,
     });
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // give time for track model to take the repost into account
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // give time for track model to take the repost into account
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
     expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
