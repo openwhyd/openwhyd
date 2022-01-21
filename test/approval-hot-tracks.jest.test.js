@@ -105,7 +105,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       cookies: userSession[0].cookies,
     });
     const postId = JSON.parse(post.body)._id;
-    const cleanJSON = (body) => body.replaceAll(postId, '__new_post_id__');
+    const cleanJSON = (body) => body.replaceAll(postId, '__posted_track_id__');
     // user 1 likes track A
     await httpClient.post({
       url: `${server.URL}/api/post/${postId}`,
@@ -138,7 +138,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       cookies: userSession[0].cookies,
     });
     const postId = JSON.parse(post.body)._id;
-    const cleanJSON = (body) => body.replaceAll(postId, '__new_post_id__');
+    const cleanJSON = (body) => body.replaceAll(postId, '__posted_track_id__');
     // user 1 reposts track A
     await httpClient.post({
       url: `${server.URL}/api/post`,
