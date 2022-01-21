@@ -1,6 +1,7 @@
 // Run with: $ npm run test-approval-hot-tracks
 //   ... or: $ npm run test-approval-hot-tracks -- --updateSnapshot
 
+const waitOn = require('wait-on');
 const {
   httpClient,
   ObjectId,
@@ -69,22 +70,25 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   let server;
 
   beforeAll(async () => {
-    // TODO: check that openwhyd server is not already running on port 8080 (or PORT)
+    // check that openwhyd server is not already running on PORT
+    await expect(() =>
+      waitOn({ resources: [`http://localhost:${PORT}`], timeout: 500 })
+    ).rejects.toThrow(/Timed out/);
     // if this test times out, make sure to start MongoDB first: $ docker-compose up -d mongo
     mongoClient = await connectToMongoDB(MONGODB_URL);
     db = await mongoClient.db();
   });
 
   afterAll(async () => {
-    await mongoClient.close();
-    if (server?.kill) server.kill('SIGKILL');
+    await mongoClient?.close();
+    server?.kill('SIGKILL');
   });
 
   beforeEach(async () => {
-    if (server?.kill) server.kill('SIGKILL');
-    await db.collection('user').deleteMany({}); // clear users
-    await db.collection('post').deleteMany({}); // clear posts
-    await db.collection('track').deleteMany({}); // clear tracks
+    server?.kill('SIGKILL');
+    await db?.collection('user')?.deleteMany({}); // clear users
+    await db?.collection('post')?.deleteMany({}); // clear posts
+    await db?.collection('track')?.deleteMany({}); // clear tracks
   });
 
   it('renders ranked tracks', async () => {
