@@ -11,9 +11,11 @@ const {
   getCleanedPageBody,
 } = require('./approval-tests-helpers');
 
-const { START_WITH_ENV_FILE } = process.env;
-
-const PORT = 8080;
+const {
+  START_WITH_ENV_FILE,
+  PORT, // Note: if PORT is not provided, approval-tests-helpers will start Openwhyd's server programmatically, using START_WITH_ENV_FILE
+  DONT_KILL,
+} = process.env;
 
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
@@ -71,22 +73,20 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   let server;
 
   beforeAll(async () => {
-    // check that openwhyd server is not already running on PORT
-    await expect(() =>
-      waitOn({ resources: [`http://localhost:${PORT}`], timeout: 500 })
-    ).rejects.toThrow(/Timed out/);
+    if (PORT)
+      await waitOn({ resources: [`http://localhost:${PORT}`], timeout: 1000 });
     // if this test times out, make sure to start MongoDB first: $ docker-compose up -d mongo
     mongoClient = await connectToMongoDB(MONGODB_URL);
     db = await mongoClient.db();
   });
 
   afterAll(async () => {
-    await mongoClient?.close();
-    server?.kill('SIGKILL');
+    if (mongoClient) await mongoClient.close();
+    if (!DONT_KILL && server) server.kill('SIGKILL');
   });
 
   beforeEach(async () => {
-    server?.kill('SIGKILL');
+    if (!DONT_KILL && server) server.kill('SIGKILL');
     await db?.collection('user')?.deleteMany({}); // clear users
     await db?.collection('post')?.deleteMany({}); // clear posts
     await db?.collection('track')?.deleteMany({}); // clear tracks

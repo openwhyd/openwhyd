@@ -134,7 +134,12 @@ async function refreshOpenwhydCache(urlPrefix) {
 }
 
 async function startOpenwhydServer({ startWithEnv, port }) {
-  if (startWithEnv) {
+  if (port) {
+    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
+    const URL = `http://localhost:${port}`;
+    await refreshOpenwhydCache(URL);
+    return { URL };
+  } else if (startWithEnv) {
     const env = {
       ...(await loadEnvVars(startWithEnv)),
       MONGODB_PORT: '27117', // port exposed by docker container
@@ -142,11 +147,6 @@ async function startOpenwhydServer({ startWithEnv, port }) {
     };
     process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
     return await startOpenwhydServerWith(env); // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
-  } else {
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
-    const URL = `http://localhost:${port}`;
-    await refreshOpenwhydCache(URL);
-    return { URL };
   }
 }
 

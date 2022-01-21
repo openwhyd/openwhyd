@@ -9,7 +9,11 @@ const {
   startOpenwhydServer,
 } = require('./approval-tests-helpers');
 
-const { DONT_KILL, START_WITH_ENV_FILE } = process.env;
+const {
+  START_WITH_ENV_FILE,
+  PORT, // Note: if PORT is not provided, approval-tests-helpers will start Openwhyd's server programmatically, using START_WITH_ENV_FILE
+  DONT_KILL,
+} = process.env;
 
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
@@ -24,7 +28,7 @@ test.before(async (t) => {
 
   t.context.serverProcess = await startOpenwhydServer({
     startWithEnv: START_WITH_ENV_FILE,
-    port: 8080,
+    port: PORT,
   });
   t.context.openwhyd = require('./api-client');
   t.context.getUser = (id) =>
