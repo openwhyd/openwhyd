@@ -21,6 +21,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   let server;
 
   beforeAll(async () => {
+    // TODO: check that openwhyd server is not already running on port 8080
     // if this test times out, make sure to start MongoDB first: $ docker-compose up -d mongo
     mongoClient = await connectToMongoDB(MONGODB_URL);
     db = await mongoClient.db();
@@ -171,11 +172,12 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       cookies: userSession[1].cookies,
     });
     console.log('repost', repost.body);
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    // TODO: make sure that track model is always picking the same post (either the initial one or its repost)
+    await new Promise((resolve) => setTimeout(resolve, 3000)); // give time for track model to take the repost into account
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
     expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
     const tracksCollection = await db.collection('track').find({}).toArray();
-    expect(cleanJSON(indentJSON(tracksCollection))).toMatchSnapshot(); // TODO: the score should be different
+    expect(cleanJSON(indentJSON(tracksCollection))).toMatchSnapshot(); // TODO: write test to make sure that the score is different
   });
 });
