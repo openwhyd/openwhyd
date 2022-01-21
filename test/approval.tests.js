@@ -22,7 +22,10 @@ test.before(async (t) => {
   };
   await insertTestData(MONGODB_URL, testDataCollections);
 
-  t.context.serverProcess = await startOpenwhydServer(START_WITH_ENV_FILE);
+  t.context.serverProcess = await startOpenwhydServer({
+    startWithEnv: START_WITH_ENV_FILE,
+    port: 8080,
+  });
   t.context.openwhyd = require('./api-client');
   t.context.getUser = (id) =>
     testDataCollections.user.find(({ _id }) => id === _id.toString());

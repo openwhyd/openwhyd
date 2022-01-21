@@ -12,6 +12,8 @@ const {
 
 const { START_WITH_ENV_FILE } = process.env;
 
+const PORT = 8080;
+
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 
@@ -67,7 +69,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   let server;
 
   beforeAll(async () => {
-    // TODO: check that openwhyd server is not already running on port 8080
+    // TODO: check that openwhyd server is not already running on port 8080 (or PORT)
     // if this test times out, make sure to start MongoDB first: $ docker-compose up -d mongo
     mongoClient = await connectToMongoDB(MONGODB_URL);
     db = await mongoClient.db();
@@ -98,7 +100,10 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         score: 2,
       },
     ]);
-    server = await startOpenwhydServer(START_WITH_ENV_FILE);
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
     const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
     expect(indentJSON(json.body)).toMatchSnapshot();
     const html = await httpClient.get({ url: `${server.URL}/hot` });
@@ -109,7 +114,10 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   it("updates the score of a track when it's liked", async () => {
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
-    server = await startOpenwhydServer(START_WITH_ENV_FILE);
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
     const userSession = await loginUsers(server, users);
     // user 0 posts track A
     const { _id } = await postTrack(server, userSession[0], tracks[0]);
@@ -131,7 +139,10 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   it("updates the score of a track when it's reposted", async () => {
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
-    server = await startOpenwhydServer(START_WITH_ENV_FILE);
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
     const userSession = await loginUsers(server, users);
     // user 0 posts track A
     const { _id } = await postTrack(server, userSession[0], tracks[0]);
