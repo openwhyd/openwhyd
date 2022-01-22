@@ -167,7 +167,7 @@ jobs:
       - name: API tests
         env:
           CI: true
-        run: npm run test-api
+        run: npm run test:integration
 
   cypress-tests:
     name: Cypress E2E tests
@@ -335,7 +335,7 @@ jobs:
       - name: Run unit tests
         run: docker-compose exec -T web npm run test-unit
       - name: Run API tests
-        run: docker-compose exec -T web npm run test-api
+        run: docker-compose exec -T web npm run test:integration
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker-compose logs
