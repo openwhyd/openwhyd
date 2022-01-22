@@ -1,5 +1,7 @@
 /* global describe, it */
 
+// $ npx mocha test/unit/bandcampExtractor-tests.js
+
 var assert = require('assert');
 const fs = require('fs');
 const request = require('request');
