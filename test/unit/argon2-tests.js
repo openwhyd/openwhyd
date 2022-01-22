@@ -1,4 +1,4 @@
-/* global describe, it */
+// $ npx mocha test/unit/argon2-tests.js
 
 const assert = require('assert');
 const argon2 = require('argon2');

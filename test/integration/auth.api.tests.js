@@ -1,5 +1,3 @@
-/* global describe, it, before */
-
 var { promisify } = require('util');
 var assert = require('assert');
 

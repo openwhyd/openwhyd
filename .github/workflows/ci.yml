@@ -111,8 +111,29 @@ jobs:
             .nyc_output
             coverage
 
-  tests:
-    name: Automated tests
+  unit-tests:
+    name: Unit tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
+        id: nvmrc
+      - uses: actions/setup-node@v2.2.0
+        with:
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Unit tests
+        env:
+          CI: true
+        run: npm run test:unit
+
+  integration-tests:
+    name: Integration tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     services:
@@ -143,16 +164,12 @@ jobs:
         run: |
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: Unit tests
-        env:
-          CI: true
-        run: npm run test-unit
       - name: API tests
         env:
           CI: true
-        run: npm run test-api
+        run: npm run test:integration
 
-  cypress:
+  cypress-tests:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
@@ -228,8 +245,9 @@ jobs:
   coverage:
     name: Send coverage reports to Codacy
     needs:
-      - cypress
+      - cypress-tests
       - approval-tests
+      # TODO: add coverage for unit and integration tests too
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -257,8 +275,9 @@ jobs:
   release:
     name: Release
     needs:
-      - tests
-      - cypress
+      - unit-tests
+      - integration-tests
+      - cypress-tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
@@ -314,9 +333,9 @@ jobs:
           docker-compose restart web
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
       - name: Run unit tests
-        run: docker-compose exec -T web npm run test-unit
+        run: docker-compose exec -T web npm run test:unit
       - name: Run API tests
-        run: docker-compose exec -T web npm run test-api
+        run: docker-compose exec -T web npm run test:integration
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker-compose logs

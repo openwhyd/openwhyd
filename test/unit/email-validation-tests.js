@@ -1,11 +1,9 @@
-/* global describe, it */
+// $ npx mocha test/unit/email-validation-tests.js
 
-var assert = require('assert');
+const assert = require('assert');
+const email = require('../../app/models/email-validation.js');
 
 describe('email validation', function () {
-  process.appParams = { urlPrefix: '' }; // required by email module
-  var email = require('../../app/models/email.js');
-
   it('should allow email@domain.com', function () {
     assert(email.validate('email@domain.com'));
   });

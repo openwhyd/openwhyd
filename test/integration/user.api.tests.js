@@ -1,5 +1,3 @@
-/* global describe, it, before */
-
 const assert = require('assert');
 
 const { DUMMY_USER, cleanup } = require('../fixtures.js');
