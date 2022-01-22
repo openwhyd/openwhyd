@@ -101,7 +101,7 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 Run unit tests only:
 
 ```sh
-$ npm run test-unit
+$ npm run test:unit
 ```
 
 Run all tests, including acceptance tests (Cypress-based):

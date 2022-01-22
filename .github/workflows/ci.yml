@@ -130,7 +130,7 @@ jobs:
       - name: Unit tests
         env:
           CI: true
-        run: npm run test-unit
+        run: npm run test:unit
 
   integration-tests:
     name: Integration tests
@@ -333,7 +333,7 @@ jobs:
           docker-compose restart web
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
       - name: Run unit tests
-        run: docker-compose exec -T web npm run test-unit
+        run: docker-compose exec -T web npm run test:unit
       - name: Run API tests
         run: docker-compose exec -T web npm run test:integration
       - name: Logs from docker-compose
