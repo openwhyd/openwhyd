@@ -1,5 +1,3 @@
-/* global describe, it */
-
 // $ npx mocha test/unit/unit-tests.js
 
 const assert = require('assert');

@@ -1,5 +1,3 @@
-/* global describe, it */
-
 // $ npx mocha test/unit/email-validation-tests.js
 
 const assert = require('assert');

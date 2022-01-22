@@ -1,5 +1,3 @@
-/* global describe, it */
-
 // $ npx mocha test/unit/bandcampExtractor-tests.js
 
 var assert = require('assert');

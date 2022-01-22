@@ -1,5 +1,3 @@
-/* global describe, it */
-
 process.appParams = {
   urlPrefix: '',
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',

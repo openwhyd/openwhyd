@@ -1,5 +1,3 @@
-/* global describe, it, before */
-
 const assert = require('assert');
 const request = require('request');
 
