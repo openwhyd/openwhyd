@@ -1,5 +1,7 @@
 /* global describe, it, before, after */
 
+// $ npx mocha test/unit/bookmarklet-tests.js
+
 const assert = require('assert');
 const {
   makeBookmarklet,
