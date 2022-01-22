@@ -52,7 +52,7 @@
     "async": "*",
     "colors": "*",
     "connect-mongo": "^3.2.0",
-    "dd-trace": "^0.30.0",
+    "dd-trace": "^1.6.0",
     "emailjs": "3.4.0",
     "ent": "2.2.0",
     "express": "^4.17.1",
