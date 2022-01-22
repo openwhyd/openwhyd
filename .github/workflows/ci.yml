@@ -112,7 +112,28 @@ jobs:
             coverage
 
   unit-tests:
-    name: Automated tests
+    name: Unit tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
+        id: nvmrc
+      - uses: actions/setup-node@v2.2.0
+        with:
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Unit tests
+        env:
+          CI: true
+        run: npm run test-unit
+
+  integration-tests:
+    name: Integration tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     services:
@@ -143,16 +164,12 @@ jobs:
         run: |
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: Unit tests
-        env:
-          CI: true
-        run: npm run test-unit
       - name: API tests
         env:
           CI: true
         run: npm run test-api
 
-  cypress:
+  cypress-tests:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
@@ -228,8 +245,9 @@ jobs:
   coverage:
     name: Send coverage reports to Codacy
     needs:
-      - cypress
+      - cypress-tests
       - approval-tests
+      # TODO: add coverage for unit and integration tests too
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -258,7 +276,8 @@ jobs:
     name: Release
     needs:
       - unit-tests
-      - cypress
+      - integration-tests
+      - cypress-tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
