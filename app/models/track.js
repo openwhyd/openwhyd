@@ -155,7 +155,7 @@ function fetchPostsByPid(pId, cb) {
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
 exports.fetchPosts = function (params, handler) {
   params = params || {};
-  var firstIndex = (params.skip = parseInt(params.skip || 0));
+  params.skip = parseInt(params.skip || 0);
   exports.fetch(params, function (tracks) {
     var pidList = snip.objArrayToValueArray(tracks, 'pId');
     fetchPostsByPid(pidList, function (posts) {
