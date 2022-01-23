@@ -37,6 +37,7 @@ var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId;
 var snip = require('../snip.js');
 var metadataResolver = require('../models/metadataResolver.js');
+const feature = require('../features/hot-tracks.js');
 
 var FIELDS_TO_SUM = {
   nbP: true, // number of plays
@@ -160,7 +161,7 @@ exports.getHotTracks = function (params, handler) {
     new Promise((resolve) => {
       exports.fetch(params, resolve);
     });
-  getTracksByDescendingScore().then((tracks) => {
+  feature.getHotTracks(getTracksByDescendingScore).then((tracks) => {
     var pidList = snip.objArrayToValueArray(tracks, 'pId');
     fetchPostsByPid(pidList, function (posts) {
       var postsByEid = snip.objArrayToSet(posts, 'eId');
