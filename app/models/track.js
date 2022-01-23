@@ -171,7 +171,7 @@ exports.fetchPosts = function (params, handler) {
           //console.error("warning: skipping null post in track.fetchPosts()");
           continue;
         }
-        tracks[i] = mergePostData(track, post, firstIndex + parseInt(i));
+        tracks[i] = mergePostData(track, post);
       }
       handler(tracks, { postsByEid: postsByEid });
     });
