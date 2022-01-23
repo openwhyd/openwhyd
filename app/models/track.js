@@ -157,7 +157,7 @@ function fetchPostsByPid(pId) {
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
 exports.getHotTracks = function (params, handler) {
   params = params || {};
-  var firstIndex = (params.skip = parseInt(params.skip || 0));
+  params.skip = parseInt(params.skip || 0);
   const getTracksByDescendingScore = () =>
     new Promise((resolve) => {
       exports.fetch(params, resolve);
@@ -178,9 +178,9 @@ exports.getHotTracks = function (params, handler) {
           //console.error("warning: skipping null post in track.getHotTracks()");
           continue;
         }
-        tracks[i] = mergePostData(track, post, firstIndex + parseInt(i));
+        tracks[i] = mergePostData(track, post);
       }
-      handler(tracks, { postsByEid: postsByEid });
+      handler(tracks);
     });
   });
 };

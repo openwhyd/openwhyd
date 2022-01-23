@@ -87,9 +87,9 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   beforeEach(async () => {
     if (!DONT_KILL && server) server.kill('SIGKILL');
-    await db?.collection('user')?.deleteMany({}); // clear users
-    await db?.collection('post')?.deleteMany({}); // clear posts
-    await db?.collection('track')?.deleteMany({}); // clear tracks
+    await db.collection('user').deleteMany({}); // clear users
+    await db.collection('post').deleteMany({}); // clear posts
+    await db.collection('track').deleteMany({}); // clear tracks
   });
 
   it('renders ranked tracks', async () => {
@@ -114,6 +114,85 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     const html = await httpClient.get({ url: `${server.URL}/hot` });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
     // Note: the request above does not mutate data => no need to snapshot the state of the "tracks" table.
+  });
+
+  it('renders a limited number of ranked tracks', async () => {
+    await db.collection('track').insertMany([
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        name: 'a regular track',
+        score: 1,
+      },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        name: 'a popular track',
+        score: 2,
+      },
+    ]);
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
+    const json = await httpClient.get({
+      url: `${server.URL}/hot?limit=1&format=json`,
+    });
+    expect(indentJSON(json.body)).toMatchSnapshot();
+    const html = await httpClient.get({ url: `${server.URL}/hot?limit=1&` });
+    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
+  });
+
+  it('renders ranked tracks, starting at a given index', async () => {
+    await db.collection('track').insertMany([
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        name: 'a regular track',
+        score: 1,
+      },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        name: 'a popular track',
+        score: 2,
+      },
+    ]);
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
+    const json = await httpClient.get({
+      url: `${server.URL}/hot?skip=1&format=json`,
+    });
+    expect(indentJSON(json.body)).toMatchSnapshot();
+    const html = await httpClient.get({ url: `${server.URL}/hot?skip=1&` });
+    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
+  });
+
+  it('renders posts enriched with track metadata', async () => {
+    const posts = [
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        eId: tracks[0].eId,
+        pl: { name: 'soundtrack of my life', id: 0 }, // metadata from the post that will be included in the list of hot tracks
+      },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        eId: tracks[1].eId,
+        text: 'my favorite track ever!', // metadata from the post that will be included in the list of hot tracks
+      },
+    ];
+    await db
+      .collection('track')
+      .insertMany(
+        tracks.map((_, i) => ({ ...tracks[i], pId: posts[i]._id, score: i }))
+      );
+    await db.collection('post').insertMany(posts);
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
+    const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
+    expect(indentJSON(json.body)).toMatchSnapshot();
+    const html = await httpClient.get({ url: `${server.URL}/hot` });
+    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
 
   it("updates the score of a track when it's liked", async () => {
