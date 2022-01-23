@@ -173,7 +173,7 @@ exports.fetchPosts = function (params, handler) {
         }
         tracks[i] = mergePostData(track, post);
       }
-      handler(tracks, { postsByEid: postsByEid });
+      handler(tracks);
     });
   });
 };
