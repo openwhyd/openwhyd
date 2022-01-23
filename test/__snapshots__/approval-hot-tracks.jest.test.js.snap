@@ -801,6 +801,119 @@ var JAMENDO_CLIENT_ID = \\"2c9a11b9\\";
 </html>"
 `;
 
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks, starting at a given index 1`] = `
+"{
+  hasMore: false,
+  tracks: [
+    {
+      _id: '61e19a3f078b4c9934e72ce4',
+      name: 'a regular track',
+      score: 1
+    }
+  ]
+}"
+`;
+
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks, starting at a given index 2`] = `
+" <div
+  class=\\"post \\"
+  data-pid=\\"61e19a3f078b4c9934e72ce4\\"
+  data-score=\\"1\\"
+  data-order=\\"\\"
+  data-initialpid=\\"\\"
+  data-loved=\\"\\"
+  data-time=\\"1642175039000\\"
+>
+  <div class=\\"playBar\\"></div>
+
+  <a
+    class=\\"thumb\\"
+    href=\\"\\"
+    target=\\"_blank\\"
+    data-eid=\\"\\"
+    onclick=\\"return playTrack(this);\\"
+    style=\\"background-image:url('/images/cover-track.png');\\"
+  >
+    <img src=\\"/images/cover-track.png\\" />
+    <div class=\\"play\\"></div>
+  </a>
+
+  <h2>
+    <a
+      href=\\"/c/61e19a3f078b4c9934e72ce4\\"
+      class=\\"no-ajaxy\\"
+      onclick=\\"toggleComments('61e19a3f078b4c9934e72ce4');return false;\\"
+      >a regular track</a
+    >
+  </h2>
+
+  <p class=\\"author\\">
+    <span style=\\"background-image:url('/img/u/');\\"></span>
+    <a href=\\"/u/\\"></a>  
+      </p>
+
+  <span class=\\"ago\\" datetime=\\"1642175039000\\">
+    <a href=\\"/c/61e19a3f078b4c9934e72ce4\\">(age)</a>
+  </span>
+
+  <div class=\\"stats\\">
+    <span
+      class=\\"nbReposts\\"
+      style=\\"display:none;\\"
+      onclick=\\"javascript:showReposts('61e19a3f078b4c9934e72ce4')\\"
+    >
+      <span>0</span>
+    </span>
+    <span
+      class=\\"nbLoves\\"
+      style=\\"display:none;\\"
+      onclick=\\"javascript:showPostLovers('61e19a3f078b4c9934e72ce4')\\"
+    >
+      <span>0</span>
+    </span>
+    <span
+      class=\\"nbComments\\"
+      style=\\"display:none;\\"
+      onclick=\\"toggleComments('61e19a3f078b4c9934e72ce4');\\"
+    >
+      <span>0</span>
+    </span>
+  </div>
+
+  <div class=\\"btns\\">
+    <a class=\\"btnRepost\\" href=\\"javascript:publishPost('61e19a3f078b4c9934e72ce4');\\"> Add to </a>
+    <span>&middot;</span>
+    <a
+      class=\\"btnLike \\"
+      href=\\"javascript:toggleLovePost('61e19a3f078b4c9934e72ce4');\\"
+    >
+       Like
+    </a>
+    <span>&middot;</span>
+    <a class=\\"btnComment\\" href=\\"javascript:toggleComments('61e19a3f078b4c9934e72ce4');\\">
+      Comment
+    </a>
+    <span>&middot;</span>
+    <a class=\\"btnShare\\" href=\\"javascript:sharePost('61e19a3f078b4c9934e72ce4');\\">
+      <span> Share </span>
+    </a>
+    <span class=\\"postEdit\\">
+      <span>&middot;</span>
+      <a onclick=\\"modalPostEditBox('61e19a3f078b4c9934e72ce4')\\"> Edit </a>
+    </span>
+  </div>
+
+  <div class=\\"ext hidden\\">
+    <p>
+      15:43 - 14 Jan 2022      </p>
+
+    <form class=\\"comments\\">
+    </form>
+  </div>
+</div>
+ "
+`;
+
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's liked 1`] = `
 "{
   hasMore: false,
