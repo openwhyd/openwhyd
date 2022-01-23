@@ -156,7 +156,11 @@ function fetchPostsByPid(pId, cb) {
 exports.getHotTracks = function (params, handler) {
   params = params || {};
   var firstIndex = (params.skip = parseInt(params.skip || 0));
-  exports.fetch(params, function (tracks) {
+  const getTracksByDescendingScore = () =>
+    new Promise((resolve) => {
+      exports.fetch(params, resolve);
+    });
+  getTracksByDescendingScore().then((tracks) => {
     var pidList = snip.objArrayToValueArray(tracks, 'pId');
     fetchPostsByPid(pidList, function (posts) {
       var postsByEid = snip.objArrayToSet(posts, 'eId');
