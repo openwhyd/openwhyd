@@ -39,17 +39,7 @@ var snip = require('../snip.js');
 var metadataResolver = require('../models/metadataResolver.js');
 const feature = require('../features/hot-tracks.js');
 
-var FIELDS_TO_SUM = {
-  nbP: true, // number of plays
-  nbL: true, // number of likes (from lov[] field)
-  nbR: true, // number of posts/reposts
-};
-
-var FIELDS_TO_COPY = {
-  name: true,
-  img: true,
-  score: true,
-};
+const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
 
 var COEF_REPOST = 100;
 var COEF_LIKE = 50;
@@ -126,17 +116,6 @@ exports.fetchTrackByEid = function (eId, cb) {
 
 // functions for fetching tracks and corresponding posts
 
-var fieldList = Object.keys(FIELDS_TO_COPY)
-  .concat(Object.keys(FIELDS_TO_SUM))
-  .concat(['prev']);
-
-function mergePostData(track, post) {
-  for (let f in fieldList) post[fieldList[f]] = track[fieldList[f]];
-  post.trackId = track._id;
-  post.rankIncr = track.prev - track.score;
-  return post;
-}
-
 function fetchPostsByPid(pId) {
   var pidList = (pId && Array.isArray(pId) ? pId : []).map(function (id) {
     return ObjectId('' + id);
@@ -162,27 +141,11 @@ exports.getHotTracks = function (params, handler) {
     new Promise((resolve) => {
       exports.fetch(params, resolve);
     });
-  feature.getHotTracks(getTracksByDescendingScore).then((tracks) => {
-    var pidList = snip.objArrayToValueArray(tracks, 'pId');
-
-    fetchPostsByPid(pidList).then(function (posts) {
-      var postsByEid = snip.objArrayToSet(posts, 'eId');
-      for (let i in tracks) {
-        var track = tracks[i];
-        if (!track) {
-          console.error('warning: skipping null track in track.getHotTracks()');
-          continue;
-        }
-        var post = postsByEid[tracks[i].eId];
-        if (!post) {
-          //console.error("warning: skipping null post in track.getHotTracks()");
-          continue;
-        }
-        tracks[i] = mergePostData(track, post);
-      }
-      handler(tracks);
+  feature
+    .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
+    .then(({ tracks, postsByEid }) => {
+      handler(tracks, { postsByEid });
     });
-  });
 };
 
 // update function
