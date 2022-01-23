@@ -80,5 +80,5 @@ exports.controller = function (request, reqParams, response) {
   }
 
   var params = { skip: reqParams.skip, limit: reqParams.limit + 1 };
-  trackModel.fetchPosts(params, renderHotTracks);
+  trackModel.getHotTracks(params, renderHotTracks);
 };

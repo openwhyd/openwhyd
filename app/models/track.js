@@ -1,8 +1,8 @@
 /**
  * track model
  * - maintained by post model: updateByEid()
- * - read by hot tracks controller: fetchPosts()
- * - read by notif template: fetchPosts()
+ * - read by hot tracks controller: getHotTracks()
+ * - read by notif template: getHotTracks()
  * @author adrienjoly, whyd
  **/
 
@@ -153,7 +153,7 @@ function fetchPostsByPid(pId, cb) {
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
-exports.fetchPosts = function (params, handler) {
+exports.getHotTracks = function (params, handler) {
   params = params || {};
   var firstIndex = (params.skip = parseInt(params.skip || 0));
   exports.fetch(params, function (tracks) {
@@ -163,12 +163,12 @@ exports.fetchPosts = function (params, handler) {
       for (let i in tracks) {
         var track = tracks[i];
         if (!track) {
-          console.error('warning: skipping null track in track.fetchPosts()');
+          console.error('warning: skipping null track in track.getHotTracks()');
           continue;
         }
         var post = postsByEid[tracks[i].eId];
         if (!post) {
-          //console.error("warning: skipping null post in track.fetchPosts()");
+          //console.error("warning: skipping null post in track.getHotTracks()");
           continue;
         }
         tracks[i] = mergePostData(track, post, firstIndex + parseInt(i));
