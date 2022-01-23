@@ -47,7 +47,7 @@ exports.getHotTracks = function (getTracksByDescendingScore, fetchPostsByPid) {
         }
         tracks[i] = mergePostData(track, post);
       }
-      return { tracks, postsByEid };
+      return tracks;
     });
   });
 };

@@ -143,8 +143,8 @@ exports.getHotTracks = function (params, handler) {
     });
   feature
     .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
-    .then(({ tracks, postsByEid }) => {
-      handler(tracks, { postsByEid });
+    .then((tracks) => {
+      handler(tracks);
     });
 };
 
