@@ -1,10 +1,5 @@
 const assert = require('assert');
-const { getHotTracks } = require('../../app/models/track.js');
-
-// function getHotTracks(getPostedTracks) {
-//   // sorts tracks by descending score
-//   return getPostedTracks().sort((a, b) => b.score - a.score);
-// }
+const { getHotTracks } = require('../../app/features/hot-tracks.js');
 
 describe('hot tracks feature', () => {
   it('should list one track in first position, if just that track was posted', () => {
