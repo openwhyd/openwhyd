@@ -1,5 +1,360 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked tracks 1`] = `
+"{
+  hasMore: {
+    skip: 1
+  },
+  tracks: [
+    {
+      _id: '61e19a3f078b4c9934e72ce5',
+      name: 'a popular track',
+      score: 2
+    }
+  ]
+}"
+`;
+
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked tracks 2`] = `
+"<!DOCTYPE html>
+<html lang=\\"en\\">
+  <head prefix=\\"og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#\\">
+    <meta charset=\\"utf-8\\" />
+<meta name=\\"google-site-verification\\" content=\\"mmqzgEU1bjTfJ__nW6zioi7O9vuur1SyYfW44DH6ozg\\" />
+<meta name=\\"apple-itunes-app\\" content=\\"app-id=874380201\\">
+<link rel=\\"image_src\\" href=\\"http://localhost:8080/images/logo-black-square-smaller.png\\"/>
+<meta name=\\"description\\" content=\\"Discover and collect music gems from Youtube, Soundcloud, Deezer and more\\" />
+<meta name=\\"keywords\\" content=\\"discover, music, curation, streaming, tracks, youtube, soundcloud, bandcamp, playlists, play, free\\" />
+<meta name=\\"twitter:card\\" content=\\"summary\\" />
+<meta name=\\"twitter:site\\" content=\\"@open_whyd\\" />
+<meta property=\\"og:image\\" content=\\"http://localhost:8080/images/logo-black-square-smaller.png\\" />
+<meta property=\\"og:description\\" content=\\"Discover and collect music gems from Youtube, Soundcloud, Deezer and more\\" />
+<meta property=\\"fb:app_id\\" content=\\"1573219269412628\\" />
+<meta property=\\"fb:admins\\" content=\\"510739408\\" />
+<meta property=\\"og:type\\" content=\\"website\\" />
+    <link href=\\"/favicon.ico\\" rel=\\"shortcut icon\\" type=\\"image/x-icon\\" />
+    <link href=\\"/favicon.png\\" rel=\\"icon\\" type=\\"image/png\\" />
+    <link href='//fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>
+    <link rel=\\"search\\" type=\\"application/opensearchdescription+xml\\" title=\\"Whyd\\" href=\\"http://localhost:8080/html/opensearch.xml\\">
+    <link rel=\\"chrome-webstore-item\\" href=\\"https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk\\">
+
+<script>
+  window.user = {
+  id: undefined,
+  name: '',
+  fbId: undefined,
+  handle: '',
+  pref: {},
+  lastFm: undefined
+};
+  window.playTrack = window.playTrack || function(){};
+</script>
+<script src=\\"/js/whydtr.js\\"></script>
+<link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"/css/cookieconsent2-3.0.3.min.css\\" />
+<script src=\\"/js/cookieconsent2-3.0.3.min.js\\"></script>
+<script>
+  /* generated from https://cookieconsent.insites.com/download/ */
+  window.addEventListener(\\"load\\", function(){
+    window.cookieconsent.initialise({
+      palette: { popup: { background: \\"#000\\" }, button: { background: \\"#f1d600\\" } }
+    })
+  });
+</script>
+    <title>Openwhyd – Discover and collect the best music tracks from the web</title>
+    <link href=\\"/css/common.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/browse.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/tipsy.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/userProfileV2.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/userPlaylistV2.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <link href=\\"/css/dlgEditProfileCover.css\\" rel=\\"stylesheet\\" type=\\"text/css\\" />
+    <script src=\\"/js/jquery-1.10.2.min.js\\"></script>
+    <script src=\\"/js/jquery-migrate-1.2.1.js\\"></script>
+    <script type=\\"text/javascript\\" src=\\"/js/jquery.history.js\\"></script>
+    <script src=\\"/js/soundmanager2-nodebug-jsmin.js\\"></script>
+    <script>soundManager.setup({url: \\"/swf/\\", flashVersion: 9, onready: function() {soundManager.isReady=true;}});</script>
+  </head>
+  <body class=\\"pgHotTracks visitor\\">
+   <div id=\\"fb-root\\"></div>
+<!--[if lt IE 8]>
+<div class=\\"topWarning\\">Warning: your web browser is not supported by Openwhyd. Please upgrade to a modern browser.</div>
+<![endif]-->
+<div id=\\"header\\"><div class=\\"container\\">
+  <div id=\\"headCenter\\">
+   <a id=\\"logo\\" title=\\"Openwhyd\\" target=\\"_top\\" class=\\"homeLink\\" href=\\"/\\">
+   </a>
+
+  </div>
+  <div id=\\"navbar\\">
+   <a target=\\"_top\\" id=\\"tabStream\\" href=\\"/\\">Stream</a>
+   <a target=\\"_top\\" id=\\"tabHot\\" href=\\"/hot\\">Hot Tracks</a>
+  </div>
+  <div id=\\"searchBar\\">
+   <div class=\\"searchForm\\" id=\\"searchForm\\">
+    <input name=\\"q\\" class=\\"q search-input\\" id=\\"q\\" type=\\"text\\" value=\\"\\" placeholder=\\"Paste a YouTube / Soundcloud / Bandcamp / Deezer URL\\" autocomplete=\\"off\\" />
+   </div>
+   <div class=\\"searchResults\\" id=\\"searchResults\\"></div>
+  </div>
+  <div id=\\"homeHeader\\">
+   <h1>Openwhyd: The community of music lovers</h1>
+	  <p>Discover and collect music gems from Youtube, Soundcloud, Deezer and more</p>
+  </div>
+  <div id=\\"logBox\\">
+   <a id=\\"signin\\" href=\\"/login\\">Login</a>
+   <a id=\\"signup\\" onclick=\\"login();\\">Sign up</a>
+  </div>
+</div></div>
+<div id=\\"contentPane\\">
+  <div id=\\"mainPanel\\">
+<div class=\\"container\\">
+  <div id=\\"filterSelector\\">
+    <ul>
+      <li class=\\"selected\\">
+        <a href=\\"#\\">All</a>
+      </li>
+    </ul>
+    <div id=\\"sideFooter\\">
+      <ul>
+        <li>
+          <a target=\\"_blank\\" href=\\"https://github.com/openwhyd\\">GitHub</a>
+        </li>
+        <li>
+          <a target=\\"_blank\\" href=\\"http://www.facebook.com/openwhyd\\"
+            >Facebook</a
+          >
+        </li>
+        <li>
+          <a target=\\"_blank\\" href=\\"http://twitter.com/open_whyd\\">Twitter</a>
+        </li>
+        <li>
+          <a
+            target=\\"_blank\\"
+            href=\\"https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md\\"
+            >FAQ</a
+          >
+        </li>
+      </ul>
+      <p>Openwhyd is maintained collaboratively,<br />under the MIT License</p>
+    </div>
+  </div>
+  <div class=\\"sub-container\\">
+    <h2 class=\\"head-name-tab\\">
+      Hot Tracks
+      <span class=\\"genreSelector\\">/ All</span>
+    </h2>
+    <div class=\\"posts\\">
+       <div
+  class=\\"post \\"
+  data-pid=\\"61e19a3f078b4c9934e72ce5\\"
+  data-score=\\"2\\"
+  data-order=\\"\\"
+  data-initialpid=\\"\\"
+  data-loved=\\"\\"
+  data-time=\\"1642175039000\\"
+>
+  <div class=\\"playBar\\"></div>
+
+  <a
+    class=\\"thumb\\"
+    href=\\"\\"
+    target=\\"_blank\\"
+    data-eid=\\"\\"
+    onclick=\\"return playTrack(this);\\"
+    style=\\"background-image:url('/images/cover-track.png');\\"
+  >
+    <img src=\\"/images/cover-track.png\\" />
+    <div class=\\"play\\"></div>
+  </a>
+
+  <h2>
+    <a
+      href=\\"/c/61e19a3f078b4c9934e72ce5\\"
+      class=\\"no-ajaxy\\"
+      onclick=\\"toggleComments('61e19a3f078b4c9934e72ce5');return false;\\"
+      >a popular track</a
+    >
+  </h2>
+
+  <p class=\\"author\\">
+    <span style=\\"background-image:url('/img/u/');\\"></span>
+    <a href=\\"/u/\\"></a>  
+      </p>
+
+  <span class=\\"ago\\" datetime=\\"1642175039000\\">
+    <a href=\\"/c/61e19a3f078b4c9934e72ce5\\">(age)</a>
+  </span>
+
+  <div class=\\"stats\\">
+    <span
+      class=\\"nbReposts\\"
+      style=\\"display:none;\\"
+      onclick=\\"javascript:showReposts('61e19a3f078b4c9934e72ce5')\\"
+    >
+      <span>0</span>
+    </span>
+    <span
+      class=\\"nbLoves\\"
+      style=\\"display:none;\\"
+      onclick=\\"javascript:showPostLovers('61e19a3f078b4c9934e72ce5')\\"
+    >
+      <span>0</span>
+    </span>
+    <span
+      class=\\"nbComments\\"
+      style=\\"display:none;\\"
+      onclick=\\"toggleComments('61e19a3f078b4c9934e72ce5');\\"
+    >
+      <span>0</span>
+    </span>
+  </div>
+
+  <div class=\\"btns\\">
+    <a class=\\"btnRepost\\" href=\\"javascript:publishPost('61e19a3f078b4c9934e72ce5');\\"> Add to </a>
+    <span>&middot;</span>
+    <a
+      class=\\"btnLike \\"
+      href=\\"javascript:toggleLovePost('61e19a3f078b4c9934e72ce5');\\"
+    >
+       Like
+    </a>
+    <span>&middot;</span>
+    <a class=\\"btnComment\\" href=\\"javascript:toggleComments('61e19a3f078b4c9934e72ce5');\\">
+      Comment
+    </a>
+    <span>&middot;</span>
+    <a class=\\"btnShare\\" href=\\"javascript:sharePost('61e19a3f078b4c9934e72ce5');\\">
+      <span> Share </span>
+    </a>
+    <span class=\\"postEdit\\">
+      <span>&middot;</span>
+      <a onclick=\\"modalPostEditBox('61e19a3f078b4c9934e72ce5')\\"> Edit </a>
+    </span>
+  </div>
+
+  <div class=\\"ext hidden\\">
+    <p>
+      15:43 - 14 Jan 2022      </p>
+
+    <form class=\\"comments\\">
+    </form>
+  </div>
+</div>
+ 
+      <div class=\\"btnLoadMore\\" onclick=\\"loadMore()\\">
+        <div>&nbsp;</div>
+        <span>Load more</span>
+      </div>
+      <script>
+        window.nextPageUrl = window.location.href + '?skip=' + '1';
+      </script>
+    </div>
+    <!-- end posts -->
+  </div>
+</div>
+<script>
+  window.whydCtx = 'hot';
+  $(function () {
+    $('.post:eq(0) .thumb').append('<div class=\\"medal\\">1</div>');
+    $('.post:eq(1) .thumb').append('<div class=\\"medal\\">2</div>');
+    $('.post:eq(2) .thumb').append('<div class=\\"medal\\">3</div>');
+    /*$(\\".post .thumb\\").each(function(i){
+			var $post = $(this);
+			if (!$post.find(\\".medal\\").length)
+				$post.append('<div class=\\"medal smallMedal\\">'+(i+1)+'</div>');
+		});
+		$(\\".post:eq(0) .thumb .smallMedal\\").removeClass('smallMedal').addClass('bigMedal');*/
+  });
+</script>
+
+  </div>
+</div>
+<div id=\\"playerContainer\\">
+  <div id=\\"playerContainerSub\\">
+    <div
+      id=\\"playerClose\\"
+      onclick=\\"window.whydPlayer.toggleVideo();\\"
+      title=\\"Hide\\"
+    ></div>
+    <div id=\\"playBtnOverlay\\" onclick=\\"window.whydPlayer.playPause();\\"></div>
+  </div>
+</div>
+<div id=\\"whydPlayer\\">
+  <div id=\\"progressTrack\\" class=\\"progressTrack\\">
+    <div id=\\"progressBar\\" class=\\"progressBar\\"></div>
+    <div id=\\"progressCursor\\" class=\\"progressCursor\\"></div>
+  </div>
+  <div class=\\"rightButtons buttons\\">
+    <div
+      id=\\"btnShuffle\\"
+      onclick=\\"whydPlayer.toggleShuffle()\\"
+      title=\\"Shuffle mode\\"
+    >
+      <div></div>
+    </div>
+    <div class=\\"volumePanel\\">
+      <div class=\\"volume\\"></div>
+      <div id=\\"volumeTrack\\" class=\\"progressTrack\\">
+        <div class=\\"progressBar\\"></div>
+        <div class=\\"progressCursor\\"></div>
+      </div>
+    </div>
+    <div
+      id=\\"btnFullscreen\\"
+      onclick=\\"whydPlayer.toggleFullscreen()\\"
+      title=\\"Fullscreen\\"
+    >
+      <div></div>
+    </div>
+  </div>
+  <div class=\\"progressPanel buttons\\">
+    <button id=\\"btnPrev\\" onclick=\\"whydPlayer.prev()\\"></button>
+    <button id=\\"btnPlay\\" onclick=\\"whydPlayer.playPause()\\"></button>
+    <button id=\\"btnNext\\" onclick=\\"whydPlayer.next()\\"></button>
+    <button id=\\"btnRepost\\" onclick=\\"whydPlayer.repost()\\" title=\\"Add\\">
+      <div></div>
+    </button>
+    <button id=\\"btnLike\\" onclick=\\"whydPlayer.like()\\" title=\\"Like\\">
+      <div></div>
+    </button>
+    <button id=\\"btnComment\\" onclick=\\"whydPlayer.comment()\\" title=\\"Comment\\">
+      <div></div>
+    </button>
+    <span id=\\"trackTitle\\">(none)</span>
+    <span id=\\"progressTimer\\"></span>
+  </div>
+  <div id=\\"trackDragPos\\"></div>
+</div>
+
+
+
+
+<script>
+var DEEZER_APP_ID = 190482;
+var DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf(\\"/\\", 10)) + \\"/html/channel.html\\";
+var SOUNDCLOUD_CLIENT_ID = \\"eb257e698774349c22b0b727df0238ad\\";
+var YOUTUBE_API_KEY = \\"AIzaSyBzqb519R--gKZ9cXgbqE5bMM85yNTXJfo\\";
+var JAMENDO_CLIENT_ID = \\"2c9a11b9\\";
+</script>
+    <script src=\\"/js/jquery.avgrund.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.tipsy.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/quickSearch.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.iframe-post-form.min.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.placeholder.min.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/underscore-min.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.elastic.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/jquery.mentionsInput.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/ui.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/whyd.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/playem-all.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/playem-youtube-iframe-patch.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/whydPlayer.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/dndUpload.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/WhydImgUpload.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+    <script src=\\"/js/facebook.js\\" type=\\"text/javascript\\" charset=\\"utf-8\\"></script>
+  </body>
+</html>"
+`;
+
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks 1`] = `
 "{
   hasMore: false,

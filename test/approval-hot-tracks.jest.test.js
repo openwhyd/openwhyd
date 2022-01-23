@@ -116,6 +116,31 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     // Note: the request above does not mutate data => no need to snapshot the state of the "tracks" table.
   });
 
+  it('renders a limited number of ranked tracks', async () => {
+    await db.collection('track').insertMany([
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        name: 'a regular track',
+        score: 1,
+      },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        name: 'a popular track',
+        score: 2,
+      },
+    ]);
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
+    const json = await httpClient.get({
+      url: `${server.URL}/hot?limit=1&format=json`,
+    });
+    expect(indentJSON(json.body)).toMatchSnapshot();
+    const html = await httpClient.get({ url: `${server.URL}/hot?limit=1&` });
+    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
+  });
+
   it("updates the score of a track when it's liked", async () => {
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
