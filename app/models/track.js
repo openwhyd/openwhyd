@@ -146,13 +146,10 @@ function fetchPostsByPid(pId) {
     mongodb.collections['post'].find(
       { _id: { $in: pidList } },
       POST_FETCH_OPTIONS,
-      function (err, cursor) {
-        if (err) return reject(err);
-        cursor.toArray(function (err, posts) {
-          if (err) return reject(err);
-          resolve(posts);
-        });
-      }
+      (err, cursor) =>
+        err
+          ? reject(err)
+          : cursor.toArray((err, posts) => (err ? reject(err) : resolve(posts)))
     )
   );
 }
