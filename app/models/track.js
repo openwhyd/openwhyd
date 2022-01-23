@@ -137,19 +137,23 @@ function mergePostData(track, post) {
   return post;
 }
 
-function fetchPostsByPid(pId, cb) {
+function fetchPostsByPid(pId) {
   var pidList = (pId && Array.isArray(pId) ? pId : []).map(function (id) {
     return ObjectId('' + id);
   });
   //for (let i in pidList) pidList[i] = ObjectId("" + pidList[i]);
-  mongodb.collections['post'].find(
-    { _id: { $in: pidList } },
-    POST_FETCH_OPTIONS,
-    function (err, cursor) {
-      cursor.toArray(function (err, posts) {
-        cb(posts);
-      });
-    }
+  return new Promise((resolve, reject) =>
+    mongodb.collections['post'].find(
+      { _id: { $in: pidList } },
+      POST_FETCH_OPTIONS,
+      function (err, cursor) {
+        if (err) return reject(err);
+        cursor.toArray(function (err, posts) {
+          if (err) return reject(err);
+          resolve(posts);
+        });
+      }
+    )
   );
 }
 
@@ -163,7 +167,8 @@ exports.getHotTracks = function (params, handler) {
     });
   feature.getHotTracks(getTracksByDescendingScore).then((tracks) => {
     var pidList = snip.objArrayToValueArray(tracks, 'pId');
-    fetchPostsByPid(pidList, function (posts) {
+
+    fetchPostsByPid(pidList).then(function (posts) {
       var postsByEid = snip.objArrayToSet(posts, 'eId');
       for (let i in tracks) {
         var track = tracks[i];
