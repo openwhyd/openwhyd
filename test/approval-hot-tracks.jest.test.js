@@ -166,17 +166,17 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
 
-  it.only('enriches tracks metadata using the `post` collection', async () => {
+  it('renders posts enriched with track metadata', async () => {
     const posts = [
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce4'),
         eId: tracks[0].eId,
-        name: 'a track',
+        pl: { name: 'soundtrack of my life', id: 0 }, // metadata from the post that will be included in the list of hot tracks
       },
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce5'),
         eId: tracks[1].eId,
-        img: 'http://localhost/thumb.jpg',
+        text: 'my favorite track ever!', // metadata from the post that will be included in the list of hot tracks
       },
     ];
     await db
@@ -185,7 +185,6 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         tracks.map((_, i) => ({ ...tracks[i], pId: posts[i]._id, score: i }))
       );
     await db.collection('post').insertMany(posts);
-    console.log({ posts });
     server = await startOpenwhydServer({
       startWithEnv: START_WITH_ENV_FILE,
       port: PORT,
