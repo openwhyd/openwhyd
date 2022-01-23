@@ -2,18 +2,20 @@ const assert = require('assert');
 const { getHotTracks } = require('../../app/features/hot-tracks.js');
 
 describe('hot tracks feature', () => {
-  it('should list one track in first position, if just that track was posted', () => {
+  it('should list one track in first position, if just that track was posted', async () => {
     const postedTrack = { eId: '1' };
     const getTracksByDescendingScore = () => Promise.resolve([postedTrack]);
-    assert.deepEqual(getHotTracks(getTracksByDescendingScore), [postedTrack]);
+    assert.deepEqual(await getHotTracks(getTracksByDescendingScore), [
+      postedTrack,
+    ]);
   });
 
-  it('should list the track with higher score in first position, given two posted tracks with different scores', () => {
+  it('should list the track with higher score in first position, given two posted tracks with different scores', async () => {
     const regularTrack = { eId: '1', score: 1 };
     const bestTrack = { eId: '2', score: 2 };
     const getTracksByDescendingScore = () =>
       Promise.resolve([bestTrack, regularTrack]);
-    assert.deepEqual(getHotTracks(getTracksByDescendingScore), [
+    assert.deepEqual(await getHotTracks(getTracksByDescendingScore), [
       bestTrack,
       regularTrack,
     ]);
