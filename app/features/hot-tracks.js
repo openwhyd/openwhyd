@@ -1,4 +1,4 @@
-exports.getHotTracks = function (getPostedTracks) {
+exports.getHotTracks = function (getTracksByDescendingScore) {
   // sorts tracks by descending score
-  return getPostedTracks().sort((a, b) => b.score - a.score);
+  return getTracksByDescendingScore();
 };
