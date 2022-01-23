@@ -87,9 +87,9 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   beforeEach(async () => {
     if (!DONT_KILL && server) server.kill('SIGKILL');
-    await db?.collection('user')?.deleteMany({}); // clear users
-    await db?.collection('post')?.deleteMany({}); // clear posts
-    await db?.collection('track')?.deleteMany({}); // clear tracks
+    await db.collection('user').deleteMany({}); // clear users
+    await db.collection('post').deleteMany({}); // clear posts
+    await db.collection('track').deleteMany({}); // clear tracks
   });
 
   it('renders ranked tracks', async () => {
@@ -163,6 +163,36 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     });
     expect(indentJSON(json.body)).toMatchSnapshot();
     const html = await httpClient.get({ url: `${server.URL}/hot?skip=1&` });
+    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
+  });
+
+  it.only('enriches tracks metadata using the `post` collection', async () => {
+    const posts = [
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        eId: tracks[0].eId,
+        name: 'a track',
+      },
+      {
+        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        eId: tracks[1].eId,
+        img: 'http://localhost/thumb.jpg',
+      },
+    ];
+    await db
+      .collection('track')
+      .insertMany(
+        tracks.map((_, i) => ({ ...tracks[i], pId: posts[i]._id, score: i }))
+      );
+    await db.collection('post').insertMany(posts);
+    console.log({ posts });
+    server = await startOpenwhydServer({
+      startWithEnv: START_WITH_ENV_FILE,
+      port: PORT,
+    });
+    const json = await httpClient.get({ url: `${server.URL}/hot?format=json` });
+    expect(indentJSON(json.body)).toMatchSnapshot();
+    const html = await httpClient.get({ url: `${server.URL}/hot` });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
 
