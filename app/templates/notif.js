@@ -141,7 +141,7 @@ exports.generateRegWelcome = function (user, inviteSender) {
 
 exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
   getSuggestedUsers().then((suggestedUsers) => {
-    trackModel.getHotTracks({ limit: MAX_HOT_TRACKS }, (hotPosts) => {
+    trackModel.getHotTracksFromDb({ limit: MAX_HOT_TRACKS }, (hotPosts) => {
       const hotUsers = suggestedUsers
         .slice(0, MAX_RECOM_USERS)
         .map((user = {}) => ({

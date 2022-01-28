@@ -1,8 +1,8 @@
 /**
  * track model
  * - maintained by post model: updateByEid()
- * - read by hot tracks controller: getHotTracks()
- * - read by notif template: getHotTracks()
+ * - read by hot tracks controller: getHotTracksFromDb()
+ * - read by notif template: getHotTracksFromDb()
  * @author adrienjoly, whyd
  **/
 
@@ -128,7 +128,7 @@ function fetchPostsByPid(pId) {
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
-exports.getHotTracks = function (params, handler) {
+exports.getHotTracksFromDb = function (params, handler) {
   params = params || {};
   params.skip = parseInt(params.skip || 0);
   const getTracksByDescendingScore = () =>
