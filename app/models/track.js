@@ -116,14 +116,15 @@ exports.fetchTrackByEid = function (eId, cb) {
 
 // functions for fetching tracks and corresponding posts
 
-function fetchPostsByPid(pId) {
-  var pidList = (pId && Array.isArray(pId) ? pId : []).map(function (id) {
+const makeObjectIdList = (pId) =>
+  (pId && Array.isArray(pId) ? pId : []).map(function (id) {
     return ObjectId('' + id);
   });
-  //for (let i in pidList) pidList[i] = ObjectId("" + pidList[i]);
+
+function fetchPostsByPid(pId) {
   return new Promise((resolve, reject) =>
     mongodb.collections['post'].find(
-      { _id: { $in: pidList } },
+      { _id: { $in: makeObjectIdList(pId) } },
       POST_FETCH_OPTIONS,
       (err, cursor) =>
         err
