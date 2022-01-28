@@ -122,16 +122,9 @@ const makeObjectIdList = (pId) =>
   });
 
 function fetchPostsByPid(pId) {
-  return new Promise((resolve, reject) =>
-    mongodb.collections['post'].find(
-      { _id: { $in: makeObjectIdList(pId) } },
-      POST_FETCH_OPTIONS,
-      (err, cursor) =>
-        err
-          ? reject(err)
-          : cursor.toArray((err, posts) => (err ? reject(err) : resolve(posts)))
-    )
-  );
+  return mongodb.collections['post']
+    .find({ _id: { $in: makeObjectIdList(pId) } }, POST_FETCH_OPTIONS)
+    .toArray();
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
