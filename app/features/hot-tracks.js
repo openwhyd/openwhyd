@@ -28,26 +28,14 @@ function mergePostData(track, post) {
 }
 
 exports.getHotTracks = function (getTracksByDescendingScore, fetchPostsByPid) {
-  // sorts tracks by descending score
   return getTracksByDescendingScore().then((tracks) => {
     var pidList = snip.objArrayToValueArray(tracks, 'pId');
-
     return fetchPostsByPid(pidList).then(function (posts) {
-      var postsByEid = snip.objArrayToSet(posts, 'eId');
-      for (let i in tracks) {
-        var track = tracks[i];
-        if (!track) {
-          console.error('warning: skipping null track in track.getHotTracks()');
-          continue;
-        }
-        var post = postsByEid[tracks[i].eId];
-        if (!post) {
-          //console.error("warning: skipping null post in track.getHotTracks()");
-          continue;
-        }
-        tracks[i] = mergePostData(track, post);
-      }
-      return tracks;
+      // complete track items with additional metadata (from posts)
+      return tracks.map((track) => {
+        const post = posts.find(({ eId }) => eId === track.eId);
+        return post ? mergePostData(track, post) : track;
+      });
     });
   });
 };
