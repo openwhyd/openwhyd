@@ -4,8 +4,8 @@ const { getHotTracks } = require('../../app/features/hot-tracks.js');
 describe('hot tracks feature', () => {
   it('should list one track in first position, if just that track was posted', async () => {
     const postedTrack = { eId: '1' };
-    const getTracksByDescendingScore = () => Promise.resolve([postedTrack]);
-    const fetchPostsByPid = () => Promise.resolve([]);
+    const getTracksByDescendingScore = () => [postedTrack];
+    const fetchPostsByPid = () => [];
     assert.deepEqual(
       await getHotTracks(getTracksByDescendingScore, fetchPostsByPid),
       [postedTrack]
@@ -15,9 +15,8 @@ describe('hot tracks feature', () => {
   it('should list the track with higher score in first position, given two posted tracks with different scores', async () => {
     const regularTrack = { eId: '1', score: 1 };
     const bestTrack = { eId: '2', score: 2 };
-    const getTracksByDescendingScore = () =>
-      Promise.resolve([bestTrack, regularTrack]);
-    const fetchPostsByPid = () => Promise.resolve([]);
+    const getTracksByDescendingScore = () => [bestTrack, regularTrack];
+    const fetchPostsByPid = () => [];
     assert.deepEqual(
       await getHotTracks(getTracksByDescendingScore, fetchPostsByPid),
       [bestTrack, regularTrack]
@@ -37,13 +36,12 @@ describe('hot tracks feature', () => {
         text: 'my favorite track ever!', // metadata from the post that will be included in the list of hot tracks
       },
     ];
-    const getTracksByDescendingScore = () =>
-      Promise.resolve([
-        { eId: posts[0].eId, pId: posts[0]._id },
-        { eId: posts[1].eId, pId: posts[1]._id },
-      ]);
+    const getTracksByDescendingScore = () => [
+      { eId: posts[0].eId, pId: posts[0]._id },
+      { eId: posts[1].eId, pId: posts[1]._id },
+    ];
     const fetchPostsByPid = (pidList) =>
-      Promise.resolve(posts.filter(({ _id }) => pidList.includes(_id)));
+      posts.filter(({ _id }) => pidList.includes(_id));
     const hotTracks = await getHotTracks(
       getTracksByDescendingScore,
       fetchPostsByPid

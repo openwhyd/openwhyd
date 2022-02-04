@@ -27,15 +27,16 @@ function mergePostData(track, post) {
   return post;
 }
 
-exports.getHotTracks = function (getTracksByDescendingScore, fetchPostsByPid) {
-  return getTracksByDescendingScore().then((tracks) => {
-    var pidList = snip.objArrayToValueArray(tracks, 'pId');
-    return fetchPostsByPid(pidList).then(function (posts) {
-      // complete track items with additional metadata (from posts)
-      return tracks.map((track) => {
-        const post = posts.find(({ eId }) => eId === track.eId);
-        return post ? mergePostData(track, post) : track;
-      });
-    });
+exports.getHotTracks = async function (
+  getTracksByDescendingScore,
+  fetchPostsByPid
+) {
+  const tracks = await getTracksByDescendingScore();
+  const pidList = snip.objArrayToValueArray(tracks, 'pId');
+  const posts = await fetchPostsByPid(pidList);
+  // complete track items with additional metadata (from posts)
+  return tracks.map((track) => {
+    const post = posts.find(({ eId }) => eId === track.eId);
+    return post ? mergePostData(track, post) : track;
   });
 };
