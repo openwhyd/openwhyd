@@ -15,7 +15,6 @@ describe(`user api -- getting user data`, function () {
         assert.equal(res.response.statusCode, 200);
         assert(!body.error);
         assert.equal(body.email, DUMMY_USER.email);
-        assert(body.openwhydServerVersion);
         done();
       });
     });

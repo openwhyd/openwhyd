@@ -121,9 +121,6 @@ exports.registerInvitedUser = function (request, user, response) {
         'Oops, your registration failed... Please try again!'
       );
 
-    if (user.fbRequest) userModel.removeInviteByFbRequestIds(user.fbRequest);
-    else userModel.removeInvite(user.inviteCode);
-
     function loginAndRedirectTo(url) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       if (user.ajax) {

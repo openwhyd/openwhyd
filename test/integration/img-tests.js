@@ -21,7 +21,7 @@ describe('"img" package', function () {
     });
     */
 
-  it('should create a thumb', function (done) {
+  it.skip('should create a thumb', function (done) {
     var thumbWidth = null; // auto-scaling
     var thumbHeight = 80;
     var thumbOutput = 'uniqueHash_thumb.jpg';

@@ -35,9 +35,10 @@ describe('auth api', () => {
       assert.equal(body.error, 'Please login first');
     });
 
-    it('gives access to personal /stream', async () => {
+    it('gives access to profile', async () => {
       const { jar } = await loginAs(ADMIN_USER);
-      const { response, body } = await get(jar, '/stream?format=json');
+      const { response, body, error } = await get(jar, '/me?format=json');
+      assert.ifError(error);
       assert.equal(response.statusCode, 200);
       assert.ifError(body.error);
       assert(body.join); // check that it's an array
@@ -68,10 +69,10 @@ describe('auth api', () => {
   // Register / sign up a new user
 
   describe('signup with md5', () => {
-    it('gives access to personal /stream', async () => {
+    it('gives access to profile', async () => {
       const { jar, body: signupBody } = await signupAs(TEST_USER);
       assert.ifError(signupBody.error);
-      const { response, body } = await get(jar, '/stream?format=json');
+      const { response, body } = await get(jar, '/me?format=json');
       assert.equal(response.statusCode, 200);
       assert.ifError(body.error);
       assert(body.join); // check that it's an array
@@ -97,9 +98,9 @@ describe('auth api', () => {
       assert.ifError(body.error);
     });
 
-    it('gives access to personal /stream', async () => {
+    it('gives access to profile', async () => {
       const { jar } = await signupAs(genSecureUser());
-      const { body } = await get(jar, '/stream?format=json');
+      const { body } = await get(jar, '/me?format=json');
       assert.ifError(body.error);
     });
 

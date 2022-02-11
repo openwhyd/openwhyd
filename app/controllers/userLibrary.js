@@ -150,7 +150,7 @@ exports.controller = function (request, reqParams, response) {
           redirectTo(
             path.replace(
               '/me',
-              user.handle ? '/' + user.handle : '/u/' + reqParams.id
+              user.handle ? '/' + user.handle : '/u/' + user.id
             )
           );
       });
