@@ -33,6 +33,8 @@ GET    /stream                         -> controllers.userLibrary
 GET    /settings                       -> controllers.settings
 POST   /settings                       -> controllers.settings
 
+GET    /signup                         -> controllers.invite
+
 GET    /consent                        -> controllers.consent
 POST   /consent                        -> controllers.consent
 
