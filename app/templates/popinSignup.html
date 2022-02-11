@@ -10,8 +10,6 @@
     },
 
     init: function () {
-      $('#popinSignup .fbButton').click(signup.facebookButton);
-
       $('form').iframePostForm({
         complete: function (res) {
           res = JSON.parse(
@@ -33,37 +31,11 @@
               }
             }
           } else if (res.redirect) {
-            window.Whyd.tracking.signedUp(res.user);
             setTimeout(function () {
               window.location.href = signup.redirect || res.redirect;
             }, 500);
           }
         },
-      });
-    },
-
-    facebookButton: function () {
-      fbRegister('email', function (res) {
-        if (!res) {
-          console.log('no fb login');
-        } else if (res.redirect) {
-          //console.log("redirect to ", res.redirect);
-          window.location.href = signup.redirect || res.redirect;
-        } else if (res.fbUser) {
-          // new user
-          const accessToken = res.fbAuthResponse.accessToken;
-
-          signup.fields['name'].val(res.fbUser.name);
-          signup.fields['email'].val(res.fbUser.email);
-
-          // Mandatory for signup but will never be used by
-          // user to login so we setup a password that is impossible
-          // to guess
-          signup.fields['password'].val(accessToken.slice(0, 31));
-          $('input[name=fbUid]').val(res.fbUser.id);
-          $('input[name=fbTok]').val(accessToken);
-          $('#btnSignUp').click();
-        }
       });
     },
   };

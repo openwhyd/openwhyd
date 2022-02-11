@@ -10,6 +10,7 @@ var feedTemplate = require('../templates/feed.js');
 var errorTemplate = require('../templates/error.js');
 var loggingTemplate = require('../templates/logging.js');
 
+var renderAllLibrary = require('./LibAll.js').render;
 var renderUserLibrary = require('./LibUser.js').render;
 
 var tabParams = [
@@ -142,7 +143,17 @@ exports.controller = function (request, reqParams, response) {
     response.temporaryRedirect(path, paramsObj);
   }
 
-  if (path == '/' || request.url.indexOf('/stream') > -1 || path == '/me') {
+  if (path == '/' || request.url.indexOf('/stream') > -1) {
+    if (loggedInUser && loggedInUser.id) {
+      lib.options.bodyClass = 'home';
+      return renderAllLibrary(lib);
+    } else if (reqParams.format == 'json')
+      return render({ errorCode: 'REQ_LOGIN' });
+    else {
+      lib.options.bodyClass = 'home';
+      return renderAllLibrary(lib);
+    }
+  } else if (path == '/me') {
     if (request.checkLogin(response, reqParams.format))
       userModel.fetchByUid(loggedInUser.id, function (user) {
         if (!user) render({ errorCode: 'USER_NOT_FOUND' });

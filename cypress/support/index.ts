@@ -21,12 +21,7 @@ import '@cypress/code-coverage/support';
 import './commands';
 
 beforeEach(function () {
-  // mock the /api/notif endpoint, to prevent tests from timing out because of dangling calls to that endpoint, preventing the "load" event from firing.
-  cy.intercept('GET', '/api/notif*', {
-    statusCode: 200,
-    body: [],
-  });
-
+  // mock endpoints to prevent tests from timing out because of dangling calls to that endpoint, preventing the "load" event from firing.
   cy.intercept('GET', 'https://cdns-files.deezer.com/js/min/dz.js', {
     statusCode: 200,
     body: '',

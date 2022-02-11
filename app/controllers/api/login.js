@@ -78,15 +78,6 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
           form.action == 'login' &&
           (ignorePassword || dbUser.pwd == form.md5)
         ) {
-          // console.log('ok, user logged in as: ' + dbUser.name);
-          // console.log('form.fbUid', form.fbUid);
-          if (form.fbUid)
-            userModel.update(dbUser._id, {
-              $set: {
-                fbId: form.fbUid,
-                fbTok: form.fbTok, // access token provided on last facebook login
-              },
-            });
           renderRedirect(form.redirect || '/', dbUser);
           return; // prevent default response (renderForm)
         } else if (form.action != 'logout') {

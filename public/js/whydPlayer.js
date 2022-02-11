@@ -378,8 +378,6 @@ function WhydPlayer() {
         },
       });
       currentTrack.metadata.tStart = new Date();
-      // also send to google analytics
-      window.Whyd.tracking.logTrackPlay(currentTrack.metadata.pid);
     }
   }
 

@@ -89,55 +89,7 @@ http.IncomingMessage.prototype.getCookies = (function () {
   };
 })();
 
-/**
- * Return facebook's "fbs_" cookie object from the request
- */
-http.IncomingMessage.prototype.getFacebookCookie = function () {
-  var cookies = this.getCookies();
-  //console.log("cookies:", cookies);
-  for (let i in cookies)
-    if (i.startsWith('fbs_')) {
-      const cookie = {},
-        cookieArray = cookies[i].split('&');
-      for (let j in cookieArray) {
-        var cookieItem = cookieArray[j].split('=');
-        cookie[cookieItem[0]] = cookieItem[1];
-      }
-      console.log('found facebook cookie'); //, cookie);
-      return cookie;
-    } else if (i.startsWith('fbsr_')) {
-      // https://developers.facebook.com/docs/authentication/signed_request/
-      try {
-        let cookie = cookies[i].split('.')[1];
-        cookie = Buffer.from(cookie /*|| ""*/, 'base64').toString('ascii');
-        cookie = JSON.parse(cookie);
-        console.log('found secure facebook cookie'); //, cookie);
-        return cookie;
-      } catch (e) {
-        console.log('secure facebook connect error: ', e);
-      }
-    }
-  return null;
-};
-
 // ========= USER ACCESSORS
-
-/**
- * Returns the logged in user's facebook uid, from its cookie
- */
-http.IncomingMessage.prototype.getFbUid = function () {
-  var fbCookie = this.getFacebookCookie();
-  if (fbCookie && fbCookie.uid)
-    this.getFbUid = function () {
-      return fbCookie.uid;
-    };
-  else if (fbCookie && fbCookie.user_id)
-    this.getFbUid = function () {
-      return fbCookie.user_id;
-    };
-  else return null;
-  return this.getFbUid();
-};
 
 /**
  * Returns the logged in user's uid, from its openwhyd session cookie

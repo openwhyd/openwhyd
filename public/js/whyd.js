@@ -140,7 +140,6 @@ window.subscribeToUser = function (uId, cb) {
     data: { action: 'insert', tId: uId },
     success: function (r) {
       cb && cb(r);
-      window.Whyd.tracking.log('Followed', uId);
     },
   });
 };
@@ -159,8 +158,6 @@ function switchSubscription() {
       $button
         .toggleClass('subscribed')
         .text(subscribing ? 'Following' : 'Follow');
-      if (subscribing) window.Whyd.tracking.log('Followed', uid);
-      else window.Whyd.tracking.log('Unfollowed', uid);
     },
   });
 }
@@ -214,11 +211,6 @@ window.toggleLovePost = function (pId) {
         $('#btnLike').toggleClass('loved', result.loved);
       if (result.loved) {
         $button.addClass('selected').text('Liked');
-        try {
-          window.Whyd.tracking.log('Liked track', result.post._id);
-        } catch (e) {
-          console.log('error', e, e.stack);
-        }
       } else $button.removeClass('selected').text('Like');
       var $counter = $post.find('.nbLoves > span');
       var nbLoves = parseInt($counter.first().text()) + (result.loved ? 1 : -1);
@@ -282,14 +274,6 @@ function onNewPost(whydPost) {
       encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
       '</a>'
   );
-
-  try {
-    window.Whyd.tracking.log('Added track using button on openwhyd.org', p._id);
-    if (p.pl && whydPost.postData.pl && whydPost.postData.pl.id == 'create')
-      window.Whyd.tracking.log('Created playlist', p.pl.id);
-  } catch (e) {
-    console.log('error', e, e.stack);
-  }
 
   if (window.location.href.indexOf('/playlist/create') != -1 && p.pl)
     goToPage(window.location.href.replace('/create', '/' + p.pl.id), p.pl.name);
@@ -588,125 +572,6 @@ window.modalPostEditBox = function (pId /*, onPosted*/) {
   });
 };
 
-/* notifs */
-
-var lastNotifData = null;
-var $notifPanel = $('#notifPanel');
-var $notifIcon = $('#notifIcon');
-
-var refreshNotifCounter = function () {
-  var notifs = lastNotifData;
-  var total = 0;
-  for (let i in notifs) total += notifs[i].n || 1;
-  $notifIcon.text(total);
-  $notifIcon.removeClass('someNotif');
-  if (total == 0) $notifPanel.hide();
-  else $notifIcon.addClass('someNotif');
-};
-
-var fetchNotifs = function () {
-  $.ajax({
-    type: 'GET',
-    url: '/api/notif',
-    dataType: 'json',
-    cache: false,
-    success: function (notifs) {
-      lastNotifData = notifs;
-      refreshNotifCounter();
-    },
-  });
-};
-
-var renderNotif = function (notif) {
-  var content, href;
-  if (notif.pId.indexOf('/reposts') > -1) {
-    href = '/c/' + notif.pId.replace('/reposts', '');
-    content =
-      '<span>' +
-      encodeHtmlEntities(notif.lastAuthor.name) +
-      (notif.n > 1 ? ' + ' + (notif.n - 1) + ' other people' : '') +
-      '</span> reposted your track <span>' +
-      encodeHtmlEntities(notif.track.name) +
-      '</span>';
-  } else if (notif.pId.indexOf('/loves') > -1) {
-    href = '/c/' + notif.pId.replace('/loves', '');
-    content =
-      '<span>' +
-      encodeHtmlEntities(notif.lastAuthor.name) +
-      (notif.n > 1 ? ' + ' + (notif.n - 1) + ' other people' : '') +
-      '</span> loved your track <span>' +
-      encodeHtmlEntities(notif.track.name) +
-      '</span>';
-  } else if (notif.html) {
-    href = notif.href;
-    content = notif.html;
-  } else {
-    href = notif.pId; // actually leads to the user's profile
-    content =
-      '<span>' +
-      encodeHtmlEntities(notif.track.name) +
-      '</span> subscribed to your stream!';
-  }
-  var imgId;
-  if (notif.lastAuthor.id) imgId = '/u/' + notif.lastAuthor.id;
-  else if ((notif.pId || '').indexOf('/') == 0) imgId = notif.pId;
-  else imgId = '/u/' + notif.pId.split('/')[0];
-  return (
-    '<li data-pid="' +
-    notif.pId +
-    '" >' +
-    '<div class="img" style="background-image:url(' +
-    (notif.img || '/img' + imgId) +
-    ');"></div>' +
-    '<div class="remove" onclick="clearNotif(\'' +
-    notif.pId +
-    '\')"></div>' + // remove
-    '<a onclick="openNotif(\'' +
-    notif.pId +
-    '\')" href="' +
-    href +
-    '">' +
-    content +
-    '</a></li>'
-  );
-};
-
-var refreshNotifPanel = function () {
-  var content =
-    '<div onclick="clearNotifs();">Clear all</div>' +
-    '<p>Your notifications</p><ul>';
-  var notifs = lastNotifData;
-  for (let i in notifs) content += renderNotif(notifs[i]);
-  $notifPanel.html(content + '</ul>').ajaxify();
-};
-
-window.clearNotif = function (pId) {
-  $.ajax({
-    type: 'POST',
-    url: '/api/notif',
-    data: { action: 'delete', pId: pId },
-    complete: fetchNotifs,
-  });
-  $('#notifPanel li').each(function () {
-    if ($(this).attr('data-pid') == pId) $(this).remove();
-  });
-};
-
-window.clearNotifs = function () {
-  $.ajax({
-    type: 'POST',
-    url: '/api/notif',
-    data: { action: 'deleteAll' },
-    complete: fetchNotifs,
-  });
-  $notifPanel.hide();
-};
-
-window.openNotif = function (/*pId*/) {
-  $notifPanel.hide();
-  //clearNotif(pId);
-};
-
 /* bio update */
 
 window.submitBio = function () {
@@ -783,13 +648,6 @@ window.sharePost = function (pId) {
         $('#sharePopin').remove();
         $('#sharepopin-overlay').remove();
       });
-    }
-
-    try {
-      post = extractPostData($post);
-      window.Whyd.tracking.log('Clicked share button', post.id);
-    } catch (e) {
-      console.log('error', e, e.stack);
     }
   });
 };
@@ -895,21 +753,6 @@ $(document).ready(function () {
       e.preventDefault();
       keyUpShortcuts[e.which]();
     }
-  });
-
-  // init notifications
-
-  var notifUpdateInterval = 20000;
-  $notifPanel = $('#notifPanel');
-  $notifIcon = $('#notifIcon');
-
-  window.setInterval(fetchNotifs, notifUpdateInterval);
-  fetchNotifs();
-
-  $notifIcon.click(function () {
-    if ($(this).text() == 0) return $notifPanel.hide();
-    refreshNotifPanel();
-    $notifPanel.toggle();
   });
 
   // init search bar
@@ -1254,8 +1097,6 @@ $(document).ready(function () {
             // final page init
             initWhydTooltips('#contentPane *[title]');
             onPageLoad();
-            // inform analytics
-            window.Whyd.tracking.sendPageview();
           } catch (e) {
             console.error(e);
           }

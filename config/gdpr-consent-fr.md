@@ -10,7 +10,6 @@
 ## Usage des cookies
 
 - Les cookies servent à maintenir ta session Openwhyd ouverte, jusqu'à ce que tu décides de te déconnecter.
-- Ils servent aussi à te compter en tant que visiteur dans les statistiques d'usage du site (Google Analytics).
 - Certains peuvent être créés par Facebook et Twitter pour permettre de te connecter à ton compte Openwhyd par leur biais, et pour afficher des boutons de partage via ton profil sur leur plateforme.
 - Nous n'utilisons pas les cookies à des fins de publicité ciblée.
 
@@ -19,7 +18,6 @@
 - Nous faisons de notre mieux pour réduire les risques de fuites de données, notamment par: le chiffrage des mots de passe avec l'algorithme MD5, l'usage du protocole SSL/HTTPS, et l'usage d'un pare-feu.
 - L'accès à notre base de données (MongoDB) est sécurisé par mot de passe dont Adrien Joly est le seul détenteur.
 - Le logiciel et les données du site sont hébergés par [DigitalOcean](https://www.digitalocean.com/security/gdpr/).
-- Notre compte Google Analytics stocke des données anonymes d'usage d'openwhyd.org avec une durée de rétention maximale de 26 mois.
 
 ## Exploitation des données
 
@@ -31,7 +29,6 @@
 ## Contrôle des données
 
 - Tu peux télécharger à tout moment la liste de tous les morceaux que tu as ajouté à ton compte Openwhyd, au format JSON. (cf [procédure de récupération de données](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#how-to-export-my-tracks--comment-exporter-ma-musique-en-csv-ou-json-))
-- Tu peux librement t'opposer à l'usage des cookies de suivi de Google Analytics, Facebook et Twitter en configurant ton navigateur.
 - Tu peux supprimer ton compte Openwhyd et les données associées (incluant ton profil et ta liste de morceaux) directement depuis ta [page de réglages](https://openwhyd.org/settings).
 - Pour toute autre demande liée à tes données, contacte [privacy@openwhyd.org](mailto:privacy@openwhyd.org), en langue française ou anglaise.
 

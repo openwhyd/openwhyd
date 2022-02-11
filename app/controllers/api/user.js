@@ -118,9 +118,6 @@ var fieldSetters = {
           : p.pref[i];
     userModel.setPref(p._id, p.pref, cb);
   },
-  fbId: function (p, cb) {
-    userModel.setFbId(p._id, p.fbId, cb, p.fbTok);
-  },
   twId: function (p, cb) {
     userModel.setTwitterId(p._id, p.twId, p.twTok, p.twSec, cb);
   },

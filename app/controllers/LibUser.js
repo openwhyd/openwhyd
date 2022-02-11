@@ -39,14 +39,6 @@ function fetchNbTracks(options, callback) {
 
 // PAGE RENDERING
 
-function generateMixpanelCode(options) {
-  return /*options.uid == options.loggedUser.id ? "" :*/ [
-    '<script>',
-    ' window.Whyd.tracking.log("Visit profile", "' + options.uid + '");',
-    '</script>',
-  ].join('\n');
-}
-
 var bareFormats = new Set(['json', 'links']);
 
 function fetchAndRender(options, callback) {
@@ -150,12 +142,7 @@ function renderResponse(feed, options, lib, user) {
     lib.renderJson(feed);
   } else if (!feedTemplate.shouldRenderWholeProfilePage(options)) {
     lib.render({ html: feed });
-  } else
-    lib.renderPage(
-      user,
-      null /*sidebarHtml*/,
-      generateMixpanelCode(options) + feed
-    );
+  } else lib.renderPage(user, null /*sidebarHtml*/, feed);
 }
 
 async function renderUserLibrary(lib, user) {

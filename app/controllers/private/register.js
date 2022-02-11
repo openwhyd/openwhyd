@@ -57,9 +57,6 @@ exports.registerInvitedUser = function (request, user, response) {
   if (user.name == 'Your Name' || user.name.trim() == '')
     return error(request, user, response, "Don't you have a name, dude ?");
 
-  if (user.fbId && isNaN('' + user.fbId))
-    return error(request, user, response, 'Invalid Facebook id');
-
   if (user.password == 'password')
     return error(
       request,
@@ -100,13 +97,6 @@ exports.registerInvitedUser = function (request, user, response) {
       if (user.iRf) dbUser.iRf = user.iRf; // referer of invite page (for analytics)
       if (user.iPg) dbUser.iPg = user.iPg; // invite page (e.g. user profile)
       if (user.fbRequest) dbUser.fbR = user.fbRequest; // fb invite request id
-      if (user.fbUid) {
-        dbUser.fbId = user.fbUid; // fb user id
-        dbUser.img = '//graph.facebook.com/v2.3/' + user.fbUid + '/picture';
-      }
-      if (user.fbTok) {
-        dbUser.fbTok = user.fbTok;
-      }
 
       userModel.save(dbUser, afterSave);
     });

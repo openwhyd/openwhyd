@@ -40,14 +40,6 @@ $playlistNameField
           var json = JSON.parse('' + res.responseText);
           //console.log("success", json);
           if (isNewPlaylist) {
-            try {
-              window.Whyd.tracking.log(
-                'Created playlist using button',
-                json.id
-              );
-            } catch (e) {
-              console.log('error', e, e.stack);
-            }
             goToPage(
               window.location.href.replace(
                 '/playlist/create',

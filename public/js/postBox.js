@@ -217,24 +217,8 @@ function initPostBox(params) {
   var editingPost = params.mode === 'editPost';
   var reposting = params.mode === 'repost';
 
-  function tellMixpanel(whydPost) {
-    try {
-      var submitted = globals.whydPost.postData,
-        stored = globals.whydPost.storedPost;
-      window.Whyd.tracking.log(
-        'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
-        stored._id
-      );
-      if ((submitted.pl || {}).id == 'create')
-        window.Whyd.tracking.log('Created playlist', stored.pl.id);
-    } catch (e) {
-      console.warn('error', e, e.stack);
-    }
-  }
-
   function onPostSuccess(postId, whydPost) {
     var posted = globals.whydPost.storedPost;
-    tellMixpanel(whydPost);
     if (addingFromBookmarklet) {
       /* from bookmarklet: display confirmation screen + link to post */
       var url = window.location.href;

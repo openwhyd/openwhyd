@@ -4,7 +4,6 @@
  * @author: adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
 
@@ -65,62 +64,6 @@ exports.fetch = function (q, p, cb) {
   getCol().find(q, p, combineResultArray(cb));
 };
 
-function notifyUsers(comment) {
-  postModel.fetchPostById(comment.pId, function (post = {}) {
-    if (post.error || !post.uId) return;
-    var notifiedUidSet = {};
-    var todo = [];
-    // notif mentioned users
-    var mentionedUsers = snip.extractMentions(comment.text);
-    if (mentionedUsers.length)
-      todo.push(function (cb) {
-        console.log('notif mentioned users');
-        snip.forEachArrayItem(
-          mentionedUsers,
-          function (mentionedUid, next) {
-            notifiedUidSet[mentionedUid] = true;
-            next();
-          },
-          cb
-        );
-      });
-    // notify post author
-    todo.push(function (cb) {
-      if (notifiedUidSet[post.uId]) {
-        cb();
-        return;
-      }
-      console.log('notify post author');
-      notifiedUidSet[post.uId] = true;
-    });
-    // notify previous commenters
-    todo.push(function (cb) {
-      console.log('notify previous commenters');
-      exports.fetch(
-        { pId: comment.pId, _id: { $lt: comment._id } },
-        { fields: { uId: 1 } },
-        function (comments = []) {
-          var commentsByUid = snip.excludeKeys(
-            snip.groupObjectsBy(comments, 'uId'),
-            notifiedUidSet
-          );
-          snip.forEachArrayItem(
-            Object.keys(commentsByUid),
-            function (uId, next) {
-              notifiedUidSet[uId] = true;
-              next();
-            },
-            cb
-          );
-        }
-      );
-    });
-    snip.forEachArrayItem(todo, function (fct, next) {
-      fct(next);
-    });
-  });
-}
-
 exports.insert = function (p, cb) {
   p = p || {};
   var comment = {
@@ -152,7 +95,6 @@ exports.insert = function (p, cb) {
         comment,
         combineInsertedResult(function (res) {
           cb && cb(res);
-          if (res && !res.error) notifyUsers(comment);
         })
       );
   });

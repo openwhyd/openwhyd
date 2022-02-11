@@ -312,8 +312,7 @@ exports.renderWhydPage = function (params = {}) {
       'dndUpload.js',
       'WhydImgUpload.js',
     ])
-    .concat(params.js || [])
-    .concat(params.noDefaultJs ? [] : ['facebook.js']);
+    .concat(params.js || []);
 
   params.css = [
     'browse.css',

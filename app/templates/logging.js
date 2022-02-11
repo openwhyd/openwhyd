@@ -79,7 +79,6 @@ exports.renderRedirectPageWithTracking = function (url, title) {
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link href="/favicon.png" rel="icon" type="image/png">
     <link rel="image_src" href="${mainTemplate.defaultPageMeta.img}">
-    <script src="/js/whydtr.js"></script>
   </head>
   <body class="pgRedirect">
     <p>Redirecting to <a href="${url}">${title || url}</a>...</p>
@@ -110,7 +109,6 @@ exports.renderIframe = function (url, metaOverrides) {
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
     <link href="/favicon.png" rel="icon" type="image/png">
     <link rel="image_src" href="${meta.img}">
-    <script src="/js/whydtr.js"></script>
   </head>
   <body style="margin:0;height:100%;">
     <base target="_blank" />

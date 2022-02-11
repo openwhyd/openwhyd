@@ -10,7 +10,6 @@
 ## Use of cookies
 
 - Cookies are used to maintain your Openwhyd session active, until you decide to sign off.
-- They are also used to take your navigation into account, so that we can track and improve how the service is being used, thanks to Google Analytics.
 - Some cookies may be created by Facebook and Twitter, to allow you to sign into your Openwhyd account faster through your social accounts, and to display social sharing buttons.
 - We don't use cookies to display targeted advertising.
 
@@ -19,7 +18,6 @@
 - We've been doing our best to reduce the risk of data leak, by encoding your password with the MD5 algorithm, enabling secure SSL/HTTPS access, and the use of a firewall on our server.
 - Access to our MongoDB database is restricted to Adrien Joly only.
 - The service and its data are hosted by [DigitalOcean](https://www.digitalocean.com/security/gdpr/).
-- Our Google Analytics account keeps anonymous usage data, for never more than 26 months.
 
 ## Data processing
 
@@ -31,7 +29,6 @@
 ## Data control
 
 - You can download the list of tracks you've added to your Openwhyd account at any time, in the JSON format. (see [how to export my tracks](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#how-to-export-my-tracks--comment-exporter-ma-musique-en-csv-ou-json-))
-- You can freely disable tracking cookies from Google Analytics, Facebook and Twitter by setting up your web browser.
 - You can delete your Openwhyd account and the underlying data (including your profile and list of tracks) directly from your [settings page](https://openwhyd.org/settings).
 - For any other question or request you may have related to your data, please reach out at [privacy@openwhyd.org](mailto:privacy@openwhyd.org).
 
