@@ -272,53 +272,6 @@ jobs:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
           coverage-reports: coverage/lcov.info
 
-  release:
-    name: Release
-    needs:
-      - unit-tests
-      - integration-tests
-      - cypress-tests
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          # to prevent "You're not authorized to push to this branch"
-          persist-credentials: false
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
-        with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
-          cache: 'npm'
-      - run: npm install --prefer-offline --no-audit
-        if: github.event_name == 'push'
-      - name: npx semantic-release
-        run: |
-          # we install just semantic-release and its plugins, without considering package.json
-          mkdir "tmp-release"
-          npm --prefix "tmp-release" install --no-save \
-            "semantic-release@17.3.1" \
-            "@semantic-release/changelog@5.0.1" \
-            "@semantic-release/git@9.0.0" \
-            && $(npm --prefix "tmp-release" bin)/semantic-release
-          rm -rf "tmp-release"
-        env:
-          CI: true
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      - name: Create Docker tags
-        id: create_docker_tags
-        run: |
-          echo "::set-output name=tags::latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)"
-          # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
-      - name: Publish to Docker Hub registry
-        if: github.event_name == 'push'
-        uses: jerray/publish-docker-action@v1.0.3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-          tags: ${{ steps.create_docker_tags.outputs.tags }}
-
   docker:
     # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
     name: Docker tests

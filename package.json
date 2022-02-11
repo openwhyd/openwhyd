@@ -10,11 +10,7 @@
     "url": "https://github.com/openwhyd/openwhyd.git"
   },
   "scripts": {
-    "build": "scripts/transpile-bookmarklet.sh",
-    "doc:serve": "cd docs && gem install bundler && bundle install && bundle exec jekyll serve --incremental",
-    "semantic-release": "semantic-release",
-    "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
-    "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
+    "postinstall": "cp node_modules/playemjs/dist/playem-*.js public/js/",
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
     "start:coverage": "npx nyc --silent node app.js --fakeEmail --digestInterval -1 $@",
     "test-reset": "node test/reset-test-db.js",
@@ -22,7 +18,6 @@
     "test:unit": "npx mocha test/unit/*.js --exit",
     "test-approval": "npx kill-port --port 8080 >/dev/null; DONT_KILL=1 START_WITH_ENV_FILE='./env-vars-testing.conf' ava test/approval.tests.js $@",
     "test-approval-debug": "npm run test-approval -- --fail-fast --serial",
-    "test-approval-hot-tracks": "npx kill-port --port 8080 >/dev/null; START_WITH_ENV_FILE='./env-vars-testing.conf' npx jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "test:cypress:dev": "node_modules/.bin/cypress open",
     "test:cypress": "node_modules/.bin/cypress run",
     "test": ". ./env-vars-testing.sh && npm run test:unit && npm run test:integration && npm run test:cypress",
@@ -33,7 +28,6 @@
     "docker:test:cypress": ". ./.env-docker && npm run test:cypress",
     "docker:test": "npm run docker:run test:unit && npm run docker:run test:integration && npm run docker:test:cypress",
     "docker:test-approval": "DONT_KILL=1 PORT=8080 ava test/approval.tests.js $@",
-    "docker:test-approval-hot-tracks": "DONT_KILL=1 PORT=8080 npx jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "lint:typescript": "npx tsc --noEmit",
     "lint:format": "prettier . --write",
     "lint:fix": "eslint . --fix",
@@ -46,20 +40,14 @@
     "test": "./test"
   },
   "dependencies": {
-    "algoliasearch": "^3.35.1",
-    "apn": "1.5.2",
     "argon2": "^0.27.1",
     "async": "*",
     "colors": "*",
     "connect-mongo": "^3.2.0",
-    "dd-trace": "^1.6.0",
-    "emailjs": "3.4.0",
-    "ent": "2.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "formidable": "^1.2.2",
     "hogan.js": "3.0.2",
-    "htmlparser": "*",
     "iconv": ">=3.0.0",
     "mongodb": "3.6.3",
     "playemjs": "1.2.2",
@@ -67,7 +55,6 @@
     "request": "2.88.2"
   },
   "devDependencies": {
-    "@applitools/eyes-cypress": "^3.23.4",
     "@cypress/code-coverage": "^3.9.12",
     "@types/node": "^16.11.4",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
@@ -87,64 +74,5 @@
   },
   "resolutions": {
     "istanbul-lib-coverage": "^3.2.0"
-  },
-  "release": {
-    "branch": "master",
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "angular",
-          "releaseRules": [
-            {
-              "type": "docs",
-              "scope": "README",
-              "release": "patch"
-            },
-            {
-              "type": "refactor",
-              "release": "patch"
-            },
-            {
-              "type": "style",
-              "release": "patch"
-            }
-          ],
-          "parserOpts": {
-            "noteKeywords": [
-              "BREAKING CHANGE",
-              "BREAKING CHANGES"
-            ]
-          }
-        }
-      ],
-      "@semantic-release/changelog",
-      "@semantic-release/git",
-      "@semantic-release/npm",
-      "@semantic-release/github"
-    ],
-    "verifyConditions": [
-      "@semantic-release/github"
-    ],
-    "prepare": [
-      {
-        "path": "@semantic-release/changelog",
-        "changelogFile": "CHANGELOG.md"
-      },
-      "@semantic-release/npm",
-      {
-        "path": "@semantic-release/git",
-        "assets": [
-          "package.json",
-          "package-lock.json",
-          "CHANGELOG.md"
-        ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ],
-    "publish": "@semantic-release/github",
-    "success": [],
-    "fail": [],
-    "npmPublish": false
   }
 }

@@ -6,18 +6,11 @@ node_modules
 .nyc_output
 coverage
 
-/docs/.jekyll-metadata
-/docs/_site
 /nbproject/private/
 /upload_data/
 /uAvatarImg/
 /uCoverImg/
 /uPlaylistImg/
-/config/apns/aps_dev.cert.pem
-/config/apns/aps_dev.key.pem
-/config/apns/aps_prod.cert.pem
-/config/apns/aps_prod.key.pem
-/config/apns/Dev_Whyd.mobileprovision
 /*.log
 /*.out
 /*.pid
@@ -25,5 +18,3 @@ coverage
 /appd.dmn
 /env-vars-local.sh
 /env-vars-perso.sh
-/scripts/mongodb-scripts/db
-/scripts/mongodb-scripts/*.gz
