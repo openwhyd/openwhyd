@@ -117,11 +117,10 @@ const errPrinter = ((blocklist) => {
 ]);
 
 async function startOpenwhydServerWith(env) {
-  const serverProcess = childProcess.fork(
-    './app.js',
-    ['--fakeEmail', '--digestInterval', '-1'],
-    { env, silent: true }
-  );
+  const serverProcess = childProcess.fork('./app.js', [], {
+    env,
+    silent: true,
+  });
   serverProcess.stderr.on('data', errPrinter);
   serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
   await waitOn({ resources: [serverProcess.URL] });
@@ -135,7 +134,6 @@ async function refreshOpenwhydCache(urlPrefix) {
 
 async function startOpenwhydServer({ startWithEnv, port }) {
   if (port) {
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
     const URL = `http://localhost:${port}`;
     await refreshOpenwhydCache(URL);
     return { URL };
@@ -145,7 +143,6 @@ async function startOpenwhydServer({ startWithEnv, port }) {
       MONGODB_PORT: '27117', // port exposed by docker container
       TZ: 'UTC',
     };
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
     return await startOpenwhydServerWith(env); // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
   }
 }

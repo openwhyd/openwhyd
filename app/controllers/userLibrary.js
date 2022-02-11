@@ -108,9 +108,7 @@ exports.controller = function (request, reqParams, response) {
     if (mimeType)
       return response.legacyRender(data, null, { 'content-type': mimeType });
     data = data || {
-      error:
-        'Nothing to render! Please send the URL of this page to ' +
-        process.appParams.feedbackEmail,
+      error: 'Nothing to render!',
     };
     if (data.errorCode) {
       //response.renderHTML(errorTemplate.renderErrorCode(data.errorCode));

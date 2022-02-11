@@ -20,6 +20,5 @@ services:
     env_file:
       - 'env-vars-testing.conf'
     environment:
-      - DISABLE_DATADOG=true
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27117

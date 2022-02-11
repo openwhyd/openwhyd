@@ -11,8 +11,8 @@
   },
   "scripts": {
     "postinstall": "cp node_modules/playemjs/dist/playem-*.js public/js/",
-    "start": "node app.js --fakeEmail --digestInterval -1 $@",
-    "start:coverage": "npx nyc --silent node app.js --fakeEmail --digestInterval -1 $@",
+    "start": "node app.js $@",
+    "start:coverage": "npx nyc --silent node app.js $@",
     "test-reset": "node test/reset-test-db.js",
     "test:integration": "npx mocha test/integration/*.js --serial --exit",
     "test:unit": "npx mocha test/unit/*.js --exit",

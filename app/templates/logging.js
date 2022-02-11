@@ -29,7 +29,6 @@ exports.renderLoginPage = function (form) {
     password: '',
     pageThumb: mainTemplate.defaultPageMeta.img,
     pageDesc: mainTemplate.defaultPageMeta.desc,
-    head: mainTemplate.analyticsHeading,
   };
 
   if (form) {

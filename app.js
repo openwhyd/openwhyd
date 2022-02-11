@@ -1,9 +1,5 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
-if (!process.env.DISABLE_DATADOG) {
-  require('dd-trace').init(); // datadog APM
-}
-
 var util = require('util');
 var mongodb = require('mongodb');
 
@@ -48,22 +44,6 @@ var params = (process.appParams = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
   color: true,
 
-  // secrets
-  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
-
-  // workers and general site logic
-  searchModule:
-    process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_API_KEY
-      ? 'searchAlgolia'
-      : '', // "searchElastic"  // "" => no search index
-  //	recomPopulation: true, // populate recommendation index at startup
-
-  // email notification preferences
-  emailModule: 'emailSendgrid', // "DISABLED"/"null" => fake email sending
-  digestInterval: 60 * 1000, // digest worker checks for pending notifications every 60 seconds
-  digestImmediate: false, // when true, digests are sent at every interval, if any notifications are pending
-  feedbackEmail: process.env.WHYD_CONTACT_EMAIL.substr(), // mandatory
-
   // rendering preferences
   version: openwhydVersion,
   startTime: new Date(),
@@ -82,15 +62,6 @@ var params = (process.appParams = {
 var FLAGS = {
   '--no-color': function () {
     process.appParams.color = false;
-  },
-  '--fakeEmail': function () {
-    params.emailModule = '';
-  },
-  '--emailAdminsOnly': function () {
-    params.emailModule = 'emailAdminsOnly';
-  },
-  '--runner': function () {
-    /* ignore this parameter from start-stop-daemon -- note: still required? */
   },
 };
 
@@ -114,7 +85,6 @@ function start() {
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
   const sessionMiddleware = session({
-    secret: process.env.WHYD_SESSION_SECRET.substr(),
     store: new MongoStore({
       url: makeMongoUrl(params),
     }),

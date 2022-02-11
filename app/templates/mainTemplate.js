@@ -88,66 +88,6 @@ var htmlHeading = [
   '    <meta charset="utf-8" />',
 ];
 
-exports.makeAnalyticsHeading = function (user) {
-  const errorTracking = process.env.DISABLE_DATADOG
-    ? ''
-    : `
-  <script>
-  (function(h,o,u,n,d) {
-    h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
-    d=o.createElement(u);d.async=1;d.src=n
-    n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
-  })(window,document,'script','https://www.datadoghq-browser-agent.com/datadog-rum.js','DD_RUM')
-  DD_RUM.onReady(function() {
-    DD_RUM.init({
-      clientToken: 'pub8eeb8858448e59bbb3db9e58371cc3d2',
-      applicationId: '5897e862-9942-4dd4-98a7-87a51a93fb91',
-      site: 'datadoghq.com',
-      service: 'openwhyd.org',
-      //  env: 'production',
-      //  version: '1.0.0',
-      sampleRate: 100,
-      trackInteractions: true,
-    })
-  })
-  </script>`;
-  // only render opengraph preferences (in order to avoid rendering a date object for nextEmail/nextEN)
-  var userPrefs = {};
-  for (let i in (user || {}).pref)
-    if (i.indexOf('og') == 0) userPrefs[i] = user.pref[i];
-  return [
-    ...errorTracking.split('\n'), // --> https://app.datadoghq.com/rum
-    '<script>',
-    '  window.user = ' +
-      (!user
-        ? '{}'
-        : util.inspect({
-            id: user.id,
-            name: uiSnippets.htmlEntities(user.name),
-            fbId: user.fbId,
-            handle: uiSnippets.htmlEntities(user.handle),
-            pref: userPrefs,
-            lastFm: user.lastFm,
-          })) +
-      ';',
-    '  window.playTrack = window.playTrack || function(){};', // prevent videos from playing in another tab, until whydPlayer is loaded
-    '</script>',
-    '<script src="/js/whydtr.js' + includeSuffix + '"></script>',
-    '<link rel="stylesheet" type="text/css" href="/css/cookieconsent2-3.0.3.min.css" />',
-    '<script src="/js/cookieconsent2-3.0.3.min.js"></script>',
-    '<script>',
-    '  /* generated from https://cookieconsent.insites.com/download/ */',
-    '  window.addEventListener("load", function(){',
-    '    window.cookieconsent.initialise({',
-    '      palette: { popup: { background: "#000" }, button: { background: "#f1d600" } }',
-    '    })',
-    '  });',
-    '</script>',
-  ];
-};
-
-exports.analyticsHeading = exports.makeAnalyticsHeading().join('\n');
-
 exports.renderHtmlFrame = function (body, head) {
   return (
     htmlHeading.join('') +
@@ -172,29 +112,26 @@ exports.renderWhydFrame = function (html, params) {
 
   params.head = params.head || makeMetaHead(params);
 
-  var out = htmlHeading
-    .concat(params.head || [])
-    .concat([
-      /* invalid html5 meta => replaced by Cache-Control HTTP header:
+  var out = htmlHeading.concat(params.head || []).concat([
+    /* invalid html5 meta => replaced by Cache-Control HTTP header:
 		'    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE" />',
 		'    <meta http-equiv="Pragma" content="no-cache" />',
 		'    <meta http-equiv="expires" content="0" />',
 		*/
-      //	'    <meta name="ROBOTS" content="NONE" />',
-      '    <link href="' +
-        render.urlPrefix +
-        '/favicon.ico" rel="shortcut icon" type="image/x-icon" />',
-      '    <link href="' +
-        render.urlPrefix +
-        '/favicon.png" rel="icon" type="image/png" />',
-      "    <link href='//fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>",
-      "    <link href='//fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>",
-      '    <link rel="search" type="application/opensearchdescription+xml" title="Whyd" href="' +
-        config.urlPrefix +
-        '/html/opensearch.xml">', // http://www.gravitywell.co.uk/blog/post/allow-google-chrome-and-other-browsers-to-search-your-site-directly-from-the-address-bar
-      '    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk">', // https://developers.google.com/chrome/web-store/docs/inline_installation?hl=fr
-    ])
-    .concat(exports.makeAnalyticsHeading(params.loggedUser));
+    //	'    <meta name="ROBOTS" content="NONE" />',
+    '    <link href="' +
+      render.urlPrefix +
+      '/favicon.ico" rel="shortcut icon" type="image/x-icon" />',
+    '    <link href="' +
+      render.urlPrefix +
+      '/favicon.png" rel="icon" type="image/png" />',
+    "    <link href='//fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>",
+    "    <link href='//fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>",
+    '    <link rel="search" type="application/opensearchdescription+xml" title="Whyd" href="' +
+      config.urlPrefix +
+      '/html/opensearch.xml">', // http://www.gravitywell.co.uk/blog/post/allow-google-chrome-and-other-browsers-to-search-your-site-directly-from-the-address-bar
+    '    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk">', // https://developers.google.com/chrome/web-store/docs/inline_installation?hl=fr
+  ]);
 
   if (params.title)
     out.push(
@@ -257,7 +194,6 @@ exports.renderWhydFrame = function (html, params) {
     'var YOUTUBE_API_KEY = "' + YOUTUBE_API_KEY + '";',
     'var JAMENDO_CLIENT_ID = "2c9a11b9";',
     '</script>',
-    // TODO: move credentials to makeAnalyticsHeading()
     jsIncludes.join('\n'),
     '  </body>',
     '</html>',

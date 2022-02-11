@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
 var emailModel = require('../models/email.js');
@@ -104,8 +103,6 @@ exports.EM_LABEL = {
   emFrd: 'friends',
   emAcc: 'accepted invites',
 };
-
-var TESTING_DIGEST = config.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {
   // console.log('Parsing reserved usernames from', routeFile, '...');
@@ -640,17 +637,6 @@ exports.getEmailNotifsFreq = function (user) {
   for (let i in user.pref)
     if (i.indexOf('em') == 0) freq = Math.max(freq, user.pref[i]);
   return freq;
-};
-
-exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
-  //console.log("fetchEmailNotifsToSend, now:", msToDigestTimestamp(now));
-  var criteria = {
-    'pref.pendEN': { $gt: 0 }, // number of pending email notifs
-  };
-  if (!TESTING_DIGEST)
-    criteria['pref.nextEN'] = { $lte: msToDigestTimestamp(now) }; // next email notif date
-
-  exports.fetchMulti(criteria, {}, cb);
 };
 
 exports.incrementNotificationCounter = function (uId, handler) {

@@ -1002,23 +1002,6 @@ ul#tabSelector {
 
 /************ SEARCH  ************************/
 
-#searchBoxAlgolia {
-  text-align: right;
-  background: transparent;
-  padding: 10px 10px 5px 10px;
-}
-
-#searchBoxAlgolia a {
-  display: block;
-}
-
-#algolia {
-  text-align: center;
-  background: transparent;
-  margin-top: 60px;
-  display: block;
-}
-
 .pgSearch .sub-container {
   float: left;
   margin-left: 10px;
