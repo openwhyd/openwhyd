@@ -1,4 +1,9 @@
 {
-  "files": ["./node_modules/@applitools/eyes-cypress/eyes-index.d.ts"],
+  "compilerOptions": {
+    "target": "es6",
+    "moduleResolution": "node",
+    "lib": ["es6", "dom"],
+    "types": ["node", "cypress"]
+  },
   "include": ["**/*.ts", "**/*.d.ts", "**/*.js"]
 }
