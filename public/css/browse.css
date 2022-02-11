@@ -568,54 +568,6 @@ font-size: 13px;
   box-shadow: none;
 }
 
-/* embedPlaylist dialog */
-
-.dlgEmbedPlaylist {
-  overflow-x: hidden;
-}
-
-.dlgEmbedPlaylist /*> .ajaxFrame*/ {
-  width: 800px;
-  height: 600px;
-  padding: 20px;
-  padding-top: 5px;
-  overflow: auto;
-}
-
-.dlgEmbedPlaylist .dlgClose {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  width: 9px;
-  height: 9px;
-  background: url(/images/icon-delete.png);
-  cursor: pointer;
-  z-index: 1;
-}
-/*
-/ *#sidebar* / .stats {
-list-style:none;
-padding:0;
-text-align:left;
-margin-top: 6px;
-}
-
-/ *#sidebar* / .stats li {
-padding: 0 5px;
-border-left: 1px solid #cacaca;
-display:inline-block;
-font-size: 11px;
-font-weight:normal;
-color: #2e2e2e;
-font-family:Helvetica,Arial,Sans-serif;
-}
-
-.stats li div {
-font-size: 16px;
-font-weight: bold;
-font-family: Helvetica, Arial, Sans-serif;
-}
-*/
 /* create / edit playlist dlg */
 
 .dlgEditPlaylist {

@@ -13,7 +13,6 @@ var template = templateLoader.loadTemplate('app/templates/posts.html');
 var getUserNameFromId = require('../models/mongodb.js').getUserNameFromId;
 
 var MAX_POSTS = config.nbPostsPerNewsfeedPage;
-var MAX_POSTS_EMBED = config.nbTracksPerPlaylistEmbed;
 var MAX_NB_REPOST_FACES = 12;
 var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
@@ -262,8 +261,7 @@ exports.renderPostsAsync = function (posts, options, callback) {
   options.ownProfile =
     options.user && options.user.id && options.user.id == options.loggedUser.id;
 
-  var maxPosts =
-    options.limit || (options.embedW ? MAX_POSTS_EMBED : MAX_POSTS);
+  var maxPosts = options.limit || MAX_POSTS;
   var hasMore = posts.length > maxPosts;
   if (hasMore) {
     posts = posts.slice(0, maxPosts);

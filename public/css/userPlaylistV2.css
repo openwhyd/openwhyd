@@ -131,24 +131,6 @@
   border: 1px solid #cfcfcf;
 }
 
-.userPlaylistV2 .container .button.embedPlaylist {
-  padding: 4px 6px;
-  font-size: 11px;
-  display: inline-block;
-  margin-left: 20px;
-  /*color: #646464;
-    font-weight: bold;
-    text-shadow: 0 1px 0 rgba(255,255,255,1);
-    font-family: "Helvetica Neue", arial, Sans-serif;
-	border-radius: 3px;
-	background-image: -o-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: -moz-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: -webkit-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: -ms-linear-gradient(-90deg, #FAFAFA 0%, #EDEDED 100%);
-	background-image: linear-gradient(-180deg, #FAFAFA 0%, #EDEDED 100%);
-	border: 1px solid #DEDEDE;*/
-}
-
 .userPlaylistV2 .feedHeader {
   overflow: auto;
   margin-bottom: 15px;

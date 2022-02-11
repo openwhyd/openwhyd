@@ -1853,10 +1853,6 @@ h2 {
   background: #bbb url('/images/icon-change-order.png') no-repeat 7px 4px;
 }
 
-.feedHeader > #playlistActions > .embedPlaylist {
-  background: #bbb url('/images/icon-embed.png') no-repeat 7px 4px;
-}
-
 .feedHeader > #playlistActions > .deletePlaylist {
   color: red;
 }

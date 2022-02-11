@@ -27,7 +27,6 @@ var paramsToInclude = [
   'before',
   'limit',
   'playlistId',
-  'embedW',
   'format',
   'pageUrl',
   'wholePage',
@@ -45,7 +44,6 @@ function LibraryController(reqParams, render) {
 		playlistId: reqParams.playlistId,
 		showPlaylists: reqParams.showPlaylists,
 		showLikes: reqParams.showLikes,
-		embedW: reqParams.embedW,
 		format: reqParams.format,
 		pageUrl: reqParams.pageUrl*/,
   };
@@ -61,22 +59,18 @@ LibraryController.prototype.renderPage = function (
   sidebarHtml,
   feedHtml
 ) {
-  if (!this.options.embedW) {
-    this.options.content = feedHtml;
-    let html = feedTemplate.renderFeedPage(user, this.options);
-    var loggedUserId = (this.options.loggedUser || {}).id;
-    if (loggedUserId) {
-      userModel.fetchByUid(loggedUserId, (user) => {
-        if (user && !user.consent) {
-          var thisUrl = encodeURIComponent(this.options.pageUrl || '/');
-          html = loggingTemplate.htmlRedirect('/consent?redirect=' + thisUrl);
-        }
-        this.render({ html });
-      });
-    } else this.render({ html });
-  } else {
-    this.render({ html: feedTemplate.renderFeedEmbed(feedHtml, this.options) });
-  }
+  this.options.content = feedHtml;
+  let html = feedTemplate.renderFeedPage(user, this.options);
+  var loggedUserId = (this.options.loggedUser || {}).id;
+  if (loggedUserId) {
+    userModel.fetchByUid(loggedUserId, (user) => {
+      if (user && !user.consent) {
+        var thisUrl = encodeURIComponent(this.options.pageUrl || '/');
+        html = loggingTemplate.htmlRedirect('/consent?redirect=' + thisUrl);
+      }
+      this.render({ html });
+    });
+  } else this.render({ html });
 };
 
 LibraryController.prototype.renderJson = function (json) {
@@ -148,7 +142,6 @@ exports.controller = function (request, reqParams, response) {
       paramsToKeep = [
         'after',
         'before',
-        'embedW',
         'format',
         'limit',
         'wholePage',
@@ -191,7 +184,7 @@ exports.controller = function (request, reqParams, response) {
       return render({ errorCode: 'USER_NOT_FOUND' });
     userModel.fetchByUid(reqParams.id, function (user) {
       if (!user) render({ errorCode: 'USER_NOT_FOUND' });
-      else if (user.handle && !reqParams.embedW)
+      else if (user.handle)
         redirectTo(path.replace('/u/' + reqParams.id, '/' + user.handle));
       else renderUserLibrary(lib, user);
     });

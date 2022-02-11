@@ -28,9 +28,6 @@
         frameborder="0"
         allowTransparency="true"
       ></iframe>
-      <a class="embedPlaylist button" href="javascript:embedPlaylist();"
-        >Embed</a
-      >
     </div>
     <h1>{{name}}</h1>
     {{#ownProfile}}
@@ -89,9 +86,6 @@
     </div>
     {{/hasMore}} {{#user}}
     <script>
-      function embedPlaylist() {
-      	openRemoteDialog('/html/embedPlaylist.html', 'dlgEmbedPlaylist');
-      };
       $(function(){
       		window.pageUser = {id:"{{id}}", name: "{{{_js_name}}}"};
       	{{#hasMore}}

@@ -77,7 +77,7 @@ function fetchAndRender(options, callback) {
   renderer.fetchAndRender(options, (err, posts) => {
     if (err) return callback(err);
     if (bareFormats.has(options.format)) return callback(posts);
-    if (!options.format && !options.embedW) {
+    if (!options.format) {
       renderer.prepareTemplate(options);
     }
     feedTemplate.renderFeedAsync(posts, options, callback);
@@ -100,9 +100,7 @@ function populatePaginationParameters(options) {
     before: options.before,
     limit: options.limit,
   };
-  if (options.embedW)
-    options.fetchParams.limit = config.nbTracksPerPlaylistEmbed;
-  else if (options.limit && typeof options.limit !== 'number') {
+  if (options.limit && typeof options.limit !== 'number') {
     if (typeof options.limit === 'string')
       options.fetchParams.limit = parseInt(options.limit);
     else if (typeof options.limit === 'object' && options.limit.push)

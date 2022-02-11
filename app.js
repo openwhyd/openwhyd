@@ -48,7 +48,6 @@ var params = (process.appParams = {
   version: openwhydVersion,
   startTime: new Date(),
   nbPostsPerNewsfeedPage: 20,
-  nbTracksPerPlaylistEmbed: 100,
 
   paths: {
     whydPath: __dirname,

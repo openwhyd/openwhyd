@@ -142,24 +142,6 @@ function prepareFeedVars(posts, options) {
       feedVars.user._js_name = snip.sanitizeJsStringInHtml(feedVars.user.name);
   }
 
-  if (options.embedW) {
-    feedVars.firstTrack =
-      posts && posts.length > 0
-        ? posts[0]
-        : {
-            id: '',
-            img: '',
-            url: 'javascript:{}',
-          };
-    if (!feedVars.firstTrack.img)
-      feedVars.firstTrack.img = '/images/cover-track.png';
-    options.title =
-      (options.playlist || {}).name +
-      ' by ' +
-      (options.user || {}).name +
-      ' - whyd';
-  }
-
   return feedVars;
 }
 
@@ -169,12 +151,7 @@ exports.renderFeedAsync = function (posts, options, callback) {
     feedVars.posts = postsHtml;
 
     //loadTemplates(function(){
-    var format = options.format
-      ? options.format.toLowerCase()
-      : options.embedW
-      ? 'embed'
-      : 'html';
-    //var t = (options.embedW ? templateEmbed[options.format || "oldEmbed"] : null) || template;
+    var format = options.format ? options.format.toLowerCase() : 'html';
     if (format == 'json') callback(postsHtml);
     else
       callback(
@@ -194,23 +171,6 @@ exports.renderFeedPage = function (user, options) {
   options.js = options.js || [];
   options.css = options.css || [];
   return mainTemplate.renderWhydPage(options);
-};
-
-exports.renderFeedEmbed = function (feedHtml, options) {
-  options = options || {};
-  options.js = options.js || [];
-  options.css = options.css || [];
-  options.nocss = true;
-  options.css.push(
-    (options.format || '').toLowerCase() == 'embedv2'
-      ? 'feedEmbedV2.css'
-      : 'feedEmbed.css'
-  );
-  options.js.push('playem-min.js');
-  options.js.push('playem-youtube-iframe-patch.js');
-  options.js.push('whydPlayer.js');
-  options.js.push('jquery.tinyscrollbar.min.js'); // http://baijs.nl/tinyscrollbar/
-  return mainTemplate.renderWhydFrame(feedHtml, options);
 };
 
 /**
