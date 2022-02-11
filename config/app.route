@@ -2,22 +2,9 @@ ALL    /                               -> controllers.userLibrary
 GET    /home                           -> controllers.userLibrary
 POST   /home                           -> controllers.userLibrary
 
-GET    /now                            -> controllers.now
-
 GET    /favicon.ico                    -> controllers.static
 GET    /favicon.png                    -> controllers.static
-GET    /press                          -> controllers.static
 GET    /privacy                        -> controllers.static
-GET    /investors                      -> controllers.static
-GET    /concertvenue                   -> controllers.static
-GET    /mobile                         -> controllers.static
-GET    /iphone                         -> controllers.static
-POST   /fbcanvas/                      -> controllers.static
-
-GET    /fbCanvas                       -> controllers.private.fbCanvas
-POST   /fbCanvas                       -> controllers.private.fbCanvas
-
-GET    /download                       -> controllers.iframe
 
 GET    /about                          -> controllers.redir
 GET    /api                            -> controllers.redir
@@ -41,51 +28,21 @@ GET    /uCoverImg/{uCoverImg}          -> controllers.uploadedFile
 GET    /uPlaylistImg/{uPlaylistImg}    -> controllers.uploadedFile
 GET    /img/{type}/{id}                -> controllers.uploadedFile
 
-GET    /config.json                    -> controllers.private.config
-GET    /search                         -> controllers.private.search
-POST   /search                         -> controllers.private.search
-
-GET    /wsYoutube                      -> controllers.private.wsYoutube
-POST   /wsYoutube                      -> controllers.private.wsYoutube
-
-GET    /all                            -> controllers.userLibrary
 GET    /stream                         -> controllers.userLibrary
-GET    /recent                         -> controllers.recentActivity
-GET    /hot                            -> controllers.hotTracks
-GET    /hot/                           -> controllers.hotTracks
-GET    /hot/{genre}                    -> controllers.hotTracks
 
 GET    /settings                       -> controllers.settings
 POST   /settings                       -> controllers.settings
 
-GET    /signup                         -> controllers.invite
-GET    /api/signup/rTk/{rTk}           -> controllers.invite
-GET    /invite                         -> controllers.invite
-POST   /invite                         -> controllers.invite
-GET    /invite/{inviteCode}            -> controllers.invite
-DELETE /invite/{inviteCode}            -> controllers.invite
-
-GET    /button                         -> controllers.onboarding
-GET    /bookmarklet                    -> controllers.onboarding
 GET    /consent                        -> controllers.consent
 POST   /consent                        -> controllers.consent
 
 GET    /login                          -> controllers.api.login
 POST   /login                          -> controllers.api.login
-GET    /facebookLogin                  -> controllers.api.facebookLogin
-POST   /facebookLogin                  -> controllers.api.facebookLogin
 
-GET    /digest                         -> controllers.private.digest
-GET    /contentType                    -> controllers.private.contentType
-POST   /contentType                    -> controllers.private.contentType
-GET    /getResourceMetadata            -> controllers.private.getResourceMetadata
-POST   /getResourceMetadata            -> controllers.private.getResourceMetadata
 GET    /password                       -> controllers.private.password
 POST   /password                       -> controllers.private.password
 GET    /upload                         -> controllers.private.upload
 POST   /upload                         -> controllers.private.upload
-GET    /visit                          -> controllers.private.visit
-POST   /visit                          -> controllers.private.visit
 
 GET    /post                           -> controllers.api.postEdit
 GET    /post/add                       -> controllers.api.postEdit
@@ -121,11 +78,6 @@ POST   /admin/{_subCtr}                -> controllers.subdir
 GET    /admin/{_subCtr}/{action}       -> controllers.subdir
 
 POST   /testing/{_subCtr}              -> controllers.subdir
-
-GET    /app                            -> controllers.pgApp
-GET    /apps                           -> controllers.pgApp
-GET    /app/{appId}                    -> controllers.pgApp
-GET    /app/{appId}/{action}           -> controllers.pgApp
 
 GET    /me                             -> controllers.userLibrary
 GET    /u/{id}                         -> controllers.userLibrary

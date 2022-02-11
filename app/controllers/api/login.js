@@ -3,9 +3,7 @@
  */
 const snip = require('../../snip.js');
 const config = require('../../models/config.js');
-var emailModel = require('../../models/email.js');
 var userModel = require('../../models/user.js');
-var notifEmails = require('../../models/notifEmails.js');
 var userApi = require('../../controllers/api/user.js');
 
 var md5 = userModel.md5;
@@ -57,8 +55,6 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
     });
     return;
   } else if (form.email) {
-    form.email = emailModel.normalize(form.email);
-
     userModel[form.email.indexOf('@') > -1 ? 'fetchByEmail' : 'fetchByHandle'](
       form.email,
       function (dbUser) {
@@ -70,7 +66,7 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
         } else if (!dbUser) {
           form.error = "Are you sure? We don't recognize your email address!";
         } else if (form.action == 'forgot') {
-          notifEmails.sendPasswordReset(dbUser._id, dbUser.pwd, form.redirect);
+          // notifEmails.sendPasswordReset(dbUser._id, dbUser.pwd, form.redirect);
           /*form.error*/ form.ok =
             'We just sent you an email to reset your password, wait for it!';
         } else if (

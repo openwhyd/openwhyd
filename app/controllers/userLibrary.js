@@ -6,14 +6,11 @@
 
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
-var analytics = require('../models/analytics.js');
 var feedTemplate = require('../templates/feed.js');
 var errorTemplate = require('../templates/error.js');
 var loggingTemplate = require('../templates/logging.js');
 
-var renderAllLibrary = require('./LibAll.js').render;
 var renderUserLibrary = require('./LibUser.js').render;
-var renderFriendsLibrary = require('./LibFriends.js').render;
 
 var tabParams = [
   'showPlaylists',
@@ -123,14 +120,6 @@ exports.controller = function (request, reqParams, response) {
       );
     } else if (data.html) {
       response.renderHTML(data.html);
-      // console.log('rendering done!');
-      if (
-        loggedInUser &&
-        loggedInUser.id &&
-        !reqParams.after &&
-        !reqParams.before
-      )
-        analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
     } else if (typeof data == 'object') response.renderJSON(data.json || data);
     else response.legacyRender(data.error);
   }
@@ -153,15 +142,7 @@ exports.controller = function (request, reqParams, response) {
     response.temporaryRedirect(path, paramsObj);
   }
 
-  if (path == '/' || request.url.indexOf('/stream') > -1) {
-    if (loggedInUser && loggedInUser.id) return renderFriendsLibrary(lib);
-    else if (reqParams.format == 'json')
-      return render({ errorCode: 'REQ_LOGIN' });
-    else {
-      lib.options.bodyClass = 'home';
-      return renderAllLibrary(lib);
-    }
-  } else if (path == '/me') {
+  if (path == '/' || request.url.indexOf('/stream') > -1 || path == '/me') {
     if (request.checkLogin(response, reqParams.format))
       userModel.fetchByUid(loggedInUser.id, function (user) {
         if (!user) render({ errorCode: 'USER_NOT_FOUND' });
@@ -173,8 +154,6 @@ exports.controller = function (request, reqParams, response) {
             )
           );
       });
-  } else if (path == '/all') {
-    return renderAllLibrary(lib);
   } else if (reqParams.handle)
     userModel.fetchByHandle(reqParams.handle, function (user) {
       renderUserLibrary(lib, user);

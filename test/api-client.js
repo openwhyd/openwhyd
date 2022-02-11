@@ -1,6 +1,5 @@
 var assert = require('assert');
 var request = require('request'); // TODO: promisify it
-var genuine = require('../app/genuine.js'); // for signup
 
 var { URL_PREFIX } = require('./fixtures.js');
 
@@ -48,9 +47,6 @@ exports.signupAs = function signupAs(user, callback) {
       body: Object.assign(
         {
           ajax: 1,
-          sTk: genuine.makeSignupToken({
-            connection: { remoteAddress: '::ffff:127.0.0.1' },
-          }),
         },
         user
       ),

@@ -3,7 +3,6 @@
  * @author adrienjoly, whyd
  **/
 
-var version = require('../../models/version.js');
 var FileController = require('./FileController.js');
 
 function wrapJsonGeneratorToText(name) {
@@ -15,11 +14,6 @@ function wrapJsonGeneratorToText(name) {
 }
 
 var fileGenerators = {
-  'version.json': function (p, cb) {
-    version.updateVersions(function (versions) {
-      cb({ json: versions });
-    });
-  },
   'version.txt': wrapJsonGeneratorToText('version.json'),
   'config.json': function (p, cb) {
     cb({ json: process.appParams });

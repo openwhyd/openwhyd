@@ -7,7 +7,6 @@
 var snip = require('../snip.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
-var notifModel = require('../models/notif.js');
 
 var MIN_COMMENT_DELAY = 2000; // min 2 seconds between comments
 
@@ -80,7 +79,7 @@ function notifyUsers(comment) {
           mentionedUsers,
           function (mentionedUid, next) {
             notifiedUidSet[mentionedUid] = true;
-            notifModel.mention(post, comment, mentionedUid, next);
+            next();
           },
           cb
         );
@@ -93,7 +92,6 @@ function notifyUsers(comment) {
       }
       console.log('notify post author');
       notifiedUidSet[post.uId] = true;
-      notifModel.comment(post, comment, cb);
     });
     // notify previous commenters
     todo.push(function (cb) {
@@ -110,7 +108,7 @@ function notifyUsers(comment) {
             Object.keys(commentsByUid),
             function (uId, next) {
               notifiedUidSet[uId] = true;
-              notifModel.commentReply(post, comment, uId, next);
+              next();
             },
             cb
           );

@@ -8,7 +8,6 @@ var fs = require('fs');
 var snip = require('../snip.js');
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
-var analytics = require('../models/analytics.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
 var filePerLang = {
@@ -115,8 +114,6 @@ exports.controller = async function (request, getParams, response) {
     if (r.redirect) response.safeRedirect(r.redirect);
     else if (r.html) response.renderHTML(r.html);
     else response.renderJSON(r);
-    // and track visit to that page
-    analytics.addVisit(p.loggedUser, request.url);
   }
 
   if (isPost) {

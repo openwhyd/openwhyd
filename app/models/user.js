@@ -6,9 +6,7 @@
 
 var mongodb = require('../models/mongodb.js');
 var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
-var emailModel = require('../models/email.js');
 var postModel = require('../models/post.js');
-var searchModel = require('../models/search.js');
 var snip = require('../snip.js');
 
 var crypto = require('crypto');
@@ -272,7 +270,7 @@ exports.fetchByFbUid = function (fbUid, handler) {
 };
 
 exports.fetchByEmail = function (email, handler) {
-  fetch({ email: emailModel.normalize(email) }, function (err, user) {
+  fetch({ email }, function (err, user) {
     if (err) console.error(err);
     handler(user);
   });
@@ -322,7 +320,7 @@ exports.save = function (pUser, handler) {
   var uid = pUser._id || pUser.id;
   var criteria = uid
     ? { _id: typeof uid == 'string' ? ObjectId(uid) : uid }
-    : { email: emailModel.normalize(pUser.email) };
+    : { email: pUser.email };
   var user = pUser;
   delete user._id;
   if (user.name) user.n = exports.normalizeName(user.name);
@@ -342,7 +340,6 @@ exports.save = function (pUser, handler) {
       fetch(criteria, function (err, user) {
         if (err) console.error(err);
         //console.log("user stored as ", user);
-        if (user) searchModel.indexTyped('user', user);
         mongodb.cacheUser(user);
         if (handler) handler(user);
       });
@@ -368,7 +365,6 @@ exports.delete = function (criteria, handler) {
               user._id + '_' + pl.id,
               pl.name
             );
-            searchModel.deletePlaylist(user._id, pl.id, next);
             // todo: delete playlist cover image file
           }
         })();
@@ -376,7 +372,6 @@ exports.delete = function (criteria, handler) {
       mongodb.collections['user'].deleteOne(criteria, function (err, item) {
         if (err) console.error(err);
         else console.log('removed users', criteria);
-        searchModel.deleteDoc('user', '' + criteria._id);
         delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
         // todo: delete user avatar file
@@ -389,10 +384,7 @@ exports.delete = function (criteria, handler) {
 // signup list (from landing)
 
 exports.fetchEmail = function (email, callback) {
-  mongodb.collections['email'].findOne(
-    { _id: emailModel.normalize(email) },
-    callback
-  );
+  mongodb.collections['email'].findOne({ _id: email }, callback);
 };
 
 exports.deleteEmails = function (emailArray, callback) {
@@ -403,98 +395,7 @@ exports.deleteEmails = function (emailArray, callback) {
 };
 
 exports.storeEmail = function (email) {
-  mongodb.collections['email'].save(
-    { _id: emailModel.normalize(email), date: new Date() },
-    { w: 0 }
-  );
-};
-
-// invites
-
-exports.fetchInvite = function (inviteCode, handler) {
-  mongodb.collections['invite'].findOne(
-    { _id: ObjectId(inviteCode) },
-    function (err, user) {
-      handler(user);
-    }
-  );
-};
-
-exports.fetchInviteByEmail = function (email, handler) {
-  mongodb.collections['invite'].findOne(
-    { email: emailModel.normalize(email) },
-    function (err, user) {
-      handler(user);
-    }
-  );
-};
-
-function insertInvite(obj, handler) {
-  var criteria = {};
-  if (obj.email) {
-    var normalized = emailModel.normalize(obj.email);
-    if (!emailModel.validate(normalized)) {
-      console.log('warning: invalid email: ' + normalized);
-      return handler ? handler(null) : null;
-    }
-    criteria = { email: (obj.email = normalized) };
-  } else if (obj.fbId) criteria = { fbId: obj.fbId };
-  else {
-    console.log('WARNING: email or fbId must be specified');
-    return handler && handler();
-  }
-
-  mongodb.collections['invite'].updateMany(
-    criteria,
-    { $set: obj },
-    { upsert: true, multi: true },
-    function (err) {
-      if (err) console.log(err);
-      mongodb.collections['invite'].findOne(criteria, function (err, user) {
-        if (err) console.error(err);
-        console.log('user invite stored as ', user);
-        if (user && obj.email)
-          mongodb.collections['email'].deleteOne(
-            { _id: obj.email },
-            function () {
-              if (handler) handler(user);
-            }
-          );
-        else if (handler) handler(user);
-      });
-    }
-  );
-}
-
-exports.inviteUser = function (email, handler) {
-  insertInvite({ email: email }, handler);
-};
-
-exports.inviteUserBy = function (email, senderId, handler) {
-  insertInvite({ email: email, iBy: senderId }, handler);
-};
-
-exports.inviteFbUserBy = function (fbId, senderId, handler) {
-  // formerly inviteToJoinConversation()
-  insertInvite({ fbId: fbId, iBy: senderId }, handler);
-};
-
-exports.removeInvite = function (inviteCode, handler) {
-  var id = typeof inviteCode == 'string' ? ObjectId(inviteCode) : inviteCode;
-  mongodb.collections['invite'].deleteOne({ _id: id }, function (err) {
-    console.log(err || 'removed invite ' + id);
-    if (handler) handler({ _id: id });
-  });
-};
-
-exports.removeInviteByEmail = function (emailList, handler) {
-  mongodb.collections['invite'].deleteMany(
-    { email: { $in: emailList } },
-    function (err) {
-      console.log(err || 'removed invites ' + emailList);
-      if (handler) handler({ emailList: emailList });
-    }
-  );
+  mongodb.collections['email'].save({ _id: email, date: new Date() }, { w: 0 });
 };
 
 // playlist management
@@ -536,7 +437,6 @@ exports.createPlaylist = function (uId, name, handler) {
     user.pl.push(pl);
     exports.save(user, function () {
       // console.log('created playlist:', pl.name, pl.id);
-      searchModel.indexPlaylist(uId, pl.id, pl.name);
       handler(pl);
     });
   });
@@ -563,7 +463,6 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
           console.log(
             'updating playlist name in index and corresponding tracks...'
           );
-          searchModel.indexPlaylist(uId, plId, upd.name);
           postModel.setPlaylist(uId, plId, upd.name, function () {
             /* do nothing */
           });
@@ -614,7 +513,6 @@ exports.deletePlaylist = function (uId, plId, handler) {
           'deleted playlist (and updated corresponding tracks):',
           plId
         );
-        searchModel.deletePlaylist(uId, plId);
         handler(plId);
       });
     });

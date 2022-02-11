@@ -16,88 +16,12 @@ var snip = require('../../snip.js');
 var mongodb = require('../../models/mongodb.js');
 var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
-var emailModel = require('../../models/email.js');
-var followModel = require('../../models/follow.js');
-var versionModel = require('../../models/version.js');
-var notifEmails = require('../../models/notifEmails.js');
 var uploadCtr = require('../uploadedFile.js');
 
 // for when called through subdir controller
 var SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
 
-function addUserInfo(userSub, mySub) {
-  var mySubIdSet = {};
-  if (mySub) for (let i in mySub) mySubIdSet[mySub[i].id] = true;
-  for (let i in userSub) {
-    var user = userSub[i];
-    user.subscribed = mySubIdSet[user.id];
-  }
-  return userSub;
-}
-
 var publicActions = {
-  subscriptions: function (p, cb) {
-    if (!p || !p.id) cb({ error: 'user not found' });
-    else
-      followModel.fetchUserSubscriptions(p.id, function (sub) {
-        userModel.fetchUserBios(sub.subscriptions, function () {
-          if (p.loggedUser && p.loggedUser.id != p.id)
-            followModel.fetchUserSubscriptions(
-              p.loggedUser.id,
-              function (mySub) {
-                cb(
-                  sub
-                    ? addUserInfo(
-                        sub.subscriptions,
-                        mySub ? mySub.subscriptions : []
-                      )
-                    : null
-                );
-              }
-            );
-          else
-            cb(
-              sub
-                ? addUserInfo(
-                    sub.subscriptions,
-                    p.loggedUser ? sub.subscriptions : []
-                  )
-                : null
-            );
-        });
-      });
-  },
-  subscribers: function (p, cb) {
-    if (!p || !p.id) cb({ error: 'user not found' });
-    else
-      followModel.fetchUserSubscriptions(p.id, function (sub) {
-        userModel.fetchUserBios(sub.subscribers, function () {
-          if (p.loggedUser && p.loggedUser.id != p.id)
-            followModel.fetchUserSubscriptions(
-              p.loggedUser.id,
-              function (mySub) {
-                cb(
-                  sub
-                    ? addUserInfo(
-                        sub.subscribers,
-                        mySub ? mySub.subscriptions : []
-                      )
-                    : null
-                );
-              }
-            );
-          else
-            cb(
-              sub
-                ? addUserInfo(
-                    sub.subscribers,
-                    p.loggedUser ? sub.subscriptions : []
-                  )
-                : null
-            );
-        });
-      });
-  },
   delete: function (p, cb) {
     if (!p || !p.loggedUser || !p.loggedUser.id)
       cb({ error: 'Please log in first' });
@@ -106,7 +30,6 @@ var publicActions = {
       userModel.delete({ _id: p.loggedUser.id }, function (r) {
         console.log('deleted user', p.loggedUser.id, r);
       });
-      notifEmails.sendUserDeleted(p.loggedUser.id, p.loggedUser.name);
       cb({
         ok: 1,
         message:
@@ -118,7 +41,6 @@ var publicActions = {
     if (!p || !p.loggedUser || !p.loggedUser.id)
       cb({ error: 'Please log in first' });
     else {
-      notifEmails.askAccountDeletion(p.loggedUser.id, p.loggedUser.name);
       cb({ ok: 1, message: 'Thank you, we will get back to you shortly.' });
     }
   },
@@ -171,7 +93,6 @@ var fieldSetters = {
     userModel.fetchByUid(p._id, function (item) {
       if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
         defaultSetter('pwd')({ _id: p._id, pwd: userModel.md5(p.pwd) }, cb);
-        notifEmails.sendPasswordUpdated(p._id, item.email);
       } else cb({ error: 'Your current password is incorrect' });
     });
   },
@@ -179,19 +100,14 @@ var fieldSetters = {
     userModel.setHandle(p._id, p.handle, cb);
   },
   email: function (p, cb) {
-    p.email = emailModel.normalize(p.email);
-    if (!emailModel.validate(p.email))
-      cb({ error: 'This email address is invalid' });
-    else
-      userModel.fetchByEmail(p.email, function (existingUser) {
-        if (!existingUser) {
-          notifEmails.sendEmailUpdated(p._id, p.email);
-          defaultSetter('email')(p, cb);
-        } else if ('' + existingUser._id == p._id)
-          // no change
-          cb({ email: p.email });
-        else cb({ error: 'This email already belongs to another user' });
-      });
+    userModel.fetchByEmail(p.email, function (existingUser) {
+      if (!existingUser) {
+        defaultSetter('email')(p, cb);
+      } else if ('' + existingUser._id == p._id)
+        // no change
+        cb({ email: p.email });
+      else cb({ error: 'This email already belongs to another user' });
+    });
   },
   pref: function (p, cb) {
     // type each provided pref value accordingly to defaults. "true" boolean was translated to "1"
@@ -223,28 +139,6 @@ var fieldSetters = {
   lnk_igrm: defaultSetter('lnk_igrm'),
 };
 
-function hasSubscribed(loggedUser, user, cb) {
-  user = user || {};
-  var uId = user.id || user._id;
-  if (uId && loggedUser)
-    followModel.get({ uId: loggedUser.id, tId: uId }, function (err, res) {
-      user.isSubscribing = !!res;
-      cb(user);
-    });
-  else cb(user);
-}
-
-function countUserSubscr(user, cb) {
-  var uId = '' + user._id;
-  followModel.countSubscriptions(uId, function (res) {
-    user.nbSubscriptions = res;
-    followModel.countSubscribers(uId, function (res) {
-      user.nbSubscribers = res;
-      cb(user);
-    });
-  });
-}
-
 function countUserPosts(user, cb) {
   postModel.countUserPosts(user.id, function (res) {
     user.nbPosts = res;
@@ -259,14 +153,8 @@ function countUserLikes(user, cb) {
   });
 }
 
-function appendVersions(user, cb) {
-  var versions = versionModel.getVersions();
-  for (let i in versions) user[i] = versions[i];
-  cb();
-}
-
 exports.fetchUserData = function (user, cb) {
-  var ops = [countUserSubscr, countUserPosts, countUserLikes, appendVersions];
+  var ops = [countUserPosts, countUserLikes];
   (function next() {
     if (!ops.length) cb(user);
     else ops.pop().apply(null, [user, next]);
@@ -289,18 +177,7 @@ function fetchUserById(uId, options, cb) {
         delete user.twTok;
         delete user.twSec;
       }
-      var getters = [
-        ['getVersion', appendVersions],
-        ['includeSubscr', countUserSubscr],
-      ];
-      (function next() {
-        var item = getters.shift();
-        if (!item) cb(user);
-        else {
-          if (options[item[0]]) item[1](user, next);
-          else next();
-        }
-      })();
+      cb(user);
     });
   });
 }
@@ -329,10 +206,6 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
     reqParams.excludePrivateFields = true;
     fetchUserByIdOrHandle(reqParams.id, reqParams, function (u) {
       var tasks = [localRendering];
-      if (reqParams.isSubscr)
-        tasks.push(function (u, next) {
-          hasSubscribed(loggedUser, u, next);
-        });
       if (reqParams.countPosts) tasks.push(countUserPosts);
       if (reqParams.countLikes) tasks.push(countUserLikes);
       (function next() {

@@ -7,7 +7,6 @@
 var config = require('../../models/config.js');
 var users = require('../../models/user.js');
 var md5 = users.md5;
-var notifEmails = require('../../models/notifEmails.js');
 var templateLoader = require('../../templates/templateLoader.js');
 
 exports.checkResetCode = function (request, reqParams, response, okCallback) {
@@ -155,7 +154,6 @@ exports.resetPassword = function (request, reqParams, response) {
           );
 
         console.log('password reset ok');
-        notifEmails.sendPasswordUpdated(storedUser._id, storedUser.email);
 
         if (reqParams.redirect) return response.redirect(reqParams.redirect);
         else

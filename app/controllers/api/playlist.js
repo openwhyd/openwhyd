@@ -5,11 +5,9 @@
 
 var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
-var notifModel = require('../../models/notif.js');
 var uploadCtr = require('../uploadedFile.js');
 
 exports.actions = {
-  sendToUsers: notifModel.sendPlaylistToUsers,
   create: function (p, callback) {
     userModel.createPlaylist(p.uId, p.name, callback);
     // returns {id, name}

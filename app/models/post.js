@@ -8,11 +8,6 @@ var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
 var db = mongodb.collections;
 
 var snip = require('../snip.js');
-var notif = require('../models/notif.js');
-var searchModel = require('../models/search.js');
-var activityModel = require('../models/activity.js');
-var trackModel = require('../models/track.js');
-var notifModel = require('../models/notif.js');
 
 var config = require('../models/config.js');
 var NB_POSTS = config.nbPostsPerNewsfeedPage;
@@ -213,15 +208,7 @@ function setPostLove(collection, pId, uId, state, handler) {
         post ? post.uId : null,
         post
       );
-      if (post && uId != post.uId) notif[state ? 'love' : 'unlove'](uId, post);
       if (handler) handler(post);
-      if (post) trackModel.updateByEid(post.eId);
-      if (state)
-        activityModel.addLikeByPost(post, {
-          id: uId,
-          name: mongodb.getUserNameFromId(uId),
-        });
-      else activityModel.removeLike(pId, uId);
     });
   });
 }
@@ -242,21 +229,6 @@ exports.countLovedPosts = function (uid, callback) {
   });
 };
 
-function notifyMentionedUsers(post, cb) {
-  var mentionedUsers = snip.extractMentions(post.text),
-    comment = { uId: post.uId, uNm: post.uNm };
-  if (mentionedUsers.length) {
-    console.log('notif mentioned users');
-    snip.forEachArrayItem(
-      mentionedUsers,
-      function (mentionedUid, next) {
-        notifModel.mention(post, comment, mentionedUid, next);
-      },
-      cb
-    );
-  }
-}
-
 exports.savePost = function (postObj, handler) {
   //console.log("post.savePost: ", postObj);
   var pId = postObj._id;
@@ -265,15 +237,7 @@ exports.savePost = function (postObj, handler) {
     //console.log("post.savePost() result: ", result);
     if (result) {
       if (Array.isArray(result)) result = result[0];
-      searchModel.indexTyped('post', result);
       result.isNew = !pId;
-      if (result.isNew) notif.post(result);
-      /*
-			recomModel.matchingEngine.addPost(result, function() {
-				//console.log("=> added post to matching engine index");
-			});
-			*/
-      notifyMentionedUsers(result);
     }
     handler(result);
   }
@@ -335,28 +299,14 @@ exports.rePost = function (pId, repostObj, handler) {
       if (error) console.error('post.rePost() error: ', error);
       result = result.ops[0];
       if (repostObj.uId != repostObj.repost.uId) {
-        notif.repost(repostObj.uId, postObj);
-        notif.post(postObj);
-        collection
-          .updateOne(
-            { _id: ObjectId('' + pId) },
-            { $inc: { nbR: 1 } },
-            { w: 0 }
-          )
-          .then(() => {
-            trackModel.updateByEid(postObj.eId);
-          });
+        collection.updateOne(
+          { _id: ObjectId('' + pId) },
+          { $inc: { nbR: 1 } },
+          { w: 0 }
+        );
       }
       if (result && result.length) {
-        //searchModel.indexPost(result);
         result = result[0];
-        searchModel.indexTyped('post', result);
-        /*
-				recomModel.matchingEngine.addPost(result, function() {
-					console.log("=> added post to matching engine index");
-				});
-				*/
-        notifyMentionedUsers(result);
       }
       handler(result);
     });
@@ -374,7 +324,6 @@ exports.deletePost = function (pId, handler, uId) {
     if (postObj)
       collection.deleteOne(q, function (error, result) {
         if (error) console.log('post.deletePost() error: ', error);
-        searchModel.deleteDoc('post', pId);
         handler(result);
         if (postObj.repost)
           collection.updateOne(
@@ -382,7 +331,6 @@ exports.deletePost = function (pId, handler, uId) {
             { $inc: { nbR: -1 } },
             { w: 0 }
           );
-        trackModel.updateByEid(postObj.eId);
       });
     else {
       console.log('post.deletePost() error: ', pId);
@@ -401,7 +349,6 @@ exports.incrPlayCounter = function (pId, cb) {
       if (err) console.log(err);
       //cb && cb(res || err);
       exports.fetchPostById(pId, function (postObj) {
-        if (postObj) trackModel.updateByEid(postObj.eId);
         cb && cb(postObj || err);
       });
     }

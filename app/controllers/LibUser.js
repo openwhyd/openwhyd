@@ -6,7 +6,6 @@
 
 var config = require('../models/config.js');
 var userModel = require('../models/user.js');
-var followModel = require('../models/follow.js');
 var postModel = require('../models/post.js');
 var feedTemplate = require('../templates/feed.js');
 
@@ -27,24 +26,6 @@ function fetchLikes(options, callback) {
   postModel.countLovedPosts(options.user.id, function (count) {
     options.user.nbLikes = count;
     callback();
-  });
-}
-
-function fetchStats(options, callback) {
-  followModel.countSubscriptions(options.user.id, function (nbSubscriptions) {
-    followModel.countSubscribers(options.user.id, function (nbSubscribers) {
-      options.subscriptions = {
-        nbSubscriptions: nbSubscriptions,
-        nbSubscribers: nbSubscribers,
-      };
-      followModel.get(
-        { uId: options.loggedUser.id, tId: options.user.id },
-        function (err, res) {
-          options.user.isSubscribed = !!res;
-          callback();
-        }
-      );
-    });
   });
 }
 
@@ -196,7 +177,6 @@ async function renderUserLibrary(lib, user) {
   // prepend required fetching operations in head of the call chain
   if (feedTemplate.shouldRenderWholeProfilePage(options)) {
     options.user.pl = await fetchPlaylists(options);
-    await new Promise((resolve) => fetchStats(options, resolve));
     await new Promise((resolve) => fetchLikes(options, resolve));
     await new Promise((resolve) => fetchNbTracks(options, resolve));
   }

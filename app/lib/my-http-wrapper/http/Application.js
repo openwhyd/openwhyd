@@ -3,7 +3,6 @@ const http = require('http');
 const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
-const sessionTracker = require('../../../controllers/admin/session.js');
 
 const LOG_THRESHOLD = process.env.LOG_REQ_THRESHOLD_MS || 500;
 
@@ -58,8 +57,6 @@ const makeStatsUpdater = () =>
     const startDate = new Date();
     const userId = (req.session || {}).whydUid;
     const userAgent = req.headers['user-agent'];
-
-    sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
 
     // log whenever a request is slow to respond
     res.on('finish', () => {
@@ -192,7 +189,7 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile) {
   });
 }
 
-function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
+function appendSlowQueryToAccessLog({ startDate, req, userId }) {
   const duration = Date.now() - startDate;
   if (duration < LOG_THRESHOLD) return;
   const logLine = [
@@ -202,6 +199,5 @@ function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
     '(' + duration + 'ms)',
   ];
   if (userId) logLine.push('uid=' + userId);
-  if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
   console.error('slow request:', logLine.join(' '));
 }

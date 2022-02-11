@@ -93,6 +93,7 @@ function start() {
       sameSite: 'strict',
     },
     name: 'whydSid',
+    secret: 'whatever', // note: this is not safe enough for production
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
@@ -129,8 +130,6 @@ function start() {
     const url = params.urlPrefix || `http://127.0.0.1:${params.port}/`;
     console.log(`[app] Server running at ${url}`);
   });
-  require('./app/workers/notifEmails.js'); // start digest worker
-  require('./app/workers/hotSnapshot.js'); // start hot tracks snapshot worker
 
   function closeGracefully(signal) {
     console.warn(`[app] ${signal} signal received: closing server...`);

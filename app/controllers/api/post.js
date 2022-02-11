@@ -7,10 +7,7 @@ var snip = require('../../snip.js');
 var mongodb = require('../../models/mongodb.js');
 var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
-var notifModel = require('../../models/notif.js');
-var followModel = require('../../models/follow.js');
 var commentModel = require('../../models/comment.js');
-var analytics = require('../../models/analytics.js');
 var lastFm = require('./lastFm.js').lastFm;
 
 var sequencedParameters = { _1: 'pId', _2: 'action' }; //[null, "pId", "action"];
@@ -34,36 +31,11 @@ function getBrowserVersionFromUserAgent(ua) {
   }
 }
 
-function fetchSubscribedUsers(uidList, uid, cb) {
-  followModel.fetch(
-    { uId: uid, tId: { $in: uidList } },
-    null,
-    function (results) {
-      var uidSet = {};
-      for (let i in results) uidSet[results[i].tId] = results[i];
-      cb(uidSet);
-    }
-  );
-}
-
 var publicActions = {
   lovers: function (p, callback) {
     postModel.fetchPostById(p.pId, function (post) {
       var lovers = [];
-      if (post && post.lov)
-        fetchSubscribedUsers(post.lov, p.uId, function (subscrUidSet) {
-          for (let i in post.lov)
-            lovers.push({
-              id: /*"/u/"+*/ post.lov[i],
-              name: (mongodb.usernames[post.lov[i]] || {}).name,
-              subscribed: !!subscrUidSet[post.lov[i]],
-            });
-          console.log('lovers', lovers);
-          userModel.fetchUserBios(lovers, function () {
-            callback(lovers);
-          });
-        });
-      else callback(lovers);
+      callback(lovers);
     });
   },
 
@@ -74,29 +46,13 @@ var publicActions = {
       null,
       function (results) {
         var reposts = [];
-        if (results) {
-          var repostUids = [];
-          for (let i in results) repostUids.push(results[i].uId);
-          fetchSubscribedUsers(repostUids, p.uId, function (subscrUidSet) {
-            for (let i in results)
-              reposts.push({
-                id: /*"/u/"+*/ results[i].uId,
-                name: (mongodb.usernames[results[i].uId] || {}).name,
-                subscribed: !!subscrUidSet[results[i].uId],
-              });
-            userModel.fetchUserBios(reposts, function () {
-              callback(reposts);
-            });
-          });
-        } else callback(reposts);
+        callback(reposts);
       }
     );
   },
 };
 
 exports.actions = {
-  sendToUsers: notifModel.sendTrackToUsers,
-
   addComment: commentModel.insert,
 
   deleteComment: commentModel.delete,
@@ -219,18 +175,6 @@ exports.actions = {
     function callbackAndLogPlay(post) {
       cb && cb({ result: post });
       if (!post || !post.name) return;
-      var ua = getShortUserAgent();
-      var anyBrowserExceptElectron = !ua || !/openwhyd-electron/.test(ua);
-      analytics.addPlay({
-        eId: post.eId,
-        pId: '' + post._id,
-        uId: p.uId,
-        own: p.uId == post.uId,
-        err: p.logData.err,
-        fbk: p.logData.fbk,
-        ua: ua,
-        foc: anyBrowserExceptElectron ? p.logData.foc : undefined, // result of document.hasFocus(), for https://github.com/openwhyd/openwhyd/issues/88#issuecomment-341404204
-      });
       if (p.duration > 0) post.duration = p.duration;
       if (!p.logData.err)
         lastFm.updateNowPlaying2(
