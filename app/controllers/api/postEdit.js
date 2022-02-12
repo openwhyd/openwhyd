@@ -89,6 +89,7 @@ function makeAddDlg(reqParams, playlists, user, cb) {
     refTtl: reqParams.refTtl || '',
     text: reqParams.text || '',
     playlists: playlists, //user.pl,
+    head: mainTemplate.makeAnalyticsHeading(user).join('\n'),
     ctx: reqParams.ctx || 'bk', // bookmarklet
   };
   var eId = reqParams.eId || config.translateUrlToEid(reqParams.embed);
