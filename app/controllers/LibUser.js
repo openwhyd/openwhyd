@@ -165,7 +165,7 @@ function renderUserLinks(lnk) {
     };
 }
 
-function renderUserLibrary(lib, user) {
+async function renderUserLibrary(lib, user) {
   var options = lib.options;
 
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
@@ -211,30 +211,19 @@ function renderUserLibrary(lib, user) {
       );
   }
 
-  // add final rendering functions at queue of the call chain
-  var fcts = [fetchAndRender, renderResponse];
-
   // prepend required fetching operations in head of the call chain
-  if (!options.after && !options.before)
+  if (!options.after && !options.before) {
     // main tab: tracks (full layout to render, with sidebar)
-    fcts = [
-      fetchPlaylists,
-      /*fetchSubscriptions,*/ fetchStats,
-      fetchLikes,
-      fetchNbTracks /*fetchSimilarity*/,
-    ].concat(fcts);
-  //if (options.showSubscribers || options.showSubscriptions || options.showActivity)
-  //	fcts = [fetchSubscriptions].concat(fcts);
 
-  // run the call chain
-  (function next(res) {
-    var fct = fcts.shift();
-    //console.time(fct.name);
-    fct(res || options, function (res) {
-      //console.timeEnd(fct.name);
-      next(res || options);
-    });
-  })();
+    await new Promise((resolve) => fetchPlaylists(options, resolve));
+    await new Promise((resolve) => fetchStats(options, resolve));
+    await new Promise((resolve) => fetchLikes(options, resolve));
+    await new Promise((resolve) => fetchNbTracks(options, resolve));
+  }
+
+  // add final rendering functions at queue of the call chain
+  const feed = await new Promise((resolve) => fetchAndRender(options, resolve));
+  renderResponse(feed);
 }
 
 exports.render = renderUserLibrary;
