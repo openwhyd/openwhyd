@@ -77,29 +77,31 @@ var bareFormats = new Set(['json', 'links']);
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
 
-  var process = bareFormats.has(options.format)
-    ? callback
-    : function (posts) {
-        if (!options.format && !options.embedW) {
-          if (options.playlistId)
-            options.pageImage =
-              config.urlPrefix +
-              '/img/playlist/' +
-              options.user.id +
-              '_' +
-              options.playlistId;
-          options.customFeedTemplate = options.playlistId
-            ? playlistTemplateV2
-            : profileTemplateV2;
-        }
-        //console.timeEnd("LibFriends.fetchAndRender");
-        feedTemplate.renderFeedAsync(posts, options, callback);
-      };
-
   populatePaginationParameters(options);
 
   const renderer = options.playlistId ? playlistRenderer : profileRenderer;
-  renderer.fetchAndRender(options, callback, process);
+  renderer.fetchAndRender(
+    options,
+    callback,
+    bareFormats.has(options.format)
+      ? callback
+      : function (posts) {
+          if (!options.format && !options.embedW) {
+            if (options.playlistId)
+              options.pageImage =
+                config.urlPrefix +
+                '/img/playlist/' +
+                options.user.id +
+                '_' +
+                options.playlistId;
+            options.customFeedTemplate = options.playlistId
+              ? playlistTemplateV2
+              : profileTemplateV2;
+          }
+          //console.timeEnd("LibFriends.fetchAndRender");
+          feedTemplate.renderFeedAsync(posts, options, callback);
+        }
+  );
 }
 
 // MAIN FUNCTION
