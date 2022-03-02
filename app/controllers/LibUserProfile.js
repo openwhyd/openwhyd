@@ -112,8 +112,7 @@ function populateUsers(subscr, options, cb) {
 }
 exports.populateUsers = populateUsers;
 
-function fetchAndRender(options, callback, process) {
-  // TODO: remove process => use callback only
+function fetchAndRender(options, callback) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
   if (options.showPlaylists) {
@@ -123,7 +122,7 @@ function fetchAndRender(options, callback, process) {
     options.bodyClass += ' userPlaylists';
     options.playlists = [...playlists].reverse(); // clone before reversing
     options.showPlaylists = { items: renderPlaylists(options) };
-    process([]); // no posts // TODO: is this call necessary ?
+    callback(null, []); // no posts // TODO: is this call necessary ?
 
     //});
   } else if (options.showLikes) {
@@ -134,7 +133,7 @@ function fetchAndRender(options, callback, process) {
       { lov: options.uid },
       /*params*/ null,
       { after: options.after },
-      process
+      (posts) => callback(null, posts)
     );
   } else if (options.showActivity) {
     options.tabTitle = 'Activity';
@@ -175,7 +174,7 @@ function fetchAndRender(options, callback, process) {
               options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
                 new Date() - options.showActivity.items[i]._id.getTimestamp()
               );
-            process([]);
+            callback(null, []);
           }
         );
       }
@@ -203,7 +202,7 @@ function fetchAndRender(options, callback, process) {
         options.showSubscribers = {
           items: subscr,
         };
-        process([]);
+        callback(null, []);
       });
     });
   } else if (options.showSubscriptions) {
@@ -229,7 +228,7 @@ function fetchAndRender(options, callback, process) {
         options.showSubscriptions = {
           items: subscr,
         };
-        process([]);
+        callback(null, []);
       });
     });
   } else {
@@ -239,7 +238,9 @@ function fetchAndRender(options, callback, process) {
     options.showTracks = true;
     options.pageTitle = options.user.name + "'s tracks";
     const proceed = () =>
-      postModel.fetchByAuthors([options.uid], options.fetchParams, process);
+      postModel.fetchByAuthors([options.uid], options.fetchParams, (posts) =>
+        callback(null, posts)
+      );
 
     if (options.after || options.before)
       // no page rendering required

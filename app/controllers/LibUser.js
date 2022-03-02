@@ -80,28 +80,24 @@ function fetchAndRender(options, callback) {
   populatePaginationParameters(options);
 
   const renderer = options.playlistId ? playlistRenderer : profileRenderer;
-  renderer.fetchAndRender(
-    options,
-    callback,
-    bareFormats.has(options.format)
-      ? callback
-      : function (posts) {
-          if (!options.format && !options.embedW) {
-            if (options.playlistId)
-              options.pageImage =
-                config.urlPrefix +
-                '/img/playlist/' +
-                options.user.id +
-                '_' +
-                options.playlistId;
-            options.customFeedTemplate = options.playlistId
-              ? playlistTemplateV2
-              : profileTemplateV2;
-          }
-          //console.timeEnd("LibFriends.fetchAndRender");
-          feedTemplate.renderFeedAsync(posts, options, callback);
-        }
-  );
+  renderer.fetchAndRender(options, (err, posts) => {
+    if (err) return callback(err);
+    if (bareFormats.has(options.format)) return callback(posts);
+    if (!options.format && !options.embedW) {
+      if (options.playlistId)
+        options.pageImage =
+          config.urlPrefix +
+          '/img/playlist/' +
+          options.user.id +
+          '_' +
+          options.playlistId;
+      options.customFeedTemplate = options.playlistId
+        ? playlistTemplateV2
+        : profileTemplateV2;
+    }
+    //console.timeEnd("LibFriends.fetchAndRender");
+    feedTemplate.renderFeedAsync(posts, options, callback);
+  });
 }
 
 // MAIN FUNCTION

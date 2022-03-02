@@ -1,7 +1,6 @@
 var postModel = require('../models/post.js');
 
-exports.fetchAndRender = function (options, callback, process) {
-  // TODO: remove process => use callback only
+exports.fetchAndRender = function (options, callback) {
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
   for (let i in options.user.pl)
@@ -48,7 +47,7 @@ exports.fetchAndRender = function (options, callback, process) {
       options.uid,
       options.playlistId,
       options.fetchParams,
-      process
+      (posts) => callback(null, posts)
     );
   }
 };
