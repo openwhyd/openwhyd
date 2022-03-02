@@ -212,9 +212,7 @@ async function renderUserLibrary(lib, user) {
   }
 
   // prepend required fetching operations in head of the call chain
-  if (!options.after && !options.before) {
-    // main tab: tracks (full layout to render, with sidebar)
-
+  if (shouldRenderFullPageLayout(options)) {
     await new Promise((resolve) => fetchPlaylists(options, resolve));
     await new Promise((resolve) => fetchStats(options, resolve));
     await new Promise((resolve) => fetchLikes(options, resolve));
@@ -227,3 +225,6 @@ async function renderUserLibrary(lib, user) {
 }
 
 exports.render = renderUserLibrary;
+function shouldRenderFullPageLayout(options) {
+  return !options.after && !options.before;
+}
