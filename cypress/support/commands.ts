@@ -41,8 +41,7 @@ Cypress.Commands.add('loginAsAdmin', () => {
 Cypress.Commands.add('postDummyTracks', (count) => {
   const makeTrack = (i) => ({
     name: `Fake track #${i}`,
-    eId:
-      '/fi/https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3',
+    eId: '/fi/https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3',
     img: '/images/cover-track.png',
   });
   for (let i = 0; i < count; ++i) {
