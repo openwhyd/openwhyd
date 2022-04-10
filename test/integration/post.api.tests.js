@@ -163,4 +163,23 @@ describe(`post api - independent tests`, function () {
     await util.promisify(api.deletePost)(jar, postId);
     assert.equal((await util.promisify(api.getMyPosts)(jar)).posts.length, 0);
   });
+
+  it('should not delete a post from another user', async function () {
+    let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    await util.promisify(api.addPost)(ownerJar, {
+      eId: '/yt/XdJVWSqb4Ck',
+      name: 'Lullaby - Jack Johnson and Matt Costa',
+    });
+    const { posts } = await util.promisify(api.getMyPosts)(ownerJar);
+    assert.equal(posts.length, 1);
+    const postId = posts[0]._id;
+    let otherJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    await assert.rejects(() =>
+      util.promisify(api.deletePost)(otherJar, postId)
+    );
+    assert.equal(
+      (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
+      1
+    );
+  });
 });
