@@ -171,13 +171,13 @@ exports.actions = {
     actualInsert();
   },
   delete: function (p, callback) {
-    postModel.deletePost(
-      p._id,
-      function (result) {
-        callback((result || {}).pop ? result.pop() : {});
-      },
-      p.uId
-    );
+    if (p.uId) {
+      postModel.deletePost(p._id, p.uId, function (err, result) {
+        callback(err ? { error: err } : (result || {}).pop ? result.pop() : {});
+      });
+    } else {
+      callback({ error: 'please login first' });
+    }
   },
   toggleLovePost: function (p, callback) {
     postModel.isPostLovedByUid(p.pId, p.uId, function (loved, post) {
@@ -276,7 +276,8 @@ exports.handleRequest = function (request, reqParams, response) {
     response.legacyRender(
       res,
       null,
-      args || { 'content-type': 'application/json' }
+      args || { 'content-type': 'application/json' },
+      (res || {}).error ? 400 : 200
     );
   }
 
