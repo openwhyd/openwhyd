@@ -363,7 +363,7 @@ exports.rePost = function (pId, repostObj, handler) {
   });
 };
 
-exports.deletePost = function (pId, handler, uId) {
+exports.deletePost = function (pId, uId, handler) {
   console.log('post.deletePost: ', pId, uId);
   var collection = mongodb.collections['post'];
   var q = {
@@ -371,11 +371,15 @@ exports.deletePost = function (pId, handler, uId) {
   };
   if (uId) q.uId = uId;
   exports.fetchPostById(pId, function (postObj) {
-    if (postObj)
+    if (postObj) {
+      if (postObj.uId !== uId) {
+        handler(new Error("can't delete another user's post"));
+        return;
+      }
       collection.deleteOne(q, function (error, result) {
         if (error) console.log('post.deletePost() error: ', error);
         searchModel.deleteDoc('post', pId);
-        handler(result);
+        handler(null, result);
         if (postObj.repost)
           collection.updateOne(
             { _id: ObjectId('' + postObj.repost.pId) },
@@ -384,9 +388,9 @@ exports.deletePost = function (pId, handler, uId) {
           );
         trackModel.updateByEid(postObj.eId);
       });
-    else {
+    } else {
       console.log('post.deletePost() error: ', pId);
-      handler();
+      handler(new Error('post not found'));
     }
   });
 };
