@@ -167,20 +167,23 @@ exports.addComment = function (jar, body, callback) {
   );
 };
 
-exports.deletePost = function (jar, postId, callback) {
-  request.post(
-    {
-      jar,
-      url: `${URL_PREFIX}/api/post`,
-      json: true,
-      body: Object.assign({ action: 'delete' }, { _id: postId }),
-    },
-    function (error, response, body) {
-      assert.ifError(error);
-      assert.equal(response.statusCode, 200);
-      callback(error, { response, body, jar });
-    }
+exports.deletePost = async function (jar, postId) {
+  const { response, body } = await new Promise((resolve, reject) =>
+    request.post(
+      {
+        jar,
+        url: `${URL_PREFIX}/api/post`,
+        json: true,
+        body: Object.assign({ action: 'delete' }, { _id: postId }),
+      },
+      function (error, response, body) {
+        if (error) reject(error);
+        else resolve({ response, body });
+      }
+    )
   );
+  assert.equal(response.statusCode, 200, body);
+  return { response, body, jar };
 };
 
 exports.getPlaylist = function (jar, plId, callback) {

@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-var { DUMMY_USER, cleanup } = require('../fixtures.js');
+var { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 var api = require('../api-client.js');
 const util = require('util');
 
@@ -160,7 +160,7 @@ describe(`post api - independent tests`, function () {
     const { posts } = await util.promisify(api.getMyPosts)(jar);
     assert.equal(posts.length, 1);
     const postId = posts[0]._id;
-    await util.promisify(api.deletePost)(jar, postId);
+    await api.deletePost(jar, postId);
     assert.equal((await util.promisify(api.getMyPosts)(jar)).posts.length, 0);
   });
 
@@ -174,6 +174,7 @@ describe(`post api - independent tests`, function () {
     assert.equal(posts.length, 1);
     const postId = posts[0]._id;
     let otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
+    await assert.rejects(() => api.deletePost(otherJar, postId));
     assert.equal(
       (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
       1
