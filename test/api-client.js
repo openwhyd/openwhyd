@@ -96,16 +96,17 @@ exports.postRaw = function (jar, url, body, callback) {
 
 // USER
 
-/*
-exports.getMe = function(jar, callback) {
-	request.get({ jar, url: `${URL_PREFIX}/me?format=json` }, function(error, response, body) {
-		assert.ifError(error);
-		assert.equal(response.statusCode, 200);
-		callback(error, { response, body, jar });
-		// => body: {"errorCode":"USER_NOT_FOUND","error":"User not found..."} ???
-	});	
-}
-*/
+exports.getMyPosts = function (jar, callback) {
+  request.get(
+    { jar, url: `${URL_PREFIX}/me?format=json` },
+    function (error, response, body) {
+      assert.ifError(error);
+      assert.equal(response.statusCode, 200);
+      callback(error, { response, body, posts: JSON.parse(body), jar });
+      // => body: {"errorCode":"USER_NOT_FOUND","error":"User not found..."} ???
+    }
+  );
+};
 
 exports.getUser = function (jar, body, callback) {
   // TODO: pass body parameters
@@ -157,6 +158,22 @@ exports.addComment = function (jar, body, callback) {
       url: `${URL_PREFIX}/api/post`,
       json: true,
       body: Object.assign({ action: 'addComment' }, body),
+    },
+    function (error, response, body) {
+      assert.ifError(error);
+      assert.equal(response.statusCode, 200);
+      callback(error, { response, body, jar });
+    }
+  );
+};
+
+exports.deletePost = function (jar, postId, callback) {
+  request.post(
+    {
+      jar,
+      url: `${URL_PREFIX}/api/post`,
+      json: true,
+      body: Object.assign({ action: 'delete' }, { _id: postId }),
     },
     function (error, response, body) {
       assert.ifError(error);
