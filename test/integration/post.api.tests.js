@@ -173,10 +173,7 @@ describe(`post api - independent tests`, function () {
     const { posts } = await util.promisify(api.getMyPosts)(ownerJar);
     assert.equal(posts.length, 1);
     const postId = posts[0]._id;
-    let otherJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
-    await assert.rejects(() =>
-      util.promisify(api.deletePost)(otherJar, postId)
-    );
+    let otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
     assert.equal(
       (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
       1
