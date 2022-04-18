@@ -37,7 +37,8 @@ describe('auth api', () => {
 
     it('gives access to personal /stream', async () => {
       const { jar } = await loginAs(ADMIN_USER);
-      const { response, body } = await get(jar, '/stream?format=json');
+      const { response, body, error } = await get(jar, '/stream?format=json');
+      assert.ifError(error);
       assert.equal(response.statusCode, 200);
       assert.ifError(body.error);
       assert(body.join); // check that it's an array
@@ -71,7 +72,8 @@ describe('auth api', () => {
     it('gives access to personal /stream', async () => {
       const { jar, body: signupBody } = await signupAs(TEST_USER);
       assert.ifError(signupBody.error);
-      const { response, body } = await get(jar, '/stream?format=json');
+      const { response, body, error } = await get(jar, '/stream?format=json');
+      assert.ifError(error);
       assert.equal(response.statusCode, 200);
       assert.ifError(body.error);
       assert(body.join); // check that it's an array
@@ -99,7 +101,8 @@ describe('auth api', () => {
 
     it('gives access to personal /stream', async () => {
       const { jar } = await signupAs(genSecureUser());
-      const { body } = await get(jar, '/stream?format=json');
+      const { body, error } = await get(jar, '/stream?format=json');
+      assert.ifError(error);
       assert.ifError(body.error);
     });
 
