@@ -1,7 +1,8 @@
 var assert = require('assert');
 
-var { DUMMY_USER, cleanup } = require('../fixtures.js');
+var { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 var api = require('../api-client.js');
+const util = require('util');
 
 describe(`post api`, function () {
   before(cleanup); // to prevent side effects between tests
@@ -129,7 +130,6 @@ describe(`post api`, function () {
   });
 
   // TODO: update post
-  // TODO: delete post
 
   it(`should return the comment data after adding it`, function (done) {
     api.loginAs(DUMMY_USER, function (error, { jar }) {
@@ -145,5 +145,39 @@ describe(`post api`, function () {
         done();
       });
     });
+  });
+});
+
+describe(`post api - independent tests`, function () {
+  beforeEach(cleanup); // to prevent side effects between tests
+
+  it('should delete a post', async function () {
+    const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
+    await util.promisify(api.addPost)(jar, {
+      eId: '/yt/XdJVWSqb4Ck',
+      name: 'Lullaby - Jack Johnson and Matt Costa',
+    });
+    const { posts } = await util.promisify(api.getMyPosts)(jar);
+    assert.equal(posts.length, 1);
+    const postId = posts[0]._id;
+    await api.deletePost(jar, postId);
+    assert.equal((await util.promisify(api.getMyPosts)(jar)).posts.length, 0);
+  });
+
+  it('should not delete a post from another user', async function () {
+    let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    await util.promisify(api.addPost)(ownerJar, {
+      eId: '/yt/XdJVWSqb4Ck',
+      name: 'Lullaby - Jack Johnson and Matt Costa',
+    });
+    const { posts } = await util.promisify(api.getMyPosts)(ownerJar);
+    assert.equal(posts.length, 1);
+    const postId = posts[0]._id;
+    let otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
+    await assert.rejects(() => api.deletePost(otherJar, postId));
+    assert.equal(
+      (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
+      1
+    );
   });
 });
