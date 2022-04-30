@@ -20,7 +20,8 @@ The goal of the Data Export API is to give free access to data that users public
 
 This API can be used by anyone, without authentication, to download the list of tracks of:
 
-- a user profile; (e.g. https://openwhyd.org/adrien)
+- a user's list of posts; (e.g. https://openwhyd.org/adrien)
+- a user's list of playlists (e.g. https://openwhyd.org/adrien/playlists)
 - a playlist; (e.g. https://openwhyd.org/adrien/playlist/61)
 - or "hot tracks". (e.g. https://openwhyd.org/hot/electro)
 
@@ -35,11 +36,12 @@ Please use these URLs responsibly: add a reasonable delay between requests, in o
 
 <!-- exported from https://whyd.hackpad.com/Early-API-Download-Whyd-track-listings-in-JSON-format-CTMZ8XxzRuB -->
 
-A list of tracks can be downloaded by appending the following HTTP GET parameters to Openwhyd URLs:
+A list of tracks (or playlists) can be downloaded by appending the following HTTP GET parameters to Openwhyd URLs:
 
 - `format`: "`json`" or "`links`"
 - `limit`: number of posts to return (optional, default=`20`)
 - `after`: identifier of the post (a.k.a. `pId`) from which entries must be returned (optional, for pagination)
+- `callback`: (optional) name of the JavaScript function to which data will be passed as a parameter (for JSONP access from external domains)
 
 ### Examples
 
