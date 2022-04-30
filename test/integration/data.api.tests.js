@@ -43,7 +43,7 @@ describe(`Data Export API`, () => {
   describe(`provides profile tracks`, () => {
     it(`of given user id, as JSON, using callback`, async () => {
       const { body } = await reqGet(
-        `${URL_PREFIX}/u/${user.id}?format=json&callback=callbackFct`
+        `${URL_PREFIX}/u/${user.id}?callback=callbackFct`
       );
       let apiResponse;
       vm.runInNewContext(body, {
@@ -88,7 +88,7 @@ describe(`Data Export API`, () => {
   describe(`provides list of playlists`, () => {
     it(`of given user id, as JSON, using callback`, async () => {
       const { body } = await reqGet(
-        `${URL_PREFIX}/u/${user.id}/playlists?format=json&callback=callbackFct`
+        `${URL_PREFIX}/u/${user.id}/playlists?callback=callbackFct`
       );
       let apiResponse;
       vm.runInNewContext(body, {
