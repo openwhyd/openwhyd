@@ -152,8 +152,9 @@ function renderUserLinks(lnk) {
 function renderResponse(feed, options, lib, user) {
   if (options.callback) {
     var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
+    const data = options.showPlaylists ? options.playlists : feed;
     lib.renderOther(
-      safeCallback + '(' + JSON.stringify(feed) + ')',
+      safeCallback + '(' + JSON.stringify(data) + ')',
       'application/javascript'
     );
   } else if (options.format == 'links') {
