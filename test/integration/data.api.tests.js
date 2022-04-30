@@ -1,3 +1,4 @@
+const vm = require('vm');
 const assert = require('assert');
 const request = require('request');
 
@@ -40,6 +41,21 @@ describe(`Data Export API`, () => {
   });
 
   describe(`provides profile tracks`, () => {
+    it(`of given user id, as JSON, using callback`, async () => {
+      const { body } = await reqGet(
+        `${URL_PREFIX}/u/${user.id}?format=json&callback=callbackFct`
+      );
+      let apiResponse;
+      vm.runInNewContext(body, {
+        callbackFct: (data) => {
+          apiResponse = data;
+        },
+      });
+      assert.strictEqual(apiResponse.error, undefined);
+      assert.strictEqual(apiResponse.length, 1);
+      assert.strictEqual(apiResponse[0].name, track.name);
+    });
+
     it(`of given user id, as JSON`, async () => {
       const { body } = await reqGet(`${URL_PREFIX}/u/${user.id}?format=json`);
       const parsedBody = JSON.parse(body) || {};
