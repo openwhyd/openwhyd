@@ -86,6 +86,21 @@ describe(`Data Export API`, () => {
   });
 
   describe(`provides list of playlists`, () => {
+    it(`of given user id, as JSON, using callback`, async () => {
+      const { body } = await reqGet(
+        `${URL_PREFIX}/u/${user.id}/playlists?format=json&callback=callbackFct`
+      );
+      let apiResponse;
+      vm.runInNewContext(body, {
+        callbackFct: (data) => {
+          apiResponse = data;
+        },
+      });
+      assert.strictEqual(apiResponse.error, undefined);
+      assert.strictEqual(apiResponse.length, 1);
+      assert.strictEqual(apiResponse[0].name, plName);
+    });
+
     it(`of given user id, as JSON`, async () => {
       const plUrl = `${URL_PREFIX}/u/${user.id}/playlists`;
       const { body } = await reqGet(`${plUrl}?format=json`);
