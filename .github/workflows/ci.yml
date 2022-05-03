@@ -156,6 +156,8 @@ jobs:
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
+      - name: Download MongoDB
+        run: node -e 'require("./test/fixtures.js").cleanup()'
       - name: API tests
         env:
           CI: true
