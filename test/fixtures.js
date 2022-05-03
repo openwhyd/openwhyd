@@ -11,7 +11,7 @@ const loadEnvVars = (file) => {
       .forEach((envVar) => {
         if (!envVar) return;
         const [key, def] = envVar.split('=');
-        envVars[key] = def.replace(/^"|"$/g, '');
+        envVars[key] = def.replace(/^"(.*)"$/, '$1');
       });
   } catch (err) {
     console.warn(`failed to load env vars from ${file}`);

@@ -11,7 +11,7 @@ const loadEnvVars = async (file) => {
   (await readFile(file)).split(/[\r\n]+/).forEach((envVar) => {
     if (!envVar) return;
     const [key, def] = envVar.split('=');
-    envVars[key] = def.replace(/^"|"$/g, '');
+    envVars[key] = def.replace(/^"(.*)"$/, '$1');
   });
   return envVars;
 };
