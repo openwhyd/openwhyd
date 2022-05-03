@@ -156,14 +156,6 @@ jobs:
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
-      - name: Initialize database
-        env:
-          CI: true
-        run: npm run test-reset
-      - name: Start Openwhyd server
-        run: |
-          npm start --mongoDbDatabase openwhyd_test &
-          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: API tests
         env:
           CI: true
