@@ -2,7 +2,6 @@
  * login controller, to authenticate users
  */
 const snip = require('../../snip.js');
-const config = require('../../models/config.js');
 var emailModel = require('../../models/email.js');
 var userModel = require('../../models/user.js');
 var notifEmails = require('../../models/notifEmails.js');
@@ -64,7 +63,10 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
       function (dbUser) {
         if (
           form.redirect &&
-          snip.getSafeOpenwhydURL(form.redirect, config.urlPrefix) === false
+          snip.getSafeOpenwhydURL(
+            form.redirect,
+            process.appParams.urlPrefix
+          ) === false
         ) {
           form.error = 'Unsafe redirect target';
         } else if (!dbUser) {

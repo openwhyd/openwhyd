@@ -261,7 +261,7 @@ http.ServerResponse.prototype.redirect = function (url) {
 };
 
 http.ServerResponse.prototype.safeRedirect = function (url) {
-  const safeURL = snip.getSafeOpenwhydURL(url, config.urlPrefix);
+  const safeURL = snip.getSafeOpenwhydURL(url, process.appParams.urlPrefix);
   if (safeURL === false) return this.forbidden();
   this.redirect(url);
 };

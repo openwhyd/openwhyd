@@ -40,9 +40,6 @@ module.exports = function (/*wallaby*/) {
         load: false,
       },
     ],
-    tests: [
-      'test/unit/*-tests.js',
-      'test/integration/user.api.tests.js', // TODO: also add other integration tests
-    ],
+    tests: ['test/unit/*-tests.js', 'test/integration/*.tests.js'],
   };
 };

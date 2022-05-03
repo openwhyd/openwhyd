@@ -23,7 +23,7 @@ exports.refreshTemplates();
 
 exports.renderLoginPage = function (form) {
   var params = {
-    urlPrefix: config.urlPrefix,
+    urlPrefix: process.appParams.urlPrefix,
     title: 'openwhyd',
     email: '',
     password: '',
@@ -55,7 +55,7 @@ exports.htmlCloseWindow = function () {
 
 exports.htmlRedirect = function (url) {
   if (url == 'closeWindow') return exports.htmlCloseWindow();
-  const safeUrl = snip.getSafeOpenwhydURL(url, config.urlPrefix);
+  const safeUrl = snip.getSafeOpenwhydURL(url, process.appParams.urlPrefix);
   if (safeUrl === false)
     return `⚠ Unsafe redirect URL: ${snip.htmlEntities(url)}`;
   return redirectTemplate.render({ url: safeUrl });
@@ -74,7 +74,7 @@ exports.renderRedirectPageWithTracking = function (url, title) {
     <meta property="fb:app_id" content="169250156435902">
     <meta property="fb:admins" content="510739408">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="${config.urlPrefix}">
+    <meta property="og:url" content="${process.appParams.urlPrefix}">
     <meta http-equiv="REFRESH" content="3;url=${url}">
     <title>${title || 'Openwhyd'} - redirecting...</title>
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
