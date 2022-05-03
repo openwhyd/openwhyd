@@ -1,7 +1,6 @@
 // Note: to prevent timeout errors when running API tests for the first time,
 // run $ node -e 'require("./test/fixtures.js").cleanup()'
 
-const { MongoMemoryServer } = require('mongodb-memory-server');
 const { startOpenwhydServer } = require('./approval-tests-helpers');
 const { resetTestDb } = require('./reset-test-db.js');
 
@@ -46,6 +45,7 @@ exports.cleanup = async function () {
   openwhydServer?.kill('SIGKILL');
 
   if (process.env.TEST_WITH_FAKE_MONGO) {
+    const { MongoMemoryServer } = require('mongodb-memory-server');
     await currentMongoInstance?.stop();
     currentMongoInstance = await MongoMemoryServer.create({
       binary: { version: '3.4.24' }, // completed from docker-compose.yml
