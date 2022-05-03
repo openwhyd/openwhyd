@@ -3,8 +3,12 @@ const { promisify, ...util } = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
 const waitOn = require('wait-on');
-
 const readFile = (file) => fs.promises.readFile(file, 'utf-8');
+
+// backup standard output, to prevent cumulative pollution from successive runs of app.js
+const consoleLog = console.log;
+const consoleWarn = console.warn;
+const consoleError = console.error;
 
 const loadEnvVars = async (file) => {
   const envVars = {};
@@ -104,6 +108,10 @@ function getCleanedPageBody(body) {
 async function startOpenwhydServerWith(env) {
   Object.assign(process.env, env);
   delete require.cache[require.resolve('../app.js')]; // force Node.js to re-intepret app.js, even if it was already executed
+  console.log = consoleLog;
+  console.warn = consoleWarn;
+  console.error = consoleError;
+
   const app = require('../app.js');
   const serverProcess = {
     kill: () =>
