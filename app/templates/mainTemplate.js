@@ -14,7 +14,6 @@ var includeSuffix = '?' + process.appParams.version;
 
 var playemFile;
 var fbId;
-console.log('process.appParams', process.appParams);
 const isProduction = process.appParams.urlPrefix.indexOf('openwhyd.org') > 0;
 if (isProduction) {
   //console.log('- Production - ');
