@@ -1,6 +1,22 @@
 // Note: to prevent timeout errors when running API tests for the first time,
 // run $ node -e 'require("./test/fixtures.js").cleanup()'
 
+const fs = require('fs');
+
+const loadEnvVars = (file) => {
+  const envVars = {};
+  fs.readFileSync(file, 'utf-8')
+    .split(/[\r\n]+/)
+    .forEach((envVar) => {
+      if (!envVar) return;
+      const [key, def] = envVar.split('=');
+      envVars[key] = def.replace(/^"|"$/g, '');
+    });
+  return envVars;
+};
+
+Object.assign(process.env, loadEnvVars('./env-vars-testing.conf'));
+
 const { startOpenwhydServer } = require('./approval-tests-helpers');
 const { resetTestDb } = require('./reset-test-db.js');
 

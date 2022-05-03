@@ -4,24 +4,9 @@ const fs = require('fs');
 
 module.exports = function (/*wallaby*/) {
   process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // from env-vars-testing.conf
+  process.env.TEST_WITH_FAKE_MONGO = 'true';
+
   const nodeVersion = fs.readFileSync('./.nvmrc').toString().trim();
-
-  const loadEnvVars = (file) => {
-    const envVars = {};
-    fs.readFileSync(file, 'utf-8')
-      .split(/[\r\n]+/)
-      .forEach((envVar) => {
-        if (!envVar) return;
-        const [key, def] = envVar.split('=');
-        envVars[key] = def.replace(/^"|"$/g, '');
-      });
-    return envVars;
-  };
-
-  Object.assign(process.env, {
-    ...loadEnvVars('./env-vars-testing.conf'),
-    TEST_WITH_FAKE_MONGO: 'true',
-  });
 
   return {
     testFramework: 'mocha',
