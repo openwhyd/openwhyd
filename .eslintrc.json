@@ -45,7 +45,7 @@
   ],
   "env": {
     "browser": true,
-    "jest": true,
+    "mocha": true,
     "node": true,
     "es6": true
   }
