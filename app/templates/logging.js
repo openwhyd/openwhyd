@@ -5,7 +5,6 @@
  */
 
 const snip = require('../snip.js');
-var config = require('../models/config.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
 var templateLoader = require('../templates/templateLoader.js');
