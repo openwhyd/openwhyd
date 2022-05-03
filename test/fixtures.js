@@ -44,13 +44,16 @@ let openwhydServer;
 // Call this before each test to prevent side effects between tests
 exports.cleanup = async function () {
   openwhydServer?.kill('SIGKILL');
-  await currentMongoInstance?.stop();
-  currentMongoInstance = await MongoMemoryServer.create({
-    binary: { version: '3.4.24' }, // completed from docker-compose.yml
-  });
-  const mongoURL = new URL(currentMongoInstance.getUri());
-  process.env.MONGODB_HOST = mongoURL.hostname;
-  process.env.MONGODB_PORT = mongoURL.port;
+
+  if (process.env.TEST_WITH_FAKE_MONGO) {
+    await currentMongoInstance?.stop();
+    currentMongoInstance = await MongoMemoryServer.create({
+      binary: { version: '3.4.24' }, // completed from docker-compose.yml
+    });
+    const mongoURL = new URL(currentMongoInstance.getUri());
+    process.env.MONGODB_HOST = mongoURL.hostname;
+    process.env.MONGODB_PORT = mongoURL.port;
+  }
 
   if (typeof this.timeout === 'function') this.timeout(4000); // for mocha, when called from a test suite
   console.warn('🧹 Cleaning up test db...');
@@ -59,7 +62,7 @@ exports.cleanup = async function () {
   console.warn('🚀 Starting Openwhyd server...');
   openwhydServer = await startOpenwhydServer({
     startWithEnv: './env-vars-testing.conf',
-    mongoDbPort: mongoURL.port,
+    mongoDbPort: process.env.MONGODB_PORT,
   });
 
   console.warn(`ℹ️  Runnning on ${openwhydServer.URL} (press Ctrl-C to exit)`);

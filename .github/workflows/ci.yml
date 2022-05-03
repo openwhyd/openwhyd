@@ -136,6 +136,11 @@ jobs:
     name: Integration tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27017:27017
     steps:
       - uses: actions/checkout@v2
       - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
@@ -147,14 +152,14 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: Install MongoDB deps
-        run: sudo apt install libssl1.0.0
       - name: npm install
         env:
           CI: true
         run: npm install --prefer-offline --no-audit
-      - name: Download MongoDB
-        run: node -e 'require("./test/fixtures.js").cleanup()'
+      - name: Initialize database
+        env:
+          CI: true
+        run: npm run test-reset
       - name: API tests
         env:
           CI: true

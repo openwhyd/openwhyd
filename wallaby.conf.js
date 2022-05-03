@@ -18,7 +18,10 @@ module.exports = function (/*wallaby*/) {
     return envVars;
   };
 
-  Object.assign(process.env, loadEnvVars('./env-vars-testing.conf'));
+  Object.assign(process.env, {
+    ...loadEnvVars('./env-vars-testing.conf'),
+    TEST_WITH_FAKE_MONGO: 'true',
+  });
 
   return {
     testFramework: 'mocha',
