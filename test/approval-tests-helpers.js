@@ -2,7 +2,6 @@ const fs = require('fs');
 const { promisify, ...util } = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
-const childProcess = require('child_process');
 const waitOn = require('wait-on');
 
 const readFile = (file) => fs.promises.readFile(file, 'utf-8');
@@ -102,37 +101,14 @@ function getCleanedPageBody(body) {
   }
 }
 
-const errPrinter = ((blocklist) => {
-  return (chunk) => {
-    const message = chunk.toString();
-    if (!blocklist.some((term) => message.includes(term)))
-      console.error(message);
-  };
-})([
-  'closing server',
-  'deprecated',
-  'gm: command not found',
-  'convert: command not found',
-  'please install graphicsmagick',
-]);
-
 async function startOpenwhydServerWith(env) {
-  console.log('startOpenwhydServerWith', env);
-  delete require.cache[require.resolve('../app.js')];
-
-  // const serverProcess = childProcess.fork(
-  //   './app.js',
-  //   ['--fakeEmail', '--digestInterval', '-1'],
-  //   { env, silent: true }
-  // );
-  // serverProcess.stderr.on('data', errPrinter);
-
   Object.assign(process.env, env);
+  delete require.cache[require.resolve('../app.js')]; // force Node.js to re-intepret app.js, even if it was already executed
   const app = require('../app.js');
   const serverProcess = {
-    kill: () => app?.appServer?.stop((err) => console.error('kill()', err)),
+    kill: () =>
+      app?.appServer?.stop((err) => (err ? console.error('kill()', err) : {})),
   };
-
   serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
   await waitOn({ resources: [serverProcess.URL] });
   return serverProcess;
