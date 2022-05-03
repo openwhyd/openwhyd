@@ -5,13 +5,17 @@ const fs = require('fs');
 
 const loadEnvVars = (file) => {
   const envVars = {};
-  fs.readFileSync(file, 'utf-8')
-    .split(/[\r\n]+/)
-    .forEach((envVar) => {
-      if (!envVar) return;
-      const [key, def] = envVar.split('=');
-      envVars[key] = def.replace(/^"|"$/g, '');
-    });
+  try {
+    fs.readFileSync(file, 'utf-8')
+      .split(/[\r\n]+/)
+      .forEach((envVar) => {
+        if (!envVar) return;
+        const [key, def] = envVar.split('=');
+        envVars[key] = def.replace(/^"|"$/g, '');
+      });
+  } catch (err) {
+    console.warn(`failed to load env vars from ${file}`);
+  }
   return envVars;
 };
 
