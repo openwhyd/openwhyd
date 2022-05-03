@@ -35,15 +35,10 @@ module.exports = function (/*wallaby*/) {
     },
     files: [
       // code files under test:
-      // 'app.js',
-      { pattern: 'app/**/*.*', instrument: false, load: false },
-      { pattern: 'public/**/*.*', instrument: false, load: false },
-      {
-        pattern: 'public/html/test-resources/*.*',
-        instrument: false,
-        load: false,
-      },
-      { pattern: 'app.js', instrument: false, load: false }, // to prevent `ReferenceError: $_$wp is not defined` error, when Openwhyd server is started programmatically for API/integration tests
+      'app.js',
+      'app/**/*.*',
+      'public/**/*.*',
+      'public/html/test-resources/*.*',
       // test helpers:
       { pattern: 'package.json', instrument: false, load: false },
       { pattern: 'env-vars-testing.conf', instrument: false, load: false },
