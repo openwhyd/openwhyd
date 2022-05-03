@@ -1,4 +1,9 @@
-const childProcess = require('child_process');
+// Note: to prevent timeout errors when running API tests for the first time,
+// run $ node -e 'require("./test/fixtures.js").cleanup()'
+
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const { startOpenwhydServer } = require('./approval-tests-helpers');
+const { resetTestDb } = require('./reset-test-db.js');
 
 exports.URL_PREFIX = 'http://localhost:8080';
 
@@ -33,10 +38,29 @@ exports.TEST_USER = {
   md5: '42b27efc1480b4fe6d7eaa5eec47424d',
 };
 
+let currentMongoInstance;
+let openwhydServer;
+
 // Call this before each test to prevent side effects between tests
-exports.cleanup = function (done) {
-  this.timeout(4000);
+exports.cleanup = async function () {
+  openwhydServer?.kill('SIGKILL');
+  await currentMongoInstance?.stop();
+  currentMongoInstance = await MongoMemoryServer.create({
+    binary: { version: '3.4.24' }, // completed from docker-compose.yml
+  });
+  const mongoURL = new URL(currentMongoInstance.getUri());
+  process.env.MONGODB_HOST = mongoURL.hostname;
+  process.env.MONGODB_PORT = mongoURL.port;
+
+  if (typeof this.timeout === 'function') this.timeout(4000); // for mocha, when called from a test suite
   console.warn('🧹 Cleaning up test db...');
-  const process = childProcess.fork('test/reset-test-db.js');
-  process.on('close', () => done());
+  await resetTestDb();
+
+  console.warn('🚀 Starting Openwhyd server...');
+  openwhydServer = await startOpenwhydServer({
+    startWithEnv: './env-vars-testing.conf',
+    mongoDbPort: mongoURL.port,
+  });
+
+  console.warn(`ℹ️  Runnning on ${openwhydServer.URL} (press Ctrl-C to exit)`);
 };

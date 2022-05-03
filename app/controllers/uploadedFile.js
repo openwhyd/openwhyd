@@ -1,15 +1,14 @@
 var fs = require('fs');
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
 var userModel = require('../models/user.js');
 
 exports.config = {
-  whydPath: config.paths.whydPath, // "../"
-  uploadSubDir: '/' + config.paths.uploadDirName, // "/upload_data"
-  uAvatarImgDir: '/' + config.paths.uAvatarImgDirName, // "/uAvatarImg"
-  uCoverImgDir: '/' + config.paths.uCoverImgDirName,
-  uPlaylistDir: '/' + config.paths.uPlaylistDirName,
+  whydPath: process.appParams.paths.whydPath, // "../"
+  uploadSubDir: '/' + process.appParams.paths.uploadDirName, // "/upload_data"
+  uAvatarImgDir: '/' + process.appParams.paths.uAvatarImgDirName, // "/uAvatarImg"
+  uCoverImgDir: '/' + process.appParams.paths.uCoverImgDirName,
+  uPlaylistDir: '/' + process.appParams.paths.uPlaylistDirName,
 };
 
 exports.config.uploadPath =
@@ -214,13 +213,13 @@ exports.controller = function (request, reqParams, response) {
       if (reqParams.remoteOnly)
         fs.stat(filePath, function (error, stats) {
           if (error || !stats.isFile()) renderLastPostImg();
-          else renderImg(config.urlPrefix + '/images/1x1-pixel.png'); // transparent image
+          else renderImg(process.appParams.urlPrefix + '/images/1x1-pixel.png'); // transparent image
         });
       else
         response.sendFile(filePath, function (error) {
           if (!error) return;
           if (reqParams.localOnly)
-            renderImg(config.urlPrefix + '/images/1x1-pixel.png');
+            renderImg(process.appParams.urlPrefix + '/images/1x1-pixel.png');
           // transparent image
           else renderLastPostImg();
         });

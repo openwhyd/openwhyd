@@ -8,14 +8,14 @@ var fs = require('fs');
 var util = require('util');
 var snip = require('../snip.js');
 var uiSnippets = snip;
-var config = require('../models/config.js');
 var render = { urlPrefix: '' };
 
-var includeSuffix = '?' + config.version;
+var includeSuffix = '?' + process.appParams.version;
 
 var playemFile;
 var fbId;
-const isProduction = config.urlPrefix.indexOf('openwhyd.org') > 0;
+console.log('process.appParams', process.appParams);
+const isProduction = process.appParams.urlPrefix.indexOf('openwhyd.org') > 0;
 if (isProduction) {
   //console.log('- Production - ');
   fbId = '169250156435902';
@@ -31,7 +31,7 @@ if (isProduction) {
 var playerHtmlCode = fs.readFileSync('app/templates/whydPlayer.html', 'utf8');
 
 exports.defaultPageMeta = {
-  img: config.urlPrefix + '/images/logo-black-square-smaller.png',
+  img: process.appParams.urlPrefix + '/images/logo-black-square-smaller.png',
   desc: 'Discover and collect music gems from Youtube, Soundcloud, Deezer and more',
 };
 
@@ -40,7 +40,9 @@ function makeMetaHead(options = {}) {
     options.pageUrl &&
     'whyd://app?href=' +
       snip.addSlashes(
-        options.pageUrl.replace('https:', 'http:').replace(config.urlPrefix, '')
+        options.pageUrl
+          .replace('https:', 'http:')
+          .replace(process.appParams.urlPrefix, '')
       );
   var pageImg = uiSnippets.htmlEntities(
     options.pageImage || exports.defaultPageMeta.img
@@ -168,7 +170,7 @@ exports.renderWhydFrame = function (html, params) {
   if (params.request && !params.pageUrl) params.pageUrl = params.request.url;
 
   if (params.pageUrl && params.pageUrl.indexOf('/') == 0)
-    params.pageUrl = config.urlPrefix + params.pageUrl;
+    params.pageUrl = process.appParams.urlPrefix + params.pageUrl;
 
   params.head = params.head || makeMetaHead(params);
 
@@ -190,7 +192,7 @@ exports.renderWhydFrame = function (html, params) {
       "    <link href='//fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>",
       "    <link href='//fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>",
       '    <link rel="search" type="application/opensearchdescription+xml" title="Whyd" href="' +
-        config.urlPrefix +
+        process.appParams.urlPrefix +
         '/html/opensearch.xml">', // http://www.gravitywell.co.uk/blog/post/allow-google-chrome-and-other-browsers-to-search-your-site-directly-from-the-address-bar
       '    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk">', // https://developers.google.com/chrome/web-store/docs/inline_installation?hl=fr
     ])

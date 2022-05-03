@@ -10,6 +10,7 @@ describe(`user api -- getting user data`, function () {
     const url =
       '/api/user?includeSubscr=true&isSubscr=true&countPosts=true&countLikes=true&getVersion=1';
     api.loginAs(DUMMY_USER, function (error, { jar }) {
+      assert.ifError(error);
       api.get(jar, url, function (err, { body, ...res }) {
         assert.ifError(err);
         assert.equal(res.response.statusCode, 200);

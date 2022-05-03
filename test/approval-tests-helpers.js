@@ -117,12 +117,22 @@ const errPrinter = ((blocklist) => {
 ]);
 
 async function startOpenwhydServerWith(env) {
-  const serverProcess = childProcess.fork(
-    './app.js',
-    ['--fakeEmail', '--digestInterval', '-1'],
-    { env, silent: true }
-  );
-  serverProcess.stderr.on('data', errPrinter);
+  console.log('startOpenwhydServerWith', env);
+  delete require.cache[require.resolve('../app.js')];
+
+  // const serverProcess = childProcess.fork(
+  //   './app.js',
+  //   ['--fakeEmail', '--digestInterval', '-1'],
+  //   { env, silent: true }
+  // );
+  // serverProcess.stderr.on('data', errPrinter);
+
+  Object.assign(process.env, env);
+  const app = require('../app.js');
+  const serverProcess = {
+    kill: () => app?.appServer?.stop((err) => console.error('kill()', err)),
+  };
+
   serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
   await waitOn({ resources: [serverProcess.URL] });
   return serverProcess;
@@ -133,7 +143,7 @@ async function refreshOpenwhydCache(urlPrefix) {
   await promisify(request.post)(urlPrefix + '/testing/refresh');
 }
 
-async function startOpenwhydServer({ startWithEnv, port }) {
+async function startOpenwhydServer({ startWithEnv, port, mongoDbPort }) {
   if (port) {
     process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
     const URL = `http://localhost:${port}`;
@@ -142,7 +152,7 @@ async function startOpenwhydServer({ startWithEnv, port }) {
   } else if (startWithEnv) {
     const env = {
       ...(await loadEnvVars(startWithEnv)),
-      MONGODB_PORT: '27117', // port exposed by docker container
+      MONGODB_PORT: mongoDbPort || '27117', // port exposed by docker container
       TZ: 'UTC',
     };
     process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js

@@ -4,8 +4,7 @@
  * @author adrienjoly, whyd
  */
 
-var config = require('../models/config.js');
-var runsLocally = config.urlPrefix.indexOf('localhost') != -1;
+var runsLocally = process.appParams.urlPrefix.indexOf('localhost') != -1;
 
 var STATIC_FILES = {
   '/favicon.ico': '/images/favicon' + (runsLocally ? '_orange' : '') + '.ico',

@@ -160,6 +160,7 @@ function start() {
     const url = params.urlPrefix || `http://127.0.0.1:${params.port}/`;
     console.log(`[app] Server running at ${url}`);
   });
+  module.exports.appServer = appServer;
   require('./app/workers/notifEmails.js'); // start digest worker
   require('./app/workers/hotSnapshot.js'); // start hot tracks snapshot worker
 
@@ -214,3 +215,5 @@ main().catch((err) => {
   console.error('[app] error from main():', err);
   process.exit(1);
 });
+
+module.exports = {}; // will contain a appServer property
