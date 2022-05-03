@@ -16,7 +16,7 @@ exports.resetTestDb = async () => {
   console.log('[test-db-init.js] Connecting to db ...');
   const mongodb = require('../app/models/mongodb.js');
   const db = await new Promise((resolve, reject) =>
-    mongodb.init((err, db) => (err ? reject(err) : resolve(db)))
+    mongodb.init((err, res) => (err ? reject(err) : resolve(res)))
   );
   console.log('[test-db-init.js] Clearing test database ...');
   await new Promise((resolve, reject) =>
