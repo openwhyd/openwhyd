@@ -127,7 +127,9 @@ async function startOpenwhydServer({ startWithEnv, port, mongoDbPort }) {
     return { URL };
   } else if (startWithEnv) {
     const env = {
-      ...(await loadEnvVars(startWithEnv)),
+      ...(await loadEnvVars(startWithEnv).catch((err) =>
+        err ? console.warn(`failed to load env vars from ${startWithEnv}`) : {}
+      )),
       MONGODB_PORT: mongoDbPort || '27117', // port exposed by docker container
       TZ: 'UTC',
     };
