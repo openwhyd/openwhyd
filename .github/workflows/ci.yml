@@ -148,7 +148,7 @@ jobs:
         with:
           env-file: env-vars-testing.conf
       - name: Install MongoDB deps
-        run: sudo apt install libssl1.0
+        run: sudo apt install libssl1.0.0
       - name: npm install
         env:
           CI: true
