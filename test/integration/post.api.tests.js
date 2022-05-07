@@ -180,4 +180,24 @@ describe(`post api - independent tests`, function () {
       1
     );
   });
+
+  it("should not allow update of another user's post", async function () {
+    let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    await util.promisify(api.addPost)(ownerJar, {
+      eId: '/yt/XdJVWSqb4Ck',
+      name: 'Lullaby - Jack Johnson and Matt Costa',
+    });
+    const { posts } = await util.promisify(api.getMyPosts)(ownerJar);
+    assert.equal(posts.length, 1);
+    const postId = posts[0]._id;
+    let otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
+    await util.promisify(api.addPost)(otherJar, {
+      _id: postId,
+      name: 'Lullaby - Jack Johnson and Matt Costa - updated',
+    });
+    assert.equal(
+      (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
+      1
+    );
+  });
 });
