@@ -144,9 +144,9 @@ exports.addPost = async function (jar, reqBody) {
         json: true,
         body: Object.assign({ action: 'insert' }, reqBody),
       },
-      function (error, response, body) {
+      function (error, response, resBody) {
         if (error) reject(error);
-        else resolve({ response, body });
+        else resolve({ response, body: resBody });
       }
     )
   );
