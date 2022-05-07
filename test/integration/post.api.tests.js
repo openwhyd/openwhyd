@@ -129,8 +129,6 @@ describe(`post api`, function () {
     });
   });
 
-  // TODO: update post
-
   it(`should return the comment data after adding it`, function (done) {
     api.loginAs(DUMMY_USER, function (error, { jar }) {
       const comment = {
@@ -179,6 +177,25 @@ describe(`post api - independent tests`, function () {
       (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
       1
     );
+  });
+
+  it('should update own post', async function () {
+    let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    await util.promisify(api.addPost)(ownerJar, {
+      eId: '/yt/XdJVWSqb4Ck',
+      name: 'Lullaby - Jack Johnson and Matt Costa',
+    });
+    const { posts } = await util.promisify(api.getMyPosts)(ownerJar);
+    assert.equal(posts.length, 1);
+    const postId = posts[0]._id;
+    const newName = 'Lullaby - Jack Johnson and Matt Costa - updated';
+    await util.promisify(api.addPost)(ownerJar, {
+      _id: postId,
+      name: newName,
+    });
+    const { posts: postsUpd } = await util.promisify(api.getMyPosts)(ownerJar);
+    assert.equal(postsUpd.length, 1);
+    assert.equal(postsUpd[0]?.name, newName);
   });
 
   it("should not allow update of another user's post", async function () {
