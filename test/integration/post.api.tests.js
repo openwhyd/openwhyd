@@ -15,7 +15,7 @@ describe(`post api`, function () {
 
   it(`should allow adding a track`, function (done) {
     api.loginAs(DUMMY_USER, function (error, { jar }) {
-      api.addPost(jar, post, function (error, { body }) {
+      api.addPost(jar, post).then(({ body }) => {
         assert.ifError(error);
         assert.equal(body.eId, post.eId);
         assert.equal(body.name, post.name);
@@ -29,7 +29,7 @@ describe(`post api`, function () {
 
   it(`should allow re-adding a track (aka "repost")`, function (done) {
     api.loginAs(DUMMY_USER, function (error, { jar }) {
-      api.addPost(jar, { pId }, function (error, { body }) {
+      api.addPost(jar, { pId }).then(({ body }) => {
         assert.ifError(error);
         assert(body._id);
         assert.notEqual(body._id, pId);
@@ -52,7 +52,7 @@ describe(`post api`, function () {
 
   it(`should allow adding a track to a playlist`, function (done) {
     api.loginAs(DUMMY_USER, function (error, { jar }) {
-      api.addPost(jar, postInPlaylist, function (error, { body }) {
+      api.addPost(jar, postInPlaylist).then(({ body }) => {
         assert.ifError(error);
         assert(body._id);
         assert.equal(body.eId, postInPlaylist.eId);
@@ -151,7 +151,7 @@ describe(`post api - independent tests`, function () {
 
   it('should delete a post', async function () {
     const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
-    await util.promisify(api.addPost)(jar, {
+    await api.addPost(jar, {
       eId: '/yt/XdJVWSqb4Ck',
       name: 'Lullaby - Jack Johnson and Matt Costa',
     });
@@ -164,7 +164,7 @@ describe(`post api - independent tests`, function () {
 
   it('should not delete a post from another user', async function () {
     let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
-    await util.promisify(api.addPost)(ownerJar, {
+    await api.addPost(ownerJar, {
       eId: '/yt/XdJVWSqb4Ck',
       name: 'Lullaby - Jack Johnson and Matt Costa',
     });
@@ -181,7 +181,7 @@ describe(`post api - independent tests`, function () {
 
   it('should update own post', async function () {
     let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
-    await util.promisify(api.addPost)(ownerJar, {
+    await api.addPost(ownerJar, {
       eId: '/yt/XdJVWSqb4Ck',
       name: 'Lullaby - Jack Johnson and Matt Costa',
     });
@@ -189,7 +189,7 @@ describe(`post api - independent tests`, function () {
     assert.equal(posts.length, 1);
     const postId = posts[0]._id;
     const newName = 'Lullaby - Jack Johnson and Matt Costa - updated';
-    await util.promisify(api.addPost)(ownerJar, {
+    await api.addPost(ownerJar, {
       _id: postId,
       name: newName,
     });
@@ -200,7 +200,7 @@ describe(`post api - independent tests`, function () {
 
   it("should not allow update of another user's post", async function () {
     let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
-    await util.promisify(api.addPost)(ownerJar, {
+    await api.addPost(ownerJar, {
       eId: '/yt/XdJVWSqb4Ck',
       name: 'Lullaby - Jack Johnson and Matt Costa',
     });
@@ -208,13 +208,20 @@ describe(`post api - independent tests`, function () {
     assert.equal(posts.length, 1);
     const postId = posts[0]._id;
     let otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
-    await util.promisify(api.addPost)(otherJar, {
-      _id: postId,
-      name: 'Lullaby - Jack Johnson and Matt Costa - updated',
-    });
+    let apiError;
+    await api
+      .addPost(otherJar, {
+        _id: postId,
+        name: 'Lullaby - Jack Johnson and Matt Costa - updated',
+      })
+      .catch((err) => (apiError = err)); // ignore assertion failure caused by non-200 status code
     assert.equal(
       (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
       1
+    );
+    assert.equal(
+      apiError.message,
+      "updating another user's post is not allowed"
     );
   });
 });

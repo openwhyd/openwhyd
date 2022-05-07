@@ -135,20 +135,27 @@ exports.setUser = function (jar, body, callback) {
 
 // /api/post
 
-exports.addPost = function (jar, body, callback) {
-  request.post(
-    {
-      jar,
-      url: `${URL_PREFIX}/api/post`,
-      json: true,
-      body: Object.assign({ action: 'insert' }, body),
-    },
-    function (error, response, body) {
-      assert.ifError(error);
-      assert.equal(response.statusCode, 200);
-      callback(error, { response, body, jar });
-    }
+exports.addPost = async function (jar, reqBody) {
+  const { response, body } = await new Promise((resolve, reject) =>
+    request.post(
+      {
+        jar,
+        url: `${URL_PREFIX}/api/post`,
+        json: true,
+        body: Object.assign({ action: 'insert' }, reqBody),
+      },
+      function (error, response, body) {
+        if (error) reject(error);
+        else resolve({ response, body });
+      }
+    )
   );
+  assert.equal(
+    response.statusCode,
+    200,
+    body?.error?.message ?? body?.error ?? body
+  );
+  return { response, body, jar };
 };
 
 exports.addComment = function (jar, body, callback) {
