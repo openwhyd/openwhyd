@@ -16,9 +16,7 @@ const addTrackToPlaylist = (user, plName, post) =>
   new Promise((resolve, reject) => {
     const postInPlaylist = { ...post, pl: { id: 'create', name: plName } };
     api.loginAs(DUMMY_USER, (error, { jar }) => {
-      api.addPost(jar, postInPlaylist, (error, res) =>
-        error ? reject(error) : resolve(res)
-      );
+      api.addPost(jar, postInPlaylist).then(resolve).catch(reject);
     });
   });
 
