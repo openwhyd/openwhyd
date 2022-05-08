@@ -122,12 +122,20 @@ exports.actions = {
       }
     }
 
-    function actualInsert() {
+    async function actualInsert() {
       if (p.pId) postModel.rePost(p.pId, q, callback);
       else {
-        if (p._id)
+        if (p._id) {
           // edit mode
+          const existingPost = await new Promise((resolve) =>
+            postModel.fetchPostById(p._id, resolve)
+          );
+          if (existingPost.uId !== q.uId) {
+            callback({ error: "updating another user's post is not allowed" });
+            return;
+          }
           q._id = p._id;
+        }
 
         if (p.img && p.img != 'null') q.img = p.img;
 
