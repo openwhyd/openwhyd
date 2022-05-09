@@ -172,7 +172,7 @@ exports.actions = {
       );
     } else if (hasAValidPlaylistId(playlistRequest.id)) {
       postRequest.pl = {
-        id: parseInt(playlistRequest.id),
+        id: parseInt(playlistRequest.id, 10),
         name: playlistRequest.name,
       };
     }

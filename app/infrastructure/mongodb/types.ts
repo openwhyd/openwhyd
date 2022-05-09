@@ -1,5 +1,7 @@
+import { ObjectID } from 'mongodb';
+
 export interface UserDocument {
-  _id: any;
+  _id: ObjectID;
   bio: string;
   consent: {
     date: string;
