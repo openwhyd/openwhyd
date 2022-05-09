@@ -420,24 +420,4 @@ module.exports = ({ ObjectId }) => [
       pendEN: 0,
     },
   },
-  {
-    _id: ObjectId('000000000000000000000001'),
-    name: 'Admin',
-  },
-  {
-    _id: ObjectId('000000000000000000000002'),
-    name: 'A Subscriber',
-  },
-  {
-    _id: ObjectId('000000000000000000000003'),
-    name: 'A New User',
-    email: 'dummy+newuser@openwhyd.org',
-    pwd: '21232f297a57a5a743894a0e4a801fc3',
-    md5: '21232f297a57a5a743894a0e4a801fc3',
-    handle: 'anewuser',
-    consent: {
-      lang: 'fr',
-      date: '2018-05-29T09:43:46.984Z',
-    },
-  },
 ];

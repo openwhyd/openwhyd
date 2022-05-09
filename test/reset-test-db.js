@@ -6,6 +6,11 @@ var DB_INIT_SCRIPTS = [
 ];
 
 exports.resetTestDb = async () => {
+  if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
+    console.log = () => {
+      /* In order to have nice console summary */
+    };
+  }
   process.appParams = {
     mongoDbHost: process.env['MONGODB_HOST'].substr(),
     mongoDbPort: process.env['MONGODB_PORT'].substr(), // 27017
