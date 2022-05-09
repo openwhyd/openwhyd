@@ -288,7 +288,8 @@ exports.handleRequest = function (request, reqParams, response, features) {
     response.legacyRender(
       res,
       null,
-      args || { 'content-type': 'application/json' }
+      args || { 'content-type': 'application/json' },
+      (res || {}).error ? 400 : 200
     );
   }
 
