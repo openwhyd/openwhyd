@@ -532,8 +532,8 @@ exports.createPlaylist = function (uId, name, handler) {
   // console.log('user.createPlaylist', uId, name);
   fetch({ _id: uId }, function (err, user) {
     user.pl = user.pl || [];
-    var pl = {
-      id: user.pl.length > 0 ? parseInt(user.pl[user.pl.length - 1].id) + 1 : 0,
+    const pl = {
+      id: user.pl.length > 0 ? Math.max(...user.pl.map(({ id }) => id)) + 1 : 0,
       name: name,
     };
     user.pl.push(pl);
