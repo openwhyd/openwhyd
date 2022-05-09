@@ -6,6 +6,10 @@ var DB_INIT_SCRIPTS = [
   './config/initdb_testing.js', // creates an admin user => should not be run on production!
 ];
 
+if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
+  console.log = () => {};
+} // In order to have nice console summary
+
 process.appParams = {
   mongoDbHost: process.env['MONGODB_HOST'].substr(),
   mongoDbPort: process.env['MONGODB_PORT'].substr(), // 27017
