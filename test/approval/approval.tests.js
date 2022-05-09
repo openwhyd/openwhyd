@@ -25,7 +25,7 @@ const scrubObjectId =
     data.replaceAll(objectId, '__OBJECT_ID__');
 
 const makePostFromBk = (user) => ({
-  uId: user._id,
+  uId: user.id,
   uNm: user.name,
   text: '',
   name: 'BOYLE - Roppongi Hills (Music Video)',
@@ -109,7 +109,7 @@ describe('When posting a track', () => {
       name: 'Lullaby - Jack Johnson and Matt Costa',
     };
     const { jar } = await util.promisify(context.api.loginAs)(user);
-    postedTrack = (await util.promisify(context.api.addPost)(jar, post)).body;
+    postedTrack = (await context.api.addPost(jar, post)).body;
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
@@ -135,7 +135,7 @@ describe('When posting a track using the bookmarklet', function () {
     const user = context.testDataCollections.user[0];
     const post = makePostFromBk(user);
     const { jar } = await util.promisify(context.api.loginAs)(user);
-    postedTrack = (await util.promisify(context.api.addPost)(jar, post)).body;
+    postedTrack = (await context.api.addPost(jar, post)).body;
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
@@ -258,7 +258,7 @@ describe('When posting a track to an existing playlist', function () {
     const user = context.testDataCollections.user[0];
     const post = { ...makePostFromBk(user), pl };
     const { jar } = await util.promisify(context.api.loginAs)(user);
-    postedTrack = (await util.promisify(context.api.addPost)(jar, post)).body;
+    postedTrack = (await context.api.addPost(jar, post)).body;
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
@@ -290,7 +290,7 @@ describe('When posting a track to a new playlist', function () {
     const user = context.testDataCollections.user[0];
     const post = { ...makePostFromBk(user), pl };
     const { jar } = await util.promisify(context.api.loginAs)(user);
-    postedTrack = (await util.promisify(context.api.addPost)(jar, post)).body;
+    postedTrack = (await context.api.addPost(jar, post)).body;
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
@@ -326,7 +326,7 @@ describe('When reposting a track to an existing playlist', function () {
 
     const { jar } = await util.promisify(context.api.loginAs)(user);
     repostedTrack = (
-      await util.promisify(context.api.addPost)(jar, {
+      await context.api.addPost(jar, {
         eId: originalTrack.eId,
         name: originalTrack.name,
         pId: originalTrack._id.toString(),
