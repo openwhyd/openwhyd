@@ -6,9 +6,11 @@
 
 var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
+var notifModel = require('../../models/notif.js');
 var uploadCtr = require('../uploadedFile.js');
 
 exports.actions = {
+  sendToUsers: notifModel.sendPlaylistToUsers,
   /**
    * @param playlistRequest {{uId:string, name:string}}
    * @param createPlaylist {import ('../../domain/api/Features').CreatePlaylist}
