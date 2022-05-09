@@ -15,6 +15,7 @@ jobs:
   code-checks:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -52,10 +53,14 @@ jobs:
           git status
           echo ℹ️  If this test fails, run `npm run lint:format` and commit the changes.
           exit $(git diff | wc -l)
+      - name: JSDoc type checks
+        run: |
+          npx tsc --target es2015 --moduleResolution node --noEmit --allowJs `find app/ -name "*.js"`
 
   approval-tests:
     name: Approval tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
       mongodb:
@@ -111,9 +116,38 @@ jobs:
             .nyc_output
             coverage
 
+  approval-tests-2:
+    name: Approval tests for /api/post
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27117:27017
+    steps:
+      - uses: actions/checkout@v2
+      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
+        id: nvmrc
+      - uses: actions/setup-node@v2.2.0
+        with:
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: env-vars-testing.conf
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Approval tests
+        run: npm run test:approval
+
   unit-tests:
     name: Unit tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -132,9 +166,32 @@ jobs:
           CI: true
         run: npm run test:unit
 
+  functional-tests:
+    name: Functional tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
+        id: nvmrc
+      - uses: actions/setup-node@v2.2.0
+        with:
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Functional tests
+        env:
+          CI: true
+        run: npm run test:functional
+
   integration-tests:
     name: Integration tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
       mongodb:
@@ -169,9 +226,45 @@ jobs:
           CI: true
         run: npm run test:integration
 
+  refactor-coverage:
+    name: Send test coverage of the `post` API to Codacy
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27117:27017
+    steps:
+      - uses: actions/checkout@v2
+      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
+        id: nvmrc
+      - uses: actions/setup-node@v2.2.0
+        with:
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: env-vars-testing.conf
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - run: npm run test:post:coverage
+        env:
+          CI: true
+          MONGODB_HOST: localhost
+          MONGODB_PORT: 27117
+      - uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
+          coverage-reports: coverage/lcov.info
+
   cypress-tests:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
       mongodb:
@@ -322,6 +415,7 @@ jobs:
   docker:
     # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
     name: Docker tests
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
