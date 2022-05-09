@@ -9,7 +9,14 @@ module.exports = function (/*wallaby*/) {
         .toString()
         .trim()}/bin/node`,
     },
-    files: ['app/**/*.js', 'public/**/*.js', 'public/html/test-resources/*.*'],
-    tests: ['test/unit/*-tests.js'],
+    files: [
+      // code files under test:
+      'app/**/*.js',
+      'public/**/*.js',
+      'public/html/test-resources/*.*',
+      // test helpers:
+      { pattern: 'test/functional/stubs/*.js', instrument: false, load: false },
+    ],
+    tests: ['test/unit/*-tests.js', 'test/functional/*.tests.js'],
   };
 };
