@@ -19,8 +19,10 @@ process.appParams = {
 
 async function initMongoDb() {
   if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
-    console.log = () => {};
-  } // In order to have nice console summary
+    console.log = () => {
+      /* In order to have nice console summary */
+    };
+  }
   await util.promisify(mongodb.init)();
   await mongodb.initCollections();
 }

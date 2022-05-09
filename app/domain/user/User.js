@@ -1,8 +1,10 @@
 //@ts-check
+
 /**
  * @typedef {import('./types').Playlist} Playlist
  * @typedef {import('./types').User} User
  */
+
 /**
  * @type {User}
  */
@@ -14,7 +16,6 @@ module.exports = class User {
   constructor(id, playlists) {
     this.id = id;
     this.playlists = playlists || [];
-    void (/** @type {User} */ (this));
   }
 
   /**

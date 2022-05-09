@@ -14,9 +14,7 @@ exports.actions = {
    * @param createPlaylist {import ('../../domain/api/Features').CreatePlaylist}
    */
   create: function ({ uId: userId, name }, callback, { createPlaylist }) {
-    // const { uId: userId, name } = playlistRequest;
     createPlaylist(userId, name).then(callback);
-    // returns {id, name}
   },
   rename: function (p, callback) {
     userModel.renamePlaylist(p.uId, p.id, p.name, callback);

@@ -6,7 +6,7 @@ const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
-const { features } = require('../../../domain/OpenWhydFeatures');
+const { features: makeFeatures } = require('../../../domain/OpenWhydFeatures');
 const {
   userCollection: userRepository,
 } = require('../../../infrastructure/mongodb/UserCollection');
@@ -122,7 +122,7 @@ exports.Application = class Application {
     /**
      * @type {Features}
      */
-    this._features = features(userRepository);
+    this._features = makeFeatures(userRepository);
   }
 
   getExpressApp() {
@@ -207,7 +207,7 @@ function attachLegacyRoute({
   method,
   path,
   controllerFile,
-  features: features,
+  features,
 }) {
   expressApp[method](path, function endpointHandler(req, res) {
     req.mergedParams = { ...req.params, ...req.query };
