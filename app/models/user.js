@@ -1,8 +1,13 @@
+//@ts-check
 /**
  * user model
  * fetch user information from mongodb
  * @author adrienjoly, whyd
  **/
+
+/**
+ * @typedef {import('../infrastructure/mongodb/types').UserDocument} UserDocument
+ */
 
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
@@ -252,6 +257,9 @@ exports.fetchMulti = function (q, options, handler) {
   });
 };
 
+/**
+ * @type {(uid : string, handler : (user : UserDocument) => void) => void }
+ */
 exports.fetchByUid = exports.model = function (uid, handler) {
   if (typeof uid == 'string') uid = ObjectId(uid);
   fetch({ _id: uid }, function (err, user) {
@@ -321,6 +329,11 @@ exports.update = function (uid, update, handler) {
   );
 };
 
+/**
+ *
+ * @param {UserDocument} pUser
+ * @param {(userDocument:UserDocument) => void} handler
+ */
 exports.save = function (pUser, handler) {
   var uid = pUser._id || pUser.id;
   var criteria = uid
@@ -525,23 +538,6 @@ exports.hasPlaylistName = function (user, name) {
 exports.hasPlaylistNameByUid = function (uId, name, cb) {
   exports.fetchByUid(uId, function (user) {
     cb(exports.hasPlaylistName(user, name));
-  });
-};
-
-exports.createPlaylist = function (uId, name, handler) {
-  // console.log('user.createPlaylist', uId, name);
-  fetch({ _id: uId }, function (err, user) {
-    user.pl = user.pl || [];
-    const pl = {
-      id: user.pl.length > 0 ? Math.max(...user.pl.map(({ id }) => id)) + 1 : 0,
-      name: name,
-    };
-    user.pl.push(pl);
-    exports.save(user, function () {
-      // console.log('created playlist:', pl.name, pl.id);
-      searchModel.indexPlaylist(uId, pl.id, pl.name);
-      handler(pl);
-    });
   });
 };
 
@@ -796,8 +792,10 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
           cb({
             error: 'This Twitter account is already associated to another user',
           });
-      else
+      else {
+        // @ts-ignore
         exports.save({ _id: uId, twId: twId, twTok: twTok, twSec: twSec }, cb);
+      }
     });
 };
 
@@ -841,6 +839,7 @@ exports.setHandle = function (uId, username, handler) {
 exports.renameUser = function (uid, name, callback) {
   function whenDone() {
     console.log('renameUser last step: save the actual user record');
+    //@ts-ignore
     exports.save({ _id: uid, name: name }, callback);
   }
   var cols = ['follow', 'post'];
