@@ -7,8 +7,10 @@ var DB_INIT_SCRIPTS = [
 ];
 
 if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
-  console.log = () => {};
-} // In order to have nice console summary
+  console.log = () => {
+    /* In order to have nice console summary */
+  };
+}
 
 process.appParams = {
   mongoDbHost: process.env['MONGODB_HOST'].substr(),

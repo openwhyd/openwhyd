@@ -1,8 +1,13 @@
+//@ts-check
 /**
  * user model
  * fetch user information from mongodb
  * @author adrienjoly, whyd
  **/
+
+/**
+ * @typedef {import('../infrastructure/mongodb/types').UserDocument} UserDocument
+ */
 
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
@@ -105,7 +110,8 @@ exports.EM_LABEL = {
   emAcc: 'accepted invites',
 };
 
-var TESTING_DIGEST = config.digestImmediate;
+// @ts-ignore
+var TESTING_DIGEST = process.appParams.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {
   // console.log('Parsing reserved usernames from', routeFile, '...');
@@ -252,6 +258,9 @@ exports.fetchMulti = function (q, options, handler) {
   });
 };
 
+/**
+ * @type {(uid : string, handler : (user : UserDocument) => void) => void }
+ */
 exports.fetchByUid = exports.model = function (uid, handler) {
   if (typeof uid == 'string') uid = ObjectId(uid);
   fetch({ _id: uid }, function (err, user) {
@@ -321,6 +330,11 @@ exports.update = function (uid, update, handler) {
   );
 };
 
+/**
+ *
+ * @param {UserDocument} pUser
+ * @param {(userDocument:UserDocument) => void} handler
+ */
 exports.save = function (pUser, handler) {
   var uid = pUser._id || pUser.id;
   var criteria = uid
@@ -345,6 +359,7 @@ exports.save = function (pUser, handler) {
       fetch(criteria, function (err, user) {
         if (err) console.error(err);
         //console.log("user stored as ", user);
+        // @ts-ignore
         if (user) searchModel.indexTyped('user', user);
         mongodb.cacheUser(user);
         if (handler) handler(user);
@@ -371,6 +386,7 @@ exports.delete = function (criteria, handler) {
               user._id + '_' + pl.id,
               pl.name
             );
+            // @ts-ignore
             searchModel.deletePlaylist(user._id, pl.id, next);
             // todo: delete playlist cover image file
           }
@@ -379,6 +395,7 @@ exports.delete = function (criteria, handler) {
       mongodb.collections['user'].deleteOne(criteria, function (err, item) {
         if (err) console.error(err);
         else console.log('removed users', criteria);
+        // @ts-ignore
         searchModel.deleteDoc('user', '' + criteria._id);
         delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
@@ -528,23 +545,6 @@ exports.hasPlaylistNameByUid = function (uId, name, cb) {
   });
 };
 
-exports.createPlaylist = function (uId, name, handler) {
-  // console.log('user.createPlaylist', uId, name);
-  fetch({ _id: uId }, function (err, user) {
-    user.pl = user.pl || [];
-    const pl = {
-      id: user.pl.length > 0 ? Math.max(...user.pl.map(({ id }) => id)) + 1 : 0,
-      name: name,
-    };
-    user.pl.push(pl);
-    exports.save(user, function () {
-      // console.log('created playlist:', pl.name, pl.id);
-      searchModel.indexPlaylist(uId, pl.id, pl.name);
-      handler(pl);
-    });
-  });
-};
-
 exports.setPlaylist = function (uId, plId, upd, handler) {
   upd = upd || {};
   console.log('user.setPlaylist', uId, plId, upd);
@@ -566,6 +566,7 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
           console.log(
             'updating playlist name in index and corresponding tracks...'
           );
+          // @ts-ignore
           searchModel.indexPlaylist(uId, plId, upd.name);
           postModel.setPlaylist(uId, plId, upd.name, function () {
             /* do nothing */
@@ -617,6 +618,7 @@ exports.deletePlaylist = function (uId, plId, handler) {
           'deleted playlist (and updated corresponding tracks):',
           plId
         );
+        // @ts-ignore
         searchModel.deletePlaylist(uId, plId);
         handler(plId);
       });
@@ -771,6 +773,7 @@ exports.setFbId = function (uId, fbId, cb, fbTok) {
     } else {
       var u = { _id: uId, fbId: fbId };
       if (fbTok) u.fbTok = fbTok;
+      // @ts-ignore
       exports.save(u, cb);
     }
   });
@@ -796,8 +799,10 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
           cb({
             error: 'This Twitter account is already associated to another user',
           });
-      else
+      else {
+        // @ts-ignore
         exports.save({ _id: uId, twId: twId, twTok: twTok, twSec: twSec }, cb);
+      }
     });
 };
 
@@ -841,6 +846,7 @@ exports.setHandle = function (uId, username, handler) {
 exports.renameUser = function (uid, name, callback) {
   function whenDone() {
     console.log('renameUser last step: save the actual user record');
+    //@ts-ignore
     exports.save({ _id: uid, name: name }, callback);
   }
   var cols = ['follow', 'post'];

@@ -4,7 +4,7 @@
  * @author adrienjoly, whyd
  */
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = function (request, reqParams, response, features) {
   //request.logToConsole("[subdir]", reqParams);
 
   var path = request.url.split('?')[0];
@@ -17,7 +17,7 @@ exports.controller = function (request, reqParams, response) {
   try {
     const safeCtrPath = `./${subDir}/${ctrName}`.replace(/\.\./g, '');
     const { controller } = require(safeCtrPath);
-    controller(request, reqParams, response);
+    controller(request, reqParams, response, features);
   } catch (err) {
     console.error('[subdir] error while contacting ' + request.url, err);
     response.notFound();
