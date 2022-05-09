@@ -34,12 +34,13 @@ module.exports = function (/*wallaby*/) {
       { pattern: 'test/api-client.js', instrument: false, load: false },
       { pattern: 'test/fixtures.js', instrument: false, load: false },
       { pattern: 'test/reset-test-db.js', instrument: false, load: false },
+      { pattern: 'test/functional/stubs/*.js', instrument: false, load: false },
       {
         pattern: 'test/approval-tests-helpers.js',
         instrument: false,
         load: false,
       },
     ],
-    tests: ['test/unit/**/*.js', 'test/integration/**/*.js'],
+    tests: ['test/unit/**/*.js', 'test/functional/*.tests.js', 'test/integration/**/*.js'],
   };
 };
