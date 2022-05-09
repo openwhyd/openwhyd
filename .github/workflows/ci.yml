@@ -256,10 +256,13 @@ jobs:
           CI: true
           MONGODB_HOST: localhost
           MONGODB_PORT: 27117
-      - uses: codacy/codacy-coverage-reporter-action@master
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v2
         with:
-          project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
-          coverage-reports: coverage/lcov.info
+          name: refactor-code-coverage-report
+          path: |
+            .nyc_output
+            coverage
 
   cypress-tests:
     name: Cypress E2E tests
@@ -352,12 +355,17 @@ jobs:
         with:
           name: approval-code-coverage-report
           path: coverage-approval/
+      - uses: actions/download-artifact@v2
+        with:
+          name: refactor-code-coverage-report
+          path: coverage-refactor/
       - name: Merge coverage reports
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
           cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-approval/.nyc_output/*.json coverage-reports
+          cp coverage-refactor/.nyc_output/*.json coverage-reports
           npx nyc merge coverage-reports .nyc_output/merged-coverage.json
           npx nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
