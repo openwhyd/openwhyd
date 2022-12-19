@@ -66,7 +66,7 @@
     "dd-trace": "^1.6.0",
     "emailjs": "3.4.0",
     "ent": "2.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.1",
     "formidable": "^1.2.2",
     "hogan.js": "3.0.2",
