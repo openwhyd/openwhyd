@@ -383,8 +383,6 @@ function WhydPlayer() {
     }
   }
 
-  // TODO: remove /api/metadataExtractor
-
   // handlers for events coming from Playem
   var playemEventHandlers = {
     onError: function (e) {

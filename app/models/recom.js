@@ -1,3 +1,5 @@
+// this feature is not active => this file is deprecated
+
 var config = require('./config.js');
 var mongodb = require('./mongodb.js');
 var snip = require('../snip.js');
