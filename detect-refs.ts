@@ -39,7 +39,7 @@ for (const directRef of allRefs) {
 }
 
 const renderReference = (ref: tsmorph.Node) => {
-  const filePath = ref.getSourceFile().getFilePath();
+  const filePath = ref.getSourceFile().getFilePath().replace(__dirname, '');
   const lineNumber = ref.getStartLineNumber();
   const caller = findParentFunction(ref)?.getName() ?? '[top level]';
   return `${filePath}:${lineNumber}, called by ${caller}`;
