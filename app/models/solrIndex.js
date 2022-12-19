@@ -1,6 +1,7 @@
 /**
  * solrIndex model
  * @author adrienjoly, whyd
+ * @deprecated because this code has not been used for years
  **/
 
 var http = require('http');
