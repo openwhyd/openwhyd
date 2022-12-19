@@ -35,18 +35,6 @@ exports.count = function (q, o, cb) {
   mongodb.collections['post'].countDocuments(q, o || {}, cb);
 };
 
-exports.forEachPost = function (q, p, handler) {
-  mongodb.collections['post'].find(q, p, function (err, cursor) {
-    cursor.forEach(
-      (err, track) => {
-        if (err) console.log('post.forEachPost error:', err);
-        if (track) handler(track);
-      },
-      () => handler() // we're done
-    );
-  });
-};
-
 function processAdvQuery(query, params, options) {
   query = query || {};
   params = params || {};
