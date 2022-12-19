@@ -247,7 +247,7 @@ exports.arrayHas = function (array, value) {
   return false;
 };
 
-/** @deprecated because the usefulness of this function is not clear, and it mutates parameters */
+/** @deprecated because the usefulness of this function is not clear, and it mutates parameters. used just once, in notifDigest.js. */
 exports.values = function (set) {
   var list = [];
   for (let i in set)
@@ -270,7 +270,7 @@ exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   return array;
 };
 
-/** @deprecated JavaScript now provides a cleaner way to do that */
+/** @deprecated JavaScript now provides a cleaner way to do that. */
 exports.arrayToSet = function (array, value) {
   var set = {};
   for (let i in array)
