@@ -92,38 +92,3 @@ describe('"get" package', function () {
     });
   });
 });
-
-describe('track matcher', function () {
-  var trackMatcher = require('../../app/models/trackMatcher.js');
-
-  it('should not match very different tracks', function () {
-    var tm = trackMatcher.TrackMatcher({
-      artistName: 'Adrien',
-      trackTitle: 'Joly',
-      duration: 1,
-    });
-    assert.equal(
-      tm.evalConfidence({
-        artistName: 'A d r i en',
-        trackTitle: 'Jo  l y',
-        duration: -22,
-      }).confidence,
-      0
-    );
-  });
-
-  it('should match tracks with close metadata', function () {
-    var tm = trackMatcher.TrackMatcher({
-      artistName: 'Adrien',
-      trackTitle: 'Joly',
-      duration: 1,
-    });
-    assert(
-      tm.evalConfidence({
-        artistName: 'Adrien',
-        trackTitle: 'Joly',
-        duration: 1.01,
-      }).confidence > 0.9
-    );
-  });
-});
