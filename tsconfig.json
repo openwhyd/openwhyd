@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "allowJs": true
+    "allowJs": true,
+    "skipLibCheck": true
   },
   "files": ["./node_modules/@applitools/eyes-cypress/eyes-index.d.ts"],
   "include": ["**/*.ts", "**/*.d.ts", "**/*.js"]
