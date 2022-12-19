@@ -247,6 +247,7 @@ exports.arrayHas = function (array, value) {
   return false;
 };
 
+/** @deprecated because the usefulness of this function is not clear, and it mutates parameters */
 exports.values = function (set) {
   var list = [];
   for (let i in set)
@@ -269,6 +270,7 @@ exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   return array;
 };
 
+/** @deprecated JavaScript now provides a cleaner way to do that */
 exports.arrayToSet = function (array, value) {
   var set = {};
   for (let i in array)
@@ -285,6 +287,7 @@ exports.objArrayToSet = function (array, attr, val) {
   return set;
 };
 
+/** @deprecated because there is a bug in it */
 exports.groupObjectsBy = function (array, attr) {
   var r = {};
   var path = ('' + attr).split('.');
@@ -318,6 +321,7 @@ exports.removeDuplicates = function (array, keyFieldName) {
   else return Object.keys(exports.arrayToSet(array));
 };
 
+/** @deprecated because there is a bug in it */
 exports.objArrayToValueArray = function (array, attr) {
   var list = [];
   for (let i in array)
