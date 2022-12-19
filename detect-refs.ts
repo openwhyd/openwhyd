@@ -1,6 +1,8 @@
 // This script lists all references to `snip.values`.
 //
-// Usage: $ npx tsx detect-refs.ts
+// Usage:   $ npx tsx detect-refs.ts <file> <identifier>
+//
+// Example: $ npx tsx detect-refs.ts app/snip.js values
 
 import * as tsmorph from 'ts-morph';
 
@@ -16,18 +18,13 @@ const findParentFunction = (ref: tsmorph.Node) => {
 };
 
 const tsConfigFilePath = './tsconfig.json';
-const targetFile = './app/snip.js';
-const targetIdentifier = 'values';
+const targetFile = process.argv[2];
+const targetIdentifier = process.argv[3];
 
 const identifierDeclaration = new tsmorph.Project({ tsConfigFilePath })
   .getSourceFile(targetFile)
   ?.getDescendantsOfKind(tsmorph.SyntaxKind.Identifier)
   .find((desc) => desc.getText() === targetIdentifier);
-
-// console.log(identifierDeclaration?.getParent().getText()); // => exports.values
-// console.log(identifierDeclaration?.getParent().getKindName()); // => PropertyAccessExpression
-// console.log(identifierDeclaration?.getParent()?.getParent()?.getKindName()); // => BinaryExpression
-// console.log(identifierDeclaration?.getParent()?.getParent()?.getParent()?.getKindName()); // => ExpressionStatement
 
 const refs = identifierDeclaration?.findReferencesAsNodes() || [];
 
