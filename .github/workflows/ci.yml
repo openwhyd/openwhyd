@@ -297,7 +297,7 @@ jobs:
           CI: true
         run: npm install --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v2.7.2
+        uses: cypress-io/github-action@v5.0.2
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
@@ -343,6 +343,7 @@ jobs:
     needs:
       - cypress-tests
       - approval-tests
+      - refactor-coverage
       # TODO: add coverage for unit and integration tests too
     runs-on: ubuntu-20.04
     steps:
