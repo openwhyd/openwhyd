@@ -194,13 +194,6 @@ exports.renderJsCallback = function (fctName, obj) {
 // =========================================================================
 // music track related functions
 
-// to run on cleaned track names, for better performance
-exports.normalizeArtistName = function (artistName) {
-  return exports
-    .removeAccents(artistName.trim().toLowerCase())
-    .replace(/[^a-z0-9]/g, ''); // remove non alpha characters
-};
-
 var reQuotes = /"[^")]*"/g;
 
 // to run on cleaned track names, for better performance
