@@ -6,8 +6,6 @@ node_modules
 .nyc_output
 coverage
 .gitattributes
-/docs/.jekyll-metadata
-/docs/_site
 /nbproject/private/
 /upload_data/
 /uAvatarImg/
