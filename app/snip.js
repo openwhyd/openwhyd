@@ -216,21 +216,6 @@ exports.normalizeArtistName = function (artistName) {
 };
 
 var reQuotes = /"[^")]*"/g;
-var reSeparator = /-+\s+/g;
-var reOnlyDigits = /^\d+$/;
-
-// to run on cleaned track names, for better performance
-exports.detectArtistName = function (trackName) {
-  var quoted = trackName.match(reQuotes) || [];
-  var splitted = (trackName || '').replace(reQuotes, ' - ').split(reSeparator);
-  // remove track title (last item of the string, or quoted items)
-  splitted.length = splitted.length - (quoted.length || 1);
-  for (let i in splitted) {
-    var normalized = exports.normalizeArtistName(splitted[i]);
-    if (normalized && !reOnlyDigits.test(normalized)) return splitted[i].trim();
-  }
-  return null;
-};
 
 // to run on cleaned track names, for better performance
 exports.detectTrackFields = function (trackName) {
