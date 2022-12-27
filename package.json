@@ -84,7 +84,7 @@
     "@types/node": "^16.11.4",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
-    "ava": "^3.15.0",
+    "ava": "^5.1.0",
     "approvals": "^4.0.0-beta.1",
     "chai": "^4.3.6",
     "chai-exclude": "^2.1.0",
