@@ -343,6 +343,7 @@ jobs:
     needs:
       - cypress-tests
       - approval-tests
+      - refactor-coverage
       # TODO: add coverage for unit and integration tests too
     runs-on: ubuntu-20.04
     steps:
