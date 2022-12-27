@@ -192,18 +192,6 @@ exports.renderJsCallback = function (fctName, obj) {
 };
 
 // =========================================================================
-// music track related functions
-
-var reQuotes = /"[^")]*"/g;
-
-// to run on cleaned track names, for better performance
-exports.detectTrackFields = function (trackName) {
-  var quoted = trackName.match(reQuotes) || [];
-  if (quoted.length == 1) return JSON.stringify(quoted);
-  else return null;
-};
-
-// =========================================================================
 // data structures
 
 exports.arrayHas = function (array, value) {
