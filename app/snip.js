@@ -194,20 +194,6 @@ exports.renderJsCallback = function (fctName, obj) {
 // =========================================================================
 // music track related functions
 
-exports.cleanTrackName = function (str) {
-  return !str
-    ? ''
-    : str
-        .trim()
-        .replace(/^\d+([-./\\]\d+)+\s+/, '') // remove prefixing date
-        .replace(/^\d+[.]+\s+/, '') // remove prefixing track number
-        .replace(/^#\d+\s+/, '') // remove prefixing rank
-        .replace(/\([^)]*\)/g, '') // remove parentheses
-        .replace(/\[[^]]*\]/g, '') // remove brackets
-        .replace(/\s+/, ' ') // remove extra/duplicate whitespace
-        .trim();
-};
-
 // to run on cleaned track names, for better performance
 exports.normalizeArtistName = function (artistName) {
   return exports
