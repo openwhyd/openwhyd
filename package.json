@@ -11,7 +11,6 @@
   },
   "scripts": {
     "build": "scripts/transpile-bookmarklet.sh",
-    "doc:serve": "cd docs && gem install bundler && bundle install && bundle exec jekyll serve --incremental",
     "semantic-release": "semantic-release",
     "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
     "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
