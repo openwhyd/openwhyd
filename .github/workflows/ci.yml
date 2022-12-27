@@ -395,7 +395,7 @@ jobs:
       - name: Create Docker tags
         id: create_docker_tags
         run: |
-          echo "tags=latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_STATE
+          echo "tags=latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_OUTPUT
           # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
       - name: Publish to Docker Hub registry
         if: github.event_name == 'push'
