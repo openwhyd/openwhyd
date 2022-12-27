@@ -192,54 +192,6 @@ exports.renderJsCallback = function (fctName, obj) {
 };
 
 // =========================================================================
-// music track related functions
-
-exports.cleanTrackName = function (str) {
-  return !str
-    ? ''
-    : str
-        .trim()
-        .replace(/^\d+([-./\\]\d+)+\s+/, '') // remove prefixing date
-        .replace(/^\d+[.]+\s+/, '') // remove prefixing track number
-        .replace(/^#\d+\s+/, '') // remove prefixing rank
-        .replace(/\([^)]*\)/g, '') // remove parentheses
-        .replace(/\[[^]]*\]/g, '') // remove brackets
-        .replace(/\s+/, ' ') // remove extra/duplicate whitespace
-        .trim();
-};
-
-// to run on cleaned track names, for better performance
-exports.normalizeArtistName = function (artistName) {
-  return exports
-    .removeAccents(artistName.trim().toLowerCase())
-    .replace(/[^a-z0-9]/g, ''); // remove non alpha characters
-};
-
-var reQuotes = /"[^")]*"/g;
-var reSeparator = /-+\s+/g;
-var reOnlyDigits = /^\d+$/;
-
-// to run on cleaned track names, for better performance
-exports.detectArtistName = function (trackName) {
-  var quoted = trackName.match(reQuotes) || [];
-  var splitted = (trackName || '').replace(reQuotes, ' - ').split(reSeparator);
-  // remove track title (last item of the string, or quoted items)
-  splitted.length = splitted.length - (quoted.length || 1);
-  for (let i in splitted) {
-    var normalized = exports.normalizeArtistName(splitted[i]);
-    if (normalized && !reOnlyDigits.test(normalized)) return splitted[i].trim();
-  }
-  return null;
-};
-
-// to run on cleaned track names, for better performance
-exports.detectTrackFields = function (trackName) {
-  var quoted = trackName.match(reQuotes) || [];
-  if (quoted.length == 1) return JSON.stringify(quoted);
-  else return null;
-};
-
-// =========================================================================
 // data structures
 
 exports.arrayHas = function (array, value) {
