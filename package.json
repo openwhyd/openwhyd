@@ -78,7 +78,7 @@
     "wait-on": "^6.0.0"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.9.12",
+    "@cypress/code-coverage": "^3.10.0",
     "@types/node": "^16.11.4",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
@@ -86,7 +86,7 @@
     "ava": "^5.1.0",
     "chai": "^4.3.6",
     "chai-exclude": "^2.1.0",
-    "cypress": "^8.6.0",
+    "cypress": "^12.2.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
     "eslint": "^8.1.0",
