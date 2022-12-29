@@ -3,10 +3,10 @@
 context('Visual Snapshots', () => {
   it('visitor on home page', () => {
     cy.visit('/'); // Home page (full stream)
-    cy.compareSnapshot('visitor on /');
+    cy.compareSnapshot('visitor on home page');
 
     cy.contains('Got it!').click(); // Remove cookie banner
-    cy.compareSnapshot('visitor on / (discarded cookie banner)');
+    cy.compareSnapshot('visitor on home page (discarded cookie banner)');
   });
 
   it('visitor on hot tracks', () => {
@@ -17,7 +17,7 @@ context('Visual Snapshots', () => {
     cy.location('pathname').should('equal', '/hot');
     // cy.get('#pageLoader').should('have.css', { opacity: 0 });
     cy.contains('/ All'); // in the header of the list of tracks
-    cy.compareSnapshot('visitor on /hot');
+    cy.compareSnapshot('visitor on hot tracks');
   });
 
   it('visitor signs up then logs in from hot tracks', () => {
@@ -26,13 +26,13 @@ context('Visual Snapshots', () => {
 
     cy.contains('Sign up').click();
     cy.contains('Create an account').should('be.visible'); // title of the modal dialog
-    cy.compareSnapshot('visitor on /#signup');
+    cy.compareSnapshot('visitor on signup');
     cy.get('body').type('{esc}'); // press "escape", to close the modal
 
     cy.contains('Login').click();
     cy.location('pathname').should('equal', '/login');
     cy.contains('No account yet?'); // below the sign in form
-    cy.compareSnapshot('visitor on /login');
+    cy.compareSnapshot('visitor on login');
   });
 
   it('visitor on a new user profile', () => {
@@ -40,7 +40,7 @@ context('Visual Snapshots', () => {
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('No tracks yet...');
-    cy.compareSnapshot('visitor on /dummy (user profile)');
+    cy.compareSnapshot('visitor on dummy page (user profile)');
   });
 
   it('visitor on the button install page', () => {
@@ -48,7 +48,7 @@ context('Visual Snapshots', () => {
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('Openwhyd "add track" button');
-    cy.compareSnapshot('visitor on /button (bookmarklet)');
+    cy.compareSnapshot('visitor on button page (bookmarklet)');
 
     // TODO: make the following test work: navigate back to home page, from the login page
     // cy.go('back'); // does not work, for some reason...
