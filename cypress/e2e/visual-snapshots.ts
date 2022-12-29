@@ -1,25 +1,12 @@
 // This suite intends to navigate through all pages, to detect visual regressions.
 
 context('Visual Snapshots', () => {
-  before(() => {
-    cy.eyesOpen({
-      appName: 'Openwhyd',
-      testName: 'Visual Snapshots',
-      browser: { width: 1000, height: 660 }, // cf https://docs.cypress.io/api/commands/viewport.html#Defaults
-    });
-    // TODO: insert a few tracks, to also check regressions on the rendering of those tracks
-  });
-
-  after(() => {
-    cy.eyesClose();
-  });
-
   it('visitor on home page', () => {
     cy.visit('/'); // Home page (full stream)
-    cy.eyesCheckWindow('visitor on /');
+    cy.compareSnapshot('visitor on /');
 
     cy.contains('Got it!').click(); // Remove cookie banner
-    cy.eyesCheckWindow('visitor on / (discarded cookie banner)');
+    cy.compareSnapshot('visitor on / (discarded cookie banner)');
   });
 
   it('visitor on hot tracks', () => {
@@ -30,7 +17,7 @@ context('Visual Snapshots', () => {
     cy.location('pathname').should('equal', '/hot');
     // cy.get('#pageLoader').should('have.css', { opacity: 0 });
     cy.contains('/ All'); // in the header of the list of tracks
-    cy.eyesCheckWindow('visitor on /hot');
+    cy.compareSnapshot('visitor on /hot');
   });
 
   it('visitor signs up then logs in from hot tracks', () => {
@@ -39,13 +26,13 @@ context('Visual Snapshots', () => {
 
     cy.contains('Sign up').click();
     cy.contains('Create an account').should('be.visible'); // title of the modal dialog
-    cy.eyesCheckWindow('visitor on /#signup');
+    cy.compareSnapshot('visitor on /#signup');
     cy.get('body').type('{esc}'); // press "escape", to close the modal
 
     cy.contains('Login').click();
     cy.location('pathname').should('equal', '/login');
     cy.contains('No account yet?'); // below the sign in form
-    cy.eyesCheckWindow('visitor on /login');
+    cy.compareSnapshot('visitor on /login');
   });
 
   it('visitor on a new user profile', () => {
@@ -53,7 +40,7 @@ context('Visual Snapshots', () => {
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('No tracks yet...');
-    cy.eyesCheckWindow('visitor on /dummy (user profile)');
+    cy.compareSnapshot('visitor on /dummy (user profile)');
   });
 
   it('visitor on the button install page', () => {
@@ -61,7 +48,7 @@ context('Visual Snapshots', () => {
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('Openwhyd "add track" button');
-    cy.eyesCheckWindow('visitor on /button (bookmarklet)');
+    cy.compareSnapshot('visitor on /button (bookmarklet)');
 
     // TODO: make the following test work: navigate back to home page, from the login page
     // cy.go('back'); // does not work, for some reason...
@@ -70,6 +57,6 @@ context('Visual Snapshots', () => {
     // TODO: try cy.window().invoke("history").invoke("back")
     // cy.location('pathname').should('equal', '/');
     // cy.contains('Recent tracks from all users'); // in the header of the list of tracks
-    // cy.eyesCheckWindow('visitor on / (back navigation)');
+    // cy.compareSnapshot('visitor on / (back navigation)');
   });
 });

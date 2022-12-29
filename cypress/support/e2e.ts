@@ -18,6 +18,9 @@
 /// <reference types="./" />
 
 import '@cypress/code-coverage/support';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('cypress-image-diff-js/dist/command')();
+
 import './commands';
 
 beforeEach(function () {
