@@ -88,6 +88,7 @@
     "chai-exclude": "^2.1.0",
     "cypress": "^12.2.0",
     "cypress-file-upload": "^5.0.8",
+    "cypress-image-diff-js": "^1.23.0",
     "cypress-log-to-output": "^1.1.2",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
