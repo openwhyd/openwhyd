@@ -83,7 +83,7 @@
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
-    "approvals": "^4.0.0-beta.1",
+    "approvals": "^6.0.0",
     "ava": "^5.1.0",
     "chai": "^4.3.6",
     "chai-exclude": "^2.1.0",
