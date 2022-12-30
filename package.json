@@ -44,7 +44,7 @@
     "docker:test-approval": "DONT_KILL=1 PORT=8080 ava test/approval.tests.js $@",
     "docker:test-approval-hot-tracks": "DONT_KILL=1 PORT=8080 npx jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "docker:test:approval": "DONT_KILL=1 PORT=8080 mocha test/approval/approval.tests.js $@",
-    "lint:typescript": "npx tsc --noEmit --moduleResolution node",
+    "lint:typescript": "npx tsc --noEmit --moduleResolution node --skipLibCheck",
     "lint:format": "prettier . --write",
     "lint:fix": "eslint . --fix",
     "lint": "eslint ."
