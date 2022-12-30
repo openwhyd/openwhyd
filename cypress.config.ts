@@ -11,12 +11,6 @@ export default defineConfig({
   pageLoadTimeout: 10000,
   requestTimeout: 5000,
   responseTimeout: 5000,
-  eyesIsDisabled: false,
-  eyesFailCypressOnDiff: true,
-  eyesDisableBrowserFetching: false,
-  eyesTestConcurrency: 5,
-  eyesIsGlobalHooksSupported: false,
-  eyesPort: 52717,
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
