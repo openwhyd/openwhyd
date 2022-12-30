@@ -57,6 +57,6 @@ context('Visual Snapshots', () => {
     // TODO: try cy.window().invoke("history").invoke("back")
     // cy.location('pathname').should('equal', '/');
     // cy.contains('Recent tracks from all users'); // in the header of the list of tracks
-    // cy.compareSnapshot('visitor on / (back navigation)');
+    // cy.eyesCheckWindow('visitor on / (back navigation)');
   });
 });
