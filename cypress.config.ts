@@ -29,3 +29,6 @@ export default defineConfig({
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   },
 });
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('@applitools/eyes-cypress')(module);
