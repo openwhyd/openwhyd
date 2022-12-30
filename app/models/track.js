@@ -36,7 +36,6 @@
 var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId;
 var snip = require('../snip.js');
-var metadataResolver = require('../models/metadataResolver.js');
 const feature = require('../features/hot-tracks.js');
 
 const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
@@ -203,45 +202,6 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
     }
     console.log('saving track', track);
     save(track, cb, replace);
-  });
-};
-
-var CONCISE_META_FIELDS = {
-  trackTitle: 'tit',
-  artistName: 'art',
-  duration: 'dur',
-  confidence: 'c',
-};
-
-var MINIMUM_CONFIDENCE = 0.8;
-
-function translateTrackToConciseMetadata(track = {}) {
-  var concise = {};
-  var meta = track.metadata || {};
-  var trackId = meta.uri || meta.id;
-  if (
-    /*meta.trackTitle && meta.artistName &&*/ meta.confidence >=
-    MINIMUM_CONFIDENCE
-  ) {
-    concise.meta = snip.filterFields(meta, CONCISE_META_FIELDS);
-  }
-  if (typeof track.mappings == 'object') {
-    concise.alt = [];
-    for (let sourceId in track.mappings) {
-      var alt = track.mappings[sourceId];
-      if (alt.id != trackId && alt.c >= MINIMUM_CONFIDENCE)
-        concise.alt.push('/' + sourceId + '/' + (alt.uri || alt.id));
-    }
-  }
-  return concise;
-}
-
-// translates resulting metadata and mappings from metadataResolver,
-// to whyd's track collection format (concise fields)
-exports.fetchConciseMetadataForEid = function (eId, cb) {
-  metadataResolver.fetchMetadataForEid(eId, function (err, track) {
-    //console.log("fetchMetadataForEid =>", track);
-    cb(err ? { error: '' + err } : translateTrackToConciseMetadata(track));
   });
 };
 

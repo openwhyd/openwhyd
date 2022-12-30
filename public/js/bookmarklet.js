@@ -226,7 +226,7 @@ var openwhydBkPageDetectors = [
             eId: bcPrefix_1 + tr.title_link.split('/').pop() + '#' + streamUrl,
             name: bc.artist + ' - ' + tr.title,
             img: bc.art_id
-              ? 'https://f4.bcbits.com/img/a' + bc.art_id + '_16.jpg'
+              ? 'https://f4.bcbits.com/img/a'.concat(bc.art_id, '_16.jpg')
               : undefined,
             artist: bc.artist,
             title: tr.title,
@@ -612,7 +612,8 @@ function makeStreamDetector(players) {
     var playerId = getPlayerId(url);
     var player = playerId && players[playerId];
     var trackId = player && player.getEid(url);
-    var eid = trackId && '/' + playerId + '/' + trackId.replace(/^\//, ''); // TODO: get rid of the removal of leading slash character, after fixing playem's soundcloud.getEid()
+    var eid =
+      trackId && '/'.concat(playerId, '/').concat(trackId.replace(/^\//, '')); // TODO: get rid of the removal of leading slash character, after fixing playem's soundcloud.getEid()
     if (!eid || eidSet[eid]) return cb();
     // 2. extract the (optional) stream URL from the identifier
     var parts = eid.split('#');
@@ -629,7 +630,7 @@ function makeStreamDetector(players) {
     if (element.artist && element.title) {
       return cb(
         __assign(__assign({}, detectedTrack), {
-          title: element.artist + ' - ' + element.title,
+          title: ''.concat(element.artist, ' - ').concat(element.title),
           img: element.img,
         })
       );

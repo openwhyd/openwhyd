@@ -24,7 +24,7 @@ function renderLoginForm() {
       '</script>',
     ].join('\n')
   );
-  /* other way (ajax) of doing this:
+  /* other way (ajax) of doing this, from HTML pages browsed from openwhyd.org/:
 		var loginDiv = document.getElementById("whydLogin");
 		function checkUserLogin(){
 			console.log("checking openwhyd user login...");

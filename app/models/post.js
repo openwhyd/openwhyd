@@ -35,18 +35,6 @@ exports.count = function (q, o, cb) {
   mongodb.collections['post'].countDocuments(q, o || {}, cb);
 };
 
-exports.forEachPost = function (q, p, handler) {
-  mongodb.collections['post'].find(q, p, function (err, cursor) {
-    cursor.forEach(
-      (err, track) => {
-        if (err) console.log('post.forEachPost error:', err);
-        if (track) handler(track);
-      },
-      () => handler() // we're done
-    );
-  });
-};
-
 function processAdvQuery(query, params, options) {
   query = query || {};
   params = params || {};
@@ -76,7 +64,6 @@ function processAdvQuery(query, params, options) {
 exports.fetchPosts = function (query, params, options, handler) {
   params = params || {};
   processAdvQuery(query, params, options);
-  //console.log("status.fetchPosts, query=", query);
   mongodb.collections['post'].find(query, params, function (err, cursor) {
     if (err) console.error(err);
     cursor.toArray(function (err, results) {
@@ -91,7 +78,6 @@ exports.fetchPosts = function (query, params, options, handler) {
         );
       results = results || [];
       processPosts(results);
-      // console.log('=> fetched ' + results.length + ' posts');
       handler(results);
     });
   });
@@ -124,7 +110,6 @@ exports.fetchByAuthorsOld = function (uidList, options, handler) {
 };
 
 exports.fetchByAuthors = function (uidList, options, cb) {
-  //console.time("post.fetchByAuthors2...");
   var posts = [],
     query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
     uidSet = snip.arrayToSet(uidList);
@@ -142,7 +127,6 @@ exports.fetchByAuthors = function (uidList, options, cb) {
       posts.push(post);
     }
     if (!post || !next || posts.length == limit) {
-      //console.timeEnd("post.fetchByAuthors2...");
       cb(processPosts(posts));
       closeCursor();
     } else {
@@ -258,21 +242,14 @@ function notifyMentionedUsers(post, cb) {
 }
 
 exports.savePost = function (postObj, handler) {
-  //console.log("post.savePost: ", postObj);
   var pId = postObj._id;
   function whenDone(error, result) {
     if (error) console.error('post.savePost() error: ', error);
-    //console.log("post.savePost() result: ", result);
     if (result) {
       if (Array.isArray(result)) result = result[0];
       searchModel.indexTyped('post', result);
       result.isNew = !pId;
       if (result.isNew) notif.post(result);
-      /*
-			recomModel.matchingEngine.addPost(result, function() {
-				//console.log("=> added post to matching engine index");
-			});
-			*/
       notifyMentionedUsers(result);
     }
     handler(result);
@@ -312,7 +289,6 @@ var fieldsToCopy = {
 }; // => not: _id, uId, uNm, text, pl, order, repost, src, lov, nbR, nbP
 
 exports.rePost = function (pId, repostObj, handler) {
-  //console.log("post.rePost: ", pId, repostObj);
   var collection = mongodb.collections['post'];
   exports.fetchPostById(pId, function (postObj) {
     postObj = postObj || { error: 'post not found' };
@@ -331,7 +307,6 @@ exports.rePost = function (pId, repostObj, handler) {
     if (repostObj.pl && typeof repostObj.pl.id !== 'number')
       repostObj.pl.id = parseInt('' + repostObj.pl.id);
     collection.insertOne(repostObj, function (error, result) {
-      //console.log("result", result);
       if (error) console.error('post.rePost() error: ', error);
       result = result.ops[0];
       if (repostObj.uId != repostObj.repost.uId) {
@@ -351,11 +326,6 @@ exports.rePost = function (pId, repostObj, handler) {
         //searchModel.indexPost(result);
         result = result[0];
         searchModel.indexTyped('post', result);
-        /*
-				recomModel.matchingEngine.addPost(result, function() {
-					console.log("=> added post to matching engine index");
-				});
-				*/
         notifyMentionedUsers(result);
       }
       handler(result);
@@ -363,7 +333,7 @@ exports.rePost = function (pId, repostObj, handler) {
   });
 };
 
-exports.deletePost = function (pId, handler, uId) {
+exports.deletePost = function (pId, uId, handler) {
   console.log('post.deletePost: ', pId, uId);
   var collection = mongodb.collections['post'];
   var q = {
@@ -371,11 +341,15 @@ exports.deletePost = function (pId, handler, uId) {
   };
   if (uId) q.uId = uId;
   exports.fetchPostById(pId, function (postObj) {
-    if (postObj)
+    if (postObj) {
+      if (postObj.uId !== uId) {
+        handler(new Error("can't delete another user's post"));
+        return;
+      }
       collection.deleteOne(q, function (error, result) {
         if (error) console.log('post.deletePost() error: ', error);
         searchModel.deleteDoc('post', pId);
-        handler(result);
+        handler(null, result);
         if (postObj.repost)
           collection.updateOne(
             { _id: ObjectId('' + postObj.repost.pId) },
@@ -384,9 +358,9 @@ exports.deletePost = function (pId, handler, uId) {
           );
         trackModel.updateByEid(postObj.eId);
       });
-    else {
+    } else {
       console.log('post.deletePost() error: ', pId);
-      handler();
+      handler(new Error('post not found'));
     }
   });
 };
@@ -399,7 +373,6 @@ exports.incrPlayCounter = function (pId, cb) {
     { $inc: { nbP: 1 } },
     function (err) {
       if (err) console.log(err);
-      //cb && cb(res || err);
       exports.fetchPostById(pId, function (postObj) {
         if (postObj) trackModel.updateByEid(postObj.eId);
         cb && cb(postObj || err);
@@ -411,21 +384,16 @@ exports.incrPlayCounter = function (pId, cb) {
 // wrappers for playlists
 
 exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
-  //console.log("fetchPlaylistPosts(uId, plId, options) + order: ", uId, plId, options, playlistSort);
   options = {
     limit: options.limit,
     after: options.after,
     before: options.before,
   };
-  ////console.time("fetchPlaylistPosts");
   exports.fetchPosts(
-    { uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
+    { uId, 'pl.id': parseInt(plId) },
     playlistSort,
     options,
-    handler /*function(){
-    //console.timeEnd("fetchPlaylistPosts");
-    handler.apply(null, arguments);
-  }*/
+    handler
   );
 };
 
@@ -434,10 +402,7 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
     handler(result);
   }
   if (uId)
-    db['post'].countDocuments(
-      { uId: uId, 'pl.id': parseInt(plId) /*{$in:[parseInt(plId), ""+plId]}*/ },
-      handle
-    );
+    db['post'].countDocuments({ uId: uId, 'pl.id': parseInt(plId) }, handle);
   else
     db['post'].countDocuments(
       { 'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] } },

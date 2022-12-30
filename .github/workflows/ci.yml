@@ -15,14 +15,13 @@ jobs:
   code-checks:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - name: npm install
         env:
@@ -52,10 +51,14 @@ jobs:
           git status
           echo ℹ️  If this test fails, run `npm run lint:format` and commit the changes.
           exit $(git diff | wc -l)
+      - name: JSDoc type checks
+        run: |
+          npx tsc --target es2015 --moduleResolution node --noEmit --allowJs `find app/ -name "*.js"`
 
   approval-tests:
     name: Approval tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
       mongodb:
@@ -63,12 +66,10 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
@@ -104,24 +105,49 @@ jobs:
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
           npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: approval-code-coverage-report
           path: |
             .nyc_output
             coverage
 
+  approval-tests-2:
+    name: Approval tests for /api/post
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27117:27017
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: env-vars-testing.conf
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Approval tests
+        run: npm run test:approval
+
   unit-tests:
     name: Unit tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - name: npm install
         env:
@@ -132,9 +158,30 @@ jobs:
           CI: true
         run: npm run test:unit
 
+  functional-tests:
+    name: Functional tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - name: Functional tests
+        env:
+          CI: true
+        run: npm run test:functional
+
   integration-tests:
     name: Integration tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
       mongodb:
@@ -142,12 +189,10 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
@@ -169,9 +214,46 @@ jobs:
           CI: true
         run: npm run test:integration
 
+  refactor-coverage:
+    name: Send test coverage of the `post` API to Codacy
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: docker://mongo:3.4
+        ports:
+          - 27117:27017
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: env-vars-testing.conf
+      - name: npm install
+        env:
+          CI: true
+        run: npm install --prefer-offline --no-audit
+      - run: npm run test:post:coverage
+        env:
+          CI: true
+          MONGODB_HOST: localhost
+          MONGODB_PORT: 27117
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: refactor-code-coverage-report
+          path: |
+            .nyc_output
+            coverage
+
   cypress-tests:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
       mongodb:
@@ -188,8 +270,8 @@ jobs:
         # run 3 copies of the current job in parallel
         containers: [1, 2, 3]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
           cache: 'npm'
@@ -201,11 +283,11 @@ jobs:
           CI: true
         run: npm install --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v2.7.2
+        uses: cypress-io/github-action@v5.0.2
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
-          config-file: cypress.json
+          config-file: cypress.config.ts
           browser: 'chromium' # to include browser console in cypress logs
           record: true
           parallel: true
@@ -223,20 +305,20 @@ jobs:
           # npm run test:coverage
           npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-code-coverage-report
           path: |
             .nyc_output
             coverage
       # NOTE: screenshots will be generated only if E2E test failed
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-videos
@@ -247,24 +329,30 @@ jobs:
     needs:
       - cypress-tests
       - approval-tests
+      - refactor-coverage
       # TODO: add coverage for unit and integration tests too
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: cypress-code-coverage-report
           path: coverage-cypress/
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: approval-code-coverage-report
           path: coverage-approval/
+      - uses: actions/download-artifact@v3
+        with:
+          name: refactor-code-coverage-report
+          path: coverage-refactor/
       - name: Merge coverage reports
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
           cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-approval/.nyc_output/*.json coverage-reports
+          cp coverage-refactor/.nyc_output/*.json coverage-reports
           npx nyc merge coverage-reports .nyc_output/merged-coverage.json
           npx nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
@@ -281,15 +369,13 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           # to prevent "You're not authorized to push to this branch"
           persist-credentials: false
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm install --prefer-offline --no-audit
         if: github.event_name == 'push'
@@ -309,7 +395,7 @@ jobs:
       - name: Create Docker tags
         id: create_docker_tags
         run: |
-          echo "::set-output name=tags::latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)"
+          echo "tags=latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_OUTPUT
           # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
       - name: Publish to Docker Hub registry
         if: github.event_name == 'push'
@@ -322,9 +408,10 @@ jobs:
   docker:
     # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
     name: Docker tests
+    timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build and start services
         run: docker-compose up --build --detach
       - name: Init database for tests

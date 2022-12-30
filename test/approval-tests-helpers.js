@@ -3,7 +3,11 @@ const { promisify, ...util } = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
 const childProcess = require('child_process');
-const waitOn = require('wait-on');
+
+const makeJSONScrubber = (scrubbers) => (obj) =>
+  JSON.parse(
+    scrubbers.reduce((data, scrub) => scrub(data), JSON.stringify(obj))
+  );
 
 const readFile = (file) => fs.promises.readFile(file, 'utf-8');
 
@@ -74,10 +78,19 @@ async function insertTestData(url, docsPerCollection) {
   await Promise.all(
     Object.keys(docsPerCollection).map(async (collection) => {
       await db.collection(collection).deleteMany({});
-      await db.collection(collection).insertMany(docsPerCollection[collection]);
+      const docs = docsPerCollection[collection];
+      if (docs.length > 0) await db.collection(collection).insertMany(docs);
     })
   );
   await mongoClient.close();
+}
+
+async function dumpMongoCollection(url, collection) {
+  const mongoClient = await connectToMongoDB(url);
+  const db = mongoClient.db();
+  const documents = await db.collection(collection).find({}).toArray();
+  await mongoClient.close();
+  return documents;
 }
 
 function indentJSON(json) {
@@ -105,10 +118,11 @@ function getCleanedPageBody(body) {
 const errPrinter = ((blocklist) => {
   return (chunk) => {
     const message = chunk.toString();
-    if (!blocklist.some((term) => message.includes(term)))
+    if (process.env.DEBUG || !blocklist.some((term) => message.includes(term)))
       console.error(message);
   };
 })([
+  'server.close => OK',
   'closing server',
   'deprecated',
   'gm: command not found',
@@ -116,17 +130,42 @@ const errPrinter = ((blocklist) => {
   'please install graphicsmagick',
 ]);
 
-async function startOpenwhydServerWith(env) {
-  const serverProcess = childProcess.fork(
-    './app.js',
-    ['--fakeEmail', '--digestInterval', '-1'],
-    { env, silent: true }
-  );
-  serverProcess.stderr.on('data', errPrinter);
-  serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
-  await waitOn({ resources: [serverProcess.URL] });
-  return serverProcess;
-}
+const startOpenwhydServerWith = async (env) =>
+  new Promise((resolve, reject) => {
+    const serverProcess =
+      process.env.COVERAGE === 'true'
+        ? childProcess.spawn('npm', ['run', 'start:coverage:no-clean'], {
+            env: { ...env, PATH: process.env.PATH },
+            shell: true,
+            detached: true, // when running on CI, we need this to kill the process group using `process.kill(-serverProcess.pid)`
+          })
+        : childProcess.fork('./app.js', [], {
+            env,
+            silent: true, // necessary to initialize serverProcess.stderr
+          });
+    serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
+    serverProcess.exit = () =>
+      new Promise((resolve) => {
+        if (serverProcess.killed) return resolve();
+        serverProcess.on('close', resolve);
+        if (!(serverProcess.kill(/*'SIGTERM'*/))) {
+          console.warn('🧟‍♀️ failed to kill childprocess!');
+        }
+        if (serverProcess.pid) {
+          try {
+            process.kill(-serverProcess.pid, 'SIGINT');
+          } catch (err) {
+            console.warn('failed to kill by pid:', err.message);
+          }
+        }
+      });
+    serverProcess.on('error', reject);
+    serverProcess.stderr.on('data', errPrinter);
+    serverProcess.stdout.on('data', (str) => {
+      if (process.env.DEBUG) errPrinter(str);
+      if (str.includes('Server running')) resolve(serverProcess);
+    });
+  });
 
 /* refresh openwhyd's in-memory cache of users, to allow this user to login */
 async function refreshOpenwhydCache(urlPrefix) {
@@ -151,11 +190,13 @@ async function startOpenwhydServer({ startWithEnv, port }) {
 }
 
 module.exports = {
+  makeJSONScrubber,
   loadEnvVars,
   httpClient,
   ObjectId,
   connectToMongoDB,
   readMongoDocuments,
+  dumpMongoCollection,
   insertTestData,
   indentJSON,
   getCleanedPageBody,

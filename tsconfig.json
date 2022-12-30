@@ -1,4 +1,4 @@
 {
-  "files": ["./node_modules/@applitools/eyes-cypress/eyes-index.d.ts"],
+  "files": ["./node_modules/@applitools/eyes-cypress/index.d.ts"],
   "include": ["**/*.ts", "**/*.d.ts", "**/*.js"]
 }

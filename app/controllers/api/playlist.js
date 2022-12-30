@@ -1,3 +1,4 @@
+//@ts-check
 /**
  * api endpoint for playlists
  * @author adrienjoly, whyd
@@ -10,9 +11,12 @@ var uploadCtr = require('../uploadedFile.js');
 
 exports.actions = {
   sendToUsers: notifModel.sendPlaylistToUsers,
-  create: function (p, callback) {
-    userModel.createPlaylist(p.uId, p.name, callback);
-    // returns {id, name}
+  /**
+   * @param playlistRequest {{uId:string, name:string}}
+   * @param createPlaylist {import ('../../domain/api/Features').CreatePlaylist}
+   */
+  create: function ({ uId: userId, name }, callback, { createPlaylist }) {
+    createPlaylist(userId, name).then(callback);
   },
   rename: function (p, callback) {
     userModel.renamePlaylist(p.uId, p.id, p.name, callback);
@@ -30,13 +34,13 @@ exports.actions = {
       uploadCtr.deleteFile(imgPath);
       userModel.fetchPlaylist(p.uId, p.id, function (pl) {
         /*
-				if (pl && pl.img && pl.img.indexOf("blank") == -1) {
-					console.log("deleting previous playlist pic: " + pl.img);
-					uploadCtr.deleteFile(pl.img);
-				}
-				function actualUpdate(newFilename) {
-					userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
-				}*/
+        if (pl && pl.img && pl.img.indexOf("blank") == -1) {
+          console.log("deleting previous playlist pic: " + pl.img);
+          uploadCtr.deleteFile(pl.img);
+        }
+        function actualUpdate(newFilename) {
+          userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
+        }*/
         if (p.img.indexOf('blank') == -1)
           uploadCtr.renameTo(p.img, imgPath, function () {
             cb(pl);
@@ -47,7 +51,7 @@ exports.actions = {
   },
 };
 
-exports.handlePostRequest = function (request, reqParams, response) {
+exports.handlePostRequest = function (request, reqParams, response, features) {
   request.logToConsole('aoi.playlist.handleRequest', reqParams);
 
   // make sure a registered user is logged, or return an error page
@@ -63,14 +67,18 @@ exports.handlePostRequest = function (request, reqParams, response) {
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
 
-  exports.actions[reqParams.action](reqParams, function (res, args) {
-    console.log(reqParams, '=>', res);
-    response.legacyRender(
-      res,
-      null,
-      args || { 'content-type': 'application/json' }
-    );
-  });
+  exports.actions[reqParams.action](
+    reqParams,
+    function (res, args) {
+      console.log(reqParams, '=>', res);
+      response.legacyRender(
+        res,
+        null,
+        args || { 'content-type': 'application/json' }
+      );
+    },
+    features
+  );
 };
 
 function fetchPlaylist(p, cb) {
@@ -123,12 +131,12 @@ function fetchPlaylist(p, cb) {
   );
 }
 
-exports.controller = function (request, getParams, response) {
+exports.controller = function (request, getParams, response, features) {
   getParams = getParams || {};
   getParams.id = getParams.id || getParams._1;
   request.logToConsole('apiPost.controller', getParams);
   if (request.method.toLowerCase() === 'post')
-    exports.handlePostRequest(request, request.body, response);
+    exports.handlePostRequest(request, request.body, response, features);
   else if (getParams.id)
     fetchPlaylist(getParams, function (playlists) {
       response.renderJSON(playlists);

@@ -1,3 +1,4 @@
+const vm = require('vm');
 const assert = require('assert');
 const request = require('request');
 
@@ -15,9 +16,7 @@ const addTrackToPlaylist = (user, plName, post) =>
   new Promise((resolve, reject) => {
     const postInPlaylist = { ...post, pl: { id: 'create', name: plName } };
     api.loginAs(DUMMY_USER, (error, { jar }) => {
-      api.addPost(jar, postInPlaylist, (error, res) =>
-        error ? reject(error) : resolve(res)
-      );
+      api.addPost(jar, postInPlaylist).then(resolve).catch(reject);
     });
   });
 
@@ -40,6 +39,21 @@ describe(`Data Export API`, () => {
   });
 
   describe(`provides profile tracks`, () => {
+    it(`of given user id, as JSON, using callback`, async () => {
+      const { body } = await reqGet(
+        `${URL_PREFIX}/u/${user.id}?callback=callbackFct`
+      );
+      let apiResponse;
+      vm.runInNewContext(body, {
+        callbackFct: (data) => {
+          apiResponse = data;
+        },
+      });
+      assert.strictEqual(apiResponse.error, undefined);
+      assert.strictEqual(apiResponse.length, 1);
+      assert.strictEqual(apiResponse[0].name, track.name);
+    });
+
     it(`of given user id, as JSON`, async () => {
       const { body } = await reqGet(`${URL_PREFIX}/u/${user.id}?format=json`);
       const parsedBody = JSON.parse(body) || {};
@@ -70,6 +84,21 @@ describe(`Data Export API`, () => {
   });
 
   describe(`provides list of playlists`, () => {
+    it(`of given user id, as JSON, using callback`, async () => {
+      const { body } = await reqGet(
+        `${URL_PREFIX}/u/${user.id}/playlists?callback=callbackFct`
+      );
+      let apiResponse;
+      vm.runInNewContext(body, {
+        callbackFct: (data) => {
+          apiResponse = data;
+        },
+      });
+      assert.strictEqual(apiResponse.error, undefined);
+      assert.strictEqual(apiResponse.length, 1);
+      assert.strictEqual(apiResponse[0].name, plName);
+    });
+
     it(`of given user id, as JSON`, async () => {
       const plUrl = `${URL_PREFIX}/u/${user.id}/playlists`;
       const { body } = await reqGet(`${plUrl}?format=json`);
@@ -104,6 +133,21 @@ describe(`Data Export API`, () => {
   });
 
   describe(`provides playlist tracks`, () => {
+    it(`of given user id, as JSON, using callback`, async () => {
+      const { body } = await reqGet(
+        `${URL_PREFIX}/u/${user.id}/playlist/0?callback=callbackFct`
+      );
+      let apiResponse;
+      vm.runInNewContext(body, {
+        callbackFct: (data) => {
+          apiResponse = data;
+        },
+      });
+      assert.strictEqual(apiResponse.error, undefined);
+      assert.strictEqual(apiResponse.length, 1);
+      assert.strictEqual(apiResponse[0].name, track.name);
+    });
+
     it(`of given user id, as JSON`, async () => {
       const plUrl = `${URL_PREFIX}/u/${user.id}/playlist/0`;
       const { body } = await reqGet(`${plUrl}?format=json`);
