@@ -6,7 +6,7 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended" // Uses the recommended rules from the @typescript-eslint/eslint-plugin
   ],
-  "plugins": ["prettier", "@typescript-eslint"],
+  "plugins": ["prettier", "@typescript-eslint", "deprecation"],
   "parserOptions": {
     "project": "tsconfig.json",
     "ecmaVersion": 2019
@@ -16,6 +16,7 @@
     "public/press/js/sliderz.v1.js"
   ],
   "rules": {
+    "deprecation/deprecation": "error",
     "prettier/prettier": "error",
     "no-inner-declarations": ["warn", "functions"]
   },

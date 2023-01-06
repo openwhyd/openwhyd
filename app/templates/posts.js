@@ -23,22 +23,20 @@ function getPostId(post = {}) {
   return '' + (post._id || post.id);
 }
 
-function loadComments(posts, cb) {
-  if (!(posts || []).length) cb();
-  else
-    commentModel.fetch({ pId: posts.map(getPostId) }, {}, function (comments) {
-      comments = snip.groupObjectsBy(comments, 'pId');
-      //console.log("=> comments", comments)
-      for (let i in posts)
-        if (posts[i])
-          try {
-            posts[i].comments = comments[getPostId(posts[i])] || [];
-          } catch (e) {
-            console.error(e.stack);
-          }
-      cb();
-    });
+async function loadComments(posts) {
+  return snip.groupObjectsBy(
+    await commentModel.fetch({ pId: posts.map(getPostId) }),
+    'pId'
+  );
 }
+
+const favoritePosts = [];
+
+async function newFeature() {
+  await loadComments(favoritePosts);
+}
+
+newFeature();
 
 function loadReposts(posts, cb) {
   if (!(posts || []).length) cb();
