@@ -18,19 +18,17 @@ const findAssignedFunction = (
   ref: tsmorph.Node
 ): NamedNodeWithReferences | undefined => {
   const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
-  if (anonymousFct) {
-    const potentialAssignment = anonymousFct.getFirstAncestorByKind(
-      tsmorph.SyntaxKind.BinaryExpression
-    );
-    const operator = potentialAssignment?.getOperatorToken();
-    const potentialIdentifier = potentialAssignment?.getLeft();
-    if (
-      operator?.isKind(tsmorph.SyntaxKind.EqualsToken) &&
-      tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialIdentifier) &&
-      tsmorph.Node.hasName(potentialIdentifier)
-    ) {
-      return potentialIdentifier;
-    }
+  const potentialAssignment = anonymousFct?.getFirstAncestorByKind(
+    tsmorph.SyntaxKind.BinaryExpression
+  );
+  const operator = potentialAssignment?.getOperatorToken();
+  const potentialIdentifier = potentialAssignment?.getLeft();
+  if (
+    operator?.isKind(tsmorph.SyntaxKind.EqualsToken) &&
+    tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialIdentifier) &&
+    tsmorph.Node.hasName(potentialIdentifier)
+  ) {
+    return potentialIdentifier;
   }
 };
 
@@ -38,16 +36,14 @@ const findPropertyAssignedFunction = (
   ref: tsmorph.Node
 ): NamedNodeWithReferences | undefined => {
   const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
-  if (anonymousFct) {
-    const potentialAssignment = anonymousFct.getFirstAncestorByKind(
-      tsmorph.SyntaxKind.PropertyAssignment
-    );
-    if (
-      tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialAssignment) &&
-      tsmorph.Node.hasName(potentialAssignment)
-    ) {
-      return potentialAssignment;
-    }
+  const potentialAssignment = anonymousFct?.getFirstAncestorByKind(
+    tsmorph.SyntaxKind.PropertyAssignment
+  );
+  if (
+    tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialAssignment) &&
+    tsmorph.Node.hasName(potentialAssignment)
+  ) {
+    return potentialAssignment;
   }
 };
 
