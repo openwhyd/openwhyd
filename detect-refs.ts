@@ -66,14 +66,17 @@ const refs = identifierDeclaration?.findReferencesAsNodes() || [];
 
 const allRefs = [...refs];
 
+const alreadyBrowsed = new Set<tsmorph.Node>(); // to de-duplicate refs, i.e. when a given node was referenced more than once by a referrer
+
 for (const node of allRefs) {
+  if (alreadyBrowsed.has(node)) continue;
+  else alreadyBrowsed.add(node);
   const referrer = findParentFunction(node);
   if (referrer?.getSymbol() === node.getSymbol()) {
     console.warn(`🔃 skipping recursive call on ${node.getText()}`);
   } else if (referrer) {
     allRefs.push(...referrer.findReferencesAsNodes());
     // TODO: exclude assignments to the "node"
-    // TODO: de-duplicate refs, i.e. when a given node was referenced more than once by a referrer
   }
 }
 
