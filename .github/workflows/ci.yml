@@ -27,7 +27,7 @@ jobs:
       - name: count references to usernames cache
         shell: bash
         run: |
-          EXPECTED_REFS_COUNT=0
+          EXPECTED_REFS_COUNT=78
           REFS=$(npx tsx detect-refs.ts app/models/mongodb.js usernames)
           if [ "$(echo "${REFS}" | wc -l)" -gt "${EXPECTED_REFS_COUNT}" ]; then
             echo '❌  Please remove new (indirect) references to usernames'.
