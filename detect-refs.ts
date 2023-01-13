@@ -64,33 +64,45 @@ const identifierDeclaration = new tsmorph.Project({ tsConfigFilePath })
 
 const refs = identifierDeclaration?.findReferencesAsNodes() || [];
 
-const allRefs = [...refs];
+type Reference = { node: tsmorph.Node; refs: Reference[] };
 
 // to de-duplicate refs, i.e. when a given node was referenced more than once by a referrer
-const nodesToBrowse = new (class {
+const browsedNodes = new (class {
   private alreadyBrowsed = new Set<tsmorph.Node>();
-  push(...nodes: tsmorph.Node[]) {
+  dedup(...nodes: tsmorph.Node[]) {
     const newNodes = nodes.filter((node) => !this.alreadyBrowsed.has(node));
-    allRefs.push(...newNodes);
     newNodes.forEach((node) => this.alreadyBrowsed.add(node));
+    return newNodes;
   }
 })();
 
-for (const node of allRefs) {
+const buildRefsSubTree = (node: tsmorph.Node): Reference[] => {
   const referrer = findParentFunction(node);
   if (referrer?.getSymbol() === node.getSymbol()) {
     console.warn(`🔃 skipping recursive call on ${node.getText()}`);
   } else if (referrer) {
-    nodesToBrowse.push(...referrer.findReferencesAsNodes());
+    const newNodes = browsedNodes.dedup(...referrer.findReferencesAsNodes());
+    return newNodes.map((ref) => ({
+      node: ref,
+      refs: buildRefsSubTree(ref),
+    }));
     // TODO: exclude assignments to the "node"
   }
-}
+  return [];
+};
 
-const renderReference = (ref: tsmorph.Node) => {
-  const filePath = ref.getSourceFile().getFilePath().replace(__dirname, '');
-  const lineNumber = ref.getStartLineNumber();
-  const callee = ref.getText();
-  const parentFct = findParentFunction(ref);
+const allRefs: Reference[] = [
+  ...refs.map((ref) => ({ node: ref, refs: buildRefsSubTree(ref) })),
+];
+
+const renderReference = (ref: Reference, depth = 0) => {
+  const filePath = ref.node
+    .getSourceFile()
+    .getFilePath()
+    .replace(__dirname, '');
+  const lineNumber = ref.node.getStartLineNumber();
+  const callee = ref.node.getText();
+  const parentFct = findParentFunction(ref.node);
   // const ancestorText = ref
   //   ?.getParent()
   //   ?.getParent()
@@ -106,7 +118,12 @@ const renderReference = (ref: tsmorph.Node) => {
   const referrer = parentFct
     ? parentFct.getName() ?? '[anonymous function]'
     : '[top level]';
-  return `${filePath}:${lineNumber}, ${callee} referenced by ${referrer}`;
+  console.log(
+    `${' '.repeat(
+      depth
+    )}${filePath}:${lineNumber}, ${callee} referenced by ${referrer}`
+  );
+  ref.refs.forEach((subRef) => renderReference(subRef, depth + 1));
 };
 
-allRefs.forEach((ref) => console.log(renderReference(ref)));
+allRefs.forEach((ref) => renderReference(ref));
