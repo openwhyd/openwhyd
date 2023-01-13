@@ -1,8 +1,9 @@
-// This script lists all references to `snip.values`.
+// This script lists all references to a given identifier from a given file.
 //
-// Usage:   $ npx tsx detect-refs.ts <file> <identifier>
+// Usage:   $ npx tsx detect-refs.ts <file> <identifier> [top]
 //
 // Example: $ npx tsx detect-refs.ts app/snip.js values
+// Example: $ npx tsx detect-refs.ts app/models/mongodb.js usernames top
 
 import * as tsmorph from 'ts-morph';
 
@@ -57,6 +58,8 @@ const findParentFunction = (
 const tsConfigFilePath = './tsconfig.json';
 const targetFile = process.argv[2];
 const targetIdentifier = process.argv[3];
+const showTop = process.argv[4] === 'top'; // if false, the entire tree is printed
+const dedup = false; // if true, each reference is printed only once
 
 const identifierDeclaration = new tsmorph.Project({ tsConfigFilePath })
   .getSourceFile(targetFile)
@@ -71,6 +74,7 @@ type Reference = { node: tsmorph.Node; refs: Reference[] };
 const browsedNodes = new (class {
   private alreadyBrowsed = new Set<tsmorph.Node>();
   dedup(...nodes: tsmorph.Node[]) {
+    if (dedup === false) return nodes; // don't exclude anything
     const newNodes = nodes.filter((node) => !this.alreadyBrowsed.has(node));
     newNodes.forEach((node) => this.alreadyBrowsed.add(node));
     return newNodes;
@@ -96,7 +100,7 @@ const allRefs: Reference[] = [
   ...refs.map((ref) => ({ node: ref, refs: buildRefsSubTree(ref) })),
 ];
 
-const printReferences = (ref: Reference, depth = 0) => {
+const render = (ref: Reference) => {
   const filePath = ref.node
     .getSourceFile()
     .getFilePath()
@@ -107,12 +111,31 @@ const printReferences = (ref: Reference, depth = 0) => {
   const referrer = parentFct
     ? parentFct.getName() ?? '[anonymous function]'
     : '[top level]';
-  console.log(
-    `${' '.repeat(
-      depth
-    )}${filePath}:${lineNumber}, ${callee} referenced by ${referrer}`
-  );
+  return `${filePath}:${lineNumber}, ${callee} referenced by ${referrer}`;
+};
+
+const printReferences = (ref: Reference, depth = 0) => {
+  console.log(`${' '.repeat(depth)}${render(ref)}`);
   ref.refs.forEach((subRef) => printReferences(subRef, depth + 1));
 };
 
-allRefs.forEach((ref) => printReferences(ref));
+const countReferences = (ref: Reference) => {
+  return ref.refs.reduce((count, subRef) => count + countReferences(subRef), 1);
+};
+
+const printTopReferences = (ref: Reference) => {
+  const refs = countReferences(ref);
+  return { refs };
+};
+
+if (showTop) {
+  allRefs
+    .map((ref) => ({
+      ref,
+      count: countReferences(ref),
+    }))
+    .sort((a, b) => b.count - a.count)
+    .forEach(({ ref, count }) => console.log(`(${count})\t${render(ref)}`));
+} else {
+  allRefs.forEach((ref) => printReferences(ref));
+}
