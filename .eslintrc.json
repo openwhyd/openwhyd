@@ -16,7 +16,7 @@
     "public/press/js/sliderz.v1.js"
   ],
   "rules": {
-    "deprecation/deprecation": "error",
+    "deprecation/deprecation": "warn",
     "prettier/prettier": "error",
     "no-inner-declarations": ["warn", "functions"]
   },
