@@ -30,7 +30,7 @@ jobs:
           REFS=$(npx tsx detect-refs.ts app/snip.js groupObjectsBy)
           echo ${REFS}
           if [ $(echo ${REFS} | wc -l) -gt ${EXPECTED_REFS_COUNT} ]; then
-          echo ❌  Please remove new (indirect) references to groupObjectsBy().
+            echo '❌  Please remove new (indirect) references to groupObjectsBy()'.
             exit 1;
           fi
 
