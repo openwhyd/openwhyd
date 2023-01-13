@@ -9,16 +9,8 @@ import * as tsmorph from 'ts-morph';
 const isFunction = (node: tsmorph.Node): node is tsmorph.FunctionDeclaration =>
   node instanceof tsmorph.FunctionDeclaration; // note: this only works if the `function` keyword was used
 
-const findParentFunction = (
-  ref: tsmorph.Node
-): tsmorph.FunctionDeclaration | null => {
-  let node: tsmorph.Node | undefined = ref;
-  while (node) {
-    if (isFunction(node)) return node;
-    node = node.getParent();
-  }
-  return null;
-};
+const findParentFunction = (ref: tsmorph.Node) =>
+  ref.getFirstAncestor(isFunction);
 
 const tsConfigFilePath = './tsconfig.json';
 const targetFile = process.argv[2];
