@@ -11,9 +11,12 @@ const isNamedFunction = (
 ): node is tsmorph.FunctionDeclaration =>
   node instanceof tsmorph.FunctionDeclaration; // only works if the `function` keyword is used
 
+type NamedNodeWithReferences = tsmorph.ReferenceFindableNode &
+  tsmorph.Node & { getName(): string };
+
 const findAssignedFunction = (
   ref: tsmorph.Node
-): tsmorph.ReferenceFindableNode | undefined => {
+): NamedNodeWithReferences | undefined => {
   const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
   if (anonymousFct) {
     const potentialAssignment = anonymousFct.getFirstAncestorByKind(
@@ -23,7 +26,8 @@ const findAssignedFunction = (
     const potentialIdentifier = potentialAssignment?.getLeft();
     if (
       operator?.isKind(tsmorph.SyntaxKind.EqualsToken) &&
-      tsmorph.Node.isReferenceFindable(potentialIdentifier)
+      tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialIdentifier) &&
+      tsmorph.Node.hasName(potentialIdentifier)
       // && potentialAssignment.getRight() === anonymousFct
     ) {
       return potentialIdentifier;
@@ -33,7 +37,7 @@ const findAssignedFunction = (
 
 const findParentFunction = (
   ref: tsmorph.Node
-): tsmorph.ReferenceFindableNode | undefined => {
+): NamedNodeWithReferences | undefined => {
   const namedFct = ref.getFirstAncestor(isNamedFunction);
   return namedFct ?? findAssignedFunction(ref);
 };
@@ -62,12 +66,14 @@ const refs = identifierDeclaration?.findReferencesAsNodes() || [];
 
 const allRefs = [...refs];
 
-for (const directRef of allRefs) {
-  const caller = findParentFunction(directRef);
-  if (caller?.getSymbol() === directRef.getSymbol()) {
-    console.warn(`🔃 skipping recursive call on ${directRef.getText()}`);
-  } else if (caller) {
-    allRefs.push(...caller.findReferencesAsNodes());
+for (const node of allRefs) {
+  const referrer = findParentFunction(node);
+  if (referrer?.getSymbol() === node.getSymbol()) {
+    console.warn(`🔃 skipping recursive call on ${node.getText()}`);
+  } else if (referrer) {
+    allRefs.push(...referrer.findReferencesAsNodes());
+    // TODO: exclude assignments to the "node"
+    // TODO: de-duplicate refs, i.e. when a given node was referenced more than once by a referrer
   }
 }
 
@@ -88,10 +94,10 @@ const renderReference = (ref: tsmorph.Node) => {
   //   console.warn(ancestorText);
   //   printParents(ref);
   // }
-  const caller = parentFct
+  const referrer = parentFct
     ? parentFct.getName() ?? '[anonymous function]'
     : '[top level]';
-  return `${filePath}:${lineNumber}, ${callee} called by ${caller}`;
+  return `${filePath}:${lineNumber}, ${callee} referenced by ${referrer}`;
 };
 
 allRefs.forEach((ref) => console.log(renderReference(ref)));
