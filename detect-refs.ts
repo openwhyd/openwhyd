@@ -123,11 +123,6 @@ const countReferences = (ref: Reference) => {
   return ref.refs.reduce((count, subRef) => count + countReferences(subRef), 1);
 };
 
-const printTopReferences = (ref: Reference) => {
-  const refs = countReferences(ref);
-  return { refs };
-};
-
 if (showTop) {
   allRefs
     .map((ref) => ({
