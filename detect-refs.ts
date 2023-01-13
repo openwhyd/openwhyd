@@ -6,11 +6,48 @@
 
 import * as tsmorph from 'ts-morph';
 
-const isFunction = (node: tsmorph.Node): node is tsmorph.FunctionDeclaration =>
-  node instanceof tsmorph.FunctionDeclaration; // note: this only works if the `function` keyword was used
+const isNamedFunction = (
+  node: tsmorph.Node
+): node is tsmorph.FunctionDeclaration =>
+  node instanceof tsmorph.FunctionDeclaration; // only works if the `function` keyword is used
 
-const findParentFunction = (ref: tsmorph.Node) =>
-  ref.getFirstAncestor(isFunction);
+const findAssignedFunction = (
+  ref: tsmorph.Node
+): tsmorph.ReferenceFindableNode | undefined => {
+  const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
+  if (anonymousFct) {
+    const potentialAssignment = anonymousFct.getFirstAncestorByKind(
+      tsmorph.SyntaxKind.BinaryExpression
+    );
+    const operator = potentialAssignment?.getOperatorToken();
+    const potentialIdentifier = potentialAssignment?.getLeft();
+    if (
+      operator?.isKind(tsmorph.SyntaxKind.EqualsToken) &&
+      tsmorph.Node.isReferenceFindable(potentialIdentifier)
+      // && potentialAssignment.getRight() === anonymousFct
+    ) {
+      return potentialIdentifier;
+    }
+  }
+};
+
+const findParentFunction = (
+  ref: tsmorph.Node
+): tsmorph.ReferenceFindableNode | undefined => {
+  const namedFct = ref.getFirstAncestor(isNamedFunction);
+  return namedFct ?? findAssignedFunction(ref);
+};
+
+// const printParents = (ref: tsmorph.Node) => {
+//   let node: tsmorph.Node | undefined = ref;
+//   while (node) {
+//     if (node.getParent()) {
+//       console.warn(node.getKindName(), isFunction(node), node.getText());
+//     }
+//     node = node.getParent();
+//   }
+//   return null;
+// };
 
 const tsConfigFilePath = './tsconfig.json';
 const targetFile = process.argv[2];
@@ -38,7 +75,22 @@ const renderReference = (ref: tsmorph.Node) => {
   const filePath = ref.getSourceFile().getFilePath().replace(__dirname, '');
   const lineNumber = ref.getStartLineNumber();
   const callee = ref.getText();
-  const caller = findParentFunction(ref)?.getName() ?? '[top level]';
+  const parentFct = findParentFunction(ref);
+  // const ancestorText = ref
+  //   ?.getParent()
+  //   ?.getParent()
+  //   ?.getParent()
+  //   ?.getParent()
+  //   ?.getParent()
+  //   ?.getParent()
+  //   ?.getText();
+  // if (ancestorText?.includes(`return exports.usernames['' + uid];`)) {
+  //   console.warn(ancestorText);
+  //   printParents(ref);
+  // }
+  const caller = parentFct
+    ? parentFct.getName() ?? '[anonymous function]'
+    : '[top level]';
   return `${filePath}:${lineNumber}, ${callee} called by ${caller}`;
 };
 
