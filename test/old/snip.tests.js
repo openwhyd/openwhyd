@@ -73,18 +73,5 @@ describe('snip.httpRequest', function () {
 			}, 3000);
 		}));
 	});
-
-	testRunner.addTest("youtube.com worker requests calls back exactly once, after limiter is set", function(p, ee, cb){
-		var count = 0;
-		function counter(err, res){
-			++count;
-		}
-		var worker = new snip.Worker({expiry:4000});
-		snip.httpRequestJSON(url, {}, worker.newJob("fetchMetadataForEid:" + YOUTUBE_VIDEO_ID).wrapCallback(counter));
-		setTimeout(function(){
-			var success = count == 1;
-			cb(!success);
-		}, 5000);
-	});
-	*/
+  */
 });

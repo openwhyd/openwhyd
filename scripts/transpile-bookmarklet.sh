@@ -2,7 +2,7 @@
 
 OUTPUT_FILE="public/js/bookmarklet.js"
 
-npx tsc --module none --outFile "${OUTPUT_FILE}" public/js/bookmarklet*.ts
+npx tsc --module none --moduleResolution node --outFile "${OUTPUT_FILE}" public/js/bookmarklet*.ts
 TRANSPILED_CODE=$(cat "${OUTPUT_FILE}")
 
 cat >"${OUTPUT_FILE}" << CONTENT

@@ -18,12 +18,10 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - name: npm install
         env:
@@ -68,12 +66,10 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
@@ -109,7 +105,7 @@ jobs:
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
           npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: approval-code-coverage-report
           path: |
@@ -127,12 +123,10 @@ jobs:
         ports:
           - 27117:27017
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
@@ -150,12 +144,10 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - name: npm install
         env:
@@ -172,12 +164,10 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - name: npm install
         env:
@@ -199,12 +189,10 @@ jobs:
         ports:
           - 27017:27017
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
@@ -237,12 +225,10 @@ jobs:
         ports:
           - 27117:27017
     steps:
-      - uses: actions/checkout@v2
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
@@ -257,7 +243,7 @@ jobs:
           MONGODB_HOST: localhost
           MONGODB_PORT: 27117
       - name: Save code coverage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: refactor-code-coverage-report
           path: |
@@ -284,8 +270,8 @@ jobs:
         # run 3 copies of the current job in parallel
         containers: [1, 2, 3]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
           cache: 'npm'
@@ -297,11 +283,11 @@ jobs:
           CI: true
         run: npm install --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v2.7.2
+        uses: cypress-io/github-action@v5.0.2
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
-          config-file: cypress.json
+          config-file: cypress.config.ts
           browser: 'chromium' # to include browser console in cypress logs
           record: true
           parallel: true
@@ -319,20 +305,20 @@ jobs:
           # npm run test:coverage
           npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cypress-code-coverage-report
           path: |
             .nyc_output
             coverage
       # NOTE: screenshots will be generated only if E2E test failed
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: cypress-videos
@@ -343,19 +329,20 @@ jobs:
     needs:
       - cypress-tests
       - approval-tests
+      - refactor-coverage
       # TODO: add coverage for unit and integration tests too
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
           name: cypress-code-coverage-report
           path: coverage-cypress/
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: approval-code-coverage-report
           path: coverage-approval/
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: refactor-code-coverage-report
           path: coverage-refactor/
@@ -382,15 +369,13 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           # to prevent "You're not authorized to push to this branch"
           persist-credentials: false
-      - uses: browniebroke/read-nvmrc-action@v1 # Read node version from `.nvmrc` file
-        id: nvmrc
-      - uses: actions/setup-node@v2.2.0
+      - uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm install --prefer-offline --no-audit
         if: github.event_name == 'push'
@@ -410,7 +395,7 @@ jobs:
       - name: Create Docker tags
         id: create_docker_tags
         run: |
-          echo "::set-output name=tags::latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)"
+          echo "tags=latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_OUTPUT
           # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
       - name: Publish to Docker Hub registry
         if: github.event_name == 'push'
@@ -426,7 +411,7 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build and start services
         run: docker-compose up --build --detach
       - name: Init database for tests

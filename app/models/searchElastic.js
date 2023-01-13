@@ -1,6 +1,7 @@
 /**
  * Wraps search requests to elasticsearch index
  * @author adrien joly, whyd
+ * @deprecated because this code has not been used for years
  **/
 
 var http = require('http');
