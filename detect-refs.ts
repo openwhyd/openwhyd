@@ -35,7 +35,11 @@ const allRefs = [...refs];
 
 for (const directRef of allRefs) {
   const caller = findParentFunction(directRef);
-  if (caller) allRefs.push(...caller.findReferencesAsNodes());
+  if (caller?.getSymbol() === directRef.getSymbol()) {
+    console.warn(`🔃 skipping recursive call on ${directRef.getText()}`);
+  } else if (caller) {
+    allRefs.push(...caller.findReferencesAsNodes());
+  }
 }
 
 const renderReference = (ref: tsmorph.Node) => {
