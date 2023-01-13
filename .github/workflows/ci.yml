@@ -25,11 +25,12 @@ jobs:
       - name: npm install
         run: npm install --prefer-offline --no-audit
       - name: count references to groupObjectsBy()
+        shell: bash
         run: |
           EXPECTED_REFS_COUNT=7
           REFS=$(npx tsx detect-refs.ts app/snip.js groupObjectsBy)
-          echo ${REFS}
-          if [ "$(echo ${REFS} | wc -l)" -gt "${EXPECTED_REFS_COUNT}" ]; then
+          echo "${REFS}"
+          if [ "$(echo "${REFS}" | wc -l)" -gt "${EXPECTED_REFS_COUNT}" ]; then
             echo '❌  Please remove new (indirect) references to groupObjectsBy()'.
             exit 1;
           fi
