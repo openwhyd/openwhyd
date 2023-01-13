@@ -27,7 +27,7 @@ jobs:
       - name: count references to groupObjectsBy()
         shell: bash
         run: |
-          EXPECTED_REFS_COUNT=7
+          EXPECTED_REFS_COUNT=8
           REFS=$(npx tsx detect-refs.ts app/snip.js groupObjectsBy)
           echo "${REFS}"
           if [ "$(echo "${REFS}" | wc -l)" -gt "${EXPECTED_REFS_COUNT}" ]; then
