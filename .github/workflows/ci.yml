@@ -26,14 +26,7 @@ jobs:
         run: npm install --prefer-offline --no-audit
       - name: count references to usernames cache
         shell: bash
-        run: |
-          EXPECTED_REFS_COUNT=78
-          REFS=$(npx tsx detect-refs.ts app/models/mongodb.js usernames)
-          if [ "$(echo "${REFS}" | wc -l)" -gt "${EXPECTED_REFS_COUNT}" ]; then
-            echo '❌  Please remove new (indirect) references to usernames'.
-            echo "${REFS}"
-            exit 1;
-          fi
+        run: check-refs.sh
 
   code-checks:
     name: Code checks
