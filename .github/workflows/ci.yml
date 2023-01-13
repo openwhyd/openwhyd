@@ -13,7 +13,7 @@ env:
 
 jobs:
   decommission:
-    name: Decommission
+    name: Decommission of user cache
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
@@ -24,16 +24,16 @@ jobs:
           cache: 'npm'
       - name: npm install
         run: npm install --prefer-offline --no-audit
-      - name: count references to groupObjectsBy()
+      - name: count references to usernames cache
         shell: bash
         run: |
-          EXPECTED_REFS_COUNT=8
-          REFS=$(npx tsx detect-refs.ts app/snip.js groupObjectsBy)
-          echo "${REFS}"
+          EXPECTED_REFS_COUNT=0
+          REFS=$(npx tsx detect-refs.ts app/models/mongodb.js usernames)
           if [ "$(echo "${REFS}" | wc -l)" -gt "${EXPECTED_REFS_COUNT}" ]; then
-            echo '❌  Please remove new (indirect) references to groupObjectsBy()'.
+            echo '❌  Please remove new (indirect) references to usernames'.
             exit 1;
           fi
+          echo "${REFS}"
 
   code-checks:
     name: Code checks
