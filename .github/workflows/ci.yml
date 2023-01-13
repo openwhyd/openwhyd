@@ -12,6 +12,28 @@ env:
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
+  decommission:
+    name: Decommission
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: npm install
+        run: npm install --prefer-offline --no-audit
+      - name: count references to groupObjectsBy()
+        run: |
+          EXPECTED_REFS_COUNT=7
+          REFS=$(npx tsx detect-refs.ts app/snip.js groupObjectsBy)
+          echo ${REFS}
+          if [ $(echo ${REFS} | wc -l) -gt ${EXPECTED_REFS_COUNT} ]; then
+          echo ❌  Please remove new (indirect) references to groupObjectsBy().
+            exit 1;
+          fi
+
   code-checks:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
