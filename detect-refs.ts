@@ -35,11 +35,50 @@ const findAssignedFunction = (
   }
 };
 
+const findPropertyAssignedFunction = (
+  ref: tsmorph.Node
+): NamedNodeWithReferences | undefined => {
+  const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
+  if (anonymousFct) {
+    const potentialAssignment = anonymousFct.getFirstAncestorByKind(
+      tsmorph.SyntaxKind.PropertyAssignment
+    );
+    if (
+      tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialAssignment) &&
+      tsmorph.Node.hasName(potentialAssignment)
+      // && potentialAssignment.getRight() === anonymousFct
+    ) {
+      return potentialAssignment;
+    }
+  }
+};
+
+// const findAnonymousFunction = (
+//   ref: tsmorph.Node
+// ): NamedNodeWithReferences | undefined => {
+//   const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
+//   const fct = anonymousFct?.getFirstAncestorByKind(
+//     tsmorph.SyntaxKind.FunctionExpression
+//   );
+//   if (fct && tsmorph.Node.isReferenceFindable<tsmorph.Node>(anonymousFct)) {
+//     return {
+//       ...fct,
+//       getName() {
+//         return '[anonymous function]';
+//       },
+//     };
+//   }
+// };
+
 const findParentFunction = (
   ref: tsmorph.Node
 ): NamedNodeWithReferences | undefined => {
-  const namedFct = ref.getFirstAncestor(isNamedFunction);
-  return namedFct ?? findAssignedFunction(ref);
+  return (
+    ref.getFirstAncestor(isNamedFunction) ??
+    findAssignedFunction(ref) ??
+    findPropertyAssignedFunction(ref)
+    // ?? findAnonymousFunction(ref)
+  );
 };
 
 // const printParents = (ref: tsmorph.Node) => {
