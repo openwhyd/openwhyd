@@ -28,7 +28,6 @@ const findAssignedFunction = (
       operator?.isKind(tsmorph.SyntaxKind.EqualsToken) &&
       tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialIdentifier) &&
       tsmorph.Node.hasName(potentialIdentifier)
-      // && potentialAssignment.getRight() === anonymousFct
     ) {
       return potentialIdentifier;
     }
@@ -46,51 +45,18 @@ const findPropertyAssignedFunction = (
     if (
       tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialAssignment) &&
       tsmorph.Node.hasName(potentialAssignment)
-      // && potentialAssignment.getRight() === anonymousFct
     ) {
       return potentialAssignment;
     }
   }
 };
 
-// const findAnonymousFunction = (
-//   ref: tsmorph.Node
-// ): NamedNodeWithReferences | undefined => {
-//   const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
-//   const fct = anonymousFct?.getFirstAncestorByKind(
-//     tsmorph.SyntaxKind.FunctionExpression
-//   );
-//   if (fct && tsmorph.Node.isReferenceFindable<tsmorph.Node>(anonymousFct)) {
-//     return {
-//       ...fct,
-//       getName() {
-//         return '[anonymous function]';
-//       },
-//     };
-//   }
-// };
-
 const findParentFunction = (
   ref: tsmorph.Node
-): NamedNodeWithReferences | undefined => {
-  return (
-    ref.getFirstAncestor(isNamedFunction) ??
-    findAssignedFunction(ref) ??
-    findPropertyAssignedFunction(ref)
-    // ?? findAnonymousFunction(ref)
-  );
-};
-
-// const printParents = (ref: tsmorph.Node) => {
-//   let node: tsmorph.Node | undefined = ref;
-//   while (node) {
-//     if (node.getParent()) {
-//       console.warn(node.getKindName(), isFunction(node), node.getText());
-//     }
-//     node = node.getParent();
-//   }
-//   return null;
-// };
+): NamedNodeWithReferences | undefined =>
+  ref.getFirstAncestor(isNamedFunction) ??
+  findAssignedFunction(ref) ??
+  findPropertyAssignedFunction(ref);
 
 const tsConfigFilePath = './tsconfig.json';
 const targetFile = process.argv[2];
@@ -125,7 +91,7 @@ const buildRefsSubTree = (node: tsmorph.Node): Reference[] => {
       node: ref,
       refs: buildRefsSubTree(ref),
     }));
-    // TODO: exclude assignments to the "node"
+    // TODO: exclude assignments to "node" ?
   }
   return [];
 };
@@ -134,7 +100,7 @@ const allRefs: Reference[] = [
   ...refs.map((ref) => ({ node: ref, refs: buildRefsSubTree(ref) })),
 ];
 
-const renderReference = (ref: Reference, depth = 0) => {
+const printReferences = (ref: Reference, depth = 0) => {
   const filePath = ref.node
     .getSourceFile()
     .getFilePath()
@@ -142,18 +108,6 @@ const renderReference = (ref: Reference, depth = 0) => {
   const lineNumber = ref.node.getStartLineNumber();
   const callee = ref.node.getText();
   const parentFct = findParentFunction(ref.node);
-  // const ancestorText = ref
-  //   ?.getParent()
-  //   ?.getParent()
-  //   ?.getParent()
-  //   ?.getParent()
-  //   ?.getParent()
-  //   ?.getParent()
-  //   ?.getText();
-  // if (ancestorText?.includes(`return exports.usernames['' + uid];`)) {
-  //   console.warn(ancestorText);
-  //   printParents(ref);
-  // }
   const referrer = parentFct
     ? parentFct.getName() ?? '[anonymous function]'
     : '[top level]';
@@ -162,7 +116,7 @@ const renderReference = (ref: Reference, depth = 0) => {
       depth
     )}${filePath}:${lineNumber}, ${callee} referenced by ${referrer}`
   );
-  ref.refs.forEach((subRef) => renderReference(subRef, depth + 1));
+  ref.refs.forEach((subRef) => printReferences(subRef, depth + 1));
 };
 
-allRefs.forEach((ref) => renderReference(ref));
+allRefs.forEach((ref) => printReferences(ref));
