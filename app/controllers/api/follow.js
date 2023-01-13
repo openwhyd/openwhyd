@@ -4,6 +4,7 @@ var snip = require('../../snip.js');
 var mongodb = require('../../models/mongodb.js');
 var followModel = require('../../models/follow.js');
 var notifModel = require('../../models/notif.js');
+var userModel = require('../../models/user.js');
 
 var IMPLICIT_PARAMS = { _1: 'action', _2: 'id' }; //[null, "action", "id"];
 
@@ -34,22 +35,31 @@ var follow = function (reqParams, dbHandler) {
 };
 
 exports.follow = function (followerId, followingId, callback) {
-  follow(
-    {
-      action: 'insert',
-      uId: '' + followerId,
-      uNm: (mongodb.usernames['' + followerId] || {}).name,
-      tId: followingId,
-      tNm: ('' + followingId).startsWith('/u/')
-        ? (mongodb.usernames[followingId.substr(3)] || {}).name
-        : null,
-    },
-    function (error, result) {
-      if (callback) {
-        callback(result);
+  Promise.all([
+    new Promise((resolve) =>
+      userModel.fetchByUid(followerId, (user) => resolve(user?.name))
+    ),
+    new Promise((resolve) =>
+      userModel.fetchByUid(followingId.toString().replace('/u/', ''), (user) =>
+        resolve(user?.name)
+      )
+    ),
+  ]).then(([followerName, followingUserName]) => {
+    follow(
+      {
+        action: 'insert',
+        uId: '' + followerId,
+        uNm: followerName,
+        tId: followingId,
+        tNm: ('' + followingId).startsWith('/u/') ? followingUserName : null,
+      },
+      function (error, result) {
+        if (callback) {
+          callback(result);
+        }
       }
-    }
-  );
+    );
+  });
 };
 
 exports.isUserFollowing = function (
