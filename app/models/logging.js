@@ -53,17 +53,6 @@ http.IncomingMessage.prototype.getReferer = function () {
 // ========= COOKIE STUFF
 
 /**
- * Generates a user session cookie string
- * that can be supplied to a Set-Cookie HTTP header.
- */
-/*
-exports.makeCookie = function(user) {
-	var date = new Date((new Date()).getTime() + 1000 * 60 * 60 * 24 * 365);
-	return 'whydUid="'+(user.id || '')+'"; Expires=' + date.toGMTString();
-};
-*/
-
-/**
  * Transforms cookies found in the request into an object
  */
 http.IncomingMessage.prototype.getCookies = (function () {
@@ -139,21 +128,30 @@ http.IncomingMessage.prototype.getFbUid = function () {
   return this.getFbUid();
 };
 
+const useAuth0AsIdentityProvider = process.env.AUTH0_ISSUER_BASE_URL;
+
 /**
- * Returns the logged in user's uid, from its openwhyd session cookie
+ * Returns the logged in user's uid
  */
-http.IncomingMessage.prototype.getUid = function () {
-  /*
-	var uid = (this.getCookies() || {})["whydUid"];
-	if (uid) uid = uid.replace(/\"/g, "");
-	//if (uid) console.log("found openwhyd session cookie", uid);
-	return uid;
-	*/
-  return (this.session || {}).whydUid;
-};
+http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
+  ? function () {
+      const userId = this.oidc.isAuthenticated()
+        ? this.oidc.user?.sub.replace('auth0|', '') // we assume that the Auth0 tenant fetched the openwhyd user's id upon login, from our database
+        : null;
+      console.warn(`getUid --> ${userId}` /*, this.oidc.user*/);
+      if (userId) {
+        this.session = this.session || {};
+        this.session.whydUid = userId;
+      }
+      return userId;
+    }
+  : function () {
+      return (this.session || {}).whydUid;
+    };
 
 /**
  * Returns the logged in user as an object {_id, id, fbId, name, img}
+ * @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead.
  */
 http.IncomingMessage.prototype.getUser = function () {
   const uid = this.getUid();
@@ -166,8 +164,10 @@ http.IncomingMessage.prototype.getUser = function () {
 
 //http.IncomingMessage.prototype.getUserFromFbUid = mongodb.getUserFromFbUid;
 
+/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
 http.IncomingMessage.prototype.getUserFromId = mongodb.getUserFromId;
 
+/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
 http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId;
 
 // ========= LOGIN/SESSION/PRIVILEGES STUFF
