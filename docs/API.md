@@ -139,7 +139,7 @@ Table of contents:
 
 #### LOGOUT
 
-`GET /logout`
+`GET /logout` (formerly: `/login?action=logout`)
 
 Clears openwhyd cookie (HTTP headers) and session (database)
 
