@@ -18,7 +18,7 @@ function extractCookieJar(response) {
 }
 
 exports.logout = function logout(jar, callback) {
-  exports.get(jar, `/login?action=logout&ajax=1`, function (error, res) {
+  exports.get(jar, `/logout?ajax=1`, function (error, res) {
     assert.ifError(error);
     assert.equal(res.response.statusCode, 200);
     callback(
