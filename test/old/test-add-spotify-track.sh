@@ -21,7 +21,7 @@ function loginAndGetCookie {
 
 function logoutAndClearCookie {
 	echo Logging out from $URL_PREFIX ...
-	curl --silent $URL_PREFIX/login?action=logout 2>&1 >/dev/null
+	curl --silent $URL_PREFIX/logout 2>&1 >/dev/null
 	COOKIE=""
 }
 

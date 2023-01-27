@@ -25,7 +25,7 @@ Cypress.Commands.add('resetDb', () => {
 });
 
 Cypress.Commands.add('logout', () => {
-  cy.request('GET', `/login?action=logout`);
+  cy.request('GET', `/logout`);
 });
 
 Cypress.Commands.add('login', ({ email, md5 }) => {

@@ -28,6 +28,8 @@
     "test:integration:mongodb": "WITHOUT_CONSOLE_LOG=true npx mocha test/integration/mongodb/*tests.js --no-deprecation --serial --exit ",
     "test:unit": "npx mocha test/unit/*.js --exit",
     "test-approval": "npx kill-port --port 8080 >/dev/null; DONT_KILL=1 START_WITH_ENV_FILE='./env-vars-testing.conf' ava test/approval.tests.js $@",
+    "test-approval-docker": "PORT=8080 DONT_KILL=1 WHYD_GENUINE_SIGNUP_SECRET='' ava test/approval.tests.js $@",
+    "test-approval-docker-update": "npm run test-approval-docker -- --update-snapshots",
     "test-approval-hot-tracks": "npx kill-port --port 8080 >/dev/null; START_WITH_ENV_FILE='./env-vars-testing.conf' npx jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "test:approval": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/approval/approval.tests.js $@",
     "test:approval:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:approval -- --serial --timeout 10000 $@ && npx nyc report --reporter=lcov && npx nyc report | grep post",
