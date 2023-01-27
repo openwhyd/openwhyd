@@ -31,6 +31,7 @@ GET    /sponsor                        -> controllers.redir
 GET    /support                        -> controllers.redir
 GET    /team                           -> controllers.redir
 GET    /tos                            -> controllers.redir
+GET    /logout                         -> controllers.redir
 
 GET    /register                       -> controllers.private.register
 POST   /register                       -> controllers.private.register
