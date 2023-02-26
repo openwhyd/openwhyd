@@ -104,7 +104,7 @@
     "istanbul-lib-coverage": "^3.2.0"
   },
   "release": {
-    "branch": "master",
+    "branch": "main",
     "plugins": [
       [
         "@semantic-release/commit-analyzer",
