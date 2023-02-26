@@ -27,7 +27,7 @@ In order to solve this issue, you are invited to fork this GitHub repository, ma
 
 First, you may want to read about:
 
-- How to install, setup and run Openwhyd on your computer: [`INSTALL.md`](https://github.com/openwhyd/openwhyd/blob/master/docs/INSTALL.md)
-- How to propose a valuable contribution to this repo: [`CONTRIBUTING.md`](https://github.com/openwhyd/openwhyd/blob/master/docs/CONTRIBUTING.md)
+- How to install, setup and run Openwhyd on your computer: [`INSTALL.md`](https://github.com/openwhyd/openwhyd/blob/main/docs/INSTALL.md)
+- How to propose a valuable contribution to this repo: [`CONTRIBUTING.md`](https://github.com/openwhyd/openwhyd/blob/main/docs/CONTRIBUTING.md)
 
 I will be happy to assist you at any stage, if you want to try to solve this issue! If you have any question, just leave a comment below. Beginners are also welcome! 🤗
