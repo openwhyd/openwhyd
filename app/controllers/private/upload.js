@@ -23,7 +23,7 @@ function processFile(file, options, callback) {
   console.log('processFile', file, options);
   if (!file || !file.filepath)
     return callback({ error: 'Error during file upload, please try again.' });
-  else if (!file.type || file.type.indexOf('image/') != 0) {
+  else if (!file.mimetype || file.mimetype.indexOf('image/') != 0) {
     console.log('uploaded a file that is not an image => deleting file');
     uploadCtr.deleteFile(file.filepath);
     return callback({
@@ -32,7 +32,7 @@ function processFile(file, options, callback) {
   } else {
     var result = {
       name: file.name,
-      mime: file.type,
+      mime: file.mimetype,
       path: uploadCtr.cleanFilePath(file.filepath),
       thumbs: {},
     };
