@@ -112,11 +112,11 @@ function makeMongoUrl(params) {
 function start() {
   const myHttp = require('./app/lib/my-http-wrapper/http');
   const session = require('express-session');
-  const MongoStore = require('connect-mongo');
+  const MongoStore = require('connect-mongo')(session);
   const sessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET.substr(),
-    store: MongoStore.create({
-      mongoUrl: makeMongoUrl(params),
+    store: new MongoStore({
+      url: makeMongoUrl(params),
     }),
     cookie: {
       maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
