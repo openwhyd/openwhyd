@@ -21,11 +21,11 @@ var defaults = {
 
 function processFile(file, options, callback) {
   console.log('processFile', file, options);
-  if (!file || !file.path)
+  if (!file || !file.filepath)
     return callback({ error: 'Error during file upload, please try again.' });
   else if (!file.type || file.type.indexOf('image/') != 0) {
     console.log('uploaded a file that is not an image => deleting file');
-    uploadCtr.deleteFile(file.path);
+    uploadCtr.deleteFile(file.filepath);
     return callback({
       error: 'Only images are supported for upload, for now.',
     });
@@ -33,7 +33,7 @@ function processFile(file, options, callback) {
     var result = {
       name: file.name,
       mime: file.type,
-      path: uploadCtr.cleanFilePath(file.path),
+      path: uploadCtr.cleanFilePath(file.filepath),
       thumbs: {},
     };
 
@@ -43,19 +43,25 @@ function processFile(file, options, callback) {
 
     const whenDone = () => {
       console.log('whendone');
-      if (!options.keepOriginal) uploadCtr.deleteFile(file.path);
+      if (!options.keepOriginal) uploadCtr.deleteFile(file.filepath);
       callback(result);
     };
 
     if (thumbDims.length > 0) {
       // create thumbs
-      var f = uploadCtr.splitFilePath(file.path);
+      var f = uploadCtr.splitFilePath(file.filepath);
       var genThumb = function (thumbWidth, thumbHeight, callback) {
         var dims = (thumbWidth || '') + 'x' + (thumbHeight || '');
         var newPath = f.prefix + '_' + dims + f.ext;
-        img.makeThumb(file.path, newPath, thumbWidth, thumbHeight, function () {
-          if (callback) callback(newPath, thumbWidth, thumbHeight, dims);
-        });
+        img.makeThumb(
+          file.filepath,
+          newPath,
+          thumbWidth,
+          thumbHeight,
+          function () {
+            if (callback) callback(newPath, thumbWidth, thumbHeight, dims);
+          }
+        );
       };
 
       var remaining = thumbDims.length; //thumbWidths.length;
