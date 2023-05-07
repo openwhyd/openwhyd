@@ -1,7 +1,7 @@
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 export interface UserDocument {
-  _id: ObjectID;
+  _id: ObjectId;
   bio: string;
   consent: {
     date: string;
