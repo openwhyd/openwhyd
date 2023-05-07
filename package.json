@@ -63,7 +63,7 @@
     "argon2": "^0.30.3",
     "async": "*",
     "colors": "*",
-    "connect-mongo": "^5.0.0",
+    "connect-mongo": "^3.2.0",
     "dd-trace": "^3.20.0",
     "emailjs": "4.0.1",
     "ent": "2.2.0",
