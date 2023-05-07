@@ -11,7 +11,7 @@ const {
   userCollection: userRepository,
 } = require('../../../infrastructure/mongodb/UserCollection');
 
-const LOG_THRESHOLD = process.env.LOG_REQ_THRESHOLD_MS || 500;
+const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '500', 10);
 
 // From Response.js
 
