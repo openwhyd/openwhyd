@@ -559,7 +559,7 @@ if (typeof exports === 'undefined') {
     var playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
     initPlayemPlayers(playemUrl, function (players) {
       var bookmarklet = makeBookmarklet({
-        pageDetectors: openwhydBkPageDetectors,
+        pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
       });
       bookmarklet.detectTracks({
         window: window,
