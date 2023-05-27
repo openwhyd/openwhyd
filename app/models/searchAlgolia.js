@@ -5,9 +5,9 @@
 
 var snip = require('../snip.js');
 var mongodb = require('./mongodb.js');
-var Algolia = require('algoliasearch');
+var algoliasearch = require('algoliasearch');
 
-var ENGINE = new Algolia(
+var ENGINE = algoliasearch(
   process.env.ALGOLIA_APP_ID.substr(),
   process.env.ALGOLIA_API_KEY.substr()
 );
@@ -97,9 +97,14 @@ Search.prototype.search = function (index, query, options, cb) {
       options.index = index;
       options.query = q;
       this.queries.push(options);
-      ENGINE.multipleQueries(this.queries, 'index', cb);
+      ENGINE.multipleQueries(this.queries, 'index')
+        .then((res) => cb(res))
+        .catch((err) => cb(err));
     } else {
-      getIndex(index).search(q, options, cb);
+      getIndex(index)
+        .search(q, options)
+        .then((res) => cb && cb(null, res))
+        .catch((err) => cb && cb(err));
     }
   } else {
     options.index = index;
@@ -278,25 +283,29 @@ function indexTypedDocs(type, items, callback) {
       });
       return doc;
     });
-    getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function (err) {
-      if (err) {
-        console.error(
-          '[search] algolia error when indexing ' +
-            items.length +
-            ' ' +
-            type +
-            ' items => ' +
-            err.toString()
-        );
-      } else {
+    getIndex(INDEX_NAME_BY_TYPE[type])
+      .saveObjects(docs, {
+        autoGenerateObjectIDIfNotExist: true,
+      })
+      .then(() => {
         console.log(
           '[search] algolia indexTyped ' + type + ' => indexed',
           items.length,
           'documents'
         );
-      }
-      callback && callback(err, { items: items });
-    });
+        callback && callback(null, { items: items });
+      })
+      .catch((err) => {
+        console.error(
+          '[search] algolia error when indexing ' +
+            items.length +
+            ' ' +
+            type +
+            ' items => ',
+          err
+        );
+        callback && callback(err, { items: items });
+      });
   }
 }
 
@@ -312,25 +321,31 @@ exports.indexTyped = function (type, item, handler) {
 };
 
 exports.countDocs = function (type, callback) {
-  ENGINE.listIndexes(function (err, content) {
-    try {
+  ENGINE.listIndices()
+    .then((content) => {
       callback(
         content.items.find(function (index) {
           return index.name === INDEX_NAME_BY_TYPE[type];
         }).entries
       );
-    } catch (e) {
+    })
+    .catch((err) => {
       console.error('[search]', err || e);
       callback(null);
-    }
-  });
+    });
 };
 
 exports.deleteAllDocs = function (type, callback) {
-  getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err) {
-    console.log('[search] algolia deleteAllDocs =>', err || 'ok');
-    callback && callback(); // TODO: check if parameters are required or not
-  });
+  getIndex(INDEX_NAME_BY_TYPE[type])
+    .clearObjects()
+    .then(() => {
+      console.log('[search] algolia deleteAllDocs => ok');
+      callback && callback(); // TODO: check if parameters are required or not
+    })
+    .catch((err) => {
+      console.log('[search] algolia deleteAllDocs =>', err);
+      callback && callback(); // TODO: check if parameters are required or not
+    });
 };
 
 exports.indexBulk = function (docs, callback) {
