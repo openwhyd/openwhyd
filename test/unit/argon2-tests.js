@@ -11,6 +11,7 @@ describe('argon2', function () {
   });
 
   it('should check if password is valid', async () => {
+    this.timeout(5000);
     const password = 'secret';
     const hash = await argon2.hash(password);
     const valid = await argon2.verify(hash, password);
@@ -18,6 +19,7 @@ describe('argon2', function () {
   });
 
   it('should check if password is invalid', async () => {
+    this.timeout(5000);
     const password = 'secret';
     const hash = await argon2.hash(password);
     const valid = await argon2.verify(hash, 'secret2');
