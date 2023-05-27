@@ -2,7 +2,7 @@ USER_ID=$1
 
 echo "user $USER_ID..."
 mongo $MONGODB_DATABASE -u $MONGODB_USER -p $MONGODB_PASS --quiet --eval \
-"db.user.deleteOne({_id: \"$USER_ID\"})"
+"db.user.deleteOne({_id: ObjectId(\"$USER_ID\")})"
 
 echo "activity of user $USER_ID..."
 mongo $MONGODB_DATABASE -u $MONGODB_USER -p $MONGODB_PASS --quiet --eval \
