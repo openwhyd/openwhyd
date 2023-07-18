@@ -34,42 +34,6 @@ var follow = function (reqParams, dbHandler) {
   }
 };
 
-exports.follow = async function (followerId, followingId, callback) {
-  const [follower, followed] = await Promise.all([
-    new Promise((resolve) => userModel.fetchByUid(followerId, resolve)),
-    new Promise((resolve) =>
-      userModel.fetchByUid(followingId.toString().replace('/u/', ''), resolve)
-    ),
-  ]);
-  follow(
-    {
-      action: 'insert',
-      uId: '' + followerId,
-      uNm: follower.name,
-      tId: followingId,
-      tNm: ('' + followingId).startsWith('/u/') ? followed.name : null,
-    },
-    function (error, result) {
-      if (callback) {
-        callback(result);
-      }
-    }
-  );
-};
-
-exports.isUserFollowing = function (
-  uid,
-  followingMid,
-  handler /*, fbAccessToken*/
-) {
-  follow(
-    { action: 'get', uId: uid, tId: followingMid },
-    function (error, result) {
-      handler(result);
-    }
-  );
-};
-
 var PUBLIC_ACTIONS = {
   fetchFollowers: function (p, cb) {
     followModel.fetchFollowers(p.id, { skip: p.skip, limit: p.limit }, cb);
@@ -103,7 +67,7 @@ function ranPublicAction(loggedUser, reqParams, cb) {
   }
 }
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('follow.controller', reqParams);
 
   reqParams = reqParams || {};
@@ -130,15 +94,16 @@ exports.controller = function (request, reqParams, response) {
   // make sure a registered user is logged, or return an error page
   if (!user) return sendResult({ error: 'please login first' });
 
-  if (reqParams.tId && !reqParams.tNm) {
-    //reqParams.tId = reqParams.tId.replace("/u/", "");
-    reqParams.tNm = (request.getUserFromId(reqParams.tId) || {}).name;
+  if (reqParams.tId) {
+    reqParams.tNm = (
+      await new Promise((resolve) =>
+        userModel.fetchByUid(reqParams.tId, resolve)
+      )
+    ).name;
   }
 
-  //var user = request.getUser();
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
-  //console.log("follow query:", reqParams);
 
-  follow(reqParams, sendResult /*, request.getFacebookCookie().access_token*/);
+  follow(reqParams, sendResult);
 };
