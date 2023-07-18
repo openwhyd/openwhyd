@@ -5,7 +5,7 @@
 
 THIS_DIR=$(dirname "$0")
 
-npx code-complexity . \
+npx --yes code-complexity@v4.2.2 . \
   --filter 'app/**/*.js' \
   --sort score \
   --format \

@@ -1,68 +1,43 @@
+//@ts-check
+
 // follow - called by the topic browser when the user favorites a topic
 
-var snip = require('../../snip.js');
-var mongodb = require('../../models/mongodb.js');
-var followModel = require('../../models/follow.js');
-var notifModel = require('../../models/notif.js');
+const snip = require('../../snip.js');
+const followModel = require('../../models/follow.js');
+const notifModel = require('../../models/notif.js');
+const userModel = require('../../models/user.js');
 
-var IMPLICIT_PARAMS = { _1: 'action', _2: 'id' }; //[null, "action", "id"];
+const IMPLICIT_PARAMS = { _1: 'action', _2: 'id' }; //[null, "action", "id"];
 
-var follow = function (reqParams, dbHandler) {
+const follow = async function (reqParams, dbHandler) {
   switch (reqParams.action) {
-    case 'get':
+    case 'get': {
       followModel.get({ uId: reqParams.uId, tId: reqParams.tId }, dbHandler);
       break;
-    case 'insert':
-      var obj = {
+    }
+    case 'insert': {
+      if (!reqParams.uId || !reqParams.tId) return dbHandler();
+      const followedUser = await new Promise((resolve) =>
+        userModel.fetchByUid(reqParams.tId, resolve)
+      );
+      const obj = {
         uId: reqParams.uId,
         uNm: reqParams.uNm,
         tId: reqParams.tId,
-        tNm: reqParams.tNm,
+        tNm: followedUser.name,
       };
-      if (!obj.uId || !obj.tId) return dbHandler();
-      //if (reqParams.recom) obj.recom = true;
       followModel.add(obj, dbHandler);
-      //if (reqParams.tId.startsWith("/u/"))
       notifModel.subscribedToUser(reqParams.uId, reqParams.tId /*.substr(3)*/);
       break;
-    case 'delete':
+    }
+    case 'delete': {
       followModel.remove(reqParams.uId, reqParams.tId, dbHandler);
       break;
-    default:
+    }
+    default: {
       dbHandler('bad request');
+    }
   }
-};
-
-exports.follow = function (followerId, followingId, callback) {
-  follow(
-    {
-      action: 'insert',
-      uId: '' + followerId,
-      uNm: (mongodb.usernames['' + followerId] || {}).name,
-      tId: followingId,
-      tNm: ('' + followingId).startsWith('/u/')
-        ? (mongodb.usernames[followingId.substr(3)] || {}).name
-        : null,
-    },
-    function (error, result) {
-      if (callback) {
-        callback(result);
-      }
-    }
-  );
-};
-
-exports.isUserFollowing = function (
-  uid,
-  followingMid,
-  handler /*, fbAccessToken*/
-) {
-  follow(
-    { action: 'get', uId: uid, tId: followingMid },
-    function (error, result) {
-      handler(result);
-    }
-  );
 };
 
 var PUBLIC_ACTIONS = {
@@ -75,11 +50,11 @@ var PUBLIC_ACTIONS = {
 };
 
 function ranPublicAction(loggedUser, reqParams, cb) {
-  var p = snip.translateFields(reqParams, IMPLICIT_PARAMS); //translateParams(reqParams);
-  var action = PUBLIC_ACTIONS[p.action];
+  const p = snip.translateFields(reqParams, IMPLICIT_PARAMS); //translateParams(reqParams);
+  const action = PUBLIC_ACTIONS[p.action];
   if (action) {
     const fetchSubscriptionStatus = (res) => {
-      var uids = snip
+      const uids = snip
         .objArrayToValueArray(res, 'uId')
         .concat(snip.objArrayToValueArray(res, 'tId'));
       followModel.fetch(
@@ -98,12 +73,12 @@ function ranPublicAction(loggedUser, reqParams, cb) {
   }
 }
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('follow.controller', reqParams);
 
   reqParams = reqParams || {};
 
-  var sendResult = function (error, result) {
+  const sendResult = function (error, result) {
     result = result && result._id ? { _id: result._id } : {};
     if (error) {
       result.error = error;
@@ -114,7 +89,7 @@ exports.controller = function (request, reqParams, response) {
     else response.renderJSON(result);
   };
 
-  var user = request.checkLogin(/*response*/);
+  const user = request.checkLogin(/*response*/);
   if (
     ranPublicAction(user, reqParams, function (res) {
       response.renderJSON(res);
@@ -125,15 +100,8 @@ exports.controller = function (request, reqParams, response) {
   // make sure a registered user is logged, or return an error page
   if (!user) return sendResult({ error: 'please login first' });
 
-  if (reqParams.tId && !reqParams.tNm) {
-    //reqParams.tId = reqParams.tId.replace("/u/", "");
-    reqParams.tNm = (request.getUserFromId(reqParams.tId) || {}).name;
-  }
-
-  //var user = request.getUser();
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
-  //console.log("follow query:", reqParams);
 
-  follow(reqParams, sendResult /*, request.getFacebookCookie().access_token*/);
+  follow(reqParams, sendResult);
 };

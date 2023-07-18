@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.49.4",
+  "version": "1.49.8",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -20,7 +20,8 @@
     "start:localdb": "node app.js $@ --mongoDbDatabase openwhyd_test --mongoDbHost localhost --mongoDbPort 27117",
     "test-reset": "node test/reset-test-db.js",
     "test:functional": "npx mocha test/functional/*.js --exit",
-    "test:integration": "npx mocha test/integration/*.js --serial --exit",
+    "test:integration": "npx --yes mocha test/integration/*.js --serial --exit",
+    "test:integration:follow": "npx --yes mocha test/integration/follow.api.tests.js --serial --exit",
     "test:integration:legacy-post": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/legacy.post.api.tests.js $@",
     "test:integration:legacy-post:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:integration:legacy-post -- --serial --timeout 10000 && npx nyc report --reporter=lcov && npx nyc report | grep post",
     "test:integration:post": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/*post.api.tests.js test/integration/playlist.api.tests.js $@",
@@ -46,6 +47,7 @@
     "docker:test-approval": "DONT_KILL=1 PORT=8080 ava test/approval.tests.js $@",
     "docker:test-approval-hot-tracks": "DONT_KILL=1 PORT=8080 npx jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "docker:test:approval": "DONT_KILL=1 PORT=8080 mocha test/approval/approval.tests.js $@",
+    "lint:jsdoc-typing": "npx tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js'`",
     "lint:typescript": "npx tsc --noEmit --moduleResolution node --skipLibCheck",
     "lint:format": "prettier . --write",
     "lint:fix": "eslint . --fix",
@@ -58,7 +60,7 @@
     "test": "./test"
   },
   "dependencies": {
-    "algoliasearch": "^4.17.0",
+    "algoliasearch": "^4.19.0",
     "apn": "^1.6.2",
     "argon2": "^0.30.3",
     "async": "*",
@@ -85,15 +87,17 @@
     "@typescript-eslint/parser": "^5.59.2",
     "approvals": "^6.2.1",
     "ava": "^5.2.0",
-    "cypress": "^12.11.0",
+    "cypress": "^12.17.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-deprecation": "^1.4.1",
     "eslint-plugin-prettier": "^4.2.1",
     "mocha": "10.2.0",
     "nyc": "^15.1.0",
     "prettier": "^2.8.8",
+    "ts-morph": "^17.0.1",
     "typescript": "^5.0.4"
   },
   "resolutions": {

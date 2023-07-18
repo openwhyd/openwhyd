@@ -12,6 +12,22 @@ env:
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
+  decommission:
+    name: Decommission of user cache
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: npm install
+        run: npm install --prefer-offline --no-audit
+      - name: count references to usernames cache
+        shell: bash
+        run: ./scripts/legacy-refs/check-refs.sh
+
   code-checks:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -53,7 +69,7 @@ jobs:
           exit $(git diff | wc -l)
       - name: JSDoc type checks
         run: |
-          npx tsc --target es2015 --moduleResolution node --noEmit --allowJs `find app/ -name "*.js"`
+          npm run lint:jsdoc-typing
 
   approval-tests:
     name: Approval tests
@@ -212,6 +228,7 @@ jobs:
       - name: API tests
         env:
           CI: true
+          MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
         run: npm run test:integration
 
   refactor-coverage:
@@ -270,6 +287,12 @@ jobs:
         # run 3 copies of the current job in parallel
         containers: [1, 2, 3]
     steps:
+      # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
+      - uses: browser-actions/setup-chrome@latest
+      - run: |
+          echo "Chrome version: $(which chrome)"
+          echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
+
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:

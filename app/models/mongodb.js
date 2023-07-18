@@ -32,6 +32,8 @@ var USER_CACHE_FIELDS = {
 };
 
 exports.collections = {};
+
+/** @deprecated */
 exports.usernames = {};
 
 exports.ObjectID = mongodb.ObjectID; //exports.ObjectID = require('bson').BSONPure.ObjectID;
