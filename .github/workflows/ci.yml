@@ -26,7 +26,7 @@ jobs:
         run: npm install --prefer-offline --no-audit
       - name: count references to usernames cache
         shell: bash
-        run: ./check-refs.sh
+        run: ./scripts/legacy-refs/check-refs.sh
 
   code-checks:
     name: Code checks
