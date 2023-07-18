@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * api endpoint for posts
  * @author adrienjoly, whyd
@@ -101,18 +102,20 @@ exports.actions = {
 
   deleteComment: commentModel.delete,
 
-  insert: function (p, callback) {
-    var q = {
-      uId: p.uId,
-      uNm: p.uNm,
-      text: p.text || '',
-      pl: undefined, // to be parsed/populated before calling actualInsert()
+  /**
+   * @param createPlaylist {import('../../domain/api/Features').CreatePlaylist}
+   */
+  insert: async function (httpRequestParams, callback, _, { createPlaylist }) {
+    var postRequest = {
+      uId: httpRequestParams.uId,
+      uNm: httpRequestParams.uNm,
+      text: httpRequestParams.text || '',
       // fields that will be ignored by rePost():
-      name: p.name,
-      eId: p.eId,
+      name: httpRequestParams.name,
+      eId: httpRequestParams.eId,
     };
 
-    if (p.ctx) q.ctx = p.ctx;
+    if (httpRequestParams.ctx) postRequest.ctx = httpRequestParams.ctx;
 
     function tryJsonParse(p) {
       try {
@@ -122,50 +125,56 @@ exports.actions = {
       }
     }
 
-    function actualInsert() {
-      if (p.pId) postModel.rePost(p.pId, q, callback);
+    async function actualInsert() {
+      if (httpRequestParams.pId)
+        postModel.rePost(httpRequestParams.pId, postRequest, callback);
       else {
-        if (p._id)
+        if (httpRequestParams._id) {
           // edit mode
-          q._id = p._id;
+          const existingPost = await new Promise((resolve) =>
+            postModel.fetchPostById(httpRequestParams._id, resolve)
+          );
+          if (existingPost.uId !== postRequest.uId) {
+            callback({ error: "updating another user's post is not allowed" });
+            return;
+          }
+          postRequest._id = httpRequestParams._id;
+        }
 
-        if (p.img && p.img != 'null') q.img = p.img;
+        if (httpRequestParams.img && httpRequestParams.img != 'null')
+          postRequest.img = httpRequestParams.img;
 
-        if (p.src)
+        if (httpRequestParams.src)
           // source webpage of the content: {id,name} provided by bookmarklet
-          q.src = typeof p.src == 'object' ? p.src : tryJsonParse(p.src);
-        else if (p['src[id]'] && p['src[name]'])
-          q.src = {
-            id: p['src[id]'],
-            name: p['src[name]'],
+          postRequest.src =
+            typeof httpRequestParams.src == 'object'
+              ? httpRequestParams.src
+              : tryJsonParse(httpRequestParams.src);
+        else if (httpRequestParams['src[id]'] && httpRequestParams['src[name]'])
+          postRequest.src = {
+            id: httpRequestParams['src[id]'],
+            name: httpRequestParams['src[name]'],
           };
-        if (!q.src || !q.src.id) delete q.src;
+        if (!postRequest.src || !postRequest.src.id) delete postRequest.src;
 
-        postModel.savePost(q, callback);
+        postModel.savePost(postRequest, callback);
       }
     }
 
-    // process playlist
-    try {
-      q.pl = typeof p.pl == 'object' ? p.pl : JSON.parse(p.pl);
-    } catch (e) {
-      q.pl = {
-        id: p['pl[id]'],
-        name: p['pl[name]'],
+    // Muter post avec la notion de playlist provenant des params
+    // Clean code => Pure function
+    const playlistRequest = extractPlaylistRequestFrom(httpRequestParams);
+
+    if (needToCreatePlaylist(playlistRequest)) {
+      postRequest.pl = await createPlaylist(
+        httpRequestParams.uId,
+        playlistRequest.name
+      );
+    } else if (hasAValidPlaylistId(playlistRequest.id)) {
+      postRequest.pl = {
+        id: parseInt(playlistRequest.id, 10),
+        name: playlistRequest.name,
       };
-    }
-    if (q.pl.id == 'create') {
-      userModel.createPlaylist(p.uId, q.pl.name, function (playlist) {
-        if (playlist) {
-          q.pl.id = playlist.id;
-          // console.log('playlist was created', q.pl);
-        }
-        actualInsert();
-      });
-      return; // avoid inserting twice
-    } else {
-      q.pl.id = parseInt(q.pl.id);
-      if (isNaN(q.pl.id)) delete q.pl; //q.pl = null;
     }
 
     actualInsert();
@@ -263,7 +272,10 @@ exports.actions = {
   },
 };
 
-exports.handleRequest = function (request, reqParams, response) {
+/**
+ * @param features {import('../../domain/api/Features').Features}
+ */
+exports.handleRequest = function (request, reqParams, response, features) {
   request.logToConsole('api.post.handleRequest', reqParams);
 
   function resultHandler(res, args) {
@@ -292,16 +304,46 @@ exports.handleRequest = function (request, reqParams, response) {
   if (!user || !user.id) return response.badRequest();
 
   if (reqParams.action && exports.actions[reqParams.action])
-    exports.actions[reqParams.action](reqParams, resultHandler, request);
+    exports.actions[reqParams.action](
+      reqParams,
+      resultHandler,
+      request,
+      features
+    );
   else response.badRequest();
 };
 
-exports.controller = function (request, getParams, response) {
+/**
+ * @param features {import('../../domain/api/Features').Features}
+ */
+exports.controller = function (request, getParams, response, features) {
   //request.logToConsole("api.post", getParams);
   var params = snip.translateFields(getParams || {}, sequencedParameters);
 
   //if (request.method.toLowerCase() === 'post')
   for (let i in request.body) params[i] = request.body[i];
 
-  exports.handleRequest(request, params, response);
+  exports.handleRequest(request, params, response, features);
 };
+
+function hasAValidPlaylistId(id) {
+  return parseInt(id) >= 0;
+}
+
+function needToCreatePlaylist(playlistRequest) {
+  return playlistRequest.id == 'create';
+}
+
+function extractPlaylistRequestFrom(httpRequestParams) {
+  // Attention double responsabilité: parsing et mapping
+  try {
+    return typeof httpRequestParams.pl == 'object'
+      ? httpRequestParams.pl
+      : JSON.parse(httpRequestParams.pl);
+  } catch (e) {
+    return {
+      id: httpRequestParams['pl[id]'],
+      name: httpRequestParams['pl[name]'],
+    };
+  }
+}

@@ -346,6 +346,28 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "JKratus",
+      "name": "Jordan NOURRY",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7414857?v=4",
+      "profile": "https://github.com/JKratus",
+      "contributions": [
+        "code",
+        "mentoring",
+        "talk"
+      ]
+    },
+    {
+      "login": "julien-topcu",
+      "name": "Julien Topçu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52136235?v=4",
+      "profile": "https://beyondxscratch.com/",
+      "contributions": [
+        "code",
+        "mentoring",
+        "talk"
+      ]
     }
   ],
   "repoType": "github",

@@ -94,7 +94,7 @@ window.globals.fbLogin = function (perms, cb) {
       $fbForm
         .iframePostForm({
           complete: function (res) {
-            res = res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1);
+            res = res.substring(res.indexOf('{'), res.indexOf('}') + 1);
             res = JSON.parse(res);
             console.log('fbLogin response', res);
             if (res && res.error) console.log('fbLogin error', res.error);

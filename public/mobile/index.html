@@ -40,45 +40,13 @@
   </head>
 
   <body class="pgMobTrackFinder">
-    <div id="searchField">
-      <input
-        id="q"
-        class="q"
-        type="text"
-        value=""
-        placeholder="Search a track"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-      />
-      <input type="button" class="searchClear" />
-    </div>
     <div id="searchPane">
       <div id="pgMain" class="page">
         <div id="pleaseLogin">
           please <a href="/login?redirect=/mobile">login to Openwhyd</a> first
         </div>
-        <div id="myPlaylists"></div>
-        <div id="myLastPosts"></div>
-      </div>
-      <div id="pgResults" class="page searchResults">
-        <div id="myPosts"></div>
-        <div id="theirPosts"></div>
-        <div id="Youtube"></div>
-        <div id="Soundcloud"></div>
-      </div>
-      <div id="pgPlaylist" class="page">
-        <div id="playlistHeader">
-          <h1>Playlist: <span id="playlistName"></span></h1>
-          <div id="exitPlaylist">back</div>
-          <div id="toDeezer">Play with Deezer</div>
-        </div>
-        <div id="playlistTracks"></div>
       </div>
     </div>
-    <script type="text/javascript" src="/js/quickSearch.js"></script>
     <script type="text/javascript" src="/js/TrackFinder.js"></script>
-    <div id="dz-root"></div>
-    <script type="text/javascript" src="/js/DeezerExport.js"></script>
   </body>
 </html>

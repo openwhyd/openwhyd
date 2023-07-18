@@ -30,7 +30,7 @@
 
 ## Contrôle des données
 
-- Tu peux télécharger à tout moment la liste de tous les morceaux que tu as ajouté à ton compte Openwhyd, au format JSON. (cf [procédure de récupération de données](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#how-to-export-my-tracks--comment-exporter-ma-musique-en-csv-ou-json-))
+- Tu peux télécharger à tout moment la liste de tous les morceaux que tu as ajouté à ton compte Openwhyd, au format JSON. (cf [procédure de récupération de données](https://github.com/openwhyd/openwhyd/blob/main/docs/FAQ.md#how-to-export-my-tracks--comment-exporter-ma-musique-en-csv-ou-json-))
 - Tu peux librement t'opposer à l'usage des cookies de suivi de Google Analytics, Facebook et Twitter en configurant ton navigateur.
 - Tu peux supprimer ton compte Openwhyd et les données associées (incluant ton profil et ta liste de morceaux) directement depuis ta [page de réglages](https://openwhyd.org/settings).
 - Pour toute autre demande liée à tes données, contacte [privacy@openwhyd.org](mailto:privacy@openwhyd.org), en langue française ou anglaise.
