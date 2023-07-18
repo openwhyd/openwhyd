@@ -129,7 +129,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
         <li>
           <a
             target="_blank"
-            href="https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md"
+            href="https://github.com/openwhyd/openwhyd/blob/main/docs/FAQ.md"
             >FAQ</a
           >
         </li>
@@ -496,7 +496,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
         <li>
           <a
             target="_blank"
-            href="https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md"
+            href="https://github.com/openwhyd/openwhyd/blob/main/docs/FAQ.md"
             >FAQ</a
           >
         </li>
@@ -824,6 +824,7 @@ var JAMENDO_CLIENT_ID = "2c9a11b9";
   </body>
 </html>"
 `;
+
 
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks, starting at a given index 1`] = `
 "{

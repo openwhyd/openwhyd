@@ -14,6 +14,9 @@ COPY --chown=node:node ./package*.json /usr/src/app/
 RUN mkdir -p public/js/
 RUN npm ci --only=production --no-audit
 
+# Remove unnecessary files from the node_modules folder
+RUN curl -sf https://gobinaries.com/tj/node-prune | sh
+
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
 # RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js
 

@@ -11,6 +11,7 @@ var FAQ_PAGE = 'https://openwhyd.github.io/openwhyd/FAQ';
 var SUPPORT_PAGE = FAQ_PAGE + '#how-to-contact-openwhyds-team';
 var DONATE_PAGE = 'https://opencollective.com/openwhyd';
 var PRIVACY_PAGE = config.urlPrefix + '/privacy';
+var LOGOUT_PAGE = config.urlPrefix + '/login?action=logout';
 
 var REDIRECTIONS = {
   '/about': [
@@ -31,6 +32,7 @@ var REDIRECTIONS = {
   '/support': [SUPPORT_PAGE, { title: 'Support' }],
   '/team': [SUPPORT_PAGE, { title: 'Team' }],
   '/tos': [PRIVACY_PAGE, { title: 'Terms of Service' }],
+  '/logout': [LOGOUT_PAGE, { title: 'Logout' }],
 };
 
 exports.controller = function (request, reqParams, response) {
