@@ -14,7 +14,7 @@ env:
 jobs:
   code-checks:
     name: Code checks
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
@@ -57,7 +57,7 @@ jobs:
 
   approval-tests:
     name: Approval tests
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
@@ -114,7 +114,7 @@ jobs:
 
   approval-tests-2:
     name: Approval tests for /api/post
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
@@ -140,7 +140,7 @@ jobs:
 
   unit-tests:
     name: Unit tests
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
@@ -160,7 +160,7 @@ jobs:
 
   functional-tests:
     name: Functional tests
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     steps:
@@ -180,7 +180,7 @@ jobs:
 
   integration-tests:
     name: Integration tests
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
@@ -217,7 +217,7 @@ jobs:
 
   refactor-coverage:
     name: Send test coverage of the `post` API to Codacy
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
@@ -253,7 +253,7 @@ jobs:
 
   cypress-tests:
     name: Cypress E2E tests
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
     services:
@@ -373,7 +373,7 @@ jobs:
       - unit-tests
       - integration-tests
       - cypress-tests
-    if: '!contains(github.event.head_commit.message, "[skip ci]")'
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
