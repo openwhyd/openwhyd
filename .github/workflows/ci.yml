@@ -228,6 +228,7 @@ jobs:
       - name: API tests
         env:
           CI: true
+          MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
         run: npm run test:integration
 
   refactor-coverage:
