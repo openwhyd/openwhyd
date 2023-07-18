@@ -107,19 +107,19 @@ jobs:
           PORT: '8080'
           DONT_KILL: '1'
           MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
-        run: npx ava test/approval.tests.js
+        run: npx --yes ava test/approval.tests.js
       - name: Approval tests for Hot Tracks
         env:
           PORT: '8080'
           DONT_KILL: '1'
           MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
-        run: npx jest --runInBand test/approval-hot-tracks.jest.test.js
+        run: npx --yes jest --runInBand test/approval-hot-tracks.jest.test.js
       - name: Get coverage data
         run: |
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
           killall node
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
-          npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
+          npx --yes nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
@@ -326,7 +326,7 @@ jobs:
       - name: Get coverage data
         run: |
           # npm run test:coverage
-          npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
+          npx --yes nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
@@ -376,8 +376,8 @@ jobs:
           cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-approval/.nyc_output/*.json coverage-reports
           cp coverage-refactor/.nyc_output/*.json coverage-reports
-          npx nyc merge coverage-reports .nyc_output/merged-coverage.json
-          npx nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
+          npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
+          npx --yes nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
         with:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
@@ -402,7 +402,7 @@ jobs:
           cache: 'npm'
       - run: npm install --prefer-offline --no-audit
         if: github.event_name == 'push'
-      - name: npx semantic-release
+      - name: npx --yes semantic-release
         run: |
           # we install just semantic-release and its plugins, without considering package.json
           mkdir "tmp-release"
