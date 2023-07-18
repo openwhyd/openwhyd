@@ -11,4 +11,4 @@ VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
 # sudo service nginx restart
 
 echo "👋  Restarting Openwhyd server ($VERSION) on port $PORT..."
-cd $ROOT_DIR && source env-vars-local.sh && WHYD_PORT=$PORT npx --yes pm2 restart app.js
+cd $ROOT_DIR && source env-vars-local.sh && WHYD_PORT=$PORT npx pm2 restart app.js
