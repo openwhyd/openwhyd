@@ -60,7 +60,7 @@
     "test": "./test"
   },
   "dependencies": {
-    "algoliasearch": "^4.17.0",
+    "algoliasearch": "^4.19.0",
     "apn": "^1.6.2",
     "argon2": "^0.30.3",
     "async": "*",
