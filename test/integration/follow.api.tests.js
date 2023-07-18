@@ -1,8 +1,15 @@
+//@ts-check
+
 const querystring = require('querystring');
 const assert = require('assert');
 
 const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
+const { dumpMongoCollection } = require('../approval-tests-helpers.js');
+const { ObjectId } = require('../../app/models/mongodb.js');
+
+const MONGODB_URL =
+  process.env.MONGODB_URL || 'mongodb://mongo:27117/openwhyd_test';
 
 const getAsUser = (user, url, params) =>
   new Promise((resolve, reject) => {
@@ -23,17 +30,29 @@ describe(`follow api`, () => {
 
   before(cleanup); // to prevent side effects between tests
 
-  before(function () {
-    this.timeout(4000); // give 4 seconds for each test to pass
-  });
+  it(`allows a user to follow another user`, async function () {
+    this.timeout(5000); // give 5 seconds for this test to pass
 
-  it(`allows a user to follow another user`, async () => {
     const { response, body } = await getAsUser(DUMMY_USER, '/api/follow', {
       action: 'insert',
       tId: ADMIN_USER.id,
     });
-    console.log({ statusCode: response.statusCode, body });
     assert.strictEqual(response.statusCode, 200);
-    // TODO: then, check in the db that the user was really followed
+
+    // check in the db that the user was really followed
+    const actualSubscriptions = await dumpMongoCollection(
+      MONGODB_URL,
+      'follow'
+    );
+    const expectedSubscriptions = [
+      {
+        _id: ObjectId(body._id),
+        uId: DUMMY_USER.id,
+        uNm: DUMMY_USER.name,
+        tId: ADMIN_USER.id,
+        tNm: ADMIN_USER.name,
+      },
+    ];
+    assert.deepStrictEqual(actualSubscriptions, expectedSubscriptions);
   });
 });
