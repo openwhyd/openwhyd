@@ -1,8 +1,8 @@
 /**
  * track model
  * - maintained by post model: updateByEid()
- * - read by hot tracks controller: fetchPosts()
- * - read by notif template: fetchPosts()
+ * - read by hot tracks controller: getHotTracksFromDb()
+ * - read by notif template: getHotTracksFromDb()
  * @author adrienjoly, whyd
  **/
 
@@ -36,18 +36,9 @@
 var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId;
 var snip = require('../snip.js');
+const feature = require('../features/hot-tracks.js');
 
-var FIELDS_TO_SUM = {
-  nbP: true, // number of plays
-  nbL: true, // number of likes (from lov[] field)
-  nbR: true, // number of posts/reposts
-};
-
-var FIELDS_TO_COPY = {
-  name: true,
-  img: true,
-  score: true,
-};
+const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
 
 var COEF_REPOST = 100;
 var COEF_LIKE = 50;
@@ -124,57 +115,29 @@ exports.fetchTrackByEid = function (eId, cb) {
 
 // functions for fetching tracks and corresponding posts
 
-var fieldList = Object.keys(FIELDS_TO_COPY)
-  .concat(Object.keys(FIELDS_TO_SUM))
-  .concat(['prev']);
-
-function mergePostData(track, post) {
-  for (let f in fieldList) post[fieldList[f]] = track[fieldList[f]];
-  post.trackId = track._id;
-  post.rankIncr = track.prev - track.score;
-  return post;
-}
-
-function fetchPostsByPid(pId, cb) {
-  var pidList = (pId && Array.isArray(pId) ? pId : []).map(function (id) {
+const makeObjectIdList = (pId) =>
+  (pId && Array.isArray(pId) ? pId : []).map(function (id) {
     return ObjectId('' + id);
   });
-  //for (let i in pidList) pidList[i] = ObjectId("" + pidList[i]);
-  mongodb.collections['post'].find(
-    { _id: { $in: pidList } },
-    POST_FETCH_OPTIONS,
-    function (err, cursor) {
-      cursor.toArray(function (err, posts) {
-        cb(posts);
-      });
-    }
-  );
+
+function fetchPostsByPid(pId) {
+  return mongodb.collections['post']
+    .find({ _id: { $in: makeObjectIdList(pId) } }, POST_FETCH_OPTIONS)
+    .toArray();
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
-exports.fetchPosts = function (params, handler) {
-  params = params || {};
+exports.getHotTracksFromDb = function (params, handler) {
   params.skip = parseInt(params.skip || 0);
-  exports.fetch(params, function (tracks) {
-    var pidList = snip.objArrayToValueArray(tracks, 'pId');
-    fetchPostsByPid(pidList, function (posts) {
-      var postsByEid = snip.objArrayToSet(posts, 'eId');
-      for (let i in tracks) {
-        var track = tracks[i];
-        if (!track) {
-          console.error('warning: skipping null track in track.fetchPosts()');
-          continue;
-        }
-        var post = postsByEid[tracks[i].eId];
-        if (!post) {
-          //console.error("warning: skipping null post in track.fetchPosts()");
-          continue;
-        }
-        tracks[i] = mergePostData(track, post);
-      }
+  const getTracksByDescendingScore = () =>
+    new Promise((resolve) => {
+      exports.fetch(params, resolve);
+    });
+  feature
+    .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
+    .then((tracks) => {
       handler(tracks);
     });
-  });
 };
 
 // update function
