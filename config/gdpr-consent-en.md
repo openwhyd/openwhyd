@@ -30,7 +30,7 @@
 
 ## Data control
 
-- You can download the list of tracks you've added to your Openwhyd account at any time, in the JSON format. (see [how to export my tracks](https://github.com/openwhyd/openwhyd/blob/master/docs/FAQ.md#how-to-export-my-tracks--comment-exporter-ma-musique-en-csv-ou-json-))
+- You can download the list of tracks you've added to your Openwhyd account at any time, in the JSON format. (see [how to export my tracks](https://github.com/openwhyd/openwhyd/blob/main/docs/FAQ.md#how-to-export-my-tracks--comment-exporter-ma-musique-en-csv-ou-json-))
 - You can freely disable tracking cookies from Google Analytics, Facebook and Twitter by setting up your web browser.
 - You can delete your Openwhyd account and the underlying data (including your profile and list of tracks) directly from your [settings page](https://openwhyd.org/settings).
 - For any other question or request you may have related to your data, please reach out at [privacy@openwhyd.org](mailto:privacy@openwhyd.org).

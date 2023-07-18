@@ -321,7 +321,7 @@ exports.renderHeader = function (user, content, params) {
             '      <a href="/invite">Invite friends</a>',
             '      <a href="/button">Install "Add Track" button</a>',
             '      <a href="/settings">Settings</a>',
-            '      <a href="/login?action=logout" class="no-ajaxy">Logout</a>', //javascript:logout()
+            '      <a href="/logout" class="no-ajaxy">Logout</a>', //javascript:logout()
             '     </div>',
             '   </div>',
             '  </div>',

@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 env:
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
@@ -286,6 +286,12 @@ jobs:
         # run 3 copies of the current job in parallel
         containers: [1, 2, 3]
     steps:
+      # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
+      - uses: browser-actions/setup-chrome@latest
+      - run: |
+          echo "Chrome version: $(which chrome)"
+          echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
+
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:

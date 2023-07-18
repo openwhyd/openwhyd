@@ -3,6 +3,5 @@
     "allowJs": true,
     "skipLibCheck": true
   },
-  "files": ["./node_modules/@applitools/eyes-cypress/index.d.ts"],
   "include": ["**/*.ts", "**/*.d.ts", "**/*.js"]
 }
