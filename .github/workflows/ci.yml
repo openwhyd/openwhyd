@@ -12,6 +12,22 @@ env:
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
+  decommission:
+    name: Decommission of user cache
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: npm install
+        run: npm install --prefer-offline --no-audit
+      - name: count references to usernames cache
+        shell: bash
+        run: ./scripts/legacy-refs/check-refs.sh
+
   code-checks:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -53,7 +69,7 @@ jobs:
           exit $(git diff | wc -l)
       - name: JSDoc type checks
         run: |
-          npx tsc --target es2015 --moduleResolution node --noEmit --allowJs `find app/ -name "*.js"`
+          npm run lint:jsdoc-typing
 
   approval-tests:
     name: Approval tests
