@@ -289,10 +289,8 @@ jobs:
     steps:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
       - uses: browser-actions/setup-chrome@latest
-        with:
-          chrome-version: 114
       - run: |
-          echo "Chrome version: $(chrome --version)"
+          echo "Chrome version: $(which chrome)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
 
       - uses: actions/checkout@v3
