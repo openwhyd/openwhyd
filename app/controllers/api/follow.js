@@ -34,32 +34,27 @@ var follow = function (reqParams, dbHandler) {
   }
 };
 
-exports.follow = function (followerId, followingId, callback) {
-  Promise.all([
+exports.follow = async function (followerId, followingId, callback) {
+  const [follower, followed] = await Promise.all([
+    new Promise((resolve) => userModel.fetchByUid(followerId, resolve)),
     new Promise((resolve) =>
-      userModel.fetchByUid(followerId, (user) => resolve(user?.name))
+      userModel.fetchByUid(followingId.toString().replace('/u/', ''), resolve)
     ),
-    new Promise((resolve) =>
-      userModel.fetchByUid(followingId.toString().replace('/u/', ''), (user) =>
-        resolve(user?.name)
-      )
-    ),
-  ]).then(([followerName, followingUserName]) => {
-    follow(
-      {
-        action: 'insert',
-        uId: '' + followerId,
-        uNm: followerName,
-        tId: followingId,
-        tNm: ('' + followingId).startsWith('/u/') ? followingUserName : null,
-      },
-      function (error, result) {
-        if (callback) {
-          callback(result);
-        }
+  ]);
+  follow(
+    {
+      action: 'insert',
+      uId: '' + followerId,
+      uNm: follower.name,
+      tId: followingId,
+      tNm: ('' + followingId).startsWith('/u/') ? followed.name : null,
+    },
+    function (error, result) {
+      if (callback) {
+        callback(result);
       }
-    );
-  });
+    }
+  );
 };
 
 exports.isUserFollowing = function (
