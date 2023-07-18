@@ -127,7 +127,7 @@ function fetchPostsByPid(pId) {
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
-exports.getHotTracksFromDb = function (params = {}, handler) {
+exports.getHotTracksFromDb = function (params, handler) {
   params.skip = parseInt(params.skip || 0);
   const getTracksByDescendingScore = () =>
     new Promise((resolve) => {
