@@ -69,7 +69,7 @@ jobs:
           exit $(git diff | wc -l)
       - name: JSDoc type checks
         run: |
-          npx tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name "*.js"`
+          npm run lint:jsdoc-typing
 
   approval-tests:
     name: Approval tests
