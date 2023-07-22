@@ -9,7 +9,7 @@ var Algolia = require('algoliasearch');
 
 var ENGINE = new Algolia(
   process.env.ALGOLIA_APP_ID.substr(),
-  process.env.ALGOLIA_API_KEY.substr()
+  process.env.ALGOLIA_API_KEY.substr() // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings
 );
 
 var INDEX_NAME_BY_TYPE = {
