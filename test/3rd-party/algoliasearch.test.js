@@ -2,6 +2,11 @@
 
 const util = require('util');
 
+const DUMMY_POST = {
+  _id: 'xyz',
+  name: 'a post',
+};
+
 describe('Algolia search wrapper', () => {
   let searchModel;
 
@@ -44,30 +49,18 @@ describe('Algolia search wrapper', () => {
   });
 
   it('should hit an indexed post, when searching posts', async () => {
-    const post = {
-      _id: 'xyz',
-      name: 'a post',
-    };
+    const post = DUMMY_POST;
     const result = await util.promisify(searchModel.indexTyped)('post', post);
     expect(result).toMatchObject({ items: [post] });
 
     const posts = await new Promise((resolve) =>
-      searchModel.query(
-        {
-          _type: 'post',
-          q: '',
-        },
-        resolve
-      )
+      searchModel.query({ _type: 'post', q: '' }, resolve)
     );
     expect(posts).toMatchObject({ hits: [post] });
   });
 
   it('should hit an indexed post, when searching all types of documents', async () => {
-    const post = {
-      _id: 'xyz',
-      name: 'a post',
-    };
+    const post = DUMMY_POST;
     const result = await util.promisify(searchModel.indexTyped)('post', post);
     expect(result).toMatchObject({ items: [post] });
 
