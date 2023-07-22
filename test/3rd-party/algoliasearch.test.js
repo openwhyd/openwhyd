@@ -35,12 +35,23 @@ describe('Algolia search wrapper', () => {
   //   await expect(promise).rejects.toThrow('Not enough rights to add an object');
   // });
 
-  it('should index a post', async () => {
+  it('should index then find a post', async () => {
     const post = {
       _id: 'xyz',
       name: 'a post',
     };
     const result = await util.promisify(searchModel.indexTyped)('post', post);
     expect(result).toMatchObject({ items: [post] });
+
+    const posts = await new Promise((resolve) =>
+      searchModel.query(
+        {
+          _type: 'post',
+          q: '',
+        },
+        resolve
+      )
+    );
+    expect(posts).toMatchObject({ hits: [post] });
   });
 });

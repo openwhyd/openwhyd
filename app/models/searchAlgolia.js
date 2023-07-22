@@ -9,7 +9,7 @@ var Algolia = require('algoliasearch');
 
 var ENGINE = new Algolia(
   process.env.ALGOLIA_APP_ID.substr(),
-  process.env.ALGOLIA_API_KEY.substr() // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings
+  process.env.ALGOLIA_API_KEY.substr() // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
 );
 
 var INDEX_NAME_BY_TYPE = {
@@ -97,9 +97,12 @@ Search.prototype.search = function (index, query, options, cb) {
       options.index = index;
       options.query = q;
       this.queries.push(options);
-      ENGINE.multipleQueries(this.queries, 'index', cb);
+      ENGINE.multipleQueries(this.queries, 'index', cb); // TODO: make sure that this still works
     } else {
-      getIndex(index).search(q, options, cb);
+      getIndex(index)
+        .search(q, options)
+        .catch(cb)
+        .then((success) => cb(null, success));
     }
   } else {
     options.index = index;
@@ -335,10 +338,16 @@ exports.deleteAllDocs = function (type, callback) {
     callback && callback(new Error('invalid type'));
     return;
   }
-  getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err) {
-    console.log('[search] algolia deleteAllDocs =>', err || 'ok');
-    callback && callback(); // TODO: check if parameters are required or not
-  });
+  getIndex(INDEX_NAME_BY_TYPE[type])
+    .clearObjects()
+    .catch((err) => {
+      console.error('[search] algolia deleteAllDocs =>', err);
+      callback && callback(err);
+    })
+    .then(() => {
+      console.log('[search] algolia deleteAllDocs =>', 'ok');
+      callback && callback(); // TODO: check if parameters are required or not
+    });
 };
 
 exports.indexBulk = function (docs, callback) {
