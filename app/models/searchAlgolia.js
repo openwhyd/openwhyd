@@ -278,8 +278,10 @@ function indexTypedDocs(type, items, callback) {
       });
       return doc;
     });
-    getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function (err) {
-      if (err) {
+
+    getIndex(INDEX_NAME_BY_TYPE[type])
+      .saveObjects(docs, { autoGenerateObjectIDIfNotExist: true })
+      .catch((err) => {
         console.error(
           '[search] algolia error when indexing ' +
             items.length +
@@ -288,15 +290,16 @@ function indexTypedDocs(type, items, callback) {
             ' items => ' +
             err.toString()
         );
-      } else {
+        callback && callback(err);
+      })
+      .then(() => {
         console.log(
           '[search] algolia indexTyped ' + type + ' => indexed',
           items.length,
           'documents'
         );
-      }
-      callback && callback(err, { items: items });
-    });
+        callback && callback(null, { items: items });
+      });
   }
 }
 
