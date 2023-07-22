@@ -319,18 +319,22 @@ exports.indexTyped = function (type, item, handler) {
 };
 
 exports.countDocs = function (type, callback) {
-  ENGINE.listIndexes(function (err, content) {
-    try {
-      callback(
-        content.items.find(function (index) {
-          return index.name === INDEX_NAME_BY_TYPE[type];
-        }).entries
-      );
-    } catch (e) {
-      console.error('[search]', err || e);
+  ENGINE.listIndices()
+    .catch((err) => {
+      console.error('[search]', err);
       callback(null);
-    }
-  });
+    })
+    .then(function (content) {
+      try {
+        const count = content.items.find(function (index) {
+          return index.name === INDEX_NAME_BY_TYPE[type];
+        }).entries;
+        callback(count);
+      } catch (e) {
+        console.error('[search]', e);
+        callback(null);
+      }
+    });
 };
 
 exports.deleteAllDocs = function (type, callback) {
