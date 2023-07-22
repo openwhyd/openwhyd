@@ -308,6 +308,7 @@ exports.indexTyped = function (type, item, handler) {
   if (!item || !item._id || !item.name) {
     logToConsole({ error: 'indexTyped: missing parameters' });
     handler && handler(new Error('indexTyped: missing parameters'));
+    return;
   }
   return indexTypedDocs(type, [item], function (err, success) {
     handler && handler(err, success);
