@@ -20,12 +20,21 @@ describe('Algolia search wrapper', () => {
     await expect(promise).rejects.toThrow('indexTyped: missing parameters');
   });
 
+  // TODO
+  // it('should fail to index a post thru a readonly API key', async () => {
+  //   const promise = util.promisify(searchModel.indexTyped)('post', {
+  //     _id: 'xyz',
+  //     name: 'a post',
+  //   });
+  //   await expect(promise).rejects.toThrow('Not enough rights to add an object');
+  // });
+
   it('should index a post', async () => {
-    const result = await util.promisify(searchModel.indexTyped)('post', {
+    const post = {
       _id: 'xyz',
       name: 'a post',
-    });
-
-    console.log({ result });
+    };
+    const result = await util.promisify(searchModel.indexTyped)('post', post);
+    expect(result).toMatch({ items: [post] });
   });
 });
