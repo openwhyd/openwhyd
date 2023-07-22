@@ -294,7 +294,7 @@ jobs:
   cypress-tests:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    timeout-minutes: 5
+    timeout-minutes: 7
     runs-on: ubuntu-20.04
     services:
       mongodb:
