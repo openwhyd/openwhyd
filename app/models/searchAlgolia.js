@@ -284,6 +284,7 @@ function indexTypedDocs(type, items, callback) {
 
     getIndex(INDEX_NAME_BY_TYPE[type])
       .saveObjects(docs, { autoGenerateObjectIDIfNotExist: true })
+      .wait()
       .catch((err) => {
         console.error(
           '[search] algolia error when indexing ' +
