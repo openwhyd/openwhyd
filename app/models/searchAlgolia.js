@@ -92,24 +92,16 @@ Search.prototype.search = function (index, query, options, cb) {
     options.facets = facetAttrs.join(',');
     options.facetFilters = facetFilters;
   }
-  if (cb) {
-    if (this.queries) {
-      options.index = index;
-      options.query = q;
-      this.queries.push(options);
-      client.multipleQueries(this.queries, 'index', cb); // TODO: make sure that this still works
-    } else {
-      getIndex(index)
-        .search(q, options)
-        .catch(cb)
-        .then((success) => cb(null, success));
-    }
-  } else {
-    options.index = index;
-    options.query = q;
-    this.queries = this.queries || [];
-    this.queries.push(options);
+  if (!cb) {
+    throw new Error(
+      'please pass a callback parameter when calling Search.prototype.search'
+    );
   }
+  getIndex(index)
+    .search(q, options)
+    .catch(cb)
+    .then((success) => cb(null, success));
+
   return this;
 };
 
