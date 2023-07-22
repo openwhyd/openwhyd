@@ -41,7 +41,7 @@ describe('Algolia search wrapper', () => {
     await expect(count).toBe(0);
   });
 
-  it('should index then find a post', async () => {
+  it('should hit an indexed post, when searching posts', async () => {
     const post = {
       _id: 'xyz',
       name: 'a post',
@@ -53,6 +53,25 @@ describe('Algolia search wrapper', () => {
       searchModel.query(
         {
           _type: 'post',
+          q: '',
+        },
+        resolve
+      )
+    );
+    expect(posts).toMatchObject({ hits: [post] });
+  });
+
+  it('should hit an indexed post, when searching all types of documents', async () => {
+    const post = {
+      _id: 'xyz',
+      name: 'a post',
+    };
+    const result = await util.promisify(searchModel.indexTyped)('post', post);
+    expect(result).toMatchObject({ items: [post] });
+
+    const posts = await new Promise((resolve) =>
+      searchModel.query(
+        {
           q: '',
         },
         resolve
