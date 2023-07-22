@@ -249,7 +249,7 @@ jobs:
       - env:
           CI: true
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
-          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_READONLY_TEST_API_KEY }}
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
         run: npm run test:3rd-party
 
   refactor-coverage:
