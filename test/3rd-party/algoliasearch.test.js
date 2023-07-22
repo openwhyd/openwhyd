@@ -5,12 +5,13 @@ const util = require('util');
 describe('Algolia search wrapper', () => {
   let searchModel;
 
-  // init with provided credentials
-  beforeAll(() => {
+  // init with provided credentials + clean up
+  beforeAll(async () => {
     expect(process.env).toHaveProperty('ALGOLIA_APP_ID');
     expect(process.env).toHaveProperty('ALGOLIA_API_KEY');
     process.appParams = { searchModule: 'searchAlgolia' };
     searchModel = require('../../app/models/search.js');
+    await util.promisify(searchModel.deleteAllDocs)('post');
   });
 
   it('should fail to delete unknown type of documents', async () => {
