@@ -9,7 +9,7 @@ var Algolia = require('algoliasearch');
 
 var ENGINE = new Algolia(
   process.env.ALGOLIA_APP_ID.substr(),
-  process.env.ALGOLIA_API_KEY.substr()
+  process.env.ALGOLIA_API_KEY.substr() // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
 );
 
 var INDEX_NAME_BY_TYPE = {
@@ -97,9 +97,12 @@ Search.prototype.search = function (index, query, options, cb) {
       options.index = index;
       options.query = q;
       this.queries.push(options);
-      ENGINE.multipleQueries(this.queries, 'index', cb);
+      ENGINE.multipleQueries(this.queries, 'index', cb); // TODO: make sure that this still works
     } else {
-      getIndex(index).search(q, options, cb);
+      getIndex(index)
+        .search(q, options)
+        .catch(cb)
+        .then((success) => cb(null, success));
     }
   } else {
     options.index = index;
@@ -278,8 +281,11 @@ function indexTypedDocs(type, items, callback) {
       });
       return doc;
     });
-    getIndex(INDEX_NAME_BY_TYPE[type]).addObjects(docs, function (err) {
-      if (err) {
+
+    getIndex(INDEX_NAME_BY_TYPE[type])
+      .saveObjects(docs, { autoGenerateObjectIDIfNotExist: true })
+      .wait()
+      .catch((err) => {
         console.error(
           '[search] algolia error when indexing ' +
             items.length +
@@ -288,15 +294,16 @@ function indexTypedDocs(type, items, callback) {
             ' items => ' +
             err.toString()
         );
-      } else {
+        callback && callback(err);
+      })
+      .then(() => {
         console.log(
           '[search] algolia indexTyped ' + type + ' => indexed',
           items.length,
           'documents'
         );
-      }
-      callback && callback(err, { items: items });
-    });
+        callback && callback(null, { items: items });
+      });
   }
 }
 
@@ -304,33 +311,48 @@ exports.indexTyped = function (type, item, handler) {
   //console.log("models.search.index(): ", item, "...");
   if (!item || !item._id || !item.name) {
     logToConsole({ error: 'indexTyped: missing parameters' });
-    handler && handler(); // TODO: check if parameters are required or not
+    handler && handler(new Error('indexTyped: missing parameters'));
+    return;
   }
-  return indexTypedDocs(type, [item], function () {
-    handler && handler(); // TODO: check if parameters are required or not
+  return indexTypedDocs(type, [item], function (err, success) {
+    handler && handler(err, success);
   });
 };
 
 exports.countDocs = function (type, callback) {
-  ENGINE.listIndexes(function (err, content) {
-    try {
-      callback(
-        content.items.find(function (index) {
-          return index.name === INDEX_NAME_BY_TYPE[type];
-        }).entries
-      );
-    } catch (e) {
-      console.error('[search]', err || e);
+  ENGINE.listIndices()
+    .catch((err) => {
+      console.error('[search]', err);
       callback(null);
-    }
-  });
+    })
+    .then(function (content) {
+      try {
+        const count = content.items.find(function (index) {
+          return index.name === INDEX_NAME_BY_TYPE[type];
+        }).entries;
+        callback(count);
+      } catch (e) {
+        console.error('[search]', e);
+        callback(null);
+      }
+    });
 };
 
 exports.deleteAllDocs = function (type, callback) {
-  getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err) {
-    console.log('[search] algolia deleteAllDocs =>', err || 'ok');
-    callback && callback(); // TODO: check if parameters are required or not
-  });
+  if (!INDEX_NAME_BY_TYPE[type]) {
+    callback && callback(new Error('invalid type'));
+    return;
+  }
+  getIndex(INDEX_NAME_BY_TYPE[type])
+    .clearObjects()
+    .catch((err) => {
+      console.error('[search] algolia deleteAllDocs =>', err);
+      callback && callback(err);
+    })
+    .then(() => {
+      console.log('[search] algolia deleteAllDocs =>', 'ok');
+      callback && callback(); // TODO: check if parameters are required or not
+    });
 };
 
 exports.indexBulk = function (docs, callback) {

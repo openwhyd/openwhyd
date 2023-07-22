@@ -37,6 +37,7 @@
     "test:post:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:unit -- --serial && COVERAGE=true npm run test:functional -- --serial && COVERAGE=true npm run test:approval -- --serial --timeout 10000 && COVERAGE=true npm run test:integration:post -- --serial --timeout 10000 && npx nyc report --reporter=lcov && npx nyc report | grep post",
     "test:cypress:dev": "node_modules/.bin/cypress open",
     "test:cypress": "node_modules/.bin/cypress run",
+    "test:3rd-party": "jest test/3rd-party/*.test.js",
     "test": ". ./env-vars-testing.sh && npm run test:unit && npm run test:integration && npm run test:cypress",
     "test:coverage": "npx nyc report --reporter=text-summary  --reporter=lcov",
     "docker:seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
