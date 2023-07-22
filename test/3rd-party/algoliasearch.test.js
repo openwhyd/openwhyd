@@ -13,6 +13,11 @@ describe('Algolia search wrapper', () => {
     searchModel = require('../../app/models/search.js');
   });
 
+  it('should fail to delete unknown type of documents', async () => {
+    const promise = util.promisify(searchModel.deleteAllDocs)('whatever');
+    await expect(promise).rejects.toThrow('invalid type');
+  });
+
   it('should fail to index a post if name is missing', async () => {
     const promise = util.promisify(searchModel.indexTyped)('post', {
       _id: 'xyz',

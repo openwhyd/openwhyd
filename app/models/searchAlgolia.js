@@ -330,6 +330,10 @@ exports.countDocs = function (type, callback) {
 };
 
 exports.deleteAllDocs = function (type, callback) {
+  if (!INDEX_NAME_BY_TYPE[type]) {
+    callback && callback(new Error('invalid type'));
+    return;
+  }
   getIndex(INDEX_NAME_BY_TYPE[type]).clearIndex(function (err) {
     console.log('[search] algolia deleteAllDocs =>', err || 'ok');
     callback && callback(); // TODO: check if parameters are required or not
