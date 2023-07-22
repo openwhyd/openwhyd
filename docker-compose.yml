@@ -23,3 +23,5 @@ services:
       - DISABLE_DATADOG=true
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27117
+      - ALGOLIA_APP_ID
+      - ALGOLIA_API_KEY

@@ -5,9 +5,9 @@
 
 var snip = require('../snip.js');
 var mongodb = require('./mongodb.js');
-var Algolia = require('algoliasearch');
+const algoliasearch = require('algoliasearch');
 
-var ENGINE = new Algolia(
+const client = algoliasearch(
   process.env.ALGOLIA_APP_ID.substr(),
   process.env.ALGOLIA_API_KEY.substr() // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
 );
@@ -52,7 +52,7 @@ var getIndex = (function () {
   return function (indexName) {
     var index = INDEX[indexName];
     if (!index) {
-      index = INDEX[indexName] = ENGINE.initIndex(indexName);
+      index = INDEX[indexName] = client.initIndex(indexName);
       // init field indexing settings
       var fields = INDEX_FIELDS_BY_TYPE[INDEX_TYPE_BY_NAME[indexName]] || [];
       index.setSettings({
@@ -92,24 +92,16 @@ Search.prototype.search = function (index, query, options, cb) {
     options.facets = facetAttrs.join(',');
     options.facetFilters = facetFilters;
   }
-  if (cb) {
-    if (this.queries) {
-      options.index = index;
-      options.query = q;
-      this.queries.push(options);
-      ENGINE.multipleQueries(this.queries, 'index', cb); // TODO: make sure that this still works
-    } else {
-      getIndex(index)
-        .search(q, options)
-        .catch(cb)
-        .then((success) => cb(null, success));
-    }
-  } else {
-    options.index = index;
-    options.query = q;
-    this.queries = this.queries || [];
-    this.queries.push(options);
+  if (!cb) {
+    throw new Error(
+      'please pass a callback parameter when calling Search.prototype.search'
+    );
   }
+  getIndex(index)
+    .search(q, options)
+    .catch(cb)
+    .then((success) => cb(null, success));
+
   return this;
 };
 
@@ -320,7 +312,8 @@ exports.indexTyped = function (type, item, handler) {
 };
 
 exports.countDocs = function (type, callback) {
-  ENGINE.listIndices()
+  client
+    .listIndices()
     .catch((err) => {
       console.error('[search]', err);
       callback(null);

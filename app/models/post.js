@@ -247,7 +247,7 @@ exports.savePost = function (postObj, handler) {
     if (error) console.error('post.savePost() error: ', error);
     if (result) {
       if (Array.isArray(result)) result = result[0];
-      // searchModel.indexTyped('post', result); // TODO: re-enable seach, cf https://github.com/openwhyd/openwhyd/issues/612
+      searchModel.indexTyped('post', result);
       result.isNew = !pId;
       if (result.isNew) notif.post(result);
       notifyMentionedUsers(result);
@@ -325,7 +325,7 @@ exports.rePost = function (pId, repostObj, handler) {
       if (result && result.length) {
         //searchModel.indexPost(result);
         result = result[0];
-        // searchModel.indexTyped('post', result); // TODO: re-enable seach, cf https://github.com/openwhyd/openwhyd/issues/612
+        searchModel.indexTyped('post', result);
         notifyMentionedUsers(result);
       }
       handler(result);
