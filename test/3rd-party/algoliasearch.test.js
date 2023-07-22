@@ -35,6 +35,6 @@ describe('Algolia search wrapper', () => {
       name: 'a post',
     };
     const result = await util.promisify(searchModel.indexTyped)('post', post);
-    expect(result).toMatch({ items: [post] });
+    expect(result).toMatchObject({ items: [post] });
   });
 });
