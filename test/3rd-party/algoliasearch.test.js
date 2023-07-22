@@ -7,6 +7,8 @@ describe('Algolia search wrapper', () => {
 
   const cleanUp = async () => {
     await util.promisify(searchModel.deleteAllDocs)('post');
+    await util.promisify(searchModel.deleteAllDocs)('playlist');
+    await util.promisify(searchModel.deleteAllDocs)('user');
   };
 
   // init with provided credentials + clean up
@@ -70,12 +72,7 @@ describe('Algolia search wrapper', () => {
     expect(result).toMatchObject({ items: [post] });
 
     const posts = await new Promise((resolve) =>
-      searchModel.query(
-        {
-          q: '',
-        },
-        resolve
-      )
+      searchModel.query({ q: '' }, resolve)
     );
     expect(posts).toMatchObject({ hits: [post] });
   });
