@@ -360,7 +360,7 @@ exports.save = function (pUser, handler) {
         if (err) console.error(err);
         //console.log("user stored as ", user);
         // @ts-ignore
-        if (user) searchModel.indexTyped('user', user);
+        // if (user) searchModel.indexTyped('user', user); // TODO: re-enable seach, cf https://github.com/openwhyd/openwhyd/issues/612
         mongodb.cacheUser(user);
         if (handler) handler(user);
       });

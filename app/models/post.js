@@ -325,7 +325,7 @@ exports.rePost = function (pId, repostObj, handler) {
       if (result && result.length) {
         //searchModel.indexPost(result);
         result = result[0];
-        searchModel.indexTyped('post', result);
+        // searchModel.indexTyped('post', result); // TODO: re-enable seach, cf https://github.com/openwhyd/openwhyd/issues/612
         notifyMentionedUsers(result);
       }
       handler(result);
