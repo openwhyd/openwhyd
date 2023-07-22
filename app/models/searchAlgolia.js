@@ -304,10 +304,10 @@ exports.indexTyped = function (type, item, handler) {
   //console.log("models.search.index(): ", item, "...");
   if (!item || !item._id || !item.name) {
     logToConsole({ error: 'indexTyped: missing parameters' });
-    handler && handler(); // TODO: check if parameters are required or not
+    handler && handler(new Error('indexTyped: missing parameters'));
   }
-  return indexTypedDocs(type, [item], function () {
-    handler && handler(); // TODO: check if parameters are required or not
+  return indexTypedDocs(type, [item], function (err, success) {
+    handler && handler(err, success);
   });
 };
 
