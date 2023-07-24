@@ -80,7 +80,6 @@ exports.remove = function (uId, tId, dbHandler) {
   mongodb.collections[COLNAME].deleteOne({ uId: uId, tId: tId }, dbHandler);
 };
 
-// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.fetch = function (q, options, callback) {
   fetchArray(q, options, callback);
 };
@@ -134,7 +133,6 @@ exports.fetchUserSubscriptions = function (uid, callback) {
 
 // HELPERS
 
-// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.fetchSubscriptionSet = function (uid, callback) {
   fetchArray(
     { uId: uid },
@@ -145,7 +143,6 @@ exports.fetchSubscriptionSet = function (uid, callback) {
   );
 };
 
-// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.fetchSubscriptionArray = function (uid, cb) {
   fetchArray({ uId: uid }, { fields: { _id: 0, tId: 1 } }, function (subscr) {
     for (let i in subscr) subscr[i] = subscr[i].tId;
