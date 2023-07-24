@@ -102,8 +102,7 @@ exports.cacheUsers = function (callback) {
   );
 };
 
-// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
-exports.forEach = function (colName, params, handler, cb, cbParam) {
+exports.forEach = async function (colName, params, handler, cb, cbParam) {
   var q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 1000;
@@ -111,14 +110,15 @@ exports.forEach = function (colName, params, handler, cb, cbParam) {
     q = params.q;
     delete params.q;
   }
-  exports.collections[colName].find(q, params, function (err, cursor) {
-    cursor.forEach(
-      (err, item) => {
-        if (item) handler(item);
-      },
-      cb ? () => cb(cbParam) : undefined,
-    );
-  });
+  const { fields } = params ?? {};
+  delete params.fields;
+  const cursor = await exports.collections[colName]
+    .find(q, params)
+    .project(fields);
+  for await (const item of cursor) {
+    if (item) handler(item);
+  }
+  cb && cb(cbParam);
 };
 
 // handler is responsible for calling the provided "next" function
