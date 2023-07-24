@@ -249,7 +249,10 @@ exports.init = function (readyCallback) {
     useNewUrlParser: true,
     //strict: false,
     //safe: false,
-    w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+    writeConcern: {
+      w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+    },
+    useUnifiedTopology: true,
   };
 
   mongodb.MongoClient.connect(url, options, function (err, client) {

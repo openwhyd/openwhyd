@@ -57,7 +57,7 @@ function buildContext(db, nextCommand, callback) {
         err,
         !err && {
           dropIndex: wrapCollectionMethod(col, 'dropIndex', colName),
-          ensureIndex: wrapCollectionMethod(col, 'ensureIndex', colName),
+          createIndex: wrapCollectionMethod(col, 'createIndex', colName),
           updateOne: wrapCollectionMethod(col, 'updateOne', colName),
           updateMany: wrapCollectionMethod(col, 'updateMany', colName),
         },
