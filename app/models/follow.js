@@ -32,7 +32,7 @@ function transformSubscriberArray(results) {
   return results;
 }
 
-function fetchArray(query = {}, options, callback) {
+async function fetchArray(query = {}, options, callback) {
   if (typeof query.uId == 'string' && query.uId.indexOf('/u/') == 0)
     console.error('warning: found uId with /u/ prefix');
   if (typeof query.tId == 'string' && query.tId.indexOf('/u/') == 0)
@@ -44,16 +44,13 @@ function fetchArray(query = {}, options, callback) {
     // is ObjectId
     query.tId = '' + query.tId;
   //console.log("follow.fetchArray", query, "...");
-  mongodb.collections[COLNAME].find(
-    query,
-    options || {},
-    function (err, cursor) {
-      cursor.toArray(function (err, results) {
-        //console.log("=> ", results.length, "follow items");
-        callback(results);
-      });
-    },
-  );
+  const { fields } = options ?? {};
+  delete options.fields;
+  const results = await mongodb.collections[COLNAME].find(query, options || {})
+    .project(fields ?? {})
+    .toArray();
+  //console.log("=> ", results.length, "follow items");
+  callback(results);
 }
 
 exports.get = function (followObj, dbHandler) {

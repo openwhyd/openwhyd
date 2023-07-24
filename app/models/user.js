@@ -241,7 +241,7 @@ exports.fetchAll = function (handler) {
   );
 };
 
-exports.fetchMulti = function (q, options, handler) {
+exports.fetchMulti = async function (q, options, handler) {
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   if (q._id && typeof q._id == 'object')
     // $in:[]
@@ -249,12 +249,14 @@ exports.fetchMulti = function (q, options, handler) {
       if (i == '$in')
         for (let j in q._id['$in'])
           q._id['$in'][j] = ObjectId('' + q._id['$in'][j]);
-  mongodb.collections['user'].find(q, options || {}, function (err, cursor) {
-    cursor.toArray(function (err, array) {
-      processUsers(array);
-      handler(array);
-    });
-  });
+  const { fields } = options ?? {};
+  delete options.fields;
+  const array = await mongodb.collections['user']
+    .find(q, options || {})
+    .project(fields ?? {})
+    .toArray();
+  processUsers(array);
+  handler(array);
 };
 
 /**

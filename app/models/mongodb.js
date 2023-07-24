@@ -102,7 +102,7 @@ exports.cacheUsers = function (callback) {
   );
 };
 
-exports.forEach = function (colName, params, handler, cb, cbParam) {
+exports.forEach = async function (colName, params, handler, cb, cbParam) {
   var q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 1000;
@@ -110,18 +110,19 @@ exports.forEach = function (colName, params, handler, cb, cbParam) {
     q = params.q;
     delete params.q;
   }
-  exports.collections[colName].find(q, params, function (err, cursor) {
-    cursor.forEach(
-      (err, item) => {
-        if (item) handler(item);
-      },
-      cb ? () => cb(cbParam) : undefined,
-    );
-  });
+  const { fields } = params ?? {};
+  delete params.fields;
+  const cursor = await exports.collections[colName]
+    .find(q, params)
+    .project(fields);
+  for await (const item of cursor) {
+    if (item) handler(item);
+  }
+  cb && cb(cbParam);
 };
 
 // handler is responsible for calling the provided "next" function
-exports.forEach2 = function (colName, params, handler) {
+exports.forEach2 = async function (colName, params, handler) {
   var q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 100;
@@ -131,19 +132,23 @@ exports.forEach2 = function (colName, params, handler) {
   }
   if (params.after != null && exports.isObjectId(params.after))
     q._id = { $lt: exports.ObjectId('' + params.after) };
-  exports.collections[colName].find(q, params, function (err, cursor) {
-    (function next() {
-      cursor.next(function (err, item) {
-        if (err) {
-          console.error('[db] mongodb.forEach2 ERROR', err);
-          handler({ error: err }, undefined, cursor.close.bind(cursor));
-          cursor.close();
-        } else {
-          handler(item, item ? next : undefined, cursor.close.bind(cursor));
-        }
-      });
-    })();
-  });
+
+  const { fields } = params ?? {};
+  delete params.fields;
+  const cursor = await exports.collections[colName]
+    .find(q, params)
+    .project(fields);
+  (function next() {
+    cursor.next(function (err, item) {
+      if (err) {
+        console.error('[db] mongodb.forEach2 ERROR', err);
+        handler({ error: err }, undefined, cursor.close.bind(cursor));
+        cursor.close();
+      } else {
+        handler(item, item ? next : undefined, cursor.close.bind(cursor));
+      }
+    });
+  })();
 };
 
 exports.cacheCollections = function (callback) {
