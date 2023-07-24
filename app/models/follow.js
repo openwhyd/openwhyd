@@ -52,7 +52,7 @@ function fetchArray(query = {}, options, callback) {
         //console.log("=> ", results.length, "follow items");
         callback(results);
       });
-    }
+    },
   );
 }
 
@@ -75,7 +75,7 @@ exports.add = function (followObj, dbHandler) {
       // to avoid duplicates
       if (err) dbHandler(err, result);
       else collection.findOne(req, dbHandler);
-    }
+    },
   );
 };
 
@@ -101,14 +101,14 @@ function wrapCallback(cb) {
 exports.countSubscriptions = function (uId, cb) {
   mongodb.collections[COLNAME].countDocuments(
     { uId: '' + uId },
-    wrapCallback(cb)
+    wrapCallback(cb),
   );
 };
 
 exports.countSubscribers = function (uId, cb) {
   mongodb.collections[COLNAME].countDocuments(
     { tId: '' + uId },
-    wrapCallback(cb)
+    wrapCallback(cb),
   );
 };
 
@@ -128,9 +128,9 @@ exports.fetchUserSubscriptions = function (uid, callback) {
         function (subscribers) {
           result.subscribers = transformSubscriberArray(subscribers);
           callback(result);
-        }
+        },
       );
-    }
+    },
   );
 };
 
@@ -142,7 +142,7 @@ exports.fetchSubscriptionSet = function (uid, callback) {
     { fields: { _id: 0, tId: 1 } },
     function (subscriptions) {
       callback(snip.objArrayToSet(subscriptions, 'tId'));
-    }
+    },
   );
 };
 
@@ -192,7 +192,7 @@ exports.fetchSubscriptionHistory = function (options, callback) {
   fetchArray(
     q,
     { sort: [['_id', 'desc']], limit: options.limit || HISTORY_LIMIT },
-    callback
+    callback,
   );
 };
 

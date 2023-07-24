@@ -54,7 +54,7 @@ function pushToMobileTokens(toUser, text, payload) {
         '[notif] sending to iOS user',
         toUser.id || '' + toUser._id,
         'tok:',
-        device.tok
+        device.tok,
       );
       applenotif.pushToDevice(device.tok, text, payload);
     });
@@ -70,7 +70,7 @@ function pushToMobile(code, initialToUser, text, payload) {
   if (!(toUser || {}).pref)
     return console.error(
       'push notif prefs not found for user: ',
-      initialToUser
+      initialToUser,
     );
   if (parseInt('' + toUser.pref['mn' + code]) > -1) {
     if (toUser.apTok) pushToMobileTokens(toUser, text, payload);
@@ -124,7 +124,7 @@ function updateNotif(q, p, cb) {
     logErrors(function (res) {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
       cb && cb(res);
-    })
+    }),
   );
 }
 
@@ -138,7 +138,7 @@ function insertNotif(to, p, cb) {
     logErrors(function (res) {
       invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
       cb && cb(res && res.ops[0]);
-    })
+    }),
   );
 }
 
@@ -155,7 +155,7 @@ function pushNotif(to, q, set, push, cb) {
     logErrors(function (res) {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
       cb && cb(res);
-    })
+    }),
   );
 }
 
@@ -176,8 +176,8 @@ exports.clearUserNotifsForPost = function (uId, pId) {
       mongodb.ObjectID.createFromHexString(
         typeof pId === 'string'
           ? extractObjectID(pId) // strip the eventual "/u/" prefix or "/reposts" suffix (e.g. in notif-tests.js)
-          : pId
-      )
+          : pId,
+      ),
     );
   } catch (e) {
     console.error('error in clearUserNotifsForPost:', e);
@@ -192,9 +192,9 @@ exports.clearUserNotifsForPost = function (uId, pId) {
       db['notif'].deleteMany(
         { _id: { $in: idList }, uId: { $size: 0 } },
         { multi: true /*w: 0*/ },
-        () => invalidateUserNotifsCache(uId)
+        () => invalidateUserNotifsCache(uId),
       );
-    }
+    },
   );
 };
 
@@ -224,18 +224,18 @@ exports.clearUserNotifs = function (uId, cb) {
               () => {
                 invalidateUserNotifsCache(uId);
                 cb && cb();
-              }
+              },
             );
-          }
+          },
         );
       }
       cursor.forEach(
         (err, item) => {
           if (item && item.uId.length === 1) idsToRemove.push(item._id);
         },
-        () => whenDone()
+        () => whenDone(),
       );
-    }
+    },
   );
 };
 
@@ -272,7 +272,7 @@ exports.fetchUserNotifs = function (uId, handler) {
         cacheUserNotifs(uId, notifs);
         if (handler) handler(notifs);
       });
-    }
+    },
   );
 };
 
@@ -299,7 +299,7 @@ exports.html = function (uId, html, href, img) {
       href: href,
       img: img,
     },
-    { w: 0 }
+    { w: 0 },
   );
   invalidateUserNotifsCache(uId);
 };
@@ -324,7 +324,7 @@ exports.love = function (loverUid, post, callback) {
       $inc: { n: 1 },
     },
     { upsert: true, w: 0 },
-    callback
+    callback,
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);
@@ -349,12 +349,12 @@ exports.unlove = function (loverUid, pId) {
             col.updateOne(
               criteria,
               { $set: { uIdLast: res.lov[res.lov.length - 1] } },
-              { w: 0 }
+              { w: 0 },
             );
           invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
         }
       });
-    }
+    },
   );
 };
 
@@ -396,7 +396,7 @@ exports.repost = function (reposterUid, post) {
       $push: { reposters: reposterUid },
       $inc: { n: 1 },
     },
-    { upsert: true, w: 0 }
+    { upsert: true, w: 0 },
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendRepost(reposter, post, author /*.email*/);
@@ -435,7 +435,7 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
         },
         $push: { uId: favoritedId },
       },
-      { upsert: true, w: 0 }
+      { upsert: true, w: 0 },
     );
     invalidateUserNotifsCache(favoritedId);
     notifEmails.sendSubscribedToUser(sender, favorited, cb);
@@ -472,9 +472,9 @@ exports.comment = function (post = {}, comment = {}, cb) {
           commentUser.name + ' commented on one of your tracks',
           {
             href: '/c/' + post._id,
-          }
+          },
         );
-      }
+      },
     );
   }
 };
@@ -502,9 +502,9 @@ exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
           commentUser.name + ' mentionned you',
           {
             href: '/c/' + post._id,
-          }
+          },
         );
-      }
+      },
     );
   }
 };
@@ -537,9 +537,9 @@ exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
           commentUser.name + ' replied to your comment',
           {
             href: '/c/' + post._id,
-          }
+          },
         );
-      }
+      },
     );
   }
 };
@@ -563,9 +563,9 @@ exports.inviteAccepted = function (inviterId, newUser) {
         'Your friend ' + newUser.name + ' accepted your invite',
         {
           href: '/u/' + newUser.id,
-        }
+        },
       );
-    }
+    },
   );
   notifEmails.sendInviteAccepted(inviterId, newUser);
 };

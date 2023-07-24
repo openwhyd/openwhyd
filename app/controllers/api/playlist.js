@@ -74,10 +74,10 @@ exports.handlePostRequest = function (request, reqParams, response, features) {
       response.legacyRender(
         res,
         null,
-        args || { 'content-type': 'application/json' }
+        args || { 'content-type': 'application/json' },
       );
     },
-    features
+    features,
   );
 };
 
@@ -93,7 +93,7 @@ function fetchPlaylist(p, cb) {
       plIdSet[plId] = {};
       uidList.push(plId.split('_')[0]);
       return plId;
-    }
+    },
   );
   userModel.fetchMulti(
     { _id: { $in: uidList } },
@@ -127,7 +127,7 @@ function fetchPlaylist(p, cb) {
             next(i + 1);
           });
       })(0);
-    }
+    },
   );
 }
 

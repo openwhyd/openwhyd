@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <!-- downloaded from http://metrics.whyd.com/hack.html -->
 <html>
   <head>
@@ -9,7 +9,7 @@
           .getElementById('track')
           .contentWindow.postMessage(
             JSON.stringify({ code: method, data: args }),
-            'http://adrienjoly.tumblr.com/post/80167551383/iframe-test'
+            'http://adrienjoly.tumblr.com/post/80167551383/iframe-test',
           );
       }
 
@@ -20,7 +20,7 @@
             '[host] receives from:',
             e.origin,
             message.code,
-            message.data
+            message.data,
           );
           if (message.code === 'getTrackPositionCallback')
             document.getElementById('time').innerHTML = 'Time:' + message.data;

@@ -27,7 +27,7 @@ exports.handleRequest = function (request, reqParams, response) {
         function (fbfriends) {
           var list = (fbfriends || {}).notOnWhyd || [];
           response.legacyRender({ fbfriends: list });
-        }
+        },
       );
     } else
       facebookModel.fetchFbFriendsWithSub(
@@ -35,7 +35,7 @@ exports.handleRequest = function (request, reqParams, response) {
         reqParams.fbAccessToken || fbTok,
         function (result) {
           response.legacyRender(result);
-        }
+        },
       );
   });
 };

@@ -24,7 +24,7 @@ function makeMapWith(mapHelpers, mapTemplate) {
     return entire.substring(entire.indexOf('{') + 1, entire.lastIndexOf('}'));
   };
   return new Function(
-    [getFuncBody(mapHelpers), getFuncBody(mapTemplate)].join('\n')
+    [getFuncBody(mapHelpers), getFuncBody(mapTemplate)].join('\n'),
   );
 }
 

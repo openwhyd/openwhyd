@@ -14,7 +14,7 @@
       {
         scrollTop: $(id).offset().top,
       },
-      scrollTime
+      scrollTime,
     );
   }
 
@@ -48,7 +48,7 @@
           console.log('failed => opening chrome web store in a new tab...');
           //goToPage(e.href);
           window.open(e.target.href, '_blank').focus();
-        }
+        },
       );
       return false;
     });

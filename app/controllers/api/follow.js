@@ -18,7 +18,7 @@ const follow = async function (reqParams, dbHandler) {
     case 'insert': {
       if (!reqParams.uId || !reqParams.tId) return dbHandler();
       const followedUser = await new Promise((resolve) =>
-        userModel.fetchByUid(reqParams.tId, resolve)
+        userModel.fetchByUid(reqParams.tId, resolve),
       );
       const obj = {
         uId: reqParams.uId,
@@ -65,7 +65,7 @@ function ranPublicAction(loggedUser, reqParams, cb) {
           for (let i in res)
             res[i].isSubscribing = subscrSet[res[i].uId || res[i].tId];
           cb(res);
-        }
+        },
       );
     };
     action(p, !loggedUser || !p.isSubscr ? cb : fetchSubscriptionStatus);

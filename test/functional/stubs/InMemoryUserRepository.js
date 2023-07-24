@@ -13,7 +13,7 @@ const User = require('../../../app/domain/user/User');
  */
 exports.inMemoryUserRepository = function (users) {
   const userRepository = new Map(
-    deepCopyUsers(users).map((user) => [user.id, user])
+    deepCopyUsers(users).map((user) => [user.id, user]),
   );
 
   return {
@@ -52,6 +52,6 @@ function deepCopyUser(user) {
     user.id,
     user.playlists.map((playlist) => {
       return { id: playlist.id, name: playlist.name };
-    })
+    }),
   );
 }

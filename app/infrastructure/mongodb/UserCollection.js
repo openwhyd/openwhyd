@@ -21,7 +21,7 @@ exports.userCollection = {
   insertPlaylist: (userId, playlist) =>
     mongodb.collections['user'].updateOne(
       { _id: mongodb.ObjectId(userId) },
-      { $push: { pl: playlist } }
+      { $push: { pl: playlist } },
     ),
 };
 

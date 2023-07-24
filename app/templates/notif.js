@@ -40,7 +40,7 @@ var TEMPLATE_DEFAULTS = {
 var renderTemplateFile = (function () {
   for (let i in TEMPLATES)
     TEMPLATES[i].template = templateLoader.loadTemplate(
-      TEMPLATE_PATH + TEMPLATES[i].file
+      TEMPLATE_PATH + TEMPLATES[i].file,
     );
   return function (templateName, p = {}) {
     for (let i in TEMPLATE_DEFAULTS)
@@ -124,7 +124,7 @@ exports.generateRegWelcome = function (user, inviteSender) {
       ? 'By the way, take a look at the stream of your friend ' +
         renderLink(
           inviteSender.name,
-          '/u/' + (inviteSender._id || inviteSender.id)
+          '/u/' + (inviteSender._id || inviteSender.id),
         )
       : '',
     'Never stop jamming!',
@@ -263,7 +263,7 @@ exports.generateNotifDigest = function (p) {
   p = p || {};
   p.notifType = 'digest';
   return new NotifDigest(p).renderNotifEmailObj(
-    'Your ' + p.digestFrequency + ' digest'
+    'Your ' + p.digestFrequency + ' digest',
   );
 };
 
@@ -274,7 +274,7 @@ exports.generateRepost = function (reposter, post) {
   })
     .addRepostedTrack(post, reposter)
     .renderNotifEmailObj(
-      reposter.name + ' has added one of your tracks on Openwhyd!'
+      reposter.name + ' has added one of your tracks on Openwhyd!',
     );
 };
 
@@ -293,7 +293,7 @@ exports.generateLike = function (user, post) {
   })
     .addLikedTrack(post, user)
     .renderNotifEmailObj(
-      user.name + ' has liked one of your tracks on Openwhyd!'
+      user.name + ' has liked one of your tracks on Openwhyd!',
     );
 };
 

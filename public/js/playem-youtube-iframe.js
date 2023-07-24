@@ -44,7 +44,7 @@ function YoutubeIframePlayer() {
       var args = Array.apply(null, arguments).slice(1); // exclude first arg (fctName)
       this.iframe.contentWindow.postMessage(
         JSON.stringify({ code: fctName, data: args }),
-        IFRAME_HOST + IFRAME_PATH
+        IFRAME_HOST + IFRAME_PATH,
       );
     } catch (e) {
       console.error('YT safecall error', e, e.stack);
@@ -62,7 +62,7 @@ function YoutubeIframePlayer() {
   Player.prototype.getEid = function (url) {
     if (
       /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
-        url
+        url,
       ) ||
       /\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
       /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url)
@@ -97,7 +97,7 @@ function YoutubeIframePlayer() {
           .map(function (p) {
             return p + '=' + encodeURIComponent(settings[p]);
           })
-          .join('&')
+          .join('&'),
     );
     this.embedVars.playerContainer.appendChild(this.iframe);
   };

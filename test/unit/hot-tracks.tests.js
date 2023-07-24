@@ -8,7 +8,7 @@ describe('hot tracks feature', () => {
     const fetchPostsByPid = () => [];
     assert.deepEqual(
       await getHotTracks(getTracksByDescendingScore, fetchPostsByPid),
-      [postedTrack]
+      [postedTrack],
     );
   });
 
@@ -19,7 +19,7 @@ describe('hot tracks feature', () => {
     const fetchPostsByPid = () => [];
     assert.deepEqual(
       await getHotTracks(getTracksByDescendingScore, fetchPostsByPid),
-      [bestTrack, regularTrack]
+      [bestTrack, regularTrack],
     );
   });
 
@@ -44,7 +44,7 @@ describe('hot tracks feature', () => {
       posts.filter(({ _id }) => pidList.includes(_id));
     const hotTracks = await getHotTracks(
       getTracksByDescendingScore,
-      fetchPostsByPid
+      fetchPostsByPid,
     );
     assert.deepEqual(hotTracks[0].pl, posts[0].pl);
     assert.deepEqual(hotTracks[1].text, posts[1].text);

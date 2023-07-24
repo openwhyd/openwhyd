@@ -44,7 +44,7 @@ exports.controller = async function (req, reqParams = {}, res) {
     const track = matched.pop();
     const artist = matched.pop();
     const { body } = await fetch(
-      `https://${artist}.bandcamp.com/track/${track}`
+      `https://${artist}.bandcamp.com/track/${track}`,
     );
     res.json({
       eId,
@@ -58,8 +58,8 @@ exports.controller = async function (req, reqParams = {}, res) {
 const fetch = (url) =>
   new Promise((resolve, reject) =>
     request(url, (error, response, body) =>
-      error ? reject(error) : resolve({ response, body })
-    )
+      error ? reject(error) : resolve({ response, body }),
+    ),
   );
 
 const sameDomain = (url1, url2) => new URL(url1).host === new URL(url2).host;

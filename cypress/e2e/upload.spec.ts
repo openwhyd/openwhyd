@@ -17,7 +17,7 @@ context('upload', () => {
     });
     cy.request(`/img/u/${userId}?_t=${new Date().getTime()}`).should(
       (response) =>
-        expect(response.body.length).to.equal(defaultImageBody.length)
+        expect(response.body.length).to.equal(defaultImageBody.length),
     );
 
     // open the "edit profile" dialog
@@ -37,7 +37,7 @@ context('upload', () => {
     cy.request(`/img/u/${userId}?_t=${new Date().getTime() + 1}`).should(
       // note: above, we increase the timestamp to prevent cache from returning the previous response
       (response) =>
-        expect(response.body.length).not.to.equal(defaultImageBody.length)
+        expect(response.body.length).not.to.equal(defaultImageBody.length),
     );
   });
 });

@@ -29,7 +29,7 @@ function mergePostData(track, post) {
 
 exports.getHotTracks = async function (
   getTracksByDescendingScore,
-  fetchPostsByPid
+  fetchPostsByPid,
 ) {
   const tracks = await getTracksByDescendingScore();
   const pidList = snip.objArrayToValueArray(tracks, 'pId');

@@ -210,17 +210,17 @@ exports.handleRequest = function (request, reqParams, response) {
                 response.legacyRender(
                   renderTemplate(requests, invites, users, reqParams),
                   null,
-                  { 'content-type': 'text/html' }
+                  { 'content-type': 'text/html' },
                 );
                 // console.log('rendering done!');
               },
-              { sort: [['date', 'desc']] }
+              { sort: [['date', 'desc']] },
             );
           },
-          { sort: [['_id', 'desc']] }
+          { sort: [['_id', 'desc']] },
         );
       },
-      { sort: [['_id', 'desc']] }
+      { sort: [['_id', 'desc']] },
     );
   };
 

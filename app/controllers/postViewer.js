@@ -22,14 +22,14 @@ exports.controller = function (request, reqParams, response) {
         p,
         response,
         reqParams.format,
-        request.getUser()
+        request.getUser(),
       );
     } else if (p && p.html) {
       response.renderHTML(p.html);
       analytics.addVisit(
         request.getUid(),
         /*"/c/" + pId*/ request.url,
-        reqParams.orig
+        reqParams.orig,
       );
     } else if (p && p.data) response.renderJSON(p);
     // TODO: or p.data?
@@ -46,7 +46,7 @@ exports.controller = function (request, reqParams, response) {
           format: reqParams.format,
           loggedUser: request.getUser(),
         },
-        render
+        render,
       );
   }
 
@@ -56,14 +56,14 @@ exports.controller = function (request, reqParams, response) {
         eId: decodeURIComponent(request.url),
         img: '/images/cover-track.png', // by default => changed by postViewerDynamic.js
       },
-      true
+      true,
     );
   else if (!mongodb.isObjectId(reqParams.id))
     errorTemplate.renderErrorResponse(
       { errorCode: 'POST_NOT_FOUND' },
       response,
       reqParams.format,
-      request.getUser()
+      request.getUser(),
     );
   else postModel.fetchPostById(reqParams.id || reqParams.pId, renderPost);
 };

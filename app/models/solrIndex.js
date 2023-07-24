@@ -36,7 +36,7 @@ exports.request = function (path, data, callback) {
         //console.log("solr request response:", resData);
         if (callback) callback(resData, res.statusCode);
       });
-    }
+    },
   );
   //req.setHeader('Content-type', 'application/json');
   //req.setHeader('Accept', 'application/json');
@@ -86,7 +86,7 @@ exports.addDoc = function (doc, callback = noOp) {
         console.log(e.stack);
         callback({ error: e });
       }
-    }
+    },
   );
 };
 /*

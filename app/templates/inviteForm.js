@@ -12,7 +12,7 @@ var template = null;
 exports.refreshTemplates = function (callback) {
   template = templateLoader.loadTemplate(
     'app/templates/inviteForm.html',
-    callback
+    callback,
   );
 };
 
@@ -28,7 +28,7 @@ exports.renderInviteForm = function (params = {}) {
   params.emailTemplate = notifTemplate.generateInviteBy(
     params.loggedUser.name,
     params.inviteCode,
-    MSG_TOKEN
+    MSG_TOKEN,
   );
   params.emailSubject = params.emailTemplate
     ? params.emailTemplate.subject

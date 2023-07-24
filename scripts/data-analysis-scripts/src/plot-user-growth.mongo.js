@@ -31,5 +31,5 @@ print(
   res.results
     .sort((a, b) => new Date(a._id) - new Date(b._id))
     .map((res) => [res._id, res.value.total || 0, res.value.iPhoneApp || 0])
-    .join('\n')
+    .join('\n'),
 );

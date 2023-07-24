@@ -81,14 +81,14 @@ function showMessage(txt, isError) {
       (isError ? 'error' : '') +
       '"><div>' +
       txt +
-      '</div></div>'
+      '</div></div>',
   );
   $container.css('zIndex', 1002);
   $('body').append($container);
   function disappear() {
     $container.animate(
       { height: '0px' },
-      300 /*, function(){ $(this).hide(); }*/
+      300 /*, function(){ $(this).hide(); }*/,
     ); //.fadeOut();
   }
   $container

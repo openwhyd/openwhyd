@@ -33,7 +33,7 @@ describe('bandcampExtractor', function () {
     // run test
     const body = await fs.promises.readFile(
       'public/html/test-resources/bandcamp-track-page.html', // from https://harissa.bandcamp.com/track/rooftop
-      'utf8'
+      'utf8',
     );
     const matches = extractBandcampStreamURLsFromHTML(body);
     assert.strictEqual(matches.length, expectedMatches);
@@ -41,7 +41,7 @@ describe('bandcampExtractor', function () {
     assert(url.hostname.includes(expectedHostname));
     assert.deepStrictEqual(
       [...url.searchParams.keys()].sort(),
-      expectedSearchParams
+      expectedSearchParams,
     );
   });
 });
@@ -49,6 +49,6 @@ describe('bandcampExtractor', function () {
 const fetch = (url) =>
   new Promise((resolve, reject) =>
     request(url, (error, response, body) =>
-      error ? reject(error) : resolve({ response, body })
-    )
+      error ? reject(error) : resolve({ response, body }),
+    ),
   );

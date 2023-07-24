@@ -21,7 +21,7 @@ exports.controller = function (request, reqParams = {}, response) {
         { name: 'coco', id: '7' },
         function (email) {
           response.renderHTML(email.bodyHtml);
-        }
+        },
       );
     else
       templateLoader.loadTemplate(
@@ -32,7 +32,7 @@ exports.controller = function (request, reqParams = {}, response) {
           var html = templateHtml.render(reqParams);
           console.log('\n' + html /*.replace(/\n/g, " ")*/ + '\n');
           response.legacyRender(html, null, { 'content-type': 'text/html' });
-        }
+        },
       );
   } catch (e) {
     response.legacyRender(e);

@@ -54,7 +54,7 @@ exports.makeTests = function (p) {
           function (res) {
             testVars.pl = res.response;
             cb(testVars.pl.id > -1);
-          }
+          },
         );
       },
     ],
@@ -78,7 +78,7 @@ exports.makeTests = function (p) {
         req(
           '/api/playlist',
           { body: { action: 'delete', id: testVars.pl.id } },
-          () => cb(true)
+          () => cb(true),
         );
       },
     ],

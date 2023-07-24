@@ -8,5 +8,5 @@ export interface UserRepository {
 export type GetByUserId = (userId: string) => Promise<User>;
 export type InsertPlaylist = (
   userid: string,
-  playlist: Playlist
+  playlist: Playlist,
 ) => Promise<void>;

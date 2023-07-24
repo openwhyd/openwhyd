@@ -8,7 +8,7 @@ type UrlDetector = (
     title?: string;
     img?: string;
     name?: string; // element.name could have been extracted from the page by one of pageDetectors
-  }
+  },
 ) => void;
 
 // TODO: refactor makeFileDetector() and makeStreamDetector() to pass element param before callback

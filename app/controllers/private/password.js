@@ -15,7 +15,7 @@ exports.checkResetCode = function (request, reqParams, response, okCallback) {
     console.log('resetCode and uid parameters are required');
     response.legacyRender(
       'Your password reset request is invalid. Please try to login on ' +
-        process.appParams.urlPrefix
+        process.appParams.urlPrefix,
     );
     return false;
   }
@@ -27,7 +27,7 @@ exports.checkResetCode = function (request, reqParams, response, okCallback) {
       console.log('invalid password reset request');
       response.legacyRender(
         'Your password reset request is invalid or expired. Please try to login on ' +
-          process.appParams.urlPrefix
+          process.appParams.urlPrefix,
       );
     }
   });
@@ -57,7 +57,7 @@ exports.renderForgotPage = function (request, reqParams, response, error) {
       response.legacyRender(template.render(vars), null, {
         'content-type': 'text/html',
       });
-    }
+    },
   );
 };
 
@@ -94,7 +94,7 @@ exports.renderPasswordPage = function (request, reqParams, response, error) {
         response.legacyRender(template.render(vars), null, {
           'content-type': 'text/html',
         });
-      }
+      },
     );
   });
 };
@@ -112,7 +112,7 @@ exports.resetPassword = function (request, reqParams, response) {
           email: reqParams.email,
           redirect: reqParams.redirect,
         }
-      : null
+      : null,
   );
 
   reqParams = reqParams || {};
@@ -122,7 +122,7 @@ exports.resetPassword = function (request, reqParams, response) {
       request,
       reqParams,
       response,
-      'missing required parameters'
+      'missing required parameters',
     );
 
   if (reqParams.password == 'password' || reqParams.password.trim() == '')
@@ -130,14 +130,14 @@ exports.resetPassword = function (request, reqParams, response) {
       request,
       reqParams,
       response,
-      'Please enter your new password twice'
+      'Please enter your new password twice',
     );
   else if (reqParams.password.length < 4 || reqParams.password.length > 32)
     return exports.renderPasswordPage(
       request,
       reqParams,
       response,
-      'Your password must be between 4 and 32 characters'
+      'Your password must be between 4 and 32 characters',
     );
   //else if (!pwdRegex.test(reqParams.password))
   //	return exports.renderPasswordPage(request, reqParams, response, "Your password contains invalid characters");
@@ -151,7 +151,7 @@ exports.resetPassword = function (request, reqParams, response) {
             request,
             reqParams,
             response,
-            'Oops, your request failed... Please try again!'
+            'Oops, your request failed... Please try again!',
           );
 
         console.log('password reset ok');
@@ -161,10 +161,10 @@ exports.resetPassword = function (request, reqParams, response) {
         else
           return response.legacyRender(
             'Your password was successfully updated! You can now login there: ' +
-              config.urlPrefix
+              config.urlPrefix,
           );
         //, null, {'content-type': 'text/html'});
-      }
+      },
     );
   });
 };

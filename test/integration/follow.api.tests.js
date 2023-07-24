@@ -19,7 +19,7 @@ const getAsUser = (user, url, params) =>
       } else {
         const getParams = !params ? '' : `?${querystring.encode(params)}`;
         api.get(jar, url + getParams, (err, res) =>
-          err ? reject(err) : resolve(res)
+          err ? reject(err) : resolve(res),
         );
       }
     });
@@ -42,7 +42,7 @@ describe(`follow api`, () => {
     // check in the db that the user was really followed
     const actualSubscriptions = await dumpMongoCollection(
       MONGODB_URL,
-      'follow'
+      'follow',
     );
     const expectedSubscriptions = [
       {

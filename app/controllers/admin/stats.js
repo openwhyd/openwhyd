@@ -18,9 +18,9 @@ function listBestContributors(cb) {
     },
     function () {
       cb(
-        snip.mapToObjArray(users).sort(snip.makeFieldSort('c', snip.descSort))
+        snip.mapToObjArray(users).sort(snip.makeFieldSort('c', snip.descSort)),
       );
-    }
+    },
   );
 }
 
@@ -42,7 +42,7 @@ function listTracksFromBookmarklet(p, cb) {
       //else console.log("[WARNING] invalid post", post)
     },
     cb,
-    bkPosts
+    bkPosts,
   );
 }
 

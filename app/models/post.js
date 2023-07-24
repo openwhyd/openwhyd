@@ -74,7 +74,7 @@ exports.fetchPosts = function (query, params, options, handler) {
           'with params',
           params,
           ':',
-          err
+          err,
         );
       results = results || [];
       processPosts(results);
@@ -91,7 +91,7 @@ exports.fetchAll = function (handler, after, limit) {
     {},
     {},
     { limit: limit, after: after /*, before:before*/ },
-    handler
+    handler,
   );
 };
 
@@ -105,7 +105,7 @@ exports.fetchByAuthorsOld = function (uidList, options, handler) {
     query,
     {},
     { after: options.after, before: options.before, limit: options.limit },
-    handler
+    handler,
   );
 };
 
@@ -150,7 +150,7 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
       limit: options.limit,
       until: options.until,
     },
-    handler
+    handler,
   );
 };
 
@@ -159,7 +159,7 @@ exports.countUserPosts = function (uid, handler) {
     { uId: uid, rTo: null },
     function (err, result) {
       handler(result);
-    }
+    },
   );
 };
 
@@ -172,7 +172,7 @@ exports.fetchPostById = function (pId, handler) {
     function (err, res) {
       if (err) console.log(err);
       handler(res);
-    }
+    },
   );
 };
 
@@ -195,7 +195,7 @@ function setPostLove(collection, pId, uId, state, handler) {
         pId,
         uId,
         post ? post.uId : null,
-        post
+        post,
       );
       if (post && uId != post.uId) notif[state ? 'love' : 'unlove'](uId, post);
       if (handler) handler(post);
@@ -236,7 +236,7 @@ function notifyMentionedUsers(post, cb) {
       function (mentionedUid, next) {
         notifModel.mention(post, comment, mentionedUid, next);
       },
-      cb
+      cb,
     );
   }
 }
@@ -270,9 +270,9 @@ exports.savePost = function (postObj, handler) {
         if (error) console.log('update error', error);
         mongodb.collections['post'].findOne(
           { _id: ObjectId('' + pId) },
-          whenDone
+          whenDone,
         );
-      }
+      },
     );
   } else
     mongodb.collections['post'].insertOne(postObj, function (error, result) {
@@ -316,7 +316,7 @@ exports.rePost = function (pId, repostObj, handler) {
           .updateOne(
             { _id: ObjectId('' + pId) },
             { $inc: { nbR: 1 } },
-            { w: 0 }
+            { w: 0 },
           )
           .then(() => {
             trackModel.updateByEid(postObj.eId);
@@ -354,7 +354,7 @@ exports.deletePost = function (pId, uId, handler) {
           collection.updateOne(
             { _id: ObjectId('' + postObj.repost.pId) },
             { $inc: { nbR: -1 } },
-            { w: 0 }
+            { w: 0 },
           );
         trackModel.updateByEid(postObj.eId);
       });
@@ -377,7 +377,7 @@ exports.incrPlayCounter = function (pId, cb) {
         if (postObj) trackModel.updateByEid(postObj.eId);
         cb && cb(postObj || err);
       });
-    }
+    },
   );
 };
 
@@ -393,7 +393,7 @@ exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
     { uId, 'pl.id': parseInt(plId) },
     playlistSort,
     options,
-    handler
+    handler,
   );
 };
 
@@ -406,7 +406,7 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
   else
     db['post'].countDocuments(
       { 'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] } },
-      handle
+      handle,
     );
 };
 
@@ -424,7 +424,7 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
     function (err, res) {
       if (err) console.log(err);
       if (handler) handler(res);
-    }
+    },
   );
 };
 
@@ -442,7 +442,7 @@ exports.unsetPlaylist = function (uId, plId, handler) {
     function (err, res) {
       if (err) console.log(err);
       if (handler) handler(res);
-    }
+    },
   );
 };
 
@@ -451,7 +451,7 @@ exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
     'post.setPlaylistOrder(uId, plId, order.length): ',
     uId,
     plId,
-    order.length
+    order.length,
   );
   var collection = mongodb.collections['post'];
   function next(err) {

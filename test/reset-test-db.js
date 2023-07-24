@@ -33,7 +33,7 @@ require('../app/models/mongodb.js').init(function (err, db) {
         console.log(
           '[test-db-init.js] Applying db init script:',
           initScript,
-          '...'
+          '...',
         );
         mongodb.runShellScript(fs.readFileSync(initScript), nextScript);
       },
@@ -41,7 +41,7 @@ require('../app/models/mongodb.js').init(function (err, db) {
         if (err) throw err;
         console.log('[test-db-init.js] => done.');
         process.exit();
-      }
+      },
     );
   });
 });

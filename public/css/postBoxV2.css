@@ -52,9 +52,15 @@ body {
   top: 50%;
   left: 47.5%;
   opacity: 0.5;
-  transition: opacity, transform 0.2s;
-  -moz-transition: opacity, -moz-transform 0.2s;
-  -webkit-transition: opacity, -webkit-transform 0.2s;
+  transition:
+    opacity,
+    transform 0.2s;
+  -moz-transition:
+    opacity,
+    -moz-transform 0.2s;
+  -webkit-transition:
+    opacity,
+    -webkit-transform 0.2s;
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -o-transform: scale(1);
@@ -103,7 +109,9 @@ body {
   max-height: 271px;
   width: 294px;
   background: #fff;
-  transition: opacity 0.1s linear, margin 0.1s linear;
+  transition:
+    opacity 0.1s linear,
+    margin 0.1s linear;
   /* overflow: hidden; */
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
@@ -462,7 +470,9 @@ body.success div.success {
   height: 100%;
   opacity: 0;
 
-  transition: opacity 0.2s linear, padding 0.2s linear;
+  transition:
+    opacity 0.2s linear,
+    padding 0.2s linear;
   padding-top: 15px;
 }
 

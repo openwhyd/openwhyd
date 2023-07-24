@@ -20,7 +20,7 @@ function buildContext(db, nextCommand, callback) {
       PRINT_ACTIVE &&
         console.log.apply(
           console,
-          [LOG_PREFIX].concat(Array.prototype.slice.call(arguments))
+          [LOG_PREFIX].concat(Array.prototype.slice.call(arguments)),
         );
       nextCommand();
     },
@@ -46,7 +46,7 @@ function buildContext(db, nextCommand, callback) {
         col,
         Array.prototype.slice
           .call(arguments)
-          .concat([makeCallback(colName + '.' + methodName)])
+          .concat([makeCallback(colName + '.' + methodName)]),
       );
     };
   }
@@ -60,7 +60,7 @@ function buildContext(db, nextCommand, callback) {
           ensureIndex: wrapCollectionMethod(col, 'ensureIndex', colName),
           updateOne: wrapCollectionMethod(col, 'updateOne', colName),
           updateMany: wrapCollectionMethod(col, 'updateMany', colName),
-        }
+        },
       );
     });
   }
@@ -78,12 +78,12 @@ function buildContext(db, nextCommand, callback) {
             context.db[colObj.collectionName] = res; // mutating the context object
             nextCollection();
           },
-          nextCommand
+          nextCommand,
         );
       },
       function (err) {
         callback(err, context);
-      }
+      },
     );
   });
 }
@@ -113,6 +113,6 @@ exports.runScriptOnDatabase = function (script, db, callback) {
         });
       }
     },
-    callback
+    callback,
   );
 };

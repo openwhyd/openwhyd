@@ -98,7 +98,7 @@ exports.cacheUsers = function (callback) {
     function (results) {
       for (let i in results) exports.cacheUser(results[i]);
       if (callback) callback();
-    }
+    },
   );
 };
 
@@ -115,7 +115,7 @@ exports.forEach = function (colName, params, handler, cb, cbParam) {
       (err, item) => {
         if (item) handler(item);
       },
-      cb ? () => cb(cbParam) : undefined
+      cb ? () => cb(cbParam) : undefined,
     );
   });
 };
@@ -218,7 +218,7 @@ exports.initCollections = function ({ addTestData } = {}) {
             resolve();
           });
         });
-      }
+      },
     );
   });
 };
@@ -241,7 +241,7 @@ exports.init = function (readyCallback) {
   var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
   console.log(
-    `[db] Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`
+    `[db] Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`,
   );
 
   var options = {

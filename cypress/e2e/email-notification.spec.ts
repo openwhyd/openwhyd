@@ -20,7 +20,7 @@ context('reduce frequency of email notifications', () => {
         .to.have.property('emSub', '1');
     });
     cy.visit(
-      `/api/unsubscribe?uId=000000000000000000000001&type=emSub&action=reduce`
+      `/api/unsubscribe?uId=000000000000000000000001&type=emSub&action=reduce`,
     );
     cy.get('body').contains('weekly');
     cy.request('api/user').should((response) => {

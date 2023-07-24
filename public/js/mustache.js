@@ -63,7 +63,7 @@ var Mustache = (function () {
 
       var that = this;
       var regex = new RegExp(
-        this.otag + '%([\\w-]+) ?([\\w]+=[\\w]+)?' + this.ctag
+        this.otag + '%([\\w-]+) ?([\\w]+=[\\w]+)?' + this.ctag,
       );
       return template.replace(regex, function (match, pragma, options) {
         if (!that.pragmas_implemented[pragma]) {
@@ -117,7 +117,7 @@ var Mustache = (function () {
           '\\/\\s*\\2\\s*' +
           this.ctag +
           '\\s*',
-        'mg'
+        'mg',
       );
 
       // for each {{#foo}}{{/foo}} section do...
@@ -141,7 +141,7 @@ var Mustache = (function () {
                   content,
                   that.create_context(row),
                   partials,
-                  true
+                  true,
                 );
               })
               .join('');
@@ -151,7 +151,7 @@ var Mustache = (function () {
               content,
               that.create_context(value),
               partials,
-              true
+              true,
             );
           } else if (typeof value === 'function') {
             // higher order section
@@ -178,7 +178,7 @@ var Mustache = (function () {
       var new_regex = function () {
         return new RegExp(
           that.otag + '(=|!|>|\\{|%)?([^\\/#\\^]+?)\\1?' + that.ctag + '+',
-          'g'
+          'g',
         );
       };
 
@@ -239,7 +239,7 @@ var Mustache = (function () {
         ];
         arguments.callee.sRE = new RegExp(
           '(\\' + specials.join('|\\') + ')',
-          'g'
+          'g',
         );
       }
       return text.replace(arguments.callee.sRE, '\\$1');

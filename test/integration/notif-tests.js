@@ -107,7 +107,7 @@ function testAllNotifs(u) {
     ADMIN_USER.id,
     'coucou <small>html</small>',
     'http://www.facebook.com',
-    '/images/logo-s.png'
+    '/images/logo-s.png',
   );
   notifModel.mention(FAKE_POST, COMMENTS[u], ADMIN_USER.id);
 
@@ -167,7 +167,7 @@ describe('notifications', function () {
 
   it('fails when calling notif.sendTrackToUsers() with no parameters', async () => {
     const res = await new Promise((resolve) =>
-      notifModel.sendTrackToUsers(null, resolve)
+      notifModel.sendTrackToUsers(null, resolve),
     );
     assert.equal(res.error, 'object is null');
   });
@@ -176,8 +176,8 @@ describe('notifications', function () {
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(
         { uId: USERS[0].id, uNm: USERS[0].name, uidList: [ADMIN_USER.id] },
-        resolve
-      )
+        resolve,
+      ),
     );
     assert.equal(res.error, 'missing field: pId');
   });
@@ -191,8 +191,8 @@ describe('notifications', function () {
           uidList: [ADMIN_USER.id],
           pId: FAKE_POST,
         },
-        resolve
-      )
+        resolve,
+      ),
     );
     assert.equal(res.error, 'mistyped field: pId');
   });
@@ -207,7 +207,7 @@ describe('notifications', function () {
       pId: '' + FAKE_POST._id,
     };
     const res = await new Promise((resolve) =>
-      notifModel.sendTrackToUsers(p, resolve)
+      notifModel.sendTrackToUsers(p, resolve),
     );
     // expect: the notif is received by recipient
     await pollUntil(makeNotifChecker(1));
@@ -246,7 +246,7 @@ describe('notifications', function () {
     assert.strictEqual(n.img, n.track.img);
     assert(
       n.track.img.indexOf(p.plId) > -1,
-      'track.img should include the plId'
+      'track.img should include the plId',
     );
     assert(n.href.indexOf(plUri) > -1, 'href should include the plUri');
   });

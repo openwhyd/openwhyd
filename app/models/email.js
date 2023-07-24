@@ -29,7 +29,7 @@ exports.email = function (
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
   return emailImpl.email(
     emailAddr,
@@ -37,7 +37,7 @@ exports.email = function (
     textContent,
     htmlContent,
     userName,
-    callback
+    callback,
   );
 };
 
@@ -51,7 +51,7 @@ exports.notif = function (toUid, subject, text /*, fbAccessToken*/) {
     if (!user || !user.email) {
       console.log(
         'ERROR: found no email address for user ' + toUid + ' : ',
-        user
+        user,
       );
       return;
     } else {
