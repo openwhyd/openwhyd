@@ -52,6 +52,7 @@
     "lint:typescript": "npx tsc --noEmit --moduleResolution node --skipLibCheck",
     "lint:format": "prettier . --write",
     "lint:fix": "eslint . --fix",
+    "lint:errors": "eslint . --quiet",
     "lint": "eslint ."
   },
   "directories": {

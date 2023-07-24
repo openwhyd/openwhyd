@@ -9,7 +9,6 @@
  * @typedef {import('../infrastructure/mongodb/types').UserDocument} UserDocument
  */
 
-var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
 var emailModel = require('../models/email.js');

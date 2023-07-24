@@ -35,7 +35,6 @@
 
 var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId;
-var snip = require('../snip.js');
 const feature = require('../features/hot-tracks.js');
 
 const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
