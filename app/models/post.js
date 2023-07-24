@@ -61,27 +61,29 @@ function processAdvQuery(query, params, options) {
   if (!params.sort) params.sort = [/*['rTm','desc'],*/ ['_id', 'desc']]; // by default
 }
 
-// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
-exports.fetchPosts = function (query, params, options, handler) {
+exports.fetchPosts = async function (query, params, options, handler) {
   params = params || {};
   processAdvQuery(query, params, options);
-  mongodb.collections['post'].find(query, params, function (err, cursor) {
-    if (err) console.error(err);
-    cursor.toArray(function (err, results) {
-      if (err)
-        console.error(
-          'model.fetchPosts ERROR on query',
-          query,
-          'with params',
-          params,
-          ':',
-          err,
-        );
-      results = results || [];
-      processPosts(results);
-      handler(results);
-    });
-  });
+  const { fields } = params ?? {};
+  delete params.fields;
+  let results = [];
+  try {
+    results = await mongodb.collections['post']
+      .find(query, params)
+      .project(fields ?? {})
+      .toArray();
+  } catch (err) {
+    console.error(
+      'model.fetchPosts ERROR on query',
+      query,
+      'with params',
+      params,
+      ':',
+      err,
+    );
+  }
+  processPosts(results);
+  handler(results);
 };
 
 // more specific functions
