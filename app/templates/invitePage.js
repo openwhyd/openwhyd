@@ -13,7 +13,7 @@ var pageTemplate = null;
 exports.refreshTemplates = function (callback) {
   pageTemplate = templateLoader.loadTemplate(
     'app/templates/invitePage.html',
-    callback
+    callback,
   );
 };
 
@@ -70,7 +70,7 @@ exports.renderInvitePage = function (
   iPo,
   email,
   fbRequest,
-  redirect
+  redirect,
 ) {
   var params = {};
   params.title = !inviteCode ? 'Join Openwhyd' : 'Your invitation to Openwhyd';

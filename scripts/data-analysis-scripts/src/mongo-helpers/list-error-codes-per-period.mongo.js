@@ -31,7 +31,7 @@ function mapTemplate() {
 
 const map = makeMapWith(
   renderFct,
-  mapTemplate.toString().replace('renderFct', RENDER_FCT)
+  mapTemplate.toString().replace('renderFct', RENDER_FCT),
 );
 
 function reduce(day, vals) {
@@ -40,8 +40,8 @@ function reduce(day, vals) {
   // sum counts for each period
   vals.forEach((val) =>
     Object.keys(val).forEach(
-      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key])
-    )
+      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key]),
+    ),
   );
   return finalVal;
 }

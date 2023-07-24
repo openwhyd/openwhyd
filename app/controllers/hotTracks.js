@@ -16,7 +16,7 @@ var template;
 (function loadTemplates(callback) {
   template = templateLoader.loadTemplate(
     'app/templates/hotTracks.html',
-    callback
+    callback,
   );
 })();
 
@@ -74,7 +74,7 @@ exports.controller = function (request, reqParams, response) {
               content: html,
             });
           render(html);
-        }
+        },
       );
     }
   }

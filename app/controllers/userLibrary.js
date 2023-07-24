@@ -59,7 +59,7 @@ function LibraryController(reqParams, render) {
 LibraryController.prototype.renderPage = function (
   user,
   sidebarHtml,
-  feedHtml
+  feedHtml,
 ) {
   if (!this.options.embedW) {
     this.options.content = feedHtml;
@@ -118,7 +118,7 @@ exports.controller = function (request, reqParams, response) {
         data,
         response,
         reqParams.format,
-        loggedInUser
+        loggedInUser,
       );
     } else if (data.error) {
       console.error('userLibrary ERROR: ', data.error);
@@ -127,7 +127,7 @@ exports.controller = function (request, reqParams, response) {
         data,
         response,
         reqParams.format,
-        loggedInUser
+        loggedInUser,
       );
     } else if (data.html) {
       response.renderHTML(data.html);
@@ -178,8 +178,8 @@ exports.controller = function (request, reqParams, response) {
           redirectTo(
             path.replace(
               '/me',
-              user.handle ? '/' + user.handle : '/u/' + user.id
-            )
+              user.handle ? '/' + user.handle : '/u/' + user.id,
+            ),
           );
       });
   } else if (path == '/all') {

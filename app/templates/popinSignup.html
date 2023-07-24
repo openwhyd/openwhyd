@@ -15,7 +15,7 @@
       $('form').iframePostForm({
         complete: function (res) {
           res = JSON.parse(
-            res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1)
+            res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1),
           );
           console.log('response', res);
           $('.errorMessage').remove();
@@ -24,7 +24,7 @@
               var hasError = res.error.indexOf(fName) != -1;
               var $field = signup.fields[fName].toggleClass(
                 'errorInput',
-                hasError
+                hasError,
               );
               if (hasError) {
                 $("<p class='errorMessage'></p>")

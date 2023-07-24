@@ -27,7 +27,7 @@ exports.makeTests = function (p) {
             testVars.uidList = subscriptions.concat([p.loggedUser.id]);
             //console.timeEnd("fetchSubscriptionArray");
             cb(true);
-          }
+          },
         );
       },
     ],

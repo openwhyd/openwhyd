@@ -20,7 +20,7 @@ function initMenuScrollAnimation(menuId, options) {
       {
         scrollTop: $(anchor.attr('href')).offset().top,
       },
-      scrollTime
+      scrollTime,
     );
   });
 
@@ -32,7 +32,7 @@ function initMenuScrollAnimation(menuId, options) {
       if (scrollTop >= section.offset().top) {
         $('#' + menuId + ' a.' + menuActiveClass).removeClass(menuActiveClass);
         $('#' + menuId + ' a[href="#' + section.attr('id') + '"]').addClass(
-          menuActiveClass
+          menuActiveClass,
         );
         return;
       }

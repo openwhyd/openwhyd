@@ -9,7 +9,7 @@ var snip = require('../../snip.js');
 
 function loadTestFile(testName) {
   var filePath = path.resolve(
-    'app/controllers/admin/tests/' + testName + '.js'
+    'app/controllers/admin/tests/' + testName + '.js',
   );
   delete require.cache[filePath]; // clear the cache entry for this file before reloading it below
   try {
@@ -29,7 +29,7 @@ var runTests = (function () {
           .map(function (t) {
             return t[0] + ' => ' + (t[2] || '(not tested)');
           })
-          .join('\n')
+          .join('\n'),
       );
     }
     function runTest(t, cb) {
@@ -71,7 +71,7 @@ exports.controller = function (request, reqParams, response) {
             file = file.substr(0, file.lastIndexOf('.'));
             return '<li><a href="test/' + file + '">' + file + '</a>';
           })
-          .join('\n')
+          .join('\n'),
       );
     });
   }

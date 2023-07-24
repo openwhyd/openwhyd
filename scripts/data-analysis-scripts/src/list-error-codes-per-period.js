@@ -45,7 +45,7 @@ const map = makeMapWith(
   mapTemplate
     .toString()
     .replace('renderFct', RENDER_FCT)
-    .replace('emit', '(' + emit.toString() + ')')
+    .replace('emit', '(' + emit.toString() + ')'),
 );
 
 function reduce(day, vals) {
@@ -54,8 +54,8 @@ function reduce(day, vals) {
   // sum counts for each period
   vals.forEach((val) =>
     Object.keys(val).forEach(
-      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key])
-    )
+      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key]),
+    ),
   );
   return finalVal;
 }
@@ -85,7 +85,7 @@ var opts = {
     INPUT_FILE,
     map,
     reduce,
-    opts
+    opts,
   );
   console.warn(`⏲  Duration: ${(new Date() - startDate) / 1000} seconds`); // => ~3 mn (instead of 8 from db)
 

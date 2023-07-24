@@ -43,7 +43,7 @@ $(function () {
           .text(
             res.error && typeof res.error == 'string'
               ? res.error
-              : 'An unknown error occured, please try again'
+              : 'An unknown error occured, please try again',
           )
           .show();
       cb && cb(res);
@@ -74,7 +74,7 @@ $(function () {
         '<img src="/images/fun-y_u_no_use_whyd.jpg" style="float:left;margin:15px;">' +
         '<span style="line-height:30px;">Are you sure?</span><br>' +
         '<span style="font-weight:normal;">If you have a question or problem,<br>we\'re happy to help at contact@openwhyd.org.</span>' +
-        '</div><span class="redButton">Delete my account</span>'
+        '</div><span class="redButton">Delete my account</span>',
     );
     $html.last().click(function () {
       $html
@@ -91,7 +91,7 @@ $(function () {
     globals.openJqueryDialog(
       $html,
       'dlgDeletePost',
-      'Delete your openwhyd account'
+      'Delete your openwhyd account',
     );
   });
 
@@ -175,7 +175,7 @@ $(function () {
           allOk
             ? 'Your changes were successfully applied'
             : 'Please fix your settings and try again',
-          !allOk
+          !allOk,
         );
     })(true);
   });
@@ -238,7 +238,7 @@ $(function () {
       var popup = window.open(
         href,
         'whyd_lastFmConn',
-        'height=600,width=800,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
+        'height=600,width=800,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no',
       );
       popup.focus();
       globals.lastFmCallback = function (session) {
@@ -257,7 +257,7 @@ $(function () {
     $lastFmConn.click(lastFmConn);
 
     toggleLastFmConnection(
-      globals.user.lastFm && globals.user.lastFm.name && globals.user.lastFm.sk
+      globals.user.lastFm && globals.user.lastFm.name && globals.user.lastFm.sk,
     );
   })();
 
@@ -298,7 +298,7 @@ $(function () {
       if (IS_READY == false) {
         globals.showMessage(
           'Something went wrong.. Please try again, reload your page.',
-          IS_LOGGED
+          IS_LOGGED,
         );
       } else {
         globals.DZ.init({
@@ -311,7 +311,7 @@ $(function () {
             IS_LOGGED = true;
             globals.showMessage(
               'You are already logged into your Deezer account.',
-              !IS_LOGGED
+              !IS_LOGGED,
             );
           }
         });
@@ -326,16 +326,16 @@ $(function () {
               IS_LOGGED = true;
               globals.showMessage(
                 'Login successful. Your Deezer tracks will be full length from now on!',
-                !IS_LOGGED
+                !IS_LOGGED,
               );
             } else {
               globals.showMessage(
                 'We could not establish a connection to a Deezer Account, please try again.',
-                IS_LOGGED
+                IS_LOGGED,
               );
             }
           },
-          { perms: 'email' }
+          { perms: 'email' },
         );
       }
     }
@@ -389,9 +389,9 @@ $(function () {
           $pwdForm.find('.fld').toggleClass(!res.error ? 'ok' : 'error');
           globals.showMessage(
             res.error || 'Your password was successfully set',
-            !!res.error
+            !!res.error,
           );
-        }
+        },
       );
       /*
 			$(this).closest("input[type=submit]").addClass("loading");
@@ -464,7 +464,7 @@ $(function () {
         ok
           ? 'Your changes were successfully applied'
           : 'Oops, something went wrong! Please try again',
-        !ok
+        !ok,
       );
     });
   });

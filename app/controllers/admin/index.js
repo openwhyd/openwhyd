@@ -39,7 +39,7 @@ function refreshIndex(type, cb, preprocess) {
       if (r.errors || r.error)
         console.error(
           '[ERR] (BULK) admin.index.refreshIndex, searchModel.index: ' +
-            (r.errors || r.error)
+            (r.errors || r.error),
         );
       indexed += (r.items || []).length || 0;
       cb();
@@ -86,7 +86,7 @@ function refreshIndex(type, cb, preprocess) {
               indexed,
               'documents from',
               fetched,
-              'fetched db records'
+              'fetched db records',
             );
             cb && cb();
           });
@@ -149,24 +149,22 @@ function countDbUsersAndPlaylists(cb) {
           }
         });
       })();
-    }
+    },
   );
 }
 
 function countItems(cb) {
   countDbUsersAndPlaylists(function (p) {
-    mongodb.collections[indexCol['post']].countDocuments(function (
-      err,
-      dbPosts
-    ) {
-      p.dbPosts = dbPosts;
-      searchModel.countDocs('user', function (idxUsers) {
-        p.idxUsers = idxUsers;
-        searchModel.countDocs('post', function (idxPosts) {
-          p.idxPosts = idxPosts;
-          searchModel.countDocs('playlist', function (idxPlaylists) {
-            p.idxPlaylists = idxPlaylists;
-            /*
+    mongodb.collections[indexCol['post']].countDocuments(
+      function (err, dbPosts) {
+        p.dbPosts = dbPosts;
+        searchModel.countDocs('user', function (idxUsers) {
+          p.idxUsers = idxUsers;
+          searchModel.countDocs('post', function (idxPosts) {
+            p.idxPosts = idxPosts;
+            searchModel.countDocs('playlist', function (idxPlaylists) {
+              p.idxPlaylists = idxPlaylists;
+              /*
 						p = {
 							idxUsers: idxUsers,
 							idxPosts: idxPosts,
@@ -175,11 +173,12 @@ function countItems(cb) {
 							dbPosts: dbPosts,
 							dbPlaylists: dbPlaylists
 						};*/
-            cb(p);
+              cb(p);
+            });
           });
         });
-      });
-    });
+      },
+    );
   });
 }
 

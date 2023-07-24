@@ -35,7 +35,7 @@ $(function () {
           $('.post:visible').addClass('filtered');
           display(resultsHtml, false); // stop the searching animation
           $results.ajaxify();
-        }
+        },
       );
     },
     onEmpty: function () {

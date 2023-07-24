@@ -31,14 +31,14 @@ function follow(user, userToFollow, ctx) {
     },
     function () {
       console.log('auto follow: ', user.name, userToFollow.name);
-    }
+    },
   );
 }
 
 function renderError(request, getParams, response, errorMsg) {
   var json = { error: errorMsg };
   response[getParams.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
-    json
+    json,
   );
 }
 
@@ -63,7 +63,7 @@ exports.registerInvitedUser = function (request, user, response) {
           ajax: user.ajax,
           fbRequest: user.fbRequest,
         }
-      : null
+      : null,
   );
 
   user = user || {};
@@ -110,14 +110,14 @@ exports.registerInvitedUser = function (request, user, response) {
       request,
       user,
       response,
-      'You have to set your password first'
+      'You have to set your password first',
     );
   else if (user.password.length < 4 || user.password.length > 32)
     return error(
       request,
       user,
       response,
-      'Your password must be between 4 and 32 characters'
+      'Your password must be between 4 and 32 characters',
     );
   //else if (!pwdRegex.test(user.password))
   //	return error(request, user, response, "Your password contains invalid characters");
@@ -129,7 +129,7 @@ exports.registerInvitedUser = function (request, user, response) {
           request,
           user,
           response,
-          'This email address is already registered on whyd'
+          'This email address is already registered on whyd',
         );
 
       var dbUser = {
@@ -163,7 +163,7 @@ exports.registerInvitedUser = function (request, user, response) {
         request,
         user,
         response,
-        'Oops, your registration failed... Please try again!'
+        'Oops, your registration failed... Please try again!',
       );
 
     if (user.fbRequest) userModel.removeInviteByFbRequestIds(user.fbRequest);
@@ -175,7 +175,7 @@ exports.registerInvitedUser = function (request, user, response) {
         var json = { redirect: url, uId: '' + storedUser._id };
         const renderJSON = () => {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
-            json
+            json,
           );
         };
         if (user.includeUser) {

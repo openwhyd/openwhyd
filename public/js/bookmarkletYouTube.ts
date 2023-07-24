@@ -3,7 +3,7 @@ const openwhydYouTubeExtractor = {
     // code imported from playem-all
     if (
       /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
-        url
+        url,
       ) ||
       /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
       /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||

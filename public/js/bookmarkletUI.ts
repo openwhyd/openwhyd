@@ -45,7 +45,7 @@ if (typeof exports === 'undefined') {
 
     window.closeWhydBk = function () {
       window.document.body.removeChild(
-        window.document.getElementById('whydBookmarklet')
+        window.document.getElementById('whydBookmarklet'),
       );
       window.document.onkeydown = window.onkeydownBackup;
       window.document.body.style.overflow = overflowBackup;
@@ -137,7 +137,7 @@ if (typeof exports === 'undefined') {
         else if (track.eId.indexOf('/ja/') == 0)
           track.img = track.img.replace(
             /\/covers\/1\.200\.jpg$/,
-            '/covers/1.600.jpg'
+            '/covers/1.600.jpg',
           );
       }
       return track;
@@ -151,7 +151,7 @@ if (typeof exports === 'undefined') {
       let div = window.document.getElementById('whydBookmarklet');
       if (!div) {
         window.document.body.appendChild(
-          window.document.createElement('div')
+          window.document.createElement('div'),
         ).id = 'whydBookmarklet';
         div = window.document.getElementById('whydBookmarklet');
       }
@@ -191,7 +191,7 @@ if (typeof exports === 'undefined') {
         const whydPop = window.open(
           href,
           'whydPop',
-          'height=460,width=780,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
+          'height=460,width=780,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no',
         );
         whydPop.focus();
         window.closeWhydBk();
@@ -200,7 +200,7 @@ if (typeof exports === 'undefined') {
       function showSearch(searchQuery) {
         const whydPop = window.open(
           urlPrefix + '/search?q=' + encodeURIComponent(searchQuery),
-          'whydSearch'
+          'whydSearch',
         );
         whydPop.focus();
         window.closeWhydBk();
@@ -252,7 +252,7 @@ if (typeof exports === 'undefined') {
             elt({ class: 'whydSrcLogo', img: thumb.sourceLogo }),
             addBtn,
             checkBox,
-          ]
+          ],
         );
       }
 

@@ -22,8 +22,8 @@ function reduce(day, vals) {
   var finalVal = {};
   vals.forEach((val) =>
     Object.keys(val).forEach(
-      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key])
-    )
+      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key]),
+    ),
   );
   return finalVal;
 }

@@ -3,7 +3,7 @@ var postModel = require('../models/post.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var playlistTemplateV2 = templateLoader.loadTemplate(
-  'app/templates/userPlaylistV2.html'
+  'app/templates/userPlaylistV2.html',
 );
 
 exports.fetchAndRender = function (options, callback) {
@@ -53,7 +53,7 @@ exports.fetchAndRender = function (options, callback) {
       options.uid,
       options.playlistId,
       options.fetchParams,
-      (posts) => callback(null, posts)
+      (posts) => callback(null, posts),
     );
   }
 };

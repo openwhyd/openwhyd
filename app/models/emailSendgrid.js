@@ -15,7 +15,7 @@ exports.email = function (
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
   console.log('[EMAIL] about to send:', snip.formatEmail(emailAddr), subject);
 
@@ -59,7 +59,7 @@ exports.email = function (
           console.log('[EMAIL] response:', data);
           if (callback) callback(data);
         });
-      }
+      },
     )
     .on('error', function (err) {
       console.log('[EMAIL] send error:', err);

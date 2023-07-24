@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -316,7 +316,7 @@
               // new user
               $('input[name=fbUid]').val(res.fbUser.id);
               $('input[name=fbTok]').val(
-                (res.fbAuthResponse || {}).accessToken
+                (res.fbAuthResponse || {}).accessToken,
               );
               $name.val(res.fbUser.name);
               $email.val(res.fbUser.email);

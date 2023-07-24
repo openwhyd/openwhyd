@@ -84,7 +84,7 @@ function QuickSearch(searchForm, options) {
     toggleClass(
       searchResults.getElementsByTagName('li')[selected],
       'hover',
-      true
+      true,
     );
   }
 

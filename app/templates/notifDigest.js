@@ -149,7 +149,7 @@ exports.NotifDigest.prototype.renderText = function () {
           (p.posts[i].plural ? 's' : '') +
           ' added/liked your track "' +
           p.posts[i].name +
-          '"'
+          '"',
       );
       for (let j in p.posts[i].reposts)
         text.push('- ' + p.posts[i].reposts[j].name);
@@ -162,7 +162,7 @@ exports.NotifDigest.prototype.renderText = function () {
       p.subscriptions.count +
         ' music lover' +
         (p.subscriptions.plural ? 's' : '') +
-        ' subscribed to you'
+        ' subscribed to you',
     );
     for (let i in p.subscriptions.items)
       text.push('- ' + p.subscriptions.items[i].name);
@@ -184,11 +184,11 @@ exports.NotifDigest.prototype.renderText = function () {
         p.linkUnsubscribeNotifs.text +
         ' (' +
         p.linkUnsubscribeNotifs.url +
-        ')'
+        ')',
     );
     if (p.linkReduceNotifs)
       text.push(
-        '- or ' + p.linkReduceNotifs.text + ' (' + p.linkReduceNotifs.url + ')'
+        '- or ' + p.linkReduceNotifs.text + ' (' + p.linkReduceNotifs.url + ')',
       );
   }
   return text.join('\n');

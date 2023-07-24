@@ -114,7 +114,7 @@ describe(`post api`, function () {
           assert.equal(body[0].pl.id, firstPlaylistIndex);
           assert.equal(body[0].pl.name, postInPlaylist.pl.name);
           done();
-        }
+        },
       );
     });
   });
@@ -202,7 +202,7 @@ describe(`post api - independent tests`, function () {
     await assert.rejects(() => api.deletePost(otherJar, postId));
     assert.equal(
       (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
-      1
+      1,
     );
   });
 
@@ -244,11 +244,11 @@ describe(`post api - independent tests`, function () {
       .catch((err) => (apiError = err)); // ignore assertion failure caused by non-200 status code
     assert.equal(
       (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
-      1
+      1,
     );
     assert.equal(
       apiError.message,
-      "updating another user's post is not allowed"
+      "updating another user's post is not allowed",
     );
   });
 });

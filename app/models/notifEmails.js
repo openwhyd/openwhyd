@@ -27,7 +27,7 @@ function sendEmail(toUid, emailObj, cb) {
       emailObj.bodyText,
       emailObj.bodyHtml,
       to.name,
-      cb
+      cb,
     );
 }
 
@@ -40,7 +40,7 @@ exports.sendAcceptedInvite = function (storedUser) {
     storedUser.email,
     temp.subject,
     temp.bodyText,
-    temp.bodyHtml
+    temp.bodyHtml,
   );
 };
 
@@ -51,7 +51,7 @@ exports.sendRegWelcome = function (storedUser, inviteSender) {
     storedUser.email,
     temp.subject,
     temp.bodyText,
-    temp.bodyHtml
+    temp.bodyHtml,
   );
 };
 
@@ -66,9 +66,9 @@ exports.sendRegWelcomeAsync = function (storedUser, inviteSender, cb) {
         email.bodyText,
         email.bodyHtml,
         undefined,
-        cb
+        cb,
       );
-    }
+    },
   );
 };
 
@@ -89,7 +89,7 @@ exports.askAccountDeletion = function (uId, uNm) {
   emailModel.email(
     process.appParams.feedbackEmail,
     '[' + process.appParams.urlPrefix + '] user account deletion request',
-    text
+    text,
   );
 };
 
@@ -105,7 +105,7 @@ exports.sendUserDeleted = function (uId, uNm) {
     emailModel.email(
       process.appParams.feedbackEmail,
       '[' + process.appParams.urlPrefix + '] user account deleted',
-      text
+      text,
     );
   }
 };
@@ -116,7 +116,7 @@ exports.sendUserDeleted = function (uId, uNm) {
 exports.sendPasswordReset = function (uid, resetCode, redirect) {
   var temp = notifTemplate.generatePasswordReset(
     { id: uid },
-    { resetCode: resetCode, redirect: redirect }
+    { resetCode: resetCode, redirect: redirect },
   );
   emailModel.notif(uid, temp.subject, temp.bodyText, temp.bodyHtml);
 };
@@ -141,7 +141,7 @@ exports.sendEmailUpdated = function (uid, emailAddr) {
 function submitNotif(recipient, type, immediateNotifHandler, noNotifHandler) {
   if (!recipient)
     return console.error(
-      'NULL recipient in models/notifEmails.js/submitNotif()'
+      'NULL recipient in models/notifEmails.js/submitNotif()',
     );
   //console.log("notifEmails.submitNotif, type:", type, (recipient.pref || {})[type]);
   if (recipient.pref && recipient.pref[type] == -1) {
@@ -162,7 +162,7 @@ exports.sendRepost = function (reposter, post, postAuthor /*Email*/) {
       postAuthor.email /*Email*/,
       temp.subject,
       temp.bodyText,
-      temp.bodyHtml
+      temp.bodyHtml,
     );
   });
 };
@@ -175,7 +175,7 @@ exports.sendSubscribedToUser = function (subscriber, selectedUser, cb) {
     function () {
       var temp = notifTemplate.generateSubscribedToUser(
         subscriber,
-        selectedUser._id
+        selectedUser._id,
       );
       emailModel.email(
         selectedUser.email,
@@ -183,10 +183,10 @@ exports.sendSubscribedToUser = function (subscriber, selectedUser, cb) {
         temp.bodyText,
         temp.bodyHtml,
         undefined,
-        cb
+        cb,
       );
     },
-    cb
+    cb,
   );
 };
 
@@ -200,7 +200,7 @@ exports.sendLike = function (user, post, postAuthor) {
         postAuthor.email,
         temp.subject,
         temp.bodyText,
-        temp.bodyHtml
+        temp.bodyHtml,
       );
     }
   });
@@ -226,7 +226,7 @@ exports.sendMention = function (mentionedUid, post, comment, cb) {
     sendEmail(
       mentionedUid,
       notifTemplate.generateMention(mentionedUid, post, comment),
-      cb
+      cb,
     );
 };
 
@@ -238,6 +238,6 @@ exports.sendCommentReply = function (post, comment, repliedUid, cb) {
     sendEmail(
       repliedUid,
       notifTemplate.generateCommentReply(post, comment, repliedUid),
-      cb
+      cb,
     );
 };

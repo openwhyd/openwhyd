@@ -16,7 +16,7 @@ function renderTemplate(params, callback) {
     'app/templates/feed-trackorder.html',
     function (template) {
       callback(template.render(params));
-    }
+    },
   );
 }
 
@@ -70,6 +70,6 @@ exports.controller = function (request, getParams, response) {
         posts: posts,
       };
       renderTemplate(params, render);
-    }
+    },
   );
 };

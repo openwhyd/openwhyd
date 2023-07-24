@@ -69,7 +69,7 @@ function LastFM(apiKey, apiSecret) {
       {},
       function (res) {
         cb((res || {}).session);
-      }
+      },
     );
   };
 
@@ -83,7 +83,7 @@ function LastFM(apiKey, apiSecret) {
       {},
       function (res) {
         cb && cb((res || {}).user);
-      }
+      },
     );
   };
 
@@ -118,7 +118,7 @@ function LastFM(apiKey, apiSecret) {
     lastFmSessionKey,
     chosenByUser,
     timestamp,
-    cb
+    cb,
   ) {
     var splitted = (trackName || '').split(' - ');
     if (lastFmSessionKey && splitted.length > 1)
@@ -131,7 +131,7 @@ function LastFM(apiKey, apiSecret) {
           timestamp: timestamp,
           chosenByUser: !!chosenByUser,
         },
-        cb
+        cb,
       );
     else if (cb) cb({ error: 'unable to scrobble track' });
   };
@@ -159,7 +159,7 @@ exports.controller = function (request, p, response) {
         message +
           '<script>window.opener.lastFmCallback(' +
           session +
-          ');</script>'
+          ');</script>',
       );
     };
     exports.lastFm.fetchSession(p.token, function (session) {

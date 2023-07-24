@@ -8,7 +8,7 @@ var postPage = {
     this.eId = $('.thumb').attr('data-eid');
     if (isDynamic) {
       $(
-        '.ago, .author, .ext, .btnLike, .btnComment, .btnShare, .btnRepost, .postEdit, .btns span'
+        '.ago, .author, .ext, .btnLike, .btnComment, .btnShare, .btnRepost, .postEdit, .btns span',
       ).hide();
       $('body').addClass('loading');
       this.externalImages(whydPlayer, this.imagesResolver.bind(this));
@@ -45,7 +45,7 @@ var postPage = {
           $('.btnRepost')
             .attr(
               'href',
-              'javascript:publishPost(' + JSON.stringify(track) + ');'
+              'javascript:publishPost(' + JSON.stringify(track) + ');',
             )
             .show();
           cb(track.img);

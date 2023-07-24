@@ -40,13 +40,15 @@ function makeMetaHead(options = {}) {
     options.pageUrl &&
     'whyd://app?href=' +
       snip.addSlashes(
-        options.pageUrl.replace('https:', 'http:').replace(config.urlPrefix, '')
+        options.pageUrl
+          .replace('https:', 'http:')
+          .replace(config.urlPrefix, ''),
       );
   var pageImg = uiSnippets.htmlEntities(
-    options.pageImage || exports.defaultPageMeta.img
+    options.pageImage || exports.defaultPageMeta.img,
   );
   var pageDesc = uiSnippets.htmlEntities(
-    options.pageDesc || exports.defaultPageMeta.desc
+    options.pageDesc || exports.defaultPageMeta.desc,
   );
   var meta = [
     '<meta name="google-site-verification" content="mmqzgEU1bjTfJ__nW6zioi7O9vuur1SyYfW44DH6ozg" />',
@@ -70,13 +72,13 @@ function makeMetaHead(options = {}) {
     meta.push(
       '<meta property="og:title" content="' +
         uiSnippets.htmlEntities(options.ogTitle || options.pageTitle) +
-        '" />'
+        '" />',
     );
   if (options.pageUrl)
     meta.push(
       '<meta property="og:url" content="' +
         uiSnippets.htmlEntities(options.pageUrl) +
-        '" />'
+        '" />',
     );
   return meta;
 }
@@ -198,7 +200,7 @@ exports.renderWhydFrame = function (html, params) {
 
   if (params.title)
     out.push(
-      '    <title>' + uiSnippets.htmlEntities(params.title) + '</title>'
+      '    <title>' + uiSnippets.htmlEntities(params.title) + '</title>',
     );
 
   for (let i in params.css)
@@ -208,7 +210,7 @@ exports.renderWhydFrame = function (html, params) {
         '/css/' +
         params.css[i] +
         includeSuffix +
-        '" rel="stylesheet" type="text/css" />'
+        '" rel="stylesheet" type="text/css" />',
     );
 
   out.push(
@@ -221,7 +223,7 @@ exports.renderWhydFrame = function (html, params) {
       '/js/jquery.history.js"></script>',
     //	'    <script src="/js/soundmanager2.js"></script>',
     '    <script src="/js/soundmanager2-nodebug-jsmin.js"></script>',
-    '    <script>soundManager.setup({url: "/swf/", flashVersion: 9, onready: function() {soundManager.isReady=true;}});</script>'
+    '    <script>soundManager.setup({url: "/swf/", flashVersion: 9, onready: function() {soundManager.isReady=true;}});</script>',
   );
 
   var jsIncludes = [];
@@ -233,7 +235,7 @@ exports.renderWhydFrame = function (html, params) {
     jsIncludes.push(
       '    <script src="' +
         src +
-        '" type="text/javascript" charset="utf-8"></script>'
+        '" type="text/javascript" charset="utf-8"></script>',
     );
   }
 
@@ -335,7 +337,7 @@ exports.renderHeader = function (user, content, params) {
             '   <a id="signin" href="/login">Login</a>',
             '   <a id="signup" onclick="login();">Sign up</a>',
             '  </div>',
-          ]
+          ],
     );
   return ['<div id="header"><div class="container">']
     .concat(content)

@@ -89,7 +89,7 @@ function ProgressBar(p = {}) {
       if (!draggingCursor) {
         $progressCursor.css(
           'left',
-          $progressTrack.width() * this.value - 6 + 'px'
+          $progressTrack.width() * this.value - 6 + 'px',
         );
         p.onCursorMove && p.onCursorMove(this.value);
       }
@@ -209,7 +209,7 @@ function WhydPlayer() {
                 'Want to play music in the background?' +
                   ' Please install <a href="https://openwhyd.org/download"' +
                   ' target="_blank">Openwhyd Desktop App</a> 👌',
-                true
+                true,
               );
           }
         }
@@ -252,7 +252,7 @@ function WhydPlayer() {
       $progressTimer.text(
         formatTime(currentTrack.trackDuration * progress) +
           ' / ' +
-          formatTime(currentTrack.trackDuration)
+          formatTime(currentTrack.trackDuration),
       );
     }
   }
@@ -339,7 +339,7 @@ function WhydPlayer() {
     $('.post').removeClass('playing');
     $post = $(
       track.metadata.post ||
-        '.post:visible[data-pid=' + track.metadata.pid + ']'
+        '.post:visible[data-pid=' + track.metadata.pid + ']',
     ).addClass('playing');
     $body.toggleClass('reduced', $post.length == 0 || $post.is(':hidden'));
     return $post;
@@ -442,7 +442,7 @@ function WhydPlayer() {
       }
       $('#trackThumb').css(
         'background-image',
-        "url('" + track.metadata.img + "')"
+        "url('" + track.metadata.img + "')",
       );
       $('#btnLike').toggleClass('loved', track.metadata.isLoved);
 
@@ -467,12 +467,12 @@ function WhydPlayer() {
             pId: currentTrack.metadata.pid,
             trackDuration: currentTrack.trackDuration,
             timestamp: Math.floor(
-              currentTrack.metadata.tStart.getTime() / 1000
+              currentTrack.metadata.tStart.getTime() / 1000,
             ),
           },
           function (res) {
             console.log('scrobbled to last.fm, baby!', res);
-          }
+          },
         );
     },
     onPause: function () {
@@ -520,14 +520,14 @@ function WhydPlayer() {
   if (!playerContainer) {
     playerContainer = document.createElement('div');
     $(playerContainer).append(
-      '<div id="playBtnOverlay" onclick="window.whydPlayer.playPause();">'
+      '<div id="playBtnOverlay" onclick="window.whydPlayer.playPause();">',
     );
 
     var $containerParent = $('#contentPane');
     if (!$containerParent.length) $containerParent = $body;
 
     $containerParent.prepend(
-      $('<div id="playerContainer">').append(playerContainer)
+      $('<div id="playerContainer">').append(playerContainer),
     );
   }
   $('body').addClass('reduced');
@@ -537,7 +537,7 @@ function WhydPlayer() {
   for (let evtName in playemEventHandlers)
     window.playem.on(
       evtName,
-      wrapLogger(evtName, playemEventHandlers[evtName])
+      wrapLogger(evtName, playemEventHandlers[evtName]),
     );
 
   var genericHolder = document.createElement('div');
@@ -607,7 +607,7 @@ function WhydPlayer() {
   for (let prefix in PLAYERS)
     players[prefix] = window.playem.addPlayer(
       window[PLAYERS[prefix]],
-      defaultDefaultParams
+      defaultDefaultParams,
     );
 
   // http://stackoverflow.com/questions/2450954/how-to-randomize-a-javascript-array

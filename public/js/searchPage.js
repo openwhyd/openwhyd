@@ -60,7 +60,7 @@ if (document.getElementById('q').value.replace(/ /g, '')) {
       }
       function isAlreadyListed(track) {
         return !!document.querySelector(
-          'a.thumb[data-eid="' + track.eId + '"]'
+          'a.thumb[data-eid="' + track.eId + '"]',
         );
       }
       var tracks = [];
@@ -72,7 +72,7 @@ if (document.getElementById('q').value.replace(/ /g, '')) {
           .join('\n');
         trackCounter.innerHTML = trackCounter.innerHTML.replace(
           '' + trackCount,
-          trackCount + tracks.length
+          trackCount + tracks.length,
         );
         $body.removeClass('loading');
         if (trackCount + tracks.length === 0) {
@@ -97,7 +97,7 @@ if (document.getElementById('q').value.replace(/ /g, '')) {
           tracks.push(track);
         } else displayDynamicSearchResults();
       });
-    }.bind(window, document.getElementById('q').value)
+    }.bind(window, document.getElementById('q').value),
   );
 } else {
   window.location.replace('/');

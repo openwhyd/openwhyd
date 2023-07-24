@@ -91,7 +91,7 @@ function renderTemplate(items) {
       '		alert("aborted rename request");',
       '	return false;',
       '});',
-    ].join('\n')
+    ].join('\n'),
   );
 
   return console.renderPage({ title: 'whyd user management console' });
@@ -131,7 +131,7 @@ exports.handleRequest = function (request, reqParams, response) {
       { sort: [['_id', 'desc']], limit: 600 },
       function (users) {
         renderResult({ html: renderTemplate(/*mongodb.usernames*/ users) });
-      }
+      },
     );
 };
 

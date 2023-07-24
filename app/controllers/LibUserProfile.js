@@ -11,7 +11,7 @@ var uiSnippets = require('../templates/uiSnippets.js');
 
 var templateLoader = require('../templates/templateLoader.js');
 var profileTemplateV2 = templateLoader.loadTemplate(
-  'app/templates/userProfileV2.html'
+  'app/templates/userProfileV2.html',
 );
 
 //var NEW_PROFILE = true;
@@ -35,7 +35,7 @@ function fetchActivity(options, cb) {
       for (let i in activities)
         if (activities[i]) {
           activities[i].ago = uiSnippets.renderTimestamp(
-            new Date() - activities[i]._id.getTimestamp()
+            new Date() - activities[i]._id.getTimestamp(),
           );
           if (activities[i].like)
             postsToPopulate.push(mongodb.ObjectId('' + activities[i].like.pId));
@@ -58,9 +58,9 @@ function fetchActivity(options, cb) {
             options.activity.push(activities[i]);
           }
           cb();
-        }
+        },
       );
-    }
+    },
   );
 }
 
@@ -107,7 +107,7 @@ function populateUsers(subscr, options, cb) {
       userModel.fetchUserBios(subscr, function () {
         cb(renderFriends(subscr));
       });
-    }
+    },
   );
 }
 
@@ -132,7 +132,7 @@ exports.fetchAndRender = function (options, callback) {
       { lov: options.uid },
       /*params*/ null,
       { after: options.after },
-      (posts) => callback(null, posts)
+      (posts) => callback(null, posts),
     );
   } else if (options.showActivity) {
     options.tabTitle = 'Activity';
@@ -144,7 +144,7 @@ exports.fetchAndRender = function (options, callback) {
         //console.log("mySubscr.subscriptions", mySubscr.subscriptions);
         var mySubscrUidList = snip.objArrayToValueArray(
           mySubscr.subscriptions,
-          'id'
+          'id',
         );
         activityController.generateActivityFeed(
           [options.user.id],
@@ -172,12 +172,12 @@ exports.fetchAndRender = function (options, callback) {
             }
             for (let i in options.showActivity.items)
               options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
-                new Date() - options.showActivity.items[i]._id.getTimestamp()
+                new Date() - options.showActivity.items[i]._id.getTimestamp(),
               );
             callback(null, []);
-          }
+          },
         );
-      }
+      },
     );
   } else if (options.showSubscribers) {
     options.tabTitle = 'Followers';
@@ -237,7 +237,7 @@ exports.fetchAndRender = function (options, callback) {
     options.pageTitle = options.user.name + "'s tracks";
     const proceed = () =>
       postModel.fetchByAuthors([options.uid], options.fetchParams, (posts) =>
-        callback(null, posts)
+        callback(null, posts),
       );
 
     if (!feedTemplate.shouldRenderWholeProfilePage(options))

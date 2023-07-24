@@ -53,8 +53,8 @@ const loginUsers = (server, users) =>
     users.map(({ email, pwd }) =>
       httpClient.get({
         url: `${server.URL}/login?action=login&ajax=1&email=${email}&md5=${pwd}`,
-      })
-    )
+      }),
+    ),
   );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -158,7 +158,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     await db
       .collection('track')
       .insertMany(
-        tracks.map((_, i) => ({ ...tracks[i], pId: posts[i]._id, score: i }))
+        tracks.map((_, i) => ({ ...tracks[i], pId: posts[i]._id, score: i })),
       );
     await db.collection('post').insertMany(posts);
     server = await startOpenwhydServer({

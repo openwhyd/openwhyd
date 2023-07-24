@@ -12,7 +12,7 @@ function renderTemplate(report) {
   var params = { title: 'whyd analytics', css: [], js: [] };
 
   var out = ['<h1>whyd analytics console</h1>', '► <a href="/">home</a>'].join(
-    '\n'
+    '\n',
   );
 
   out += '<table>';
@@ -176,7 +176,7 @@ exports.controller = function (request, reqParams, response) {
           recentUserIds[users[i]._id] = users[i];
       cb(
         'Number of users who registered after ' + date.toString(),
-        Object.keys(recentUserIds).length
+        Object.keys(recentUserIds).length,
       );
     };
   }
@@ -195,10 +195,10 @@ exports.controller = function (request, reqParams, response) {
         cursor.toArray(function (err, items) {
           callback(
             'Number of pending invites',
-            (pendingInvites = items).length
+            (pendingInvites = items).length,
           );
         });
-      }
+      },
     );
   };
 

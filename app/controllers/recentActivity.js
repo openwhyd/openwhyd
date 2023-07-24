@@ -21,7 +21,7 @@ function loadTemplates(callback) {
     'app/templates/recentActivity.html',
     function () {
       if (callback) callback();
-    }
+    },
   );
 }
 loadTemplates();
@@ -36,7 +36,7 @@ var fetchSubscriptions = function (uid, callback) {
         subscriptions.subscriptions[i].id != uid
       )
         uidList.push(
-          ('' + subscriptions.subscriptions[i].id).replace('/u/', '')
+          ('' + subscriptions.subscriptions[i].id).replace('/u/', ''),
         );
     //console.log("LibFriends.fetchSubscriptions => ", uidList ? uidList.length : null);
     callback(uidList, subscriptions);
@@ -96,10 +96,10 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
               finalActivities.push(activities[i]);
             }
             cb(finalActivities, hasMore);
-          }
+          },
         );
       });
-    }
+    },
   );
 }
 
@@ -142,7 +142,7 @@ exports.generateActivityFeed = function (
   uidList,
   mySubscriptionsUidList,
   reqParams,
-  cb
+  cb,
 ) {
   fetchRecentActivity(
     uidList,
@@ -160,7 +160,7 @@ exports.generateActivityFeed = function (
             : null,
         });
       });
-    }
+    },
   );
 };
 
@@ -198,12 +198,12 @@ exports.controller = function (request, reqParams, response) {
               bodyClass: 'pgRecentActivity pgWithSideBar',
               loggedUser: loggedInUser,
               content: template.render(pageVars),
-            })
+            }),
           );
         } else {
           render(template.render(pageVars));
         }
-      }
+      },
     );
   });
 };
