@@ -35,7 +35,7 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
     { limit: HISTORY_LIMIT },
     function (activities) {
       cb(activities /*.slice(0, HISTORY_LIMIT)*/);
-    }
+    },
   );
 }
 

@@ -38,7 +38,7 @@ describe('"img" package', function () {
       console.log = log; // restore console.log
       assert(
         fs.existsSync(thumbOutput),
-        thumbOutput + ' should be created by img.makeThumb()'
+        thumbOutput + ' should be created by img.makeThumb()',
       );
       //console.log(imgOutput + ' thumb saved at ' + thumbOutput);
       //fs.unlinkSync(imgOutput);

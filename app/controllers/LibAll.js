@@ -33,7 +33,7 @@ function renderAllLibrary(lib) {
       { repost: { $exists: false } },
       null,
       { after: options.after, before: options.before },
-      process
+      process,
     );
   }
 
@@ -49,7 +49,7 @@ function renderAllLibrary(lib) {
           /*name:"Whyd"*/
         },
         null /*sidebarHtml*/,
-        feedHtml
+        feedHtml,
       );
       //});
     });

@@ -268,7 +268,7 @@ exports.removeDuplicates = function (array, keyFieldName) {
   if (keyFieldName)
     return exports.mapToObjArray(
       exports.objArrayToSet(array, keyFieldName),
-      keyFieldName
+      keyFieldName,
     );
   else return Object.keys(exports.arrayToSet(array));
 };
@@ -418,7 +418,7 @@ exports.getLevenshteinDistance = (function () {
         r[i][j] = minimator(
           r[i - 1][j] + 1,
           r[i][j - 1] + 1,
-          r[i - 1][j - 1] + cost
+          r[i - 1][j - 1] + cost,
         );
       }
     }
@@ -579,7 +579,7 @@ exports.httpRequest = function (url, options = {}, callback) {
         domainOpts.queue.shift(); // request id done => dequeue
         //console.log("4 =>", options.host, domainOpts.queue.length);
         runNext();
-      })
+      }),
     );
     return domainOpts.queue.length == 1 ? runNext() : undefined;
   }

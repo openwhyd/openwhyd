@@ -48,7 +48,7 @@ apnConnection.on('transmitted', function (data, dest) {
     '[APNS] transmitted:',
     (data || {}).compiledPayload,
     'to',
-    (dest || {}).token || '(unknown)'
+    (dest || {}).token || '(unknown)',
   );
 });
 

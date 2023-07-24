@@ -58,7 +58,7 @@ function loadReposts(posts, cb) {
           reposts.map(function (r) {
             return { id: r.uId, name: r.uNm, pId: r.repost.pId };
           }),
-          'pId'
+          'pId',
         );
         for (let i in posts)
           if (posts[i])
@@ -68,7 +68,7 @@ function loadReposts(posts, cb) {
               console.error(e.stack);
             }
         cb();
-      }
+      },
     );
   }
 }
@@ -204,7 +204,7 @@ exports.preparePost = function (post, options) {
     (post.reposts || []).concat(post.lov || []).map(function (u) {
       return { id: u.id || u, name: getUserNameFromId(u.id || u) };
     }),
-    'id'
+    'id',
   );
 
   // rendering "via" source
@@ -302,7 +302,7 @@ exports.renderPostsAsync = function (posts, options, callback) {
             displayVia: !!options.embedW,
             displayPlaylistName: options.displayPlaylistName,
           },
-          callback
+          callback,
         );
       }
     });

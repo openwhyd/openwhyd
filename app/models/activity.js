@@ -112,7 +112,7 @@ exports.addLikeByPost = function (post, liker, callback) {
         name: liker.name,
         like: { pId: post._id, id: post.uId, name: post.uNm },
       },
-      callback
+      callback,
     );
   else callback && callback({ error: 'post not found' });
 };

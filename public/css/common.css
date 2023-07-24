@@ -3497,7 +3497,9 @@ body.playing_Deezer #whydPlayer #btnFullscreen > div {
   top: 50%;
   left: 47.5%;
   opacity: 0.5;
-  transition: opacity, transform 0.2s;
+  transition:
+    opacity,
+    transform 0.2s;
   transform: scale(1);
 }
 

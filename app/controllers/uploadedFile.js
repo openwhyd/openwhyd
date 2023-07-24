@@ -84,7 +84,7 @@ exports.renameTo = function (filename, toFilename, callback) {
   }
   if (!filename || !toFilename)
     return error(
-      'invalid filename or toFilename: ' + filename + ', ' + toFilename
+      'invalid filename or toFilename: ' + filename + ', ' + toFilename,
     );
   try {
     var actualFilename = exports.actualFilePath(filename);
@@ -113,7 +113,7 @@ exports.moveTo = function (filename, toPath, callback) {
   if (!filename || !toPath) {
     if (callback) callback();
     console.log(
-      'ERROR: invalid filename or toPath: ' + filename + ', ' + toPath
+      'ERROR: invalid filename or toPath: ' + filename + ', ' + toPath,
     );
     return filename;
   }
@@ -135,7 +135,7 @@ exports.controller = function (request, reqParams, response) {
       if (defaultImg)
         response.sendFile(
           exports.config.whydPath + '/public' + defaultImg,
-          (err) => err && renderNoImage()
+          (err) => err && renderNoImage(),
         );
       else renderNoImage();
     });
@@ -145,7 +145,7 @@ exports.controller = function (request, reqParams, response) {
     if (uri && ('' + uri).indexOf('//') != -1) {
       var args = request.url.indexOf('?');
       response.temporaryRedirect(
-        uri.replace('http:', '') + (args > -1 ? request.url.substr(args) : '')
+        uri.replace('http:', '') + (args > -1 ? request.url.substr(args) : ''),
       );
     } else renderFile(uri, defaultImg);
   }
@@ -159,12 +159,12 @@ exports.controller = function (request, reqParams, response) {
       var args = request.url.indexOf('?');
       response.temporaryRedirect(
         user.img.replace('http:', '') +
-          (args > -1 ? request.url.substr(args) : '')
+          (args > -1 ? request.url.substr(args) : ''),
       );
     } else
       renderFile(
         exports.config.uAvatarImgPath + '/' + id,
-        '/images/blank_user.gif'
+        '/images/blank_user.gif',
       );
   }
 
@@ -175,15 +175,19 @@ exports.controller = function (request, reqParams, response) {
       if (id.indexOf('.') > -1)
         return renderFile(
           exports.config.uCoverImgPath + '/' + id,
-          '/images/1x1-pixel.png'
+          '/images/1x1-pixel.png',
         );
       userModel.fetchByUid(id, function (user) {
         if (user && user.cvrImg) {
           var args = request.url.indexOf('?');
           response.temporaryRedirect(
-            user.cvrImg + (args > -1 ? request.url.substr(args) : '')
+            user.cvrImg + (args > -1 ? request.url.substr(args) : ''),
           );
-        } else renderFile(exports.config.uCoverImgPath + '/' + id, '/images/1x1-pixel.png');
+        } else
+          renderFile(
+            exports.config.uCoverImgPath + '/' + id,
+            '/images/1x1-pixel.png',
+          );
       });
     },
     post: function (id) {
@@ -208,7 +212,7 @@ exports.controller = function (request, reqParams, response) {
               }
             }
             response.notFound();
-          }
+          },
         );
       }
       if (reqParams.remoteOnly)

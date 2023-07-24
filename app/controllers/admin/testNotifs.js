@@ -40,7 +40,7 @@ exports.controller = function (request, reqParams, response) {
     user.id,
     'coucou <small>html</small>',
     'http://www.facebook.com',
-    '/images/logo-s.png'
+    '/images/logo-s.png',
   );
   notifModel.comment(fakePost, fakeComment);
   notifModel.mention(fakePost, fakeComment, user.id);

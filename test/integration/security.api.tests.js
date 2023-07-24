@@ -21,9 +21,9 @@ describe('security', () => {
       });
       assert(
         response.body.includes(
-          `window.location.href = '${URL_PREFIX}${target}'`
+          `window.location.href = '${URL_PREFIX}${target}'`,
         ) === true,
-        `page body should include redirect to ${target}`
+        `page body should include redirect to ${target}`,
       );
     });
 
@@ -37,7 +37,7 @@ describe('security', () => {
       });
       assert(
         response.body.includes(`window.location.href="${target}"`) === false,
-        `page body should NOT include redirect to ${target}`
+        `page body should NOT include redirect to ${target}`,
       );
     });
 
@@ -51,7 +51,7 @@ describe('security', () => {
       });
       assert(
         response.body.includes(`window.location.href="${target}"`) === false,
-        `page body should NOT include redirect to ${target}`
+        `page body should NOT include redirect to ${target}`,
       );
     });
 
@@ -65,7 +65,7 @@ describe('security', () => {
       });
       assert(
         response.body.includes(`window.location.href="${target}"`) === false,
-        `page body should NOT include redirect to ${target}`
+        `page body should NOT include redirect to ${target}`,
       );
     });
 
@@ -79,7 +79,7 @@ describe('security', () => {
       });
       assert(
         response.body.includes(`window.location.href="${target}"`) === false,
-        `page body should NOT include redirect to ${target}`
+        `page body should NOT include redirect to ${target}`,
       );
     });
   });

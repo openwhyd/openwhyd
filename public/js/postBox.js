@@ -113,7 +113,7 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
     globals.whydPost.setPlaylist(
       $li.attr('data-plid'),
       $li.text(),
-      $li.attr('data-collabid')
+      $li.attr('data-collabid'),
     );
     $head.text($li.text()).append($arrow);
     hideMenu();
@@ -132,13 +132,13 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
       var $li = $ul.find(
         defaultPlaylist.collabId
           ? "li[data-collabid='" + defaultPlaylist.collabId + "']"
-          : "li[data-plid='" + defaultPlaylist.id + "']"
+          : "li[data-plid='" + defaultPlaylist.id + "']",
       );
       if ($li.length == 0)
         $li = addPlaylist(
           defaultPlaylist.name,
           defaultPlaylist.id,
-          defaultPlaylist.collabId
+          defaultPlaylist.collabId,
         );
       $li.each(selectPlaylist);
     }
@@ -223,7 +223,7 @@ function initPostBox(params) {
         stored = globals.whydPost.storedPost;
       window.Whyd.tracking.log(
         'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
-        stored._id
+        stored._id,
       );
       if ((submitted.pl || {}).id == 'create')
         window.Whyd.tracking.log('Created playlist', stored.pl.id);
@@ -254,7 +254,7 @@ function initPostBox(params) {
             'script src="https://platform.twitter.com/widgets.js" type="text/javascript"></' +
             'script><div class="fb-like" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-href="' +
             htmlEntities(url) +
-            '"></div>'
+            '"></div>',
         );
       $confirm.find('a').first().attr('href', url);
     } else {
@@ -263,7 +263,7 @@ function initPostBox(params) {
       if (!posted) {
         (window.showMessage || alert)(
           'Oops; an error occurred... Please try again!',
-          true
+          true,
         );
         return console.log(postId, whydPost);
       }
@@ -279,7 +279,7 @@ function initPostBox(params) {
             url +
             "'>" +
             globals.encodeHtmlEntities(plName) +
-            '</a>'
+            '</a>',
         );
       } else if (url) window.location.href = url;
       else window.location.reload();
@@ -297,14 +297,14 @@ function initPostBox(params) {
       if (params.pl)
         globals.whydPost.setPlaylist(
           params.pl.id,
-          params.pl.name /*, "{{collabId}}"*/
+          params.pl.name /*, "{{collabId}}"*/,
         );
     }
 
     new WhydPlaylistSelector(
       globals.whydPost,
       null,
-      globals.whydPost.postData.pl
+      globals.whydPost.postData.pl,
     ).bindItems();
 
     $('#contentSource')
@@ -313,7 +313,7 @@ function initPostBox(params) {
 
     // init ui
     $('#contentThumb > div > div').html(
-      '<img src="' + (embedRef.img || '/images/cover-track.png') + '"/>'
+      '<img src="' + (embedRef.img || '/images/cover-track.png') + '"/>',
     );
     $('#contentTitle').text(embedRef.name);
     var $titleInput = $('#contentTitleInput').val(embedRef.name);
@@ -327,7 +327,7 @@ function initPostBox(params) {
         if ($titleInput.length) globals.whydPost.setName($titleInput.val());
         globals.whydPost.setText(text);
         globals.whydPost.submit(onPostSuccess);
-      }
+      },
     );
   }
 
@@ -383,7 +383,7 @@ function initPostBox(params) {
           $('#btnSubmit').hide();
           return (window.showMessage || alert)(
             'Oops; an error occurred... Please try again!',
-            true
+            true,
           );
         }
         track.src = params.src;
@@ -392,7 +392,7 @@ function initPostBox(params) {
           // weak equality necessary because of text()
           track.name = track.title;
         onTrack(track);
-      }
+      },
     );
 
     $('#lnkDeletePost').click(function () {

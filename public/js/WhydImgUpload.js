@@ -67,7 +67,7 @@ function WhydImgUpload(options) {
         };
       else
         data = JSON.parse(
-          data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1)
+          data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1),
         );
     }
     try {
@@ -81,7 +81,7 @@ function WhydImgUpload(options) {
     } catch (e) {
       options.onError(
         data.error || 'Upload did not work... Please try again!',
-        e
+        e,
       );
     }
     setAvatar(lastAvatarUrl);

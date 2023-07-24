@@ -19,7 +19,7 @@ function DndUpload(options) {
   )
     return handler(
       'error',
-      'drag&drop, formdata and upload progress are not supported'
+      'drag&drop, formdata and upload progress are not supported',
     );
 
   if (!options.url) return handler('error', 'missing url parameter');

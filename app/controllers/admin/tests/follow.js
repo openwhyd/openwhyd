@@ -18,11 +18,11 @@ exports.makeTests = function (p) {
             for (let i in subscriptions.subscriptions)
               if (subscriptions.subscriptions[i].id)
                 testVars.uidList.push(
-                  ('' + subscriptions.subscriptions[i].id).replace('/u/', '')
+                  ('' + subscriptions.subscriptions[i].id).replace('/u/', ''),
                 );
             //console.timeEnd("fetchUserSubscriptions");
             cb(true);
-          }
+          },
         );
       },
     ],
@@ -36,7 +36,7 @@ exports.makeTests = function (p) {
             subscriptions.push(p.loggedUser.id);
             //console.timeEnd("fetchSubscriptionArray");
             cb(subscriptions.sort().join() === testVars.uidList.sort().join());
-          }
+          },
         );
       },
     ],

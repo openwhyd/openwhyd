@@ -45,7 +45,7 @@ exports.fetchLast = function (p, cb) {
     getCol().findOne(
       { pId: '' + p.pId },
       { sort: [['_id', 'desc']] },
-      combineResult(cb)
+      combineResult(cb),
     );
 };
 
@@ -82,7 +82,7 @@ function notifyUsers(comment) {
             notifiedUidSet[mentionedUid] = true;
             notifModel.mention(post, comment, mentionedUid, next);
           },
-          cb
+          cb,
         );
       });
     // notify post author
@@ -104,7 +104,7 @@ function notifyUsers(comment) {
         function (comments = []) {
           var commentsByUid = snip.excludeKeys(
             snip.groupObjectsBy(comments, 'uId'),
-            notifiedUidSet
+            notifiedUidSet,
           );
           snip.forEachArrayItem(
             Object.keys(commentsByUid),
@@ -112,9 +112,9 @@ function notifyUsers(comment) {
               notifiedUidSet[uId] = true;
               notifModel.commentReply(post, comment, uId, next);
             },
-            cb
+            cb,
           );
-        }
+        },
       );
     });
     snip.forEachArrayItem(todo, function (fct, next) {
@@ -155,7 +155,7 @@ exports.insert = function (p, cb) {
         combineInsertedResult(function (res) {
           cb && cb(res);
           if (res && !res.error) notifyUsers(comment);
-        })
+        }),
       );
   });
 };
@@ -182,8 +182,8 @@ exports.delete = function (p, cb) {
             return;
           }
           getCol().deleteOne(q, combineResult(cb));
-        }
+        },
       );
-    })
+    }),
   );
 };

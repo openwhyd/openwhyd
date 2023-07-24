@@ -25,7 +25,7 @@ const fbSafeCall = function (fct, failFct) {
   if (!window.globals.FB) {
     window.globals.showMessage(
       'Unable to connect to Facebook. Did you block it?',
-      true
+      true,
     );
     if (failFct) failFct();
   } else fct();
@@ -36,7 +36,7 @@ window.globals.fbIsLogged = function (cb) {
     window.globals.FB.getLoginStatus(function (response) {
       cb(
         response.status === 'connected' &&
-          window.globals.user.fbId == response.authResponse.userID
+          window.globals.user.fbId == response.authResponse.userID,
       );
     }, true);
   else if (cb) cb(false);
@@ -62,7 +62,7 @@ window.globals.fbAuth = function (perms, cb, dontLink) {
             },
           });
       },
-      { scope: facebookPerms + (perms ? ',' + perms : '') }
+      { scope: facebookPerms + (perms ? ',' + perms : '') },
     );
   }, cb);
 };
@@ -87,7 +87,7 @@ window.globals.fbLogin = function (perms, cb) {
           '<input type="hidden" name="fbAccessToken" value="' +
           fbAuthResponse.authResponse.accessToken +
           '"/>' +
-          '</form>'
+          '</form>',
       ).appendTo('body');
       // TODO: make sure that jquery.iframe-post-form.min.js is loaded
       // if (!$('script[src*="jquery.iframe-post-form"]').length) ...
@@ -107,7 +107,7 @@ window.globals.fbLogin = function (perms, cb) {
         })
         .submit();
     },
-    true
+    true,
   );
 };
 
@@ -136,7 +136,7 @@ window.globals.fbRegister = function (perms, cb) {
         });
       });
     },
-    true
+    true,
   );
 };
 

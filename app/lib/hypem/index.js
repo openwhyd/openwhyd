@@ -21,7 +21,7 @@ exports.search = function (query, callback) {
           callback(e);
         }
       }
-    }
+    },
   );
 };
 
@@ -72,7 +72,7 @@ exports.searchMp3s = function (query, callback) {
           if (data[i]) getMp3(data[i]);
         }
       }
-    }
+    },
   );
 };
 

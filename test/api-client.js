@@ -11,7 +11,7 @@ function extractCookieJar(response) {
   if (((response.headers || {})['set-cookie'] || []).length) {
     jar.setCookie(
       request.cookie(response.headers['set-cookie'][0]),
-      URL_PREFIX
+      URL_PREFIX,
     );
   }
   return jar;
@@ -23,7 +23,7 @@ exports.logout = function logout(jar, callback) {
     assert.equal(res.response.statusCode, 200);
     callback(
       error,
-      Object.assign({}, res, { jar: extractCookieJar(res.response) })
+      Object.assign({}, res, { jar: extractCookieJar(res.response) }),
     );
   });
 };
@@ -52,7 +52,7 @@ exports.signupAs = function signupAs(user, callback) {
             connection: { remoteAddress: '::ffff:127.0.0.1' },
           }),
         },
-        user
+        user,
       ),
     },
     function (error, response, body) {
@@ -61,7 +61,7 @@ exports.signupAs = function signupAs(user, callback) {
       const jar = extractCookieJar(response);
       const loggedIn = !!jar.getCookieString(URL_PREFIX);
       callback(error, { response, body, jar, loggedIn });
-    }
+    },
   );
 };
 // HTTP request wrappers
@@ -71,7 +71,7 @@ exports.getRaw = function (jar, url, callback) {
     { jar, url: `${URL_PREFIX}${url}` },
     function (error, response, body) {
       callback(error, { response, body });
-    }
+    },
   );
 };
 
@@ -90,7 +90,7 @@ exports.get = function (jar, url, callback) {
 exports.postRaw = function (jar, url, body, callback) {
   request.post(
     { jar, url: `${URL_PREFIX}${url}`, body, json: typeof body === 'object' },
-    (error, response, body) => callback(error, { response, body })
+    (error, response, body) => callback(error, { response, body }),
   );
 };
 
@@ -104,7 +104,7 @@ exports.getMyPosts = function (jar, callback) {
       assert.equal(response.statusCode, 200);
       callback(error, { response, body, posts: JSON.parse(body), jar });
       // => body: {"errorCode":"USER_NOT_FOUND","error":"User not found..."} ???
-    }
+    },
   );
 };
 
@@ -129,7 +129,7 @@ exports.setUser = function (jar, body, callback) {
       assert.ifError(error);
       assert.equal(response.statusCode, 200);
       callback(error, { response, body, jar });
-    }
+    },
   );
 };
 
@@ -147,13 +147,13 @@ exports.addPost = async function (jar, reqBody) {
       function (error, resp, resBody) {
         if (error) reject(error);
         else resolve({ response: resp, body: resBody });
-      }
-    )
+      },
+    ),
   );
   assert.equal(
     response.statusCode,
     200,
-    body?.error?.message ?? body?.error ?? body
+    body?.error?.message ?? body?.error ?? body,
   );
   return { response, body, jar };
 };
@@ -170,7 +170,7 @@ exports.addComment = function (jar, body, callback) {
       assert.ifError(error);
       assert.equal(response.statusCode, 200);
       callback(error, { response, body, jar });
-    }
+    },
   );
 };
 
@@ -186,8 +186,8 @@ exports.deletePost = async function (jar, postId) {
       function (error, response, body) {
         if (error) reject(error);
         else resolve({ response, body });
-      }
-    )
+      },
+    ),
   );
   assert.equal(response.statusCode, 200, body);
   return { response, body, jar };

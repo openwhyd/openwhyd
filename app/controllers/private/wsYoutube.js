@@ -34,11 +34,11 @@ exports.requestVideos = function (query, handler) {
               query +
               ' => ' +
               (results ? results.length : 0) +
-              ' videos'
+              ' videos',
           );
           handler(results);
         });
-      }
+      },
     )
     .on('error', function (err) {
       console.log('[ERR] wsYoutube.requestVideos ', err);
@@ -53,7 +53,7 @@ exports.render = function (q, callback) {
     callback(
       results
         ? renderTemplate(results)
-        : 'Sorry, no videos were found about this topic...'
+        : 'Sorry, no videos were found about this topic...',
     );
   });
 };

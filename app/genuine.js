@@ -28,7 +28,7 @@ function hashRequest(req, date) {
     .createHash('md5')
     .update(
       /*crypto.randomBytes(4).toString('hex') +*/ req.connection.remoteAddress +
-        date
+        date,
     ) // remoteAddress: '74.125.127.100' or '2001:4860:a005::68'
     .digest('base64')
     .replace(/==$/, '');

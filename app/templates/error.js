@@ -29,7 +29,7 @@ exports.renderErrorMessage = function (errorMessage, loggedUser) {
     content:
       "<div class='container'>" +
       snip.htmlEntities(
-        errorMessage || 'Unexpected error, please go back and try again later.'
+        errorMessage || 'Unexpected error, please go back and try again later.',
       ) +
       '</div>',
   };
@@ -48,7 +48,7 @@ exports.renderErrorResponse = function (
   errorObj,
   response,
   format = 'html',
-  loggedUser
+  loggedUser,
 ) {
   var statusCode =
     errorObj && typeof errorObj.errorCode === 'number' && errorObj.errorCode;
@@ -68,7 +68,7 @@ exports.renderErrorResponse = function (
           pageTitle: 'Oops...',
           loggedUser: loggedUser,
         }),
-        statusCode
+        statusCode,
       );
       // TODO: response.render('404', { url: req.url });
     } else if (format === 'json') {
@@ -79,11 +79,11 @@ exports.renderErrorResponse = function (
   } else if (errorObj.errorCode)
     response.renderHTML(
       exports.renderErrorCode(errorObj.errorCode, loggedUser),
-      statusCode
+      statusCode,
     );
   else
     response.renderHTML(
       exports.renderErrorMessage(errorObj.error, loggedUser),
-      statusCode
+      statusCode,
     );
 };

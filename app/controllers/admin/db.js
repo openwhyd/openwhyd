@@ -54,7 +54,7 @@ function listMissingUsers(uids, cb) {
       users.push(user);
     },
     cb,
-    users
+    users,
   );
 }
 

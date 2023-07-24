@@ -93,7 +93,7 @@ function prepareFeedVars(posts, options) {
     feedVars.playlist = options.playlist || {};
     if (feedVars.playlist.name)
       feedVars.playlist._js_name = snip.sanitizeJsStringInHtml(
-        feedVars.playlist.name
+        feedVars.playlist.name,
       );
     feedVars.playlist.url =
       config.urlPrefix +
@@ -103,7 +103,7 @@ function prepareFeedVars(posts, options) {
       feedVars.playlist.id;
     feedVars.playlist.urlEncoded = encodeURIComponent(feedVars.playlist.url);
     feedVars.playlist.urlEncodedTweet = encodeURIComponent(
-      '♫ ' + feedVars.playlist.name /*+ ' ' + feedVars.playlist.url*/
+      '♫ ' + feedVars.playlist.name /*+ ' ' + feedVars.playlist.url*/,
     );
     feedVars.playlist.nbTracks =
       feedVars.playlist.nbTracks || (posts ? posts.length : 'no');
@@ -182,7 +182,7 @@ exports.renderFeedAsync = function (posts, options, callback) {
           options.customFeedTemplate ||
           templates[format] ||
           templates['html']
-        ).render(feedVars)
+        ).render(feedVars),
       );
     // console.log('renderFeedAsync => ' + posts.length + ' posts');
     //});
@@ -204,7 +204,7 @@ exports.renderFeedEmbed = function (feedHtml, options) {
   options.css.push(
     (options.format || '').toLowerCase() == 'embedv2'
       ? 'feedEmbedV2.css'
-      : 'feedEmbed.css'
+      : 'feedEmbed.css',
   );
   options.js.push('playem-min.js');
   options.js.push('playem-youtube-iframe-patch.js');

@@ -25,11 +25,11 @@ if (gmVersion) {
     console.log(
       '[my.img] detected',
       imVersion,
-      '=> using it for image manipulation'
+      '=> using it for image manipulation',
     );
   } else {
     console.error(
-      '[my.img] ERROR: please install graphicsmagick or imagemagick for image manipulation.'
+      '[my.img] ERROR: please install graphicsmagick or imagemagick for image manipulation.',
     );
   }
 }
@@ -53,7 +53,7 @@ exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
           } else if (endListener) endListener();
         });
       });
-    }
+    },
   );
 };
 
@@ -64,7 +64,7 @@ if (USE_GRAPHICS_MAGICK) {
     thumbOutput,
     width,
     height,
-    endListener
+    endListener,
   ) {
     gm.createCommand(imgPath)
       .resize(width || '', height || '')
@@ -79,7 +79,7 @@ if (USE_GRAPHICS_MAGICK) {
     thumbOutput,
     width,
     height,
-    endListener
+    endListener,
   ) {
     var execCallback = function (error, stdout, stderr) {
       console.log('[my.img] exec convert => ', error, stdout, stderr);
@@ -95,17 +95,17 @@ if (USE_GRAPHICS_MAGICK) {
           height +
           ' ' +
           thumbOutput,
-        execCallback
+        execCallback,
       );
     else if (width)
       exec(
         'convert ' + imgPath + ' -resize ' + width + ' ' + thumbOutput,
-        execCallback
+        execCallback,
       );
     else if (height)
       exec(
         'convert ' + imgPath + ' -resize x' + height + ' ' + thumbOutput,
-        execCallback
+        execCallback,
       );
   };
 }

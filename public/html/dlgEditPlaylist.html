@@ -52,7 +52,7 @@
       if (window.pageUser)
         $img.attr(
           'src',
-          '/img/playlist/' + window.pageUser.id + '_' + window.pagePlaylist.id
+          '/img/playlist/' + window.pageUser.id + '_' + window.pagePlaylist.id,
         );
     } else $dlg.find('a.deletePl').hide();
 
@@ -185,12 +185,12 @@
               var plUrl = '/img/playlist/' + user.id + '_' + pl.id + '?';
               $thumb.css(
                 'background-image',
-                plUrl + $thumb.css('background-image').split('?').pop()
+                plUrl + $thumb.css('background-image').split('?').pop(),
               );
               var $blur = $thumb.find('.blur');
               $blur.css(
                 'background-image',
-                plUrl + $blur.css('background-image').split('?').pop()
+                plUrl + $blur.css('background-image').split('?').pop(),
               );
             }
             whenUpdated();
@@ -220,7 +220,7 @@
             showMessage(
               'Your playlist has been successfully ' +
                 (window.pagePlaylist ? 'updated' : 'created') +
-                '!'
+                '!',
             );
             if (window.pagePlaylist) {
               window.pagePlaylist = result;

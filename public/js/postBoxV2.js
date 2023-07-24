@@ -210,7 +210,7 @@ window.globals.initPostBox = function (params) {
         stored = whydPost.storedPost;
       window.globals.Whyd.tracking.log(
         'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
-        stored._id
+        stored._id,
       );
       if ((submitted.pl || {}).id == 'create')
         window.globals.Whyd.tracking.log('Created playlist', stored.pl.id);
@@ -256,7 +256,7 @@ window.globals.initPostBox = function (params) {
           '<div class="fb-like" data-send="false" data-layout="button_count" data-width="450"' +
           ' data-show-faces="false" data-href="' +
           htmlEntities(url) +
-          '"></div>'
+          '"></div>',
       );
     }
   }
@@ -267,7 +267,7 @@ window.globals.initPostBox = function (params) {
     if (!posted)
       return (window.globals.showMessage || alert)(
         'Oops; an error occurred... Please try again!',
-        true
+        true,
       );
     var url = '/u/' + posted.uId;
     if (posted.pl) {
@@ -280,7 +280,7 @@ window.globals.initPostBox = function (params) {
           url +
           "'>" +
           window.globals.encodeHtmlEntities(plName) +
-          '</a>'
+          '</a>',
       );
     } else if (url) window.location.href = url;
     else window.location.reload();
@@ -303,18 +303,18 @@ window.globals.initPostBox = function (params) {
     $('#contentTitle').text(embedRef.name);
     $('#contentThumb').css(
       'background-image',
-      'url("' + (embedRef.img || '/images/cover-track.png') + '")'
+      'url("' + (embedRef.img || '/images/cover-track.png') + '")',
     );
     $('.whydSrcLogo').css(
       'background-image',
       'url("/images/icon-' +
         embedRef.playerLabel.toLowerCase().split(' ')[0] +
-        '.png")'
+        '.png")',
     );
     new WhydPlaylistSelector(
       $('#selPlaylist'),
       whydPost.postData.pl,
-      whydPost.setPlaylist.bind(whydPost)
+      whydPost.setPlaylist.bind(whydPost),
     );
     //		var $titleInput = $("#contentTitleInput").val(embedRef.name);
     var descBox = new WhydTextWithMentions(document.getElementById('text'));
@@ -398,7 +398,7 @@ window.globals.initPostBox = function (params) {
       else if (track.eId.indexOf('/ja/') == 0)
         track.img = track.img.replace(
           /\/covers\/1\.200\.jpg$/,
-          '/covers/1.600.jpg'
+          '/covers/1.600.jpg',
         );
     }
     return track;
@@ -421,7 +421,7 @@ window.globals.initPostBox = function (params) {
             track.name = track.title;
         } else track = {};
         populateTrackUi(track);
-      }
+      },
     );
     /*
 		$("#lnkDeletePost").unbind().click(function() {

@@ -42,7 +42,7 @@ function makeBookmarklet(_a) {
             // Note: previously, the condition above was track && track.id, for some reason 🤷‍♂️
             else processNext();
           },
-          element
+          element,
         );
       })();
     }
@@ -99,7 +99,8 @@ function makeBookmarklet(_a) {
         var url =
           elt &&
           normalize(
-            elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || '')
+            elt.eId ||
+              unwrapFacebookLink(elt.href || elt.src || elt.data || ''),
           );
         if (!url) return;
         var existingElt = set[url];
@@ -179,10 +180,10 @@ var openwhydBkPageDetectors = [
     }; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
     // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
     var artist = getNodeText(
-        window.document.getElementsByClassName('playerBarArtist')[0] || {}
+        window.document.getElementsByClassName('playerBarArtist')[0] || {},
       ),
       title = getNodeText(
-        window.document.getElementsByClassName('playerBarSong')[0] || {}
+        window.document.getElementsByClassName('playerBarSong')[0] || {},
       );
     return artist && title
       ? [{ src: window.location.href, searchQuery: artist + ' - ' + title }]
@@ -257,13 +258,15 @@ var openwhydBkPageDetectors = [
   },
   function parseDomElements(window) {
     var results = [];
-    ['iframe', 'object', 'embed', 'a', 'audio', 'source'].forEach(function (
-      elName
-    ) {
-      results = results.concat(
-        Array.prototype.slice.call(window.document.getElementsByTagName(elName))
-      );
-    });
+    ['iframe', 'object', 'embed', 'a', 'audio', 'source'].forEach(
+      function (elName) {
+        results = results.concat(
+          Array.prototype.slice.call(
+            window.document.getElementsByTagName(elName),
+          ),
+        );
+      },
+    );
     return results;
   },
 ];
@@ -307,7 +310,7 @@ if (typeof exports === 'undefined') {
     window.document.body.style.overflow = 'hidden';
     window.closeWhydBk = function () {
       window.document.body.removeChild(
-        window.document.getElementById('whydBookmarklet')
+        window.document.getElementById('whydBookmarklet'),
       );
       window.document.onkeydown = window.onkeydownBackup;
       window.document.body.style.overflow = overflowBackup;
@@ -394,7 +397,7 @@ if (typeof exports === 'undefined') {
         else if (track.eId.indexOf('/ja/') == 0)
           track.img = track.img.replace(
             /\/covers\/1\.200\.jpg$/,
-            '/covers/1.600.jpg'
+            '/covers/1.600.jpg',
           );
       }
       return track;
@@ -405,7 +408,7 @@ if (typeof exports === 'undefined') {
       var div = window.document.getElementById('whydBookmarklet');
       if (!div) {
         window.document.body.appendChild(
-          window.document.createElement('div')
+          window.document.createElement('div'),
         ).id = 'whydBookmarklet';
         div = window.document.getElementById('whydBookmarklet');
       }
@@ -443,7 +446,7 @@ if (typeof exports === 'undefined') {
         var whydPop = window.open(
           href,
           'whydPop',
-          'height=460,width=780,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
+          'height=460,width=780,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no',
         );
         whydPop.focus();
         window.closeWhydBk();
@@ -451,7 +454,7 @@ if (typeof exports === 'undefined') {
       function showSearch(searchQuery) {
         var whydPop = window.open(
           urlPrefix + '/search?q=' + encodeURIComponent(searchQuery),
-          'whydSearch'
+          'whydSearch',
         );
         whydPop.focus();
         window.closeWhydBk();
@@ -503,7 +506,7 @@ if (typeof exports === 'undefined') {
             elt({ class: 'whydSrcLogo', img: thumb.sourceLogo }),
             addBtn,
             checkBox,
-          ]
+          ],
         );
       }
       var contentDiv = window.document.getElementById('whydContent');
@@ -632,7 +635,7 @@ function makeStreamDetector(players) {
         __assign(__assign({}, detectedTrack), {
           title: ''.concat(element.artist, ' - ').concat(element.title),
           img: element.img,
-        })
+        }),
       );
     }
     if (!player.fetchMetadata) {
@@ -645,7 +648,7 @@ function makeStreamDetector(players) {
         __assign(__assign(__assign({}, detectedTrack), track), {
           title: track.title || element.name,
           eId: track.eId || eid.substr(0, 4) + track.id,
-        })
+        }),
       );
     });
   };
@@ -659,7 +662,7 @@ var openwhydYouTubeExtractor = {
     // code imported from playem-all
     if (
       /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
-        url
+        url,
       ) ||
       /^\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
       /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url) ||

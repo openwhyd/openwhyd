@@ -25,7 +25,7 @@ function inviteByRequestId(reqIds, response) {
           invite._id,
           null,
           '',
-          reqIds
+          reqIds,
         );
         response.legacyRender(registrationPage, null, {
           'content-type': 'text/html',

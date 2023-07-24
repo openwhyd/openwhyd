@@ -17,7 +17,7 @@ function renderTemplate(user) {
           field +
           ']" value="' +
           user.pref[field] +
-          '"></p>'
+          '"></p>',
       );
   out = [
     '<h1>whyd notif console</h1>',

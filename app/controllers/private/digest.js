@@ -23,7 +23,7 @@ function fetchSubscribers(uid, options, cb) {
           name: subscribers[i].uNm,
         };
       cb((options.data.subscribers = subscribers));
-    }
+    },
   );
 }
 
@@ -77,9 +77,9 @@ function fetchLikedPostSet(uid, options, cb) {
             )
               delete likersPerTrack[i];
           cb((options.data.likersPerPost = likersPerTrack));
-        }
+        },
       );
-    }
+    },
   );
 }
 
@@ -154,7 +154,7 @@ exports.fetchAndGenerateNotifDigest = function (user, options, cb) {
           likersPerPost: likersPerPost,
           sameTrackSet: sameTrackSet,
           digestFrequency: options.frequency,
-        })
+        }),
       );
     } else cb();
   });
@@ -187,7 +187,7 @@ exports.controller = function (request, reqParams, response) {
           process.env.WHYD_ADMIN_EMAIL,
           'whyd digest test',
           email.bodyText,
-          email.bodyHtml
+          email.bodyHtml,
         );
     } else response.legacyRender('no notifications since last digest');
   });

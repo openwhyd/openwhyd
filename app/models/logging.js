@@ -32,7 +32,7 @@ http.IncomingMessage.prototype.logToConsole = function (suffix, params) {
           ? JSON.stringify(snip.formatPrivateFields(params))
           : '',
       suffix: suffix ? '(' + suffix + ')' : '',
-    })
+    }),
   );
 };
 
@@ -81,7 +81,7 @@ http.IncomingMessage.prototype.getCookies = (function () {
       var separ = cookiesArray[i].indexOf('=');
       if (separ > 0)
         cookies[cookiesArray[i].substr(0, separ)] = cookiesArray[i].substring(
-          separ + 1
+          separ + 1,
         );
     }
     //console.log("cookies object:", cookies);
@@ -184,7 +184,7 @@ http.IncomingMessage.prototype.checkLogin = function (response, format) {
         errorTemplate.renderErrorResponse(
           { errorCode: 'REQ_LOGIN' },
           response,
-          'json'
+          'json',
         );
       else response.renderHTML(renderUnauthorizedPage());
     }
@@ -194,7 +194,7 @@ http.IncomingMessage.prototype.checkLogin = function (response, format) {
 };
 
 http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin = function (
-  user
+  user,
 ) {
   return user.email && config.adminEmails[user.email];
 };
@@ -209,7 +209,7 @@ http.IncomingMessage.prototype.checkAdmin = function (response, format) {
   else if (!exports.isUserAdmin(user)) {
     console.log(
       'access restricted, user is not an admin: ',
-      user._id || user.id
+      user._id || user.id,
     );
     response && response.legacyRender('nice try! ;-)');
     return false;
@@ -224,7 +224,7 @@ http.ServerResponse.prototype.renderHTML = function (html, statusCode) {
     html,
     null,
     { 'content-type': 'text/html; charset=utf-8' },
-    statusCode
+    statusCode,
   );
 };
 
@@ -233,7 +233,7 @@ http.ServerResponse.prototype.renderJSON = function (json, statusCode) {
     json,
     null,
     { 'content-type': 'application/json; charset=utf-8' },
-    statusCode
+    statusCode,
   );
 };
 
@@ -242,7 +242,7 @@ http.ServerResponse.prototype.renderWrappedJSON = function (json, statusCode) {
     '<!DOCTYPE html><html><body><textarea>' +
       JSON.stringify(json) +
       '</textarea></body></html>',
-    statusCode
+    statusCode,
   );
 };
 
@@ -251,7 +251,7 @@ http.ServerResponse.prototype.renderText = function (json, statusCode) {
     json,
     null,
     { 'content-type': 'text/text; charset=utf-8' },
-    statusCode
+    statusCode,
   );
 };
 
@@ -268,7 +268,7 @@ http.ServerResponse.prototype.safeRedirect = function (url) {
 
 http.ServerResponse.prototype.redirectWithTracking = function (url, title) {
   return this.renderHTML(
-    loggingTemplate.renderRedirectPageWithTracking(url, title)
+    loggingTemplate.renderRedirectPageWithTracking(url, title),
   );
 };
 

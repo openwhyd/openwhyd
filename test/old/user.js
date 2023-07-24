@@ -40,7 +40,7 @@ function makeJsonRequest(method, cookie) {
     snip.httpRequestWithParams(
       config.urlPrefix + url,
       options,
-      makeJsonResponseHandler(cb)
+      makeJsonResponseHandler(cb),
     );
   };
 }
@@ -63,7 +63,7 @@ exports.makeTests = function (p) {
           email: email,
         },
       },
-      cb
+      cb,
     );
   }
   /*
@@ -102,7 +102,7 @@ exports.makeTests = function (p) {
         testVars.registeredUid = res.uId;
         testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
         cb(res.redirect && res.uId);
-      }
+      },
     );
   }
 
@@ -121,7 +121,7 @@ exports.makeTests = function (p) {
           log('user deleted:', !testUser);
           cb(!testUser);
         });
-      }
+      },
     );
   }
 
@@ -151,7 +151,7 @@ exports.makeTests = function (p) {
           if (testUser)
             log(
               'please delete the test user before running this test => /admin/users?action=delete&_id=' +
-                testUser._id
+                testUser._id,
             );
           cb(!testUser);
         });
@@ -169,7 +169,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Please enter your name');
-          }
+          },
         );
       },
     ],
@@ -187,7 +187,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Please enter a password');
-          }
+          },
         );
       },
     ],
@@ -205,7 +205,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Please enter your email');
-          }
+          },
         );
       },
     ],
@@ -225,7 +225,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Invalid Facebook id');
-          }
+          },
         );
       },
     ],
@@ -245,7 +245,7 @@ exports.makeTests = function (p) {
             {},
             function (apiUser) {
               cb(testUser._id === apiUser._id);
-            }
+            },
           );
         });
       },
@@ -261,7 +261,7 @@ exports.makeTests = function (p) {
             cb(
               testUser._id === apiUser._id &&
                 testUser.email === apiUser.email &&
-                testUser.pref.emAdd === apiUser.pref.emAdd
+                testUser.pref.emAdd === apiUser.pref.emAdd,
             );
           });
         });
@@ -295,7 +295,7 @@ exports.makeTests = function (p) {
             getUser(function (user) {
               cb(user.pref['emLik'] == 0);
             });
-          }
+          },
         );
       },
     ],
@@ -312,7 +312,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error);
-          }
+          },
         );
       },
     ],
@@ -333,7 +333,7 @@ exports.makeTests = function (p) {
               getUser(function (user) {
                 cb(user.handle == TEST_USER.handle);
               });
-          }
+          },
         );
       },
     ],
@@ -347,7 +347,7 @@ exports.makeTests = function (p) {
             getUser(function (user) {
               cb(!user.apTok);
             });
-          }
+          },
         );
       },
     ],
@@ -362,7 +362,7 @@ exports.makeTests = function (p) {
               //log("user", user);
               cb(user.apTok[0].tok === TEST_USER.apTok.replace(/ /g, ''));
             });
-          }
+          },
         );
       },
     ],
@@ -383,7 +383,7 @@ exports.makeTests = function (p) {
             getUser(function (user) {
               cb(user.twId && user.twTok && user.twSec);
             });
-          }
+          },
         );
       },
     ],
@@ -402,7 +402,7 @@ exports.makeTests = function (p) {
             getUser(function (user) {
               cb(!user.twId && !user.twTok && !user.twSec);
             });
-          }
+          },
         );
       },
     ],
@@ -433,7 +433,7 @@ exports.makeTests = function (p) {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
-          }
+          },
         );
       },
     ],
@@ -454,7 +454,7 @@ exports.makeTests = function (p) {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
-          }
+          },
         );
       },
     ],
@@ -477,7 +477,7 @@ exports.makeTests = function (p) {
               var cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
-          }
+          },
         );
       },
     ],
@@ -500,7 +500,7 @@ exports.makeTests = function (p) {
           },
           function (data) {
             cb(!!data.error);
-          }
+          },
         );
       },
     ],
@@ -529,7 +529,7 @@ exports.makeTests = function (p) {
           function (data) {
             log('response', data);
             cb(!data.error);
-          }
+          },
         );
       },
     ],
@@ -550,7 +550,7 @@ exports.makeTests = function (p) {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
-          }
+          },
         );
       },
     ],
@@ -573,7 +573,7 @@ exports.makeTests = function (p) {
               var cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
-          }
+          },
         );
       },
     ],

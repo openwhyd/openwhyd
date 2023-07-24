@@ -33,7 +33,7 @@ describe('Mongo user repository should', function () {
     assert.equal(id, userId.toString());
     assert.deepEqual(
       playlists,
-      user[0].pl.map((pl) => ({ id: Number(pl.id), name: pl.name }))
+      user[0].pl.map((pl) => ({ id: Number(pl.id), name: pl.name })),
     );
   });
 
@@ -55,7 +55,7 @@ describe('Mongo user repository should', function () {
     });
     assert.deepEqual(
       [newPlaylist],
-      userDocument.pl.filter((pl) => pl.id == playlistId)
+      userDocument.pl.filter((pl) => pl.id == playlistId),
     );
   });
 });

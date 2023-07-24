@@ -43,7 +43,7 @@ function fetchSubscribedUsers(uidList, uid, cb) {
       var uidSet = {};
       for (let i in results) uidSet[results[i].tId] = results[i];
       cb(uidSet);
-    }
+    },
   );
 }
 
@@ -90,7 +90,7 @@ var publicActions = {
             });
           });
         } else callback(reposts);
-      }
+      },
     );
   },
 };
@@ -132,7 +132,7 @@ exports.actions = {
         if (httpRequestParams._id) {
           // edit mode
           const existingPost = await new Promise((resolve) =>
-            postModel.fetchPostById(httpRequestParams._id, resolve)
+            postModel.fetchPostById(httpRequestParams._id, resolve),
           );
           if (existingPost.uId !== postRequest.uId) {
             callback({ error: "updating another user's post is not allowed" });
@@ -168,7 +168,7 @@ exports.actions = {
     if (needToCreatePlaylist(playlistRequest)) {
       postRequest.pl = await createPlaylist(
         httpRequestParams.uId,
-        playlistRequest.name
+        playlistRequest.name,
       );
     } else if (hasAValidPlaylistId(playlistRequest.id)) {
       postRequest.pl = {
@@ -214,7 +214,7 @@ exports.actions = {
       console.log(
         'warning: skipping invalid pId value in incrPlayCounter:',
         typeof p.pId,
-        p.pId
+        p.pId,
       );
       console.log('from user agent: ', getShortUserAgent());
       return cb && cb({ error: 'invalid pId' });
@@ -247,7 +247,7 @@ exports.actions = {
           (mongodb.usernames[p.uId].lastFm || {}).sk,
           function () {
             //console.log("-> last fm response", res);
-          }
+          },
         );
     }
     if (p.logData.err) postModel.fetchPostById(p.pId, callbackAndLogPlay);
@@ -266,7 +266,7 @@ exports.actions = {
         function (res) {
           //console.log("-> last fm response", res);
           cb && cb(res);
-        }
+        },
       );
     });
   },
@@ -283,13 +283,13 @@ exports.handleRequest = function (request, reqParams, response, features) {
       console.log(
         /*reqParams,*/ 'api.post.' + reqParams.action,
         ' RESULT =>',
-        res
+        res,
       );
     response.legacyRender(
       res,
       null,
       args || { 'content-type': 'application/json' },
-      (res || {}).error ? 400 : 200
+      (res || {}).error ? 400 : 200,
     );
   }
 
@@ -308,7 +308,7 @@ exports.handleRequest = function (request, reqParams, response, features) {
       reqParams,
       resultHandler,
       request,
-      features
+      features,
     );
   else response.badRequest();
 };

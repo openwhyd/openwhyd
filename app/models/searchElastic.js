@@ -45,7 +45,7 @@ function getJson(pathSuffix, cb) {
     .addListener('error', function (err) {
       console.error(
         '[search] elasticsearch index getJson() socket error:',
-        err
+        err,
       );
       cb({ error: err });
     })
@@ -67,7 +67,7 @@ function postJson(data = {}, cb) {
       pathSuffix,
       ':',
       data.length,
-      'bytes...'
+      'bytes...',
     );
   } else {
     if (data.query) pathSuffix += '/_search';
@@ -98,7 +98,7 @@ function postJson(data = {}, cb) {
     .addListener('error', function (err) {
       console.error(
         '[search] elasticsearch index postJson() socket error:',
-        err
+        err,
       );
       cb({ error: err });
     })
@@ -287,7 +287,7 @@ exports.init = function () {
   console.log(
     '[search] initializing ElasticSearch index:',
     INDEX_HOST + ':' + INDEX_PORT + '/' + INDEX_NAME,
-    '...'
+    '...',
   );
   try {
     exports.countDocs('user', function (c) {

@@ -100,7 +100,7 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
 
         console.log('login result', form.error);
         renderForm(form);
-      }
+      },
     );
   } else renderForm(form);
 };

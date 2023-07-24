@@ -17,6 +17,6 @@ exports.getSuggestedUsers = () =>
         { id: '5228bc3c7e91c862b2b003af' }, // MrArijog
         { id: '4d94501d1f78ac091dbc9b4d' }, // Adrien Joly
       ],
-      resolve
-    )
+      resolve,
+    ),
   );

@@ -43,7 +43,7 @@ $playlistNameField
             try {
               window.Whyd.tracking.log(
                 'Created playlist using button',
-                json.id
+                json.id,
               );
             } catch (e) {
               console.log('error', e, e.stack);
@@ -51,8 +51,8 @@ $playlistNameField
             goToPage(
               window.location.href.replace(
                 '/playlist/create',
-                '/playlist/' + json.id
-              )
+                '/playlist/' + json.id,
+              ),
             );
           } else {
             showMessage('Your playlist was successfully renamed');

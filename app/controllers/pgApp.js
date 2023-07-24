@@ -51,7 +51,7 @@ function sendWelcomeEmail(p, cb) {
       'app sending WHYD welcome email',
       user.email,
       p.sender.id,
-      p.sender.name
+      p.sender.name,
     );
     notifEmails.sendRegWelcomeAsync(user, p.sender, cb);
     // heariam user receives an email as well, telling that his friend accepted his invitation to whyd
@@ -65,7 +65,7 @@ function sendHeariamEmail(p) {
       'app sending HEARIAM welcome email',
       user.email,
       p.sender.id,
-      p.sender.name
+      p.sender.name,
     );
     if (!user.email)
       return console.error('ERROR: user not found in sendHeariamEmail');
@@ -81,7 +81,7 @@ function sendHeariamEmail(p) {
         'Best regards,',
         'Adrien and Loick, creators of Hear I Am',
         'http://hearim.net/',
-      ].join('\n\n')
+      ].join('\n\n'),
     );
   });
 }
@@ -108,7 +108,7 @@ function handleRequest(p, cb) {
   else if (p.action == 'signup')
     renderSignupPage(
       { app: app, loggedUser: p.loggedUser, ref: p.ref, email: p.email },
-      cb
+      cb,
     );
   else if (p.action == 'connected' && p.appId == 'heariam') {
     // callback from heariam

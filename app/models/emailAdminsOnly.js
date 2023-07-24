@@ -15,7 +15,7 @@ exports.email = function (
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
   var isAdmin =
     emailAddr.indexOf(process.env.WHYD_ADMIN_EMAIL.split('@')[0]) > -1;
@@ -30,7 +30,7 @@ exports.email = function (
     textContent,
     htmlContent,
     userName,
-    callback
+    callback,
   );
 };
 // when config.emailModule is set, this method will be overidden (see at bottom)

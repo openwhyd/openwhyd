@@ -168,20 +168,20 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
           {
             jar,
             url: `${URL_PREFIX}/api/post?action=insert&eId=${encodeURIComponent(
-              post.eId
+              post.eId,
             )}&name=${encodeURIComponent(
-              post.name
+              post.name,
             )}&src[id]=${encodeURIComponent(
-              post.src.id
+              post.src.id,
             )}&src[name]=${encodeURIComponent(
-              post.src.name
+              post.src.name,
             )}&pl[id]=${encodeURIComponent(
-              pl.id
+              pl.id,
             )}&pl[name]=${encodeURIComponent(pl.name)}`,
           },
-          (error, response, body) => (error ? reject(error) : resolve(body))
-        )
-      )
+          (error, response, body) => (error ? reject(error) : resolve(body)),
+        ),
+      ),
     );
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
@@ -226,8 +226,8 @@ describe('When renaming a track', function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     renamedTrack = JSON.parse(renameResponse.body);
     scrub = context.makeJSONScrubber([

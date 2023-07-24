@@ -6,7 +6,7 @@ const childProcess = require('child_process');
 
 const makeJSONScrubber = (scrubbers) => (obj) =>
   JSON.parse(
-    scrubbers.reduce((data, scrub) => scrub(data), JSON.stringify(obj))
+    scrubbers.reduce((data, scrub) => scrub(data), JSON.stringify(obj)),
   );
 
 const readFile = (file) => fs.promises.readFile(file, 'utf-8');
@@ -35,7 +35,7 @@ const httpClient = {
       ({ body, headers }) => ({
         body,
         cookies: extractCookieJar(headers, new URL(url).origin),
-      })
+      }),
     );
   },
   post({ url, body, headers, cookies }) {
@@ -80,7 +80,7 @@ async function insertTestData(url, docsPerCollection) {
       await db.collection(collection).deleteMany({});
       const docs = docsPerCollection[collection];
       if (docs.length > 0) await db.collection(collection).insertMany(docs);
-    })
+    }),
   );
   await mongoClient.close();
 }

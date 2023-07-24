@@ -7,7 +7,7 @@ module.exports = class Progress {
       process.stdout.clearLine();
       process.stdout.cursorTo(0);
       process.stdout.write(
-        `( ${this.label} ${this.count} ${max ? `/ ${max}` : ''} )`
+        `( ${this.label} ${this.count} ${max ? `/ ${max}` : ''} )`,
       );
     }, intervalMs);
   }

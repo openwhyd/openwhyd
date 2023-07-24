@@ -45,7 +45,7 @@ exports.AdminLists = function () {
               '</small>'
             : '') +
           '</div>' +
-          '</p>'
+          '</p>',
       );
     }
     html = html.join('\n');
@@ -110,7 +110,7 @@ exports.AdminLists = function () {
               '</small>'
             : '') +
           '</div>' +
-          '</li>'
+          '</li>',
       );
     }
     html = '<ul>' + html.join('\n') + '</ul>';
@@ -162,7 +162,7 @@ exports.AdminLists = function () {
 
     addScript: function (html) {
       lists.push(
-        ['<script>', '/*<![CDATA[*/', html, '/*]]>*/', '</script>'].join('\n')
+        ['<script>', '/*<![CDATA[*/', html, '/*]]>*/', '</script>'].join('\n'),
       );
     },
     renderPage: function (params = {}) {

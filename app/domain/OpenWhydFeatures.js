@@ -44,7 +44,7 @@ exports.features = function (userRepository) {
         userRepository
           .getByUserId(userId)
           .then(addNewPlayListToUser(playlistName))
-          .then(insertPlaylist)
+          .then(insertPlaylist),
       ),
   };
 };

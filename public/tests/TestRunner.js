@@ -22,7 +22,7 @@ function TestRunner() {
       testFct(function (res) {
         console.log(
           '%c[TEST]=> ' + (res ? 'OK' : 'FAIL: ' + title),
-          'color:' + (res ? 'green' : 'red')
+          'color:' + (res ? 'green' : 'red'),
         );
         if (res) setTimeout(nextTestFct);
         else finalCallback({ ok: false, title: title });

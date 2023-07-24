@@ -133,7 +133,7 @@ function rstr2any(input, encoding) {
    * use.
    */
   var full_length = Math.ceil(
-    (input.length * 8) / (Math.log(encoding.length) / Math.log(2))
+    (input.length * 8) / (Math.log(encoding.length) / Math.log(2)),
   );
   var remainders = Array(full_length);
   for (j = 0; j < full_length; j++) {
@@ -180,20 +180,20 @@ function str2rstr_utf8(input) {
     else if (x <= 0x7ff)
       output += String.fromCharCode(
         0xc0 | ((x >>> 6) & 0x1f),
-        0x80 | (x & 0x3f)
+        0x80 | (x & 0x3f),
       );
     else if (x <= 0xffff)
       output += String.fromCharCode(
         0xe0 | ((x >>> 12) & 0x0f),
         0x80 | ((x >>> 6) & 0x3f),
-        0x80 | (x & 0x3f)
+        0x80 | (x & 0x3f),
       );
     else if (x <= 0x1fffff)
       output += String.fromCharCode(
         0xf0 | ((x >>> 18) & 0x07),
         0x80 | ((x >>> 12) & 0x3f),
         0x80 | ((x >>> 6) & 0x3f),
-        0x80 | (x & 0x3f)
+        0x80 | (x & 0x3f),
       );
   }
   return output;
@@ -207,7 +207,7 @@ function str2rstr_utf16le(input) {
   for (let i = 0; i < input.length; i++)
     output += String.fromCharCode(
       input.charCodeAt(i) & 0xff,
-      (input.charCodeAt(i) >>> 8) & 0xff
+      (input.charCodeAt(i) >>> 8) & 0xff,
     );
   return output;
 }
@@ -217,7 +217,7 @@ function str2rstr_utf16be(input) {
   for (let i = 0; i < input.length; i++)
     output += String.fromCharCode(
       (input.charCodeAt(i) >>> 8) & 0xff,
-      input.charCodeAt(i) & 0xff
+      input.charCodeAt(i) & 0xff,
     );
   return output;
 }

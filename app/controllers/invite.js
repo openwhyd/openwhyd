@@ -33,7 +33,7 @@ exports.checkInviteCode = function (request, reqParams, response, okCallback) {
           console.log(
             'found user from inviteCode (fake invite):',
             user._id,
-            user.name
+            user.name,
           );
           if (okCallback)
             okCallback({
@@ -76,7 +76,7 @@ exports.renderRegisterPage = function (request, reqParams, response) {
       user.pId,
       reqParams.email || user.email || '',
       user.fbRequestIds,
-      reqParams.redirect
+      reqParams.redirect,
     );
     response.legacyRender(registrationPage, null, {
       'content-type': 'text/html',
@@ -93,7 +93,7 @@ exports.renderRegisterPage = function (request, reqParams, response) {
       function (template) {
         var page = template.render(reqParams);
         response.renderHTML(page);
-      }
+      },
     );
   } else {
     //console.log("inviteCode parameter is required");
@@ -176,9 +176,9 @@ var submitInvites = function (request, reqParams, response) {
         response.legacyRender(
           !invite
             ? null
-            : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id }
+            : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id },
         );
-      }
+      },
     );
   else response.badRequest();
 };

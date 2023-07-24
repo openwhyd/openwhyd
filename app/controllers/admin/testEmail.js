@@ -30,9 +30,9 @@ function sendEmails(user, template, cb) {
             bodyText: template.bodyText,
             bodyHtml: template.bodyHtml,
           });
-        }
+        },
       );
-    }
+    },
   );
 }
 
@@ -52,6 +52,6 @@ exports.controller = function (request, reqParams, response) {
   notifModel.generateRegWelcomeAsync(
     user,
     { name: 'inviteSender', id: '7' },
-    send
+    send,
   );
 };

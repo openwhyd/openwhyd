@@ -22,7 +22,7 @@ db.user.updateOne(
       'consent.date': true, // => mongodb will store a ISODate in consent.date
     },
   },
-  { upsert: true }
+  { upsert: true },
 );
 
 db.user.updateOne(
@@ -40,7 +40,7 @@ db.user.updateOne(
       'consent.date': true, // => mongodb will store a ISODate in consent.date
     },
   },
-  { upsert: true }
+  { upsert: true },
 );
 
 print('done! :-)');

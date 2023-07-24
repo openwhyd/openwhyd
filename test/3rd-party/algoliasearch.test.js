@@ -43,7 +43,7 @@ describe('Algolia search wrapper', () => {
 
   it('should count number of documents per index', async () => {
     const count = await new Promise((resolve) =>
-      searchModel.countDocs('post', resolve)
+      searchModel.countDocs('post', resolve),
     );
     await expect(count).toBe(0);
   });
@@ -54,7 +54,7 @@ describe('Algolia search wrapper', () => {
     expect(result).toMatchObject({ items: [post] });
 
     const posts = await new Promise((resolve) =>
-      searchModel.query({ _type: 'post', q: '' }, resolve)
+      searchModel.query({ _type: 'post', q: '' }, resolve),
     );
     expect(posts).toMatchObject({ hits: [post] });
   });
@@ -65,7 +65,7 @@ describe('Algolia search wrapper', () => {
     expect(result).toMatchObject({ items: [post] });
 
     const posts = await new Promise((resolve) =>
-      searchModel.query({ q: '' }, resolve)
+      searchModel.query({ q: '' }, resolve),
     );
     expect(posts).toMatchObject({ hits: [post] });
   });

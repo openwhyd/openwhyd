@@ -102,11 +102,11 @@ describe('hypemachine / mp3 detector', function () {
 	genDetectTracksTest('http://audioporncentral.com/2012/09/metronomy-hypnose-late-night-tales.html', 'Metronomy - Hypnose'); // one vimeo and 1 soundcloud embed
 	*/
   genDetectTracksTest(
-    'http://www.deadhorsemarch.com/video-metronomy-everything-goes-my-way-6-5-12/' /*, 'Metronomy – “Everything Goes My Way”'*/
+    'http://www.deadhorsemarch.com/video-metronomy-everything-goes-my-way-6-5-12/' /*, 'Metronomy – “Everything Goes My Way”'*/,
   ); // 1 youtube video embed
   genDetectTracksTest(
     'http://www.deadhorsemarch.com/video-metronomy-everything-goes-my-way-6-5-12/',
-    'Metronomy – “Everything Goes My Way”'
+    'Metronomy – “Everything Goes My Way”',
   ); // 1 youtube video embed
 
   // TODO: fix hypem module => re-enable all test cases
