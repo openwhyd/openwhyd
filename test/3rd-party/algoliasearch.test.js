@@ -18,18 +18,16 @@ describe('Algolia search wrapper', () => {
 
   // init with provided credentials + clean up
   beforeAll(async function () {
-    jest.setTimeout(20 * 1000);
     expect(process.env).toHaveProperty('ALGOLIA_APP_ID');
     expect(process.env).toHaveProperty('ALGOLIA_API_KEY');
     process.appParams = { searchModule: 'searchAlgolia' };
     searchModel = require('../../app/models/search.js');
     await cleanUp();
-  });
+  }, 20 * 1000); // override jest timeout, to leave algolia enough time to apply requested changes
 
   afterAll(async function () {
-    jest.setTimeout(10 * 1000);
     await cleanUp();
-  });
+  }, 10 * 1000); // override jest timeout, to leave algolia enough time to apply requested changes
 
   it('should fail to delete unknown type of documents', async () => {
     const promise = util.promisify(searchModel.deleteAllDocs)('whatever');
