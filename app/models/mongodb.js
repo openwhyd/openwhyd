@@ -122,8 +122,7 @@ exports.forEach = async function (colName, params, handler, cb, cbParam) {
 };
 
 // handler is responsible for calling the provided "next" function
-// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
-exports.forEach2 = function (colName, params, handler) {
+exports.forEach2 = async function (colName, params, handler) {
   var q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 100;
@@ -133,19 +132,23 @@ exports.forEach2 = function (colName, params, handler) {
   }
   if (params.after != null && exports.isObjectId(params.after))
     q._id = { $lt: exports.ObjectId('' + params.after) };
-  exports.collections[colName].find(q, params, function (err, cursor) {
-    (function next() {
-      cursor.next(function (err, item) {
-        if (err) {
-          console.error('[db] mongodb.forEach2 ERROR', err);
-          handler({ error: err }, undefined, cursor.close.bind(cursor));
-          cursor.close();
-        } else {
-          handler(item, item ? next : undefined, cursor.close.bind(cursor));
-        }
-      });
-    })();
-  });
+
+  const { fields } = params ?? {};
+  delete params.fields;
+  const cursor = await exports.collections[colName]
+    .find(q, params)
+    .project(fields);
+  (function next() {
+    cursor.next(function (err, item) {
+      if (err) {
+        console.error('[db] mongodb.forEach2 ERROR', err);
+        handler({ error: err }, undefined, cursor.close.bind(cursor));
+        cursor.close();
+      } else {
+        handler(item, item ? next : undefined, cursor.close.bind(cursor));
+      }
+    });
+  })();
 };
 
 exports.cacheCollections = function (callback) {
