@@ -241,6 +241,7 @@ exports.fetchAll = function (handler) {
   );
 };
 
+// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.fetchMulti = function (q, options, handler) {
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   if (q._id && typeof q._id == 'object')

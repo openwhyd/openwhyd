@@ -60,6 +60,7 @@ function refreshIndex(type, cb, preprocess) {
     : function (obj, fetchAndProcessNextObject) {
         preprocess(obj, fetchAndProcessNextObject, index);
       };
+  // TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
   var options = {
     fields: indexFields[type],
     //limit: 9999999,
@@ -135,6 +136,7 @@ function countDbUsersAndPlaylists(cb) {
     dbUsers: 0,
     dbPlaylists: 0,
   };
+  // TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
   mongodb.collections[indexCol['user']].find(
     {},
     { fields: { pl: 1 } },

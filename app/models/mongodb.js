@@ -102,6 +102,7 @@ exports.cacheUsers = function (callback) {
   );
 };
 
+// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.forEach = function (colName, params, handler, cb, cbParam) {
   var q = {};
   params = params || {};
@@ -121,6 +122,7 @@ exports.forEach = function (colName, params, handler, cb, cbParam) {
 };
 
 // handler is responsible for calling the provided "next" function
+// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.forEach2 = function (colName, params, handler) {
   var q = {};
   params = params || {};

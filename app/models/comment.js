@@ -49,6 +49,7 @@ exports.fetchLast = function (p, cb) {
     );
 };
 
+// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.fetch = function (q, p, cb) {
   q = q || {};
   p = p || {};

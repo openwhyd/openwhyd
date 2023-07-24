@@ -61,6 +61,7 @@ function processAdvQuery(query, params, options) {
   if (!params.sort) params.sort = [/*['rTm','desc'],*/ ['_id', 'desc']]; // by default
 }
 
+// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
 exports.fetchPosts = function (query, params, options, handler) {
   params = params || {};
   processAdvQuery(query, params, options);
