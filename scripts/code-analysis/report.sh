@@ -13,4 +13,4 @@ npx --yes code-complexity@v4.2.2 . \
   > ${THIS_DIR}/code-complexity.txt
 cat ${THIS_DIR}/code-complexity.txt
 
-npx arkit app/ -o ${THIS_DIR}/arkit.svg
+npx --yes arkit app/ -o ${THIS_DIR}/arkit.svg
