@@ -131,28 +131,24 @@ var indexFcts = {
   },
 };
 
-function countDbUsersAndPlaylists(cb) {
+async function countDbUsersAndPlaylists(cb) {
   var result = {
     dbUsers: 0,
     dbPlaylists: 0,
   };
-  // TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
-  mongodb.collections[indexCol['user']].find(
-    {},
-    { fields: { pl: 1 } },
-    function (err, cursor) {
-      (function nextUser() {
-        cursor.next(function (err, user) {
-          if (!user) cb(result);
-          else {
-            ++result.dbUsers;
-            if (user.pl) result.dbPlaylists += user.pl.length;
-            setImmediate(nextUser);
-          }
-        });
-      })();
-    },
-  );
+  const cursor = await mongodb.collections[indexCol['user']]
+    .find()
+    .project({ pl: 1 });
+  (function nextUser() {
+    cursor.next(function (err, user) {
+      if (!user) cb(result);
+      else {
+        ++result.dbUsers;
+        if (user.pl) result.dbPlaylists += user.pl.length;
+        setImmediate(nextUser);
+      }
+    });
+  })();
 }
 
 function countItems(cb) {
