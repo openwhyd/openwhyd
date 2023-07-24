@@ -81,25 +81,25 @@
     "wait-on": "^7.0.1"
   },
   "devDependencies": {
-    "@applitools/eyes-cypress": "^3.32.2",
-    "@cypress/code-coverage": "^3.10.4",
-    "@types/node": "^20.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.2",
-    "@typescript-eslint/parser": "^5.59.2",
+    "@applitools/eyes-cypress": "^3.34.1",
+    "@cypress/code-coverage": "^3.11.0",
+    "@types/node": "^20.4.4",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
     "approvals": "^6.2.1",
-    "ava": "^5.2.0",
-    "cypress": "^12.17.1",
+    "ava": "^5.3.1",
+    "cypress": "^12.17.2",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
-    "eslint": "^8.40.0",
+    "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-deprecation": "^1.4.1",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-prettier": "^5.0.0",
     "mocha": "10.2.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.8.8",
-    "ts-morph": "^17.0.1",
-    "typescript": "^5.0.4"
+    "prettier": "^3.0.0",
+    "ts-morph": "^19.0.0",
+    "typescript": "^5.1.6"
   },
   "resolutions": {
     "istanbul-lib-coverage": "^3.2.0"
