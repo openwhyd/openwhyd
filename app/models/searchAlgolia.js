@@ -338,6 +338,7 @@ exports.deleteAllDocs = function (type, callback) {
   }
   getIndex(INDEX_NAME_BY_TYPE[type])
     .clearObjects()
+    .wait()
     .catch((err) => {
       console.error('[search] algolia deleteAllDocs =>', err);
       callback && callback(err);
