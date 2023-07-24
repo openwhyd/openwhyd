@@ -30,7 +30,7 @@ function processFile(file, options, callback) {
   console.log(
     '[upload] processFile',
     { filepath, mimetype, name },
-    { thumbDims: options.thumbDims, keepOriginal: options.keepOriginal }
+    { thumbDims: options.thumbDims, keepOriginal: options.keepOriginal },
   );
   if (!file || !filepath)
     return callback({ error: 'Error during file upload, please try again.' });
