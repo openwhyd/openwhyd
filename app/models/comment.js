@@ -49,8 +49,7 @@ exports.fetchLast = function (p, cb) {
     );
 };
 
-// TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
-exports.fetch = function (q, p, cb) {
+exports.fetch = async function (q, p, cb) {
   q = q || {};
   p = p || {};
   p.sort = p.sort || [['_id', 'asc']];
@@ -64,7 +63,13 @@ exports.fetch = function (q, p, cb) {
     q.pId = {
       $in: (q.pId.push ? q.pId : [q.pId]).map(/*mongodb.ObjectId*/ stringify),
     };
-  getCol().find(q, p, combineResultArray(cb));
+  const { fields } = p ?? {};
+  delete p.fields;
+  const results = await getCol()
+    .find(q, p)
+    .project(fields ?? {})
+    .toArray();
+  combineResultArray(cb)(results);
 };
 
 function notifyUsers(comment) {
