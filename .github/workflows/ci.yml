@@ -102,9 +102,9 @@ jobs:
         run: |
           npm run start:coverage --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-        env:
-          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
-          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
+        # env:
+        #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
+        #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Approval tests
         env:
           PORT: '8080'
@@ -347,8 +347,8 @@ jobs:
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # DEBUG: 'cypress:server:socket-base'
-          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
-          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
+          # ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
+          # ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Get coverage data
         run: |
           # npm run test:coverage
@@ -464,9 +464,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build and start services
         run: docker-compose up --build --detach
-        env:
-          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
-          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
+        # env:
+        #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
+        #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Init database for tests
         run: |
           docker-compose exec -T web npm run test-reset
