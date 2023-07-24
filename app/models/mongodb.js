@@ -252,6 +252,7 @@ exports.init = function (readyCallback) {
     writeConcern: {
       w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
     },
+    useUnifiedTopology: true,
   };
 
   mongodb.MongoClient.connect(url, options, function (err, client) {
