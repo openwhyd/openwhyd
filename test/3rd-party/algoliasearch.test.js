@@ -17,7 +17,8 @@ describe('Algolia search wrapper', () => {
   };
 
   // init with provided credentials + clean up
-  beforeAll(async () => {
+  beforeAll(async function () {
+    jest.setTimeout(20 * 1000);
     expect(process.env).toHaveProperty('ALGOLIA_APP_ID');
     expect(process.env).toHaveProperty('ALGOLIA_API_KEY');
     process.appParams = { searchModule: 'searchAlgolia' };
@@ -25,7 +26,8 @@ describe('Algolia search wrapper', () => {
     await cleanUp();
   });
 
-  afterAll(async () => {
+  afterAll(async function () {
+    jest.setTimeout(10 * 1000);
     await cleanUp();
   });
 
