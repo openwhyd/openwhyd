@@ -27,7 +27,7 @@ function deleteIndex(type, cb) {
   });
 }
 
-function refreshIndex(type, cb, preprocess) {
+async function refreshIndex(type, cb, preprocess) {
   var BULK_SIZE = 1000,
     bulkDocs = [],
     fetched = 0,
@@ -60,41 +60,41 @@ function refreshIndex(type, cb, preprocess) {
     : function (obj, fetchAndProcessNextObject) {
         preprocess(obj, fetchAndProcessNextObject, index);
       };
-  // TODO: `fields` option is deprecated => try `project` (cf https://stackoverflow.com/a/51732851/592254)
   var options = {
-    fields: indexFields[type],
     //limit: 9999999,
     sort: [['_id', 'desc']],
     batchSize: 1000,
   };
+  const fields = indexFields[type];
   console.log('index: iterating on collection:', indexCol[type]);
-  mongodb.collections[indexCol[type]].find({}, options, function (err, cursor) {
-    (function next() {
-      cursor.next(function (err, u) {
-        if (err)
-          console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err);
-        if (u != null) {
-          ++fetched;
-          process(u, function () {
-            if (fetched % 100 == 0)
-              console.warn('=> last (BULK) indexed document: ', u._id);
-            setTimeout(next /*, 100*/);
-          });
-        } else {
-          flush(function () {
-            console.log(
-              'admin.index.refreshIndex DONE! => indexed',
-              indexed,
-              'documents from',
-              fetched,
-              'fetched db records',
-            );
-            cb && cb();
-          });
-        }
-      });
-    })();
-  });
+  const cursor = await mongodb.collections[indexCol[type]]
+    .find({}, options)
+    .project(fields);
+  (function next() {
+    cursor.next(function (err, u) {
+      if (err)
+        console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err);
+      if (u != null) {
+        ++fetched;
+        process(u, function () {
+          if (fetched % 100 == 0)
+            console.warn('=> last (BULK) indexed document: ', u._id);
+          setTimeout(next /*, 100*/);
+        });
+      } else {
+        flush(function () {
+          console.log(
+            'admin.index.refreshIndex DONE! => indexed',
+            indexed,
+            'documents from',
+            fetched,
+            'fetched db records',
+          );
+          cb && cb();
+        });
+      }
+    });
+  })();
 }
 
 var indexFcts = {
