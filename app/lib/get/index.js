@@ -48,7 +48,7 @@ Page.prototype.getImages = function () {
           path.normalize(
             img.charAt(0) === '/'
               ? this.host + '/' + img
-              : this.host + '/' + this.path + '/' + img
+              : this.host + '/' + this.path + '/' + img,
           );
     }
     imgs[i] = img;
@@ -173,7 +173,7 @@ getPage.ContentType = function (address, callback) {
           null,
           contentType && CONTENT_TYPE_REG.test(contentType)
             ? RegExp.$1
-            : 'noContentType'
+            : 'noContentType',
         );
       }
     })

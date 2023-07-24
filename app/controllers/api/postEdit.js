@@ -22,7 +22,7 @@ function renderLoginForm() {
       '<script>',
       '  setTimeout(function(){ window.location.reload(); }, 1000);',
       '</script>',
-    ].join('\n')
+    ].join('\n'),
   );
   /* other way (ajax) of doing this, from HTML pages browsed from openwhyd.org/:
 		var loginDiv = document.getElementById("whydLogin");
@@ -117,7 +117,7 @@ function makeAddDlg(reqParams, playlists, user, cb) {
           snip.renderTimestamp(new Date() - posts[0]._id.getTimestamp()) +
           ' ago.';
       cb(null, p);
-    }
+    },
   );
 }
 
@@ -142,7 +142,7 @@ exports.controller = function (request, reqParams, response) {
         : 'app/templates/postEdit.html', // TODO: effacer postEdit.html et postBox.js
       function (template) {
         response.renderHTML(template.render(params));
-      }
+      },
     );
   }
 

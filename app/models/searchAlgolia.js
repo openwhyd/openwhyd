@@ -9,7 +9,7 @@ const algoliasearch = require('algoliasearch');
 
 const client = algoliasearch(
   process.env.ALGOLIA_APP_ID.substr(),
-  process.env.ALGOLIA_API_KEY.substr() // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
+  process.env.ALGOLIA_API_KEY.substr(), // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
 );
 
 var INDEX_NAME_BY_TYPE = {
@@ -59,7 +59,7 @@ var getIndex = (function () {
         attributesForFaceting: ['name'].concat(
           fields.map(function (field) {
             return 'filterOnly(' + field + ')';
-          })
+          }),
         ),
       });
     }
@@ -94,7 +94,7 @@ Search.prototype.search = function (index, query, options, cb) {
   }
   if (!cb) {
     throw new Error(
-      'please pass a callback parameter when calling Search.prototype.search'
+      'please pass a callback parameter when calling Search.prototype.search',
     );
   }
   getIndex(index)
@@ -139,7 +139,7 @@ var searchByType = {
       'users',
       q.q,
       options,
-      makeCallbackTranslator('user', cb)
+      makeCallbackTranslator('user', cb),
     );
     // tested http://localhost:8080/search?q=adrien&context=mention
     //     => { q: 'adrien', limit: 6 }
@@ -160,7 +160,7 @@ var searchByType = {
           delete h.post;
         });
         cb(res);
-      })
+      }),
     );
   },
   post: function (q, cb) {
@@ -175,7 +175,7 @@ var searchByType = {
         'posts',
         q,
         options,
-        makeCallbackTranslator('post', cb)
+        makeCallbackTranslator('post', cb),
       );
       // tested http://localhost:8080/search?q=adrien&context=quick
       //     => { q: 'adrien', uId: '4d94501d1f78ac091dbc9b4d', limit: 10 }
@@ -190,7 +190,7 @@ var searchByType = {
         'posts',
         q,
         options,
-        makeCallbackTranslator('post', cb)
+        makeCallbackTranslator('post', cb),
       );
       // tested http://localhost:8080/search?q=adrien&context=quick
       //     => { q: 'adrien', excludeUid: '4d94501d1f78ac091dbc9b4d', limit: 10 }
@@ -201,7 +201,7 @@ var searchByType = {
         'posts',
         q.q,
         options,
-        makeCallbackTranslator('post', cb)
+        makeCallbackTranslator('post', cb),
       );
       // tested http://localhost:8080/search?q=pouet&context=header
       //     => { q: 'pouet' }
@@ -214,7 +214,7 @@ var searchByType = {
       'playlists',
       q.q,
       options,
-      makeCallbackTranslator('playlist', cb)
+      makeCallbackTranslator('playlist', cb),
     );
     // tested http://localhost:8080/search?q=pouet&context=header
     //     => { q: 'pouet' }
@@ -237,7 +237,7 @@ exports.query = function (q = {}, cb) {
           console.log(
             '[search] searchAlgolia.query =>',
             res.hits.length,
-            'hits'
+            'hits',
           );
           hits = hits.concat(res.hits);
         } else {
@@ -245,7 +245,7 @@ exports.query = function (q = {}, cb) {
             '[search] algolia error for ' +
               JSON.stringify(q, null, 2) +
               ' => ' +
-              JSON.stringify(res, null, 2)
+              JSON.stringify(res, null, 2),
           );
         }
         next();
@@ -284,7 +284,7 @@ function indexTypedDocs(type, items, callback) {
             ' ' +
             type +
             ' items => ' +
-            err.toString()
+            err.toString(),
         );
         callback && callback(err);
       })
@@ -292,7 +292,7 @@ function indexTypedDocs(type, items, callback) {
         console.log(
           '[search] algolia indexTyped ' + type + ' => indexed',
           items.length,
-          'documents'
+          'documents',
         );
         callback && callback(null, { items: items });
       });
@@ -367,7 +367,7 @@ exports.indexBulk = function (docs, callback) {
         error: err,
         items: (res || {}).items,
       });
-    }
+    },
   );
 };
 

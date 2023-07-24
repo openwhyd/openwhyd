@@ -15,7 +15,7 @@ exports.email = function (
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
   /*
   console.log('FAKE EMAIL', {

@@ -38,7 +38,7 @@ function processUser(u, cb) {
     userModel.setPref(u._id, cleanPref, function (updatedUser) {
       console.log(
         '[notif] ' + u._id + ' => next digest date: ',
-        ((updatedUser || {}).pref || {}).nextEN
+        ((updatedUser || {}).pref || {}).nextEN,
       );
       cb();
     });
@@ -61,11 +61,11 @@ function processUser(u, cb) {
           function (r) {
             console.log('[notif] ' + u._id + ' => digest email result:', r);
             done();
-          }
+          },
         );
       else {
         console.log(
-          '[notif] ' + u._id + ' => NO NEW NOTIFICATION since last digest'
+          '[notif] ' + u._id + ' => NO NEW NOTIFICATION since last digest',
         );
         done();
       }
@@ -104,7 +104,7 @@ function oneAtATime(fct, msg) {
     if (running)
       console.error(
         msg ||
-          'WARNING: [OneAtATime] fct is trying to start before last call has ended'
+          'WARNING: [OneAtATime] fct is trying to start before last call has ended',
       );
     else {
       running = true;
@@ -117,7 +117,7 @@ function oneAtATime(fct, msg) {
 
 if (DIGEST_INTERVAL < 0)
   console.log(
-    '[notif] config.digestInterval is NULL or NEGATIVE => digest worker is disabled'
+    '[notif] config.digestInterval is NULL or NEGATIVE => digest worker is disabled',
   );
 else if (!timer) {
   console.log('[notif] Starting with interval', DIGEST_INTERVAL, '...');

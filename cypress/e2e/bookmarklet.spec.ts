@@ -7,7 +7,7 @@ context('Openwhyd bookmarklet', () => {
 
   const injectBookmarklet = (win) => {
     win.document.body.appendChild(
-      win.document.createElement('script')
+      win.document.createElement('script'),
     ).src = `${Cypress.config().baseUrl}/js/bookmarklet.js?${Date.now()}`;
   };
 
@@ -44,13 +44,13 @@ context('Openwhyd bookmarklet', () => {
     // should list the main track of the page
     cy.get('#whydContent').should(
       'contain.html',
-      'juanchov182/thievery-corporation-meu' // Note: id is found in the data-eid attribute of the thumb element
+      'juanchov182/thievery-corporation-meu', // Note: id is found in the data-eid attribute of the thumb element
     );
     cy.get('.whydThumb')
       .first()
       .should(
         'contain.text',
-        'thievery corporation - meu destino (my destiny)'
+        'thievery corporation - meu destino (my destiny)',
       );
     cy.get('.whydThumb').first().click();
   });

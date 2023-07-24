@@ -189,7 +189,7 @@ window.searchExternalTracks = (function () {
   return function (query, handleResult) {
     // playem.searchTracks(query, handleResult);
     console.info(
-      'ignoring external search, see https://github.com/openwhyd/openwhyd/issues/262'
+      'ignoring external search, see https://github.com/openwhyd/openwhyd/issues/262',
     );
     handleResult(); // callback to signal that no more results are going to be returned
   };
@@ -280,7 +280,7 @@ function onNewPost(whydPost) {
       (p.pl ? '/playlist/' + p.pl.id : '') +
       "'>" +
       encodeHtmlEntities((p.pl || {}).name || 'your tracks') +
-      '</a>'
+      '</a>',
   );
 
   try {
@@ -317,7 +317,7 @@ function _createSubscribeButton(user, $li) {
           .attr('data-uid', user.id)
           .text(user.subscribed ? 'Following' : 'Follow')
           .toggleClass('subscribed', user.subscribed ? true : false)
-          .appendTo($li)
+          .appendTo($li),
       );
   }
 }
@@ -330,14 +330,14 @@ function _renderUserInList(user, liHandler) {
           'background-image',
           "url('" +
             (user.img || '/img/u/' + user.id) +
-            "?width=100&amp;height=100')"
+            "?width=100&amp;height=100')",
         )
         .click(
           user.thumbClickHandler ||
             function () {
               $(this).parent().find('a.userLink').click();
-            }
-        )
+            },
+        ),
     )
     .append(
       $("<a class='userLink'>")
@@ -345,7 +345,7 @@ function _renderUserInList(user, liHandler) {
           $.modal.close();
         })
         .attr('href', user.url || '/u/' + user.id)
-        .text(user.name)
+        .text(user.name),
     )
     .append($('<small>').text(user.bio))
     .addClass('user');
@@ -367,7 +367,7 @@ function _showUserListDlg(users, title) {
   openJqueryDialog(
     _renderUserList(users),
     'dlgUserList',
-    (users || []).length + ' ' + title
+    (users || []).length + ' ' + title,
   );
 }
 
@@ -393,7 +393,7 @@ function _commentDeleteHandler() {
   var $post = $comment.closest('.post');
   var $html = $(
     '<div><p>Do you want to permanently delete this comment?</p></div>' +
-      '<span class="btnDelete greenButton">Delete</span>'
+      '<span class="btnDelete greenButton">Delete</span>',
   );
   openJqueryDialog($html, 'dlgDeleteComment');
   $('.dlgDeleteComment .btnDelete').click(function () {
@@ -553,7 +553,7 @@ window.dlgEditPlaylist = function () {
     function ($dlg) {
       //console.log("window.pagePlaylist", window.pagePlaylist);
       $dlg.find('h1').text('Edit playlist');
-    }
+    },
   );
 };
 
@@ -576,7 +576,7 @@ function modalRepostBox(trackOrPid /*onPosted*/) {
     function ($box) {
       $box.prepend('<h1>Add this track to your page</h1>');
       $box.find('#contentThumb').addClass('loading');
-    }
+    },
   );
 }
 
@@ -729,7 +729,7 @@ window.submitBio = function () {
 window.sharePost = function (pId) {
   getPostById(pId, function ($post) {
     var post = extractPostData(
-      $post /*, {uId:window.pageTopic.mid, uNm:window.pageTopic.name}*/
+      $post /*, {uId:window.pageTopic.mid, uNm:window.pageTopic.name}*/,
     );
     console.log('post data', post);
     var $btn = $post.find('.btns > .btnShare');
@@ -958,7 +958,7 @@ $(document).ready(function () {
                   "<ul class='resultCategory'>" +
                   '<div>Tracks</div>' +
                   tracks.map(renderTrack).join('\n') +
-                  '</ul>'
+                  '</ul>',
               );
         }
         if (/^https?:\/\//.test(query))
@@ -974,7 +974,7 @@ $(document).ready(function () {
                     '<p>We currently support URLs from Youtube, Soundcloud and Vimeo.</p>' +
                     '<p>Please install and try <a href="/button">our "Add Track" button</a> from that page.</p>' +
                     '</div>',
-              false
+              false,
             );
             // TODO: send this URL back to whyd/playemJS team
           });
@@ -995,10 +995,17 @@ $(document).ready(function () {
                   if (track) {
                     track.name = track.title;
                     externalTracks.push(track);
-                  } else display(prependExternalTracks(externalTracks.slice(0, 2), resultsHtml), false);
+                  } else
+                    display(
+                      prependExternalTracks(
+                        externalTracks.slice(0, 2),
+                        resultsHtml,
+                      ),
+                      false,
+                    );
                 });
               }
-            }
+            },
           );
         }
       },
@@ -1068,7 +1075,7 @@ $(document).ready(function () {
         .replace(/<!DOCTYPE[^>]*>/i, '')
         .replace(
           /<(html|head|body|title|meta|script)([\s>])/gi,
-          '<div class="document-$1"$2'
+          '<div class="document-$1"$2',
         )
         .replace(/<\/(html|head|body|title|meta|script)>/gi, '</div>');
 
@@ -1173,7 +1180,7 @@ $(document).ready(function () {
               relativeUrl +
               '"],a[href^="' +
               url +
-              '"]'
+              '"]',
           );
           if ($menuChildren.length === 1) {
             $menuChildren.addClass(activeClass);
@@ -1209,7 +1216,7 @@ $(document).ready(function () {
             if (src) scriptNode.src = src;
             else
               scriptNode.appendChild(
-                document.createTextNode(/*$script.text()*/ this.innerHTML)
+                document.createTextNode(/*$script.text()*/ this.innerHTML),
               );
             contentNode.appendChild(scriptNode);
           });
@@ -1243,7 +1250,7 @@ $(document).ready(function () {
             // update the body class
             $('body').attr(
               'class',
-              data.split('<body')[1].split('class=')[1].split(/["']/)[1]
+              data.split('<body')[1].split('class=')[1].split(/["']/)[1],
             );
             // re-position the player
             window.whydPlayer.refresh();
@@ -1359,14 +1366,14 @@ window.sortPlaylists = function (sortType) {
         //if sorting by date first convert index key string to a number with '+' then compare to sort in ascending order.
         function (firstPlaylistIndex, secondPlaylistIndex) {
           return +firstPlaylistIndex - +secondPlaylistIndex;
-        }
+        },
       );
     } else {
       sortedPlaylistObjectKeys = Object.keys(allPlaylistsObject).sort();
     }
 
     sortedPlaylistObjectKeys.forEach((playlist) =>
-      playlistsFragment.appendChild(allPlaylistsObject[playlist])
+      playlistsFragment.appendChild(allPlaylistsObject[playlist]),
     );
 
     playlistsContainer.appendChild(playlistsFragment);

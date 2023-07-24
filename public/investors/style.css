@@ -140,7 +140,11 @@ table {
 
 body {
   background: #f2f2f2;
-  font: 14px/21px 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+  font:
+    14px/21px 'Helvetica Neue',
+    Helvetica,
+    Arial,
+    Sans-serif;
   color: #4a4a4a;
 }
 
@@ -177,7 +181,11 @@ h3 {
 }
 
 .big-slogan {
-  font: 34px/57px 'HelveticaNeue-Medium', 'Helvetica Neue', Arial, Sans-serif;
+  font:
+    34px/57px 'HelveticaNeue-Medium',
+    'Helvetica Neue',
+    Arial,
+    Sans-serif;
   margin-top: 40px;
   color: #4a4a4a;
 }
@@ -251,7 +259,11 @@ h3 {
 
 .background-presentation .wrapp h2 {
   color: #8d8d8d;
-  font: 18px/26px 'HelveticaNeue-Medium', Helvetica, Arial, Sans-serif;
+  font:
+    18px/26px 'HelveticaNeue-Medium',
+    Helvetica,
+    Arial,
+    Sans-serif;
 }
 .background-presentation .wrapp > img {
   position: absolute;
@@ -305,7 +317,11 @@ h3 {
 }
 
 .background-team h4 {
-  font: 20px/30px 'HelveticaNeue-Medium', 'Helvetica Neue', Arial, Sans-serif;
+  font:
+    20px/30px 'HelveticaNeue-Medium',
+    'Helvetica Neue',
+    Arial,
+    Sans-serif;
   color: #4a4a4a;
   padding: 0;
 }
@@ -427,7 +443,11 @@ h3 {
 }
 
 .background-product p {
-  font: 18px/26px 'Droid Sans', 'Helvetica Neue', Helvetica, Arial;
+  font:
+    18px/26px 'Droid Sans',
+    'Helvetica Neue',
+    Helvetica,
+    Arial;
   padding: 10px;
 }
 
@@ -500,7 +520,11 @@ h3 {
 }
 
 .background-marketsize > .wrapp > p.billions {
-  font: 34px/57px 'HelveticaNeue-Medium', 'Helvetica Neue', Arial, Sans-serif;
+  font:
+    34px/57px 'HelveticaNeue-Medium',
+    'Helvetica Neue',
+    Arial,
+    Sans-serif;
   background-color: #39bfe7;
   color: #fff;
   display: inline-block;
@@ -548,7 +572,11 @@ h3 {
 
 .focus p.special {
   color: #4a4a4a;
-  font: 34px/54px 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+  font:
+    34px/54px 'Helvetica Neue',
+    Helvetica,
+    Arial,
+    Sans-serif;
   font-weight: bold;
 }
 .focus p,
@@ -762,7 +790,11 @@ ul.user li a {
   color: #4a4a4a;
   margin: 5px auto 30px;
   display: inline-block;
-  font: bold 18px/30px 'Droid Sans', 'Helvetica Neue', Helvetica, Arial,
+  font:
+    bold 18px/30px 'Droid Sans',
+    'Helvetica Neue',
+    Helvetica,
+    Arial,
     Sans-serif;
   color: #4a4a4a;
   border-bottom: 2px solid #dedede;

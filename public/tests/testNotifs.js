@@ -143,8 +143,8 @@
         cb(
           confirm('have you received a push notification?') &&
             confirm(
-              'is there a badge with 3 pending notifications on the openwhyd app icon?'
-            )
+              'is there a badge with 3 pending notifications on the openwhyd app icon?',
+            ),
         );
       });
     },
@@ -163,7 +163,7 @@
           jsonGet('/api/user', {}, function (me) {
             cb(me.pref.mnSub == testVars.initialMnSub);
           });
-        }
+        },
       );
     },
     'restore apTok': function (cb) {
@@ -176,7 +176,7 @@
               log('restored initial token', me.apTok);
               cb(true);
             });
-          }
+          },
         );
       });
     },

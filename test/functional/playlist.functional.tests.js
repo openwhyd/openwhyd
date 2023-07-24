@@ -63,7 +63,7 @@ describe('playlist', () => {
 
     const savedUser = await userRepository.getByUserId(userWithPlaylist.id);
     const savedPlaylist = savedUser.playlists.find(
-      (pl) => pl.id == playlist.id
+      (pl) => pl.id == playlist.id,
     );
 
     assert.equal(savedUser.playlists.length, previousPlaylistLength + 1);

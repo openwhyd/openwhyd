@@ -19,7 +19,7 @@ function fetchPlaylists(options) {
   return new Promise((resolve) =>
     userModel.fetchPlaylists(options.user, {}, function (playlists) {
       resolve(playlists);
-    })
+    }),
   );
 }
 
@@ -42,7 +42,7 @@ function fetchStats(options, callback) {
         function (err, res) {
           options.user.isSubscribed = !!res;
           callback();
-        }
+        },
       );
     });
   });
@@ -155,7 +155,7 @@ function renderResponse(feed, options, lib, user) {
     const data = options.showPlaylists ? options.playlists : feed;
     lib.renderOther(
       safeCallback + '(' + JSON.stringify(data) + ')',
-      'application/javascript'
+      'application/javascript',
     );
   } else if (options.format == 'links') {
     lib.renderOther(
@@ -164,7 +164,7 @@ function renderResponse(feed, options, lib, user) {
           return config.translateEidToUrl((p || {}).eId);
         })
         .join('\n'),
-      'text/text'
+      'text/text',
     );
   } else if (options.showPlaylists && options.format == 'json') {
     lib.renderJson(options.playlists);
@@ -176,7 +176,7 @@ function renderResponse(feed, options, lib, user) {
     lib.renderPage(
       user,
       null /*sidebarHtml*/,
-      generateMixpanelCode(options) + feed
+      generateMixpanelCode(options) + feed,
     );
 }
 
@@ -187,7 +187,7 @@ async function renderUserLibrary(lib, user) {
 
   options.pageUrl = options.pageUrl.replace(
     '/' + user.handle,
-    '/u/' + user._id
+    '/u/' + user._id,
   );
 
   options.uid = '' + user._id;

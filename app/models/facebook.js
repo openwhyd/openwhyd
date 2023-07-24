@@ -52,7 +52,7 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
             if (json && json.error)
               console.log(
                 'facebookModel.graphApiRequest => ERROR:',
-                json.error
+                json.error,
               );
             //var results = (json || {}).data || [];
             handler(json);
@@ -60,7 +60,7 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
             handler();
           }
         });
-      }
+      },
     )
     .on('error', function (err) {
       console.log('[ERR] facebook.graphApiRequest ', err);

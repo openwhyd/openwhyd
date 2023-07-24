@@ -50,7 +50,7 @@ window.Whyd.tracking =
         document,
         'script',
         '//www.google-analytics.com/analytics.js',
-        'ga'
+        'ga',
       );
       ga('create', 'UA-83857066-1', /*'auto',*/ { alwaysSendReferrer: true });
       var electron = navigator.userAgent.match(/openwhyd-electron\/[^ ]*/);

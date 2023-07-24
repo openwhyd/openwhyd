@@ -238,7 +238,7 @@ exports.fetchAll = function (handler) {
         processUsers(array);
         handler(array);
       });
-    }
+    },
   );
 };
 
@@ -314,7 +314,7 @@ exports.updateAndFetch = function (criteria, update, opts, cb) {
         if (user) mongodb.cacheUser(user);
         cb && cb(err || err2, user);
       });
-    }
+    },
   );
 };
 
@@ -326,7 +326,7 @@ exports.update = function (uid, update, handler) {
     null,
     function (err, user) {
       handler && handler(user);
-    }
+    },
   );
 };
 
@@ -364,7 +364,7 @@ exports.save = function (pUser, handler) {
         mongodb.cacheUser(user);
         if (handler) handler(user);
       });
-    }
+    },
   );
 };
 
@@ -384,7 +384,7 @@ exports.delete = function (criteria, handler) {
             console.log(
               'deleting user playlists',
               user._id + '_' + pl.id,
-              pl.name
+              pl.name,
             );
             // @ts-ignore
             searchModel.deletePlaylist(user._id, pl.id, next);
@@ -411,21 +411,21 @@ exports.delete = function (criteria, handler) {
 exports.fetchEmail = function (email, callback) {
   mongodb.collections['email'].findOne(
     { _id: emailModel.normalize(email) },
-    callback
+    callback,
   );
 };
 
 exports.deleteEmails = function (emailArray, callback) {
   mongodb.collections['email'].deleteMany(
     { _id: { $in: emailArray } },
-    callback
+    callback,
   );
 };
 
 exports.storeEmail = function (email) {
   mongodb.collections['email'].save(
     { _id: emailModel.normalize(email), date: new Date() },
-    { w: 0 }
+    { w: 0 },
   );
 };
 
@@ -436,7 +436,7 @@ exports.fetchInvite = function (inviteCode, handler) {
     { _id: ObjectId(inviteCode) },
     function (err, user) {
       handler(user);
-    }
+    },
   );
 };
 
@@ -445,7 +445,7 @@ exports.fetchInviteByEmail = function (email, handler) {
     { email: emailModel.normalize(email) },
     function (err, user) {
       handler(user);
-    }
+    },
   );
 };
 
@@ -478,11 +478,11 @@ function insertInvite(obj, handler) {
             { _id: obj.email },
             function () {
               if (handler) handler(user);
-            }
+            },
           );
         else if (handler) handler(user);
       });
-    }
+    },
   );
 }
 
@@ -513,7 +513,7 @@ exports.removeInviteByEmail = function (emailList, handler) {
     function (err) {
       console.log(err || 'removed invites ' + emailList);
       if (handler) handler({ emailList: emailList });
-    }
+    },
   );
 };
 
@@ -564,7 +564,7 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
         if (handler) handler(found);
         if (upd.name) {
           console.log(
-            'updating playlist name in index and corresponding tracks...'
+            'updating playlist name in index and corresponding tracks...',
           );
           // @ts-ignore
           searchModel.indexPlaylist(uId, plId, upd.name);
@@ -616,7 +616,7 @@ exports.deletePlaylist = function (uId, plId, handler) {
       exports.save(user, function () {
         console.log(
           'deleted playlist (and updated corresponding tracks):',
-          plId
+          plId,
         );
         // @ts-ignore
         searchModel.deletePlaylist(uId, plId);
@@ -663,7 +663,7 @@ exports.incrementNotificationCounter = function (uId, handler) {
     function (err, item) {
       if (err) console.error(err);
       handler && handler(err ? { error: err } : item);
-    }
+    },
   );
 };
 
@@ -686,14 +686,14 @@ exports.setPref = function (uId, pref, handler) {
       var now = new Date().getTime();
       cleanPref['pref.prevEN'] = msToDigestTimestamp(now);
       cleanPref['pref.nextEN'] = msToDigestTimestamp(
-        now + daysToMillisecs(emailFreq)
+        now + daysToMillisecs(emailFreq),
       );
       exports.update(uId, { $set: cleanPref }, handler);
     } else
       exports.update(
         uId,
         { $set: cleanPref, $unset: { 'pref.prevEN': 1, 'pref.nextEN': 1 } },
-        handler
+        handler,
       );
   }
 };
@@ -733,9 +733,9 @@ exports.setApTok = function (uId, _apTok, cb) {
       mongodb.collections['user'].updateOne(
         { _id: ObjectId('' + uId) },
         { $set: { apTok: [newApTok] } },
-        handleResult
+        handleResult,
       );
-    }
+    },
   );
 };
 
@@ -745,7 +745,7 @@ exports.clearApTok = function (uId, cb) {
     { $unset: { apTok: '' } },
     function (err, success) {
       cb && cb(err || !success ? { error: err } : { ok: success });
-    }
+    },
   );
 };
 
@@ -758,7 +758,7 @@ exports.setFbId = function (uId, fbId, cb, fbTok) {
           '[WARNING] This Facebook account is already associated to another user:',
           uId,
           fbId,
-          user._id
+          user._id,
         );
         cb &&
           cb({
@@ -789,7 +789,7 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
       { $unset: { twId: '', twTok: '', twSec: '' } },
       function (err, success) {
         cb && cb(err || !success ? { error: err } : { ok: success });
-      }
+      },
     );
   else if (!twTok || !twSec) return cb && cb({ error: 'invalid parameters' });
   else
@@ -881,11 +881,11 @@ exports.renameUser = function (uid, name, callback) {
                   if (err) console.log('err', err);
                   //console.log("-> updated to ", result);
                   next();
-                }
+                },
               );
-            }
+            },
           );
-        }
+        },
       );
     })();
 };
@@ -908,7 +908,7 @@ exports.fetchUserFields = function (subList, attrToCopy, cb) {
             if (subList[i] && uidSet[subList[i].id])
               subList[i][attrToCopy[j]] = uidSet[subList[i].id][attrToCopy[j]];
         cb(subList);
-      }
+      },
     );
   } else cb();
 };
@@ -937,10 +937,10 @@ exports.fetchPlaylists = function (user, params, cb) {
             p.url = '/u/' + uId + '/playlist/' + p.id;
             p.nbTracks = plCount['' + p.id] || 0;
             return p;
-          })
+          }),
         );
       });
-    }
+    },
   );
   /*
 	function handlePlaylist(playlist, countNext) {

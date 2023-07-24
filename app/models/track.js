@@ -67,7 +67,7 @@ function save(track, cb, replace) {
       //console.log("=> saved hot track:", result);
       if (error) console.error('track.save() db error:', error);
       if (cb) cb(result);
-    }
+    },
   );
 }
 
@@ -107,7 +107,7 @@ exports.fetchTrackByEid = function (eId, cb) {
         function (err, track) {
           if (track && track.eId.split('#')[0] != eidPrefix) track = null;
           cb(err ? { error: err } : track);
-        }
+        },
       );
     else cb(err ? { error: err } : track);
   });
@@ -151,7 +151,7 @@ function fetchPostsByEid(eId, cb) {
       cursor.toArray(function (err, posts) {
         cb(posts);
       });
-    }
+    },
   );
 }
 
@@ -196,7 +196,7 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
       console.log(
         'storing additional fields',
         Object.keys(additionalFields),
-        '...'
+        '...',
       );
       for (let f in additionalFields) track[f] = additionalFields[f];
     }
@@ -222,17 +222,17 @@ exports.snapshotTrackScores = function (cb) {
             console.log(`snapshotTrackScores ${i + 1} / ${count}`);
           } else if (count % 1000 === 0) {
             console.log(
-              `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`
+              `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`,
             );
           }
           ++i;
           mongodb.collections['track'].updateOne(
             { _id: track._id },
             { $set: { prev: track.score } },
-            next
+            next,
           );
         }
-      }
+      },
     );
   });
 };
@@ -251,7 +251,7 @@ exports.refreshTrackCollection = function (cb) {
           console.log('refreshHotTracksCache', ++i, '/', count);
           exports.updateByEid(track.eId, next, true);
         }
-      }
+      },
     );
   });
 };

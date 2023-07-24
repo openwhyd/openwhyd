@@ -68,7 +68,7 @@ exports.parseHtmlDom = function (html, cb) {
         console.error(error);
         cb({ error: error });
       } else cb(exports.parseDom(dom));
-    })
+    }),
   );
   parser.parseComplete(html);
 };

@@ -27,7 +27,7 @@ function renderMarkdownLine(mdLine) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
     .replace(
       /^<p>- \[ \] (.*)/g,
-      '<div class="consent-box"><input class="checkbox" type="checkbox"><p>$1</div>'
+      '<div class="consent-box"><input class="checkbox" type="checkbox"><p>$1</div>',
     )
     .replace(/^<p>- (.*)/g, '<li>$1</li>')
     .replace(/^<p>#+ (.*)/g, '<h1>$1</h1>')
@@ -44,14 +44,14 @@ const promisedTemplatePerLang = Object.entries(filePerLang).reduce(
           .split('\n')
           .filter(removeEmptyLine)
           .map(renderMarkdownLine)
-          .join('\n')
+          .join('\n'),
       );
     return {
       ...acc,
       [langId]: promisedHtml,
     };
   },
-  {}
+  {},
 );
 
 async function renderPageContent(params) {
@@ -137,10 +137,10 @@ exports.controller = async function (request, getParams, response) {
             'user id',
             p.loggedUser.id,
             'consented to gdpr notice =>',
-            user.consent
+            user.consent,
           );
         render(err ? { error: err } : p); // should redirect to p.redirect, or display error
-      }
+      },
     );
   } else {
     (p.css = p.css || []).push('consent.css');

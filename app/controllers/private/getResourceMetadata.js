@@ -33,7 +33,7 @@ exports.handleRequest = function (request, reqParams, response) {
                 desc: user.bio,
                 key: user.handle,
                 url: url,
-              }
+              },
         );
       });
     } else if (url.startsWith('/user/')) {
@@ -49,7 +49,7 @@ exports.handleRequest = function (request, reqParams, response) {
                 desc: user.bio,
                 key: user.handle,
                 url: url,
-              }
+              },
         );
       });
     }

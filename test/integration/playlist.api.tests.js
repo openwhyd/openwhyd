@@ -24,7 +24,7 @@ describe(`playlist api`, function () {
     await context.serverProcess?.exit();
   });
   beforeEach(
-    async () => ({ jar } = await util.promisify(api.loginAs)(ADMIN_USER))
+    async () => ({ jar } = await util.promisify(api.loginAs)(ADMIN_USER)),
     /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.
      * May be initdb_testing.js is not up to date with the current schema?
      */
@@ -43,8 +43,8 @@ describe(`playlist api`, function () {
           url: `${URL_PREFIX}/api/playlist`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
 
     const { id, name } = JSON.parse(res.body);

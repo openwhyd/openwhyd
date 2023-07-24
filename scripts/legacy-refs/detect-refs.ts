@@ -8,7 +8,7 @@
 import * as tsmorph from 'ts-morph';
 
 const isNamedFunction = (
-  node: tsmorph.Node
+  node: tsmorph.Node,
 ): node is tsmorph.FunctionDeclaration =>
   node instanceof tsmorph.FunctionDeclaration; // only works if the `function` keyword is used
 
@@ -16,11 +16,11 @@ type NamedNodeWithReferences = tsmorph.ReferenceFindableNode &
   tsmorph.Node & { getName(): string };
 
 const findAssignedFunction = (
-  ref: tsmorph.Node
+  ref: tsmorph.Node,
 ): NamedNodeWithReferences | undefined => {
   const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
   const potentialAssignment = anonymousFct?.getFirstAncestorByKind(
-    tsmorph.SyntaxKind.BinaryExpression
+    tsmorph.SyntaxKind.BinaryExpression,
   );
   const operator = potentialAssignment?.getOperatorToken();
   const potentialIdentifier = potentialAssignment?.getLeft();
@@ -34,11 +34,11 @@ const findAssignedFunction = (
 };
 
 const findPropertyAssignedFunction = (
-  ref: tsmorph.Node
+  ref: tsmorph.Node,
 ): NamedNodeWithReferences | undefined => {
   const anonymousFct = ref.getFirstAncestor(tsmorph.Node.isBodied);
   const potentialAssignment = anonymousFct?.getFirstAncestorByKind(
-    tsmorph.SyntaxKind.PropertyAssignment
+    tsmorph.SyntaxKind.PropertyAssignment,
   );
   if (
     tsmorph.Node.isReferenceFindable<tsmorph.Node>(potentialAssignment) &&
@@ -49,7 +49,7 @@ const findPropertyAssignedFunction = (
 };
 
 const findParentFunction = (
-  ref: tsmorph.Node
+  ref: tsmorph.Node,
 ): NamedNodeWithReferences | undefined =>
   ref.getFirstAncestor(isNamedFunction) ??
   findAssignedFunction(ref) ??

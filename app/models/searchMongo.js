@@ -31,7 +31,7 @@ exports.topicNameSearch = function (
   mongodbModel,
   timeoutDuration,
   maxCycles,
-  limit
+  limit,
 ) {
   function mongodb(collection, cb) {
     cb(null, mongodbModel.collections[collection]);
@@ -60,7 +60,7 @@ exports.topicNameSearch = function (
             ' : ' +
             item.name +
             ', ' +
-            item.img
+            item.img,
         );
       });
 
@@ -88,7 +88,7 @@ exports.topicNameSearch = function (
                     ') ' +
                     item._id +
                     ' : ' +
-                    item.name /* + ", " + item.t*/
+                    item.name /* + ", " + item.t*/,
                 );
                 exactResults.push(item);
                 --remaining;
@@ -97,7 +97,7 @@ exports.topicNameSearch = function (
             };
 
             cursor.next(handleNextResult); // start gathering results
-          }
+          },
         );
 
         query = { n: words[0] /*{"$regex":q}*/ };
@@ -117,7 +117,7 @@ exports.topicNameSearch = function (
                     ') ' +
                     item._id +
                     ' : ' +
-                    item.name /* + ", " + item.t*/
+                    item.name /* + ", " + item.t*/,
                 );
                 quickResults.push(item);
                 --remaining;
@@ -126,7 +126,7 @@ exports.topicNameSearch = function (
             };
 
             cursor.next(handleNextResult); // start gathering results
-          }
+          },
         );
 
         var renderer = function () {

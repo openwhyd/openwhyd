@@ -49,20 +49,20 @@ var publicActions = {
                   sub
                     ? addUserInfo(
                         sub.subscriptions,
-                        mySub ? mySub.subscriptions : []
+                        mySub ? mySub.subscriptions : [],
                       )
-                    : null
+                    : null,
                 );
-              }
+              },
             );
           else
             cb(
               sub
                 ? addUserInfo(
                     sub.subscriptions,
-                    p.loggedUser ? sub.subscriptions : []
+                    p.loggedUser ? sub.subscriptions : [],
                   )
-                : null
+                : null,
             );
         });
       });
@@ -80,20 +80,20 @@ var publicActions = {
                   sub
                     ? addUserInfo(
                         sub.subscribers,
-                        mySub ? mySub.subscriptions : []
+                        mySub ? mySub.subscriptions : [],
                       )
-                    : null
+                    : null,
                 );
-              }
+              },
             );
           else
             cb(
               sub
                 ? addUserInfo(
                     sub.subscribers,
-                    p.loggedUser ? sub.subscriptions : []
+                    p.loggedUser ? sub.subscriptions : [],
                   )
-                : null
+                : null,
             );
         });
       });
@@ -159,7 +159,7 @@ var fieldSetters = {
       function actualUpdate(newFilename) {
         defaultSetter('cvrImg')(
           { _id: p._id, cvrImg: newFilename || p.cvrImg },
-          cb
+          cb,
         );
       }
       if (p.cvrImg.indexOf('blank') == -1)
@@ -392,10 +392,10 @@ exports.controller = function (request, reqParams, response) {
     if (!r || r.error)
       console.log(
         'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
-        (r || {}).error || r
+        (r || {}).error || r,
       );
     response.renderJSON(
-      reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r
+      reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r,
     );
   }
 
@@ -403,7 +403,7 @@ exports.controller = function (request, reqParams, response) {
   handleRequest(
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,
-    localRendering
+    localRendering,
   );
 };
 

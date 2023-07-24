@@ -17,7 +17,7 @@ exports.handleRequest = function (request, reqParams, response) {
 
   function renderJSON(json) {
     response[reqParams.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
-      json
+      json,
     );
   }
 
@@ -50,7 +50,7 @@ exports.handleRequest = function (request, reqParams, response) {
         function (res) {
           renderJSON(res);
         },
-        reqParams.fbAccessToken
+        reqParams.fbAccessToken,
       );
     } else {
       // actual facebook login
@@ -74,7 +74,7 @@ exports.handleRequest = function (request, reqParams, response) {
             request,
             dbUser,
             response,
-            /*ignorePassword:*/ true
+            /*ignorePassword:*/ true,
           );
         } else {
           // user not found => new user or legacy user (not yet connected to fb)

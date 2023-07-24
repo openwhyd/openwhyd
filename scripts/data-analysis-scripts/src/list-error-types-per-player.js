@@ -28,8 +28,8 @@ function reduce(errType, vals) {
   // sum counts for each player (and total)
   vals.forEach((val) =>
     Object.keys(val).forEach(
-      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key])
-    )
+      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key]),
+    ),
   );
   return finalVal;
 }
@@ -59,7 +59,7 @@ var opts = {
 
   var keyVals = sorted.reduce(
     (results, { _id, value }) => ({ ...results, [_id]: value }),
-    {}
+    {},
   );
 
   console.log(JSON.stringify(keyVals, null, 2));

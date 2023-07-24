@@ -65,7 +65,7 @@ exports.renderPosts = function (posts, loggedUser, cb) {
       loggedUser: loggedUser,
       displayPlaylistName: true,
     },
-    cb
+    cb,
   );
 };
 
@@ -93,7 +93,7 @@ exports.renderSearchPage = function (results, reqParams, cb) {
         function (postsHtml) {
           results.postsHtml = postsHtml;
           render();
-        }
+        },
       );
   } else render();
 };

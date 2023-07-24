@@ -38,7 +38,7 @@ function makeBookmarklet({ pageDetectors }: { pageDetectors: PageDetector[] }) {
             // Note: previously, the condition above was track && track.id, for some reason 🤷‍♂️
             else processNext();
           },
-          element
+          element,
         );
       })();
     }
@@ -98,7 +98,8 @@ function makeBookmarklet({ pageDetectors }: { pageDetectors: PageDetector[] }) {
         const url =
           elt &&
           normalize(
-            elt.eId || unwrapFacebookLink(elt.href || elt.src || elt.data || '')
+            elt.eId ||
+              unwrapFacebookLink(elt.href || elt.src || elt.data || ''),
           );
         if (!url) return;
         const existingElt = set[url];

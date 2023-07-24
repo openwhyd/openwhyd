@@ -60,7 +60,7 @@ function processFile(file, options, callback) {
           thumbHeight,
           function () {
             if (callback) callback(newPath, thumbWidth, thumbHeight, dims);
-          }
+          },
         );
       };
 

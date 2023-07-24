@@ -25,7 +25,7 @@ const connectToDb = ({ url, dbName }) =>
     mongodb.MongoClient.connect(url, (err, client) => {
       if (err) reject(err);
       else resolve({ db: client.db(dbName), client });
-    })
+    }),
   );
 
 const fetchUserProfile = ({ username }) =>
@@ -33,7 +33,7 @@ const fetchUserProfile = ({ username }) =>
     const url = `https://openwhyd.org/api/user/${username}?format=json`;
     console.log(`fetching profile from ${url} ...`);
     request(url, (err, _, body) =>
-      err ? reject(err) : resolve(JSON.parse(body))
+      err ? reject(err) : resolve(JSON.parse(body)),
     );
   });
 
@@ -49,7 +49,7 @@ const fetchUserData = ({ username }) =>
               ...post,
               _id: ObjectID(post._id),
             })),
-          })
+          }),
     );
   });
 
@@ -60,14 +60,14 @@ const upsertUser = ({ db, user }) =>
       { _id: ObjectID(_id) },
       { $set: { ...userData, pwd: password.md5 } },
       { upsert: true },
-      (err) => (err ? reject(err) : resolve())
+      (err) => (err ? reject(err) : resolve()),
     );
   });
 
 const insertPosts = ({ db, posts }) =>
   new Promise((resolve, reject) => {
     db.collection('post').insertMany(posts, (err) =>
-      err ? reject(err) : resolve()
+      err ? reject(err) : resolve(),
     );
   });
 
@@ -82,8 +82,8 @@ const insertPosts = ({ db, posts }) =>
   // refresh openwhyd's in-memory cache of users, to allow this user to login
   await new Promise((resolve, reject) =>
     request.post('http://localhost:8080/testing/refresh', (err) =>
-      err ? reject(err) : resolve()
-    )
+      err ? reject(err) : resolve(),
+    ),
   );
   client.close();
   console.log(`inserted user => http://localhost:8080/${username}`);

@@ -76,7 +76,7 @@ var fetchDataByType = {
         items = [];
         for (let i in idList) items.push(itemSet['' + idList[i]]);
         cb(items);
-      }
+      },
     );
   },
   user: function (hits, cb) {
@@ -106,7 +106,7 @@ var fetchDataByType = {
     var result = [];
     for (let i in playlists)
       playlists[i].idParts = ('' + (playlists[i]._id || playlists[i].id)).split(
-        '_'
+        '_',
       );
     function next(i) {
       if (i >= playlists.length) return cb(result);
@@ -129,7 +129,7 @@ var fetchDataByType = {
               playlists[i].lastPosts = posts;
               result.push(playlists[i]);
               next(i + 1);
-            }
+            },
           );
         }
       });
@@ -207,7 +207,7 @@ function processPosts(results, params, cb) {
         removeDuplicates(removeEmptyItems(posts))
           .map(mapping)
           .sort(sortByDecreasingScore)
-          .slice(0, params.limit || MAX_IN_ADD_RESULTS)
+          .slice(0, params.limit || MAX_IN_ADD_RESULTS),
       );
     }
     if (params.uid)
@@ -227,7 +227,7 @@ function fetchMyPosts(q, uid, cb) {
       uId: uid,
       limit: MAX_IN_ADD_RESULTS * 2,
     },
-    cb
+    cb,
   );
 }
 
@@ -240,7 +240,7 @@ function fetchTheirPosts(q, uid, cb) {
       limit: MAX_IN_ADD_RESULTS * 2,
       //sort: [/*{_score: "desc"},*/ {_uid:{order: "asc", ignore_unmapped: true}}]
     },
-    cb
+    cb,
   );
 }
 
@@ -303,7 +303,7 @@ exports.controller = function (request, reqParams = {}, response) {
                   },
                 });
               });
-            }
+            },
           );
         });
       });
@@ -342,7 +342,7 @@ exports.controller = function (request, reqParams = {}, response) {
             sorted[followed[u._id] ? 'unshift' : 'push'](u);
           }
           cb({ hits: sorted });
-        }
+        },
       );
     });
     // TODO: boost matches by handle

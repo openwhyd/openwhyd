@@ -54,15 +54,15 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const res = await new Promise((resolve, reject) =>
       request.get(
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const { data: postedTrack } = JSON.parse(res.body);
     assert.equal(postedTrack.name, newName);
@@ -87,8 +87,8 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const postedTrack = JSON.parse(res.body);
     assert.equal(postedTrack.name, name);
@@ -130,15 +130,15 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const res = await new Promise((resolve, reject) =>
       request.get(
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const { data: postedTrack } = JSON.parse(res.body);
     assert.equal(postedTrack.name, name);
@@ -170,8 +170,8 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const postedTrack = JSON.parse(res.body);
     assert.equal(postedTrack.name, name);
@@ -209,15 +209,15 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const res = await new Promise((resolve, reject) =>
       request.get(
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
     const { data: postedTrack } = JSON.parse(res.body);
     assert.equal(postedTrack.name, name);
@@ -249,8 +249,8 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
 
     const postedTrack = JSON.parse(res.body);
@@ -298,8 +298,8 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
 
     const postedTrack = JSON.parse(res.body);
@@ -348,8 +348,8 @@ describe(`post api`, function () {
           url: `${URL_PREFIX}/api/post`,
         },
         (error, response, body) =>
-          error ? reject(error) : resolve({ response, body })
-      )
+          error ? reject(error) : resolve({ response, body }),
+      ),
     );
 
     const postedTrack = JSON.parse(res.body);

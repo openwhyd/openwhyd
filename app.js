@@ -25,7 +25,7 @@ function makeErrorLog(fct, type) {
       type,
       '--',
       new Date().toUTCString(),
-      ...arguments
+      ...arguments,
     );
   };
 }
@@ -135,7 +135,7 @@ function start() {
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       console.log(
-        `[app] rendering server error page ${statusCode} for ${req.method} ${req.path}`
+        `[app] rendering server error page ${statusCode} for ${req.method} ${req.path}`,
       );
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
@@ -146,7 +146,7 @@ function start() {
             : req.accepts('json')
             ? 'json'
             : 'text'),
-        req.getUser()
+        req.getUser(),
       );
     },
     uploadSettings: {
@@ -192,11 +192,11 @@ async function main() {
     require('colors'); // populates .grey, .cyan, etc... on strings, for logging.js and MyController.js
     console.warn = makeErrorLog(
       makeColorConsole(consoleError, 'yellow'),
-      'Warning'
+      'Warning',
     );
     console.error = makeErrorLog(
       makeColorConsole(consoleError, 'red'),
-      'Error'
+      'Error',
     );
   } else {
     process.appParams.color = false;

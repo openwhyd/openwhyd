@@ -24,7 +24,7 @@ function getMp3s() {
           path.normalize(
             mp3.charAt(0) === '/'
               ? this.host + '/' + mp3
-              : this.host + '/' + this.path + '/' + mp3
+              : this.host + '/' + this.path + '/' + mp3,
           );
     }
     mp3s[i] = mp3;
@@ -59,7 +59,7 @@ exports.controller = function (request, reqParams, response) {
         if (embeds[i].name)
           embeds[i].distance = levenshteinenator(
             normalize(embeds[i].name),
-            title
+            title,
           );
       embeds.sort(function (a, b) {
         return a.distance - b.distance;
@@ -148,7 +148,7 @@ var levenshteinenator = function (a, b) {
       r[i][j] = minimator(
         r[i - 1][j] + 1,
         r[i][j - 1] + 1,
-        r[i - 1][j - 1] + cost
+        r[i - 1][j - 1] + cost,
       );
     }
   }

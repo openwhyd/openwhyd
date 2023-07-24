@@ -77,7 +77,7 @@
         data[i] = '(player)';
     parent.window.postMessage(
       JSON.stringify({ code: code, data: data }),
-      ORIGIN
+      ORIGIN,
     );
   }
 

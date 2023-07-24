@@ -21,7 +21,7 @@ http.ServerResponse.prototype.legacyRender = function (
   // @ts-ignore
   data,
   headers = {},
-  statusCode
+  statusCode,
 ) {
   const isString = typeof view === 'string';
   if (!headers['content-type']) {
@@ -39,7 +39,7 @@ http.ServerResponse.prototype.legacyRender = function (
 function noCache(req, res, next) {
   res.set(
     'Cache-Control',
-    'max-age=0,no-cache,no-store,post-check=0,pre-check=0'
+    'max-age=0,no-cache,no-store,post-check=0,pre-check=0',
   );
   next();
 }
@@ -79,7 +79,9 @@ const makeStatsUpdater = () =>
       const reqId = `${startDate.toISOString()} ${req.method} ${req.path}`;
       // @ts-ignore
       const duration = Date.now() - startDate;
-      console.log(`◀ ${reqId} responds ${res.statusCode} after ${duration} ms`);
+      console.log(
+        `◀ ${reqId} responds ${res.statusCode} after ${duration} ms`,
+      );
       appendSlowQueryToAccessLog({
         startDate,
         req,
@@ -147,7 +149,7 @@ exports.Application = class Application {
       app,
       this._appDir,
       this._routeFile,
-      this._features
+      this._features,
     );
     app.use(makeNotFound(this._errorHandler));
     return (this._expressApp = app);
@@ -191,7 +193,7 @@ function parseExpressRoute({ pattern }) {
   const path = (pathParams || []).reduce(
     (path, param) =>
       path.replace(param, `:${param.substring(1, param.length - 1)}`),
-    legacyPath
+    legacyPath,
   );
   return { method, path };
 }

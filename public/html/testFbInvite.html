@@ -58,7 +58,7 @@
             message: 'Show me your interests on Openwhyd!',
             to: user_id,
           },
-          requestCallback
+          requestCallback,
         );
       }
 
@@ -68,7 +68,7 @@
             method: 'apprequests',
             message: 'Show me your interests on Openwhyd!',
           },
-          requestCallback
+          requestCallback,
         );
       }
 
@@ -82,7 +82,7 @@
             window.user.name + ' invited you to join Openwhyd',
             function (params) {
               console.log('sent!');
-            }
+            },
           );
         else if (response && response.request && response.to)
           invitedToConversation(
@@ -91,7 +91,7 @@
             window.user.name + ' invited you to join Openwhyd',
             function (params) {
               console.log('sent!');
-            }
+            },
           );
         else console.log('invalid response');
       }

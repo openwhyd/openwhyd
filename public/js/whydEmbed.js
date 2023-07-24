@@ -163,7 +163,7 @@ var DEBUG = false, // for soundmanager
       (params.path.indexOf('//') + 1 ? '' : urlPrefix) +
         params.path +
         '?callback=' +
-        cbName
+        cbName,
     );
   }
 
@@ -212,7 +212,7 @@ var DEBUG = false, // for soundmanager
           },
         });
         soundManager.beginDelayedInit();
-      }
+      },
     );
     cb();
   }
