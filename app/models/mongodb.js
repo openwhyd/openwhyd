@@ -251,7 +251,6 @@ exports.init = function (readyCallback) {
   );
 
   var options = {
-    native_parser: true,
     useNewUrlParser: true,
     //strict: false,
     //safe: false,

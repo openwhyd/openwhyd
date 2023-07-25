@@ -2,7 +2,6 @@ const mongodb = require('mongodb');
 const Progress = require('./Progress');
 
 var MONGO_OPTIONS = {
-  native_parser: true,
   useNewUrlParser: true,
   //strict: false,
   //safe: false,
