@@ -232,7 +232,6 @@ exports.fetchAll = function (handler) {
   mongodb.collections['user'].find(
     {},
     { sort: [['_id', 'desc']] },
-    // @ts-ignore
     function (err, cursor) {
       cursor.toArray(function (err, array) {
         processUsers(array);
@@ -295,7 +294,6 @@ exports.fetchByEmail = function (email, handler) {
 };
 
 exports.fetchInvitedUsers = function (uid, handler) {
-  // @ts-ignore
   mongodb.collections['user'].find({ iBy: '' + uid }, function (err, cursor) {
     if (err) console.error(err);
     cursor.toArray(function (err, array) {
@@ -428,7 +426,6 @@ exports.deleteEmails = function (emailArray, callback) {
 };
 
 exports.storeEmail = function (email) {
-  // @ts-ignore
   mongodb.collections['email'].save(
     { _id: emailModel.normalize(email), date: new Date() },
     { w: 0 },
@@ -473,7 +470,6 @@ function insertInvite(obj, handler) {
   mongodb.collections['invite'].updateMany(
     criteria,
     { $set: obj },
-    // @ts-ignore
     { upsert: true, multi: true },
     function (err) {
       if (err) console.log(err);
@@ -735,7 +731,6 @@ exports.setApTok = function (uId, _apTok, cb) {
   mongodb.collections['user'].updateMany(
     { 'apTok.tok': apTok },
     { $unset: { apTok: '' } },
-    // @ts-ignore
     { multi: 1 },
     function () {
       mongodb.collections['user'].updateOne(
@@ -930,7 +925,6 @@ exports.fetchPlaylists = function (user, params, cb) {
   var uId = (user || {}).id;
   mongodb.collections['post'].aggregate(
     [{ $match: { uId: uId } }, { $group: { _id: '$pl.id', c: { $sum: 1 } } }],
-    // @ts-ignore
     function (err, cursor) {
       if (err) console.error(err);
       cursor.toArray(function (err, counts) {
