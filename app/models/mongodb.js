@@ -31,6 +31,7 @@ var USER_CACHE_FIELDS = {
   lastFm: 1, // needed by mainTemplate
 };
 
+/** @type Record<string, import("mongodb").Collection> */
 exports.collections = {};
 
 /** @deprecated */
@@ -250,7 +251,6 @@ exports.init = function (readyCallback) {
   );
 
   var options = {
-    native_parser: true,
     useNewUrlParser: true,
     //strict: false,
     //safe: false,

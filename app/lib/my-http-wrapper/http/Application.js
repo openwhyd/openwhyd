@@ -18,7 +18,6 @@ const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '500', 10);
 // @ts-ignore
 http.ServerResponse.prototype.legacyRender = function (
   view,
-  // @ts-ignore
   data,
   headers = {},
   statusCode,
@@ -35,7 +34,6 @@ http.ServerResponse.prototype.legacyRender = function (
 
 // Middlewares
 
-// @ts-ignore
 function noCache(req, res, next) {
   res.set(
     'Cache-Control',
@@ -45,12 +43,9 @@ function noCache(req, res, next) {
 }
 
 const makeBodyParser = (uploadSettings) =>
-  // @ts-ignore
   function bodyParser(req, res, callback) {
     var form = new formidable.IncomingForm();
-    // @ts-ignore
     form.uploadDir = uploadSettings.uploadDir;
-    // @ts-ignore
     form.keepExtensions = uploadSettings.keepExtensions;
     form.parse(req, function (err, postParams, files) {
       if (err) console.error('formidable parsing error:', err);
@@ -86,7 +81,6 @@ const makeStatsUpdater = () =>
         startDate,
         req,
         userId,
-        // @ts-ignore
         userAgent,
       });
     });
@@ -94,7 +88,6 @@ const makeStatsUpdater = () =>
     next();
   };
 
-// @ts-ignore
 function defaultErrorHandler(req, reqParams, res, statusCode) {
   res.sendStatus(statusCode);
 }
@@ -220,8 +213,7 @@ function attachLegacyRoute({
 
 function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
   loadRoutesFromFile(routeFile).forEach(({ pattern, name }) => {
-    // @ts-ignore
-    const { method, path } = parseExpressRoute({ pattern, name });
+    const { method, path } = parseExpressRoute({ pattern });
     attachLegacyRoute({
       expressApp,
       method,

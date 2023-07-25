@@ -263,11 +263,13 @@ exports.fetchMulti = async function (q, options, handler) {
  * @type {(uid : string, handler : (user : UserDocument) => void) => void }
  */
 exports.fetchByUid = exports.model = function (uid, handler) {
-  if (typeof uid == 'string') uid = ObjectId(uid);
-  fetch({ _id: uid }, function (err, user) {
-    if (err) console.error(err);
-    handler(user);
-  });
+  fetch(
+    { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
+    function (err, user) {
+      if (err) console.error(err);
+      handler(user);
+    },
+  );
 };
 
 exports.fetchByHandle = function (handle, handler) {
