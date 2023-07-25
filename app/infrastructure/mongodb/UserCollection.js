@@ -18,11 +18,12 @@ exports.userCollection = {
       .findOne({ _id: mongodb.ObjectId(userId) })
       .then(checkUserIsValid)
       .then(mapToDomainUser),
-  insertPlaylist: (userId, playlist) =>
-    mongodb.collections['user'].updateOne(
+  insertPlaylist: async (userId, playlist) => {
+    await mongodb.collections['user'].updateOne(
       { _id: mongodb.ObjectId(userId) },
       { $push: { pl: playlist } },
-    ),
+    );
+  },
 };
 
 /**
