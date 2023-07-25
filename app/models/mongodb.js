@@ -31,6 +31,7 @@ var USER_CACHE_FIELDS = {
   lastFm: 1, // needed by mainTemplate
 };
 
+/** @type Record<string, import("mongodb").Collection> */
 exports.collections = {};
 
 /** @deprecated */
