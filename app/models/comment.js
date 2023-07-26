@@ -158,8 +158,11 @@ exports.insert = function (p, cb) {
     else
       getCol().insertOne(
         comment,
-        combineInsertedResult(function (res) {
-          cb && cb(res);
+        combineInsertedResult(async function (res) {
+          const commentOrError = res.insertedId
+            ? await getCol().findOne({ _id: res.insertedId })
+            : res;
+          cb && cb(commentOrError);
           if (res && !res.error) notifyUsers(comment);
         }),
       );
