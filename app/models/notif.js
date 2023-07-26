@@ -135,9 +135,13 @@ function insertNotif(to, p, cb) {
   db['notif'].insertOne(
     p,
     { /*w:0*/ safe: true },
-    logErrors(function (res) {
+    logErrors(async function (res) {
       invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res && res);
+      cb &&
+        cb(
+          res?.insertedId &&
+            (await db['notif'].findOne({ _id: res.insertedId })),
+        );
     }),
   );
 }
