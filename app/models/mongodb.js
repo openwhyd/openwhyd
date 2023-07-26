@@ -252,14 +252,11 @@ exports.init = function (readyCallback) {
     `[db] Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`,
   );
 
-  var options = {
-    useNewUrlParser: true,
-    //strict: false,
-    //safe: false,
+  /** @type mongodb.MongoClientOptions */
+  const options = {
     writeConcern: {
       w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
     },
-    useUnifiedTopology: true,
   };
 
   mongodb.MongoClient.connect(url, options, function (err, client) {
