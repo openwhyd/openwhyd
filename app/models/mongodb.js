@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * mongodb model
  * wraps a accessor to collections of a mongodb database
@@ -264,10 +266,6 @@ exports.init = function (readyCallback) {
     if (err) throw err;
 
     exports._db = client.db(dbName);
-
-    exports._db.addListener('error', function (e) {
-      console.log('[db] MongoDB model async error: ', e);
-    });
 
     console.log('[db] Successfully connected to ' + url);
     readyCallback.call(module.exports, null, exports._db);
