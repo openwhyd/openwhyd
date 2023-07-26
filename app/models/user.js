@@ -228,17 +228,13 @@ function fetch(q, handler) {
   });
 }
 
-exports.fetchAll = function (handler) {
-  mongodb.collections['user'].find(
-    {},
-    { sort: [['_id', 'desc']] },
-    function (err, cursor) {
-      cursor.toArray(function (err, array) {
-        processUsers(array);
-        handler(array);
-      });
-    },
-  );
+exports.fetchAll = async function (handler) {
+  const array = await mongodb.collections['user']
+    .find({})
+    .sort([['_id', 'desc']])
+    .toArray();
+  processUsers(array);
+  handler(array);
 };
 
 exports.fetchMulti = async function (q, options, handler) {
@@ -293,15 +289,13 @@ exports.fetchByEmail = function (email, handler) {
   });
 };
 
-exports.fetchInvitedUsers = function (uid, handler) {
-  mongodb.collections['user'].find({ iBy: '' + uid }, function (err, cursor) {
-    if (err) console.error(err);
-    cursor.toArray(function (err, array) {
-      if (err) console.error(err);
-      processUsers(array);
-      handler(array);
-    });
-  });
+exports.fetchInvitedUsers = async function (uid, handler) {
+  const array = await mongodb.collections['user']
+    .find({ iBy: '' + uid })
+    .toArray()
+    .catch((err) => console.error(err));
+  processUsers(array);
+  handler(array);
 };
 
 exports.updateAndFetch = function (criteria, update, opts, cb) {
@@ -426,9 +420,10 @@ exports.deleteEmails = function (emailArray, callback) {
 };
 
 exports.storeEmail = function (email) {
-  mongodb.collections['email'].save(
-    { _id: emailModel.normalize(email), date: new Date() },
-    { w: 0 },
+  mongodb.collections['email'].updateOne(
+    { _id: emailModel.normalize(email) },
+    { date: new Date() },
+    { upsert: true },
   );
 };
 
@@ -470,7 +465,7 @@ function insertInvite(obj, handler) {
   mongodb.collections['invite'].updateMany(
     criteria,
     { $set: obj },
-    { upsert: true, multi: true },
+    { upsert: true },
     function (err) {
       if (err) console.log(err);
       mongodb.collections['invite'].findOne(criteria, function (err, user) {
@@ -731,7 +726,6 @@ exports.setApTok = function (uId, _apTok, cb) {
   mongodb.collections['user'].updateMany(
     { 'apTok.tok': apTok },
     { $unset: { apTok: '' } },
-    { multi: 1 },
     function () {
       mongodb.collections['user'].updateOne(
         { _id: ObjectId('' + uId) },
@@ -920,30 +914,26 @@ exports.fetchUserBios = function (subList, cb) {
   exports.fetchUserFields(subList, ['name', 'bio'], cb);
 };
 
-exports.fetchPlaylists = function (user, params, cb) {
+exports.fetchPlaylists = async function (user, params, cb) {
   var pl = (user || {}).pl || [];
   var uId = (user || {}).id;
-  mongodb.collections['post'].aggregate(
-    [{ $match: { uId: uId } }, { $group: { _id: '$pl.id', c: { $sum: 1 } } }],
-    function (err, cursor) {
-      if (err) console.error(err);
-      cursor.toArray(function (err, counts) {
-        if (err) console.error(err);
-        var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
-        counts.map(function (counter) {
-          // necessary to make a sum, because playlist ids can be both stored as int and string
-          plCount['' + counter._id] =
-            (plCount['' + counter._id] || 0) + counter.c;
-        });
-        cb(
-          pl.reverse().map(function (p) {
-            p.url = '/u/' + uId + '/playlist/' + p.id;
-            p.nbTracks = plCount['' + p.id] || 0;
-            return p;
-          }),
-        );
-      });
-    },
+  const counts = await mongodb.collections['post']
+    .aggregate([
+      { $match: { uId: uId } },
+      { $group: { _id: '$pl.id', c: { $sum: 1 } } },
+    ])
+    .toArray();
+  var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
+  counts.map(function (counter) {
+    // necessary to make a sum, because playlist ids can be both stored as int and string
+    plCount['' + counter._id] = (plCount['' + counter._id] || 0) + counter.c;
+  });
+  cb(
+    pl.reverse().map(function (p) {
+      p.url = '/u/' + uId + '/playlist/' + p.id;
+      p.nbTracks = plCount['' + p.id] || 0;
+      return p;
+    }),
   );
   /*
 	function handlePlaylist(playlist, countNext) {
