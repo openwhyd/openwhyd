@@ -52,8 +52,8 @@ exports.ObjectId = function (v) {
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
-  var t = Math.round(date.getTime() / 1000); // turn into seconds
-  t = t.toString(16); // translate into hexadecimal representation
+  const seconds = Math.round(date.getTime() / 1000);
+  let t = seconds.toString(16); // translate into hexadecimal representation
   t = t + '0000000000000000'; // add null values for 8 other bytes
   while (
     t.length <
