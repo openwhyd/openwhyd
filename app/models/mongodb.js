@@ -170,10 +170,8 @@ exports.cacheCollections = function (callback) {
           return function (err) {
             if (err) console.error(`[db] cacheCollections error:`, err);
             // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
-            exports._db.collection(table, function (err, col) {
-              exports.collections[table] = col;
-              if (0 == --remaining) finishInit();
-            });
+            exports.collections[table] = exports._db.collection(table);
+            if (0 == --remaining) finishInit();
           };
         })();
         collections[i].countDocuments(queryHandler);
@@ -192,7 +190,7 @@ exports.clearCollections = async function () {
     throw new Error('allowed on test database only');
   } else {
     for (const name in exports.collections) {
-      await exports.collections[name].deleteMany({}, { multi: true });
+      await exports.collections[name].deleteMany({});
     }
   }
 };
