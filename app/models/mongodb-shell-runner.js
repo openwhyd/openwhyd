@@ -52,16 +52,12 @@ function buildContext(db, nextCommand, callback) {
   }
 
   function wrapCollection(colName, callback) {
-    db.collection(colName, function (err, col) {
-      callback(
-        err,
-        !err && {
-          dropIndex: wrapCollectionMethod(col, 'dropIndex', colName),
-          createIndex: wrapCollectionMethod(col, 'createIndex', colName),
-          updateOne: wrapCollectionMethod(col, 'updateOne', colName),
-          updateMany: wrapCollectionMethod(col, 'updateMany', colName),
-        },
-      );
+    const col = db.collection(colName);
+    callback(null, {
+      dropIndex: wrapCollectionMethod(col, 'dropIndex', colName),
+      createIndex: wrapCollectionMethod(col, 'createIndex', colName),
+      updateOne: wrapCollectionMethod(col, 'updateOne', colName),
+      updateMany: wrapCollectionMethod(col, 'updateMany', colName),
     });
   }
 
