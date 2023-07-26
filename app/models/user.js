@@ -230,8 +230,7 @@ function fetch(q, handler) {
 
 exports.fetchAll = async function (handler) {
   const array = await mongodb.collections['user']
-    .find({})
-    .sort([['_id', 'desc']])
+    .find({}, { sort: [['_id', 'desc']] })
     .toArray();
   processUsers(array);
   handler(array);
