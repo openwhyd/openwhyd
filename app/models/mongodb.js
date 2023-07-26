@@ -195,7 +195,7 @@ exports.clearCollections = async function () {
   }
 };
 
-exports.initCollections = function ({ addTestData } = {}) {
+exports.initCollections = function ({ addTestData = false } = {}) {
   return new Promise((resolve, reject) => {
     const dbInitScripts = [DB_INIT_SCRIPT];
     if (addTestData) {
