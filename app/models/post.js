@@ -316,8 +316,12 @@ exports.rePost = function (pId, repostObj, handler) {
     delete repostObj._id;
     if (repostObj.pl && typeof repostObj.pl.id !== 'number')
       repostObj.pl.id = parseInt('' + repostObj.pl.id);
-    collection.insertOne(repostObj, function (error, result) {
-      if (error) console.error('post.rePost() error: ', error);
+    collection.insertOne(repostObj, async function (error, result) {
+      if (error) {
+        console.error('post.rePost() error: ', error);
+        handler({ error });
+        return;
+      }
       if (repostObj.uId != repostObj.repost.uId) {
         notif.repost(repostObj.uId, postObj);
         notif.post(postObj);
@@ -331,14 +335,13 @@ exports.rePost = function (pId, repostObj, handler) {
             trackModel.updateByEid(postObj.eId);
           });
       }
-      // TODO: check if this condition still makes sense
-      if (result && result.length) {
-        //searchModel.indexPost(result);
-        result = result[0];
-        searchModel.indexTyped('post', result);
-        notifyMentionedUsers(result);
-      }
-      handler({ _id: result.insertedId });
+      const post = await mongodb.collections['post'].findOne({
+        _id: ObjectId('' + result.insertedId),
+      });
+      //searchModel.indexPost(post);
+      searchModel.indexTyped('post', post);
+      notifyMentionedUsers(post);
+      handler(post);
     });
   });
 };
