@@ -280,7 +280,7 @@ exports.savePost = function (postObj, handler) {
   } else
     mongodb.collections['post'].insertOne(postObj, function (error, result) {
       if (error) console.log('update error', error);
-      whenDone(error, error ? {} : result);
+      whenDone(error, error ? {} : { _id: result.insertedId });
     });
 };
 
@@ -324,13 +324,14 @@ exports.rePost = function (pId, repostObj, handler) {
             trackModel.updateByEid(postObj.eId);
           });
       }
+      // TODO: check if this condition still makes sense
       if (result && result.length) {
         //searchModel.indexPost(result);
         result = result[0];
         searchModel.indexTyped('post', result);
         notifyMentionedUsers(result);
       }
-      handler(result);
+      handler({ _id: result.insertedId });
     });
   });
 };

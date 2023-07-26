@@ -59,8 +59,8 @@ const httpClient = {
   },
 };
 
-async function connectToMongoDB(url) {
-  return await mongodb.MongoClient.connect(url, {
+function connectToMongoDB(url) {
+  return new mongodb.MongoClient(url, {
     useUnifiedTopology: true,
   });
 }

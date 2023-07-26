@@ -68,7 +68,9 @@ async function postTrack(server, userSession, { _id, ...trackData }) {
 }
 
 describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () => {
+  /** @type import('mongodb').MongoClient */
   let mongoClient;
+  /** @type import('mongodb').Db */
   let db;
   let server;
 
