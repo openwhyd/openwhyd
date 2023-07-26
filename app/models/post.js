@@ -280,7 +280,7 @@ exports.savePost = function (postObj, handler) {
   } else
     mongodb.collections['post'].insertOne(postObj, function (error, result) {
       if (error) console.log('update error', error);
-      whenDone(error, error ? {} : result.ops[0]);
+      whenDone(error, error ? {} : result);
     });
 };
 
