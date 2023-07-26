@@ -1,5 +1,5 @@
 module.exports = class Progress {
-  constructor({ label, intervalMs = 1000, max }) {
+  constructor({ label, intervalMs = 1000, max = undefined }) {
     this.count = 0;
     this.label = label;
     console.log(`( ${this.label} )`);

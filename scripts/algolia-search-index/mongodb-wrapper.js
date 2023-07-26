@@ -1,11 +1,13 @@
+// @ts-check
+
 const mongodb = require('mongodb');
 const Progress = require('./Progress');
 
-var MONGO_OPTIONS = {
-  useNewUrlParser: true,
-  //strict: false,
-  //safe: false,
-  w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+/** @type mongodb.MongoClientOptions */
+const MONGO_OPTIONS = {
+  writeConcern: {
+    w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+  },
 };
 
 const makeConnUrl = (params) => {
@@ -51,9 +53,6 @@ const initMongo = (params, callback) => {
       callback(err);
     } else {
       const db = client.db(dbName);
-      db.addListener('error', function (err) {
-        console.log('MongoDB model async error: ', err);
-      });
       cacheCollections(db, callback); // will mutate db and callback
     }
   });
