@@ -34,7 +34,7 @@ function buildContext(db, nextCommand, callback) {
       try {
         return mongodb.ObjectID.createFromHexString('' + v);
       } catch (e) {
-        console.warn('invalid mongodb object id:' + v);
+        console.warn('invalid mongodb object id:' + v); // TODO: detect bugs by re-throwing this error, instead of just logging it
         return 'invalid_id';
       }
     },

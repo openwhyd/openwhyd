@@ -246,16 +246,23 @@ function notifyMentionedUsers(post, cb) {
 
 exports.savePost = function (postObj, handler) {
   var pId = postObj._id;
-  function whenDone(error, result) {
-    if (error) console.error('post.savePost() error: ', error);
-    if (result) {
-      if (Array.isArray(result)) result = result[0];
-      searchModel.indexTyped('post', result);
-      result.isNew = !pId;
-      if (result.isNew) notif.post(result);
-      notifyMentionedUsers(result);
+  async function whenDone(error, result) {
+    if (error || !result) {
+      console.error('post.savePost() error: ', error);
+      handler({ error });
     }
-    handler(result);
+    if (result) {
+      console.log('savePost::whenDone', { result });
+      if (Array.isArray(result)) result = result[0];
+      const post = await mongodb.collections['post'].findOne({
+        _id: ObjectId('' + result._id),
+      });
+      searchModel.indexTyped('post', post);
+      post.isNew = !pId;
+      if (post.isNew) notif.post(post);
+      notifyMentionedUsers(post);
+      handler(post);
+    }
   }
   if (postObj.pl && typeof postObj.pl.id !== 'number')
     postObj.pl.id = parseInt('' + postObj.pl.id);
