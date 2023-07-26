@@ -311,7 +311,6 @@ exports.rePost = function (pId, repostObj, handler) {
       repostObj.pl.id = parseInt('' + repostObj.pl.id);
     collection.insertOne(repostObj, function (error, result) {
       if (error) console.error('post.rePost() error: ', error);
-      result = result.ops[0];
       if (repostObj.uId != repostObj.repost.uId) {
         notif.repost(repostObj.uId, postObj);
         notif.post(postObj);

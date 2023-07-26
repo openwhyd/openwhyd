@@ -27,7 +27,7 @@ function combineResult(cb) {
 
 function combineInsertedResult(cb) {
   return function (err, res) {
-    (cb || console.log)(err ? { error: err } : res.ops[0]);
+    (cb || console.log)(err ? { error: err } : res);
   };
 }
 

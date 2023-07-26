@@ -137,7 +137,7 @@ function insertNotif(to, p, cb) {
     { /*w:0*/ safe: true },
     logErrors(function (res) {
       invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res && res.ops[0]);
+      cb && cb(res && res);
     }),
   );
 }
