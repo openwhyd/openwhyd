@@ -104,6 +104,17 @@ function indentJSON(json) {
   });
 }
 
+/** This function serializes `new ObjectId` instances into objects. */
+function sortAndIndentAsJSON(obj) {
+  class ObjectId {
+    constructor(id) {
+      this._bsontype = 'ObjectID';
+      this.id = id;
+    }
+  }
+  return eval(indentJSON(obj));
+}
+
 function getCleanedPageBody(body) {
   try {
     return JSON.parse(body);
@@ -199,6 +210,7 @@ module.exports = {
   dumpMongoCollection,
   insertTestData,
   indentJSON,
+  sortAndIndentAsJSON,
   getCleanedPageBody,
   startOpenwhydServer,
 };
