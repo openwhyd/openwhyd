@@ -53,7 +53,8 @@
     "lint:format": "prettier . --write",
     "lint:fix": "eslint . --fix",
     "lint:errors": "eslint . --quiet",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:full": "npm run lint:jsdoc-typing && npm run lint:typescript && npm run lint:format && npm run lint"
   },
   "directories": {
     "src": "./app",
