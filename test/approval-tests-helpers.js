@@ -106,6 +106,7 @@ function indentJSON(json) {
 
 /** This function serializes `new ObjectId` instances into objects. */
 function sortAndIndentAsJSON(obj) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   class ObjectId {
     constructor(id) {
       this._bsontype = 'ObjectID';
