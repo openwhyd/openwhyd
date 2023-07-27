@@ -209,11 +209,10 @@ exports.clearAllNotifs = () =>
 
 exports.clearUserNotifs = function (uId, cb) {
   if (!uId) return;
-  db['notif']
-    .find({ uId: uId })
-    .project({ uId: 1 })
-    .limit(1000)
-    .then((cursor) => {
+  db['notif'].find(
+    { uId: uId },
+    { projection: { uId: 1 }, limit: 1000 },
+    function (err, cursor) {
       var idsToRemove = [];
       function whenDone() {
         // delete records that were only associated to that user
@@ -240,16 +239,17 @@ exports.clearUserNotifs = function (uId, cb) {
         },
         () => whenDone(),
       );
-    });
+    },
+  );
 };
 
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
 
 exports.fetchUserNotifs = function (uId, handler) {
-  db['notif']
-    .find({ uId: uId })
-    .sort(['t', 'desc'])
-    .then(function (cursor) {
+  db['notif'].find(
+    { uId: uId },
+    { sort: ['t', 'desc'] },
+    function (err, cursor) {
       cursor.toArray(function (err, results) {
         var notifs = [];
         for (let i in results) {
@@ -276,7 +276,8 @@ exports.fetchUserNotifs = function (uId, handler) {
         cacheUserNotifs(uId, notifs);
         if (handler) handler(notifs);
       });
-    });
+    },
+  );
 };
 
 exports.getUserNotifs = function (uid, handler) {

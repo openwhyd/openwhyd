@@ -50,122 +50,119 @@ exports.topicNameSearch = function (
   mongodb('user', function (err, usercol) {
     var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
-    usercol
-      .find(query)
-      .limit(limitUsers)
-      .then(function (cursor) {
-        cursor.forEach((err, item) => {
-          if (!item) return;
-          userResults.push({ _id: '/u/' + item.fbId, name: item.name });
-          console.log(
-            'user search result: ' +
-              item.fbId +
-              ' : ' +
-              item.name +
-              ', ' +
-              item.img,
-          );
-        });
-
-        mongodb('topic', function (err, collection) {
-          var cycles = maxCycles;
-          var exactResults = [],
-            quickResults = [];
-
-          var words = normalizeNameSearchQuery(q);
-
-          var query = { n: { $all: words } };
-          console.log('search exact query: ' + util.inspect(query));
-          collection
-            .find(query)
-            .sort([['s', 'desc']])
-            .limit(limitExact)
-            .then(function (cursor) {
-              var remaining = limitExact;
-
-              var handleNextResult = function (err, item) {
-                //console.log("handleNextResult()");
-                if (item != null) {
-                  console.log(
-                    'search exact result: (' +
-                      item.s +
-                      ') ' +
-                      item._id +
-                      ' : ' +
-                      item.name /* + ", " + item.t*/,
-                  );
-                  exactResults.push(item);
-                  --remaining;
-                  if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
-                } else cursor.queryRun = false;
-              };
-
-              cursor.next(handleNextResult); // start gathering results
-            });
-
-          query = { n: words[0] /*{"$regex":q}*/ };
-          console.log('search quick query: ' + util.inspect(query));
-          collection
-            .find(query)
-            // .sort([['$natural','asc']])
-            .limit(limit)
-            .then(function (cursor) {
-              var remaining = limit;
-
-              var handleNextResult = function (err, item) {
-                //console.log("handleNextResult()");
-                if (item != null) {
-                  console.log(
-                    'search quick result: (' +
-                      item.s +
-                      ') ' +
-                      item._id +
-                      ' : ' +
-                      item.name /* + ", " + item.t*/,
-                  );
-                  quickResults.push(item);
-                  --remaining;
-                  if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
-                } else cursor.queryRun = false;
-              };
-
-              cursor.next(handleNextResult); // start gathering results
-            });
-
-          var renderer = function () {
-            clearTimeout(timeout);
-            var results = exactResults;
-
-            // combine exact and quick results without duplicates
-            if (exactResults.length > 0 && quickResults.length > 0)
-              for (let j in quickResults) {
-                var found = false;
-                for (let i in exactResults)
-                  if (exactResults[i]._id === quickResults[j]._id) {
-                    //console.log("found dup " + exactResults[i].name);
-                    found = true;
-                    break;
-                  }
-                if (false == found) results.push(quickResults[j]);
-              }
-            else results = results.concat(quickResults);
-
-            results = userResults.concat(results);
-
-            if (results.length == 0) {
-              console.log('search: no results so far...');
-              if (cycles-- == 0) resultHandler([], q);
-              //response.legacyRender("");
-              else timeout = setTimeout(renderer, timeoutDuration);
-            } else {
-              //console.log(renderTemplate(q,results));
-              //response.legacyRender(util.inspect(results));
-              resultHandler(results, q);
-              // console.log('search: rendering done!');
-            }
-          };
-          var timeout = setTimeout(renderer, timeoutDuration);
-        });
+    usercol.find(query, { limit: limitUsers }, function (err, cursor) {
+      cursor.forEach((err, item) => {
+        if (!item) return;
+        userResults.push({ _id: '/u/' + item.fbId, name: item.name });
+        console.log(
+          'user search result: ' +
+            item.fbId +
+            ' : ' +
+            item.name +
+            ', ' +
+            item.img,
+        );
       });
+
+      mongodb('topic', function (err, collection) {
+        var cycles = maxCycles;
+        var exactResults = [],
+          quickResults = [];
+
+        var words = normalizeNameSearchQuery(q);
+
+        var query = { n: { $all: words } };
+        console.log('search exact query: ' + util.inspect(query));
+        collection.find(
+          query,
+          { sort: [['s', 'desc']], limit: limitExact },
+          function (err, cursor) {
+            var remaining = limitExact;
+
+            var handleNextResult = function (err, item) {
+              //console.log("handleNextResult()");
+              if (item != null) {
+                console.log(
+                  'search exact result: (' +
+                    item.s +
+                    ') ' +
+                    item._id +
+                    ' : ' +
+                    item.name /* + ", " + item.t*/,
+                );
+                exactResults.push(item);
+                --remaining;
+                if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
+              } else cursor.queryRun = false;
+            };
+
+            cursor.next(handleNextResult); // start gathering results
+          },
+        );
+
+        query = { n: words[0] /*{"$regex":q}*/ };
+        console.log('search quick query: ' + util.inspect(query));
+        collection.find(
+          query,
+          { /*sort:[['$natural','asc']],*/ limit: limit },
+          function (err, cursor) {
+            var remaining = limit;
+
+            var handleNextResult = function (err, item) {
+              //console.log("handleNextResult()");
+              if (item != null) {
+                console.log(
+                  'search quick result: (' +
+                    item.s +
+                    ') ' +
+                    item._id +
+                    ' : ' +
+                    item.name /* + ", " + item.t*/,
+                );
+                quickResults.push(item);
+                --remaining;
+                if (remaining > 0) cursor.next(handleNextResult); //recursive call for next objects
+              } else cursor.queryRun = false;
+            };
+
+            cursor.next(handleNextResult); // start gathering results
+          },
+        );
+
+        var renderer = function () {
+          clearTimeout(timeout);
+          var results = exactResults;
+
+          // combine exact and quick results without duplicates
+          if (exactResults.length > 0 && quickResults.length > 0)
+            for (let j in quickResults) {
+              var found = false;
+              for (let i in exactResults)
+                if (exactResults[i]._id === quickResults[j]._id) {
+                  //console.log("found dup " + exactResults[i].name);
+                  found = true;
+                  break;
+                }
+              if (false == found) results.push(quickResults[j]);
+            }
+          else results = results.concat(quickResults);
+
+          results = userResults.concat(results);
+
+          if (results.length == 0) {
+            console.log('search: no results so far...');
+            if (cycles-- == 0) resultHandler([], q);
+            //response.legacyRender("");
+            else timeout = setTimeout(renderer, timeoutDuration);
+          } else {
+            //console.log(renderTemplate(q,results));
+            //response.legacyRender(util.inspect(results));
+            resultHandler(results, q);
+            // console.log('search: rendering done!');
+          }
+        };
+        var timeout = setTimeout(renderer, timeoutDuration);
+      });
+    });
   });
 };

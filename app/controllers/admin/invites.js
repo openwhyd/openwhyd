@@ -12,11 +12,9 @@ var callWhenDone = require('../../snip.js').callWhenDone;
 
 var fetchUsers = function (table, handler, options) {
   console.log('fetching users from ' + table + '...');
-  mongodb.collections[table]
-    .find({}, options)
-    .toArray()
-    .catch(handler)
-    .then((res) => handler(null, res));
+  mongodb.collections[table].find({}, options, function (err, cursor) {
+    cursor.toArray(handler);
+  });
 };
 
 var inviteUser = function (email, handler) {

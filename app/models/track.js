@@ -88,13 +88,12 @@ exports.countTracksWithField = function (fieldName, cb) {
 exports.fetch = function (params, handler) {
   params = params || {};
   params.sort = params.sort || [['score', 'desc']];
-  mongodb.collections['track']
-    .find({}, params)
-    .toArray()
-    .then(function (results) {
+  mongodb.collections['track'].find({}, params, function (err, cursor) {
+    cursor.toArray(function (err, results) {
       // console.log('=> fetched ' + results.length + ' tracks');
       if (handler) handler(results);
     });
+  });
 };
 
 exports.fetchTrackByEid = function (eId, cb) {
@@ -144,10 +143,15 @@ exports.getHotTracksFromDb = function (params, handler) {
 
 function fetchPostsByEid(eId, cb) {
   var criteria = { eId: eId && Array.isArray(eId) ? { $in: eId } : eId };
-  mongodb.collections['post']
-    .find(criteria, POST_FETCH_OPTIONS)
-    .toArray()
-    .then(cb);
+  mongodb.collections['post'].find(
+    criteria,
+    POST_FETCH_OPTIONS,
+    function (err, cursor) {
+      cursor.toArray(function (err, posts) {
+        cb(posts);
+      });
+    },
+  );
 }
 
 // called when a track is updated/deleted by a user

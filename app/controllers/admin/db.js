@@ -96,11 +96,14 @@ var fileGenerators = {
         if (p[i] == '$exists') p[i] = { $exists: true };
       }
       console.log('query:', p);
-      col
-        .find(p, { limit: limit })
-        .toArray()
-        .catch((error) => cb({ error: error }))
-        .then((items) => cb(items));
+      col.find(p, { limit: limit }, function (error, cursor) {
+        if (error) cb({ error: error });
+        else
+          cursor.toArray(function (error, items) {
+            if (error) cb({ error: error });
+            else cb(items);
+          });
+      });
     }
   },
   'find.txt': wrapJsonGeneratorToText('find.json'),
