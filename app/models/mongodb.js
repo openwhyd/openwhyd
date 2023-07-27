@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * mongodb model
  * wraps a accessor to collections of a mongodb database
@@ -43,15 +45,15 @@ exports.ObjectId = function (v) {
   try {
     return exports.ObjectID.createFromHexString('' + v);
   } catch (e) {
-    console.warn(`[db] invalid mongodb object id: ${v} (${typeof v})`);
+    console.warn(`[db] invalid mongodb object id: ${v} (${typeof v})`); // TODO: detect bugs by re-throwing this error, instead of just logging it
     return 'invalid_id';
   }
 };
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
-  var t = Math.round(date.getTime() / 1000); // turn into seconds
-  t = t.toString(16); // translate into hexadecimal representation
+  const seconds = Math.round(date.getTime() / 1000);
+  let t = seconds.toString(16); // translate into hexadecimal representation
   t = t + '0000000000000000'; // add null values for 8 other bytes
   while (
     t.length <
@@ -168,10 +170,8 @@ exports.cacheCollections = function (callback) {
           return function (err) {
             if (err) console.error(`[db] cacheCollections error:`, err);
             // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
-            exports._db.collection(table, function (err, col) {
-              exports.collections[table] = col;
-              if (0 == --remaining) finishInit();
-            });
+            exports.collections[table] = exports._db.collection(table);
+            if (0 == --remaining) finishInit();
           };
         })();
         collections[i].countDocuments(queryHandler);
@@ -190,12 +190,12 @@ exports.clearCollections = async function () {
     throw new Error('allowed on test database only');
   } else {
     for (const name in exports.collections) {
-      await exports.collections[name].deleteMany({}, { multi: true });
+      await exports.collections[name].deleteMany({});
     }
   }
 };
 
-exports.initCollections = function ({ addTestData } = {}) {
+exports.initCollections = function ({ addTestData = false } = {}) {
   return new Promise((resolve, reject) => {
     const dbInitScripts = [DB_INIT_SCRIPT];
     if (addTestData) {
@@ -250,24 +250,17 @@ exports.init = function (readyCallback) {
     `[db] Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`,
   );
 
-  var options = {
-    useNewUrlParser: true,
-    //strict: false,
-    //safe: false,
+  /** @type mongodb.MongoClientOptions */
+  const options = {
     writeConcern: {
       w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
     },
-    useUnifiedTopology: true,
   };
 
   mongodb.MongoClient.connect(url, options, function (err, client) {
     if (err) throw err;
 
     exports._db = client.db(dbName);
-
-    exports._db.addListener('error', function (e) {
-      console.log('[db] MongoDB model async error: ', e);
-    });
 
     console.log('[db] Successfully connected to ' + url);
     readyCallback.call(module.exports, null, exports._db);

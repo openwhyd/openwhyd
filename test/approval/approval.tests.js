@@ -46,6 +46,7 @@ async function setupTestEnv() {
     readMongoDocuments,
     insertTestData,
     startOpenwhydServer,
+    sortAndIndentAsJSON,
   } = require('../approval-tests-helpers');
   const api = require('../api-client');
   const context = {
@@ -54,6 +55,7 @@ async function setupTestEnv() {
     ObjectId,
     dumpMongoCollection,
     insertTestData,
+    sortAndIndentAsJSON,
   };
   // insert fixtures / test data
   context.testDataCollections = {
@@ -270,7 +272,9 @@ describe('When posting a track to an existing playlist', function () {
   });
 
   it('should not update the user\'s playlists in the "user" db collection', async function () {
-    const dbUsers = await context.dumpMongoCollection(MONGODB_URL, 'user');
+    const dbUsers = context.sortAndIndentAsJSON(
+      await context.dumpMongoCollection(MONGODB_URL, 'user'),
+    );
     this.verifyAsJSON(dbUsers);
   });
 
@@ -302,7 +306,9 @@ describe('When posting a track to a new playlist', function () {
   });
 
   it('should update the user\'s playlists in the "user" db collection', async function () {
-    const dbUsers = await context.dumpMongoCollection(MONGODB_URL, 'user');
+    const dbUsers = context.sortAndIndentAsJSON(
+      await context.dumpMongoCollection(MONGODB_URL, 'user'),
+    );
     this.verifyAsJSON(dbUsers); // Note: this reveals a bug in the automatic numbering of new playlists, when playlists are listed in reverse order, cf https://github.com/openwhyd/openwhyd-solo/blob/73734c0ab665f6701af7aa8b5b9ce635ad8a2b2f/app/models/user.js#L434
   });
 
@@ -347,7 +353,9 @@ describe('When reposting a track to an existing playlist', function () {
   });
 
   it('should not update the user\'s playlists in the "user" db collection', async function () {
-    const dbUsers = await context.dumpMongoCollection(MONGODB_URL, 'user');
+    const dbUsers = context.sortAndIndentAsJSON(
+      await context.dumpMongoCollection(MONGODB_URL, 'user'),
+    );
     this.verifyAsJSON(dbUsers);
   });
 

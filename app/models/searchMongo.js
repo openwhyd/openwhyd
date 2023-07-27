@@ -50,7 +50,7 @@ exports.topicNameSearch = function (
   mongodb('user', function (err, usercol) {
     var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
-    usercol.find(query, { limit: limitUsers }, function (err, cursor) {
+    usercol.find(query, { limit: limitUsers }).then(function (cursor) {
       cursor.forEach((err, item) => {
         if (!item) return;
         userResults.push({ _id: '/u/' + item.fbId, name: item.name });
@@ -73,10 +73,9 @@ exports.topicNameSearch = function (
 
         var query = { n: { $all: words } };
         console.log('search exact query: ' + util.inspect(query));
-        collection.find(
-          query,
-          { sort: [['s', 'desc']], limit: limitExact },
-          function (err, cursor) {
+        collection
+          .find(query, { sort: [['s', 'desc']], limit: limitExact })
+          .then(function (cursor) {
             var remaining = limitExact;
 
             var handleNextResult = function (err, item) {
@@ -97,15 +96,13 @@ exports.topicNameSearch = function (
             };
 
             cursor.next(handleNextResult); // start gathering results
-          },
-        );
+          });
 
         query = { n: words[0] /*{"$regex":q}*/ };
         console.log('search quick query: ' + util.inspect(query));
-        collection.find(
-          query,
-          { /*sort:[['$natural','asc']],*/ limit: limit },
-          function (err, cursor) {
+        collection
+          .find(query, { limit /*sort: [['$natural', 'asc']]*/ })
+          .then(function (cursor) {
             var remaining = limit;
 
             var handleNextResult = function (err, item) {
@@ -126,8 +123,7 @@ exports.topicNameSearch = function (
             };
 
             cursor.next(handleNextResult); // start gathering results
-          },
-        );
+          });
 
         var renderer = function () {
           clearTimeout(timeout);

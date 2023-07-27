@@ -48,12 +48,13 @@
     "docker:test-approval": "DONT_KILL=1 PORT=8080 ava test/approval.tests.js $@",
     "docker:test-approval-hot-tracks": "DONT_KILL=1 PORT=8080 npx --yes jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "docker:test:approval": "DONT_KILL=1 PORT=8080 mocha test/approval/approval.tests.js $@",
-    "lint:jsdoc-typing": "npx --yes tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js'`",
+    "lint:jsdoc-typing": "npx --yes tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'`",
     "lint:typescript": "npx --yes tsc --noEmit --moduleResolution node --skipLibCheck",
     "lint:format": "prettier . --write",
     "lint:fix": "eslint . --fix",
     "lint:errors": "eslint . --quiet",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:full": "npm run lint:jsdoc-typing && npm run lint:typescript && npm run lint:format && npm run lint"
   },
   "directories": {
     "src": "./app",
@@ -75,7 +76,7 @@
     "hogan.js": "3.0.2",
     "htmlparser": "*",
     "iconv": ">=3.0.1",
-    "mongodb": "^3.7.4",
+    "mongodb": "4.16.0",
     "playemjs": "1.2.2",
     "q-set": "^2.0.8",
     "request": "2.88.2",

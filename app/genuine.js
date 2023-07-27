@@ -6,7 +6,7 @@
 
 var crypto = require('crypto');
 
-var GENUINE_SIGNUP_SECRET = process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(), // secret key (only known by secure openwhyd clients), used to hash sTk
+var GENUINE_SIGNUP_SECRET = process.env.WHYD_GENUINE_SIGNUP_SECRET, // secret key (only known by secure openwhyd clients), used to hash sTk
   TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
 
 // hack caused by proxy on openwhyd server

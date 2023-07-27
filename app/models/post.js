@@ -246,16 +246,23 @@ function notifyMentionedUsers(post, cb) {
 
 exports.savePost = function (postObj, handler) {
   var pId = postObj._id;
-  function whenDone(error, result) {
-    if (error) console.error('post.savePost() error: ', error);
-    if (result) {
-      if (Array.isArray(result)) result = result[0];
-      searchModel.indexTyped('post', result);
-      result.isNew = !pId;
-      if (result.isNew) notif.post(result);
-      notifyMentionedUsers(result);
+  async function whenDone(error, result) {
+    if (error || !result) {
+      console.error('post.savePost() error: ', error);
+      handler();
     }
-    handler(result);
+    if (result) {
+      console.log('savePost::whenDone', { result });
+      if (Array.isArray(result)) result = result[0];
+      const post = await mongodb.collections['post'].findOne({
+        _id: ObjectId('' + result._id),
+      });
+      searchModel.indexTyped('post', post);
+      post.isNew = !pId;
+      if (post.isNew) notif.post(post);
+      notifyMentionedUsers(post);
+      handler(post);
+    }
   }
   if (postObj.pl && typeof postObj.pl.id !== 'number')
     postObj.pl.id = parseInt('' + postObj.pl.id);
@@ -280,7 +287,7 @@ exports.savePost = function (postObj, handler) {
   } else
     mongodb.collections['post'].insertOne(postObj, function (error, result) {
       if (error) console.log('update error', error);
-      whenDone(error, error ? {} : result.ops[0]);
+      whenDone(error, error ? {} : { _id: result.insertedId });
     });
 };
 
@@ -309,9 +316,12 @@ exports.rePost = function (pId, repostObj, handler) {
     delete repostObj._id;
     if (repostObj.pl && typeof repostObj.pl.id !== 'number')
       repostObj.pl.id = parseInt('' + repostObj.pl.id);
-    collection.insertOne(repostObj, function (error, result) {
-      if (error) console.error('post.rePost() error: ', error);
-      result = result.ops[0];
+    collection.insertOne(repostObj, async function (error, result) {
+      if (error) {
+        console.error('post.rePost() error: ', error);
+        handler();
+        return;
+      }
       if (repostObj.uId != repostObj.repost.uId) {
         notif.repost(repostObj.uId, postObj);
         notif.post(postObj);
@@ -325,13 +335,13 @@ exports.rePost = function (pId, repostObj, handler) {
             trackModel.updateByEid(postObj.eId);
           });
       }
-      if (result && result.length) {
-        //searchModel.indexPost(result);
-        result = result[0];
-        searchModel.indexTyped('post', result);
-        notifyMentionedUsers(result);
-      }
-      handler(result);
+      const post = await mongodb.collections['post'].findOne({
+        _id: ObjectId('' + result.insertedId),
+      });
+      //searchModel.indexPost(post);
+      searchModel.indexTyped('post', post);
+      notifyMentionedUsers(post);
+      handler(post);
     });
   });
 };

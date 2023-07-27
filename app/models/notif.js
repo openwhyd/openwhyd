@@ -135,9 +135,13 @@ function insertNotif(to, p, cb) {
   db['notif'].insertOne(
     p,
     { /*w:0*/ safe: true },
-    logErrors(function (res) {
+    logErrors(async function (res) {
       invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res && res.ops[0]);
+      cb &&
+        cb(
+          res?.insertedId &&
+            (await db['notif'].findOne({ _id: res.insertedId })),
+        );
     }),
   );
 }
@@ -205,10 +209,10 @@ exports.clearAllNotifs = () =>
 
 exports.clearUserNotifs = function (uId, cb) {
   if (!uId) return;
-  db['notif'].find(
-    { uId: uId },
-    { projection: { uId: 1 }, limit: 1000 },
-    function (err, cursor) {
+  db['notif']
+    .find({ uId: uId }, { limit: 1000 })
+    .project({ uId: 1 })
+    .then((cursor) => {
       var idsToRemove = [];
       function whenDone() {
         // delete records that were only associated to that user
@@ -235,45 +239,41 @@ exports.clearUserNotifs = function (uId, cb) {
         },
         () => whenDone(),
       );
-    },
-  );
+    });
 };
 
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
 
 exports.fetchUserNotifs = function (uId, handler) {
-  db['notif'].find(
-    { uId: uId },
-    { sort: ['t', 'desc'] },
-    function (err, cursor) {
-      cursor.toArray(function (err, results) {
-        var notifs = [];
-        for (let i in results) {
-          var n = 0;
-          if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
-          else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
-          var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
-          notifs.push({
-            type: results[i].type,
-            pId: '' + results[i]._id,
-            track: {
-              eId: results[i].eId,
-              name: results[i].name,
-              img: config.imgUrl(results[i].img),
-            },
-            t: new Date(results[i].t * 1000),
-            lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
-            n: n,
-            img: results[i].img,
-            html: results[i].html,
-            href: results[i].href,
-          });
-        }
-        cacheUserNotifs(uId, notifs);
-        if (handler) handler(notifs);
-      });
-    },
-  );
+  db['notif']
+    .find({ uId: uId }, { sort: ['t', 'desc'] })
+    .toArray()
+    .then(function (results) {
+      var notifs = [];
+      for (let i in results) {
+        var n = 0;
+        if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
+        else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
+        var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
+        notifs.push({
+          type: results[i].type,
+          pId: '' + results[i]._id,
+          track: {
+            eId: results[i].eId,
+            name: results[i].name,
+            img: config.imgUrl(results[i].img),
+          },
+          t: new Date(results[i].t * 1000),
+          lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
+          n: n,
+          img: results[i].img,
+          html: results[i].html,
+          href: results[i].href,
+        });
+      }
+      cacheUserNotifs(uId, notifs);
+      if (handler) handler(notifs);
+    });
 };
 
 exports.getUserNotifs = function (uid, handler) {

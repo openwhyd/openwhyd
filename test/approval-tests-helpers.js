@@ -59,8 +59,8 @@ const httpClient = {
   },
 };
 
-async function connectToMongoDB(url) {
-  return await mongodb.MongoClient.connect(url, {
+function connectToMongoDB(url) {
+  return new mongodb.MongoClient(url, {
     useUnifiedTopology: true,
   });
 }
@@ -102,6 +102,18 @@ function indentJSON(json) {
     maxArrayLength: Infinity,
     maxStringLength: Infinity,
   });
+}
+
+/** This function serializes `new ObjectId` instances into objects. */
+function sortAndIndentAsJSON(obj) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  class ObjectId {
+    constructor(id) {
+      this._bsontype = 'ObjectID';
+      this.id = id;
+    }
+  }
+  return eval(indentJSON(obj));
 }
 
 function getCleanedPageBody(body) {
@@ -199,6 +211,7 @@ module.exports = {
   dumpMongoCollection,
   insertTestData,
   indentJSON,
+  sortAndIndentAsJSON,
   getCleanedPageBody,
   startOpenwhydServer,
 };

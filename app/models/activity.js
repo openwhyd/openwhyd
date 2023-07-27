@@ -23,11 +23,11 @@ exports.fetch = function (q, options, callback) {
   if (options.until)
     q._id = { $gt: mongodb.ObjectId(mongodb.dateToHexObjectId(options.until)) };
   options.sort = options.sort || [['_id', 'desc']];
-  getCol().find(q, options, function (err, results) {
-    results.toArray(function (err, results) {
-      callback(results);
-    });
-  });
+  getCol()
+    .find(q, options)
+    .toArray()
+    .catch(() => callback())
+    .then((res) => callback(res));
 };
 
 exports.add = function (d, callback) {

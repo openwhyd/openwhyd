@@ -185,21 +185,12 @@ exports.controller = function (request, reqParams, response) {
 
   var pendingInvites = null;
 
-  var fetchPendingInvites = function (callback) {
+  var fetchPendingInvites = async function (callback) {
     console.log('fetching invite collection...');
-    mongodb.collections['invite'].find(
-      {},
-      { limit: 999999 },
-      function (err, cursor) {
-        console.log('done fetching invite collection.');
-        cursor.toArray(function (err, items) {
-          callback(
-            'Number of pending invites',
-            (pendingInvites = items).length,
-          );
-        });
-      },
-    );
+    const items = await mongodb.collections['invite']
+      .find({}, { limit: 999999 })
+      .toArray();
+    callback('Number of pending invites', (pendingInvites = items).length);
   };
 
   function countRecentInvites(cb) {

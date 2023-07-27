@@ -825,7 +825,6 @@ var JAMENDO_CLIENT_ID = "2c9a11b9";
 </html>"
 `;
 
-
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks, starting at a given index 1`] = `
 "{
   hasMore: false,
@@ -973,18 +972,18 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's liked 2`] = `
 "[
   {
-    _id: 61e19a3f078b4c9934e72ce6,
+    _id: new ObjectId("61e19a3f078b4c9934e72ce6"),
     eId: '/yt/track_A',
     img: null,
     name: null,
     nbL: 1,
     nbP: 0,
     nbR: 1,
-    pId: __posted_track_id__,
+    pId: new ObjectId("__posted_track_id__"),
     score: 100
   },
   {
-    _id: 61e19a3f078b4c9934e72ce7,
+    _id: new ObjectId("61e19a3f078b4c9934e72ce7"),
     eId: '/yt/track_B',
     score: 0
   }
@@ -1022,18 +1021,18 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
 exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `
 "[
   {
-    _id: 61e19a3f078b4c9934e72ce6,
+    _id: new ObjectId("61e19a3f078b4c9934e72ce6"),
     eId: '/yt/track_A',
     img: null,
     name: null,
     nbL: 0,
     nbP: 0,
     nbR: 2,
-    pId: __posted_track_id__,
+    pId: new ObjectId("__posted_track_id__"),
     score: 200
   },
   {
-    _id: 61e19a3f078b4c9934e72ce7,
+    _id: new ObjectId("61e19a3f078b4c9934e72ce7"),
     eId: '/yt/track_B',
     score: 0
   }
