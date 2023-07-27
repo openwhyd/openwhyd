@@ -91,6 +91,7 @@ exports.fetch = function (params, handler) {
   mongodb.collections['track']
     .find({}, params)
     .toArray()
+    .catch(() => handler())
     .then(function (results) {
       // console.log('=> fetched ' + results.length + ' tracks');
       if (handler) handler(results);
@@ -147,7 +148,8 @@ function fetchPostsByEid(eId, cb) {
   mongodb.collections['post']
     .find(criteria, POST_FETCH_OPTIONS)
     .toArray()
-    .then(cb);
+    .catch(() => cb())
+    .then((posts) => cb(posts));
 }
 
 // called when a track is updated/deleted by a user
