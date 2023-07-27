@@ -249,7 +249,7 @@ exports.savePost = function (postObj, handler) {
   async function whenDone(error, result) {
     if (error || !result) {
       console.error('post.savePost() error: ', error);
-      handler({ error });
+      handler();
     }
     if (result) {
       console.log('savePost::whenDone', { result });
@@ -319,7 +319,7 @@ exports.rePost = function (pId, repostObj, handler) {
     collection.insertOne(repostObj, async function (error, result) {
       if (error) {
         console.error('post.rePost() error: ', error);
-        handler({ error });
+        handler();
         return;
       }
       if (repostObj.uId != repostObj.repost.uId) {
