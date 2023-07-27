@@ -210,8 +210,9 @@ exports.clearAllNotifs = () =>
 exports.clearUserNotifs = function (uId, cb) {
   if (!uId) return;
   db['notif']
-    .find({ uId: uId }, { limit: 1000 })
+    .find({ uId: uId })
     .project({ uId: 1 })
+    .limit(1000)
     .then((cursor) => {
       var idsToRemove = [];
       function whenDone() {
@@ -246,7 +247,8 @@ exports.fetchAllNotifs = () => db['notif'].find().toArray();
 
 exports.fetchUserNotifs = function (uId, handler) {
   db['notif']
-    .find({ uId: uId }, { sort: ['t', 'desc'] })
+    .find({ uId: uId })
+    .sort(['t', 'desc'])
     .then(function (cursor) {
       cursor.toArray(function (err, results) {
         var notifs = [];
