@@ -75,7 +75,7 @@ const forEachObject = (coll, handler, options = {}) =>
     const progress = new Progress({ label: 'fetching from mongodb...' });
     // options.batchSize = options.batchSize || 100;
     // options.cursorDelay = options.cursorDelay || 0;
-    coll.find({}, options, function (err, cursor) {
+    coll.find({}, options).then(function (cursor) {
       const onObject = (err, obj) => {
         if (err) {
           progress.done();
