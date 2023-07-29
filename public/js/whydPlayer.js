@@ -352,6 +352,9 @@ function WhydPlayer() {
   function logTrackPlay() {
     if (currentTrack.yetToPublish) {
       currentTrack.yetToPublish = false;
+      if (!currentTrack.metadata.pid) {
+        return;
+      }
       // ajax increment play counter
       var data = {
         action: 'incrPlayCounter',
