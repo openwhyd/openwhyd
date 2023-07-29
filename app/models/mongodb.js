@@ -41,17 +41,17 @@ exports.usernames = {};
 
 exports.ObjectID = mongodb.ObjectID; //exports.ObjectID = require('bson').BSONPure.ObjectID;
 
-exports.ObjectId = function (v) {
-  try {
-    return exports.ObjectID.createFromHexString('' + v);
-  } catch (e) {
-    console.trace(`[db] invalid mongodb object id: ${v} (${typeof v})`); // TODO: detect bugs by re-throwing this error, instead of just logging it
-    return 'invalid_id';
-  }
-};
-
 exports.ObjectIdOrThrow = function (objectId) {
   return new mongodb.ObjectId('' + objectId);
+};
+
+exports.ObjectId = function (v) {
+  try {
+    return exports.ObjectIdOrThrow(v);
+  } catch (err) {
+    console.trace(`[db] invalid mongodb object id: ${v} (${typeof v})`);
+    throw err;
+  }
 };
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
