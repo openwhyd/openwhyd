@@ -11,7 +11,7 @@ var postModel = require('../../models/post.js');
 var followModel = require('../../models/follow.js');
 var template = require('../../templates/search.js');
 
-var ObjectId = mongodb.ObjectId; //mongodb.ObjectID.createFromHexString;
+var ObjectId = mongodb.ObjectId;
 
 var MAX_RESULTS = 100;
 var MAX_PLAYLIST_THUMBS = 3;

@@ -209,16 +209,9 @@ exports.actions = {
   incrPlayCounter: function (p, cb, request) {
     // TODO: prevent a user from sending many calls in a row
     if (!p.uId) return cb && cb({ error: 'not logged in' });
-    if (mongodb.ObjectId('' + p.pId) === 'invalid_id') {
+    if (!p.pId || !mongodb.isObjectId(p.pId))
       // FYI: an old iOS version was sending a "(null)" value
-      console.log(
-        'warning: skipping invalid pId value in incrPlayCounter:',
-        typeof p.pId,
-        p.pId,
-      );
-      console.log('from user agent: ', getShortUserAgent());
       return cb && cb({ error: 'invalid pId' });
-    }
     p.logData = p.logData || {};
     function getShortUserAgent() {
       var userAgent =

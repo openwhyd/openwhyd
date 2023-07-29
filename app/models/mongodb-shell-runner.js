@@ -31,12 +31,7 @@ function buildContext(db, nextCommand, callback) {
       // + one property per collection will be populated
     },
     ObjectId: function (v) {
-      try {
-        return mongodb.ObjectID.createFromHexString('' + v);
-      } catch (e) {
-        console.trace('invalid mongodb object id:' + v); // TODO: detect bugs by re-throwing this error, instead of just logging it
-        return 'invalid_id';
-      }
+      return new mongodb.ObjectId('' + v);
     },
   };
 
