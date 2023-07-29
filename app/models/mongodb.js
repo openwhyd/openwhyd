@@ -45,7 +45,7 @@ exports.ObjectId = function (v) {
   try {
     return exports.ObjectID.createFromHexString('' + v);
   } catch (e) {
-    console.warn(`[db] invalid mongodb object id: ${v} (${typeof v})`); // TODO: detect bugs by re-throwing this error, instead of just logging it
+    console.trace(`[db] invalid mongodb object id: ${v} (${typeof v})`); // TODO: detect bugs by re-throwing this error, instead of just logging it
     return 'invalid_id';
   }
 };
