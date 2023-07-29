@@ -7,7 +7,7 @@ var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
 var followModel = require('../models/follow.js');
 
-var ObjectId = mongodb.ObjectID.createFromHexString;
+const ObjectId = mongodb.ObjectId;
 
 var DEFAULT_LIMIT_HISTORY = 10;
 

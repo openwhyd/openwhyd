@@ -10,7 +10,7 @@
  */
 
 var mongodb = require('../models/mongodb.js');
-var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
+const ObjectId = mongodb.ObjectId;
 var emailModel = require('../models/email.js');
 var postModel = require('../models/post.js');
 var searchModel = require('../models/search.js');

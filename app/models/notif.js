@@ -177,7 +177,7 @@ exports.clearUserNotifsForPost = function (uId, pId) {
   var idList = [pId];
   try {
     idList.push(
-      mongodb.ObjectID.createFromHexString(
+      mongodb.ObjectId(
         typeof pId === 'string'
           ? extractObjectID(pId) // strip the eventual "/u/" prefix or "/reposts" suffix (e.g. in notif-tests.js)
           : pId,

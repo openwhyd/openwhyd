@@ -39,8 +39,6 @@ exports.collections = {};
 /** @deprecated */
 exports.usernames = {};
 
-exports.ObjectID = mongodb.ObjectID; //exports.ObjectID = require('bson').BSONPure.ObjectID;
-
 exports.ObjectIdOrThrow = function (objectId) {
   return new mongodb.ObjectId('' + objectId);
 };

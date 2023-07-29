@@ -8,7 +8,7 @@
 const request = require('request');
 const mongodb = require('mongodb');
 
-const ObjectID = (id) => mongodb.ObjectID.createFromHexString(id);
+const ObjectId = (id) => mongodb.ObjectId(id);
 
 // Parameters
 const { MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
@@ -47,7 +47,7 @@ const fetchUserData = ({ username }) =>
         : resolve({
             posts: JSON.parse(body).map((post) => ({
               ...post,
-              _id: ObjectID(post._id),
+              _id: ObjectId(post._id),
             })),
           }),
     );
@@ -57,7 +57,7 @@ const upsertUser = ({ db, user }) =>
   new Promise((resolve, reject) => {
     const { _id, ...userData } = user;
     db.collection('user').updateOne(
-      { _id: ObjectID(_id) },
+      { _id: ObjectId(_id) },
       { $set: { ...userData, pwd: password.md5 } },
       { upsert: true },
       (err) => (err ? reject(err) : resolve()),

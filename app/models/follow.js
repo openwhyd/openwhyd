@@ -5,7 +5,7 @@
 
 var snip = require('../snip.js');
 var mongodb = require('./mongodb.js');
-var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
+var ObjectId = mongodb.ObjectId;
 
 var COLNAME = 'follow';
 var HISTORY_LIMIT = 20;
