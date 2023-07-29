@@ -7,7 +7,10 @@ var https = require('https');
 var snip = require('./../snip.js');
 var querystring = require('querystring');
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY.substr();
+if (!process.env['SENDGRID_API_KEY'])
+  throw new Error(`missing env var: SENDGRID_API_KEY`);
+
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 
 exports.email = function (
   emailAddr,
@@ -22,10 +25,15 @@ exports.email = function (
   if (!emailAddr)
     return callback && callback({ error: 'no email address was provided' });
 
+  if (!process.env['SENDGRID_API_FROM_EMAIL'])
+    throw new Error(`missing env var: SENDGRID_API_FROM_EMAIL`);
+  if (!process.env['SENDGRID_API_FROM_NAME'])
+    throw new Error(`missing env var: SENDGRID_API_FROM_NAME`);
+
   // Set up message
   var content = {
-    from: process.env.SENDGRID_API_FROM_EMAIL.substr(), // e.g. "no-reply@whyd.org",
-    fromname: process.env.SENDGRID_API_FROM_NAME.substr(), // e.g. "whyd",
+    from: process.env.SENDGRID_API_FROM_EMAIL, // e.g. "no-reply@whyd.org",
+    fromname: process.env.SENDGRID_API_FROM_NAME, // e.g. "whyd",
     to: emailAddr,
     subject: subject,
     text: textContent,

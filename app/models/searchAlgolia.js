@@ -7,9 +7,14 @@ var snip = require('../snip.js');
 var mongodb = require('./mongodb.js');
 const algoliasearch = require('algoliasearch');
 
+if (!process.env['ALGOLIA_APP_ID'])
+  throw new Error(`missing env var: ALGOLIA_APP_ID`);
+if (!process.env['ALGOLIA_API_KEY'])
+  throw new Error(`missing env var: ALGOLIA_API_KEY`);
+
 const client = algoliasearch(
-  process.env.ALGOLIA_APP_ID.substr(),
-  process.env.ALGOLIA_API_KEY.substr(), // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
+  process.env.ALGOLIA_APP_ID,
+  process.env.ALGOLIA_API_KEY, // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
 );
 
 var INDEX_NAME_BY_TYPE = {

@@ -21,12 +21,17 @@ var CONN_OPTIONS = {
     (prod ? 'prod' : 'dev') +
     '.key.pem',
   passphrase: prod
-    ? process.env.WHYD_APNS_PASSPHRASE.substr()
-    : process.env.WHYD_DEV_APNS_PASSPHRASE.substr(),
+    ? process.env.WHYD_APNS_PASSPHRASE
+    : process.env.WHYD_DEV_APNS_PASSPHRASE,
   gateway: prod ? 'gateway.push.apple.com' : 'gateway.sandbox.push.apple.com',
   port: 2195,
   production: prod, // by default: false unless the NODE_ENV environment variable is set to "production"
 };
+
+if (!CONN_OPTIONS.passphrase)
+  throw new Error(
+    `missing env var: WHYD_APNS_PASSPHRASE or WHYD_DEV_APNS_PASSPHRASE`,
+  );
 
 //console.log("[APNS] parameters:", CONN_OPTIONS);
 

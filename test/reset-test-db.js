@@ -12,9 +12,14 @@ if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
   };
 }
 
+if (!process.env['MONGODB_HOST'])
+  throw new Error(`missing env var: MONGODB_HOST`);
+if (!process.env['MONGODB_PORT'])
+  throw new Error(`missing env var: MONGODB_PORT`);
+
 process.appParams = {
-  mongoDbHost: process.env['MONGODB_HOST'].substr(),
-  mongoDbPort: process.env['MONGODB_PORT'].substr(), // 27017
+  mongoDbHost: process.env['MONGODB_HOST'],
+  mongoDbPort: process.env['MONGODB_PORT'], // 27017
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: 'openwhyd_test', //process.env['MONGODB_DATABASE'],
