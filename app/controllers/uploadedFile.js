@@ -171,24 +171,11 @@ exports.controller = function (request, reqParams, response) {
   var renderTypedImg = {
     u: renderUserImg,
     user: renderUserImg,
-    userCover: function (id) {
-      if (id.indexOf('.') > -1)
-        return renderFile(
-          exports.config.uCoverImgPath + '/' + id,
-          '/images/1x1-pixel.png',
-        );
-      userModel.fetchByUid(id, function (user) {
-        if (user && user.cvrImg) {
-          var args = request.url.indexOf('?');
-          response.temporaryRedirect(
-            user.cvrImg + (args > -1 ? request.url.substr(args) : ''),
-          );
-        } else
-          renderFile(
-            exports.config.uCoverImgPath + '/' + id,
-            '/images/1x1-pixel.png',
-          );
-      });
+    userCover: function (filename) {
+      return renderFile(
+        exports.config.uCoverImgPath + '/' + filename,
+        '/images/1x1-pixel.png',
+      );
     },
     post: function (id) {
       postModel.fetchPostById(id, function (post) {
