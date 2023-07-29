@@ -17,14 +17,6 @@ function htmlEntities(str) {
     .replace(/"/g, '&quot;');
 }
 
-function htmlDecode(str) {
-  return String(str)
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"');
-}
-
 //================ WHYD POST CLASS (to submit posts)
 
 function WhydPost(/*embedRef*/) {
@@ -204,21 +196,6 @@ window.globals.initPostBox = function (params) {
     return whydPost;
   }
 
-  function tellMixpanel(whydPost) {
-    try {
-      var submitted = whydPost.postData,
-        stored = whydPost.storedPost;
-      window.globals.Whyd.tracking.log(
-        'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
-        stored._id,
-      );
-      if ((submitted.pl || {}).id == 'create')
-        window.globals.Whyd.tracking.log('Created playlist', stored.pl.id);
-    } catch (e) {
-      console.warn('error', e, e.stack);
-    }
-  }
-
   var $body = $('body');
 
   function close() {
@@ -289,7 +266,6 @@ window.globals.initPostBox = function (params) {
   function onPostSuccess(postId, whydPost) {
     var posted = whydPost.storedPost;
     if (!posted) console.log('error from post api:', postId, whydPost);
-    else tellMixpanel(whydPost);
     if (addingFromBookmarklet) displayConfirmationScreen(posted);
     else closeAndShowTrack(posted);
   }

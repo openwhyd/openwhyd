@@ -19,7 +19,7 @@ function htmlEntities(str) {
 
 //================ WHYD POST CLASS (to submit posts)
 
-function WhydPost(embedRef) {
+function WhydPost(/*embedRef*/) {
   var that = this;
   this.postData = {
     action: 'insert',
@@ -203,7 +203,7 @@ function WhydTextWithMentions(textArea, btn, onSubmit) {
       });
     },
   });
-  $btn.click(function (e) {
+  $btn.click(function () {
     $textField.mentionsInput('val', function (text) {
       onSubmit(text.trim ? text.trim() : text);
     });
@@ -212,29 +212,13 @@ function WhydTextWithMentions(textArea, btn, onSubmit) {
 
 //================ javascript code moved from postEdit.html
 
-function initPostBox(params) {
+window.initPostBox = function (params) {
   var addingFromBookmarklet = params.mode === 'addFromBookmarklet';
   var editingPost = params.mode === 'editPost';
   var reposting = params.mode === 'repost';
 
-  function tellMixpanel(whydPost) {
-    try {
-      var submitted = globals.whydPost.postData,
-        stored = globals.whydPost.storedPost;
-      window.Whyd.tracking.log(
-        'Added track' + (addingFromBookmarklet ? ' using bookmarklet' : ''),
-        stored._id,
-      );
-      if ((submitted.pl || {}).id == 'create')
-        window.Whyd.tracking.log('Created playlist', stored.pl.id);
-    } catch (e) {
-      console.warn('error', e, e.stack);
-    }
-  }
-
   function onPostSuccess(postId, whydPost) {
     var posted = globals.whydPost.storedPost;
-    tellMixpanel(whydPost);
     if (addingFromBookmarklet) {
       /* from bookmarklet: display confirmation screen + link to post */
       var url = window.location.href;
@@ -331,7 +315,7 @@ function initPostBox(params) {
     );
   }
 
-  function makePlayemStreamDetector(eidSet) {
+  function makePlayemStreamDetector(/*eidSet*/) {
     var players = {
       // playem-all.js must be loaded at that point
       yt: new globals.YoutubePlayer({}),
@@ -420,4 +404,4 @@ function initPostBox(params) {
       console.error(ex);
     }
   });
-}
+};

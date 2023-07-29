@@ -1,6 +1,6 @@
 /* global $ */
 
-function initMenuScrollAnimation(menuId, options) {
+window.initMenuScrollAnimation = function (menuId, options) {
   options || (options = {});
 
   var scrollTime = options.scrollTime || 1000;
@@ -38,4 +38,4 @@ function initMenuScrollAnimation(menuId, options) {
       }
     }
   });
-}
+};

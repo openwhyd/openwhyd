@@ -2,7 +2,6 @@
 
 var assert = require('assert');
 const fs = require('fs');
-const request = require('request');
 var {
   extractBandcampStreamURLs,
   extractBandcampStreamURLsFromHTML,
@@ -45,10 +44,3 @@ describe('bandcampExtractor', function () {
     );
   });
 });
-
-const fetch = (url) =>
-  new Promise((resolve, reject) =>
-    request(url, (error, response, body) =>
-      error ? reject(error) : resolve({ response, body }),
-    ),
-  );
