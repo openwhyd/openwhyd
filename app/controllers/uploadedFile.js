@@ -2,7 +2,6 @@ var fs = require('fs');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
-var userModel = require('../models/user.js');
 
 exports.config = {
   whydPath: config.paths.whydPath, // "../"
@@ -171,24 +170,11 @@ exports.controller = function (request, reqParams, response) {
   var renderTypedImg = {
     u: renderUserImg,
     user: renderUserImg,
-    userCover: function (id) {
-      if (id.indexOf('.') > -1)
-        return renderFile(
-          exports.config.uCoverImgPath + '/' + id,
-          '/images/1x1-pixel.png',
-        );
-      userModel.fetchByUid(id, function (user) {
-        if (user && user.cvrImg) {
-          var args = request.url.indexOf('?');
-          response.temporaryRedirect(
-            user.cvrImg + (args > -1 ? request.url.substr(args) : ''),
-          );
-        } else
-          renderFile(
-            exports.config.uCoverImgPath + '/' + id,
-            '/images/1x1-pixel.png',
-          );
-      });
+    userCover: function (filename) {
+      return renderFile(
+        exports.config.uCoverImgPath + '/' + filename,
+        '/images/1x1-pixel.png',
+      );
     },
     post: function (id) {
       postModel.fetchPostById(id, function (post) {
