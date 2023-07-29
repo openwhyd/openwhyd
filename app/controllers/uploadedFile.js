@@ -2,7 +2,6 @@ var fs = require('fs');
 var config = require('../models/config.js');
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
-var userModel = require('../models/user.js');
 
 exports.config = {
   whydPath: config.paths.whydPath, // "../"
