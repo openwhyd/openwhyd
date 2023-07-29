@@ -5,6 +5,7 @@
 
 var mongodb = require('./mongodb.js');
 var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
+const ObjectIdOrThrow = mongodb.ObjectIdOrThrow;
 var db = mongodb.collections;
 
 var snip = require('../snip.js');
@@ -379,10 +380,15 @@ exports.deletePost = function (pId, uId, handler) {
 };
 
 exports.incrPlayCounter = function (pId, cb) {
-  var _id = ObjectId('' + pId);
-  if (!_id) cb();
+  let _id;
+  try {
+    _id = ObjectIdOrThrow('' + pId);
+    if (!_id) throw new Error('empty ObjectId');
+  } catch (err) {
+    cb();
+  }
   mongodb.collections['post'].updateOne(
-    { _id: _id },
+    { _id },
     { $inc: { nbP: 1 } },
     function (err) {
       if (err) console.log(err);

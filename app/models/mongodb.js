@@ -50,6 +50,10 @@ exports.ObjectId = function (v) {
   }
 };
 
+exports.ObjectIdOrThrow = function (objectId) {
+  return new mongodb.ObjectId('' + objectId);
+};
+
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
   const seconds = Math.round(date.getTime() / 1000);
