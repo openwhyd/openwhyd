@@ -19,6 +19,8 @@ if (process.env['MONGODB_HOST'] === undefined)
 if (process.env['MONGODB_PORT'] === undefined)
   throw new Error(`missing env var: MONGODB_PORT`);
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
 process.appParams = {
   mongoDbHost: process.env['MONGODB_HOST'],
   mongoDbPort: process.env['MONGODB_PORT'], // 27017
