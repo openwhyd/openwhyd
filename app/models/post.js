@@ -66,7 +66,7 @@ exports.fetchPosts = async function (query, params, options, handler) {
   params = params || {};
   processAdvQuery(query, params, options);
   const { fields } = params ?? {};
-  delete params.fields;
+  if (params) delete params.fields;
   let results = [];
   try {
     results = await mongodb.collections['post']

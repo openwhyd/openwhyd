@@ -45,7 +45,7 @@ async function fetchArray(query = {}, options, callback) {
     query.tId = '' + query.tId;
   //console.log("follow.fetchArray", query, "...");
   const { fields } = options ?? {};
-  delete options.fields;
+  if (options) delete options.fields;
   const results = await mongodb.collections[COLNAME].find(query, options || {})
     .project(fields ?? {})
     .toArray();

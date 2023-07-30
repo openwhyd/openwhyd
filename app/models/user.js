@@ -245,7 +245,7 @@ exports.fetchMulti = async function (q, options, handler) {
         for (let j in q._id['$in'])
           q._id['$in'][j] = ObjectId('' + q._id['$in'][j]);
   const { fields } = options ?? {};
-  delete options.fields;
+  if (options) delete options.fields;
   const array = await mongodb.collections['user']
     .find(q, options || {})
     .project(fields ?? {})
