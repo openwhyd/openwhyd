@@ -11,8 +11,13 @@ var userModel = require('../../models/user.js');
 var snip = require('../../snip.js');
 var uiSnip = require('../../templates/uiSnippets.js');
 
-var API_KEY = process.env.LAST_FM_API_KEY.substr();
-var API_SECRET = process.env.LAST_FM_API_SECRET.substr();
+if (process.env['LAST_FM_API_KEY'] === undefined)
+  throw new Error(`missing env var: LAST_FM_API_KEY`);
+if (process.env['LAST_FM_API_SECRET'] === undefined)
+  throw new Error(`missing env var: LAST_FM_API_SECRET`);
+
+var API_KEY = process.env.LAST_FM_API_KEY;
+var API_SECRET = process.env.LAST_FM_API_SECRET;
 
 var API_HOST = 'ws.audioscrobbler.com';
 var API_PREFIX = '/2.0/';

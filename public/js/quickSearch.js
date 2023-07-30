@@ -29,7 +29,7 @@ var removeEvent = window.removeEventListener ? function (elem, type, method) {
 */
 
 // native version, converted from jQuery implementation
-function QuickSearch(searchForm, options) {
+window.QuickSearch = function (searchForm, options) {
   var timeout;
   var prevVal = ''; // to prevent submitting the same query twice
   var selected = null; // index of selected result (hovered)
@@ -216,4 +216,4 @@ function QuickSearch(searchForm, options) {
   };
 
   this.clear = clearResults;
-}
+};

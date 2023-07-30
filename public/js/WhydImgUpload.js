@@ -1,6 +1,6 @@
-/* global $ */
+/* global $, DndUpload */
 
-function WhydImgUpload(options) {
+window.WhydImgUpload = function (options) {
   options = options || {};
   options.onError = options.onError || console.log;
 
@@ -114,11 +114,11 @@ function WhydImgUpload(options) {
     $avatarDrop.find('button').click(function () {
       $input.click();
     });
-    $avatarDrop.on('dragenter', function (e) {
+    $avatarDrop.on('dragenter', function (event) {
       destination = event.target;
       $(this).addClass('hover');
     });
-    $avatarDrop.on('dragleave', function (e) {
+    $avatarDrop.on('dragleave', function (event) {
       if (
         !$(this).find(destination).size() &&
         !$(this).find(event.target).size()
@@ -126,12 +126,12 @@ function WhydImgUpload(options) {
         $(this).removeClass('hover');
     });
     var handlers = {
-      error: function (eventData) {
+      error: function () {
         $boxes.hide();
         $avatarForm.show();
         $progress.hide();
       },
-      post: function (eventData) {
+      post: function () {
         onImageUpload();
         $progressLevel.css('width', '0px');
         $progress.show();
@@ -144,7 +144,7 @@ function WhydImgUpload(options) {
         onImageUploadComplete(eventData);
       },
     };
-    var dndUpload = new DndUpload({
+    DndUpload({
       form: $avatarForm[0],
       holder: $avatarDrop[0],
       url: uploadUrl,
@@ -158,4 +158,4 @@ function WhydImgUpload(options) {
   }
 
   this.activate();
-}
+};

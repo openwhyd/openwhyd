@@ -1,6 +1,6 @@
 // inspired by http://html5demos.com/dnd-upload#view-source
 
-function DndUpload(options) {
+window.DndUpload = function (options) {
   var options = options || {};
 
   var handler =
@@ -28,11 +28,6 @@ function DndUpload(options) {
 
   var url = options.url;
   var holder = options.holder;
-  var acceptedTypes = options.acceptedTypes || {
-    'image/png': true,
-    'image/jpeg': true,
-    'image/gif': true,
-  };
 
   holder.ondragover = function () {
     //this.className += ' hover';
@@ -68,4 +63,4 @@ function DndUpload(options) {
     };
     xhr.send(formData);
   };
-}
+};

@@ -12,7 +12,7 @@ function forEachAsync(fcts, cb) {
   })();
 }
 
-function TestRunner() {
+window.TestRunner = function () {
   var tests = [];
   var finalCallback = null;
 
@@ -43,4 +43,4 @@ function TestRunner() {
     });
     return this;
   };
-}
+};

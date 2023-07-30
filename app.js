@@ -35,6 +35,11 @@ console.error = makeErrorLog(consoleError, 'Error');
 
 // app configuration
 
+if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
+  throw new Error(`missing env var: WHYD_GENUINE_SIGNUP_SECRET`);
+if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
+  throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
+
 var params = (process.appParams = {
   // server level
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
@@ -49,7 +54,7 @@ var params = (process.appParams = {
   color: true,
 
   // secrets
-  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
+  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET,
 
   // workers and general site logic
   searchModule:
@@ -62,7 +67,7 @@ var params = (process.appParams = {
   emailModule: 'emailSendgrid', // "DISABLED"/"null" => fake email sending
   digestInterval: 60 * 1000, // digest worker checks for pending notifications every 60 seconds
   digestImmediate: false, // when true, digests are sent at every interval, if any notifications are pending
-  feedbackEmail: process.env.WHYD_CONTACT_EMAIL.substr(), // mandatory
+  feedbackEmail: process.env.WHYD_CONTACT_EMAIL, // mandatory
 
   // rendering preferences
   version: openwhydVersion,
@@ -110,11 +115,14 @@ function makeMongoUrl(params) {
 }
 
 function start() {
+  if (process.env['WHYD_SESSION_SECRET'] === undefined)
+    throw new Error(`missing env var: WHYD_SESSION_SECRET`);
+
   const myHttp = require('./app/lib/my-http-wrapper/http');
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
   const sessionMiddleware = session({
-    secret: process.env.WHYD_SESSION_SECRET.substr(),
+    secret: process.env.WHYD_SESSION_SECRET,
     store: new MongoStore({
       url: makeMongoUrl(params),
     }),
