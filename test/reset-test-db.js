@@ -1,7 +1,9 @@
-var fs = require('fs');
-var async = require('async');
+//@ts-check
 
-var DB_INIT_SCRIPTS = [
+const fs = require('fs');
+const async = require('async');
+
+const DB_INIT_SCRIPTS = [
   './config/initdb.js',
   './config/initdb_testing.js', // creates an admin user => should not be run on production!
 ];
