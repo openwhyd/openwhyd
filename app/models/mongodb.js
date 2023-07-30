@@ -116,10 +116,10 @@ exports.forEach = async function (colName, params, handler, cb, cbParam) {
     delete params.q;
   }
   const { fields } = params ?? {};
-  delete params.fields;
+  if (params) delete params.fields;
   const cursor = await exports.collections[colName]
     .find(q, params)
-    .project(fields);
+    .project(fields ?? {});
   for await (const item of cursor) {
     if (item) handler(item);
   }
@@ -139,10 +139,10 @@ exports.forEach2 = async function (colName, params, handler) {
     q._id = { $lt: exports.ObjectId('' + params.after) };
 
   const { fields } = params ?? {};
-  delete params.fields;
+  if (params) delete params.fields;
   const cursor = await exports.collections[colName]
     .find(q, params)
-    .project(fields);
+    .project(fields ?? {});
   (function next() {
     cursor.next(function (err, item) {
       if (err) {
