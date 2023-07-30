@@ -193,7 +193,7 @@ async function main() {
       var flagFct = FLAGS[flag];
       if (flagFct) flagFct();
       else if (flag.indexOf('--') == 0)
-        params[flag.substr(2)] = process.argv[++i];
+        params[flag.substring(2)] = process.argv[++i];
     }
   }
   if (params.color == true) {
