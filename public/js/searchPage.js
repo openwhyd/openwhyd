@@ -1,14 +1,14 @@
 /* global $, jQuery, htmlEntities */
 
-const selectTab = () => {
-  $('#tabSelector a.selected').removeClass('selected');
-  $(this).addClass('selected');
-  $('.resultPage').hide();
-  var current = $(this).attr('href').split('#').pop();
-  $('.resultPage#' + current).show();
-};
-
 if (document.getElementById('q').value.replace(/ /g, '')) {
+  const selectTab = function () {
+    $('#tabSelector a.selected').removeClass('selected');
+    $(this).addClass('selected');
+    $('.resultPage').hide();
+    var current = $(this).attr('href').split('#').pop();
+    $('.resultPage#' + current).show();
+  };
+
   $('#tabSelector a').on('click', selectTab);
   if (window.location.href.indexOf('tab=') != -1) {
     var tab = (window.location.href.split('tab=').pop() || '').split('&')[0];
