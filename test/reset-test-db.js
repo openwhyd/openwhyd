@@ -28,7 +28,8 @@ process.appParams = {
 console.log('[test-db-init.js] Connecting to db ...');
 require('../app/models/mongodb.js').init(function (err, db) {
   if (err) throw err;
-  var mongodb = this;
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const mongodb = this;
   console.log('[test-db-init.js] Clearing test database ...');
   db.dropDatabase(function (err) {
     if (err) throw err;
