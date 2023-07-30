@@ -144,7 +144,7 @@ window.WhydImgUpload = function (options) {
         onImageUploadComplete(eventData);
       },
     };
-    new DndUpload({
+    DndUpload({
       form: $avatarForm[0],
       holder: $avatarDrop[0],
       url: uploadUrl,
