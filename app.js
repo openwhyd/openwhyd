@@ -1,11 +1,14 @@
+//@ts-check
+
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 if (!process.env.DISABLE_DATADOG) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore // cf https://docs.datadoghq.com/fr/tracing/trace_collection/dd_libraries/nodejs/?tab=autresenvironnements
   require('dd-trace').init(); // datadog APM
 }
 
-var util = require('util');
-var mongodb = require('mongodb');
+const util = require('util');
 
 var openwhydVersion = require('./package.json').version;
 
@@ -40,14 +43,14 @@ if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
 if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
   throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
 
-var params = (process.appParams = {
+const params = (process.appParams = {
   // server level
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
   urlPrefix:
     process.env['WHYD_URL_PREFIX'] ||
     `http://localhost:${process.env['WHYD_PORT'] || 8080}`, // base URL of the app
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
+  mongoDbPort: process.env['MONGODB_PORT'] || '27017',
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
@@ -84,7 +87,7 @@ var params = (process.appParams = {
   },
 });
 
-var FLAGS = {
+const FLAGS = {
   '--no-color': function () {
     process.appParams.color = false;
   },
@@ -193,7 +196,7 @@ async function main() {
       var flagFct = FLAGS[flag];
       if (flagFct) flagFct();
       else if (flag.indexOf('--') == 0)
-        params[flag.substr(2)] = process.argv[++i];
+        params[flag.substring(2)] = process.argv[++i];
     }
   }
   if (params.color == true) {

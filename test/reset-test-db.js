@@ -1,7 +1,9 @@
-var fs = require('fs');
-var async = require('async');
+//@ts-check
 
-var DB_INIT_SCRIPTS = [
+const fs = require('fs');
+const async = require('async');
+
+const DB_INIT_SCRIPTS = [
   './config/initdb.js',
   './config/initdb_testing.js', // creates an admin user => should not be run on production!
 ];
@@ -17,6 +19,8 @@ if (process.env['MONGODB_HOST'] === undefined)
 if (process.env['MONGODB_PORT'] === undefined)
   throw new Error(`missing env var: MONGODB_PORT`);
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
 process.appParams = {
   mongoDbHost: process.env['MONGODB_HOST'],
   mongoDbPort: process.env['MONGODB_PORT'], // 27017
@@ -28,7 +32,8 @@ process.appParams = {
 console.log('[test-db-init.js] Connecting to db ...');
 require('../app/models/mongodb.js').init(function (err, db) {
   if (err) throw err;
-  var mongodb = this;
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const mongodb = this;
   console.log('[test-db-init.js] Clearing test database ...');
   db.dropDatabase(function (err) {
     if (err) throw err;
