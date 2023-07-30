@@ -1,22 +1,22 @@
-/* global $ */
+/* global $, jQuery, htmlEntities */
+
+const selectTab = () => {
+  $('#tabSelector a.selected').removeClass('selected');
+  $(this).addClass('selected');
+  $('.resultPage').hide();
+  var current = $(this).attr('href').split('#').pop();
+  $('.resultPage#' + current).show();
+};
 
 if (document.getElementById('q').value.replace(/ /g, '')) {
-  function selectTab() {
-    $('#tabSelector a.selected').removeClass('selected');
-    $(this).addClass('selected');
-    $('.resultPage').hide();
-    var current = $(this).attr('href').split('#').pop();
-    $('.resultPage#' + current).show();
-  }
-
-  $('#tabSelector a').click(selectTab);
+  $('#tabSelector a').on('click', selectTab);
   if (window.location.href.indexOf('tab=') != -1) {
     var tab = (window.location.href.split('tab=').pop() || '').split('&')[0];
     if (tab) $('#tab_' + tab).each(selectTab);
   }
 
   // merges results from youtube and soundcloud with currently displayed results
-  $(window).ready(
+  jQuery(
     function (query) {
       var $body = $('body');
       $body.addClass('loading');
