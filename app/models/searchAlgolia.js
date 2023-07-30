@@ -340,11 +340,9 @@ exports.deleteAllDocs = function (type, callback) {
     .clearObjects()
     .wait()
     .catch((err) => {
-      console.error('[search] algolia deleteAllDocs =>', err);
       callback && callback(err);
     })
     .then(() => {
-      console.log('[search] algolia deleteAllDocs =>', 'ok');
       callback && callback(); // TODO: check if parameters are required or not
     });
 };
