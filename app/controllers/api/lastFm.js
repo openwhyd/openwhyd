@@ -16,8 +16,8 @@ if (process.env['LAST_FM_API_KEY'] === undefined)
 if (process.env['LAST_FM_API_SECRET'] === undefined)
   throw new Error(`missing env var: LAST_FM_API_SECRET`);
 
-var API_KEY = process.env.LAST_FM_API_KEY;
-var API_SECRET = process.env.LAST_FM_API_SECRET;
+const API_KEY = process.env.LAST_FM_API_KEY;
+const API_SECRET = process.env.LAST_FM_API_SECRET;
 
 var API_HOST = 'ws.audioscrobbler.com';
 var API_PREFIX = '/2.0/';
