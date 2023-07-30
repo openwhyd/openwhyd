@@ -7,9 +7,9 @@ var snip = require('../snip.js');
 var mongodb = require('./mongodb.js');
 const algoliasearch = require('algoliasearch');
 
-if (!process.env['ALGOLIA_APP_ID'])
+if (process.env['ALGOLIA_APP_ID'] === undefined)
   throw new Error(`missing env var: ALGOLIA_APP_ID`);
-if (!process.env['ALGOLIA_API_KEY'])
+if (process.env['ALGOLIA_API_KEY'] === undefined)
   throw new Error(`missing env var: ALGOLIA_API_KEY`);
 
 const client = algoliasearch(

@@ -12,9 +12,9 @@ const mongo = require('./mongodb-wrapper.js');
 
 const MONGODB_PARAMS = {}; //{ mongoDbPort: 27117 }; // can be used to override environment variables
 
-if (!process.env['ALGOLIA_APP_ID'])
+if (process.env['ALGOLIA_APP_ID'] === undefined)
   throw new Error(`missing env var: ALGOLIA_APP_ID`);
-if (!process.env['ALGOLIA_API_KEY'])
+if (process.env['ALGOLIA_API_KEY'] === undefined)
   throw new Error(`missing env var: ALGOLIA_API_KEY`);
 
 const appId = process.env.ALGOLIA_APP_ID;

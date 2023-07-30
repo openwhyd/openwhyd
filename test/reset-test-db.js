@@ -12,9 +12,9 @@ if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
   };
 }
 
-if (!process.env['MONGODB_HOST'])
+if (process.env['MONGODB_HOST'] === undefined)
   throw new Error(`missing env var: MONGODB_HOST`);
-if (!process.env['MONGODB_PORT'])
+if (process.env['MONGODB_PORT'] === undefined)
   throw new Error(`missing env var: MONGODB_PORT`);
 
 process.appParams = {

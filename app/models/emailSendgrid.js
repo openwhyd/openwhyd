@@ -7,7 +7,7 @@ var https = require('https');
 var snip = require('./../snip.js');
 var querystring = require('querystring');
 
-if (!process.env['SENDGRID_API_KEY'])
+if (process.env['SENDGRID_API_KEY'] === undefined)
   throw new Error(`missing env var: SENDGRID_API_KEY`);
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
@@ -25,9 +25,9 @@ exports.email = function (
   if (!emailAddr)
     return callback && callback({ error: 'no email address was provided' });
 
-  if (!process.env['SENDGRID_API_FROM_EMAIL'])
+  if (process.env['SENDGRID_API_FROM_EMAIL'] === undefined)
     throw new Error(`missing env var: SENDGRID_API_FROM_EMAIL`);
-  if (!process.env['SENDGRID_API_FROM_NAME'])
+  if (process.env['SENDGRID_API_FROM_NAME'] === undefined)
     throw new Error(`missing env var: SENDGRID_API_FROM_NAME`);
 
   // Set up message

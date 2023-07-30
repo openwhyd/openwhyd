@@ -35,12 +35,10 @@ console.error = makeErrorLog(consoleError, 'Error');
 
 // app configuration
 
-if (!process.env['WHYD_GENUINE_SIGNUP_SECRET'])
+if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
   throw new Error(`missing env var: WHYD_GENUINE_SIGNUP_SECRET`);
-if (!process.env['WHYD_CONTACT_EMAIL'])
+if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
   throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
-if (!process.env['WHYD_SESSION_SECRET'])
-  throw new Error(`missing env var: WHYD_SESSION_SECRET`);
 
 var params = (process.appParams = {
   // server level
@@ -117,6 +115,9 @@ function makeMongoUrl(params) {
 }
 
 function start() {
+  if (process.env['WHYD_SESSION_SECRET'] === undefined)
+    throw new Error(`missing env var: WHYD_SESSION_SECRET`);
+
   const myHttp = require('./app/lib/my-http-wrapper/http');
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
