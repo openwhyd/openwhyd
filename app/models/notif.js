@@ -7,9 +7,7 @@
 var snip = require('../snip.js');
 var mongodb = require('./mongodb.js');
 var config = require('../models/config.js');
-var userModel = require('../models/user.js');
 var notifEmails = require('../models/notifEmails.js');
-var applenotif = require('../models/applenotif.js');
 
 exports.userNotifsCache = {}; // uId -> { t, notifs: [pId, topic, t, lastAuthor, n] }
 
@@ -44,46 +42,6 @@ var db = mongodb.collections;
 **/
 
 // private functions
-
-function pushToMobileTokens(toUser, text, payload) {
-  payload = payload || {};
-  exports.getUserNotifs(toUser.id || '' + toUser._id, function (notifs) {
-    payload.badge = countUserNotifs(notifs);
-    (toUser.apTok || []).map(function (device) {
-      console.log(
-        '[notif] sending to iOS user',
-        toUser.id || '' + toUser._id,
-        'tok:',
-        device.tok,
-      );
-      applenotif.pushToDevice(device.tok, text, payload);
-    });
-  });
-}
-
-function getUser(u) {
-  return u && mongodb.usernames['' + (u.id || u._id || u)];
-}
-
-function pushToMobile(code, initialToUser, text, payload) {
-  var toUser = getUser(initialToUser);
-  if (!(toUser || {}).pref)
-    return console.error(
-      'push notif prefs not found for user: ',
-      initialToUser,
-    );
-  if (parseInt('' + toUser.pref['mn' + code]) > -1) {
-    if (toUser.apTok) pushToMobileTokens(toUser, text, payload);
-    else
-      userModel.fetchUserFields([toUser], ['apTok'], function (toUsers) {
-        pushToMobileTokens(toUsers[0], text, payload);
-      });
-  }
-}
-
-function pushToMobiles(code, toUsers, text, payload) {
-  for (let i in toUsers) pushToMobile(code, toUsers[i], text, payload);
-}
 
 function cacheUserNotifs(uId, notifs) {
   exports.userNotifsCache[uId] = { t: new Date(), notifs: notifs };
@@ -328,9 +286,6 @@ exports.love = function (loverUid, post, callback) {
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);
-  pushToMobile('Lik', author, user.name + ' liked one of your tracks', {
-    href: '/c/' + post._id,
-  });
 };
 
 exports.unlove = function (loverUid, pId) {
@@ -400,9 +355,6 @@ exports.repost = function (reposterUid, post) {
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendRepost(reposter, post, author /*.email*/);
-  pushToMobile('Add', author, reposter.name + ' re-added your track', {
-    href: '/c/' + post._id,
-  });
 };
 /*
 exports.unrepost = function (reposterUid, pId) {
@@ -439,9 +391,6 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
     );
     invalidateUserNotifsCache(favoritedId);
     notifEmails.sendSubscribedToUser(sender, favorited, cb);
-    pushToMobile('Sub', favorited, sender.name + ' subscribed to you', {
-      href: '/u/' + senderId,
-    });
   }
 };
 
@@ -466,14 +415,6 @@ exports.comment = function (post = {}, comment = {}, cb) {
       null,
       function () {
         notifEmails.sendComment(post, comment, cb);
-        pushToMobile(
-          'Com',
-          post.uId,
-          commentUser.name + ' commented on one of your tracks',
-          {
-            href: '/c/' + post._id,
-          },
-        );
       },
     );
   }
@@ -496,14 +437,6 @@ exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
       },
       function () {
         notifEmails.sendMention(mentionedUid, post, comment, cb);
-        pushToMobile(
-          'Men',
-          mongodb.usernames['' + mentionedUid],
-          commentUser.name + ' mentionned you',
-          {
-            href: '/c/' + post._id,
-          },
-        );
       },
     );
   }
@@ -531,14 +464,6 @@ exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
       },
       function () {
         notifEmails.sendCommentReply(post, comment, repliedUid, cb);
-        pushToMobile(
-          'Rep',
-          mongodb.usernames['' + repliedUid],
-          commentUser.name + ' replied to your comment',
-          {
-            href: '/c/' + post._id,
-          },
-        );
       },
     );
   }
@@ -556,16 +481,7 @@ exports.inviteAccepted = function (inviterId, newUser) {
       img: '/img/u/' + newUser.id,
       href: '/u/' + newUser.id,
     },
-    function () {
-      pushToMobile(
-        'Acc',
-        { id: inviterId },
-        'Your friend ' + newUser.name + ' accepted your invite',
-        {
-          href: '/u/' + newUser.id,
-        },
-      );
-    },
+    function () {},
   );
   notifEmails.sendInviteAccepted(inviterId, newUser);
 };
@@ -590,9 +506,6 @@ exports.sendTrackToUsers = function (p, cb) {
   };
   //updateNotif({_id: p.pId+"/sent"}, { $set: payload, $addToSet: {uId:{$each:p.uidList}} }, function(res){
   insertNotif(p.uidList, payload, function (res) {
-    pushToMobiles(payload.type, p.uidList, p.uNm + ' sent you a track', {
-      href: payload.href,
-    });
     // no email to send
     cb && cb(res);
   });
@@ -618,9 +531,6 @@ exports.sendPlaylistToUsers = function (p, cb) {
     html: makeLink(p.uNm, '/u/' + p.uId) + ' sent you a playlist',
   };
   insertNotif(p.uidList, payload, function (res) {
-    pushToMobiles(payload.type, p.uidList, p.uNm + ' sent you a playlist', {
-      href: payload.href,
-    });
     // no email to send
     cb && cb(res);
   });

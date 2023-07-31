@@ -88,7 +88,6 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 - Make sure that the necessary environment variables are defined (see below)
 - Make sure that the database is initialized (by running `mongo openwhyd_data config/initdb.js` and `mongo openwhyd_data config/initdb_testing.js`)
 - Make sure that dependencies are installed (`npm install`)
-- If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 
 ### Usage (advanced)
 
@@ -147,8 +146,6 @@ If you want to test Deezer Connect, you will need your server to be reachable th
 
 - `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
 - `WHYD_SESSION_SECRET` (mandatory. a secret key used to sign session cookies)
-- `WHYD_DEV_APNS_PASSPHRASE` (mandatory. the passphrase used to de-cypher APNS certificate and key, for iOS push notifications in DEV mode)
-- `WHYD_APNS_PASSPHRASE` (mandatory. the passphrase used to de-cypher APNS certificate and key, for iOS push notifications in PRODUCTION mode)
 - `WHYD_ADMIN_OBJECTID` (ObjectId of the user that can access to admin endpoints)
 - `WHYD_ADMIN_NAME` (Full-text name of the user that can access to admin endpoints)
 - `WHYD_ADMIN_EMAIL` (mandatory. Email address of the user that can access to admin endpoints)

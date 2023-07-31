@@ -36,7 +36,7 @@ db.follow.createIndex({ tId: 1 });
 db.user.createIndex({ email: 1 });
 db.user.createIndex({ handle: 1 }, { sparse: true });
 db.user.createIndex({ fbId: 1 }, { sparse: true });
-db.user.createIndex({ apTok: 1 }, { sparse: true });
+db.user.createIndex({ apTok: 1 }, { sparse: true }); // TODO remove index and collection
 db.user.createIndex({ n: 1 }, { sparse: true });
 db.user.createIndex({ 'pref.pendEN': 1 }, { sparse: true });
 db.user.createIndex({ 'pref.nextEN': 1 }, { sparse: true });

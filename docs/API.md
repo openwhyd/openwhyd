@@ -357,7 +357,6 @@ Allowed Parameters (one or many can be passed):
 - **twId**: (string) Twitter handle connected to this openwhyd account (set to empty string to disconnect)
 - **twTok**: (string) last session token received from connecting to Twitter (to send with **twId**)
 - **twSec**: (string) last session secret received from connecting to Twitter (to send with **twId**)
-- **apTok**: (string) user's Apple Push Notification token (string of 64 hexadecimal chars)
 - **bio**: (string) user's biography / description, to be displayed publicly on Openwhyd
 - **loc**: (string) user's location. freeform, no format restrictions apply.
 - **lnk_home**: (string) url of user's homepage, to be displayed as is on his profile

@@ -11,11 +11,6 @@ coverage
 /uAvatarImg/
 /uCoverImg/
 /uPlaylistImg/
-/config/apns/aps_dev.cert.pem
-/config/apns/aps_dev.key.pem
-/config/apns/aps_prod.cert.pem
-/config/apns/aps_prod.key.pem
-/config/apns/Dev_Whyd.mobileprovision
 /*.log
 /*.out
 /*.pid

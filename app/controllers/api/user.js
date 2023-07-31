@@ -208,10 +208,6 @@ var fieldSetters = {
   twId: function (p, cb) {
     userModel.setTwitterId(p._id, p.twId, p.twTok, p.twSec, cb);
   },
-  apTok: function (p, cb) {
-    if (p.apTok === '') userModel.clearApTok(p._id, cb);
-    else userModel.setApTok(p._id, p.apTok, cb);
-  },
   //"fbId": defaultSetter("fbId"),
   bio: defaultSetter('bio'),
   loc: defaultSetter('loc'),
@@ -285,7 +281,6 @@ function fetchUserById(uId, options, cb) {
         delete user.lastFm;
         delete user.pref;
         delete user.fbTok;
-        delete user.apTok;
         delete user.twTok;
         delete user.twSec;
       }
