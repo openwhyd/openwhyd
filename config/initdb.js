@@ -36,11 +36,14 @@ db.follow.createIndex({ tId: 1 });
 db.user.createIndex({ email: 1 });
 db.user.createIndex({ handle: 1 }, { sparse: true });
 db.user.createIndex({ fbId: 1 }, { sparse: true });
-db.user.createIndex({ apTok: 1 }, { sparse: true });
 db.user.createIndex({ n: 1 }, { sparse: true });
 db.user.createIndex({ 'pref.pendEN': 1 }, { sparse: true });
 db.user.createIndex({ 'pref.nextEN': 1 }, { sparse: true });
 db.user.createIndex({ 'sp.id': 1 }, { sparse: true }); // spotify id
+
+// print('removing legacy fields on user collection...');
+db.user.dropIndex({ apTok: 1 });
+db.user.updateMany({}, { $unset: { apTok: 1 } });
 
 // print('indexing activity collection...');
 db.activity.createIndex({ id: 1 }, { sparse: true }); /*poster.id*/

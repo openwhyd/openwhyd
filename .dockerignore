@@ -23,7 +23,6 @@ npm-debug.log
 /uCoverImg
 /uPlaylistImg
 /upload_data
-/config/apns
 /scripts/mongodb-scripts/db
 /scripts/mongodb-scripts/*.gz
 /misc

@@ -12,8 +12,6 @@ var TEST_USER = {
   // additional fields:
   handle: 'testvaliduserhandl',
   fbId: '1',
-  apTok:
-    '00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000',
 };
 
 function log() {
@@ -338,35 +336,6 @@ exports.makeTests = function (p) {
       },
     ],
     [
-      'set invalid apple push notification token',
-      function (cb) {
-        jsonPost(
-          '/api/user',
-          { cookie: testVars.cookie, body: { apTok: 'pouet' } },
-          function () {
-            getUser(function (user) {
-              cb(!user.apTok);
-            });
-          },
-        );
-      },
-    ],
-    [
-      'set valid apple push notification token',
-      function (cb) {
-        jsonPost(
-          '/api/user',
-          { cookie: testVars.cookie, body: { apTok: TEST_USER.apTok } },
-          function () {
-            getUser(function (user) {
-              //log("user", user);
-              cb(user.apTok[0].tok === TEST_USER.apTok.replace(/ /g, ''));
-            });
-          },
-        );
-      },
-    ],
-    [
       'connect to twitter',
       function (cb) {
         jsonPost(
@@ -579,24 +548,6 @@ exports.makeTests = function (p) {
     ],
     END_TEST,
   ];
-
-  /*
-		["set adrien's apple push notification token", function(cb){
-			jsonPost("/api/user", { body: { "apTok": "07e3570a 8393f53e b868f627 766ea900 88c243a2 4f842051 769ad757 4ed10d7b" } }, function(res){
-				cb(!!res);
-			});
-		}],
-		["set adrien's apple push preferences", function(cb){
-			jsonPost("/api/user", { body: { "pref[mnLik]": 0 } }, function(res){
-				cb(!!res);
-			});
-		}],
-		["disable adrien's apple push preferences", function(cb){
-			jsonPost("/api/user", { body: { "pref[mnLik]": -1 } }, function(res){
-				cb(!!res);
-			});
-		}],
-	*/
 
   return [
     TESTS_SIGNUP,

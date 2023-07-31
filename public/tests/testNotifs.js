@@ -74,17 +74,6 @@
         });
       });
     },
-    'backup and delete apTok': function (cb) {
-      jsonGet('/api/user', {}, function (me) {
-        testVars.initialApTok = me.apTok;
-        log('apTok:', me.apTok || '(none)');
-        jsonPost('/api/user', { apTok: '' }, function () {
-          jsonGet('/api/user', {}, function (me) {
-            cb(!me.apTok);
-          });
-        });
-      });
-    },
     'backup and disable mnSub notif preference': function (cb) {
       jsonGet('/api/user', {}, function (me) {
         testVars.initialMnSub = me.pref.mnSub;
@@ -107,15 +96,6 @@
         var count = countNotifs(notifs);
         log('found', count, 'notifs');
         cb(count == 1);
-      });
-    },
-    'set apTok': function (cb) {
-      var token = window.prompt('What is your APNS token?', DEFAULT_TOKEN);
-      jsonPost('/api/user', { apTok: token }, function () {
-        jsonGet('/api/user', {}, function (me) {
-          log('new token', me.apTok);
-          cb(me.apTok && me.apTok[0].tok == token.replace(/ /g, ''));
-        });
       });
     },
     'simulate a notif => still no push': function (cb) {
@@ -165,20 +145,6 @@
           });
         },
       );
-    },
-    'restore apTok': function (cb) {
-      jsonPost('/api/user', { apTok: '' }, function () {
-        jsonPost(
-          '/api/user',
-          { apTok: (testVars.initialApTok.pop() || { tok: '' }).tok },
-          function () {
-            jsonGet('/api/user', {}, function (me) {
-              log('restored initial token', me.apTok);
-              cb(true);
-            });
-          },
-        );
-      });
     },
     'clear notifications': function (cb) {
       jsonPost('/api/notif', { action: 'deleteAll' }, function () {

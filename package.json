@@ -64,7 +64,6 @@
   },
   "dependencies": {
     "algoliasearch": "4.17.0",
-    "apn": "^1.6.2",
     "argon2": "^0.30.3",
     "async": "*",
     "colors": "*",

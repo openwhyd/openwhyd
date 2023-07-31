@@ -697,54 +697,6 @@ exports.setPref = function (uId, pref, handler) {
 
 // === OTHER METHODS
 
-// apple push notification token
-exports.setApTok = function (uId, _apTok, cb) {
-  var apTok = ('' + _apTok).replace(/[^0-9a-f]/gi, '');
-  if (apTok.length != 64)
-    return cb({ error: 'invalid apple push notification device token' });
-  function handleResult(err, success) {
-    cb && cb(err || !success ? { error: err } : { ok: success });
-  }
-  var newApTok = { tok: apTok, t: Date.now() };
-  /*
-	// policy: a user can have several apTok, but no duplicates, and the same apTok can be associated to several users
-	mongodb.collections["user"].findOne({_id:ObjectId(""+uId), "apTok.tok":apTok}, {fields:{apTok:1}}, function(err, user) {
-		if (user) {
-			var finalApTok = [];
-			for (let i in user.apTok)
-				if (user.apTok[i].tok != apTok)
-					finalApTok.push(user.apTok[i]);
-			finalApTok.push(newApTok);
-			mongodb.collections["user"].update({_id:ObjectId(""+uId)}, {$set:{apTok:finalApTok}}, handleResult);
-		}
-		else
-			mongodb.collections["user"].update({_id:ObjectId(""+uId)}, {$push:{apTok:newApTok}}, handleResult);
-	});
-	*/
-  // new policy: one apTok <--> one user.
-  mongodb.collections['user'].updateMany(
-    { 'apTok.tok': apTok },
-    { $unset: { apTok: '' } },
-    function () {
-      mongodb.collections['user'].updateOne(
-        { _id: ObjectId('' + uId) },
-        { $set: { apTok: [newApTok] } },
-        handleResult,
-      );
-    },
-  );
-};
-
-exports.clearApTok = function (uId, cb) {
-  mongodb.collections['user'].updateOne(
-    { _id: ObjectId('' + uId) },
-    { $unset: { apTok: '' } },
-    function (err, success) {
-      cb && cb(err || !success ? { error: err } : { ok: success });
-    },
-  );
-};
-
 exports.setFbId = function (uId, fbId, cb, fbTok) {
   console.log('user.setFbId', uId, fbId);
   exports.fetchByFbUid(fbId, function (user) {
