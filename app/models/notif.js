@@ -240,12 +240,6 @@ exports.getUserNotifs = function (uid, handler) {
   else exports.fetchUserNotifs(uid, handler);
 };
 
-function countUserNotifs(notifs) {
-  var total = 0;
-  for (let i in notifs) total += notifs[i].n || 1;
-  return total;
-}
-
 // generation notification method
 
 exports.html = function (uId, html, href, img) {
