@@ -1,8 +1,11 @@
+//@ts-check
+
 var vm = require('vm');
 var mongodb = require('mongodb');
 
 const PRINT_ACTIVE = false;
 const LOG_PREFIX = '[mongo shell]';
+const TIMEOUT_MS = 2 * 60 * 1000; // two minutes
 
 function buildContext(db, callback) {
   const context = {
@@ -23,12 +26,14 @@ function buildContext(db, callback) {
 
 // this method runs the commands of a mongo shell script (e.g. initdb.js)
 exports.runScriptOnDatabase = function (script, db, callback) {
-  buildContext(db, function (err, context) {
-    if (err) {
-      callback(err);
-      return;
-    };
-    new vm.Script(script).runInContext(vm.createContext(context));
+  buildContext(db, async function (err, contextObj) {
+    if (!err) {
+      await vm.runInNewContext(
+        `Promise.resolve().then(async () => { ${script} });`,
+        vm.createContext(contextObj),
+        { timeout: TIMEOUT_MS, microtaskMode: 'afterEvaluate' },
+      );
+    }
+    callback(err);
   });
-  callback();
 };
