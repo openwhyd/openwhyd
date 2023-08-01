@@ -27,7 +27,7 @@ exports.runScriptOnDatabase = function (script, db, callback) {
     if (err) {
       callback(err);
       return;
-    };
+    }
     new vm.Script(script).runInContext(vm.createContext(context));
   });
   callback();
