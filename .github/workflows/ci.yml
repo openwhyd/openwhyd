@@ -80,7 +80,7 @@ jobs:
       mongodb:
         image: docker://mongo:3.6
         ports:
-          - 27017:27017
+          - 27117:27017
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -206,7 +206,7 @@ jobs:
       mongodb:
         image: docker://mongo:3.6
         ports:
-          - 27017:27017
+          - 27117:27017
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -300,7 +300,7 @@ jobs:
       mongodb:
         image: docker://mongo:3.6
         ports:
-          - 27017:27017
+          - 27117:27017
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
