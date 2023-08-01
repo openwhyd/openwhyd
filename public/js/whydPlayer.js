@@ -582,11 +582,11 @@ function WhydPlayer() {
             this.playStreamUrl(streamURL);
           }
         },
-        error: (err) => {
+        error: (err, textStatus, errorThrown) => {
           console.error('bandcampExtractor error:', err);
           this.clientCall('onError', self, {
             source: 'BandcampPatchedPlayer',
-            error: err.message || err,
+            error: 'message' in err ? err.message : errorThrown || textStatus,
           });
         },
       });
@@ -701,8 +701,9 @@ function WhydPlayer() {
       var trackList = populateTracksFromPosts();
       var trackNumber = 0;
       if (postNode)
-        for (let i in trackList)
-          if (trackList[i].metadata.post == postNode) trackNumber = i;
+        trackList.forEach((track, i) => {
+          if (track.metadata.post == postNode) trackNumber = i;
+        });
       if (currentTrack && currentTrack.metadata.post == postNode)
         self.playPause();
       else playTrack(trackNumber);
