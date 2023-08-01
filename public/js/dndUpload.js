@@ -1,7 +1,7 @@
 // inspired by http://html5demos.com/dnd-upload#view-source
 
 window.DndUpload = function (options) {
-  var options = options || {};
+  options = options || {};
 
   var handler =
     options.handler ||

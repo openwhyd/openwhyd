@@ -34,7 +34,7 @@ window.QuickSearch = function (searchForm, options) {
   var prevVal = ''; // to prevent submitting the same query twice
   var selected = null; // index of selected result (hovered)
   var nbResults = 0; // number of results
-  var options = options || {};
+  options = options || {};
   var params = options.params || {};
   var cancelledQuery = false;
   //var searchForm = searchForm || document.getElementById("searchForm");
@@ -112,7 +112,7 @@ window.QuickSearch = function (searchForm, options) {
     searchResults.style.display = 'block';
 
     if (options.onResultClick) {
-      function makeHandler(li) {
+      const makeHandler = function (li) {
         var a = li.getElementsByTagName('a')[0];
         return function (e) {
           e.preventDefault();
@@ -120,7 +120,7 @@ window.QuickSearch = function (searchForm, options) {
           hideResults();
           return false;
         };
-      }
+      };
       for (let i = anchors.length - 1; i >= 0; --i)
         addEvent(anchors[i], 'click', makeHandler(anchors[i]));
     }
@@ -207,7 +207,7 @@ window.QuickSearch = function (searchForm, options) {
 
   this.cancelQuery = function () {
     cancelQuery();
-    searchClear && toggle(searchClear, 'loading', false); // TODO: call toggleClass() instead
+    searchClear && toggleClass(searchClear, 'loading', false);
   };
 
   this.search = function (q) {

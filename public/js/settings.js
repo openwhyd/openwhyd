@@ -115,7 +115,7 @@ $(function () {
 
   $handle.bind('keydown keypress change', function () {
     setTimeout(function () {
-      var valid = validateUsername();
+      /*var valid =*/ validateUsername();
       $handle
         .parent()
         .toggleClass('ok', false) //valid == 1)
