@@ -5,18 +5,22 @@
 //print("connecting to openwhyd_data database...");
 //db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
 
+const tolerateError = (name) => (err) => {
+  if (!err.message.includes(name)) throw err;
+};
+
 print('creating openwhyd collections...');
 await Promise.all([
-  db.createCollection('config'),
-  db.createCollection('email'),
-  db.createCollection('invite'),
-  db.createCollection('notif'),
-  db.createCollection('user'),
-  db.createCollection('follow'),
-  db.createCollection('post'),
-  db.createCollection('activity'),
-  db.createCollection('track'),
-  db.createCollection('comment'),
+  db.createCollection('config').catch(tolerateError('already exists')),
+  db.createCollection('email').catch(tolerateError('already exists')),
+  db.createCollection('invite').catch(tolerateError('already exists')),
+  db.createCollection('notif').catch(tolerateError('already exists')),
+  db.createCollection('user').catch(tolerateError('already exists')),
+  db.createCollection('follow').catch(tolerateError('already exists')),
+  db.createCollection('post').catch(tolerateError('already exists')),
+  db.createCollection('activity').catch(tolerateError('already exists')),
+  db.createCollection('track').catch(tolerateError('already exists')),
+  db.createCollection('comment').catch(tolerateError('already exists')),
 ]);
 
 // print('indexing post collection...');
@@ -45,7 +49,10 @@ await db.collection('user').createIndex({ 'pref.nextEN': 1 }, { sparse: true });
 await db.collection('user').createIndex({ 'sp.id': 1 }, { sparse: true }); // spotify id
 
 // print('removing legacy fields on user collection...');
-await db.collection('user').dropIndex({ apTok: 1 });
+await db
+  .collection('user')
+  .dropIndex({ apTok: 1 })
+  .catch(tolerateError("can't find index"));
 await db.collection('user').updateMany({}, { $unset: { apTok: 1 } });
 
 // print('indexing activity collection...');

@@ -1,3 +1,5 @@
+//@ts-check
+
 var vm = require('vm');
 var mongodb = require('mongodb');
 
@@ -23,12 +25,14 @@ function buildContext(db, callback) {
 
 // this method runs the commands of a mongo shell script (e.g. initdb.js)
 exports.runScriptOnDatabase = function (script, db, callback) {
-  buildContext(db, function (err, context) {
-    if (err) {
-      callback(err);
-      return;
+  buildContext(db, async function (err, contextObj) {
+    if (!err) {
+      await vm.runInNewContext(
+        `Promise.resolve().then(async () => { ${script} });`,
+        vm.createContext(contextObj),
+        { timeout: 5, microtaskMode: 'afterEvaluate' },
+      );
     }
-    new vm.Script(script).runInContext(vm.createContext(context));
+    callback(err);
   });
-  callback();
 };
