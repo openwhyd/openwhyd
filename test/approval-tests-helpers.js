@@ -1,25 +1,13 @@
-const fs = require('fs');
 const { promisify, ...util } = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
 const childProcess = require('child_process');
+const { loadEnvVars } = require('./fixtures');
 
 const makeJSONScrubber = (scrubbers) => (obj) =>
   JSON.parse(
     scrubbers.reduce((data, scrub) => scrub(data), JSON.stringify(obj)),
   );
-
-const readFile = (file) => fs.promises.readFile(file, 'utf-8');
-
-const loadEnvVars = async (file) => {
-  const envVars = {};
-  (await readFile(file)).split(/[\r\n]+/).forEach((envVar) => {
-    if (!envVar) return;
-    const [key, def] = envVar.split('=');
-    envVars[key] = def.replace(/^"|"$/g, '');
-  });
-  return envVars;
-};
 
 function extractCookieJar(headers, origin) {
   const jar = request.jar();
