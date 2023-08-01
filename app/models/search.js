@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /**
  * generic search wrapper
  * @author adrienjoly, whyd
@@ -7,31 +9,21 @@ var config = require('./config.js');
 
 /** @returns {void} */
 exports.indexTyped = (docType, document) => {
-  docType;
-  document;
   throw new Error('not implemented');
 };
 
 /** @returns {void} */
 exports.deletePlaylist = (userId, playlistId, callback) => {
-  userId;
-  playlistId;
-  callback;
   throw new Error('not implemented');
 };
 
 /** @returns {void} */
 exports.deleteDoc = (docType, playlistId) => {
-  docType;
-  playlistId;
   throw new Error('not implemented');
 };
 
 /** @returns {void} */
 exports.indexPlaylist = (userId, playlistId, playlistName) => {
-  userId;
-  playlistId;
-  playlistName;
   throw new Error('not implemented');
 };
 

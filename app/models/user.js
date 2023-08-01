@@ -338,22 +338,14 @@ exports.save = function (pUser, handler) {
   var user = pUser;
   delete user._id;
   if (user.name) user.n = exports.normalizeName(user.name);
-  // console.log(
-  //   'models.user.save : ',
-  //   Object.keys(user),
-  //   '=> criteria: ',
-  //   criteria
-  // );
   mongodb.collections['user'].updateOne(
     criteria,
     { $set: user },
     { upsert: true },
     function (err) {
-      //console.log("updated user => item ", item);
       if (err) console.log(err);
       fetch(criteria, function (err, user) {
         if (err) console.error(err);
-        //console.log("user stored as ", user);
         if (user) searchModel.indexTyped('user', user);
         mongodb.cacheUser(user);
         if (handler) handler(user);
