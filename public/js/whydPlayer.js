@@ -1,9 +1,11 @@
-/* global $, Playem, loadMore, showMessage, toggleLovePost, publishPost, goToPage */
+//@ts-check
 
 /**
  * openwhyd player
  * @author adrienjoly
  **/
+
+const $ = window.jQuery;
 
 window.playTrack = function () {
   return false;
@@ -23,6 +25,8 @@ var MAX_POSTS_TO_SHUFFLE = 200;
 
 // utility functions
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- incomplete definition of window.console
 if (undefined == window.console) window.console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 function EventEmitter() {
@@ -71,7 +75,7 @@ function ProgressBar(p = {}) {
     }
     $(document)
       .mousemove(moveCursor)
-      .one('mouseup', function (e) {
+      .one('mouseup', (e) => {
         draggingCursor = false;
         $(document).unbind('mousemove');
         moveCursor(e);
@@ -101,7 +105,7 @@ function ProgressBar(p = {}) {
 /////////////////////////////////////////////////////////////////////////////////
 
 function WhydPlayer() {
-  window.playem = new Playem({
+  window.playem = new window.Playem({
     loop: true,
     playTimeoutMs: 12 * 1000, // give 12 seconds for tracks to (try to) start playing
   });
@@ -205,7 +209,7 @@ function WhydPlayer() {
           if (wasPlaying) {
             window.playem.resume();
             window.showMessage &&
-              showMessage(
+              window.showMessage(
                 'Want to play music in the background?' +
                   ' Please install <a href="https://openwhyd.org/download"' +
                   ' target="_blank">Openwhyd Desktop App</a> 👌',
@@ -405,7 +409,7 @@ function WhydPlayer() {
           ' target="_blank">Openwhyd Desktop App</a> 👌';
       }
 
-      window.showMessage && showMessage(failedTrackMessage, true);
+      window.showMessage && window.showMessage(failedTrackMessage, true);
       if (e && e.track) {
         console.log('cleaning track metadata before logging', e.track);
         // to prevent circular object
@@ -486,7 +490,7 @@ function WhydPlayer() {
     },
     // todo: call from whydPlayer.onTrackChange() instead of exposing this function to playem
     loadMore: function (params, cb) {
-      if (params || cb) return loadMore(params, cb);
+      if (params || cb) return window.loadMore(params, cb);
       else if (!isShuffle) {
         var $btnLoadMore = $('.btnLoadMore:visible');
         if ($btnLoadMore.length) $btnLoadMore.click();
@@ -665,7 +669,7 @@ function WhydPlayer() {
       isShuffle = !isShuffle;
       $body.toggleClass('isShuffle', isShuffle);
       if (isShuffle)
-        loadMore({ limit: MAX_POSTS_TO_SHUFFLE }, function () {
+        window.loadMore({ limit: MAX_POSTS_TO_SHUFFLE }, function () {
           populateTracksFromPosts();
         });
       else populateTracksFromPosts(); // will shuffle the tracks
@@ -708,15 +712,15 @@ function WhydPlayer() {
     },
     like: function () {
       if (currentTrack.metadata)
-        toggleLovePost(currentTrack.metadata.post.dataset.pid);
+        window.toggleLovePost(currentTrack.metadata.post.dataset.pid);
     },
     repost: function () {
       if (currentTrack.metadata)
-        publishPost(currentTrack.metadata.post.dataset.pid);
+        window.publishPost(currentTrack.metadata.post.dataset.pid);
     },
     comment: function () {
       if (currentTrack.metadata)
-        goToPage('/c/' + currentTrack.metadata.post.dataset.pid);
+        window.goToPage('/c/' + currentTrack.metadata.post.dataset.pid);
     },
     refresh: function () {
       if (currentTrack) {
