@@ -314,7 +314,7 @@ jobs:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
       - uses: browser-actions/setup-chrome@latest
       - run: |
-          echo "Chrome version: $(which chrome)"
+          echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
 
       - uses: actions/checkout@v3
@@ -335,7 +335,8 @@ jobs:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
           config-file: cypress.config.ts
-          browser: 'chromium' # to include browser console in cypress logs
+          browser: '${{ env.BROWSER_PATH }}' # chromium/chrome is required to include browser console in cypress logs
+          install: false
           record: true
           parallel: true
         env:
