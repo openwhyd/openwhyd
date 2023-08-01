@@ -5,6 +5,7 @@ var mongodb = require('mongodb');
 
 const PRINT_ACTIVE = false;
 const LOG_PREFIX = '[mongo shell]';
+const TIMEOUT_MS = 2 * 60 * 1000; // two minutes
 
 function buildContext(db, callback) {
   const context = {
@@ -30,7 +31,7 @@ exports.runScriptOnDatabase = function (script, db, callback) {
       await vm.runInNewContext(
         `Promise.resolve().then(async () => { ${script} });`,
         vm.createContext(contextObj),
-        { timeout: 5, microtaskMode: 'afterEvaluate' },
+        { timeout: TIMEOUT_MS, microtaskMode: 'afterEvaluate' },
       );
     }
     callback(err);
