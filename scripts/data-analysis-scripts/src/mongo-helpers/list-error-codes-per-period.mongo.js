@@ -1,4 +1,4 @@
-/* globals db, load, makeMapWith, emit, RENDER_FCT, WEEK, OUTPUT_COLLECTION, makeDateRangeQuery, today */
+/* globals db, load, makeMapWith, emit, PERIOD, RENDER_FCT, WEEK, OUTPUT_COLLECTION, makeDateRangeQuery, today */
 
 // usage: $ mongo openwhyd_dump --eval "const RENDER_FCT = renderDate, OUTPUT_COLLECTION = 'list-error-codes-per-day';" list-error-codes-per-period.mongo.js
 
@@ -11,8 +11,10 @@ load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
 // - PERIOD: (optional) range in milliseconds from today, e.g. 'YEAR', 'MONTH'
 
 try {
+  // eslint-disable-next-line no-global-assign
   PERIOD = eval(PERIOD);
 } catch (e) {
+  // eslint-disable-next-line no-global-assign
   PERIOD = WEEK; // default value: 7 days
 }
 

@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, user, goToPage, showMessage */
 
 var $playlistNameField = $('#playlistNameField');
 var $playlistNameSubmit = $('#playlistNameSubmit');
@@ -70,7 +70,7 @@ $playlistNameField
 
 var $deletePlaylist = $('.deletePlaylist').first();
 
-function deletePlaylist() {
+window.deletePlaylist = function () {
   if (confirm('Are you sure you want to delete this playlist?')) {
     $deletePlaylist.addClass('loading');
     $.ajax({
@@ -94,4 +94,4 @@ function deletePlaylist() {
       },
     });
   }
-}
+};

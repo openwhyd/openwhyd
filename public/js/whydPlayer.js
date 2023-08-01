@@ -1,9 +1,11 @@
-/* global $, Playem, loadMore, showMessage, toggleLovePost, publishPost, goToPage */
+//@ts-check
 
 /**
  * openwhyd player
  * @author adrienjoly
  **/
+
+const $ = window.jQuery;
 
 window.playTrack = function () {
   return false;
@@ -23,6 +25,8 @@ var MAX_POSTS_TO_SHUFFLE = 200;
 
 // utility functions
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- incomplete definition of window.console
 if (undefined == window.console) window.console = { log: function () {} }; // eslint-disable-line @typescript-eslint/no-empty-function
 
 function EventEmitter() {
@@ -71,7 +75,7 @@ function ProgressBar(p = {}) {
     }
     $(document)
       .mousemove(moveCursor)
-      .one('mouseup', function (e) {
+      .one('mouseup', (e) => {
         draggingCursor = false;
         $(document).unbind('mousemove');
         moveCursor(e);
@@ -101,15 +105,14 @@ function ProgressBar(p = {}) {
 /////////////////////////////////////////////////////////////////////////////////
 
 function WhydPlayer() {
-  window.playem = new Playem({
+  window.playem = new window.Playem({
     loop: true,
     playTimeoutMs: 12 * 1000, // give 12 seconds for tracks to (try to) start playing
   });
   var currentTrack = null;
   var isPlaying = false;
   var isShuffle = false;
-  var self = this;
-  inheritEventEmitter(self); // adds on() and emit() methods
+  inheritEventEmitter(this); // adds on() and emit() methods
 
   // utility functions
 
@@ -205,7 +208,7 @@ function WhydPlayer() {
           if (wasPlaying) {
             window.playem.resume();
             window.showMessage &&
-              showMessage(
+              window.showMessage(
                 'Want to play music in the background?' +
                   ' Please install <a href="https://openwhyd.org/download"' +
                   ' target="_blank">Openwhyd Desktop App</a> 👌',
@@ -405,7 +408,7 @@ function WhydPlayer() {
           ' target="_blank">Openwhyd Desktop App</a> 👌';
       }
 
-      window.showMessage && showMessage(failedTrackMessage, true);
+      window.showMessage && window.showMessage(failedTrackMessage, true);
       if (e && e.track) {
         console.log('cleaning track metadata before logging', e.track);
         // to prevent circular object
@@ -453,12 +456,12 @@ function WhydPlayer() {
       $post = highlightTrack(track);
       setState('loading', $post);
     },
-    onPlay: function () {
+    onPlay: () => {
       setState('playing', $post);
       setPageTitlePrefix('▶');
       $('#btnPlay').addClass('playing');
 
-      self.emit('play', currentTrack);
+      this.emit('play', currentTrack);
       logTrackPlay();
     },
     onEnd: function () {
@@ -478,15 +481,15 @@ function WhydPlayer() {
           },
         );
     },
-    onPause: function () {
+    onPause: () => {
       setState('paused', $post);
       setPageTitlePrefix('❚❚');
       $('#btnPlay').removeClass('playing');
-      self.emit('pause', currentTrack);
+      this.emit('pause', currentTrack);
     },
     // todo: call from whydPlayer.onTrackChange() instead of exposing this function to playem
     loadMore: function (params, cb) {
-      if (params || cb) return loadMore(params, cb);
+      if (params || cb) return window.loadMore(params, cb);
       else if (!isShuffle) {
         var $btnLoadMore = $('.btnLoadMore:visible');
         if ($btnLoadMore.length) $btnLoadMore.click();
@@ -578,11 +581,11 @@ function WhydPlayer() {
             this.playStreamUrl(streamURL);
           }
         },
-        error: (err) => {
+        error: (err, textStatus, errorThrown) => {
           console.error('bandcampExtractor error:', err);
           this.clientCall('onError', self, {
             source: 'BandcampPatchedPlayer',
-            error: err.message || err,
+            error: 'message' in err ? err.message : errorThrown || textStatus,
           });
         },
       });
@@ -665,7 +668,7 @@ function WhydPlayer() {
       isShuffle = !isShuffle;
       $body.toggleClass('isShuffle', isShuffle);
       if (isShuffle)
-        loadMore({ limit: MAX_POSTS_TO_SHUFFLE }, function () {
+        window.loadMore({ limit: MAX_POSTS_TO_SHUFFLE }, function () {
           populateTracksFromPosts();
         });
       else populateTracksFromPosts(); // will shuffle the tracks
@@ -680,9 +683,9 @@ function WhydPlayer() {
     pause: function () {
       if (currentTrack && isPlaying) window.playem.pause();
     },
-    playPause: function () {
-      if (!currentTrack) self.playAll();
-      else if (isPlaying) self.pause();
+    playPause: () => {
+      if (!currentTrack) this.playAll();
+      else if (isPlaying) this.pause();
       else window.playem.resume();
     },
     next: function () {
@@ -691,16 +694,17 @@ function WhydPlayer() {
     prev: function () {
       window.playem.prev();
     },
-    playAll: function (postNode) {
+    playAll: (postNode) => {
       isShuffle = false;
       $body.removeClass('isShuffle');
       var trackList = populateTracksFromPosts();
       var trackNumber = 0;
       if (postNode)
-        for (let i in trackList)
-          if (trackList[i].metadata.post == postNode) trackNumber = i;
+        trackList.forEach((track, i) => {
+          if (track.metadata.post == postNode) trackNumber = i;
+        });
       if (currentTrack && currentTrack.metadata.post == postNode)
-        self.playPause();
+        this.playPause();
       else playTrack(trackNumber);
     },
     updateTracks: function () {
@@ -708,15 +712,15 @@ function WhydPlayer() {
     },
     like: function () {
       if (currentTrack.metadata)
-        toggleLovePost(currentTrack.metadata.post.dataset.pid);
+        window.toggleLovePost(currentTrack.metadata.post.dataset.pid);
     },
     repost: function () {
       if (currentTrack.metadata)
-        publishPost(currentTrack.metadata.post.dataset.pid);
+        window.publishPost(currentTrack.metadata.post.dataset.pid);
     },
     comment: function () {
       if (currentTrack.metadata)
-        goToPage('/c/' + currentTrack.metadata.post.dataset.pid);
+        window.goToPage('/c/' + currentTrack.metadata.post.dataset.pid);
     },
     refresh: function () {
       if (currentTrack) {
@@ -728,19 +732,19 @@ function WhydPlayer() {
     toggleFullscreen: function (toggle) {
       $body.removeClass('reduced').toggleClass('fullscreenVideo', toggle);
     },
-    populateTracks: function () {
+    populateTracks: () => {
       populateTracksFromPosts();
-      self.refresh();
+      this.refresh();
     },
     setVolume: function (vol) {
       window.playem.setVolume(vol);
     },
   };
 
-  for (let f in exports) self[f] = exports[f];
+  for (let f in exports) this[f] = exports[f];
 
   //populateTracksFromPosts();
-  return self; //exports;
+  return this; //exports;
 }
 
 /*loader.whenReady*/ (function () {

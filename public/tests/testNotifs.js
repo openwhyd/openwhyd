@@ -1,8 +1,6 @@
 /* globals $, TestRunner */
 
 (function () {
-  var DEFAULT_TOKEN = '';
-
   // wrap console
 
   var origLog = console.log;
