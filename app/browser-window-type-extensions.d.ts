@@ -24,8 +24,11 @@ interface Playem {
 }
 
 interface WhydPlayer {
-  emit: () => void;
+  emit: (eventName: string, params: uknown) => void;
   playAll: (node: unknown) => void;
+  pause: () => void;
+  playPause: () => void;
+  refresh: () => void;
 }
 
 interface Window {

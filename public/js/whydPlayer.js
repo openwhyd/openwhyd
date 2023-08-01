@@ -112,8 +112,7 @@ function WhydPlayer() {
   var currentTrack = null;
   var isPlaying = false;
   var isShuffle = false;
-  var self = this;
-  inheritEventEmitter(self); // adds on() and emit() methods
+  inheritEventEmitter(this); // adds on() and emit() methods
 
   // utility functions
 
@@ -457,12 +456,12 @@ function WhydPlayer() {
       $post = highlightTrack(track);
       setState('loading', $post);
     },
-    onPlay: function () {
+    onPlay: () => {
       setState('playing', $post);
       setPageTitlePrefix('▶');
       $('#btnPlay').addClass('playing');
 
-      self.emit('play', currentTrack);
+      this.emit('play', currentTrack);
       logTrackPlay();
     },
     onEnd: function () {
@@ -482,11 +481,11 @@ function WhydPlayer() {
           },
         );
     },
-    onPause: function () {
+    onPause: () => {
       setState('paused', $post);
       setPageTitlePrefix('❚❚');
       $('#btnPlay').removeClass('playing');
-      self.emit('pause', currentTrack);
+      this.emit('pause', currentTrack);
     },
     // todo: call from whydPlayer.onTrackChange() instead of exposing this function to playem
     loadMore: function (params, cb) {
@@ -684,9 +683,9 @@ function WhydPlayer() {
     pause: function () {
       if (currentTrack && isPlaying) window.playem.pause();
     },
-    playPause: function () {
-      if (!currentTrack) self.playAll();
-      else if (isPlaying) self.pause();
+    playPause: () => {
+      if (!currentTrack) this.playAll();
+      else if (isPlaying) this.pause();
       else window.playem.resume();
     },
     next: function () {
@@ -695,7 +694,7 @@ function WhydPlayer() {
     prev: function () {
       window.playem.prev();
     },
-    playAll: function (postNode) {
+    playAll: (postNode) => {
       isShuffle = false;
       $body.removeClass('isShuffle');
       var trackList = populateTracksFromPosts();
@@ -705,7 +704,7 @@ function WhydPlayer() {
           if (track.metadata.post == postNode) trackNumber = i;
         });
       if (currentTrack && currentTrack.metadata.post == postNode)
-        self.playPause();
+        this.playPause();
       else playTrack(trackNumber);
     },
     updateTracks: function () {
@@ -733,19 +732,19 @@ function WhydPlayer() {
     toggleFullscreen: function (toggle) {
       $body.removeClass('reduced').toggleClass('fullscreenVideo', toggle);
     },
-    populateTracks: function () {
+    populateTracks: () => {
       populateTracksFromPosts();
-      self.refresh();
+      this.refresh();
     },
     setVolume: function (vol) {
       window.playem.setVolume(vol);
     },
   };
 
-  for (let f in exports) self[f] = exports[f];
+  for (let f in exports) this[f] = exports[f];
 
   //populateTracksFromPosts();
-  return self; //exports;
+  return this; //exports;
 }
 
 /*loader.whenReady*/ (function () {
