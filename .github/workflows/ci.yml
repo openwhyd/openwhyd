@@ -256,6 +256,7 @@ jobs:
         env:
           MONGODB_HOST: localhost
           MONGODB_PORT: 27117
+          MONGODB_URL: mongodb://localhost:27117/openwhyd_test
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
