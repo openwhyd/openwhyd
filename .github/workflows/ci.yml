@@ -158,7 +158,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: Unit tests
         env:
           CI: true
