@@ -13,7 +13,6 @@ env:
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
-
   dependencies:
     name: Check dependencies (with audit)
     timeout-minutes: 5
