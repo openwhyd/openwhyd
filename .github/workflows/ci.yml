@@ -232,8 +232,8 @@ jobs:
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
         run: npm run test:3rd-party
 
-  refactor-coverage:
-    name: Send test coverage of the `post` API to Codacy
+  code-coverage:
+    name: Code Coverage for Codacy
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
@@ -252,14 +252,14 @@ jobs:
         with:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
-      - run: npm run test:post:coverage
+      - run: npm run test:all:coverage
         env:
           MONGODB_HOST: localhost
           MONGODB_PORT: 27117
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
-          name: refactor-code-coverage-report
+          name: all-code-coverage-report
           path: |
             .nyc_output
             coverage
@@ -348,8 +348,8 @@ jobs:
     needs:
       - cypress-tests
       - approval-tests
-      - refactor-coverage
-      # TODO: add coverage for unit and integration tests too
+      - code-coverage
+      # TODO: remove coverage for approval tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -363,15 +363,15 @@ jobs:
           path: coverage-approval/
       - uses: actions/download-artifact@v3
         with:
-          name: refactor-code-coverage-report
-          path: coverage-refactor/
+          name: all-code-coverage-report
+          path: coverage-all/
       - name: Merge coverage reports
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
           cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-approval/.nyc_output/*.json coverage-reports
-          cp coverage-refactor/.nyc_output/*.json coverage-reports
+          cp coverage-all/.nyc_output/*.json coverage-reports
           npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
           npx --yes nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
