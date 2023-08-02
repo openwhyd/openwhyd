@@ -56,6 +56,7 @@ describe(`follow api`, () => {
     // check in the db that the user was really followed
     const { env } =
       serverProcess && 'env' in serverProcess ? serverProcess : process;
+    console.warn('test is connecting to ', { MONGODB_URL: env.MONGODB_URL });
     const actualSubscriptions = await dumpMongoCollection(
       env.MONGODB_URL,
       'follow',
