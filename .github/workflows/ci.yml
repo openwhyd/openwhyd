@@ -9,6 +9,7 @@ on:
       - main
 
 env:
+  CI: true
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
@@ -101,8 +102,6 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Initialize database
-        env:
-          CI: true
         run: npm run test-reset
       - name: Start Openwhyd server
         run: |
@@ -173,8 +172,6 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - name: Unit tests
-        env:
-          CI: true
         run: npm run test:unit
 
   functional-tests:
@@ -190,8 +187,6 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - name: Functional tests
-        env:
-          CI: true
         run: npm run test:functional
 
   integration-tests:
@@ -215,8 +210,6 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Initialize database
-        env:
-          CI: true
         run: npm run test-reset
       - name: Start Openwhyd server
         run: |
@@ -224,7 +217,6 @@ jobs:
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: API tests
         env:
-          CI: true
           MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
         run: npm run test:integration
 
@@ -241,7 +233,6 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - env:
-          CI: true
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
         run: npm run test:3rd-party
@@ -268,7 +259,6 @@ jobs:
       - run: npm ci --prefer-offline --no-audit
       - run: npm run test:post:coverage
         env:
-          CI: true
           MONGODB_HOST: localhost
           MONGODB_PORT: 27117
       - name: Save code coverage results
@@ -324,7 +314,6 @@ jobs:
           record: true
           parallel: true
         env:
-          CI: true
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -425,7 +414,6 @@ jobs:
             && $(npm --prefix "tmp-release" bin)/semantic-release
           rm -rf "tmp-release"
         env:
-          CI: true
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Create Docker tags
         id: create_docker_tags
