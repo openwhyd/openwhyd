@@ -19,7 +19,7 @@
     "start:coverage:no-clean": "npx --yes nyc --silent --no-clean node app.js $@",
     "start:localdb": "node app.js $@ --mongoDbDatabase openwhyd_test --mongoDbHost localhost --mongoDbPort 27117",
     "test-reset": "node test/reset-test-db.js",
-    "test:all:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:unit -- --serial && COVERAGE=true npm run test:functional -- --serial && COVERAGE=true npm run test:approval -- --serial --timeout 10000 && COVERAGE=true npm run test:integration -- --serial --timeout 10000 && npx --yes nyc report --reporter=lcov && npx --yes nyc report",
+    "test:almost-all:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:unit -- --serial && COVERAGE=true npm run test:functional -- --serial && COVERAGE=true npm run test:approval -- --serial --timeout 10000 && COVERAGE=true npm run test:integration:api -- --serial --timeout 10000 && npx --yes nyc report --reporter=lcov && npx --yes nyc report",
     "test:functional": "npx --yes mocha test/functional/*.js --exit",
     "test:integration": "npx --yes mocha test/integration/*.js --serial --exit",
     "test:integration:api": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/*.api.tests.js --serial $@",

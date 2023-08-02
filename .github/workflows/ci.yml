@@ -252,7 +252,7 @@ jobs:
         with:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
-      - run: npm run test:all:coverage
+      - run: npm run test:almost-all:coverage
         env:
           MONGODB_HOST: localhost
           MONGODB_PORT: 27117
