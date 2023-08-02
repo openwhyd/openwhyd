@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, whydPlayer */
 
 var postPage = {
   eId: '',

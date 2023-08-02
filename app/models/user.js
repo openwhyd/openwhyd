@@ -109,7 +109,6 @@ exports.EM_LABEL = {
   emAcc: 'accepted invites',
 };
 
-// @ts-ignore
 var TESTING_DIGEST = process.appParams.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {
@@ -339,23 +338,14 @@ exports.save = function (pUser, handler) {
   var user = pUser;
   delete user._id;
   if (user.name) user.n = exports.normalizeName(user.name);
-  // console.log(
-  //   'models.user.save : ',
-  //   Object.keys(user),
-  //   '=> criteria: ',
-  //   criteria
-  // );
   mongodb.collections['user'].updateOne(
     criteria,
     { $set: user },
     { upsert: true },
     function (err) {
-      //console.log("updated user => item ", item);
       if (err) console.log(err);
       fetch(criteria, function (err, user) {
         if (err) console.error(err);
-        //console.log("user stored as ", user);
-        // @ts-ignore
         if (user) searchModel.indexTyped('user', user);
         mongodb.cacheUser(user);
         if (handler) handler(user);
@@ -382,7 +372,6 @@ exports.delete = function (criteria, handler) {
               user._id + '_' + pl.id,
               pl.name,
             );
-            // @ts-ignore
             searchModel.deletePlaylist(user._id, pl.id, next);
             // todo: delete playlist cover image file
           }
@@ -391,7 +380,6 @@ exports.delete = function (criteria, handler) {
       mongodb.collections['user'].deleteOne(criteria, function (err, item) {
         if (err) console.error(err);
         else console.log('removed users', criteria);
-        // @ts-ignore
         searchModel.deleteDoc('user', '' + criteria._id);
         delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
@@ -563,7 +551,6 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
           console.log(
             'updating playlist name in index and corresponding tracks...',
           );
-          // @ts-ignore
           searchModel.indexPlaylist(uId, plId, upd.name);
           postModel.setPlaylist(uId, plId, upd.name, function () {
             /* do nothing */
@@ -615,7 +602,6 @@ exports.deletePlaylist = function (uId, plId, handler) {
           'deleted playlist (and updated corresponding tracks):',
           plId,
         );
-        // @ts-ignore
         searchModel.deletePlaylist(uId, plId);
         handler(plId);
       });
