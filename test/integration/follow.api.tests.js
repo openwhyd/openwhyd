@@ -41,7 +41,7 @@ describe(`follow api`, () => {
   });
 
   after(async () => {
-    if ('exit' in serverProcess) await serverProcess?.exit();
+    if (serverProcess && 'exit' in serverProcess) await serverProcess.exit();
   });
 
   it(`allows a user to follow another user`, async function () {
@@ -54,8 +54,10 @@ describe(`follow api`, () => {
     assert.strictEqual(response.statusCode, 200);
 
     // check in the db that the user was really followed
+    const { env } =
+      serverProcess && 'env' in serverProcess ? serverProcess : process;
     const actualSubscriptions = await dumpMongoCollection(
-      ('env' in serverProcess ? serverProcess.env : process.env).MONGODB_URL,
+      env.MONGODB_URL,
       'follow',
     );
     const expectedSubscriptions = [
