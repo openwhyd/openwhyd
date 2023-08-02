@@ -9,9 +9,22 @@ on:
       - main
 
 env:
+  CI: true
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
+  dependencies:
+    name: Check dependencies (with audit)
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+
   decommission:
     name: Decommission of user cache
     timeout-minutes: 5
@@ -22,8 +35,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: count references to usernames cache
         shell: bash
         run: ./scripts/legacy-refs/check-refs.sh
@@ -39,10 +51,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: npm run build
         run: |
           npm run build
@@ -90,13 +99,8 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Initialize database
-        env:
-          CI: true
         run: npm run test-reset
       - name: Start Openwhyd server
         run: |
@@ -148,10 +152,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Approval tests
         run: npm run test:approval
 
@@ -166,13 +167,8 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Unit tests
-        env:
-          CI: true
         run: npm run test:unit
 
   functional-tests:
@@ -186,13 +182,8 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Functional tests
-        env:
-          CI: true
         run: npm run test:functional
 
   integration-tests:
@@ -214,21 +205,14 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Initialize database
-        env:
-          CI: true
         run: npm run test-reset
       - name: Start Openwhyd server
         run: |
           npm start --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: API tests
-        env:
-          CI: true
         run: npm run test:integration
 
   third-party-tests:
@@ -242,12 +226,8 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - env:
-          CI: true
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
         run: npm run test:3rd-party
@@ -271,13 +251,9 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - run: npm run test:post:coverage
         env:
-          CI: true
           MONGODB_HOST: localhost
           MONGODB_PORT: 27117
       - name: Save code coverage results
@@ -322,10 +298,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
         uses: cypress-io/github-action@v5.0.2
         with:
@@ -337,7 +310,6 @@ jobs:
           record: true
           parallel: true
         env:
-          CI: true
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -425,7 +397,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
         if: github.event_name == 'push'
       - name: npx --yes semantic-release
         run: |
@@ -438,7 +410,6 @@ jobs:
             && $(npm --prefix "tmp-release" bin)/semantic-release
           rm -rf "tmp-release"
         env:
-          CI: true
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Create Docker tags
         id: create_docker_tags
