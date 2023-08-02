@@ -444,6 +444,8 @@ jobs:
       - name: Run unit tests
         run: docker-compose exec -T web npm run test:unit
       - name: Run API tests
+        env:
+          MONGODB_URL: mongodb://mongo:27017/openwhyd_test
         run: docker-compose exec -T web npm run test:integration
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
