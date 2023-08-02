@@ -214,6 +214,9 @@ class OpenwhydTestEnv {
       ? this.serverProcess.env
       : process.env;
   }
+  async dumpCollection(collection) {
+    return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
+  }
 }
 
 module.exports = {
