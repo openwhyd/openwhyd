@@ -1,6 +1,7 @@
 var { promisify } = require('util');
 var assert = require('assert');
 
+const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 var { ADMIN_USER, TEST_USER, cleanup } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
@@ -22,6 +23,18 @@ const genSecureUser = (() => {
 before(cleanup);
 
 describe('auth api', () => {
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: process.env.START_WITH_ENV_FILE,
+  });
+
+  before(async () => {
+    await openwhyd.setup();
+  });
+
+  after(async () => {
+    await openwhyd.release();
+  });
+
   describe('login with email', () => {
     it('succeeds', async () => {
       const { response, body } = await loginAs(ADMIN_USER);

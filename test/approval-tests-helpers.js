@@ -1,3 +1,5 @@
+process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
+
 const { promisify, ...util } = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
@@ -180,7 +182,6 @@ async function refreshOpenwhydCache(urlPrefix) {
 /** @param {{startWithEnv:unknown, port?: number | string | undefined}} */
 async function startOpenwhydServer({ startWithEnv, port }) {
   if (port) {
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
     const URL = `http://localhost:${port}`;
     await refreshOpenwhydCache(URL);
     return { URL };
