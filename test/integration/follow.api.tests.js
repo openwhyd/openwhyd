@@ -7,6 +7,8 @@ const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
 const { dumpMongoCollection } = require('../approval-tests-helpers.js');
 const { ObjectId } = require('../../app/models/mongodb.js');
+const { START_WITH_ENV_FILE } = process.env;
+const { startOpenwhydServer } = require('../approval-tests-helpers');
 
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://mongo:27117/openwhyd_test';
@@ -28,7 +30,21 @@ const getAsUser = (user, url, params) =>
 describe(`follow api`, () => {
   // API documentation: https://openwhyd.github.io/openwhyd/API.html
 
+  let context = {};
+
   before(cleanup); // to prevent side effects between tests
+
+  before(async () => {
+    if (START_WITH_ENV_FILE) {
+      context.serverProcess = await startOpenwhydServer({
+        startWithEnv: START_WITH_ENV_FILE,
+      });
+    }
+  });
+
+  after(async () => {
+    await context.serverProcess?.exit();
+  });
 
   it(`allows a user to follow another user`, async function () {
     this.timeout(5000); // give 5 seconds for this test to pass

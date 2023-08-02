@@ -130,6 +130,7 @@ const errPrinter = ((blocklist) => {
   'please install graphicsmagick',
 ]);
 
+/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams>} */
 const startOpenwhydServerWith = async (env) =>
   new Promise((resolve, reject) => {
     const serverProcess =
@@ -172,6 +173,9 @@ async function refreshOpenwhydCache(urlPrefix) {
   await promisify(request.post)(urlPrefix + '/testing/refresh');
 }
 
+/** @param {{startWithEnv:unknown, port?: number | string | undefined}}
+ *  @returns {Promise<{ URL: string } | childProcess.ChildProcessWithoutNullStreams>}
+ */
 async function startOpenwhydServer({ startWithEnv, port }) {
   if (port) {
     process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
@@ -181,7 +185,7 @@ async function startOpenwhydServer({ startWithEnv, port }) {
   } else if (startWithEnv) {
     const env = {
       ...(await loadEnvVars(startWithEnv)),
-      MONGODB_PORT: '27117', // port exposed by docker container
+      MONGODB_PORT: '27117', // port exposed by docker container // TODO: remove hard-coded mentions to port 27117
       TZ: 'UTC',
     };
     process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
