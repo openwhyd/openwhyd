@@ -12,6 +12,19 @@ env:
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
+
+  dependencies:
+    name: Check dependencies (with audit)
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+
   decommission:
     name: Decommission of user cache
     timeout-minutes: 5
@@ -22,7 +35,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: count references to usernames cache
         shell: bash
         run: ./scripts/legacy-refs/check-refs.sh
@@ -38,7 +51,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: npm run build
         run: |
           npm run build
@@ -86,7 +99,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: Initialize database
         env:
           CI: true
@@ -143,7 +156,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: Approval tests
         run: npm run test:approval
 
@@ -175,7 +188,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: Functional tests
         env:
           CI: true
@@ -200,7 +213,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: Initialize database
         env:
           CI: true
@@ -226,7 +239,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - env:
           CI: true
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
@@ -252,7 +265,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - run: npm run test:post:coverage
         env:
           CI: true
@@ -300,7 +313,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
         uses: cypress-io/github-action@v5.0.2
         with:
@@ -399,7 +412,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci
+      - run: npm ci --prefer-offline --no-audit
         if: github.event_name == 'push'
       - name: npx --yes semantic-release
         run: |
