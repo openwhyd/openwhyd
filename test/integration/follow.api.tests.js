@@ -5,10 +5,12 @@ const assert = require('assert');
 
 const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
-const { dumpMongoCollection } = require('../approval-tests-helpers.js');
+const {
+  dumpMongoCollection,
+  OpenwhydTestEnv,
+} = require('../approval-tests-helpers.js');
 const { ObjectId } = require('../../app/models/mongodb.js');
 const { START_WITH_ENV_FILE } = process.env;
-const { startOpenwhydServer } = require('../approval-tests-helpers');
 
 const getAsUser = (user, url, params) =>
   new Promise((resolve, reject) => {
@@ -27,21 +29,20 @@ const getAsUser = (user, url, params) =>
 describe(`follow api`, () => {
   // API documentation: https://openwhyd.github.io/openwhyd/API.html
 
-  /** @type { Awaited<ReturnType<startOpenwhydServer>>} */
-  let serverProcess;
+  // /** @type { Awaited<ReturnType<startOpenwhydServer>>} */
+  // let serverProcess;
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: START_WITH_ENV_FILE,
+  });
 
   before(cleanup); // to prevent side effects between tests
 
   before(async () => {
-    if (START_WITH_ENV_FILE) {
-      serverProcess = await startOpenwhydServer({
-        startWithEnv: START_WITH_ENV_FILE,
-      });
-    }
+    await openwhyd.setup();
   });
 
   after(async () => {
-    if (serverProcess && 'exit' in serverProcess) await serverProcess.exit();
+    await openwhyd.release();
   });
 
   it(`allows a user to follow another user`, async function () {
@@ -54,8 +55,7 @@ describe(`follow api`, () => {
     assert.strictEqual(response.statusCode, 200);
 
     // check in the db that the user was really followed
-    const { env } =
-      serverProcess && 'env' in serverProcess ? serverProcess : process;
+    const env = openwhyd.getEnv();
     console.warn('test is connecting to ', { MONGODB_URL: env.MONGODB_URL });
     const actualSubscriptions = await dumpMongoCollection(
       env.MONGODB_URL,

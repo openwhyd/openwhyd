@@ -196,6 +196,26 @@ async function startOpenwhydServer({ startWithEnv, port }) {
   }
 }
 
+class OpenwhydTestEnv {
+  /** @param {{ startWithEnv: string } | { port: number | string }} options */
+  constructor(options) {
+    this.options = options;
+  }
+  async setup() {
+    if (this.options.startWithEnv)
+      this.serverProcess = await startOpenwhydServer(this.options);
+  }
+  async release() {
+    if (this.serverProcess && 'exit' in this.serverProcess)
+      await this.serverProcess.exit();
+  }
+  getEnv() {
+    return this.serverProcess && 'env' in this.serverProcess
+      ? this.serverProcess.env
+      : process.env;
+  }
+}
+
 module.exports = {
   makeJSONScrubber,
   loadEnvVars,
@@ -209,4 +229,5 @@ module.exports = {
   sortAndIndentAsJSON,
   getCleanedPageBody,
   startOpenwhydServer,
+  OpenwhydTestEnv,
 };
