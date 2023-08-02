@@ -1,7 +1,20 @@
 const assert = require('assert');
 
+const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 const { DUMMY_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
+
+const openwhyd = new OpenwhydTestEnv({
+  startWithEnv: process.env.START_WITH_ENV_FILE,
+});
+
+before(async () => {
+  await openwhyd.setup();
+});
+
+after(async () => {
+  await openwhyd.release();
+});
 
 describe(`user api -- getting user data`, function () {
   before(cleanup); // to prevent side effects between tests

@@ -24,6 +24,7 @@
     "test:integration:auth": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/auth.api.tests.js $@",
     "test:integration:data": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/data.api.tests.js $@",
     "test:integration:security": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/security.api.tests.js $@",
+    "test:integration:user": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/user.api.tests.js $@",
     "test:integration:follow": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/follow.api.tests.js $@",
     "test:integration:legacy-post": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/legacy.post.api.tests.js $@",
     "test:integration:legacy-post:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:integration:legacy-post -- --serial --timeout 10000 && npx --yes nyc report --reporter=lcov && npx --yes nyc report | grep post",
