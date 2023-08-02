@@ -22,8 +22,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: count references to usernames cache
         shell: bash
         run: ./scripts/legacy-refs/check-refs.sh
@@ -39,10 +38,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: npm run build
         run: |
           npm run build
@@ -90,10 +86,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: Initialize database
         env:
           CI: true
@@ -150,10 +143,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: Approval tests
         run: npm run test:approval
 
@@ -168,10 +158,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: Unit tests
         env:
           CI: true
@@ -188,10 +175,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: Functional tests
         env:
           CI: true
@@ -216,10 +200,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: Initialize database
         env:
           CI: true
@@ -245,10 +226,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - env:
           CI: true
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
@@ -274,10 +252,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - run: npm run test:post:coverage
         env:
           CI: true
@@ -325,10 +300,7 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci
       - name: Run Cypress tests against Openwhyd server
         uses: cypress-io/github-action@v5.0.2
         with:
@@ -427,7 +399,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm install --prefer-offline --no-audit
+      - run: npm ci
         if: github.event_name == 'push'
       - name: npx --yes semantic-release
         run: |
