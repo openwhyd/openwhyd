@@ -384,7 +384,7 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
       { upsert: true, w: 0 },
     );
     invalidateUserNotifsCache(favoritedId);
-    notifEmails.sendSubscribedToUser(sender, favorited, cb);
+    notifEmails.sendSubscribedToUser(sender, favorited, cb); // may reject with "Permission denied, wrong credentials"
   }
 };
 

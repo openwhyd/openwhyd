@@ -12,6 +12,7 @@ if (process.env['SENDGRID_API_KEY'] === undefined)
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 
+/** may reject with "Permission denied, wrong credentials" */
 exports.email = function (
   emailAddr,
   subject,

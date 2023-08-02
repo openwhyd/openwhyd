@@ -140,10 +140,14 @@ const startOpenwhydServerWith = async (env) =>
             shell: true,
             detached: true, // when running on CI, we need this to kill the process group using `process.kill(-serverProcess.pid)`
           })
-        : childProcess.fork('./app.js', [], {
-            env,
-            silent: true, // necessary to initialize serverProcess.stderr
-          });
+        : childProcess.fork(
+            './app.js',
+            ['--fakeEmail', '--digestInterval', '-1'],
+            {
+              env,
+              silent: true, // necessary to initialize serverProcess.stderr
+            },
+          );
     serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
     serverProcess.exit = () =>
       new Promise((resolve) => {
