@@ -130,7 +130,7 @@ const errPrinter = ((blocklist) => {
   'please install graphicsmagick',
 ]);
 
-/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams>} */
+/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams & {exit: () => Promise<void>}>} */
 const startOpenwhydServerWith = async (env) =>
   new Promise((resolve, reject) => {
     const serverProcess =
@@ -177,9 +177,7 @@ async function refreshOpenwhydCache(urlPrefix) {
   await promisify(request.post)(urlPrefix + '/testing/refresh');
 }
 
-/** @param {{startWithEnv:unknown, port?: number | string | undefined}}
- *  @returns {Promise<{ URL: string } | childProcess.ChildProcessWithoutNullStreams>}
- */
+/** @param {{startWithEnv:unknown, port?: number | string | undefined}} */
 async function startOpenwhydServer({ startWithEnv, port }) {
   if (port) {
     process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
@@ -191,9 +189,10 @@ async function startOpenwhydServer({ startWithEnv, port }) {
       ...(await loadEnvVars(startWithEnv)),
       MONGODB_PORT: '27117', // port exposed by docker container // TODO: remove hard-coded mentions to port 27117
       TZ: 'UTC',
+      ...process.env, // allow overrides
     };
     process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
-    return await startOpenwhydServerWith(env); // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
+    return { ...(await startOpenwhydServerWith(env)), env }; // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
   }
 }
 

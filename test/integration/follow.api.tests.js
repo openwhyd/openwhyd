@@ -10,9 +10,6 @@ const { ObjectId } = require('../../app/models/mongodb.js');
 const { START_WITH_ENV_FILE } = process.env;
 const { startOpenwhydServer } = require('../approval-tests-helpers');
 
-const MONGODB_URL =
-  process.env.MONGODB_URL || 'mongodb://mongo:27117/openwhyd_test';
-
 const getAsUser = (user, url, params) =>
   new Promise((resolve, reject) => {
     api.loginAs(user, function (err, { jar }) {
@@ -30,20 +27,21 @@ const getAsUser = (user, url, params) =>
 describe(`follow api`, () => {
   // API documentation: https://openwhyd.github.io/openwhyd/API.html
 
-  let context = {};
+  /** @type { Awaited<ReturnType<startOpenwhydServer>>} */
+  let serverProcess;
 
   before(cleanup); // to prevent side effects between tests
 
   before(async () => {
     if (START_WITH_ENV_FILE) {
-      context.serverProcess = await startOpenwhydServer({
+      serverProcess = await startOpenwhydServer({
         startWithEnv: START_WITH_ENV_FILE,
       });
     }
   });
 
   after(async () => {
-    await context.serverProcess?.exit();
+    if ('exit' in serverProcess) await serverProcess?.exit();
   });
 
   it(`allows a user to follow another user`, async function () {
@@ -57,7 +55,7 @@ describe(`follow api`, () => {
 
     // check in the db that the user was really followed
     const actualSubscriptions = await dumpMongoCollection(
-      MONGODB_URL,
+      ('env' in serverProcess ? serverProcess.env : process.env).MONGODB_URL,
       'follow',
     );
     const expectedSubscriptions = [
