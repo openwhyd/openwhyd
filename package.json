@@ -17,7 +17,7 @@
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
     "start:coverage": "npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts.start') $@",
     "start:coverage:no-clean": "npx --yes nyc --silent --no-clean $(node -p 'require(`./package.json`).scripts.start') $@",
-    "start:localdb": "node app.js $@ --mongoDbDatabase openwhyd_test --mongoDbHost localhost --mongoDbPort 27117",
+    "start:localdb": ". ./env-vars-testing.sh && npm start -- $@",
     "test-reset": "node test/reset-test-db.js",
     "test:almost-all:coverage": "npm run coverage:clear && COVERAGE=true npm run test:unit -- --serial && COVERAGE=true npm run test:functional -- --serial && COVERAGE=true npm run test:approval -- --serial --timeout 10000 && COVERAGE=true npm run test:integration:api -- --serial --timeout 10000 && npm run coverage:summary",
     "test:functional": "npx --yes mocha test/functional/*.js --exit",
