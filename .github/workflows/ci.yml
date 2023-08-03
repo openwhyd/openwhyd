@@ -142,7 +142,16 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - name: Unit tests
-        run: npm run test:unit
+        run: npm run test:unit:coverage
+      - name: Get coverage data
+        run: npm run coverage:report
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit-tests-code-coverage-report
+          path: |
+            .nyc_output
+            coverage
 
   functional-tests:
     name: Functional tests
@@ -157,7 +166,16 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - name: Functional tests
-        run: npm run test:functional
+        run: npm run test:functional:coverage
+      - name: Get coverage data
+        run: npm run coverage:report
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: functional-tests-code-coverage-report
+          path: |
+            .nyc_output
+            coverage
 
   integration-tests:
     name: Integration tests
@@ -183,10 +201,19 @@ jobs:
         run: npm run test-reset
       - name: Start Openwhyd server
         run: |
-          npm start --mongoDbDatabase openwhyd_test &
+          npm run start:coverage --mongoDbDatabase openwhyd_test &
           ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: API tests
-        run: npm run test:integration
+        run: npm run test:integration:coverage
+      - name: Get coverage data
+        run: npm run coverage:report
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-tests-code-coverage-report
+          path: |
+            .nyc_output
+            coverage
 
   third-party-tests:
     name: 3rd-party tests
@@ -204,39 +231,6 @@ jobs:
           ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
           ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
         run: npm run test:3rd-party
-
-  code-coverage:
-    name: Code Coverage for Codacy
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    timeout-minutes: 5
-    runs-on: ubuntu-20.04
-    services:
-      mongodb:
-        image: docker://mongo:3.6
-        ports:
-          - 27117:27017
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
-      - run: npm ci --prefer-offline --no-audit
-      - run: npm run test:almost-all:coverage
-        env:
-          MONGODB_HOST: localhost
-          MONGODB_PORT: 27117
-          MONGODB_URL: mongodb://localhost:27117/openwhyd_test
-      - name: Save code coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: all-code-coverage-report
-          path: |
-            .nyc_output
-            coverage
 
   cypress-tests:
     name: Cypress E2E tests
@@ -320,7 +314,9 @@ jobs:
     needs:
       - cypress-tests
       - approval-tests
-      - code-coverage
+      - unit-tests
+      - functional-tests
+      # - approval-tests
       # TODO: remove coverage for approval tests
     runs-on: ubuntu-20.04
     steps:
@@ -335,15 +331,23 @@ jobs:
           path: coverage-approval/
       - uses: actions/download-artifact@v3
         with:
-          name: all-code-coverage-report
-          path: coverage-all/
+          name: unit-tests-code-coverage-report
+          path: coverage-unit-tests/
+      - uses: actions/download-artifact@v3
+        with:
+          name: functional-tests-code-coverage-report
+          path: coverage-functional-tests/
+      - uses: actions/download-artifact@v3
+        with:
+          name: integration-tests-code-coverage-report
+          path: coverage-integration-tests/
       - name: Merge coverage reports
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
           cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-approval/.nyc_output/*.json coverage-reports
-          cp coverage-all/.nyc_output/*.json coverage-reports
+          cp coverage-unit-tests/.nyc_output/*.json coverage-reports
           npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
           npm run coverage:report  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
