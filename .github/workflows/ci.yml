@@ -109,16 +109,12 @@ jobs:
         # env:
         #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
-      - name: Approval tests
-        env:
-          PORT: '8080'
-          DONT_KILL: '1'
-        run: npx --yes ava test/approval.tests.js
-      - name: Approval tests for Hot Tracks
-        env:
-          PORT: '8080'
-          DONT_KILL: '1'
-        run: npx --yes jest --runInBand test/approval-hot-tracks.jest.test.js
+      - name: Approval tests on main routes
+        run: npm run docker:test-approval
+      - name: Approval tests on Hot Tracks
+        run: npm run docker:test-approval-hot-tracks
+      - name: Approval tests on posting tracks
+        run: npm run docker:test:approval
       - name: Get coverage data
         run: |
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
@@ -132,29 +128,6 @@ jobs:
           path: |
             .nyc_output
             coverage
-
-  approval-tests-2:
-    name: Approval tests for /api/post
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    timeout-minutes: 5
-    runs-on: ubuntu-20.04
-    services:
-      mongodb:
-        image: docker://mongo:3.6
-        ports:
-          - 27117:27017
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
-      - run: npm ci --prefer-offline --no-audit
-      - name: Approval tests
-        run: npm run test:approval
 
   unit-tests:
     name: Unit tests
