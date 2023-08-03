@@ -53,6 +53,16 @@ const fetchUserData = ({ username }) =>
     );
   });
 
+const fetchSubscribers = ({ username }) =>
+  new Promise((resolve, reject) => {
+    const userId = '5040f0e87e91c862b2a8043d'; // TODO: get from params
+    const url = `https://openwhyd.org/api/user/${userId}/subscribers`;
+    console.log(`fetching ${url} ...`);
+    request(url, (err, _, body) =>
+      err ? reject(err) : resolve({ subscribers: JSON.parse(body) }),
+    );
+  });
+
 const upsertUser = ({ db, user }) =>
   new Promise((resolve, reject) => {
     const { _id, ...userData } = user;
@@ -71,6 +81,24 @@ const insertPosts = ({ db, posts }) =>
     );
   });
 
+const insertSubscribers = async ({ db, subscribers }) => {
+  const userId = '5040f0e87e91c862b2a8043d'; // TODO: get from params
+  db.collection('follow').insertMany(
+    subscribers.map((subscriber) => ({
+      uId: subscriber.id,
+      uNm: subscriber.name,
+      tId: userId,
+      tNm: userId,
+    })),
+  );
+  await db.collection('user').insertMany(
+    subscribers.map((subscriber) => ({
+      _id: ObjectId(subscriber.id),
+      name: subscriber.name,
+    })),
+  );
+};
+
 (async () => {
   console.log(`connecting to ${url}/${dbName} ...`);
   const { db, client } = await connectToDb({ url, dbName });
@@ -79,6 +107,9 @@ const insertPosts = ({ db, posts }) =>
   const { posts } = await fetchUserData({ username }); // or require(`./../${username}.json`);
   console.log(`imported ${posts.length} posts`);
   await insertPosts({ db, posts });
+  const { subscribers } = await fetchSubscribers({ username });
+  console.log(`imported ${subscribers.length} subscribers`);
+  await insertSubscribers({ db, subscribers });
   // refresh openwhyd's in-memory cache of users, to allow this user to login
   await new Promise((resolve, reject) =>
     request.post('http://localhost:8080/testing/refresh', (err) =>

@@ -1,4 +1,5 @@
 const assert = require('assert');
+const util = require('util');
 
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 const { DUMMY_USER, cleanup } = require('../fixtures.js');
@@ -53,5 +54,16 @@ describe('user api', () => {
         });
       });
     });
+  });
+
+  it('should allow just one value for the `after` parameter, when fetching subscribers', async () => {
+    const url =
+      '/dummy/subscribers?after=50&after=100&wholePage=true&wholePage=true';
+    const { body, ...res } = await util.promisify(api.get)({}, url);
+    assert.equal(res.response.statusCode, 200);
+    assert.equal(
+      body.error,
+      'invalid parameter: after should be a numeric value',
+    );
   });
 });
