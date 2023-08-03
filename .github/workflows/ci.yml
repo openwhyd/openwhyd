@@ -191,18 +191,10 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
-      - name: Initialize database
-        run: npm run test-reset
-      - name: Start Openwhyd server
-        run: |
-          npm run start:coverage --mongoDbDatabase openwhyd_test &
-          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
       - name: API tests
-        run: npm run test:integration:coverage
+        run: npm run test:integration:api:coverage
+        # TODO: find a way to run other integration tests too
       - name: Get coverage data
         run: |
           sleep 2; killall node; sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
@@ -337,10 +329,10 @@ jobs:
         with:
           name: functional-tests-code-coverage-report
           path: coverage-functional-tests/
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: integration-tests-code-coverage-report
-      #     path: coverage-integration-tests/
+      - uses: actions/download-artifact@v3
+        with:
+          name: integration-tests-code-coverage-report
+          path: coverage-integration-tests/
       - name: Merge coverage reports
         run: |
           mkdir .nyc_output
