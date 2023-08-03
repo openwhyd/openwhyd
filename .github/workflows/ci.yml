@@ -124,7 +124,7 @@ jobs:
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
           killall node
           sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
-          npx --yes nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
+          npm run coverage:report # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
@@ -321,9 +321,7 @@ jobs:
           # ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
           # ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Get coverage data
-        run: |
-          # npm run test:coverage
-          npx --yes nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
+        run: npm run coverage:report # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
@@ -374,7 +372,7 @@ jobs:
           cp coverage-approval/.nyc_output/*.json coverage-reports
           cp coverage-all/.nyc_output/*.json coverage-reports
           npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
-          npx --yes nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
+          npm run coverage:report  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
         with:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
