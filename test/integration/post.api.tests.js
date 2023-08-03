@@ -482,4 +482,31 @@ describe(`post api`, function () {
     const resBody = JSON.parse(res.body);
     assert.deepEqual(resBody, { acknowledged: true, deletedCount: 1 });
   });
+
+  it("should allow post's author to delete anyone's comment on that post", async function () {
+    const postId = '000000000000000000000009';
+    const commentId = '000000000000000000000010';
+    await openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId), uId: loggedUser.id }],
+      comment: [{ _id: ObjectId(commentId), pId: postId, uId: otherUser.id }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: postId,
+            _id: commentId,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert.deepEqual(resBody, { acknowledged: true, deletedCount: 1 });
+  });
 });
