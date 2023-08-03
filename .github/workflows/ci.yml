@@ -117,9 +117,7 @@ jobs:
         run: npm run docker:test:approval
       - name: Get coverage data
         run: |
-          sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
-          killall node
-          sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
+          sleep 2; killall node; sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
           npm run coverage:report # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
@@ -206,7 +204,9 @@ jobs:
       - name: API tests
         run: npm run test:integration:coverage
       - name: Get coverage data
-        run: npm run coverage:report
+        run: |
+          sleep 2; killall node; sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
+          npm run coverage:report
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
