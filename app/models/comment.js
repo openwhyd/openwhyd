@@ -174,25 +174,22 @@ exports.delete = function (p, cb) {
   var q = { _id: mongodb.ObjectId('' + p._id) };
   getCol().findOne(
     q,
-    combineResult(function (comment = { error: 'comment not found' }) {
-      if (comment.error) {
-        cb && cb(comment);
+    combineResult(function (comment) {
+      if (!comment || comment.error) {
+        cb && cb({ error: comment ? comment.error : 'comment not found' });
         return;
       }
-      postModel.fetchPostById(
-        comment.pId,
-        (post = { error: 'post not found' }) => {
-          if (post.error) {
-            cb && cb(post);
-            return;
-          }
-          if (p.uId != post.uId && comment.uId != p.uId) {
-            cb && cb({ error: 'you are not allowed to delete this comment' });
-            return;
-          }
-          getCol().deleteOne(q, combineResult(cb));
-        },
-      );
+      postModel.fetchPostById(comment.pId, (post) => {
+        if (!post || post.error) {
+          cb && cb({ error: post ? post.error : 'post not found' });
+          return;
+        }
+        if (p.uId != post.uId && comment.uId != p.uId) {
+          cb && cb({ error: 'you are not allowed to delete this comment' });
+          return;
+        }
+        getCol().deleteOne(q, combineResult(cb));
+      });
     }),
   );
 };

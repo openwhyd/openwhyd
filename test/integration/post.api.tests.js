@@ -1,13 +1,20 @@
 const assert = require('assert');
 const util = require('util');
 const request = require('request');
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 
-const { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
+const {
+  ADMIN_USER,
+  cleanup,
+  URL_PREFIX,
+  DUMMY_USER,
+} = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`post api`, function () {
+  const loggedUser = ADMIN_USER;
+  const otherUser = DUMMY_USER;
   let post;
   let jar;
   const openwhyd = new OpenwhydTestEnv({
@@ -30,7 +37,7 @@ describe(`post api`, function () {
       name: `Lullaby - Jack Johnson and Matt Costa`,
     };
 
-    ({ jar } = await util.promisify(api.loginAs)(ADMIN_USER));
+    ({ jar } = await util.promisify(api.loginAs)(loggedUser));
     /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.
      * May be initdb_testing.js is not up to date with the current schema?
      */
@@ -370,5 +377,164 @@ describe(`post api`, function () {
     assert.equal(postedTrack.repost.pId, pId);
     assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
     assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
+  });
+
+  it('should fail to delete a comment that does not exist', async function () {
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: '000000000000000000000009',
+            _id: '000000000000000000000009',
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+
+    const resBody = JSON.parse(res.body);
+
+    assert.deepEqual(resBody, { error: 'comment not found' });
+  });
+
+  it('should fail to delete a comment on a post that does not exist', async function () {
+    const postId = '000000000000000000000009';
+    const commentId = '000000000000000000000010';
+    await openwhyd.insertTestData({
+      comment: [{ _id: ObjectId(commentId), pId: postId }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: postId,
+            _id: commentId,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert.deepEqual(resBody, { error: 'post not found' });
+  });
+
+  it("should fail to delete someone else's comment", async function () {
+    const postId = '000000000000000000000009';
+    const commentId = '000000000000000000000010';
+    await openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId) }],
+      comment: [{ _id: ObjectId(commentId), pId: postId, uId: otherUser._id }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: postId,
+            _id: commentId,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert.deepEqual(resBody, {
+      error: 'you are not allowed to delete this comment',
+    });
+  });
+
+  it("should delete one's own comments", async function () {
+    const postId = '000000000000000000000009';
+    const commentId = '000000000000000000000010';
+    await openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId) }],
+      comment: [{ _id: ObjectId(commentId), pId: postId, uId: loggedUser.id }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: postId,
+            _id: commentId,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert.deepEqual(resBody, { acknowledged: true, deletedCount: 1 });
+  });
+
+  it("should allow post's author to delete anyone's comment on that post", async function () {
+    const postId = '000000000000000000000009';
+    const commentId = '000000000000000000000010';
+    await openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId), uId: loggedUser.id }],
+      comment: [{ _id: ObjectId(commentId), pId: postId, uId: otherUser.id }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: postId,
+            _id: commentId,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert.deepEqual(resBody, { acknowledged: true, deletedCount: 1 });
+  });
+
+  it("should post a comment on anyone's post", async function () {
+    const postId = '000000000000000000000009';
+    const commentText = '"hello world"';
+    await openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId) }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'addComment',
+            pId: postId,
+            text: commentText,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert(resBody?._id, '_id should be provided in response');
+    assert.equal(typeof resBody._id, 'string');
+    assert.notEqual(resBody._id, '', '_id should not be empty');
   });
 });
