@@ -337,10 +337,10 @@ jobs:
         with:
           name: functional-tests-code-coverage-report
           path: coverage-functional-tests/
-      - uses: actions/download-artifact@v3
-        with:
-          name: integration-tests-code-coverage-report
-          path: coverage-integration-tests/
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: integration-tests-code-coverage-report
+      #     path: coverage-integration-tests/
       - name: Merge coverage reports
         run: |
           mkdir .nyc_output
