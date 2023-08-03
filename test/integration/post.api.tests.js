@@ -509,4 +509,32 @@ describe(`post api`, function () {
     const resBody = JSON.parse(res.body);
     assert.deepEqual(resBody, { acknowledged: true, deletedCount: 1 });
   });
+
+  it("should post a comment on anyone's post", async function () {
+    const postId = '000000000000000000000009';
+    const commentText = '"hello world"';
+    await openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId) }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'addComment',
+            pId: postId,
+            text: commentText,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert(resBody?._id, '_id should be provided in response');
+    assert.equal(typeof resBody._id, 'string');
+    assert.notEqual(resBody._id, '', '_id should not be empty');
+  });
 });
