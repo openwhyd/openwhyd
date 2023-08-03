@@ -13,6 +13,8 @@ const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`post api`, function () {
+  const loggedUser = ADMIN_USER;
+  const otherUser = DUMMY_USER;
   let post;
   let jar;
   const openwhyd = new OpenwhydTestEnv({
@@ -35,7 +37,7 @@ describe(`post api`, function () {
       name: `Lullaby - Jack Johnson and Matt Costa`,
     };
 
-    ({ jar } = await util.promisify(api.loginAs)(ADMIN_USER));
+    ({ jar } = await util.promisify(api.loginAs)(loggedUser));
     /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.
      * May be initdb_testing.js is not up to date with the current schema?
      */
@@ -430,7 +432,7 @@ describe(`post api`, function () {
     const commentId = '000000000000000000000010';
     await openwhyd.insertTestData({
       post: [{ _id: ObjectId(postId) }],
-      comment: [{ _id: ObjectId(commentId), pId: postId, uId: DUMMY_USER._id }],
+      comment: [{ _id: ObjectId(commentId), pId: postId, uId: otherUser._id }],
     });
 
     const res = await new Promise((resolve, reject) =>
@@ -452,5 +454,32 @@ describe(`post api`, function () {
     assert.deepEqual(resBody, {
       error: 'you are not allowed to delete this comment',
     });
+  });
+
+  it("should delete one's own comments", async function () {
+    const postId = '000000000000000000000009';
+    const commentId = '000000000000000000000010';
+    await openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId) }],
+      comment: [{ _id: ObjectId(commentId), pId: postId, uId: loggedUser.id }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: postId,
+            _id: commentId,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert.deepEqual(resBody, { acknowledged: true, deletedCount: 1 });
   });
 });
