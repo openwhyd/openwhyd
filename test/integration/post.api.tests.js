@@ -1,7 +1,7 @@
 const assert = require('assert');
 const util = require('util');
 const request = require('request');
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 
 const { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
 const api = require('../api-client.js');
@@ -392,5 +392,31 @@ describe(`post api`, function () {
     const resBody = JSON.parse(res.body);
 
     assert.deepEqual(resBody, { error: 'comment not found' });
+  });
+
+  it('should fail to delete a comment on a post that does not exist', async function () {
+    const postId = '000000000000000000000009';
+    const commentId = '000000000000000000000010';
+    await openwhyd.insertTestData({
+      comment: [{ _id: ObjectId(commentId), pId: postId }],
+    });
+
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: postId,
+            _id: commentId,
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+    const resBody = JSON.parse(res.body);
+    assert.deepEqual(resBody, { error: 'post not found' });
   });
 });

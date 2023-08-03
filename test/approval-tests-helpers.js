@@ -218,6 +218,9 @@ class OpenwhydTestEnv {
   async dumpCollection(collection) {
     return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
   }
+  async insertTestData(docsPerCollection) {
+    return await insertTestData(this.getEnv().MONGODB_URL, docsPerCollection);
+  }
 }
 
 module.exports = {
