@@ -371,4 +371,26 @@ describe(`post api`, function () {
     assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
     assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
   });
+
+  it('should fail to delete a comment that does not exist', async function () {
+    const res = await new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form: {
+            action: 'deleteComment',
+            pId: '000000000000000000000009',
+            _id: '000000000000000000000009',
+          },
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+
+    const resBody = JSON.parse(res.body);
+
+    assert.deepEqual(resBody, { error: 'comment not found' });
+  });
 });
