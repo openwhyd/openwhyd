@@ -174,9 +174,9 @@ exports.delete = function (p, cb) {
   var q = { _id: mongodb.ObjectId('' + p._id) };
   getCol().findOne(
     q,
-    combineResult(function (comment = { error: 'comment not found' }) {
-      if (comment.error) {
-        cb && cb(comment);
+    combineResult(function (comment) {
+      if (!comment || comment.error) {
+        cb && cb({ error: comment ? comment.error : 'comment not found' }); // TODO: return 404
         return;
       }
       postModel.fetchPostById(
