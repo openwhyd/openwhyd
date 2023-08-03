@@ -378,17 +378,29 @@ function handleRequest(loggedUser, reqParams, localRendering) {
   return handleAuthRequest(loggedUser, reqParams, localRendering);
 }
 
+// these error messages are displayed to the user, we don't need to log them
+const USER_ERRORS = [
+  'Special characters are not allowed',
+  'This username is taken by another user',
+];
+
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
 
   function localRendering(r) {
     if (r) delete r.pwd;
-    if (!r || r.error)
-      console.log(
-        'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
-        (r || {}).error || r,
-      );
+    if (!r || r.error) {
+      const errMessage = (r || {}).error || r;
+      const isUserError =
+        typeof errMessage === 'string' &&
+        USER_ERRORS.some((userError) => errMessage.includes(userError));
+      if (!isUserError)
+        console.log(
+          'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
+          errMessage,
+        );
+    }
     response.renderJSON(
       reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r,
     );
