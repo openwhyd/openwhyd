@@ -1,29 +1,29 @@
 const assert = require('assert');
 const util = require('util');
 const request = require('request');
+const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 
 const { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
 const api = require('../api-client.js');
-const { START_WITH_ENV_FILE } = process.env;
-const { startOpenwhydServer } = require('../approval-tests-helpers');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`post api`, function () {
   let post;
   let jar;
-  let context = {};
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: process.env.START_WITH_ENV_FILE,
+  });
 
   before(cleanup); // to prevent side effects between test suites
+
   before(async () => {
-    if (START_WITH_ENV_FILE) {
-      context.serverProcess = await startOpenwhydServer({
-        startWithEnv: START_WITH_ENV_FILE,
-      });
-    }
+    await openwhyd.setup();
   });
+
   after(async () => {
-    await context.serverProcess?.exit();
+    await openwhyd.release();
   });
+
   beforeEach(async () => {
     post = {
       eId: `/yt/${randomString()}`,

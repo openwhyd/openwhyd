@@ -2,6 +2,7 @@ const vm = require('vm');
 const assert = require('assert');
 const request = require('request');
 
+const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 const { URL_PREFIX, DUMMY_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
 
@@ -23,7 +24,19 @@ const addTrackToPlaylist = (user, plName, post) =>
 describe(`Data Export API`, () => {
   // API documentation: https://openwhyd.github.io/openwhyd/API.html#openwhyd-data-export-api
 
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: process.env.START_WITH_ENV_FILE,
+  });
+
   before(cleanup); // to prevent side effects between tests
+
+  before(async () => {
+    await openwhyd.setup();
+  });
+
+  after(async () => {
+    await openwhyd.release();
+  });
 
   // add a playlist with one track
   const user = DUMMY_USER;

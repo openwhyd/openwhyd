@@ -1,15 +1,28 @@
 const { promisify } = require('util');
 const assert = require('assert');
 
+const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 const { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
 const postRaw = promisify(apiClient.postRaw);
 const loginAs = promisify(apiClient.loginAs);
 
-before(cleanup);
-
 describe('security', () => {
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: process.env.START_WITH_ENV_FILE,
+  });
+
+  before(cleanup);
+
+  before(async () => {
+    await openwhyd.setup();
+  });
+
+  after(async () => {
+    await openwhyd.release();
+  });
+
   describe('Open Redirect from /login', () => {
     it('should allow redirect to /stream', async () => {
       const target = `/stream`;

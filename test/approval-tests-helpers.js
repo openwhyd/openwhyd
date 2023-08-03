@@ -1,25 +1,15 @@
-const fs = require('fs');
+process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
+
 const { promisify, ...util } = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
 const childProcess = require('child_process');
+const { loadEnvVars } = require('./fixtures');
 
 const makeJSONScrubber = (scrubbers) => (obj) =>
   JSON.parse(
     scrubbers.reduce((data, scrub) => scrub(data), JSON.stringify(obj)),
   );
-
-const readFile = (file) => fs.promises.readFile(file, 'utf-8');
-
-const loadEnvVars = async (file) => {
-  const envVars = {};
-  (await readFile(file)).split(/[\r\n]+/).forEach((envVar) => {
-    if (!envVar) return;
-    const [key, def] = envVar.split('=');
-    envVars[key] = def.replace(/^"|"$/g, '');
-  });
-  return envVars;
-};
 
 function extractCookieJar(headers, origin) {
   const jar = request.jar();
@@ -142,6 +132,7 @@ const errPrinter = ((blocklist) => {
   'please install graphicsmagick',
 ]);
 
+/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams & {exit: () => Promise<void>}>} */
 const startOpenwhydServerWith = async (env) =>
   new Promise((resolve, reject) => {
     const serverProcess =
@@ -151,10 +142,14 @@ const startOpenwhydServerWith = async (env) =>
             shell: true,
             detached: true, // when running on CI, we need this to kill the process group using `process.kill(-serverProcess.pid)`
           })
-        : childProcess.fork('./app.js', [], {
-            env,
-            silent: true, // necessary to initialize serverProcess.stderr
-          });
+        : childProcess.fork(
+            './app.js',
+            ['--fakeEmail', '--digestInterval', '-1'],
+            {
+              env,
+              silent: true, // necessary to initialize serverProcess.stderr
+            },
+          );
     serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
     serverProcess.exit = () =>
       new Promise((resolve) => {
@@ -184,20 +179,44 @@ async function refreshOpenwhydCache(urlPrefix) {
   await promisify(request.post)(urlPrefix + '/testing/refresh');
 }
 
+/** @param {{startWithEnv:unknown, port?: number | string | undefined}} */
 async function startOpenwhydServer({ startWithEnv, port }) {
   if (port) {
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = 'whatever'; // required by ./api-client.js
     const URL = `http://localhost:${port}`;
     await refreshOpenwhydCache(URL);
     return { URL };
   } else if (startWithEnv) {
     const env = {
       ...(await loadEnvVars(startWithEnv)),
-      MONGODB_PORT: '27117', // port exposed by docker container
+      MONGODB_PORT: '27117', // port exposed by docker container // TODO: remove hard-coded mentions to port 27117
       TZ: 'UTC',
+      ...process.env, // allow overrides
     };
     process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
-    return await startOpenwhydServerWith(env); // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
+    return { ...(await startOpenwhydServerWith(env)), env }; // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
+  }
+}
+
+class OpenwhydTestEnv {
+  /** @param {{ startWithEnv: string } | { port: number | string }} options */
+  constructor(options) {
+    this.options = options;
+  }
+  async setup() {
+    if (this.options.startWithEnv)
+      this.serverProcess = await startOpenwhydServer(this.options);
+  }
+  async release() {
+    if (this.serverProcess && 'exit' in this.serverProcess)
+      await this.serverProcess.exit();
+  }
+  getEnv() {
+    return this.serverProcess && 'env' in this.serverProcess
+      ? this.serverProcess.env
+      : process.env;
+  }
+  async dumpCollection(collection) {
+    return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
   }
 }
 
@@ -214,4 +233,5 @@ module.exports = {
   sortAndIndentAsJSON,
   getCleanedPageBody,
   startOpenwhydServer,
+  OpenwhydTestEnv,
 };
