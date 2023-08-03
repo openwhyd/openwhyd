@@ -282,7 +282,7 @@ exports.handleRequest = function (request, reqParams, response, features) {
       res,
       null,
       args || { 'content-type': 'application/json' },
-      (res || {}).error ? 400 : 200,
+      (res || {}).error ? 400 : 200, // note: it would be better to return a 404 when post is not found
     );
   }
 

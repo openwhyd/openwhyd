@@ -176,7 +176,7 @@ exports.delete = function (p, cb) {
     q,
     combineResult(function (comment) {
       if (!comment || comment.error) {
-        cb && cb({ error: comment ? comment.error : 'comment not found' }); // TODO: return 404
+        cb && cb({ error: comment ? comment.error : 'comment not found' });
         return;
       }
       postModel.fetchPostById(
