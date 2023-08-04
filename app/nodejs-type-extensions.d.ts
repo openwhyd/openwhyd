@@ -37,5 +37,6 @@ declare namespace NodeJS {
   export interface Process {
     env: ProcessEnv;
     appParams: AppParams;
+    datadogTracer?: import('dd-trace').Tracer;
   }
 }

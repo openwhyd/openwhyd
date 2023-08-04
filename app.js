@@ -5,7 +5,7 @@ var /*consoleWarn = console.warn,*/ consoleError = console.error;
 if (!process.env.DISABLE_DATADOG) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore // cf https://docs.datadoghq.com/fr/tracing/trace_collection/dd_libraries/nodejs/?tab=autresenvironnements
-  require('dd-trace').init(); // datadog APM
+  process.datadogTracer = require('dd-trace').init(); // datadog APM
 }
 
 const util = require('util');
