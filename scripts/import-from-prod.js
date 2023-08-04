@@ -37,7 +37,7 @@ const fetchUserProfile = ({ username }) =>
     );
   });
 
-const fetchUserData = ({ username }) =>
+const fetchUserPosts = ({ username }) =>
   new Promise((resolve, reject) => {
     const url = `https://openwhyd.org/${username}?format=json`;
     console.log(`fetching tracks from ${url} ...`);
@@ -53,9 +53,8 @@ const fetchUserData = ({ username }) =>
     );
   });
 
-const fetchSubscribers = ({ username }) =>
+const fetchSubscribers = ({ userId }) =>
   new Promise((resolve, reject) => {
-    const userId = '5040f0e87e91c862b2a8043d'; // TODO: get from params
     const url = `https://openwhyd.org/api/user/${userId}/subscribers`;
     console.log(`fetching ${url} ...`);
     request(url, (err, _, body) =>
@@ -81,8 +80,7 @@ const insertPosts = ({ db, posts }) =>
     );
   });
 
-const insertSubscribers = async ({ db, subscribers }) => {
-  const userId = '5040f0e87e91c862b2a8043d'; // TODO: get from params
+const insertSubscribers = async ({ db, userId, subscribers }) => {
   db.collection('follow').insertMany(
     subscribers.map((subscriber) => ({
       uId: subscriber.id,
@@ -104,12 +102,13 @@ const insertSubscribers = async ({ db, subscribers }) => {
   const { db, client } = await connectToDb({ url, dbName });
   const user = await fetchUserProfile({ username });
   await upsertUser({ db, user });
-  const { posts } = await fetchUserData({ username }); // or require(`./../${username}.json`);
+  const userId = '' + user._id;
+  const { posts } = await fetchUserPosts({ username }); // or require(`./../${username}.json`);
   console.log(`imported ${posts.length} posts`);
   await insertPosts({ db, posts });
-  const { subscribers } = await fetchSubscribers({ username });
+  const { subscribers } = await fetchSubscribers({ userId });
   console.log(`imported ${subscribers.length} subscribers`);
-  await insertSubscribers({ db, subscribers });
+  await insertSubscribers({ db, userId, subscribers });
   // refresh openwhyd's in-memory cache of users, to allow this user to login
   await new Promise((resolve, reject) =>
     request.post('http://localhost:8080/testing/refresh', (err) =>
