@@ -111,6 +111,7 @@ function populateUsers(subscr, options, cb) {
   );
 }
 
+/** @param {FetchAndRenderOptions} options */
 exports.fetchAndRender = function (options, callback) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
@@ -190,7 +191,9 @@ exports.fetchAndRender = function (options, callback) {
       fields: { _id: 0, uId: 1 },
       skip: Number(options.after || 0),
     };
+    console.warn('fetching subscribers', { params });
     followModel.fetch({ tId: options.user.id }, params, function (subscr) {
+      console.warn('fetching subscribers=>', { subscr });
       if (subscr.length > MAX_SUBSCRIPTIONS) {
         const lastPid = params.skip + MAX_SUBSCRIPTIONS;
         postsTemplate.populateNextPageUrl(options, lastPid);

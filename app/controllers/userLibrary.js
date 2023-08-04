@@ -1,3 +1,5 @@
+//@ts-check
+
 /**
  * userLibrary controller
  * shows an organized view of posts (user's and friends' library)
@@ -37,6 +39,7 @@ var paramsToInclude = [
 function LibraryController(reqParams, render) {
   reqParams = reqParams || {};
   this.render = render;
+  /** @type import('./LibUser.js').FetchAndRenderOptions */
   this.options = {
     loggedUser: reqParams.loggedUser || {} /*,
 		after: reqParams.after,
