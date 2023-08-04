@@ -286,7 +286,10 @@ http.ServerResponse.prototype.temporaryRedirect = function (_url, _reqParams) {
 };
 
 http.ServerResponse.prototype.badRequest = function (error) {
-  this.status(400).send(error ? '' + error : 'BAD REQUEST');
+  this.status(400).send(
+    (typeof error === 'object' ? JSON.stringify(error) : error) ??
+      'BAD REQUEST',
+  );
 };
 
 http.ServerResponse.prototype.forbidden = function (error) {

@@ -57,13 +57,9 @@ describe('user api', () => {
   });
 
   it('should allow just one value for the `after` parameter, when fetching subscribers', async () => {
-    const url =
-      '/dummy/subscribers?after=50&after=100&wholePage=true&wholePage=true';
+    const url = '/dummy/subscribers?after=50&after=100';
     const { body, ...res } = await util.promisify(api.get)({}, url);
-    assert.equal(res.response.statusCode, 200);
-    assert.equal(
-      body.error,
-      'invalid parameter: after should be a numeric value',
-    );
+    assert.equal(res.response.statusCode, 400);
+    assert.equal(body.error, 'invalid parameter value: after');
   });
 });
