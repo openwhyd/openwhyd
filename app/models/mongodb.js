@@ -39,10 +39,8 @@ exports.collections = {};
 /** @deprecated */
 exports.usernames = {};
 
-/** @param { string | mongodb.ObjectId } objectId */
-exports.ObjectId = function (objectId) {
-  return new mongodb.ObjectId('' + objectId);
-};
+/** @param { ConstructorParameters<typeof mongodb.ObjectId>[0] } inputId */
+exports.ObjectId = (inputId) => new mongodb.ObjectId(inputId);
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
