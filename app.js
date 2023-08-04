@@ -3,9 +3,12 @@
 var /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 if (!process.env.DISABLE_DATADOG) {
+  // Initialize Datadog APM
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore // cf https://docs.datadoghq.com/fr/tracing/trace_collection/dd_libraries/nodejs/?tab=autresenvironnements
-  process.datadogTracer = require('dd-trace').init(); // datadog APM
+  process.datadogTracer = require('dd-trace').init({
+    profiling: true, // cf https://docs.datadoghq.com/fr/profiler/enabling/nodejs/?tab=incode
+  });
 }
 
 const util = require('util');
