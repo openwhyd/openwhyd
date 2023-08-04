@@ -39,18 +39,8 @@ exports.collections = {};
 /** @deprecated */
 exports.usernames = {};
 
-exports.ObjectIdOrThrow = function (objectId) {
-  return new mongodb.ObjectId('' + objectId);
-};
-
-exports.ObjectId = function (v) {
-  try {
-    return exports.ObjectIdOrThrow(v);
-  } catch (err) {
-    console.trace(`[db] invalid mongodb object id: ${v} (${typeof v})`);
-    throw err;
-  }
-};
+/** @param { ConstructorParameters<typeof mongodb.ObjectId>[0] } inputId */
+exports.ObjectId = (inputId) => new mongodb.ObjectId(inputId);
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
