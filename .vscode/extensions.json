@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "dbaeumer.vscode-eslint",
+    "mongodb.mongodb-vscode",
+    "esbenp.prettier-vscode",
+    "redhat.vscode-yaml"
+  ]
+}
