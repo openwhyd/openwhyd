@@ -182,7 +182,7 @@ jobs:
     runs-on: ubuntu-20.04
     services:
       mongodb:
-        image: docker://mongo:3.6
+        image: docker://mongo:3.6@sha256:146c1fd999a660e697aac40bc6da842b005c7868232eb0b7d8996c8f3545b05d
         ports:
           - 27117:27017
     steps:
@@ -413,7 +413,7 @@ jobs:
         run: docker-compose exec -T web npm run test:unit
       - name: Run API tests
         env:
-          MONGODB_URL: mongodb://mongo:27117/openwhyd_test
+          MONGODB_URL: mongodb://mongo:27017/openwhyd_test
         run: docker-compose exec --env MONGODB_URL -T web npm run test:integration
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail

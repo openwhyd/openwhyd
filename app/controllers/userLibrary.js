@@ -1,3 +1,5 @@
+//@ts-check
+
 /**
  * userLibrary controller
  * shows an organized view of posts (user's and friends' library)
@@ -37,20 +39,16 @@ var paramsToInclude = [
 function LibraryController(reqParams, render) {
   reqParams = reqParams || {};
   this.render = render;
+  /** @type import('./LibUser.js').FetchAndRenderOptions */
   this.options = {
-    loggedUser: reqParams.loggedUser || {} /*,
-		after: reqParams.after,
-		before: reqParams.before,
-		limit: reqParams.limit,
-		playlistId: reqParams.playlistId,
-		showPlaylists: reqParams.showPlaylists,
-		showLikes: reqParams.showLikes,
-		embedW: reqParams.embedW,
-		format: reqParams.format,
-		pageUrl: reqParams.pageUrl*/,
+    loggedUser: reqParams.loggedUser || {},
   };
-  for (let i in paramsToInclude)
-    this.options[paramsToInclude[i]] = reqParams[paramsToInclude[i]];
+  for (const paramName of paramsToInclude) {
+    const value = reqParams[paramName];
+    if (typeof value === 'object')
+      throw new Error(`invalid parameter value: ${paramName}`);
+    this.options[paramName] = value;
+  }
   if (typeof this.options.limit == 'string')
     this.options.limit = parseInt(this.options.limit);
   if (this.options.callback) this.options.format = 'json';
@@ -143,7 +141,13 @@ exports.controller = function (request, reqParams, response) {
     else response.legacyRender(data.error);
   }
 
-  var lib = new LibraryController(reqParams, render);
+  let lib;
+  try {
+    lib = new LibraryController(reqParams, render);
+  } catch (err) {
+    response.badRequest({ error: err.message });
+    return;
+  }
 
   function redirectTo(path) {
     var paramsObj = {},

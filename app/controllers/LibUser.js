@@ -1,3 +1,13 @@
+//@ts-check
+
+// WIP: Type definitions are incomplete and some may be wrong
+/** @typedef {{ loggedUser: any, pageUrl?: string }} RequestContext */
+/** @typedef {{ uid?: string, user?: { lnk: string, pl: unknown } }} RequestedUserData */
+/** @typedef {{ playlistId?: string }} RequestedPlaylistData */
+/** @typedef {{ after?: number | string, limit?: number | string }} PaginationParameters */
+/** @typedef {{ bodyClass?: string, format?: string, displayPlaylistName?: boolean, embedW?: unknown, content?: string, callback?: string }} RenderingAttributes */
+/** @typedef { RequestContext & RequestedUserData & RequestedPlaylistData & PaginationParameters & RenderingAttributes } FetchAndRenderOptions */
+
 /**
  * LibUser class
  * fetchs and renders a user's library
@@ -68,6 +78,7 @@ function generateMixpanelCode(options) {
 
 var bareFormats = new Set(['json', 'links']);
 
+/** @param {FetchAndRenderOptions} options */
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
 
@@ -101,7 +112,7 @@ function populatePaginationParameters(options) {
     limit: options.limit,
   };
   if (options.embedW)
-    options.fetchParams.limit = config.nbTracksPerPlaylistEmbed;
+    options.fetchParams.limit = process.appParams.nbTracksPerPlaylistEmbed;
   else if (options.limit && typeof options.limit !== 'number') {
     if (typeof options.limit === 'string')
       options.fetchParams.limit = parseInt(options.limit);
@@ -180,6 +191,7 @@ function renderResponse(feed, options, lib, user) {
     );
 }
 
+/** @param {{ options: FetchAndRenderOptions, render: (unknown) => void }} lib */
 async function renderUserLibrary(lib, user) {
   var options = lib.options;
 

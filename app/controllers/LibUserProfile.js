@@ -111,6 +111,7 @@ function populateUsers(subscr, options, cb) {
   );
 }
 
+/** @param {FetchAndRenderOptions} options */
 exports.fetchAndRender = function (options, callback) {
   options.bodyClass += ' userProfileV2';
   options.nbPlaylists = (options.user.pl || []).length;
