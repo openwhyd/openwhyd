@@ -190,7 +190,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-      - run: npm ci
+          cache: 'npm'
+      - run: npm ci --prefer-offline --no-audit
       - name: API tests
         run: npm run test:integration:api:coverage
         # TODO: find a way to run other integration tests too
