@@ -55,7 +55,7 @@ function connectToMongoDB(url) {
   });
 }
 
-const ObjectId = (id) => mongodb.ObjectID.createFromHexString(id);
+const ObjectId = (id) => new ObjectId(id);
 
 async function readMongoDocuments(file) {
   const ISODate = (d) => new Date(d);

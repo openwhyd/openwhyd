@@ -4,8 +4,7 @@
  **/
 
 var mongodb = require('./mongodb.js');
-var ObjectId = mongodb.ObjectId; //ObjectID.createFromHexString;
-const ObjectIdOrThrow = mongodb.ObjectIdOrThrow;
+const ObjectId = mongodb.ObjectId;
 var db = mongodb.collections;
 
 var snip = require('../snip.js');
@@ -382,7 +381,7 @@ exports.deletePost = function (pId, uId, handler) {
 exports.incrPlayCounter = function (pId, cb) {
   let _id;
   try {
-    _id = ObjectIdOrThrow('' + pId);
+    _id = ObjectId('' + pId);
     if (!_id) throw new Error('empty ObjectId');
   } catch (err) {
     cb();

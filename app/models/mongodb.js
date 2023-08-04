@@ -39,17 +39,9 @@ exports.collections = {};
 /** @deprecated */
 exports.usernames = {};
 
-exports.ObjectIdOrThrow = function (objectId) {
+/** @param { string | mongodb.ObjectId } objectId */
+exports.ObjectId = function (objectId) {
   return new mongodb.ObjectId('' + objectId);
-};
-
-exports.ObjectId = function (v) {
-  try {
-    return exports.ObjectIdOrThrow(v);
-  } catch (err) {
-    console.trace(`[db] invalid mongodb object id: ${v} (${typeof v})`);
-    throw err;
-  }
 };
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
