@@ -192,6 +192,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
+      - run: npm run test:integration:image # TODO: add coverage
       - run: npm run test:integration:mongodb # TODO: add coverage
       - name: API tests
         run: npm run test:integration:api:coverage
