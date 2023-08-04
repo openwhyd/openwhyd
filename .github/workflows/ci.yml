@@ -182,7 +182,7 @@ jobs:
     runs-on: ubuntu-20.04
     services:
       mongodb:
-        image: docker://mongo:3.6
+        image: docker://mongo:3.6@sha256:146c1fd999a660e697aac40bc6da842b005c7868232eb0b7d8996c8f3545b05d
         ports:
           - 27117:27017
     steps:
@@ -190,8 +190,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci --prefer-offline --no-audit
+      - run: npm ci
       - name: API tests
         run: npm run test:integration:api:coverage
         # TODO: find a way to run other integration tests too
