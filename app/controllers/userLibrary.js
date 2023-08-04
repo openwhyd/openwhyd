@@ -41,16 +41,7 @@ function LibraryController(reqParams, render) {
   this.render = render;
   /** @type import('./LibUser.js').FetchAndRenderOptions */
   this.options = {
-    loggedUser: reqParams.loggedUser || {} /*,
-		after: reqParams.after,
-		before: reqParams.before,
-		limit: reqParams.limit,
-		playlistId: reqParams.playlistId,
-		showPlaylists: reqParams.showPlaylists,
-		showLikes: reqParams.showLikes,
-		embedW: reqParams.embedW,
-		format: reqParams.format,
-		pageUrl: reqParams.pageUrl*/,
+    loggedUser: reqParams.loggedUser || {},
   };
   for (let i in paramsToInclude)
     this.options[paramsToInclude[i]] = reqParams[paramsToInclude[i]];
