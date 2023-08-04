@@ -67,6 +67,10 @@ const makeStatsUpdater = () =>
     const userId = (req.session || {}).whydUid;
     const userAgent = req.headers['user-agent'];
 
+    // also push to Datadog APM, cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
+    if (userId)
+      process.datadogTracer?.scope().active()?.setTag('user.id', userId);
+
     sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
 
     // log whenever a request is slow to respond
@@ -236,8 +240,4 @@ function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
   if (userId) logLine.push('uid=' + userId);
   if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
   console.error('slow request:', logLine.join(' '));
-
-  // also push to Datadog APM, cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
-  if (userId)
-    process.datadogTracer?.scope().active()?.setTag('user.id', userId);
 }
