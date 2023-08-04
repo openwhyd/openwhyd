@@ -4,11 +4,10 @@ services:
     image: mongo:3.6
     command: mongod --port 27117
     volumes:
-      - /data # Data Persistance
+      - target: /data
+        type: tmpfs
     ports:
       - '27117:27117'
-    logging:
-      driver: none
 
   web:
     restart: 'always'
