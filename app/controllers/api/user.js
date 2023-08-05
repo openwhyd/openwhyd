@@ -18,7 +18,6 @@ var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
 var emailModel = require('../../models/email.js');
 var followModel = require('../../models/follow.js');
-const config = require('../../models/config.js');
 var notifEmails = require('../../models/notifEmails.js');
 var uploadCtr = require('../uploadedFile.js');
 
