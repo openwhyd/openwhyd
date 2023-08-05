@@ -21,7 +21,7 @@
     "test-reset": "node test/reset-test-db.js",
     "test:functional": "npx --yes mocha test/functional/*.js --exit",
     "test:functional:coverage": "npm run coverage:clear && npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts[`test:functional`]') $@",
-    "test:integration": "START_WITH_ENV_FILE='./env-vars-testing.conf' npx --yes mocha test/integration/*.js --serial --exit",
+    "test:integration": "npx --yes mocha test/integration/*.js --serial --exit",
     "test:api": "START_WITH_ENV_FILE='./env-vars-testing.conf' npx --yes mocha test/api/*.tests.js",
     "test:api:coverage": "npm run coverage:clear && COVERAGE=true npm run test:api -- --timeout 10000 && npm run coverage:report | grep api",
     "test:integration:mongodb": ". ./env-vars-testing.sh && WITHOUT_CONSOLE_LOG=true npx --yes mocha test/integration/mongodb/*tests.js --exit",
