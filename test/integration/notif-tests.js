@@ -17,7 +17,7 @@ const assert = require('assert');
 const { ObjectId, ...mongodb } = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
 
-const { ADMIN_USER } = require('../fixtures.js');
+const { ADMIN_USER, cleanup } = require('../fixtures.js');
 
 const POLL_TIMEOUT = 4000;
 
@@ -130,6 +130,8 @@ describe('notifications', function () {
   this.timeout(5000);
 
   USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
+
+  before(cleanup); // reset database state and seed fixtures (including ADMIN_USER)
 
   it('initiatialises db', initDb);
 
