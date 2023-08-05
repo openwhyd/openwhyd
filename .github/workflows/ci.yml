@@ -196,7 +196,7 @@ jobs:
       - run: npm run test:integration:image # TODO: add coverage
       - run: npm run test:integration:mongodb # TODO: add coverage
       - name: API tests
-        run: npm run test:integration:api:coverage
+        run: npm run test:api:coverage
         # TODO: find a way to run other integration tests too
       - name: Get coverage data
         run: npm run coverage:report
