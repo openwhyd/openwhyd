@@ -255,7 +255,7 @@ function countUserLikes(user, cb) {
 }
 
 exports.fetchUserData = function (user, cb) {
-  var ops = [countUserSubscr, countUserPosts, countUserLikes];
+  const ops = [countUserSubscr, countUserPosts, countUserLikes];
   (function next() {
     if (!ops.length) cb(user);
     else ops.pop().apply(null, [user, next]);
@@ -277,7 +277,7 @@ function fetchUserById(uId, options, cb) {
         delete user.twTok;
         delete user.twSec;
       }
-      var getters = [['includeSubscr', countUserSubscr]];
+      const getters = [['includeSubscr', countUserSubscr]];
       (function next() {
         var item = getters.shift();
         if (!item) cb(user);
