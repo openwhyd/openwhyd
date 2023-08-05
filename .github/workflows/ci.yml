@@ -411,10 +411,14 @@ jobs:
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
       - name: Run unit tests
         run: docker-compose exec -T web npm run test:unit
-      - name: Run API tests
+      - name: Run integration tests
         env:
           MONGODB_URL: mongodb://mongo:27017/openwhyd_test
         run: docker-compose exec --env MONGODB_URL -T web npm run test:integration
+      - name: Run API tests
+        env:
+          MONGODB_URL: mongodb://mongo:27017/openwhyd_test
+        run: docker-compose exec --env MONGODB_URL -T web npm run test:api
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker-compose logs
