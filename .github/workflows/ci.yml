@@ -412,9 +412,7 @@ jobs:
       - name: Run unit tests
         run: docker-compose exec -T web npm run test:unit
       - name: Run integration tests
-        env:
-          MONGODB_URL: mongodb://mongo:27017/openwhyd_test
-        run: docker-compose exec --env MONGODB_URL -T web npm run test:integration
+        run: docker-compose exec -T web npm run test:integration
       - name: Run API tests
         env:
           MONGODB_URL: mongodb://mongo:27017/openwhyd_test
