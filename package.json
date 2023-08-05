@@ -38,7 +38,7 @@
     "test:cypress:dev": "node_modules/.bin/cypress open",
     "test:cypress": "node_modules/.bin/cypress run",
     "test:3rd-party": "jest test/3rd-party/*.test.js",
-    "test": ". ./env-vars-testing.sh && npm run test:unit && npm run test:integration && npm run test:cypress",
+    "test": ". ./env-vars-testing.sh && npm run test:unit && npm run test:integration && npm run test:integration:mongodb && npm run test:api && npm run test:cypress",
     "coverage:clear": "rm -rf .nyc_output coverage",
     "coverage:report": "npx --yes nyc report --reporter=text --reporter=lcov # stores the coverage report in coverage/lcov.info",
     "coverage:summary": "npx --yes nyc report --reporter=text-summary --reporter=lcov # stores the coverage report in coverage/lcov.info",
