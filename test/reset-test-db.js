@@ -14,6 +14,7 @@ if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
   };
 }
 
+// TODO: we should not rely on env vars in this file
 if (process.env['MONGODB_HOST'] === undefined)
   throw new Error(`missing env var: MONGODB_HOST`);
 if (process.env['MONGODB_PORT'] === undefined)
