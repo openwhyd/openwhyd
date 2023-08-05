@@ -16,9 +16,7 @@ function wrapJsonGeneratorToText(name) {
 
 var fileGenerators = {
   'version.json': function (p, cb) {
-    version.updateVersions(function (versions) {
-      cb({ json: versions });
-    });
+    cb({ json: version.getVersions() });
   },
   'version.txt': wrapJsonGeneratorToText('version.json'),
   'config.json': function (p, cb) {
