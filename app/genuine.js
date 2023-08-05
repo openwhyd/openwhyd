@@ -1,6 +1,6 @@
 /**
  * genuine signup token compiler and checker
- * tools to make sure that accounts can be created only from official openwhyd clients (iOS and web ui)
+ * tools to make sure that accounts can be created only from official openwhyd clients
  * @author adrienjoly, whyd
  */
 
@@ -48,7 +48,7 @@ function parseSignupToken(sTk) {
 //var hexDate = date.toString(16) => "14a7cabae02" // 11 hexadecimal chars
 //parseInt(hexDate, 16)
 
-// used directly by iOS app, indirectly by web ui (through request token validation)
+// used indirectly by web ui (through request token validation)
 exports.makeSignupToken = function (request, date) {
   request = realIP(request);
   //console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
@@ -85,7 +85,7 @@ exports.validateSignupToken = function (sTk, request) {
   // TODO: check request's referer
 };
 
-// used by iOS app and backend of web ui
+// used by backend of web ui
 exports.checkSignupToken = function (sTk, request) {
   request = realIP(request);
 
