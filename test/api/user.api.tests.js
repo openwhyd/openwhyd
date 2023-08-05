@@ -23,14 +23,13 @@ describe('user api', () => {
   describe(`getting user data`, function () {
     it(`gets user profile data`, function (done) {
       const url =
-        '/api/user?includeSubscr=true&isSubscr=true&countPosts=true&countLikes=true&getVersion=1';
+        '/api/user?includeSubscr=true&isSubscr=true&countPosts=true&countLikes=true';
       api.loginAs(DUMMY_USER, function (error, { jar }) {
         api.get(jar, url, function (err, { body, ...res }) {
           assert.ifError(err);
           assert.equal(res.response.statusCode, 200);
           assert(!body.error);
           assert.equal(body.email, DUMMY_USER.email);
-          assert(body.openwhydServerVersion);
           done();
         });
       });

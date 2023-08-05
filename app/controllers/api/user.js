@@ -18,7 +18,6 @@ var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
 var emailModel = require('../../models/email.js');
 var followModel = require('../../models/follow.js');
-var versionModel = require('../../models/version.js');
 var notifEmails = require('../../models/notifEmails.js');
 var uploadCtr = require('../uploadedFile.js');
 
@@ -255,14 +254,8 @@ function countUserLikes(user, cb) {
   });
 }
 
-function appendVersions(user, cb) {
-  var versions = versionModel.getVersions();
-  for (let i in versions) user[i] = versions[i];
-  cb();
-}
-
 exports.fetchUserData = function (user, cb) {
-  var ops = [countUserSubscr, countUserPosts, countUserLikes, appendVersions];
+  const ops = [countUserSubscr, countUserPosts, countUserLikes];
   (function next() {
     if (!ops.length) cb(user);
     else ops.pop().apply(null, [user, next]);
@@ -284,10 +277,7 @@ function fetchUserById(uId, options, cb) {
         delete user.twTok;
         delete user.twSec;
       }
-      var getters = [
-        ['getVersion', appendVersions],
-        ['includeSubscr', countUserSubscr],
-      ];
+      const getters = [['includeSubscr', countUserSubscr]];
       (function next() {
         var item = getters.shift();
         if (!item) cb(user);

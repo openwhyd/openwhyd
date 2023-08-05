@@ -7,7 +7,7 @@ about: Propose a feature that would make Openwhyd better for its users
 
 _[openwhyd.org](https://openwhyd.org) is an open-source music platform used daily by thousands of users to create playlists of songs from the web (Youtube, Soundcloud, etc...), and discover musical gems from similar users._
 
-_Tech stack: Node.js, MongoDB, Docker, Mocka, Webdriver.io, jQuery, Electron + iOS app_
+_Tech stack: Node.js, MongoDB, Docker, Mocka, Webdriver.io, jQuery, Electron_
 
 ## Goal
 
