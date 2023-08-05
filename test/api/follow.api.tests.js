@@ -49,8 +49,6 @@ describe(`follow api`, () => {
     assert.strictEqual(response.statusCode, 200);
 
     // check in the db that the user was really followed
-    const env = openwhyd.getEnv();
-    console.warn('test is connecting to ', { MONGODB_URL: env.MONGODB_URL });
     const actualSubscriptions = await openwhyd.dumpCollection('follow');
     const expectedSubscriptions = [
       {

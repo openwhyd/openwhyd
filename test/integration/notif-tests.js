@@ -1,10 +1,16 @@
+// TODO: we should not rely on env vars
+process.env['MONGODB_HOST'] = process.env['MONGODB_HOST'] || 'localhost';
+process.env['MONGODB_PORT'] = process.env['MONGODB_PORT'] || 27117;
+process.env['MONGODB_DATABASE'] =
+  process.env['MONGODB_DATABASE'] || 'openwhyd_test';
+
 process.appParams = {
   urlPrefix: '',
-  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
+  mongoDbHost: process.env['MONGODB_HOST'],
+  mongoDbPort: process.env['MONGODB_PORT'],
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
+  mongoDbDatabase: process.env['MONGODB_DATABASE'],
 };
 
 const consoleBackup = console.log;
@@ -17,7 +23,7 @@ const assert = require('assert');
 const { ObjectId, ...mongodb } = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
 
-const { ADMIN_USER } = require('../fixtures.js');
+const { ADMIN_USER, cleanup } = require('../fixtures.js');
 
 const POLL_TIMEOUT = 4000;
 
@@ -131,7 +137,9 @@ describe('notifications', function () {
 
   USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
 
-  it('initiatialises db', initDb);
+  before(cleanup); // reset database state and seed fixtures (including ADMIN_USER)
+
+  before(initDb);
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid

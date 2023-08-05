@@ -192,9 +192,8 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
-      - name: API tests
-        run: npm run test:integration:api:coverage
-        # TODO: find a way to run other integration tests too
+      - run: npm run test:integration # TODO: add coverage
+      - run: npm run test:api:coverage
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
@@ -409,12 +408,14 @@ jobs:
           docker-compose exec -T web npm run test-reset
           docker-compose restart web
           docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
-      - name: Run unit tests
-        run: docker-compose exec -T web npm run test:unit
-      - name: Run API tests
+      - name: Run integration tests
+        run: docker-compose exec -T --env MONGODB_URL web npm run test:integration
         env:
-          MONGODB_URL: mongodb://mongo:27017/openwhyd_test
-        run: docker-compose exec --env MONGODB_URL -T web npm run test:integration
+          MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test' # needed by mongodb integration tests (user.repository.tests.js)
+      - name: Run API tests
+        run: docker-compose exec -T --env MONGODB_URL web npm run test:api:raw
+        env:
+          MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test'
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker-compose logs

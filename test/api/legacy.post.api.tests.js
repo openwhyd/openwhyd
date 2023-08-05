@@ -1,10 +1,10 @@
-var assert = require('assert');
+const assert = require('assert');
 
-var { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
-var api = require('../api-client.js');
+const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
+const api = require('../api-client.js');
 const util = require('util');
-var { START_WITH_ENV_FILE } = process.env;
-const { startOpenwhydServer } = require('../approval-tests-helpers');
+const { START_WITH_ENV_FILE } = process.env;
+const { startOpenwhydServer } = require('../approval-tests-helpers.js');
 
 describe(`post api`, function () {
   before(cleanup); // to prevent side effects between test suites (there are side effects between tests in this file...)
@@ -20,7 +20,7 @@ describe(`post api`, function () {
     await context.serverProcess?.exit();
   });
 
-  var pId, uId;
+  let pId, uId;
   const post = {
     eId: '/yt/XdJVWSqb4Ck',
     name: 'Lullaby - Jack Johnson and Matt Costa',
@@ -54,7 +54,7 @@ describe(`post api`, function () {
     });
   });
 
-  var playlistFullId;
+  let playlistFullId;
   const firstPlaylistIndex = 0;
   const postInPlaylist = Object.assign({}, post, {
     pl: {

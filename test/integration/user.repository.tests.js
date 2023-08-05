@@ -1,3 +1,5 @@
+//@ts-check
+
 const assert = require('assert');
 const {
   mongodb,
@@ -5,21 +7,33 @@ const {
   cleanup,
   readMongoDocuments,
   insertUser,
-} = require('./mongo.integration.base.tests');
+} = require('./mongodb/mongo.integration.base.tests');
 const {
   userCollection: userRepository,
-} = require('../../../app/infrastructure/mongodb/UserCollection');
-const COMPLETE_USER_JSON = __dirname + '/fixtures/complete.users.json.js';
+} = require('../../app/infrastructure/mongodb/UserCollection');
+const COMPLETE_USER_JSON =
+  __dirname + '/mongodb/fixtures/complete.users.json.js';
 
 describe('Mongo user repository should', function () {
   before(initMongoDb);
   beforeEach(cleanup);
 
+  it('throw exception when user is invalid', async () => {
+    try {
+      await userRepository.getByUserId('invalidUserId');
+    } catch (err) {
+      assert.deepEqual(
+        err.message,
+        'Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer',
+      );
+    }
+  });
+
   it('throw exception when user is unknown', async () => {
     try {
-      await userRepository.getByUserId('unknownUserId');
+      await userRepository.getByUserId('4d94501d1f78ac091dbc9bff');
     } catch (err) {
-      assert.deepEqual(err, Error('User is unknown'));
+      assert.deepEqual(err.message, 'User is unknown');
     }
   });
 
@@ -41,7 +55,7 @@ describe('Mongo user repository should', function () {
     const user = await readMongoDocuments(COMPLETE_USER_JSON);
     const userId = await insertUser(user);
 
-    const playlistId = '65';
+    const playlistId = 65;
     const newPlaylist = {
       id: playlistId,
       name: '🌍 Tour du monde',
