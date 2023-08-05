@@ -26,6 +26,7 @@
     "test:integration:api:coverage": "npm run coverage:clear && COVERAGE=true npm run test:integration:api -- --timeout 10000 && npm run coverage:report | grep api",
     "test:integration:mongodb": ". ./env-vars-testing.sh && WITHOUT_CONSOLE_LOG=true npx --yes mocha test/integration/mongodb/*tests.js --exit",
     "test:integration:image": "npx --yes mocha test/integration/img-tests.js",
+    "test:integration:notif": "npx --yes mocha test/integration/notif-tests.js",
     "test:unit": "npx --yes mocha test/unit/*.js --exit",
     "test:unit:coverage": "npm run coverage:clear && npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts[`test:unit`]') $@",
     "test-approval": "npx --yes kill-port --port 8080 >/dev/null; DONT_KILL=1 START_WITH_ENV_FILE='./env-vars-testing.conf' ava test/approval.tests.js $@",
