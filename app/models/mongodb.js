@@ -221,12 +221,13 @@ exports.initCollections = function ({ addTestData = false } = {}) {
   });
 };
 
-exports.init = function (readyCallback) {
-  var dbName = process.appParams.mongoDbDatabase;
-  var host = process.appParams.mongoDbHost;
-  var port = process.appParams.mongoDbPort;
-  var authUser = process.appParams.mongoDbAuthUser;
-  var authPassword = process.appParams.mongoDbAuthPassword;
+/** @param {{ mongoDbHost: string, mongoDbPort: string, mongoDbDatabase: string, mongoDbAuthUser?: string, mongoDbAuthPassword?: string }} connParams */
+exports.init = function (connParams, readyCallback) {
+  const dbName = connParams.mongoDbDatabase;
+  const host = connParams.mongoDbHost;
+  const port = connParams.mongoDbPort;
+  const authUser = connParams.mongoDbAuthUser;
+  const authPassword = connParams.mongoDbAuthPassword;
 
   var authStr = '';
   if (authUser && authPassword)

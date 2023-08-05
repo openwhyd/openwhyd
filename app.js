@@ -217,7 +217,7 @@ async function main() {
   }
   console.log(`[app] Starting Openwhyd v${params.version}`);
   const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
-  await util.promisify(mongodb.init)();
+  await util.promisify(mongodb.init)(process.appParams); // TODO: only pass the required params
   await mongodb.initCollections();
   start();
 }

@@ -24,7 +24,7 @@ async function initMongoDb() {
       /* In order to have nice console summary */
     };
   }
-  await util.promisify(mongodb.init)();
+  await util.promisify(mongodb.init)(process.appParams); // TODO: don't store db credentials in appParams
   await mongodb.initCollections();
 }
 

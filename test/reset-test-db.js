@@ -31,7 +31,8 @@ process.appParams = {
 };
 
 console.log('[test-db-init.js] Connecting to db ...');
-require('../app/models/mongodb.js').init(function (err, db) {
+// TODO: don't store db credentials in appParams
+require('../app/models/mongodb.js').init(process.appParams, function (err, db) {
   if (err) throw err;
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const mongodb = this;
