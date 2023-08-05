@@ -16,7 +16,7 @@ const argon2 = require('argon2');
 const notifEmails = require('../../models/notifEmails.js');
 const mongodb = require('../../models/mongodb.js');
 
-var ENFORCE_GENUINE_SIGNUP_FROM_IOS = false; // TODO: set to true, after x-real-ip header is set by the nginx proxy
+const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
 var onboardingUrl = '/';
 var checkInvites = false;
 
@@ -70,7 +70,7 @@ exports.registerInvitedUser = function (request, user, response) {
 
   var error = !user.ajax ? inviteController.renderRegisterPage : renderError;
 
-  if (ENFORCE_GENUINE_SIGNUP_FROM_IOS || user.iRf !== 'iPhoneApp') {
+  if (ENFORCE_GENUINE_SIGNUP) {
     var genuineToken;
 
     if (!user.sTk || typeof user.sTk !== 'string')
