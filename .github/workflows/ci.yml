@@ -404,11 +404,6 @@ jobs:
         # env:
         #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
-      - name: Init database for tests
-        run: |
-          docker-compose exec -T web npm run test-reset
-          docker-compose restart web
-          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
       - name: Run unit tests
         run: docker-compose exec -T web npm run test:unit
       - name: Run integration tests
