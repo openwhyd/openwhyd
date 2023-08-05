@@ -7,11 +7,12 @@ const {
   cleanup,
   readMongoDocuments,
   insertUser,
-} = require('./mongo.integration.base.tests');
+} = require('./mongodb/mongo.integration.base.tests');
 const {
   userCollection: userRepository,
-} = require('../../../app/infrastructure/mongodb/UserCollection');
-const COMPLETE_USER_JSON = __dirname + '/fixtures/complete.users.json.js';
+} = require('../../app/infrastructure/mongodb/UserCollection');
+const COMPLETE_USER_JSON =
+  __dirname + '/mongodb/fixtures/complete.users.json.js';
 
 describe('Mongo user repository should', function () {
   before(initMongoDb);
