@@ -418,7 +418,7 @@ jobs:
       - name: Run API tests
         env:
           MONGODB_URL: mongodb://mongo:27017/openwhyd_test
-        run: docker-compose exec --env MONGODB_URL -T web npm run test:api
+        run: docker-compose exec --env MONGODB_URL -T web npm run test:api:raw
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker-compose logs
