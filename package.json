@@ -42,7 +42,7 @@
     "coverage:report": "npx --yes nyc report --reporter=text --reporter=lcov # stores the coverage report in coverage/lcov.info",
     "coverage:summary": "npx --yes nyc report --reporter=text-summary --reporter=lcov # stores the coverage report in coverage/lcov.info",
     "docker:seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
-    "docker:run": "npm run docker:seed && docker-compose exec web npm run $@",
+    "docker:run": "npm run docker:seed && docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run $@",
     "docker:test:cypress:dev": ". ./.env-docker && npm run test:cypress:dev",
     "docker:test:cypress": ". ./.env-docker && npm run test:cypress",
     "docker:test": "npm run docker:run test:unit && npm run docker:run test:integration && npm run docker:test:cypress",
