@@ -45,7 +45,7 @@
     "docker:run": "npm run docker:seed && docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run $@",
     "docker:test:cypress:dev": ". ./.env-docker && npm run test:cypress:dev",
     "docker:test:cypress": ". ./.env-docker && npm run test:cypress",
-    "docker:test": "npm run docker:run test:unit && npm run docker:run test:integration && npm run docker:test:cypress",
+    "docker:test": "npm run docker:run test:unit && npm run docker:run test:integration && npm run docker:run test:api:raw && npm run docker:test:cypress",
     "docker:test-approval": "DONT_KILL=1 PORT=8080 ava test/approval.tests.js $@",
     "docker:test-approval-hot-tracks": "DONT_KILL=1 PORT=8080 npx --yes jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "docker:test:approval": "DONT_KILL=1 PORT=8080 mocha test/approval/approval.tests.js $@",
