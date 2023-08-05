@@ -18,7 +18,7 @@ var postModel = require('../../models/post.js');
 var userModel = require('../../models/user.js');
 var emailModel = require('../../models/email.js');
 var followModel = require('../../models/follow.js');
-var versionModel = require('../../models/version.js');
+const config = require('../../models/config.js');
 var notifEmails = require('../../models/notifEmails.js');
 var uploadCtr = require('../uploadedFile.js');
 
@@ -256,7 +256,9 @@ function countUserLikes(user, cb) {
 }
 
 function appendVersions(user, cb) {
-  var versions = versionModel.getVersions();
+  var versions = {
+    openwhydServerVersion: config.version,
+  };
   for (let i in versions) user[i] = versions[i];
   cb();
 }

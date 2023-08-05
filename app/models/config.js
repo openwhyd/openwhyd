@@ -1,7 +1,7 @@
 // command-line overridable config
 
 var config = process.appParams; // cf init in appd.js
-for (let key in config) exports[key] = config[key];
+for (let key in config) exports[key] = config[key]; // 🥷 this populates module.exports with all the values from process.appParams
 
 // TODO: update team and autoSubscribeUsers
 
