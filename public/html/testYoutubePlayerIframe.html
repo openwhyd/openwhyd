@@ -45,4 +45,7 @@
     ></iframe>
     <span id="time">Time: 0</span>
   </body>
+  <!-- content of http://adrienjoly.tumblr.com/post/80167551383/iframe-test, from tumblr account:
+    // <![CDATA[              var player = new YoutubePlayer({}, {         playerContainer: document.getElementById('player')       });              var origin = window.location.protocol + "//localhost:8080"; //"//run.jsbin.io";       console.log("[iframe] expected origin:", origin);        window.addEventListener('message', function(e) {         if (e.origin == origin) {           var message = JSON.parse(e.data);           var method = message.code;           var args = message.data;           console.log("[iframe]", e.origin, "is calling", method);           if (typeof player[method] === 'function') {             if (method === 'getTrackPosition') {               player.getTrackPosition(function(pos) {                 console.log(pos);                 parent.window.postMessage(                   JSON.stringify({code: 'getTrackPositionCallback', data: pos}), origin                 );               });             } else {               player[method].apply(player, args);             }           }         }       });      // ]]>
+  -->
 </html>
