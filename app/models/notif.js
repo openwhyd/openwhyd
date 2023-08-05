@@ -261,7 +261,8 @@ exports.html = function (uId, html, href, img) {
 exports.love = function (loverUid, post, callback) {
   var user = mongodb.usernames['' + loverUid];
   var author = mongodb.usernames['' + post.uId];
-  if (!user || !author) return;
+  if (!author) throw new Error('author not found');
+  if (!user) throw new Error('target user not found');
   db['notif'].updateOne(
     { _id: post._id + '/loves' },
     {
