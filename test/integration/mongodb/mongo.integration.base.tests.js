@@ -1,3 +1,20 @@
+process.appParams = {
+  urlPrefix: '',
+  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
+  mongoDbPort: process.env['MONGODB_PORT'] || 27117,
+  mongoDbAuthUser: process.env['MONGODB_USER'],
+  mongoDbAuthPassword: process.env['MONGODB_PASS'],
+  mongoDbDatabase: process.env['MONGODB_DATABASE'],
+};
+
+console.warn('mongodb test env:', {
+  MONGODB_URL: process.env.MONGODB_URL,
+  MONGODB_HOST: process.env.MONGODB_HOST,
+  MONGODB_PORT: process.env.MONGODB_PORT,
+  MONGODB_PASS: process.env.MONGODB_PASS,
+  appParams: process.appParams,
+});
+
 const util = require('util');
 const {
   readMongoDocuments,
@@ -7,15 +24,6 @@ const mongodb = require('../../../app/models/mongodb.js');
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 const { cleanup } = require('../../fixtures.js');
-
-process.appParams = {
-  urlPrefix: '',
-  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || 27117,
-  mongoDbAuthUser: process.env['MONGODB_USER'],
-  mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'],
-};
 
 async function initMongoDb() {
   if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
