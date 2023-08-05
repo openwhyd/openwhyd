@@ -25,7 +25,7 @@ const profileRenderer = require('./LibUserProfile.js');
 
 // DATA FETCHING HELPERS
 
-function fetchPlaylists(options) {
+async function fetchPlaylists(options) {
   return new Promise((resolve) => {
     userModel.fetchPlaylists(options.user, {}, function (playlists) {
       resolve(playlists);
