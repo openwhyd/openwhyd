@@ -406,13 +406,13 @@ jobs:
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Init database for tests
         run: |
-          docker-compose exec --no-TTY web npm run test-reset
+          docker-compose exec -T web npm run test-reset
           docker-compose restart web
-          docker-compose exec --no-TTY web sh -c './scripts/wait-for-http-server.sh 8080'
+          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
       - name: Run integration tests
-        run: docker-compose exec --no-TTY web npm run test:integration
+        run: docker-compose exec -T web npm run test:integration
       - name: Run API tests
-        run: docker-compose exec --no-TTY --env MONGODB_URL web npm run test:api:raw
+        run: docker-compose exec -T --env MONGODB_URL web npm run test:api:raw
         env:
           MONGODB_URL: mongodb://mongo:27017/openwhyd_test
       - name: Logs from docker-compose
