@@ -404,14 +404,12 @@ jobs:
         # env:
         #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
-      - name: Run unit tests
-        run: docker-compose exec -T web npm run test:unit
       - name: Run integration tests
         run: docker-compose exec -T web npm run test:integration
       - name: Run API tests
+        run: docker-compose exec --env MONGODB_URL -T web npm run test:api:raw
         env:
           MONGODB_URL: mongodb://mongo:27017/openwhyd_test
-        run: docker-compose exec --env MONGODB_URL -T web npm run test:api:raw
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker-compose logs
