@@ -1,3 +1,4 @@
+// TODO: we should not rely on env vars
 process.appParams = {
   urlPrefix: '',
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
@@ -6,14 +7,6 @@ process.appParams = {
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: process.env['MONGODB_DATABASE'],
 };
-
-console.warn('mongodb test env:', {
-  MONGODB_URL: process.env.MONGODB_URL,
-  MONGODB_HOST: process.env.MONGODB_HOST,
-  MONGODB_PORT: process.env.MONGODB_PORT,
-  MONGODB_PASS: process.env.MONGODB_PASS,
-  appParams: process.appParams,
-});
 
 const util = require('util');
 const {
