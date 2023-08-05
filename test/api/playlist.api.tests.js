@@ -5,7 +5,7 @@ const request = require('request');
 var { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
 var api = require('../api-client.js');
 var { START_WITH_ENV_FILE } = process.env;
-const { startOpenwhydServer } = require('../approval-tests-helpers');
+const { startOpenwhydServer } = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`playlist api`, function () {

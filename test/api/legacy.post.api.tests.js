@@ -4,7 +4,7 @@ var { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 var api = require('../api-client.js');
 const util = require('util');
 var { START_WITH_ENV_FILE } = process.env;
-const { startOpenwhydServer } = require('../approval-tests-helpers');
+const { startOpenwhydServer } = require('../approval-tests-helpers.js');
 
 describe(`post api`, function () {
   before(cleanup); // to prevent side effects between test suites (there are side effects between tests in this file...)
