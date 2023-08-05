@@ -71,7 +71,7 @@ window.openRemoteDialog = function (url, dlgClass, callback) {
 };
 
 window.showMessage = function (txt, isError) {
-  if (txt && typeof txt == 'object') {
+  if (txt && typeof txt === 'object') {
     isError = isError || txt.error;
     txt = txt.error || txt.message || txt.result || txt;
   }
