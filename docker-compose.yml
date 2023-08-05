@@ -23,7 +23,5 @@ services:
       - DISABLE_DATADOG=true
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
-      # overridable env vars:
-      - MONGODB_DATABASE
       - ALGOLIA_APP_ID
       - ALGOLIA_API_KEY
