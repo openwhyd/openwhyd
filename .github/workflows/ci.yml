@@ -193,7 +193,6 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
       - run: npm run test:integration # TODO: add coverage
-      - run: npm run test:integration:mongodb # TODO: add coverage
       - run: npm run test:api:coverage
       - name: Get coverage data
         run: npm run coverage:report
