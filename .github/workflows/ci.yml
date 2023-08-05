@@ -404,6 +404,8 @@ jobs:
         # env:
         #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
+      - name: Wait for Openwhyd readiness
+        run: docker-compose exec --no-TTY web sh -c './scripts/wait-for-http-server.sh 8080'
       - name: Run integration tests
         run: docker-compose exec --no-TTY web npm run test:integration
       - name: Run API tests
