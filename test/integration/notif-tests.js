@@ -1,6 +1,6 @@
 //@ts-check
 
-// TODO: we should not rely on env vars
+// TODO: we should not mutate env vars
 process.env['MONGODB_HOST'] = process.env['MONGODB_HOST'] || 'localhost';
 process.env['MONGODB_PORT'] = process.env['MONGODB_PORT'] || '27117';
 process.env['MONGODB_DATABASE'] =

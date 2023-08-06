@@ -1,4 +1,3 @@
-// TODO: we should not rely on env vars
 /** @type {import('../../../app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
