@@ -6,15 +6,20 @@ process.env['MONGODB_PORT'] = process.env['MONGODB_PORT'] || '27117';
 process.env['MONGODB_DATABASE'] =
   process.env['MONGODB_DATABASE'] || 'openwhyd_test';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
-process.appParams = {
-  urlPrefix: '',
+/** @type {Pick<typeof process.appParams, "mongoDbHost" | "mongoDbPort" | "mongoDbAuthUser" | "mongoDbAuthPassword" | "mongoDbDatabase">} */
+const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'],
   mongoDbPort: process.env['MONGODB_PORT'],
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: process.env['MONGODB_DATABASE'],
+};
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
+process.appParams = {
+  urlPrefix: '',
+  ...dbCreds,
 };
 
 const consoleBackup = console.log;
@@ -70,7 +75,7 @@ var COMMENTS = USERS.map(function (u) {
 // test helpers
 
 async function initDb() {
-  await util.promisify(mongodb.init)(process.appParams); // TODO: don't store db credentials in appParams
+  await util.promisify(mongodb.init)(dbCreds);
   // const initScript = './config/initdb.js';
   // await mongodb.runShellScript(require('fs').readFileSync(initScript))
   await util.promisify(mongodb.cacheCollections)();

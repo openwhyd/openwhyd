@@ -46,17 +46,22 @@ if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
 if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
   throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
 
+/** @type {Pick<typeof process.appParams, "mongoDbHost" | "mongoDbPort" | "mongoDbAuthUser" | "mongoDbAuthPassword" | "mongoDbDatabase">} */
+const dbCreds = {
+  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
+  mongoDbPort: process.env['MONGODB_PORT'] || '27017',
+  mongoDbAuthUser: process.env['MONGODB_USER'],
+  mongoDbAuthPassword: process.env['MONGODB_PASS'],
+  mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
+};
+
 const params = (process.appParams = {
   // server level
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
   urlPrefix:
     process.env['WHYD_URL_PREFIX'] ||
     `http://localhost:${process.env['WHYD_PORT'] || 8080}`, // base URL of the app
-  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || '27017',
-  mongoDbAuthUser: process.env['MONGODB_USER'],
-  mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
+  ...dbCreds,
   color: true,
 
   // secrets
@@ -217,7 +222,7 @@ async function main() {
   }
   console.log(`[app] Starting Openwhyd v${params.version}`);
   const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
-  await util.promisify(mongodb.init)(process.appParams); // TODO: only pass the required params
+  await util.promisify(mongodb.init)(dbCreds);
   await mongodb.initCollections();
   start();
 }

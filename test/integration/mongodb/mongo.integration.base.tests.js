@@ -1,6 +1,6 @@
 // TODO: we should not rely on env vars
-process.appParams = {
-  urlPrefix: '',
+/** @type {Pick<typeof process.appParams, "mongoDbHost" | "mongoDbPort" | "mongoDbAuthUser" | "mongoDbAuthPassword" | "mongoDbDatabase">} */
+const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || 27117,
   mongoDbAuthUser: process.env['MONGODB_USER'],
@@ -24,7 +24,7 @@ async function initMongoDb() {
       /* In order to have nice console summary */
     };
   }
-  await util.promisify(mongodb.init)(process.appParams); // TODO: don't store db credentials in appParams
+  await util.promisify(mongodb.init)(dbCreds);
   await mongodb.initCollections();
 }
 

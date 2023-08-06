@@ -20,9 +20,8 @@ if (process.env['MONGODB_HOST'] === undefined)
 if (process.env['MONGODB_PORT'] === undefined)
   throw new Error(`missing env var: MONGODB_PORT`);
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
-process.appParams = {
+/** @type {Pick<typeof process.appParams, "mongoDbHost" | "mongoDbPort" | "mongoDbAuthUser" | "mongoDbAuthPassword" | "mongoDbDatabase">} */
+const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'],
   mongoDbPort: process.env['MONGODB_PORT'], // 27017
   mongoDbAuthUser: process.env['MONGODB_USER'],
@@ -31,8 +30,7 @@ process.appParams = {
 };
 
 console.log('[test-db-init.js] Connecting to db ...');
-// TODO: don't store db credentials in appParams
-require('../app/models/mongodb.js').init(process.appParams, function (err, db) {
+require('../app/models/mongodb.js').init(dbCreds, function (err, db) {
   if (err) throw err;
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const mongodb = this;
