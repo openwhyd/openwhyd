@@ -15,6 +15,8 @@ var userModel = null; // require("./user.js") will be lazy-loaded here
 const DB_INIT_SCRIPT = './config/initdb.js';
 const DB_TEST_SCRIPT = './config/initdb_testing.js';
 
+let isTesting = false;
+
 exports.isObjectId = function (i) {
   //return isNaN(i);
   return ('' + i).length == 24;
@@ -178,7 +180,7 @@ exports.runShellScript = function (script, callback) {
 };
 
 exports.clearCollections = async function () {
-  if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+  if (!isTesting) {
     throw new Error('allowed on test database only');
   } else {
     for (const name in exports.collections) {
@@ -191,7 +193,7 @@ exports.initCollections = function ({ addTestData = false } = {}) {
   return new Promise((resolve, reject) => {
     const dbInitScripts = [DB_INIT_SCRIPT];
     if (addTestData) {
-      if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+      if (!isTesting) {
         return reject(new Error('allowed on test database only'));
       } else {
         dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
@@ -223,6 +225,7 @@ exports.initCollections = function ({ addTestData = false } = {}) {
 
 /** @param {{ mongoDbHost: string, mongoDbPort: string, mongoDbDatabase: string, mongoDbAuthUser?: string, mongoDbAuthPassword?: string }} connParams */
 exports.init = function (connParams, readyCallback) {
+  isTesting = connParams.mongoDbDatabase === 'openwhyd_test';
   const dbName = connParams.mongoDbDatabase;
   const host = connParams.mongoDbHost;
   const port = connParams.mongoDbPort;

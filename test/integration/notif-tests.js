@@ -6,7 +6,7 @@ process.env['MONGODB_PORT'] = process.env['MONGODB_PORT'] || '27117';
 process.env['MONGODB_DATABASE'] =
   process.env['MONGODB_DATABASE'] || 'openwhyd_test';
 
-/** @type {Pick<typeof process.appParams, "mongoDbHost" | "mongoDbPort" | "mongoDbAuthUser" | "mongoDbAuthPassword" | "mongoDbDatabase">} */
+/** @type {import('../../app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'],
   mongoDbPort: process.env['MONGODB_PORT'],
@@ -19,7 +19,6 @@ const dbCreds = {
 // @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
 process.appParams = {
   urlPrefix: '',
-  ...dbCreds,
 };
 
 const consoleBackup = console.log;

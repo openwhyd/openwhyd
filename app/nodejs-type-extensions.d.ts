@@ -1,11 +1,6 @@
 /// <reference types="node" />
 
 type AppParams = {
-  mongoDbDatabase: string;
-  mongoDbHost: string;
-  mongoDbPort: string;
-  mongoDbAuthUser: string;
-  mongoDbAuthPassword: string;
   port: string | number;
   urlPrefix: string;
   color: boolean;

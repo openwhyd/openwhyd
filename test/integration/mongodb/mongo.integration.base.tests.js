@@ -1,5 +1,5 @@
 // TODO: we should not rely on env vars
-/** @type {Pick<typeof process.appParams, "mongoDbHost" | "mongoDbPort" | "mongoDbAuthUser" | "mongoDbAuthPassword" | "mongoDbDatabase">} */
+/** @type {import('../../../app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || 27117,

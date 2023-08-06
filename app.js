@@ -46,7 +46,7 @@ if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
 if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
   throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
 
-/** @type {Pick<typeof process.appParams, "mongoDbHost" | "mongoDbPort" | "mongoDbAuthUser" | "mongoDbAuthPassword" | "mongoDbDatabase">} */
+/** @type {import('./app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || '27017',
@@ -61,7 +61,6 @@ const params = (process.appParams = {
   urlPrefix:
     process.env['WHYD_URL_PREFIX'] ||
     `http://localhost:${process.env['WHYD_PORT'] || 8080}`, // base URL of the app
-  ...dbCreds,
   color: true,
 
   // secrets
