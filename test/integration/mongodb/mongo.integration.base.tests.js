@@ -1,4 +1,3 @@
-/** @type {import('../../../app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || 27117,

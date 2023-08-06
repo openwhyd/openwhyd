@@ -19,7 +19,6 @@ if (process.env['MONGODB_HOST'] === undefined)
 if (process.env['MONGODB_PORT'] === undefined)
   throw new Error(`missing env var: MONGODB_PORT`);
 
-/** @type {import('../app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'],
   mongoDbPort: process.env['MONGODB_PORT'], // 27017

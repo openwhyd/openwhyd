@@ -46,7 +46,6 @@ if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
 if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
   throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
 
-/** @type {import('./app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || '27017',

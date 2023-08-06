@@ -6,7 +6,6 @@ process.env['MONGODB_PORT'] = process.env['MONGODB_PORT'] || '27117';
 process.env['MONGODB_DATABASE'] =
   process.env['MONGODB_DATABASE'] || 'openwhyd_test';
 
-/** @type {import('../../app/models/mongodb').DbCreds} */
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'],
   mongoDbPort: process.env['MONGODB_PORT'],
