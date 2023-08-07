@@ -60,6 +60,7 @@ const params = (process.appParams = {
   urlPrefix:
     process.env['WHYD_URL_PREFIX'] ||
     `http://localhost:${process.env['WHYD_PORT'] || 8080}`, // base URL of the app
+  isOnTestDatabase: dbCreds.mongoDbDatabase === 'openwhyd_test',
   color: true,
 
   // secrets

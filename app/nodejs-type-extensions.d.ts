@@ -3,6 +3,7 @@
 type AppParams = {
   port: string | number;
   urlPrefix: string;
+  isOnTestDatabase: boolean;
   color: boolean;
   genuineSignupSecret: string;
   searchModule: string;
