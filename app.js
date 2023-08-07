@@ -133,7 +133,7 @@ function start() {
   const sessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET,
     store: new MongoStore({
-      url: makeMongoUrl(params),
+      url: makeMongoUrl(dbCreds),
     }),
     cookie: {
       maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
