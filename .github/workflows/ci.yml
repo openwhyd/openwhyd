@@ -97,8 +97,6 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
-      - name: Initialize database
-        run: npm run test-reset
       - name: Approval tests on Hot Tracks
         run: npm run test:approval:hot-tracks:start
       - name: Approval tests on posting tracks
