@@ -114,7 +114,7 @@ jobs:
       - name: Approval tests on Hot Tracks
         run: npm run test:approval:hot-tracks
       - name: Approval tests on posting tracks
-        run: npm run docker:test:approval
+        run: npm run test:approval:posting
       - name: Get coverage data
         run: |
           sleep 2; killall node; sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info

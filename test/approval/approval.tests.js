@@ -1,4 +1,4 @@
-// Run with: $ npm run test:approval
+// Run with: $ npm run test:approval:posting
 
 const approvals = require('approvals').mocha();
 const util = require('util');
