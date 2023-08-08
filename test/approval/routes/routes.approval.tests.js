@@ -7,7 +7,7 @@ const {
   insertTestData,
   getCleanedPageBody,
   startOpenwhydServer,
-} = require('./approval-tests-helpers');
+} = require('../../approval-tests-helpers');
 
 const {
   START_WITH_ENV_FILE,
@@ -20,9 +20,11 @@ const MONGODB_URL =
 
 test.before(async (t) => {
   const testDataCollections = {
-    user: await readMongoDocuments(__dirname + '/approval.users.json.js'),
-    post: await readMongoDocuments(__dirname + '/approval.posts.json.js'),
-    follow: await readMongoDocuments(__dirname + '/approval.follows.json.js'),
+    user: await readMongoDocuments(__dirname + '/../../approval.users.json.js'),
+    post: await readMongoDocuments(__dirname + '/../../approval.posts.json.js'),
+    follow: await readMongoDocuments(
+      __dirname + '/../../approval.follows.json.js',
+    ),
   };
   await insertTestData(MONGODB_URL, testDataCollections);
 
@@ -30,7 +32,7 @@ test.before(async (t) => {
     startWithEnv: START_WITH_ENV_FILE,
     port: PORT,
   });
-  t.context.openwhyd = require('./api-client');
+  t.context.openwhyd = require('../../api-client');
   t.context.getUser = (id) =>
     testDataCollections.user.find(({ _id }) => id === _id.toString());
 });
