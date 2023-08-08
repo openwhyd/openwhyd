@@ -52,33 +52,16 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
-      - name: npm run build
+      - name: make build
         run: |
-          npm run build
-          git status
+          make build
           echo 'ℹ️  If this test fails, run `$ npm run build` and commit the changes.'
           exit $(git diff | wc -l)
-      - name: npm run lint:typescript
+      - name: make lint
         run: |
-          npm run lint:typescript
-          git status
-          echo 'ℹ️  If this test fails, run `$ npm run lint:typescript` and commit the changes.'
+          make lint
+          echo 'ℹ️  If this test fails, run `$ make lint` and commit the changes.'
           exit $(git diff | wc -l)
-      - name: npm run lint:fix
-        run: |
-          npm run lint:fix
-          git status
-          echo 'ℹ️  If this test fails, run `$ npm run lint:fix` and commit the changes.'
-          exit $(git diff | wc -l)
-      - name: npm run lint:format
-        run: |
-          npm run lint:format
-          git status
-          echo 'ℹ️  If this test fails, run `$ npm run lint:format` and commit the changes.'
-          exit $(git diff | wc -l)
-      - name: JSDoc type checks
-        run: |
-          npm run lint:jsdoc-typing
 
   approval-tests:
     name: Approval tests

@@ -4,7 +4,10 @@ fetch-deps: ## Fetch JS dependencies.
 	@npm install
 
 dev: fetch-deps ## Start a local dev server.
-	@npm start
+	docker compose stop
+	docker compose up --detach mongo
+	npm run start:localdb
+	docker compose stop
 
 start: ## Start the production server without downtime.
 	@cd scripts && ./start.sh
@@ -16,10 +19,17 @@ restart-to-latest: ## Restart the production server to its latest version, witho
 	@git checkout -- package-lock.json && git pull && npm install --prefer-offline --no-audit --production && cd scripts && ./restart.sh
 	# also don't forget to switch to the right version of nodejs, e.g. with "$ nvm use"
 
-lint: fetch-deps ## Run ESLint
-	@npm run lint 
+build: fetch-deps ## Build runtime assets
+	npm run build
+	git status
 
-test: fetch-deps lint ## Run tests against a local db
+lint: fetch-deps build ## Run static code checks
+	npm run lint:jsdoc-typing
+	npm run lint:typescript
+	npm run lint:format
+	npm run lint:fix
+
+test: fetch-deps build lint ## Run tests against a local db
 	# 1. tests that don't need a database
 	docker compose stop
 	npm run test:functional
@@ -34,7 +44,7 @@ test: fetch-deps lint ## Run tests against a local db
 	# 4. release services
 	docker compose stop
 
-test-approval: fetch-deps lint ## Run approval tests against a local db
+test-approval: fetch-deps build lint ## Run approval tests against a local db
 	docker compose stop
 	docker compose up --detach mongo
 	npm run test:approval:routes:start
@@ -54,4 +64,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: fetch-deps dev start restart restart-to-latest lint test test-approval ci help
+.PHONY: fetch-deps dev start restart restart-to-latest build lint test test-approval ci help
