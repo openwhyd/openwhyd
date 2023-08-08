@@ -84,11 +84,11 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   afterAll(async () => {
     if (mongoClient) await mongoClient.close();
-    if (!DONT_KILL && server) server.kill('SIGKILL');
+    if (!DONT_KILL && server?.kill) server.kill('SIGKILL');
   });
 
   beforeEach(async () => {
-    if (!DONT_KILL && server) server.kill('SIGKILL');
+    if (!DONT_KILL && server?.kill) server.kill('SIGKILL');
     await db.collection('user').deleteMany({}); // clear users
     await db.collection('post').deleteMany({}); // clear posts
     await db.collection('track').deleteMany({}); // clear tracks
