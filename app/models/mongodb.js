@@ -253,12 +253,10 @@ exports.init = function (connParams, readyCallback) {
     },
   };
 
-  mongodb.MongoClient.connect(url, options, function (err, client) {
-    if (err) throw err;
+  const client = new mongodb.MongoClient(url, options);
 
-    exports._db = client.db(dbName);
+  exports._db = client.db(dbName);
 
-    console.log(`[db] Successfully connected to ${publicURL}`);
-    readyCallback.call(module.exports, null, exports._db);
-  });
+  console.log(`[db] Successfully connected to ${publicURL}`);
+  readyCallback.call(module.exports, null, exports._db);
 };

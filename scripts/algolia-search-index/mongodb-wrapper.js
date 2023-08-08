@@ -48,14 +48,9 @@ const initMongo = (params, callback) => {
   var url = makeConnUrl(params) + '/' + dbName;
   var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
   console.log('Connecting to ' + url + '...');
-  mongodb.MongoClient.connect(url, MONGO_OPTIONS, (err, client) => {
-    if (err) {
-      callback(err);
-    } else {
-      const db = client.db(dbName);
-      cacheCollections(db, callback); // will mutate db and callback
-    }
-  });
+  const client = new mongodb.MongoClient(url, MONGO_OPTIONS);
+  const db = client.db(dbName);
+  cacheCollections(db, callback); // will mutate db and callback
 };
 
 const init = (params) =>

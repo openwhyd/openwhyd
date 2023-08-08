@@ -20,13 +20,10 @@ const password = {
   md5: '21232f297a57a5a743894a0e4a801fc3',
 };
 
-const connectToDb = ({ url, dbName }) =>
-  new Promise((resolve, reject) =>
-    mongodb.MongoClient.connect(url, (err, client) => {
-      if (err) reject(err);
-      else resolve({ db: client.db(dbName), client });
-    }),
-  );
+const connectToDb = ({ url, dbName }) => {
+  const client = new mongodb.MongoClient(url);
+  return { db: client.db(dbName), client };
+};
 
 const fetchUserProfile = ({ username }) =>
   new Promise((resolve, reject) => {
