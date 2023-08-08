@@ -34,6 +34,14 @@ test: fetch-deps lint ## Run tests against a local db
 	# 4. release services
 	docker compose stop
 
+test-approval: fetch-deps lint ## Run approval tests against a local db
+	docker compose stop
+	docker compose up --detach mongo
+	npm run test:approval:routes:start
+	npm run test:approval:hot-tracks:start
+	npm run test:approval:posting:start
+	docker compose stop
+
 ci: ## Run automated tests defined in GitHub Actions CI workflow.
 	@echo 'ℹ️  Prerequisite: https://github.com/nektos/act#installation-through-package-managers'
 	@echo '{"head_commit": {"message": "build latest"}}' >github_event.tmp
@@ -45,4 +53,5 @@ help: ## This help.
 	@echo 'Available targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-.PHONY: fetch-deps dev start restart restart-to-latest lint test ci help
+# PHONY deps are task dependencies that are not represented by files
+.PHONY: fetch-deps dev start restart restart-to-latest lint test test-approval ci help
