@@ -109,12 +109,12 @@ jobs:
         # env:
         #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
-      - name: Approval tests on main routes
-        run: npm run test:approval:routes
-      - name: Approval tests on Hot Tracks
-        run: npm run test:approval:hot-tracks
       - name: Approval tests on posting tracks
         run: npm run test:approval:posting
+      - name: Approval tests on Hot Tracks
+        run: npm run test:approval:hot-tracks
+      - name: Approval tests on main routes
+        run: npm run test:approval:routes
       - name: Get coverage data
         run: |
           sleep 2; killall node; sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
