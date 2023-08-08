@@ -1,5 +1,5 @@
-// Run with: $ npm run test-approval-hot-tracks
-//   ... or: $ npm run test-approval-hot-tracks -- --updateSnapshot
+// Run with: $ npm run test:approval:hot-tracks
+//   ... or: $ npm run test:approval:hot-tracks -- --updateSnapshot
 
 const waitOn = require('wait-on');
 const {
