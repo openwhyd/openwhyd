@@ -42,9 +42,7 @@ After making changes to the source code, don't forget to stop and re-start it us
 Commands to run all automated tests against the Docker container:
 
 ```sh
-$ docker-compose up --build --detach  # to have openwhyd's web server and database running in the background
-$ npm install                         # will install the necessary test runners
-$ npm run docker:test                 # will run the automated tests: unit and end-to-end
+$ make test
 ```
 
 ### Sample data
@@ -52,6 +50,7 @@ $ npm run docker:test                 # will run the automated tests: unit and e
 If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
 
 ```sh
+$ docker-compose up --build --detach    # will start openwhyd's web server and database in the background
 $ npm run docker:seed                   # will clear the database
 $ node scripts/import-from-prod.js test # will import 21 posts from https://openwhyd.org/test
 ```
@@ -103,13 +102,11 @@ Run unit tests only:
 $ npm run test:unit
 ```
 
-Run all tests, including acceptance tests (Cypress-based):
+Run all tests, including approval tests:
 
 ```sh
-# in a terminal session, start Openwhyd's application server
-$ . ./env-vars-testing.sh && npm start
-# in another terminal session, run the tests
-$ npm test
+$ make test
+$ make test-approval
 ```
 
 ---
