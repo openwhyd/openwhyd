@@ -8,12 +8,6 @@ const dbCreds = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
-process.appParams = {
-  urlPrefix: '',
-};
-
 const consoleBackup = console.log;
 console.log = () => {
   // prevent mongodb from adding noise to stdout

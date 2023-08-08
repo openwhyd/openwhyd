@@ -19,7 +19,7 @@ exports.loadTemplate = function (fileName, callback, forceReload) {
     }
   }
 
-  if (process.appParams.verbose)
+  if (process.appParams?.verbose)
     console.log('templates.templateLoader loading ' + fileName + '...');
 
   var instance = {};

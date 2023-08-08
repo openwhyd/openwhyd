@@ -109,7 +109,7 @@ exports.EM_LABEL = {
   emAcc: 'accepted invites',
 };
 
-var TESTING_DIGEST = process.appParams.digestImmediate;
+const TESTING_DIGEST = process.appParams?.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {
   // console.log('Parsing reserved usernames from', routeFile, '...');
