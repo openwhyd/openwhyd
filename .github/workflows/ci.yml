@@ -56,25 +56,25 @@ jobs:
         run: |
           npm run build
           git status
-          echo ℹ️  If this test fails, run `npm run build` and commit the changes.
+          echo 'ℹ️  If this test fails, run `$ npm run build` and commit the changes.'
           exit $(git diff | wc -l)
       - name: npm run lint:typescript
         run: |
           npm run lint:typescript
           git status
-          echo ℹ️  If this test fails, run `npm run lint:typescript` and commit the changes.
+          echo 'ℹ️  If this test fails, run `$ npm run lint:typescript` and commit the changes.'
           exit $(git diff | wc -l)
       - name: npm run lint:fix
         run: |
           npm run lint:fix
           git status
-          echo ℹ️  If this test fails, run `npm run lint:fix` and commit the changes.
+          echo 'ℹ️  If this test fails, run `$ npm run lint:fix` and commit the changes.'
           exit $(git diff | wc -l)
       - name: npm run lint:format
         run: |
           npm run lint:format
           git status
-          echo ℹ️  If this test fails, run `npm run lint:format` and commit the changes.
+          echo 'ℹ️  If this test fails, run `$ npm run lint:format` and commit the changes.'
           exit $(git diff | wc -l)
       - name: JSDoc type checks
         run: |
