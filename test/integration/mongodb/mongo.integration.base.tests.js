@@ -3,7 +3,7 @@ const dbCreds = {
   mongoDbPort: process.env['MONGODB_PORT'] || 27117,
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'],
+  mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
 };
 
 const util = require('util');

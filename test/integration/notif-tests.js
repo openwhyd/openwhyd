@@ -1,17 +1,11 @@
 //@ts-check
 
-// TODO: we should not mutate env vars
-process.env['MONGODB_HOST'] = process.env['MONGODB_HOST'] || 'localhost';
-process.env['MONGODB_PORT'] = process.env['MONGODB_PORT'] || '27117';
-process.env['MONGODB_DATABASE'] =
-  process.env['MONGODB_DATABASE'] || 'openwhyd_test';
-
 const dbCreds = {
-  mongoDbHost: process.env['MONGODB_HOST'],
-  mongoDbPort: process.env['MONGODB_PORT'],
+  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
+  mongoDbPort: process.env['MONGODB_PORT'] || '27117',
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'],
+  mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
