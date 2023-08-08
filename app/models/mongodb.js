@@ -242,9 +242,9 @@ exports.init = function (connParams, readyCallback) {
 
   var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
-  console.log(
-    `[db] Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`,
-  );
+  const publicURL = authPassword ? url.replace(authPassword, '***') : url;
+
+  console.log(`[db] Connecting to ${publicURL} ...`);
 
   /** @type mongodb.MongoClientOptions */
   const options = {
@@ -258,7 +258,7 @@ exports.init = function (connParams, readyCallback) {
 
     exports._db = client.db(dbName);
 
-    console.log('[db] Successfully connected to ' + url);
+    console.log(`[db] Successfully connected to ${publicURL}`);
     readyCallback.call(module.exports, null, exports._db);
   });
 };
