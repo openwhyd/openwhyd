@@ -33,7 +33,7 @@
     "test:approval:routes": "ava test/approval.tests.js $@",
     "test:approval:routes:update": "npm run test:approval:routes -- --update-snapshots",
     "test:approval:routes:start": "npm run stop; DONT_KILL=1 START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:routes -- $@",
-    "test:approval:hot-tracks:raw": "npx --yes jest --runInBand test/approval-hot-tracks.jest.test.js $@",
+    "test:approval:hot-tracks:raw": "npx --yes jest --runInBand test/approval/hot-tracks/hot-tracks.approval.test.js $@",
     "test:approval:hot-tracks": "PORT=8080 npm run test:approval:hot-tracks:raw -- $@",
     "test:approval:hot-tracks:start": "npm run stop; START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:hot-tracks:raw -- $@",
     "test:approval:posting": "mocha test/approval/posting/posting.approval.tests.js $@",

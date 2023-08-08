@@ -9,7 +9,7 @@ const {
   startOpenwhydServer,
   indentJSON,
   getCleanedPageBody,
-} = require('./approval-tests-helpers');
+} = require('../../approval-tests-helpers');
 
 const {
   START_WITH_ENV_FILE,
