@@ -112,7 +112,7 @@ jobs:
       - name: Approval tests on main routes
         run: npm run test:approval:routes
       - name: Approval tests on Hot Tracks
-        run: npm run docker:test-approval-hot-tracks
+        run: npm run test:approval:hot-tracks
       - name: Approval tests on posting tracks
         run: npm run docker:test:approval
       - name: Get coverage data
