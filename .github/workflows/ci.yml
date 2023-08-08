@@ -96,36 +96,15 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Initialize database
         run: npm run test-reset
-      - name: Start Openwhyd server
-        run: |
-          npm run start:coverage --mongoDbDatabase openwhyd_test &
-          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-        # env:
-        #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
-        #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
-      - name: Approval tests on posting tracks
-        run: npm run test:approval:posting
       - name: Approval tests on Hot Tracks
-        run: npm run test:approval:hot-tracks
+        run: npm run test:approval:hot-tracks:start
+      - name: Approval tests on posting tracks
+        run: npm run test:approval:posting:start
       - name: Approval tests on main routes
-        run: npm run test:approval:routes
-      - name: Get coverage data
-        run: |
-          sleep 2; killall node; sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
-          npm run coverage:report # stores the coverage report in coverage/lcov.info
-      - name: Save code coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: approval-code-coverage-report
-          path: |
-            .nyc_output
-            coverage
+        run: npm run test:approval:routes:start
 
   unit-tests:
     name: Unit tests
@@ -305,8 +284,6 @@ jobs:
       - approval-tests
       - unit-tests
       - functional-tests
-      # - approval-tests
-      # TODO: remove coverage for approval tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -314,10 +291,6 @@ jobs:
         with:
           name: cypress-code-coverage-report
           path: coverage-cypress/
-      - uses: actions/download-artifact@v3
-        with:
-          name: approval-code-coverage-report
-          path: coverage-approval/
       - uses: actions/download-artifact@v3
         with:
           name: unit-tests-code-coverage-report
@@ -335,10 +308,9 @@ jobs:
           mkdir .nyc_output
           mkdir coverage-reports
           cp coverage-cypress/.nyc_output/*.json coverage-reports
-          cp coverage-approval/.nyc_output/*.json coverage-reports
           cp coverage-unit-tests/.nyc_output/*.json coverage-reports
           cp coverage-functional-tests/.nyc_output/*.json coverage-reports
-          # cp coverage-integration-tests/.nyc_output/*.json coverage-reports
+          # cp coverage-integration-tests/.nyc_output/*.json coverage-reports # TODO: re-activate this line ?
           npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
           npm run coverage:report  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
