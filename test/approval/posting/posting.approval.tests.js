@@ -59,8 +59,10 @@ async function setupTestEnv() {
   };
   // insert fixtures / test data
   context.testDataCollections = {
-    user: await readMongoDocuments(__dirname + '/../../approval.users.json.js'),
-    post: [], // await readMongoDocuments(__dirname + '/../approval.posts.json.js'),
+    user: await readMongoDocuments(
+      `${__dirname}/test-data/approval.users.json.js`,
+    ),
+    post: [],
   };
   await insertTestData(MONGODB_URL, context.testDataCollections);
   // start openwhyd server

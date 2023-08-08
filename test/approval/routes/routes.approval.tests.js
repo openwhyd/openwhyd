@@ -18,13 +18,13 @@ const {
 const MONGODB_URL =
   process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 
+const testDataDir = `${__dirname}/test-data`;
+
 test.before(async (t) => {
   const testDataCollections = {
-    user: await readMongoDocuments(__dirname + '/../../approval.users.json.js'),
-    post: await readMongoDocuments(__dirname + '/../../approval.posts.json.js'),
-    follow: await readMongoDocuments(
-      __dirname + '/../../approval.follows.json.js',
-    ),
+    user: await readMongoDocuments(testDataDir + '/approval.users.json.js'),
+    post: await readMongoDocuments(testDataDir + '/approval.posts.json.js'),
+    follow: await readMongoDocuments(testDataDir + '/approval.follows.json.js'),
   };
   await insertTestData(MONGODB_URL, testDataCollections);
 
