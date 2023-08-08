@@ -169,11 +169,8 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
-      - run: npm run test:integration # TODO: add coverage
-        env:
-          MONGODB_HOST: 'localhost' # required by reset-test-db.js
-          MONGODB_PORT: '27117' # required by reset-test-db.js
       - run: npm run test:api:coverage
+      - run: npm run test:integration:coverage
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
@@ -311,7 +308,7 @@ jobs:
           cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-unit-tests/.nyc_output/*.json coverage-reports
           cp coverage-functional-tests/.nyc_output/*.json coverage-reports
-          # cp coverage-integration-tests/.nyc_output/*.json coverage-reports # TODO: re-activate this line ?
+          cp coverage-integration-tests/.nyc_output/*.json coverage-reports
           npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
           npm run coverage:report  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
