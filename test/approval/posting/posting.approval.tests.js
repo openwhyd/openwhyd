@@ -3,7 +3,7 @@
 const approvals = require('approvals').mocha();
 const util = require('util');
 const request = require('request');
-const { URL_PREFIX } = require('../fixtures.js');
+const { URL_PREFIX } = require('../../fixtures.js');
 
 const {
   START_WITH_ENV_FILE,
@@ -47,8 +47,8 @@ async function setupTestEnv() {
     insertTestData,
     startOpenwhydServer,
     sortAndIndentAsJSON,
-  } = require('../approval-tests-helpers');
-  const api = require('../api-client');
+  } = require('../../approval-tests-helpers.js');
+  const api = require('../../api-client.js');
   const context = {
     api,
     makeJSONScrubber,
@@ -59,7 +59,7 @@ async function setupTestEnv() {
   };
   // insert fixtures / test data
   context.testDataCollections = {
-    user: await readMongoDocuments(__dirname + '/../approval.users.json.js'),
+    user: await readMongoDocuments(__dirname + '/../../approval.users.json.js'),
     post: [], // await readMongoDocuments(__dirname + '/../approval.posts.json.js'),
   };
   await insertTestData(MONGODB_URL, context.testDataCollections);

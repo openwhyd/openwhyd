@@ -36,7 +36,7 @@
     "test:approval:hot-tracks:raw": "npx --yes jest --runInBand test/approval-hot-tracks.jest.test.js $@",
     "test:approval:hot-tracks": "PORT=8080 npm run test:approval:hot-tracks:raw -- $@",
     "test:approval:hot-tracks:start": "npm run stop; START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:hot-tracks:raw -- $@",
-    "test:approval:posting": "mocha test/approval/approval.tests.js $@",
+    "test:approval:posting": "mocha test/approval/posting/posting.approval.tests.js $@",
     "test:approval:posting:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:posting -- $@",
     "test:approval:posting:coverage": "npm run coverage:clear && COVERAGE=true npm run test:approval:posting:start -- --serial --timeout 10000 $@ && npm run coverage:report | grep post",
     "test:cypress:dev": "node_modules/.bin/cypress open",
