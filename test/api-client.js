@@ -6,6 +6,9 @@ var { URL_PREFIX } = require('./fixtures.js');
 
 // AUTH
 
+const GENUINE_SIGNUP_SECRET =
+  process.env.WHYD_GENUINE_SIGNUP_SECRET ?? 'whatever';
+
 function extractCookieJar(response) {
   const jar = request.jar();
   if (((response.headers || {})['set-cookie'] || []).length) {
@@ -48,7 +51,7 @@ exports.signupAs = function signupAs(user, callback) {
       body: Object.assign(
         {
           ajax: 1,
-          sTk: genuine.makeSignupToken({
+          sTk: genuine.makeSignupToken(GENUINE_SIGNUP_SECRET, {
             connection: { remoteAddress: '::ffff:127.0.0.1' },
           }),
         },

@@ -17,6 +17,7 @@ const notifEmails = require('../../models/notifEmails.js');
 const mongodb = require('../../models/mongodb.js');
 
 const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
+const { genuineSignupSecret } = process.appParams;
 var onboardingUrl = '/';
 var checkInvites = false;
 
@@ -71,13 +72,13 @@ exports.registerInvitedUser = function (request, user, response) {
   var error = !user.ajax ? inviteController.renderRegisterPage : renderError;
 
   if (ENFORCE_GENUINE_SIGNUP) {
-    var genuineToken;
-
     if (!user.sTk || typeof user.sTk !== 'string')
       return error(request, user, response, 'Invalid sTk');
-
-    genuineToken = genuine.checkSignupToken(user.sTk || '', request);
-    //console.log("genuine:", genuineToken, genuine.validateSignupToken(user.sTk || "", request));
+    const genuineToken = genuine.checkSignupToken(
+      genuineSignupSecret,
+      user.sTk || '',
+      request,
+    );
     if (!genuineToken)
       return error(request, user, response, 'Non genuine signup request');
   }

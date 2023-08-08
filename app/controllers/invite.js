@@ -12,8 +12,11 @@ var templateLoader = require('../templates/templateLoader.js');
 var makeSignupToken = require('../genuine.js').makeSignupToken;
 
 // genuine signup V1
-var EXPECTED_RTK = '7', // rTk = request token (necessary to fetch sTk)
-  INVALID_STK = makeSignupToken({ connection: { remoteAddress: '' } }); // fake sTk, to be returned when requested using wrong rTk
+const { genuineSignupSecret } = process.appParams;
+const EXPECTED_RTK = '7'; // rTk = request token (necessary to fetch sTk)
+const INVALID_STK = makeSignupToken(genuineSignupSecret, {
+  connection: { remoteAddress: '' },
+}); // fake sTk, to be returned when requested using wrong rTk
 // TODO: replace constants by dynamic values, according to https://quip.com/YmOJAl8OIOaM
 
 // only used to generate the signup token indirectly from the web ui
@@ -200,10 +203,10 @@ exports.controller = function (request, reqParams, response, error) {
   else if (reqParams.rTk) {
     // GET /api/signup/rTk/{rTk}
     // check validity of request token => generate a signup token
-    var sTk = checkRequestToken(reqParams.rTk)
-      ? makeSignupToken(request)
+    const sTk = checkRequestToken(reqParams.rTk)
+      ? makeSignupToken(genuineSignupSecret, request)
       : INVALID_STK;
-    var js =
+    const js =
       '$(\'<input type="hidden" name="sTk" value="' +
       sTk +
       '" />\').appendTo("form");';

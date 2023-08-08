@@ -6,8 +6,7 @@
 
 var crypto = require('crypto');
 
-var GENUINE_SIGNUP_SECRET = process.env.WHYD_GENUINE_SIGNUP_SECRET, // secret key (only known by secure openwhyd clients), used to hash sTk
-  TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
+const TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
 
 // hack caused by proxy on openwhyd server
 function realIP(request) {
@@ -49,36 +48,22 @@ function parseSignupToken(sTk) {
 //parseInt(hexDate, 16)
 
 // used indirectly by web ui (through request token validation)
-exports.makeSignupToken = function (request, date) {
+/** @param {string} genuineSignupSecret - secret key (only known by secure openwhyd clients), used to hash sTk */
+exports.makeSignupToken = function (genuineSignupSecret, request, date) {
   request = realIP(request);
-  //console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
   date = date ? new Date(date).getTime() : Date.now();
   var requestHash = hashRequest(request, date);
   var hash = date.toString(16) + requestHash;
-
-  //console.log('date =>',  date.toString(16));
-  //console.log('')
-  var sign = signature(hash, GENUINE_SIGNUP_SECRET);
-  /*
-	console.log({
-		hash: hash,
-		date: new Date(date),
-		requestHash: requestHash,
-		signature: sign,
-	});
-	*/
+  const sign = signature(hash, genuineSignupSecret);
   return hash + sign;
 };
 
-exports.validateSignupToken = function (sTk, request) {
+/** @param {string} genuineSignupSecret - secret key (only known by secure openwhyd clients), used to hash sTk */
+exports.validateSignupToken = function (genuineSignupSecret, sTk, request) {
   request = realIP(request);
-  // console.log(
-  //   '[genuine.validateSignupToken] request IP:',
-  //   request.connection.remoteAddress
-  // );
   var token = parseSignupToken(sTk);
   return {
-    authentic: token.signature === signature(token.hash, GENUINE_SIGNUP_SECRET),
+    authentic: token.signature === signature(token.hash, genuineSignupSecret),
     notExpired: Date.now() - token.date < TOKEN_EXPIRY,
     sameAddr: token.requestHash === hashRequest(request, token.date.getTime()),
   };
@@ -86,14 +71,10 @@ exports.validateSignupToken = function (sTk, request) {
 };
 
 // used by backend of web ui
-exports.checkSignupToken = function (sTk, request) {
+/** @param {string} genuineSignupSecret - secret key (only known by secure openwhyd clients), used to hash sTk */
+exports.checkSignupToken = function (genuineSignupSecret, sTk, request) {
   request = realIP(request);
-
-  // console.log(
-  //   '[genuine.checkSignupToken] request IP:',
-  //   request.connection.remoteAddress
-  // );
-  var valid = exports.validateSignupToken(sTk, request);
+  const valid = exports.validateSignupToken(genuineSignupSecret, sTk, request);
   for (let i in valid) {
     // valid contains the following keys: authentic, notExpired, sameAddr
     if (!valid[i]) {
