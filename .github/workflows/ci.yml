@@ -110,7 +110,7 @@ jobs:
         #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Approval tests on main routes
-        run: npm run test:approval:routes:docker
+        run: npm run test:approval:routes
       - name: Approval tests on Hot Tracks
         run: npm run docker:test-approval-hot-tracks
       - name: Approval tests on posting tracks
