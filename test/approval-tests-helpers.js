@@ -188,11 +188,8 @@ async function startOpenwhydServer({ startWithEnv, port }) {
   } else if (startWithEnv) {
     const env = {
       ...(await loadEnvVars(startWithEnv)),
-      MONGODB_PORT: '27117', // port exposed by docker container // TODO: remove hard-coded mentions to port 27117
-      TZ: 'UTC',
       ...process.env, // allow overrides
     };
-    process.env.WHYD_GENUINE_SIGNUP_SECRET = env.WHYD_GENUINE_SIGNUP_SECRET; // required by ./api-client.js
     return { ...(await startOpenwhydServerWith(env)), env }; // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
   }
 }

@@ -1,11 +1,9 @@
-// TODO: we should not rely on env vars
-process.appParams = {
-  urlPrefix: '',
+const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || 27117,
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'],
+  mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
 };
 
 const util = require('util');
@@ -24,7 +22,7 @@ async function initMongoDb() {
       /* In order to have nice console summary */
     };
   }
-  await util.promisify(mongodb.init)();
+  await util.promisify(mongodb.init)(dbCreds);
   await mongodb.initCollections();
 }
 

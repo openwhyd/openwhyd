@@ -1,4 +1,4 @@
-// Run with: $ npm run test-approval
+// Run with: $ npm run test:approval:routes
 
 const test = require('ava');
 const { promisify } = require('util');

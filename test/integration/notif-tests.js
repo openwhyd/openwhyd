@@ -1,16 +1,17 @@
-// TODO: we should not rely on env vars
-process.env['MONGODB_HOST'] = process.env['MONGODB_HOST'] || 'localhost';
-process.env['MONGODB_PORT'] = process.env['MONGODB_PORT'] || 27117;
-process.env['MONGODB_DATABASE'] =
-  process.env['MONGODB_DATABASE'] || 'openwhyd_test';
+//@ts-check
 
-process.appParams = {
-  urlPrefix: '',
-  mongoDbHost: process.env['MONGODB_HOST'],
-  mongoDbPort: process.env['MONGODB_PORT'],
+const dbCreds = {
+  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
+  mongoDbPort: process.env['MONGODB_PORT'] || '27117',
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'],
+  mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
+};
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- in this context, we only need to define a subset of Openwhyd's required params
+process.appParams = {
+  urlPrefix: '',
 };
 
 const consoleBackup = console.log;
@@ -20,10 +21,12 @@ console.log = () => {
 
 const util = require('util');
 const assert = require('assert');
-const { ObjectId, ...mongodb } = require('../../app/models/mongodb.js');
+const mongodb = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
 
 const { ADMIN_USER, cleanup } = require('../fixtures.js');
+
+const { ObjectId } = mongodb;
 
 const POLL_TIMEOUT = 4000;
 
@@ -64,7 +67,7 @@ var COMMENTS = USERS.map(function (u) {
 // test helpers
 
 async function initDb() {
-  await util.promisify(mongodb.init)();
+  await util.promisify(mongodb.init)(dbCreds);
   // const initScript = './config/initdb.js';
   // await mongodb.runShellScript(require('fs').readFileSync(initScript))
   await util.promisify(mongodb.cacheCollections)();
@@ -143,7 +146,7 @@ describe('notifications', function () {
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid
-    await db['notif'].deleteMany({ uId: { $size: 0 } }, { multi: true });
+    await db['notif'].deleteMany({ uId: { $size: 0 } });
     const count = await countEmptyNotifs();
     assert(count === 0, 'failed to remove notifs with empty uid');
   });
