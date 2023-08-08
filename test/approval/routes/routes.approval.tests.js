@@ -37,9 +37,9 @@ test.before(async (t) => {
     testDataCollections.user.find(({ _id }) => id === _id.toString());
 });
 
-test.after((t) => {
-  if (t.context.serverProcess?.kill && !DONT_KILL) {
-    t.context.serverProcess.kill('SIGINT');
+test.after(async (t) => {
+  if (t.context.serverProcess?.exit && !DONT_KILL) {
+    await t.context.serverProcess.exit();
   }
 });
 
