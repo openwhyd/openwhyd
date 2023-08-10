@@ -21,10 +21,15 @@ exports.controller = async function (request, getParams, response) {
 
     // delete uploaded files
     const appDir = process.cwd();
-    ['uAvatarImg', 'uCoverImg', 'upload_data'].forEach((subDir) => {
-      const dir = path.join(appDir, subDir);
-      readdirSync(dir).forEach((file) => rmSync(`${dir}/${file}`));
-    });
+    ['uAvatarImg', 'uCoverImg', 'uPlaylistImg', 'upload_data'].forEach(
+      (subDir) => {
+        const dir = path.join(appDir, subDir);
+        readdirSync(dir).forEach((file) => {
+          console.warn(`reset.controller deleting ${dir}/${file}`);
+          rmSync(`${dir}/${file}`);
+        });
+      },
+    );
 
     response.renderJSON({ ok: true });
   } catch (err) {
