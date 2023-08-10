@@ -9,7 +9,7 @@ context('upload', () => {
     });
   });
 
-  it('user profile images', () => {
+  it('should update user profile image', () => {
     // check that user has the default profile image
     let defaultImageBody;
     cy.request(`/images/blank_user.gif`).then((response) => {
@@ -39,5 +39,37 @@ context('upload', () => {
       (response) =>
         expect(response.body.length).not.to.equal(defaultImageBody.length),
     );
+  });
+
+  it('should create a new playlist with a custom image', () => {
+    // create a playlist with default image
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+    cy.get('body').contains('+ New Playlist').click();
+    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
+    cy.get('body').contains('Save').scrollIntoView().click({ force: true });
+
+    // expect the playlist to have a default image
+    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
+    cy.request({
+      url: `/img/playlist/${userId}_0?remoteOnly=1`,
+      failOnStatusCode: false,
+    }).should('have.property', 'status', 404);
+
+    // create a playlist with custom image
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+    cy.get('body').contains('+ New Playlist').click();
+    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 2');
+    cy.get('body').contains('Add/set playlist cover image').click();
+    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
+    cy.get('body').contains('Save').scrollIntoView().click({ force: true });
+
+    // expect the playlist to have a custom image
+    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
+    cy.request({
+      url: `/img/playlist/${userId}_1?remoteOnly=1`,
+      failOnStatusCode: false,
+    }).should('have.property', 'status', 200);
+
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
   });
 });
