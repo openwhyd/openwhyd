@@ -50,10 +50,7 @@ context('upload', () => {
 
     // expect the playlist to have a default image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
-    cy.request({
-      url: `/img/playlist/${userId}_0?remoteOnly=1`,
-      failOnStatusCode: false,
-    }).should('have.property', 'status', 404);
+    playlistShouldHaveNoImage({ userId, playlistId: 1 });
 
     // create a playlist with custom image
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
@@ -65,10 +62,7 @@ context('upload', () => {
 
     // expect the playlist to have a custom image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
-    cy.request({
-      url: `/img/playlist/${userId}_1?remoteOnly=1`,
-      retryOnStatusCodeFailure: true,
-    }).should('have.property', 'status', 200);
+    playlistShouldHaveCustomImage({ userId, playlistId: 1 });
 
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
   });
@@ -82,10 +76,7 @@ context('upload', () => {
 
     // expect the playlist to have a default image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
-    cy.request({
-      url: `/img/playlist/${userId}_0?remoteOnly=1`,
-      failOnStatusCode: false,
-    }).should('have.property', 'status', 404);
+    playlistShouldHaveNoImage({ userId, playlistId: 0 });
 
     // set the playlist's image
     cy.wait(1000);
@@ -99,9 +90,24 @@ context('upload', () => {
 
     // expect the playlist to have a custom image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
-    cy.request({
-      url: `/img/playlist/${userId}_0?remoteOnly=1`,
-      retryOnStatusCodeFailure: true,
-    }).should('have.property', 'status', 200);
+    playlistShouldHaveCustomImage({ userId, playlistId: 0 });
   });
 });
+
+function playlistShouldHaveCustomImage({ userId, playlistId }) {
+  return cy
+    .request({
+      url: `/img/playlist/${userId}_${playlistId}?remoteOnly=1`,
+      retryOnStatusCodeFailure: true,
+    })
+    .should('have.property', 'status', 200);
+}
+
+function playlistShouldHaveNoImage({ userId, playlistId }) {
+  return cy
+    .request({
+      url: `/img/playlist/${userId}_${playlistId}?remoteOnly=1`,
+      failOnStatusCode: false,
+    })
+    .should('have.property', 'status', 404);
+}
