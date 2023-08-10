@@ -67,7 +67,7 @@ context('upload', () => {
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
     cy.request({
       url: `/img/playlist/${userId}_1?remoteOnly=1`,
-      failOnStatusCode: false,
+      retryOnStatusCodeFailure: true,
     }).should('have.property', 'status', 200);
 
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
