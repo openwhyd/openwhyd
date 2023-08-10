@@ -9,7 +9,7 @@ context('upload', () => {
     });
   });
 
-  it('user profile images', () => {
+  it('should update user profile image', () => {
     // check that user has the default profile image
     let defaultImageBody;
     cy.request(`/images/blank_user.gif`).then((response) => {
@@ -40,4 +40,74 @@ context('upload', () => {
         expect(response.body.length).not.to.equal(defaultImageBody.length),
     );
   });
+
+  it('should create a new playlist with a custom image', () => {
+    // create a playlist with default image
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+    cy.get('body').contains('+ New Playlist').click();
+    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
+    cy.get('body').contains('Save').click();
+
+    // expect the playlist to have a default image
+    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
+    playlistShouldHaveNoImage({ userId, playlistId: 1 });
+
+    // create a playlist with custom image
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+    cy.get('body').contains('+ New Playlist').click();
+    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 2');
+    cy.get('body').contains('Add/set playlist cover image').click();
+    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
+    cy.get('body').contains('Save').click();
+
+    // expect the playlist to have a custom image
+    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
+    playlistShouldHaveCustomImage({ userId, playlistId: 1 });
+
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+  });
+
+  it('should set the image of a new playlist', () => {
+    // create a playlist with default image
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+    cy.get('body').contains('+ New Playlist').click();
+    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
+    cy.get('body').contains('Save').click();
+
+    // expect the playlist to have a default image
+    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
+    playlistShouldHaveNoImage({ userId, playlistId: 0 });
+
+    // set the playlist's image
+    cy.wait(1000);
+    cy.get('.btnEditPlaylist').contains('Edit').click();
+    cy.get('body')
+      .contains('Add/set playlist cover image')
+      .should('be.visible') // to wait for upload scripts to load and init propertly on the page
+      .click();
+    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
+    cy.get('body').contains('Save').click();
+
+    // expect the playlist to have a custom image
+    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
+    playlistShouldHaveCustomImage({ userId, playlistId: 0 });
+  });
 });
+
+function playlistShouldHaveCustomImage({ userId, playlistId }) {
+  return cy
+    .request({
+      url: `/img/playlist/${userId}_${playlistId}?remoteOnly=1`,
+      retryOnStatusCodeFailure: true,
+    })
+    .should('have.property', 'status', 200);
+}
+
+function playlistShouldHaveNoImage({ userId, playlistId }) {
+  return cy
+    .request({
+      url: `/img/playlist/${userId}_${playlistId}?remoteOnly=1`,
+      failOnStatusCode: false,
+    })
+    .should('have.property', 'status', 404);
+}
