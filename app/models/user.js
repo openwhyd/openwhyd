@@ -32,6 +32,8 @@ var USERNAME_RESERVED = {
   playlist: true,
   playlists: true,
   about: true,
+  iphone: true,
+  ios: true,
   'robots.txt': true,
   'favicon.ico': true,
   'favicon.png': true,
@@ -112,9 +114,8 @@ exports.EM_LABEL = {
 const TESTING_DIGEST = process.appParams?.digestImmediate;
 
 (function parseHandlesFromRouteFile(routeFile) {
-  // console.log('Parsing reserved usernames from', routeFile, '...');
   snip.forEachFileLine(routeFile, function (line) {
-    if (typeof line != 'string') return; // console.log('=> Parsed', nb, 'handles from:', routeFile);
+    if (typeof line != 'string') return;
     line = line.substr(line.indexOf('/') + 1);
     var end = line.search(/[\t/]/);
     if (end > -1) {
@@ -127,9 +128,8 @@ const TESTING_DIGEST = process.appParams?.digestImmediate;
 })('config/app.route');
 
 (function parseHandlesFromTextFile(fileName) {
-  // console.log('Parsing reserved usernames from', fileName, '...');
   snip.forEachFileLine(fileName, function (line) {
-    if (typeof line != 'string') return; // console.log('=> Parsed', nb, 'handles from:', fileName);
+    if (typeof line != 'string') return;
     if (!line.length || line[0] == '#') return;
     USERNAME_RESERVED[line] = true;
   });
@@ -215,7 +215,6 @@ function processUsers(list) {
 }
 
 function fetch(q, handler) {
-  // snip.console.log('fetching user ', q, '...');
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   mongodb.collections['user'].findOne(q, function (err, user) {
     if (user) {
@@ -260,7 +259,7 @@ exports.fetchByUid = exports.model = function (uid, handler) {
   fetch(
     { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
     function (err, user) {
-      if (err) console.error(err);
+      if (err) console.error('fetchByUid error:', err);
       handler(user);
     },
   );
@@ -268,7 +267,7 @@ exports.fetchByUid = exports.model = function (uid, handler) {
 
 exports.fetchByHandle = function (handle, handler) {
   fetch({ handle: handle }, function (err, user) {
-    if (err) console.error(err);
+    if (err) console.error('fetchByHandle error:', err);
     handler(user);
   });
 };
@@ -282,7 +281,7 @@ exports.fetchByFbUid = function (fbUid, handler) {
 
 exports.fetchByEmail = function (email, handler) {
   fetch({ email: emailModel.normalize(email) }, function (err, user) {
-    if (err) console.error(err);
+    if (err) console.error('fetchByEmail error:', err);
     handler(user);
   });
 };
@@ -291,21 +290,18 @@ exports.fetchInvitedUsers = async function (uid, handler) {
   const array = await mongodb.collections['user']
     .find({ iBy: '' + uid })
     .toArray()
-    .catch((err) => console.error(err));
+    .catch((err) => console.error('fetchInvitedUsers error:', err));
   processUsers(array);
   handler(array);
 };
 
 exports.updateAndFetch = function (criteria, update, opts, cb) {
-  console.log('models.user.update criteria', criteria);
   mongodb.collections['user'].updateOne(
     criteria,
     /*{$set:*/ update /*}*/,
     opts || {},
     function (err) {
-      if (err) console.error(err);
       fetch(criteria, function (err2, user) {
-        if (err2) console.error(err2);
         if (user) mongodb.cacheUser(user);
         cb && cb(err || err2, user);
       });
@@ -343,9 +339,9 @@ exports.save = function (pUser, handler) {
     { $set: user },
     { upsert: true },
     function (err) {
-      if (err) console.log(err);
+      if (err) console.log('user.save error 1:', err);
       fetch(criteria, function (err, user) {
-        if (err) console.error(err);
+        if (err) console.error('user.save error 2:', err);
         if (user) searchModel.indexTyped('user', user);
         mongodb.cacheUser(user);
         if (handler) handler(user);
@@ -359,7 +355,7 @@ exports.delete = function (criteria, handler) {
   if (criteria._id) {
     criteria._id = ObjectId('' + criteria._id);
     fetch(criteria, function (err, user) {
-      if (err) console.error(err);
+      if (err) console.error('user.delete error:', err);
       if (!user) return handler && handler({ error: 'user not found' });
       // delete playlists from index
       if (user.pl)
@@ -378,8 +374,7 @@ exports.delete = function (criteria, handler) {
         })();
       // delete user
       mongodb.collections['user'].deleteOne(criteria, function (err, item) {
-        if (err) console.error(err);
-        else console.log('removed users', criteria);
+        if (err) console.error('user.delete error:', err);
         searchModel.deleteDoc('user', '' + criteria._id);
         delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
@@ -439,13 +434,12 @@ function insertInvite(obj, handler) {
   if (obj.email) {
     var normalized = emailModel.normalize(obj.email);
     if (!emailModel.validate(normalized)) {
-      console.log('warning: invalid email: ' + normalized);
       return handler ? handler(null) : null;
     }
     criteria = { email: (obj.email = normalized) };
-  } else if (obj.fbId) criteria = { fbId: obj.fbId };
-  else {
-    console.log('WARNING: email or fbId must be specified');
+  } else if (obj.fbId) {
+    criteria = { fbId: obj.fbId };
+  } else {
     return handler && handler();
   }
 
@@ -454,10 +448,9 @@ function insertInvite(obj, handler) {
     { $set: obj },
     { upsert: true },
     function (err) {
-      if (err) console.log(err);
+      if (err) console.log('insertInvite error 1:', err);
       mongodb.collections['invite'].findOne(criteria, function (err, user) {
-        if (err) console.error(err);
-        console.log('user invite stored as ', user);
+        if (err) console.error('insertInvite error 2:', err);
         if (user && obj.email)
           mongodb.collections['email'].deleteOne(
             { _id: obj.email },
@@ -487,7 +480,7 @@ exports.inviteFbUserBy = function (fbId, senderId, handler) {
 exports.removeInvite = function (inviteCode, handler) {
   var id = typeof inviteCode == 'string' ? ObjectId(inviteCode) : inviteCode;
   mongodb.collections['invite'].deleteOne({ _id: id }, function (err) {
-    console.log(err || 'removed invite ' + id);
+    console.log('removeInvite =>', err || 'removed invite ' + id);
     if (handler) handler({ _id: id });
   });
 };
@@ -496,7 +489,10 @@ exports.removeInviteByEmail = function (emailList, handler) {
   mongodb.collections['invite'].deleteMany(
     { email: { $in: emailList } },
     function (err) {
-      console.log(err || 'removed invites ' + emailList);
+      console.log(
+        'removeInviteByEmail =>',
+        err || 'removed invites ' + emailList,
+      );
       if (handler) handler({ emailList: emailList });
     },
   );
@@ -505,7 +501,6 @@ exports.removeInviteByEmail = function (emailList, handler) {
 // playlist management
 
 exports.fetchPlaylist = function (uId, plId, cb) {
-  console.log('user.fetchPlaylist', uId, plId);
   exports.fetchByUid(uId, function (user) {
     if (user && user.pl && user.pl.length)
       for (let i in user.pl) {
@@ -516,9 +511,10 @@ exports.fetchPlaylist = function (uId, plId, cb) {
 };
 
 exports.hasPlaylistName = function (user, name) {
-  console.log('user.hasPlaylist', (user || {}).id, name);
   if (!user && user.id != null)
-    console.error('null user provided in user.hasPlaylist');
+    console.error(
+      'user.hasPlaylistName error: null user provided in user.hasPlaylist',
+    );
   else if (user.pl && user.pl.length)
     for (let i in user.pl) if (user.pl[i].name == name) return user.pl[i];
   return false;
@@ -532,7 +528,6 @@ exports.hasPlaylistNameByUid = function (uId, name, cb) {
 
 exports.setPlaylist = function (uId, plId, upd, handler) {
   upd = upd || {};
-  console.log('user.setPlaylist', uId, plId, upd);
   fetch({ _id: '' + uId }, function (err, user) {
     var found = true;
     user.pl = user.pl || [];
@@ -545,12 +540,8 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
       }
     if (found) {
       exports.save(user, function () {
-        console.log('updated playlist => ', found);
         if (handler) handler(found);
         if (upd.name) {
-          console.log(
-            'updating playlist name in index and corresponding tracks...',
-          );
           searchModel.indexPlaylist(uId, plId, upd.name);
           postModel.setPlaylist(uId, plId, upd.name, function () {
             /* do nothing */
@@ -589,7 +580,6 @@ exports.setPlaylistImg = function(uId, plId, img, cb) {
 }
 */
 exports.deletePlaylist = function (uId, plId, handler) {
-  console.log('user.deletePlaylist', uId, plId);
   fetch({ _id: uId }, function (err, user) {
     var newPl = [];
     user.pl = user.pl || [];
@@ -598,10 +588,6 @@ exports.deletePlaylist = function (uId, plId, handler) {
     postModel.unsetPlaylist(uId, plId, function () {
       user.pl = newPl;
       exports.save(user, function () {
-        console.log(
-          'deleted playlist (and updated corresponding tracks):',
-          plId,
-        );
         searchModel.deletePlaylist(uId, plId);
         handler(plId);
       });
@@ -628,7 +614,6 @@ exports.getEmailNotifsFreq = function (user) {
 };
 
 exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
-  //console.log("fetchEmailNotifsToSend, now:", msToDigestTimestamp(now));
   var criteria = {
     'pref.pendEN': { $gt: 0 }, // number of pending email notifs
   };
@@ -639,19 +624,16 @@ exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
 };
 
 exports.incrementNotificationCounter = function (uId, handler) {
-  //console.log("user.incrementNotificationCounter:", uId);
   mongodb.collections['user'].updateOne(
     { _id: ObjectId('' + uId) },
     { $inc: { 'pref.pendEN': 1 } },
     function (err, item) {
-      if (err) console.error(err);
       handler && handler(err ? { error: err } : item);
     },
   );
 };
 
 exports.setPref = function (uId, pref, handler) {
-  console.log('user.setPref', uId, pref);
   if (!pref) handler({ error: 'Invalid preferences' });
   else {
     var cleanPref = {},
@@ -684,16 +666,9 @@ exports.setPref = function (uId, pref, handler) {
 // === OTHER METHODS
 
 exports.setFbId = function (uId, fbId, cb, fbTok) {
-  console.log('user.setFbId', uId, fbId);
   exports.fetchByFbUid(fbId, function (user) {
     if (user) {
       if (user._id != uId) {
-        console.error(
-          '[WARNING] This Facebook account is already associated to another user:',
-          uId,
-          fbId,
-          user._id,
-        );
         cb &&
           cb({
             error:
@@ -714,7 +689,6 @@ exports.setFbId = function (uId, fbId, cb, fbTok) {
 };
 
 exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
-  console.log('user.setTwitterId', uId, twId);
   if (!uId) return cb && cb({ error: 'invalid parameters' });
   else if (!twId)
     // disconnect twitter account
@@ -741,9 +715,7 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
 };
 
 exports.setHandle = function (uId, username, handler) {
-  console.log('user.setHandle', uId, username);
   function res(result) {
-    console.log('user.setHandle response: ', result);
     handler && handler(result);
   }
   if (!username) return res({ error: 'You must enter a username' });
@@ -770,7 +742,6 @@ exports.setHandle = function (uId, username, handler) {
         if (err) return res({ error: err });
         user.handle = username;
         exports.save(user, function () {
-          console.log('updated username', uId, username);
           handler({ ok: 1, user: user, username: username, handle: username });
         });
       });
@@ -834,7 +805,6 @@ exports.fetchUserFields = function (subList, attrToCopy, cb) {
       { fields: attrSet },
       function (userList) {
         var uidSet = {};
-        //console.log(userList);
         if (userList)
           for (let i in userList) uidSet['' + userList[i]._id] = userList[i];
         for (let i in subList)

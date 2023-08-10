@@ -239,12 +239,13 @@ function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
 
   // also push to Datadog APM, cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
   if (userId) {
-    process.datadogTracer?.scope().active()?.setTag('customer.id', userId);
-    // console.error('datadog:', {
-    //   datadogTracer: typeof process.datadogTracer,
-    //   scope: typeof process.datadogTracer?.scope(),
-    //   active: typeof process.datadogTracer?.scope().active(),
-    //   res,
-    // });
+    try {
+      process.datadogTracer?.scope().active()?.setTag('customer.id', userId);
+    } catch (err) {
+      console.error(`datadog error: ${err.message}`);
+      console.error({ datadogTracer: typeof process.datadogTracer });
+      console.error({ scope: typeof process.datadogTracer?.scope() });
+      console.error({ active: typeof process.datadogTracer?.scope().active() });
+    }
   }
 }

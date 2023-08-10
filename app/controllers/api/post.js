@@ -272,12 +272,6 @@ exports.handleRequest = function (request, reqParams, response, features) {
   request.logToConsole('api.post.handleRequest', reqParams);
 
   function resultHandler(res, args) {
-    if (!res || res.error)
-      console.log(
-        /*reqParams,*/ 'api.post.' + reqParams.action,
-        ' RESULT =>',
-        res,
-      );
     response.legacyRender(
       res,
       null,
