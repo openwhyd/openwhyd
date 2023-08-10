@@ -95,17 +95,9 @@ exports.controller = function (req, requestParams, res) {
   var user = req.checkLogin(res);
   if (!user) return;
 
-  //var form = new formidable.IncomingForm();
-  //form.uploadDir = settings.uploadDir;
-  //form.keepExtensions = settings.keepExtensions;
-  //form.parse(req, function(err, postParams, files) {
   var postParams = req.body;
   var files = req.files;
   console.log('[upload] postParams', postParams);
-  //if (err) {
-  //	console.log("upload.controller error", err.stack);
-  //	return res.legacyRender({error:err});
-  //}
 
   if (postParams && postParams.id && postParams.action == 'delete')
     return uploadCtr.deleteFile(settings.uploadDir + '/' + postParams.id);
@@ -119,18 +111,13 @@ exports.controller = function (req, requestParams, res) {
 
   var processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
-      if (result && result.error) console.log('[upload] error:', result.error);
       results[i] = result;
       if (--remaining == 0) {
         console.log('[upload] controller completed', result);
         res.legacyRender(results, null, { 'content-type': 'text/plain' });
-        /*
-					res.writeHead(200, {'content-type': 'text/plain'});
-					res.end('received upload\nreceived\n');*/
       }
     });
   };
 
   for (let i in files) processAndPushFile(i);
-  //});
 };
