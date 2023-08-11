@@ -43,12 +43,9 @@ context('upload', () => {
     });
   });
 
-  it('should create a new playlist with a custom image', () => {
+  it.only('should create a new playlist with a custom image', () => {
     // create a playlist with default image
-    cy.visit(`/u/${userId}/playlists`); // user's playlists page
-    cy.get('body').contains('+ New Playlist').click();
-    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
-    cy.get('body').contains('Save').click();
+    createPlaylist({ userId });
 
     // expect the playlist to have a default image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
@@ -95,3 +92,9 @@ context('upload', () => {
     playlistShouldHaveCustomImage({ userId, playlistId: 0 });
   });
 });
+function createPlaylist({ userId }) {
+  cy.visit(`/u/${userId}/playlists`); // user's playlists page
+  cy.get('body').contains('+ New Playlist').click();
+  cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
+  cy.get('body').contains('Save').click();
+}
