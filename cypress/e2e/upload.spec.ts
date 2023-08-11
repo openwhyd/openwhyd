@@ -87,17 +87,12 @@ context('upload', () => {
 
     // set the playlist's image
     changePlaylistImage({ imagePath: SAMPLE_IMG_PATH_2 });
-
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
 
     // check that the playlist image was updated
     repeatRequest({
-      url: `/img/playlist/${userId}_${playlistId}?_t=${
-        new Date().getTime() + 1
-      }`, // note: we increase the timestamp to prevent cache from returning the previous response
-      until: (resp) => {
-        return resp.body.length !== initialImage.length;
-      },
+      url: `/img/playlist/${userId}_${playlistId}`,
+      until: (resp) => resp.body.length !== initialImage.length,
     });
   });
 });
