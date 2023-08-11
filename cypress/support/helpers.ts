@@ -35,6 +35,17 @@ export function createPlaylist({
   cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
 }
 
+export function changePlaylistImage({ imagePath }) {
+  cy.get('.btnEditPlaylist').contains('Edit').click();
+  cy.get('body')
+    .contains('Add/set playlist cover image')
+    .should('be.visible') // to wait for upload scripts to load and init propertly on the page
+    .click();
+  cy.get('input[type="file"]').attachFile(imagePath); // to upload the file
+  cy.get('body').contains('Save').click();
+  cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
+}
+
 export function playlistShouldHaveCustomImage({ userId, playlistId }) {
   return cy
     .request({

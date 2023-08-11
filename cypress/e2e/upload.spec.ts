@@ -1,4 +1,5 @@
 import {
+  changePlaylistImage,
   createPlaylist,
   playlistShouldHaveCustomImage,
   playlistShouldHaveNoImage,
@@ -63,13 +64,7 @@ context('upload', () => {
     playlistShouldHaveNoImage({ userId, playlistId: 0 });
 
     // set the playlist's image
-    cy.get('.btnEditPlaylist').contains('Edit').click();
-    cy.get('body')
-      .contains('Add/set playlist cover image')
-      .should('be.visible') // to wait for upload scripts to load and init propertly on the page
-      .click();
-    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
-    cy.get('body').contains('Save').click();
+    changePlaylistImage({ imagePath: SAMPLE_IMG_PATH });
 
     // expect the playlist to have a custom image
     playlistShouldHaveCustomImage({ userId, playlistId: 0 });
@@ -91,14 +86,7 @@ context('upload', () => {
     });
 
     // set the playlist's image
-    cy.get('.btnEditPlaylist').contains('Edit').click();
-    cy.get('body')
-      .contains('Add/set playlist cover image')
-      .should('be.visible') // to wait for upload scripts to load and init propertly on the page
-      .click();
-    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH_2); // to upload the file
-    cy.get('body').contains('Save').click();
-    cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
+    changePlaylistImage({ imagePath: SAMPLE_IMG_PATH_2 });
 
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
 
