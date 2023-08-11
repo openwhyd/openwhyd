@@ -139,7 +139,9 @@ var fieldSetters = {
     userModel.fetchByUid(p._id, function (user) {
       if (user.img && user.img.indexOf('blank_user.gif') == -1) {
         console.log('deleting previous profile pic: ' + user.img);
-        uploadCtr.deleteFile(user.img);
+        uploadCtr
+          .deleteFile(user.img)
+          .catch((err) => console.log(err, err.stack));
       }
       function actualUpdate(newFilename) {
         defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
@@ -153,7 +155,9 @@ var fieldSetters = {
     userModel.fetchByUid(p._id, function (user) {
       if (user.cvrImg && user.cvrImg.indexOf('blank') == -1) {
         console.log('deleting previous cover image: ' + user.cvrImg);
-        uploadCtr.deleteFile(user.cvrImg);
+        uploadCtr
+          .deleteFile(user.cvrImg)
+          .catch((err) => console.log(err, err.stack));
       }
       function actualUpdate(newFilename) {
         defaultSetter('cvrImg')(

@@ -31,12 +31,14 @@ exports.actions = {
   update: function (p, cb) {
     if (p && p.img) {
       var imgPath = uploadCtr.config.uPlaylistDir + '/' + p.uId + '_' + p.id;
-      uploadCtr.deleteFile(imgPath);
+      uploadCtr.deleteFile(imgPath).catch(() => {
+        /* nothing to do if file did not exist */
+      });
       userModel.fetchPlaylist(p.uId, p.id, function (pl) {
         /*
         if (pl && pl.img && pl.img.indexOf("blank") == -1) {
           console.log("deleting previous playlist pic: " + pl.img);
-          uploadCtr.deleteFile(pl.img);
+          uploadCtr.deleteFile(pl.img).catch((err) => console.log(err, err.stack));
         }
         function actualUpdate(newFilename) {
           userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);

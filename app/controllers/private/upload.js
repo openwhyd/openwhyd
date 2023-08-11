@@ -36,7 +36,7 @@ function processFile(file, options, callback) {
     return callback({ error: 'Error during file upload, please try again.' });
   else if (!mimetype || mimetype.indexOf('image/') != 0) {
     console.log('[upload] file is not an image => deleting file');
-    uploadCtr.deleteFile(filepath);
+    uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
     return callback({
       error: 'Only images are supported for upload, for now.',
     });
@@ -52,7 +52,8 @@ function processFile(file, options, callback) {
 
     const whenDone = () => {
       console.log('[upload] done');
-      if (!options.keepOriginal) uploadCtr.deleteFile(filepath);
+      if (!options.keepOriginal)
+        uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
       callback(result);
     };
 
@@ -93,14 +94,18 @@ exports.controller = function (req, requestParams, res) {
   req.logToConsole('upload.controller', requestParams);
 
   var user = req.checkLogin(res);
-  if (!user) return;
+  if (!user) return; // Note: we may want to send a response in that case too
 
   var postParams = req.body;
   var files = req.files;
   console.log('[upload] postParams', postParams);
 
-  if (postParams && postParams.id && postParams.action == 'delete')
-    return uploadCtr.deleteFile(settings.uploadDir + '/' + postParams.id);
+  if (postParams && postParams.id && postParams.action == 'delete') {
+    return uploadCtr
+      .deleteFile(settings.uploadDir + '/' + postParams.id)
+      .catch((err) => console.log(err, err.stack));
+    // Note: we may want to send a response in that case too
+  }
 
   var results = {},
     remaining = Object.keys(files).length;
