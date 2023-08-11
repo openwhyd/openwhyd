@@ -30,7 +30,7 @@ exports.actions = {
   },
   update: function (p, cb) {
     if (p && p.img) {
-      var imgPath = uploadCtr.config.uPlaylistDir + '/' + p.uId + '_' + p.id;
+      const imgPath = uploadCtr.getPlaylistImagePath(p);
       uploadCtr.deleteFile(imgPath).catch(() => {
         /* nothing to do if file did not exist */
       });

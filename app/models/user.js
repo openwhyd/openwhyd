@@ -593,7 +593,6 @@ exports.deletePlaylist = function (uId, plId, handler) {
       });
     });
   });
-  // TODO: delete image file
 };
 
 // === USER PREFS

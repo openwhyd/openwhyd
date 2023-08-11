@@ -38,6 +38,9 @@ for (let i in dirsToCreate)
     //console.log("Did not create directory:", dirsToCreate[i]);
   }
 
+exports.getPlaylistImagePath = ({ uId, id }) =>
+  exports.config.uPlaylistDir + '/' + uId + '_' + id;
+
 // separate file prefix (path & name) and extension from file.path
 exports.splitFilePath = function (filepath) {
   var path = filepath.split('/');
