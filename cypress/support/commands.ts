@@ -21,7 +21,6 @@ Cypress.Commands.add('resetDb', () => {
     retryOnStatusCodeFailure: true,
     retryOnNetworkFailure: true,
   });
-  cy.wait(1000);
 });
 
 Cypress.Commands.add('logout', () => {
