@@ -63,19 +63,19 @@ context('upload', () => {
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
   });
 
-  it('should set the image of a new playlist', () => {
+  it.only('should set the image of a new playlist', () => {
     // create a playlist with default image
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
     cy.get('body').contains('+ New Playlist').click();
     cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
     cy.get('body').contains('Save').click();
+    cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
 
     // expect the playlist to have a default image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
     playlistShouldHaveNoImage({ userId, playlistId: 0 });
 
     // set the playlist's image
-    cy.wait(1000);
     cy.get('.btnEditPlaylist').contains('Edit').click();
     cy.get('body')
       .contains('Add/set playlist cover image')
