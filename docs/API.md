@@ -877,7 +877,6 @@ Example of use:
 Parameters:
 
 - **file**: (standard HTML-compliant file upload field)
-- **keepOriginal**: (boolean, optional) if this parameter is set, the uploaded image will be stored as is, without resize.
 - **thumbDims**: (string, optional) comma-separated list of dimensions to which the provided image must be resized (e.g. for creating thumbs). Format of a dimension: `[width]x[height]` (both width and height are optional)
 
 Triggers the following standard events:

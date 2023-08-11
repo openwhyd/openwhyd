@@ -23,14 +23,14 @@ var defaultOptions = {
 
 /**
  * @param {{ filepath: string, mimetype:string, name: string }} file
- * @param {{ thumbDims?: string, keepOriginal?: boolean }} options
+ * @param {{ thumbDims?: string}} options
  */
 function processFile(file, options, callback) {
   const { filepath, mimetype, name } = file ?? {};
   console.log(
     '[upload] processFile',
     { filepath, mimetype, name },
-    { thumbDims: options.thumbDims, keepOriginal: options.keepOriginal },
+    { thumbDims: options.thumbDims },
   );
   if (!file || !filepath)
     return callback({ error: 'Error during file upload, please try again.' });
@@ -52,8 +52,7 @@ function processFile(file, options, callback) {
 
     const whenDone = () => {
       console.log('[upload] done');
-      if (!options.keepOriginal)
-        uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
+      uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
       callback(result);
     };
 
@@ -79,8 +78,7 @@ function processFile(file, options, callback) {
         genThumb(thumbWidth, thumbHeight, function (thumbFile) {
           console.log('[upload] generated thumb', { thumbDim, thumbFile });
           result.thumbs[/*dims*/ thumbDim] = uploadCtr.cleanFilePath(thumbFile);
-          if (!options.keepOriginal)
-            result.path = result.thumbs[/*dims*/ thumbDim];
+          result.path = result.thumbs[/*dims*/ thumbDim];
           if (--remaining == 0) whenDone();
         });
       }
