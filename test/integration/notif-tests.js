@@ -13,6 +13,17 @@ console.log = () => {
   // prevent mongodb from adding noise to stdout
 };
 
+// @ts-ignore // paths are necessary since the user deletion model takes responsibility for deleting playlist images
+process.appParams = {
+  paths: {
+    whydPath: __dirname + '/../../',
+    uploadDirName: 'upload_data',
+    uAvatarImgDirName: 'uAvatarImg',
+    uCoverImgDirName: 'uCoverImg',
+    uPlaylistDirName: 'uPlaylistImg',
+  },
+};
+
 const util = require('util');
 const assert = require('assert');
 const mongodb = require('../../app/models/mongodb.js');
