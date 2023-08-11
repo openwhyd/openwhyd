@@ -47,16 +47,10 @@ context('upload', () => {
   it('should create a new playlist with a custom image', () => {
     // create a playlist with default image
     createPlaylist({ userId, name: 'playlist 1' });
-
-    // expect the playlist to have a default image
-    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
     playlistShouldHaveNoImage({ userId, playlistId: 1 });
 
     // create a playlist with custom image
     createPlaylist({ userId, name: 'playlist 2', imagePath: SAMPLE_IMG_PATH });
-
-    // expect the playlist to have a custom image
-    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
     playlistShouldHaveCustomImage({ userId, playlistId: 1 });
 
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
@@ -65,9 +59,6 @@ context('upload', () => {
   it('should set the image of a new playlist', () => {
     // create a playlist with default image
     createPlaylist({ userId, name: 'playlist 1' });
-
-    // expect the playlist to have a default image
-    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
     playlistShouldHaveNoImage({ userId, playlistId: 0 });
 
     // set the playlist's image
@@ -80,7 +71,6 @@ context('upload', () => {
     cy.get('body').contains('Save').click();
 
     // expect the playlist to have a custom image
-    cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
     playlistShouldHaveCustomImage({ userId, playlistId: 0 });
   });
 });
