@@ -87,10 +87,8 @@ context('upload', () => {
       url: `/img/playlist/${userId}_${playlistId}`,
       retryOnStatusCodeFailure: true,
     }).then((response) => {
-      cy.log(response.body.length);
       initialImage = response.body;
     });
-    cy.wait(2000);
 
     // set the playlist's image
     cy.get('.btnEditPlaylist').contains('Edit').click();
