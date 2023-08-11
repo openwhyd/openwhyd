@@ -30,7 +30,7 @@ context('upload', () => {
     cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
     cy.get('body').contains('Drop your image file here'); // to wait for the progress bar to disappear
     cy.wait(1000); // to wait for the form to be ready to save
-    cy.get('body').contains('Save').scrollIntoView().click({ force: true });
+    cy.get('body').contains('Save').click();
     cy.wait(1000); // to wait for the dialog to close and page to refresh
 
     // check that the user's profile image was updated
