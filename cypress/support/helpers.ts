@@ -46,6 +46,15 @@ export function changePlaylistImage({ imagePath }) {
   cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
 }
 
+export function deletePlaylist() {
+  cy.get('.btnEditPlaylist').contains('Edit').click();
+  cy.get('body')
+    .contains('Delete playlist')
+    .should('be.visible') // to wait for upload scripts to load and init propertly on the page
+    .click();
+  cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
+}
+
 export function playlistShouldHaveCustomImage({ userId, playlistId }) {
   return cy
     .request({

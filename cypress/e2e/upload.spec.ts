@@ -1,6 +1,7 @@
 import {
   changePlaylistImage,
   createPlaylist,
+  deletePlaylist,
   playlistShouldHaveCustomImage,
   playlistShouldHaveNoImage,
   repeatRequest,
@@ -87,6 +88,33 @@ context('upload', () => {
 
     // set the playlist's image
     changePlaylistImage({ imagePath: SAMPLE_IMG_PATH_2 });
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+
+    // check that the playlist image was updated
+    repeatRequest({
+      url: `/img/playlist/${userId}_${playlistId}`,
+      until: (resp) => resp.body.length !== initialImage.length,
+    });
+  });
+
+  // TODO: make this test pass
+  it.skip('should delete the image of a deleted playlist', () => {
+    // create a playlist with custom image
+    const playlistId = 0;
+    createPlaylist({ userId, name: 'my playlist', imagePath: SAMPLE_IMG_PATH });
+    playlistShouldHaveCustomImage({ userId, playlistId });
+
+    // remember the current playlist image
+    let initialImage;
+    cy.request({
+      url: `/img/playlist/${userId}_${playlistId}`,
+      retryOnStatusCodeFailure: true,
+    }).then((response) => {
+      initialImage = response.body;
+    });
+
+    // delete the playlist
+    deletePlaylist();
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
 
     // check that the playlist image was updated
