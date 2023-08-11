@@ -1,4 +1,5 @@
 import {
+  createPlaylist,
   playlistShouldHaveCustomImage,
   playlistShouldHaveNoImage,
   repeatRequest,
@@ -43,21 +44,16 @@ context('upload', () => {
     });
   });
 
-  it.only('should create a new playlist with a custom image', () => {
+  it('should create a new playlist with a custom image', () => {
     // create a playlist with default image
-    createPlaylist({ userId });
+    createPlaylist({ userId, name: 'playlist 1' });
 
     // expect the playlist to have a default image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
     playlistShouldHaveNoImage({ userId, playlistId: 1 });
 
     // create a playlist with custom image
-    cy.visit(`/u/${userId}/playlists`); // user's playlists page
-    cy.get('body').contains('+ New Playlist').click();
-    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 2');
-    cy.get('body').contains('Add/set playlist cover image').click();
-    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
-    cy.get('body').contains('Save').click();
+    createPlaylist({ userId, name: 'playlist 2', imagePath: SAMPLE_IMG_PATH });
 
     // expect the playlist to have a custom image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
@@ -68,11 +64,7 @@ context('upload', () => {
 
   it('should set the image of a new playlist', () => {
     // create a playlist with default image
-    cy.visit(`/u/${userId}/playlists`); // user's playlists page
-    cy.get('body').contains('+ New Playlist').click();
-    cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
-    cy.get('body').contains('Save').click();
-    cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
+    createPlaylist({ userId, name: 'playlist 1' });
 
     // expect the playlist to have a default image
     cy.url().should('match', /\/u\/.*\/playlist\/[0-9]+$/);
@@ -92,9 +84,3 @@ context('upload', () => {
     playlistShouldHaveCustomImage({ userId, playlistId: 0 });
   });
 });
-function createPlaylist({ userId }) {
-  cy.visit(`/u/${userId}/playlists`); // user's playlists page
-  cy.get('body').contains('+ New Playlist').click();
-  cy.get('form[id="playlistForm"] input[name="name"]').type('playlist 1');
-  cy.get('body').contains('Save').click();
-}
