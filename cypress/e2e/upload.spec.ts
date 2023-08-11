@@ -7,6 +7,7 @@ import {
 
 context('upload', () => {
   const SAMPLE_IMG_PATH = 'upload-resources/sample-avatar.jpg';
+  const SAMPLE_IMG_PATH_2 = 'upload-resources/sample-avatar-2.png';
   let userId;
 
   beforeEach('login', () => {
@@ -72,5 +73,45 @@ context('upload', () => {
 
     // expect the playlist to have a custom image
     playlistShouldHaveCustomImage({ userId, playlistId: 0 });
+  });
+
+  it('should set the image of a playlist that already has a custom image', () => {
+    // create a playlist with custom image
+    const playlistId = 0;
+    createPlaylist({ userId, name: 'my playlist', imagePath: SAMPLE_IMG_PATH });
+    playlistShouldHaveCustomImage({ userId, playlistId });
+
+    // remember the current playlist image
+    let initialImage;
+    cy.request({
+      url: `/img/playlist/${userId}_${playlistId}`,
+      retryOnStatusCodeFailure: true,
+    }).then((response) => {
+      cy.log(response.body.length);
+      initialImage = response.body;
+    });
+    cy.wait(2000);
+
+    // set the playlist's image
+    cy.get('.btnEditPlaylist').contains('Edit').click();
+    cy.get('body')
+      .contains('Add/set playlist cover image')
+      .should('be.visible') // to wait for upload scripts to load and init propertly on the page
+      .click();
+    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH_2); // to upload the file
+    cy.get('body').contains('Save').click();
+    cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
+
+    cy.visit(`/u/${userId}/playlists`); // user's playlists page
+
+    // check that the playlist image was updated
+    repeatRequest({
+      url: `/img/playlist/${userId}_${playlistId}?_t=${
+        new Date().getTime() + 1
+      }`, // note: we increase the timestamp to prevent cache from returning the previous response
+      until: (resp) => {
+        return resp.body.length !== initialImage.length;
+      },
+    });
   });
 });
