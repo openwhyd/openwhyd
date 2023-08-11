@@ -46,7 +46,6 @@ context('Openwhyd', () => {
     cy.get('.dlgPostBox').should('be.visible');
 
     // should show a link to the post after adding the track
-    cy.wait(500); // TODO: we should not have to wait for the "Add" link to be clickable
     cy.get('.dlgPostBox span').contains('Add').click();
     cy.contains('your tracks'); // notification bar with link to "your tracks"
 
