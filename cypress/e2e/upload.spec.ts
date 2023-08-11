@@ -1,3 +1,9 @@
+import {
+  playlistShouldHaveCustomImage,
+  playlistShouldHaveNoImage,
+  repeatRequest,
+} from '../support/helpers';
+
 context('upload', () => {
   const SAMPLE_IMG_PATH = 'upload-resources/sample-avatar.jpg';
   let userId;
@@ -63,7 +69,7 @@ context('upload', () => {
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
   });
 
-  it.only('should set the image of a new playlist', () => {
+  it('should set the image of a new playlist', () => {
     // create a playlist with default image
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
     cy.get('body').contains('+ New Playlist').click();
@@ -89,38 +95,3 @@ context('upload', () => {
     playlistShouldHaveCustomImage({ userId, playlistId: 0 });
   });
 });
-
-function playlistShouldHaveCustomImage({ userId, playlistId }) {
-  return cy
-    .request({
-      url: `/img/playlist/${userId}_${playlistId}?remoteOnly=1`,
-      retryOnStatusCodeFailure: true,
-    })
-    .should('have.property', 'status', 200);
-}
-
-function playlistShouldHaveNoImage({ userId, playlistId }) {
-  return cy
-    .request({
-      url: `/img/playlist/${userId}_${playlistId}?remoteOnly=1`,
-      failOnStatusCode: false,
-    })
-    .should('have.property', 'status', 404);
-}
-
-// cf https://stackoverflow.com/a/73955233/592254
-function repeatRequest({ url, until }) {
-  const maxAttempts = 10;
-  const delay = 200;
-  const action = () => cy.request(url).then(until);
-  let chain = action();
-  for (let i = 0; i < maxAttempts; i++) {
-    chain = chain.then((foundMatch) => {
-      if (!foundMatch) {
-        cy.wait(delay);
-        return action();
-      }
-    });
-  }
-  return chain.then((foundMatch) => assert.isTrue(foundMatch));
-}
