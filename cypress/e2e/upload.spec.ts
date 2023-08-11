@@ -14,11 +14,10 @@ context('upload', () => {
     let defaultImageBody;
     cy.request(`/images/blank_user.gif`).then((response) => {
       defaultImageBody = response.body;
+      cy.request(`/img/u/${userId}?_t=${new Date().getTime()}`)
+        .its('body.length')
+        .should('equal', defaultImageBody.length);
     });
-    cy.request(`/img/u/${userId}?_t=${new Date().getTime()}`).should(
-      (response) =>
-        expect(response.body.length).to.equal(defaultImageBody.length),
-    );
 
     // open the "edit profile" dialog
     cy.visit(`/u/${userId}`); // user's profile page
@@ -29,16 +28,13 @@ context('upload', () => {
     // upload a new profile image
     cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH); // to upload the file
     cy.get('body').contains('Drop your image file here'); // to wait for the progress bar to disappear
-    cy.wait(1000); // to wait for the form to be ready to save
     cy.get('body').contains('Save').click();
-    cy.wait(1000); // to wait for the dialog to close and page to refresh
 
     // check that the user's profile image was updated
-    cy.request(`/img/u/${userId}?_t=${new Date().getTime() + 1}`).should(
-      // note: above, we increase the timestamp to prevent cache from returning the previous response
-      (response) =>
-        expect(response.body.length).not.to.equal(defaultImageBody.length),
-    );
+    repeatRequest({
+      url: `/img/u/${userId}?_t=${new Date().getTime() + 1}`, // note: we increase the timestamp to prevent cache from returning the previous response
+      until: (resp) => resp.body.length !== defaultImageBody.length,
+    });
   });
 
   it('should create a new playlist with a custom image', () => {
@@ -110,4 +106,21 @@ function playlistShouldHaveNoImage({ userId, playlistId }) {
       failOnStatusCode: false,
     })
     .should('have.property', 'status', 404);
+}
+
+// cf https://stackoverflow.com/a/73955233/592254
+function repeatRequest({ url, until }) {
+  const maxAttempts = 10;
+  const delay = 200;
+  const action = () => cy.request(url).then(until);
+  let chain = action();
+  for (let i = 0; i < maxAttempts; i++) {
+    chain = chain.then((foundMatch) => {
+      if (!foundMatch) {
+        cy.wait(delay);
+        return action();
+      }
+    });
+  }
+  return chain.then((foundMatch) => assert.isTrue(foundMatch));
 }
