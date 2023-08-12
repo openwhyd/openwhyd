@@ -13,7 +13,8 @@
  */
 exports.makeFeatures = function (userRepository) {
   /**
-   * @type {([User, Playlist]) => Promise<Playlist>}
+   * @param {[user: User, playlist: Playlist]} params
+   * @returns {Promise<Playlist>}
    */
   const insertPlaylist = ([user, playlist]) =>
     userRepository
