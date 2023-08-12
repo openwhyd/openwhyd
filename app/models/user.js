@@ -579,6 +579,8 @@ exports.setPlaylistImg = function(uId, plId, img, cb) {
 	});
 }
 */
+
+// TODO: delete this function
 exports.deletePlaylist = function (uId, plId, handler) {
   fetch({ _id: uId }, function (err, user) {
     var newPl = [];

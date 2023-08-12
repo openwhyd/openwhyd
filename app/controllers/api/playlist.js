@@ -21,8 +21,8 @@ exports.actions = {
   rename: function (p, callback) {
     userModel.renamePlaylist(p.uId, p.id, p.name, callback);
   },
-  delete: function (p, callback) {
-    userModel.deletePlaylist(p.uId, p.id, callback);
+  delete: function ({ uId, id: playlistId }, callback, { deletePlaylist }) {
+    deletePlaylist(uId, playlistId).then(callback); // TODO: handle errors (e.g. "playlist not found")
   },
   setOrder: function (p, cb) {
     if (!p || !p.order || !p.id) cb({ error: 'missing parameters' });
