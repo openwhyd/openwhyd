@@ -1,10 +1,10 @@
 //@ts-check
+
 /**
  * @typedef {import('../../app/domain/user/types').User} User
  * @typedef {import('../../app/domain/user/types').Playlist} Playlist
  * @typedef {import('../../app/domain/spi/UserRepository').UserRepository} UserRepository
  * @typedef {import('./api/Features').Features} Features
- * @typedef {import('./api/Features').CreatePlaylist} CreatePlaylist
  */
 
 /**
@@ -25,18 +25,10 @@ exports.makeFeatures = function (userRepository) {
    * @returns {(user: User) =>  Promise<[User, Playlist]>}
    */
   function addNewPlayListToUser(playlistName) {
-    /**
-     * @param {User} user
-     * @returns { Promise<[User, Playlist]>}
-     */
     return (user) => user.addNewPlaylist(playlistName);
   }
 
   return {
-    /**
-     * @type {CreatePlaylist}
-     * @returns {Promise<Playlist>}
-     */
     createPlaylist: (userId, playlistName) =>
       Promise.resolve(
         userRepository
