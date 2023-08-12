@@ -6,6 +6,7 @@
  */
 
 /**
+ * User entity.
  * @type {User}
  */
 module.exports = class User {
@@ -31,6 +32,13 @@ module.exports = class User {
       new User(this.id, [...this.playlists, newPlaylist]),
       newPlaylist,
     ]);
+  };
+
+  deletePlaylist = (playlistId) => {
+    const playlist = this.playlists.find((pl) => pl.id === playlistId);
+    const otherPlaylists = this.playlists.filter((pl) => pl.id !== playlistId);
+    if (!playlist) throw new Error('playlist not found');
+    return Promise.resolve(new User(this.id, otherPlaylists));
   };
 };
 
