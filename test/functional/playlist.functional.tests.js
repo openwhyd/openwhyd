@@ -33,7 +33,7 @@ describe('playlist', () => {
   beforeEach(() => {
     userRepository = inMemoryUserRepository([userNoPlaylist, userWithPlaylist]);
 
-    ({ createPlaylist } = features(userRepository));
+    ({ createPlaylist, deletePlaylist } = features(userRepository));
   });
 
   it('should be created for a user with no playlist', async () => {
@@ -69,7 +69,14 @@ describe('playlist', () => {
     assert.equal(savedPlaylist.name, playlist.name);
   });
 
-  // it('should be deleted', async () => {
+  it('should be deleted', async () => {
+    const initialPlaylistsCount = userWithPlaylist.playlists.length;
+    const userBefore = await userRepository.getByUserId(userWithPlaylist.id);
+    assert.equal(userBefore.playlists.length, initialPlaylistsCount);
 
-  // })
+    await deletePlaylist(userWithPlaylist.id, userWithPlaylist.playlists[0].id);
+
+    const userAfter = await userRepository.getByUserId(userWithPlaylist.id);
+    assert.equal(userAfter.playlists.length, initialPlaylistsCount - 1);
+  });
 });
