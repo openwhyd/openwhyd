@@ -13,10 +13,12 @@ const { inMemoryUserRepository } = require('./stubs/InMemoryUserRepository');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe('playlist', () => {
-  let userNoPlaylist;
-
+  // test data
   const lastExistingPlaylistId = 42;
-  let userWithPlaylist;
+  const userNoPlaylist = new User('userNoPlaylist', []);
+  const userWithPlaylist = new User('userWithPlaylist', [
+    { id: lastExistingPlaylistId, name: 'existingPlaylist' },
+  ]);
 
   /**
    * @type {CreatePlaylist}
@@ -29,11 +31,6 @@ describe('playlist', () => {
   let userRepository;
 
   beforeEach(() => {
-    userNoPlaylist = new User('userNoPlaylist', []);
-    userWithPlaylist = new User('userWithPlaylist', [
-      { id: lastExistingPlaylistId, name: 'existingPlaylist' },
-    ]);
-
     userRepository = inMemoryUserRepository([userNoPlaylist, userWithPlaylist]);
 
     ({ createPlaylist } = features(userRepository));
@@ -71,4 +68,8 @@ describe('playlist', () => {
     assert.equal(savedPlaylist.id, playlist.id);
     assert.equal(savedPlaylist.name, playlist.name);
   });
+
+  // it('should be deleted', async () => {
+
+  // })
 });
