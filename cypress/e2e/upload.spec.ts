@@ -2,8 +2,10 @@ import {
   changePlaylistImage,
   createPlaylist,
   deletePlaylist,
+  playlistShouldExist,
   playlistShouldHaveCustomImage,
   playlistShouldHaveNoImage,
+  playlistShouldNotExist,
   repeatRequest,
 } from '../support/helpers';
 
@@ -97,17 +99,19 @@ context('upload', () => {
     });
   });
 
-  it('should delete the image of a deleted playlist', () => {
+  it.only('should delete the image of a deleted playlist', () => {
     // create a playlist with custom image
-    const playlistId = 0;
-    createPlaylist({ userId, name: 'my playlist', imagePath: SAMPLE_IMG_PATH });
-    playlistShouldHaveCustomImage({ userId, playlistId });
+    const playlist = { id: 0, name: 'my playlist' };
+    createPlaylist({ userId, name: playlist.name, imagePath: SAMPLE_IMG_PATH });
+    playlistShouldExist({ userId, playlistName: playlist.name });
+    playlistShouldHaveCustomImage({ userId, playlistId: playlist.id });
 
     // delete the playlist
-    deletePlaylist();
+    deletePlaylist({ userId, playlistId: playlist.id });
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
 
     // check that the playlist image was updated
-    playlistShouldHaveNoImage({ userId, playlistId });
+    playlistShouldNotExist({ userId, playlistName: playlist.name });
+    playlistShouldHaveNoImage({ userId, playlistId: playlist.id });
   });
 });
