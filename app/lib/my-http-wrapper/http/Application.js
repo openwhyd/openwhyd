@@ -6,7 +6,9 @@ const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
-const { features: makeFeatures } = require('../../../domain/OpenWhydFeatures');
+const {
+  makeFeatures: makeFeatures,
+} = require('../../../domain/OpenWhydFeatures');
 const {
   userCollection: userRepository,
 } = require('../../../infrastructure/mongodb/UserCollection');

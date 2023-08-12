@@ -6,7 +6,7 @@
  */
 const assert = require('assert');
 
-const { features } = require('../../app/domain/OpenWhydFeatures');
+const { makeFeatures: features } = require('../../app/domain/OpenWhydFeatures');
 const User = require('../../app/domain/user/User');
 
 const { inMemoryUserRepository } = require('./stubs/InMemoryUserRepository');

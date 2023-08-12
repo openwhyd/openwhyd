@@ -8,11 +8,10 @@
  */
 
 /**
- *
  * @param {UserRepository} userRepository
  * @returns {Features}
  */
-exports.features = function (userRepository) {
+exports.makeFeatures = function (userRepository) {
   /**
    * @type {([User, Playlist]) => Promise<Playlist>}
    */
@@ -30,7 +29,6 @@ exports.features = function (userRepository) {
      * @param {User} user
      * @returns { Promise<[User, Playlist]>}
      */
-
     return (user) => user.addNewPlaylist(playlistName);
   }
 
