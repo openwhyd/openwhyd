@@ -23,7 +23,7 @@ describe('playlist', () => {
   /**
    * @type {CreatePlaylist}
    */
-  let createPlaylist;
+  let createPlaylist, deletePlaylist;
 
   /**
    * @type {UserRepository}
