@@ -21,20 +21,12 @@ exports.makeFeatures = function (userRepository) {
       .insertPlaylist(user.id, playlist)
       .then(() => Promise.resolve(playlist));
 
-  /**
-   * @param {string} playlistName
-   * @returns {(user: User) =>  Promise<[User, Playlist]>}
-   */
-  function addNewPlayListToUser(playlistName) {
-    return (user) => user.addNewPlaylist(playlistName);
-  }
-
   return {
     createPlaylist: (userId, playlistName) =>
       Promise.resolve(
         userRepository
           .getByUserId(userId)
-          .then(addNewPlayListToUser(playlistName))
+          .then((user) => user.addNewPlaylist(playlistName))
           .then(insertPlaylist),
       ),
   };
