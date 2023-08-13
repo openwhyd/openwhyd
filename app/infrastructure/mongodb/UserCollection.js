@@ -24,6 +24,12 @@ exports.userCollection = {
       { $push: { pl: playlist } },
     );
   },
+  removePlaylist: async (userId, playlistId) => {
+    await mongodb.collections['user'].updateOne(
+      { _id: mongodb.ObjectId(userId) },
+      { $pull: { pl: { id: playlistId } } },
+    );
+  },
 };
 
 /**

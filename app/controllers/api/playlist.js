@@ -32,7 +32,7 @@ exports.actions = {
     if (Number.isNaN(playlistId))
       return callback({ error: 'invalid playlist id' });
     deletePlaylist(uId, Number(playlistId))
-      .then(callback)
+      .then(() => callback(playlistId))
       .catch((err) => callback({ error: err.message || err }));
   },
   setOrder: function (p, cb) {
