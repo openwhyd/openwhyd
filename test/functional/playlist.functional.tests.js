@@ -79,4 +79,22 @@ describe('playlist', () => {
     const userAfter = await userRepository.getByUserId(userWithPlaylist.id);
     assert.equal(userAfter.playlists.length, initialPlaylistsCount - 1);
   });
+
+  it('should delete the associated image', async () => {
+    const userId = userWithPlaylist.id;
+    const playlistId = userWithPlaylist.playlists[0].id;
+    const imageUrlBefore = await imageRepository.getImageUrlForPlaylist(
+      userId,
+      playlistId,
+    );
+    assert.equal(typeof imageUrlBefore, 'string');
+
+    await deletePlaylist(userWithPlaylist.id, userWithPlaylist.playlists[0].id);
+
+    const imageUrlAfter = await imageRepository.getImageUrlForPlaylist(
+      userId,
+      playlistId,
+    );
+    assert.equal(typeof imageUrlAfter, 'null');
+  });
 });
