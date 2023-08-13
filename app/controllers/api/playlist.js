@@ -9,6 +9,12 @@ var userModel = require('../../models/user.js');
 var notifModel = require('../../models/notif.js');
 var uploadCtr = require('../uploadedFile.js');
 
+/** @typedef {import('../../domain/OpenWhydFeatures.js').Features} Features */
+/** @typedef {Record<string, unknown>} ReqParams */
+/** @typedef {{ error?: string } | undefined} ActionCallbackParam */
+/** @typedef {(ActionCallbackParam) => void} ActionCallback */
+
+/** @type {Record<string, (p: ReqParams, callback: ActionCallback, features: Features) => void>} */
 exports.actions = {
   sendToUsers: notifModel.sendPlaylistToUsers,
   /**

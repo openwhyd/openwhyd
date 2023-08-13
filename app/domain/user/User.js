@@ -2,12 +2,12 @@
 
 /**
  * @typedef {import('./types').Playlist} Playlist
- * @typedef {import('./types').User} User
+ * @typedef {import('./types').User} UserInterface
  */
 
 /**
  * User entity.
- * @type {User}
+ * @type {UserInterface}
  */
 module.exports = class User {
   /**
@@ -34,6 +34,7 @@ module.exports = class User {
     ]);
   };
 
+  /** @type {UserInterface["deletePlaylist"]} */
   deletePlaylist = (playlistId) => {
     const playlist = this.playlists.find((pl) => pl.id === playlistId);
     const otherPlaylists = this.playlists.filter((pl) => pl.id !== playlistId);
