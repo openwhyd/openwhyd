@@ -34,6 +34,9 @@ exports.makeFeatures = function (userRepository) {
       await user.deletePlaylist(playlistId); // validates the operation, by checking that this playlist does exist => may throw "playlist not found"
       await userRepository.removePlaylist(user.id, playlistId);
       // TODO: also delete the associated image, if any
+      // TODO: also release tracks from that playlist, cf postModel.unsetPlaylist()
+      // TODO: also delete the playlist from search index, cf searchModel.deletePlaylist()
+      // TODO: after all that => delete exports.deletePlaylist() from app/models/user.js
     },
   };
 };
