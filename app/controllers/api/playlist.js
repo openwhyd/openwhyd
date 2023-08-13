@@ -37,16 +37,20 @@ exports.actions = {
   },
   setOrder: function (p, cb) {
     if (!p || !p.order || !p.id) cb({ error: 'missing parameters' });
+    if (!Array.isArray(p.order)) cb({ error: 'invalid order' });
     else postModel.setPlaylistOrder(p.uId, p.id, p.order, cb);
   },
   update: function (p, cb) {
-    if (p && p.img) {
-      const imgPath = uploadCtr.getPlaylistImagePath(p);
-      uploadCtr.deleteFile(imgPath).catch(() => {
-        /* nothing to do if file did not exist */
-      });
-      userModel.fetchPlaylist(p.uId, p.id, function (pl) {
-        /*
+    const img = p?.img;
+    if (typeof img !== 'string') {
+      return cb({ error: 'invalid img parameter' });
+    }
+    const imgPath = uploadCtr.getPlaylistImagePath(p);
+    uploadCtr.deleteFile(imgPath).catch(() => {
+      /* nothing to do if file did not exist */
+    });
+    userModel.fetchPlaylist(p.uId, p.id, function (pl) {
+      /*
         if (pl && pl.img && pl.img.indexOf("blank") == -1) {
           console.log("deleting previous playlist pic: " + pl.img);
           uploadCtr.deleteFile(pl.img).catch((err) => console.log(err, err.stack));
@@ -54,13 +58,12 @@ exports.actions = {
         function actualUpdate(newFilename) {
           userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
         }*/
-        if (p.img.indexOf('blank') == -1)
-          uploadCtr.renameTo(p.img, imgPath, function () {
-            cb(pl);
-          });
-        else cb(pl);
-      });
-    } else cb({ error: 'missing parameters' });
+      if (img.indexOf('blank') == -1)
+        uploadCtr.renameTo(p.img, imgPath, function () {
+          cb(pl);
+        });
+      else cb(pl);
+    });
   },
 };
 
