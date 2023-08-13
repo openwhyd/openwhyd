@@ -28,7 +28,12 @@ exports.actions = {
     userModel.renamePlaylist(p.uId, p.id, p.name, callback);
   },
   delete: function ({ uId, id: playlistId }, callback, { deletePlaylist }) {
-    deletePlaylist(uId, playlistId).then(callback); // TODO: handle errors (e.g. "playlist not found")
+    if (typeof uId !== 'string') return callback({ error: 'invalid uId' });
+    if (Number.isNaN(playlistId))
+      return callback({ error: 'invalid playlist id' });
+    deletePlaylist(uId, Number(playlistId))
+      .then(callback)
+      .catch((err) => callback({ error: err.message || err }));
   },
   setOrder: function (p, cb) {
     if (!p || !p.order || !p.id) cb({ error: 'missing parameters' });
