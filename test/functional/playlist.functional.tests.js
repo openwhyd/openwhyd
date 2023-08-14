@@ -3,6 +3,7 @@
 /**
  * @typedef {import('../../app/domain/api/Features').CreatePlaylist} CreatePlaylist
  * @typedef {import('../../app/domain/spi/UserRepository').UserRepository} UserRepository
+ * @typedef {import('../../app/domain/spi/ImageRepository').ImageRepository} ImageRepository
  */
 const assert = require('assert');
 
@@ -10,6 +11,9 @@ const { makeFeatures: features } = require('../../app/domain/OpenWhydFeatures');
 const User = require('../../app/domain/user/User');
 
 const { inMemoryUserRepository } = require('./stubs/InMemoryUserRepository');
+const {
+  inMemoryImageRepository,
+} = require('./stubs/InMemoryImageRepository.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe('playlist', () => {
@@ -25,14 +29,15 @@ describe('playlist', () => {
    */
   let createPlaylist, deletePlaylist;
 
-  /**
-   * @type {UserRepository}
-   */
+  /** @type {UserRepository} */
   let userRepository;
+
+  /** @type {ImageRepository} */
+  let imageRepository;
 
   beforeEach(() => {
     userRepository = inMemoryUserRepository([userNoPlaylist, userWithPlaylist]);
-
+    imageRepository = inMemoryImageRepository();
     ({ createPlaylist, deletePlaylist } = features(userRepository));
   });
 
