@@ -103,6 +103,6 @@ describe('playlist', () => {
       userId,
       playlistId,
     );
-    assert.equal(typeof imageUrlAfter, 'null');
+    assert.equal(imageUrlAfter, null);
   });
 });
