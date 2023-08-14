@@ -38,7 +38,10 @@ describe('playlist', () => {
   beforeEach(() => {
     userRepository = inMemoryUserRepository([userNoPlaylist, userWithPlaylist]);
     imageRepository = inMemoryImageRepository();
-    ({ createPlaylist, deletePlaylist } = features(userRepository));
+    ({ createPlaylist, deletePlaylist } = features({
+      userRepository,
+      imageRepository,
+    }));
   });
 
   it('should be created for a user with no playlist', async () => {
