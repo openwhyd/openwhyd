@@ -40,16 +40,21 @@ exports.actions = {
     if (!Array.isArray(p.order)) cb({ error: 'invalid order' });
     else postModel.setPlaylistOrder(p.uId, p.id, p.order, cb);
   },
-  update: function (p, cb) {
-    const img = p?.img;
+  update: function ({ uId, id, img }, cb) {
     if (typeof img !== 'string') {
       return cb({ error: 'invalid img parameter' });
     }
-    const imgPath = uploadCtr.getPlaylistImagePath(p);
+    if (typeof uId !== 'string') {
+      return cb({ error: 'invalid uId parameter' });
+    }
+    if (typeof id !== 'string') {
+      return cb({ error: 'invalid id parameter' });
+    }
+    const imgPath = uploadCtr.getPlaylistImagePath({ uId, id });
     uploadCtr.deleteFile(imgPath).catch(() => {
       /* nothing to do if file did not exist */
     });
-    userModel.fetchPlaylist(p.uId, p.id, function (pl) {
+    userModel.fetchPlaylist(uId, id, function (pl) {
       /*
         if (pl && pl.img && pl.img.indexOf("blank") == -1) {
           console.log("deleting previous playlist pic: " + pl.img);
@@ -59,7 +64,7 @@ exports.actions = {
           userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
         }*/
       if (img.indexOf('blank') == -1)
-        uploadCtr.renameTo(p.img, imgPath, function () {
+        uploadCtr.renameTo(img, imgPath, function () {
           cb(pl);
         });
       else cb(pl);
