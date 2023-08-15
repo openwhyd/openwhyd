@@ -1,6 +1,7 @@
 //@ts-check
 
 const assert = require('assert');
+const { jestExpect: expect } = require('@jest/expect');
 const {
   mongodb,
   initMongoDb,
@@ -14,11 +15,11 @@ const {
 const COMPLETE_USER_JSON =
   __dirname + '/mongodb/fixtures/complete.users.json.js';
 
-describe('Mongo user repository should', function () {
+describe('MongoDB User Repository', function () {
   before(initMongoDb);
   beforeEach(cleanup);
 
-  it('throw exception when user is invalid', async () => {
+  it('should throw exception when user is invalid', async () => {
     try {
       await userRepository.getByUserId('invalidUserId');
     } catch (err) {
@@ -29,7 +30,7 @@ describe('Mongo user repository should', function () {
     }
   });
 
-  it('throw exception when user is unknown', async () => {
+  it('should throw exception when user is unknown', async () => {
     try {
       await userRepository.getByUserId('4d94501d1f78ac091dbc9bff');
     } catch (err) {
@@ -37,7 +38,7 @@ describe('Mongo user repository should', function () {
     }
   });
 
-  it('find user by id', async () => {
+  it('should find user by id', async () => {
     const user = await readMongoDocuments(COMPLETE_USER_JSON);
     const userId = await insertUser(user);
 
@@ -51,7 +52,7 @@ describe('Mongo user repository should', function () {
     );
   });
 
-  it('insert playlist to user', async () => {
+  it('should insert playlist to user', async () => {
     const user = await readMongoDocuments(COMPLETE_USER_JSON);
     const userId = await insertUser(user);
 
@@ -71,5 +72,23 @@ describe('Mongo user repository should', function () {
       [newPlaylist],
       userDocument.pl.filter((pl) => pl.id == playlistId),
     );
+  });
+
+  it("should delete a user's playlist", async () => {
+    // Given a user with a playlist called 'Emerging rock talent from Paris'
+    const user = await readMongoDocuments(COMPLETE_USER_JSON);
+    const userId = await insertUser(user);
+    const userBefore = await userRepository.getByUserId(userId);
+    const playlistToDelete = userBefore.playlists.find(
+      (pl) => pl.name === 'Emerging rock talent from Paris',
+    );
+
+    // When we delete that playlist
+    await userRepository.removePlaylist(userId, playlistToDelete.id);
+
+    // Then all playlists are still there, except the deleted one
+    const userAfter = await userRepository.getByUserId(userId);
+    expect(userAfter.playlists).toHaveLength(userBefore.playlists.length - 1);
+    expect(userAfter.playlists).not.toContain(playlistToDelete);
   });
 });

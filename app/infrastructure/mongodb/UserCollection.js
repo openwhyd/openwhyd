@@ -10,6 +10,9 @@ const User = require('../../domain/user/User');
 const mongodb = require('../../models/mongodb');
 
 /**
+ * MongoDB implementation of the UserRepository interface.
+ * Persists User instances in the "user" collection.
+ * Tests: test/integration/user.repository.tests.js
  * @type {UserRepository}
  */
 exports.userCollection = {
