@@ -48,3 +48,13 @@ export interface UserDocument {
   };
   pwd: string;
 }
+
+/** To be completed */
+export interface PostDocument {
+  _id: ObjectId;
+  name: string;
+  eId: string;
+  uId: string;
+  uNm: string;
+  pl?: { id: string | number; name: string };
+}

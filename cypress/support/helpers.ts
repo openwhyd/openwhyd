@@ -46,8 +46,12 @@ export function changePlaylistImage({ imagePath }) {
   cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
 }
 
+export function goToPlaylist({ userId, playlistId }) {
+  return cy.visit(`/u/${userId}/playlist/${playlistId}`);
+}
+
 export function deletePlaylist({ userId, playlistId }) {
-  cy.visit(`/u/${userId}/playlist/${playlistId}`);
+  goToPlaylist({ userId, playlistId });
   cy.get('.btnEditPlaylist').contains('Edit').click();
   cy.get('body')
     .contains('Delete playlist')

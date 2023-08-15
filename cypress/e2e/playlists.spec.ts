@@ -2,6 +2,7 @@ import {
   changePlaylistImage,
   createPlaylist,
   deletePlaylist,
+  goToPlaylist,
   playlistShouldExist,
   playlistShouldHaveCustomImage,
   playlistShouldHaveNoImage,
@@ -12,12 +13,13 @@ import {
 context('playlists', () => {
   const SAMPLE_IMG_PATH = 'upload-resources/sample-avatar.jpg';
   const SAMPLE_IMG_PATH_2 = 'upload-resources/sample-avatar-2.png';
-  let userId;
+  let userId, userName;
 
   beforeEach('login', () => {
     cy.fixture('users.js').then(({ dummy }) => {
       cy.login(dummy);
       userId = dummy.id;
+      userName = dummy.name;
     });
   });
 
@@ -59,12 +61,23 @@ context('playlists', () => {
     });
   });
 
-  it('should delete the image of a deleted playlist', () => {
-    // create a playlist with custom image
-    const playlist = { id: 0, name: 'my playlist' };
+  it('should delete a playlist, its image, and release associated posts', () => {
+    // Given a playlist with a custom image and one post
+    const playlist = { id: 0, name: 'my favorite playlist' };
+    const track = {
+      uId: userId,
+      uNm: userName,
+      name: 'my favorite track',
+      pl: playlist,
+    };
     createPlaylist({ userId, name: playlist.name, imagePath: SAMPLE_IMG_PATH });
+    cy.postDummyTracks(1, track);
     playlistShouldExist({ userId, playlistName: playlist.name });
     playlistShouldHaveCustomImage({ userId, playlistId: playlist.id });
+    goToPlaylist({ userId, playlistId: playlist.id })
+      .get('body')
+      .should('contain', track.name)
+      .should('contain', playlist.name);
 
     // delete the playlist
     deletePlaylist({ userId, playlistId: playlist.id });
@@ -73,5 +86,11 @@ context('playlists', () => {
     // check that the playlist image was updated
     playlistShouldNotExist({ userId, playlistName: playlist.name });
     playlistShouldHaveNoImage({ userId, playlistId: playlist.id });
+
+    // check that the track is still on the user's profile, but not associated to the playlist
+    cy.visit(`/u/${userId}`) // user's profile page
+      .get('body')
+      .should('contain', track.name)
+      .should('not.contain', playlist.name);
   });
 });
