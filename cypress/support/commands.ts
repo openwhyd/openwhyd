@@ -62,7 +62,7 @@ Cypress.Commands.add('postDummyTracks', (count, propOverrides = {}) => {
     const querystring = Object.entries(flattened)
       .map(
         ([param, value]) =>
-          `${encodeURIComponent(param)}=${encodeURIComponent(value)}`,
+          `${encodeURIComponent(param)}=${encodeURIComponent('' + value)}`,
       )
       .join('&');
     cy.request('GET', `/api/post?${querystring}`);

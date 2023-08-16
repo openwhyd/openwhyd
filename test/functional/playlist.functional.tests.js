@@ -38,9 +38,13 @@ describe('playlist', () => {
   beforeEach(() => {
     userRepository = inMemoryUserRepository([userNoPlaylist, userWithPlaylist]);
     imageRepository = inMemoryImageRepository();
+    const releasePlaylistPosts = async () => {
+      /* no implementation needed yet */
+    };
     ({ createPlaylist, deletePlaylist } = features({
       userRepository,
       imageRepository,
+      releasePlaylistPosts,
     }));
   });
 

@@ -11,6 +11,7 @@ const {
   userCollection: userRepository,
 } = require('../../../infrastructure/mongodb/UserCollection');
 const { ImageStorage } = require('../../../infrastructure/ImageStorage.js');
+const { unsetPlaylist } = require('../../../models/post.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -116,8 +117,14 @@ exports.Application = class Application {
     this._uploadSettings = options.uploadSettings;
 
     const imageRepository = new ImageStorage();
+    const releasePlaylistPosts = async (userId, playlistId) =>
+      new Promise((resolve) => unsetPlaylist(userId, playlistId, resolve));
 
-    this._features = makeFeatures({ userRepository, imageRepository });
+    this._features = makeFeatures({
+      userRepository,
+      imageRepository,
+      releasePlaylistPosts,
+    });
   }
 
   getExpressApp() {

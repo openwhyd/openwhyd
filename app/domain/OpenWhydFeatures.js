@@ -6,15 +6,21 @@
  * @typedef {import('../../app/domain/spi/UserRepository').UserRepository} UserRepository
  * @typedef {import('../../app/domain/spi/ImageRepository').ImageRepository} ImageRepository
  * @typedef {import('./api/Features').Features} Features
+ * @typedef {(userId: User["id"], playlistId: Playlist["id"]) => Promise<void>} ReleasePlaylistPosts
  */
 
 /**
  * @param {object} adapters
  * @param {UserRepository} adapters.userRepository
  * @param {ImageRepository} adapters.imageRepository
+ * @param {ReleasePlaylistPosts} adapters.releasePlaylistPosts
  * @returns {Features}
  */
-exports.makeFeatures = function ({ userRepository, imageRepository }) {
+exports.makeFeatures = function ({
+  userRepository,
+  imageRepository,
+  releasePlaylistPosts,
+}) {
   /**
    * @param {[user: User, playlist: Playlist]} params
    * @returns {Promise<Playlist>}
@@ -37,7 +43,7 @@ exports.makeFeatures = function ({ userRepository, imageRepository }) {
       await user.deletePlaylist(playlistId); // validates the operation, by checking that this playlist does exist => may throw "playlist not found"
       await userRepository.removePlaylist(user.id, playlistId);
       await imageRepository.deletePlaylistImage(user.id, playlistId);
-      // TODO: also release tracks from that playlist, cf postModel.unsetPlaylist()
+      await releasePlaylistPosts(userId, playlistId); // --> postModel.unsetPlaylist()
       // TODO: also delete the playlist from search index, cf searchModel.deletePlaylist()
       // TODO: after all that => delete exports.deletePlaylist() from app/models/user.js
     },
