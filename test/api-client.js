@@ -52,7 +52,7 @@ exports.signupAs = function signupAs(user, callback) {
         {
           ajax: 1,
           sTk: genuine.makeSignupToken(GENUINE_SIGNUP_SECRET, {
-            connection: { remoteAddress: '::ffff:127.0.0.1' },
+            connection: { remoteAddress: '::1' },
           }),
         },
         user,
