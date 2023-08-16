@@ -13,7 +13,6 @@ var searchModel = require('../models/search.js');
 var activityModel = require('../models/activity.js');
 var trackModel = require('../models/track.js');
 var notifModel = require('../models/notif.js');
-const uploadCtr = require('../controllers/uploadedFile.js');
 
 var config = require('../models/config.js');
 var NB_POSTS = config.nbPostsPerNewsfeedPage;
