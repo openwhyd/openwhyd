@@ -1,7 +1,6 @@
 //@ts-check
 
 const assert = require('assert');
-const { jestExpect: expect } = require('@jest/expect');
 const {
   mongodb,
   initMongoDb,
@@ -88,7 +87,7 @@ describe('MongoDB User Repository', function () {
 
     // Then all playlists are still there, except the deleted one
     const userAfter = await userRepository.getByUserId(userId);
-    expect(userAfter.playlists).toHaveLength(userBefore.playlists.length - 1);
-    expect(userAfter.playlists).not.toContain(playlistToDelete);
+    assert.equal(userAfter.playlists.length, userBefore.playlists.length - 1);
+    assert.equal(userAfter.playlists.includes(playlistToDelete), false);
   });
 });
