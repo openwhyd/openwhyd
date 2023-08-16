@@ -368,8 +368,7 @@ exports.delete = function (criteria, handler) {
               user._id + '_' + pl.id,
               pl.name,
             );
-            searchModel.deletePlaylist(user._id, pl.id, next);
-            // todo: delete playlist cover image file
+            searchModel.deletePlaylist(user._id, pl.id, next); // TODO: use new deletePlaylist use case, instead
           }
         })();
       // delete user
@@ -579,23 +578,6 @@ exports.setPlaylistImg = function(uId, plId, img, cb) {
 	});
 }
 */
-
-// TODO: delete this function
-exports.deletePlaylist = function (uId, plId, handler) {
-  fetch({ _id: uId }, function (err, user) {
-    var newPl = [];
-    user.pl = user.pl || [];
-    for (let i in user.pl)
-      if ('' + user.pl[i].id != '' + plId) newPl.push(user.pl[i]);
-    postModel.unsetPlaylist(uId, plId, function () {
-      user.pl = newPl;
-      exports.save(user, function () {
-        searchModel.deletePlaylist(uId, plId);
-        handler(plId);
-      });
-    });
-  });
-};
 
 // === USER PREFS
 

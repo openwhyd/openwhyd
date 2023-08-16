@@ -1,4 +1,5 @@
 //@ts-check
+
 /**
  * @typedef {import('../../../app/domain/spi/UserRepository').UserRepository} UserRepository
  * @typedef {import('./types').UserDocument} UserDocument
@@ -8,6 +9,7 @@
 
 const User = require('../../domain/user/User');
 const mongodb = require('../../models/mongodb');
+// const searchModel = require('../../models/search');
 
 /**
  * MongoDB implementation of the UserRepository interface.
@@ -32,6 +34,7 @@ exports.userCollection = {
       { _id: mongodb.ObjectId(userId) },
       { $pull: { pl: { id: playlistId } } },
     );
+    // searchModel.deletePlaylist(userId, playlistId); // TODO: implement this with Algolia search provider
   },
 };
 

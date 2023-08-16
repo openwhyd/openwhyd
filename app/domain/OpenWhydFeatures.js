@@ -41,10 +41,9 @@ exports.makeFeatures = function ({
     deletePlaylist: async (userId, playlistId) => {
       const user = await userRepository.getByUserId(userId);
       await user.deletePlaylist(playlistId); // validates the operation, by checking that this playlist does exist => may throw "playlist not found"
-      await userRepository.removePlaylist(user.id, playlistId);
+      await userRepository.removePlaylist(user.id, playlistId); // removes from mongodb + search index
       await imageRepository.deletePlaylistImage(user.id, playlistId);
       await releasePlaylistPosts(userId, playlistId); // --> postModel.unsetPlaylist()
-      // TODO: also delete the playlist from search index, cf searchModel.deletePlaylist()
       // TODO: after all that => delete exports.deletePlaylist() from app/models/user.js
     },
   };
