@@ -30,6 +30,11 @@ declare namespace Cypress {
     /**
      * Login as the admin user defined in initdb_testing.js
      */
-    postDummyTracks(count: number): Chainable;
+    postDummyTracks(
+      count: number,
+      propOverrides?: Partial<
+        import('../../app/infrastructure/mongodb/types.js').PostDocument
+      >,
+    ): Chainable;
   }
 }

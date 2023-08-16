@@ -3,6 +3,7 @@
  * @typedef {import('../../../app/domain/spi/UserRepository').UserRepository} UserRepository
  * @typedef {import('../../../app/domain/spi/UserRepository').GetByUserId} GetByUserId
  * @typedef {import('../../../app/domain/spi/UserRepository').InsertPlaylist} InsertPlaylist
+ * @typedef {import('../../../app/domain/spi/UserRepository').RemovePlaylist} RemovePlaylist
  * @typedef {import('../../../app/domain/user/types').User} UserType
  */
 
@@ -26,9 +27,15 @@ exports.inMemoryUserRepository = function (users) {
     /**
      * @type {InsertPlaylist}
      */
-    insertPlaylist: (userId, playlist) => {
+    insertPlaylist: async (userId, playlist) => {
       userRepository.get(userId).playlists.push(playlist);
-      return Promise.resolve();
+    },
+    /**
+     * @type {RemovePlaylist}
+     */
+    removePlaylist: async (userId, playlistId) => {
+      const user = userRepository.get(userId);
+      user.playlists = user.playlists.filter((pl) => pl.id !== playlistId);
     },
   };
 };

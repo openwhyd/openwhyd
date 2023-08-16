@@ -38,6 +38,9 @@ for (let i in dirsToCreate)
     //console.log("Did not create directory:", dirsToCreate[i]);
   }
 
+exports.getPlaylistImagePath = ({ uId, id }) =>
+  exports.config.uPlaylistDir + '/' + uId + '_' + id;
+
 // separate file prefix (path & name) and extension from file.path
 exports.splitFilePath = function (filepath) {
   var path = filepath.split('/');
@@ -70,9 +73,7 @@ exports.actualFilePath = function (filepath) {
 exports.deleteFile = function (_filepath) {
   const filepath = exports.actualFilePath(_filepath);
   console.log('deleting ' + filepath);
-  return fs.promises
-    .unlink(filepath)
-    .catch((err) => console.log(err, err.stack));
+  return fs.promises.unlink(filepath);
 };
 
 exports.renameTo = function (filename, toFilename, callback) {
@@ -97,7 +98,7 @@ exports.renameTo = function (filename, toFilename, callback) {
 		var os = fs.createWriteStream(actualToFilename);
 		util.pump(is, os, function(x) {
 			console.log("result", x);
-			exports.deleteFile(filename);
+			exports.deleteFile(filename).catch((err) => console.log(err, err.stack));
 			if (callback)
 				callback(toFilename);
 		});

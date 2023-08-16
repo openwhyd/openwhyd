@@ -23,20 +23,20 @@ var defaultOptions = {
 
 /**
  * @param {{ filepath: string, mimetype:string, name: string }} file
- * @param {{ thumbDims?: string, keepOriginal?: boolean }} options
+ * @param {{ thumbDims?: string}} options
  */
 function processFile(file, options, callback) {
   const { filepath, mimetype, name } = file ?? {};
   console.log(
     '[upload] processFile',
     { filepath, mimetype, name },
-    { thumbDims: options.thumbDims, keepOriginal: options.keepOriginal },
+    { thumbDims: options.thumbDims },
   );
   if (!file || !filepath)
     return callback({ error: 'Error during file upload, please try again.' });
   else if (!mimetype || mimetype.indexOf('image/') != 0) {
     console.log('[upload] file is not an image => deleting file');
-    uploadCtr.deleteFile(filepath);
+    uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
     return callback({
       error: 'Only images are supported for upload, for now.',
     });
@@ -52,7 +52,7 @@ function processFile(file, options, callback) {
 
     const whenDone = () => {
       console.log('[upload] done');
-      if (!options.keepOriginal) uploadCtr.deleteFile(filepath);
+      uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
       callback(result);
     };
 
@@ -78,8 +78,7 @@ function processFile(file, options, callback) {
         genThumb(thumbWidth, thumbHeight, function (thumbFile) {
           console.log('[upload] generated thumb', { thumbDim, thumbFile });
           result.thumbs[/*dims*/ thumbDim] = uploadCtr.cleanFilePath(thumbFile);
-          if (!options.keepOriginal)
-            result.path = result.thumbs[/*dims*/ thumbDim];
+          result.path = result.thumbs[/*dims*/ thumbDim];
           if (--remaining == 0) whenDone();
         });
       }
@@ -93,22 +92,18 @@ exports.controller = function (req, requestParams, res) {
   req.logToConsole('upload.controller', requestParams);
 
   var user = req.checkLogin(res);
-  if (!user) return;
+  if (!user) return; // Note: we may want to send a response in that case too
 
-  //var form = new formidable.IncomingForm();
-  //form.uploadDir = settings.uploadDir;
-  //form.keepExtensions = settings.keepExtensions;
-  //form.parse(req, function(err, postParams, files) {
   var postParams = req.body;
   var files = req.files;
   console.log('[upload] postParams', postParams);
-  //if (err) {
-  //	console.log("upload.controller error", err.stack);
-  //	return res.legacyRender({error:err});
-  //}
 
-  if (postParams && postParams.id && postParams.action == 'delete')
-    return uploadCtr.deleteFile(settings.uploadDir + '/' + postParams.id);
+  if (postParams && postParams.id && postParams.action == 'delete') {
+    return uploadCtr
+      .deleteFile(settings.uploadDir + '/' + postParams.id)
+      .catch((err) => console.log(err, err.stack));
+    // Note: we may want to send a response in that case too
+  }
 
   var results = {},
     remaining = Object.keys(files).length;
@@ -119,18 +114,13 @@ exports.controller = function (req, requestParams, res) {
 
   var processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
-      if (result && result.error) console.log('[upload] error:', result.error);
       results[i] = result;
       if (--remaining == 0) {
         console.log('[upload] controller completed', result);
         res.legacyRender(results, null, { 'content-type': 'text/plain' });
-        /*
-					res.writeHead(200, {'content-type': 'text/plain'});
-					res.end('received upload\nreceived\n');*/
       }
     });
   };
 
   for (let i in files) processAndPushFile(i);
-  //});
 };

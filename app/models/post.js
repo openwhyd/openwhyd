@@ -446,6 +446,7 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
   );
 };
 
+/** Delete a user's playlist */
 exports.unsetPlaylist = function (uId, plId, handler) {
   console.log('post.unsetPlaylist', uId, plId);
   var criteria = {
@@ -458,7 +459,7 @@ exports.unsetPlaylist = function (uId, plId, handler) {
     update,
     { multi: true },
     function (err, res) {
-      if (err) console.log(err);
+      if (err) console.log('post.unsetPlaylist =>', err);
       if (handler) handler(res);
     },
   );
