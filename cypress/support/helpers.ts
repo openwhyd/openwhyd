@@ -46,13 +46,28 @@ export function changePlaylistImage({ imagePath }) {
   cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
 }
 
-export function deletePlaylist() {
+export function goToPlaylist({ userId, playlistId }) {
+  return cy.visit(`/u/${userId}/playlist/${playlistId}`);
+}
+
+export function deletePlaylist({ userId, playlistId }) {
+  goToPlaylist({ userId, playlistId });
   cy.get('.btnEditPlaylist').contains('Edit').click();
   cy.get('body')
     .contains('Delete playlist')
     .should('be.visible') // to wait for upload scripts to load and init propertly on the page
     .click();
   cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
+}
+
+export function playlistShouldExist({ userId, playlistName }) {
+  cy.visit(`/u/${userId}/playlists`);
+  return cy.get('body').contains(playlistName).should('be.visible');
+}
+
+export function playlistShouldNotExist({ userId, playlistName }) {
+  cy.visit(`/u/${userId}/playlists`);
+  return cy.get('body').should('not.contain', playlistName);
 }
 
 export function playlistShouldHaveCustomImage({ userId, playlistId }) {

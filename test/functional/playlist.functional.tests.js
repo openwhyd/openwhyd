@@ -3,40 +3,49 @@
 /**
  * @typedef {import('../../app/domain/api/Features').CreatePlaylist} CreatePlaylist
  * @typedef {import('../../app/domain/spi/UserRepository').UserRepository} UserRepository
+ * @typedef {import('../../app/domain/spi/ImageRepository').ImageRepository} ImageRepository
  */
 const assert = require('assert');
 
-const { features } = require('../../app/domain/OpenWhydFeatures');
+const { makeFeatures: features } = require('../../app/domain/OpenWhydFeatures');
 const User = require('../../app/domain/user/User');
 
 const { inMemoryUserRepository } = require('./stubs/InMemoryUserRepository');
+const {
+  inMemoryImageRepository,
+} = require('./stubs/InMemoryImageRepository.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe('playlist', () => {
-  let userNoPlaylist;
-
+  // test data
   const lastExistingPlaylistId = 42;
-  let userWithPlaylist;
+  const userNoPlaylist = new User('userNoPlaylist', []);
+  const userWithPlaylist = new User('userWithPlaylist', [
+    { id: lastExistingPlaylistId, name: 'existingPlaylist' },
+  ]);
 
   /**
    * @type {CreatePlaylist}
    */
-  let createPlaylist;
+  let createPlaylist, deletePlaylist;
 
-  /**
-   * @type {UserRepository}
-   */
+  /** @type {UserRepository} */
   let userRepository;
 
+  /** @type {ImageRepository} */
+  let imageRepository;
+
   beforeEach(() => {
-    userNoPlaylist = new User('userNoPlaylist', []);
-    userWithPlaylist = new User('userWithPlaylist', [
-      { id: lastExistingPlaylistId, name: 'existingPlaylist' },
-    ]);
-
     userRepository = inMemoryUserRepository([userNoPlaylist, userWithPlaylist]);
-
-    ({ createPlaylist } = features(userRepository));
+    imageRepository = inMemoryImageRepository();
+    const releasePlaylistPosts = async () => {
+      /* no implementation needed yet */
+    };
+    ({ createPlaylist, deletePlaylist } = features({
+      userRepository,
+      imageRepository,
+      releasePlaylistPosts,
+    }));
   });
 
   it('should be created for a user with no playlist', async () => {
@@ -70,5 +79,34 @@ describe('playlist', () => {
 
     assert.equal(savedPlaylist.id, playlist.id);
     assert.equal(savedPlaylist.name, playlist.name);
+  });
+
+  it('should be deleted', async () => {
+    const initialPlaylistsCount = userWithPlaylist.playlists.length;
+    const userBefore = await userRepository.getByUserId(userWithPlaylist.id);
+    assert.equal(userBefore.playlists.length, initialPlaylistsCount);
+
+    await deletePlaylist(userWithPlaylist.id, userWithPlaylist.playlists[0].id);
+
+    const userAfter = await userRepository.getByUserId(userWithPlaylist.id);
+    assert.equal(userAfter.playlists.length, initialPlaylistsCount - 1);
+  });
+
+  it('should delete the associated image', async () => {
+    const userId = userWithPlaylist.id;
+    const playlistId = userWithPlaylist.playlists[0].id;
+    const imageUrlBefore = await imageRepository.getImageUrlForPlaylist(
+      userId,
+      playlistId,
+    );
+    assert.equal(typeof imageUrlBefore, 'string');
+
+    await deletePlaylist(userWithPlaylist.id, userWithPlaylist.playlists[0].id);
+
+    const imageUrlAfter = await imageRepository.getImageUrlForPlaylist(
+      userId,
+      playlistId,
+    );
+    assert.equal(imageUrlAfter, null);
   });
 });

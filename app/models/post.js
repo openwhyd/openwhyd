@@ -13,7 +13,6 @@ var searchModel = require('../models/search.js');
 var activityModel = require('../models/activity.js');
 var trackModel = require('../models/track.js');
 var notifModel = require('../models/notif.js');
-const uploadCtr = require('../controllers/uploadedFile.js');
 
 var config = require('../models/config.js');
 var NB_POSTS = config.nbPostsPerNewsfeedPage;
@@ -461,10 +460,6 @@ exports.unsetPlaylist = function (uId, plId, handler) {
     { multi: true },
     function (err, res) {
       if (err) console.log('post.unsetPlaylist =>', err);
-      else {
-        const imgPath = uploadCtr.getPlaylistImagePath({ uId, id: plId });
-        uploadCtr.deleteFile(imgPath).catch(/* don't log if it has no image */);
-      }
       if (handler) handler(res);
     },
   );

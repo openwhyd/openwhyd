@@ -6,10 +6,12 @@ const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
-const { features: makeFeatures } = require('../../../domain/OpenWhydFeatures');
+const { makeFeatures } = require('../../../domain/OpenWhydFeatures');
 const {
   userCollection: userRepository,
 } = require('../../../infrastructure/mongodb/UserCollection');
+const { ImageStorage } = require('../../../infrastructure/ImageStorage.js');
+const { unsetPlaylist } = require('../../../models/post.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -114,10 +116,15 @@ exports.Application = class Application {
     this._expressApp = null; // will be lazy-loaded by getExpressApp()
     this._uploadSettings = options.uploadSettings;
 
-    /**
-     * @type {Features}
-     */
-    this._features = makeFeatures(userRepository);
+    const imageRepository = new ImageStorage();
+    const releasePlaylistPosts = async (userId, playlistId) =>
+      new Promise((resolve) => unsetPlaylist(userId, playlistId, resolve));
+
+    this._features = makeFeatures({
+      userRepository,
+      imageRepository,
+      releasePlaylistPosts,
+    });
   }
 
   getExpressApp() {

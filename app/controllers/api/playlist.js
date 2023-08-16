@@ -9,6 +9,12 @@ var userModel = require('../../models/user.js');
 var notifModel = require('../../models/notif.js');
 var uploadCtr = require('../uploadedFile.js');
 
+/** @typedef {import('../../domain/OpenWhydFeatures.js').Features} Features */
+/** @typedef {Record<string, unknown>} ReqParams */
+/** @typedef {{ error?: string } | undefined} ActionCallbackParam */
+/** @typedef {(ActionCallbackParam) => void} ActionCallback */
+
+/** @type {Record<string, (p: ReqParams, callback: ActionCallback, features: Features) => void>} */
 exports.actions = {
   sendToUsers: notifModel.sendPlaylistToUsers,
   /**
@@ -21,21 +27,35 @@ exports.actions = {
   rename: function (p, callback) {
     userModel.renamePlaylist(p.uId, p.id, p.name, callback);
   },
-  delete: function (p, callback) {
-    userModel.deletePlaylist(p.uId, p.id, callback);
+  delete: function ({ uId, id: playlistId }, callback, { deletePlaylist }) {
+    if (typeof uId !== 'string') return callback({ error: 'invalid uId' });
+    if (Number.isNaN(playlistId))
+      return callback({ error: 'invalid playlist id' });
+    deletePlaylist(uId, Number(playlistId))
+      .then(() => callback(playlistId))
+      .catch((err) => callback({ error: err.message || err }));
   },
   setOrder: function (p, cb) {
     if (!p || !p.order || !p.id) cb({ error: 'missing parameters' });
+    if (!Array.isArray(p.order)) cb({ error: 'invalid order' });
     else postModel.setPlaylistOrder(p.uId, p.id, p.order, cb);
   },
-  update: function (p, cb) {
-    if (p && p.img) {
-      const imgPath = uploadCtr.getPlaylistImagePath(p);
-      uploadCtr.deleteFile(imgPath).catch(() => {
-        /* nothing to do if file did not exist */
-      });
-      userModel.fetchPlaylist(p.uId, p.id, function (pl) {
-        /*
+  update: function ({ uId, id, img }, cb) {
+    if (typeof img !== 'string') {
+      return cb({ error: 'invalid img parameter' });
+    }
+    if (typeof uId !== 'string') {
+      return cb({ error: 'invalid uId parameter' });
+    }
+    if (typeof id !== 'string') {
+      return cb({ error: 'invalid id parameter' });
+    }
+    const imgPath = uploadCtr.getPlaylistImagePath({ uId, id });
+    uploadCtr.deleteFile(imgPath).catch(() => {
+      /* nothing to do if file did not exist */
+    });
+    userModel.fetchPlaylist(uId, id, function (pl) {
+      /*
         if (pl && pl.img && pl.img.indexOf("blank") == -1) {
           console.log("deleting previous playlist pic: " + pl.img);
           uploadCtr.deleteFile(pl.img).catch((err) => console.log(err, err.stack));
@@ -43,13 +63,12 @@ exports.actions = {
         function actualUpdate(newFilename) {
           userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
         }*/
-        if (p.img.indexOf('blank') == -1)
-          uploadCtr.renameTo(p.img, imgPath, function () {
-            cb(pl);
-          });
-        else cb(pl);
-      });
-    } else cb({ error: 'missing parameters' });
+      if (img.indexOf('blank') == -1)
+        uploadCtr.renameTo(img, imgPath, function () {
+          cb(pl);
+        });
+      else cb(pl);
+    });
   },
 };
 

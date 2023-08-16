@@ -7,4 +7,5 @@ export interface User {
   id: string;
   playlists: Playlist[];
   addNewPlaylist: (playlistName: string) => Promise<[User, Playlist]>;
+  deletePlaylist: (playlistId: number) => Promise<User>;
 }
