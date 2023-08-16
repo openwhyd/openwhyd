@@ -461,10 +461,6 @@ exports.unsetPlaylist = function (uId, plId, handler) {
     { multi: true },
     function (err, res) {
       if (err) console.log('post.unsetPlaylist =>', err);
-      else {
-        const imgPath = uploadCtr.getPlaylistImagePath({ uId, id: plId });
-        uploadCtr.deleteFile(imgPath).catch(/* don't log if it has no image */);
-      }
       if (handler) handler(res);
     },
   );
