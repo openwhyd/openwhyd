@@ -1,13 +1,11 @@
 var assert = require('assert');
 var request = require('request'); // TODO: promisify it
-var genuine = require('../app/genuine.js'); // for signup
 
 var { URL_PREFIX } = require('./fixtures.js');
 
-// AUTH
+const EXPECTED_RTK = 7; // cf app/controllers/invite.js
 
-const GENUINE_SIGNUP_SECRET =
-  process.env.WHYD_GENUINE_SIGNUP_SECRET ?? 'whatever';
+// AUTH
 
 function extractCookieJar(response) {
   const jar = request.jar();
@@ -43,7 +41,14 @@ exports.loginAs = function loginAs(user, callback) {
   });
 };
 
-exports.signupAs = function signupAs(user, callback) {
+exports.signupAs = async function signupAs(user, callback) {
+  const body = await new Promise((resolve, reject) =>
+    request.get(
+      { url: `${URL_PREFIX}/api/signup/rTk/${EXPECTED_RTK}` },
+      (error, response, body) => (error ? reject(error) : resolve(body)),
+    ),
+  );
+  const sTk = body.split('value="').pop().split('"')[0];
   request.post(
     {
       url: `${URL_PREFIX}/register`,
@@ -51,9 +56,7 @@ exports.signupAs = function signupAs(user, callback) {
       body: Object.assign(
         {
           ajax: 1,
-          sTk: genuine.makeSignupToken(GENUINE_SIGNUP_SECRET, {
-            connection: { remoteAddress: '::ffff:127.0.0.1' },
-          }),
+          sTk,
         },
         user,
       ),
