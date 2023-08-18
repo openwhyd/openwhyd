@@ -30,9 +30,9 @@ lint: fetch-deps build ## Run static code checks
 	npm run lint:fix
 
 docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker container
-	docker-compose exec web npm run test-reset
+	docker-compose exec -T web npm run test-reset
 	docker-compose restart web
-	./scripts/wait-for-http-server.sh 8080
+	docker-compose exec -T web ./scripts/wait-for-http-server.sh 8080
 
 test: fetch-deps build lint ## Run tests against a local db
 	# 1. tests that don't need a database
