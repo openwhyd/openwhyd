@@ -50,9 +50,9 @@ $ make test
 If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
 
 ```sh
-$ docker-compose up --build --detach    # will start openwhyd's web server and database in the background
-$ npm run docker:seed                   # will clear the database
-$ node scripts/import-from-prod.js test # will import 21 posts from https://openwhyd.org/test
+$ docker-compose up --build --detach    # starts openwhyd's web server and database in the background
+$ make docker-seed                      # clears the database and restarts openwhyd's container
+$ node scripts/import-from-prod.js test # imports 21 posts from https://openwhyd.org/test
 ```
 
 After that, you will be able to sign in as an administrator using the credentials returned by the script.

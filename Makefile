@@ -29,6 +29,11 @@ lint: fetch-deps build ## Run static code checks
 	npm run lint:format
 	npm run lint:fix
 
+docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker container
+	docker-compose exec web npm run test-reset
+	docker-compose restart web
+	./scripts/wait-for-http-server.sh 8080
+
 test: fetch-deps build lint ## Run tests against a local db
 	# 1. tests that don't need a database
 	docker compose stop
@@ -75,4 +80,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: fetch-deps dev start restart restart-to-latest build lint test test-approval test-in-docker ci help
+.PHONY: fetch-deps dev start restart restart-to-latest build lint docker-seed test test-approval test-in-docker ci help
