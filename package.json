@@ -48,7 +48,7 @@
     "coverage:clear": "rm -rf .nyc_output coverage",
     "coverage:report": "npx --yes nyc report --reporter=text --reporter=lcov # stores the coverage report in coverage/lcov.info",
     "coverage:summary": "npx --yes nyc report --reporter=text-summary --reporter=lcov # stores the coverage report in coverage/lcov.info",
-    "docker:run": "make docker-seed && docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run $@",
+    "docker:run": "docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run $@",
     "docker:test": "make test-in-docker",
     "lint:jsdoc-typing": "npx --yes tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`",
     "lint:typescript": "npx --yes tsc --noEmit --moduleResolution node --skipLibCheck",

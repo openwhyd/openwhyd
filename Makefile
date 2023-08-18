@@ -60,6 +60,7 @@ test-approval: fetch-deps build lint ## Run approval tests against a local db
 
 test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker compose up --detach --build mongo web
+	make docker-seed
 	npm run docker:run test:functional
 	npm run docker:run test:unit
 	npm run docker:run test:integration
