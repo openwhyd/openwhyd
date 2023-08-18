@@ -52,6 +52,15 @@ test-approval: fetch-deps build lint ## Run approval tests against a local db
 	npm run test:approval:posting:start
 	docker compose stop
 
+test-in-docker: ## Run tests in the Openwhyd's docker container
+	docker compose up --detach --build mongo web
+	npm run docker:run test:functional
+	npm run docker:run test:unit
+	npm run docker:run test:integration
+	npm run docker:run test:api:raw
+	npm run test:cypress:docker
+	docker compose stop
+
 ci: ## Run automated tests defined in GitHub Actions CI workflow.
 	@echo 'ℹ️  Prerequisite: https://github.com/nektos/act#installation-through-package-managers'
 	@echo '{"head_commit": {"message": "build latest"}}' >github_event.tmp
@@ -64,4 +73,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: fetch-deps dev start restart restart-to-latest build lint test test-approval ci help
+.PHONY: fetch-deps dev start restart restart-to-latest build lint test test-approval test-in-docker ci help
