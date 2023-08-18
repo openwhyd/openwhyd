@@ -66,7 +66,7 @@ test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:integration
 	docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:api:raw
 	echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
-	npm run test:cypress:docker
+	. ./.env-docker && npm run test:cypress
 	docker compose stop
 
 ci: ## Run automated tests defined in GitHub Actions CI workflow.
