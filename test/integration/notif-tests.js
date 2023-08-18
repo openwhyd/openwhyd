@@ -1,13 +1,5 @@
 //@ts-check
 
-const dbCreds = {
-  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || '27117',
-  mongoDbAuthUser: process.env['MONGODB_USER'],
-  mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
-};
-
 const consoleBackup = console.log;
 console.log = () => {
   // prevent mongodb from adding noise to stdout
@@ -18,6 +10,7 @@ const assert = require('assert');
 const mongodb = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
 
+const { initMongoDb } = require('../mongodb-client.js');
 const { ADMIN_USER, cleanup } = require('../fixtures.js');
 
 const { ObjectId } = mongodb;
@@ -61,9 +54,7 @@ var COMMENTS = USERS.map(function (u) {
 // test helpers
 
 async function initDb() {
-  await util.promisify(mongodb.init)(dbCreds);
-  // const initScript = './config/initdb.js';
-  // await mongodb.runShellScript(require('fs').readFileSync(initScript))
+  const mongodb = await initMongoDb();
   await util.promisify(mongodb.cacheCollections)();
   await util.promisify(mongodb.cacheUsers)();
   console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
