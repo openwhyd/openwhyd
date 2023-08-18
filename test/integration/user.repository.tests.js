@@ -1,9 +1,8 @@
 //@ts-check
 
 const assert = require('assert');
+const { initMongoDb } = require('../mongodb-client');
 const {
-  mongodb,
-  initMongoDb,
   cleanup,
   readMongoDocuments,
   insertUser,
@@ -15,7 +14,11 @@ const COMPLETE_USER_JSON =
   __dirname + '/mongodb/fixtures/complete.users.json.js';
 
 describe('MongoDB User Repository', function () {
-  before(initMongoDb);
+  let mongodb;
+
+  before(async () => {
+    mongodb = await initMongoDb();
+  });
   beforeEach(cleanup);
 
   it('should throw exception when user is invalid', async () => {
