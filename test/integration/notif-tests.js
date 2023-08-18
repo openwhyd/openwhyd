@@ -5,7 +5,6 @@ console.log = () => {
   // prevent mongodb from adding noise to stdout
 };
 
-const util = require('util');
 const assert = require('assert');
 const mongodb = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
@@ -54,9 +53,7 @@ var COMMENTS = USERS.map(function (u) {
 // test helpers
 
 async function initDb() {
-  const mongodb = await initMongoDb();
-  await util.promisify(mongodb.cacheCollections)();
-  await util.promisify(mongodb.cacheUsers)();
+  await initMongoDb();
   console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
 }
 
