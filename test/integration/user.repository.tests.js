@@ -2,16 +2,25 @@
 
 const assert = require('assert');
 const { initMongoDb } = require('../mongodb-client');
+const { cleanup } = require('../fixtures.js');
 const {
-  cleanup,
   readMongoDocuments,
-  insertUser,
-} = require('./mongodb/mongo.integration.base.tests');
+  insertTestData,
+} = require('../approval-tests-helpers');
 const {
   userCollection: userRepository,
 } = require('../../app/infrastructure/mongodb/UserCollection');
+
 const COMPLETE_USER_JSON =
   __dirname + '/mongodb/fixtures/complete.users.json.js';
+
+const MONGODB_URL =
+  process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
+
+async function insertUser(user) {
+  await insertTestData(MONGODB_URL, { user: user });
+  return user[0]._id;
+}
 
 describe('MongoDB User Repository', function () {
   let mongodb;
