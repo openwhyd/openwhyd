@@ -1,3 +1,4 @@
+// Usage:
 // $ ALGOLIA_APP_ID="XXXXX" ALGOLIA_API_KEY="YYYYY" npx jest test/3rd-party/algoliasearch.test.js
 
 const util = require('util');
@@ -20,8 +21,7 @@ describe('Algolia search wrapper', () => {
   beforeAll(async function () {
     expect(process.env).toHaveProperty('ALGOLIA_APP_ID');
     expect(process.env).toHaveProperty('ALGOLIA_API_KEY');
-    process.appParams = { searchModule: 'searchAlgolia' };
-    searchModel = require('../../app/models/search.js');
+    searchModel = require('../../app/models/searchAlgolia.js');
     await cleanUp();
   }, 20 * 1000); // override jest timeout, to leave algolia enough time to apply requested changes
 
