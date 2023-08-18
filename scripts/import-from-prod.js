@@ -1,9 +1,8 @@
 // Import tracks from a user profile on openwhyd.org, to the local test db.
 //
 // Usage:
-//   $ npm run docker:seed  # will clear the database and create the admin user
-//   $ node scripts/import-from-prod.js adrien
-//   # ... will import 21 posts from https://openwhyd.org/adrien
+//   $ make docker-seed                         # clears the database and creates the admin user
+//   $ node scripts/import-from-prod.js adrien  # imports 21 posts from https://openwhyd.org/adrien
 
 const request = require('request');
 const mongodb = require('mongodb');
