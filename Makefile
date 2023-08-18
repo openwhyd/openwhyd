@@ -61,10 +61,10 @@ test-approval: fetch-deps build lint ## Run approval tests against a local db
 test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker compose up --detach --build mongo web
 	make docker-seed
-	npm run docker:run test:functional
-	npm run docker:run test:unit
-	npm run docker:run test:integration
-	npm run docker:run test:api:raw
+	docker-compose exec web npm run test:functional
+	docker-compose exec web npm run test:unit
+	docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:integration
+	docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:api:raw
 	echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
 	npm run test:cypress:docker
 	docker compose stop
