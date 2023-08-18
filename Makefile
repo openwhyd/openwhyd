@@ -43,6 +43,7 @@ test: fetch-deps build lint ## Run tests against a local db
 	npm run test:cypress
 	# 4. release services
 	docker compose stop
+	echo "ℹ️ To run approval tests: $ make test-approval"
 
 test-approval: fetch-deps build lint ## Run approval tests against a local db
 	docker compose stop
@@ -58,6 +59,7 @@ test-in-docker: ## Run tests in the Openwhyd's docker container
 	npm run docker:run test:unit
 	npm run docker:run test:integration
 	npm run docker:run test:api:raw
+	echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
 	npm run test:cypress:docker
 	docker compose stop
 
