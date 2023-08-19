@@ -28,7 +28,7 @@ Page.prototype.find = function (regEx) {
 
 //==============================================================================
 Page.prototype.getTitle = function () {
-  return TITLE_REG.test(this.text) ? RegExp.$1.toString('utf8') : '';
+  return (TITLE_REG.exec(this.text) || ['', ''])[1].toString('utf8');
 };
 
 //==============================================================================
