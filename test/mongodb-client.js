@@ -17,8 +17,17 @@ const dbCreds = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
 };
 
-exports.initMongoDb = async () => {
+exports.initMongoDb = async ({ silent } = { silent: false }) => {
+  const consoleBackup = console.log;
+  if (silent) {
+    console.log = () => {
+      /* prevent mongodb from adding noise to stdout */
+    };
+  }
   await util.promisify(mongodb.init)(dbCreds);
   await mongodb.initCollections();
+  if (silent) {
+    console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
+  }
   return mongodb;
 };

@@ -49,9 +49,9 @@ exports.TEST_USER = {
 };
 
 // Call this before each test to prevent side effects between tests
-exports.cleanup = async function () {
+exports.cleanup = async function ({ silent } = { silent: false }) {
   this.timeout(4000);
-  console.warn('🧹 Cleaning up test db...');
+  if (!silent) console.warn('🧹 Cleaning up test db...');
   const envFile = process.env.START_WITH_ENV_FILE
     ? await exports.loadEnvVars(process.env.START_WITH_ENV_FILE)
     : {};
@@ -61,6 +61,7 @@ exports.cleanup = async function () {
       MONGODB_HOST: envFile.MONGODB_HOST || process.env.MONGODB_HOST,
       MONGODB_PORT: envFile.MONGODB_PORT || process.env.MONGODB_PORT,
     },
+    silent,
   });
 
   // resetDbProcess.stdout.on('data', (data) => {

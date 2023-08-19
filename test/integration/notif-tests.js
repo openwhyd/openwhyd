@@ -1,10 +1,5 @@
 //@ts-check
 
-const consoleBackup = console.log;
-console.log = () => {
-  // prevent mongodb from adding noise to stdout
-};
-
 const assert = require('assert');
 const notifModel = require('../../app/models/notif.js');
 
@@ -51,9 +46,8 @@ var COMMENTS = USERS.map(function (u) {
 // test helpers
 
 async function initDb() {
-  mongodb = await initMongoDb();
+  mongodb = await initMongoDb({ silent: true });
   db = mongodb.collections;
-  console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
   USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
 }
 
@@ -120,7 +114,8 @@ async function addAllNotifs() {
 describe('notifications', function () {
   this.timeout(5000);
 
-  before(cleanup); // reset database state and seed fixtures (including ADMIN_USER)
+  // reset database state and seed fixtures (including ADMIN_USER)
+  before(cleanup.bind(this, { silent: true }));
 
   before(initDb);
 

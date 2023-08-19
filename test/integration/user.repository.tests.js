@@ -25,9 +25,10 @@ describe('MongoDB User Repository', function () {
   let mongodb;
 
   before(async () => {
-    mongodb = await initMongoDb();
+    mongodb = await initMongoDb({ silent: true });
   });
-  beforeEach(cleanup);
+
+  beforeEach(cleanup.bind(this, { silent: true }));
 
   it('should throw exception when user is invalid', async () => {
     try {
