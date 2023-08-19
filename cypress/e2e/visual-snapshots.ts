@@ -1,7 +1,7 @@
 // This suite intends to navigate through all pages, to detect visual regressions.
 
 context('Visual Snapshots', () => {
-  if (!process.env.APPLITOOLS_API_KEY) {
+  if (!Cypress.env('APPLITOOLS_API_KEY')) {
     it.skip(`⚠ missing env var: APPLITOOLS_API_KEY => skipping`, () => {});
     return;
   }
