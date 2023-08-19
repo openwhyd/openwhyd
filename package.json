@@ -12,8 +12,7 @@
   "scripts": {
     "build": "scripts/transpile-bookmarklet.sh",
     "semantic-release": "semantic-release",
-    "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
-    "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
+    "postinstall": "cp node_modules/playemjs/dist/playem-*.js public/js/",
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
     "start:coverage": "npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts.start') $@",
     "start:coverage:no-clean": "npx --yes nyc --silent --no-clean $(node -p 'require(`./package.json`).scripts.start') $@",
