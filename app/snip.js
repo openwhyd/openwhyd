@@ -281,12 +281,7 @@ exports.removeDuplicates = function (array, keyFieldName) {
  * @returns {Obj[keyof Obj][]}
  */
 exports.objArrayToValueArray = function (array, attr) {
-  var list = [];
-  for (let i in array)
-    if (array[i] && array[i][attr])
-      // TODO: fix this line, cf line 217
-      list.push(array[i][attr]);
-  return list;
+  return array.map((item) => item?.[attr]).filter((item) => !!item);
 };
 
 exports.forEachArrayItem = function (array, handler, cb) {
