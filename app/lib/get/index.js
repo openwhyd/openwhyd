@@ -1,6 +1,5 @@
 // @ts-check
 
-var url = require('url');
 var http = require('http');
 var https = require('https');
 var path = require('path');
@@ -63,7 +62,7 @@ Page.prototype.getImages = function () {
 
 //==============================================================================
 function getPage(address, callback) {
-  var urlObj = url.parse(address);
+  var urlObj = new URL(address);
   var options = {
     host: urlObj.hostname,
     path: urlObj.pathname,
@@ -75,12 +74,13 @@ function getPage(address, callback) {
     .get(options, function (res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
-      if (typeof location !== 'string') {
-        callback(new Error('location header should be a string'));
-        return;
-      }
       res.on('error', callback);
       if (location) {
+        if (typeof location !== 'string') {
+          console.warn({ location });
+          callback(new Error('location header should be a string'));
+          return;
+        }
         options.path = location;
         // @ts-ignore
         http.get(options, arguments.callee).on('error', callback).end();
@@ -111,7 +111,7 @@ function getPage(address, callback) {
             } catch (e) {
               console.error(e);
             }
-          callback(null, new Page(urlObj.host, urlObj.path, text));
+          callback(null, new Page(urlObj.host, urlObj.pathname, text));
         });
       }
     })
@@ -134,7 +134,7 @@ getPage.Images = function (address, callback) {
 
 //==============================================================================
 getPage.Request = function (address, callback) {
-  var urlObj = url.parse(address);
+  var urlObj = new URL(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = {
     method: 'GET',
@@ -159,7 +159,7 @@ getPage.Request = function (address, callback) {
 
 //==============================================================================
 getPage.ContentType = function (address, callback) {
-  var urlObj = url.parse(address);
+  var urlObj = new URL(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = { method: 'GET', host: urlObj.hostname, path: urlObj.pathname };
   var contentType;
@@ -169,6 +169,7 @@ getPage.ContentType = function (address, callback) {
       var location = headers.Location || headers.location;
       if (location) {
         if (typeof location !== 'string') {
+          console.warn({ location });
           callback(new Error('location header should be a string'));
           return;
         }
