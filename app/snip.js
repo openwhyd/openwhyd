@@ -222,14 +222,15 @@ exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   return array;
 };
 
-/** @deprecated JavaScript now provides a cleaner way to do that. */
-exports.arrayToSet = function (array, value) {
-  var set = {};
-  for (let i in array)
-    if (array[i])
-      // TODO: remove this line
-      set[array[i]] = value !== undefined ? value : true;
-  return set;
+/**
+ * @template ItemType
+ * @template ValueType
+ * @param {ItemType[]} array
+ * @param {ValueType} value
+ * @returns {Record<ItemType, ValueType>}
+ */
+exports.arrayToSet = function (array, value = true) {
+  return array.reduce((acc, item) => ({ ...acc, [item]: value ?? true }), {});
 };
 
 exports.objArrayToSet = function (array, attr, val) {
