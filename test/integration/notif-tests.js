@@ -120,8 +120,9 @@ async function addAllNotifs() {
 describe('notifications', function () {
   this.timeout(5000);
 
-  before(initDb);
   before(cleanup); // reset database state and seed fixtures (including ADMIN_USER)
+
+  before(initDb);
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid
