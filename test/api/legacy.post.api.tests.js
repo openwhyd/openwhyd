@@ -7,8 +7,10 @@ const { START_WITH_ENV_FILE } = process.env;
 const { startOpenwhydServer } = require('../approval-tests-helpers.js');
 
 describe(`post api`, function () {
-  before(cleanup); // to prevent side effects between test suites (there are side effects between tests in this file...)
+  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites (there are side effects between tests in this file...)
+
   let context = {};
+
   before(async () => {
     if (START_WITH_ENV_FILE) {
       context.serverProcess = await startOpenwhydServer({
@@ -16,6 +18,7 @@ describe(`post api`, function () {
       });
     }
   });
+
   after(async () => {
     await context.serverProcess?.exit();
   });
@@ -163,7 +166,8 @@ describe(`post api - independent tests`, function () {
   let context = {};
 
   // to prevent side effects between tests
-  beforeEach(cleanup);
+  beforeEach(cleanup.bind(this, { silent: true }));
+
   beforeEach(async function () {
     if (START_WITH_ENV_FILE) {
       context.serverProcess = await startOpenwhydServer({

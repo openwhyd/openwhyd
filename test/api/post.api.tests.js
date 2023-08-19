@@ -21,7 +21,7 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup); // to prevent side effects between test suites
+  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
 
   before(async () => {
     await openwhyd.setup();

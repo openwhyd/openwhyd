@@ -20,12 +20,12 @@ const genSecureUser = (() => {
   });
 })();
 
-describe('auth api', () => {
+describe('auth api', function () {
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup);
+  before(cleanup.bind(this, { silent: true }));
 
   before(async () => {
     await openwhyd.setup();

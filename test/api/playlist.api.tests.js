@@ -12,7 +12,8 @@ describe(`playlist api`, function () {
   let jar;
   let context = {};
 
-  before(cleanup); // to prevent side effects between test suites
+  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
+
   before(async () => {
     if (START_WITH_ENV_FILE) {
       context.serverProcess = await startOpenwhydServer({
@@ -20,9 +21,11 @@ describe(`playlist api`, function () {
       });
     }
   });
+
   after(async () => {
     await context.serverProcess?.exit();
   });
+
   beforeEach(
     async () => ({ jar } = await util.promisify(api.loginAs)(ADMIN_USER)),
     /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.

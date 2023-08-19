@@ -1,22 +1,34 @@
 //@ts-check
 
 const assert = require('assert');
+const { initMongoDb } = require('../mongodb-client'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE env vars
+const { cleanup } = require('../fixtures.js');
 const {
-  mongodb,
-  initMongoDb,
-  cleanup,
   readMongoDocuments,
-  insertUser,
-} = require('./mongodb/mongo.integration.base.tests');
+  insertTestData,
+} = require('../approval-tests-helpers');
 const {
   userCollection: userRepository,
 } = require('../../app/infrastructure/mongodb/UserCollection');
-const COMPLETE_USER_JSON =
-  __dirname + '/mongodb/fixtures/complete.users.json.js';
+
+const COMPLETE_USER_JSON = __dirname + '/test-data/complete.users.json.js';
+
+const MONGODB_URL =
+  process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
+
+async function insertUser(user) {
+  await insertTestData(MONGODB_URL, { user: user });
+  return user[0]._id;
+}
 
 describe('MongoDB User Repository', function () {
-  before(initMongoDb);
-  beforeEach(cleanup);
+  let mongodb;
+
+  before(async () => {
+    mongodb = await initMongoDb({ silent: true });
+  });
+
+  beforeEach(cleanup.bind(this, { silent: true }));
 
   it('should throw exception when user is invalid', async () => {
     try {

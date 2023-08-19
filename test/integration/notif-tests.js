@@ -1,48 +1,33 @@
 //@ts-check
 
-const dbCreds = {
-  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || '27117',
-  mongoDbAuthUser: process.env['MONGODB_USER'],
-  mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'] || 'openwhyd_test',
-};
-
-const consoleBackup = console.log;
-console.log = () => {
-  // prevent mongodb from adding noise to stdout
-};
-
-const util = require('util');
 const assert = require('assert');
-const mongodb = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
 
+const { ObjectId } = require('mongodb');
+const { initMongoDb } = require('../mongodb-client.js'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE env vars
 const { ADMIN_USER, cleanup } = require('../fixtures.js');
 
-const { ObjectId } = mongodb;
+let mongodb, db;
 
 const POLL_TIMEOUT = 4000;
-
-const db = mongodb.collections;
 
 // test data
 
 const USERS = [
   {
     id: '4d7fc1969aa9db130e000003',
-    _id: ObjectId('4d7fc1969aa9db130e000003'),
+    _id: new ObjectId('4d7fc1969aa9db130e000003'),
     name: 'Gilles (test)',
   },
   {
     id: '4dd4060ddb28e240e8508c28',
-    _id: ObjectId('4dd4060ddb28e240e8508c28'),
+    _id: new ObjectId('4dd4060ddb28e240e8508c28'),
     name: 'Loick (test)',
   },
 ];
 
 var FAKE_POST = {
-  _id: ObjectId('4fe3428e9f2ec28c92000024'),
+  _id: new ObjectId('4fe3428e9f2ec28c92000024'),
   uId: ADMIN_USER.id,
   name: 'Knust hjerte by Casiokids (test)',
   eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
@@ -50,7 +35,7 @@ var FAKE_POST = {
 
 var COMMENTS = USERS.map(function (u) {
   return {
-    _id: ObjectId('4ed3de428fed15d73c00001f'),
+    _id: new ObjectId('4ed3de428fed15d73c00001f'),
     pId: '' + FAKE_POST._id,
     uId: u.id,
     uNm: u.name,
@@ -61,12 +46,9 @@ var COMMENTS = USERS.map(function (u) {
 // test helpers
 
 async function initDb() {
-  await util.promisify(mongodb.init)(dbCreds);
-  // const initScript = './config/initdb.js';
-  // await mongodb.runShellScript(require('fs').readFileSync(initScript))
-  await util.promisify(mongodb.cacheCollections)();
-  await util.promisify(mongodb.cacheUsers)();
-  console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
+  mongodb = await initMongoDb({ silent: true });
+  db = mongodb.collections;
+  USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
 }
 
 const countEmptyNotifs = (cb) =>
@@ -132,9 +114,8 @@ async function addAllNotifs() {
 describe('notifications', function () {
   this.timeout(5000);
 
-  USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
-
-  before(cleanup); // reset database state and seed fixtures (including ADMIN_USER)
+  // reset database state and seed fixtures (including ADMIN_USER)
+  before(cleanup.bind(this, { silent: true }));
 
   before(initDb);
 

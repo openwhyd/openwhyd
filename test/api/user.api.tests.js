@@ -5,12 +5,12 @@ const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 const { DUMMY_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
 
-describe('user api', () => {
+describe('user api', function () {
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup); // to prevent side effects between tests
+  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
 
   before(async () => {
     await openwhyd.setup();
@@ -37,7 +37,7 @@ describe('user api', () => {
   });
 
   describe(`setting user data`, function () {
-    before(cleanup); // to prevent side effects between tests
+    before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
 
     it(`updates the user's name`, function (done) {
       api.loginAs(DUMMY_USER, function (error, { body, jar }) {
