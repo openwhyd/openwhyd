@@ -3,6 +3,12 @@
 const util = require('util');
 const mongodb = require('../app/models/mongodb.js');
 
+if (process.env['MONGODB_HOST'] === undefined)
+  throw new Error(`missing env var: MONGODB_HOST`);
+
+if (process.env['MONGODB_PORT'] === undefined)
+  throw new Error(`missing env var: MONGODB_PORT`);
+
 const dbCreds = {
   mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
   mongoDbPort: process.env['MONGODB_PORT'] || '27117',
