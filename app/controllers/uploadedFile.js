@@ -93,16 +93,6 @@ exports.renameTo = function (filename, toFilename, callback) {
     fs.rename(actualFilename, actualToFilename, function () {
       callback && callback(toFilename);
     });
-    /*
-		var is = fs.createReadStream(actualFilename)
-		var os = fs.createWriteStream(actualToFilename);
-		util.pump(is, os, function(x) {
-			console.log("result", x);
-			exports.deleteFile(filename).catch((err) => console.log(err, err.stack));
-			if (callback)
-				callback(toFilename);
-		});
-		*/
   } catch (e) {
     error(e);
   }

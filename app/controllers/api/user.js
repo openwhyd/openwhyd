@@ -136,19 +136,25 @@ var fieldSetters = {
     userModel.renameUser(p._id, p.name, cb);
   },
   img: function (p, cb) {
-    userModel.fetchByUid(p._id, function (user) {
-      if (user.img && user.img.indexOf('blank_user.gif') == -1) {
+    userModel.fetchByUid(p._id, async function (user) {
+      if (hasProfileImage(user)) {
         console.log('deleting previous profile pic: ' + user.img);
-        uploadCtr
+        await uploadCtr
           .deleteFile(user.img)
-          .catch((err) => console.log(err, err.stack));
+          .catch((err) =>
+            console.log(
+              'failed to delete existing profile image in fieldSetters.img',
+              err,
+              err.stack,
+            ),
+          );
       }
-      function actualUpdate(newFilename) {
-        defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
-      }
-      if (p.img.indexOf('blank_user.gif') == -1)
-        uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, actualUpdate);
-      else actualUpdate(p.img);
+      const newFilename = hasProfileImage(p)
+        ? await new Promise((resolve) =>
+            uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, resolve),
+          )
+        : p.img;
+      defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
     });
   },
   cvrImg: function (p, cb) {
@@ -221,6 +227,10 @@ var fieldSetters = {
   lnk_yt: defaultSetter('lnk_yt'),
   lnk_igrm: defaultSetter('lnk_igrm'),
 };
+
+function hasProfileImage(user) {
+  return user.img?.indexOf('blank_user.gif') == -1;
+}
 
 function hasSubscribed(loggedUser, user, cb) {
   user = user || {};
