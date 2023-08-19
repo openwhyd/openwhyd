@@ -96,7 +96,8 @@ var PLAYERS = {
     name: 'Jamendo',
     urlPrefix: '//jamendo.com/track/',
     extractId: function (url) {
-      /jamendo.com\/.*track\/(\d+)/.test(url) ? { videoId: RegExp.$1 } : null;
+      const matches = /jamendo.com\/.*track\/(\d+)/.exec(url);
+      return matches?.length > 0 ? { videoId: matches[1] } : null;
     },
   },
   fi: {

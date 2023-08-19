@@ -173,9 +173,8 @@ getPage.ContentType = function (address, callback) {
           headers['Content-type'];
         callback(
           null,
-          contentType && CONTENT_TYPE_REG.test(contentType)
-            ? RegExp.$1
-            : 'noContentType',
+          contentType &&
+            ((CONTENT_TYPE_REG.exec(contentType) || [])[1] || 'noContentType'),
         );
       }
     })
