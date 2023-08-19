@@ -1,3 +1,5 @@
+// @ts-check
+
 const snip = require('../../app/snip.js');
 
 const FIELDS_TO_SUM = {
@@ -27,6 +29,9 @@ function mergePostData(track, post) {
   return post;
 }
 
+/**
+ * @param {() => Promise<{pId: string, eId: string}[]>} getTracksByDescendingScore (partial type definition, just to check usage of objArrayToValueArray)
+ */
 exports.getHotTracks = async function (
   getTracksByDescendingScore,
   fetchPostsByPid,

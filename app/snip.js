@@ -274,7 +274,12 @@ exports.removeDuplicates = function (array, keyFieldName) {
   else return Object.keys(exports.arrayToSet(array));
 };
 
-/** @deprecated because there is a bug in it */
+/**
+ * @template Obj extends Record<Key, Value>
+ * @param {Obj[]} array
+ * @param {keyof Obj} attr
+ * @returns {Obj[keyof Obj][]}
+ */
 exports.objArrayToValueArray = function (array, attr) {
   var list = [];
   for (let i in array)
