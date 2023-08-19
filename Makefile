@@ -45,7 +45,7 @@ test: fetch-deps build lint ## Run tests against a local db
 	npm run test:api
 	# 3. tests that need a database and Openwhyd server running
 	docker compose up --detach --build mongo web
-	npm run test:cypress
+	CYPRESS_SKIP_APPLITOOLS_TESTS=true npm run test:cypress
 	# 4. release services
 	docker compose stop
 	echo "ℹ️ To run approval tests: $ make test-approval"

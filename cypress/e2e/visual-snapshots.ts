@@ -1,8 +1,9 @@
 // This suite intends to navigate through all pages, to detect visual regressions.
+// It requires the APPLITOOLS_API_KEY env var to be set.
 
 context('Visual Snapshots', () => {
-  if (!Cypress.env('APPLITOOLS_API_KEY')) {
-    it.skip(`⚠ missing env var: APPLITOOLS_API_KEY => skipping`, () => {});
+  if (Cypress.env('SKIP_APPLITOOLS_TESTS')) {
+    it.skip(`⚠ CYPRESS_SKIP_APPLITOOLS_TESTS env var is set => skipping`, () => {});
     return;
   }
 
