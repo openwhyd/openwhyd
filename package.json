@@ -11,7 +11,6 @@
   },
   "scripts": {
     "build": "scripts/transpile-bookmarklet.sh",
-    "semantic-release": "semantic-release",
     "postinstall": "cp node_modules/playemjs/dist/playem-*.js public/js/",
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
     "start:coverage": "npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts.start') $@",
