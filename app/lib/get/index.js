@@ -35,8 +35,8 @@ Page.prototype.getTitle = function () {
 Page.prototype.getImages = function () {
   var imgs = this.text.match(IMAGE_REG) || [];
   var imgsUniq = [];
-  var base = BASE_REG.test(this.text) ? RegExp.$1 : null;
-  var ogImage = OG_IMAGE_REG.test(this.text) ? RegExp.$1 : null;
+  var base = (BASE_REG.exec(this.text) || [])[1] || null;
+  var ogImage = (OG_IMAGE_REG.exec(this.text) || [])[1] || null;
   var i, len, img;
   for (i = 0, len = imgs.length; i < len; i++) {
     img = imgs[i].match(IMAGE_URL_REG)[1];
@@ -91,9 +91,11 @@ function getPage(address, callback) {
             bufferPos += chunk.length;
           }
           text = buffer.toString();
-          charset = CHARSET_REG.test(text)
-            ? (RegExp.$1 || RegExp.$2).toLowerCase()
-            : 'utf-8';
+          const charsetMatches = CHARSET_REG.exec(text);
+          charset =
+            charsetMatches?.length > 0
+              ? (charsetMatches[1] || charsetMatches[2]).toLowerCase()
+              : 'utf-8';
           if (charset !== 'utf-8')
             try {
               text = new iconv.Iconv(charset, 'utf-8')
