@@ -1,7 +1,7 @@
 //@ts-check
 
 const assert = require('assert');
-const { initMongoDb } = require('../mongodb-client');
+const { initMongoDb } = require('../mongodb-client'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE and WITHOUT_CONSOLE_LOG env vars
 const { cleanup } = require('../fixtures.js');
 const {
   readMongoDocuments,
