@@ -22,14 +22,14 @@ const getAsUser = (user, url, params) =>
     });
   });
 
-describe(`follow api`, () => {
+describe(`follow api`, function () {
   // API documentation: https://openwhyd.github.io/openwhyd/API.html
 
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup); // to prevent side effects between tests
+  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
 
   before(async () => {
     await openwhyd.setup();

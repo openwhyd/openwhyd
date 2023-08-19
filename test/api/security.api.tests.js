@@ -8,12 +8,12 @@ const apiClient = require('../api-client.js');
 const postRaw = promisify(apiClient.postRaw);
 const loginAs = promisify(apiClient.loginAs);
 
-describe('security', () => {
+describe('security', function () {
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup);
+  before(cleanup.bind(this, { silent: true }));
 
   before(async () => {
     await openwhyd.setup();
