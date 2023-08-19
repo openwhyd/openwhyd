@@ -2,13 +2,9 @@
   {
     "_id": "__OBJECT_ID__",
     "ctx": "bk",
-    "eId": [
-      "/yt/jI3YrVfOksE"
-    ],
+    "eId": "/yt/jI3YrVfOksE",
     "img": "https://i.ytimg.com/vi/jI3YrVfOksE/default.jpg",
-    "name": [
-      "coucou"
-    ],
+    "name": "coucou",
     "src": {
       "id": "https://www.youtube.com/watch?v=jI3YrVfOksE",
       "name": "BOYLE - Roppongi Hills (Music Video) - YouTube"
