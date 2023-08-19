@@ -140,15 +140,14 @@ async function countDbUsersAndPlaylists(cb) {
   const cursor = await mongodb.collections[indexCol['user']]
     .find()
     .project({ pl: 1 });
-  (function nextUser() {
-    cursor.next(function (err, user) {
-      if (!user) cb(result);
-      else {
-        ++result.dbUsers;
-        if (user.pl) result.dbPlaylists += user.pl.length;
-        setImmediate(nextUser);
-      }
-    });
+  (async function nextUser() {
+    const user = await cursor.next();
+    if (!user) cb(result);
+    else {
+      ++result.dbUsers;
+      if (user.pl) result.dbPlaylists += user.pl.length;
+      setImmediate(nextUser);
+    }
   })();
 }
 
