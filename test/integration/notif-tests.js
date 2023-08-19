@@ -9,7 +9,7 @@ const assert = require('assert');
 const mongodb = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
 
-const { initMongoDb } = require('../mongodb-client.js'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE and WITHOUT_CONSOLE_LOG env vars
+const { initMongoDb } = require('../mongodb-client.js'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE env vars
 const { ADMIN_USER, cleanup } = require('../fixtures.js');
 
 const { ObjectId } = mongodb;

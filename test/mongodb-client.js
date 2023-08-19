@@ -18,11 +18,6 @@ const dbCreds = {
 };
 
 exports.initMongoDb = async () => {
-  if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
-    console.log = () => {
-      /* In order to have nice console summary */
-    };
-  }
   await util.promisify(mongodb.init)(dbCreds);
   await mongodb.initCollections();
   return mongodb;
