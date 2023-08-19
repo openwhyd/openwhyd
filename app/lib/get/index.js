@@ -1,3 +1,5 @@
+// @ts-check
+
 var url = require('url');
 var http = require('http');
 var https = require('https');
@@ -28,7 +30,7 @@ Page.prototype.find = function (regEx) {
 
 //==============================================================================
 Page.prototype.getTitle = function () {
-  return (TITLE_REG.exec(this.text) || ['', ''])[1].toString('utf8');
+  return (TITLE_REG.exec(this.text) || ['', ''])[1].toString(); // note: we may need to convert to utf-8
 };
 
 //==============================================================================
@@ -73,9 +75,14 @@ function getPage(address, callback) {
     .get(options, function (res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
+      if (typeof location !== 'string') {
+        callback(new Error('location header should be a string'));
+        return;
+      }
       res.on('error', callback);
       if (location) {
         options.path = location;
+        // @ts-ignore
         http.get(options, arguments.callee).on('error', callback).end();
       } else {
         res.on('data', function (chunk) {
@@ -161,7 +168,12 @@ getPage.ContentType = function (address, callback) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
       if (location) {
+        if (typeof location !== 'string') {
+          callback(new Error('location header should be a string'));
+          return;
+        }
         options.path = location;
+        // @ts-ignore
         httpOrHttps
           .request(options, arguments.callee)
           .on('error', callback)
@@ -171,6 +183,9 @@ getPage.ContentType = function (address, callback) {
           headers['content-type'] ||
           headers['Content-Type'] ||
           headers['Content-type'];
+        if (Array.isArray(contentType)) {
+          contentType = contentType.join(' ');
+        }
         callback(
           null,
           contentType &&
