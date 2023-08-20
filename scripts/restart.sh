@@ -4,7 +4,7 @@
 ROOT_DIR="`pwd`/.."
 PORT="1095"
 VERSION=$(node -p "require('${ROOT_DIR}/package.json').version")
-NODE="$(nvm which default)"
+NODE="$(which node)"
 
 # NGINX_ENBLD=/etc/nginx/sites-enabled
 # NGINX_TEMPLATE=$ROOT_DIR/config/nginx-site-template
