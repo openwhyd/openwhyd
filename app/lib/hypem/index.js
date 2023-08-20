@@ -1,7 +1,7 @@
 const get = require('../get');
 
 const HYPEM_SEARCH_URL =
-  'http://hypem.com/playlist/search/QUERY/json/1/data.js';
+  'https://hypem.com/playlist/search/QUERY/json/1/data.js';
 const NB_RESULTS_PER_PAGE = 20;
 const TIME_OUT = 3000;
 
