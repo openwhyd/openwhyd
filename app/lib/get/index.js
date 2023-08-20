@@ -37,7 +37,7 @@ Page.prototype.getImages = function () {
   var imgs = this.text.match(IMAGE_REG) || [];
   var imgsUniq = [];
   var base = (BASE_REG.exec(this.text) || [])[1] || null;
-  var ogImage = (OG_IMAGE_REG.exec(this.text) || [])[1] || null;
+  const ogImage = (OG_IMAGE_REG.exec(this.text) || [])[1] || null;
   var i, len, img;
   for (i = 0, len = imgs.length; i < len; i++) {
     img = imgs[i].match(IMAGE_URL_REG)[1];
@@ -62,7 +62,7 @@ Page.prototype.getImages = function () {
 
 //==============================================================================
 function getPage(address, callback) {
-  var urlObj = new URL(address);
+  const urlObj = new URL(address);
   var options = {
     host: urlObj.hostname,
     path: urlObj.pathname,
@@ -134,7 +134,7 @@ getPage.Images = function (address, callback) {
 
 //==============================================================================
 getPage.Request = function (address, callback) {
-  var urlObj = new URL(address);
+  const urlObj = new URL(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = {
     method: 'GET',
@@ -159,7 +159,7 @@ getPage.Request = function (address, callback) {
 
 //==============================================================================
 getPage.ContentType = function (address, callback) {
-  var urlObj = new URL(address);
+  const urlObj = new URL(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = { method: 'GET', host: urlObj.hostname, path: urlObj.pathname };
   var contentType;
