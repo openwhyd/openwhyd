@@ -3,7 +3,6 @@
  * @author adrienjoly, whyd
  */
 
-var analytics = require('../models/analytics.js');
 var templateLoader = require('../templates/templateLoader.js');
 var mainTemplate = require('../templates/mainTemplate.js');
 
@@ -34,5 +33,4 @@ exports.controller = function (request, reqParams, response) {
   exports.renderSettingsForm(reqParams, function (res) {
     response.legacyRender(res.html, null, { 'content-type': 'text/html' });
   });
-  analytics.addVisit(reqParams.loggedUser, request.url /*"/u/"+uid*/);
 };

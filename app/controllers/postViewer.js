@@ -6,7 +6,6 @@
 
 var mongodb = require('../models/mongodb.js');
 var postModel = require('../models/post.js');
-var analytics = require('../models/analytics.js');
 var errorTemplate = require('../templates/error.js');
 var template = require('../templates/postViewer.js');
 
@@ -26,11 +25,6 @@ exports.controller = function (request, reqParams, response) {
       );
     } else if (p && p.html) {
       response.renderHTML(p.html);
-      analytics.addVisit(
-        request.getUid(),
-        /*"/c/" + pId*/ request.url,
-        reqParams.orig,
-      );
     } else if (p && p.data) response.renderJSON(p);
     // TODO: or p.data?
     else response.legacyRender(p);

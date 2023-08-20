@@ -79,8 +79,6 @@ GET    /password                       -> controllers.private.password
 POST   /password                       -> controllers.private.password
 GET    /upload                         -> controllers.private.upload
 POST   /upload                         -> controllers.private.upload
-GET    /visit                          -> controllers.private.visit
-POST   /visit                          -> controllers.private.visit
 
 GET    /post                           -> controllers.api.postEdit
 GET    /post/add                       -> controllers.api.postEdit

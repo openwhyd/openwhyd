@@ -5,7 +5,6 @@
  **/
 
 var snip = require('../snip.js');
-var analytics = require('../models/analytics.js');
 var ObjectId = require('../models/mongodb.js').ObjectId;
 var followModel = require('../models/follow.js');
 var activityModel = require('../models/activity.js');
@@ -174,14 +173,6 @@ exports.controller = function (request, reqParams, response) {
 
   function render(html) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
-    // console.log('rendering done!');
-    if (
-      loggedInUser &&
-      loggedInUser.id &&
-      !reqParams.after &&
-      !reqParams.before
-    )
-      analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
   }
 
   fetchSubscriptions(loggedInUser.id, function (uidList) {

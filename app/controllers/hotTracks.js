@@ -6,7 +6,6 @@
 
 var snip = require('../snip.js');
 var config = require('../models/config.js');
-var analytics = require('../models/analytics.js');
 var trackModel = require('../models/track.js');
 var postsTemplate = require('../templates/posts.js');
 var templateLoader = require('../templates/templateLoader.js');
@@ -26,14 +25,6 @@ exports.controller = function (request, reqParams, response) {
 
   function render(html) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
-
-    if (
-      loggedInUser &&
-      loggedInUser.id &&
-      !reqParams.after &&
-      !reqParams.before
-    )
-      analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
   }
 
   reqParams.limit =

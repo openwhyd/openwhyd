@@ -8,7 +8,6 @@
 
 var mongodb = require('../models/mongodb.js');
 var userModel = require('../models/user.js');
-var analytics = require('../models/analytics.js');
 var feedTemplate = require('../templates/feed.js');
 var errorTemplate = require('../templates/error.js');
 var loggingTemplate = require('../templates/logging.js');
@@ -129,14 +128,6 @@ exports.controller = function (request, reqParams, response) {
       );
     } else if (data.html) {
       response.renderHTML(data.html);
-      // console.log('rendering done!');
-      if (
-        loggedInUser &&
-        loggedInUser.id &&
-        !reqParams.after &&
-        !reqParams.before
-      )
-        analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
     } else if (typeof data == 'object') response.renderJSON(data.json || data);
     else response.legacyRender(data.error);
   }

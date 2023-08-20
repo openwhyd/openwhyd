@@ -12,12 +12,6 @@ var playlogStream = fs.createWriteStream('./playlog.json.log', {
   autoClose: true,
 });
 
-var visitStream = fs.createWriteStream('./visits.json.log', {
-  flags: 'a', // append
-  encoding: 'utf8',
-  autoClose: true,
-});
-
 /**
  * obj fields parameters:
  * - eId: (string) id of the track, without hash suffix (e.g. /yt/e34tr6, /sc/coucou/pouet)
@@ -62,36 +56,3 @@ var tests = [
 	console.log("TEST", test, " => ", exports.addPlay(test));
 });
 */
-
-exports.addVisit = function (uId, tId, request) {
-  var orig = request;
-
-  if (uId) {
-    if ((typeof uId).toLowerCase() == 'object' && uId.id) uId = uId.id;
-    uId = uId.replace('/u/', '');
-  }
-
-  /*if (reqParams && reqParams.orig)
-		orig = reqParams.orig;
-	else*/
-  if (
-    request &&
-    (typeof request).toLowerCase() == 'object' &&
-    request.headers &&
-    request.headers.referer
-  )
-    // request
-    orig = request.headers.referer;
-
-  if (orig) {
-    if (orig.includes('facebook.com')) orig = 'fb';
-    else if (orig.includes('twitter.com')) orig = 'tw';
-    else if (orig.includes('http')) orig = null;
-  }
-
-  var visit = { uId, tId };
-  if (orig) visit.orig = orig;
-
-  visit._t = new Date().getTime();
-  visitStream.write(JSON.stringify(visit) + '\n');
-};

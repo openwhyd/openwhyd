@@ -5,7 +5,6 @@
  */
 
 var users = require('../models/user.js');
-var analytics = require('../models/analytics.js');
 var invitePage = require('../templates/invitePage.js');
 var inviteFormTemplate = require('../templates/inviteForm.js');
 var templateLoader = require('../templates/templateLoader.js');
@@ -114,8 +113,6 @@ var renderInviteForm = function (request, reqParams, response) {
 
   var html = inviteFormTemplate.renderInviteFormPage(reqParams);
   response.legacyRender(html, null, { 'content-type': 'text/html' });
-
-  analytics.addVisit(reqParams.loggedUser, request.url /*"/u/"+uid*/);
 };
 
 var submitInvites = function (request, reqParams, response) {
