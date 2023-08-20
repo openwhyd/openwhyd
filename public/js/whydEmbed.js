@@ -55,8 +55,8 @@ const DEBUG = false, // for soundmanager
       }
     } else {
       inc = document.createElement('script');
+      const interval = 100;
       let timer,
-        interval = 100,
         retries = 10;
       const check = () => {
         const loaded =
@@ -84,38 +84,37 @@ const DEBUG = false, // for soundmanager
   }
 
   function forEachElement(elementName, handler) {
-    let els = document.getElementsByTagName(elementName),
-      i;
-    for (i = 0; i < els.length; ++i) handler(els[i], i);
+    const els = document.getElementsByTagName(elementName);
+    for (let i = 0; i < els.length; ++i) handler(els[i], i);
   }
 
   // extract parameters
-  let urlPrefix,
-    params = (function getScriptParams(fileName) {
-      const url = (function findScriptUrls(fileName) {
-        let url = null;
-        forEachElement('script', function (element) {
-          const pathPos = element.src.indexOf(fileName);
-          if (pathPos > -1) {
-            url = element.src;
-            urlPrefix = element.src.substr(0, pathPos);
-          }
+  let urlPrefix;
+  const params = (function getScriptParams(fileName) {
+    const url = (function findScriptUrls(fileName) {
+      let url = null;
+      forEachElement('script', function (element) {
+        const pathPos = element.src.indexOf(fileName);
+        if (pathPos > -1) {
+          url = element.src;
+          urlPrefix = element.src.substr(0, pathPos);
+        }
+      });
+      return url;
+    })(fileName);
+    return (function parseQueryString(url) {
+      const params = {};
+      url
+        .split('?')
+        .pop()
+        .split('&')
+        .forEach(function (p) {
+          p = p.split('=');
+          params[p[0]] = p[1];
         });
-        return url;
-      })(fileName);
-      return (function parseQueryString(url) {
-        const params = {};
-        url
-          .split('?')
-          .pop()
-          .split('&')
-          .forEach(function (p) {
-            p = p.split('=');
-            params[p[0]] = p[1];
-          });
-        return params;
-      })(url);
-    })('/js/whydEmbed.js');
+      return params;
+    })(url);
+  })('/js/whydEmbed.js');
 
   // openwhyd api + rendering
 
@@ -176,8 +175,7 @@ const DEBUG = false, // for soundmanager
 
   function initPlayem(playerContainer, playerId, cb) {
     console.info('initializing players...');
-    let playem,
-      PLAYERS = [
+    const PLAYERS = [
         'Youtube',
         'SoundCloud',
         'Vimeo',
@@ -193,6 +191,8 @@ const DEBUG = false, // for soundmanager
         height: params.videoHeight || playerContainer.clientHeight,
         playerContainer: playerContainer,
       };
+    let playem;
+
     include(urlPrefix + '/js/playem-min.js', function () {
       playem = new global.Playem();
       PLAYERS.forEach(function (pl) {

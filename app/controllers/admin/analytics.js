@@ -40,8 +40,8 @@ exports.controller = function (request, reqParams, response) {
 
   if (!request.checkAdmin(response)) return;
 
-  let users,
-    userIndex = {};
+  let users;
+  const userIndex = {};
 
   const t0 = new Date();
   const report = { 'Report date': t0 };

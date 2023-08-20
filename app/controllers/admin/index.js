@@ -28,8 +28,8 @@ function deleteIndex(type, cb) {
 }
 
 async function refreshIndex(type, cb, preprocess) {
-  let BULK_SIZE = 1000,
-    bulkDocs = [],
+  const BULK_SIZE = 1000;
+  let bulkDocs = [],
     fetched = 0,
     indexed = 0;
   console.log('Indexing ' + type + 's ...');

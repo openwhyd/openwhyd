@@ -13,8 +13,8 @@ const DIGEST_INTERVAL = parseInt(config.digestInterval) || -1;
 let timer = null;
 
 function processUser(u, cb) {
-  let freq = 0,
-    cleanPref = {}; // daily (by default)
+  let freq = 0;
+  const cleanPref = {}; // daily (by default)
   for (const i in u.pref)
     if (i.indexOf('em') == 0 && u.pref[i] > 0) {
       freq = u.pref[i];

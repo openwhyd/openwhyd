@@ -104,8 +104,8 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 
 function aggregateActivities(acts) {
   //console.log("acts", acts);
-  let aggrs = [],
-    aggr = {};
+  const aggrs = [];
+  let aggr = {};
   for (const i in acts) {
     const attrName = (acts[i].type = acts[i].like ? 'like' : 'subscription'),
       sameAuthor = aggr.id == acts[i].id,

@@ -1,8 +1,8 @@
 function include(src, callback) {
-  let inc = document.createElement('script'),
-    timer,
-    interval = 100,
-    retries = 10;
+  const inc = document.createElement('script');
+  let timer;
+  const interval = 100;
+  let retries = 10;
   function check() {
     const loaded =
       inc.readyState &&

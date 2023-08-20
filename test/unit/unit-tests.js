@@ -1,15 +1,6 @@
 // $ npx mocha test/unit/unit-tests.js
 
 const assert = require('assert');
-const express = require('express');
-
-const HTML_PAGE_WITH_TITLE_AND_IMAGES = [
-  '<!DOCTYPE html>',
-  '<html>',
-  '<head><title>foo</title></head>',
-  '<body><img src="1.jpg"></body>',
-  '</html>',
-].join('\n');
 
 describe('snip.js', function () {
   const snip = require('../../app/snip.js');

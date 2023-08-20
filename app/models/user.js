@@ -619,8 +619,8 @@ exports.incrementNotificationCounter = function (uId, handler) {
 exports.setPref = function (uId, pref, handler) {
   if (!pref) handler({ error: 'Invalid preferences' });
   else {
-    let cleanPref = {},
-      emailFreq = 0;
+    const cleanPref = {};
+    let emailFreq = 0;
     for (const i in defaultPref)
       if (pref[i] !== undefined && pref[i] !== null) {
         // only clean provided pref values

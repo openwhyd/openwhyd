@@ -563,8 +563,8 @@ window.modalPostBox = function (/*onPosted*/) {
 };
 
 function modalRepostBox(trackOrPid /*onPosted*/) {
-  let url = '/post',
-    params = window.whydCtx ? ['ctx=' + window.whydCtx] : [];
+  let url = '/post';
+  const params = window.whydCtx ? ['ctx=' + window.whydCtx] : [];
   if (typeof trackOrPid == 'string') url += '/' + trackOrPid /*+'/add'*/;
   // ?pid='+pId; //postData.pId+'&embed='+postData.eId+'&text='+postData.text;
   else if (trackOrPid.eId)
@@ -1037,18 +1037,19 @@ $(document).ready(function () {
   // Wait for Document
   $(function () {
     // Prepare Variables
-    let /* Application Specific Variables */
+    const /* Application Specific Variables */
       contentSelector = /*#contentPane*/ '#mainPanel', //'#content,article:first,.article:first,.post:first',
-      $content = $(contentSelector).filter(':first'),
-      contentNode = $content.get(0),
       $menu = $('#menu,#nav,nav:first,.nav:first').filter(':first'),
       activeClass = 'active selected current youarehere',
       activeSelector = '.active,.selected,.current,.youarehere',
       menuChildrenSelector = '> li,> ul > li',
       /* Application Generic Variables */
       $body = $(document.body) /*.find(contentSelector).first()*/,
-      rootUrl = History.getRootUrl(),
-      newState = false; // HACK to restore scroll position on previous page of history
+      rootUrl = History.getRootUrl();
+    let newState = false; // HACK to restore scroll position on previous page of history
+
+    let $content = $(contentSelector).filter(':first');
+    const contentNode = $content.get(0);
 
     // Ensure Content
     if ($content.length === 0) {
@@ -1058,12 +1059,9 @@ $(document).ready(function () {
     // Internal Helper
     $.expr[':'].internal = function (obj /*, index, meta, stack*/) {
       // Prepare
-      let $this = $(obj),
-        url = $this.attr('href') || '',
-        isInternalLink;
-
-      // Check link
-      isInternalLink =
+      const $this = $(obj);
+      const url = $this.attr('href') || '';
+      const isInternalLink =
         url.substring(0, rootUrl.length) === rootUrl || url.indexOf(':') === -1;
 
       // Ignore or Keep
@@ -1151,28 +1149,26 @@ $(document).ready(function () {
         url: url,
         success: function (data) {
           // Prepare
-          let $data = $(documentHtml(data)),
+          const $data = $(documentHtml(data)),
             $dataHead = $data.find('.document-head:first'),
             $dataBody = $data.find('.document-body:first'),
-            $dataContent = $dataBody.find(contentSelector).filter(':first'),
-            $menuChildren,
-            contentHtml,
-            $scripts;
+            $dataContent = $dataBody.find(contentSelector).filter(':first');
 
           // Fetch the scripts
-          $scripts = $dataContent.find('.document-script');
+          const $scripts = $dataContent.find('.document-script');
           if ($scripts.length) {
             $scripts.detach();
           }
 
           // Fetch the content
-          contentHtml = $dataContent.html() /*||$data.html()*/;
+          const contentHtml = $dataContent.html(); /*||$data.html()*/
           if (!contentHtml) {
             document.location.href = url;
             return false;
           }
 
           // Update the menu
+          let $menuChildren;
           $menuChildren = $menu.find(menuChildrenSelector);
           $menuChildren.filter(activeSelector).removeClass(activeClass);
           $menuChildren = $menuChildren.has(
@@ -1224,8 +1220,8 @@ $(document).ready(function () {
           });
 
           // Update CSS code
-          let currentLinks = {},
-            anonCounter = 0;
+          const currentLinks = {};
+          let anonCounter = 0;
           $('link').each(function () {
             const src = $(this).attr('href');
             if (src.indexOf('static.olark.com/css') == -1)

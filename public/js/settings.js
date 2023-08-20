@@ -265,8 +265,8 @@ $(function () {
   (function () {
     const $deezerConBtn = $('#deezerProfile');
 
-    let SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
-      IS_LOGGED = false,
+    const SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js';
+    let IS_LOGGED = false,
       IS_READY = false;
 
     // setup DOM unless existing

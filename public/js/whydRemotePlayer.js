@@ -9,7 +9,7 @@
 (function () {
   const wlh = window.location.href;
   // ORIGIN should match the domain on which openwhyd is running
-  let ORIGIN =
+  const ORIGIN =
       wlh.indexOf('http://localhost:') == 0 ||
       /^https?:\/\/(\w+)\.openwhyd\.(\w+)(:8080)?\//.test(wlh)
         ? wlh.substr(0, wlh.indexOf('/', 10))
@@ -24,7 +24,6 @@
       'onEnded',
       'onError',
     ],
-    player,
     eventHandlers = {},
     parameters = {};
 
@@ -68,7 +67,7 @@
     post("onEmbedReady", arguments);
   };
   */
-  player = new YoutubePlayer(eventHandlers, parameters);
+  const player = new YoutubePlayer(eventHandlers, parameters);
   console.log('PLAYER', player);
   function post(code, data) {
     //console.log("[iframe] sends:", code, data);

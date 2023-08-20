@@ -105,8 +105,8 @@ exports.controller = function (req, requestParams, res) {
     // Note: we may want to send a response in that case too
   }
 
-  let results = {},
-    remaining = Object.keys(files).length;
+  const results = {};
+  let remaining = Object.keys(files).length;
 
   const options = {};
   for (const i in defaultOptions) options[i] = defaultOptions[i];

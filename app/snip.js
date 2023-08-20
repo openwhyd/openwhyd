@@ -531,8 +531,8 @@ exports.httpGetDomain = function (domain) {
 };
 
 function _httpRequest(options, callback) {
-  let data = '',
-    body = options.body;
+  const body = options.body;
+  let data = '';
   if (body)
     // => don't forget to add Content-Type and Content-Length headers in that case
     delete options.body;
