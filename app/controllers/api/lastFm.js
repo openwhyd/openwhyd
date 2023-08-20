@@ -55,10 +55,9 @@ function LastFM(apiKey, apiSecret) {
       };
     } else path += '?' + body;
 
-    console.log('submitting ' + path + ' request to last.fm ...', options);
+    console.log('[lastFm] submitting to ' + path + '...');
 
     snip.httpRequestJSON(path, options, function (err, data) {
-      //console.log("-> last.fm response status code", (res || {}).statusCode)
       cb(data || err);
     });
   };

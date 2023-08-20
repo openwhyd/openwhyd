@@ -204,7 +204,6 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
       );
       for (const f in additionalFields) track[f] = additionalFields[f];
     }
-    console.log('saving track', track);
     save(track, cb, replace);
   });
 };

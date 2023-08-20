@@ -193,13 +193,6 @@ function setPostLove(collection, pId, uId, state, handler) {
     if (err) console.log(err);
     collection.findOne({ _id: ObjectId('' + pId) }, function (err, post) {
       if (err) console.log(err);
-      console.log(
-        'setPostLove -> notif',
-        pId,
-        uId,
-        post ? post.uId : null,
-        post,
-      );
       if (post && uId != post.uId) notif[state ? 'love' : 'unlove'](uId, post);
       if (handler) handler(post);
       if (post) trackModel.updateByEid(post.eId);
@@ -214,12 +207,10 @@ function setPostLove(collection, pId, uId, state, handler) {
 }
 
 exports.lovePost = function (pId, uId, handler) {
-  console.log('lovePost', pId, uId);
   setPostLove(mongodb.collections['post'], pId, uId, true, handler);
 };
 
 exports.unlovePost = function (pId, uId, handler) {
-  console.log('unLovePost', pId, uId);
   setPostLove(mongodb.collections['post'], pId, uId, false, handler);
 };
 
@@ -233,7 +224,7 @@ function notifyMentionedUsers(post, cb) {
   const mentionedUsers = snip.extractMentions(post.text),
     comment = { uId: post.uId, uNm: post.uNm };
   if (mentionedUsers.length) {
-    console.log('notif mentioned users');
+    // notif mentioned users
     snip.forEachArrayItem(
       mentionedUsers,
       function (mentionedUid, next) {
@@ -347,7 +338,6 @@ exports.rePost = function (pId, repostObj, handler) {
 };
 
 exports.deletePost = function (pId, uId, handler) {
-  console.log('post.deletePost: ', pId, uId);
   const collection = mongodb.collections['post'];
   const q = {
     _id: ObjectId(pId),
@@ -429,7 +419,6 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
 };
 
 exports.setPlaylist = function (uId, plId, plName, handler) {
-  console.log('post.setPlaylist', uId, plId, plName);
   const criteria = {
     uId: uId,
     'pl.id': parseInt(plId),
@@ -448,7 +437,6 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
 
 /** Delete a user's playlist */
 exports.unsetPlaylist = function (uId, plId, handler) {
-  console.log('post.unsetPlaylist', uId, plId);
   const criteria = {
     uId: uId,
     'pl.id': parseInt(plId),
@@ -466,12 +454,6 @@ exports.unsetPlaylist = function (uId, plId, handler) {
 };
 
 exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
-  console.log(
-    'post.setPlaylistOrder(uId, plId, order.length): ',
-    uId,
-    plId,
-    order.length,
-  );
   const collection = mongodb.collections['post'];
   function next(err) {
     if (err) console.log('error', err);
@@ -482,7 +464,6 @@ exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
         uId: uId,
         'pl.id': parseInt(plId),
       };
-      console.log('moving post ', post._id, ' to pos ', order.length);
       collection.updateOne(post, { $set: { order: order.length } }, next);
     }
   }
