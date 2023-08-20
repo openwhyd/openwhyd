@@ -16,10 +16,10 @@ exports.extractBandcampStreamURLsFromHTML = (html) => {
 
 function htmlDecode(str) {
   return String(str)
-    .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"');
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&');
 }
 
 exports.controller = async function (req, reqParams = {}, res) {
