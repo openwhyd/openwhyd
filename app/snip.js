@@ -44,7 +44,7 @@ exports.weekNumberToDate = function (weekNumber) {
 exports.forEachFileLine = function (fileName, lineHandler) {
   let buffer = '';
   function processBuffer(flush) {
-    const parts = buffer.replace('\r', '').split('\n');
+    const parts = buffer.replace(/\r/g, '').split('\n');
     buffer = !flush && parts.pop();
     parts.forEach(lineHandler);
   }
