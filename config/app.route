@@ -117,11 +117,6 @@ GET    /admin/{_subCtr}/{action}       -> controllers.subdir
 
 POST   /testing/{_subCtr}              -> controllers.subdir
 
-GET    /app                            -> controllers.pgApp
-GET    /apps                           -> controllers.pgApp
-GET    /app/{appId}                    -> controllers.pgApp
-GET    /app/{appId}/{action}           -> controllers.pgApp
-
 GET    /me                             -> controllers.userLibrary
 GET    /u/{id}                         -> controllers.userLibrary
 GET    /u/{id}/likes                   -> controllers.userLibrary
