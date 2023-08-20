@@ -740,3 +740,12 @@ exports.extractMentions = function (commentText) {
   }
   return mentions.slice(0, MAX_NB_MENTIONS);
 };
+
+/**
+ * @param {RegExp} regex
+ * @param {string} str
+ * @return {string | undefined}
+ */
+exports.getFirstMatch = function (regex, str) {
+  return (regex.exec(str) || [])[1];
+};

@@ -4,6 +4,7 @@ var http = require('http');
 var https = require('https');
 var path = require('path');
 var iconv = require('iconv'); //'iconv-jp'
+const { getFirstMatch } = require('../../snip');
 
 var CHARSET_REG = /<meta[^<>]+charset\s*=\s*(?:"([^<>"]+)"|([^<>"\s]+))[^<>]*>/;
 var TITLE_REG = /<title>([^<>]*)<\/title>/;
@@ -29,15 +30,15 @@ Page.prototype.find = function (regEx) {
 
 //==============================================================================
 Page.prototype.getTitle = function () {
-  return (TITLE_REG.exec(this.text) || ['', ''])[1].toString(); // note: we may need to convert to utf-8
+  return getFirstMatch(TITLE_REG, this.text) ?? ''; // note: we may need to convert to utf-8
 };
 
 //==============================================================================
 Page.prototype.getImages = function () {
   var imgs = this.text.match(IMAGE_REG) || [];
   var imgsUniq = [];
-  var base = (BASE_REG.exec(this.text) || [])[1] || null;
-  const ogImage = (OG_IMAGE_REG.exec(this.text) || [])[1] || null;
+  const base = getFirstMatch(BASE_REG, this.text) ?? null;
+  const ogImage = getFirstMatch(OG_IMAGE_REG, this.text) ?? null;
   var i, len, img;
   for (i = 0, len = imgs.length; i < len; i++) {
     img = imgs[i].match(IMAGE_URL_REG)[1];
@@ -190,7 +191,7 @@ getPage.ContentType = function (address, callback) {
         callback(
           null,
           contentType &&
-            ((CONTENT_TYPE_REG.exec(contentType) || [])[1] || 'noContentType'),
+            (getFirstMatch(CONTENT_TYPE_REG, contentType) ?? 'noContentType'),
         );
       }
     })

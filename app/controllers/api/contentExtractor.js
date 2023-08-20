@@ -4,6 +4,7 @@
  */
 var path = require('path');
 var get = require('../../lib/get');
+const { getFirstMatch } = require('../../snip');
 
 var BASE_REG = /<base[^<>]+href\s*=\s*"([^"]*)"[^<>]*>/;
 var MP3_REG = /<a\s+[^<>]*href\s*=\s*"[^"]*\.mp3"/gi;
@@ -12,7 +13,7 @@ var MP3_URL_REG = /<a\s+[^<>]*href\s*=\s*"([^"]*\.mp3)"/i;
 function getMp3s() {
   var mp3s = this.text.match(MP3_REG) || [];
   var mp3sUniq = [];
-  var base = (BASE_REG.exec(this.text) || [])[1] || null;
+  const base = getFirstMatch(BASE_REG, 'this.text') ?? null;
   var i, len, mp3;
   for (i = 0, len = mp3s.length; i < len; i++) {
     mp3 = mp3s[i].match(MP3_URL_REG)[1];
