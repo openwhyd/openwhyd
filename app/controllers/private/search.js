@@ -337,7 +337,7 @@ exports.controller = function (request, reqParams = {}, response) {
       searchModel.query(
         { _type: 'user', q: reqParams.q, limit: MAX_NB_MENTION_SUGGESTIONS },
         function (users) {
-          const hits = (users || {}).hits || [];
+          const hits = users?.hits || [];
           for (let i = hits.length - 1; i > -1; --i) {
             const u = hits[i];
             sorted[followed[u._id] ? 'unshift' : 'push'](u);
