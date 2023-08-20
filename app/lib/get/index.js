@@ -76,12 +76,10 @@ function getPage(address, callback) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
       res.on('error', callback);
-      if (location) {
-        if (typeof location !== 'string') {
-          console.warn({ location });
-          callback(new Error('location header should be a string'));
-          return;
-        }
+      if (Array.isArray(location)) {
+        console.warn('getPage', { location });
+        callback(new Error('location header should be a string'));
+      } else if (location) {
         options.path = location;
         // @ts-ignore
         http.get(options, arguments.callee).on('error', callback).end();
@@ -168,12 +166,10 @@ getPage.ContentType = function (address, callback) {
     .request(options, function (res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
-      if (location) {
-        if (typeof location !== 'string') {
-          console.warn({ location });
-          callback(new Error('location header should be a string'));
-          return;
-        }
+      if (Array.isArray(location)) {
+        console.warn('getPage.ContentType', { location });
+        callback(new Error('location header should be a string'));
+      } else if (location) {
         options.path = location;
         // @ts-ignore
         httpOrHttps
