@@ -27,8 +27,7 @@ const handlers = {
       console.log('delete user ', id);
       userModel.delete({ _id: id }, function (res) {
         res = res || {};
-        const json = JSON.parse(JSON.stringify(res));
-        res.json = json;
+        res.json = JSON.parse(JSON.stringify(res));
         cb(res);
       });
     } else cb({ error: 'missing arguments' });

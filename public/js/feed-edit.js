@@ -85,8 +85,6 @@
           $deletePlaylist.removeClass('loading');
           try {
             if (status != 'success' || !res.responseText) throw 0;
-            const json = JSON.parse('' + res.responseText);
-            //console.log("success", json);
             goToPage('/u/' + user.id + '/playlists');
           } catch (e) {
             showMessage('An error occured. Please try again.');
