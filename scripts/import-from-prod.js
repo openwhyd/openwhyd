@@ -18,6 +18,7 @@ const password = {
   plain: 'admin',
   md5: '21232f297a57a5a743894a0e4a801fc3',
 };
+const importSubscribers = false;
 
 const connectToDb = ({ url, dbName }) => {
   const client = new mongodb.MongoClient(url);
@@ -86,10 +87,12 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
     })),
   );
   await db.collection('user').insertMany(
-    subscribers.map((subscriber) => ({
-      _id: ObjectId(subscriber.id),
-      name: subscriber.name,
-    })),
+    subscribers
+      .filter((subscriber) => subscriber.id !== userId) // to prevent E11000 duplicate key error
+      .map((subscriber) => ({
+        _id: ObjectId(subscriber.id),
+        name: subscriber.name,
+      })),
   );
 };
 
@@ -102,9 +105,11 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
   const { posts } = await fetchUserPosts({ username }); // or require(`./../${username}.json`);
   console.log(`imported ${posts.length} posts`);
   await insertPosts({ db, posts });
-  const { subscribers } = await fetchSubscribers({ userId });
-  console.log(`imported ${subscribers.length} subscribers`);
-  await insertSubscribers({ db, userId, subscribers });
+  if (importSubscribers) {
+    const { subscribers } = await fetchSubscribers({ userId });
+    console.log(`imported ${subscribers.length} subscribers`);
+    await insertSubscribers({ db, userId, subscribers });
+  }
   // refresh openwhyd's in-memory cache of users, to allow this user to login
   await new Promise((resolve, reject) =>
     request.post('http://localhost:8080/testing/refresh', (err) =>
