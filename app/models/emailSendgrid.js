@@ -3,9 +3,9 @@
  * to send emails through Sendgrid API.
  **/
 
-var https = require('https');
-var snip = require('./../snip.js');
-var querystring = require('querystring');
+const https = require('https');
+const snip = require('./../snip.js');
+const querystring = require('querystring');
 
 if (process.env['SENDGRID_API_KEY'] === undefined)
   throw new Error(`missing env var: SENDGRID_API_KEY`);
@@ -32,7 +32,7 @@ exports.email = function (
     throw new Error(`missing env var: SENDGRID_API_FROM_NAME`);
 
   // Set up message
-  var content = {
+  let content = {
     from: process.env.SENDGRID_API_FROM_EMAIL, // e.g. "no-reply@whyd.org",
     fromname: process.env.SENDGRID_API_FROM_NAME, // e.g. "whyd",
     to: emailAddr,
@@ -46,7 +46,7 @@ exports.email = function (
   content = querystring.stringify(content);
 
   // Initiate REST request
-  var request = https
+  const request = https
     .request(
       {
         method: 'POST',
@@ -60,7 +60,7 @@ exports.email = function (
         },
       },
       function (response) {
-        var data = '';
+        let data = '';
         response.on('data', function (chunk) {
           data += chunk;
         });

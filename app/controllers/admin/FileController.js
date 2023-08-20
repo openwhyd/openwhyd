@@ -16,7 +16,7 @@ exports.buildController = function (params = {}) {
       else response.legacyRender(res);
     }
 
-    var processor = params.fileGenerators[reqParams.action];
+    const processor = params.fileGenerators[reqParams.action];
 
     if (processor) {
       console.log('generating ' + reqParams.action + '...');

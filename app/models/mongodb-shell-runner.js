@@ -1,7 +1,7 @@
 //@ts-check
 
-var vm = require('vm');
-var mongodb = require('mongodb');
+const vm = require('vm');
+const mongodb = require('mongodb');
 
 const PRINT_ACTIVE = false;
 const LOG_PREFIX = '[mongo shell]';

@@ -1,13 +1,13 @@
 // various tools by Adrien Joly
 // tests: tests/tess-snips.js
 
-var fs = require('fs');
-var urlModule = require('url');
-var http = require('http');
-var https = require('https');
-var querystring = require('querystring');
+const fs = require('fs');
+const urlModule = require('url');
+const http = require('http');
+const https = require('https');
+const querystring = require('querystring');
 
-var firstWeek = new Date('Monday January 3, 2011 08:00'); // week #1 = 1st of january 2010
+const firstWeek = new Date('Monday January 3, 2011 08:00'); // week #1 = 1st of january 2010
 
 // privacy helper: anonymise email address
 exports.formatEmail = function (emailAddr) {
@@ -42,9 +42,9 @@ exports.weekNumberToDate = function (weekNumber) {
 };
 
 exports.forEachFileLine = function (fileName, lineHandler) {
-  var buffer = '';
+  let buffer = '';
   function processBuffer(flush) {
-    var parts = buffer.replace('\r', '').split('\n');
+    const parts = buffer.replace(/\r/g, '').split('\n');
     buffer = !flush && parts.pop();
     parts.forEach(lineHandler);
   }
@@ -74,9 +74,9 @@ exports.removeAccents = function (str) {
 };
 
 //var regexUrl = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-var regexUrl =
+const regexUrl =
   /(\b(https?|ftp|file):\/\/([-A-Z0-9+&@#$*'()%?=~_|!:,.;]*)[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
-var regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
+const regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 exports.replaceURLWithHTMLLinks = function (text) {
   return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
@@ -116,7 +116,7 @@ exports.getSafeOpenwhydURL = function (url, safeUrlPrefix) {
   else return fullURL;
 };
 
-var timeScales = [
+const timeScales = [
   { 'minute(s)': 60 },
   { 'hour(s)': 60 },
   { 'day(s)': 24 },
@@ -125,18 +125,18 @@ var timeScales = [
 ];
 
 exports.renderTimestamp = function (timestamp) {
-  var t = timestamp / 1000,
+  let t = timestamp / 1000,
     lastScale = 'second(s)';
-  for (let i in timeScales) {
+  for (const i in timeScales) {
     var scaleTitle;
     for (scaleTitle in timeScales[i]);
-    var scaleVal = timeScales[i][scaleTitle];
+    const scaleVal = timeScales[i][scaleTitle];
 
     if (t / scaleVal < 1) break;
     t = t / scaleVal;
     lastScale = scaleTitle;
   }
-  var rounded = Math.round(t);
+  const rounded = Math.round(t);
   return rounded + ' ' + lastScale.replace(/\(s\)/g, rounded > 1 ? 's' : '');
 };
 
@@ -156,15 +156,15 @@ exports.MONTHS_SHORT = [
 ];
 
 exports.renderShortMonthYear = function (date) {
-  var t = new Date(date);
-  var sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
+  const t = new Date(date);
+  const sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
   return (
     exports.MONTHS_SHORT[t.getMonth()] + (sameYear ? '' : ' ' + t.getFullYear())
   );
 };
 
 exports.padNumber = function (str, n) {
-  var ret = '' + str;
+  let ret = '' + str;
   while (
     ret.length < n // pad with leading zeroes
   )
@@ -173,7 +173,7 @@ exports.padNumber = function (str, n) {
 };
 
 exports.renderTime = function (date) {
-  var t = new Date(date);
+  const t = new Date(date);
   return t.getHours() + ':' + exports.padNumber(t.getMinutes(), 2);
 };
 
@@ -195,14 +195,14 @@ exports.renderJsCallback = function (fctName, obj) {
 // data structures
 
 exports.arrayHas = function (array, value) {
-  if (array) for (let i in array) if (value == array[i]) return true;
+  if (array) for (const i in array) if (value == array[i]) return true;
   return false;
 };
 
 /** @deprecated because the usefulness of this function is not clear, and it mutates parameters. used just once, in notifDigest.js. */
 exports.values = function (set) {
-  var list = [];
-  for (let i in set)
+  const list = [];
+  for (const i in set)
     if (set[i])
       // TODO: remove this line
       list.push(set[i]);
@@ -210,13 +210,13 @@ exports.values = function (set) {
 };
 
 exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
-  var array = [];
-  for (let k in map) {
-    var obj = {};
+  const array = [];
+  for (const k in map) {
+    const obj = {};
     if (keyFieldName) obj[keyFieldName] = k;
     if (valueFieldName) obj[valueFieldName] = map[k];
     else if (typeof map[k] == 'object')
-      for (let f in map[k]) obj[f] = map[k][f];
+      for (const f in map[k]) obj[f] = map[k][f];
     array.push(obj);
   }
   return array;
@@ -234,29 +234,29 @@ exports.arrayToSet = function (array, value = true) {
 };
 
 exports.objArrayToSet = function (array, attr, val) {
-  var set = {};
-  for (let i in array)
+  const set = {};
+  for (const i in array)
     if (array[i] && attr in array[i]) set[array[i][attr]] = val || array[i];
   return set;
 };
 
 /** @deprecated because there is a bug in it */
 exports.groupObjectsBy = function (array, attr) {
-  var r = {};
-  var path = ('' + attr).split('.');
+  const r = {};
+  const path = ('' + attr).split('.');
   if (path.length > 1) {
-    for (let i in array) {
+    for (const i in array) {
       const obj = array[i] || {};
       let key = obj;
-      for (let j in path) {
+      for (const j in path) {
         key = (key || {})[path[j]];
       }
       if (key) (r[key] = r[key] || []).push(obj);
     }
   } else {
-    for (let i in array) {
+    for (const i in array) {
       const obj = array[i] || {};
-      let key = obj[attr];
+      const key = obj[attr];
       if (key)
         // TODO: fix this line
         (r[key] = r[key] || []).push(obj);
@@ -285,8 +285,8 @@ exports.objArrayToValueArray = function (array, attr) {
 };
 
 exports.forEachArrayItem = function (array, handler, cb) {
-  var i = 0;
-  var length = array.length;
+  let i = 0;
+  const length = array.length;
   (function next() {
     setTimeout(function () {
       if (i < length) handler(array[i++], next);
@@ -296,10 +296,10 @@ exports.forEachArrayItem = function (array, handler, cb) {
 };
 
 exports.getMapFieldNames = function (map /*, firstField*/) {
-  var fieldNames = [],
+  const fieldNames = [],
     fieldSet = {};
-  for (let i in map) {
-    for (let f in map[i])
+  for (const i in map) {
+    for (const f in map[i])
       if (!fieldSet[f]) {
         // TODO: check this line
         fieldNames.push(f);
@@ -313,7 +313,7 @@ exports.getMapFieldNames = function (map /*, firstField*/) {
 
 exports.excludeKeys = function (map = [], keySet = {}) {
   const res = [];
-  for (let k in map)
+  for (const k in map)
     if (!keySet[k])
       // TODO: check this line
       res[k] = map[k];
@@ -322,7 +322,7 @@ exports.excludeKeys = function (map = [], keySet = {}) {
 
 exports.checkMissingFields = function (obj, fieldSet) {
   if (!obj || typeof obj !== 'object') return { error: 'object is null' };
-  for (let f in fieldSet)
+  for (const f in fieldSet)
     if (fieldSet[f] && !(f in obj))
       return { field: f, expected: true, error: 'missing field: ' + f };
     else if (!fieldSet[f] && f in obj)
@@ -339,7 +339,7 @@ exports.checkMistypedFields = function (obj, fieldTypeSet) {
       error: error + ': ' + f,
     };
   }
-  for (let f in fieldTypeSet)
+  for (const f in fieldTypeSet)
     if (fieldTypeSet[f]) {
       if (!(f in obj)) return Error('missing field', f);
       else if (
@@ -353,7 +353,7 @@ exports.checkMistypedFields = function (obj, fieldTypeSet) {
 // translateFields({a,b,c}, {b:"bb"}) => {a,bb,c}
 exports.translateFields = function (obj, mapping) {
   if (obj && typeof obj === 'object')
-    for (let f in mapping)
+    for (const f in mapping)
       if (f in obj) {
         obj[mapping[f]] = obj[f];
         delete obj[f];
@@ -363,8 +363,8 @@ exports.translateFields = function (obj, mapping) {
 
 // filterFields({a,b,c}, {b:"bb"}) => {bb}
 exports.filterFields = function (obj, mapping) {
-  var finalObj = {};
-  for (let field in mapping)
+  const finalObj = {};
+  for (const field in mapping)
     if (field in obj)
       finalObj[mapping[field] === true ? field : mapping[field]] = obj[field];
   return finalObj;
@@ -397,18 +397,18 @@ exports.getLevenshteinDistance = (function () {
     return z;
   }
   return function (a, b) {
-    var cost,
+    let cost,
       m = a.length,
       n = b.length;
     if (m < n) {
-      var c = a;
+      const c = a;
       a = b;
       b = c;
-      var o = m;
+      const o = m;
       m = n;
       n = o;
     }
-    var r = [];
+    const r = [];
     r[0] = [];
     for (let c = 0; c < n + 1; c++) r[0][c] = c;
     for (let i = 1; i < m + 1; i++) {
@@ -443,12 +443,12 @@ exports.DataTable = function () {
   this.fromMap = (map, header) => {
     this.header = header || exports.getMapFieldNames(map);
     //table = /*mapToTable(map, header);*/ [];
-    for (let i in map) {
-      var line = [
+    for (const i in map) {
+      const line = [
         /*i*/
       ];
       //for (let f in map[i]) line.push(map[i][f]);
-      for (let f in this.header) line.push(map[i][this.header[f]]);
+      for (const f in this.header) line.push(map[i][this.header[f]]);
       this.table.push(line);
     }
     return this;
@@ -464,10 +464,10 @@ exports.DataTable = function () {
   };
 
   const toCharSeparatedValues = (charSepar, replacement, lineSepar) => {
-    var table = getFullTableCopy();
-    var regExp = new RegExp('[' + charSepar + '\n"]', 'g');
-    for (let i in table) {
-      for (let j in table[i])
+    const table = getFullTableCopy();
+    const regExp = new RegExp('[' + charSepar + '\n"]', 'g');
+    for (const i in table) {
+      for (const j in table[i])
         table[i][j] = ('' + table[i][j]).replace(regExp, replacement || ' ');
       //console.log(i, table[i]);
       table[i] = table[i].join(charSepar);
@@ -488,7 +488,7 @@ exports.DataTable = function () {
   };
 
   this.toHtml = () => {
-    var table = getFullTableCopy().map((line) => {
+    const table = getFullTableCopy().map((line) => {
       return '<tr>' + line.map(valToHtmlCell).join('') + '</tr>';
     });
     return [
@@ -516,7 +516,7 @@ exports.DataTable = function () {
 // =========================================================================
 // HTTP requests
 
-var httpDomains = {};
+const httpDomains = {};
 
 exports.httpSetDomain = function (regex, options) {
   if (!options) delete httpDomains[regex];
@@ -526,18 +526,18 @@ exports.httpSetDomain = function (regex, options) {
 exports.httpDomains = httpDomains;
 
 exports.httpGetDomain = function (domain) {
-  for (let i in httpDomains)
+  for (const i in httpDomains)
     if (httpDomains[i][0].test(domain)) return httpDomains[i][1];
 };
 
 function _httpRequest(options, callback) {
-  var data = '',
-    body = options.body;
+  const body = options.body;
+  let data = '';
   if (body)
     // => don't forget to add Content-Type and Content-Length headers in that case
     delete options.body;
   //console.log("httpRequest", options.host + options.path);
-  var req = (options.protocol === 'http:' ? http : https)
+  const req = (options.protocol === 'http:' ? http : https)
     .request(options, function (res) {
       if (options.responseEncoding)
         res.setEncoding(options.responseEncoding /*'utf-8'*/);
@@ -558,14 +558,14 @@ function _httpRequest(options, callback) {
 }
 
 exports.httpRequest = function (url, options = {}, callback) {
-  var urlObj = urlModule.parse(url);
+  const urlObj = urlModule.parse(url);
   options.method = options.method || 'GET';
   options.protocol = urlObj.protocol;
   options.host = urlObj.hostname;
   options.port = urlObj.port || (urlObj.protocol === 'https:' ? 443 : 80);
   options.path = urlObj.path; //url; //urlObj.pathname
   //options.headers = {'Accept':'application/json'};
-  var domainOpts = exports.httpGetDomain(options.host) || {};
+  const domainOpts = exports.httpGetDomain(options.host) || {};
   if (domainOpts.queue) {
     const runNext = () => {
       //console.log("5-next?", options.host, domainOpts.queue.length);
@@ -620,7 +620,7 @@ exports.httpRequestJSON = function (url, options, callback) {
 };
 
 function BasicCache() {
-  var cache = {};
+  let cache = {};
   this.get = function (url) {
     return cache[url];
   };
@@ -637,11 +637,11 @@ function BasicCache() {
 }
 
 exports.HttpRequestCache = function (cache) {
-  var realRequest = exports.httpRequest;
+  const realRequest = exports.httpRequest;
   this.cache = cache = cache || new BasicCache();
   this.httpRequest = function (url, options, callback) {
     // TODO: options are ignored for now
-    var cached = cache.get(url);
+    const cached = cache.get(url);
     if (cached) {
       //console.warn("used cached request for", url, "...");
       callback(null, cached);
@@ -673,7 +673,7 @@ AsyncEventEmitter.prototype.on = function (evtName, listener) {
 };
 
 AsyncEventEmitter.prototype.emit = function (evtName, param, callback) {
-  var listeners = this._eventListeners[evtName];
+  let listeners = this._eventListeners[evtName];
   if (!listeners) return false;
   listeners = listeners.slice(); // duplicate array
   const nextListener = () => {
@@ -696,7 +696,7 @@ exports.AsyncEventEmitter = AsyncEventEmitter;
  * @author adrienjoly, whyd
  */
 exports.callWhenDone = function (callback) {
-  var counter = 0;
+  let counter = 0;
   return function (incr) {
     if (0 == (counter += incr)) callback();
   };
@@ -709,15 +709,15 @@ exports.callWhenDone = function (callback) {
  * @author adrienjoly, whyd
  */
 exports.checkParams = function (obj, mandatorySet, optionalSet) {
-  var finalObj = {};
+  const finalObj = {};
   function storeIfValid(fieldName, typeSet) {
     if (typeof obj[fieldName] != typeSet[fieldName])
       throw Error('invalid field value: ' + fieldName);
     else finalObj[fieldName] = obj[fieldName];
   }
   obj = obj || {};
-  for (let fieldName in mandatorySet) storeIfValid(fieldName, mandatorySet);
-  for (let fieldName in optionalSet)
+  for (const fieldName in mandatorySet) storeIfValid(fieldName, mandatorySet);
+  for (const fieldName in optionalSet)
     if (fieldName in obj && obj[fieldName] != null)
       storeIfValid(fieldName, optionalSet);
   return finalObj;
@@ -725,16 +725,16 @@ exports.checkParams = function (obj, mandatorySet, optionalSet) {
 
 // =========================================================================
 
-var MAX_NB_MENTIONS = 6;
-var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
+const MAX_NB_MENTIONS = 6;
+const RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
 exports.RE_MENTION = RE_MENTION;
 
 exports.extractMentions = function (commentText) {
-  var mentions = [];
+  const mentions = [];
   for (;;) {
     // extract user id (last matched group) of each mention
-    var mentionedUid = (RE_MENTION.exec(commentText) || []).pop();
+    const mentionedUid = (RE_MENTION.exec(commentText) || []).pop();
     if (mentionedUid) mentions.push(mentionedUid);
     else break;
   }

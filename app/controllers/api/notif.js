@@ -4,8 +4,8 @@
  * @author adrienjoly, whyd
  */
 
-var mongodb = require('../../models/mongodb.js');
-var notifModel = require('../../models/notif');
+const mongodb = require('../../models/mongodb.js');
+const notifModel = require('../../models/notif');
 //var formidable = require('formidable'); // for POST request handling
 
 exports.handlePostRequest = function (request, postParams, response) {
@@ -39,7 +39,7 @@ exports.handlePostRequest = function (request, postParams, response) {
 
 exports.controller = function (req, reqParams, res) {
   //req.logToConsole("notif.controller", reqParams);
-  var user = req.checkLogin(/*res*/);
+  const user = req.checkLogin(/*res*/);
   if (!user) return res.legacyRender(); // replace by render(null) if user not logged
 
   if (req.method.toLowerCase() === 'post') {

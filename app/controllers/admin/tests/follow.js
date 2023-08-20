@@ -1,10 +1,10 @@
 // usage: run from http://localhost:8080/admin/test
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var followModel = require('../../../models/follow.js');
+const followModel = require('../../../models/follow.js');
 
 exports.makeTests = function (p) {
-  var testVars = {};
+  const testVars = {};
 
   return [
     [
@@ -15,7 +15,7 @@ exports.makeTests = function (p) {
           p.loggedUser.id,
           function (subscriptions) {
             testVars.uidList = [p.loggedUser.id];
-            for (let i in subscriptions.subscriptions)
+            for (const i in subscriptions.subscriptions)
               if (subscriptions.subscriptions[i].id)
                 testVars.uidList.push(
                   ('' + subscriptions.subscriptions[i].id).replace('/u/', ''),

@@ -3,24 +3,24 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb');
-var userModel = require('../../models/user');
+const mongodb = require('../../models/mongodb');
+const userModel = require('../../models/user');
 //var followModel = require("../../models/follow");
-var mainTemplate = require('../../templates/mainTemplate');
+const mainTemplate = require('../../templates/mainTemplate');
 
 function renderTemplate(report) {
-  var params = { title: 'whyd analytics', css: [], js: [] };
+  const params = { title: 'whyd analytics', css: [], js: [] };
 
-  var out = ['<h1>whyd analytics console</h1>', '► <a href="/">home</a>'].join(
+  let out = ['<h1>whyd analytics console</h1>', '► <a href="/">home</a>'].join(
     '\n',
   );
 
   out += '<table>';
 
-  var p = 0;
-  var color = ['lightgray', 'white'];
+  let p = 0;
+  const color = ['lightgray', 'white'];
 
-  for (let i in report)
+  for (const i in report)
     out +=
       "<tr  style='background:" +
       color[p++ % 2] +
@@ -40,17 +40,17 @@ exports.controller = function (request, reqParams, response) {
 
   if (!request.checkAdmin(response)) return;
 
-  var users,
-    userIndex = {};
+  let users;
+  const userIndex = {};
 
-  var t0 = new Date();
-  var report = { 'Report date': t0 };
+  const t0 = new Date();
+  const report = { 'Report date': t0 };
   //t0 = t0.getTime();
 
-  var populateUsers = function (callback) {
+  const populateUsers = function (callback) {
     userModel.fetchAll(function (usersP) {
       users = usersP;
-      for (let i in users) {
+      for (const i in users) {
         users[i].firstDate = users[i]._id.getTimestamp();
         userIndex['' + users[i]._id] = users[i];
       }
@@ -167,11 +167,11 @@ exports.controller = function (request, reqParams, response) {
 
   // recent users
 
-  var recentUserIds = {};
+  const recentUserIds = {};
 
   function findUsersRegisteredAfter(date) {
     return function (cb) {
-      for (let i in users)
+      for (const i in users)
         if (new Date(users[i].firstDate) >= date)
           recentUserIds[users[i]._id] = users[i];
       cb(
@@ -183,9 +183,9 @@ exports.controller = function (request, reqParams, response) {
 
   // "invite" analytics
 
-  var pendingInvites = null;
+  let pendingInvites = null;
 
-  var fetchPendingInvites = async function (callback) {
+  const fetchPendingInvites = async function (callback) {
     console.log('fetching invite collection...');
     const items = await mongodb.collections['invite']
       .find({}, { limit: 999999 })
@@ -194,18 +194,18 @@ exports.controller = function (request, reqParams, response) {
   };
 
   function countRecentInvites(cb) {
-    var nb = 0;
-    for (let i in users) if (users[i].lastFm) ++nb;
+    let nb = 0;
+    for (const i in users) if (users[i].lastFm) ++nb;
     cb('Number of lastfm users', nb);
   }
 
   function countLastfmUsers(cb) {
-    var nbAccepted = 0,
+    let nbAccepted = 0,
       nbPending = 0;
-    for (let uid in recentUserIds)
+    for (const uid in recentUserIds)
       if (recentUserIds[uid].iBy && recentUserIds[recentUserIds[uid].iBy])
         ++nbAccepted;
-    for (let i in pendingInvites)
+    for (const i in pendingInvites)
       if (pendingInvites[i].iBy && recentUserIds[pendingInvites[i].iBy])
         ++nbPending;
     report['Number of recent pending invites'] = nbPending;
@@ -215,7 +215,7 @@ exports.controller = function (request, reqParams, response) {
 
   // sequence of asynchronous calls to make
 
-  var seq = [
+  const seq = [
     populateUsers,
     countLastfmUsers,
     /*

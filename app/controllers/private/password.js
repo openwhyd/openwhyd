@@ -4,11 +4,11 @@
  * @author adrienjoly, whyd
  */
 
-var config = require('../../models/config.js');
-var users = require('../../models/user.js');
-var md5 = users.md5;
-var notifEmails = require('../../models/notifEmails.js');
-var templateLoader = require('../../templates/templateLoader.js');
+const config = require('../../models/config.js');
+const users = require('../../models/user.js');
+const md5 = users.md5;
+const notifEmails = require('../../models/notifEmails.js');
+const templateLoader = require('../../templates/templateLoader.js');
 
 exports.checkResetCode = function (request, reqParams, response, okCallback) {
   if (!reqParams.resetCode || !reqParams.uid) {
@@ -45,7 +45,7 @@ exports.renderForgotPage = function (request, reqParams, response, error) {
     redirect: reqParams.redirect,
   });
 
-  var vars = {
+  const vars = {
     email: reqParams.email,
     error: error || reqParams.error || '',
     redirect: reqParams.redirect || '',
@@ -76,7 +76,7 @@ exports.renderPasswordPage = function (request, reqParams, response, error) {
   });
 
   exports.checkResetCode(request, reqParams, response, function (user) {
-    var vars = {
+    const vars = {
       resetCode: reqParams.resetCode,
       uid: user.id,
       email: user.email,

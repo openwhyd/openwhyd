@@ -1,7 +1,7 @@
 // test email model
 
-var notifModel = require('../../templates/notif.js');
-var emailModel = require('../../models/email.js');
+const notifModel = require('../../templates/notif.js');
+const emailModel = require('../../models/email.js');
 
 function sendEmails(user, template, cb) {
   //var fbCookie = request.getFacebookCookie();
@@ -39,7 +39,7 @@ function sendEmails(user, template, cb) {
 exports.controller = function (request, reqParams, response) {
   console.log('test email notif');
 
-  var user = request.checkLogin(response);
+  const user = request.checkLogin(response);
   if (!user) return;
 
   function send(email) {

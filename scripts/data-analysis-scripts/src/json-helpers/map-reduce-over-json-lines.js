@@ -26,7 +26,7 @@ const promoteObject = (object) => ({
 const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
   new Promise((resolve) => {
     let ignoreTheRest = false;
-    let reduced = {};
+    const reduced = {};
     const limitReached = !opts.limit
       ? () => false
       : (

@@ -13,21 +13,21 @@ const map = makeMapWith(renderDate, function mapTemplate() {
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
-  var userSet = {};
+  const userSet = {};
   vals.forEach((val) => val.users.forEach((uId) => (userSet[uId] = true)));
-  var users = Object.keys(userSet);
+  const users = Object.keys(userSet);
   return {
     users,
     count: users.length,
   };
 }
 
-var opts = {
+const opts = {
   out: { inline: 1 },
   // limit: 1000
 };
 
-var res = db.post.mapReduce(map, reduce, opts);
+const res = db.post.mapReduce(map, reduce, opts);
 //print(res.results.map(res => [ res._id, res.value.count ]).join('\n'));
 print(
   res.results

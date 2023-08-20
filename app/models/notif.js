@@ -4,14 +4,14 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var mongodb = require('./mongodb.js');
-var config = require('../models/config.js');
-var notifEmails = require('../models/notifEmails.js');
+const snip = require('../snip.js');
+const mongodb = require('./mongodb.js');
+const config = require('../models/config.js');
+const notifEmails = require('../models/notifEmails.js');
 
 exports.userNotifsCache = {}; // uId -> { t, notifs: [pId, topic, t, lastAuthor, n] }
 
-var db = mongodb.collections;
+const db = mongodb.collections;
 
 /**
   NOTIF COLLECTION MODEL
@@ -49,7 +49,7 @@ function cacheUserNotifs(uId, notifs) {
 
 function invalidateUserNotifsCache(uId) {
   if (uId.splice)
-    for (let i in uId) delete exports.userNotifsCache['' + uId[i]];
+    for (const i in uId) delete exports.userNotifsCache['' + uId[i]];
   else delete exports.userNotifsCache['' + uId]; // => force fetch on next request
 }
 
@@ -62,9 +62,9 @@ function logErrors(cb) {
 }
 
 function detectTo(p) {
-  for (let i in p) {
-    var uId = (p[i] || {}).uId;
-    var to = ((uId || {}).$each || [uId])[0];
+  for (const i in p) {
+    const uId = (p[i] || {}).uId;
+    const to = ((uId || {}).$each || [uId])[0];
     if (to) return to;
   }
 }
@@ -74,7 +74,7 @@ function updateNotif(q, p, cb) {
   p = p || {};
   p.$set = p.$set || {};
   p.$set.t = Math.round(new Date().getTime() / 1000);
-  var to = detectTo(p);
+  const to = detectTo(p);
   db['notif'].updateOne(
     q,
     p,
@@ -108,7 +108,7 @@ function pushNotif(to, q, set, push, cb) {
   set = set || {};
   set.t = Math.round(new Date().getTime() / 1000);
   if (!(push || {}).uId) set.uId = ['' + to];
-  var p = { $set: set };
+  const p = { $set: set };
   if (push) p.$push = push;
   db['notif'].updateOne(
     q,
@@ -132,7 +132,7 @@ const extractObjectID = (str) => str.match(/[0-9a-f]{24}/)[0];
 
 exports.clearUserNotifsForPost = function (uId, pId) {
   if (!uId || !pId) return;
-  var idList = [pId];
+  const idList = [pId];
   try {
     idList.push(
       mongodb.ObjectId(
@@ -171,7 +171,7 @@ exports.clearUserNotifs = function (uId, cb) {
     .find({ uId: uId }, { limit: 1000 })
     .project({ uId: 1 })
     .then((cursor) => {
-      var idsToRemove = [];
+      const idsToRemove = [];
       function whenDone() {
         // delete records that were only associated to that user
         db['notif'].deleteMany(
@@ -207,12 +207,12 @@ exports.fetchUserNotifs = function (uId, handler) {
     .find({ uId: uId }, { sort: ['t', 'desc'] })
     .toArray()
     .then(function (results) {
-      var notifs = [];
-      for (let i in results) {
-        var n = 0;
+      const notifs = [];
+      for (const i in results) {
+        let n = 0;
         if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
-        else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
-        var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
+        else for (const j in results[i].uId) if (results[i].uId[j] == uId) n++;
+        const lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
         notifs.push({
           type: results[i].type,
           pId: '' + results[i]._id,
@@ -235,7 +235,7 @@ exports.fetchUserNotifs = function (uId, handler) {
 };
 
 exports.getUserNotifs = function (uid, handler) {
-  var cachedNotifs = exports.userNotifsCache[uid];
+  const cachedNotifs = exports.userNotifsCache[uid];
   if (cachedNotifs) handler(cachedNotifs.notifs, cachedNotifs.t);
   else exports.fetchUserNotifs(uid, handler);
 };
@@ -259,8 +259,8 @@ exports.html = function (uId, html, href, img) {
 // specific notification methods
 
 exports.love = function (loverUid, post, callback) {
-  var user = mongodb.usernames['' + loverUid];
-  var author = mongodb.usernames['' + post.uId];
+  const user = mongodb.usernames['' + loverUid];
+  const author = mongodb.usernames['' + post.uId];
   if (!user) throw new Error('user not found');
   if (!author) throw new Error(`post author not found`);
   db['notif'].updateOne(
@@ -284,8 +284,8 @@ exports.love = function (loverUid, post, callback) {
 };
 
 exports.unlove = function (loverUid, pId) {
-  var criteria = { _id: pId + '/loves' };
-  var col = db['notif'];
+  const criteria = { _id: pId + '/loves' };
+  const col = db['notif'];
   col.updateOne(
     criteria,
     { $inc: { n: -1 }, $pull: { lov: loverUid } },
@@ -310,7 +310,7 @@ exports.unlove = function (loverUid, pId) {
 
 exports.post = function (post) {
   if (!post || !post.eId || !post.uId) return;
-  var query = {
+  const query = {
     q: {
       eId: post.eId,
       uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
@@ -319,7 +319,7 @@ exports.post = function (post) {
     projection: { uId: true },
   };
   mongodb.forEach2('post', query, function (sameTrack, next) {
-    var author =
+    const author =
       sameTrack && !sameTrack.error && mongodb.usernames[sameTrack.uId];
     if (author) {
       notifEmails.sendPostedSameTrack(author, next);
@@ -330,8 +330,8 @@ exports.post = function (post) {
 };
 
 exports.repost = function (reposterUid, post) {
-  var reposter = mongodb.usernames['' + reposterUid];
-  var author = mongodb.usernames['' + post.uId];
+  const reposter = mongodb.usernames['' + reposterUid];
+  const author = mongodb.usernames['' + post.uId];
   if (!reposter || !author) return;
   db['notif'].updateOne(
     { _id: post._id + '/reposts' },
@@ -369,8 +369,8 @@ exports.unrepost = function (reposterUid, pId) {
 };
 */
 exports.subscribedToUser = function (senderId, favoritedId, cb) {
-  var sender = mongodb.usernames['' + senderId];
-  var favorited = mongodb.usernames['' + favoritedId];
+  const sender = mongodb.usernames['' + senderId];
+  const favorited = mongodb.usernames['' + favoritedId];
   if (sender && favorited) {
     db['notif'].updateOne(
       { _id: '/u/' + sender.id },
@@ -390,7 +390,7 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
 };
 
 exports.comment = function (post = {}, comment = {}, cb) {
-  var commentUser = mongodb.usernames['' + comment.uId];
+  const commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.comment' });
   else if (commentUser.id == post.uId)
@@ -416,7 +416,7 @@ exports.comment = function (post = {}, comment = {}, cb) {
 };
 
 exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
-  var commentUser = mongodb.usernames['' + comment.uId];
+  const commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !mentionedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.mention' });
   else {
@@ -438,7 +438,7 @@ exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
 };
 
 exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
-  var commentUser = mongodb.usernames['' + comment.uId];
+  const commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !repliedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.commentReply' });
   else if (commentUser.id == repliedUid)
@@ -482,7 +482,7 @@ exports.inviteAccepted = function (inviterId, newUser) {
 };
 
 exports.sendTrackToUsers = function (p, cb) {
-  var fieldCheck = snip.checkMistypedFields(p, {
+  const fieldCheck = snip.checkMistypedFields(p, {
     uId: 'string', // id of the sender
     uNm: 'string', // name of the sender
     pId: 'string', // id of the post to share
@@ -492,7 +492,7 @@ exports.sendTrackToUsers = function (p, cb) {
     cb(fieldCheck); // {error:"..."}
     return;
   }
-  var payload = {
+  const payload = {
     type: 'Snt',
     href: '/c/' + p.pId,
     img: '/img/post/' + p.pId,
@@ -507,7 +507,7 @@ exports.sendTrackToUsers = function (p, cb) {
 };
 
 exports.sendPlaylistToUsers = function (p, cb) {
-  var fieldCheck = snip.checkMistypedFields(p, {
+  const fieldCheck = snip.checkMistypedFields(p, {
     uId: 'string', // id of the sender
     uNm: 'string', // name of the sender
     plId: 'string', // id of the playlist to share (format: <uid>_<number>)
@@ -517,8 +517,8 @@ exports.sendPlaylistToUsers = function (p, cb) {
     cb(fieldCheck); // {error:"..."}
     return;
   }
-  var plUri = p.plId.replace('_', '/playlist/');
-  var payload = {
+  const plUri = p.plId.replace('_', '/playlist/');
+  const payload = {
     type: 'Snp',
     href: '/u/' + plUri,
     img: '/img/playlist/' + p.plId,

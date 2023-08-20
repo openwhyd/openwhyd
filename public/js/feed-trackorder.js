@@ -1,6 +1,6 @@
 /* global $ */
 
-var init = function () {
+const init = function () {
   console.log('trackorder init');
 
   $('.posts').disableSelection().sortable({
@@ -28,8 +28,8 @@ var init = function () {
   }
 
   $('#playlistTrackOrderSubmit').click(function () {
-    var order = [];
-    var posts = $('.post').each(function () {
+    const order = [];
+    const posts = $('.post').each(function () {
       order.push($(this).attr('data-pid'));
     });
     submitTrackOrder(plId, order, function (res) {

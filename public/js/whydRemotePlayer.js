@@ -7,9 +7,9 @@
 // this script will be running from a different domain name (i.e. a CDN).
 
 (function () {
-  var wlh = window.location.href;
+  const wlh = window.location.href;
   // ORIGIN should match the domain on which openwhyd is running
-  var ORIGIN =
+  const ORIGIN =
       wlh.indexOf('http://localhost:') == 0 ||
       /^https?:\/\/(\w+)\.openwhyd\.(\w+)(:8080)?\//.test(wlh)
         ? wlh.substr(0, wlh.indexOf('/', 10))
@@ -24,17 +24,16 @@
       'onEnded',
       'onError',
     ],
-    player,
     eventHandlers = {},
     parameters = {};
 
   // initialize iframe DOM
-  var body = document.getElementsByTagName('body')[0];
+  const body = document.getElementsByTagName('body')[0];
   body.innerHTML = '<div id="player"></div>';
   //body.style.margin = "0";
   //body.style.padding = "0";
   parameters.playerContainer = document.getElementById('player');
-  var css = document.createElement('style');
+  const css = document.createElement('style');
   css.type = 'text/css';
   //css.innerHTML = "#tumblr_controls { visibility: hidden !important; opacity:0 !important; }";
   css.innerHTML = [
@@ -47,7 +46,7 @@
   (window.location.href.split('?').pop() || '')
     .split('&')
     .forEach(function (p) {
-      var splitted = p.split('=');
+      const splitted = p.split('=');
       parameters[splitted[0]] = splitted[1];
     });
 
@@ -68,11 +67,11 @@
     post("onEmbedReady", arguments);
   };
   */
-  player = new YoutubePlayer(eventHandlers, parameters);
+  const player = new YoutubePlayer(eventHandlers, parameters);
   console.log('PLAYER', player);
   function post(code, data) {
     //console.log("[iframe] sends:", code, data);
-    for (let i in data)
+    for (const i in data)
       if (typeof data[i] == 'object' && data[i].label == 'Youtube')
         data[i] = '(player)';
     parent.window.postMessage(
@@ -83,9 +82,9 @@
 
   window.addEventListener('message', function (e) {
     if (e.origin == ORIGIN) {
-      var message = JSON.parse(e.data);
-      var method = message.code;
-      var args = message.data;
+      const message = JSON.parse(e.data);
+      const method = message.code;
+      let args = message.data;
       //console.log("[iframe] parent sends:", method, args);
       if (typeof player[method] === 'function') {
         if (method === 'getTrackPosition') {

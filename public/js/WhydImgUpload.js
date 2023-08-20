@@ -4,17 +4,17 @@ window.WhydImgUpload = function (options) {
   options = options || {};
   options.onError = options.onError || console.log;
 
-  var lastAvatarUrl = null,
+  let lastAvatarUrl = null,
     lastUploadUrl = null;
-  var $dlg = options.holder;
-  var $boxes = options.$boxes || $dlg.find('.uploadBox');
-  var $img = $dlg.find('.dlgImgPane > img');
-  var $input = $dlg.find('input[type=file]');
-  var $avatarForm = $input.closest('form');
-  var uploadUrl = options.url || $avatarForm.attr('action');
-  var defaultImgUrl = options.defaultImgUrl || '/images/blank_user.gif';
+  const $dlg = options.holder;
+  const $boxes = options.$boxes || $dlg.find('.uploadBox');
+  const $img = $dlg.find('.dlgImgPane > img');
+  const $input = $dlg.find('input[type=file]');
+  const $avatarForm = $input.closest('form');
+  const uploadUrl = options.url || $avatarForm.attr('action');
+  const defaultImgUrl = options.defaultImgUrl || '/images/blank_user.gif';
 
-  var self = this;
+  const self = this;
 
   this.activate = function () {
     console.log('legacy upload activation');
@@ -71,7 +71,7 @@ window.WhydImgUpload = function (options) {
         );
     }
     try {
-      var img = data.postImg || data.file;
+      const img = data.postImg || data.file;
       lastUploadUrl = (img.path[0] != '/' ? '/' : '') + img.path;
       if (img.mime && img.mime.indexOf('image/') == 0) {
         lastAvatarUrl = lastUploadUrl;
@@ -102,10 +102,10 @@ window.WhydImgUpload = function (options) {
 
   if (DndUpload) {
     console.log('this browser accepts drag&drop uploads :-)');
-    var destination;
-    var $avatarDrop = $dlg.find('#avatarDrop');
-    var $progress = $dlg.find('.progress');
-    var $progressLevel = $progress.find('div');
+    let destination;
+    const $avatarDrop = $dlg.find('#avatarDrop');
+    const $progress = $dlg.find('.progress');
+    const $progressLevel = $progress.find('div');
     this.activate = function () {
       console.log('html5 upload activation');
       $boxes.hide();
@@ -125,7 +125,7 @@ window.WhydImgUpload = function (options) {
       )
         $(this).removeClass('hover');
     });
-    var handlers = {
+    const handlers = {
       error: function () {
         $boxes.hide();
         $avatarForm.show();
@@ -150,7 +150,7 @@ window.WhydImgUpload = function (options) {
       url: uploadUrl,
       handler: function (eventName, eventData) {
         $(this).removeClass('hover');
-        var handler = handlers[eventName];
+        const handler = handlers[eventName];
         if (handler) handler(eventData);
         else console.log('DndUpload handler', eventName, eventData);
       },

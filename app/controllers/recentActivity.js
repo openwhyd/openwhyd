@@ -4,17 +4,17 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var ObjectId = require('../models/mongodb.js').ObjectId;
-var followModel = require('../models/follow.js');
-var activityModel = require('../models/activity.js');
-var postModel = require('../models/post.js');
-var userModel = require('../models/user.js');
-var postsTemplate = require('../templates/posts.js');
-var templateLoader = require('../templates/templateLoader.js');
-var mainTemplate = require('../templates/mainTemplate.js');
+const snip = require('../snip.js');
+const ObjectId = require('../models/mongodb.js').ObjectId;
+const followModel = require('../models/follow.js');
+const activityModel = require('../models/activity.js');
+const postModel = require('../models/post.js');
+const userModel = require('../models/user.js');
+const postsTemplate = require('../templates/posts.js');
+const templateLoader = require('../templates/templateLoader.js');
+const mainTemplate = require('../templates/mainTemplate.js');
 
-var template;
+let template;
 function loadTemplates(callback) {
   template = templateLoader.loadTemplate(
     'app/templates/recentActivity.html',
@@ -25,11 +25,11 @@ function loadTemplates(callback) {
 }
 loadTemplates();
 
-var fetchSubscriptions = function (uid, callback) {
-  var uidList = [];
+const fetchSubscriptions = function (uid, callback) {
+  const uidList = [];
   //console.log("recentActivity.fetchSubscriptions", uid);
   followModel.fetchUserSubscriptions(uid, function (subscriptions) {
-    for (let i in subscriptions.subscriptions)
+    for (const i in subscriptions.subscriptions)
       if (
         subscriptions.subscriptions[i].id &&
         subscriptions.subscriptions[i].id != uid
@@ -49,8 +49,8 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 			id:"4fb118c368b1a410ecdc0058", name:"Tony Hymes", subscribed: true
 		}}
 	]); */
-  var uidSet = {};
-  for (let i in mySubscriptionsUidList)
+  const uidSet = {};
+  for (const i in mySubscriptionsUidList)
     uidSet[mySubscriptionsUidList[i]] = true;
   //options = options || {};
   //uidList.push("4d94501d1f78ac091dbc9b4d"); // adrien (for tests)
@@ -63,9 +63,9 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
     function (activities, hasMore) {
       // extract users and posts to fetch from DB
 
-      var usersToPopulate = [],
+      const usersToPopulate = [],
         postsToPopulate = [];
-      for (let i in activities)
+      for (const i in activities)
         if ((activities[i] || {}).subscription) {
           activities[i].subscription.subscribed =
             uidSet[activities[i].subscription.id];
@@ -82,10 +82,10 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
           /*options*/ null,
           function (posts) {
             // apply fetched data (when not null) to liked posts
-            var postSet = {},
+            const postSet = {},
               finalActivities = [];
-            for (let i in posts) postSet['' + posts[i]._id] = posts[i];
-            for (let i in activities) {
+            for (const i in posts) postSet['' + posts[i]._id] = posts[i];
+            for (const i in activities) {
               if ((activities[i] || {}).like) {
                 if (postSet['' + activities[i].like.pId])
                   activities[i].like.post =
@@ -104,10 +104,10 @@ function fetchRecentActivity(uidList, mySubscriptionsUidList, options, cb) {
 
 function aggregateActivities(acts) {
   //console.log("acts", acts);
-  var aggrs = [],
-    aggr = {};
-  for (let i in acts) {
-    var attrName = (acts[i].type = acts[i].like ? 'like' : 'subscription'),
+  const aggrs = [];
+  let aggr = {};
+  for (const i in acts) {
+    const attrName = (acts[i].type = acts[i].like ? 'like' : 'subscription'),
       sameAuthor = aggr.id == acts[i].id,
       sameActType = aggr.type == acts[i].type;
     if (sameAuthor && sameActType)
@@ -124,7 +124,7 @@ function aggregateActivities(acts) {
 
 function renderLikedPosts(activity, cb) {
   if (activity.type == 'like') {
-    var posts = activity.likes.aggregatedItems.map(function (aggr) {
+    const posts = activity.likes.aggregatedItems.map(function (aggr) {
       return postsTemplate.preparePost(aggr.post);
     });
     //if (!posts.length) continue;
@@ -148,7 +148,7 @@ exports.generateActivityFeed = function (
     mySubscriptionsUidList,
     { after: reqParams.after },
     function (rawActivities, hasMore) {
-      var activities = aggregateActivities(rawActivities);
+      const activities = aggregateActivities(rawActivities);
 
       snip.forEachArrayItem(activities, renderLikedPosts, function () {
         cb({
@@ -166,7 +166,7 @@ exports.generateActivityFeed = function (
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('recentActivity.controller', reqParams);
   reqParams = reqParams || {};
-  var loggedInUser = request.getUser() || {};
+  const loggedInUser = request.getUser() || {};
   if (!loggedInUser.id) return response.temporaryRedirect('/');
 
   //reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
@@ -182,7 +182,7 @@ exports.controller = function (request, reqParams, response) {
       reqParams,
       function (pageVars) {
         if (!pageVars.rawFeed) {
-          var fullUidList = uidList.slice(0, uidList.length);
+          const fullUidList = uidList.slice(0, uidList.length);
           fullUidList.push(loggedInUser.id);
           render(
             mainTemplate.renderWhydPage({

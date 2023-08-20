@@ -9,19 +9,19 @@
  * @typedef {import('../infrastructure/mongodb/types').UserDocument} UserDocument
  */
 
-var mongodb = require('../models/mongodb.js');
+const mongodb = require('../models/mongodb.js');
 const ObjectId = mongodb.ObjectId;
-var emailModel = require('../models/email.js');
-var postModel = require('../models/post.js');
-var searchModel = require('../models/search.js');
-var snip = require('../snip.js');
+const emailModel = require('../models/email.js');
+const postModel = require('../models/post.js');
+const searchModel = require('../models/search.js');
+const snip = require('../snip.js');
 
-var crypto = require('crypto');
+const crypto = require('crypto');
 
-var USERNAME_REGEX = /^[a-z0-9]+[a-z0-9_\-.]+[a-z0-9]+$/i;
-var USERNAME_MIN_LENGTH = 3;
-var USERNAME_MAX_LENGTH = 18;
-var USERNAME_RESERVED = {
+const USERNAME_REGEX = /^[a-z0-9]+[a-z0-9_\-.]+[a-z0-9]+$/i;
+const USERNAME_MIN_LENGTH = 3;
+const USERNAME_MAX_LENGTH = 18;
+const USERNAME_RESERVED = {
   // blacklist of user urls
   'index.html': true,
   null: true,
@@ -60,7 +60,7 @@ var USER_FIELDS = {
 */
 
 // default user preferences
-var defaultPref = (exports.DEFAULT_PREF = {
+const defaultPref = (exports.DEFAULT_PREF = {
   // ui preferences
   hideBkAd: false, // hide the "add bookmaklet" side box on home page
 
@@ -117,9 +117,9 @@ const TESTING_DIGEST = process.appParams?.digestImmediate;
   snip.forEachFileLine(routeFile, function (line) {
     if (typeof line != 'string') return;
     line = line.substr(line.indexOf('/') + 1);
-    var end = line.search(/[\t/]/);
+    const end = line.search(/[\t/]/);
     if (end > -1) {
-      var handle = line.substr(0, end);
+      const handle = line.substr(0, end);
       if (handle.indexOf('{') == -1) {
         USERNAME_RESERVED[handle] = true;
       }
@@ -198,7 +198,7 @@ exports.md5 = function (data) {
 // make sure user prefs are set with default values, if not set manually yet
 function processUserPref(user) {
   user.pref = user.pref || {}; //defaultPref;
-  for (let i in defaultPref)
+  for (const i in defaultPref)
     user.pref[i] =
       user.pref[i] === undefined || user.pref[i] === null
         ? defaultPref[i] // default is better than null/undefined value
@@ -211,7 +211,7 @@ function processUserPref(user) {
 exports.processUser = processUserPref;
 
 function processUsers(list) {
-  for (let i in list) if (list[i]) processUserPref(list[i]);
+  for (const i in list) if (list[i]) processUserPref(list[i]);
 }
 
 function fetch(q, handler) {
@@ -238,9 +238,9 @@ exports.fetchMulti = async function (q, options, handler) {
   if (q._id && typeof q._id == 'string') q._id = ObjectId(q._id);
   if (q._id && typeof q._id == 'object')
     // $in:[]
-    for (let i in q._id)
+    for (const i in q._id)
       if (i == '$in')
-        for (let j in q._id['$in'])
+        for (const j in q._id['$in'])
           q._id['$in'][j] = ObjectId('' + q._id['$in'][j]);
   const { fields } = options ?? {};
   if (options) delete options.fields;
@@ -327,11 +327,11 @@ exports.update = function (uid, update, handler) {
  * @param {(userDocument:UserDocument) => void} handler
  */
 exports.save = function (pUser, handler) {
-  var uid = pUser._id || pUser.id;
-  var criteria = uid
+  const uid = pUser._id || pUser.id;
+  const criteria = uid
     ? { _id: typeof uid == 'string' ? ObjectId(uid) : uid }
     : { email: emailModel.normalize(pUser.email) };
-  var user = pUser;
+  const user = pUser;
   delete user._id;
   if (user.name) user.n = exports.normalizeName(user.name);
   mongodb.collections['user'].updateOne(
@@ -362,7 +362,7 @@ exports.delete = function (criteria, handler) {
         (function next() {
           if (!user.pl.length) console.log('done deleting user playlists');
           else {
-            var pl = user.pl.pop() || {};
+            const pl = user.pl.pop() || {};
             console.log(
               'deleting user playlists',
               user._id + '_' + pl.id,
@@ -429,9 +429,9 @@ exports.fetchInviteByEmail = function (email, handler) {
 };
 
 function insertInvite(obj, handler) {
-  var criteria = {};
+  let criteria = {};
   if (obj.email) {
-    var normalized = emailModel.normalize(obj.email);
+    const normalized = emailModel.normalize(obj.email);
     if (!emailModel.validate(normalized)) {
       return handler ? handler(null) : null;
     }
@@ -477,7 +477,7 @@ exports.inviteFbUserBy = function (fbId, senderId, handler) {
 };
 
 exports.removeInvite = function (inviteCode, handler) {
-  var id = typeof inviteCode == 'string' ? ObjectId(inviteCode) : inviteCode;
+  const id = typeof inviteCode == 'string' ? ObjectId(inviteCode) : inviteCode;
   mongodb.collections['invite'].deleteOne({ _id: id }, function (err) {
     console.log('removeInvite =>', err || 'removed invite ' + id);
     if (handler) handler({ _id: id });
@@ -502,7 +502,7 @@ exports.removeInviteByEmail = function (emailList, handler) {
 exports.fetchPlaylist = function (uId, plId, cb) {
   exports.fetchByUid(uId, function (user) {
     if (user && user.pl && user.pl.length)
-      for (let i in user.pl) {
+      for (const i in user.pl) {
         if (user.pl[i].id == plId) return cb(user.pl[i]);
       }
     else if (cb) cb();
@@ -515,7 +515,7 @@ exports.hasPlaylistName = function (user, name) {
       'user.hasPlaylistName error: null user provided in user.hasPlaylist',
     );
   else if (user.pl && user.pl.length)
-    for (let i in user.pl) if (user.pl[i].name == name) return user.pl[i];
+    for (const i in user.pl) if (user.pl[i].name == name) return user.pl[i];
   return false;
 };
 
@@ -528,9 +528,9 @@ exports.hasPlaylistNameByUid = function (uId, name, cb) {
 exports.setPlaylist = function (uId, plId, upd, handler) {
   upd = upd || {};
   fetch({ _id: '' + uId }, function (err, user) {
-    var found = true;
+    let found = true;
     user.pl = user.pl || [];
-    for (let i in user.pl)
+    for (const i in user.pl)
       if ('' + user.pl[i].id == '' + plId) {
         found = user.pl[i]; // = {id:plId, name:plName};
         if (upd.name) user.pl[i].name = upd.name;
@@ -590,14 +590,14 @@ function msToDigestTimestamp(date) {
 }
 
 exports.getEmailNotifsFreq = function (user) {
-  var freq = -1; // daily (by default)
-  for (let i in user.pref)
+  let freq = -1; // daily (by default)
+  for (const i in user.pref)
     if (i.indexOf('em') == 0) freq = Math.max(freq, user.pref[i]);
   return freq;
 };
 
 exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
-  var criteria = {
+  const criteria = {
     'pref.pendEN': { $gt: 0 }, // number of pending email notifs
   };
   if (!TESTING_DIGEST)
@@ -619,9 +619,9 @@ exports.incrementNotificationCounter = function (uId, handler) {
 exports.setPref = function (uId, pref, handler) {
   if (!pref) handler({ error: 'Invalid preferences' });
   else {
-    var cleanPref = {},
-      emailFreq = 0;
-    for (let i in defaultPref)
+    const cleanPref = {};
+    let emailFreq = 0;
+    for (const i in defaultPref)
       if (pref[i] !== undefined && pref[i] !== null) {
         // only clean provided pref values
         cleanPref['pref.' + i] =
@@ -631,7 +631,7 @@ exports.setPref = function (uId, pref, handler) {
           emailFreq = Math.max(emailFreq, parseInt('' + pref[i]));
       }
     if (emailFreq > 0) {
-      var now = new Date().getTime();
+      const now = new Date().getTime();
       cleanPref['pref.prevEN'] = msToDigestTimestamp(now);
       cleanPref['pref.nextEN'] = msToDigestTimestamp(
         now + daysToMillisecs(emailFreq),
@@ -663,7 +663,7 @@ exports.setFbId = function (uId, fbId, cb, fbTok) {
             error: 'This Facebook account is already associated to this user',
           });
     } else {
-      var u = { _id: uId, fbId: fbId };
+      const u = { _id: uId, fbId: fbId };
       if (fbTok) u.fbTok = fbTok;
       // @ts-ignore
       exports.save(u, cb);
@@ -737,16 +737,16 @@ exports.renameUser = function (uid, name, callback) {
     //@ts-ignore
     exports.save({ _id: uid, name: name }, callback);
   }
-  var cols = ['follow', 'post'];
+  const cols = ['follow', 'post'];
   uid = '' + uid;
-  var user = mongodb.getUserFromId(uid);
-  var oldName = (user || {}).name;
+  const user = mongodb.getUserFromId(uid);
+  const oldName = (user || {}).name;
   if (!user) callback({ error: 'renameUser error: user not found' });
   else if (oldName == name) callback({});
   // nothing to do
   else
     (function next() {
-      var col;
+      let col;
       if (!(col = cols.pop())) return whenDone();
       console.log('renameUser: processing collection', col, '...');
       col = mongodb.collections[col];
@@ -779,19 +779,19 @@ exports.renameUser = function (uid, name, callback) {
 };
 
 exports.fetchUserFields = function (subList, attrToCopy, cb) {
-  var uidList = [];
-  if (subList) for (let i in subList) uidList.push(subList[i].id);
+  const uidList = [];
+  if (subList) for (const i in subList) uidList.push(subList[i].id);
   if (uidList.length) {
-    var attrSet = snip.arrayToSet(attrToCopy, 1);
+    const attrSet = snip.arrayToSet(attrToCopy, 1);
     exports.fetchMulti(
       { _id: { $in: uidList } },
       { fields: attrSet },
       function (userList) {
-        var uidSet = {};
+        const uidSet = {};
         if (userList)
-          for (let i in userList) uidSet['' + userList[i]._id] = userList[i];
-        for (let i in subList)
-          for (let j in attrToCopy)
+          for (const i in userList) uidSet['' + userList[i]._id] = userList[i];
+        for (const i in subList)
+          for (const j in attrToCopy)
             if (subList[i] && uidSet[subList[i].id])
               subList[i][attrToCopy[j]] = uidSet[subList[i].id][attrToCopy[j]];
         cb(subList);
@@ -805,15 +805,15 @@ exports.fetchUserBios = function (subList, cb) {
 };
 
 exports.fetchPlaylists = async function (user, params, cb) {
-  var pl = (user || {}).pl || [];
-  var uId = (user || {}).id;
+  const pl = (user || {}).pl || [];
+  const uId = (user || {}).id;
   const counts = await mongodb.collections['post']
     .aggregate([
       { $match: { uId: uId } },
       { $group: { _id: '$pl.id', c: { $sum: 1 } } },
     ])
     .toArray();
-  var plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
+  const plCount = {}; //snip.objArrayToSet(counts, "_id"); // => {plId -> {_id: plId, c: nbTracks}}
   counts.map(function (counter) {
     // necessary to make a sum, because playlist ids can be both stored as int and string
     plCount['' + counter._id] = (plCount['' + counter._id] || 0) + counter.c;

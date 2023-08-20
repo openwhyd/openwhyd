@@ -3,14 +3,14 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../../snip.js');
-var mongodb = require('../../models/mongodb.js');
-var userModel = require('../../models/user.js');
-var AdminLists = require('../../templates/adminLists.js').AdminLists;
+const snip = require('../../snip.js');
+const mongodb = require('../../models/mongodb.js');
+const userModel = require('../../models/user.js');
+const AdminLists = require('../../templates/adminLists.js').AdminLists;
 
 // ACTION HANDLERS
 
-var handlers = {
+const handlers = {
   rename: function (p, cb) {
     if (p._id && p.name)
       userModel.renameUser(p._id, p.name, function (result) {
@@ -22,13 +22,12 @@ var handlers = {
     else cb({ error: 'missing arguments' });
   },
   delete: function (p, cb) {
-    var id = p._id && p._id.join ? p._id[0] : p._id;
+    const id = p._id && p._id.join ? p._id[0] : p._id;
     if (id) {
       console.log('delete user ', id);
       userModel.delete({ _id: id }, function (res) {
         res = res || {};
-        var json = JSON.parse(JSON.stringify(res));
-        res.json = json;
+        res.json = JSON.parse(JSON.stringify(res));
         cb(res);
       });
     } else cb({ error: 'missing arguments' });
@@ -38,7 +37,7 @@ var handlers = {
 // ADMIN CONSOLE TEMPLATES
 
 function renderItem(item) {
-  var date = item.date || item._id.getTimestamp();
+  let date = item.date || item._id.getTimestamp();
   date =
     date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
   return {
@@ -69,10 +68,10 @@ function renderItem(item) {
 }
 
 function renderTemplate(items) {
-  var users = [];
-  for (let i in items) users.push(renderItem(items[i]));
+  const users = [];
+  for (const i in items) users.push(renderItem(items[i]));
 
-  var console = new AdminLists();
+  const console = new AdminLists();
   console.addWideList(users, 'Users', ['rename', 'delete'], {});
 
   // the handler will be called AFTER the confirmation dialog
@@ -103,7 +102,7 @@ exports.handleRequest = function (request, reqParams, response) {
   request.logToConsole('admin/users.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
-  var user = request.checkAdmin(response);
+  const user = request.checkAdmin(response);
   if (!user) return;
 
   function renderResult(result) {
@@ -112,7 +111,7 @@ exports.handleRequest = function (request, reqParams, response) {
       response.renderJSON(result.json);
       return;
     }
-    var html =
+    const html =
       result.html ||
       (result.error
         ? '<h1>error</h1><p>' + result.error + '</p>'

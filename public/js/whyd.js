@@ -1,10 +1,10 @@
 /* global $, openRemoteDialog, whydPlayer, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
 
-var MAX_NB_MENTIONS = 6;
+const MAX_NB_MENTIONS = 6;
 
-var wlh = window.location.href;
-var urlPrefix = wlh.substr(0, wlh.indexOf('/', 8));
-var urlDomain = urlPrefix.split('//').pop();
+const wlh = window.location.href;
+const urlPrefix = wlh.substr(0, wlh.indexOf('/', 8));
+const urlDomain = urlPrefix.split('//').pop();
 
 window.goToPage = function (url) {
   console.log('goToPage (no history)', url);
@@ -38,9 +38,9 @@ function getPostById(pId, callback) {
 
 function extractPostData($post, defaults = {}) {
   $post = $post || $(this);
-  var $author = $post.find('.author > a').first();
-  var uId = $author.attr('href') || defaults.uId;
-  var text = $post
+  const $author = $post.find('.author > a').first();
+  const uId = $author.attr('href') || defaults.uId;
+  let text = $post
     .find('.text')
     .first()
     .contents()
@@ -146,11 +146,11 @@ window.subscribeToUser = function (uId, cb) {
 };
 
 function switchSubscription() {
-  var $button = $(this).hasClass('userSubscribe')
+  const $button = $(this).hasClass('userSubscribe')
     ? $(this)
     : $('.userSubscribe');
-  var uid = $button.attr('data-uid') || window.pageUser.id;
-  var subscribing = !$button.hasClass('subscribed');
+  const uid = $button.attr('data-uid') || window.pageUser.id;
+  const subscribing = !$button.hasClass('subscribed');
   $.ajax({
     type: 'GET',
     url: '/api/follow',
@@ -203,12 +203,12 @@ window.toggleLovePost = function (pId) {
     //return alert("Please sign in first!")
     return login();
   getPostById(pId, function ($post) {
-    var $button = $post.find('.btnLike').first();
+    let $button = $post.find('.btnLike').first();
     $button = $button.add('#postViewer .btnLike');
     function updateButton(result) {
       if (!result || result.error)
         return alert(result.error || 'operation failed... please try again!');
-      var playingTrack = window.whydPlayer.getCurrentTrack();
+      const playingTrack = window.whydPlayer.getCurrentTrack();
       console.log('playing track', playingTrack);
       if (playingTrack && playingTrack.metadata.pid == pId)
         $('#btnLike').toggleClass('loved', result.loved);
@@ -220,8 +220,9 @@ window.toggleLovePost = function (pId) {
           console.log('error', e, e.stack);
         }
       } else $button.removeClass('selected').text('Like');
-      var $counter = $post.find('.nbLoves > span');
-      var nbLoves = parseInt($counter.first().text()) + (result.loved ? 1 : -1);
+      const $counter = $post.find('.nbLoves > span');
+      const nbLoves =
+        parseInt($counter.first().text()) + (result.loved ? 1 : -1);
       $counter.text(nbLoves); //.parent().toggle(nbLoves>0);
       updatePostStats($post);
     }
@@ -230,9 +231,9 @@ window.toggleLovePost = function (pId) {
 };
 
 window.loadMore = function (params, cb) {
-  var $button = $('.btnLoadMore').last();
+  const $button = $('.btnLoadMore').last();
   $button.addClass('loading');
-  var $frame = $button.parent();
+  const $frame = $button.parent();
   $frame.ready(function () {
     params = params || {};
     if (params.limit)
@@ -250,7 +251,7 @@ window.loadMore = function (params, cb) {
 };
 
 function loadTop() {
-  var $firstPost = $('.posts > .post').first();
+  const $firstPost = $('.posts > .post').first();
   if (window.prevPageUrl && window.prevPageUrl.split('before=')[1])
     $.get(window.prevPageUrl, function (data) {
       $firstPost.before(data);
@@ -266,7 +267,7 @@ function loadTop() {
 
 function onNewPost(whydPost) {
   console.log('on new post', whydPost);
-  var p = whydPost.storedPost;
+  const p = whydPost.storedPost;
 
   if (!p) {
     showMessage('Oops; an error occurred... Please try again!');
@@ -323,7 +324,7 @@ function _createSubscribeButton(user, $li) {
 }
 
 function _renderUserInList(user, liHandler) {
-  var $li = $('<li>')
+  const $li = $('<li>')
     .append(
       $("<div class='thumb'>")
         .css(
@@ -354,7 +355,7 @@ function _renderUserInList(user, liHandler) {
 }
 
 function _renderUserList(users, liHandler) {
-  var $out = $('<ul>').addClass('userList');
+  const $out = $('<ul>').addClass('userList');
   for (let i = 0; i < users.length; ++i)
     $out.append(_renderUserInList(users[i], liHandler));
   return $out.ajaxify ? $out.ajaxify() : $out;
@@ -362,7 +363,7 @@ function _renderUserList(users, liHandler) {
 
 function _showUserListDlg(users, title) {
   if (!users || users.length == 0) return;
-  var plural = (users || []).length > 1;
+  const plural = (users || []).length > 1;
   title = title.replace('(s)', plural ? 's' : '');
   openJqueryDialog(
     _renderUserList(users),
@@ -371,9 +372,9 @@ function _showUserListDlg(users, title) {
   );
 }
 
-var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
+const RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
-var regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
+const regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 function replaceURLWithHTMLLinks(text) {
   return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
@@ -389,9 +390,9 @@ function _renderCommentText(str) {
 }
 
 function _commentDeleteHandler() {
-  var $comment = $(this).closest('div[data-cid]');
-  var $post = $comment.closest('.post');
-  var $html = $(
+  const $comment = $(this).closest('div[data-cid]');
+  const $post = $comment.closest('.post');
+  const $html = $(
     '<div><p>Do you want to permanently delete this comment?</p></div>' +
       '<span class="btnDelete greenButton">Delete</span>',
   );
@@ -405,9 +406,9 @@ function _commentDeleteHandler() {
 }
 
 function _renderComment(c) {
-  var t = new Date();
+  let t = new Date();
   t = t.getHours() + ':' + t.getMinutes();
-  var $com = $("<div class='comment' data-cid='" + c._id + "'>");
+  const $com = $("<div class='comment' data-cid='" + c._id + "'>");
   $("<a class='author' href='/u/" + c.uId + "'>")
     .append("<span style='background-image:url(/img/u/" + c.uId + ");'>")
     .append($('<p>').text(c.uNm).append($("<span class='t'>").text(t)))
@@ -420,13 +421,11 @@ function _renderComment(c) {
 function updatePostStats($post /*, $ext*/) {
   //var $ext = $post.find(".stats") || $ext ;
 
-  var nbComments = $post.find('.comment').length;
+  const nbComments = $post.find('.comment').length;
   $post.find('.nbComments span').text(nbComments);
-  var hasReposts =
-    parseInt($post.find('.nbReposts span').text()) == 0 ? false : true;
-  var hasLikes =
-    parseInt($post.find('.nbLoves span').text()) == 0 ? false : true;
-  var hasComments = $post.find('.comment').length == 0 ? false : true;
+  const hasReposts = parseInt($post.find('.nbReposts span').text()) > 0;
+  const hasLikes = parseInt($post.find('.nbLoves span').text()) > 0;
+  const hasComments = $post.find('.comment').length > 0;
 
   // $ext.find(".stats").toggle(hasReposts || hasLikes);
   $post.find('.nbReposts').toggle(hasReposts);
@@ -436,19 +435,19 @@ function updatePostStats($post /*, $ext*/) {
 
 function toggleComments(pId, toggle) {
   getPostById(pId, function ($post) {
-    var $ext = $post
+    const $ext = $post
       .find('.ext')
       .toggleClass('hidden', toggle != undefined ? !toggle : undefined);
     if ($ext.hasClass('hidden')) return;
     if ($ext.ajaxify) $ext.ajaxify();
     // init comment input
-    var $btn = $ext.find('input[type=submit]');
-    var $textField = $ext.find('textarea').mentionsInput({
+    const $btn = $ext.find('input[type=submit]');
+    const $textField = $ext.find('textarea').mentionsInput({
       maxMentions: MAX_NB_MENTIONS,
       onDataRequest: function (mode, query, callback) {
         submitSearchQuery({ q: query, context: 'mention' }, function (res) {
           res = JSON.parse(res);
-          var hits = (res.hits || []).map(function (r) {
+          const hits = (res.hits || []).map(function (r) {
             return {
               id: r._id,
               name: r.name,
@@ -490,7 +489,7 @@ function toggleComments(pId, toggle) {
     updatePostStats($post, $ext);
     // init "show more" link
     if (!$ext.find('.showMore').length) {
-      var $hidden = $ext.find('.comments > div.hidden');
+      const $hidden = $ext.find('.comments > div.hidden');
       if ($hidden.length)
         $("<p class='showMore'>Show more comments</p>")
           .insertBefore($hidden.first())
@@ -562,8 +561,8 @@ window.modalPostBox = function (/*onPosted*/) {
 };
 
 function modalRepostBox(trackOrPid /*onPosted*/) {
-  var url = '/post',
-    params = window.whydCtx ? ['ctx=' + window.whydCtx] : [];
+  let url = '/post';
+  const params = window.whydCtx ? ['ctx=' + window.whydCtx] : [];
   if (typeof trackOrPid == 'string') url += '/' + trackOrPid /*+'/add'*/;
   // ?pid='+pId; //postData.pId+'&embed='+postData.eId+'&text='+postData.text;
   else if (trackOrPid.eId)
@@ -581,7 +580,7 @@ function modalRepostBox(trackOrPid /*onPosted*/) {
 }
 
 window.modalPostEditBox = function (pId /*, onPosted*/) {
-  var url = '/post/' + pId + '/edit';
+  const url = '/post/' + pId + '/edit';
   openRemoteDialog(url, 'dlgPostBox dlgRepostBox', function ($box) {
     $box.prepend('<h1>Edit this track</h1>');
     $box.find('#contentThumb').addClass('loading');
@@ -590,21 +589,21 @@ window.modalPostEditBox = function (pId /*, onPosted*/) {
 
 /* notifs */
 
-var lastNotifData = null;
-var $notifPanel = $('#notifPanel');
-var $notifIcon = $('#notifIcon');
+let lastNotifData = null;
+let $notifPanel = $('#notifPanel');
+let $notifIcon = $('#notifIcon');
 
-var refreshNotifCounter = function () {
-  var notifs = lastNotifData;
-  var total = 0;
-  for (let i in notifs) total += notifs[i].n || 1;
+const refreshNotifCounter = function () {
+  const notifs = lastNotifData;
+  let total = 0;
+  for (const i in notifs) total += notifs[i].n || 1;
   $notifIcon.text(total);
   $notifIcon.removeClass('someNotif');
   if (total == 0) $notifPanel.hide();
   else $notifIcon.addClass('someNotif');
 };
 
-var fetchNotifs = function () {
+const fetchNotifs = function () {
   $.ajax({
     type: 'GET',
     url: '/api/notif',
@@ -617,8 +616,8 @@ var fetchNotifs = function () {
   });
 };
 
-var renderNotif = function (notif) {
-  var content, href;
+const renderNotif = function (notif) {
+  let content, href;
   if (notif.pId.indexOf('/reposts') > -1) {
     href = '/c/' + notif.pId.replace('/reposts', '');
     content =
@@ -647,7 +646,7 @@ var renderNotif = function (notif) {
       encodeHtmlEntities(notif.track.name) +
       '</span> subscribed to your stream!';
   }
-  var imgId;
+  let imgId;
   if (notif.lastAuthor.id) imgId = '/u/' + notif.lastAuthor.id;
   else if ((notif.pId || '').indexOf('/') == 0) imgId = notif.pId;
   else imgId = '/u/' + notif.pId.split('/')[0];
@@ -671,12 +670,12 @@ var renderNotif = function (notif) {
   );
 };
 
-var refreshNotifPanel = function () {
-  var content =
+const refreshNotifPanel = function () {
+  let content =
     '<div onclick="clearNotifs();">Clear all</div>' +
     '<p>Your notifications</p><ul>';
-  var notifs = lastNotifData;
-  for (let i in notifs) content += renderNotif(notifs[i]);
+  const notifs = lastNotifData;
+  for (const i in notifs) content += renderNotif(notifs[i]);
   $notifPanel.html(content + '</ul>').ajaxify();
 };
 
@@ -710,7 +709,7 @@ window.openNotif = function (/*pId*/) {
 /* bio update */
 
 window.submitBio = function () {
-  var bio = $('.bio');
+  const bio = $('.bio');
   bio.parent().addClass('submitting');
   $.ajax({
     type: 'GET',
@@ -728,15 +727,15 @@ window.submitBio = function () {
 
 window.sharePost = function (pId) {
   getPostById(pId, function ($post) {
-    var post = extractPostData(
+    let post = extractPostData(
       $post /*, {uId:window.pageTopic.mid, uNm:window.pageTopic.name}*/,
     );
     console.log('post data', post);
-    var $btn = $post.find('.btns > .btnShare');
+    const $btn = $post.find('.btns > .btnShare');
     $btn.addClass('active');
-    var offset = $btn.offset();
+    const offset = $btn.offset();
     //$(".sharePopin").remove();
-    var postUrl =
+    const postUrl =
       window.location.href.substr(0, window.location.href.indexOf('/', 10)) +
       '/c/' +
       post.id;
@@ -744,7 +743,7 @@ window.sharePost = function (pId) {
       $btn.removeClass('active');
       delete window.onDialogClose;
     };
-    var TEMPLATE = [
+    const TEMPLATE = [
       '<div id="sharepopin-overlay"></div>',
       '<div id="sharePopin">',
       '<div class="pointe"></div>',
@@ -771,8 +770,8 @@ window.sharePost = function (pId) {
       $('#sharePopin').remove();
       $('#sharepopin-overlay').remove();
     } else {
-      var container = $($btn).parent().parent();
-      var share = $(TEMPLATE);
+      const container = $($btn).parent().parent();
+      const share = $(TEMPLATE);
       $(container).append(share);
       offset.top += 25;
       offset.left -= 30;
@@ -804,11 +803,11 @@ window.publishPost = function (pId) {
 /* main init */
 
 window.makeUrl = function (getParamsObj) {
-  var wlh = window.getCurrentUrl
+  let wlh = window.getCurrentUrl
     ? window.getCurrentUrl()
     : window.location.href;
   wlh = wlh.split('#')[0];
-  var hasParams = wlh.indexOf('?') > -1;
+  const hasParams = wlh.indexOf('?') > -1;
   /*
   if (hasParams && wlh.indexOf("#") > -1 && wlh.indexOf("_suid") > -1) { // finds canonical url from ajax/hash-based urls (e.g. in IE9)
     wlh = wlh.substr(0, wlh.indexOf("/", 10)) + "/" + wlh.split("#").pop().split("?")[0];
@@ -817,8 +816,8 @@ window.makeUrl = function (getParamsObj) {
   */
   if (getParamsObj) {
     wlh += hasParams ? '&' : '?';
-    var p = [];
-    for (let i in getParamsObj)
+    const p = [];
+    for (const i in getParamsObj)
       p.push(encodeURIComponent(i) + '=' + encodeURIComponent(getParamsObj[i]));
     wlh += p.join('&');
   }
@@ -826,13 +825,13 @@ window.makeUrl = function (getParamsObj) {
 };
 
 function onPageLoad() {
-  var $body = $('body');
+  const $body = $('body');
   if ($body.hasClass('pgPost'))
     toggleComments($('.post').first().attr('data-pid'), true);
 }
 
 $(document).ready(function () {
-  var keyShortcuts = {
+  const keyShortcuts = {
     32: function () {
       // space: play/pause
       window.whydPlayer.playPause();
@@ -851,7 +850,7 @@ $(document).ready(function () {
     },
   };
 
-  var keyUpShortcuts = {
+  const keyUpShortcuts = {
     27: function () {
       // escape: disable fullscreen mode
       window.whydPlayer.toggleFullscreen(false);
@@ -899,7 +898,7 @@ $(document).ready(function () {
 
   // init notifications
 
-  var notifUpdateInterval = 20000;
+  const notifUpdateInterval = 20000;
   $notifPanel = $('#notifPanel');
   $notifIcon = $('#notifIcon');
 
@@ -914,7 +913,7 @@ $(document).ready(function () {
 
   // init search bar
 
-  var noResultsYet = function (q) {
+  const noResultsYet = function (q) {
     return /*$(*/ [
       '<ul class="showAllResults loading">',
       '<li><a href="/search?q=' +
@@ -987,10 +986,11 @@ $(document).ready(function () {
                   typeof resultsHtml === 'string' &&
                   resultsHtml) ||
                 '';
-              var foundTracks = resultsHtml.indexOf('<div>Tracks</div>') != -1;
+              const foundTracks =
+                resultsHtml.indexOf('<div>Tracks</div>') != -1;
               display(resultsHtml, !foundTracks); // stop the searching animation only if tracks were found
               if (!foundTracks) {
-                var externalTracks = [];
+                const externalTracks = [];
                 window.searchExternalTracks(query, function (track) {
                   if (track) {
                     track.name = track.title;
@@ -1023,7 +1023,7 @@ $(document).ready(function () {
 // AJAXIFY https://gist.github.com/854622
 (function (window /*, undefined*/) {
   // Prepare our Variables
-  var History = window.History,
+  const History = window.History,
     $ = window.jQuery,
     document = window.document;
 
@@ -1035,18 +1035,19 @@ $(document).ready(function () {
   // Wait for Document
   $(function () {
     // Prepare Variables
-    var /* Application Specific Variables */
+    const /* Application Specific Variables */
       contentSelector = /*#contentPane*/ '#mainPanel', //'#content,article:first,.article:first,.post:first',
-      $content = $(contentSelector).filter(':first'),
-      contentNode = $content.get(0),
       $menu = $('#menu,#nav,nav:first,.nav:first').filter(':first'),
       activeClass = 'active selected current youarehere',
       activeSelector = '.active,.selected,.current,.youarehere',
       menuChildrenSelector = '> li,> ul > li',
       /* Application Generic Variables */
       $body = $(document.body) /*.find(contentSelector).first()*/,
-      rootUrl = History.getRootUrl(),
-      newState = false; // HACK to restore scroll position on previous page of history
+      rootUrl = History.getRootUrl();
+    let newState = false; // HACK to restore scroll position on previous page of history
+
+    let $content = $(contentSelector).filter(':first');
+    const contentNode = $content.get(0);
 
     // Ensure Content
     if ($content.length === 0) {
@@ -1056,12 +1057,9 @@ $(document).ready(function () {
     // Internal Helper
     $.expr[':'].internal = function (obj /*, index, meta, stack*/) {
       // Prepare
-      var $this = $(obj),
-        url = $this.attr('href') || '',
-        isInternalLink;
-
-      // Check link
-      isInternalLink =
+      const $this = $(obj);
+      const url = $this.attr('href') || '';
+      const isInternalLink =
         url.substring(0, rootUrl.length) === rootUrl || url.indexOf(':') === -1;
 
       // Ignore or Keep
@@ -1069,9 +1067,9 @@ $(document).ready(function () {
     };
 
     // HTML Helper
-    var documentHtml = function (html) {
+    const documentHtml = function (html) {
       // Prepare
-      var result = String(html)
+      const result = String(html)
         .replace(/<!DOCTYPE[^>]*>/i, '')
         .replace(
           /<(html|head|body|title|meta|script)([\s>])/gi,
@@ -1086,20 +1084,20 @@ $(document).ready(function () {
     // Ajaxify Helper
     $.fn.ajaxify = function () {
       // Prepare
-      var $this = $(this);
+      const $this = $(this);
 
       // Ajaxify
       $this.find('a:internal:not(.no-ajaxy)').click(function (event) {
         // Prepare
-        var $this = $(this),
+        const $this = $(this),
           url = $this.attr('href'),
           title = $this.attr('title') || null;
 
         newState = true;
         //url = decodeURIComponent(url); // fix for non-latin characters
 
-        var noProtocol = (url || '').split('//').pop();
-        var isLocal =
+        const noProtocol = (url || '').split('//').pop();
+        const isLocal =
           noProtocol.charAt(0) == '/' || noProtocol.indexOf(urlDomain) == 0;
 
         // Continue as normal for cmd clicks etc
@@ -1122,7 +1120,7 @@ $(document).ready(function () {
 
     function loadPage() {
       // Prepare Variables
-      var State = History.getState(),
+      const State = History.getState(),
         url = State.url,
         relativeUrl = url.replace(rootUrl, '');
 
@@ -1149,28 +1147,26 @@ $(document).ready(function () {
         url: url,
         success: function (data) {
           // Prepare
-          var $data = $(documentHtml(data)),
+          const $data = $(documentHtml(data)),
             $dataHead = $data.find('.document-head:first'),
             $dataBody = $data.find('.document-body:first'),
-            $dataContent = $dataBody.find(contentSelector).filter(':first'),
-            $menuChildren,
-            contentHtml,
-            $scripts;
+            $dataContent = $dataBody.find(contentSelector).filter(':first');
 
           // Fetch the scripts
-          $scripts = $dataContent.find('.document-script');
+          const $scripts = $dataContent.find('.document-script');
           if ($scripts.length) {
             $scripts.detach();
           }
 
           // Fetch the content
-          contentHtml = $dataContent.html() /*||$data.html()*/;
+          const contentHtml = $dataContent.html(); /*||$data.html()*/
           if (!contentHtml) {
             document.location.href = url;
             return false;
           }
 
           // Update the menu
+          let $menuChildren;
           $menuChildren = $menu.find(menuChildrenSelector);
           $menuChildren.filter(activeSelector).removeClass(activeClass);
           $menuChildren = $menuChildren.has(
@@ -1207,7 +1203,7 @@ $(document).ready(function () {
 
           // Add the scripts
           $scripts.each(function () {
-            var $script = $(this),
+            const $script = $(this),
               src = $script.attr('src'),
               scriptNode = document.createElement('script');
             //if ($script.hasClass("no-ajaxy"))
@@ -1222,15 +1218,15 @@ $(document).ready(function () {
           });
 
           // Update CSS code
-          var currentLinks = {},
-            anonCounter = 0;
+          const currentLinks = {};
+          let anonCounter = 0;
           $('link').each(function () {
-            var src = $(this).attr('href');
+            const src = $(this).attr('href');
             if (src.indexOf('static.olark.com/css') == -1)
               currentLinks[src || anonCounter++] = $(this);
           });
           $dataHead.find('link').each(function () {
-            var src = $(this).attr('href');
+            const src = $(this).attr('href');
             if (currentLinks[src]) {
               //console.log("skip link: ", src, $(this));
               delete currentLinks[src];
@@ -1239,7 +1235,7 @@ $(document).ready(function () {
               $('head').append($(this));
             }
           });
-          for (let i in currentLinks) {
+          for (const i in currentLinks) {
             //console.log("remove link: ", i, currentLinks[i]);
             currentLinks[i].remove();
           }
@@ -1290,7 +1286,7 @@ $(document).ready(function () {
         if (window.location.href == url) loadPage({});
         else {
           // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
-          var httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
+          let httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
           if (httpPos != -1) {
             httpPos += 4;
             url =
@@ -1334,8 +1330,8 @@ $("<div id='pageLoader'></div>").appendTo('body');
 window.sortPlaylists = function (sortType) {
   const playlistsContainer = document.querySelector('#playlists');
   const allPlaylists = playlistsContainer.querySelectorAll('.playlist');
-  let playlistsFragment = document.createDocumentFragment();
-  let allPlaylistsObject = {};
+  const playlistsFragment = document.createDocumentFragment();
+  const allPlaylistsObject = {};
   let sortedPlaylistObjectKeys = [];
 
   if (allPlaylists.length > 2) {

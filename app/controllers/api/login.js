@@ -3,13 +3,13 @@
  */
 const snip = require('../../snip.js');
 const config = require('../../models/config.js');
-var emailModel = require('../../models/email.js');
-var userModel = require('../../models/user.js');
-var notifEmails = require('../../models/notifEmails.js');
-var userApi = require('../../controllers/api/user.js');
+const emailModel = require('../../models/email.js');
+const userModel = require('../../models/user.js');
+const notifEmails = require('../../models/notifEmails.js');
+const userApi = require('../../controllers/api/user.js');
 
-var md5 = userModel.md5;
-var loggingTemplate = require('../../templates/logging.js');
+const md5 = userModel.md5;
+const loggingTemplate = require('../../templates/logging.js');
 
 exports.handleRequest = function (request, form, response, ignorePassword) {
   form = form || {};
@@ -30,7 +30,7 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
     request.session.whydUid = (user || {}).id;
     if (!form.ajax) response.renderHTML(loggingTemplate.htmlRedirect(url));
     else {
-      var json = { redirect: url };
+      const json = { redirect: url };
       if (form.includeUser) {
         userApi.fetchUserData(user, function (user) {
           json.user = user;

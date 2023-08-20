@@ -4,17 +4,17 @@
  * @author adrienjoly, whyd
  **/
 
-var fs = require('fs');
-var util = require('util');
-var snip = require('../snip.js');
-var uiSnippets = snip;
-var config = require('../models/config.js');
-var render = { urlPrefix: '' };
+const fs = require('fs');
+const util = require('util');
+const snip = require('../snip.js');
+const uiSnippets = snip;
+const config = require('../models/config.js');
+const render = { urlPrefix: '' };
 
-var includeSuffix = '?' + config.version;
+const includeSuffix = '?' + config.version;
 
-var playemFile;
-var fbId;
+let playemFile;
+let fbId;
 const isProduction = config.urlPrefix.indexOf('openwhyd.org') > 0;
 if (isProduction) {
   //console.log('- Production - ');
@@ -28,7 +28,7 @@ if (isProduction) {
 
 //console.log("[mainTemplate] today is week #", snip.getWeekNumber(new Date()));
 
-var playerHtmlCode = fs.readFileSync('app/templates/whydPlayer.html', 'utf8');
+const playerHtmlCode = fs.readFileSync('app/templates/whydPlayer.html', 'utf8');
 
 exports.defaultPageMeta = {
   img: config.urlPrefix + '/images/logo-black-square-smaller.png',
@@ -36,7 +36,7 @@ exports.defaultPageMeta = {
 };
 
 function makeMetaHead(options = {}) {
-  var appUrl =
+  const appUrl =
     options.pageUrl &&
     'whyd://app?href=' +
       snip.addSlashes(
@@ -44,13 +44,13 @@ function makeMetaHead(options = {}) {
           .replace('https:', 'http:')
           .replace(config.urlPrefix, ''),
       );
-  var pageImg = uiSnippets.htmlEntities(
+  const pageImg = uiSnippets.htmlEntities(
     options.pageImage || exports.defaultPageMeta.img,
   );
-  var pageDesc = uiSnippets.htmlEntities(
+  const pageDesc = uiSnippets.htmlEntities(
     options.pageDesc || exports.defaultPageMeta.desc,
   );
-  var meta = [
+  const meta = [
     '<meta name="google-site-verification" content="mmqzgEU1bjTfJ__nW6zioi7O9vuur1SyYfW44DH6ozg" />',
     '<meta name="apple-itunes-app" content="app-id=874380201' +
       (appUrl ? ', app-argument=' + appUrl : '') +
@@ -83,7 +83,7 @@ function makeMetaHead(options = {}) {
   return meta;
 }
 
-var htmlHeading = [
+const htmlHeading = [
   '<!DOCTYPE html>',
   '<html lang="en">',
   '  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">', // music: http://ogp.me/ns/music# video: http://ogp.me/ns/video# website: http://ogp.me/ns/website#
@@ -114,8 +114,8 @@ exports.makeAnalyticsHeading = function (user) {
   })
   </script>`;
   // only render opengraph preferences (in order to avoid rendering a date object for nextEmail/nextEN)
-  var userPrefs = {};
-  for (let i in (user || {}).pref)
+  const userPrefs = {};
+  for (const i in (user || {}).pref)
     if (i.indexOf('og') == 0) userPrefs[i] = user.pref[i];
   return [
     ...errorTracking.split('\n'), // --> https://app.datadoghq.com/rum
@@ -174,7 +174,7 @@ exports.renderWhydFrame = function (html, params) {
 
   params.head = params.head || makeMetaHead(params);
 
-  var out = htmlHeading
+  let out = htmlHeading
     .concat(params.head || [])
     .concat([
       /* invalid html5 meta => replaced by Cache-Control HTTP header:
@@ -203,7 +203,7 @@ exports.renderWhydFrame = function (html, params) {
       '    <title>' + uiSnippets.htmlEntities(params.title) + '</title>',
     );
 
-  for (let i in params.css)
+  for (const i in params.css)
     out.push(
       '    <link href="' +
         render.urlPrefix +
@@ -226,9 +226,9 @@ exports.renderWhydFrame = function (html, params) {
     '    <script>soundManager.setup({url: "/swf/", flashVersion: 9, onready: function() {soundManager.isReady=true;}});</script>',
   );
 
-  var jsIncludes = [];
-  for (let i in params.js) {
-    var src =
+  const jsIncludes = [];
+  for (const i in params.js) {
+    const src =
       params.js[i].indexOf('//') > -1
         ? params.js[i]
         : render.urlPrefix + '/js/' + params.js[i] + includeSuffix;
@@ -268,7 +268,7 @@ exports.renderWhydFrame = function (html, params) {
   return out.join('\n');
 };
 exports.renderHeader = function (user, content, params) {
-  var uid = user ? user.id : null;
+  const uid = user ? user.id : null;
   content =
     content ||
     [
@@ -389,12 +389,12 @@ exports.renderWhydPage = function (params = {}) {
     'dlgEditProfileCover.css',
   ].concat(params.css || []);
 
-  var user = params.loggedUser || {};
+  const user = params.loggedUser || {};
   // console.log('connected user:', user.name, user.id);
 
   // other recognized params: bodyClass, head, content, sidebar
 
-  var out = [
+  const out = [
     //'<div class="topWarning">🚧 We\'re moving! => Openwhyd will be unavailable on Sunday 21th of May.</div>',
     '<!--[if lt IE 8]>',
     '<div class="topWarning">Warning: your web browser is not supported by Openwhyd. Please upgrade to a modern browser.</div>',

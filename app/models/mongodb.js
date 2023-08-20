@@ -6,11 +6,11 @@
  * @author adrienjoly, whyd
  **/
 
-var fs = require('fs');
-var mongodb = require('mongodb');
-var async = require('async');
-var shellRunner = require('./mongodb-shell-runner.js');
-var userModel = null; // require("./user.js") will be lazy-loaded here
+const fs = require('fs');
+const mongodb = require('mongodb');
+const async = require('async');
+const shellRunner = require('./mongodb-shell-runner.js');
+let userModel = null; // require("./user.js") will be lazy-loaded here
 
 const DB_INIT_SCRIPT = './config/initdb.js';
 const DB_TEST_SCRIPT = './config/initdb_testing.js';
@@ -22,7 +22,7 @@ exports.isObjectId = function (i) {
   return ('' + i).length == 24;
 };
 
-var USER_CACHE_FIELDS = {
+const USER_CACHE_FIELDS = {
   _id: 1,
   fbId: 1,
   name: 1,
@@ -68,7 +68,7 @@ exports.getUserNameFromId = function (uid) {
 };
 
 exports.getPublicProfileFromId = function (uid) {
-  var user = exports.usernames['' + uid];
+  const user = exports.usernames['' + uid];
   return !user
     ? undefined
     : {
@@ -82,7 +82,7 @@ exports.cacheUser = function (user) {
   user.id = '' + (user._id || user.id);
   exports.usernames[user.id] = exports.usernames[user.id] || {};
   exports.usernames[user.id].id = user.id;
-  for (let i in user)
+  for (const i in user)
     if (USER_CACHE_FIELDS[i])
       exports.usernames[user.id][i] = user[i] || exports.usernames[user.id][i];
 };
@@ -93,14 +93,14 @@ exports.cacheUsers = function (callback) {
     {},
     { projection: USER_CACHE_FIELDS },
     function (results) {
-      for (let i in results) exports.cacheUser(results[i]);
+      for (const i in results) exports.cacheUser(results[i]);
       if (callback) callback();
     },
   );
 };
 
 exports.forEach = async function (colName, params, handler, cb, cbParam) {
-  var q = {};
+  let q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 1000;
   if (params.q) {
@@ -120,7 +120,7 @@ exports.forEach = async function (colName, params, handler, cb, cbParam) {
 
 // handler is responsible for calling the provided "next" function
 exports.forEach2 = async function (colName, params, handler) {
-  var q = {};
+  let q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 100;
   if (params.q) {
@@ -157,10 +157,10 @@ exports.cacheCollections = function (callback) {
     if (err) console.log('[db] MongoDB Error : ' + err);
     else {
       if (0 == collections.length) finishInit();
-      var remaining = collections.length;
-      for (let i in collections) {
-        var queryHandler = (function () {
-          var table = collections[i].collectionName;
+      let remaining = collections.length;
+      for (const i in collections) {
+        const queryHandler = (function () {
+          const table = collections[i].collectionName;
           return function (err) {
             if (err) console.error(`[db] cacheCollections error:`, err);
             // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
@@ -232,7 +232,7 @@ exports.init = function (connParams, readyCallback) {
   const authUser = connParams.mongoDbAuthUser;
   const authPassword = connParams.mongoDbAuthPassword;
 
-  var authStr = '';
+  let authStr = '';
   if (authUser && authPassword)
     authStr =
       encodeURIComponent(authUser) +
@@ -240,7 +240,7 @@ exports.init = function (connParams, readyCallback) {
       encodeURIComponent(authPassword) +
       '@';
 
-  var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
+  const url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
   const publicURL = authPassword ? url.replace(authPassword, '***') : url;
 

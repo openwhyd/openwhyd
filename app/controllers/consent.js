@@ -4,13 +4,13 @@
  * @author adrienjoly, openwhyd
  */
 
-var fs = require('fs');
-var snip = require('../snip.js');
-var mongodb = require('../models/mongodb.js');
-var userModel = require('../models/user.js');
-var mainTemplate = require('../templates/mainTemplate.js');
+const fs = require('fs');
+const snip = require('../snip.js');
+const mongodb = require('../models/mongodb.js');
+const userModel = require('../models/user.js');
+const mainTemplate = require('../templates/mainTemplate.js');
 
-var filePerLang = {
+const filePerLang = {
   en: 'config/gdpr-consent-en.md',
   fr: 'config/gdpr-consent-fr.md',
 };
@@ -54,7 +54,7 @@ const promisedTemplatePerLang = Object.entries(filePerLang).reduce(
 );
 
 async function renderPageContent(params) {
-  var safeRedirect = snip.sanitizeJsStringInHtml(params.redirect || '/');
+  const safeRedirect = snip.sanitizeJsStringInHtml(params.redirect || '/');
   // credits: flag icons by Freepik, https://www.flaticon.com/packs/countrys-flags
   return [
     '<div class="container" id="consent-container" data-lang="lang-en">',
@@ -96,8 +96,8 @@ async function renderPageContent(params) {
 }
 
 exports.controller = async function (request, getParams, response) {
-  var isPost = request.method.toLowerCase() === 'post';
-  var p = (isPost ? request.body : getParams) || {};
+  const isPost = request.method.toLowerCase() === 'post';
+  const p = (isPost ? request.body : getParams) || {};
   request.logToConsole('consent.controller ' + request.method, p);
   // make sure user is logged in
   if (!(p.loggedUser = request.checkLogin(response))) return;

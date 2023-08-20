@@ -4,15 +4,15 @@
  * @author adrienjoly, whyd
  */
 
-var fs = require('fs');
-var hogan = require('hogan.js');
+const fs = require('fs');
+const hogan = require('hogan.js');
 
-var templateCache = {};
+const templateCache = {};
 
 // e.g. filename : 'public/register.html'
 exports.loadTemplate = function (fileName, callback, forceReload) {
   if (!forceReload) {
-    var cached = templateCache[fileName];
+    const cached = templateCache[fileName];
     if (cached) {
       callback && callback(cached);
       return cached;
@@ -22,7 +22,7 @@ exports.loadTemplate = function (fileName, callback, forceReload) {
   if (process.appParams?.verbose)
     console.log('templates.templateLoader loading ' + fileName + '...');
 
-  var instance = {};
+  const instance = {};
 
   // Note: loading templates synchronously is bad... but:
   // - because most of the code is not async-friendly, async loading causes crashes;

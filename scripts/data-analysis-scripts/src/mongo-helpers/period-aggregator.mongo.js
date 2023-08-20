@@ -9,8 +9,9 @@ const renderDate = (t) =>
 
 // creates a renderWeek() function to be used from map() functions
 const renderWeek = (t) => {
-  var onejan = new Date(t.getFullYear(), 0, 1);
-  var week = '' + Math.ceil(((t - onejan) / DAY_MS + onejan.getDay() + 1) / 7);
+  const onejan = new Date(t.getFullYear(), 0, 1);
+  const week =
+    '' + Math.ceil(((t - onejan) / DAY_MS + onejan.getDay() + 1) / 7);
   return [
     t.getFullYear(),
     week.length === 2 ? week : '0' + week, // pad with leading 0 if necessary, for final sorting
@@ -20,7 +21,7 @@ const renderWeek = (t) => {
 // generates a map function after injecting code from the mapHelpers() function
 function makeMapWith(mapHelpers, mapTemplate) {
   const getFuncBody = (fct) => {
-    var entire = fct.toString();
+    const entire = fct.toString();
     return entire.substring(entire.indexOf('{') + 1, entire.lastIndexOf('}'));
   };
   return new Function(

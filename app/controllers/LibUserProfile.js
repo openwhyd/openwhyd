@@ -1,24 +1,24 @@
-var snip = require('../snip.js');
-var mongodb = require('../models/mongodb.js');
-var userModel = require('../models/user.js');
-var followModel = require('../models/follow.js');
-var postModel = require('../models/post.js');
-var activityModel = require('../models/activity.js');
-var activityController = require('../controllers/recentActivity.js');
-var feedTemplate = require('../templates/feed.js');
-var postsTemplate = require('../templates/posts.js');
-var uiSnippets = require('../templates/uiSnippets.js');
+const snip = require('../snip.js');
+const mongodb = require('../models/mongodb.js');
+const userModel = require('../models/user.js');
+const followModel = require('../models/follow.js');
+const postModel = require('../models/post.js');
+const activityModel = require('../models/activity.js');
+const activityController = require('../controllers/recentActivity.js');
+const feedTemplate = require('../templates/feed.js');
+const postsTemplate = require('../templates/posts.js');
+const uiSnippets = require('../templates/uiSnippets.js');
 
-var templateLoader = require('../templates/templateLoader.js');
-var profileTemplateV2 = templateLoader.loadTemplate(
+const templateLoader = require('../templates/templateLoader.js');
+const profileTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userProfileV2.html',
 );
 
 //var NEW_PROFILE = true;
-var MAX_PLAYLISTS_SIDE = 4;
-var MAX_FRIENDS = 6;
-var MAX_HISTORY = 3;
-var MAX_SUBSCRIPTIONS = 50;
+const MAX_PLAYLISTS_SIDE = 4;
+const MAX_FRIENDS = 6;
+const MAX_HISTORY = 3;
+const MAX_SUBSCRIPTIONS = 50;
 
 // used to render the sidebar
 function fetchActivity(options, cb) {
@@ -31,8 +31,8 @@ function fetchActivity(options, cb) {
           _id: mongodb.ObjectId(options.user.id),
           other: { text: 'joined whyd' },
         });
-      var postsToPopulate = [];
-      for (let i in activities)
+      const postsToPopulate = [];
+      for (const i in activities)
         if (activities[i]) {
           activities[i].ago = uiSnippets.renderTimestamp(
             new Date() - activities[i]._id.getTimestamp(),
@@ -46,10 +46,10 @@ function fetchActivity(options, cb) {
         /*params*/ null,
         /*options*/ null,
         function (posts) {
-          var postSet = {};
+          const postSet = {};
           options.activity = [];
-          for (let i in posts) postSet['' + posts[i]._id] = posts[i];
-          for (let i in activities) {
+          for (const i in posts) postSet['' + posts[i]._id] = posts[i];
+          for (const i in activities) {
             if ((activities[i] || {}).like) {
               if (postSet['' + activities[i].like.pId])
                 activities[i].like.post = postSet['' + activities[i].like.pId];
@@ -65,7 +65,7 @@ function fetchActivity(options, cb) {
 }
 
 function renderPlaylists(options, maxNb) {
-  var playlists = options.user.pl || [];
+  let playlists = options.user.pl || [];
   if (maxNb) {
     if (playlists.length > maxNb) playlists = playlists.slice(0, maxNb);
     //playlists.length-maxNb, playlists.length);
@@ -79,7 +79,7 @@ function renderPlaylists(options, maxNb) {
         });
     }
   }
-  for (let i in playlists)
+  for (const i in playlists)
     if (playlists[i].id !== undefined) {
       //playlists[i].url = "/u/" + options.user.id + "/playlist/" + playlists[i].id;
       playlists[i].img =
@@ -90,7 +90,7 @@ function renderPlaylists(options, maxNb) {
 }
 
 function renderFriends(friends) {
-  for (let i in friends) {
+  for (const i in friends) {
     friends[i].url = '/u/' + friends[i].id;
     friends[i].img = '/img/u/' + friends[i].id;
   }
@@ -101,8 +101,8 @@ function populateUsers(subscr, options, cb) {
   followModel.fetchSubscriptionArray(
     options.loggedUser.id,
     function (mySubscr) {
-      var subscrSet = snip.arrayToSet(mySubscr);
-      for (let i in subscr)
+      const subscrSet = snip.arrayToSet(mySubscr);
+      for (const i in subscr)
         if (subscrSet[subscr[i].id]) subscr[i].subscribed = true;
       userModel.fetchUserBios(subscr, function () {
         cb(renderFriends(subscr));
@@ -143,7 +143,7 @@ exports.fetchAndRender = function (options, callback) {
       options.loggedUser.id,
       function (mySubscr) {
         //console.log("mySubscr.subscriptions", mySubscr.subscriptions);
-        var mySubscrUidList = snip.objArrayToValueArray(
+        const mySubscrUidList = snip.objArrayToValueArray(
           mySubscr.subscriptions,
           'id',
         );
@@ -152,7 +152,7 @@ exports.fetchAndRender = function (options, callback) {
           mySubscrUidList,
           options,
           function (result) {
-            for (let i in result.recentActivity.items)
+            for (const i in result.recentActivity.items)
               if (result.recentActivity.items[i].subscriptions) {
                 result.recentActivity.items[i].subscribedUsers =
                   result.recentActivity.items[i].subscriptions;
@@ -164,14 +164,14 @@ exports.fetchAndRender = function (options, callback) {
               const lastPid = result.hasMore.last_id;
               postsTemplate.populateNextPageUrl(options, lastPid);
             } else {
-              var creation = mongodb.ObjectId(options.user.id);
+              const creation = mongodb.ObjectId(options.user.id);
               options.showActivity.items.push({
                 _id: creation,
                 other: { text: 'joined whyd' },
                 //						ago: uiSnippets.renderTimestamp(new Date() - creation.getTimestamp())
               });
             }
-            for (let i in options.showActivity.items)
+            for (const i in options.showActivity.items)
               options.showActivity.items[i].ago = uiSnippets.renderTimestamp(
                 new Date() - options.showActivity.items[i]._id.getTimestamp(),
               );
@@ -185,7 +185,7 @@ exports.fetchAndRender = function (options, callback) {
 
     options.bodyClass += ' userSubscribers';
     options.pageTitle = options.user.name + "'s followers";
-    var params = {
+    const params = {
       sort: { _id: -1 },
       limit: MAX_SUBSCRIPTIONS + 1,
       fields: { _id: 0, uId: 1 },
@@ -197,7 +197,7 @@ exports.fetchAndRender = function (options, callback) {
         postsTemplate.populateNextPageUrl(options, lastPid);
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
-      for (let i in subscr) subscr[i] = { id: subscr[i].uId };
+      for (const i in subscr) subscr[i] = { id: subscr[i].uId };
       populateUsers(subscr, options, function (subscr) {
         options.showSubscribers = {
           items: subscr,
@@ -222,7 +222,7 @@ exports.fetchAndRender = function (options, callback) {
         postsTemplate.populateNextPageUrl(options, lastPid);
         subscr = subscr.slice(0, MAX_SUBSCRIPTIONS);
       }
-      for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+      for (const i in subscr) subscr[i] = { id: subscr[i].tId };
       populateUsers(subscr, options, function (subscr) {
         options.showSubscriptions = {
           items: subscr,
@@ -250,7 +250,7 @@ exports.fetchAndRender = function (options, callback) {
       fetchActivity(options, function () {
         // => populates options.activity
         //console.timeEnd("LibUser.fetchActivity");
-        var ownProfile = options.user.id == (options.loggedUser || {}).id;
+        const ownProfile = options.user.id == (options.loggedUser || {}).id;
         // render playlists
         if ((options.user.pl || []).length || ownProfile)
           options.playlists = {
@@ -258,14 +258,14 @@ exports.fetchAndRender = function (options, callback) {
             items: renderPlaylists(options, MAX_PLAYLISTS_SIDE),
           };
         // fetch and render friends
-        var params = {
+        const params = {
           sort: { _id: -1 },
           limit: MAX_FRIENDS,
           fields: { _id: 0, tId: 1 },
         };
         followModel.fetch({ uId: options.user.id }, params, function (subscr) {
           if (subscr.length || ownProfile) {
-            for (let i in subscr) subscr[i] = { id: subscr[i].tId };
+            for (const i in subscr) subscr[i] = { id: subscr[i].tId };
             userModel.fetchUserBios(subscr, function () {
               options.friends = {
                 url: '/u/' + options.user.id + '/subscriptions',

@@ -3,17 +3,17 @@
  * @author adrienjoly, whyd
  **/
 
-var SEARCH_DELAY = 300; // milliseconds between text entry and actual index request
+const SEARCH_DELAY = 300; // milliseconds between text entry and actual index request
 
 function toggleClass(elem, className, showOrHide) {
-  var newClassName = elem.className.replace(className, '');
+  const newClassName = elem.className.replace(className, '');
   elem.className =
     newClassName +
     (showOrHide || newClassName == className ? ' ' + className : '');
   return elem;
 }
 
-var addEvent = window.addEventListener
+const addEvent = window.addEventListener
   ? function (elem, type, method) {
       elem.addEventListener(type, method, false);
     }
@@ -30,24 +30,24 @@ var removeEvent = window.removeEventListener ? function (elem, type, method) {
 
 // native version, converted from jQuery implementation
 window.QuickSearch = function (searchForm, options) {
-  var timeout;
-  var prevVal = ''; // to prevent submitting the same query twice
-  var selected = null; // index of selected result (hovered)
-  var nbResults = 0; // number of results
+  let timeout;
+  let prevVal = ''; // to prevent submitting the same query twice
+  let selected = null; // index of selected result (hovered)
+  let nbResults = 0; // number of results
   options = options || {};
-  var params = options.params || {};
-  var cancelledQuery = false;
+  const params = options.params || {};
+  let cancelledQuery = false;
   //var searchForm = searchForm || document.getElementById("searchForm");
   searchForm = (searchForm && searchForm[0]) || searchForm; // compatibility with jQuery elements
   if (!searchForm || !searchForm.getElementsByClassName) {
     console.log('warning: searchForm not found', searchForm);
     return null;
   }
-  var searchField = searchForm.getElementsByClassName('q')[0];
-  var searchResults =
+  const searchField = searchForm.getElementsByClassName('q')[0];
+  const searchResults =
     searchForm.getElementsByClassName('searchResults')[0] ||
     document.createElement('div');
-  var searchClear = searchForm.getElementsByClassName('searchClear')[0];
+  const searchClear = searchForm.getElementsByClassName('searchClear')[0];
 
   function cancelQuery() {
     cancelledQuery = true;
@@ -75,7 +75,7 @@ window.QuickSearch = function (searchForm, options) {
   }
 
   function unhoverItem() {
-    var liArray = searchResults.getElementsByTagName('li');
+    const liArray = searchResults.getElementsByTagName('li');
     for (let i = liArray.length - 1; i >= 0; --i)
       toggleClass(liArray[i], 'hover', false);
   }
@@ -108,12 +108,12 @@ window.QuickSearch = function (searchForm, options) {
       toggleClass(searchClear, 'loading', false);
 
     (destination || searchResults).innerHTML = html;
-    var anchors = searchResults.getElementsByTagName('li');
+    const anchors = searchResults.getElementsByTagName('li');
     searchResults.style.display = 'block';
 
     if (options.onResultClick) {
       const makeHandler = function (li) {
-        var a = li.getElementsByTagName('a')[0];
+        const a = li.getElementsByTagName('a')[0];
         return function (e) {
           e.preventDefault();
           options.onResultClick(a.href, a);
@@ -155,7 +155,7 @@ window.QuickSearch = function (searchForm, options) {
         selected != null &&
         selected > -1
       ) {
-        var a = searchResults.getElementsByTagName('a')[selected];
+        const a = searchResults.getElementsByTagName('a')[selected];
         if (a.onclick) a.onclick(event);
         if (options.onResultClick) return options.onResultClick(a.href, a);
         else window.location.href = a.href;
@@ -180,7 +180,7 @@ window.QuickSearch = function (searchForm, options) {
       event.preventDefault();
       updateSelection(-1);
     } else {
-      var val = searchField.value;
+      const val = searchField.value;
       if (prevVal == val) return;
       cancelQuery();
       nbResults = 0;

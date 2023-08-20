@@ -5,12 +5,12 @@
  **/
 
 //var https = require('https');
-var config = require('./config');
-var users = require('./user');
+const config = require('./config');
+const users = require('./user');
 
-var emailModule = config.emailModule || 'emailFake.js';
+const emailModule = config.emailModule || 'emailFake.js';
 // console.log('loading EMAIL module: ' + emailModule + '...');
-var emailImpl = require('./' + emailModule);
+const emailImpl = require('./' + emailModule);
 
 exports.validate = require('./email-validation.js').validate;
 
@@ -69,7 +69,7 @@ exports.notif = function (toUid, subject, text /*, fbAccessToken*/) {
 			//console.log("requesting: "+host+path+"...");
 			https.get({ host: host, path: path }, logResponse);
 		} */
-      var to = user.email;
+      const to = user.email;
       //var to = user.name + " <" + user.email + ">";
       //console.log("sending email to " + to);
       exports.email(to, subject, text, null, user.name);

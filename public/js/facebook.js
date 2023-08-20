@@ -2,9 +2,9 @@
 
 window.globals = window;
 
-var href = window.location.href + '/';
+const href = window.location.href + '/';
 
-var fbId;
+let fbId;
 if (href.indexOf('openwhyd.org/') > 0) {
   // namespace = 'whydapp';
   fbId = '169250156435902';
@@ -13,9 +13,9 @@ if (href.indexOf('openwhyd.org/') > 0) {
   fbId = '1573219269412628';
 }
 
-var facebookPerms = 'public_profile,email';
+const facebookPerms = 'public_profile,email';
 
-var whenFbReadyQueue = [];
+const whenFbReadyQueue = [];
 
 window.globals.whenFbReady = function (fct) {
   whenFbReadyQueue.push(fct);
@@ -76,7 +76,7 @@ window.globals.fbLogin = function (perms, cb) {
         return console.log('no fb login');
       }
       // try to logging in using fbUid and fb cookie
-      var $fbForm = $('#fbForm').remove();
+      let $fbForm = $('#fbForm').remove();
       //if (!$fbForm.length)
       $fbForm = $(
         '<form id="fbForm" action="/facebookLogin" method="post">' +
@@ -155,12 +155,11 @@ window.globals.fbAsyncInit = function () {
 
 // Load the SDK Asynchronously
 (function (d, s, id) {
-  var js,
-    fjs = d.getElementsByTagName(s)[0];
+  const fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {
     return;
   }
-  js = d.createElement(s);
+  const js = d.createElement(s);
   js.id = id;
   js.src = 'https://connect.facebook.net/en_US/sdk.js';
   fjs.parentNode.insertBefore(js, fjs);

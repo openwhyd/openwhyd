@@ -40,17 +40,17 @@ const feature = require('../features/hot-tracks.js');
 
 const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
 
-var COEF_REPOST = 100;
-var COEF_LIKE = 50;
-var COEF_PLAY = 1;
+const COEF_REPOST = 100;
+const COEF_LIKE = 50;
+const COEF_PLAY = 1;
 
-var HOT_TRACK_TIME_WINDOW = 7 * 24 * 60 * 60 * 1000; // count (re)posts that are less than 1 week old, for ranking
+const HOT_TRACK_TIME_WINDOW = 7 * 24 * 60 * 60 * 1000; // count (re)posts that are less than 1 week old, for ranking
 
 function scorePost(post) {
   return COEF_REPOST * post.nbR + COEF_LIKE * post.nbL + COEF_PLAY * post.nbP;
 }
 
-var POST_FETCH_OPTIONS = {
+const POST_FETCH_OPTIONS = {
   limit: 10000,
   sort: [['_id', 'desc']],
 };
@@ -58,7 +58,7 @@ var POST_FETCH_OPTIONS = {
 // core methods
 
 function save(track, cb, replace) {
-  var op = replace ? track : { $set: track };
+  const op = replace ? track : { $set: track };
   mongodb.collections['track'].updateOne(
     { eId: track.eId },
     op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
@@ -80,7 +80,7 @@ function remove(q, cb) {
 }
 
 exports.countTracksWithField = function (fieldName, cb) {
-  var q = {};
+  const q = {};
   q[fieldName] = { $exists: 1 };
   mongodb.collections['track'].countDocuments(q, cb);
 };
@@ -101,7 +101,7 @@ exports.fetch = function (params, handler) {
 
 exports.fetchTrackByEid = function (eId, cb) {
   // in order to allow requests of soundcloud eId without hash (#):
-  var eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
+  const eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
   mongodb.collections['track'].findOne({ eId: eId }, function (err, track) {
     if (!err && !track && eidPrefix)
       mongodb.collections['track'].findOne(
@@ -151,7 +151,7 @@ exports.getHotTracksFromDb = function (params, handler) {
 // update function
 
 function fetchPostsByEid(eId, cb) {
-  var criteria = { eId: eId && Array.isArray(eId) ? { $in: eId } : eId };
+  const criteria = { eId: eId && Array.isArray(eId) ? { $in: eId } : eId };
   mongodb.collections['post']
     .find(criteria, POST_FETCH_OPTIONS)
     .toArray()
@@ -161,24 +161,24 @@ function fetchPostsByEid(eId, cb) {
 
 // called when a track is updated/deleted by a user
 exports.updateByEid = function (eId, cb, replace, additionalFields) {
-  var since = Date.now() - HOT_TRACK_TIME_WINDOW;
+  const since = Date.now() - HOT_TRACK_TIME_WINDOW;
   console.log('track.updateByEid: ', eId);
   fetchPostsByEid(eId, function (posts) {
     if (!posts || !posts.length) return remove({ eId: eId }, cb);
     // 0) init track objects (one for storage and display, one for scoring over the selected period of time)
-    var freshTrackStats = {},
+    const freshTrackStats = {},
       track = {
         eId: eId,
         nbR: posts.length,
       };
-    for (let f in FIELDS_TO_SUM) {
+    for (const f in FIELDS_TO_SUM) {
       track[f] = track[f] || 0;
       freshTrackStats[f] = freshTrackStats[f] || 0;
     }
     // 1) score posts, to select which user will be featured for this track
-    for (let p in posts) {
+    for (const p in posts) {
       posts[p].nbL = (posts[p].lov || []).length;
-      for (let f in FIELDS_TO_SUM) posts[p][f] = posts[p][f] || 0;
+      for (const f in FIELDS_TO_SUM) posts[p][f] = posts[p][f] || 0;
       posts[p].score = scorePost(posts[p]);
       track.nbP += posts[p].nbP;
       track.nbL += posts[p].nbL;
@@ -194,7 +194,7 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
     });
     // 2) populate and save track object, based on best-scored post
     track.pId = posts[0]._id;
-    for (let f in FIELDS_TO_COPY) track[f] = posts[0][f];
+    for (const f in FIELDS_TO_COPY) track[f] = posts[0][f];
     track.score = scorePost(freshTrackStats);
     if (additionalFields) {
       console.log(
@@ -202,7 +202,7 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
         Object.keys(additionalFields),
         '...',
       );
-      for (let f in additionalFields) track[f] = additionalFields[f];
+      for (const f in additionalFields) track[f] = additionalFields[f];
     }
     console.log('saving track', track);
     save(track, cb, replace);
@@ -213,7 +213,7 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
 
 exports.snapshotTrackScores = function (cb) {
   mongodb.collections['track'].countDocuments(function (err, count) {
-    var i = 0;
+    let i = 0;
     mongodb.forEach2(
       'track',
       { fields: { score: 1 } },
@@ -243,7 +243,7 @@ exports.snapshotTrackScores = function (cb) {
 
 exports.refreshTrackCollection = function (cb) {
   mongodb.collections['track'].countDocuments(function (err, count) {
-    var i = 0;
+    let i = 0;
     mongodb.forEach2(
       'track',
       { fields: { _id: 0, eId: 1 } },

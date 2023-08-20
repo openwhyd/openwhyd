@@ -3,12 +3,12 @@
  * @author adrienjoly, whyd
  **/
 
-var fs = require('fs');
-var path = require('path');
-var snip = require('../../snip.js');
+const fs = require('fs');
+const path = require('path');
+const snip = require('../../snip.js');
 
 function loadTestFile(testName) {
-  var filePath = path.resolve(
+  const filePath = path.resolve(
     'app/controllers/admin/tests/' + testName + '.js',
   );
   delete require.cache[filePath]; // clear the cache entry for this file before reloading it below
@@ -19,7 +19,7 @@ function loadTestFile(testName) {
   }
 }
 
-var runTests = (function () {
+const runTests = (function () {
   return function (tests, p, cb) {
     p = p || {};
     function returnResults(res) {
@@ -47,19 +47,19 @@ var runTests = (function () {
 
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('test.controller', (reqParams = reqParams || {}));
-  var user = request.checkAdmin(response);
+  const user = request.checkAdmin(response);
   if (false == user) return;
 
   if (reqParams.action) {
-    var testFile = loadTestFile(reqParams.action);
+    const testFile = loadTestFile(reqParams.action);
     if (!testFile)
       return response.renderText('test file not found: ' + reqParams.action);
-    var p = {
+    const p = {
       loggedUser: request.getUser(),
       session: request.session,
       cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'],
     };
-    var tests = testFile.makeTests(p);
+    const tests = testFile.makeTests(p);
     runTests(tests, p, function (res) {
       response.renderText(res);
     });

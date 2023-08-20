@@ -14,11 +14,11 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
-var userModel = require('../models/user.js');
-var followModel = require('../models/follow.js');
-var postModel = require('../models/post.js');
-var feedTemplate = require('../templates/feed.js');
+const config = require('../models/config.js');
+const userModel = require('../models/user.js');
+const followModel = require('../models/follow.js');
+const postModel = require('../models/post.js');
+const feedTemplate = require('../templates/feed.js');
 
 const playlistRenderer = require('./LibUserPlaylist.js');
 const profileRenderer = require('./LibUserProfile.js');
@@ -76,7 +76,7 @@ function generateMixpanelCode(options) {
   ].join('\n');
 }
 
-var bareFormats = new Set(['json', 'links']);
+const bareFormats = new Set(['json', 'links']);
 
 /** @param {FetchAndRenderOptions} options */
 function fetchAndRender(options, callback) {
@@ -97,7 +97,7 @@ function fetchAndRender(options, callback) {
 
 // MAIN FUNCTION
 
-var LNK_URL_PREFIX = {
+const LNK_URL_PREFIX = {
   fb: 'facebook.com/',
   tw: 'twitter.com/',
   sc: 'soundcloud.com/',
@@ -125,14 +125,14 @@ function populatePaginationParameters(options) {
 
 function renderUserLinks(lnk) {
   // clean social links
-  for (let i in lnk) lnk[i] = ('' + lnk[i]).trim();
+  for (const i in lnk) lnk[i] = ('' + lnk[i]).trim();
 
   // for each social link, detect username and rebuild URL
-  for (let i in LNK_URL_PREFIX)
+  for (const i in LNK_URL_PREFIX)
     if (lnk[i]) {
-      var parts = lnk[i].split('?').shift().split('/');
+      const parts = lnk[i].split('?').shift().split('/');
       lnk[i] = ''; // by default, if no username was found
-      var username = '';
+      let username = '';
       while (!(username = parts.pop()));
       //for (let j=parts.length-1; j>-1; --j)
       //	if (parts[j]) {
@@ -142,11 +142,11 @@ function renderUserLinks(lnk) {
     }
 
   // make sure URLs are valid
-  for (let i in lnk)
+  for (const i in lnk)
     if (lnk[i]) {
-      var lnkBody = '//' + lnk[i].split('//').pop();
+      const lnkBody = '//' + lnk[i].split('//').pop();
       if (i == 'home') {
-        var isHttps = lnk[i].match(/^https:\/\//);
+        const isHttps = lnk[i].match(/^https:\/\//);
         lnk[i] = (isHttps ? 'https' : 'http') + ':' + lnkBody;
       } else {
         lnk[i] = lnkBody;
@@ -162,7 +162,7 @@ function renderUserLinks(lnk) {
 
 function renderResponse(feed, options, lib, user) {
   if (options.callback) {
-    var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
+    const safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
     const data = options.showPlaylists ? options.playlists : feed;
     lib.renderOther(
       safeCallback + '(' + JSON.stringify(data) + ')',
@@ -193,7 +193,7 @@ function renderResponse(feed, options, lib, user) {
 
 /** @param {{ options: FetchAndRenderOptions, render: (unknown) => void }} lib */
 async function renderUserLibrary(lib, user) {
-  var options = lib.options;
+  const options = lib.options;
 
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
 

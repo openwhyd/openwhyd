@@ -4,20 +4,20 @@
  * @author: adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
-var ObjectId = mongodb.ObjectId;
-var followModel = require('../../models/follow.js');
-var activityModel = require('../../models/activity.js');
-var postModel = require('../../models/post.js');
-var emailModel = require('../../models/email.js');
-var notifTemplate = require('../../templates/notif.js');
+const mongodb = require('../../models/mongodb.js');
+const ObjectId = mongodb.ObjectId;
+const followModel = require('../../models/follow.js');
+const activityModel = require('../../models/activity.js');
+const postModel = require('../../models/post.js');
+const emailModel = require('../../models/email.js');
+const notifTemplate = require('../../templates/notif.js');
 
 function fetchSubscribers(uid, options, cb) {
   if (!options.includeSubscribers) return cb([]);
   followModel.fetchSubscriptionHistory(
     { toUId: uid, until: options.until },
     function (subscribers) {
-      for (let i in subscribers)
+      for (const i in subscribers)
         subscribers[i] = {
           id: subscribers[i].uId,
           name: subscribers[i].uNm,
@@ -34,7 +34,7 @@ function fetchSubscriptionSet(uid, options, cb) {
 }
 
 function fetchLikedPostSet(uid, options, cb) {
-  var postsToPopulate = [],
+  const postsToPopulate = [],
     likersPerPost = {},
     likersPerTrack = {};
   if (!options.includeLikes) return cb(likersPerTrack);
@@ -42,8 +42,8 @@ function fetchLikedPostSet(uid, options, cb) {
     uid,
     { until: options.until },
     function (activities) {
-      for (let i in activities) {
-        var pId = '' + activities[i].like.pId;
+      for (const i in activities) {
+        const pId = '' + activities[i].like.pId;
         postsToPopulate.push(ObjectId(pId));
         likersPerPost[pId] = likersPerPost[pId] || [];
         if (activities[i].id != uid)
@@ -59,7 +59,7 @@ function fetchLikedPostSet(uid, options, cb) {
         /*params*/ null,
         /*options*/ null,
         function (posts) {
-          for (let i in posts) {
+          for (const i in posts) {
             if (posts[i] && likersPerPost['' + posts[i]._id])
               likersPerTrack[posts[i].eId] = {
                 id: '' + posts[i]._id,
@@ -69,7 +69,7 @@ function fetchLikedPostSet(uid, options, cb) {
               };
           }
           // delete records of deleted posts (stored as arrays of likers instead of encapsulated objects)
-          for (let i in likersPerTrack)
+          for (const i in likersPerTrack)
             if (
               !likersPerTrack[i] ||
               !likersPerTrack[i].likes ||
@@ -84,12 +84,12 @@ function fetchLikedPostSet(uid, options, cb) {
 }
 
 function fetchRepostedTrackSet(uid, options, cb) {
-  var repostedTrackSet = {};
+  const repostedTrackSet = {};
   if (!options.includeReposts) return cb(repostedTrackSet);
   postModel.fetchRepostsFromMe(uid, options, function (reposts) {
-    for (let i in reposts) {
-      var pId = '' + reposts[i].repost.pId;
-      var eId = '' + reposts[i].eId;
+    for (const i in reposts) {
+      const pId = '' + reposts[i].repost.pId;
+      const eId = '' + reposts[i].eId;
       repostedTrackSet[eId] = repostedTrackSet[eId] || {
         id: pId,
         name: reposts[i].name,
@@ -110,14 +110,14 @@ function fetchRepostedTrackSet(uid, options, cb) {
 
 function fetchData(uid, options, cb) {
   options.data = {};
-  var fcts = [
+  const fcts = [
     fetchLikedPostSet,
     fetchRepostedTrackSet,
     fetchSubscribers,
     fetchSubscriptionSet,
   ];
   (function next() {
-    var fct = fcts.shift();
+    const fct = fcts.shift();
     if (fct) fct(uid, options, next);
     else if (cb) cb(options.data);
   })();
@@ -127,7 +127,7 @@ exports.fetchAndGenerateNotifDigest = function (user, options, cb) {
   options = options || {};
   //fetchSampleData(function(subscriptions, posts) {
   fetchData(user._id, options, function (data) {
-    var subscribers = data.subscribers || [],
+    const subscribers = data.subscribers || [],
       subscriptionSet = data.subscriptionSet || {},
       repostedTrackSet = data.repostedTrackSet || {},
       likersPerPost = data.likersPerPost || {},
@@ -138,11 +138,11 @@ exports.fetchAndGenerateNotifDigest = function (user, options, cb) {
       Object.keys(likersPerPost).length +
       Object.keys(sameTrackSet).length
     ) {
-      var lists = [repostedTrackSet, likersPerPost];
-      for (let list in lists) {
-        for (let track in lists[list]) {
-          var users = lists[list][track].reposts || lists[list][track].likes;
-          for (let i in users)
+      const lists = [repostedTrackSet, likersPerPost];
+      for (const list in lists) {
+        for (const track in lists[list]) {
+          const users = lists[list][track].reposts || lists[list][track].likes;
+          for (const i in users)
             if (users[i]) users[i].subscribed = !!subscriptionSet[users[i].id];
         }
       }
@@ -163,10 +163,10 @@ exports.fetchAndGenerateNotifDigest = function (user, options, cb) {
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('digest.controller', reqParams);
 
-  var user = request.checkLogin(response); //request.checkAdmin(response);
+  const user = request.checkLogin(response); //request.checkAdmin(response);
   if (!user) return;
 
-  var options = {
+  const options = {
     frequency: 'weekly',
     until: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     includeLikes: true,

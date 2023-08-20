@@ -26,14 +26,14 @@ const USERS = [
   },
 ];
 
-var FAKE_POST = {
+const FAKE_POST = {
   _id: new ObjectId('4fe3428e9f2ec28c92000024'),
   uId: ADMIN_USER.id,
   name: 'Knust hjerte by Casiokids (test)',
   eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
 };
 
-var COMMENTS = USERS.map(function (u) {
+const COMMENTS = USERS.map(function (u) {
   return {
     _id: new ObjectId('4ed3de428fed15d73c00001f'),
     pId: '' + FAKE_POST._id,
@@ -104,8 +104,8 @@ function testAllNotifs(u) {
 }
 
 async function addAllNotifs() {
-  var NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
-  for (let u in USERS) /*nbNotifs =*/ testAllNotifs(u);
+  const NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
+  for (const u in USERS) /*nbNotifs =*/ testAllNotifs(u);
   await pollUntil(makeNotifChecker(NOTIF_COUNT));
 }
 
@@ -143,7 +143,7 @@ describe('notifications', function () {
     await addAllNotifs();
     // action: clear individual notifications
     const notifs = await fetchNotifs(ADMIN_USER.id);
-    for (let i in notifs)
+    for (const i in notifs)
       notifModel.clearUserNotifsForPost(ADMIN_USER.id, notifs[i].pId);
     await pollUntil(makeNotifChecker(0));
     // expect: db is clean
@@ -186,7 +186,7 @@ describe('notifications', function () {
   it('can receive a track notification from Gilles', async () => {
     await clearAllNotifs();
     // action: send the notif
-    var p = {
+    const p = {
       uId: USERS[0].id,
       uNm: USERS[0].name,
       uidList: [ADMIN_USER.id],
@@ -213,13 +213,13 @@ describe('notifications', function () {
   it('can receive a playlist notification from Gilles', async () => {
     await clearAllNotifs();
     // action: send the notif
-    var p = {
+    const p = {
       uId: USERS[0].id,
       uNm: USERS[0].name,
       uidList: [ADMIN_USER.id],
       plId: USERS[0].id + '_' + 0, // gilles' 1st playlist
     };
-    var plUri = p.plId.replace('_', '/playlist/');
+    const plUri = p.plId.replace('_', '/playlist/');
     await new Promise((resolve) => notifModel.sendPlaylistToUsers(p, resolve));
     // expect: the notif is received by recipient
     await pollUntil(makeNotifChecker(1));

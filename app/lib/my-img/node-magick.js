@@ -1,4 +1,4 @@
-var childProcess = require('child_process');
+const childProcess = require('child_process');
 
 exports.createCommand = function (input) {
   return magickCommand({ input: input });
@@ -11,11 +11,11 @@ var magickCommand = function (obj) {
     return obj.resize(width, height).crop(width, height);
   };
   obj.resize = function (width, height) {
-    var wh = width + 'x' + height;
+    const wh = width + 'x' + height;
     return obj.makeArgs(['-resize', wh]);
   };
   obj.crop = function (width, height) {
-    var wh = width + 'x' + height;
+    const wh = width + 'x' + height;
     return obj.makeArgs(['-crop', wh]);
   };
   obj.makeArgs = function (inargs, outargs) {
@@ -34,7 +34,7 @@ var magickCommand = function (obj) {
   obj.write = function (out, callback) {
     obj.inArgs.push(obj.input);
     obj.outArgs.push(out);
-    var args = obj.inArgs.concat(obj.outArgs);
+    const args = obj.inArgs.concat(obj.outArgs);
     obj.__run('convert', args, callback);
   };
   obj.__run = function (cmd, args, callback) {

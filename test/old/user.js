@@ -1,11 +1,11 @@
 // Info: moved from app/controllers/admin/tests, for security reasons.
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var snip = require('../../app/snip.js');
-var config = require('../../app/models/config.js'); // {urlPrefix:"http://localhost:8000"};
-var userModel = require('../../app/models/user.js');
+const snip = require('../../app/snip.js');
+const config = require('../../app/models/config.js'); // {urlPrefix:"http://localhost:8000"};
+const userModel = require('../../app/models/user.js');
 
-var TEST_USER = {
+const TEST_USER = {
   name: 'test user',
   email: process.env.WHYD_ADMIN_EMAIL,
   password: 'coco',
@@ -46,9 +46,9 @@ function makeJsonRequest(method, cookie) {
 exports.makeTests = function (p) {
   p.stopOnFail = true;
 
-  var testVars = {};
-  var jsonGet = makeJsonRequest('GET', p.cookie);
-  var jsonPost = makeJsonRequest('POST', p.cookie);
+  const testVars = {};
+  const jsonGet = makeJsonRequest('GET', p.cookie);
+  const jsonPost = makeJsonRequest('POST', p.cookie);
 
   // api helpers
 
@@ -76,7 +76,7 @@ exports.makeTests = function (p) {
 	*/
   function fetchTestUser(cb) {
     fetchUsersByEmail(TEST_USER.email, function (res) {
-      var testUser = res && res[0];
+      const testUser = res && res[0];
       testVars.registeredUid = (testUser || {})._id;
       if (!testUser) delete testVars.cookie;
       cb(testUser);
@@ -136,10 +136,10 @@ exports.makeTests = function (p) {
     jsonGet('/api/user', { cookie: testVars.cookie }, cb);
   }
 
-  var BEGIN_TEST = ['(init test user)', makeSureTestUserExists],
+  const BEGIN_TEST = ['(init test user)', makeSureTestUserExists],
     END_TEST = ['(delete test user)', deleteTestUser];
 
-  var TESTS_SIGNUP = [
+  const TESTS_SIGNUP = [
     BEGIN_TEST, // CREATE TEST USER
     END_TEST, // DELETE TEST USER
     [
@@ -232,7 +232,7 @@ exports.makeTests = function (p) {
     END_TEST,
   ];
 
-  var TESTS_FETCH = [
+  const TESTS_FETCH = [
     BEGIN_TEST,
     [
       'fetch user using API (logged as admin)',
@@ -268,7 +268,7 @@ exports.makeTests = function (p) {
     END_TEST,
   ];
 
-  var TESTS_USERDATA = [
+  const TESTS_USERDATA = [
     BEGIN_TEST,
     [
       'check default prefs',
@@ -378,14 +378,14 @@ exports.makeTests = function (p) {
     END_TEST,
   ];
 
-  var TESTS_LOGIN = [
+  const TESTS_LOGIN = [
     BEGIN_TEST,
     [
       'get logged user => testUser',
       function (cb) {
         getUser(function (user, response) {
           //log("response headers", response.headers);
-          var cookie = response.headers['set-cookie'][0].split(';')[0];
+          const cookie = response.headers['set-cookie'][0].split(';')[0];
           log('cookie', cookie);
           log('expected cookie', testVars.cookie);
           cb(cookie === testVars.cookie);
@@ -443,7 +443,7 @@ exports.makeTests = function (p) {
           function (data, response) {
             testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
             getUser(function (user, response) {
-              var cookie = response.headers['set-cookie'][0].split(';')[0];
+              const cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
           },
@@ -453,7 +453,7 @@ exports.makeTests = function (p) {
     END_TEST,
   ];
 
-  var TESTS_RESETPASSWORD = [
+  const TESTS_RESETPASSWORD = [
     BEGIN_TEST,
     [
       'try to reset password with wrong initial password',
@@ -539,7 +539,7 @@ exports.makeTests = function (p) {
           function (data, response) {
             testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
             getUser(function (user, response) {
-              var cookie = response.headers['set-cookie'][0].split(';')[0];
+              const cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
           },

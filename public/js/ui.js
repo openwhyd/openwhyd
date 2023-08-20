@@ -34,8 +34,8 @@ function openHtmlDialog(html) {
 }
 
 function overflowPopin() {
-  var avgrund = $('.avgrund-popin');
-  var child = $('.avgrund-popin').children().eq(1);
+  const avgrund = $('.avgrund-popin');
+  const child = $('.avgrund-popin').children().eq(1);
 
   if (child.innerHeight() > avgrund.height()) {
     avgrund.css('overflow-y', 'scroll');
@@ -46,7 +46,7 @@ function overflowPopin() {
 }
 
 function openJqueryDialog($element, dlgClass, title) {
-  var dlg = $('<div>')
+  const dlg = $('<div>')
     .attr('class', 'dlg ' + (dlgClass || ''))
     .append($element);
   if (title) dlg.prepend('<h1>' + title + '</h1>');
@@ -60,7 +60,7 @@ window.openRemoteDialog = function (url, dlgClass, callback) {
     type: 'GET',
     url: url,
     complete: function (data) {
-      var $ajaxFrame = $('.dlg');
+      const $ajaxFrame = $('.dlg');
       $ajaxFrame.html(data.responseText).ready(function () {
         //$(this).find("a").click(function(){$.modal.close();});
         $ajaxFrame.removeClass('loading');
@@ -76,7 +76,7 @@ window.showMessage = function (txt, isError) {
     txt = txt?.error || txt?.message || txt?.result || txt;
   }
   $('#whydMessageContainer').remove();
-  var $container = $(
+  const $container = $(
     '<div id="whydMessageContainer" class="' +
       (isError ? 'error' : '') +
       '"><div>' +

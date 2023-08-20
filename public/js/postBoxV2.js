@@ -20,7 +20,7 @@ function htmlEntities(str) {
 //================ WHYD POST CLASS (to submit posts)
 
 function WhydPost(/*embedRef*/) {
-  var that = this;
+  const that = this;
   this.postData = {
     action: 'insert',
   };
@@ -74,11 +74,11 @@ function WhydPost(/*embedRef*/) {
 //================ PLAYLIST SELECTOR (ui component)
 
 function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
-  var $ul = $selPlaylist.find('ul');
-  var $head = $selPlaylist.find('span').first();
-  var $arrow = $head.find('span');
-  var $playlistMenu = $selPlaylist.find('.content');
-  var $form = $selPlaylist.find('form');
+  const $ul = $selPlaylist.find('ul');
+  const $head = $selPlaylist.find('span').first();
+  const $arrow = $head.find('span');
+  const $playlistMenu = $selPlaylist.find('.content');
+  const $form = $selPlaylist.find('form');
   function hideMenu(/*e*/) {
     // only hide if e is null, or if a playlist was clicked (avoid playlist menu head and form)
     // if (!e || !($head[0] == e.target || $head[0] == e.target.parentNode
@@ -95,21 +95,21 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
     //$selPlaylist.parent().unbind("click").click(hideMenu);
   });
   function selectPlaylist() {
-    var $li = $(this);
+    const $li = $(this);
     $ul.find('li').removeClass('selected');
     $li.addClass('selected');
     onSelect($li.attr('data-plid'), $li.text());
-    var datatext = $li.attr('data-text');
+    const datatext = $li.attr('data-text');
     $head.text(datatext).append($arrow);
     hideMenu();
   }
   function addPlaylist(name, id) {
-    var $li = $('<li>').attr('data-plid', id).text(name).appendTo($ul);
+    const $li = $('<li>').attr('data-plid', id).text(name).appendTo($ul);
     $ul.find('li').unbind().click(selectPlaylist);
     return $li;
   }
   $form.unbind().submit(function () {
-    var name = $('#newPlaylistName').val();
+    const name = $('#newPlaylistName').val();
     if (name != '') {
       addPlaylist(name, 'create').each(selectPlaylist);
       $('#newPlaylistName').val('');
@@ -117,7 +117,7 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
   });
   function bindItems() {
     if (defaultPlaylist) {
-      var $li = $ul.find("li[data-plid='" + defaultPlaylist.id + "']");
+      let $li = $ul.find("li[data-plid='" + defaultPlaylist.id + "']");
       if ($li.length == 0)
         $li = addPlaylist(defaultPlaylist.name, defaultPlaylist.id);
       $li.each(selectPlaylist);
@@ -131,7 +131,7 @@ function WhydPlaylistSelector($selPlaylist, defaultPlaylist, onSelect) {
 //================ DESCRIPTION FIELD (ui component)
 
 function WhydTextWithMentions(textArea) {
-  var MAX_NB_MENTIONS = 6;
+  const MAX_NB_MENTIONS = 6;
   // not used from bookmarklet
   function submitSearchQuery(q, cb) {
     $.ajax({
@@ -149,12 +149,12 @@ function WhydTextWithMentions(textArea) {
       },
     });
   }
-  var $textField = $(textArea).mentionsInput({
+  const $textField = $(textArea).mentionsInput({
     maxMentions: MAX_NB_MENTIONS,
     onDataRequest: function (mode, query, callback) {
       submitSearchQuery({ q: query, context: 'mention' }, function (res) {
         res = JSON.parse(res);
-        var hits = (res.hits || []).map(function (r) {
+        const hits = (res.hits || []).map(function (r) {
           return {
             id: r._id,
             name: r.name,
@@ -178,9 +178,9 @@ function WhydTextWithMentions(textArea) {
 //================ javascript code moved from postEdit.html
 
 window.globals.initPostBox = function (params) {
-  var addingFromBookmarklet = params.mode === 'addFromBookmarklet';
-  var editingPost = params.mode === 'editPost';
-  var reposting = params.mode === 'repost';
+  const addingFromBookmarklet = params.mode === 'addFromBookmarklet';
+  const editingPost = params.mode === 'editPost';
+  const reposting = params.mode === 'repost';
 
   function initWhydPost(embedRef) {
     const whydPost = new WhydPost();
@@ -196,7 +196,7 @@ window.globals.initPostBox = function (params) {
     return whydPost;
   }
 
-  var $body = $('body');
+  const $body = $('body');
 
   function close() {
     if (window.globals.avgrundClose) window.globals.avgrundClose();
@@ -208,16 +208,16 @@ window.globals.initPostBox = function (params) {
 
   // for bookmarklet
   function displayConfirmationScreen(posted) {
-    var pId = (posted || {})._id;
+    const pId = (posted || {})._id;
     $body.addClass(pId ? 'success' : 'failed');
     $body.removeClass('loading');
     if (pId) {
-      var url = window.location.href;
+      let url = window.location.href;
       url =
         url.substr(0, url.indexOf('/', 10)).replace('https', 'http') +
         '/c/' +
         pId;
-      var $confirm = $('#confirmationScreen');
+      const $confirm = $('#confirmationScreen');
       $confirm.find('a').first().attr('href', url).unbind().click(close);
       $confirm.find('.sharing').html(
         '<a href="https://twitter.com/share" class="twitter-share-button"' +
@@ -246,12 +246,12 @@ window.globals.initPostBox = function (params) {
         'Oops; an error occurred... Please try again!',
         true,
       );
-    var url = '/u/' + posted.uId;
+    let url = '/u/' + posted.uId;
     if (posted.pl) {
       url += '/playlist/' + posted.pl.id;
     }
     if (window.globals.showMessage) {
-      var plName = posted.pl ? posted.pl.name : 'your tracks';
+      const plName = posted.pl ? posted.pl.name : 'your tracks';
       window.globals.showMessage(
         "Successfully added track to <a target='_blank' href='" +
           url +
@@ -264,7 +264,7 @@ window.globals.initPostBox = function (params) {
   }
 
   function onPostSuccess(postId, whydPost) {
-    var posted = whydPost.storedPost;
+    const posted = whydPost.storedPost;
     if (!posted) console.log('error from post api:', postId, whydPost);
     if (addingFromBookmarklet) displayConfirmationScreen(posted);
     else closeAndShowTrack(posted);
@@ -274,7 +274,7 @@ window.globals.initPostBox = function (params) {
     embedRef = imageToHD(embedRef);
     console.log('populateTrackUi:', embedRef);
     if (!(embedRef || {}).eId) return displayConfirmationScreen(false);
-    var whydPost = initWhydPost(embedRef);
+    const whydPost = initWhydPost(embedRef);
     // init ui
     $('#contentTitle').text(embedRef.name);
     $('#contentThumb').css(
@@ -293,7 +293,7 @@ window.globals.initPostBox = function (params) {
       whydPost.setPlaylist.bind(whydPost),
     );
     //		var $titleInput = $("#contentTitleInput").val(embedRef.name);
-    var descBox = new WhydTextWithMentions(document.getElementById('text'));
+    const descBox = new WhydTextWithMentions(document.getElementById('text'));
     $('#btnSubmit')
       .unbind()
       .click(function (/*e*/) {
@@ -313,7 +313,7 @@ window.globals.initPostBox = function (params) {
   }
 
   function makePlayemStreamDetector(/*eidSet*/) {
-    var players = {
+    const players = {
       // playem-all.js must be loaded at that point
       yt: new window.globals.YoutubePlayer({}),
       sc: new window.globals.SoundCloudPlayer({}),
@@ -326,11 +326,11 @@ window.globals.initPostBox = function (params) {
       // TODO: make sure that the list of players is always up to date
     };
     function getPlayerId(url) {
-      for (let i in players) if (players[i].getEid(url)) return i;
+      for (const i in players) if (players[i].getEid(url)) return i;
     }
     function detectEid(url, cb) {
-      var playerId = getPlayerId(url);
-      var player = playerId && players[playerId];
+      const playerId = getPlayerId(url);
+      const player = playerId && players[playerId];
       cb(player && '/' + playerId + '/' + player.getEid(url), player);
     }
     return function detect(url, cb) {
@@ -355,11 +355,11 @@ window.globals.initPostBox = function (params) {
   function imageToHD(track) {
     if (track.img) {
       if (track.eId.substr(1, 2) == 'yt') {
-        var img =
+        const img =
           'https://img.youtube.com/vi/' +
           track.eId.substr(4).split('?')[0] +
           '/hqdefault.jpg';
-        var i = new Image();
+        const i = new Image();
         i.onload = function () {
           if (i.height >= 120) {
             document.getElementById('contentThumb').style.backgroundImage =

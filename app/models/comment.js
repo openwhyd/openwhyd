@@ -4,12 +4,12 @@
  * @author: adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var notifModel = require('../models/notif.js');
+const snip = require('../snip.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
+const notifModel = require('../models/notif.js');
 
-var MIN_COMMENT_DELAY = 2000; // min 2 seconds between comments
+const MIN_COMMENT_DELAY = 2000; // min 2 seconds between comments
 
 function getCol() {
   return mongodb.collections['comment'];
@@ -75,10 +75,10 @@ exports.fetch = async function (q, p, cb) {
 function notifyUsers(comment) {
   postModel.fetchPostById(comment.pId, function (post = {}) {
     if (post.error || !post.uId) return;
-    var notifiedUidSet = {};
-    var todo = [];
+    const notifiedUidSet = {};
+    const todo = [];
     // notif mentioned users
-    var mentionedUsers = snip.extractMentions(comment.text);
+    const mentionedUsers = snip.extractMentions(comment.text);
     if (mentionedUsers.length)
       todo.push(function (cb) {
         console.log('notif mentioned users');
@@ -108,7 +108,7 @@ function notifyUsers(comment) {
         { pId: comment.pId, _id: { $lt: comment._id } },
         { fields: { uId: 1 } },
         function (comments = []) {
-          var commentsByUid = snip.excludeKeys(
+          const commentsByUid = snip.excludeKeys(
             snip.groupObjectsBy(comments, 'uId'),
             notifiedUidSet,
           );
@@ -131,14 +131,14 @@ function notifyUsers(comment) {
 
 exports.insert = function (p, cb) {
   p = p || {};
-  var comment = {
+  const comment = {
     uId: p.uId,
     uNm: mongodb.getUserNameFromId(p.uId) /*p.uNm*/,
     pId: /*mongodb.ObjectId*/ '' + p.pId,
     text: (p.text || '').trim(),
   };
   // checking parameters
-  for (let f in comment)
+  for (const f in comment)
     if (!comment[f]) {
       cb({ error: 'missing field: ' + f });
       return;
@@ -171,7 +171,7 @@ exports.insert = function (p, cb) {
 
 exports.delete = function (p, cb) {
   p = p || {};
-  var q = { _id: mongodb.ObjectId('' + p._id) };
+  const q = { _id: mongodb.ObjectId('' + p._id) };
   getCol().findOne(
     q,
     combineResult(function (comment) {

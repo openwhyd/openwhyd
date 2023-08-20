@@ -1,5 +1,5 @@
 // http://www.regular-expressions.info/email.html
-var emailCheck =
+const emailCheck =
   /^[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
 
 exports.validate = function (email) {

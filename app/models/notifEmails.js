@@ -4,12 +4,12 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
-var emailModel = require('../models/email.js');
-var userModel = require('../models/user.js');
-var notifTemplate = require('../templates/notif.js');
+const mongodb = require('../models/mongodb.js');
+const emailModel = require('../models/email.js');
+const userModel = require('../models/user.js');
+const notifTemplate = require('../templates/notif.js');
 
-var SEND_USER_DELETION_EMAILS = false;
+const SEND_USER_DELETION_EMAILS = false;
 
 // helpers
 
@@ -18,7 +18,7 @@ function getUserPrefs(uId) {
 }
 
 function sendEmail(toUid, emailObj, cb) {
-  var to = mongodb.usernames['' + toUid];
+  const to = mongodb.usernames['' + toUid];
   if (!to || !emailObj) cb && cb({ error: 'invalid call to sendEmail()' });
   else
     emailModel.email(
@@ -35,7 +35,7 @@ function sendEmail(toUid, emailObj, cb) {
 
 // 2) when a openwhyd admin accepted a visitor to register => "The team is glad to invite you to join whyd"
 exports.sendAcceptedInvite = function (storedUser) {
-  var temp = notifTemplate.generateAcceptedInvite(storedUser);
+  const temp = notifTemplate.generateAcceptedInvite(storedUser);
   emailModel.email(
     storedUser.email,
     temp.subject,
@@ -46,7 +46,7 @@ exports.sendAcceptedInvite = function (storedUser) {
 
 // 3) when a user just finished registration => "Here are some tips to get started"
 exports.sendRegWelcome = function (storedUser, inviteSender) {
-  var temp = notifTemplate.generateRegWelcome(storedUser, inviteSender);
+  const temp = notifTemplate.generateRegWelcome(storedUser, inviteSender);
   emailModel.email(
     storedUser.email,
     temp.subject,
@@ -80,7 +80,7 @@ exports.sendInviteAccepted = function (senderId, storedUser) {
 
 // 6) when wants to delete their account => notify team
 exports.askAccountDeletion = function (uId, uNm) {
-  var text =
+  const text =
     (uNm || 'A user') +
     ' requested deletion of their profile: ' +
     process.appParams.urlPrefix +
@@ -96,7 +96,7 @@ exports.askAccountDeletion = function (uId, uNm) {
 // 7) when user chose to delete their account => notify team
 exports.sendUserDeleted = function (uId, uNm) {
   if (SEND_USER_DELETION_EMAILS) {
-    var text =
+    const text =
       (uNm || 'A user') +
       ' deleted their profile: ' +
       process.appParams.urlPrefix +
@@ -114,7 +114,7 @@ exports.sendUserDeleted = function (uId, uNm) {
 
 // 1) when a user forgets his password => "open this link to reset your password"
 exports.sendPasswordReset = function (uid, resetCode, redirect) {
-  var temp = notifTemplate.generatePasswordReset(
+  const temp = notifTemplate.generatePasswordReset(
     { id: uid },
     { resetCode: resetCode, redirect: redirect },
   );
@@ -123,7 +123,7 @@ exports.sendPasswordReset = function (uid, resetCode, redirect) {
 
 // 2) when a user has just set a new password => "your openwhyd password was successfully updated"
 exports.sendPasswordUpdated = function (uid, emailAddr) {
-  var temp = notifTemplate.generatePasswordUpdated({
+  const temp = notifTemplate.generatePasswordUpdated({
     id: uid,
     email: emailAddr,
   });
@@ -132,7 +132,10 @@ exports.sendPasswordUpdated = function (uid, emailAddr) {
 
 // 3) when a user has just set a new email address => "your openwhyd email was successfully updated"
 exports.sendEmailUpdated = function (uid, emailAddr) {
-  var temp = notifTemplate.generateEmailUpdated({ id: uid, email: emailAddr });
+  const temp = notifTemplate.generateEmailUpdated({
+    id: uid,
+    email: emailAddr,
+  });
   emailModel.notif(uid, temp.subject, temp.bodyText, temp.bodyHtml);
 };
 
@@ -157,7 +160,7 @@ function submitNotif(recipient, type, immediateNotifHandler, noNotifHandler) {
 // 1) when reposter reposts a post => "XXX has added one of your tracks on whyd"
 exports.sendRepost = function (reposter, post, postAuthor /*Email*/) {
   submitNotif(postAuthor, 'emAdd', function () {
-    var temp = notifTemplate.generateRepost(reposter, post);
+    const temp = notifTemplate.generateRepost(reposter, post);
     emailModel.email(
       postAuthor.email /*Email*/,
       temp.subject,
@@ -173,7 +176,7 @@ exports.sendSubscribedToUser = function (subscriber, selectedUser, cb) {
     selectedUser,
     'emSub',
     function () {
-      var temp = notifTemplate.generateSubscribedToUser(
+      const temp = notifTemplate.generateSubscribedToUser(
         subscriber,
         selectedUser._id,
       );
@@ -195,7 +198,7 @@ exports.sendLike = function (user, post, postAuthor) {
   submitNotif(postAuthor, 'emLik', function () {
     if (postAuthor.pref && postAuthor.pref['emLik'] == 0) {
       // user explicitely chose to receive immediate notifications
-      var temp = notifTemplate.generateLike(user, post, postAuthor);
+      const temp = notifTemplate.generateLike(user, post, postAuthor);
       emailModel.email(
         postAuthor.email,
         temp.subject,

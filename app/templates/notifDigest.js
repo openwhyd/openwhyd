@@ -4,17 +4,19 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
-var templateLoader = require('../templates/templateLoader.js');
-var snip = require('../snip.js');
+const config = require('../models/config.js');
+const templateLoader = require('../templates/templateLoader.js');
+const snip = require('../snip.js');
 
 // LOAD TEMPLATES
 
-var digestTemplate = templateLoader.loadTemplate('app/emails/notifDigest.html');
+const digestTemplate = templateLoader.loadTemplate(
+  'app/emails/notifDigest.html',
+);
 //var textTemplate = templateLoader.loadTemplate("app/emails/notifDigest.txt");
 
-var SUPPORT_EMAIL = config.feedbackEmail;
-var URL_PREFIX = config.urlPrefix;
+const SUPPORT_EMAIL = config.feedbackEmail;
+const URL_PREFIX = config.urlPrefix;
 
 /*
 function sampleData(cb) {
@@ -38,9 +40,9 @@ function sampleData(cb) {
 */
 
 function aggregateByPost(setList) {
-  var postSet = {};
-  for (let setName in setList)
-    for (let pId in setList[setName]) {
+  const postSet = {};
+  for (const setName in setList)
+    for (const pId in setList[setName]) {
       postSet[pId] = postSet[pId] || {};
       postSet[pId].id = postSet[pId].id || setList[setName][pId].id;
       postSet[pId].name = postSet[pId].name || setList[setName][pId].name;
@@ -52,7 +54,7 @@ function aggregateByPost(setList) {
   return snip.values(postSet);
 }
 
-var INIT_PARAMS = {
+const INIT_PARAMS = {
   recipient: null,
   subscriptions: Array,
   repostedTrackSet: Object,
@@ -63,13 +65,13 @@ var INIT_PARAMS = {
 };
 
 exports.NotifDigest = function (p) {
-  for (let key in INIT_PARAMS)
+  for (const key in INIT_PARAMS)
     this[key] = p[key] || (INIT_PARAMS[key] && new INIT_PARAMS[key]());
 };
 
 exports.NotifDigest.prototype.addRepostedTrack = function (post, reposter) {
-  var pId = post._id || post.id;
-  var track = (this.repostedTrackSet[pId] = this.repostedTrackSet[pId] || {
+  const pId = post._id || post.id;
+  const track = (this.repostedTrackSet[pId] = this.repostedTrackSet[pId] || {
     id: pId,
     name: post.name,
   });
@@ -82,8 +84,8 @@ exports.NotifDigest.prototype.addRepostedTrack = function (post, reposter) {
 };
 
 exports.NotifDigest.prototype.addLikedTrack = function (post, liker) {
-  var pId = post._id || post.id;
-  var track = (this.likersPerPost[pId] = this.likersPerPost[pId] || {
+  const pId = post._id || post.id;
+  const track = (this.likersPerPost[pId] = this.likersPerPost[pId] || {
     id: pId,
     name: post.name,
   });
@@ -96,12 +98,12 @@ exports.NotifDigest.prototype.addLikedTrack = function (post, liker) {
 };
 
 exports.NotifDigest.prototype._prepareTemplateParameters = function () {
-  var unsubPrefix =
+  const unsubPrefix =
     URL_PREFIX +
     '/api/unsubscribe?uId=' +
     (this.recipient._id || this.recipient.id) +
     (this.notifType ? '&type=' + this.notifType : '');
-  var params = {
+  const params = {
     // constants
     whydUrl: URL_PREFIX,
     urlPrefix: URL_PREFIX,
@@ -137,11 +139,11 @@ exports.NotifDigest.prototype.renderHtml = function () {
 };
 
 exports.NotifDigest.prototype.renderText = function () {
-  var p = this._prepareTemplateParameters();
+  const p = this._prepareTemplateParameters();
   //return textTemplate.render(p).replace(/\n/g, "\n\n"); //"You need a modern email client to read this email, sorry...";
-  var text = ['Hey, ' + p.user.name + '!'];
+  let text = ['Hey, ' + p.user.name + '!'];
   if (p.posts)
-    for (let i in p.posts) {
+    for (const i in p.posts) {
       text.push('');
       text.push(
         p.posts[i].count +
@@ -151,9 +153,9 @@ exports.NotifDigest.prototype.renderText = function () {
           p.posts[i].name +
           '"',
       );
-      for (let j in p.posts[i].reposts)
+      for (const j in p.posts[i].reposts)
         text.push('- ' + p.posts[i].reposts[j].name);
-      for (let j in p.posts[i].likes)
+      for (const j in p.posts[i].likes)
         text.push('- ' + p.posts[i].likes[j].name);
     }
   if (p.subscriptions) {
@@ -164,7 +166,7 @@ exports.NotifDigest.prototype.renderText = function () {
         (p.subscriptions.plural ? 's' : '') +
         ' subscribed to you',
     );
-    for (let i in p.subscriptions.items)
+    for (const i in p.subscriptions.items)
       text.push('- ' + p.subscriptions.items[i].name);
   }
   text = text.concat([

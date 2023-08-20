@@ -1,5 +1,5 @@
 exports.buildController = function (params) {
-  var logPrefix = params.controllerName + '.controller';
+  let logPrefix = params.controllerName + '.controller';
   if (process.appParams.color) logPrefix = logPrefix.yellow;
   return function (request, reqParams = {}, response) {
     request.logToConsole(logPrefix, reqParams);
@@ -38,7 +38,7 @@ exports.buildController = function (params) {
       }
     }
 
-    var processor = params.actions[reqParams.action];
+    const processor = params.actions[reqParams.action];
 
     if (processor) {
       console.log(logPrefix, 'action: ' + reqParams.action + '...');

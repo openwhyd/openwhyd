@@ -5,20 +5,20 @@ if (document.getElementById('q').value.replace(/ /g, '')) {
     $('#tabSelector a.selected').removeClass('selected');
     $(this).addClass('selected');
     $('.resultPage').hide();
-    var current = $(this).attr('href').split('#').pop();
+    const current = $(this).attr('href').split('#').pop();
     $('.resultPage#' + current).show();
   };
 
   $('#tabSelector a').on('click', selectTab);
   if (window.location.href.indexOf('tab=') != -1) {
-    var tab = (window.location.href.split('tab=').pop() || '').split('&')[0];
+    const tab = (window.location.href.split('tab=').pop() || '').split('&')[0];
     if (tab) $('#tab_' + tab).each(selectTab);
   }
 
   // merges results from youtube and soundcloud with currently displayed results
   jQuery(
     function (query) {
-      var $body = $('body');
+      const $body = $('body');
       $body.addClass('loading');
       function renderTrack(track) {
         return (
@@ -63,10 +63,10 @@ if (document.getElementById('q').value.replace(/ /g, '')) {
           'a.thumb[data-eid="' + track.eId + '"]',
         );
       }
-      var tracks = [];
+      const tracks = [];
       function displayDynamicSearchResults() {
-        var trackCounter = document.getElementById('tab_tracks');
-        var trackCount = parseInt(trackCounter.innerHTML);
+        const trackCounter = document.getElementById('tab_tracks');
+        const trackCount = parseInt(trackCounter.innerHTML);
         document.getElementById('tracks').innerHTML += tracks
           .map(renderTrack)
           .join('\n');

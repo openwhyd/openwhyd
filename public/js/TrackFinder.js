@@ -6,7 +6,7 @@ window.$ =
   window.$ ||
   new (function FakeJquery() {
     function loadJS(src, cb) {
-      var inc = document.createElement('script');
+      const inc = document.createElement('script');
       if (cb)
         inc.onload = inc.onreadystatechange = function () {
           if (
@@ -21,9 +21,9 @@ window.$ =
     }
 
     function loadJSON(src, cb) {
-      var r = new XMLHttpRequest();
+      const r = new XMLHttpRequest();
       r.onload = function () {
-        var res = undefined;
+        let res = undefined;
         try {
           res = JSON.parse(this.responseText);
         } catch (e) {
@@ -35,15 +35,15 @@ window.$ =
       r.send();
     }
 
-    var _getJSON_counter = 0;
+    let _getJSON_counter = 0;
     return {
       getJSON: function (url, cb) {
         if (url[0] == '/' || url.indexOf('=?') == -1)
           // local request
           loadJSON(url, cb);
         else {
-          var wFct = '_getJSON_cb_' + ++_getJSON_counter;
-          var wUrl = url.replace('=?', '=' + wFct);
+          const wFct = '_getJSON_cb_' + ++_getJSON_counter;
+          const wUrl = url.replace('=?', '=' + wFct);
           window[wFct] = function (data) {
             cb(data);
             // TODO: remove script element from DOM

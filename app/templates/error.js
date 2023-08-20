@@ -4,8 +4,8 @@
  **/
 
 const fs = require('fs');
-var snip = require('../snip.js');
-var mainTemplate = require('../templates/mainTemplate.js');
+const snip = require('../snip.js');
+const mainTemplate = require('../templates/mainTemplate.js');
 
 const page404Html = fs.readFileSync('public/html/404.html', 'utf8');
 
@@ -24,7 +24,7 @@ exports.ERRORCODE = {
 };
 
 exports.renderErrorMessage = function (errorMessage, loggedUser) {
-  var params = {
+  const params = {
     loggedUser: loggedUser,
     content:
       "<div class='container'>" +
@@ -37,7 +37,7 @@ exports.renderErrorMessage = function (errorMessage, loggedUser) {
 };
 
 exports.renderErrorCode = function (errorCode, loggedUser) {
-  var err = exports.ERRORCODE[errorCode];
+  const err = exports.ERRORCODE[errorCode];
   if (!err) {
     console.error('invalid error code:', errorCode);
   }
@@ -50,7 +50,7 @@ exports.renderErrorResponse = function (
   format = 'html',
   loggedUser,
 ) {
-  var statusCode =
+  const statusCode =
     errorObj && typeof errorObj.errorCode === 'number' && errorObj.errorCode;
   //var format = (querystring.parse(url.parse(request.url).query) || {}).format || "";
   if (format.toLowerCase() == 'json') {

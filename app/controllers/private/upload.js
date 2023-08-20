@@ -7,16 +7,16 @@
  */
 
 //var formidable = require('formidable');
-var img = require('../../lib/my-img');
-var uploadCtr = require('../uploadedFile.js');
+const img = require('../../lib/my-img');
+const uploadCtr = require('../uploadedFile.js');
 
 // hosting settings
-var settings = {
+const settings = {
   uploadDir: uploadCtr.config.uploadPath, //'../upload_data',
   keepExtensions: true,
 };
 
-var defaultOptions = {
+const defaultOptions = {
   keepOriginal: false,
   thumbDims: '180x', // image resize settings (optimized for profile/topic pictures)
 };
@@ -41,14 +41,14 @@ function processFile(file, options, callback) {
       error: 'Only images are supported for upload, for now.',
     });
   } else {
-    var result = {
+    const result = {
       name: name,
       mime: mimetype,
       path: uploadCtr.cleanFilePath(filepath),
       thumbs: {},
     };
 
-    var thumbDims = options.thumbDims ? options.thumbDims.split(',') : [];
+    const thumbDims = options.thumbDims ? options.thumbDims.split(',') : [];
 
     const whenDone = () => {
       console.log('[upload] done');
@@ -58,22 +58,22 @@ function processFile(file, options, callback) {
 
     if (thumbDims.length > 0) {
       // create thumbs
-      var f = uploadCtr.splitFilePath(filepath);
-      var genThumb = function (thumbWidth, thumbHeight, callback) {
-        var dims = (thumbWidth || '') + 'x' + (thumbHeight || '');
-        var newPath = f.prefix + '_' + dims + f.ext;
+      const f = uploadCtr.splitFilePath(filepath);
+      const genThumb = function (thumbWidth, thumbHeight, callback) {
+        const dims = (thumbWidth || '') + 'x' + (thumbHeight || '');
+        const newPath = f.prefix + '_' + dims + f.ext;
         img.makeThumb(filepath, newPath, thumbWidth, thumbHeight, function () {
           if (callback) callback(newPath, thumbWidth, thumbHeight, dims);
         });
       };
 
-      var remaining = thumbDims.length; //thumbWidths.length;
-      for (let i in thumbDims) {
+      let remaining = thumbDims.length; //thumbWidths.length;
+      for (const i in thumbDims) {
         var thumbDim = thumbDims[i];
-        var thumbWidthHeight = thumbDim.split('x');
-        var thumbWidth =
+        const thumbWidthHeight = thumbDim.split('x');
+        const thumbWidth =
           thumbWidthHeight.length > 0 ? thumbWidthHeight[0] : null;
-        var thumbHeight =
+        const thumbHeight =
           thumbWidthHeight.length > 1 ? thumbWidthHeight[1] : null;
         genThumb(thumbWidth, thumbHeight, function (thumbFile) {
           console.log('[upload] generated thumb', { thumbDim, thumbFile });
@@ -91,11 +91,11 @@ function processFile(file, options, callback) {
 exports.controller = function (req, requestParams, res) {
   req.logToConsole('upload.controller', requestParams);
 
-  var user = req.checkLogin(res);
+  const user = req.checkLogin(res);
   if (!user) return; // Note: we may want to send a response in that case too
 
-  var postParams = req.body;
-  var files = req.files;
+  const postParams = req.body;
+  const files = req.files;
   console.log('[upload] postParams', postParams);
 
   if (postParams && postParams.id && postParams.action == 'delete') {
@@ -105,14 +105,14 @@ exports.controller = function (req, requestParams, res) {
     // Note: we may want to send a response in that case too
   }
 
-  var results = {},
-    remaining = Object.keys(files).length;
+  const results = {};
+  let remaining = Object.keys(files).length;
 
-  var options = {};
-  for (let i in defaultOptions) options[i] = defaultOptions[i];
-  for (let i in postParams) options[i] = postParams[i];
+  const options = {};
+  for (const i in defaultOptions) options[i] = defaultOptions[i];
+  for (const i in postParams) options[i] = postParams[i];
 
-  var processAndPushFile = function (i) {
+  const processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
       results[i] = result;
       if (--remaining == 0) {
@@ -122,5 +122,5 @@ exports.controller = function (req, requestParams, res) {
     });
   };
 
-  for (let i in files) processAndPushFile(i);
+  for (const i in files) processAndPushFile(i);
 };

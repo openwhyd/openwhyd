@@ -14,14 +14,14 @@ const map = makeMapWith(renderDate, function mapTemplate() {
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
-  var userSet = {};
+  const userSet = {};
   vals.forEach((val) => val.users.forEach((uId) => (userSet[uId] = true)));
   return {
     users: Object.keys(userSet),
   };
 }
 
-var opts = {
+const opts = {
   finalize: function (key, reducedValue) {
     return reducedValue.users.length;
   },
@@ -33,5 +33,5 @@ var opts = {
   //limit: 100000 // => runs in 4 seconds
 };
 
-var results = db.playlog.mapReduce(map, reduce, opts).results;
+const results = db.playlog.mapReduce(map, reduce, opts).results;
 print(results.map((res) => [res._id, res.value.users.length]).join('\n'));

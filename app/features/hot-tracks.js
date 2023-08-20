@@ -23,7 +23,7 @@ const fieldList = Object.keys(FIELDS_TO_COPY)
   .concat(['prev']);
 
 function mergePostData(track, post) {
-  for (let f in fieldList) post[fieldList[f]] = track[fieldList[f]];
+  for (const f in fieldList) post[fieldList[f]] = track[fieldList[f]];
   post.trackId = track._id;
   post.rankIncr = track.prev - track.score;
   return post;

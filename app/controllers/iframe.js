@@ -4,7 +4,7 @@
  * note: destination pages must contain <base target="_parent"> to open links properly from the iframe
  */
 
-var DESTINATIONS = {
+const DESTINATIONS = {
   '/download': [
     'https://openwhyd.github.io/openwhyd-electron/download',
     {
@@ -16,8 +16,8 @@ var DESTINATIONS = {
 };
 
 exports.controller = function (request, reqParams, response) {
-  var path = request.url.split('?')[0];
-  var [redirUrl, meta] = DESTINATIONS[path] || [];
+  const path = request.url.split('?')[0];
+  const [redirUrl, meta] = DESTINATIONS[path] || [];
   if (redirUrl) {
     response.renderIframe(redirUrl, meta);
   } else {

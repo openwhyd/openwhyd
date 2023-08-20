@@ -4,22 +4,22 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb');
-var userModel = require('../../models/user');
-var invitePage = require('../../templates/invitePage.js');
+const mongodb = require('../../models/mongodb');
+const userModel = require('../../models/user');
+const invitePage = require('../../templates/invitePage.js');
 
 function inviteByRequestId(reqIds, response) {
-  var remaining = reqIds.length;
+  let remaining = reqIds.length;
 
-  var checkInvite = function (reqId) {
+  const checkInvite = function (reqId) {
     userModel.fetchInviteByFbRequestId(reqId, function (invite) {
       console.log('found invite:', invite);
       if (invite && invite.fbRequestIds) {
         //return response.redirect("/invite/" + invite._id);
         //return response.redirect("/fbinvite/" + invite.fbRequestIds);
         //var sender = request.getUserFromId(invite.iBy); // TODO: test case when there is no sender
-        var sender = mongodb.usernames['' + invite.iBy]; // TODO: test case when there is no sender
-        var registrationPage = invitePage.renderInvitePage(
+        const sender = mongodb.usernames['' + invite.iBy]; // TODO: test case when there is no sender
+        const registrationPage = invitePage.renderInvitePage(
           sender,
           null /*request.getUser()*/,
           invite._id,
@@ -38,7 +38,7 @@ function inviteByRequestId(reqIds, response) {
     });
   };
 
-  for (let i in reqIds) checkInvite(reqIds[i]);
+  for (const i in reqIds) checkInvite(reqIds[i]);
 }
 
 exports.controller = function (request, reqParams, response) {

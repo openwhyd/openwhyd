@@ -1,10 +1,10 @@
 function include(src, callback) {
-  var inc = document.createElement('script'),
-    timer,
-    interval = 100,
-    retries = 10;
+  const inc = document.createElement('script');
+  let timer;
+  const interval = 100;
+  let retries = 10;
   function check() {
-    var loaded =
+    const loaded =
       inc.readyState &&
       (inc.readyState == 'loaded' ||
         inc.readyState == 'complete' ||
@@ -29,7 +29,7 @@ function include(src, callback) {
 
 function fetch(url, cb) {
   console.info('fetching data from ' + url + '...');
-  var cbName =
+  const cbName =
     '_whyd_callback_' +
     Date.now() +
     '_' +
@@ -42,7 +42,7 @@ function fetch(url, cb) {
 }
 
 fetch('/api/user', function (res) {
-  var loggedUser = !!(res || {})._id && res;
+  const loggedUser = !!(res || {})._id && res;
   if (loggedUser) {
     document.body.className = (document.body.className || '') + 'loggedIn';
     document.body.innerHTML = 'logged in';

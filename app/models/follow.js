@@ -3,18 +3,18 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var mongodb = require('./mongodb.js');
-var ObjectId = mongodb.ObjectId;
+const snip = require('../snip.js');
+const mongodb = require('./mongodb.js');
+const ObjectId = mongodb.ObjectId;
 
-var COLNAME = 'follow';
-var HISTORY_LIMIT = 20;
+const COLNAME = 'follow';
+const HISTORY_LIMIT = 20;
 
 // utility functions
 
 function transformSubscriptionArray(results) {
   if (results)
-    for (let i in results)
+    for (const i in results)
       results[i] = {
         id: ('' + results[i].tId).replace('/u/', ''),
         name: results[i].tNm,
@@ -24,7 +24,7 @@ function transformSubscriptionArray(results) {
 
 function transformSubscriberArray(results) {
   if (results)
-    for (let i in results)
+    for (const i in results)
       results[i] = {
         id: /*"/u/" +*/ '' + results[i].uId,
         name: results[i].uNm,
@@ -58,11 +58,11 @@ exports.get = function (followObj, dbHandler) {
 };
 
 exports.add = function (followObj, dbHandler) {
-  var req = {
+  const req = {
     uId: followObj.uId,
     tId: followObj.tId,
   };
-  var collection = mongodb.collections[COLNAME];
+  const collection = mongodb.collections[COLNAME];
   //collection.save(obj, dbHandler);
   collection.updateOne(
     req,
@@ -110,7 +110,7 @@ exports.countSubscribers = function (uId, cb) {
 };
 
 exports.fetchUserSubscriptions = function (uid, callback) {
-  var result = {
+  const result = {
     subscriptions: [],
     subscribers: [],
   };
@@ -145,7 +145,7 @@ exports.fetchSubscriptionSet = function (uid, callback) {
 
 exports.fetchSubscriptionArray = function (uid, cb) {
   fetchArray({ uId: uid }, { fields: { _id: 0, tId: 1 } }, function (subscr) {
-    for (let i in subscr) subscr[i] = subscr[i].tId;
+    for (const i in subscr) subscr[i] = subscr[i].tId;
     cb(subscr);
   });
 };
@@ -173,7 +173,7 @@ exports.fetchSubscriberHistory = function(uid, options, callback) {
 */
 exports.fetchSubscriptionHistory = function (options, callback) {
   options = options || {};
-  var q = {};
+  const q = {};
   if (options.fromUId) q.uId = { $in: options.fromUId };
   else if (options.toUId) {
     q.uId = { $ne: '' + options.toUId };

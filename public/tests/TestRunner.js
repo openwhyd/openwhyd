@@ -6,15 +6,15 @@
 function forEachAsync(fcts, cb) {
   fcts = fcts || [];
   (function next() {
-    var fct = fcts.shift();
+    const fct = fcts.shift();
     if (!fct) cb();
     else fct(next);
   })();
 }
 
 window.TestRunner = function () {
-  var tests = [];
-  var finalCallback = null;
+  const tests = [];
+  let finalCallback = null;
 
   function wrapTest(testFct, title) {
     return function (nextTestFct) {
@@ -31,7 +31,7 @@ window.TestRunner = function () {
   }
 
   this.addTests = function (testMap) {
-    for (let title in testMap) tests.push(wrapTest(testMap[title], title));
+    for (const title in testMap) tests.push(wrapTest(testMap[title], title));
     return this;
   };
 

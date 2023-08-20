@@ -27,13 +27,13 @@ const INPUT_FILE = 'playlog.json.log'; // TODO: also support stdin (for shell-pi
 const RENDER_FCT = process.env.RENDER_FCT;
 const PERIOD = process.env.PERIOD ? eval(process.env.PERIOD) : WEEK; // default value: 7 days
 
-var renderFct = eval(RENDER_FCT); // => e.g. renderDate() or renderWeek()
+const renderFct = eval(RENDER_FCT); // => e.g. renderDate() or renderWeek()
 
 // notice: MongoDB will not call the reduce function for a key that has only a single value
 function mapTemplate() {
   //var failed = this.err ? 1 : 0;
-  var val = { total: 1 }; //, total_err: failed
-  var error = this.err
+  const val = { total: 1 }; //, total_err: failed
+  const error = this.err
     ? this.err.code || this.err.error || this.err.data
     : undefined;
   if (error !== undefined) val[error] = 1;
@@ -50,7 +50,7 @@ const map = makeMapWith(
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
-  var finalVal = {};
+  const finalVal = {};
   // sum counts for each period
   vals.forEach((val) =>
     Object.keys(val).forEach(
@@ -60,7 +60,7 @@ function reduce(day, vals) {
   return finalVal;
 }
 
-var opts = {
+const opts = {
   finalize: function (key, reduced) {
     // list of player ids from https://github.com/openwhyd/openwhyd/blob/d27fb71220cbd29e9e418bd767426e3b4a2187f3/public/js/whydPlayer.js#L559
     Object.keys(reduced)

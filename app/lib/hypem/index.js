@@ -1,15 +1,16 @@
-var get = require('../get');
+const get = require('../get');
 
-var HYPEM_SEARCH_URL = 'http://hypem.com/playlist/search/QUERY/json/1/data.js';
-var NB_RESULTS_PER_PAGE = 20;
-var TIME_OUT = 3000;
+const HYPEM_SEARCH_URL =
+  'https://hypem.com/playlist/search/QUERY/json/1/data.js';
+const NB_RESULTS_PER_PAGE = 20;
+const TIME_OUT = 3000;
 
 //==============================================================================
 exports.search = function (query, callback) {
   get(
     HYPEM_SEARCH_URL.replace('QUERY', encodeURI(query)),
     function (err, page) {
-      var data;
+      let data;
       if (err) {
         callback(err, null);
       } else {
@@ -30,9 +31,9 @@ exports.searchMp3s = function (query, callback) {
   get(
     HYPEM_SEARCH_URL.replace('QUERY', encodeURI(query)),
     function (err, page) {
-      var count = 0;
-      var mp3s = [];
-      var data, i, callbackCalled;
+      let count = 0;
+      const mp3s = [];
+      let data, i, callbackCalled;
 
       function getMp3(data) {
         count++;
@@ -97,7 +98,7 @@ exports.getMp3FromPostUrl = function (postUrl, title, callback) {
 String.prototype.endsWith =
   String.prototype.endsWith ||
   function (str) {
-    var len = this.length;
+    const len = this.length;
     if (str && str.length > len) return false;
     return this.substring(len - str.length, len) === str;
   };

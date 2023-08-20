@@ -4,7 +4,7 @@
  **/
 
 const config = require('../../models/config.js');
-var FileController = require('./FileController.js');
+const FileController = require('./FileController.js');
 
 function wrapJsonGeneratorToText(name) {
   return function (p, cb) {

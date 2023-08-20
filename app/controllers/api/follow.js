@@ -40,7 +40,7 @@ const follow = async function (reqParams, dbHandler) {
   }
 };
 
-var PUBLIC_ACTIONS = {
+const PUBLIC_ACTIONS = {
   fetchFollowers: function (p, cb) {
     followModel.fetchFollowers(p.id, { skip: p.skip, limit: p.limit }, cb);
   },
@@ -61,8 +61,8 @@ function ranPublicAction(loggedUser, reqParams, cb) {
         { uId: loggedUser.id, tId: { $in: uids } },
         null,
         function (subscrStatus) {
-          var subscrSet = snip.objArrayToSet(subscrStatus, 'tId', true);
-          for (let i in res)
+          const subscrSet = snip.objArrayToSet(subscrStatus, 'tId', true);
+          for (const i in res)
             res[i].isSubscribing = subscrSet[res[i].uId || res[i].tId];
           cb(res);
         },
