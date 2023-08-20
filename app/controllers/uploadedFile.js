@@ -118,16 +118,18 @@ exports.controller = function (request, reqParams, response) {
   }
 
   function renderFile(path, defaultImg) {
-    //console.log("uploadedFile Path:", path);
     response.sendFile('' + path, function (error) {
       if (!error) return;
-      //console.log("uploadedFile error: ", error, exports.config.whydPath + "/public" + defaultImg);
-      if (defaultImg)
-        response.sendFile(
-          exports.config.whydPath + '/public' + defaultImg,
-          (err) => err && renderNoImage(),
-        );
-      else renderNoImage();
+      console.trace(`renderFile error for ${path}:`, error);
+      if (defaultImg) {
+        const defaultImagePath =
+          exports.config.whydPath + '/public' + defaultImg;
+        response.sendFile(defaultImagePath, (err) => {
+          if (!err) return;
+          console.trace(`renderFile error for ${defaultImagePath}:`, err);
+          renderNoImage();
+        });
+      } else renderNoImage();
     });
   }
 
