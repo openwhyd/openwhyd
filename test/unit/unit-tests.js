@@ -7,7 +7,7 @@ describe('snip.js', function () {
 
   it('translateFields() should replace a mapped field', function () {
     const orig = { a: 1, b: 2 };
-    const obj = Object.assign({}, orig); // clone orig
+    const obj = { ...orig }; // clone orig
     const mapping = { b: 'bb' };
     const res = snip.translateFields(obj, mapping);
     assert(!res.b);
