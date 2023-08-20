@@ -70,30 +70,31 @@ async function refreshIndex(type, cb, preprocess) {
   const cursor = await mongodb.collections[indexCol[type]]
     .find({}, options)
     .project(fields);
-  (function next() {
-    cursor.next(function (err, u) {
-      if (err)
-        console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err);
-      if (u != null) {
-        ++fetched;
-        process(u, function () {
-          if (fetched % 100 == 0)
-            console.warn('=> last (BULK) indexed document: ', u._id);
-          setTimeout(next /*, 100*/);
-        });
-      } else {
-        flush(function () {
-          console.log(
-            'admin.index.refreshIndex DONE! => indexed',
-            indexed,
-            'documents from',
-            fetched,
-            'fetched db records',
-          );
-          cb && cb();
-        });
-      }
-    });
+  (async function next() {
+    const u = await cursor
+      .next()
+      .catch((err) =>
+        console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err),
+      );
+    if (u != null) {
+      ++fetched;
+      process(u, function () {
+        if (fetched % 100 == 0)
+          console.warn('=> last (BULK) indexed document: ', u._id);
+        setTimeout(next /*, 100*/);
+      });
+    } else {
+      flush(function () {
+        console.log(
+          'admin.index.refreshIndex DONE! => indexed',
+          indexed,
+          'documents from',
+          fetched,
+          'fetched db records',
+        );
+        cb && cb();
+      });
+    }
   })();
 }
 
@@ -139,15 +140,14 @@ async function countDbUsersAndPlaylists(cb) {
   const cursor = await mongodb.collections[indexCol['user']]
     .find()
     .project({ pl: 1 });
-  (function nextUser() {
-    cursor.next(function (err, user) {
-      if (!user) cb(result);
-      else {
-        ++result.dbUsers;
-        if (user.pl) result.dbPlaylists += user.pl.length;
-        setImmediate(nextUser);
-      }
-    });
+  (async function nextUser() {
+    const user = await cursor.next();
+    if (!user) cb(result);
+    else {
+      ++result.dbUsers;
+      if (user.pl) result.dbPlaylists += user.pl.length;
+      setImmediate(nextUser);
+    }
   })();
 }
 

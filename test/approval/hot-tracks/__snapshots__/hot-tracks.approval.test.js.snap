@@ -365,7 +365,8 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       rankIncr: null,
       score: 1,
       text: 'my favorite track ever!',
-      trackId: '61e19a3f078b4c9934e72ce7'
+      trackId: '61e19a3f078b4c9934e72ce7',
+      trackUrl: '//youtube.com/watch?v=track_B'
     },
     {
       _id: '61e19a3f078b4c9934e72ce4',
@@ -376,7 +377,8 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       },
       rankIncr: null,
       score: 0,
-      trackId: '61e19a3f078b4c9934e72ce6'
+      trackId: '61e19a3f078b4c9934e72ce6',
+      trackUrl: '//youtube.com/watch?v=track_A'
     }
   ]
 }"
@@ -957,13 +959,15 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
       score: 100,
       text: '',
       trackId: '61e19a3f078b4c9934e72ce6',
+      trackUrl: '//youtube.com/watch?v=track_A',
       uId: '61e19a3f078b4c9934e72ce1',
       uNm: 'user 0'
     },
     {
       _id: '61e19a3f078b4c9934e72ce7',
       eId: '/yt/track_B',
-      score: 0
+      score: 0,
+      trackUrl: '//youtube.com/watch?v=track_B'
     }
   ]
 }"
@@ -1006,13 +1010,15 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) update
       score: 200,
       text: '',
       trackId: '61e19a3f078b4c9934e72ce6',
+      trackUrl: '//youtube.com/watch?v=track_A',
       uId: '61e19a3f078b4c9934e72ce1',
       uNm: 'user 0'
     },
     {
       _id: '61e19a3f078b4c9934e72ce7',
       eId: '/yt/track_B',
-      score: 0
+      score: 0,
+      trackUrl: '//youtube.com/watch?v=track_B'
     }
   ]
 }"

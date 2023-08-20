@@ -1,8 +1,10 @@
-var url = require('url');
+// @ts-check
+
 var http = require('http');
 var https = require('https');
 var path = require('path');
 var iconv = require('iconv'); //'iconv-jp'
+const { getFirstMatch } = require('../../snip');
 
 var CHARSET_REG = /<meta[^<>]+charset\s*=\s*(?:"([^<>"]+)"|([^<>"\s]+))[^<>]*>/;
 var TITLE_REG = /<title>([^<>]*)<\/title>/;
@@ -28,15 +30,15 @@ Page.prototype.find = function (regEx) {
 
 //==============================================================================
 Page.prototype.getTitle = function () {
-  return TITLE_REG.test(this.text) ? RegExp.$1.toString('utf8') : '';
+  return getFirstMatch(TITLE_REG, this.text) ?? ''; // note: we may need to convert to utf-8
 };
 
 //==============================================================================
 Page.prototype.getImages = function () {
   var imgs = this.text.match(IMAGE_REG) || [];
   var imgsUniq = [];
-  var base = BASE_REG.test(this.text) ? RegExp.$1 : null;
-  var ogImage = OG_IMAGE_REG.test(this.text) ? RegExp.$1 : null;
+  const base = getFirstMatch(BASE_REG, this.text) ?? null;
+  const ogImage = getFirstMatch(OG_IMAGE_REG, this.text) ?? null;
   var i, len, img;
   for (i = 0, len = imgs.length; i < len; i++) {
     img = imgs[i].match(IMAGE_URL_REG)[1];
@@ -61,7 +63,7 @@ Page.prototype.getImages = function () {
 
 //==============================================================================
 function getPage(address, callback) {
-  var urlObj = url.parse(address);
+  const urlObj = new URL(address);
   var options = {
     host: urlObj.hostname,
     path: urlObj.pathname,
@@ -70,13 +72,16 @@ function getPage(address, callback) {
   var chunks = [];
   var length = 0;
   return http
-    .get(options, function (res) {
+    .get(options, function parsePage(res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
       res.on('error', callback);
-      if (location) {
+      if (Array.isArray(location)) {
+        console.warn('getPage', { location });
+        callback(new Error('location header should be a string'));
+      } else if (location) {
         options.path = location;
-        http.get(options, arguments.callee).on('error', callback).end();
+        http.get(options, parsePage).on('error', callback).end();
       } else {
         res.on('data', function (chunk) {
           chunks.push(chunk);
@@ -91,9 +96,11 @@ function getPage(address, callback) {
             bufferPos += chunk.length;
           }
           text = buffer.toString();
-          charset = CHARSET_REG.test(text)
-            ? (RegExp.$1 || RegExp.$2).toLowerCase()
-            : 'utf-8';
+          const charsetMatches = CHARSET_REG.exec(text);
+          charset =
+            charsetMatches?.length > 0
+              ? (charsetMatches[1] || charsetMatches[2]).toLowerCase()
+              : 'utf-8';
           if (charset !== 'utf-8')
             try {
               text = new iconv.Iconv(charset, 'utf-8')
@@ -102,7 +109,7 @@ function getPage(address, callback) {
             } catch (e) {
               console.error(e);
             }
-          callback(null, new Page(urlObj.host, urlObj.path, text));
+          callback(null, new Page(urlObj.host, urlObj.pathname, text));
         });
       }
     })
@@ -125,7 +132,7 @@ getPage.Images = function (address, callback) {
 
 //==============================================================================
 getPage.Request = function (address, callback) {
-  var urlObj = url.parse(address);
+  const urlObj = new URL(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = {
     method: 'GET',
@@ -150,30 +157,32 @@ getPage.Request = function (address, callback) {
 
 //==============================================================================
 getPage.ContentType = function (address, callback) {
-  var urlObj = url.parse(address);
+  const urlObj = new URL(address);
   var httpOrHttps = urlObj.protocol === 'http:' ? http : https;
   var options = { method: 'GET', host: urlObj.hostname, path: urlObj.pathname };
   var contentType;
   httpOrHttps
-    .request(options, function (res) {
+    .request(options, function parsePage(res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
-      if (location) {
+      if (Array.isArray(location)) {
+        console.warn('getPage.ContentType', { location });
+        callback(new Error('location header should be a string'));
+      } else if (location) {
         options.path = location;
-        httpOrHttps
-          .request(options, arguments.callee)
-          .on('error', callback)
-          .end();
+        httpOrHttps.request(options, parsePage).on('error', callback).end();
       } else {
         contentType =
           headers['content-type'] ||
           headers['Content-Type'] ||
           headers['Content-type'];
+        if (Array.isArray(contentType)) {
+          contentType = contentType.join(' ');
+        }
         callback(
           null,
-          contentType && CONTENT_TYPE_REG.test(contentType)
-            ? RegExp.$1
-            : 'noContentType',
+          contentType &&
+            (getFirstMatch(CONTENT_TYPE_REG, contentType) ?? 'noContentType'),
         );
       }
     })

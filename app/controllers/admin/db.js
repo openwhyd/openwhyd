@@ -26,10 +26,8 @@ function wrapJsonGeneratorToCsv(name) {
   };
 }
 
-function fetchUidList(cb) {
-  mongodb.collections['post'].distinct('uId', {}, function (err, uidList) {
-    cb(uidList);
-  });
+async function fetchUidList() {
+  return await mongodb.collections['post'].distinct('uId', {});
 }
 
 function cleanUidList(uidList) {
@@ -71,12 +69,11 @@ var fileGenerators = {
     });
     cb('refreshing track trends...');
   },
-  'listUsersWithoutPosts.html': function (p, cb) {
-    fetchUidList(function (uidList) {
-      listMissingUsers(cleanUidList(uidList), function (users) {
-        cb({
-          html: new snip.DataTable().fromMap(users).toHtml(true),
-        });
+  'listUsersWithoutPosts.html': async function (p, cb) {
+    const uidList = await fetchUidList();
+    listMissingUsers(cleanUidList(uidList), function (users) {
+      cb({
+        html: new snip.DataTable().fromMap(users).toHtml(true),
       });
     });
   },

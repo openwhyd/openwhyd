@@ -68,7 +68,7 @@ exports.controller = function (request, reqParams, response) {
       response.renderHTML(
         files
           .map(function (file) {
-            file = file.substr(0, file.lastIndexOf('.'));
+            file = file.substring(0, file.lastIndexOf('.'));
             return '<li><a href="test/' + file + '">' + file + '</a>';
           })
           .join('\n'),
