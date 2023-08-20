@@ -137,10 +137,12 @@ exports.getHotTracksFromDb = function (params, handler) {
     });
   feature
     .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
-    .then((track) => ({
-      ...track,
-      trackUrl: config.translateEidToUrl(track.eId),
-    }))
+    .then((tracks) =>
+      tracks.map((track) => ({
+        ...track,
+        trackUrl: config.translateEidToUrl(track.eId),
+      })),
+    )
     .then((tracks) => {
       handler(tracks);
     });
