@@ -49,7 +49,8 @@ const openwhydBkPageDetectors: PageDetector[] = [
     ];
   },
   function detectPandoraTrack(window) {
-    if (window.location.href.indexOf('pandora.com') == -1) return null;
+    const { host } = window.location;
+    if (host !== 'pandora.com' && host !== 'www.pandora.com') return null;
     const getNodeText = (node) =>
       (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
     // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
