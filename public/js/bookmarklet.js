@@ -19,7 +19,7 @@
       if (fbLink.length > 1) {
         fbLink = decodeURIComponent(fbLink.pop().split('&').shift());
         const result =
-          fbLink.indexOf('//www.facebook.com/') == -1 ? fbLink : src;
+          new URL(fbLink).host !== 'www.facebook.com' ? fbLink : src;
         return result;
       }
       return src;
