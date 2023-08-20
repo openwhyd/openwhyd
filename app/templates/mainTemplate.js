@@ -214,14 +214,8 @@ exports.renderWhydFrame = function (html, params) {
     );
 
   out.push(
-    //	'    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>',
-    //	'    <script type="text/javascript" src="'+render.urlPrefix+'/js/jquery-1.10.2.min.js"></script>',
     '    <script src="/js/jquery-1.10.2.min.js"></script>',
     '    <script src="/js/jquery-migrate-1.2.1.js"></script>',
-    '    <script type="text/javascript" src="' +
-      render.urlPrefix +
-      '/js/jquery.history.js"></script>',
-    //	'    <script src="/js/soundmanager2.js"></script>',
     '    <script src="/js/soundmanager2-nodebug-jsmin.js"></script>',
     '    <script>soundManager.setup({url: "/swf/", flashVersion: 9, onready: function() {soundManager.isReady=true;}});</script>',
   );
