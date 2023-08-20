@@ -423,11 +423,9 @@ function updatePostStats($post /*, $ext*/) {
 
   const nbComments = $post.find('.comment').length;
   $post.find('.nbComments span').text(nbComments);
-  const hasReposts =
-    parseInt($post.find('.nbReposts span').text()) == 0 ? false : true;
-  const hasLikes =
-    parseInt($post.find('.nbLoves span').text()) == 0 ? false : true;
-  const hasComments = $post.find('.comment').length == 0 ? false : true;
+  const hasReposts = parseInt($post.find('.nbReposts span').text()) > 0;
+  const hasLikes = parseInt($post.find('.nbLoves span').text()) > 0;
+  const hasComments = $post.find('.comment').length > 0;
 
   // $ext.find(".stats").toggle(hasReposts || hasLikes);
   $post.find('.nbReposts').toggle(hasReposts);
