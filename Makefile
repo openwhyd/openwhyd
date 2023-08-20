@@ -16,7 +16,9 @@ restart: ## Restart the production server without downtime.
 	@cd scripts && ./restart.sh
 
 restart-to-latest: ## Restart the production server to its latest version, without downtime.
-	@git checkout -- package-lock.json && git pull && npm install --prefer-offline --no-audit --production && cd scripts && ./restart.sh
+	git pull
+	npm ci --omit=dev --prefer-offline --no-audit
+	cd scripts && ./restart.sh
 	# also don't forget to switch to the right version of nodejs, e.g. with "$ nvm use"
 
 build: fetch-deps ## Build runtime assets
