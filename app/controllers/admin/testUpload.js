@@ -4,7 +4,7 @@ function renderTemplate() {
   return [
     '<html>',
     '<head>',
-    '<script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script>',
+    '<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>',
     '<script type="text/javascript" src="/js/jquery.iframe-post-form.min.js"></script>',
     '<script type="text/javascript"><!--',
     '$(function ()',
