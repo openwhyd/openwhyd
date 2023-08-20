@@ -4,13 +4,13 @@
  * @author adrienjoly, whyd
  */
 
-var crypto = require('crypto');
+const crypto = require('crypto');
 
 const TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
 
 // hack caused by proxy on openwhyd server
 function realIP(request) {
-  var realIP = (request.headers || {})['x-real-ip'];
+  const realIP = (request.headers || {})['x-real-ip'];
   return realIP ? { connection: { remoteAddress: realIP } } : request;
 }
 
@@ -52,8 +52,8 @@ function parseSignupToken(sTk) {
 exports.makeSignupToken = function (genuineSignupSecret, request, date) {
   request = realIP(request);
   date = date ? new Date(date).getTime() : Date.now();
-  var requestHash = hashRequest(request, date);
-  var hash = date.toString(16) + requestHash;
+  const requestHash = hashRequest(request, date);
+  const hash = date.toString(16) + requestHash;
   const sign = signature(hash, genuineSignupSecret);
   return hash + sign;
 };
@@ -61,7 +61,7 @@ exports.makeSignupToken = function (genuineSignupSecret, request, date) {
 /** @param {string} genuineSignupSecret - secret key (only known by secure openwhyd clients), used to hash sTk */
 exports.validateSignupToken = function (genuineSignupSecret, sTk, request) {
   request = realIP(request);
-  var token = parseSignupToken(sTk);
+  const token = parseSignupToken(sTk);
   return {
     authentic: token.signature === signature(token.hash, genuineSignupSecret),
     notExpired: Date.now() - token.date < TOKEN_EXPIRY,
@@ -75,7 +75,7 @@ exports.validateSignupToken = function (genuineSignupSecret, sTk, request) {
 exports.checkSignupToken = function (genuineSignupSecret, sTk, request) {
   request = realIP(request);
   const valid = exports.validateSignupToken(genuineSignupSecret, sTk, request);
-  for (let i in valid) {
+  for (const i in valid) {
     // valid contains the following keys: authentic, notExpired, sameAddr
     if (!valid[i]) {
       return false;

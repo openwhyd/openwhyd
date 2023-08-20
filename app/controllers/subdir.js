@@ -7,10 +7,10 @@
  */
 
 exports.controller = function (request, reqParams, response, features) {
-  var path = request.url.split('?')[0];
-  var splitted = path.split('/');
-  var subDir = splitted[1];
-  var ctrName = splitted[2];
+  const path = request.url.split('?')[0];
+  const splitted = path.split('/');
+  const subDir = splitted[1];
+  const ctrName = splitted[2];
 
   try {
     const safeCtrPath = `./${subDir}/${ctrName}`.replace(/\.\./g, '');

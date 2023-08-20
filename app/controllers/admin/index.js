@@ -3,16 +3,16 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
-var searchModel = require('../../models/search.js');
+const mongodb = require('../../models/mongodb.js');
+const searchModel = require('../../models/search.js');
 
-var indexCol = {
+const indexCol = {
   user: 'user',
   post: 'post',
   playlist: 'user',
 };
 
-var indexFields = {
+const indexFields = {
   // different from the one from search.js model
   user: { _id: 1, name: 1, email: 1, handle: 1 },
   post: { _id: 1, name: 1, text: 1, uId: 1, eId: 1, pl: 1 },
@@ -28,7 +28,7 @@ function deleteIndex(type, cb) {
 }
 
 async function refreshIndex(type, cb, preprocess) {
-  var BULK_SIZE = 1000,
+  let BULK_SIZE = 1000,
     bulkDocs = [],
     fetched = 0,
     indexed = 0;
@@ -55,12 +55,12 @@ async function refreshIndex(type, cb, preprocess) {
     if (bulkDocs.length >= BULK_SIZE) flush(cb);
     else cb();
   }
-  var process = !preprocess
+  const process = !preprocess
     ? index
     : function (obj, fetchAndProcessNextObject) {
         preprocess(obj, fetchAndProcessNextObject, index);
       };
-  var options = {
+  const options = {
     //limit: 9999999,
     sort: [['_id', 'desc']],
     batchSize: 1000,
@@ -98,7 +98,7 @@ async function refreshIndex(type, cb, preprocess) {
   })();
 }
 
-var indexFcts = {
+const indexFcts = {
   deleteUserIndex: function (cb) {
     deleteIndex('user', cb);
   },
@@ -117,7 +117,7 @@ var indexFcts = {
   refreshPlaylistIndex: function (cb) {
     refreshIndex('playlist', cb, function (user, nextUser, index) {
       function nextPlaylist() {
-        var p = user.pl.pop();
+        const p = user.pl.pop();
         if (!p) nextUser();
         // no more playlists for this user => process next user
         else {
@@ -133,7 +133,7 @@ var indexFcts = {
 };
 
 async function countDbUsersAndPlaylists(cb) {
-  var result = {
+  const result = {
     dbUsers: 0,
     dbPlaylists: 0,
   };
@@ -208,7 +208,7 @@ exports.controller = function (request, reqParams = {}, response) {
   if (!reqParams.loggedUser) return;
 
   if (request.method.toLowerCase() === 'post') {
-    for (let i in indexFcts)
+    for (const i in indexFcts)
       if (request.body[i])
         return indexFcts[i](function (r) {
           response.legacyRender(r || { ok: 'done' });

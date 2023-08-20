@@ -10,7 +10,7 @@ const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`playlist api`, function () {
   let jar;
-  let context = {};
+  const context = {};
 
   before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
 

@@ -1,9 +1,9 @@
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
-var child_process = require('child_process');
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
+const child_process = require('child_process');
 
-var USE_GRAPHICS_MAGICK = true; // previously process.env.WHYD_USE_GRAPHICS_MAGICK
+let USE_GRAPHICS_MAGICK = true; // previously process.env.WHYD_USE_GRAPHICS_MAGICK
 
 // returns a version string from cmd's stdout, or undefined if cmd could not be run
 function getVersion(cmd) {
@@ -15,12 +15,12 @@ function getVersion(cmd) {
 }
 
 // detect graphicsmagick
-var gmVersion = getVersion('gm -version');
+const gmVersion = getVersion('gm -version');
 if (gmVersion) {
   console.log('[my.img] detected', gmVersion);
 } else {
   USE_GRAPHICS_MAGICK = false;
-  var imVersion = getVersion('convert --version');
+  const imVersion = getVersion('convert --version');
   if (imVersion) {
     console.log(
       '[my.img] detected',
@@ -39,7 +39,7 @@ exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
   http.get(
     { host: imgUrl.host, path: imgUrl.pathname, port: 80 },
     function (res) {
-      var data = '';
+      let data = '';
       res.setEncoding('binary');
       res.on('data', function (chunk) {
         data += chunk;
@@ -58,7 +58,7 @@ exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
 };
 
 if (USE_GRAPHICS_MAGICK) {
-  var gm = require('./node-magick');
+  const gm = require('./node-magick');
   exports.makeThumb = function (
     imgPath,
     thumbOutput,
@@ -73,7 +73,7 @@ if (USE_GRAPHICS_MAGICK) {
       });
   };
 } else {
-  var exec = child_process.exec;
+  const exec = child_process.exec;
   exports.makeThumb = function (
     imgPath,
     thumbOutput,
@@ -81,7 +81,7 @@ if (USE_GRAPHICS_MAGICK) {
     height,
     endListener,
   ) {
-    var execCallback = function (error, stdout, stderr) {
+    const execCallback = function (error, stdout, stderr) {
       console.log('[my.img] exec convert => ', error, stdout, stderr);
       if (endListener) endListener(error, stdout, stderr);
     };

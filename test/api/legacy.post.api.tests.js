@@ -9,7 +9,7 @@ const { startOpenwhydServer } = require('../approval-tests-helpers.js');
 describe(`post api`, function () {
   before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites (there are side effects between tests in this file...)
 
-  let context = {};
+  const context = {};
 
   before(async () => {
     if (START_WITH_ENV_FILE) {
@@ -163,7 +163,7 @@ describe(`post api`, function () {
 });
 
 describe(`post api - independent tests`, function () {
-  let context = {};
+  const context = {};
 
   // to prevent side effects between tests
   beforeEach(cleanup.bind(this, { silent: true }));
@@ -194,7 +194,7 @@ describe(`post api - independent tests`, function () {
   });
 
   it('should not delete a post from another user', async function () {
-    let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    const ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
     await api.addPost(ownerJar, {
       eId: '/yt/XdJVWSqb4Ck',
       name: 'Lullaby - Jack Johnson and Matt Costa',
@@ -202,7 +202,7 @@ describe(`post api - independent tests`, function () {
     const { posts } = await util.promisify(api.getMyPosts)(ownerJar);
     assert.equal(posts.length, 1);
     const postId = posts[0]._id;
-    let otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
+    const otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
     await assert.rejects(() => api.deletePost(otherJar, postId));
     assert.equal(
       (await util.promisify(api.getMyPosts)(ownerJar)).posts.length,
@@ -211,7 +211,7 @@ describe(`post api - independent tests`, function () {
   });
 
   it('should update own post', async function () {
-    let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    const ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
     await api.addPost(ownerJar, {
       eId: '/yt/XdJVWSqb4Ck',
       name: 'Lullaby - Jack Johnson and Matt Costa',
@@ -230,7 +230,7 @@ describe(`post api - independent tests`, function () {
   });
 
   it("should not allow update of another user's post", async function () {
-    let ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
+    const ownerJar = (await util.promisify(api.loginAs)(DUMMY_USER)).jar;
     await api.addPost(ownerJar, {
       eId: '/yt/XdJVWSqb4Ck',
       name: 'Lullaby - Jack Johnson and Matt Costa',
@@ -238,7 +238,7 @@ describe(`post api - independent tests`, function () {
     const { posts } = await util.promisify(api.getMyPosts)(ownerJar);
     assert.equal(posts.length, 1);
     const postId = posts[0]._id;
-    let otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
+    const otherJar = (await util.promisify(api.loginAs)(ADMIN_USER)).jar;
     let apiError;
     await api
       .addPost(otherJar, {

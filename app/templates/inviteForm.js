@@ -3,11 +3,11 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var mainTemplate = require('../templates/mainTemplate.js');
-var notifTemplate = require('../templates/notif.js');
-var templateLoader = require('../templates/templateLoader.js');
-var template = null;
+const snip = require('../snip.js');
+const mainTemplate = require('../templates/mainTemplate.js');
+const notifTemplate = require('../templates/notif.js');
+const templateLoader = require('../templates/templateLoader.js');
+let template = null;
 
 exports.refreshTemplates = function (callback) {
   template = templateLoader.loadTemplate(
@@ -18,8 +18,8 @@ exports.refreshTemplates = function (callback) {
 
 exports.refreshTemplates();
 
-var MSG_HTML = '<span>[[ your personal message here ]]</span>';
-var MSG_TOKEN = '[[MSG]]';
+const MSG_HTML = '<span>[[ your personal message here ]]</span>';
+const MSG_TOKEN = '[[MSG]]';
 
 exports.renderInviteForm = function (params = {}) {
   params.fields = [{ n: 1 }, { n: 2 }]; //var NB_INVITES = 3;

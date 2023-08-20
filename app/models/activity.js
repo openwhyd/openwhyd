@@ -3,13 +3,13 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var followModel = require('../models/follow.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
+const followModel = require('../models/follow.js');
 
 const ObjectId = mongodb.ObjectId;
 
-var DEFAULT_LIMIT_HISTORY = 10;
+const DEFAULT_LIMIT_HISTORY = 10;
 
 function getCol() {
   return mongodb.collections['activity'];
@@ -59,16 +59,16 @@ exports.fetchLikersOfUser = function (uid, options, callback) {
 
 exports.fetchHistoryFromUidList = function (uidList, options, callback) {
   options = options || {};
-  var limit = options.limit || DEFAULT_LIMIT_HISTORY;
+  const limit = options.limit || DEFAULT_LIMIT_HISTORY;
   options.limit = limit + 1;
-  var q = { id: { $in: uidList } };
+  const q = { id: { $in: uidList } };
   if (options.likesOnly) q.like = { $exists: true };
   function whenDone(activities) {
     activities = activities.sort(function (a, b) {
       return b._id.getTimestamp() - a._id.getTimestamp(); // sort by _id
     });
     //console.log("sorted likes with subscr:", activities);
-    var hasMore = activities && activities.length > limit;
+    const hasMore = activities && activities.length > limit;
     if (hasMore) activities = activities.slice(0, limit);
     //console.log("filtered likes with subscr:", activities);
     // console.log(
@@ -86,7 +86,7 @@ exports.fetchHistoryFromUidList = function (uidList, options, callback) {
     options.fromUId = uidList;
     //followModel.fetchUsersSubscriptionsHistory(uidList, options, function(subscriptions) {
     followModel.fetchSubscriptionHistory(options, function (subscriptions) {
-      for (let i in subscriptions)
+      for (const i in subscriptions)
         activities.push({
           _id: subscriptions[i]._id,
           id: subscriptions[i].uId,

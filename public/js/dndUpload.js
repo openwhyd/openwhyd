@@ -3,7 +3,7 @@
 window.DndUpload = function (options) {
   options = options || {};
 
-  var handler =
+  const handler =
     options.handler ||
     function (eventName, eventData) {
       if (options[eventName]) options[eventName](eventData, this);
@@ -26,8 +26,8 @@ window.DndUpload = function (options) {
 
   if (!options.holder) return handler('error', 'missing holder parameter');
 
-  var url = options.url;
-  var holder = options.holder;
+  const url = options.url;
+  const holder = options.holder;
 
   holder.ondragover = function () {
     //this.className += ' hover';
@@ -40,16 +40,16 @@ window.DndUpload = function (options) {
   holder.ondrop = function (e) {
     //this.className = this.className.replace(' hover', '');
     e.preventDefault();
-    var files = e.dataTransfer.files;
-    var formData = new FormData();
-    var formFields = (options.form || {}).elements;
+    const files = e.dataTransfer.files;
+    const formData = new FormData();
+    const formFields = (options.form || {}).elements;
     if (formFields)
       for (let i = formFields.length - 1; i >= 0; --i)
         if (formFields[i].type != 'file')
           formData.append(formFields[i].name, formFields[i].value);
     formData.append('file', files[0]);
     handler('post', files[0]);
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function (e2) {
       handler('progress', 1);

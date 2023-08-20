@@ -11,11 +11,11 @@ const MONGO_OPTIONS = {
 };
 
 const makeConnUrl = (params) => {
-  var host = params.mongoDbHost || process.env.MONGODB_HOST;
-  var port = params.mongoDbPort || process.env.MONGODB_PORT;
-  var authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
-  var authPassword = params.mongoDbAuthPassword || process.env.MONGODB_PASS;
-  var authStr =
+  const host = params.mongoDbHost || process.env.MONGODB_HOST;
+  const port = params.mongoDbPort || process.env.MONGODB_PORT;
+  const authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
+  const authPassword = params.mongoDbAuthPassword || process.env.MONGODB_PASS;
+  const authStr =
     authUser && authPassword
       ? encodeURIComponent(authUser) +
         ':' +
@@ -32,12 +32,12 @@ const cacheCollections = function (db, callback) {
       callback(err, db);
       return;
     }
-    var remaining = collections.length;
+    let remaining = collections.length;
     const cacheCollection = (colName) => {
       db.collections[colName] = db.collection(colName);
       if (0 == --remaining) callback(null, db);
     };
-    for (let i in collections) {
+    for (const i in collections) {
       cacheCollection(collections[i].collectionName);
       // cacheCollection will mutate remaining, and callback when remaining == 0
     }
@@ -45,7 +45,7 @@ const cacheCollections = function (db, callback) {
 };
 
 const initMongo = (params, callback) => {
-  var url = makeConnUrl(params) + '/' + dbName;
+  const url = makeConnUrl(params) + '/' + dbName;
   var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
   console.log('Connecting to ' + url + '...');
   const client = new mongodb.MongoClient(url, MONGO_OPTIONS);

@@ -4,10 +4,10 @@
  * @author adrienjoly, whyd
  */
 
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var errorTemplate = require('../templates/error.js');
-var template = require('../templates/postViewer.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
+const errorTemplate = require('../templates/error.js');
+const template = require('../templates/postViewer.js');
 
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('postViewer.controller', reqParams);

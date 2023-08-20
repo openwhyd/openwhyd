@@ -5,12 +5,12 @@
  */
 
 const snip = require('../snip.js');
-var config = require('../models/config.js');
-var mainTemplate = require('../templates/mainTemplate.js');
+const config = require('../models/config.js');
+const mainTemplate = require('../templates/mainTemplate.js');
 
-var templateLoader = require('../templates/templateLoader.js');
-var loginTemplate = null;
-var redirectTemplate = null;
+const templateLoader = require('../templates/templateLoader.js');
+let loginTemplate = null;
+let redirectTemplate = null;
 
 exports.refreshTemplates = function (callback) {
   const path = 'app/templates';
@@ -22,7 +22,7 @@ exports.refreshTemplates = function (callback) {
 exports.refreshTemplates();
 
 exports.renderLoginPage = function (form) {
-  var params = {
+  const params = {
     urlPrefix: config.urlPrefix,
     title: 'openwhyd',
     email: '',
@@ -33,7 +33,7 @@ exports.renderLoginPage = function (form) {
   };
 
   if (form) {
-    for (let i in form) // [error, email, password]
+    for (const i in form) // [error, email, password]
       params[i] = form[i];
     if (form.error) params.message = [{ text: form.error }];
   }
@@ -93,7 +93,7 @@ exports.renderRedirectPageWithTracking = function (url, title) {
 };
 
 exports.renderIframe = function (url, metaOverrides) {
-  var meta = {
+  const meta = {
     ...mainTemplate.defaultPageMeta,
     ...metaOverrides,
   };

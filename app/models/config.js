@@ -1,7 +1,7 @@
 // command-line overridable config
 
-var config = process.appParams; // cf init in appd.js
-for (let key in config) exports[key] = config[key]; // 🥷 this populates module.exports with all the values from process.appParams
+const config = process.appParams; // cf init in appd.js
+for (const key in config) exports[key] = config[key]; // 🥷 this populates module.exports with all the values from process.appParams
 
 // TODO: update team and autoSubscribeUsers
 
@@ -24,12 +24,12 @@ exports.autoSubscribeUsers = [
 ];
 
 exports.adminEmails = {};
-for (let i in exports.whydTeam)
+for (const i in exports.whydTeam)
   exports.adminEmails[exports.whydTeam[i].email] = true;
 
 // track players
 
-var PLAYERS = {
+const PLAYERS = {
   yt: {
     name: 'YouTube',
     urlPrefix: '//youtube.com/watch?v=',
@@ -86,7 +86,7 @@ var PLAYERS = {
   bc: {
     name: 'Bandcamp',
     urlMaker: function (eId) {
-      var parts = eId.split('#')[0].substr(4).split('/');
+      const parts = eId.split('#')[0].substr(4).split('/');
       return parts.length < 2
         ? undefined
         : '//' + parts[0] + '.bandcamp.com/track/' + parts[1];
@@ -107,8 +107,8 @@ var PLAYERS = {
 
 exports.getPlayerMeta = function (eId, src) {
   if (eId && eId.length && eId[0] == '/') {
-    var playerId = eId.split('/')[1];
-    var player = PLAYERS[playerId];
+    const playerId = eId.split('/')[1];
+    const player = PLAYERS[playerId];
     if (player)
       return {
         hostLabel: player.name,
@@ -127,8 +127,8 @@ exports.translateEidToUrl = function (eId) {
 };
 
 exports.translateUrlToEid = function (url) {
-  for (let i in PLAYERS) {
-    var eId = PLAYERS[i].extractId && PLAYERS[i].extractId(url);
+  for (const i in PLAYERS) {
+    const eId = PLAYERS[i].extractId && PLAYERS[i].extractId(url);
     if (eId) return '/' + i + '/' + eId;
   }
 };

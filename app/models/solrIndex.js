@@ -4,18 +4,18 @@
  * @deprecated because this code has not been used for years
  **/
 
-var http = require('http');
+const http = require('http');
 
-var host = process.env['SOLR_HOST'] || 'localhost';
-var port = process.env['SOLR_PORT'] || 8983;
+const host = process.env['SOLR_HOST'] || 'localhost';
+const port = process.env['SOLR_PORT'] || 8983;
 
-var queryPath = '/solr/select/';
-var updatePath = '/solr/update/json?wt=json&commit=true';
+const queryPath = '/solr/select/';
+const updatePath = '/solr/update/json?wt=json&commit=true';
 
-var DEFAULT_BOOST = 10000;
+const DEFAULT_BOOST = 10000;
 
 exports.request = function (path, data, callback) {
-  var req = http.request(
+  const req = http.request(
     {
       path: path,
       host: host,
@@ -27,7 +27,7 @@ exports.request = function (path, data, callback) {
       },
     },
     function (res) {
-      var resData = '';
+      let resData = '';
       res.addListener('data', function (chunk) {
         resData += chunk.toString();
       });
@@ -52,7 +52,7 @@ exports.request = function (path, data, callback) {
 };
 
 exports.query = function (args = {}, callback) {
-  var path =
+  const path =
     queryPath +
     '?version=2.2&wt=json&start=0&rows=' +
     (args.limit || 10) +

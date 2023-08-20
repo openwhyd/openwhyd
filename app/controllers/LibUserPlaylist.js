@@ -1,15 +1,15 @@
-var config = require('../models/config.js');
-var postModel = require('../models/post.js');
+const config = require('../models/config.js');
+const postModel = require('../models/post.js');
 
-var templateLoader = require('../templates/templateLoader.js');
-var playlistTemplateV2 = templateLoader.loadTemplate(
+const templateLoader = require('../templates/templateLoader.js');
+const playlistTemplateV2 = templateLoader.loadTemplate(
   'app/templates/userPlaylistV2.html',
 );
 
 exports.fetchAndRender = function (options, callback) {
   options.bodyClass += ' userPlaylistV2';
   options.user.pl = options.user.pl || [];
-  for (let i in options.user.pl)
+  for (const i in options.user.pl)
     if (options.user.pl[i] && options.user.pl[i].id == options.playlistId) {
       options.playlist = options.user.pl[i];
       break;
@@ -30,9 +30,9 @@ exports.fetchAndRender = function (options, callback) {
   }
   if (!options.playlist) callback('meh... this playlist does not exist!');
   else {
-    var prevId = null;
+    let prevId = null;
     for (let p = options.user.pl.length - 1; p > -1; --p) {
-      var pl = options.user.pl[p];
+      const pl = options.user.pl[p];
       if (!pl) continue;
       if (pl.id == options.playlistId) {
         if (prevId !== null)

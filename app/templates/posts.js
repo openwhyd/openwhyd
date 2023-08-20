@@ -3,19 +3,19 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var config = require('../models/config.js');
-var postModel = require('../models/post.js');
-var commentModel = require('../models/comment.js');
-var templateLoader = require('../templates/templateLoader.js');
-var template = templateLoader.loadTemplate('app/templates/posts.html');
+const snip = require('../snip.js');
+const config = require('../models/config.js');
+const postModel = require('../models/post.js');
+const commentModel = require('../models/comment.js');
+const templateLoader = require('../templates/templateLoader.js');
+const template = templateLoader.loadTemplate('app/templates/posts.html');
 
-var getUserNameFromId = require('../models/mongodb.js').getUserNameFromId;
+const getUserNameFromId = require('../models/mongodb.js').getUserNameFromId;
 
-var MAX_POSTS = config.nbPostsPerNewsfeedPage;
-var MAX_POSTS_EMBED = config.nbTracksPerPlaylistEmbed;
-var MAX_NB_REPOST_FACES = 12;
-var RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
+const MAX_POSTS = config.nbPostsPerNewsfeedPage;
+const MAX_POSTS_EMBED = config.nbTracksPerPlaylistEmbed;
+const MAX_NB_REPOST_FACES = 12;
+const RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 
 // database functions
 
@@ -29,7 +29,7 @@ function loadComments(posts, cb) {
     commentModel.fetch({ pId: posts.map(getPostId) }, {}, function (comments) {
       comments = snip.groupObjectsBy(comments, 'pId');
       //console.log("=> comments", comments)
-      for (let i in posts)
+      for (const i in posts)
         if (posts[i])
           try {
             posts[i].comments = comments[getPostId(posts[i])] || [];
@@ -43,7 +43,7 @@ function loadComments(posts, cb) {
 function loadReposts(posts, cb) {
   if (!(posts || []).length) cb();
   else {
-    var query = { 'repost.pId': { $in: posts.map(getPostId) } };
+    const query = { 'repost.pId': { $in: posts.map(getPostId) } };
     postModel.fetchPosts(
       query,
       { fields: { uId: 1, uNm: 1, 'repost.pId': 1 } },
@@ -60,7 +60,7 @@ function loadReposts(posts, cb) {
           }),
           'pId',
         );
-        for (let i in posts)
+        for (const i in posts)
           if (posts[i])
             try {
               posts[i].reposts = reposts[getPostId(posts[i])] || [];
@@ -76,8 +76,8 @@ function loadReposts(posts, cb) {
 // rendering functions
 
 function renderCommentDate(when) {
-  var date = new Date(when);
-  var ago = new Date() - date;
+  const date = new Date(when);
+  const ago = new Date() - date;
   if (ago < 1000 * 60 * 60 * 24) return snip.renderTime(date);
   else if (ago < 1000 * 60 * 60 * 24 * 32)
     return snip.renderShortMonthYear(date);
@@ -87,7 +87,7 @@ function renderCommentDate(when) {
 exports.preparePost = function (post, options) {
   if (!post) return null;
   post._id = post._id || post.id;
-  var when = post._id ? post._id.getTimestamp().getTime() : undefined;
+  const when = post._id ? post._id.getTimestamp().getTime() : undefined;
 
   if (post.ctx == 'mob')
     post.src = {
@@ -103,11 +103,11 @@ exports.preparePost = function (post, options) {
   }
 
   options = options || {};
-  var loggedUser = options.loggedUser || {};
+  const loggedUser = options.loggedUser || {};
 
   // rendering comments
 
-  var comments = post.comments || [];
+  const comments = post.comments || [];
   //var desc = snip.replaceURLWithHTMLLinks(snip.htmlEntities(post.text || '')).replace(/\n\n/g, "\n").replace(/\n/g,"<br/>");
   if (post.text)
     comments.unshift({
@@ -118,8 +118,8 @@ exports.preparePost = function (post, options) {
     });
 
   for (let j = 0; j < comments.length; ++j) {
-    var c = comments[j];
-    var t = c._id.getTimestamp();
+    const c = comments[j];
+    const t = c._id.getTimestamp();
     c.t = t.getTime();
     c.tRendered = renderCommentDate(t);
     c.html = snip
@@ -138,7 +138,7 @@ exports.preparePost = function (post, options) {
 
   // rendering dates
 
-  var date = new Date(when);
+  let date = new Date(when);
   date =
     snip.renderTime(date) +
     ' - ' +
@@ -148,13 +148,13 @@ exports.preparePost = function (post, options) {
     ' ' +
     date.getFullYear();
 
-  var ago = new Date() - when;
+  let ago = new Date() - when;
   if (ago < 1000 * 60 * 60 * 24 * 32) ago = snip.renderTimestamp(ago);
   else ago = snip.renderShortMonthYear(when);
 
   // setting main post attributes
 
-  var newPost = {
+  const newPost = {
     loggedUser: loggedUser.id && loggedUser,
     id: post._id,
     initialid: post.repost ? post.repost.pId : post._id,
@@ -210,7 +210,7 @@ exports.preparePost = function (post, options) {
   // rendering "via" source
 
   if (/*options.displayVia &&*/ post.eId && post.eId[0] == '/') {
-    var meta = config.getPlayerMeta(post.eId, (post.src || {}).id);
+    const meta = config.getPlayerMeta(post.eId, (post.src || {}).id);
     if (meta) newPost.via = meta;
   }
 
@@ -244,7 +244,8 @@ exports.renderPosts = function (posts, options) {
   options = options || {};
   console.log('_ _ _ _ _ _ _ _PREPAREEE');
 
-  for (let p in posts) posts[p] = exports.preparePost(posts[p], options || {});
+  for (const p in posts)
+    posts[p] = exports.preparePost(posts[p], options || {});
 
   return exports.render({
     posts: posts,
@@ -262,12 +263,12 @@ exports.renderPostsAsync = function (posts, options, callback) {
   options.ownProfile =
     options.user && options.user.id && options.user.id == options.loggedUser.id;
 
-  var maxPosts =
+  const maxPosts =
     options.limit || (options.embedW ? MAX_POSTS_EMBED : MAX_POSTS);
-  var hasMore = posts.length > maxPosts;
+  const hasMore = posts.length > maxPosts;
   if (hasMore) {
     posts = posts.slice(0, maxPosts);
-    var lastPost = posts[posts.length - 1];
+    const lastPost = posts[posts.length - 1];
     const lastPid =
       options.playlist && !isNaN(lastPost.order)
         ? lastPost.order
@@ -276,7 +277,7 @@ exports.renderPostsAsync = function (posts, options, callback) {
   }
 
   function prepareAndRender(posts, options, cb) {
-    var templateVars = options.templateVars || {};
+    const templateVars = options.templateVars || {};
     templateVars.posts = posts.map(function (post) {
       return exports.preparePost(post, options || {});
     });

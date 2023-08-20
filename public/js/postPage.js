@@ -1,10 +1,10 @@
 /* global $, whydPlayer */
 
-var postPage = {
+const postPage = {
   eId: '',
 
   init: function () {
-    var isDynamic = $('.post').attr('data-pid') == '' ? true : false;
+    const isDynamic = $('.post').attr('data-pid') == '' ? true : false;
     this.eId = $('.thumb').attr('data-eid');
     if (isDynamic) {
       $(
@@ -13,7 +13,7 @@ var postPage = {
       $('body').addClass('loading');
       this.externalImages(whydPlayer, this.imagesResolver.bind(this));
     } else {
-      var img = $('.thumb').attr('data-img');
+      const img = $('.thumb').attr('data-img');
       this.imagesResolver(img);
     }
   },
@@ -27,7 +27,7 @@ var postPage = {
   },
 
   externalImages: function (whydPlayer, cb) {
-    var eId = this.eId;
+    const eId = this.eId;
 
     //preload image FROM EID
     if (this.eId.substr(1, 2) == 'yt') {
@@ -69,7 +69,7 @@ var postPage = {
         img = img.replace(/\/image$/, '/image?size=480x640');
       else if (this.eId.indexOf('/ja/') == 0)
         img = img.replace(/\/covers\/1\.200\.jpg$/, '/covers/1.600.jpg');
-      var i = new Image();
+      const i = new Image();
       i.onload = function () {
         if (i.height >= 120) {
           $('.jsDynThumb').css('background-image', 'url(' + img + ')');

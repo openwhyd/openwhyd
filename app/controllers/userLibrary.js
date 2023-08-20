@@ -6,24 +6,24 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
-var userModel = require('../models/user.js');
-var feedTemplate = require('../templates/feed.js');
-var errorTemplate = require('../templates/error.js');
-var loggingTemplate = require('../templates/logging.js');
+const mongodb = require('../models/mongodb.js');
+const userModel = require('../models/user.js');
+const feedTemplate = require('../templates/feed.js');
+const errorTemplate = require('../templates/error.js');
+const loggingTemplate = require('../templates/logging.js');
 
-var renderAllLibrary = require('./LibAll.js').render;
-var renderUserLibrary = require('./LibUser.js').render;
-var renderFriendsLibrary = require('./LibFriends.js').render;
+const renderAllLibrary = require('./LibAll.js').render;
+const renderUserLibrary = require('./LibUser.js').render;
+const renderFriendsLibrary = require('./LibFriends.js').render;
 
-var tabParams = [
+const tabParams = [
   'showPlaylists',
   'showLikes',
   'showActivity',
   'showSubscribers',
   'showSubscriptions',
 ];
-var paramsToInclude = [
+const paramsToInclude = [
   'after',
   'before',
   'limit',
@@ -61,11 +61,11 @@ LibraryController.prototype.renderPage = function (
   if (!this.options.embedW) {
     this.options.content = feedHtml;
     let html = feedTemplate.renderFeedPage(user, this.options);
-    var loggedUserId = (this.options.loggedUser || {}).id;
+    const loggedUserId = (this.options.loggedUser || {}).id;
     if (loggedUserId) {
       userModel.fetchByUid(loggedUserId, (user) => {
         if (user && !user.consent) {
-          var thisUrl = encodeURIComponent(this.options.pageUrl || '/');
+          const thisUrl = encodeURIComponent(this.options.pageUrl || '/');
           html = loggingTemplate.htmlRedirect('/consent?redirect=' + thisUrl);
         }
         this.render({ html });
@@ -88,11 +88,11 @@ exports.controller = function (request, reqParams, response) {
   request.logToConsole('userLibrary.controller', reqParams);
 
   reqParams = reqParams || {};
-  var loggedInUser = (reqParams.loggedUser = request.getUser() || {});
+  const loggedInUser = (reqParams.loggedUser = request.getUser() || {});
   if (loggedInUser && loggedInUser.id)
     reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
 
-  var path = request.url.split('?')[0];
+  const path = request.url.split('?')[0];
   //console.log("path", path)
   reqParams.showPlaylists = path.endsWith('/playlists');
   reqParams.showLikes = path.endsWith('/likes');
@@ -141,7 +141,7 @@ exports.controller = function (request, reqParams, response) {
   }
 
   function redirectTo(path) {
-    var paramsObj = {},
+    const paramsObj = {},
       paramsToKeep = [
         'after',
         'before',
@@ -151,7 +151,7 @@ exports.controller = function (request, reqParams, response) {
         'wholePage',
         'callback',
       ];
-    for (let i in paramsToKeep)
+    for (const i in paramsToKeep)
       if (reqParams[paramsToKeep[i]])
         paramsObj[paramsToKeep[i]] = reqParams[paramsToKeep[i]];
     response.temporaryRedirect(path, paramsObj);

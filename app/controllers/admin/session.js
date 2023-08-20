@@ -3,7 +3,7 @@
  * @author adrienjoly, whyd
  **/
 
-var MyController = require('../../MyController.js');
+const MyController = require('../../MyController.js');
 
 const MAX_LEN_UA = 12;
 
@@ -20,13 +20,13 @@ exports.notifyUserActivity = function ({ userId, userAgent, startDate }) {
 };
 
 function filterByFreshness(d) {
-  var now = Date.now();
-  var filtered = {};
-  for (let ua in lastAccessPerUA) {
-    var users = 0; //[];
-    var userAccess = lastAccessPerUA[ua];
-    for (let uid in userAccess) {
-      var t = userAccess[uid];
+  const now = Date.now();
+  const filtered = {};
+  for (const ua in lastAccessPerUA) {
+    let users = 0; //[];
+    const userAccess = lastAccessPerUA[ua];
+    for (const uid in userAccess) {
+      const t = userAccess[uid];
       if (now - t <= d) ++users;
       //users.push({id: uid, secondsAgo: (now - t) / 1000}) ;
     }
@@ -38,7 +38,7 @@ function filterByFreshness(d) {
   };
 }
 
-var ACTIONS = {
+const ACTIONS = {
   all: function (p, cb) {
     cb({ json: lastAccessPerUA });
   },

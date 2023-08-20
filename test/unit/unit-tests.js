@@ -12,23 +12,23 @@ const HTML_PAGE_WITH_TITLE_AND_IMAGES = [
 ].join('\n');
 
 describe('snip.js', function () {
-  var snip = require('../../app/snip.js');
+  const snip = require('../../app/snip.js');
 
   it('translateFields() should replace a mapped field', function () {
-    var orig = { a: 1, b: 2 };
-    var obj = Object.assign({}, orig); // clone orig
-    var mapping = { b: 'bb' };
-    var res = snip.translateFields(obj, mapping);
+    const orig = { a: 1, b: 2 };
+    const obj = Object.assign({}, orig); // clone orig
+    const mapping = { b: 'bb' };
+    const res = snip.translateFields(obj, mapping);
     assert(!res.b);
     assert.equal(res.bb, orig.b);
   });
 
   it('translateFields() should not crash on an object without prototype', function () {
-    var orig = { a: 1, b: 2 };
-    var obj = Object.create(null);
+    const orig = { a: 1, b: 2 };
+    const obj = Object.create(null);
     Object.assign(obj, orig);
-    var mapping = { b: 'bb' };
-    var res = snip.translateFields(obj, mapping);
+    const mapping = { b: 'bb' };
+    const res = snip.translateFields(obj, mapping);
     assert(!res.b);
     assert.equal(res.bb, orig.b);
   });

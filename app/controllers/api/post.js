@@ -4,21 +4,21 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../../snip.js');
-var mongodb = require('../../models/mongodb.js');
-var postModel = require('../../models/post.js');
-var userModel = require('../../models/user.js');
-var notifModel = require('../../models/notif.js');
-var followModel = require('../../models/follow.js');
-var commentModel = require('../../models/comment.js');
-var analytics = require('../../models/analytics.js');
-var lastFm = require('./lastFm.js').lastFm;
+const snip = require('../../snip.js');
+const mongodb = require('../../models/mongodb.js');
+const postModel = require('../../models/post.js');
+const userModel = require('../../models/user.js');
+const notifModel = require('../../models/notif.js');
+const followModel = require('../../models/follow.js');
+const commentModel = require('../../models/comment.js');
+const analytics = require('../../models/analytics.js');
+const lastFm = require('./lastFm.js').lastFm;
 
-var sequencedParameters = { _1: 'pId', _2: 'action' }; //[null, "pId", "action"];
+const sequencedParameters = { _1: 'pId', _2: 'action' }; //[null, "pId", "action"];
 
 function getBrowserVersionFromUserAgent(ua) {
   // reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#Browser_Name
-  var BROWSER_UA_REGEX = [
+  const BROWSER_UA_REGEX = [
     /(openwhyd-electron)\/([^ $]+)/,
     /(Chrome)\/([^ $]+)/,
     /(Chromium)\/([^ $]+)/,
@@ -30,7 +30,7 @@ function getBrowserVersionFromUserAgent(ua) {
     /(Firefox)\/([^ $]+)/,
   ];
   for (let i = 0; i < BROWSER_UA_REGEX.length; ++i) {
-    var match = ua.match(BROWSER_UA_REGEX[i]);
+    const match = ua.match(BROWSER_UA_REGEX[i]);
     if (match) return match.slice(1, 3); // => [ browser_name, version ]
   }
 }
@@ -40,20 +40,20 @@ function fetchSubscribedUsers(uidList, uid, cb) {
     { uId: uid, tId: { $in: uidList } },
     null,
     function (results) {
-      var uidSet = {};
-      for (let i in results) uidSet[results[i].tId] = results[i];
+      const uidSet = {};
+      for (const i in results) uidSet[results[i].tId] = results[i];
       cb(uidSet);
     },
   );
 }
 
-var publicActions = {
+const publicActions = {
   lovers: function (p, callback) {
     postModel.fetchPostById(p.pId, function (post) {
-      var lovers = [];
+      const lovers = [];
       if (post && post.lov)
         fetchSubscribedUsers(post.lov, p.uId, function (subscrUidSet) {
-          for (let i in post.lov)
+          for (const i in post.lov)
             lovers.push({
               id: /*"/u/"+*/ post.lov[i],
               name: (mongodb.usernames[post.lov[i]] || {}).name,
@@ -74,12 +74,12 @@ var publicActions = {
       null,
       null,
       function (results) {
-        var reposts = [];
+        const reposts = [];
         if (results) {
-          var repostUids = [];
-          for (let i in results) repostUids.push(results[i].uId);
+          const repostUids = [];
+          for (const i in results) repostUids.push(results[i].uId);
           fetchSubscribedUsers(repostUids, p.uId, function (subscrUidSet) {
-            for (let i in results)
+            for (const i in results)
               reposts.push({
                 id: /*"/u/"+*/ results[i].uId,
                 name: (mongodb.usernames[results[i].uId] || {}).name,
@@ -106,7 +106,7 @@ exports.actions = {
    * @param createPlaylist {import('../../domain/api/Features').CreatePlaylist}
    */
   insert: async function (httpRequestParams, callback, _, { createPlaylist }) {
-    var postRequest = {
+    const postRequest = {
       uId: httpRequestParams.uId,
       uNm: httpRequestParams.uNm,
       text: httpRequestParams.text || '',
@@ -214,15 +214,15 @@ exports.actions = {
       return cb && cb({ error: 'invalid pId' });
     p.logData = p.logData || {};
     function getShortUserAgent() {
-      var userAgent =
+      const userAgent =
         request && request.headers && request.headers['user-agent'];
       return userAgent ? getBrowserVersionFromUserAgent(userAgent) : undefined;
     }
     function callbackAndLogPlay(post) {
       cb && cb({ result: post });
       if (!post || !post.name) return;
-      var ua = getShortUserAgent();
-      var anyBrowserExceptElectron = !ua || !/openwhyd-electron/.test(ua);
+      const ua = getShortUserAgent();
+      const anyBrowserExceptElectron = !ua || !/openwhyd-electron/.test(ua);
       analytics.addPlay({
         eId: post.eId,
         pId: '' + post._id,
@@ -250,7 +250,7 @@ exports.actions = {
     if (!p.uId) return cb && cb({ error: 'not logged in' });
     postModel.fetchPostById(p.pId, function (r) {
       if (!r) return cb && cb({ error: 'missing track' });
-      var lastFmSessionKey = (mongodb.usernames[p.uId].lastFm || {}).sk;
+      const lastFmSessionKey = (mongodb.usernames[p.uId].lastFm || {}).sk;
       lastFm.scrobble2(
         r && r.name,
         lastFmSessionKey,
@@ -280,7 +280,7 @@ exports.handleRequest = function (request, reqParams, response, features) {
     );
   }
 
-  var user = request.getUser() || {}; //checkLogin(response);
+  const user = request.getUser() || {}; //checkLogin(response);
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
 
@@ -305,10 +305,10 @@ exports.handleRequest = function (request, reqParams, response, features) {
  */
 exports.controller = function (request, getParams, response, features) {
   //request.logToConsole("api.post", getParams);
-  var params = snip.translateFields(getParams || {}, sequencedParameters);
+  const params = snip.translateFields(getParams || {}, sequencedParameters);
 
   //if (request.method.toLowerCase() === 'post')
-  for (let i in request.body) params[i] = request.body[i];
+  for (const i in request.body) params[i] = request.body[i];
 
   exports.handleRequest(request, params, response, features);
 };

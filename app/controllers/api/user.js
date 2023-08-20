@@ -12,29 +12,29 @@
 // http://localhost:8080/api/user
 // http://localhost:8080/admin/users?action=delete&_id=<...>
 
-var snip = require('../../snip.js');
-var mongodb = require('../../models/mongodb.js');
-var postModel = require('../../models/post.js');
-var userModel = require('../../models/user.js');
-var emailModel = require('../../models/email.js');
-var followModel = require('../../models/follow.js');
-var notifEmails = require('../../models/notifEmails.js');
-var uploadCtr = require('../uploadedFile.js');
+const snip = require('../../snip.js');
+const mongodb = require('../../models/mongodb.js');
+const postModel = require('../../models/post.js');
+const userModel = require('../../models/user.js');
+const emailModel = require('../../models/email.js');
+const followModel = require('../../models/follow.js');
+const notifEmails = require('../../models/notifEmails.js');
+const uploadCtr = require('../uploadedFile.js');
 
 // for when called through subdir controller
-var SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
+const SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
 
 function addUserInfo(userSub, mySub) {
-  var mySubIdSet = {};
-  if (mySub) for (let i in mySub) mySubIdSet[mySub[i].id] = true;
-  for (let i in userSub) {
-    var user = userSub[i];
+  const mySubIdSet = {};
+  if (mySub) for (const i in mySub) mySubIdSet[mySub[i].id] = true;
+  for (const i in userSub) {
+    const user = userSub[i];
     user.subscribed = mySubIdSet[user.id];
   }
   return userSub;
 }
 
-var publicActions = {
+const publicActions = {
   subscriptions: function (p, cb) {
     if (!p || !p.id) cb({ error: 'user not found' });
     else
@@ -125,13 +125,13 @@ var publicActions = {
 
 function defaultSetter(fieldName) {
   return function (p, cb) {
-    var u = { _id: p._id };
+    const u = { _id: p._id };
     u[fieldName.replace('_', '.')] = p[fieldName];
     userModel.save(u, cb);
   };
 }
 
-var fieldSetters = {
+const fieldSetters = {
   name: function (p, cb) {
     userModel.renameUser(p._id, p.name, cb);
   },
@@ -204,7 +204,7 @@ var fieldSetters = {
   },
   pref: function (p, cb) {
     // type each provided pref value accordingly to defaults. "true" boolean was translated to "1"
-    for (let i in p.pref)
+    for (const i in p.pref)
       p.pref[i] =
         typeof userModel.DEFAULT_PREF[i] == 'boolean'
           ? p.pref[i] == 1
@@ -234,7 +234,7 @@ function hasProfileImage(user) {
 
 function hasSubscribed(loggedUser, user, cb) {
   user = user || {};
-  var uId = user.id || user._id;
+  const uId = user.id || user._id;
   if (uId && loggedUser)
     followModel.get({ uId: loggedUser.id, tId: uId }, function (err, res) {
       user.isSubscribing = !!res;
@@ -244,7 +244,7 @@ function hasSubscribed(loggedUser, user, cb) {
 }
 
 function countUserSubscr(user, cb) {
-  var uId = '' + user._id;
+  const uId = '' + user._id;
   followModel.countSubscriptions(uId, function (res) {
     user.nbSubscriptions = res;
     followModel.countSubscribers(uId, function (res) {
@@ -293,7 +293,7 @@ function fetchUserById(uId, options, cb) {
       }
       const getters = [['includeSubscr', countUserSubscr]];
       (function next() {
-        var item = getters.shift();
+        const item = getters.shift();
         if (!item) cb(user);
         else {
           if (options[item[0]]) item[1](user, next);
@@ -306,11 +306,11 @@ function fetchUserById(uId, options, cb) {
 
 function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
   function returnUser(u) {
-    var uId = (u || {}).id;
+    const uId = (u || {}).id;
     if (!uId) cb({ error: 'user not found' });
     else fetchUserById(uId, options, cb);
   }
-  var u = mongodb.getUserFromId(uidOrHandle) || {};
+  const u = mongodb.getUserFromId(uidOrHandle) || {};
   if (u.id) returnUser(u);
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
@@ -319,7 +319,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
   // transforming sequential parameters to named parameters
   reqParams = snip.translateFields(reqParams, SEQUENCED_PARAMETERS);
 
-  var handler = publicActions[reqParams.action];
+  const handler = publicActions[reqParams.action];
   if (handler) {
     reqParams.loggedUser = loggedUser;
     handler(reqParams, localRendering);
@@ -327,7 +327,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
   } else if (reqParams.id) {
     reqParams.excludePrivateFields = true;
     fetchUserByIdOrHandle(reqParams.id, reqParams, function (u) {
-      var tasks = [localRendering];
+      const tasks = [localRendering];
       if (reqParams.isSubscr)
         tasks.push(function (u, next) {
           hasSubscribed(loggedUser, u, next);
@@ -335,7 +335,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
       if (reqParams.countPosts) tasks.push(countUserPosts);
       if (reqParams.countLikes) tasks.push(countUserLikes);
       (function next() {
-        var fct = tasks.pop();
+        const fct = tasks.pop();
         fct && fct(u, next);
       })();
     });
@@ -350,17 +350,18 @@ function handleAuthRequest(loggedUser, reqParams, localRendering) {
 
   reqParams._id = loggedUser._id;
 
-  var toUpdate = [];
-  for (let i in fieldSetters) if (reqParams[i] !== undefined) toUpdate.push(i);
+  const toUpdate = [];
+  for (const i in fieldSetters)
+    if (reqParams[i] !== undefined) toUpdate.push(i);
 
   if (toUpdate.length) {
-    var result = {};
+    const result = {};
     (function setNextField(prevResult) {
       if (prevResult)
-        for (let i in prevResult) result[i] = prevResult[i] || result[i];
+        for (const i in prevResult) result[i] = prevResult[i] || result[i];
       if (!toUpdate.length) localRendering(result);
       else {
-        var fieldName = toUpdate.pop();
+        const fieldName = toUpdate.pop();
         console.log('calling field setter: ', fieldName);
         reqParams._id = loggedUser._id; // force the logged user id
         fieldSetters[fieldName](reqParams, setNextField);
@@ -410,7 +411,7 @@ exports.controller = function (request, reqParams, response) {
     );
   }
 
-  var loggedUser = request.checkLogin(/*response*/);
+  const loggedUser = request.checkLogin(/*response*/);
   handleRequest(
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,

@@ -1,7 +1,7 @@
-var assert = require('assert');
-var request = require('request'); // TODO: promisify it
+const assert = require('assert');
+const request = require('request'); // TODO: promisify it
 
-var { URL_PREFIX } = require('./fixtures.js');
+const { URL_PREFIX } = require('./fixtures.js');
 
 const EXPECTED_RTK = 7; // cf app/controllers/invite.js
 

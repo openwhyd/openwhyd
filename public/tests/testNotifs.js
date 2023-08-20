@@ -3,20 +3,20 @@
 (function () {
   // wrap console
 
-  var origLog = console.log;
+  const origLog = console.log;
 
-  var log = (console.log = function () {
+  const log = (console.log = function () {
     origLog.apply(console, arguments);
-    for (let i in arguments)
+    for (const i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = JSON.stringify(arguments[i]);
-    var p = document.createElement('p');
+    const p = document.createElement('p');
     if (arguments[0].indexOf('%c') == 0) {
       arguments[0] = arguments[0].substr(2);
       p.setAttribute('style', arguments[arguments.length - 1]);
       --arguments.length;
     }
-    var text = Array.prototype.join.call(arguments, ' ');
+    const text = Array.prototype.join.call(arguments, ' ');
     //origLog(text);
     p.innerText = text;
     document.body.appendChild(p);
@@ -48,16 +48,16 @@
   // helpers
 
   function countNotifs(notifs) {
-    var total = 0;
-    for (let i in notifs) total += notifs[i].n || 1;
+    let total = 0;
+    for (const i in notifs) total += notifs[i].n || 1;
     return total;
   }
 
   // tests
 
-  var testVars = {};
+  const testVars = {};
 
-  var TESTS = {
+  const TESTS = {
     'backup and clear notifications': function (cb) {
       jsonGet('/api/notif', {}, function (notifs) {
         testVars.initialNotifs = notifs;
@@ -85,26 +85,26 @@
     },
     'simulate a notif => no push': function (cb) {
       jsonPost('/api/notif', { action: 'test' }, function () {
-        var result = confirm('have you received a push notification?');
+        const result = confirm('have you received a push notification?');
         cb(!result);
       });
     },
     'check notification counter 1': function (cb) {
       jsonGet('/api/notif', {}, function (notifs) {
-        var count = countNotifs(notifs);
+        const count = countNotifs(notifs);
         log('found', count, 'notifs');
         cb(count == 1);
       });
     },
     'simulate a notif => still no push': function (cb) {
       jsonPost('/api/notif', { action: 'test' }, function () {
-        var result = confirm('have you received a push notification?');
+        const result = confirm('have you received a push notification?');
         cb(!result);
       });
     },
     'check notification counter 2': function (cb) {
       jsonGet('/api/notif', {}, function (notifs) {
-        var count = countNotifs(notifs);
+        const count = countNotifs(notifs);
         log('found', count, 'notifs');
         cb(count == 2);
       });
@@ -128,7 +128,7 @@
     },
     'check notification counter 3': function (cb) {
       jsonGet('/api/notif', {}, function (notifs) {
-        var count = countNotifs(notifs);
+        const count = countNotifs(notifs);
         log('found', count, 'notifs');
         cb(count == 3);
       });
@@ -155,7 +155,7 @@
 
   // init button
   document.getElementById('run').onclick = function () {
-    var runner = new TestRunner();
+    const runner = new TestRunner();
     runner.addTests(TESTS);
     runner.run(function (result) {
       log('result of all tests:', result);
@@ -163,9 +163,9 @@
   };
 
   // display list for tests
-  var listEl = document.getElementById('tests');
-  for (let t in TESTS) {
-    var li = document.createElement('li');
+  const listEl = document.getElementById('tests');
+  for (const t in TESTS) {
+    const li = document.createElement('li');
     li.innerText = t;
     listEl.appendChild(li);
   }

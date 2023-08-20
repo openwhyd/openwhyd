@@ -19,9 +19,9 @@ window.showMessage =
 
 // configuration
 
-var USING_IOS = navigator.userAgent.match(/(iPod|iPhone|iPad)/i);
-var USING_ELECTRON = /openwhyd-electron/.test(navigator.userAgent);
-var MAX_POSTS_TO_SHUFFLE = 200;
+const USING_IOS = navigator.userAgent.match(/(iPod|iPhone|iPad)/i);
+const USING_ELECTRON = /openwhyd-electron/.test(navigator.userAgent);
+const MAX_POSTS_TO_SHUFFLE = 200;
 
 // utility functions
 
@@ -40,30 +40,30 @@ EventEmitter.prototype.on = function (eventName, handler) {
 };
 
 EventEmitter.prototype.emit = function (eventName /*, args...*/) {
-  var args = Array.prototype.slice.call(arguments, 1); // remove eventName from arguments, and make it an array
-  var listeners = this._eventListeners[eventName];
-  for (let i in listeners) listeners[i].apply(null, args);
+  const args = Array.prototype.slice.call(arguments, 1); // remove eventName from arguments, and make it an array
+  const listeners = this._eventListeners[eventName];
+  for (const i in listeners) listeners[i].apply(null, args);
 };
 
 function inheritEventEmitter(object) {
-  var eventEmitter = new EventEmitter();
-  for (let i in eventEmitter) object[i] = eventEmitter[i];
+  const eventEmitter = new EventEmitter();
+  for (const i in eventEmitter) object[i] = eventEmitter[i];
 }
 
 /////////////////////////////////////////////////////////////////////////////////
 
 function ProgressBar(p = {}) {
-  var updateBarOnDrag = p.updateBarOnDrag;
+  const updateBarOnDrag = p.updateBarOnDrag;
   this.value = p.value || 0;
-  var $progressTrack = p.progressTrack;
-  var $progressBar = $progressTrack.find('.progressBar');
-  var $progressCursor = $progressTrack.find('.progressCursor');
-  var draggingCursor = false;
+  const $progressTrack = p.progressTrack;
+  const $progressBar = $progressTrack.find('.progressBar');
+  const $progressCursor = $progressTrack.find('.progressCursor');
+  let draggingCursor = false;
   $progressTrack.mousedown(function (e) {
     //console.log("progresstrack.mousedown", e, $progressTrack);
-    var min_x = $progressTrack.offset().left + 3;
-    var width = $progressTrack.width();
-    var offset_x = Math.min(width, Math.max(0, e.pageX - min_x));
+    const min_x = $progressTrack.offset().left + 3;
+    const width = $progressTrack.width();
+    let offset_x = Math.min(width, Math.max(0, e.pageX - min_x));
     draggingCursor = true;
     function moveCursor(e) {
       $progressTrack.addClass('dragging');
@@ -109,15 +109,15 @@ function WhydPlayer() {
     loop: true,
     playTimeoutMs: 12 * 1000, // give 12 seconds for tracks to (try to) start playing
   });
-  var currentTrack = null;
-  var isPlaying = false;
-  var isShuffle = false;
+  let currentTrack = null;
+  let isPlaying = false;
+  let isShuffle = false;
   inheritEventEmitter(this); // adds on() and emit() methods
 
   // utility functions
 
   function setPageTitlePrefix(symbol) {
-    var spacePos = window.document.title.indexOf(' ');
+    const spacePos = window.document.title.indexOf(' ');
     if (spacePos < 3)
       window.document.title = window.document.title.substr(spacePos + 1);
     window.document.title = symbol + ' ' + window.document.title;
@@ -125,7 +125,7 @@ function WhydPlayer() {
 
   // ui init
 
-  var div = document.getElementById('whydPlayer');
+  let div = document.getElementById('whydPlayer');
   if (!div) {
     document.body.appendChild(document.createElement('div')).id = 'whydPlayer';
     div = document.getElementById('whydPlayer');
@@ -159,10 +159,10 @@ function WhydPlayer() {
     ].join('\n');
   }
 
-  var $body = $('body');
-  var $trackTitle = $('#trackTitle');
-  var $trackNumber = $('#trackNumber');
-  var $trackSrc = $('#trackSrc');
+  const $body = $('body');
+  const $trackTitle = $('#trackTitle');
+  const $trackNumber = $('#trackNumber');
+  const $trackSrc = $('#trackSrc');
 
   function setState(state, $post) {
     // var loading = state == 'loading';
@@ -170,8 +170,8 @@ function WhydPlayer() {
 
     $body.toggleClass('playing', isPlaying);
 
-    var classes = $body.attr('class').split(' ');
-    for (let i in classes)
+    const classes = $body.attr('class').split(' ');
+    for (const i in classes)
       if (classes[i].indexOf('playing_') == 0) $body.removeClass(classes[i]);
     $body.addClass('playing_' + currentTrack.playerName);
 
@@ -193,10 +193,10 @@ function WhydPlayer() {
   }
 
   if (typeof document.hasFocus === 'function' && !USING_ELECTRON) {
-    var hadFocus = true,
+    let hadFocus = true,
       wasPlaying = false;
     const updateFocusState = () => {
-      var hasFocus = document.hasFocus();
+      const hasFocus = document.hasFocus();
       //console.log('updateFocusState', hadFocus, '->', hasFocus);
       if (hasFocus !== hadFocus) {
         if (!hasFocus) {
@@ -223,10 +223,10 @@ function WhydPlayer() {
     setInterval(updateFocusState, 500);
   }
 
-  var $progressTimer = $('#progressTimer'),
+  const $progressTimer = $('#progressTimer'),
     $trackDragPos = $('#trackDragPos');
 
-  var progressBar = new ProgressBar({
+  const progressBar = new ProgressBar({
     progressTrack: $('#progressTrack'),
     onCursorMove: function (pos) {
       if (pos && currentTrack.trackDuration) {
@@ -244,8 +244,8 @@ function WhydPlayer() {
   });
 
   function formatTime(secTotal) {
-    var mn = Math.floor(secTotal / 60);
-    var sec = '' + Math.floor(secTotal - mn * 60);
+    const mn = Math.floor(secTotal / 60);
+    const sec = '' + Math.floor(secTotal - mn * 60);
     return '' + mn + ':' + (sec.length < 2 ? '0' : '') + sec;
   }
 
@@ -260,10 +260,10 @@ function WhydPlayer() {
     }
   }
 
-  var $volumeTrack = $('#volumeTrack');
+  const $volumeTrack = $('#volumeTrack');
   if ($volumeTrack.length) {
-    var prevVolumeLevel = 1.0;
-    var $volumeBtn = $('.volume').click(function () {
+    let prevVolumeLevel = 1.0;
+    const $volumeBtn = $('.volume').click(function () {
       setVolume(volumeBar.value > 0.01 ? 0 : prevVolumeLevel);
     });
     const setVolume = (pos) => {
@@ -284,7 +284,7 @@ function WhydPlayer() {
 
   // data provider
 
-  var shortcuts = {
+  const shortcuts = {
     '/yt/': window.location.protocol + '//youtube.com/v/',
     '/sc/': window.location.protocol + '//soundcloud.com/',
     '/dm/': window.location.protocol + '//dailymotion.com/video/',
@@ -297,8 +297,9 @@ function WhydPlayer() {
 
   function addTrackByEid(eId, metadata) {
     eId = '' + eId;
-    var src = (shortcuts[eId.substr(0, 4)] || eId.substr(0, 4)) + eId.substr(4);
-    var track = window.playem.addTrackByUrl(src, metadata);
+    const src =
+      (shortcuts[eId.substr(0, 4)] || eId.substr(0, 4)) + eId.substr(4);
+    const track = window.playem.addTrackByUrl(src, metadata);
     if (!track.player) {
       console.warn('addTrackByEid, track was not recognized:', track);
       $(metadata.post).addClass('disabled');
@@ -307,9 +308,9 @@ function WhydPlayer() {
   }
 
   function addTrackFromAnchor(e) {
-    var post = e.parentNode;
-    var authorHtml = ($(post).find('.author') || [])[0];
-    var title = (post.getElementsByTagName('h2') || [])[0];
+    const post = e.parentNode;
+    const authorHtml = ($(post).find('.author') || [])[0];
+    const title = (post.getElementsByTagName('h2') || [])[0];
     addTrackByEid(e.dataset ? e.dataset.eid : e.getAttribute('data-eid'), {
       title: title ? title.innerHTML : null,
       url: e.getAttribute('href'),
@@ -327,16 +328,16 @@ function WhydPlayer() {
   function populateTracksFromPosts() {
     console.log('populating track list...');
     window.playem.clearQueue();
-    var posts = $('.post:visible');
+    const posts = $('.post:visible');
     for (let i = 0; i < posts.length; ++i)
       addTrackFromAnchor(posts[i].getElementsByTagName('a')[0]);
-    var playQueue = window.playem.getQueue();
+    const playQueue = window.playem.getQueue();
     if (isShuffle && playQueue && playQueue.length) shuffleArray(playQueue);
     //console.log("shuffled?", isShuffle, playQueue.length, playQueue.map(function(a){return a.index;}));
     return playQueue;
   }
 
-  var $post = null;
+  let $post = null;
 
   function highlightTrack(track) {
     $('.post').removeClass('playing');
@@ -359,7 +360,7 @@ function WhydPlayer() {
         return;
       }
       // ajax increment play counter
-      var data = {
+      const data = {
         action: 'incrPlayCounter',
         pId: currentTrack.metadata.pid,
         eId: currentTrack.metadata.eid,
@@ -379,7 +380,7 @@ function WhydPlayer() {
         contentType: 'application/json; charset=utf-8', // otherwise, jquery sends `prop[prop]` url-encoded entries that are not recognized by openwhyd's server
         data: JSON.stringify(data),
         success: function () {
-          var $nbPlays = $post.find('.nbPlays');
+          const $nbPlays = $post.find('.nbPlays');
           $nbPlays.text((parseInt($nbPlays.text()) || 0) + 1).show();
         },
       });
@@ -390,12 +391,12 @@ function WhydPlayer() {
   }
 
   // handlers for events coming from Playem
-  var playemEventHandlers = {
+  const playemEventHandlers = {
     onError: function (e) {
       if (currentTrack.metadata.logData) logTrackPlay();
 
       //Detect user agent for electron specific message
-      var failedTrackMessage;
+      let failedTrackMessage;
       if (USING_ELECTRON) {
         failedTrackMessage = 'Oops, we could not play this track...';
       } else {
@@ -491,7 +492,7 @@ function WhydPlayer() {
     loadMore: function (params, cb) {
       if (params || cb) return window.loadMore(params, cb);
       else if (!isShuffle) {
-        var $btnLoadMore = $('.btnLoadMore:visible');
+        const $btnLoadMore = $('.btnLoadMore:visible');
         if ($btnLoadMore.length) $btnLoadMore.click();
       }
     },
@@ -501,7 +502,7 @@ function WhydPlayer() {
   };
 
   // log events from Playem before handling them
-  var wrapLogger = (function () {
+  const wrapLogger = (function () {
     // var lastLog = null;
     return function (evtName, handler) {
       return function (data) {
@@ -522,14 +523,14 @@ function WhydPlayer() {
 
   // init whydPlayer DOM elements
 
-  var playerContainer = document.getElementById('playerContainerSub');
+  let playerContainer = document.getElementById('playerContainerSub');
   if (!playerContainer) {
     playerContainer = document.createElement('div');
     $(playerContainer).append(
       '<div id="playBtnOverlay" onclick="window.whydPlayer.playPause();">',
     );
 
-    var $containerParent = $('#contentPane');
+    let $containerParent = $('#contentPane');
     if (!$containerParent.length) $containerParent = $body;
 
     $containerParent.prepend(
@@ -540,17 +541,17 @@ function WhydPlayer() {
 
   // init playem object, based on DOM elements
 
-  for (let evtName in playemEventHandlers)
+  for (const evtName in playemEventHandlers)
     window.playem.on(
       evtName,
       wrapLogger(evtName, playemEventHandlers[evtName]),
     );
 
-  var genericHolder = document.createElement('div');
+  const genericHolder = document.createElement('div');
   genericHolder.id = 'genericholder';
   playerContainer.appendChild(genericHolder);
 
-  var defaultDefaultParams = {
+  const defaultDefaultParams = {
     playerId: 'genericplayer',
     origin: window.location.host || window.location.hostname || 'openwhyd.org',
     playerContainer: genericHolder,
@@ -594,7 +595,7 @@ function WhydPlayer() {
     console.warn('failed to initialize BandcampPatchedPlayer:', err);
   }
 
-  var PLAYERS = {
+  const PLAYERS = {
       // yt: inProduction ? 'YoutubeIframePlayer' : (inTest?'YoutubeIframePlayer':'YoutubeIframePlayer'),
       yt: 'YoutubeIframePlayer',
       sc: 'SoundCloudPlayer',
@@ -610,7 +611,7 @@ function WhydPlayer() {
     },
     players = [];
 
-  for (let prefix in PLAYERS)
+  for (const prefix in PLAYERS)
     players[prefix] = window.playem.addPlayer(
       window[PLAYERS[prefix]],
       defaultDefaultParams,
@@ -618,7 +619,7 @@ function WhydPlayer() {
 
   // http://stackoverflow.com/questions/2450954/how-to-randomize-a-javascript-array
   function shuffleArray(array) {
-    var currentIndex = array.length,
+    let currentIndex = array.length,
       temporaryValue,
       randomIndex;
     while (0 !== currentIndex) {
@@ -634,16 +635,16 @@ function WhydPlayer() {
 
   // ui-bound handlers
 
-  var exports = {
+  const exports = {
     detectTrackByUrl: function (url) {
-      for (let i in players) {
-        var player = players[i];
-        var eId = player.getEid(url);
+      for (const i in players) {
+        const player = players[i];
+        const eId = player.getEid(url);
         if (eId) return eId;
       }
     },
     fetchTrackByUrl: function (url, cb) {
-      for (let playerId in players) {
+      for (const playerId in players) {
         var player = players[playerId];
         var eId = player.getEid(url);
         if (eId) {
@@ -697,8 +698,8 @@ function WhydPlayer() {
     playAll: (postNode) => {
       isShuffle = false;
       $body.removeClass('isShuffle');
-      var trackList = populateTracksFromPosts();
-      var trackNumber = 0;
+      const trackList = populateTracksFromPosts();
+      let trackNumber = 0;
       if (postNode)
         trackList.forEach((track, i) => {
           if (track.metadata.post == postNode) trackNumber = i;
@@ -741,7 +742,7 @@ function WhydPlayer() {
     },
   };
 
-  for (let f in exports) this[f] = exports[f];
+  for (const f in exports) this[f] = exports[f];
 
   //populateTracksFromPosts();
   return this; //exports;

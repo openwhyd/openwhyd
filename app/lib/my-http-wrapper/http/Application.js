@@ -46,15 +46,15 @@ function noCache(req, res, next) {
 
 const makeBodyParser = (uploadSettings) =>
   function bodyParser(req, res, callback) {
-    var form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm();
     form.uploadDir = uploadSettings.uploadDir;
     form.keepExtensions = uploadSettings.keepExtensions;
     form.parse(req, function (err, postParams, files) {
       // if (err) console.error('formidable parsing error:', err);
       // using qset to parse fields with brackets [] for url-encoded form data:
       // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
-      var parsedParams = {};
-      for (let key in postParams) {
+      const parsedParams = {};
+      for (const key in postParams) {
         qset.deep(parsedParams, key, postParams[key]);
       }
       req.body = { ...postParams, ...parsedParams };
@@ -175,8 +175,8 @@ exports.Application = class Application {
 // returns a list of { pattern, name } from the provided file (e.g. app.route)
 function loadRoutesFromFile(file) {
   const lines = fs.readFileSync(file, 'utf8').split('\n');
-  var routeArray = [];
-  var line;
+  const routeArray = [];
+  let line;
   for (let i = 0, len = lines.length; i < len; i++) {
     line = lines[i].split('->');
     if (line.length >= 2)

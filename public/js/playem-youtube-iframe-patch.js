@@ -10,11 +10,11 @@ function YoutubeIframePlayer() {
 }
 
 (function () {
-  var isLocal =
+  const isLocal =
     window.location.href.indexOf('http://localhost:') == 0 ||
     /^https?:\/\/(\w+)\.openwhyd\.(\w+)(:8080)?\//.test(window.location.href);
 
-  var IFRAME_HOST = isLocal
+  const IFRAME_HOST = isLocal
       ? window.location.href.substr(0, window.location.href.indexOf('/', 10))
       : window.location.protocol + '//d3qdgup1c3urcq.cloudfront.net', // CDN cached of Openwhyd's static resources (html and js files), available through a different domain name.
     IFRAME_PATH = isLocal
@@ -22,14 +22,14 @@ function YoutubeIframePlayer() {
       : '/html/YoutubePlayerIframe.html'; // same file, except it explicitly loads playem-all.js and whydRemotePlayer.js from the openwhyd.org domain
 
   function Player(eventHandlers, embedVars) {
-    var that = this;
+    const that = this;
     this.iframeReady = false;
     this.eventHandlers = eventHandlers || {};
     this.embedVars = embedVars || {};
     this.label = 'Youtube';
     window.addEventListener('message', function (e) {
       if (e.origin === IFRAME_HOST) {
-        var message, param;
+        let message, param;
         try {
           message = JSON.parse(e.data);
           param = message.data[0];
@@ -56,7 +56,7 @@ function YoutubeIframePlayer() {
     if (!this.iframeReady)
       return console.warn('YT-iframe not ready => ignoring call to', fctName);
     try {
-      var args = Array.apply(null, arguments).slice(1); // exclude first arg (fctName)
+      const args = Array.apply(null, arguments).slice(1); // exclude first arg (fctName)
       this.iframe.contentWindow.postMessage(
         JSON.stringify({ code: fctName, data: args }),
         IFRAME_HOST + IFRAME_PATH,
@@ -86,13 +86,13 @@ function YoutubeIframePlayer() {
   };
 
   Player.prototype.play = function (id) {
-    var that = this;
+    const that = this;
     this.iframeReady = false;
     this.embedVars.videoId = id;
     this.embedVars.playerId = this.embedVars.playerId || 'ytplayer';
     this.iframe = document.createElement('iframe');
     this.iframe.id = this.embedVars.playerId;
-    var settings = {
+    const settings = {
       width: this.embedVars.width || '200',
       height: this.embedVars.height || '200',
       //origin: this.embedVars.origin

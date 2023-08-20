@@ -4,22 +4,22 @@
  * @author adrienjoly, whyd
  */
 
-var userModel = require('../../models/user.js');
-var followModel = require('../../models/follow.js');
-var emailModel = require('../../models/email.js'); // for validation
-var notifModel = require('../../models/notif.js');
-var inviteController = require('../invite.js');
-var userApi = require('../../controllers/api/user.js');
-var htmlRedirect = require('../../templates/logging.js').htmlRedirect;
-var genuine = require('../../genuine.js');
+const userModel = require('../../models/user.js');
+const followModel = require('../../models/follow.js');
+const emailModel = require('../../models/email.js'); // for validation
+const notifModel = require('../../models/notif.js');
+const inviteController = require('../invite.js');
+const userApi = require('../../controllers/api/user.js');
+const htmlRedirect = require('../../templates/logging.js').htmlRedirect;
+const genuine = require('../../genuine.js');
 const argon2 = require('argon2');
 const notifEmails = require('../../models/notifEmails.js');
 const mongodb = require('../../models/mongodb.js');
 
 const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
 const { genuineSignupSecret } = process.appParams;
-var onboardingUrl = '/';
-var checkInvites = false;
+const onboardingUrl = '/';
+const checkInvites = false;
 
 function follow(user, userToFollow, ctx) {
   followModel.add(
@@ -37,7 +37,7 @@ function follow(user, userToFollow, ctx) {
 }
 
 function renderError(request, getParams, response, errorMsg) {
-  var json = { error: errorMsg };
+  const json = { error: errorMsg };
   response[getParams.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
     json,
   );
@@ -69,7 +69,7 @@ exports.registerInvitedUser = function (request, user, response) {
 
   user = user || {};
 
-  var error = !user.ajax ? inviteController.renderRegisterPage : renderError;
+  const error = !user.ajax ? inviteController.renderRegisterPage : renderError;
 
   if (ENFORCE_GENUINE_SIGNUP) {
     if (!user.sTk || typeof user.sTk !== 'string')
@@ -133,7 +133,7 @@ exports.registerInvitedUser = function (request, user, response) {
           'This email address is already registered on whyd',
         );
 
-      var dbUser = {
+      const dbUser = {
         name: user.name,
         email: user.email,
         pwd: userModel.md5(user.password),
@@ -173,7 +173,7 @@ exports.registerInvitedUser = function (request, user, response) {
     function loginAndRedirectTo(url) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       if (user.ajax) {
-        var json = { redirect: url, uId: '' + storedUser._id };
+        const json = { redirect: url, uId: '' + storedUser._id };
         const renderJSON = () => {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
             json,

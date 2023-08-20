@@ -1,5 +1,5 @@
 const request = require('request');
-var config = require('../../models/config.js');
+const config = require('../../models/config.js');
 
 const RE_EID = /^\/bc\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/;
 const RE_STREAM_URL = /https:\/\/[^.]+\.bcbits\.com\/stream\/[^;"]*/g;

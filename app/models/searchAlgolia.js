@@ -3,8 +3,8 @@
  * @author adrien joly, whyd
  **/
 
-var snip = require('../snip.js');
-var mongodb = require('./mongodb.js');
+const snip = require('../snip.js');
+const mongodb = require('./mongodb.js');
 const algoliasearch = require('algoliasearch');
 
 if (process.env['ALGOLIA_APP_ID'] === undefined)
@@ -17,14 +17,14 @@ const client = algoliasearch(
   process.env.ALGOLIA_API_KEY, // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
 );
 
-var INDEX_NAME_BY_TYPE = {
+const INDEX_NAME_BY_TYPE = {
   user: 'users',
   track: 'tracks',
   post: 'posts',
   playlist: 'playlists',
 };
 
-var INDEX_TYPE_BY_NAME = {
+const INDEX_TYPE_BY_NAME = {
   users: 'user',
   tracks: 'track',
   posts: 'post',
@@ -32,7 +32,7 @@ var INDEX_TYPE_BY_NAME = {
 };
 
 // fields that will be indexed for search and faceting (together with the `name` field)
-var INDEX_FIELDS_BY_TYPE = {
+const INDEX_FIELDS_BY_TYPE = {
   user: ['handle'],
   track: [],
   post: ['text', 'uId'],
@@ -40,7 +40,7 @@ var INDEX_FIELDS_BY_TYPE = {
 };
 
 // fields that will be stored in the search index's documents
-var FIELDS_BY_TYPE = {
+const FIELDS_BY_TYPE = {
   user: INDEX_FIELDS_BY_TYPE.user.concat(['name', /*'img',*/ 'nbPosts']),
   track: INDEX_FIELDS_BY_TYPE.track.concat([
     'name',
@@ -52,14 +52,14 @@ var FIELDS_BY_TYPE = {
 };
 
 // lazy init and caching of indexes
-var getIndex = (function () {
-  var INDEX = {}; // cache of indexes
+const getIndex = (function () {
+  const INDEX = {}; // cache of indexes
   return function (indexName) {
-    var index = INDEX[indexName];
+    let index = INDEX[indexName];
     if (!index) {
       index = INDEX[indexName] = client.initIndex(indexName);
       // init field indexing settings
-      var fields = INDEX_FIELDS_BY_TYPE[INDEX_TYPE_BY_NAME[indexName]] || [];
+      const fields = INDEX_FIELDS_BY_TYPE[INDEX_TYPE_BY_NAME[indexName]] || [];
       index.setSettings({
         attributesForFaceting: ['name'].concat(
           fields.map(function (field) {
@@ -77,9 +77,9 @@ function Search() {
 }
 
 Search.prototype.search = function (index, query, options, cb) {
-  var facetAttrs = [];
-  var facetFilters = [];
-  var i, q;
+  const facetAttrs = [];
+  const facetFilters = [];
+  let i, q;
   if (typeof options === 'function') {
     cb = options;
     options = {};
@@ -126,7 +126,7 @@ function makeCallbackTranslator(type, cb) {
   };
 }
 
-var FIELD_MAPPING = {
+const FIELD_MAPPING = {
   limit: 'hitsPerPage',
 };
 
@@ -134,12 +134,12 @@ function extractOptions(q) {
   return snip.filterFields(q, FIELD_MAPPING);
 }
 
-var searchIndex = new Search();
+const searchIndex = new Search();
 
-var searchByType = {
+const searchByType = {
   user: function (q, cb) {
     console.log('[search] search users', q);
-    var options = extractOptions(q);
+    const options = extractOptions(q);
     return searchIndex.search(
       'users',
       q.q,
@@ -153,7 +153,7 @@ var searchByType = {
   },
   track: function (q, cb) {
     console.log('[search] search tracks', q);
-    var options = extractOptions(q);
+    const options = extractOptions(q);
     return searchIndex.search(
       'tracks',
       q.q,
@@ -170,7 +170,7 @@ var searchByType = {
   },
   post: function (q, cb) {
     console.log('[search] search posts', q);
-    var options = extractOptions(q);
+    const options = extractOptions(q);
     if (q.uId) {
       q = {
         q: q.q,
@@ -214,7 +214,7 @@ var searchByType = {
   },
   playlist: function (q, cb) {
     console.log('[search] search playlists', q);
-    var options = extractOptions(q);
+    const options = extractOptions(q);
     return searchIndex.search(
       'playlists',
       q.q,
@@ -227,14 +227,14 @@ var searchByType = {
 };
 
 exports.query = function (q = {}, cb) {
-  var hits = [];
-  var queue;
+  let hits = [];
+  let queue;
   if (q._type) queue = [q._type];
   else if (q.uId) queue = ['post'];
   else queue = ['user', 'track', 'post', 'playlist']; //Object.keys(searchByType);
   delete q._type;
   (function next() {
-    var type = queue.pop();
+    const type = queue.pop();
     if (!type) cb({ q: q.q, hits: hits });
     else
       searchByType[type](q, function (res) {
@@ -267,12 +267,12 @@ function indexTypedDocs(type, items, callback) {
   if (!type || !INDEX_NAME_BY_TYPE[type]) {
     callback && callback(new Error('indexTyped: unknown type'));
   } else {
-    var docs = items.map(function (item) {
+    const docs = items.map(function (item) {
       if (!item || !item._id || !item.name) {
         logToConsole({ error: 'indexTypedDocs: missing parameters' });
       }
       // filter fields to be indexed
-      var doc = { objectID: item._id };
+      const doc = { objectID: item._id };
       FIELDS_BY_TYPE[type].forEach(function (field) {
         doc[field] = item[field];
       });
@@ -354,11 +354,11 @@ exports.deleteAllDocs = function (type, callback) {
 
 exports.indexBulk = function (docs, callback) {
   console.log('[search] indexBulk', docs.length, '...');
-  var docsPerType = {};
+  const docsPerType = {};
   docs.forEach(function (doc) {
     docsPerType[doc._type] = (docsPerType[doc._type] || []).concat([doc]);
   });
-  var typeToBeIndexed = Object.keys(docsPerType).find(function (type) {
+  const typeToBeIndexed = Object.keys(docsPerType).find(function (type) {
     console.log('[search] docsPerType', type, ':', docsPerType[type].length);
     return docsPerType[type].length > 0;
   });

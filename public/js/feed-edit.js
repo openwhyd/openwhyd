@@ -1,10 +1,10 @@
 /* global $, user, goToPage, showMessage */
 
-var $playlistNameField = $('#playlistNameField');
-var $playlistNameSubmit = $('#playlistNameSubmit');
-var currentPlaylistName = $playlistNameField.val();
+const $playlistNameField = $('#playlistNameField');
+const $playlistNameSubmit = $('#playlistNameSubmit');
+let currentPlaylistName = $playlistNameField.val();
 
-var isNewPlaylist = window.location.href.indexOf('/playlist/create') != -1;
+const isNewPlaylist = window.location.href.indexOf('/playlist/create') != -1;
 if (isNewPlaylist) {
   $playlistNameField.focus();
   $playlistNameSubmit.show();
@@ -20,7 +20,7 @@ $playlistNameField
   .unbind()
   .submit(function (e) {
     e.preventDefault();
-    var newPlaylistName = $playlistNameField.val();
+    const newPlaylistName = $playlistNameField.val();
     if (currentPlaylistName == newPlaylistName) return;
     $playlistNameSubmit.hide();
     $playlistNameField.addClass('loading');
@@ -37,7 +37,7 @@ $playlistNameField
         $playlistNameField.removeClass('loading').focus();
         try {
           if (status != 'success' || !res.responseText) throw 0;
-          var json = JSON.parse('' + res.responseText);
+          const json = JSON.parse('' + res.responseText);
           //console.log("success", json);
           if (isNewPlaylist) {
             try {
@@ -68,7 +68,7 @@ $playlistNameField
     });
   });
 
-var $deletePlaylist = $('.deletePlaylist').first();
+const $deletePlaylist = $('.deletePlaylist').first();
 
 window.deletePlaylist = function () {
   if (confirm('Are you sure you want to delete this playlist?')) {
@@ -84,7 +84,7 @@ window.deletePlaylist = function () {
         $deletePlaylist.removeClass('loading');
         try {
           if (status != 'success' || !res.responseText) throw 0;
-          var json = JSON.parse('' + res.responseText);
+          const json = JSON.parse('' + res.responseText);
           //console.log("success", json);
           goToPage('/u/' + user.id + '/playlists');
         } catch (e) {

@@ -3,21 +3,21 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('./mongodb.js');
+const mongodb = require('./mongodb.js');
 const ObjectId = mongodb.ObjectId;
-var db = mongodb.collections;
+const db = mongodb.collections;
 
-var snip = require('../snip.js');
-var notif = require('../models/notif.js');
-var searchModel = require('../models/search.js');
-var activityModel = require('../models/activity.js');
-var trackModel = require('../models/track.js');
-var notifModel = require('../models/notif.js');
+const snip = require('../snip.js');
+const notif = require('../models/notif.js');
+const searchModel = require('../models/search.js');
+const activityModel = require('../models/activity.js');
+const trackModel = require('../models/track.js');
+const notifModel = require('../models/notif.js');
 
-var config = require('../models/config.js');
-var NB_POSTS = config.nbPostsPerNewsfeedPage;
+const config = require('../models/config.js');
+const NB_POSTS = config.nbPostsPerNewsfeedPage;
 
-var playlistSort = {
+const playlistSort = {
   sort: [
     ['order', 'asc'],
     ['_id', 'desc'],
@@ -25,7 +25,7 @@ var playlistSort = {
 };
 
 function processPosts(results) {
-  for (let i in results) results[i].lov = results[i].lov || [];
+  for (const i in results) results[i].lov = results[i].lov || [];
   return results;
 }
 
@@ -100,7 +100,7 @@ exports.fetchAll = function (handler, after, limit) {
 
 exports.fetchByAuthorsOld = function (uidList, options, handler) {
   console.log('post.fetchByAuthors...');
-  var query = {
+  const query = {
     uId: { $in: uidList },
     'repost.uId': { $nin: uidList },
   };
@@ -113,16 +113,16 @@ exports.fetchByAuthorsOld = function (uidList, options, handler) {
 };
 
 exports.fetchByAuthors = function (uidList, options, cb) {
-  var posts = [],
+  const posts = [],
     query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
     uidSet = snip.arrayToSet(uidList);
-  var params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
+  const params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
   processAdvQuery(query, params, {
     after: options.after,
     before: options.before,
     limit: options.limit,
   });
-  var limit = params.limit;
+  const limit = params.limit;
   params.limit = undefined; // prevent forEach2 from limiting cursor
   params.q = query;
   mongodb.forEach2('post', params, function (post, next, closeCursor) {
@@ -140,7 +140,7 @@ exports.fetchByAuthors = function (uidList, options, cb) {
 
 exports.fetchRepostsFromMe = function (uid, options, handler) {
   console.log('post.fetchRepostsFromMe...');
-  var query = {
+  const query = {
     uId: { $nin: ['' + uid] },
     'repost.uId': '' + uid,
   };
@@ -186,7 +186,7 @@ exports.isPostLovedByUid = function (pId, uId, handler) {
 };
 
 function setPostLove(collection, pId, uId, state, handler) {
-  var update = state
+  const update = state
     ? { $push: { lov: '' + uId } }
     : { $pull: { lov: '' + uId } };
   collection.updateOne({ _id: ObjectId('' + pId) }, update, function (err) {
@@ -230,7 +230,7 @@ exports.countLovedPosts = function (uid, callback) {
 };
 
 function notifyMentionedUsers(post, cb) {
-  var mentionedUsers = snip.extractMentions(post.text),
+  const mentionedUsers = snip.extractMentions(post.text),
     comment = { uId: post.uId, uNm: post.uNm };
   if (mentionedUsers.length) {
     console.log('notif mentioned users');
@@ -245,7 +245,7 @@ function notifyMentionedUsers(post, cb) {
 }
 
 exports.savePost = function (postObj, handler) {
-  var pId = postObj._id;
+  const pId = postObj._id;
   async function whenDone(error, result) {
     if (error || !result) {
       console.error('post.savePost() error: ', error);
@@ -268,7 +268,7 @@ exports.savePost = function (postObj, handler) {
     postObj.pl.id = parseInt('' + postObj.pl.id);
   if (pId) {
     delete postObj._id;
-    var update = { $set: postObj };
+    const update = { $set: postObj };
     if (postObj.pl == null || (isNaN(postObj.pl.id) && !postObj.pl.collabId)) {
       delete update.$set.pl;
       update.$unset = { pl: 1 };
@@ -291,7 +291,7 @@ exports.savePost = function (postObj, handler) {
     });
 };
 
-var fieldsToCopy = {
+const fieldsToCopy = {
   name: true,
   eId: true,
   img: true,
@@ -299,14 +299,14 @@ var fieldsToCopy = {
 }; // => not: _id, uId, uNm, text, pl, order, repost, src, lov, nbR, nbP
 
 exports.rePost = function (pId, repostObj, handler) {
-  var collection = mongodb.collections['post'];
+  const collection = mongodb.collections['post'];
   exports.fetchPostById(pId, function (postObj) {
     postObj = postObj || { error: 'post not found' };
     if (postObj.error) {
       handler(postObj);
       return;
     }
-    for (let i in fieldsToCopy)
+    for (const i in fieldsToCopy)
       if (/*repostObj[i] == null &&*/ postObj[i] != null)
         repostObj[i] = postObj[i];
     repostObj.repost = { pId: pId, uId: postObj.uId, uNm: postObj.uNm };
@@ -348,8 +348,8 @@ exports.rePost = function (pId, repostObj, handler) {
 
 exports.deletePost = function (pId, uId, handler) {
   console.log('post.deletePost: ', pId, uId);
-  var collection = mongodb.collections['post'];
-  var q = {
+  const collection = mongodb.collections['post'];
+  const q = {
     _id: ObjectId(pId),
   };
   if (uId) q.uId = uId;
@@ -430,11 +430,11 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
 
 exports.setPlaylist = function (uId, plId, plName, handler) {
   console.log('post.setPlaylist', uId, plId, plName);
-  var criteria = {
+  const criteria = {
     uId: uId,
     'pl.id': parseInt(plId),
   };
-  var update = { $set: { pl: { id: parseInt(plId), name: plName } } };
+  const update = { $set: { pl: { id: parseInt(plId), name: plName } } };
   mongodb.collections['post'].updateMany(
     criteria,
     update,
@@ -449,11 +449,11 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
 /** Delete a user's playlist */
 exports.unsetPlaylist = function (uId, plId, handler) {
   console.log('post.unsetPlaylist', uId, plId);
-  var criteria = {
+  const criteria = {
     uId: uId,
     'pl.id': parseInt(plId),
   };
-  var update = { $unset: { pl: 1 } };
+  const update = { $unset: { pl: 1 } };
   mongodb.collections['post'].updateMany(
     criteria,
     update,
@@ -472,12 +472,12 @@ exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
     plId,
     order.length,
   );
-  var collection = mongodb.collections['post'];
+  const collection = mongodb.collections['post'];
   function next(err) {
     if (err) console.log('error', err);
     if (!order.length) handler({ ok: 1 });
     else {
-      var post = {
+      const post = {
         _id: ObjectId('' + order.pop()),
         uId: uId,
         'pl.id': parseInt(plId),

@@ -28,7 +28,7 @@ var hotTracks = {
         '&limit=' +
         hotTracks.limit,
       function (data) {
-        var content = '';
+        let content = '';
 
         content = data.tracks.map(function (track) {
           return hotTracks.templating(hotTracks.template, track);
@@ -55,7 +55,7 @@ var hotTracks = {
   templating: function (template, item) {
     //CSS
     item.cssClass = '';
-    var rankIncr = item.rankIncr;
+    const rankIncr = item.rankIncr;
     if (rankIncr != 'undefined') {
       if (rankIncr > 0) {
         item.cssClass += 'rankingUp';
@@ -80,7 +80,7 @@ var hotTracks = {
 
     item.trackUrl = global.translateEidToUrl(item.eId);
 
-    for (let p in item) {
+    for (const p in item) {
       template = template.replace(
         new RegExp('{' + p + '}', 'g'),
         global.htmlEntities(item[p]),
@@ -131,8 +131,8 @@ var hotTracks = {
 /********************* TIME AGO ***************************/
 
 global.timeFromPost = function (post) {
-  var timeString = post._id.substring(0, 8);
-  var timestamp = parseInt(timeString, 16) * 1000;
+  const timeString = post._id.substring(0, 8);
+  const timestamp = parseInt(timeString, 16) * 1000;
   return global.timeAgoWithString(timestamp);
 };
 
@@ -141,7 +141,7 @@ global.timeFromPost = function (post) {
  * @return date string
  */
 global.timeAgoWithString = function (timestamp) {
-  var MONTHS_SHORT = [
+  const MONTHS_SHORT = [
     'Jan',
     'Feb',
     'Mar',
@@ -156,7 +156,7 @@ global.timeAgoWithString = function (timestamp) {
     'Dec',
   ];
 
-  var timeScales = [
+  const timeScales = [
     { 'minute(s)': 60 },
     { 'hour(s)': 60 },
     { 'day(s)': 24 },
@@ -165,7 +165,7 @@ global.timeAgoWithString = function (timestamp) {
   ];
 
   const padNumber = function (str, n) {
-    var ret = '' + str;
+    let ret = '' + str;
     while (ret.length < n) {
       // pad with leading zeroes
       ret = '0' + ret;
@@ -179,29 +179,29 @@ global.timeAgoWithString = function (timestamp) {
   };
 
   const renderTimestamp = function (timestamp) {
-    var t = timestamp / 1000,
+    let t = timestamp / 1000,
       lastScale = 'second(s)';
     for (const i in timeScales) {
       var scaleTitle;
       for (scaleTitle in timeScales[i]);
-      var scaleVal = timeScales[i][scaleTitle];
+      const scaleVal = timeScales[i][scaleTitle];
 
       if (t / scaleVal < 1) break;
 
       t = t / scaleVal;
       lastScale = scaleTitle;
     }
-    var rounded = Math.round(t);
+    const rounded = Math.round(t);
     return rounded + ' ' + lastScale.replace(/\(s\)/g, rounded > 1 ? 's' : '');
   };
 
   const renderShortMonthYear = function (t) {
     var t = new Date(t);
-    var sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
+    const sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
     return MONTHS_SHORT[t.getMonth()] + (sameYear ? '' : ' ' + t.getFullYear());
   };
 
-  var date = new Date(timestamp);
+  let date = new Date(timestamp);
   date =
     renderTime(date) +
     ' - ' +
@@ -211,7 +211,7 @@ global.timeAgoWithString = function (timestamp) {
     ' ' +
     date.getFullYear();
 
-  var ago = new Date() - timestamp;
+  let ago = new Date() - timestamp;
   if (ago < 1000 * 60 * 60 * 24 * 32) {
     ago = renderTimestamp(ago);
   } else {

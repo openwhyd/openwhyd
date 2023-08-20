@@ -1,8 +1,8 @@
 // $ npx mocha test/unit/bandcampExtractor-tests.js
 
-var assert = require('assert');
+const assert = require('assert');
 const fs = require('fs');
-var {
+const {
   extractBandcampStreamURLs,
   extractBandcampStreamURLsFromHTML,
 } = require('./../../app/controllers/api/bandcampExtractor.js');

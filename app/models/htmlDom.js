@@ -2,7 +2,7 @@
  * simple html parser with dom traversal methods
  */
 
-var htmlparser = require('htmlparser');
+const htmlparser = require('htmlparser');
 
 // returns the <html> node, as a SimpleDomNode instance
 exports.parseDom = function (dom) {
@@ -10,12 +10,12 @@ exports.parseDom = function (dom) {
     this.node = node;
   }
   SimpleDomNode.prototype.getFirstElementByTagName = function (tagName) {
-    var nodes = this.node.children || this.node;
-    for (let i in nodes)
+    const nodes = this.node.children || this.node;
+    for (const i in nodes)
       if (nodes[i].name == tagName) return new SimpleDomNode(nodes[i]);
   };
   SimpleDomNode.prototype.getText = function () {
-    var results = [];
+    let results = [];
     if (this.node.type == 'text') {
       results.push(this.node.data);
     }
@@ -31,10 +31,10 @@ exports.parseDom = function (dom) {
     });
   };
   SimpleDomNode.prototype.getElementsByTagName = function (tagName) {
-    var results = [];
-    var nodes = this.node.children;
-    for (let i in nodes) {
-      var node = new SimpleDomNode(nodes[i]);
+    let results = [];
+    const nodes = this.node.children;
+    for (const i in nodes) {
+      const node = new SimpleDomNode(nodes[i]);
       if (nodes[i].name == tagName) results.push(node);
       if (nodes[i].children)
         results = results.concat(node.getElementsByTagName(tagName));
@@ -42,16 +42,16 @@ exports.parseDom = function (dom) {
     return results;
   };
   SimpleDomNode.prototype.getElementsByClassName = function (className) {
-    var nodeHasClass = (function (className) {
+    const nodeHasClass = (function (className) {
       return function (node) {
-        var classNames = (node.attribs || {}).class;
+        const classNames = (node.attribs || {}).class;
         return classNames && (' ' + classNames + ' ').indexOf(className) > -1;
       };
     })(' ' + className + ' ');
-    var results = [];
-    var nodes = this.node.children;
-    for (let i in nodes) {
-      var node = new SimpleDomNode(nodes[i]);
+    let results = [];
+    const nodes = this.node.children;
+    for (const i in nodes) {
+      const node = new SimpleDomNode(nodes[i]);
       if (nodeHasClass(nodes[i])) results.push(node);
       if (nodes[i].children)
         results = results.concat(node.getElementsByClassName(className));
@@ -62,7 +62,7 @@ exports.parseDom = function (dom) {
 };
 
 exports.parseHtmlDom = function (html, cb) {
-  var parser = new htmlparser.Parser(
+  const parser = new htmlparser.Parser(
     new htmlparser.DefaultHandler(function (error, dom) {
       if (error) {
         console.error(error);

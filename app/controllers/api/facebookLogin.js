@@ -4,9 +4,9 @@
  * @author adrienjoly, whyd
  */
 
-var facebookModel = require('../../models/facebook.js');
-var userModel = require('../../models/user.js');
-var loggingCtr = require('../../controllers/api/login.js');
+const facebookModel = require('../../models/facebook.js');
+const userModel = require('../../models/user.js');
+const loggingCtr = require('../../controllers/api/login.js');
 
 // testing "link" action:
 // $ curl --cookie "whydSid=rFfJv52ZkDe5CGViKR16PgXasUZuW8YWgYjsWj76iLGcDwA35kCXTtod2Q+X3Uhsg" http://localhost:8080/api/user
@@ -29,7 +29,7 @@ exports.handleRequest = function (request, reqParams, response) {
   if (!reqParams || !reqParams.fbAccessToken || !reqParams.fbUid)
     return renderError('invalid facebook login request');
 
-  var fbCookieUid = request.getFbUid();
+  const fbCookieUid = request.getFbUid();
   if (fbCookieUid) {
     console.log('facebook cookie uid:', fbCookieUid);
     if (!reqParams.fbUid || fbCookieUid != reqParams.fbUid)
@@ -38,7 +38,7 @@ exports.handleRequest = function (request, reqParams, response) {
 
   // check validity of the token by making a graph api request
   facebookModel.fetchMe(reqParams.fbAccessToken, function (fbUser) {
-    var loggedUser = request.getUser();
+    const loggedUser = request.getUser();
     console.log('fb session returned user id', (fbUser || {}).id);
     if (!fbUser || fbUser.id != reqParams.fbUid)
       renderError('facebook session token does not match user id', fbUser);

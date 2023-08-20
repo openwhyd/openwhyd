@@ -4,11 +4,11 @@
  * @author adrienjoly, whyd
  */
 
-var users = require('../models/user.js');
-var invitePage = require('../templates/invitePage.js');
-var inviteFormTemplate = require('../templates/inviteForm.js');
-var templateLoader = require('../templates/templateLoader.js');
-var makeSignupToken = require('../genuine.js').makeSignupToken;
+const users = require('../models/user.js');
+const invitePage = require('../templates/invitePage.js');
+const inviteFormTemplate = require('../templates/inviteForm.js');
+const templateLoader = require('../templates/templateLoader.js');
+const makeSignupToken = require('../genuine.js').makeSignupToken;
 
 // genuine signup V1
 const { genuineSignupSecret } = process.appParams;
@@ -70,8 +70,8 @@ exports.renderRegisterPage = function (request, reqParams, response) {
 
   function render(user = {}) {
     //invitePage.refreshTemplates(function() {
-    var sender = request.getUserFromId(user.iBy);
-    var registrationPage = invitePage.renderInvitePage(
+    const sender = request.getUserFromId(user.iBy);
+    const registrationPage = invitePage.renderInvitePage(
       sender,
       request.getUser(),
       user._id,
@@ -93,7 +93,7 @@ exports.renderRegisterPage = function (request, reqParams, response) {
     templateLoader.loadTemplate(
       'app/templates/popinSignup.html',
       function (template) {
-        var page = template.render(reqParams);
+        const page = template.render(reqParams);
         response.renderHTML(page);
       },
     );
@@ -104,20 +104,20 @@ exports.renderRegisterPage = function (request, reqParams, response) {
   }
 };
 
-var renderInviteForm = function (request, reqParams, response) {
+const renderInviteForm = function (request, reqParams, response) {
   request.logToConsole('invite.renderInviteForm', reqParams);
   if (!reqParams) reqParams = {};
 
   reqParams.loggedUser = request.checkLogin(response); //getUser();
   if (!reqParams.loggedUser) return;
 
-  var html = inviteFormTemplate.renderInviteFormPage(reqParams);
+  const html = inviteFormTemplate.renderInviteFormPage(reqParams);
   response.legacyRender(html, null, { 'content-type': 'text/html' });
 };
 
-var submitInvites = function (request, reqParams, response) {
+const submitInvites = function (request, reqParams, response) {
   console.log('POST params', reqParams);
-  var loggedUser = request.getUser();
+  const loggedUser = request.getUser();
   if (!loggedUser || !reqParams) response.badRequest();
   else if (reqParams.email && reqParams.email.join && reqParams.email.length) {
     // === invite by email

@@ -1,6 +1,6 @@
 //@ts-check
 
-var /*consoleWarn = console.warn,*/ consoleError = console.error;
+const /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 if (!process.env.DISABLE_DATADOG) {
   // Initialize Datadog APM
@@ -13,11 +13,11 @@ if (!process.env.DISABLE_DATADOG) {
 
 const util = require('util');
 
-var openwhydVersion = require('./package.json').version;
+const openwhydVersion = require('./package.json').version;
 
 function makeColorConsole(fct, color) {
   return function () {
-    for (let i in arguments)
+    for (const i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
     fct(Array.prototype.join.call(arguments, ' ')[color]);
@@ -145,7 +145,7 @@ function start() {
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
-  var serverOptions = {
+  const serverOptions = {
     urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
@@ -199,8 +199,8 @@ async function main() {
   if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
     for (let i = 2; i < process.argv.length; ++i) {
-      var flag = process.argv[i];
-      var flagFct = FLAGS[flag];
+      const flag = process.argv[i];
+      const flagFct = FLAGS[flag];
       if (flagFct) flagFct();
       else if (flag.indexOf('--') == 0)
         params[flag.substring(2)] = process.argv[++i];

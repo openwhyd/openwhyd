@@ -4,12 +4,12 @@
  * @author adrienjoly, whyd
  **/
 
-var postModel = require('../models/post.js');
-var followModel = require('../models/follow.js');
-var activityModel = require('../models/activity.js');
-var feedTemplate = require('../templates/feed.js');
+const postModel = require('../models/post.js');
+const followModel = require('../models/follow.js');
+const activityModel = require('../models/activity.js');
+const feedTemplate = require('../templates/feed.js');
 
-var HISTORY_LIMIT = 3;
+const HISTORY_LIMIT = 3;
 
 function fetchSubscriptions(uid, callback) {
   //console.time("LibFriends.fetchSubscriptions");
@@ -27,8 +27,8 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 		}}
 	]);
 	return;*/
-  var subscribers = [];
-  for (let i in uidList)
+  const subscribers = [];
+  for (const i in uidList)
     if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
   activityModel.fetchHistoryFromUidList(
     /*uidList*/ subscribers,
@@ -56,7 +56,7 @@ function prepareSidebar(uidList, options, cb) {
 }
 
 function renderFriendsFeed(options, callback) {
-  var params = {
+  const params = {
     after: options.after,
     before: options.before,
     //limit:limit
@@ -75,7 +75,7 @@ function renderFriendsFeed(options, callback) {
 }
 
 function renderFriendsLibrary(lib) {
-  var options = lib.options;
+  const options = lib.options;
   options.bodyClass = 'pgStream pgWithSideBar';
   options.homeFeed = true;
   options.displayPlaylistName = true;
@@ -85,7 +85,7 @@ function renderFriendsLibrary(lib) {
     else if (!feedTemplate.shouldRenderWholeProfilePage(options))
       lib.render({ html: res });
     else {
-      var /*options.mixpanelCode*/ feedHtml =
+      const /*options.mixpanelCode*/ feedHtml =
           [
             '<script>',
             ' window.Whyd.tracking.log("Visit home");',
