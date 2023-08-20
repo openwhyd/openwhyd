@@ -75,8 +75,6 @@ GET    /facebookLogin                  -> controllers.api.facebookLogin
 POST   /facebookLogin                  -> controllers.api.facebookLogin
 
 GET    /digest                         -> controllers.private.digest
-GET    /contentType                    -> controllers.private.contentType
-POST   /contentType                    -> controllers.private.contentType
 GET    /getResourceMetadata            -> controllers.private.getResourceMetadata
 POST   /getResourceMetadata            -> controllers.private.getResourceMetadata
 GET    /password                       -> controllers.private.password
