@@ -33,8 +33,9 @@
   -> the score of a track will only be updated on a (re-)post, like, or play operation on that track
 */
 
-var mongodb = require('./mongodb.js');
-var ObjectId = mongodb.ObjectId;
+const config = require('./config.js');
+const mongodb = require('./mongodb.js');
+const ObjectId = mongodb.ObjectId;
 const feature = require('../features/hot-tracks.js');
 
 const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
@@ -136,6 +137,10 @@ exports.getHotTracksFromDb = function (params, handler) {
     });
   feature
     .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
+    .then((track) => ({
+      ...track,
+      trackUrl: config.translateEidToUrl(track.eId),
+    }))
     .then((tracks) => {
       handler(tracks);
     });
