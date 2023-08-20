@@ -586,7 +586,8 @@
       // 1. find the matching player and track identifier
       const playerId = getPlayerId(url);
       const player = playerId && players[playerId];
-      const trackId = player && player.getEid(url);
+      const trackId =
+        player === null || player === void 0 ? void 0 : player.getEid(url);
       const eid = trackId && `/${playerId}/${trackId.replace(/^\//, '')}`; // TODO: get rid of the removal of leading slash character, after fixing playem's soundcloud.getEid()
       if (!eid || eidSet[eid]) return cb();
       // 2. extract the (optional) stream URL from the identifier
