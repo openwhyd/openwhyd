@@ -9,8 +9,7 @@ window.Whyd.tracking =
   (function (options) {
     options = options || {};
 
-    const runsLocally =
-      window.location.href.split('/')[2].indexOf('openwhyd.org') == -1;
+    const runsLocally = window.location.hostname !== 'openwhyd.org';
     let loggedUser = options.loggedUser || {};
     let uId = loggedUser._id || loggedUser.id;
 

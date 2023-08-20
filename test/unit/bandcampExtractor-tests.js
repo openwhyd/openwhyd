@@ -37,7 +37,7 @@ describe('bandcampExtractor', function () {
     const matches = extractBandcampStreamURLsFromHTML(body);
     assert.strictEqual(matches.length, expectedMatches);
     const url = new URL(matches[0]);
-    assert(url.hostname.includes(expectedHostname));
+    assert(url.hostname.endsWith(expectedHostname));
     assert.deepStrictEqual(
       [...url.searchParams.keys()].sort(),
       expectedSearchParams,
