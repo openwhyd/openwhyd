@@ -72,7 +72,7 @@ function getPage(address, callback) {
   var chunks = [];
   var length = 0;
   return http
-    .get(options, function (res) {
+    .get(options, function parsePage(res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
       res.on('error', callback);
@@ -81,8 +81,7 @@ function getPage(address, callback) {
         callback(new Error('location header should be a string'));
       } else if (location) {
         options.path = location;
-        // @ts-ignore
-        http.get(options, arguments.callee).on('error', callback).end();
+        http.get(options, parsePage).on('error', callback).end();
       } else {
         res.on('data', function (chunk) {
           chunks.push(chunk);
@@ -163,7 +162,7 @@ getPage.ContentType = function (address, callback) {
   var options = { method: 'GET', host: urlObj.hostname, path: urlObj.pathname };
   var contentType;
   httpOrHttps
-    .request(options, function (res) {
+    .request(options, function parsePage(res) {
       var headers = res.headers;
       var location = headers.Location || headers.location;
       if (Array.isArray(location)) {
@@ -171,11 +170,7 @@ getPage.ContentType = function (address, callback) {
         callback(new Error('location header should be a string'));
       } else if (location) {
         options.path = location;
-        // @ts-ignore
-        httpOrHttps
-          .request(options, arguments.callee)
-          .on('error', callback)
-          .end();
+        httpOrHttps.request(options, parsePage).on('error', callback).end();
       } else {
         contentType =
           headers['content-type'] ||
