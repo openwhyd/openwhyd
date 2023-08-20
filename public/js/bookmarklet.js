@@ -554,7 +554,7 @@
   function makeFileDetector() {
     const eidSet = {}; // to prevent duplicates // TODO: is this still useful, now that we de-duplicate in toDetect ?
     return function detectMusicFiles(url, cb, element) {
-      const fileName = (url.match(/([^/]+)\.(?:mp3|ogg)$/) || []).pop();
+      const fileName = (url.match(/([^/]+)\.(mp3|ogg)$/) || []).pop();
       if (eidSet[url] || !fileName) return cb();
       const getNodeText = (node) =>
         (node.innerText || node.textContent || '').trim().split('\n')[0]; // keep just the first line of text (useful for suggested YouTube links that include stats on following lines)
