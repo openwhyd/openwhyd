@@ -1,4 +1,4 @@
-/* global $, openRemoteDialog, whydPlayer, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
+/* global $, _, openRemoteDialog, whydPlayer, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
 
 const MAX_NB_MENTIONS = 6;
 
@@ -1193,10 +1193,9 @@ $(document).ready(function () {
           // Update the title
           document.title = $data.find('.document-title:first').text();
           try {
-            document.getElementsByTagName('title')[0].innerHTML = document.title
-              .replace('<', '&lt;')
-              .replace('>', '&gt;')
-              .replace(' & ', ' &amp; ');
+            document.getElementsByTagName('title')[0].innerHTML = _.escape(
+              document.title,
+            ); // use underscore.js to encode html entities
           } catch (err) {
             console.error(err);
           }
