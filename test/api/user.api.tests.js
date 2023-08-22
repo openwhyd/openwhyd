@@ -34,6 +34,15 @@ describe('user api', function () {
         });
       });
     });
+
+    it("should redirect to user's avatar URL", async () => {
+      // TODO: upload avatar for DUMMY_USER
+      const url = `/u/${DUMMY_USER.id}`;
+      const { body, ...res } = await util.promisify(api.get)(jar, url);
+      assert(!body.error);
+      assert.equal(res.response.statusCode, 307); // temporary redirect
+      assert.equal(res.headers?.Location, DUMMY_USER.img);
+    });
   });
 
   describe(`setting user data`, function () {
