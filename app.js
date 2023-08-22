@@ -3,6 +3,11 @@
 const /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 if (!process.env.DISABLE_DATADOG) {
+  const { DD_GIT_COMMIT_SHA, DD_GIT_REPOSITORY_URL } = process.env;
+  console.log('Init Datadog APM with:', {
+    DD_GIT_COMMIT_SHA,
+    DD_GIT_REPOSITORY_URL,
+  });
   // Initialize Datadog APM
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore // cf https://docs.datadoghq.com/fr/tracing/trace_collection/dd_libraries/nodejs/?tab=autresenvironnements
