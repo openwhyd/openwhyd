@@ -21,4 +21,4 @@ source env-vars-local.sh
 DD_GIT_COMMIT_SHA="${GIT_COMMIT_SHA}" \
 DD_GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
 WHYD_PORT=${PORT} \
-  npx --yes pm2 restart app.js --interpreter=${NODE}
+  npx --yes pm2 restart app.js --interpreter=${NODE} --update-env
