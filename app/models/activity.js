@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * activity model
  * @author adrienjoly, whyd
@@ -30,17 +32,13 @@ exports.fetch = function (q, options, callback) {
     .then((res) => callback(res));
 };
 
-exports.add = function (d, callback) {
+exports.add = async function (d, callback) {
   if (d && d.like && d.like.pId) d.like.pId = '' + d.like.pId;
-  getCol().insertOne(d, function (err, result) {
-    callback && callback(result || err);
-  });
+  return getCol().insertOne(d).then(callback, callback);
 };
 
 exports.remove = function (q, callback) {
-  getCol().deleteOne(q, function (err, result) {
-    callback && callback(result || err);
-  });
+  getCol().deleteOne(q).then(callback, callback);
 };
 
 // fetch helpers
