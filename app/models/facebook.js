@@ -38,8 +38,8 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
       { path: url, host: host, port: 443, method: params.method },
       function (res) {
         res.addListener('error', function (err) {
-          console.log('facebook request error: ', err);
           if (handler) handler({ error: err });
+          else console.trace('facebook request error', err);
         });
         let json = '';
         res.addListener('data', function (chunk) {

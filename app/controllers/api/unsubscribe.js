@@ -97,7 +97,6 @@ exports.controller = function (request, reqParams, response) {
 
   const user = request.getUserFromId(reqParams.uId);
   if (!user) {
-    console.log({ error: 'user not found' });
     return render({ error: 'user not found' });
   }
 

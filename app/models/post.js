@@ -268,7 +268,7 @@ exports.savePost = function (postObj, handler) {
       { _id: ObjectId('' + pId) },
       update,
       function (error) {
-        if (error) console.log('update error', error);
+        if (error) console.trace('post update error', error);
         mongodb.collections['post'].findOne(
           { _id: ObjectId('' + pId) },
           whenDone,
@@ -277,7 +277,7 @@ exports.savePost = function (postObj, handler) {
     );
   } else
     mongodb.collections['post'].insertOne(postObj, function (error, result) {
-      if (error) console.log('update error', error);
+      if (error) console.trace('post update error', error);
       whenDone(error, error ? {} : { _id: result.insertedId });
     });
 };
@@ -350,7 +350,7 @@ exports.deletePost = function (pId, uId, handler) {
         return;
       }
       collection.deleteOne(q, function (error, result) {
-        if (error) console.log('post.deletePost() error: ', error);
+        if (error) console.trace('post.deletePost() error: ', error);
         searchModel.deleteDoc('post', pId);
         handler(null, result);
         if (postObj.repost)
@@ -362,7 +362,6 @@ exports.deletePost = function (pId, uId, handler) {
         trackModel.updateByEid(postObj.eId);
       });
     } else {
-      console.log('post.deletePost() error: ', pId);
       handler(new Error('post not found'));
     }
   });
@@ -456,7 +455,7 @@ exports.unsetPlaylist = function (uId, plId, handler) {
 exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
   const collection = mongodb.collections['post'];
   function next(err) {
-    if (err) console.log('error', err);
+    if (err) console.trace('setPlaylistOrder error', err);
     if (!order.length) handler({ ok: 1 });
     else {
       const post = {

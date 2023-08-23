@@ -80,7 +80,7 @@ exports.renameTo = function (filename, toFilename, callback) {
   //console.log("uploadedFile.renameTo", filename, toFilename);
   function error(e) {
     if (callback) callback();
-    console.log('ERROR:', e);
+    console.trace('renameTo ERROR:', e);
   }
   if (!filename || !toFilename)
     return error(

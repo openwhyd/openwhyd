@@ -106,7 +106,7 @@ exports.controller = async function (request, getParams, response) {
     // content or error
     if (!r || r.error) {
       r = r || {};
-      console.log(r.error);
+      console.trace('in consent.render:', r.error);
     } else if (r.content) {
       r.html = mainTemplate.renderWhydPage(r);
     }

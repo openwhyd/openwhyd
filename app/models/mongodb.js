@@ -154,7 +154,7 @@ exports.cacheCollections = function (callback) {
   }
   // diagnostics and collection caching
   exports._db.collections(function (err, collections) {
-    if (err) console.log('[db] MongoDB Error : ' + err);
+    if (err) console.trace('[db] MongoDB Error : ' + err);
     else {
       if (0 == collections.length) finishInit();
       let remaining = collections.length;

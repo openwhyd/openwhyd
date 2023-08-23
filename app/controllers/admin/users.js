@@ -15,7 +15,7 @@ const handlers = {
     if (p._id && p.name)
       userModel.renameUser(p._id, p.name, function (result) {
         result = result || {};
-        if (result.error) console.log('error:', result.error);
+        if (result.error) console.trace('user rename error:', result.error);
         else result.message = 'The user name has been set to ' + p.name;
         cb(result);
       });

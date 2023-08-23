@@ -41,7 +41,7 @@ exports.request = function (path, data, callback) {
   //req.setHeader('Content-type', 'application/json');
   //req.setHeader('Accept', 'application/json');
   req.addListener('error', function (err) {
-    console.log('solrIndex.request socket error: ', err);
+    console.trace('solrIndex.request socket error: ', err);
     if (callback) callback({ error: err });
   });
   if (data) {

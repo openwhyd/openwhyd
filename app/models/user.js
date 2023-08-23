@@ -339,7 +339,7 @@ exports.save = function (pUser, handler) {
     { $set: user },
     { upsert: true },
     function (err) {
-      if (err) console.log('user.save error 1:', err);
+      if (err) console.trace('user.save error 1:', err);
       fetch(criteria, function (err, user) {
         if (err) console.error('user.save error 2:', err);
         if (user) searchModel.indexTyped('user', user);
@@ -447,7 +447,7 @@ function insertInvite(obj, handler) {
     { $set: obj },
     { upsert: true },
     function (err) {
-      if (err) console.log('insertInvite error 1:', err);
+      if (err) console.trace('insertInvite error 1:', err);
       mongodb.collections['invite'].findOne(criteria, function (err, user) {
         if (err) console.error('insertInvite error 2:', err);
         if (user && obj.email)

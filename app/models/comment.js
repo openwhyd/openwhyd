@@ -21,20 +21,26 @@ function stringify(a) {
 
 function combineResult(cb) {
   return function (err, res) {
-    (cb || console.log)(err ? { error: err } : res);
+    if (cb) cb(err ? { error: err } : res);
+    else if (err) console.trace('error in comment.combineResult', err);
   };
 }
 
 function combineInsertedResult(cb) {
   return function (err, res) {
-    (cb || console.log)(err ? { error: err } : res);
+    if (cb) cb(err ? { error: err } : res);
+    else if (err) console.trace('error in comment.combineResult', err);
   };
 }
 
 function combineResultArray(cb) {
   return function (err, res) {
-    if (err) (cb || console.log)({ error: err });
-    else res.toArray(combineResult(cb));
+    if (err) {
+      if (cb) cb({ error: err });
+      else console.trace('error in comment.combineResultArray', err);
+    } else {
+      res.toArray(combineResult(cb));
+    }
   };
 }
 
