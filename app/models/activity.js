@@ -82,7 +82,6 @@ exports.fetchHistoryFromUidList = function (uidList, options, callback) {
     // console.log('=> fetched', activities.length, 'likes');
     if (options.likesOnly) return whenDone(activities);
     options.fromUId = uidList;
-    //followModel.fetchUsersSubscriptionsHistory(uidList, options, function(subscriptions) {
     followModel.fetchSubscriptionHistory(options, function (subscriptions) {
       for (const i in subscriptions)
         activities.push({
