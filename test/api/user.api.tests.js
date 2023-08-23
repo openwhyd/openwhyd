@@ -21,6 +21,11 @@ describe('user api', function () {
     await openwhyd.release();
   });
 
+  it("should return a 404 for user handles that don't exist", async () => {
+    const { response } = await util.promisify(api.getRaw)(null, '/nobody');
+    assert.equal(response.statusCode, 404);
+  });
+
   describe(`getting user data`, function () {
     it(`gets user profile data`, function (done) {
       const url =
