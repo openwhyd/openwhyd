@@ -16,7 +16,6 @@ exports.controller = function (request, reqParams, response) {
 
   function render(p) {
     if (p && p.errorCode) {
-      console.error('postViewer error:', p.errorCode, 'on', request.url);
       errorTemplate.renderErrorResponse(
         p,
         response,
