@@ -222,7 +222,7 @@ exports.query = function (q = {}, handler) {
 exports.index = function (doc, handler) {
   //console.log("[search] index():", doc);
   postJson(doc, function (response) {
-    console.log('[search] index() => ', (response || {}).ok ? 'OK' : 'ERROR');
+    console.trace('[search] index() => ', (response || {}).ok ? 'OK' : 'ERROR');
     handler && handler(response);
   });
 };
@@ -248,7 +248,7 @@ exports.indexBulk = function (docs, cb) {
 };
 
 function logToConsole(e) {
-  console.log('[search] INDEX ERROR: ' + (e || {}).error);
+  console.trace('[search] INDEX ERROR: ' + (e || {}).error);
 }
 
 exports.indexTyped = function (type, item, handler) {

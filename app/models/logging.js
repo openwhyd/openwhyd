@@ -114,7 +114,7 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
         console.log('found secure facebook cookie'); //, cookie);
         return cookie;
       } catch (e) {
-        console.log('secure facebook connect error: ', e);
+        console.trace('secure facebook connect error: ', e);
       }
     }
   return null;

@@ -259,7 +259,7 @@ exports.query = function (q = {}, cb) {
 };
 
 function logToConsole(e) {
-  console.log('[search] INDEX ERROR: ' + (e || {}).error);
+  console.trace('[search] INDEX ERROR: ' + (e || {}).error);
 }
 
 function indexTypedDocs(type, items, callback) {
