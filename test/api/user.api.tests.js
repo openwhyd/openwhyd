@@ -46,11 +46,11 @@ describe('user api', function () {
       const tmpImageData = await fs.promises.readFile(`./${tmpImage.path}`);
       await util.promisify(api.setUser)(jar, { img: tmpImage.path });
 
-      // when they ask for their avatar URL
+      // when they ask for their avatar
       const url = `/uAvatarImg/${DUMMY_USER.id}`;
       const { body } = await util.promisify(api.getRaw)(jar, url);
 
-      // then they should be redirected to the final URL of that image
+      // then they should receive the image data
       assert.equal(body, tmpImageData.toString());
     });
 
@@ -68,11 +68,24 @@ describe('user api', function () {
       const url = res.body.img;
       assert(url.startsWith('/uAvatarImg/'));
 
-      // when they ask for their avatar URL
+      // when they ask for their avatar
       const { body } = await util.promisify(api.getRaw)(jar, url);
 
-      // then they should be redirected to the final URL of that image
+      // then they should receive the image data
       assert.equal(body, tmpImageData.toString());
+    });
+
+    it("should provide a default avatar for users that don't exist", async () => {
+      // when somebody asks for the avatar of a user that does not exist
+      const url = `/uAvatarImg/ababababababab`;
+      const { body } = await util.promisify(api.getRaw)(null, url);
+
+      // then they should receive a default avatar
+      const defaultAvatarData = await fs.promises.readFile(
+        `./public/images/blank_user.gif`,
+        'utf-8',
+      );
+      assert.equal(body, defaultAvatarData.toString());
     });
   });
 
