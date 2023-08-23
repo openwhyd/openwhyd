@@ -3,7 +3,7 @@ const assert = require('assert');
 const util = require('util');
 
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { DUMMY_USER, cleanup } = require('../fixtures.js');
+const { DUMMY_USER, cleanup, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 
 describe('user api', function () {
@@ -19,6 +19,19 @@ describe('user api', function () {
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  it("should return a 404 for user handle that doesn't exist", async () => {
+    const { response } = await util.promisify(api.getRaw)(null, '/nobody');
+    assert.equal(response.statusCode, 404);
+  });
+
+  it("should return a 404 for user id that doesn't exist", async () => {
+    const { response } = await util.promisify(api.getRaw)(
+      null,
+      `/u/${FAKE_ID}`,
+    );
+    assert.equal(response.statusCode, 404);
   });
 
   describe(`getting user data`, function () {
