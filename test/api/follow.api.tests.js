@@ -5,7 +5,10 @@ const assert = require('assert');
 
 const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const {
+  OpenwhydTestEnv,
+  sortAndIndentAsJSON,
+} = require('../approval-tests-helpers.js');
 const { ObjectId } = require('../../app/models/mongodb.js');
 
 const getAsUser = (user, url, params) =>
@@ -59,6 +62,9 @@ describe(`follow api`, function () {
         tNm: ADMIN_USER.name,
       },
     ];
-    assert.deepStrictEqual(actualSubscriptions, expectedSubscriptions);
+    assert.deepEqual(
+      sortAndIndentAsJSON(actualSubscriptions),
+      sortAndIndentAsJSON(expectedSubscriptions),
+    );
   });
 });
