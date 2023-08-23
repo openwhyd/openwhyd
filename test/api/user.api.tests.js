@@ -1,3 +1,4 @@
+const fs = require('fs');
 const assert = require('assert');
 const util = require('util');
 
@@ -35,13 +36,22 @@ describe('user api', function () {
       });
     });
 
-    it("should redirect to user's avatar URL", async () => {
-      // TODO: upload avatar for DUMMY_USER
-      const url = `/u/${DUMMY_USER.id}`;
-      const { body, ...res } = await util.promisify(api.get)(jar, url);
-      assert(!body.error);
-      assert.equal(res.response.statusCode, 307); // temporary redirect
-      assert.equal(res.headers?.Location, DUMMY_USER.img);
+    it("should provide user's avatar thru /uAvatarImg/{uid}", async () => {
+      // given a user with a custom avatar / user image
+      const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
+      const tmpImage = await api.uploadImage(
+        jar,
+        fs.createReadStream('./public/press/images/adrien.png'),
+      );
+      const tmpImageData = await fs.promises.readFile(`./${tmpImage.path}`);
+      await util.promisify(api.setUser)(jar, { img: tmpImage.path });
+
+      // when they ask for their avatar URL
+      const url = `/uAvatarImg/${DUMMY_USER.id}`;
+      const { body } = await util.promisify(api.getRaw)(jar, url);
+
+      // then they should be redirected to the final URL of that image
+      assert.equal(body, tmpImageData.toString());
     });
   });
 
