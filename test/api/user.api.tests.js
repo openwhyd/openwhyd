@@ -21,8 +21,17 @@ describe('user api', function () {
     await openwhyd.release();
   });
 
-  it("should return a 404 for user handles that don't exist", async () => {
+  it("should return a 404 for user handle that doesn't exist", async () => {
     const { response } = await util.promisify(api.getRaw)(null, '/nobody');
+    assert.equal(response.statusCode, 404);
+  });
+
+  it("should return a 404 for user id that doesn't exist", async () => {
+    const fakeUserId = DUMMY_USER.id.replace(/0/g, 'a');
+    const { response } = await util.promisify(api.getRaw)(
+      null,
+      `/u/${fakeUserId}`,
+    );
     assert.equal(response.statusCode, 404);
   });
 
