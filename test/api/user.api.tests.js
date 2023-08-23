@@ -75,10 +75,10 @@ describe('user api', function () {
       assert.equal(body, tmpImageData.toString());
     });
 
-    it("should provide a default avatar for users that don't exist", async () => {
+    it("should return a default avatar with a 404, for users that don't exist", async () => {
       // when somebody asks for the avatar of a user that does not exist
       const url = `/uAvatarImg/ababababababab`;
-      const { body } = await util.promisify(api.getRaw)(null, url);
+      const { body, response } = await util.promisify(api.getRaw)(null, url);
 
       // then they should receive a default avatar
       const defaultAvatarData = await fs.promises.readFile(
@@ -86,6 +86,7 @@ describe('user api', function () {
         'utf-8',
       );
       assert.equal(body, defaultAvatarData.toString());
+      assert.equal(response.statusCode, 404);
     });
   });
 
