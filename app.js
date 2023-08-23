@@ -157,9 +157,6 @@ function start() {
     sessionMiddleware,
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
-      console.log(
-        `[app] rendering server error page ${statusCode} for ${req.method} ${req.path}`,
-      );
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
         response,
