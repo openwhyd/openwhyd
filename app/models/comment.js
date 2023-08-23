@@ -26,13 +26,6 @@ function combineResult(cb) {
   };
 }
 
-function combineInsertedResult(cb) {
-  return function (err, res) {
-    if (cb) cb(err ? { error: err } : res);
-    else if (err) console.trace('error in comment.combineResult', err);
-  };
-}
-
 function combineResultArray(cb) {
   return function (err, res) {
     if (err) {
@@ -48,11 +41,9 @@ exports.fetchLast = function (p, cb) {
   p = p || {};
   if (!p.pId) cb({ error: 'missing field: pId' });
   else
-    getCol().findOne(
-      { pId: '' + p.pId },
-      { sort: [['_id', 'desc']] },
-      combineResult(cb),
-    );
+    getCol()
+      .findOne({ pId: '' + p.pId }, { sort: [['_id', 'desc']] })
+      .then(cb, (err) => cb({ error: err }));
 };
 
 exports.fetch = async function (q, p, cb) {
@@ -162,40 +153,43 @@ exports.insert = function (p, cb) {
       });
     // actual insert
     else
-      getCol().insertOne(
-        comment,
-        combineInsertedResult(async function (res) {
-          const commentOrError = res.insertedId
-            ? await getCol().findOne({ _id: res.insertedId })
-            : res;
-          cb && cb(commentOrError);
-          if (res && !res.error) notifyUsers(comment);
-        }),
-      );
+      getCol()
+        .insertOne(comment)
+        .then(
+          async function (res) {
+            cb && cb(await getCol().findOne({ _id: res.insertedId }));
+            notifyUsers(comment);
+          },
+          (err) => cb({ error: err }),
+        );
   });
 };
 
 exports.delete = function (p, cb) {
   p = p || {};
   const q = { _id: mongodb.ObjectId('' + p._id) };
-  getCol().findOne(
-    q,
-    combineResult(function (comment) {
-      if (!comment || comment.error) {
-        cb && cb({ error: comment ? comment.error : 'comment not found' });
-        return;
-      }
-      postModel.fetchPostById(comment.pId, (post) => {
-        if (!post || post.error) {
-          cb && cb({ error: post ? post.error : 'post not found' });
+  getCol()
+    .findOne(q)
+    .then(
+      function (comment) {
+        if (!comment) {
+          cb && cb({ error: 'comment not found' });
           return;
         }
-        if (p.uId != post.uId && comment.uId != p.uId) {
-          cb && cb({ error: 'you are not allowed to delete this comment' });
-          return;
-        }
-        getCol().deleteOne(q, combineResult(cb));
-      });
-    }),
-  );
+        postModel.fetchPostById(comment.pId, (post) => {
+          if (!post || post.error) {
+            cb && cb({ error: post ? post.error : 'post not found' });
+            return;
+          }
+          if (p.uId != post.uId && comment.uId != p.uId) {
+            cb && cb({ error: 'you are not allowed to delete this comment' });
+            return;
+          }
+          getCol()
+            .deleteOne(q)
+            .then(cb, (err) => cb({ error: err }));
+        });
+      },
+      (err) => cb({ error: err }),
+    );
 };
