@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * template for error pages
  * @author adrienjoly, whyd
@@ -44,6 +46,15 @@ exports.renderErrorCode = function (errorCode, loggedUser) {
   return exports.renderErrorMessage(err, loggedUser);
 };
 
+/** @typedef {keyof typeof exports.ERRORCODE} ErrorCode */
+
+/**
+ *
+ * @param {{ errorCode?: ErrorCode, error?: unknown } | undefined} errorObj
+ * @param {*} response
+ * @param {*} format
+ * @param {*} loggedUser
+ */
 exports.renderErrorResponse = function (
   errorObj,
   response,
