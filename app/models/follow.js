@@ -39,8 +39,8 @@ async function fetchArray(query = {}, options, callback) {
     console.error('warning: found uId with /u/ prefix');
   if (typeof query.tId == 'string' && query.tId.indexOf('/u/') == 0)
     console.error('warning: found tId with /u/ prefix');
-  if ((query.uId || {}).generationTime) query.uId = '' + query.uId;
-  if ((query.tId || {}).generationTime) query.tId = '' + query.tId;
+  if (query.uId?.generationTime) query.uId = '' + query.uId;
+  if (query.tId?.generationTime) query.tId = '' + query.tId;
   const { fields } = options ?? {};
   if (options) delete options.fields;
   const results = await mongodb.collections[COLNAME].find(query, options || {})

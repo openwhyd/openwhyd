@@ -157,7 +157,7 @@ exports.insert = function (p, cb) {
         .insertOne(comment)
         .then(
           async function (res) {
-            cb && cb(await getCol().findOne({ _id: res.insertedId }));
+            cb?.(await getCol().findOne({ _id: res.insertedId }));
             notifyUsers(comment);
           },
           (err) => cb({ error: err }),
@@ -173,7 +173,7 @@ exports.delete = function (p, cb) {
     .then(
       function (comment) {
         if (!comment) {
-          cb && cb({ error: 'comment not found' });
+          cb?.({ error: 'comment not found' });
           return;
         }
         postModel.fetchPostById(comment.pId, (post) => {
