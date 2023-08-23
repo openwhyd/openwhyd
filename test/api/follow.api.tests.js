@@ -59,6 +59,9 @@ describe(`follow api`, function () {
         tNm: ADMIN_USER.name,
       },
     ];
-    assert.deepStrictEqual(actualSubscriptions, expectedSubscriptions);
+    assert.deepStrictEqual(
+      JSON.stringify(actualSubscriptions),
+      JSON.stringify(expectedSubscriptions),
+    );
   });
 });
