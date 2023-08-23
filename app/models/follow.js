@@ -60,7 +60,11 @@ exports.add = function (followObj, dbHandler) {
   };
   const collection = mongodb.collections[COLNAME];
   collection.updateOne(req, { $set: followObj }, { upsert: true }).then(
-    () => collection.findOne(req).then(dbHandler, (err) => dbHandler(err)),
+    () =>
+      collection.findOne(req).then(
+        (res) => dbHandler(null, res),
+        (err) => dbHandler(err),
+      ),
     (err) => dbHandler(err),
   );
 };
