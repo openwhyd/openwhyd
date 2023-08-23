@@ -61,7 +61,7 @@ exports.renderErrorResponse = function (
   format = 'html',
   loggedUser,
 ) {
-  const statusCode =
+  let statusCode =
     errorObj && typeof errorObj.errorCode === 'number' && errorObj.errorCode;
   //var format = (querystring.parse(url.parse(request.url).query) || {}).format || "";
   if (format.toLowerCase() == 'json') {
@@ -71,7 +71,7 @@ exports.renderErrorResponse = function (
     errorObj.errorCode == 404 ||
     errorObj.errorCode == 'USER_NOT_FOUND'
   ) {
-    response.status(404);
+    statusCode = 404;
     if (format === 'html') {
       //response.sendFile("public/html/404.html");
       response.renderHTML(
@@ -83,9 +83,9 @@ exports.renderErrorResponse = function (
       );
       // TODO: response.render('404', { url: req.url });
     } else if (format === 'json') {
-      response.send({ error: 'Not found' });
+      response.status(statusCode).send({ error: 'Not found' });
     } else {
-      response.type('txt').send('Not found');
+      response.status(statusCode).type('txt').send('Not found');
     }
   } else if (errorObj.errorCode)
     response.renderHTML(
