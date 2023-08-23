@@ -3,7 +3,7 @@ const assert = require('assert');
 const util = require('util');
 
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { DUMMY_USER, cleanup } = require('../fixtures.js');
+const { DUMMY_USER, cleanup, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 
 describe('user api', function () {
@@ -27,10 +27,9 @@ describe('user api', function () {
   });
 
   it("should return a 404 for user id that doesn't exist", async () => {
-    const fakeUserId = DUMMY_USER.id.replace(/0/g, 'a');
     const { response } = await util.promisify(api.getRaw)(
       null,
-      `/u/${fakeUserId}`,
+      `/u/${FAKE_ID}`,
     );
     assert.equal(response.statusCode, 404);
   });
