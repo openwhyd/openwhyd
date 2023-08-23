@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const async = require('async');
+const { ImageStorage } = require('../app/infrastructure/ImageStorage.js');
 
 const { DEBUG } = process.env;
 
@@ -42,8 +43,12 @@ require('../app/models/mongodb.js').init(dbCreds, function (err, db) {
           );
         mongodb.runShellScript(fs.readFileSync(initScript), nextScript);
       },
-      function (err) {
+      async function (err) {
         if (err) throw err;
+
+        // delete uploaded files
+        await new ImageStorage().deleteAllFiles();
+
         if (DEBUG) console.log('[test-db-init.js] => done.');
         process.exit();
       },
