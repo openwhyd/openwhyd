@@ -8,6 +8,7 @@ const {
   cleanup,
   URL_PREFIX,
   DUMMY_USER,
+  FAKE_ID,
 } = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
@@ -41,6 +42,14 @@ describe(`post api`, function () {
     /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.
      * May be initdb_testing.js is not up to date with the current schema?
      */
+  });
+
+  it("should return a 404 for post that doesn't exist", async () => {
+    const { response } = await util.promisify(api.getRaw)(
+      null,
+      `/c/${FAKE_ID}`,
+    );
+    assert.equal(response.statusCode, 404);
   });
 
   it("should edit a track's name", async function () {
