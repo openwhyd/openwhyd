@@ -53,6 +53,27 @@ describe('user api', function () {
       // then they should be redirected to the final URL of that image
       assert.equal(body, tmpImageData.toString());
     });
+
+    it("should provide user's avatar thru /uAvatarImg/{path}", async () => {
+      // given a user with a custom avatar / user image
+      const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
+      const tmpImage = await api.uploadImage(
+        jar,
+        fs.createReadStream('./public/press/images/adrien.png'),
+      );
+      const tmpImageData = await fs.promises.readFile(`./${tmpImage.path}`);
+      const res = await util.promisify(api.setUser)(jar, {
+        img: tmpImage.path,
+      });
+      const url = res.body.img;
+      assert(url.startsWith('/uAvatarImg/'));
+
+      // when they ask for their avatar URL
+      const { body } = await util.promisify(api.getRaw)(jar, url);
+
+      // then they should be redirected to the final URL of that image
+      assert.equal(body, tmpImageData.toString());
+    });
   });
 
   describe(`setting user data`, function () {
