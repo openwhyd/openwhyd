@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * template for error pages
  * @author adrienjoly, whyd
@@ -15,14 +17,33 @@ const renderPage404 = (params) =>
     content: page404Html,
   });
 
+/** @typedef {{ message: string, status: number }} ErrorWithStatus */
+
+/** @type {Record<number|string, ErrorWithStatus>} */
 exports.ERRORCODE = {
-  401: 'Unauthorized. Please login before accessing this page.',
-  404: '404 / not found. There might have been some music here, in the past... Please make sure that this URL is correct.',
-  REQ_LOGIN: 'Please login first',
-  USER_NOT_FOUND: 'User not found...',
-  POST_NOT_FOUND: "Sorry, we can't find this track... maybe was it deleted?",
+  401: {
+    status: 404,
+    message: 'Unauthorized. Please login before accessing this page.',
+  },
+  404: {
+    status: 404,
+    message:
+      '404 / not found. There might have been some music here, in the past... Please make sure that this URL is correct.',
+  },
+  REQ_LOGIN: { status: 401, message: 'Please login first' },
+  USER_NOT_FOUND: { status: 404, message: 'User not found...' },
+  POST_NOT_FOUND: {
+    status: 404,
+    message: "Sorry, we can't find this track... maybe was it deleted?",
+  },
 };
 
+/**
+ * Renders a HTML page for the provided error message.
+ * @param {string} errorMessage
+ * @param {unknown} loggedUser
+ * @returns {string}
+ */
 exports.renderErrorMessage = function (errorMessage, loggedUser) {
   const params = {
     loggedUser: loggedUser,
@@ -41,26 +62,31 @@ exports.renderErrorCode = function (errorCode, loggedUser) {
   if (!err) {
     console.error('invalid error code:', errorCode);
   }
-  return exports.renderErrorMessage(err, loggedUser);
+  return exports.renderErrorMessage(err.message, loggedUser);
 };
 
+/** @typedef {keyof typeof exports.ERRORCODE} ErrorCode */
+
+/**
+ *
+ * @param {{ errorCode?: ErrorCode, error?: string } | undefined} errorObj
+ * @param {*} response
+ * @param {*} format
+ * @param {*} loggedUser
+ */
 exports.renderErrorResponse = function (
   errorObj,
   response,
   format = 'html',
   loggedUser,
 ) {
-  const statusCode =
-    errorObj && typeof errorObj.errorCode === 'number' && errorObj.errorCode;
+  const errorCode = errorObj?.errorCode;
+  const statusCode = exports.ERRORCODE[errorCode]?.status;
   //var format = (querystring.parse(url.parse(request.url).query) || {}).format || "";
   if (format.toLowerCase() == 'json') {
-    errorObj.error = errorObj.error || exports.ERRORCODE[errorObj.errorCode];
+    errorObj.error = errorObj.error || exports.ERRORCODE[errorCode]?.message;
     response.renderJSON(errorObj, statusCode);
-  } else if (
-    errorObj.errorCode == 404 ||
-    errorObj.errorCode == 'USER_NOT_FOUND'
-  ) {
-    response.status(404);
+  } else if (errorCode == 404 || errorCode == 'USER_NOT_FOUND') {
     if (format === 'html') {
       //response.sendFile("public/html/404.html");
       response.renderHTML(
@@ -72,9 +98,9 @@ exports.renderErrorResponse = function (
       );
       // TODO: response.render('404', { url: req.url });
     } else if (format === 'json') {
-      response.send({ error: 'Not found' });
+      response.status(statusCode).send({ error: 'Not found' });
     } else {
-      response.type('txt').send('Not found');
+      response.status(statusCode).type('txt').send('Not found');
     }
   } else if (errorObj.errorCode)
     response.renderHTML(

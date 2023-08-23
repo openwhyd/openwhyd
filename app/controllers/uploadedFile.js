@@ -80,7 +80,7 @@ exports.renameTo = function (filename, toFilename, callback) {
   //console.log("uploadedFile.renameTo", filename, toFilename);
   function error(e) {
     if (callback) callback();
-    console.log('ERROR:', e);
+    console.trace('renameTo ERROR:', e);
   }
   if (!filename || !toFilename)
     return error(
@@ -114,22 +114,22 @@ exports.moveTo = function (filename, toPath, callback) {
 
 exports.controller = function (request, reqParams, response) {
   function renderNoImage() {
-    response.sendFile(NO_IMAGE_PATH);
+    response.status(404).sendFile(NO_IMAGE_PATH);
   }
 
   function renderFile(path, defaultImg) {
     response.sendFile('' + path, function (error) {
       if (!error) return;
-      console.trace(`renderFile error for ${path}:`, error);
       if (defaultImg) {
         const defaultImagePath =
           exports.config.whydPath + '/public' + defaultImg;
-        response.sendFile(defaultImagePath, (err) => {
+        response.status(404).sendFile(defaultImagePath, (err) => {
           if (!err) return;
-          console.trace(`renderFile error for ${defaultImagePath}:`, err);
           renderNoImage();
         });
-      } else renderNoImage();
+      } else {
+        renderNoImage();
+      }
     });
   }
 

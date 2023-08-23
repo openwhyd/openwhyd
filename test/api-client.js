@@ -1,3 +1,4 @@
+const util = require('util');
 const assert = require('assert');
 const request = require('request'); // TODO: promisify it
 
@@ -123,6 +124,7 @@ exports.getUser = function (jar, body, callback) {
   });
 };
 
+/** Documentation: https://openwhyd.github.io/openwhyd/API.html#set-user-data */
 exports.setUser = function (jar, body, callback) {
   request.post(
     {
@@ -206,4 +208,17 @@ exports.getPlaylist = function (jar, plId, callback) {
 exports.getPlaylistTracks = function (jar, uId, plId, callback) {
   // TODO: define a version that accepts parameters (limit, after, before...)
   exports.get(jar, `/${uId}/playlist/${plId}?format=json`, callback);
+};
+
+/**
+ * Uploads an image.
+ * @param {*} jar
+ * @param {import('fs').ReadStream} dataStream - e.g. fs.createReadStream(__dirname + '/attachment1.jpg')
+ * @returns {{ mime: string, path: string, thumbs: Record<string, string> }} - e.g. { mime: 'image/jpeg', path: 'upload_data/aea7b2adefac48afaaa465c00_180x', thumbs: { '180x': 'upload_data/e645c9f60b93ddbecde73bc00_180x' } }
+ */
+exports.uploadImage = async function (jar, dataStream) {
+  const formData = { postImg: dataStream };
+  const url = `${URL_PREFIX}/upload`;
+  const res = await util.promisify(request.post)({ url, formData, jar });
+  return JSON.parse(res.body).postImg;
 };

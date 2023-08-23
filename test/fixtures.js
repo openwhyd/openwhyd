@@ -15,6 +15,8 @@ exports.loadEnvVars = async (file) => {
   return envVars;
 };
 
+exports.FAKE_ID = 'a0000000000000000000000a';
+
 exports.URL_PREFIX = 'http://localhost:8080';
 
 // inserted by config/initdb_testing.js

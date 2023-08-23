@@ -3,6 +3,11 @@
 const /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 if (!process.env.DISABLE_DATADOG) {
+  const { DD_GIT_COMMIT_SHA, DD_GIT_REPOSITORY_URL } = process.env;
+  console.log('Init Datadog APM with:', {
+    DD_GIT_COMMIT_SHA,
+    DD_GIT_REPOSITORY_URL,
+  });
   // Initialize Datadog APM
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore // cf https://docs.datadoghq.com/fr/tracing/trace_collection/dd_libraries/nodejs/?tab=autresenvironnements
@@ -152,9 +157,6 @@ function start() {
     sessionMiddleware,
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
-      console.log(
-        `[app] rendering server error page ${statusCode} for ${req.method} ${req.path}`,
-      );
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
         response,

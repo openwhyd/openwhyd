@@ -1,9 +1,7 @@
 // A private controller for Cypress to be able to reset the database between tests
 
-const path = require('path');
-const { readdirSync, rmSync } = require('fs');
-
 const mongodb = require('../../models/mongodb.js');
+const { ImageStorage } = require('../../infrastructure/ImageStorage.js');
 
 exports.controller = async function (request, getParams, response) {
   // Important: After calling this `/testing/reset` route, other pending HTTP requests may never return.
@@ -20,16 +18,7 @@ exports.controller = async function (request, getParams, response) {
     await mongodb.initCollections({ addTestData: true });
 
     // delete uploaded files
-    const appDir = process.cwd();
-    ['uAvatarImg', 'uCoverImg', 'uPlaylistImg', 'upload_data'].forEach(
-      (subDir) => {
-        const dir = path.join(appDir, subDir);
-        readdirSync(dir).forEach((file) => {
-          console.warn(`reset.controller deleting ${dir}/${file}`);
-          rmSync(`${dir}/${file}`);
-        });
-      },
-    );
+    await new ImageStorage().deleteAllFiles();
 
     response.renderJSON({ ok: true });
   } catch (err) {

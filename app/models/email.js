@@ -43,7 +43,7 @@ exports.email = function (
 
 exports.notif = function (toUid, subject, text /*, fbAccessToken*/) {
   if (!toUid) {
-    console.log('ERROR: unable to send email to user ' + toUid);
+    console.trace('ERROR: unable to send email to user ' + toUid);
     return;
   }
 

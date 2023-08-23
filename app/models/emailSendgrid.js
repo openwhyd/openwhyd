@@ -71,7 +71,6 @@ exports.email = function (
       },
     )
     .on('error', function (err) {
-      console.log('[EMAIL] send error:', err);
       console.error('[EMAIL] send error:', err);
       if (callback) callback({ error: err });
     });
