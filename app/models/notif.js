@@ -164,27 +164,24 @@ exports.clearAllNotifs = () =>
     exports.userNotifsCache = {}; // => force fetch on next request
   });
 
-exports.clearUserNotifs = function (uId, cb) {
-  if (!uId) return;
+/** @param {string} uId */
+exports.clearUserNotifs = async function (uId, cb) {
+  if (!uId) return cb && cb({ error: 'missing uId' });
   const idsToRemove = [];
-  db['notif']
+  // delete records that were only associated to that user
+  // note: we may delete those in one command, using https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length
+  await db['notif']
     .find({ uId: uId }, { limit: 1000 })
     .project({ uId: 1 })
-    .forEach((err, item) => {
+    .forEach((item) => {
+      // reminder: item.uId is an array of user ids
       if (item && item.uId.length === 1) idsToRemove.push(item._id);
-    })
-    .then(async function whenDone() {
-      // delete records that were only associated to that user
-      await db['notif'].deleteMany({ _id: { $in: idsToRemove } });
-      // ...then, remove the user from remaining records
-      await db['notif'].updateMany(
-        { uId: uId },
-        { $pull: { uId: uId } },
-        { multi: true, w: 0 },
-      );
-      invalidateUserNotifsCache(uId);
-      cb && cb();
     });
+  await db['notif'].deleteMany({ _id: { $in: idsToRemove } });
+  // ...then, remove the user from remaining records
+  await db['notif'].updateMany({ uId: uId }, { $pull: { uId: uId } });
+  invalidateUserNotifsCache(uId);
+  cb && cb();
 };
 
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
