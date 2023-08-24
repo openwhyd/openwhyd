@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * notif model
  * stores and retrieves user notifications, and send emails when required
@@ -78,7 +80,7 @@ function updateNotif(q, p, cb) {
   db['notif'].updateOne(
     q,
     p,
-    { upsert: true, /*w:0*/ safe: true },
+    { upsert: true },
     logErrors(function (res) {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
       cb && cb(res);
@@ -92,7 +94,6 @@ function insertNotif(to, p, cb) {
   p.uId = to.splice ? to : ['' + to];
   db['notif'].insertOne(
     p,
-    { /*w:0*/ safe: true },
     logErrors(async function (res) {
       invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
       cb &&
@@ -113,7 +114,7 @@ function pushNotif(to, q, set, push, cb) {
   db['notif'].updateOne(
     q,
     p,
-    { upsert: true, /*w:0*/ safe: true },
+    { upsert: true },
     logErrors(function (res) {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
       cb && cb(res);
@@ -147,21 +148,19 @@ exports.clearUserNotifsForPost = function (uId, pId) {
   db['notif'].updateOne(
     { _id: { $in: idList } },
     { $pull: { uId: uId } },
-    { safe: true /*w:0*/ },
     function (err) {
       if (err) console.log(err);
       // remove documents with empty uid
-      db['notif'].deleteMany(
-        { _id: { $in: idList }, uId: { $size: 0 } },
-        { multi: true /*w: 0*/ },
-        () => invalidateUserNotifsCache(uId),
+      db['notif'].deleteMany({ _id: { $in: idList }, uId: { $size: 0 } }, () =>
+        invalidateUserNotifsCache(uId),
       );
     },
   );
 };
 
+/** WARNING: for automated tests only. */
 exports.clearAllNotifs = () =>
-  db['notif'].deleteMany().then(() => {
+  db['notif'].deleteMany({}).then(() => {
     exports.userNotifsCache = {}; // => force fetch on next request
   });
 
@@ -174,22 +173,18 @@ exports.clearUserNotifs = function (uId, cb) {
       const idsToRemove = [];
       function whenDone() {
         // delete records that were only associated to that user
-        db['notif'].deleteMany(
-          { _id: { $in: idsToRemove } },
-          { multi: true, safe: true },
-          function () {
-            // ...then, remove the user from remaining records
-            db['notif'].updateMany(
-              { uId: uId },
-              { $pull: { uId: uId } },
-              { multi: true, w: 0 },
-              () => {
-                invalidateUserNotifsCache(uId);
-                cb && cb();
-              },
-            );
-          },
-        );
+        db['notif'].deleteMany({ _id: { $in: idsToRemove } }, function () {
+          // ...then, remove the user from remaining records
+          db['notif'].updateMany(
+            { uId: uId },
+            { $pull: { uId: uId } },
+            { multi: true, w: 0 },
+            () => {
+              invalidateUserNotifsCache(uId);
+              cb && cb();
+            },
+          );
+        });
       }
       cursor.forEach(
         (err, item) => {
@@ -276,7 +271,7 @@ exports.love = function (loverUid, post, callback) {
       $push: { lov: loverUid },
       $inc: { n: 1 },
     },
-    { upsert: true, w: 0 },
+    { upsert: true },
     callback,
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
@@ -289,7 +284,6 @@ exports.unlove = function (loverUid, pId) {
   col.updateOne(
     criteria,
     { $inc: { n: -1 }, $pull: { lov: loverUid } },
-    { safe: true },
     function () {
       col.findOne(criteria).then(
         function (res) {
@@ -349,7 +343,7 @@ exports.repost = function (reposterUid, post) {
       $push: { reposters: reposterUid },
       $inc: { n: 1 },
     },
-    { upsert: true, w: 0 },
+    { upsert: true },
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendRepost(reposter, post, author /*.email*/);
@@ -385,7 +379,7 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
         },
         $push: { uId: favoritedId },
       },
-      { upsert: true, w: 0 },
+      { upsert: true },
     );
     invalidateUserNotifsCache(favoritedId);
     notifEmails.sendSubscribedToUser(sender, favorited, cb); // may reject with "Permission denied, wrong credentials"
