@@ -136,15 +136,18 @@ exports.forEach2 = async function (colName, params, handler) {
     .find(q, params)
     .project(fields ?? {});
   (function next() {
-    cursor.next(function (err, item) {
-      if (err) {
+    cursor.next().then(
+      (item) => {
+        handler(item, item ? next : undefined, (cb) =>
+          cursor.close().then(cb, cb),
+        );
+      },
+      (err) => {
         console.error('[db] mongodb.forEach2 ERROR', err);
-        handler({ error: err }, undefined, cursor.close.bind(cursor));
+        handler({ error: err }, undefined, (cb) => cursor.close().then(cb, cb));
         cursor.close();
-      } else {
-        handler(item, item ? next : undefined, cursor.close.bind(cursor));
-      }
-    });
+      },
+    );
   })();
 };
 
@@ -153,9 +156,8 @@ exports.cacheCollections = function (callback) {
     callback.call(module.exports, null, exports._db);
   }
   // diagnostics and collection caching
-  exports._db.collections(function (err, collections) {
-    if (err) console.trace('[db] MongoDB Error : ' + err);
-    else {
+  exports._db.collections().then(
+    function (collections) {
       if (0 == collections.length) finishInit();
       let remaining = collections.length;
       for (const i in collections) {
@@ -170,8 +172,9 @@ exports.cacheCollections = function (callback) {
         })();
         collections[i].countDocuments(queryHandler);
       }
-    }
-  });
+    },
+    (err) => console.trace('[db] MongoDB Error : ' + err),
+  );
 };
 
 // this method runs the commands of a mongo shell script (e.g. initdb.js)
