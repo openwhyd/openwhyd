@@ -13,7 +13,6 @@ const notifEmails = require('../models/notifEmails.js');
 
 exports.userNotifsCache = {}; // uId -> { t, notifs: [pId, topic, t, lastAuthor, n] }
 
-/** @type {{ notif: import("mongodb").Collection<Document & { uId: string[] }> }} */
 const db = mongodb.collections;
 
 /**
@@ -180,6 +179,7 @@ exports.clearUserNotifs = async function (uId, cb) {
     });
   await db['notif'].deleteMany({ _id: { $in: idsToRemove } });
   // ...then, remove the user from remaining records
+  // @ts-ignore ts(2322), Type 'string' is not assignable to type 'never', cf https://www.mongodb.com/community/forums/t/type-objectid-is-not-assignable-to-type-never/139699
   await db['notif'].updateMany({ uId: uId }, { $pull: { uId: uId } });
   invalidateUserNotifsCache(uId);
   cb && cb();
