@@ -406,7 +406,7 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
     handler(result);
   }
   if (uId)
-    db['post'].countDocuments({ uId: uId, 'pl.id': parseInt(plId) }).then(
+    db['post'].countDocuments({ uId: uId, 'pl.id': parseInt(plId, 10) }).then(
       (res) => handle(null, res),
       (err) => handle(err),
     );
