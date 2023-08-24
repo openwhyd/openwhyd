@@ -267,7 +267,7 @@ exports.unlove = async function (loverUid, pId) {
   const col = db['notif'];
   await col.updateOne(criteria, { $inc: { n: -1 }, $pull: { lov: loverUid } });
   const res = await col.findOne(criteria);
-  if (!res.lov || res.lov.length == 0 || res.n < 1) col.deleteOne(criteria);
+  if (!res.lov || res.lov.length === 0 || res.n < 1) col.deleteOne(criteria);
   else
     col.updateOne(criteria, { $set: { uIdLast: res.lov[res.lov.length - 1] } });
   invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
