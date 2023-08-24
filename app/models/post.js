@@ -16,8 +16,7 @@ const activityModel = require('../models/activity.js');
 const trackModel = require('../models/track.js');
 const notifModel = require('../models/notif.js');
 
-const config = require('../models/config.js');
-const NB_POSTS = config.nbPostsPerNewsfeedPage;
+const NB_POSTS = process.appParams.nbPostsPerNewsfeedPage;
 
 const playlistSort = {
   sort: [
