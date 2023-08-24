@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * post model
  * @author adrienjoly, whyd
