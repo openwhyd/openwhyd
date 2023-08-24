@@ -255,8 +255,8 @@ exports.love = function (loverUid, post, callback) {
       { upsert: true },
     )
     .then(
-      (res) => callback(null, res),
-      (err) => callback(err),
+      (res) => callback?.(null, res),
+      (err) => callback?.(err) ?? console.trace('love error:', err),
     );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);
