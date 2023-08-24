@@ -291,8 +291,8 @@ exports.unlove = function (loverUid, pId) {
     { $inc: { n: -1 }, $pull: { lov: loverUid } },
     { safe: true },
     function () {
-      col.findOne(criteria, function (err, res) {
-        if (res) {
+      col.findOne(criteria).then(
+        function (res) {
           if (!res.lov || res.lov.length == 0 || res.n < 1)
             col.deleteOne(criteria, { w: 0 });
           else
@@ -302,8 +302,11 @@ exports.unlove = function (loverUid, pId) {
               { w: 0 },
             );
           invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
-        }
-      });
+        },
+        (err) => {
+          console.trace('notif:unlove', err);
+        },
+      );
     },
   );
 };
