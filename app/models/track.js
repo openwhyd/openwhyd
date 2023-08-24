@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * track model
  * - maintained by post model: updateByEid()
@@ -52,7 +54,7 @@ function scorePost(post) {
 
 const POST_FETCH_OPTIONS = {
   limit: 10000,
-  sort: [['_id', 'desc']],
+  sort: ['_id', 'desc'],
 };
 
 // core methods
