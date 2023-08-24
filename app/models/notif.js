@@ -166,33 +166,31 @@ exports.clearAllNotifs = () =>
 
 exports.clearUserNotifs = function (uId, cb) {
   if (!uId) return;
-  db['notif']
+  const cursor = db['notif']
     .find({ uId: uId }, { limit: 1000 })
-    .project({ uId: 1 })
-    .then((cursor) => {
-      const idsToRemove = [];
-      function whenDone() {
-        // delete records that were only associated to that user
-        db['notif'].deleteMany({ _id: { $in: idsToRemove } }, function () {
-          // ...then, remove the user from remaining records
-          db['notif'].updateMany(
-            { uId: uId },
-            { $pull: { uId: uId } },
-            { multi: true, w: 0 },
-            () => {
-              invalidateUserNotifsCache(uId);
-              cb && cb();
-            },
-          );
-        });
-      }
-      cursor.forEach(
-        (err, item) => {
-          if (item && item.uId.length === 1) idsToRemove.push(item._id);
+    .project({ uId: 1 });
+  const idsToRemove = [];
+  function whenDone() {
+    // delete records that were only associated to that user
+    db['notif'].deleteMany({ _id: { $in: idsToRemove } }, function () {
+      // ...then, remove the user from remaining records
+      db['notif'].updateMany(
+        { uId: uId },
+        { $pull: { uId: uId } },
+        { multi: true, w: 0 },
+        () => {
+          invalidateUserNotifsCache(uId);
+          cb && cb();
         },
-        () => whenDone(),
       );
     });
+  }
+  cursor.forEach(
+    (err, item) => {
+      if (item && item.uId.length === 1) idsToRemove.push(item._id);
+    },
+    () => whenDone(),
+  );
 };
 
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
