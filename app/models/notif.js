@@ -159,7 +159,7 @@ exports.clearAllNotifs = () =>
 
 /** @param {string} uId */
 exports.clearUserNotifs = async function (uId, cb) {
-  if (!uId) return cb && cb({ error: 'missing uId' });
+  if (!uId) return cb?.({ error: 'missing uId' });
   const idsToRemove = [];
   // delete records that were only associated to that user
   // note: we may delete those in one command, using https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length
