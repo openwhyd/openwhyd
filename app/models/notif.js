@@ -228,16 +228,13 @@ exports.getUserNotifs = function (uid, handler) {
 // generation notification method
 
 exports.html = function (uId, html, href, img) {
-  db['notif'].insertOne(
-    {
-      t: Math.round(new Date().getTime() / 1000),
-      uId: [uId],
-      html: html,
-      href: href,
-      img: img,
-    },
-    { w: 0 },
-  );
+  db['notif'].insertOne({
+    t: Math.round(new Date().getTime() / 1000),
+    uId: [uId],
+    html: html,
+    href: href,
+    img: img,
+  });
   invalidateUserNotifsCache(uId);
 };
 
@@ -248,51 +245,39 @@ exports.love = function (loverUid, post, callback) {
   const author = mongodb.usernames['' + post.uId];
   if (!user) throw new Error('user not found');
   if (!author) throw new Error(`post author not found`);
-  db['notif'].updateOne(
-    { _id: post._id + '/loves' },
-    {
-      $set: {
-        eId: post.eId,
-        name: post.name,
-        t: Math.round(new Date().getTime() / 1000),
-        uIdLast: loverUid, // last lover of this post
-        uId: [post.uId],
+  db['notif']
+    .updateOne(
+      { _id: post._id + '/loves' },
+      {
+        $set: {
+          eId: post.eId,
+          name: post.name,
+          t: Math.round(new Date().getTime() / 1000),
+          uIdLast: loverUid, // last lover of this post
+          uId: [post.uId],
+        },
+        $push: { lov: loverUid },
+        $inc: { n: 1 },
       },
-      $push: { lov: loverUid },
-      $inc: { n: 1 },
-    },
-    { upsert: true },
-    callback,
-  );
+      { upsert: true },
+    )
+    .then(
+      (res) => callback(null, res),
+      (err) => callback(err),
+    );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);
 };
 
-exports.unlove = function (loverUid, pId) {
+exports.unlove = async function (loverUid, pId) {
   const criteria = { _id: pId + '/loves' };
   const col = db['notif'];
-  col.updateOne(
-    criteria,
-    { $inc: { n: -1 }, $pull: { lov: loverUid } },
-    function () {
-      col.findOne(criteria).then(
-        function (res) {
-          if (!res.lov || res.lov.length == 0 || res.n < 1)
-            col.deleteOne(criteria, { w: 0 });
-          else
-            col.updateOne(
-              criteria,
-              { $set: { uIdLast: res.lov[res.lov.length - 1] } },
-              { w: 0 },
-            );
-          invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
-        },
-        (err) => {
-          console.trace('notif:unlove', err);
-        },
-      );
-    },
-  );
+  await col.updateOne(criteria, { $inc: { n: -1 }, $pull: { lov: loverUid } });
+  const res = await col.findOne(criteria);
+  if (!res.lov || res.lov.length == 0 || res.n < 1) col.deleteOne(criteria);
+  else
+    col.updateOne(criteria, { $set: { uIdLast: res.lov[res.lov.length - 1] } });
+  invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
 };
 
 exports.post = function (post) {
