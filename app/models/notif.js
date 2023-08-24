@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * notif model
  * stores and retrieves user notifications, and send emails when required
@@ -53,14 +55,6 @@ function invalidateUserNotifsCache(uId) {
   else delete exports.userNotifsCache['' + uId]; // => force fetch on next request
 }
 
-function logErrors(cb) {
-  return function (err, res) {
-    res = res || { error: err };
-    if (res.error) console.log(res);
-    cb && cb(res);
-  };
-}
-
 function detectTo(p) {
   for (const i in p) {
     const uId = (p[i] || {}).uId;
@@ -75,33 +69,34 @@ function updateNotif(q, p, cb) {
   p.$set = p.$set || {};
   p.$set.t = Math.round(new Date().getTime() / 1000);
   const to = detectTo(p);
-  db['notif'].updateOne(
-    q,
-    p,
-    { upsert: true, /*w:0*/ safe: true },
-    logErrors(function (res) {
+  db['notif']
+    .updateOne(q, p, { upsert: true })
+    .then(
+      (res) => cb?.(res),
+      (err) => cb?.({ error: err }) ?? console.trace('updateNotif', err),
+    )
+    .finally(() => {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res);
-    }),
-  );
+    });
 }
 
 function insertNotif(to, p, cb) {
   p = p || {};
   p.t = Math.round(new Date().getTime() / 1000);
   p.uId = to.splice ? to : ['' + to];
-  db['notif'].insertOne(
-    p,
-    { /*w:0*/ safe: true },
-    logErrors(async function (res) {
-      invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
-      cb &&
-        cb(
+  db['notif']
+    .insertOne(p)
+    .then(
+      async (res) =>
+        cb?.(
           res?.insertedId &&
             (await db['notif'].findOne({ _id: res.insertedId })),
-        );
-    }),
-  );
+        ),
+      (err) => cb?.({ error: err }) ?? console.trace('insertNotif', err),
+    )
+    .finally(() => {
+      invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
+    });
 }
 
 function pushNotif(to, q, set, push, cb) {
@@ -110,18 +105,19 @@ function pushNotif(to, q, set, push, cb) {
   if (!(push || {}).uId) set.uId = ['' + to];
   const p = { $set: set };
   if (push) p.$push = push;
-  db['notif'].updateOne(
-    q,
-    p,
-    { upsert: true, /*w:0*/ safe: true },
-    logErrors(function (res) {
+  db['notif']
+    .updateOne(q, p, { upsert: true })
+    .then(
+      (res) => cb?.(res),
+      (err) => cb?.({ error: err }) ?? console.trace('pushNotif', err),
+    )
+    .finally(() => {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res);
-    }),
-  );
+    });
 }
 
-function makeLink(text /*, url*/) {
+function makeLink(text, url) {
+  url; // just to ignore ts(6133): 'url' is declared but its value is never read.
   //return "<a href='" + url + "'>" + snip.htmlEntities(text) + "</a>";
   return '<span>' + snip.htmlEntities(text) + '</span>';
 }
@@ -130,7 +126,7 @@ function makeLink(text /*, url*/) {
 
 const extractObjectID = (str) => str.match(/[0-9a-f]{24}/)[0];
 
-exports.clearUserNotifsForPost = function (uId, pId) {
+exports.clearUserNotifsForPost = async function (uId, pId) {
   if (!uId || !pId) return;
   const idList = [pId];
   try {
@@ -142,62 +138,44 @@ exports.clearUserNotifsForPost = function (uId, pId) {
       ),
     );
   } catch (e) {
-    console.error('error in clearUserNotifsForPost:', e);
+    console.trace('error in clearUserNotifsForPost:', e);
   }
-  db['notif'].updateOne(
-    { _id: { $in: idList } },
-    { $pull: { uId: uId } },
-    { safe: true /*w:0*/ },
-    function (err) {
-      if (err) console.log(err);
+  db['notif']
+    .updateOne({ _id: { $in: idList } }, { $pull: { uId: uId } })
+    .catch((err) => console.trace('clearUserNotifsForPost', err))
+    .finally(() => {
       // remove documents with empty uid
-      db['notif'].deleteMany(
-        { _id: { $in: idList }, uId: { $size: 0 } },
-        { multi: true /*w: 0*/ },
-        () => invalidateUserNotifsCache(uId),
-      );
-    },
-  );
+      db['notif']
+        .deleteMany({ _id: { $in: idList }, uId: { $size: 0 } })
+        .finally(() => invalidateUserNotifsCache(uId));
+    });
 };
 
+/** WARNING: for automated tests only. */
 exports.clearAllNotifs = () =>
-  db['notif'].deleteMany().then(() => {
+  db['notif'].deleteMany({}).then(() => {
     exports.userNotifsCache = {}; // => force fetch on next request
   });
 
-exports.clearUserNotifs = function (uId, cb) {
-  if (!uId) return;
-  db['notif']
+/** @param {string} uId */
+exports.clearUserNotifs = async function (uId, cb) {
+  if (!uId) return cb?.({ error: 'missing uId' });
+  const idsToRemove = [];
+  // delete records that were only associated to that user
+  // note: we may delete those in one command, using https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length
+  await db['notif']
     .find({ uId: uId }, { limit: 1000 })
     .project({ uId: 1 })
-    .then((cursor) => {
-      const idsToRemove = [];
-      function whenDone() {
-        // delete records that were only associated to that user
-        db['notif'].deleteMany(
-          { _id: { $in: idsToRemove } },
-          { multi: true, safe: true },
-          function () {
-            // ...then, remove the user from remaining records
-            db['notif'].updateMany(
-              { uId: uId },
-              { $pull: { uId: uId } },
-              { multi: true, w: 0 },
-              () => {
-                invalidateUserNotifsCache(uId);
-                cb && cb();
-              },
-            );
-          },
-        );
-      }
-      cursor.forEach(
-        (err, item) => {
-          if (item && item.uId.length === 1) idsToRemove.push(item._id);
-        },
-        () => whenDone(),
-      );
+    .forEach((item) => {
+      // reminder: item.uId is an array of user ids
+      if (item && item.uId.length === 1) idsToRemove.push(item._id);
     });
+  await db['notif'].deleteMany({ _id: { $in: idsToRemove } });
+  // ...then, remove the user from remaining records
+  // @ts-ignore ts(2322), Type 'string' is not assignable to type 'never', cf https://www.mongodb.com/community/forums/t/type-objectid-is-not-assignable-to-type-never/139699
+  await db['notif'].updateMany({ uId: uId }, { $pull: { uId: uId } });
+  invalidateUserNotifsCache(uId);
+  cb && cb();
 };
 
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
@@ -243,16 +221,13 @@ exports.getUserNotifs = function (uid, handler) {
 // generation notification method
 
 exports.html = function (uId, html, href, img) {
-  db['notif'].insertOne(
-    {
-      t: Math.round(new Date().getTime() / 1000),
-      uId: [uId],
-      html: html,
-      href: href,
-      img: img,
-    },
-    { w: 0 },
-  );
+  db['notif'].insertOne({
+    t: Math.round(new Date().getTime() / 1000),
+    uId: [uId],
+    html: html,
+    href: href,
+    img: img,
+  });
   invalidateUserNotifsCache(uId);
 };
 
@@ -263,49 +238,39 @@ exports.love = function (loverUid, post, callback) {
   const author = mongodb.usernames['' + post.uId];
   if (!user) throw new Error('user not found');
   if (!author) throw new Error(`post author not found`);
-  db['notif'].updateOne(
-    { _id: post._id + '/loves' },
-    {
-      $set: {
-        eId: post.eId,
-        name: post.name,
-        t: Math.round(new Date().getTime() / 1000),
-        uIdLast: loverUid, // last lover of this post
-        uId: [post.uId],
+  db['notif']
+    .updateOne(
+      { _id: post._id + '/loves' },
+      {
+        $set: {
+          eId: post.eId,
+          name: post.name,
+          t: Math.round(new Date().getTime() / 1000),
+          uIdLast: loverUid, // last lover of this post
+          uId: [post.uId],
+        },
+        $push: { lov: loverUid },
+        $inc: { n: 1 },
       },
-      $push: { lov: loverUid },
-      $inc: { n: 1 },
-    },
-    { upsert: true, w: 0 },
-    callback,
-  );
+      { upsert: true },
+    )
+    .then(
+      (res) => callback?.(null, res),
+      (err) => callback?.(err) ?? console.trace('love error:', err),
+    );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);
 };
 
-exports.unlove = function (loverUid, pId) {
+exports.unlove = async function (loverUid, pId) {
   const criteria = { _id: pId + '/loves' };
   const col = db['notif'];
-  col.updateOne(
-    criteria,
-    { $inc: { n: -1 }, $pull: { lov: loverUid } },
-    { safe: true },
-    function () {
-      col.findOne(criteria, function (err, res) {
-        if (res) {
-          if (!res.lov || res.lov.length == 0 || res.n < 1)
-            col.deleteOne(criteria, { w: 0 });
-          else
-            col.updateOne(
-              criteria,
-              { $set: { uIdLast: res.lov[res.lov.length - 1] } },
-              { w: 0 },
-            );
-          invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
-        }
-      });
-    },
-  );
+  await col.updateOne(criteria, { $inc: { n: -1 }, $pull: { lov: loverUid } });
+  const res = await col.findOne(criteria);
+  if (!res.lov || res.lov.length === 0 || res.n < 1) col.deleteOne(criteria);
+  else
+    col.updateOne(criteria, { $set: { uIdLast: res.lov[res.lov.length - 1] } });
+  invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
 };
 
 exports.post = function (post) {
@@ -346,7 +311,7 @@ exports.repost = function (reposterUid, post) {
       $push: { reposters: reposterUid },
       $inc: { n: 1 },
     },
-    { upsert: true, w: 0 },
+    { upsert: true },
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendRepost(reposter, post, author /*.email*/);
@@ -382,7 +347,7 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
         },
         $push: { uId: favoritedId },
       },
-      { upsert: true, w: 0 },
+      { upsert: true },
     );
     invalidateUserNotifsCache(favoritedId);
     notifEmails.sendSubscribedToUser(sender, favorited, cb); // may reject with "Permission denied, wrong credentials"
