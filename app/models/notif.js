@@ -122,7 +122,8 @@ function pushNotif(to, q, set, push, cb) {
   );
 }
 
-function makeLink(text /*, url*/) {
+function makeLink(text, url) {
+  url; // just to ignore ts(6133): 'url' is declared but its value is never read.
   //return "<a href='" + url + "'>" + snip.htmlEntities(text) + "</a>";
   return '<span>' + snip.htmlEntities(text) + '</span>';
 }
