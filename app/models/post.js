@@ -311,11 +311,7 @@ exports.rePost = function (pId, repostObj, handler) {
           notif.repost(repostObj.uId, postObj);
           notif.post(postObj);
           collection
-            .updateOne(
-              { _id: ObjectId('' + pId) },
-              { $inc: { nbR: 1 } },
-              { w: 0 },
-            )
+            .updateOne({ _id: ObjectId('' + pId) }, { $inc: { nbR: 1 } })
             .then(() => {
               trackModel.updateByEid(postObj.eId);
             });
@@ -360,7 +356,6 @@ exports.deletePost = function (pId, uId, handler) {
         collection.updateOne(
           { _id: ObjectId('' + postObj.repost.pId) },
           { $inc: { nbR: -1 } },
-          { w: 0 },
         );
       trackModel.updateByEid(postObj.eId);
     } else {
@@ -428,15 +423,10 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
     'pl.id': parseInt(plId),
   };
   const update = { $set: { pl: { id: parseInt(plId), name: plName } } };
-  mongodb.collections['post'].updateMany(
-    criteria,
-    update,
-    { multi: true },
-    function (err, res) {
-      if (err) console.log(err);
-      if (handler) handler(res);
-    },
-  );
+  mongodb.collections['post'].updateMany(criteria, update, function (err, res) {
+    if (err) console.log(err);
+    if (handler) handler(res);
+  });
 };
 
 /** Delete a user's playlist */
@@ -446,15 +436,10 @@ exports.unsetPlaylist = function (uId, plId, handler) {
     'pl.id': parseInt(plId),
   };
   const update = { $unset: { pl: 1 } };
-  mongodb.collections['post'].updateMany(
-    criteria,
-    update,
-    { multi: true },
-    function (err, res) {
-      if (err) console.log('post.unsetPlaylist =>', err);
-      if (handler) handler(res);
-    },
-  );
+  mongodb.collections['post'].updateMany(criteria, update, function (err, res) {
+    if (err) console.log('post.unsetPlaylist =>', err);
+    if (handler) handler(res);
+  });
 };
 
 exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
