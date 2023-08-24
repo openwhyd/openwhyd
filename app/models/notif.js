@@ -173,20 +173,17 @@ exports.clearUserNotifs = function (uId, cb) {
     .forEach((err, item) => {
       if (item && item.uId.length === 1) idsToRemove.push(item._id);
     })
-    .then(function whenDone() {
+    .then(async function whenDone() {
       // delete records that were only associated to that user
-      db['notif'].deleteMany({ _id: { $in: idsToRemove } }, function () {
-        // ...then, remove the user from remaining records
-        db['notif'].updateMany(
-          { uId: uId },
-          { $pull: { uId: uId } },
-          { multi: true, w: 0 },
-          () => {
-            invalidateUserNotifsCache(uId);
-            cb && cb();
-          },
-        );
-      });
+      await db['notif'].deleteMany({ _id: { $in: idsToRemove } });
+      // ...then, remove the user from remaining records
+      await db['notif'].updateMany(
+        { uId: uId },
+        { $pull: { uId: uId } },
+        { multi: true, w: 0 },
+      );
+      invalidateUserNotifsCache(uId);
+      cb && cb();
     });
 };
 
