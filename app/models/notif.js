@@ -13,6 +13,7 @@ const notifEmails = require('../models/notifEmails.js');
 
 exports.userNotifsCache = {}; // uId -> { t, notifs: [pId, topic, t, lastAuthor, n] }
 
+/** @type {{ notif: import("mongodb").Collection<Document & { uId: string[] }> }} */
 const db = mongodb.collections;
 
 /**
