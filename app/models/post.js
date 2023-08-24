@@ -32,7 +32,10 @@ function processPosts(results) {
 // core functions
 
 exports.count = function (q, o, cb) {
-  mongodb.collections['post'].countDocuments(q, o || {}, cb);
+  mongodb.collections['post'].countDocuments(q, o || {}).then(
+    (res) => cb(null, res),
+    (err) => cb(err),
+  );
 };
 
 function processAdvQuery(query, params, options) {
@@ -158,11 +161,9 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
 };
 
 exports.countUserPosts = function (uid, handler) {
-  mongodb.collections['post'].countDocuments(
-    { uId: uid, rTo: null },
-    function (err, result) {
-      handler(result);
-    },
+  mongodb.collections['post'].countDocuments({ uId: uid, rTo: null }).then(
+    (res) => handler(res),
+    (err) => console.trace('countUserPosts', err),
   );
 };
 
@@ -170,12 +171,9 @@ exports.model = exports;
 
 // used by apiPost (for loves)
 exports.fetchPostById = function (pId, handler) {
-  mongodb.collections['post'].findOne(
-    { _id: ObjectId('' + pId) },
-    function (err, res) {
-      if (err) console.log(err);
-      handler(res);
-    },
+  mongodb.collections['post'].findOne({ _id: ObjectId('' + pId) }).then(
+    (res) => handler(res),
+    (err) => console.trace('fetchPostsById', err),
   );
 };
 
@@ -215,9 +213,10 @@ exports.unlovePost = function (pId, uId, handler) {
 };
 
 exports.countLovedPosts = function (uid, callback) {
-  db['post'].countDocuments({ lov: '' + uid }, function (err, count) {
-    callback(count);
-  });
+  db['post'].countDocuments({ lov: '' + uid }).then(
+    (res) => callback(res),
+    (err) => console.trace('countLovedPosts', err),
+  );
 };
 
 function notifyMentionedUsers(post, cb) {
@@ -264,22 +263,20 @@ exports.savePost = function (postObj, handler) {
       delete update.$set.pl;
       update.$unset = { pl: 1 };
     }
-    mongodb.collections['post'].updateOne(
-      { _id: ObjectId('' + pId) },
-      update,
-      function (error) {
-        if (error) console.trace('post update error', error);
-        mongodb.collections['post'].findOne(
-          { _id: ObjectId('' + pId) },
-          whenDone,
+    mongodb.collections['post']
+      .updateOne({ _id: ObjectId('' + pId) }, update)
+      .catch((error) => console.trace('post update error', error))
+      .finally(() => {
+        mongodb.collections['post'].findOne({ _id: ObjectId('' + pId) }).then(
+          (res) => whenDone(null, res),
+          (err) => whenDone(err),
         );
-      },
-    );
+      });
   } else
-    mongodb.collections['post'].insertOne(postObj, function (error, result) {
-      if (error) console.trace('post update error', error);
-      whenDone(error, error ? {} : { _id: result.insertedId });
-    });
+    mongodb.collections['post'].insertOne(postObj).then(
+      (res) => whenDone(null, { _id: res.insertedId }),
+      (err) => whenDone(err),
+    );
 };
 
 const fieldsToCopy = {
@@ -307,33 +304,34 @@ exports.rePost = function (pId, repostObj, handler) {
     delete repostObj._id;
     if (repostObj.pl && typeof repostObj.pl.id !== 'number')
       repostObj.pl.id = parseInt('' + repostObj.pl.id);
-    collection.insertOne(repostObj, async function (error, result) {
-      if (error) {
-        console.error('post.rePost() error: ', error);
+    collection.insertOne(repostObj).then(
+      async function (result) {
+        if (repostObj.uId != repostObj.repost.uId) {
+          notif.repost(repostObj.uId, postObj);
+          notif.post(postObj);
+          collection
+            .updateOne(
+              { _id: ObjectId('' + pId) },
+              { $inc: { nbR: 1 } },
+              { w: 0 },
+            )
+            .then(() => {
+              trackModel.updateByEid(postObj.eId);
+            });
+        }
+        const post = await mongodb.collections['post'].findOne({
+          _id: ObjectId('' + result.insertedId),
+        });
+        //searchModel.indexPost(post);
+        searchModel.indexTyped('post', post);
+        notifyMentionedUsers(post);
+        handler(post);
+      },
+      (err) => {
+        console.trace('post.rePost() error: ', err);
         handler();
-        return;
-      }
-      if (repostObj.uId != repostObj.repost.uId) {
-        notif.repost(repostObj.uId, postObj);
-        notif.post(postObj);
-        collection
-          .updateOne(
-            { _id: ObjectId('' + pId) },
-            { $inc: { nbR: 1 } },
-            { w: 0 },
-          )
-          .then(() => {
-            trackModel.updateByEid(postObj.eId);
-          });
-      }
-      const post = await mongodb.collections['post'].findOne({
-        _id: ObjectId('' + result.insertedId),
-      });
-      //searchModel.indexPost(post);
-      searchModel.indexTyped('post', post);
-      notifyMentionedUsers(post);
-      handler(post);
-    });
+      },
+    );
   });
 };
 
@@ -343,24 +341,27 @@ exports.deletePost = function (pId, uId, handler) {
     _id: ObjectId(pId),
   };
   if (uId) q.uId = uId;
-  exports.fetchPostById(pId, function (postObj) {
+  exports.fetchPostById(pId, async function (postObj) {
     if (postObj) {
       if (postObj.uId !== uId) {
         handler(new Error("can't delete another user's post"));
         return;
       }
-      collection.deleteOne(q, function (error, result) {
-        if (error) console.trace('post.deletePost() error: ', error);
-        searchModel.deleteDoc('post', pId);
-        handler(null, result);
-        if (postObj.repost)
-          collection.updateOne(
-            { _id: ObjectId('' + postObj.repost.pId) },
-            { $inc: { nbR: -1 } },
-            { w: 0 },
-          );
-        trackModel.updateByEid(postObj.eId);
-      });
+      let result = null;
+      try {
+        result = await collection.deleteOne(q);
+      } catch (error) {
+        console.trace('post.deletePost() error: ', error);
+      }
+      searchModel.deleteDoc('post', pId);
+      handler(null, result);
+      if (postObj.repost)
+        collection.updateOne(
+          { _id: ObjectId('' + postObj.repost.pId) },
+          { $inc: { nbR: -1 } },
+          { w: 0 },
+        );
+      trackModel.updateByEid(postObj.eId);
     } else {
       handler(new Error('post not found'));
     }
@@ -375,16 +376,12 @@ exports.incrPlayCounter = function (pId, cb) {
   } catch (err) {
     cb();
   }
-  mongodb.collections['post'].updateOne(
-    { _id },
-    { $inc: { nbP: 1 } },
-    function (err) {
-      if (err) console.log(err);
-      exports.fetchPostById(pId, function (postObj) {
-        if (postObj) trackModel.updateByEid(postObj.eId);
-        cb && cb(postObj || err);
-      });
+  mongodb.collections['post'].updateOne({ _id }, { $inc: { nbP: 1 } }).then(
+    (postObj) => {
+      if (postObj) trackModel.updateByEid(postObj.eId);
+      cb?.(postObj);
     },
+    (err) => cb?.(err) ?? console.trace('incrPlayCounter', err),
   );
 };
 
@@ -409,12 +406,19 @@ exports.countPlaylistPosts = function (uId, plId, handler) {
     handler(result);
   }
   if (uId)
-    db['post'].countDocuments({ uId: uId, 'pl.id': parseInt(plId) }, handle);
-  else
-    db['post'].countDocuments(
-      { 'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] } },
-      handle,
+    db['post'].countDocuments({ uId: uId, 'pl.id': parseInt(plId) }).then(
+      (res) => handle(null, res),
+      (err) => handle(err),
     );
+  else
+    db['post']
+      .countDocuments({
+        'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] },
+      })
+      .then(
+        (res) => handle(null, res),
+        (err) => handle(err),
+      );
 };
 
 exports.setPlaylist = function (uId, plId, plName, handler) {
@@ -463,7 +467,10 @@ exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
         uId: uId,
         'pl.id': parseInt(plId),
       };
-      collection.updateOne(post, { $set: { order: order.length } }, next);
+      collection.updateOne(post, { $set: { order: order.length } }).then(
+        () => next(null),
+        (err) => next(err),
+      );
     }
   }
   next();
