@@ -59,24 +59,20 @@ const POST_FETCH_OPTIONS = {
 
 function save(track, cb, replace) {
   const op = replace ? track : { $set: track };
-  mongodb.collections['track'].updateOne(
-    { eId: track.eId },
-    op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
-    { upsert: true },
-    function (error, result) {
-      //console.log("=> saved hot track:", result);
-      if (error) console.error('track.save() db error:', error);
-      if (cb) cb(result);
-    },
-  );
+  mongodb.collections['track']
+    .updateOne(
+      { eId: track.eId },
+      op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
+      { upsert: true },
+    )
+    .then(cb, (error) => console.trace('track.save() db error:', error));
 }
 
+/** Delete a "hot track". */
 function remove(q, cb) {
-  mongodb.collections['track'].deleteOne(q, function (error, result) {
-    console.log('=> removed hot track:', q);
-    if (error) console.error('track.remove() error: ' + error.stack);
-    if (cb) cb(result);
-  });
+  mongodb.collections['track']
+    .deleteOne(q)
+    .then(cb, (error) => console.trace('track.remove() error:', error));
 }
 
 exports.countTracksWithField = function (fieldName, cb) {
@@ -102,17 +98,22 @@ exports.fetch = function (params, handler) {
 exports.fetchTrackByEid = function (eId, cb) {
   // in order to allow requests of soundcloud eId without hash (#):
   const eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
-  mongodb.collections['track'].findOne({ eId: eId }, function (err, track) {
-    if (!err && !track && eidPrefix)
-      mongodb.collections['track'].findOne(
-        { eId: new RegExp('^' + eidPrefix + '.*') },
-        function (err, track) {
-          if (track && track.eId.split('#')[0] != eidPrefix) track = null;
-          cb(err ? { error: err } : track);
-        },
-      );
-    else cb(err ? { error: err } : track);
-  });
+  mongodb.collections['track'].findOne({ eId: eId }).then(
+    function (track) {
+      if (!track && eidPrefix)
+        mongodb.collections['track']
+          .findOne({ eId: new RegExp('^' + eidPrefix + '.*') })
+          .then(
+            (track) => {
+              if (track && track.eId.split('#')[0] != eidPrefix) track = null;
+              cb(track);
+            },
+            (err) => cb(err ? { error: err } : track),
+          );
+      else cb(track);
+    },
+    (err) => cb({ error: err }),
+  );
 };
 
 // functions for fetching tracks and corresponding posts
