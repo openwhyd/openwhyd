@@ -55,14 +55,6 @@ function invalidateUserNotifsCache(uId) {
   else delete exports.userNotifsCache['' + uId]; // => force fetch on next request
 }
 
-function logErrors(cb) {
-  return function (err, res) {
-    res = res || { error: err };
-    if (res.error) console.log(res);
-    cb && cb(res);
-  };
-}
-
 function detectTo(p) {
   for (const i in p) {
     const uId = (p[i] || {}).uId;
@@ -77,32 +69,34 @@ function updateNotif(q, p, cb) {
   p.$set = p.$set || {};
   p.$set.t = Math.round(new Date().getTime() / 1000);
   const to = detectTo(p);
-  db['notif'].updateOne(
-    q,
-    p,
-    { upsert: true },
-    logErrors(function (res) {
+  db['notif']
+    .updateOne(q, p, { upsert: true })
+    .then(
+      (res) => cb?.(res),
+      (err) => cb?.({ error: err }) ?? console.trace('updateNotif', err),
+    )
+    .finally(() => {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res);
-    }),
-  );
+    });
 }
 
 function insertNotif(to, p, cb) {
   p = p || {};
   p.t = Math.round(new Date().getTime() / 1000);
   p.uId = to.splice ? to : ['' + to];
-  db['notif'].insertOne(
-    p,
-    logErrors(async function (res) {
-      invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
-      cb &&
-        cb(
+  db['notif']
+    .insertOne(p)
+    .then(
+      async (res) =>
+        cb?.(
           res?.insertedId &&
             (await db['notif'].findOne({ _id: res.insertedId })),
-        );
-    }),
-  );
+        ),
+      (err) => cb?.({ error: err }) ?? console.trace('insertNotif', err),
+    )
+    .finally(() => {
+      invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
+    });
 }
 
 function pushNotif(to, q, set, push, cb) {
@@ -111,15 +105,15 @@ function pushNotif(to, q, set, push, cb) {
   if (!(push || {}).uId) set.uId = ['' + to];
   const p = { $set: set };
   if (push) p.$push = push;
-  db['notif'].updateOne(
-    q,
-    p,
-    { upsert: true },
-    logErrors(function (res) {
+  db['notif']
+    .updateOne(q, p, { upsert: true })
+    .then(
+      (res) => cb?.(res),
+      (err) => cb?.({ error: err }) ?? console.trace('pushNotif', err),
+    )
+    .finally(() => {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res);
-    }),
-  );
+    });
 }
 
 function makeLink(text, url) {
@@ -132,7 +126,7 @@ function makeLink(text, url) {
 
 const extractObjectID = (str) => str.match(/[0-9a-f]{24}/)[0];
 
-exports.clearUserNotifsForPost = function (uId, pId) {
+exports.clearUserNotifsForPost = async function (uId, pId) {
   if (!uId || !pId) return;
   const idList = [pId];
   try {
@@ -144,19 +138,17 @@ exports.clearUserNotifsForPost = function (uId, pId) {
       ),
     );
   } catch (e) {
-    console.error('error in clearUserNotifsForPost:', e);
+    console.trace('error in clearUserNotifsForPost:', e);
   }
-  db['notif'].updateOne(
-    { _id: { $in: idList } },
-    { $pull: { uId: uId } },
-    function (err) {
-      if (err) console.log(err);
+  db['notif']
+    .updateOne({ _id: { $in: idList } }, { $pull: { uId: uId } })
+    .catch((err) => console.trace('clearUserNotifsForPost', err))
+    .finally(() => {
       // remove documents with empty uid
-      db['notif'].deleteMany({ _id: { $in: idList }, uId: { $size: 0 } }, () =>
-        invalidateUserNotifsCache(uId),
-      );
-    },
-  );
+      db['notif']
+        .deleteMany({ _id: { $in: idList }, uId: { $size: 0 } })
+        .finally(() => invalidateUserNotifsCache(uId));
+    });
 };
 
 /** WARNING: for automated tests only. */
