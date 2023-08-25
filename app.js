@@ -14,6 +14,15 @@ if (!process.env.DISABLE_DATADOG) {
   process.datadogTracer = require('dd-trace').init({
     profiling: true, // cf https://docs.datadoghq.com/fr/profiler/enabling/nodejs/?tab=incode
   });
+  process.datadogTracer.use('express', {
+    hooks: {
+      request: (span, req) => {
+        // @ts-ignore ts(2339): Property 'session' does not exist on type 'IncomingMessage'. // it's added by a middleware
+        const userId = req.session?.whydUid;
+        span.setTag('customer.id', userId);
+      },
+    },
+  });
 }
 
 const util = require('util');
