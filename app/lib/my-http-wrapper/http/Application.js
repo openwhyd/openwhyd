@@ -247,7 +247,8 @@ function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
   // also push to Datadog APM, cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
   if (userId) {
     try {
-      process.datadogTracer?.scope().active()?.setTag('customer.id', userId);
+      // process.datadogTracer?.scope().active()?.setTag('customer.id', userId); // Note: this only works from a hook, using the "express" plugin, cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#span-hooks
+      process.datadogTracer?.setUser({ id: userId }); // cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#user-identification
     } catch (err) {
       console.error(`datadog error: ${err.message}`);
       console.error({ datadogTracer: typeof process.datadogTracer });
