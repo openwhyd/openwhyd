@@ -14,6 +14,7 @@ const { ImageStorage } = require('../../../infrastructure/ImageStorage.js');
 const { unsetPlaylist } = require('../../../models/post.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
+const DATADOG_USER_LOG_THRESHOLD = 2000;
 
 // From Response.js
 
@@ -79,12 +80,17 @@ const makeStatsUpdater = () =>
       console.log(
         `◀ ${reqId} responds ${res.statusCode} after ${duration} ms`,
       );
-      appendSlowQueryToAccessLog({
-        startDate,
-        req,
-        userId,
-        userAgent,
-      });
+      if (duration >= DATADOG_USER_LOG_THRESHOLD && userId) {
+        sendUserIdToDataDog(userId);
+      }
+      if (duration >= LOG_THRESHOLD) {
+        logSlowRequest({
+          startDate,
+          req,
+          userId,
+          userAgent,
+        });
+      }
     });
 
     next();
@@ -231,9 +237,8 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
   });
 }
 
-function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
+function logSlowRequest({ startDate, req, userId, userAgent }) {
   const duration = Date.now() - startDate;
-  if (duration < LOG_THRESHOLD) return;
   const logLine = [
     startDate.toUTCString(),
     req.method,
@@ -243,17 +248,19 @@ function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
   if (userId) logLine.push('uid=' + userId);
   if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
   console.error('slow request:', logLine.join(' '));
+}
 
-  // also push to Datadog APM, cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
-  if (userId) {
-    try {
-      // process.datadogTracer?.scope().active()?.setTag('customer.id', userId); // Note: this only works from a hook, using the "express" plugin, cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#span-hooks
-      process.datadogTracer?.setUser({ id: userId }); // cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#user-identification
-    } catch (err) {
-      console.error(`datadog error: ${err.message}`);
-      console.error({ datadogTracer: typeof process.datadogTracer });
-      console.error({ scope: typeof process.datadogTracer?.scope() });
-      console.error({ active: typeof process.datadogTracer?.scope().active() });
-    }
+/**
+ * Push the request's user ID to Datadog APM, to help us reproduce performance issues.
+ * cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
+ */
+function sendUserIdToDataDog(userId) {
+  try {
+    process.datadogTracer?.setUser({ id: userId }); // cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#user-identification
+  } catch (err) {
+    console.error(`datadog error: ${err.message}`);
+    console.error({ datadogTracer: typeof process.datadogTracer });
+    console.error({ scope: typeof process.datadogTracer?.scope() });
+    console.error({ active: typeof process.datadogTracer?.scope().active() });
   }
 }
