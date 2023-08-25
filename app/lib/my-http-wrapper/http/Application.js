@@ -14,7 +14,6 @@ const { ImageStorage } = require('../../../infrastructure/ImageStorage.js');
 const { unsetPlaylist } = require('../../../models/post.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
-const DATADOG_USER_LOG_THRESHOLD = 2000;
 
 // From Response.js
 
@@ -70,6 +69,10 @@ const makeStatsUpdater = () =>
     const userId = (req.session || {}).whydUid;
     const userAgent = req.headers['user-agent'];
 
+    if (userId) {
+      sendUserIdToDataDog(userId);
+    }
+
     sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
 
     // log whenever a request is slow to respond
@@ -80,9 +83,6 @@ const makeStatsUpdater = () =>
       console.log(
         `◀ ${reqId} responds ${res.statusCode} after ${duration} ms`,
       );
-      if (duration >= DATADOG_USER_LOG_THRESHOLD && userId) {
-        sendUserIdToDataDog(userId);
-      }
       if (duration >= LOG_THRESHOLD) {
         logSlowRequest({
           startDate,
