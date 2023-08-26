@@ -162,7 +162,7 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
 
 exports.countUserPosts = function (uid, handler) {
   mongodb.collections['post'].countDocuments(
-    { uId: uid, rTo: null },
+    { uId: uid },
     function (err, result) {
       handler(result);
     },
