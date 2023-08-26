@@ -176,11 +176,21 @@ exports.controller = function (request, reqParams, response) {
   }
 
   fetchSubscriptions(loggedInUser.id, function (uidList) {
+    if (uidList.length > 5000) {
+      console.trace(
+        `potential expensive activity query, for user ${loggedInUser.id}, uidList length: ${uidList.length}`,
+      );
+      console.time(`recentActivityController_${loggedInUser.id}`);
+    }
+
     exports.generateActivityFeed(
       uidList,
       uidList,
       reqParams,
       function (pageVars) {
+        if (uidList.length > 5000) {
+          console.timeEnd(`recentActivityController_${loggedInUser.id}`);
+        }
         if (!pageVars.rawFeed) {
           const fullUidList = uidList.slice(0, uidList.length);
           fullUidList.push(loggedInUser.id);

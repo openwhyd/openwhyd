@@ -223,14 +223,22 @@ exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
 };
 
 /**
+ * Creates an object from an array, by converting its values to keys.
+ * E.g. [ "a", "b", "c" ] --> { a: true, b: true, c: true }
  * @template ItemType
  * @template ValueType
  * @param {ItemType[]} array
- * @param {ValueType} value
+ * @param {ValueType} value - value to set for each key of the output set
  * @returns {Record<ItemType, ValueType>}
  */
 exports.arrayToSet = function (array, value = true) {
-  return array.reduce((acc, item) => ({ ...acc, [item]: value ?? true }), {});
+  const set = {};
+  for (const i in array) {
+    if (array[i]) {
+      set[array[i]] = value ?? true;
+    }
+  }
+  return set;
 };
 
 exports.objArrayToSet = function (array, attr, val) {

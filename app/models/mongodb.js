@@ -141,11 +141,12 @@ exports.forEach2 = async function (colName, params, handler) {
         handler(item, item ? next : undefined, (cb) =>
           cursor.close().then(cb, cb),
         );
+        // TODO: close the cursor whenever we've run out of documents?
       },
       (err) => {
         console.error('[db] mongodb.forEach2 ERROR', err);
         handler({ error: err }, undefined, (cb) => cursor.close().then(cb, cb));
-        cursor.close();
+        cursor.close(); // TODO: prevent closing twice?
       },
     );
   })();

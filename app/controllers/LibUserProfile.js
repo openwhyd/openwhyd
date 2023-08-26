@@ -20,7 +20,7 @@ const MAX_FRIENDS = 6;
 const MAX_HISTORY = 3;
 const MAX_SUBSCRIPTIONS = 50;
 
-// used to render the sidebar
+/** Fetches the user's own activity history, to be displayed in their profile's sidebar. */
 function fetchActivity(options, cb) {
   activityModel.fetchHistoryFromUidList(
     [options.user.id],
@@ -147,11 +147,23 @@ exports.fetchAndRender = function (options, callback) {
           mySubscr.subscriptions,
           'id',
         );
+
+        if (mySubscrUidList.length > 5000) {
+          console.trace(
+            `potential expensive activity query, for user ${options.user.id}, uidList length: ${mySubscrUidList.length}`,
+          );
+          console.time(`fetchAndRender_${options.user.id}`);
+        }
+
         activityController.generateActivityFeed(
           [options.user.id],
           mySubscrUidList,
           options,
           function (result) {
+            if (mySubscrUidList.length > 5000) {
+              console.timeEnd(`fetchAndRender_${options.user.id}`);
+            }
+
             for (const i in result.recentActivity.items)
               if (result.recentActivity.items[i].subscriptions) {
                 result.recentActivity.items[i].subscribedUsers =
