@@ -56,9 +56,9 @@ function prepareSidebar(uidList, options, cb) {
     feedTemplate.shouldRenderWholeProfilePage(options) &&
     options.format != 'json'
   ) {
-    //console.time("fetchRecentActivity");
+    console.time('prepareSidebar_fetchRecentActivity');
     fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
-      //console.timeEnd("fetchRecentActivity");
+      console.timeEnd('prepareSidebar_fetchRecentActivity');
       if (activities && activities.length)
         options.recentActivity = { items: activities };
       //console.time("fetchLast");
