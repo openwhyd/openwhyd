@@ -1,4 +1,4 @@
-// $ npx mocha test/unit/unit-tests.js
+// $ npx mocha test/unit/snip-tests.js
 
 const assert = require('assert');
 
