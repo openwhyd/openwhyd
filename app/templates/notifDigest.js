@@ -6,7 +6,6 @@
 
 const config = require('../models/config.js');
 const templateLoader = require('../templates/templateLoader.js');
-const snip = require('../snip.js');
 
 // LOAD TEMPLATES
 
@@ -51,7 +50,7 @@ function aggregateByPost(setList) {
         (postSet[pId].count || 0) + (postSet[pId][setName] || []).length;
       postSet[pId].plural = postSet[pId].count > 1 ? 's' : '';
     }
-  return snip.values(postSet);
+  return Object.values(postSet);
 }
 
 const INIT_PARAMS = {
