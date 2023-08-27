@@ -204,16 +204,6 @@ exports.arrayHas = function (array, value) {
   return false;
 };
 
-/** @deprecated because the usefulness of this function is not clear, and it mutates parameters. used just once, in notifDigest.js. */
-exports.values = function (set) {
-  const list = [];
-  for (const i in set)
-    if (set[i])
-      // TODO: remove this line
-      list.push(set[i]);
-  return list;
-};
-
 exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   const array = [];
   for (const k in map) {
