@@ -173,7 +173,7 @@ const startOpenwhydServerWith = async (env) =>
     });
   });
 
-/** Refresh openwhyd's in-memory cache of users, e.g. to allow freshly added users to login. */
+/* refresh openwhyd's in-memory cache of users, to allow this user to login */
 async function refreshOpenwhydCache(urlPrefix) {
   const res = await promisify(request.post)(urlPrefix + '/testing/refresh');
   if (res.statusCode !== 200)
@@ -182,17 +182,16 @@ async function refreshOpenwhydCache(urlPrefix) {
 
 /** @param {{startWithEnv:unknown, port?: number | string | undefined}} options */
 async function startOpenwhydServer({ startWithEnv, port }) {
-  const env = {
-    ...(startWithEnv && (await loadEnvVars(startWithEnv))),
-    ...process.env, // allow overrides
-  };
-  await resetTestDb({ silent: true, env });
   if (port) {
-    return { URL: `http://localhost:${port}` };
+    const URL = `http://localhost:${port}`;
+    await refreshOpenwhydCache(URL);
+    return { URL };
   } else if (startWithEnv) {
+    const env = {
+      ...(await loadEnvVars(startWithEnv)),
+      ...process.env, // allow overrides
+    };
     return { ...(await startOpenwhydServerWith(env)), env }; // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
-  } else {
-    throw new Error('missing parameter: please provide startWithEnv or port');
   }
 }
 
