@@ -10,18 +10,18 @@ const backend = new OpenwhydTestEnv({
   startWithEnv: START_WITH_ENV_FILE,
 });
 
-before(async () => {
-  if (START_WITH_ENV_FILE) {
-    await backend.setup();
-  }
-});
-
-after(async () => {
-  await backend.release();
-});
-
 describe(`post api - legacy`, function () {
   before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites (there are side effects between tests in this file...)
+
+  before(async () => {
+    if (START_WITH_ENV_FILE) {
+      await backend.setup();
+    }
+  });
+
+  after(async () => {
+    await backend.release();
+  });
 
   let pId, uId;
   const post = {
@@ -165,6 +165,16 @@ describe(`post api - legacy`, function () {
 describe(`post api - independent tests`, function () {
   // to prevent side effects between tests
   beforeEach(cleanup.bind(this, { silent: true }));
+
+  before(async () => {
+    if (START_WITH_ENV_FILE) {
+      await backend.setup();
+    }
+  });
+
+  after(async () => {
+    await backend.release();
+  });
 
   it('should delete a post', async function () {
     const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
