@@ -29,7 +29,7 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
+  beforeEach(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
 
   before(async () => {
     await openwhyd.setup();
@@ -573,12 +573,12 @@ describe(`post api`, function () {
         ),
       );
 
-    it('should increase the number of plays of the track', async () => {
+    it('should increase the number of plays of the post', async () => {
       // Given a post with 0 plays
       const postId = '000000000000000000000009';
       await insertPostWithZeroPlays(postId);
 
-      // When requesting to increase that counter
+      // When requesting to increase the play counter for that post
       await callPostApi({
         action: 'incrPlayCounter',
         pId: postId,
@@ -587,6 +587,25 @@ describe(`post api`, function () {
       // Then the number of plays of that post is 1
       const [postAfter] = await dumpMongoCollection(MONGODB_URL, 'post');
       assert.equal(postAfter.nbP, 1);
+    });
+
+    it('should increase the total number of plays of that track', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await insertPostWithZeroPlays(postId);
+      const [trackBefore] = await dumpMongoCollection(MONGODB_URL, 'track');
+      console.warn({ trackBefore });
+      assert.equal(trackBefore.nbP, 0);
+
+      // When requesting to increase the play counter for that post
+      const resBody = await callPostApi({
+        action: 'incrPlayCounter',
+        pId: postId,
+      }).then(({ body }) => JSON.parse(body));
+
+      // Then the post _id is returned
+      const [trackAfter] = await dumpMongoCollection(MONGODB_URL, 'track');
+      assert.equal(trackAfter.nbP, 1);
     });
   });
 });
