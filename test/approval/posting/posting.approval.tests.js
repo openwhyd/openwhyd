@@ -4,6 +4,15 @@ const approvals = require('approvals').mocha();
 const util = require('util');
 const request = require('request');
 const { URL_PREFIX } = require('../../fixtures.js');
+const {
+  makeJSONScrubber,
+  ObjectId,
+  dumpMongoCollection,
+  readMongoDocuments,
+  insertTestData,
+  OpenwhydTestEnv,
+  sortAndIndentAsJSON,
+} = require('../../approval-tests-helpers.js');
 
 const {
   START_WITH_ENV_FILE,
@@ -38,16 +47,12 @@ const makePostFromBk = (user) => ({
   },
 });
 
+const backend = new OpenwhydTestEnv({
+  startWithEnv: START_WITH_ENV_FILE,
+  port: PORT,
+});
+
 async function setupTestEnv() {
-  const {
-    makeJSONScrubber,
-    ObjectId,
-    dumpMongoCollection,
-    readMongoDocuments,
-    insertTestData,
-    startOpenwhydServer,
-    sortAndIndentAsJSON,
-  } = require('../../approval-tests-helpers.js');
   const api = require('../../api-client.js');
   const context = {
     api,
@@ -66,16 +71,13 @@ async function setupTestEnv() {
   };
   await insertTestData(MONGODB_URL, context.testDataCollections);
   // start openwhyd server
-  context.serverProcess = await startOpenwhydServer({
-    startWithEnv: START_WITH_ENV_FILE,
-    port: PORT,
-  });
+  await backend.setup(); // starts openwhyd, or refreshes its state if already running
   return context;
 }
 
-async function teardownTestEnv(context) {
-  if (context.serverProcess && !DONT_KILL) {
-    await context.serverProcess.exit();
+async function teardownTestEnv() {
+  if (!DONT_KILL) {
+    await backend.release();
   }
 }
 
