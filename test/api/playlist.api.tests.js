@@ -8,6 +8,8 @@ const { START_WITH_ENV_FILE } = process.env;
 const {
   startOpenwhydServer,
   dumpMongoCollection,
+  insertTestData,
+  ObjectId,
 } = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
@@ -68,5 +70,36 @@ describe(`playlist api`, function () {
     const { id, name } = JSON.parse(res.body);
     assert.equal(name, playlistName);
     assert.equal(id, 0);
+  });
+
+  it('should rename a playlist', async function () {
+    // Given a user that has one playlist
+    const userWithOnePlaylist = {
+      ...DUMMY_USER,
+      _id: ObjectId(DUMMY_USER.id),
+      pl: [{ id: 0, name: 'old name' }],
+    };
+    await insertTestData(MONGODB_URL, { user: [userWithOnePlaylist] });
+
+    // When the user renames their playlist
+    const newName = 'new name';
+    const res = await callPlaylistApi(jar, {
+      action: 'rename',
+      id: 0,
+      name: newName,
+    });
+
+    // Then the playlist is persisted for that user
+    const user = await dumpMongoCollection(MONGODB_URL, 'user').then((users) =>
+      users.find((user) => user._id.toString() === userWithOnePlaylist.id),
+    );
+    assert.deepEqual(user.pl, [{ id: 0, name: newName }]);
+
+    // And the API returns the playlist's id and new name
+    const { id, name } = JSON.parse(res.body);
+    assert.equal(name, newName);
+    assert.equal(id, 0);
+
+    // TODO: check that posts are updated too
   });
 });
