@@ -156,7 +156,7 @@ const startOpenwhydServerWith = async (env) =>
     // @ts-ignore
     serverProcess.exit = () =>
       new Promise((resolve) => {
-        if (serverProcess.killed) return resolve();
+        if (serverProcess.exitCode !== null) return resolve();
         serverProcess.on('close', resolve);
         if (serverProcess.kill(/*'SIGTERM'*/)) return;
         if (
