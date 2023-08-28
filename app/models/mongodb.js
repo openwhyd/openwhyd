@@ -132,7 +132,7 @@ exports.forEach2 = async function (colName, params, handler) {
 
   const { fields } = params ?? {};
   if (params) delete params.fields;
-  const cursor = await exports.collections[colName]
+  const cursor = exports.collections[colName]
     .find(q, params)
     .project(fields ?? {});
   (function next() {
