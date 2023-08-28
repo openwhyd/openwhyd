@@ -79,8 +79,10 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   let db;
 
   beforeAll(async () => {
-    if (PORT)
+    await backend.setup();
+    if (PORT) {
       await waitOn({ resources: [`http://localhost:${PORT}`], timeout: 1000 });
+    }
     // if this test times out, make sure to start MongoDB first: $ docker-compose up -d mongo
     mongoClient = await connectToMongoDB(MONGODB_URL);
     db = await mongoClient.db();
@@ -92,7 +94,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   beforeEach(async () => {
-    if (!DONT_KILL) await backend.release();
+    await backend.reset();
     await db.collection('user').deleteMany({}); // clear users
     await db.collection('post').deleteMany({}); // clear posts
     await db.collection('track').deleteMany({}); // clear tracks
@@ -111,7 +113,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         score: 2,
       },
     ]);
-    await backend.setup();
+    await backend.refreshCache();
     const json = await httpClient.get({
       url: `${backend.getURL()}/hot?limit=1&format=json`,
     });
@@ -135,7 +137,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         score: 2,
       },
     ]);
-    await backend.setup();
+    await backend.refreshCache();
     const json = await httpClient.get({
       url: `${backend.getURL()}/hot?skip=1&format=json`,
     });
@@ -165,7 +167,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         tracks.map((_, i) => ({ ...tracks[i], pId: posts[i]._id, score: i })),
       );
     await db.collection('post').insertMany(posts);
-    await backend.setup();
+    await backend.refreshCache();
     const json = await httpClient.get({
       url: `${backend.getURL()}/hot?format=json`,
     });
@@ -177,7 +179,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   it("updates the score of a track when it's liked", async () => {
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
-    await backend.setup();
+    await backend.refreshCache();
     const userSession = await loginUsers(backend, users);
     // user 0 posts track A
     const { _id } = await postTrack(backend, userSession[0], tracks[0]);
@@ -201,7 +203,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   it("updates the score of a track when it's reposted", async () => {
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
-    await backend.setup();
+    await backend.refreshCache();
     const userSession = await loginUsers(backend, users);
     // user 0 posts track A
     const { _id } = await postTrack(backend, userSession[0], tracks[0]);
