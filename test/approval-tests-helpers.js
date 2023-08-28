@@ -157,9 +157,8 @@ const startOpenwhydServerWith = async (env) =>
       new Promise((resolve) => {
         if (serverProcess.killed) return resolve();
         serverProcess.on('close', resolve);
-        if (!(serverProcess.kill(/*'SIGTERM'*/))) {
-          console.warn('🧟‍♀️ failed to kill childprocess!');
-        }
+        if (serverProcess.kill(/*'SIGTERM'*/)) return; // we will resolve when the `close` event is received
+        console.warn('🧟‍♀️ failed to kill childprocess!');
         if (serverProcess.pid) {
           try {
             process.kill(-serverProcess.pid, 'SIGINT');
