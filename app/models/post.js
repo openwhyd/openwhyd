@@ -376,9 +376,12 @@ exports.incrPlayCounter = function (pId, cb) {
     cb();
   }
   mongodb.collections['post'].updateOne({ _id }, { $inc: { nbP: 1 } }).then(
-    (postObj) => {
-      if (postObj) trackModel.updateByEid(postObj.eId);
-      cb?.(postObj);
+    async (/*updateRes*/) => {
+      const post = await new Promise((resolve) =>
+        exports.fetchPostById(pId, resolve),
+      );
+      if (post?.eId) trackModel.updateByEid(post.eId);
+      cb?.({});
     },
     (err) => cb?.(err) ?? console.trace('incrPlayCounter', err),
   );
