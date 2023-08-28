@@ -13,8 +13,6 @@ describe('security', function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(async () => await openwhyd.reset());
-
   before(async () => {
     await openwhyd.setup();
   });
@@ -22,6 +20,8 @@ describe('security', function () {
   after(async () => {
     await openwhyd.release();
   });
+
+  beforeEach(async () => await openwhyd.reset());
 
   describe('Open Redirect from /login', () => {
     it('should allow redirect to /stream', async () => {

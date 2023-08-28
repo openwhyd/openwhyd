@@ -11,8 +11,6 @@ describe('user api', function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(async () => await openwhyd.reset()); // to prevent side effects between tests
-
   before(async () => {
     await openwhyd.setup();
   });
@@ -20,6 +18,8 @@ describe('user api', function () {
   after(async () => {
     await openwhyd.release();
   });
+
+  beforeEach(async () => await openwhyd.reset()); // to prevent side effects between tests
 
   it("should return a 404 for user handle that doesn't exist", async () => {
     const { response } = await util.promisify(api.getRaw)(null, '/nobody');

@@ -28,10 +28,9 @@ describe(`Data Export API`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(async () => await openwhyd.reset()); // to prevent side effects between tests
-
   before(async () => {
     await openwhyd.setup();
+    async () => await openwhyd.reset(); // to prevent side effects between test suites
   });
 
   after(async () => {

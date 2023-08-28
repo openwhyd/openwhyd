@@ -9,8 +9,6 @@ describe('base api', function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(async () => await openwhyd.reset()); // to prevent side effects between tests
-
   before(async () => {
     await openwhyd.setup();
   });
@@ -18,6 +16,8 @@ describe('base api', function () {
   after(async () => {
     await openwhyd.release();
   });
+
+  beforeEach(async () => await openwhyd.reset()); // to prevent side effects between tests
 
   it("should return a 404 for URLs that don't exist", async () => {
     const { response } = await util.promisify(api.getRaw)(

@@ -21,8 +21,6 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(async () => await openwhyd.reset()); // to prevent side effects between test suites
-
   before(async () => {
     await openwhyd.setup();
   });
@@ -30,6 +28,8 @@ describe(`post api`, function () {
   after(async () => {
     await openwhyd.release();
   });
+
+  beforeEach(async () => await openwhyd.reset()); // to prevent side effects between tests
 
   beforeEach(async () => {
     post = {
