@@ -57,9 +57,14 @@ exports.resetTestDb = async (
   if (!env?.MONGODB_HOST) throw new Error('missing env var: MONGODB_HOST');
   if (!env?.MONGODB_PORT) throw new Error('missing env var: MONGODB_PORT');
   const resetDbProcess = childProcess.fork('test/reset-test-db.js', {
-    env,
-    silent,
+    // @ts-ignore
+    env: { ...env, ...(!silent ? { DEBUG: true } : {}) },
+    silent: true,
   });
+  if (!silent)
+    resetDbProcess.stdout.on('data', (txt) =>
+      console.debug(`[cleanup] ${txt}`),
+    );
   resetDbProcess.stderr.on('data', (txt) => console.error(`[cleanup] ${txt}`));
   resetDbProcess.on('error', (err) => console.trace('[cleanup] error:', err));
   return new Promise((resolve) => resetDbProcess.on('close', () => resolve()));
