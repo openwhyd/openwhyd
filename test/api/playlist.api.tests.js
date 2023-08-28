@@ -72,34 +72,64 @@ describe(`playlist api`, function () {
     assert.equal(id, 0);
   });
 
-  it('should rename a playlist', async function () {
-    // Given a user that has one playlist
-    const userWithOnePlaylist = {
-      ...DUMMY_USER,
-      _id: ObjectId(DUMMY_USER.id),
-      pl: [{ id: 0, name: 'old name' }],
-    };
-    await insertTestData(MONGODB_URL, { user: [userWithOnePlaylist] });
+  describe('`rename` action', () => {
+    it('should rename a playlist', async function () {
+      // Given a user that has one playlist
+      const userWithOnePlaylist = {
+        ...DUMMY_USER,
+        _id: ObjectId(DUMMY_USER.id),
+        pl: [{ id: 0, name: 'old name' }],
+      };
+      await insertTestData(MONGODB_URL, { user: [userWithOnePlaylist] });
 
-    // When the user renames their playlist
-    const newName = 'new name';
-    const res = await callPlaylistApi(jar, {
-      action: 'rename',
-      id: 0,
-      name: newName,
+      // When the user renames their playlist
+      const newName = 'new name';
+      const res = await callPlaylistApi(jar, {
+        action: 'rename',
+        id: 0,
+        name: newName,
+      });
+
+      // Then the playlist is persisted for that user
+      const user = await dumpMongoCollection(MONGODB_URL, 'user').then(
+        (users) =>
+          users.find((user) => user._id.toString() === userWithOnePlaylist.id),
+      );
+      assert.deepEqual(user.pl, [{ id: 0, name: newName }]);
+
+      // And the API returns the playlist's id and new name
+      const { id, name } = JSON.parse(res.body);
+      assert.equal(name, newName);
+      assert.equal(id, 0);
     });
 
-    // Then the playlist is persisted for that user
-    const user = await dumpMongoCollection(MONGODB_URL, 'user').then((users) =>
-      users.find((user) => user._id.toString() === userWithOnePlaylist.id),
-    );
-    assert.deepEqual(user.pl, [{ id: 0, name: newName }]);
+    it("should update the playlist's name in associated posts", async function () {
+      // Given a user that has one playlist that contains one post
+      const initialPlaylist = { id: 0, name: 'old name' };
+      const userWithOnePlaylist = {
+        ...DUMMY_USER,
+        _id: ObjectId(DUMMY_USER.id),
+        pl: [initialPlaylist],
+      };
+      const postInThatPlaylist = {
+        pl: [initialPlaylist],
+      };
+      await insertTestData(MONGODB_URL, {
+        user: [userWithOnePlaylist],
+        post: [postInThatPlaylist],
+      });
 
-    // And the API returns the playlist's id and new name
-    const { id, name } = JSON.parse(res.body);
-    assert.equal(name, newName);
-    assert.equal(id, 0);
+      // When the user renames their playlist
+      const newName = 'new name';
+      await callPlaylistApi(jar, {
+        action: 'rename',
+        id: 0,
+        name: newName,
+      });
 
-    // TODO: check that posts are updated too
+      // Then the change is persisted in the playlist's posts too
+      const [post] = await dumpMongoCollection(MONGODB_URL, 'post');
+      assert.deepEqual(post.pl, [{ id: 0, name: newName }]);
+    });
   });
 });
