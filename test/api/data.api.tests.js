@@ -30,7 +30,7 @@ describe(`Data Export API`, function () {
 
   before(async () => {
     await openwhyd.setup();
-    async () => await openwhyd.reset(); // to prevent side effects between test suites
+    await openwhyd.reset(); // to prevent side effects between test suites
   });
 
   after(async () => {
