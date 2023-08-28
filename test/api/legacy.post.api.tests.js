@@ -163,9 +163,6 @@ describe(`post api - legacy`, function () {
 });
 
 describe(`post api - independent tests`, function () {
-  // to prevent side effects between tests
-  beforeEach(async () => await backend.reset());
-
   before(async () => {
     if (START_WITH_ENV_FILE) {
       await backend.setup();
@@ -175,6 +172,9 @@ describe(`post api - independent tests`, function () {
   after(async () => {
     await backend.release();
   });
+
+  // to prevent side effects between tests
+  beforeEach(async () => await backend.reset());
 
   it('should delete a post', async function () {
     const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
