@@ -204,7 +204,7 @@ describe(`post api`, function () {
     assert.equal(postedTrack.uId, ADMIN_USER.id);
     assert.equal(postedTrack.uNm, ADMIN_USER.name);
     assert.ok(postedTrack._id);
-    assert.ok(postedTrack.pl.id);
+    assert.equal(typeof postedTrack.pl.id, 'number');
     assert.equal(postedTrack.pl.name, newPlayListName);
   });
 
