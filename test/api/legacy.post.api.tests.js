@@ -4,23 +4,23 @@ const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
 const util = require('util');
 const { START_WITH_ENV_FILE } = process.env;
-const { startOpenwhydServer } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+
+const backend = new OpenwhydTestEnv({
+  startWithEnv: START_WITH_ENV_FILE,
+});
 
 describe(`post api - legacy`, function () {
   before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites (there are side effects between tests in this file...)
 
-  const context = {};
-
   before(async () => {
     if (START_WITH_ENV_FILE) {
-      context.serverProcess = await startOpenwhydServer({
-        startWithEnv: START_WITH_ENV_FILE,
-      });
+      await backend.setup();
     }
   });
 
   after(async () => {
-    await context.serverProcess?.exit();
+    await backend.release();
   });
 
   let pId, uId;
@@ -163,21 +163,17 @@ describe(`post api - legacy`, function () {
 });
 
 describe(`post api - independent tests`, function () {
-  const context = {};
-
   // to prevent side effects between tests
   beforeEach(cleanup.bind(this, { silent: true }));
 
-  beforeEach(async function () {
+  before(async () => {
     if (START_WITH_ENV_FILE) {
-      context.serverProcess = await startOpenwhydServer({
-        startWithEnv: START_WITH_ENV_FILE,
-      });
+      await backend.setup();
     }
   });
 
-  afterEach(async function () {
-    await context.serverProcess?.exit();
+  after(async () => {
+    await backend.release();
   });
 
   it('should delete a post', async function () {
