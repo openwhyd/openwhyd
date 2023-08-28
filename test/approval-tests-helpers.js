@@ -132,24 +132,25 @@ const errPrinter = ((blocklist) => {
   'please install graphicsmagick',
 ]);
 
+const withCoverage = () => process.env.COVERAGE === 'true';
+
 /** @returns {Promise<childProcess.ChildProcessWithoutNullStreams & {exit: () => Promise<void>}>} */
 const startOpenwhydServerWith = async (env) =>
   new Promise((resolve, reject) => {
-    const serverProcess =
-      process.env.COVERAGE === 'true'
-        ? childProcess.spawn('npm', ['run', 'start:coverage:no-clean'], {
-            env: { ...env, PATH: process.env.PATH },
-            shell: true,
-            detached: true, // when running on CI, we need this to kill the process group using `process.kill(-serverProcess.pid)`
-          })
-        : childProcess.fork(
-            './app.js',
-            ['--fakeEmail', '--digestInterval', '-1'],
-            {
-              env,
-              silent: true, // necessary to initialize serverProcess.stderr
-            },
-          );
+    const serverProcess = withCoverage()
+      ? childProcess.spawn('npm', ['run', 'start:coverage:no-clean'], {
+          env: { ...env, PATH: process.env.PATH },
+          shell: true,
+          detached: true, // when running on CI, we need this to kill the process group using `process.kill(-serverProcess.pid)`
+        })
+      : childProcess.fork(
+          './app.js',
+          ['--fakeEmail', '--digestInterval', '-1'],
+          {
+            env,
+            silent: true, // necessary to initialize serverProcess.stderr
+          },
+        );
     // @ts-ignore
     serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
     // @ts-ignore
@@ -157,10 +158,13 @@ const startOpenwhydServerWith = async (env) =>
       new Promise((resolve) => {
         if (serverProcess.killed) return resolve();
         serverProcess.on('close', resolve);
-        if (serverProcess.kill(/*'SIGTERM'*/)) return; // we will resolve when the `close` event is received
-        if (!serverProcess.killed && serverProcess.pid) {
-          process.kill(-serverProcess.pid, 'SIGINT');
-        }
+        if (serverProcess.kill(/*'SIGTERM'*/)) return;
+        if (
+          serverProcess.pid &&
+          withCoverage() &&
+          process.kill(-serverProcess.pid, 'SIGINT')
+        )
+          return;
         throw new Error('🧟‍♀️ failed to kill childprocess!');
       });
     serverProcess.on('error', reject);
