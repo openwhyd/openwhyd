@@ -1,8 +1,11 @@
-const { promisify, ...util } = require('util');
+// @ts-check
+
+const util = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
 const childProcess = require('child_process');
 const { loadEnvVars } = require('./fixtures');
+const { promisify } = util;
 
 const makeJSONScrubber = (scrubbers) => (obj) =>
   JSON.parse(
@@ -48,9 +51,7 @@ const httpClient = {
 };
 
 function connectToMongoDB(url) {
-  return new mongodb.MongoClient(url, {
-    useUnifiedTopology: true,
-  });
+  return new mongodb.MongoClient(url);
 }
 
 const ObjectId = (id) => new mongodb.ObjectId(id);
@@ -60,6 +61,7 @@ async function readMongoDocuments(file) {
   return require(file)({ ObjectId, ISODate });
 }
 
+/** Important: don't forget to call refreshOpenwhydCache() after mutating the `user` collection. */
 async function insertTestData(url, docsPerCollection) {
   const mongoClient = await connectToMongoDB(url);
   const db = mongoClient.db();
@@ -148,7 +150,9 @@ const startOpenwhydServerWith = async (env) =>
               silent: true, // necessary to initialize serverProcess.stderr
             },
           );
+    // @ts-ignore
     serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
+    // @ts-ignore
     serverProcess.exit = () =>
       new Promise((resolve) => {
         if (serverProcess.killed) return resolve();
@@ -168,16 +172,19 @@ const startOpenwhydServerWith = async (env) =>
     serverProcess.stderr.on('data', errPrinter);
     serverProcess.stdout.on('data', (str) => {
       if (process.env.DEBUG) errPrinter(str);
+      // @ts-ignore
       if (str.includes('Server running')) resolve(serverProcess);
     });
   });
 
 /* refresh openwhyd's in-memory cache of users, to allow this user to login */
 async function refreshOpenwhydCache(urlPrefix) {
-  await promisify(request.post)(urlPrefix + '/testing/refresh');
+  const res = await promisify(request.post)(urlPrefix + '/testing/refresh');
+  if (res.statusCode !== 200)
+    throw new Error(res.body ?? 'non-200 status code');
 }
 
-/** @param {{startWithEnv:unknown, port?: number | string | undefined}} */
+/** @param {{startWithEnv:unknown, port?: number | string | undefined}} options */
 async function startOpenwhydServer({ startWithEnv, port }) {
   if (port) {
     const URL = `http://localhost:${port}`;
@@ -198,7 +205,7 @@ class OpenwhydTestEnv {
     this.options = options;
   }
   async setup() {
-    if (this.options.startWithEnv)
+    if ('startWithEnv' in this.options)
       this.serverProcess = await startOpenwhydServer(this.options);
   }
   async release() {
@@ -213,8 +220,13 @@ class OpenwhydTestEnv {
   async dumpCollection(collection) {
     return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
   }
+  async refreshCache() {
+    const URL = `http://localhost:${this.getEnv().WHYD_PORT}`;
+    await refreshOpenwhydCache(URL);
+  }
   async insertTestData(docsPerCollection) {
-    return await insertTestData(this.getEnv().MONGODB_URL, docsPerCollection);
+    await insertTestData(this.getEnv().MONGODB_URL, docsPerCollection);
+    if ('user' in docsPerCollection) await this.refreshCache();
   }
 }
 
