@@ -555,34 +555,55 @@ describe(`post api`, function () {
   });
 
   describe('`incrPlayCounter` action', () => {
-    it('should increase the number of plays of the track', async () => {
-      // Given a post with 0 plays
-      const postId = '000000000000000000000009';
-      await openwhyd.insertTestData({
+    const insertPostWithZeroPlays = (postId) =>
+      openwhyd.insertTestData({
         post: [{ _id: ObjectId(postId), nbP: 0 }],
       });
 
-      // When requesting to increase that counter
-      const res = await new Promise((resolve, reject) =>
+    const callPostApi = (form) =>
+      new Promise((resolve, reject) =>
         request.post(
           {
             jar,
-            form: {
-              action: 'incrPlayCounter',
-              pId: postId,
-            },
+            form,
             url: `${URL_PREFIX}/api/post`,
           },
           (error, response, body) =>
             error ? reject(error) : resolve({ response, body }),
         ),
       );
-      const resBody = JSON.parse(res.body);
-      console.warn({ resBody });
+
+    it('should increase the number of plays of the track', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await insertPostWithZeroPlays(postId);
+
+      // When requesting to increase that counter
+      await callPostApi({
+        action: 'incrPlayCounter',
+        pId: postId,
+      }).then(({ body }) => JSON.parse(body));
 
       // Then the number of plays of that post is 1
       const [postAfter] = await dumpMongoCollection(MONGODB_URL, 'post');
       assert.equal(postAfter.nbP, 1);
+    });
+
+    it('should return the post _id', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await insertPostWithZeroPlays(postId);
+
+      // When requesting to increase that counter
+      const resBody = await callPostApi({
+        action: 'incrPlayCounter',
+        pId: postId,
+      }).then(({ body }) => JSON.parse(body));
+
+      // Then the post _id is returned
+      assert(resBody?._id, '_id should be provided in response');
+      assert.equal(typeof resBody._id, 'string');
+      assert.notEqual(resBody._id, '', '_id should not be empty');
     });
   });
 });
