@@ -167,6 +167,7 @@ function fetchPostsByEid(eId, cb) {
 
 // called when a track is updated/deleted by a user
 exports.updateByEid = function (eId, cb, replace, additionalFields) {
+  if (!eId) throw new Error('eId is not defined');
   const since = Date.now() - HOT_TRACK_TIME_WINDOW;
   console.log('track.updateByEid: ', eId);
   fetchPostsByEid(eId, function (posts) {
