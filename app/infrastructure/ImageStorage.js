@@ -7,44 +7,46 @@ const path = require('node:path');
  * @typedef {import("../domain/spi/ImageRepository").ImageRepository} ImageRepository
  * @typedef {import('../domain/user/types').User} User
  * @typedef {import('../domain/user/types').Playlist} Playlist
- * @typedef {'uAvatarImg' | 'uCoverImg' | 'uPlaylistImg' | 'upload_data'} SupportedImageDirectories
+ * @typedef {'uAvatarImg' | 'uCoverImg' | 'uPlaylistImg' | 'upload_data'} ImageDirectory
  */
 
-/** @type {SupportedImageDirectories[]} */
-const ALL_TYPES = ['uAvatarImg', 'uCoverImg', 'uPlaylistImg', 'upload_data'];
+const PLAYLIST_DIR = 'uPlaylistImg';
+
+/** @type {ImageDirectory[]} */
+const DIRECTORIES = ['uAvatarImg', 'uCoverImg', PLAYLIST_DIR, 'upload_data'];
 
 /**
- * @param {SupportedImageDirectories} type
  * @param {User["id"]} userId
  * @param {Playlist["id"]} playlistId
  */
-const getFilePath = (type, userId, playlistId) =>
-  `./${type}/${userId}_${playlistId}`;
+const getPlaylistFilePath = (userId, playlistId) =>
+  `./${PLAYLIST_DIR}/${userId}_${playlistId}`;
 
 /**
- * @param {SupportedImageDirectories} type
  * @param {User["id"]} userId
  * @param {Playlist["id"]} playlistId
  */
-const getFileUrl = (type, userId, playlistId) =>
-  `/${type}/${userId}_${playlistId}`;
+const getPlaylistFileUrl = (userId, playlistId) =>
+  `/${PLAYLIST_DIR}/${userId}_${playlistId}`;
 
 /** @implements {ImageRepository} */
 class ImageStorage {
   constructor() {}
 
+  /** @type {ImageRepository['getImageUrlForPlaylist']} */
   async getImageUrlForPlaylist(userId, playlistId) {
-    return getFileUrl('uPlaylistImg', userId, playlistId);
+    return getPlaylistFileUrl(userId, playlistId);
   }
 
+  /** @type {ImageRepository['deletePlaylistImage']} */
   async deletePlaylistImage(userId, playlistId) {
-    return fs.unlink(getFilePath('uPlaylistImg', userId, playlistId));
+    return fs.unlink(getPlaylistFilePath(userId, playlistId));
   }
 
-  /** @param {SupportedImageDirectories} type */
-  async deleteFiles(type) {
+  /** @param {ImageDirectory} directory */
+  async deleteFiles(directory) {
     const appDir = process.cwd();
-    const dir = path.join(appDir, type);
+    const dir = path.join(appDir, directory);
     await Promise.all(
       (await fs.readdir(dir)).map((file) => {
         console.warn(`reset.controller deleting ${dir}/${file}`);
@@ -54,7 +56,9 @@ class ImageStorage {
   }
 
   async deleteAllFiles() {
-    await Promise.all(ALL_TYPES.map((type) => this.deleteFiles(type)));
+    await Promise.all(
+      DIRECTORIES.map((directory) => this.deleteFiles(directory)),
+    );
   }
 }
 

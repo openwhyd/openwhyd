@@ -1,5 +1,7 @@
-// various tools by Adrien Joly
-// tests: tests/tess-snips.js
+// @ts-check
+
+// common utilities / helpers
+// tests: test/unit/snip-tests.js
 
 const fs = require('fs');
 const urlModule = require('url');
@@ -34,7 +36,10 @@ exports.console = {
 };
 
 exports.getWeekNumber = function (date) {
-  return date && Math.floor(1 + (date - firstWeek) / 1000 / 60 / 60 / 24 / 7);
+  return (
+    date &&
+    Math.floor(1 + (date - firstWeek.getTime()) / 1000 / 60 / 60 / 24 / 7)
+  );
 };
 
 exports.weekNumberToDate = function (weekNumber) {
@@ -199,16 +204,6 @@ exports.arrayHas = function (array, value) {
   return false;
 };
 
-/** @deprecated because the usefulness of this function is not clear, and it mutates parameters. used just once, in notifDigest.js. */
-exports.values = function (set) {
-  const list = [];
-  for (const i in set)
-    if (set[i])
-      // TODO: remove this line
-      list.push(set[i]);
-  return list;
-};
-
 exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   const array = [];
   for (const k in map) {
@@ -222,15 +217,25 @@ exports.mapToObjArray = function (map, keyFieldName, valueFieldName) {
   return array;
 };
 
+/** @typedef {string|number|symbol} ObjectKey */
+
 /**
- * @template ItemType
+ * Creates an object from an array, by converting its values to keys.
+ * E.g. [ "a", "b", "c" ] --> { a: true, b: true, c: true }
  * @template ValueType
- * @param {ItemType[]} array
- * @param {ValueType} value
- * @returns {Record<ItemType, ValueType>}
+ * @param {ObjectKey[]} array
+ * @param {ValueType | true} value - value to set for each key of the output set, default: true
+ * @returns {Record<ObjectKey, ValueType | true>}
  */
 exports.arrayToSet = function (array, value = true) {
-  return array.reduce((acc, item) => ({ ...acc, [item]: value ?? true }), {});
+  /** @type {Record<ObjectKey, ValueType | true>} */
+  const set = {};
+  for (const i in array) {
+    if (array[i]) {
+      set[array[i]] = value ?? true;
+    }
+  }
+  return set;
 };
 
 exports.objArrayToSet = function (array, attr, val) {
@@ -388,44 +393,6 @@ exports.makeFieldSort = function (field, sortFct) {
     return sortFct(a[field], b[field]);
   };
 };
-
-// by http://andrew.hedges.name
-exports.getLevenshteinDistance = (function () {
-  function minimator(x, y, z) {
-    if (x < y && x < z) return x;
-    if (y < x && y < z) return y;
-    return z;
-  }
-  return function (a, b) {
-    let cost,
-      m = a.length,
-      n = b.length;
-    if (m < n) {
-      const c = a;
-      a = b;
-      b = c;
-      const o = m;
-      m = n;
-      n = o;
-    }
-    const r = [];
-    r[0] = [];
-    for (let c = 0; c < n + 1; c++) r[0][c] = c;
-    for (let i = 1; i < m + 1; i++) {
-      r[i] = [];
-      r[i][0] = i;
-      for (let j = 1; j < n + 1; j++) {
-        cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
-        r[i][j] = minimator(
-          r[i - 1][j] + 1,
-          r[i][j - 1] + 1,
-          r[i - 1][j - 1] + cost,
-        );
-      }
-    }
-    return r[m][n];
-  };
-})();
 
 // =========================================================================
 // table structures

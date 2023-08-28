@@ -4,6 +4,7 @@
     "dbaeumer.vscode-eslint",
     "mongodb.mongodb-vscode",
     "esbenp.prettier-vscode",
-    "redhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "bierner.markdown-mermaid"
   ]
 }

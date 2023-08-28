@@ -30,10 +30,22 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
   const subscribers = [];
   for (const i in uidList)
     if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
+
+  if (subscribers.length > 5000) {
+    console.trace(
+      `potential expensive activity query, for user ${loggedUid}, uidList length: ${subscribers.length}`,
+    );
+    console.time(`fetchRecentActivity_${loggedUid}`);
+  }
+
   activityModel.fetchHistoryFromUidList(
     /*uidList*/ subscribers,
     { limit: HISTORY_LIMIT },
     function (activities) {
+      if (uidList.length > 5000) {
+        console.timeEnd(`fetchRecentActivity_${loggedUid}`);
+      }
+
       cb(activities /*.slice(0, HISTORY_LIMIT)*/);
     },
   );
@@ -44,9 +56,10 @@ function prepareSidebar(uidList, options, cb) {
     feedTemplate.shouldRenderWholeProfilePage(options) &&
     options.format != 'json'
   ) {
-    //console.time("fetchRecentActivity");
+    const loggedUser = uidList[uidList.length - 1];
+    console.time(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
     fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
-      //console.timeEnd("fetchRecentActivity");
+      console.timeEnd(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
       if (activities && activities.length)
         options.recentActivity = { items: activities };
       //console.time("fetchLast");

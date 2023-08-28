@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * track model
  * - maintained by post model: updateByEid()
@@ -52,37 +54,36 @@ function scorePost(post) {
 
 const POST_FETCH_OPTIONS = {
   limit: 10000,
-  sort: [['_id', 'desc']],
+  sort: ['_id', 'desc'],
 };
 
 // core methods
 
 function save(track, cb, replace) {
   const op = replace ? track : { $set: track };
-  mongodb.collections['track'].updateOne(
-    { eId: track.eId },
-    op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
-    { upsert: true },
-    function (error, result) {
-      //console.log("=> saved hot track:", result);
-      if (error) console.error('track.save() db error:', error);
-      if (cb) cb(result);
-    },
-  );
+  mongodb.collections['track']
+    .updateOne(
+      { eId: track.eId },
+      op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
+      { upsert: true },
+    )
+    .then(cb, (error) => console.trace('track.save() db error:', error));
 }
 
+/** Delete a "hot track". */
 function remove(q, cb) {
-  mongodb.collections['track'].deleteOne(q, function (error, result) {
-    console.log('=> removed hot track:', q);
-    if (error) console.error('track.remove() error: ' + error.stack);
-    if (cb) cb(result);
-  });
+  mongodb.collections['track']
+    .deleteOne(q)
+    .then(cb, (error) => console.trace('track.remove() error:', error));
 }
 
 exports.countTracksWithField = function (fieldName, cb) {
   const q = {};
   q[fieldName] = { $exists: 1 };
-  mongodb.collections['track'].countDocuments(q, cb);
+  mongodb.collections['track'].countDocuments(q).then(
+    (res) => cb(null, res),
+    (err) => cb(err),
+  );
 };
 
 /* fetch top hot tracks, without processing */
@@ -102,17 +103,22 @@ exports.fetch = function (params, handler) {
 exports.fetchTrackByEid = function (eId, cb) {
   // in order to allow requests of soundcloud eId without hash (#):
   const eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
-  mongodb.collections['track'].findOne({ eId: eId }, function (err, track) {
-    if (!err && !track && eidPrefix)
-      mongodb.collections['track'].findOne(
-        { eId: new RegExp('^' + eidPrefix + '.*') },
-        function (err, track) {
-          if (track && track.eId.split('#')[0] != eidPrefix) track = null;
-          cb(err ? { error: err } : track);
-        },
-      );
-    else cb(err ? { error: err } : track);
-  });
+  mongodb.collections['track'].findOne({ eId: eId }).then(
+    function (track) {
+      if (!track && eidPrefix)
+        mongodb.collections['track']
+          .findOne({ eId: new RegExp('^' + eidPrefix + '.*') })
+          .then(
+            (track) => {
+              if (track && track.eId.split('#')[0] != eidPrefix) track = null;
+              cb(track);
+            },
+            (err) => cb(err ? { error: err } : track),
+          );
+      else cb(track);
+    },
+    (err) => cb({ error: err }),
+  );
 };
 
 // functions for fetching tracks and corresponding posts
@@ -210,53 +216,51 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
 
 // maintenance functions
 
-exports.snapshotTrackScores = function (cb) {
-  mongodb.collections['track'].countDocuments(function (err, count) {
-    let i = 0;
-    mongodb.forEach2(
-      'track',
-      { fields: { score: 1 } },
-      function (track, next, closeCursor) {
-        if (!track || track.error) {
-          cb();
-          closeCursor();
-        } else {
-          if (count < 1000) {
-            console.log(`snapshotTrackScores ${i + 1} / ${count}`);
-          } else if (count % 1000 === 0) {
-            console.log(
-              `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`,
-            );
-          }
-          ++i;
-          mongodb.collections['track'].updateOne(
-            { _id: track._id },
-            { $set: { prev: track.score } },
-            next,
+exports.snapshotTrackScores = async function (cb) {
+  const count = await mongodb.collections['track'].countDocuments();
+  let i = 0;
+  mongodb.forEach2(
+    'track',
+    { fields: { score: 1 } },
+    async function (track, next, closeCursor) {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
+        if (count < 1000) {
+          console.log(`snapshotTrackScores ${i + 1} / ${count}`);
+        } else if (count % 1000 === 0) {
+          console.log(
+            `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`,
           );
         }
-      },
-    );
-  });
+        ++i;
+        await mongodb.collections['track'].updateOne(
+          { _id: track._id },
+          { $set: { prev: track.score } },
+        );
+        next();
+      }
+    },
+  );
 };
 
-exports.refreshTrackCollection = function (cb) {
-  mongodb.collections['track'].countDocuments(function (err, count) {
-    let i = 0;
-    mongodb.forEach2(
-      'track',
-      { fields: { _id: 0, eId: 1 } },
-      function (track, next, closeCursor) {
-        if (!track || track.error) {
-          cb();
-          closeCursor();
-        } else {
-          console.log('refreshHotTracksCache', ++i, '/', count);
-          exports.updateByEid(track.eId, next, true);
-        }
-      },
-    );
-  });
+exports.refreshTrackCollection = async function (cb) {
+  const count = await mongodb.collections['track'].countDocuments();
+  let i = 0;
+  mongodb.forEach2(
+    'track',
+    { fields: { _id: 0, eId: 1 } },
+    function (track, next, closeCursor) {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
+        console.log('refreshHotTracksCache', ++i, '/', count);
+        exports.updateByEid(track.eId, next, true);
+      }
+    },
+  );
 };
 
 exports.model = exports;

@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * activity model
  * @author adrienjoly, whyd
@@ -26,21 +28,20 @@ exports.fetch = function (q, options, callback) {
   getCol()
     .find(q, options)
     .toArray()
-    .catch(() => callback())
+    .catch((err) => {
+      console.trace('error in activity.fetch:', err);
+      callback();
+    })
     .then((res) => callback(res));
 };
 
-exports.add = function (d, callback) {
+exports.add = async function (d, callback) {
   if (d && d.like && d.like.pId) d.like.pId = '' + d.like.pId;
-  getCol().insertOne(d, function (err, result) {
-    callback && callback(result || err);
-  });
+  return getCol().insertOne(d).then(callback, callback);
 };
 
 exports.remove = function (q, callback) {
-  getCol().deleteOne(q, function (err, result) {
-    callback && callback(result || err);
-  });
+  getCol().deleteOne(q).then(callback, callback);
 };
 
 // fetch helpers
@@ -84,7 +85,6 @@ exports.fetchHistoryFromUidList = function (uidList, options, callback) {
     // console.log('=> fetched', activities.length, 'likes');
     if (options.likesOnly) return whenDone(activities);
     options.fromUId = uidList;
-    //followModel.fetchUsersSubscriptionsHistory(uidList, options, function(subscriptions) {
     followModel.fetchSubscriptionHistory(options, function (subscriptions) {
       for (const i in subscriptions)
         activities.push({

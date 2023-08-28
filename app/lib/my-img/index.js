@@ -1,6 +1,7 @@
+// @ts-check
+
 const http = require('http');
 const fs = require('fs');
-const url = require('url');
 const child_process = require('child_process');
 
 let USE_GRAPHICS_MAGICK = true; // previously process.env.WHYD_USE_GRAPHICS_MAGICK
@@ -35,7 +36,7 @@ if (gmVersion) {
 }
 
 exports.get = function (imgUrl, imgOutput, endListener, errorListener) {
-  imgUrl = url.parse(imgUrl);
+  imgUrl = new URL(imgUrl);
   http.get(
     { host: imgUrl.host, path: imgUrl.pathname, port: 80 },
     function (res) {

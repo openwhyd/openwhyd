@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * "follow" model, for subscriptions
  * @author adrienjoly, whyd
@@ -37,19 +39,13 @@ async function fetchArray(query = {}, options, callback) {
     console.error('warning: found uId with /u/ prefix');
   if (typeof query.tId == 'string' && query.tId.indexOf('/u/') == 0)
     console.error('warning: found tId with /u/ prefix');
-  if ((query.uId || {}).generationTime)
-    // is ObjectId
-    query.uId = '' + query.uId;
-  if ((query.tId || {}).generationTime)
-    // is ObjectId
-    query.tId = '' + query.tId;
-  //console.log("follow.fetchArray", query, "...");
+  if (query.uId?.generationTime) query.uId = '' + query.uId;
+  if (query.tId?.generationTime) query.tId = '' + query.tId;
   const { fields } = options ?? {};
   if (options) delete options.fields;
   const results = await mongodb.collections[COLNAME].find(query, options || {})
     .project(fields ?? {})
     .toArray();
-  //console.log("=> ", results.length, "follow items");
   callback(results);
 }
 
@@ -63,16 +59,13 @@ exports.add = function (followObj, dbHandler) {
     tId: followObj.tId,
   };
   const collection = mongodb.collections[COLNAME];
-  //collection.save(obj, dbHandler);
-  collection.updateOne(
-    req,
-    { $set: followObj },
-    { upsert: true },
-    function (err, result) {
-      // to avoid duplicates
-      if (err) dbHandler(err, result);
-      else collection.findOne(req, dbHandler);
-    },
+  collection.updateOne(req, { $set: followObj }, { upsert: true }).then(
+    () =>
+      collection.findOne(req).then(
+        (res) => dbHandler(null, res),
+        (err) => dbHandler(err),
+      ),
+    (err) => dbHandler(err),
   );
 };
 
@@ -88,24 +81,17 @@ exports.remove = function (uId, tId, dbHandler) {
   mongodb.collections[COLNAME].deleteOne({ uId: uId, tId: tId }, dbHandler);
 };
 
-// wraps a cb(result) callback into a cb(err,res) callback
-function wrapCallback(cb) {
-  return function (err, res) {
-    cb(err ? { error: err } : res);
-  };
-}
-
 exports.countSubscriptions = function (uId, cb) {
-  mongodb.collections[COLNAME].countDocuments(
-    { uId: '' + uId },
-    wrapCallback(cb),
+  mongodb.collections[COLNAME].countDocuments({ uId: '' + uId }).then(
+    (res) => cb(res),
+    (error) => cb({ error }),
   );
 };
 
 exports.countSubscribers = function (uId, cb) {
-  mongodb.collections[COLNAME].countDocuments(
-    { tId: '' + uId },
-    wrapCallback(cb),
+  mongodb.collections[COLNAME].countDocuments({ tId: '' + uId }).then(
+    (res) => cb(res),
+    (error) => cb({ error }),
   );
 };
 
@@ -149,28 +135,7 @@ exports.fetchSubscriptionArray = function (uid, cb) {
     cb(subscr);
   });
 };
-/*
-exports.fetchUsersSubscriptionsHistory = function(uidList, options, callback) {
-	options = options || {};
-	var q = {
-		uId: {$in: uidList}, // show subscriptions from subscribed users
-	};
-	if (options.after)
-		q._id = {$lt: ObjectId(""+options.after)};
-	fetchArray(q, {sort:[['_id','desc']], limit: options.limit || HISTORY_LIMIT}, callback);
-};
 
-exports.fetchSubscriberHistory = function(uid, options, callback) {
-	options = options || {};
-	var q = {
-		uId: {$ne: ""+uid}, // subscriptions from anyone but uid
-		tId: ""+uid // ...to uid only
-	};
-	if (options.after) q._id = {$lt: ObjectId(""+options.after)};
-	if (options.until) q._id = {$gt: mongodb.ObjectId(mongodb.dateToHexObjectId(options.until))};
-	fetchArray(q, {sort:[['_id','desc']], limit: options.limit || HISTORY_LIMIT}, callback);
-};
-*/
 exports.fetchSubscriptionHistory = function (options, callback) {
   options = options || {};
   const q = {};
@@ -192,28 +157,6 @@ exports.fetchSubscriptionHistory = function (options, callback) {
     callback,
   );
 };
-
-/*
-exports.addMulti = function(user, subscriptionList, callback) {
-	var remaining = subscriptionList.length;
-	function callbackWhenDone() {
-		if (--remaining == 0)
-			callback && callback();
-	}
-	for (let i in subscriptionList) {
-		var tId = subscriptionList[i].id;
-		if (tId)
-			exports.add({
-				uId: user.id,
-				uNm: user.name,
-				tId: (""+tId).replace("/u/", ""),
-				tNm: subscriptionList[i].name
-			}, callbackWhenDone);
-		else
-			callbackWhenDone();
-	}
-}
-*/
 
 exports.fetchFollowing = function (uId, options, cb) {
   options = options || {};

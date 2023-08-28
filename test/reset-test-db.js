@@ -47,7 +47,9 @@ require('../app/models/mongodb.js').init(dbCreds, function (err, db) {
         if (err) throw err;
 
         // delete uploaded files
-        await new ImageStorage().deleteAllFiles();
+        await new ImageStorage()
+          .deleteAllFiles()
+          .catch((err) => console.warn(`[test-db-init.js] ${err.message}`));
 
         if (DEBUG) console.log('[test-db-init.js] => done.');
         process.exit();

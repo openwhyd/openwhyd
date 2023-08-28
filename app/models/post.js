@@ -113,9 +113,12 @@ exports.fetchByAuthorsOld = function (uidList, options, handler) {
 };
 
 exports.fetchByAuthors = function (uidList, options, cb) {
+  const loggedUser = uidList[uidList.length - 1];
+  console.time(`fetchByAuthors>arrayToSet_${loggedUser}`);
   const posts = [],
     query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
     uidSet = snip.arrayToSet(uidList);
+  console.timeEnd(`fetchByAuthors>arrayToSet_${loggedUser}`);
   const params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
   processAdvQuery(query, params, {
     after: options.after,
@@ -159,7 +162,7 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
 
 exports.countUserPosts = function (uid, handler) {
   mongodb.collections['post'].countDocuments(
-    { uId: uid, rTo: null },
+    { uId: uid },
     function (err, result) {
       handler(result);
     },
