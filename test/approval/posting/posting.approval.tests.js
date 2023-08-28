@@ -89,7 +89,7 @@ describe('When setting up a new test environment', function () {
     context = await setupTestEnv();
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should have an empty "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -119,7 +119,7 @@ describe('When posting a track', () => {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -145,7 +145,7 @@ describe('When posting a track using the bookmarklet', function () {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -192,7 +192,7 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -241,7 +241,7 @@ describe('When renaming a track', function () {
     ]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed with new name in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -268,7 +268,7 @@ describe('When posting a track to an existing playlist', function () {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -302,7 +302,7 @@ describe('When posting a track to a new playlist', function () {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -349,7 +349,7 @@ describe('When reposting a track to an existing playlist', function () {
     ]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should both be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
