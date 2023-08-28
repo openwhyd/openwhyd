@@ -14,8 +14,8 @@ const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`post api`, function () {
-  const loggedUser = ADMIN_USER;
-  const otherUser = DUMMY_USER;
+  const loggedUser = DUMMY_USER;
+  const otherUser = ADMIN_USER;
   let post;
   let jar;
   const openwhyd = new OpenwhydTestEnv({
@@ -39,9 +39,6 @@ describe(`post api`, function () {
     };
 
     ({ jar } = await util.promisify(api.loginAs)(loggedUser));
-    /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.
-     * May be initdb_testing.js is not up to date with the current schema?
-     */
   });
 
   it("should return a 404 for post that doesn't exist", async () => {
@@ -111,8 +108,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.equal(postedTrack.ctx, ctx);
     assert.equal(postedTrack.isNew, true);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.ok(postedTrack._id);
     assert.equal(postedTrack.pl, undefined);
   });
@@ -163,8 +160,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.pl.id, playlist.id);
     assert.equal(postedTrack.pl.name, playlist.name);
     assert.equal(postedTrack.text, description);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
   });
 
   it('should add a track to a new playlist', async function () {
@@ -194,8 +191,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.equal(postedTrack.ctx, ctx);
     assert.equal(postedTrack.isNew, true);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.ok(postedTrack._id);
     assert.ok(postedTrack.pl.id);
     assert.equal(postedTrack.pl.name, newPlayListName);
@@ -241,8 +238,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.ctx, ctx);
     assert.equal(postedTrack.pl.name, newPlayListName);
     assert.equal(postedTrack.text, description);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
   });
 
   it('should re-add a track to a new playlist from the stream or from the Tracks in the user profile', async function () {
@@ -275,8 +272,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.notEqual(postedTrack.pl.id, undefined);
     assert.equal(postedTrack.pl.name, newPlayListName);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.deepEqual(postedTrack.lov, []);
     assert.equal(postedTrack.text, '');
     assert.equal(postedTrack.nbP, 0);
@@ -285,8 +282,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack._id, pId);
 
     assert.equal(postedTrack.repost.pId, pId);
-    assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.repost.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.repost.uNm, DUMMY_USER.name);
   });
 
   it('should re-add a track into an existing playlist', async function () {
@@ -325,8 +322,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack.pl.id, undefined);
     assert.equal(postedTrack.pl.id, playlist.id);
     assert.equal(postedTrack.pl.name, playlist.name);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.deepEqual(postedTrack.lov, []);
     assert.equal(postedTrack.text, '');
     assert.equal(postedTrack.nbP, 0);
@@ -335,8 +332,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack._id, pId);
 
     assert.equal(postedTrack.repost.pId, pId);
-    assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.repost.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.repost.uNm, DUMMY_USER.name);
   });
 
   it('should allow re-adding a track into another playlist', async function () {
@@ -374,8 +371,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.ok(postedTrack.pl.id);
     assert.equal(postedTrack.pl.name, newPlaylistName);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.deepEqual(postedTrack.lov, []);
     assert.equal(postedTrack.text, '');
     assert.equal(postedTrack.nbP, 0);
@@ -384,8 +381,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack._id, pId);
 
     assert.equal(postedTrack.repost.pId, pId);
-    assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.repost.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.repost.uNm, DUMMY_USER.name);
   });
 
   it('should fail to delete a comment that does not exist', async function () {
