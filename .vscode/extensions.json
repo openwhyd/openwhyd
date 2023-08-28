@@ -5,6 +5,7 @@
     "mongodb.mongodb-vscode",
     "esbenp.prettier-vscode",
     "redhat.vscode-yaml",
-    "bierner.markdown-mermaid"
+    "bierner.markdown-mermaid",
+    "sonarsource.sonarlint-vscode"
   ]
 }

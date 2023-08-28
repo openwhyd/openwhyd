@@ -324,7 +324,7 @@ exports.update = function (uid, update, handler) {
 /**
  *
  * @param {UserDocument} pUser
- * @param {(userDocument:UserDocument) => void} handler
+ * @param {(userDocument:UserDocument) => any} handler
  */
 exports.save = function (pUser, handler) {
   const uid = pUser._id || pUser.id;
@@ -542,7 +542,7 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
         if (upd.name) {
           searchModel.indexPlaylist(uId, plId, upd.name);
           await new Promise((resolve) =>
-            postModel.setPlaylist(uId, plId, upd.name, resolve),
+            postModel.setPlaylist(uId, plId, upd.name, () => resolve()),
           );
         }
         if (handler) handler(found);
