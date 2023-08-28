@@ -2,7 +2,7 @@ const assert = require('assert');
 const util = require('util');
 const request = require('request');
 
-const { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
+const { DUMMY_USER, URL_PREFIX } = require('../fixtures.js');
 const api = require('../api-client.js');
 const { START_WITH_ENV_FILE } = process.env;
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
@@ -25,7 +25,7 @@ describe(`playlist api`, function () {
 
   it('should create a playlist', async function () {
     const playlistName = `playlist-${randomString()}`;
-    const { jar } = await util.promisify(api.loginAs)(ADMIN_USER); // FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection. May be initdb_testing.js is not up to date with the current schema? => see #684.
+    const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
     const res = await new Promise((resolve, reject) =>
       request.post(
         {
