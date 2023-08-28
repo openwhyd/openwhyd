@@ -193,7 +193,7 @@ describe(`post api`, function () {
     assert.equal(postedTrack.uId, DUMMY_USER.id);
     assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.ok(postedTrack._id);
-    assert.ok(postedTrack.pl.id);
+    assert.equal(postedTrack.pl.id, 0);
     assert.equal(postedTrack.pl.name, newPlayListName);
   });
 
