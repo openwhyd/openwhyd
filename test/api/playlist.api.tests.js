@@ -112,7 +112,8 @@ describe(`playlist api`, function () {
         pl: [initialPlaylist],
       };
       const postInThatPlaylist = {
-        pl: [initialPlaylist],
+        uId: userWithOnePlaylist.id,
+        pl: initialPlaylist,
       };
       await insertTestData(MONGODB_URL, {
         user: [userWithOnePlaylist],
@@ -129,7 +130,7 @@ describe(`playlist api`, function () {
 
       // Then the change is persisted in the playlist's posts too
       const [post] = await dumpMongoCollection(MONGODB_URL, 'post');
-      assert.deepEqual(post.pl, [{ id: 0, name: newName }]);
+      assert.deepEqual(post.pl, { id: 0, name: newName });
     });
   });
 });
