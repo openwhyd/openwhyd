@@ -11,8 +11,6 @@ const backend = new OpenwhydTestEnv({
 });
 
 describe(`post api - legacy`, function () {
-  before(async () => await backend.reset()); // to prevent side effects between test suites (there are side effects between tests in this file...)
-
   before(async () => {
     if (START_WITH_ENV_FILE) {
       await backend.setup();
@@ -22,6 +20,8 @@ describe(`post api - legacy`, function () {
   after(async () => {
     await backend.release();
   });
+
+  before(async () => await backend.reset()); // to prevent side effects between test suites (there are side effects between tests in this file...)
 
   let pId, uId;
   const post = {
