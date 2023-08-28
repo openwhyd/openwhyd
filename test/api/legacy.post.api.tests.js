@@ -6,7 +6,7 @@ const util = require('util');
 const { START_WITH_ENV_FILE } = process.env;
 const { startOpenwhydServer } = require('../approval-tests-helpers.js');
 
-describe(`post api`, function () {
+describe(`post api - legacy`, function () {
   before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites (there are side effects between tests in this file...)
 
   const context = {};
