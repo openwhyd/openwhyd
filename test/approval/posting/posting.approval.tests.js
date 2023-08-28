@@ -3,7 +3,6 @@
 const approvals = require('approvals').mocha();
 const util = require('util');
 const request = require('request');
-const { URL_PREFIX } = require('../../fixtures.js');
 const {
   makeJSONScrubber,
   ObjectId,
@@ -173,7 +172,7 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
         request.get(
           {
             jar,
-            url: `${URL_PREFIX}/api/post?action=insert&eId=${encodeURIComponent(
+            url: `${backend.getURL()}/api/post?action=insert&eId=${encodeURIComponent(
               post.eId,
             )}&name=${encodeURIComponent(
               post.name,
@@ -229,7 +228,7 @@ describe('When renaming a track', function () {
             _id: postedTrack._id.toString(),
             pl: { id: null, name: 'full stream' },
           },
-          url: `${URL_PREFIX}/api/post`,
+          url: `${backend.getURL()}/api/post`,
         },
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
