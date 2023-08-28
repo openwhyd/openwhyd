@@ -11,14 +11,16 @@ const randomString = () => Math.random().toString(36).substring(2, 9);
 describe(`playlist api`, function () {
   const openwhyd = new OpenwhydTestEnv({ startWithEnv: START_WITH_ENV_FILE });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
-
   before(async () => {
     await openwhyd.setup();
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // to prevent side effects between test suites
   });
 
   it('should create a playlist', async function () {

@@ -4,7 +4,7 @@ const util = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
 const childProcess = require('child_process');
-const { loadEnvVars } = require('./fixtures');
+const { loadEnvVars, resetTestDb } = require('./fixtures');
 const { promisify } = util;
 
 const makeJSONScrubber = (scrubbers) => (obj) =>
@@ -214,6 +214,9 @@ class OpenwhydTestEnv {
   }
   async dumpCollection(collection) {
     return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
+  }
+  async reset() {
+    await resetTestDb.bind({ silent: true, env: this.getEnv() });
   }
   async refreshCache() {
     const URL = `http://localhost:${this.getEnv().WHYD_PORT}`;
