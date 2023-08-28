@@ -65,17 +65,7 @@ exports.cleanup = async function ({ silent } = { silent: false }) {
     },
     silent,
   });
-
-  // resetDbProcess.stdout.on('data', (data) => {
-  //   console.log(`stdout: ${data}`);
-  // });
-
-  // resetDbProcess.stderr.on('data', (data) => {
-  //   console.error(`stderr: ${data}`);
-  // });
-
-  // resetDbProcess.on('error', (err) => console.error('cleanup error:', err));
-  // resetDbProcess.on('close', () => done());
-
+  resetDbProcess.stderr.on('data', (txt) => console.error(`[cleanup] ${txt}`));
+  resetDbProcess.on('error', (err) => console.trace('[cleanup] error:', err));
   return new Promise((resolve) => resetDbProcess.on('close', () => resolve()));
 };
