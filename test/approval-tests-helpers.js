@@ -239,7 +239,8 @@ class OpenwhydTestEnv {
   /** Clears and (re)initializes Openwhyd's database, for testing. */
   async reset() {
     if (!this.isSetup) throw new Error('please call setup() before reset()');
-    await resetTestDb({ silent: true, env: this.getEnv() });
+    await resetTestDb({ silent: false, env: this.getEnv() });
+    await this.refreshCache();
   }
 
   /* Refresh openwhyd's in-memory cache of users, e.g. to allow freshly added users to login. */
