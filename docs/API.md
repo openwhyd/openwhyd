@@ -605,10 +605,6 @@ _Parameters:_
 - **pId** : (string) id of the post played
 - **logData**: (object, optional), as described in [this spec](https://whyd.hackpad.com/Track-performance-log-AF7pRadBNrU)
 
-Return:
-
-- **result**: (object) the post object
-
 #### Scrobble a play to Last.fm
 
 To be called whenever a track ends playing, for users who connected their last.fm account.

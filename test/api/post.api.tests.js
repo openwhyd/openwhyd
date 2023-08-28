@@ -588,22 +588,5 @@ describe(`post api`, function () {
       const [postAfter] = await dumpMongoCollection(MONGODB_URL, 'post');
       assert.equal(postAfter.nbP, 1);
     });
-
-    it('should return the post _id', async () => {
-      // Given a post with 0 plays
-      const postId = '000000000000000000000009';
-      await insertPostWithZeroPlays(postId);
-
-      // When requesting to increase that counter
-      const resBody = await callPostApi({
-        action: 'incrPlayCounter',
-        pId: postId,
-      }).then(({ body }) => JSON.parse(body));
-
-      // Then the post _id is returned
-      assert(resBody?._id, '_id should be provided in response');
-      assert.equal(typeof resBody._id, 'string');
-      assert.notEqual(resBody._id, '', '_id should not be empty');
-    });
   });
 });
