@@ -6,7 +6,7 @@ const {
   readMongoDocuments,
   insertTestData,
   getCleanedPageBody,
-  startOpenwhydServer,
+  OpenwhydTestEnv,
 } = require('../../approval-tests-helpers');
 
 const {
@@ -20,6 +20,11 @@ const MONGODB_URL =
 
 const testDataDir = `${__dirname}/test-data`;
 
+const backend = new OpenwhydTestEnv({
+  startWithEnv: START_WITH_ENV_FILE,
+  port: PORT,
+});
+
 test.before(async (t) => {
   const testDataCollections = {
     user: await readMongoDocuments(testDataDir + '/approval.users.json.js'),
@@ -28,19 +33,14 @@ test.before(async (t) => {
   };
   await insertTestData(MONGODB_URL, testDataCollections);
 
-  t.context.serverProcess = await startOpenwhydServer({
-    startWithEnv: START_WITH_ENV_FILE,
-    port: PORT,
-  });
+  await backend.setup(); // starts openwhyd, or refreshes its state if already running
   t.context.openwhyd = require('../../api-client');
   t.context.getUser = (id) =>
     testDataCollections.user.find(({ _id }) => id === _id.toString());
 });
 
 test.after(async (t) => {
-  if (t.context.serverProcess?.exit && !DONT_KILL) {
-    await t.context.serverProcess.exit();
-  }
+  if (!DONT_KILL) await backend.release();
 });
 
 const personas = [

@@ -1,26 +1,23 @@
 const assert = require('assert');
 
-const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
+const { DUMMY_USER, ADMIN_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 const util = require('util');
 const { START_WITH_ENV_FILE } = process.env;
-const { startOpenwhydServer } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+
+const backend = new OpenwhydTestEnv({
+  startWithEnv: START_WITH_ENV_FILE,
+});
 
 describe(`post api - legacy`, function () {
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites (there are side effects between tests in this file...)
-
-  const context = {};
-
   before(async () => {
-    if (START_WITH_ENV_FILE) {
-      context.serverProcess = await startOpenwhydServer({
-        startWithEnv: START_WITH_ENV_FILE,
-      });
-    }
+    await backend.setup();
+    await backend.reset(); // to prevent side effects between test suites (there are side effects between tests in this file...)
   });
 
   after(async () => {
-    await context.serverProcess?.exit();
+    await backend.release();
   });
 
   let pId, uId;
@@ -163,22 +160,16 @@ describe(`post api - legacy`, function () {
 });
 
 describe(`post api - independent tests`, function () {
-  const context = {};
+  before(async () => {
+    await backend.setup();
+  });
+
+  after(async () => {
+    await backend.release();
+  });
 
   // to prevent side effects between tests
-  beforeEach(cleanup.bind(this, { silent: true }));
-
-  beforeEach(async function () {
-    if (START_WITH_ENV_FILE) {
-      context.serverProcess = await startOpenwhydServer({
-        startWithEnv: START_WITH_ENV_FILE,
-      });
-    }
-  });
-
-  afterEach(async function () {
-    await context.serverProcess?.exit();
-  });
+  beforeEach(async () => await backend.reset());
 
   it('should delete a post', async function () {
     const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
