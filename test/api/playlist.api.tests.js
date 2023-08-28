@@ -27,13 +27,6 @@ describe(`playlist api`, function () {
     await openwhyd.reset(); // to prevent side effects between test suites
   });
 
-  it('should impact the execution of following tests', async () => {
-    const client = connectToMongoDB(openwhyd.getEnv().MONGODB_URL);
-    const db = client.db();
-    await db.collection('user').deleteMany({});
-    client.close();
-  });
-
   it('should create a playlist', async function () {
     const playlistName = `playlist-${randomString()}`;
     const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
@@ -55,13 +48,6 @@ describe(`playlist api`, function () {
     const { id, name } = JSON.parse(res.body);
     assert.equal(name, playlistName);
     assert.equal(id, 0);
-  });
-
-  it('should impact the execution of following tests (2)', async () => {
-    const client = connectToMongoDB(openwhyd.getEnv().MONGODB_URL);
-    const db = client.db();
-    await db.collection('user').deleteMany({});
-    client.close();
   });
 
   describe('`rename` action', () => {
