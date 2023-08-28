@@ -1,7 +1,11 @@
 const assert = require('assert');
 const util = require('util');
 const request = require('request');
-const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
+const {
+  OpenwhydTestEnv,
+  ObjectId,
+  dumpMongoCollection,
+} = require('../approval-tests-helpers.js');
 
 const {
   ADMIN_USER,
@@ -12,6 +16,9 @@ const {
 } = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
+
+const MONGODB_URL =
+  process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
 
 describe(`post api`, function () {
   const loggedUser = ADMIN_USER;
@@ -545,5 +552,37 @@ describe(`post api`, function () {
     assert(resBody?._id, '_id should be provided in response');
     assert.equal(typeof resBody._id, 'string');
     assert.notEqual(resBody._id, '', '_id should not be empty');
+  });
+
+  describe('`incrPlayCounter` action', () => {
+    it('should increase the number of plays of the track', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await openwhyd.insertTestData({
+        post: [{ _id: ObjectId(postId), nbP: 0 }],
+      });
+
+      // When requesting to increase that counter
+      const res = await new Promise((resolve, reject) =>
+        request.post(
+          {
+            jar,
+            form: {
+              action: 'incrPlayCounter',
+              pId: postId,
+            },
+            url: `${URL_PREFIX}/api/post`,
+          },
+          (error, response, body) =>
+            error ? reject(error) : resolve({ response, body }),
+        ),
+      );
+      const resBody = JSON.parse(res.body);
+      console.warn({ resBody });
+
+      // Then the number of plays of that post is 1
+      const [postAfter] = await dumpMongoCollection(MONGODB_URL, 'post');
+      assert.equal(postAfter.nbP, 1);
+    });
   });
 });
