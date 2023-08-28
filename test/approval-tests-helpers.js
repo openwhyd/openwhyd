@@ -213,15 +213,17 @@ class OpenwhydTestEnv {
       ? this.serverProcess.env
       : process.env;
   }
+  getURL() {
+    return `http://localhost:${this.getEnv().WHYD_PORT}`;
+  }
   async dumpCollection(collection) {
     return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
   }
   async reset() {
-    await resetTestDb.bind({ silent: true, env: this.getEnv() });
+    await resetTestDb({ silent: true, env: this.getEnv() });
   }
   async refreshCache() {
-    const URL = `http://localhost:${this.getEnv().WHYD_PORT}`;
-    await refreshOpenwhydCache(URL);
+    await refreshOpenwhydCache(this.getURL());
   }
   async insertTestData(docsPerCollection) {
     await insertTestData(this.getEnv().MONGODB_URL, docsPerCollection);
