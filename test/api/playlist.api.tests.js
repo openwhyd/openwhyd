@@ -5,7 +5,7 @@ const request = require('request');
 const { DUMMY_USER, URL_PREFIX } = require('../fixtures.js');
 const api = require('../api-client.js');
 const { START_WITH_ENV_FILE } = process.env;
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`playlist api`, function () {
@@ -44,5 +44,49 @@ describe(`playlist api`, function () {
     const { id, name } = JSON.parse(res.body);
     assert.equal(name, playlistName);
     assert.equal(id, 0);
+  });
+
+  describe('`rename` action', () => {
+    it('should rename a playlist', async function () {
+      // Given a user that has one playlist
+      const userWithOnePlaylist = {
+        ...DUMMY_USER,
+        _id: ObjectId(DUMMY_USER.id),
+        pl: [{ id: 0, name: 'old name' }],
+      };
+      await openwhyd.insertTestData({ user: [userWithOnePlaylist] });
+
+      // When the user renames their playlist
+      const newName = 'new name';
+      const { jar } = await util.promisify(api.loginAs)(userWithOnePlaylist);
+      const res = await new Promise((resolve, reject) =>
+        request.post(
+          {
+            jar,
+            form: {
+              action: 'rename',
+              id: 0,
+              name: newName,
+            },
+            url: `${URL_PREFIX}/api/playlist`,
+          },
+          (error, response, body) =>
+            error ? reject(error) : resolve({ response, body }),
+        ),
+      );
+
+      // Then the playlist is persisted for that user
+      const user = await openwhyd
+        .dumpCollection('user')
+        .then((users) =>
+          users.find((user) => user._id.toString() === userWithOnePlaylist.id),
+        );
+      assert.deepEqual(user.pl, [{ id: 0, name: newName }]);
+
+      // And the API returns the playlist's id and new name
+      const { id, name } = JSON.parse(res.body);
+      assert.equal(name, newName);
+      assert.equal(id, 0);
+    });
   });
 });
