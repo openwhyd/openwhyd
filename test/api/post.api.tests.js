@@ -29,8 +29,6 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  beforeEach(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
-
   before(async () => {
     await openwhyd.setup();
   });
@@ -39,11 +37,13 @@ describe(`post api`, function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => {
+  beforeEach(async function () {
     post = {
       eId: `/yt/${randomString()}`,
       name: `Lullaby - Jack Johnson and Matt Costa`,
     };
+
+    await cleanup.bind(this, { silent: true })(); // to prevent side effects between tests
 
     ({ jar } = await util.promisify(api.loginAs)(loggedUser));
     /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.
