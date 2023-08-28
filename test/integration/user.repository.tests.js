@@ -28,9 +28,7 @@ describe('MongoDB User Repository', function () {
     mongodb = await initMongoDb({ silent: true });
   });
 
-  beforeEach(
-    async () => await resetTestDb({ env: process.env, silent: false }),
-  );
+  beforeEach(async () => await resetTestDb({ env: process.env, silent: true }));
 
   it('should throw exception when user is invalid', async () => {
     try {
