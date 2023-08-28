@@ -593,12 +593,9 @@ describe(`post api`, function () {
       // Given a post with 0 plays
       const postId = '000000000000000000000009';
       await insertPostWithZeroPlays(postId);
-      const [trackBefore] = await dumpMongoCollection(MONGODB_URL, 'track');
-      console.warn({ trackBefore });
-      assert.equal(trackBefore.nbP, 0);
 
       // When requesting to increase the play counter for that post
-      const resBody = await callPostApi({
+      await callPostApi({
         action: 'incrPlayCounter',
         pId: postId,
       }).then(({ body }) => JSON.parse(body));
