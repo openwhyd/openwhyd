@@ -26,8 +26,8 @@ exports.ADMIN_USER = Object.freeze({
   name: 'admin',
   username: 'admin',
   password: 'admin',
-  pwd: 'admin',
-  md5: '21232f297a57a5a743894a0e4a801fc3',
+  pwd: '21232f297a57a5a743894a0e4a801fc3', // MD5 hash of password
+  md5: '21232f297a57a5a743894a0e4a801fc3', // MD5 hash of password
 });
 
 // inserted by config/initdb_testing.js
@@ -37,17 +37,17 @@ exports.DUMMY_USER = Object.freeze({
   name: 'dummy',
   handle: 'dummy',
   password: 'admin',
-  pwd: 'admin',
-  md5: '21232f297a57a5a743894a0e4a801fc3',
+  pwd: '21232f297a57a5a743894a0e4a801fc3', // MD5 hash of password
+  md5: '21232f297a57a5a743894a0e4a801fc3', // MD5 hash of password
 });
 
 exports.TEST_USER = Object.freeze({
   email: 'test-user@openwhyd.org',
   name: 'Test User',
   username: 'test-user',
-  pwd: 'test-user',
   password: 'test-user', // for the /register api endpoint
-  md5: '42b27efc1480b4fe6d7eaa5eec47424d',
+  pwd: '42b27efc1480b4fe6d7eaa5eec47424d', // MD5 hash of password
+  md5: '42b27efc1480b4fe6d7eaa5eec47424d', // MD5 hash of password
 });
 
 /** Clears and (re)initializes Openwhyd's database, for testing. */

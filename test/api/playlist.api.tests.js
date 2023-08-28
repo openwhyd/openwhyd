@@ -55,7 +55,6 @@ describe(`playlist api`, function () {
       // Given a user that has one playlist
       const userWithOnePlaylist = {
         ...DUMMY_USER,
-        pwd: DUMMY_USER.md5, // to allow login
         _id: ObjectId(DUMMY_USER.id),
         pl: [{ id: 0, name: 'old name' }],
       };
