@@ -5,7 +5,11 @@ const request = require('request');
 const { DUMMY_USER, URL_PREFIX } = require('../fixtures.js');
 const api = require('../api-client.js');
 const { START_WITH_ENV_FILE } = process.env;
-const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
+const {
+  OpenwhydTestEnv,
+  ObjectId,
+  connectToMongoDB,
+} = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`playlist api`, function () {
@@ -21,6 +25,13 @@ describe(`playlist api`, function () {
 
   beforeEach(async () => {
     await openwhyd.reset(); // to prevent side effects between test suites
+  });
+
+  it('should impact the execution of following tests', async () => {
+    const client = connectToMongoDB(openwhyd.getEnv().MONGODB_URL);
+    const db = client.db();
+    await db.collection('user').deleteMany({});
+    client.close();
   });
 
   it('should create a playlist', async function () {
@@ -44,6 +55,13 @@ describe(`playlist api`, function () {
     const { id, name } = JSON.parse(res.body);
     assert.equal(name, playlistName);
     assert.equal(id, 0);
+  });
+
+  it('should impact the execution of following tests (2)', async () => {
+    const client = connectToMongoDB(openwhyd.getEnv().MONGODB_URL);
+    const db = client.db();
+    await db.collection('user').deleteMany({});
+    client.close();
   });
 
   describe('`rename` action', () => {
