@@ -8,6 +8,20 @@ const { START_WITH_ENV_FILE } = process.env;
 const { startOpenwhydServer } = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
+function callPlaylistApi(jar, form) {
+  return new Promise((resolve, reject) =>
+    request.post(
+      {
+        jar,
+        form,
+        url: `${URL_PREFIX}/api/playlist`,
+      },
+      (error, response, body) =>
+        error ? reject(error) : resolve({ response, body }),
+    ),
+  );
+}
+
 describe(`playlist api`, function () {
   let jar;
   const context = {};
@@ -35,20 +49,10 @@ describe(`playlist api`, function () {
 
   it('should create a playlist', async function () {
     const playlistName = `playlist-${randomString()}`;
-    const res = await new Promise((resolve, reject) =>
-      request.post(
-        {
-          jar,
-          form: {
-            action: 'create',
-            name: playlistName,
-          },
-          url: `${URL_PREFIX}/api/playlist`,
-        },
-        (error, response, body) =>
-          error ? reject(error) : resolve({ response, body }),
-      ),
-    );
+    const res = await callPlaylistApi(jar, {
+      action: 'create',
+      name: playlistName,
+    });
 
     const { id, name } = JSON.parse(res.body);
     assert.equal(name, playlistName);
