@@ -68,7 +68,7 @@ exports.resetTestDb = async (
 /**
  * Call this before each test to prevent side effects between tests.
  * Don't forget to bind to `this`, so Mocha's timeout can be adjusted.
- * @deprecated Use OpenwhydTestEnv.reset() instead.
+ * Note: For tests that need Openwhyd server to run, use OpenwhydTestEnv.reset() instead.
  */
 exports.cleanup = async function ({ silent } = { silent: false }) {
   this.timeout(4000);

@@ -3,7 +3,7 @@ const assert = require('assert');
 const request = require('request');
 
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { URL_PREFIX, DUMMY_USER, cleanup } = require('../fixtures.js');
+const { URL_PREFIX, DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 
 const reqGet = (url) =>
@@ -28,7 +28,7 @@ describe(`Data Export API`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
+  before(async () => await openwhyd.reset()); // to prevent side effects between tests
 
   before(async () => {
     await openwhyd.setup();

@@ -5,7 +5,6 @@ const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 
 const {
   ADMIN_USER,
-  cleanup,
   URL_PREFIX,
   DUMMY_USER,
   FAKE_ID,
@@ -22,7 +21,7 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
+  before(async () => await openwhyd.reset()); // to prevent side effects between test suites
 
   before(async () => {
     await openwhyd.setup();

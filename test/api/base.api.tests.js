@@ -2,7 +2,6 @@ const assert = require('assert');
 const util = require('util');
 
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { cleanup } = require('../fixtures.js');
 const api = require('../api-client.js');
 
 describe('base api', function () {
@@ -10,7 +9,7 @@ describe('base api', function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
+  before(async () => await openwhyd.reset()); // to prevent side effects between tests
 
   before(async () => {
     await openwhyd.setup();

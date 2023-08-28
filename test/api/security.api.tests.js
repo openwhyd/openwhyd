@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const assert = require('assert');
 
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
+const { ADMIN_USER, URL_PREFIX } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
 const postRaw = promisify(apiClient.postRaw);
@@ -13,7 +13,7 @@ describe('security', function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true }));
+  before(async () => await openwhyd.reset());
 
   before(async () => {
     await openwhyd.setup();

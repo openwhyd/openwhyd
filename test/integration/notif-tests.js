@@ -5,7 +5,7 @@ const notifModel = require('../../app/models/notif.js');
 
 const { ObjectId } = require('mongodb');
 const { initMongoDb } = require('../mongodb-client.js'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE env vars
-const { ADMIN_USER, cleanup } = require('../fixtures.js');
+const { ADMIN_USER, resetTestDb } = require('../fixtures.js');
 
 let mongodb, db;
 
@@ -115,7 +115,7 @@ describe('notifications', function () {
   this.timeout(5000);
 
   // reset database state and seed fixtures (including ADMIN_USER)
-  before(cleanup.bind(this, { silent: true }));
+  before(async () => await resetTestDb({ env: process.env, silent: false }));
 
   before(initDb);
 

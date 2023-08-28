@@ -3,7 +3,7 @@
 const querystring = require('querystring');
 const assert = require('assert');
 
-const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
+const { DUMMY_USER, ADMIN_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 const {
   OpenwhydTestEnv,
@@ -32,7 +32,7 @@ describe(`follow api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
+  before(async () => await openwhyd.reset()); // to prevent side effects between tests
 
   before(async () => {
     await openwhyd.setup();
