@@ -243,6 +243,5 @@ module.exports = {
   indentJSON,
   sortAndIndentAsJSON,
   getCleanedPageBody,
-  startOpenwhydServer, // TODO: STOP exporting this function => use OpenwhydTestEnv instead
   OpenwhydTestEnv,
 };
