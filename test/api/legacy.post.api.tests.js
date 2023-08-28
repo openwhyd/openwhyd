@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
+const { DUMMY_USER, ADMIN_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 const util = require('util');
 const { START_WITH_ENV_FILE } = process.env;
@@ -11,7 +11,7 @@ const backend = new OpenwhydTestEnv({
 });
 
 describe(`post api - legacy`, function () {
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites (there are side effects between tests in this file...)
+  before(async () => await backend.reset()); // to prevent side effects between test suites (there are side effects between tests in this file...)
 
   before(async () => {
     if (START_WITH_ENV_FILE) {
@@ -164,7 +164,7 @@ describe(`post api - legacy`, function () {
 
 describe(`post api - independent tests`, function () {
   // to prevent side effects between tests
-  beforeEach(cleanup.bind(this, { silent: true }));
+  beforeEach(async () => await backend.reset());
 
   before(async () => {
     if (START_WITH_ENV_FILE) {
