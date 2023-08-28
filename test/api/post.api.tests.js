@@ -555,9 +555,9 @@ describe(`post api`, function () {
   });
 
   describe('`incrPlayCounter` action', () => {
-    const insertPostWithZeroPlays = (postId) =>
+    const insertPost = (postId, props) =>
       openwhyd.insertTestData({
-        post: [{ _id: ObjectId(postId), nbP: 0 }],
+        post: [{ _id: ObjectId(postId), ...props }],
       });
 
     const callPostApi = (form) =>
@@ -576,13 +576,10 @@ describe(`post api`, function () {
     it('should increase the number of plays of the post', async () => {
       // Given a post with 0 plays
       const postId = '000000000000000000000009';
-      await insertPostWithZeroPlays(postId);
+      await insertPost(postId, { nbP: 0 });
 
       // When requesting to increase the play counter for that post
-      await callPostApi({
-        action: 'incrPlayCounter',
-        pId: postId,
-      }).then(({ body }) => JSON.parse(body));
+      await callPostApi({ action: 'incrPlayCounter', pId: postId });
 
       // Then the number of plays of that post is 1
       const [postAfter] = await dumpMongoCollection(MONGODB_URL, 'post');
@@ -592,13 +589,10 @@ describe(`post api`, function () {
     it('should increase the total number of plays of that track', async () => {
       // Given a post with 0 plays
       const postId = '000000000000000000000009';
-      await insertPostWithZeroPlays(postId);
+      await insertPost(postId, { nbP: 0, eId: '/yt/fake_video_id' });
 
       // When requesting to increase the play counter for that post
-      await callPostApi({
-        action: 'incrPlayCounter',
-        pId: postId,
-      }).then(({ body }) => JSON.parse(body));
+      await callPostApi({ action: 'incrPlayCounter', pId: postId });
 
       // Then the post _id is returned
       const [trackAfter] = await dumpMongoCollection(MONGODB_URL, 'track');
