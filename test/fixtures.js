@@ -50,22 +50,30 @@ exports.TEST_USER = Object.freeze({
   md5: '42b27efc1480b4fe6d7eaa5eec47424d',
 });
 
-// Call this before each test to prevent side effects between tests
-exports.cleanup = async function ({ silent } = { silent: false }) {
-  this.timeout(4000);
-  if (!silent) console.warn('🧹 Cleaning up test db...');
-  const envFile = process.env.START_WITH_ENV_FILE
-    ? await exports.loadEnvVars(process.env.START_WITH_ENV_FILE)
-    : {};
+/** Clears and (re)initializes Openwhyd's database, for testing. */
+exports.resetTestDb = async (
+  { env, silent } = { env: process.env, silent: false },
+) => {
+  if (!env?.MONGODB_HOST) throw new Error('missing env var: MONGODB_HOST');
+  if (!env?.MONGODB_PORT) throw new Error('missing env var: MONGODB_PORT');
   const resetDbProcess = childProcess.fork('test/reset-test-db.js', {
-    env: {
-      ...process.env,
-      MONGODB_HOST: envFile.MONGODB_HOST || process.env.MONGODB_HOST,
-      MONGODB_PORT: envFile.MONGODB_PORT || process.env.MONGODB_PORT,
-    },
+    env,
     silent,
   });
   resetDbProcess.stderr.on('data', (txt) => console.error(`[cleanup] ${txt}`));
   resetDbProcess.on('error', (err) => console.trace('[cleanup] error:', err));
   return new Promise((resolve) => resetDbProcess.on('close', () => resolve()));
+};
+
+/**
+ * Call this before each test to prevent side effects between tests.
+ * Don't forget to bind to `this`, so Mocha's timeout can be adjusted.
+ */
+exports.cleanup = async function ({ silent } = { silent: false }) {
+  this.timeout(4000);
+  if (!silent) console.warn('🧹 Cleaning up test db...');
+  const env = process.env.START_WITH_ENV_FILE
+    ? await exports.loadEnvVars(process.env.START_WITH_ENV_FILE)
+    : {};
+  await exports.resetTestDb({ silent, env: { ...process.env, ...env } });
 };
