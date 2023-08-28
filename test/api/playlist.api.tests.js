@@ -12,7 +12,7 @@ describe(`playlist api`, function () {
   let jar;
   const context = {};
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
+  beforeEach(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
 
   before(async () => {
     if (START_WITH_ENV_FILE) {
