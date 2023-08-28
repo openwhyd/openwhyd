@@ -220,7 +220,7 @@ class OpenwhydTestEnv {
     return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
   }
   async reset() {
-    await resetTestDb.bind({ silent: true, env: this.getEnv() });
+    await resetTestDb({ silent: true, env: this.getEnv() });
   }
   async refreshCache() {
     await refreshOpenwhydCache(this.getURL());
