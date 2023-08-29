@@ -22,6 +22,24 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
+  const insertPost = (postId, props) =>
+    openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId), ...props }],
+    });
+
+  const callPostApi = (form) =>
+    new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form,
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+
   before(async () => {
     await openwhyd.setup();
     URL_PREFIX = openwhyd.getURL();
@@ -31,7 +49,7 @@ describe(`post api`, function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => {
+  beforeEach(async function () {
     await openwhyd.reset(); // prevent side effects between tests by resetting db state
     ({ jar } = await util.promisify(api.loginAs)(loggedUser));
   });
@@ -537,5 +555,82 @@ describe(`post api`, function () {
     assert(resBody?._id, '_id should be provided in response');
     assert.equal(typeof resBody._id, 'string');
     assert.notEqual(resBody._id, '', '_id should not be empty');
+  });
+
+  describe('`incrPlayCounter` action', () => {
+    it('should increase the number of plays of the post', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await insertPost(postId, { nbP: 0 });
+
+      // When requesting to increase the play counter for that post
+      await callPostApi({ action: 'incrPlayCounter', pId: postId });
+
+      // Then the number of plays of that post is 1
+      const [postAfter] = await openwhyd.dumpCollection('post');
+      assert.equal(postAfter.nbP, 1);
+    });
+
+    it('should increase the total number of plays of that track', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await insertPost(postId, { nbP: 0, eId: '/yt/fake_video_id' });
+
+      // When requesting to increase the play counter for that post
+      await callPostApi({ action: 'incrPlayCounter', pId: postId });
+
+      // Then the number of plays of that track is 1
+      const [trackAfter] = await openwhyd.dumpCollection('track');
+      assert.equal(trackAfter.nbP, 1);
+    });
+  });
+
+  describe('`toggleLovePost` action', () => {
+    const postFromOtherUser = {
+      uId: otherUser.id,
+      lov: [],
+      eId: '/yt/fake_video_id',
+    };
+    it('should increase the number of loves of the post', async () => {
+      // Given a post with 0 loves
+      const postId = '000000000000000000000009';
+      await insertPost(postId, postFromOtherUser);
+
+      // When requesting to increase the love counter for that post
+      await callPostApi({ action: 'toggleLovePost', pId: postId });
+
+      // Then the user is included in the list of loves
+      const [postAfter] = await openwhyd.dumpCollection('post');
+      assert.deepEqual(postAfter.lov, [loggedUser.id]);
+    });
+
+    it('should increase the total number of loves of that track', async () => {
+      // Given a post with 0 loves
+      const postId = '000000000000000000000009';
+      await insertPost(postId, postFromOtherUser);
+
+      // When requesting to increase the love counter for that post
+      await callPostApi({ action: 'toggleLovePost', pId: postId });
+
+      // Then the number of loves of that track is 1
+      const [trackAfter] = await openwhyd.dumpCollection('track');
+      assert.equal(trackAfter.nbL, 1);
+    });
+
+    it('should list that action in the activity collection', async () => {
+      // Given a post with 0 loves
+      const postId = '000000000000000000000009';
+      await insertPost(postId, postFromOtherUser);
+
+      // When requesting to increase the love counter for that post
+      await callPostApi({ action: 'toggleLovePost', pId: postId });
+
+      // Then the number of loves of that track is 1
+      const activities = await openwhyd.dumpCollection('activity');
+      assert.equal(activities.length, 1);
+      assert.equal(activities[0]?.id, loggedUser.id);
+      assert.equal(activities[0]?.like?.id, otherUser.id);
+      assert.equal(activities[0]?.like?.pId, postId);
+    });
   });
 });
