@@ -202,7 +202,7 @@ function setPostLove(collection, pId, uId, state, handler) {
     collection.findOne({ _id: ObjectId('' + pId) }, function (err, post) {
       if (err) console.log(err);
       if (post && uId != post.uId) notif[state ? 'love' : 'unlove'](uId, post);
-      if (handler) handler(post);
+      handler?.(post);
       if (post) trackModel.updateByEid(post.eId);
       if (state)
         activityModel.addLikeByPost(post, {
