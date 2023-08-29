@@ -22,6 +22,24 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
+  const insertPost = (postId, props) =>
+    openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId), ...props }],
+    });
+
+  const callPostApi = (form) =>
+    new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form,
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+
   before(async () => {
     await openwhyd.setup();
     URL_PREFIX = openwhyd.getURL();
@@ -540,24 +558,6 @@ describe(`post api`, function () {
   });
 
   describe('`incrPlayCounter` action', () => {
-    const insertPost = (postId, props) =>
-      openwhyd.insertTestData({
-        post: [{ _id: ObjectId(postId), ...props }],
-      });
-
-    const callPostApi = (form) =>
-      new Promise((resolve, reject) =>
-        request.post(
-          {
-            jar,
-            form,
-            url: `${URL_PREFIX}/api/post`,
-          },
-          (error, response, body) =>
-            error ? reject(error) : resolve({ response, body }),
-        ),
-      );
-
     it('should increase the number of plays of the post', async () => {
       // Given a post with 0 plays
       const postId = '000000000000000000000009';
@@ -579,7 +579,7 @@ describe(`post api`, function () {
       // When requesting to increase the play counter for that post
       await callPostApi({ action: 'incrPlayCounter', pId: postId });
 
-      // Then the post _id is returned
+      // Then the number of plays of that track is 1
       const [trackAfter] = await openwhyd.dumpCollection('track');
       assert.equal(trackAfter.nbP, 1);
     });
