@@ -429,10 +429,13 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
     'pl.id': parseInt(plId),
   };
   const update = { $set: { pl: { id: parseInt(plId), name: plName } } };
-  mongodb.collections['post'].updateMany(criteria, update, function (err, res) {
-    if (err) console.log(err);
-    if (handler) handler(res);
-  });
+  mongodb.collections['post'].updateMany(criteria, update).then(
+    (res) => handler?.(res),
+    (err) => {
+      console.trace('postModel.setPlaylist', err);
+      handler?.();
+    },
+  );
 };
 
 /** Delete a user's playlist */
