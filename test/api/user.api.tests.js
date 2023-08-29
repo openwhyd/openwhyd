@@ -19,7 +19,9 @@ describe('user api', function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => await openwhyd.reset()); // to prevent side effects between tests
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
+  });
 
   it("should return a 404 for user handle that doesn't exist", async () => {
     const { response } = await util.promisify(api.getRaw)(null, '/nobody');

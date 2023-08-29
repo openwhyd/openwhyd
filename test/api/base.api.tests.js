@@ -17,7 +17,9 @@ describe('base api', function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => await openwhyd.reset()); // to prevent side effects between tests
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
+  });
 
   it("should return a 404 for URLs that don't exist", async () => {
     const { response } = await util.promisify(api.getRaw)(

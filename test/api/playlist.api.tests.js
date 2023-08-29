@@ -20,7 +20,7 @@ describe(`playlist api`, function () {
   });
 
   beforeEach(async () => {
-    await openwhyd.reset(); // to prevent side effects between test suites
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   it('should create a playlist', async function () {

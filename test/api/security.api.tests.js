@@ -21,7 +21,9 @@ describe('security', function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => await openwhyd.reset());
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
+  });
 
   describe('Open Redirect from /login', () => {
     it('should allow redirect to /stream', async () => {

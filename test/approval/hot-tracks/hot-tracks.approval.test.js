@@ -94,7 +94,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   beforeEach(async () => {
-    await backend.reset();
+    await backend.reset(); // prevent side effects between tests by resetting db state
     await db.collection('user').deleteMany({}); // clear users
     await db.collection('post').deleteMany({}); // clear posts
     await db.collection('track').deleteMany({}); // clear tracks

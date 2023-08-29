@@ -34,7 +34,7 @@ describe(`post api`, function () {
   });
 
   beforeEach(async () => {
-    await openwhyd.reset(); // to prevent side effects between tests
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
     ({ jar } = await util.promisify(api.loginAs)(loggedUser));
   });
 

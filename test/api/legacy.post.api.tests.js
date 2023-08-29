@@ -164,7 +164,7 @@ describe(`post api - independent tests`, function () {
   });
 
   beforeEach(async () => {
-    await openwhyd.reset(); // to prevent side effects between tests
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   it('should delete a post', async function () {
