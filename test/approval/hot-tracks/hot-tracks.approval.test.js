@@ -17,7 +17,7 @@ const {
   DONT_KILL,
 } = process.env;
 
-const backend = new OpenwhydTestEnv({
+const openwhyd = new OpenwhydTestEnv({
   startWithEnv: START_WITH_ENV_FILE,
   port: PORT,
 });
@@ -79,7 +79,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   let db;
 
   beforeAll(async () => {
-    await backend.setup();
+    await openwhyd.setup();
     if (PORT) {
       await waitOn({ resources: [`http://localhost:${PORT}`], timeout: 1000 });
     }
@@ -90,11 +90,11 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
 
   afterAll(async () => {
     if (mongoClient) await mongoClient.close();
-    if (!DONT_KILL) await backend.release();
+    if (!DONT_KILL) await openwhyd.release();
   });
 
   beforeEach(async () => {
-    await backend.reset(); // prevent side effects between tests by resetting db state
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
     await db.collection('user').deleteMany({}); // clear users
     await db.collection('post').deleteMany({}); // clear posts
     await db.collection('track').deleteMany({}); // clear tracks
@@ -113,13 +113,13 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         score: 2,
       },
     ]);
-    await backend.refreshCache();
+    await openwhyd.refreshCache();
     const json = await httpClient.get({
-      url: `${backend.getURL()}/hot?limit=1&format=json`,
+      url: `${openwhyd.getURL()}/hot?limit=1&format=json`,
     });
     expect(indentJSON(json.body)).toMatchSnapshot();
     const html = await httpClient.get({
-      url: `${backend.getURL()}/hot?limit=1&`,
+      url: `${openwhyd.getURL()}/hot?limit=1&`,
     });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
@@ -137,13 +137,13 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         score: 2,
       },
     ]);
-    await backend.refreshCache();
+    await openwhyd.refreshCache();
     const json = await httpClient.get({
-      url: `${backend.getURL()}/hot?skip=1&format=json`,
+      url: `${openwhyd.getURL()}/hot?skip=1&format=json`,
     });
     expect(indentJSON(json.body)).toMatchSnapshot();
     const html = await httpClient.get({
-      url: `${backend.getURL()}/hot?skip=1&`,
+      url: `${openwhyd.getURL()}/hot?skip=1&`,
     });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
@@ -167,32 +167,32 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
         tracks.map((_, i) => ({ ...tracks[i], pId: posts[i]._id, score: i })),
       );
     await db.collection('post').insertMany(posts);
-    await backend.refreshCache();
+    await openwhyd.refreshCache();
     const json = await httpClient.get({
-      url: `${backend.getURL()}/hot?format=json`,
+      url: `${openwhyd.getURL()}/hot?format=json`,
     });
     expect(indentJSON(json.body)).toMatchSnapshot();
-    const html = await httpClient.get({ url: `${backend.getURL()}/hot` });
+    const html = await httpClient.get({ url: `${openwhyd.getURL()}/hot` });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
 
   it("updates the score of a track when it's liked", async () => {
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
-    await backend.refreshCache();
-    const userSession = await loginUsers(backend, users);
+    await openwhyd.refreshCache();
+    const userSession = await loginUsers(openwhyd, users);
     // user 0 posts track A
-    const { _id } = await postTrack(backend, userSession[0], tracks[0]);
+    const { _id } = await postTrack(openwhyd, userSession[0], tracks[0]);
     const cleanJSON = (body) => body.replaceAll(_id, '__posted_track_id__');
     // user 1 likes track A
     await httpClient.post({
-      url: `${backend.getURL()}/api/post/${_id}`,
+      url: `${openwhyd.getURL()}/api/post/${_id}`,
       body: { action: 'toggleLovePost' },
       cookies: userSession[1].cookies,
     });
     await new Promise((resolve) => setTimeout(resolve, 1000)); // give time for track model to take the like into account
     const json = await httpClient.get({
-      url: `${backend.getURL()}/hot?format=json`,
+      url: `${openwhyd.getURL()}/hot?format=json`,
     });
     expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.
@@ -203,20 +203,20 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   it("updates the score of a track when it's reposted", async () => {
     await db.collection('user').insertMany(users);
     await db.collection('track').insertMany(tracks);
-    await backend.refreshCache();
-    const userSession = await loginUsers(backend, users);
+    await openwhyd.refreshCache();
+    const userSession = await loginUsers(openwhyd, users);
     // user 0 posts track A
-    const { _id } = await postTrack(backend, userSession[0], tracks[0]);
+    const { _id } = await postTrack(openwhyd, userSession[0], tracks[0]);
     const cleanJSON = (body) => body.replaceAll(_id, '__posted_track_id__');
     // user 1 reposts track A
     await httpClient.post({
-      url: `${backend.getURL()}/api/post`,
+      url: `${openwhyd.getURL()}/api/post`,
       body: { action: 'insert', pId: _id },
       cookies: userSession[1].cookies,
     });
     await new Promise((resolve) => setTimeout(resolve, 1000)); // give time for track model to take the repost into account
     const json = await httpClient.get({
-      url: `${backend.getURL()}/hot?format=json`,
+      url: `${openwhyd.getURL()}/hot?format=json`,
     });
     expect(cleanJSON(indentJSON(json.body))).toMatchSnapshot();
     // Note: the requests above mutate data => we snapshot the state of the "tracks" table.

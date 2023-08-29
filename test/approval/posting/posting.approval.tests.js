@@ -46,7 +46,7 @@ const makePostFromBk = (user) => ({
   },
 });
 
-const backend = new OpenwhydTestEnv({
+const openwhyd = new OpenwhydTestEnv({
   startWithEnv: START_WITH_ENV_FILE,
   port: PORT,
 });
@@ -70,13 +70,13 @@ async function setupTestEnv() {
   };
   await insertTestData(MONGODB_URL, context.testDataCollections);
   // start openwhyd server
-  await backend.setup(); // starts openwhyd, or refreshes its state if already running
+  await openwhyd.setup(); // starts openwhyd, or refreshes its state if already running
   return context;
 }
 
 async function teardownTestEnv() {
   if (!DONT_KILL) {
-    await backend.release();
+    await openwhyd.release();
   }
 }
 
@@ -172,7 +172,7 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
         request.get(
           {
             jar,
-            url: `${backend.getURL()}/api/post?action=insert&eId=${encodeURIComponent(
+            url: `${openwhyd.getURL()}/api/post?action=insert&eId=${encodeURIComponent(
               post.eId,
             )}&name=${encodeURIComponent(
               post.name,
@@ -228,7 +228,7 @@ describe('When renaming a track', function () {
             _id: postedTrack._id.toString(),
             pl: { id: null, name: 'full stream' },
           },
-          url: `${backend.getURL()}/api/post`,
+          url: `${openwhyd.getURL()}/api/post`,
         },
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
