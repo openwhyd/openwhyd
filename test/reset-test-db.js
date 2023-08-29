@@ -1,7 +1,8 @@
 //@ts-check
 
 const fs = require('fs');
-const async = require('async');
+const util = require('util');
+const mongodb = require('../app/models/mongodb.js');
 const { ImageStorage } = require('../app/infrastructure/ImageStorage.js');
 
 const { DEBUG } = process.env;
@@ -25,35 +26,22 @@ const dbCreds = {
 };
 
 if (DEBUG) console.log('[test-db-init.js] Connecting to db ...');
-require('../app/models/mongodb.js').init(dbCreds, function (err, db) {
+mongodb.init(dbCreds, async (err, db) => {
   if (err) throw err;
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const mongodb = this;
   if (DEBUG) console.log('[test-db-init.js] Clearing test database ...');
-  db.dropDatabase(function (err) {
-    if (err) throw err;
-    async.eachSeries(
-      DB_INIT_SCRIPTS,
-      function (initScript, nextScript) {
-        if (DEBUG)
-          console.log(
-            '[test-db-init.js] Applying db init script:',
-            initScript,
-            '...',
-          );
-        mongodb.runShellScript(fs.readFileSync(initScript), nextScript);
-      },
-      async function (err) {
-        if (err) throw err;
+  await db.dropDatabase({ writeConcern: { w: 'majority', fsync: true } }); // intends to prevent occasional `E11000 duplicate key error collection: openwhyd_test.user`
+  for await (const initScript of DB_INIT_SCRIPTS) {
+    if (DEBUG)
+      console.log(`[test-db-init.js] Applying script: ${initScript} ...`);
+    const script = await fs.promises.readFile(initScript);
+    // @ts-ignore
+    await util.promisify(mongodb.runShellScript)(script);
+  }
+  // delete uploaded files
+  await new ImageStorage()
+    .deleteAllFiles()
+    .catch((err) => console.warn(`[test-db-init.js] ${err.message}`));
 
-        // delete uploaded files
-        await new ImageStorage()
-          .deleteAllFiles()
-          .catch((err) => console.warn(`[test-db-init.js] ${err.message}`));
-
-        if (DEBUG) console.log('[test-db-init.js] => done.');
-        process.exit();
-      },
-    );
-  });
+  if (DEBUG) console.log('[test-db-init.js] => done.');
+  process.exit();
 });
