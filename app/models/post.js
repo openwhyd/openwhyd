@@ -194,25 +194,21 @@ exports.isPostLovedByUid = function (pId, uId, handler) {
 };
 
 /** @param {import('mongodb').Collection} collection */
-function setPostLove(collection, pId, uId, state, handler) {
+async function setPostLove(collection, pId, uId, state, handler) {
   const update = state
     ? { $push: { lov: '' + uId } }
     : { $pull: { lov: '' + uId } };
-  collection.updateOne({ _id: ObjectId('' + pId) }, update, function (err) {
-    if (err) console.log(err);
-    collection.findOne({ _id: ObjectId('' + pId) }, function (err, post) {
-      if (err) console.log(err);
-      if (post && uId != post.uId) notif[state ? 'love' : 'unlove'](uId, post);
-      handler?.(post);
-      if (post) trackModel.updateByEid(post.eId);
-      if (state)
-        activityModel.addLikeByPost(post, {
-          id: uId,
-          name: mongodb.getUserNameFromId(uId),
-        });
-      else activityModel.removeLike(pId, uId);
+  await collection.updateOne({ _id: ObjectId('' + pId) }, update);
+  const post = await collection.findOne({ _id: ObjectId('' + pId) });
+  if (post && uId != post.uId) notif[state ? 'love' : 'unlove'](uId, post);
+  handler?.(post);
+  if (post) trackModel.updateByEid(post.eId);
+  if (state)
+    activityModel.addLikeByPost(post, {
+      id: uId,
+      name: mongodb.getUserNameFromId(uId),
     });
-  });
+  else activityModel.removeLike(pId, uId);
 }
 
 exports.lovePost = function (pId, uId, handler) {
