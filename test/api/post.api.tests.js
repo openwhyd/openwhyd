@@ -3,12 +3,7 @@ const util = require('util');
 const request = require('request');
 const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 
-const {
-  ADMIN_USER,
-  URL_PREFIX,
-  DUMMY_USER,
-  FAKE_ID,
-} = require('../fixtures.js');
+const { ADMIN_USER, DUMMY_USER, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
@@ -20,6 +15,7 @@ describe(`post api`, function () {
     name: `Lullaby - Jack Johnson and Matt Costa`,
   });
   let jar;
+  let URL_PREFIX;
 
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
@@ -27,6 +23,7 @@ describe(`post api`, function () {
 
   before(async () => {
     await openwhyd.setup();
+    URL_PREFIX = openwhyd.getURL();
   });
 
   after(async () => {

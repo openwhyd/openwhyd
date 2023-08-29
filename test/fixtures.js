@@ -17,8 +17,6 @@ exports.loadEnvVars = async (file) => {
 
 exports.FAKE_ID = 'a0000000000000000000000a';
 
-exports.URL_PREFIX = 'http://localhost:8080';
-
 // inserted by config/initdb_testing.js
 exports.ADMIN_USER = Object.freeze({
   id: '000000000000000000000001',

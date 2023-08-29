@@ -2,7 +2,7 @@ const assert = require('assert');
 const util = require('util');
 const request = require('request');
 
-const { DUMMY_USER, URL_PREFIX } = require('../fixtures.js');
+const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
@@ -35,7 +35,7 @@ describe(`playlist api`, function () {
             action: 'create',
             name: playlistName,
           },
-          url: `${URL_PREFIX}/api/playlist`,
+          url: `${openwhyd.getURL()}/api/playlist`,
         },
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -69,7 +69,7 @@ describe(`playlist api`, function () {
               id: 0,
               name: newName,
             },
-            url: `${URL_PREFIX}/api/playlist`,
+            url: `${openwhyd.getURL()}/api/playlist`,
           },
           (error, response, body) =>
             error ? reject(error) : resolve({ response, body }),
