@@ -30,11 +30,16 @@ describe(`Data Export API`, function () {
 
   before(async () => {
     await openwhyd.setup();
-    await openwhyd.reset(); // to prevent side effects between test suites
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    this.timeout(4000);
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
+    return addTrackToPlaylist(user, plName, track);
   });
 
   // add a playlist with one track
@@ -45,10 +50,6 @@ describe(`Data Export API`, function () {
     eId: '/yt/59MdiE1IsBY',
     url: '//youtube.com/watch?v=59MdiE1IsBY',
   };
-  before(function () {
-    this.timeout(4000);
-    return addTrackToPlaylist(user, plName, track);
-  });
 
   describe(`provides profile tracks`, () => {
     it(`of given user id, as JSON, using callback`, async () => {
