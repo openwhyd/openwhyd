@@ -405,6 +405,7 @@ exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
 
 exports.countPlaylistPosts = function (uId, plId, handler) {
   function handle(err, result) {
+    if (err) console.trace('post.countPlaylistPosts =>', err);
     handler(result);
   }
   if (uId)
@@ -432,7 +433,7 @@ exports.setPlaylist = function (uId, plId, plName, handler) {
   mongodb.collections['post'].updateMany(criteria, update).then(
     (res) => handler?.(res),
     (err) => {
-      console.trace('postModel.setPlaylist', err);
+      console.trace('post.setPlaylist =>', err);
       handler?.();
     },
   );
@@ -445,10 +446,13 @@ exports.unsetPlaylist = function (uId, plId, handler) {
     'pl.id': parseInt(plId),
   };
   const update = { $unset: { pl: 1 } };
-  mongodb.collections['post'].updateMany(criteria, update, function (err, res) {
-    if (err) console.log('post.unsetPlaylist =>', err);
-    if (handler) handler(res);
-  });
+  mongodb.collections['post'].updateMany(criteria, update).then(
+    (res) => handler?.(res),
+    (err) => {
+      console.trace('post.unsetPlaylist =>', err);
+      handler?.();
+    },
+  );
 };
 
 exports.setPlaylistOrder = function (uId, plId, order = [], handler) {
