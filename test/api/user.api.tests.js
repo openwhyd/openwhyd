@@ -2,7 +2,7 @@ const fs = require('fs');
 const assert = require('assert');
 const util = require('util');
 
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const { DUMMY_USER, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 

@@ -5,10 +5,8 @@ const assert = require('assert');
 
 const { DUMMY_USER, ADMIN_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
-const {
-  OpenwhydTestEnv,
-  sortAndIndentAsJSON,
-} = require('../approval-tests-helpers.js');
+const { sortAndIndentAsJSON } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const { ObjectId } = require('../../app/models/mongodb.js');
 
 const getAsUser = (user, url, params) =>

@@ -2,7 +2,7 @@ const vm = require('vm');
 const assert = require('assert');
 const request = require('request');
 
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 

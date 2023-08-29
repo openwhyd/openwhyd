@@ -1,7 +1,7 @@
 const { promisify } = require('util');
 const assert = require('assert');
 
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const { ADMIN_USER } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 

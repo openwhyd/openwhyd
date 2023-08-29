@@ -9,9 +9,9 @@ const {
   dumpMongoCollection,
   readMongoDocuments,
   insertTestData,
-  OpenwhydTestEnv,
   sortAndIndentAsJSON,
 } = require('../../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../../OpenwhydTestEnv.js');
 
 const {
   START_WITH_ENV_FILE,

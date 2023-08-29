@@ -6,10 +6,10 @@ const {
   httpClient,
   ObjectId,
   connectToMongoDB,
-  OpenwhydTestEnv,
   indentJSON,
   getCleanedPageBody,
 } = require('../../approval-tests-helpers');
+const { OpenwhydTestEnv } = require('../../OpenwhydTestEnv');
 
 const {
   START_WITH_ENV_FILE,

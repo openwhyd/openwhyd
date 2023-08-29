@@ -6,8 +6,8 @@ const {
   readMongoDocuments,
   insertTestData,
   getCleanedPageBody,
-  OpenwhydTestEnv,
 } = require('../../approval-tests-helpers');
+const { OpenwhydTestEnv } = require('../../OpenwhydTestEnv');
 
 const {
   START_WITH_ENV_FILE,

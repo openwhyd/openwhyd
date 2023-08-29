@@ -4,7 +4,8 @@ const request = require('request');
 
 const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
-const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
+const { ObjectId } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`playlist api`, function () {

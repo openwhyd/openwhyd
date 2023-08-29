@@ -4,7 +4,7 @@ const { DUMMY_USER, ADMIN_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 const util = require('util');
 const { START_WITH_ENV_FILE } = process.env;
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 
 const openwhyd = new OpenwhydTestEnv({
   startWithEnv: START_WITH_ENV_FILE,

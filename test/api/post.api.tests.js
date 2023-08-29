@@ -1,7 +1,8 @@
 const assert = require('assert');
 const util = require('util');
 const request = require('request');
-const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
+const { ObjectId } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 
 const { ADMIN_USER, DUMMY_USER, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');

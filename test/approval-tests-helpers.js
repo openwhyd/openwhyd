@@ -3,8 +3,7 @@
 const util = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
-const childProcess = require('child_process');
-const { loadEnvVars, resetTestDb } = require('./fixtures');
+const { loadEnvVars } = require('./fixtures');
 const { promisify } = util;
 
 const makeJSONScrubber = (scrubbers) => (obj) =>
@@ -117,155 +116,6 @@ function getCleanedPageBody(body) {
   }
 }
 
-const errPrinter = ((blocklist) => {
-  return (chunk) => {
-    const message = chunk.toString();
-    if (process.env.DEBUG || !blocklist.some((term) => message.includes(term)))
-      console.error(message);
-  };
-})([
-  'server.close => OK',
-  'closing server',
-  'deprecated',
-  'gm: command not found',
-  'convert: command not found',
-  'please install graphicsmagick',
-]);
-
-const withCoverage = () => process.env.COVERAGE === 'true';
-
-/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams & {exit: () => Promise<void>}>} */
-const startOpenwhydServerWith = async (env) =>
-  new Promise((resolve, reject) => {
-    const serverProcess = withCoverage()
-      ? childProcess.spawn('npm', ['run', 'start:coverage:no-clean'], {
-          env: { ...env, PATH: process.env.PATH },
-          shell: true,
-          detached: true, // when running on CI, we need this to kill the process group using `process.kill(-serverProcess.pid)`
-        })
-      : childProcess.fork(
-          './app.js',
-          ['--fakeEmail', '--digestInterval', '-1'],
-          {
-            env,
-            silent: true, // necessary to initialize serverProcess.stderr
-          },
-        );
-    // @ts-ignore
-    serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
-    // @ts-ignore
-    serverProcess.exit = () =>
-      new Promise((resolve) => {
-        if (serverProcess.exitCode !== null) return resolve();
-        serverProcess.on('close', resolve);
-        const killed =
-          withCoverage() && serverProcess.pid
-            ? process.kill(-serverProcess.pid, 'SIGINT')
-            : serverProcess.kill(/*'SIGTERM'*/);
-        if (!killed) throw new Error('🧟‍♀️ failed to kill childprocess!');
-      });
-    serverProcess.on('error', reject);
-    serverProcess.stderr.on('data', errPrinter);
-    serverProcess.stdout.on('data', (str) => {
-      if (process.env.DEBUG) errPrinter(str);
-      // @ts-ignore
-      if (str.includes('Server running')) resolve(serverProcess);
-    });
-  });
-
-/* Refresh openwhyd's in-memory cache of users, e.g. to allow freshly added users to login. */
-async function refreshOpenwhydCache(urlPrefix) {
-  const res = await promisify(request.post)(urlPrefix + '/testing/refresh');
-  if (res.statusCode !== 200)
-    throw new Error(res.body ?? 'non-200 status code');
-}
-
-/** @param {{startWithEnv:unknown, port?: number | string | undefined}} options */
-async function startOpenwhydServer({ startWithEnv, port }) {
-  if (port) {
-    const URL = `http://localhost:${port}`;
-    await refreshOpenwhydCache(URL);
-    return { URL };
-  } else if (startWithEnv) {
-    const env = {
-      ...(await loadEnvVars(startWithEnv)),
-      ...process.env, // allow overrides
-    };
-    return { ...(await startOpenwhydServerWith(env)), env }; // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
-  }
-}
-
-/**
- * Manages the environment and execution of Openwhyd server and its database, for automated tests.
- * The goal is to make automated tests easier to write, by abstracting technical details about the backend under test.
- */
-class OpenwhydTestEnv {
-  /**
-   * If `startWithEnv` is provided, `setup()` will start Openwhyd's server programmatically,
-   * by reading environment variables from the corresponding file.
-   * Otherwise, please provide the `port` on which Openwhyd is currently running.
-   * @param {{ startWithEnv: string } | { port: number | string }} options
-   */
-  constructor(options) {
-    this.options = options;
-    this.isSetup = false;
-  }
-
-  /**
-   * Start Openwhyd, if `startWithEnv` was provided at time of instanciation.
-   * Don't forget:
-   * - call `reset()` to clear and (re)initialize Openwhyd's database, before each test;
-   * - call `refreshCache()` after every modification to the `user` collection;
-   * - call `release()` to stop Openwhyd, when you're done testing.
-   */
-  async setup() {
-    if ('startWithEnv' in this.options)
-      this.serverProcess = await startOpenwhydServer(this.options);
-    this.isSetup = true;
-  }
-
-  /** Stop Openwhyd, if startWithEnv was provided at time of instanciation. */
-  async release() {
-    if (this.serverProcess && 'exit' in this.serverProcess)
-      await this.serverProcess.exit();
-  }
-
-  /** Return the environment variables used by Openwhyd. */
-  getEnv() {
-    return this.serverProcess && 'env' in this.serverProcess
-      ? this.serverProcess.env
-      : process.env;
-  }
-
-  /** Return the URL of the Openwhyd server. */
-  getURL() {
-    return `http://localhost:${this.getEnv().WHYD_PORT}`;
-  }
-
-  /** Return the documents of the provided MongoDB collection. */
-  async dumpCollection(collection) {
-    return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
-  }
-
-  /** Clears and (re)initializes Openwhyd's database, for testing. */
-  async reset() {
-    if (!this.isSetup) throw new Error('please call setup() before reset()');
-    await resetTestDb({ silent: true, env: this.getEnv() });
-    await this.refreshCache();
-  }
-
-  /* Refresh openwhyd's in-memory cache of users, e.g. to allow freshly added users to login. */
-  async refreshCache() {
-    await refreshOpenwhydCache(this.getURL());
-  }
-
-  /** Clear and populate MongoDB collections with the provided documents. */
-  async insertTestData(docsPerCollection) {
-    await insertTestData(this.getEnv().MONGODB_URL, docsPerCollection);
-    if ('user' in docsPerCollection) await this.refreshCache();
-  }
-}
-
 module.exports = {
   makeJSONScrubber,
   loadEnvVars,
@@ -278,5 +128,4 @@ module.exports = {
   indentJSON,
   sortAndIndentAsJSON,
   getCleanedPageBody,
-  OpenwhydTestEnv,
 };
