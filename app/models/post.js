@@ -167,7 +167,10 @@ exports.fetchRepostsFromMe = function (uid, options, handler) {
 exports.countUserPosts = function (uid, handler) {
   mongodb.collections['post'].countDocuments({ uId: uid }).then(
     (res) => handler(res),
-    (err) => console.trace('countUserPosts', err),
+    (err) => {
+      console.trace('countUserPosts', err);
+      handler();
+    },
   );
 };
 
@@ -177,7 +180,10 @@ exports.model = exports;
 exports.fetchPostById = function (pId, handler) {
   mongodb.collections['post'].findOne({ _id: ObjectId('' + pId) }).then(
     (res) => handler(res),
-    (err) => console.trace('fetchPostsById', err),
+    (err) => {
+      console.trace('fetchPostsById', err);
+      handler();
+    },
   );
 };
 
@@ -219,7 +225,10 @@ exports.unlovePost = function (pId, uId, handler) {
 exports.countLovedPosts = function (uid, callback) {
   db['post'].countDocuments({ lov: '' + uid }).then(
     (res) => callback(res),
-    (err) => console.trace('countLovedPosts', err),
+    (err) => {
+      console.trace('countLovedPosts', err);
+      callback();
+    },
   );
 };
 
@@ -279,7 +288,7 @@ exports.savePost = function (postObj, handler) {
   } else
     mongodb.collections['post'].insertOne(postObj).then(
       (res) => whenDone(null, { _id: res.insertedId }),
-      (err) => whenDone(err),
+      (err) => whenDone(err, {}),
     );
 };
 
