@@ -65,8 +65,7 @@ describe(`playlist api`, function () {
     assert.equal(id, 0);
   });
 
-  // TODO: re-activate this block
-  describe.skip('`rename` action', () => {
+  describe('`rename` action', () => {
     it('should rename a playlist', async function () {
       // Given a user that has one playlist
       const userWithOnePlaylist = {
