@@ -127,4 +127,58 @@ describe(`playlist api`, function () {
       assert.deepEqual(post.pl, { id: 0, name: newName });
     });
   });
+
+  describe('`delete` action', () => {
+    it('should delete the playlist', async function () {
+      // Given a user that has one playlist
+      const userWithOnePlaylist = {
+        ...DUMMY_USER,
+        _id: ObjectId(DUMMY_USER.id),
+        pl: [{ id: 0, name: 'old name' }],
+      };
+      await openwhyd.insertTestData({ user: [userWithOnePlaylist] });
+
+      // When the user deletes their playlist
+      await callPlaylistApi(jar, {
+        action: 'delete',
+        id: 0,
+      });
+
+      // Then the playlist has zero playlists
+      const user = await openwhyd
+        .dumpCollection('user')
+        .then((users) =>
+          users.find((user) => user._id.toString() === userWithOnePlaylist.id),
+        );
+      assert.deepEqual(user.pl, []);
+    });
+
+    it("should remove the playlist's name in associated posts", async function () {
+      // Given a user that has one playlist that contains one post
+      const initialPlaylist = { id: 0, name: 'old name' };
+      const userWithOnePlaylist = {
+        ...DUMMY_USER,
+        _id: ObjectId(DUMMY_USER.id),
+        pl: [initialPlaylist],
+      };
+      const postInThatPlaylist = {
+        uId: userWithOnePlaylist.id,
+        pl: initialPlaylist,
+      };
+      await openwhyd.insertTestData({
+        user: [userWithOnePlaylist],
+        post: [postInThatPlaylist],
+      });
+
+      // When the user deletes their playlist
+      await callPlaylistApi(jar, {
+        action: 'delete',
+        id: 0,
+      });
+
+      // Then the change is persisted in the playlist's posts too
+      const [post] = await openwhyd.dumpCollection('post');
+      assert.deepEqual(post.pl, undefined);
+    });
+  });
 });
