@@ -86,10 +86,11 @@ class OpenwhydTestEnv {
    * @param {{ startWithEnv: string } | { port: string }} options
    */
   constructor(options) {
+    if (!options || !('startWithEnv' in options || 'port' in options))
+      throw new Error('please provide startWithEnv or port');
     this.options = options;
     this.env = null;
     this.serverProcess = null;
-    this.isSetup = false;
   }
 
   /**
@@ -100,17 +101,16 @@ class OpenwhydTestEnv {
    * - call `release()` to stop Openwhyd, when you're done testing.
    */
   async setup() {
-    if ('port' in this.options) {
-      this.env = { ...process.env, WHYD_PORT: this.options.port };
-      await refreshOpenwhydCache(this.getURL());
-    } else if ('startWithEnv' in this.options) {
+    if ('startWithEnv' in this.options && this.options.startWithEnv) {
       this.env = {
         ...(await loadEnvVars(this.options.startWithEnv)),
         ...process.env, // allow overrides
       };
       this.serverProcess = await startOpenwhydServerWith(this.env);
+    } else {
+      this.env = { ...process.env /*, WHYD_PORT: this.options.port*/ };
+      await refreshOpenwhydCache(this.getURL());
     }
-    this.isSetup = true;
   }
 
   /** Stop Openwhyd, if startWithEnv was provided at time of instanciation. */
@@ -122,7 +122,7 @@ class OpenwhydTestEnv {
 
   /** Return the environment variables used by Openwhyd. */
   getEnv() {
-    if (!this.isSetup) throw new Error('please call setup() before getEnv()');
+    if (!this.env) throw new Error('please call setup() before getEnv()');
     return this.env;
   }
 
@@ -138,7 +138,7 @@ class OpenwhydTestEnv {
 
   /** Clears and (re)initializes Openwhyd's database, for testing. */
   async reset() {
-    if (!this.isSetup) throw new Error('please call setup() before reset()');
+    if (!this.env) throw new Error('please call setup() before reset()');
     await resetTestDb({ silent: true, env: this.getEnv() });
     await this.refreshCache();
   }
