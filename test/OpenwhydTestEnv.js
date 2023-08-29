@@ -86,8 +86,6 @@ class OpenwhydTestEnv {
    * @param {{ startWithEnv: string } | { port: string }} options
    */
   constructor(options) {
-    if (!options || !('startWithEnv' in options || 'port' in options))
-      throw new Error('please provide startWithEnv or port');
     this.options = options;
     this.env = null;
     this.serverProcess = null;
@@ -108,7 +106,11 @@ class OpenwhydTestEnv {
       };
       this.serverProcess = await startOpenwhydServerWith(this.env);
     } else {
-      this.env = { ...process.env /*, WHYD_PORT: this.options.port*/ };
+      this.env = { ...process.env };
+      if ('port' in this.options && this.options.port)
+        this.env.WHYD_PORT = this.options.port;
+      if (!this.env.WHYD_PORT)
+        throw new Error('please provide startWithEnv or port');
       await refreshOpenwhydCache(this.getURL());
     }
   }
