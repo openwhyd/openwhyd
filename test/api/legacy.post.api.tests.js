@@ -25,12 +25,13 @@ describe(`post api - legacy`, function () {
   });
 
   describe('without playlist', function () {
+    let jar;
     let initialPost;
     let pId;
 
     beforeEach(async () => {
       await openwhyd.reset(); // prevent side effects between tests by resetting db state
-      const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
+      ({ jar } = await util.promisify(api.loginAs)(DUMMY_USER));
       const { body } = await api.addPost(jar, post);
       initialPost = body;
       pId = initialPost._id;
@@ -43,16 +44,13 @@ describe(`post api - legacy`, function () {
     });
 
     it(`should allow re-adding a track (aka "repost")`, function (done) {
-      api.loginAs(DUMMY_USER, function (error, { jar }) {
-        api.addPost(jar, { pId }).then(({ body }) => {
-          assert.ifError(error);
-          assert(body._id);
-          assert.notEqual(body._id, pId);
-          assert.equal(body.repost.pId, pId);
-          assert.equal(body.eId, post.eId);
-          assert.equal(body.name, post.name);
-          done();
-        });
+      api.addPost(jar, { pId }).then(({ body }) => {
+        assert(body._id);
+        assert.notEqual(body._id, pId);
+        assert.equal(body.repost.pId, pId);
+        assert.equal(body.eId, post.eId);
+        assert.equal(body.name, post.name);
+        done();
       });
     });
   });
@@ -63,13 +61,14 @@ describe(`post api - legacy`, function () {
       id: 'create',
       name: 'my first playlist',
     };
+    let jar;
     let postInPlaylist;
     let pId, uId;
     let playlistFullId;
 
     beforeEach(async () => {
       await openwhyd.reset(); // prevent side effects between tests by resetting db state
-      const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
+      ({ jar } = await util.promisify(api.loginAs)(DUMMY_USER));
       const { body } = await api.addPost(jar, { ...post, pl: playlist });
       postInPlaylist = body;
       pId = postInPlaylist._id;
@@ -85,83 +84,71 @@ describe(`post api - legacy`, function () {
     });
 
     it(`make sure that the playlist was created`, function (done) {
-      api.loginAs(DUMMY_USER, function (error, { jar }) {
-        api.getUser(jar, {}, function (error, { body }) {
-          assert.equal(body.pl.length, 1);
-          assert.equal(body.pl[0].id, firstPlaylistIndex);
-          assert.equal(body.pl[0].name, postInPlaylist.pl.name);
-          assert.equal(body.pl[0].nbTracks, 1);
-          playlistFullId = [body.id, firstPlaylistIndex].join('_');
-          done();
-        });
+      api.getUser(jar, {}, function (error, { body }) {
+        assert.equal(body.pl.length, 1);
+        assert.equal(body.pl[0].id, firstPlaylistIndex);
+        assert.equal(body.pl[0].name, postInPlaylist.pl.name);
+        assert.equal(body.pl[0].nbTracks, 1);
+        playlistFullId = [body.id, firstPlaylistIndex].join('_');
+        done();
       });
     });
 
     it(`should find 1 track in the playlist`, function (done) {
-      api.loginAs(DUMMY_USER, function (error, { jar }) {
-        api.getPlaylist(jar, playlistFullId, function (error, { body }) {
-          assert.ifError(error);
-          assert.equal(body.length, 1);
-          assert.equal(body[0].id, playlistFullId);
-          assert.equal(body[0].plId, firstPlaylistIndex);
-          assert.equal(body[0].nbTracks, 1);
-          done();
-        });
+      api.getPlaylist(jar, playlistFullId, function (error, { body }) {
+        assert.ifError(error);
+        assert.equal(body.length, 1);
+        assert.equal(body[0].id, playlistFullId);
+        assert.equal(body[0].plId, firstPlaylistIndex);
+        assert.equal(body[0].nbTracks, 1);
+        done();
       });
     });
 
     it(`should return 1 track in the playlist`, function (done) {
-      api.loginAs(DUMMY_USER, function (error, { jar }) {
-        api.getPlaylistTracks(
-          jar,
-          `u/${uId}`,
-          firstPlaylistIndex,
-          function (error, { body }) {
-            assert.equal(body.length, 1);
-            assert.equal(body[0].pl.id, firstPlaylistIndex);
-            assert.equal(body[0].pl.name, postInPlaylist.pl.name);
-            done();
-          },
-        );
-      });
-    });
-
-    it(`should return 1 track in the playlist, with limit=1000`, function (done) {
-      api.loginAs(DUMMY_USER, function (error, { jar }) {
-        const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000`;
-        api.get(jar, url, function (error, { body }) {
+      api.getPlaylistTracks(
+        jar,
+        `u/${uId}`,
+        firstPlaylistIndex,
+        function (error, { body }) {
           assert.equal(body.length, 1);
           assert.equal(body[0].pl.id, firstPlaylistIndex);
           assert.equal(body[0].pl.name, postInPlaylist.pl.name);
           done();
-        });
+        },
+      );
+    });
+
+    it(`should return 1 track in the playlist, with limit=1000`, function (done) {
+      const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000`;
+      api.get(jar, url, function (error, { body }) {
+        assert.equal(body.length, 1);
+        assert.equal(body[0].pl.id, firstPlaylistIndex);
+        assert.equal(body[0].pl.name, postInPlaylist.pl.name);
+        done();
       });
     });
 
     it(`should return tracks if two limit parameters are provided`, function (done) {
-      api.loginAs(DUMMY_USER, function (error, { jar }) {
-        const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
-        // => the `limit` property will be parsed as ["1000","20"] => causing bug #89
-        api.get(jar, url, function (error, { body }) {
-          assert.notEqual(body.length, 0);
-          done();
-        });
+      const url = `/u/${uId}/playlist/${firstPlaylistIndex}?format=json&limit=1000&limit=20`;
+      // => the `limit` property will be parsed as ["1000","20"] => causing bug #89
+      api.get(jar, url, function (error, { body }) {
+        assert.notEqual(body.length, 0);
+        done();
       });
     });
 
     it(`should return the comment data after adding it`, function (done) {
-      api.loginAs(DUMMY_USER, function (error, { jar }) {
-        const comment = {
-          pId,
-          text: 'hello world',
-        };
-        api.addComment(jar, comment, function (error, { body }) {
-          assert.ifError(error);
-          assert.equal(body.pId, comment.pId);
-          assert.equal(body.text, comment.text);
-          assert(body._id);
-          done();
-        });
+      const comment = {
+        pId,
+        text: 'hello world',
+      };
+      api.addComment(jar, comment, function (error, { body }) {
+        assert.ifError(error);
+        assert.equal(body.pId, comment.pId);
+        assert.equal(body.text, comment.text);
+        assert(body._id);
+        done();
       });
     });
   });
