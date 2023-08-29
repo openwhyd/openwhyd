@@ -195,10 +195,15 @@ async function startOpenwhydServer({ startWithEnv, port }) {
   }
 }
 
+/**
+ * Manages the environment and execution of Openwhyd server and its database, for automated tests.
+ * The goal is to make automated tests easier to write, by abstracting technical details about the backend under test.
+ */
 class OpenwhydTestEnv {
   /**
-   * If port is not provided, OpenwhydTestEnv will start Openwhyd's server programmatically,
-   * reading environment variables from the file provided in startWithEnv.
+   * If `startWithEnv` is provided, `setup()` will start Openwhyd's server programmatically,
+   * by reading environment variables from the corresponding file.
+   * Otherwise, please provide the `port` on which Openwhyd is currently running.
    * @param {{ startWithEnv: string } | { port: number | string }} options
    */
   constructor(options) {
@@ -206,7 +211,13 @@ class OpenwhydTestEnv {
     this.isSetup = false;
   }
 
-  /** Start Openwhyd, if startWithEnv was provided at time of instanciation. */
+  /**
+   * Start Openwhyd, if `startWithEnv` was provided at time of instanciation.
+   * Don't forget:
+   * - call `reset()` to clear and (re)initialize Openwhyd's database, before each test;
+   * - call `refreshCache()` after every modification to the `user` collection;
+   * - call `release()` to stop Openwhyd, when you're done testing.
+   */
   async setup() {
     if ('startWithEnv' in this.options)
       this.serverProcess = await startOpenwhydServer(this.options);
@@ -240,6 +251,7 @@ class OpenwhydTestEnv {
   async reset() {
     if (!this.isSetup) throw new Error('please call setup() before reset()');
     await resetTestDb({ silent: true, env: this.getEnv() });
+    await this.refreshCache();
   }
 
   /* Refresh openwhyd's in-memory cache of users, e.g. to allow freshly added users to login. */

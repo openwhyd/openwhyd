@@ -17,8 +17,6 @@ exports.loadEnvVars = async (file) => {
 
 exports.FAKE_ID = 'a0000000000000000000000a';
 
-exports.URL_PREFIX = 'http://localhost:8080';
-
 // inserted by config/initdb_testing.js
 exports.ADMIN_USER = Object.freeze({
   id: '000000000000000000000001',
@@ -50,25 +48,39 @@ exports.TEST_USER = Object.freeze({
   md5: '42b27efc1480b4fe6d7eaa5eec47424d', // MD5 hash of password
 });
 
-/** Clears and (re)initializes Openwhyd's database, for testing. */
+/**
+ * Clears and (re)initializes Openwhyd's database, for automated tests.
+ * Call this before each test to prevent side effects between tests.
+ * Requires MONGODB_HOST and MONGODB_PORT env vars.
+ * @param {object} opts
+ * @param {typeof process.env} opts.env - environment variables to pass to Openwhyd server
+ * @param {boolean} opts.silent - if true, no logs from Openwhyd server will be displayed
+ */
 exports.resetTestDb = async (
   { env, silent } = { env: process.env, silent: false },
 ) => {
   if (!env?.MONGODB_HOST) throw new Error('missing env var: MONGODB_HOST');
   if (!env?.MONGODB_PORT) throw new Error('missing env var: MONGODB_PORT');
   const resetDbProcess = childProcess.fork('test/reset-test-db.js', {
-    env,
-    silent,
+    env: { ...env, ...(!silent ? { DEBUG: 'true' } : {}) },
+    silent: true,
   });
+  if (!silent)
+    resetDbProcess.stdout.on('data', (txt) =>
+      console.debug(`[cleanup] ${txt}`),
+    );
   resetDbProcess.stderr.on('data', (txt) => console.error(`[cleanup] ${txt}`));
   resetDbProcess.on('error', (err) => console.trace('[cleanup] error:', err));
   return new Promise((resolve) => resetDbProcess.on('close', () => resolve()));
 };
 
 /**
- * Call this before each test to prevent side effects between tests.
+ * Clears and (re)initializes Openwhyd's database, for automated tests.
+ * Environment variables will be read from file, if provided in START_WITH_ENV_FILE.
  * Don't forget to bind to `this`, so Mocha's timeout can be adjusted.
- * @deprecated Use OpenwhydTestEnv.reset() instead.
+ * Note: For tests that need Openwhyd server to run, use OpenwhydTestEnv.reset() instead.
+ * @param {object} opts
+ * @param {boolean} opts.silent - if true, no logs from Openwhyd server will be displayed
  */
 exports.cleanup = async function ({ silent } = { silent: false }) {
   this.timeout(4000);

@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const assert = require('assert');
 
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { ADMIN_USER, cleanup, URL_PREFIX } = require('../fixtures.js');
+const { ADMIN_USER } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
 const postRaw = promisify(apiClient.postRaw);
@@ -12,15 +12,19 @@ describe('security', function () {
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
-
-  before(cleanup.bind(this, { silent: true }));
+  let URL_PREFIX;
 
   before(async () => {
     await openwhyd.setup();
+    URL_PREFIX = openwhyd.getURL();
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   describe('Open Redirect from /login', () => {

@@ -49,12 +49,12 @@ class ImageStorage {
     const dir = path.join(appDir, directory);
     await Promise.all(
       (await fs.readdir(dir)).map((file) => {
-        console.warn(`reset.controller deleting ${dir}/${file}`);
         return fs.rm(`${dir}/${file}`);
       }),
     );
   }
 
+  /** FOR AUTOMATED TESTS ONLY */
   async deleteAllFiles() {
     await Promise.all(
       DIRECTORIES.map((directory) => this.deleteFiles(directory)),

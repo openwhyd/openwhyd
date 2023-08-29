@@ -2,18 +2,15 @@ const assert = require('assert');
 const util = require('util');
 const request = require('request');
 
-const { DUMMY_USER, URL_PREFIX } = require('../fixtures.js');
+const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
-const { START_WITH_ENV_FILE } = process.env;
-const {
-  OpenwhydTestEnv,
-  ObjectId,
-  connectToMongoDB,
-} = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`playlist api`, function () {
-  const openwhyd = new OpenwhydTestEnv({ startWithEnv: START_WITH_ENV_FILE });
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: process.env.START_WITH_ENV_FILE,
+  });
 
   before(async () => {
     await openwhyd.setup();
@@ -24,7 +21,7 @@ describe(`playlist api`, function () {
   });
 
   beforeEach(async () => {
-    await openwhyd.reset(); // to prevent side effects between test suites
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   it('should create a playlist', async function () {
@@ -38,7 +35,7 @@ describe(`playlist api`, function () {
             action: 'create',
             name: playlistName,
           },
-          url: `${URL_PREFIX}/api/playlist`,
+          url: `${openwhyd.getURL()}/api/playlist`,
         },
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -72,7 +69,7 @@ describe(`playlist api`, function () {
               id: 0,
               name: newName,
             },
-            url: `${URL_PREFIX}/api/playlist`,
+            url: `${openwhyd.getURL()}/api/playlist`,
           },
           (error, response, body) =>
             error ? reject(error) : resolve({ response, body }),

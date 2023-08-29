@@ -3,29 +3,27 @@ const util = require('util');
 const request = require('request');
 const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 
-const {
-  ADMIN_USER,
-  cleanup,
-  URL_PREFIX,
-  DUMMY_USER,
-  FAKE_ID,
-} = require('../fixtures.js');
+const { ADMIN_USER, DUMMY_USER, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`post api`, function () {
   const loggedUser = DUMMY_USER;
   const otherUser = ADMIN_USER;
-  let post;
+  const post = Object.freeze({
+    eId: `/yt/${randomString()}`,
+    name: `Lullaby - Jack Johnson and Matt Costa`,
+  });
   let jar;
+  let URL_PREFIX;
+
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
-
   before(async () => {
     await openwhyd.setup();
+    URL_PREFIX = openwhyd.getURL();
   });
 
   after(async () => {
@@ -33,11 +31,7 @@ describe(`post api`, function () {
   });
 
   beforeEach(async () => {
-    post = {
-      eId: `/yt/${randomString()}`,
-      name: `Lullaby - Jack Johnson and Matt Costa`,
-    };
-
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
     ({ jar } = await util.promisify(api.loginAs)(loggedUser));
   });
 
@@ -194,7 +188,7 @@ describe(`post api`, function () {
     assert.equal(postedTrack.uId, DUMMY_USER.id);
     assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.ok(postedTrack._id);
-    assert.ok(postedTrack.pl.id);
+    assert.equal(postedTrack.pl.id, 0);
     assert.equal(postedTrack.pl.name, newPlayListName);
   });
 

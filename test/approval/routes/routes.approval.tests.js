@@ -20,7 +20,7 @@ const MONGODB_URL =
 
 const testDataDir = `${__dirname}/test-data`;
 
-const backend = new OpenwhydTestEnv({
+const openwhyd = new OpenwhydTestEnv({
   startWithEnv: START_WITH_ENV_FILE,
   port: PORT,
 });
@@ -33,14 +33,14 @@ test.before(async (t) => {
   };
   await insertTestData(MONGODB_URL, testDataCollections);
 
-  await backend.setup(); // starts openwhyd, or refreshes its state if already running
+  await openwhyd.setup(); // starts openwhyd, or refreshes its state if already running
   t.context.openwhyd = require('../../api-client');
   t.context.getUser = (id) =>
     testDataCollections.user.find(({ _id }) => id === _id.toString());
 });
 
 test.after(async (t) => {
-  if (!DONT_KILL) await backend.release();
+  if (!DONT_KILL) await openwhyd.release();
 });
 
 const personas = [
