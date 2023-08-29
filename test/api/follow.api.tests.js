@@ -34,11 +34,14 @@ describe(`follow api`, function () {
 
   before(async () => {
     await openwhyd.setup();
-    await openwhyd.reset(); // to prevent side effects between test suites
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   it(`allows a user to follow another user`, async function () {
