@@ -1,3 +1,5 @@
+// @ts-check
+
 const util = require('util');
 const childProcess = require('child_process');
 const request = require('request');
@@ -50,8 +52,6 @@ const startOpenwhydServerWith = async (env) =>
             silent: true, // necessary to initialize serverProcess.stderr
           },
         );
-    // @ts-ignore
-    serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
     // @ts-ignore
     serverProcess.exit = () =>
       new Promise((resolve) => {
