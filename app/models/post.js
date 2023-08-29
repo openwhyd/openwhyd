@@ -193,6 +193,7 @@ exports.isPostLovedByUid = function (pId, uId, handler) {
   });
 };
 
+/** @param {import('mongodb').Collection} collection */
 function setPostLove(collection, pId, uId, state, handler) {
   const update = state
     ? { $push: { lov: '' + uId } }
