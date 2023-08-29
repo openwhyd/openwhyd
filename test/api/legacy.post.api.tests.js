@@ -6,18 +6,21 @@ const util = require('util');
 const { START_WITH_ENV_FILE } = process.env;
 const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
 
-const backend = new OpenwhydTestEnv({
+const openwhyd = new OpenwhydTestEnv({
   startWithEnv: START_WITH_ENV_FILE,
 });
 
 describe(`post api - legacy`, function () {
   before(async () => {
-    await backend.setup();
-    await backend.reset(); // to prevent side effects between test suites (there are side effects between tests in this file...)
+    await openwhyd.setup();
   });
 
   after(async () => {
-    await backend.release();
+    await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   let pId, uId;
@@ -161,15 +164,15 @@ describe(`post api - legacy`, function () {
 
 describe(`post api - independent tests`, function () {
   before(async () => {
-    await backend.setup();
+    await openwhyd.setup();
   });
 
   after(async () => {
-    await backend.release();
+    await openwhyd.release();
   });
 
   // to prevent side effects between tests
-  beforeEach(async () => await backend.reset());
+  beforeEach(async () => await openwhyd.reset());
 
   it('should delete a post', async function () {
     const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);
