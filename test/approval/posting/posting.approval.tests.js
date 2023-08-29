@@ -3,7 +3,15 @@
 const approvals = require('approvals').mocha();
 const util = require('util');
 const request = require('request');
-const { URL_PREFIX } = require('../../fixtures.js');
+const {
+  makeJSONScrubber,
+  ObjectId,
+  dumpMongoCollection,
+  readMongoDocuments,
+  insertTestData,
+  sortAndIndentAsJSON,
+} = require('../../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../../OpenwhydTestEnv.js');
 
 const {
   START_WITH_ENV_FILE,
@@ -38,16 +46,12 @@ const makePostFromBk = (user) => ({
   },
 });
 
+const openwhyd = new OpenwhydTestEnv({
+  startWithEnv: START_WITH_ENV_FILE,
+  port: PORT,
+});
+
 async function setupTestEnv() {
-  const {
-    makeJSONScrubber,
-    ObjectId,
-    dumpMongoCollection,
-    readMongoDocuments,
-    insertTestData,
-    startOpenwhydServer,
-    sortAndIndentAsJSON,
-  } = require('../../approval-tests-helpers.js');
   const api = require('../../api-client.js');
   const context = {
     api,
@@ -66,16 +70,13 @@ async function setupTestEnv() {
   };
   await insertTestData(MONGODB_URL, context.testDataCollections);
   // start openwhyd server
-  context.serverProcess = await startOpenwhydServer({
-    startWithEnv: START_WITH_ENV_FILE,
-    port: PORT,
-  });
+  await openwhyd.setup(); // starts openwhyd, or refreshes its state if already running
   return context;
 }
 
-async function teardownTestEnv(context) {
-  if (context.serverProcess && !DONT_KILL) {
-    await context.serverProcess.exit();
+async function teardownTestEnv() {
+  if (!DONT_KILL) {
+    await openwhyd.release();
   }
 }
 
@@ -87,7 +88,7 @@ describe('When setting up a new test environment', function () {
     context = await setupTestEnv();
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should have an empty "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -117,7 +118,7 @@ describe('When posting a track', () => {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -143,7 +144,7 @@ describe('When posting a track using the bookmarklet', function () {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -171,7 +172,7 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
         request.get(
           {
             jar,
-            url: `${URL_PREFIX}/api/post?action=insert&eId=${encodeURIComponent(
+            url: `${openwhyd.getURL()}/api/post?action=insert&eId=${encodeURIComponent(
               post.eId,
             )}&name=${encodeURIComponent(
               post.name,
@@ -190,7 +191,7 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -227,7 +228,7 @@ describe('When renaming a track', function () {
             _id: postedTrack._id.toString(),
             pl: { id: null, name: 'full stream' },
           },
-          url: `${URL_PREFIX}/api/post`,
+          url: `${openwhyd.getURL()}/api/post`,
         },
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -239,7 +240,7 @@ describe('When renaming a track', function () {
     ]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed with new name in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -266,7 +267,7 @@ describe('When posting a track to an existing playlist', function () {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -300,7 +301,7 @@ describe('When posting a track to a new playlist', function () {
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
@@ -347,7 +348,7 @@ describe('When reposting a track to an existing playlist', function () {
     ]);
   });
 
-  after(() => teardownTestEnv(context));
+  after(() => teardownTestEnv());
 
   it('should both be listed in the "post" db collection', async function () {
     const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');

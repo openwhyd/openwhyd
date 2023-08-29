@@ -1,8 +1,8 @@
 const { promisify } = require('util');
 const assert = require('assert');
 
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { ADMIN_USER, TEST_USER, cleanup } = require('../fixtures.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
+const { ADMIN_USER, TEST_USER } = require('../fixtures.js');
 const apiClient = require('../api-client.js');
 
 const get = promisify(apiClient.get);
@@ -25,14 +25,16 @@ describe('auth api', function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true }));
-
   before(async () => {
     await openwhyd.setup();
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   describe('login with email', () => {

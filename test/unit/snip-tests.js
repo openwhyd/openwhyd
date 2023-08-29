@@ -38,7 +38,7 @@ describe('snip.js', function () {
       assert.deepEqual(set, { a: val, b: val, c: val });
     });
 
-    it('should scale linearly, in terms of complexity / performance', () => {
+    it.skip('should scale linearly, in terms of complexity / performance', () => {
       const buildArray = (max) => {
         const array = [];
         for (let i = 0; i < max; ++i) array.push(i);

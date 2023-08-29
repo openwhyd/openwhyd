@@ -1,8 +1,10 @@
-const { promisify, ...util } = require('util');
+// @ts-check
+
+const util = require('util');
 const mongodb = require('mongodb');
 const request = require('request');
-const childProcess = require('child_process');
 const { loadEnvVars } = require('./fixtures');
+const { promisify } = util;
 
 const makeJSONScrubber = (scrubbers) => (obj) =>
   JSON.parse(
@@ -48,9 +50,7 @@ const httpClient = {
 };
 
 function connectToMongoDB(url) {
-  return new mongodb.MongoClient(url, {
-    useUnifiedTopology: true,
-  });
+  return new mongodb.MongoClient(url);
 }
 
 const ObjectId = (id) => new mongodb.ObjectId(id);
@@ -60,6 +60,7 @@ async function readMongoDocuments(file) {
   return require(file)({ ObjectId, ISODate });
 }
 
+/** Important: don't forget to call refreshOpenwhydCache() after mutating the `user` collection. */
 async function insertTestData(url, docsPerCollection) {
   const mongoClient = await connectToMongoDB(url);
   const db = mongoClient.db();
@@ -115,109 +116,6 @@ function getCleanedPageBody(body) {
   }
 }
 
-const errPrinter = ((blocklist) => {
-  return (chunk) => {
-    const message = chunk.toString();
-    if (process.env.DEBUG || !blocklist.some((term) => message.includes(term)))
-      console.error(message);
-  };
-})([
-  'server.close => OK',
-  'closing server',
-  'deprecated',
-  'gm: command not found',
-  'convert: command not found',
-  'please install graphicsmagick',
-]);
-
-/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams & {exit: () => Promise<void>}>} */
-const startOpenwhydServerWith = async (env) =>
-  new Promise((resolve, reject) => {
-    const serverProcess =
-      process.env.COVERAGE === 'true'
-        ? childProcess.spawn('npm', ['run', 'start:coverage:no-clean'], {
-            env: { ...env, PATH: process.env.PATH },
-            shell: true,
-            detached: true, // when running on CI, we need this to kill the process group using `process.kill(-serverProcess.pid)`
-          })
-        : childProcess.fork(
-            './app.js',
-            ['--fakeEmail', '--digestInterval', '-1'],
-            {
-              env,
-              silent: true, // necessary to initialize serverProcess.stderr
-            },
-          );
-    serverProcess.URL = `http://localhost:${env.WHYD_PORT}`;
-    serverProcess.exit = () =>
-      new Promise((resolve) => {
-        if (serverProcess.killed) return resolve();
-        serverProcess.on('close', resolve);
-        if (!(serverProcess.kill(/*'SIGTERM'*/))) {
-          console.warn('🧟‍♀️ failed to kill childprocess!');
-        }
-        if (serverProcess.pid) {
-          try {
-            process.kill(-serverProcess.pid, 'SIGINT');
-          } catch (err) {
-            console.warn('failed to kill by pid:', err.message);
-          }
-        }
-      });
-    serverProcess.on('error', reject);
-    serverProcess.stderr.on('data', errPrinter);
-    serverProcess.stdout.on('data', (str) => {
-      if (process.env.DEBUG) errPrinter(str);
-      if (str.includes('Server running')) resolve(serverProcess);
-    });
-  });
-
-/* refresh openwhyd's in-memory cache of users, to allow this user to login */
-async function refreshOpenwhydCache(urlPrefix) {
-  await promisify(request.post)(urlPrefix + '/testing/refresh');
-}
-
-/** @param {{startWithEnv:unknown, port?: number | string | undefined}} */
-async function startOpenwhydServer({ startWithEnv, port }) {
-  if (port) {
-    const URL = `http://localhost:${port}`;
-    await refreshOpenwhydCache(URL);
-    return { URL };
-  } else if (startWithEnv) {
-    const env = {
-      ...(await loadEnvVars(startWithEnv)),
-      ...process.env, // allow overrides
-    };
-    return { ...(await startOpenwhydServerWith(env)), env }; // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
-  }
-}
-
-class OpenwhydTestEnv {
-  /** @param {{ startWithEnv: string } | { port: number | string }} options */
-  constructor(options) {
-    this.options = options;
-  }
-  async setup() {
-    if (this.options.startWithEnv)
-      this.serverProcess = await startOpenwhydServer(this.options);
-  }
-  async release() {
-    if (this.serverProcess && 'exit' in this.serverProcess)
-      await this.serverProcess.exit();
-  }
-  getEnv() {
-    return this.serverProcess && 'env' in this.serverProcess
-      ? this.serverProcess.env
-      : process.env;
-  }
-  async dumpCollection(collection) {
-    return await dumpMongoCollection(this.getEnv().MONGODB_URL, collection);
-  }
-  async insertTestData(docsPerCollection) {
-    return await insertTestData(this.getEnv().MONGODB_URL, docsPerCollection);
-  }
-}
-
 module.exports = {
   makeJSONScrubber,
   loadEnvVars,
@@ -230,6 +128,4 @@ module.exports = {
   indentJSON,
   sortAndIndentAsJSON,
   getCleanedPageBody,
-  startOpenwhydServer,
-  OpenwhydTestEnv,
 };

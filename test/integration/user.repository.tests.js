@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const { initMongoDb } = require('../mongodb-client'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE env vars
-const { cleanup } = require('../fixtures.js');
+const { resetTestDb } = require('../fixtures.js');
 const {
   readMongoDocuments,
   insertTestData,
@@ -28,7 +28,7 @@ describe('MongoDB User Repository', function () {
     mongodb = await initMongoDb({ silent: true });
   });
 
-  beforeEach(cleanup.bind(this, { silent: true }));
+  beforeEach(async () => await resetTestDb({ env: process.env, silent: true }));
 
   it('should throw exception when user is invalid', async () => {
     try {
