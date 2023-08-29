@@ -35,7 +35,7 @@ const errPrinter = ((blocklist) => {
 
 const withCoverage = () => process.env.COVERAGE === 'true';
 
-/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams & {exit: () => Promise<void>}>} */
+/** @returns {Promise<childProcess.ChildProcessWithoutNullStreams>} serverProcess */
 const startOpenwhydServerWith = async (env) =>
   new Promise((resolve, reject) => {
     const serverProcess = withCoverage()
@@ -52,40 +52,27 @@ const startOpenwhydServerWith = async (env) =>
             silent: true, // necessary to initialize serverProcess.stderr
           },
         );
-    // @ts-ignore
-    serverProcess.exit = () =>
-      new Promise((resolve) => {
-        if (serverProcess.exitCode !== null) return resolve();
-        serverProcess.on('close', resolve);
-        const killed =
-          withCoverage() && serverProcess.pid
-            ? process.kill(-serverProcess.pid, 'SIGINT')
-            : serverProcess.kill(/*'SIGTERM'*/);
-        if (!killed) throw new Error('🧟‍♀️ failed to kill childprocess!');
-      });
     serverProcess.on('error', reject);
     serverProcess.stderr.on('data', errPrinter);
     serverProcess.stdout.on('data', (str) => {
       if (process.env.DEBUG) errPrinter(str);
-      // @ts-ignore
       if (str.includes('Server running')) resolve(serverProcess);
     });
   });
 
-/** @param {{startWithEnv:unknown, port?: number | string | undefined}} options */
-async function startOpenwhydServer({ startWithEnv, port }) {
-  if (port) {
-    const URL = `http://localhost:${port}`;
-    await refreshOpenwhydCache(URL);
-    return { URL };
-  } else if (startWithEnv) {
-    const env = {
-      ...(await loadEnvVars(startWithEnv)),
-      ...process.env, // allow overrides
-    };
-    return { ...(await startOpenwhydServerWith(env)), env }; // returns serverProcess instance with additional URL property (e.g. http://localhost:8080)
-  }
-}
+/**
+ * @param {childProcess.ChildProcessWithoutNullStreams} serverProcess
+ */
+const stopOpenwhyd = (serverProcess) =>
+  new Promise((resolve) => {
+    if (serverProcess.exitCode !== null) return resolve();
+    serverProcess.on('close', resolve);
+    const killed =
+      withCoverage() && serverProcess.pid
+        ? process.kill(-serverProcess.pid, 'SIGINT')
+        : serverProcess.kill(/*'SIGTERM'*/);
+    if (!killed) throw new Error('🧟‍♀️ failed to kill childprocess!');
+  });
 
 /**
  * Manages the environment and execution of Openwhyd server and its database, for automated tests.
@@ -96,10 +83,12 @@ class OpenwhydTestEnv {
    * If `startWithEnv` is provided, `setup()` will start Openwhyd's server programmatically,
    * by reading environment variables from the corresponding file.
    * Otherwise, please provide the `port` on which Openwhyd is currently running.
-   * @param {{ startWithEnv: string } | { port: number | string }} options
+   * @param {{ startWithEnv: string } | { port: string }} options
    */
   constructor(options) {
     this.options = options;
+    this.env = null;
+    this.serverProcess = null;
     this.isSetup = false;
   }
 
@@ -111,22 +100,30 @@ class OpenwhydTestEnv {
    * - call `release()` to stop Openwhyd, when you're done testing.
    */
   async setup() {
-    if ('startWithEnv' in this.options)
-      this.serverProcess = await startOpenwhydServer(this.options);
+    if ('port' in this.options) {
+      this.env = { ...process.env, WHYD_PORT: this.options.port };
+      await refreshOpenwhydCache(this.getURL());
+    } else if ('startWithEnv' in this.options) {
+      this.env = {
+        ...(await loadEnvVars(this.options.startWithEnv)),
+        ...process.env, // allow overrides
+      };
+      this.serverProcess = await startOpenwhydServerWith(this.env);
+    }
     this.isSetup = true;
   }
 
   /** Stop Openwhyd, if startWithEnv was provided at time of instanciation. */
   async release() {
-    if (this.serverProcess && 'exit' in this.serverProcess)
-      await this.serverProcess.exit();
+    if (this.serverProcess) {
+      await stopOpenwhyd(this.serverProcess);
+    }
   }
 
   /** Return the environment variables used by Openwhyd. */
   getEnv() {
-    return this.serverProcess && 'env' in this.serverProcess
-      ? this.serverProcess.env
-      : process.env;
+    if (!this.isSetup) throw new Error('please call setup() before getEnv()');
+    return this.env;
   }
 
   /** Return the URL of the Openwhyd server. */
