@@ -12,14 +12,18 @@ const {
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
+const openwhyd = new OpenwhydTestEnv({
+  startWithEnv: process.env.START_WITH_ENV_FILE,
+});
+
 describe(`post api`, function () {
   const loggedUser = DUMMY_USER;
   const otherUser = ADMIN_USER;
-  let post;
-  let jar;
-  const openwhyd = new OpenwhydTestEnv({
-    startWithEnv: process.env.START_WITH_ENV_FILE,
+  const post = Object.freeze({
+    eId: `/yt/${randomString()}`,
+    name: `Lullaby - Jack Johnson and Matt Costa`,
   });
+  let jar;
 
   before(async () => {
     await openwhyd.setup();
@@ -29,14 +33,8 @@ describe(`post api`, function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => await openwhyd.reset()); // to prevent side effects between tests
-
   beforeEach(async () => {
-    post = {
-      eId: `/yt/${randomString()}`,
-      name: `Lullaby - Jack Johnson and Matt Costa`,
-    };
-
+    await openwhyd.reset(); // to prevent side effects between tests
     ({ jar } = await util.promisify(api.loginAs)(loggedUser));
   });
 
