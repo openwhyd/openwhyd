@@ -27,11 +27,14 @@ describe('auth api', function () {
 
   before(async () => {
     await openwhyd.setup();
-    await openwhyd.reset();
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   describe('login with email', () => {
