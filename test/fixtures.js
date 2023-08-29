@@ -50,15 +50,21 @@ exports.TEST_USER = Object.freeze({
   md5: '42b27efc1480b4fe6d7eaa5eec47424d', // MD5 hash of password
 });
 
-/** Clears and (re)initializes Openwhyd's database, for testing. */
+/**
+ * Clears and (re)initializes Openwhyd's database, for automated tests.
+ * Call this before each test to prevent side effects between tests.
+ * Requires MONGODB_HOST and MONGODB_PORT env vars.
+ * @param {object} opts
+ * @param {typeof process.env} opts.env - environment variables to pass to Openwhyd server
+ * @param {boolean} opts.silent - if true, no logs from Openwhyd server will be displayed
+ */
 exports.resetTestDb = async (
   { env, silent } = { env: process.env, silent: false },
 ) => {
   if (!env?.MONGODB_HOST) throw new Error('missing env var: MONGODB_HOST');
   if (!env?.MONGODB_PORT) throw new Error('missing env var: MONGODB_PORT');
   const resetDbProcess = childProcess.fork('test/reset-test-db.js', {
-    // @ts-ignore
-    env: { ...env, ...(!silent ? { DEBUG: true } : {}) },
+    env: { ...env, ...(!silent ? { DEBUG: 'true' } : {}) },
     silent: true,
   });
   if (!silent)
@@ -71,9 +77,12 @@ exports.resetTestDb = async (
 };
 
 /**
- * Call this before each test to prevent side effects between tests.
+ * Clears and (re)initializes Openwhyd's database, for automated tests.
+ * Environment variables will be read from file, if provided in START_WITH_ENV_FILE.
  * Don't forget to bind to `this`, so Mocha's timeout can be adjusted.
  * Note: For tests that need Openwhyd server to run, use OpenwhydTestEnv.reset() instead.
+ * @param {object} opts
+ * @param {boolean} opts.silent - if true, no logs from Openwhyd server will be displayed
  */
 exports.cleanup = async function ({ silent } = { silent: false }) {
   this.timeout(4000);

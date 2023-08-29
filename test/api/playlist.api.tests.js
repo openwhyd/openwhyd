@@ -4,12 +4,13 @@ const request = require('request');
 
 const { DUMMY_USER, URL_PREFIX } = require('../fixtures.js');
 const api = require('../api-client.js');
-const { START_WITH_ENV_FILE } = process.env;
 const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`playlist api`, function () {
-  const openwhyd = new OpenwhydTestEnv({ startWithEnv: START_WITH_ENV_FILE });
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: process.env.START_WITH_ENV_FILE,
+  });
 
   before(async () => {
     await openwhyd.setup();
