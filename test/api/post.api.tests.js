@@ -12,10 +12,6 @@ const {
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
-const openwhyd = new OpenwhydTestEnv({
-  startWithEnv: process.env.START_WITH_ENV_FILE,
-});
-
 describe(`post api`, function () {
   const loggedUser = DUMMY_USER;
   const otherUser = ADMIN_USER;
@@ -24,6 +20,10 @@ describe(`post api`, function () {
     name: `Lullaby - Jack Johnson and Matt Costa`,
   });
   let jar;
+
+  const openwhyd = new OpenwhydTestEnv({
+    startWithEnv: process.env.START_WITH_ENV_FILE,
+  });
 
   before(async () => {
     await openwhyd.setup();
