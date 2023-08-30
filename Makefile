@@ -7,22 +7,22 @@ node_modules: .nvmrc package.json package-lock.json
 	npm install
 	touch node_modules # optimisation: prevents reinstallation of dependencies, until package files are updated
 
-build: node_modules ## Build/transpile runtime assets.
+build: ## Build/transpile runtime assets.
 	make public/js/bookmarklet.js
 
 public/js/bookmarklet.js: public/js/bookmarklet*.ts
 	npm run build
 
-dev: node_modules ## Start a local dev server.
+dev: node_modules public/js/bookmarklet.js ## Start a local dev server.
 	docker compose stop
 	docker compose up --detach mongo
 	npm run start:localdb
 	docker compose stop
 
-start: ## Start the production server without downtime.
+start: node_modules public/js/bookmarklet.js ## Start the production server without downtime.
 	@cd scripts && ./start.sh
 
-restart: ## Restart the production server without downtime.
+restart: node_modules public/js/bookmarklet.js ## Restart the production server without downtime.
 	@cd scripts && ./restart.sh
 
 restart-to-latest: ## Restart the production server to its latest version, without downtime.
@@ -31,7 +31,7 @@ restart-to-latest: ## Restart the production server to its latest version, witho
 	cd scripts && ./restart.sh
 	# also don't forget to switch to the right version of nodejs, e.g. with "$ nvm use"
 
-lint: node_modules build ## Run static code checks
+lint: node_modules public/js/bookmarklet.js ## Run static code checks
 	npm run lint:jsdoc-typing
 	npm run lint:typescript
 	npm run lint:format
@@ -42,7 +42,7 @@ docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker contai
 	docker-compose restart web
 	docker-compose exec -T web ./scripts/wait-for-http-server.sh 8080
 
-test: node_modules build lint ## Run tests against a local db
+test: node_modules public/js/bookmarklet.js lint ## Run tests against a local db
 	# 1. tests that don't need a database
 	docker compose stop
 	npm run test:functional
@@ -58,7 +58,7 @@ test: node_modules build lint ## Run tests against a local db
 	docker compose stop
 	@echo "ℹ️ To run approval tests: $ make test-approval"
 
-test-approval: node_modules build lint ## Run approval tests against a local db
+test-approval: node_modules public/js/bookmarklet.js lint ## Run approval tests against a local db
 	docker compose stop
 	docker compose up --detach mongo
 	npm run test:approval:routes:start
