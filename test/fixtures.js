@@ -7,11 +7,14 @@ const readFile = (file) => fs.promises.readFile(file, 'utf-8');
 
 exports.loadEnvVars = async (file) => {
   const envVars = {};
-  (await readFile(file)).split(/[\r\n]+/).forEach((envVar) => {
-    if (!envVar) return;
-    const [key, def] = envVar.split('=');
-    envVars[key] = def.replace(/(^")|("$)/g, '');
-  });
+  (await readFile(file))
+    .split(/[\r\n]+/)
+    .map((line) => line.split('#')[0].trim()) // strip comments
+    .forEach((envVar) => {
+      if (!envVar) return;
+      const [key, def] = envVar.split('=');
+      envVars[key] = def.replace(/(^")|("$)/g, '');
+    });
   return envVars;
 };
 
