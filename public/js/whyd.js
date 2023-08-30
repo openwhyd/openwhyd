@@ -1,5 +1,6 @@
 /* global $, _, openRemoteDialog, whydPlayer, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
 
+console.log('whyd.js');
 const MAX_NB_MENTIONS = 6;
 
 const wlh = window.location.href;
@@ -1023,14 +1024,9 @@ $(document).ready(function () {
 // AJAXIFY https://gist.github.com/854622
 (function (window /*, undefined*/) {
   // Prepare our Variables
-  const History = window.History,
+  const History = window.history,
     $ = window.jQuery,
     document = window.document;
-
-  // Check to see if History.js is enabled for our Browser
-  if (!History.enabled) {
-    return false;
-  }
 
   // Wait for Document
   $(function () {
@@ -1042,8 +1038,8 @@ $(document).ready(function () {
       activeSelector = '.active,.selected,.current,.youarehere',
       menuChildrenSelector = '> li,> ul > li',
       /* Application Generic Variables */
-      $body = $(document.body) /*.find(contentSelector).first()*/,
-      rootUrl = History.getRootUrl();
+      $body = $(document.body); /*.find(contentSelector).first()*/
+    const rootUrl = 'http://localhost:8080';
     let newState = false; // HACK to restore scroll position on previous page of history
 
     let $content = $(contentSelector).filter(':first');
@@ -1083,6 +1079,7 @@ $(document).ready(function () {
 
     // Ajaxify Helper
     $.fn.ajaxify = function () {
+      console.log('AJAXIFY');
       // Prepare
       const $this = $(this);
 
@@ -1092,6 +1089,7 @@ $(document).ready(function () {
         const $this = $(this),
           url = $this.attr('href'),
           title = $this.attr('title') || null;
+        console.log('AJAXIFied link clicked', $this, url);
 
         newState = true;
         //url = decodeURIComponent(url); // fix for non-latin characters
@@ -1106,7 +1104,9 @@ $(document).ready(function () {
         }
 
         // Ajaxify this link
-        History.pushState({ streamToTop: true }, title, url);
+        console.log(`History.pushState({ streamToTop: true }, title, ${url});`);
+        History.pushState({ url, streamToTop: true }, title, url);
+        setTimeout(loadPage, 0);
         event.preventDefault();
         return false;
       });
@@ -1116,13 +1116,16 @@ $(document).ready(function () {
     };
 
     // Ajaxify our Internal Links
+    console.log('Ajaxify our Internal Links');
+
     $body.ajaxify();
 
     function loadPage() {
       // Prepare Variables
-      const State = History.getState(),
-        url = State.url,
-        relativeUrl = url.replace(rootUrl, '');
+      const State = history.state;
+      console.log('loadPage', { State });
+      const url = State.url;
+      const relativeUrl = url.replace(rootUrl, '');
 
       window.getCurrentUrl = function () {
         return url;
@@ -1277,25 +1280,32 @@ $(document).ready(function () {
     }
 
     // Hook into State Changes
-    $(window).bind('statechange', loadPage); // end onStateChange
+    // $(window).bind('statechange', loadPage); // end onStateChange
 
-    if (History.enabled) {
-      window.goToPage = function (url, title) {
-        console.log('goToPage (history)', url, !!window.onPageLeave);
-        if (window.location.href == url) loadPage({});
-        else {
-          // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
-          let httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
-          if (httpPos != -1) {
-            httpPos += 4;
-            url =
-              url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
-            console.log('fixed URL to:', url);
-          }
-          History.pushState(null, title, url || window.location.href); // will trigger "statechange" => call loadPage()
+    console.log('addEventListener');
+    window.addEventListener('popstate', (event) => {
+      console.log(
+        `location: ${document.location}, state: ${JSON.stringify(event.state)}`,
+      );
+      setTimeout(loadPage, 0);
+    });
+
+    window.goToPage = function (url, title) {
+      console.log('goToPage (history)', url, !!window.onPageLeave);
+      if (window.location.href == url) loadPage({});
+      else {
+        // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
+        let httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
+        if (httpPos != -1) {
+          httpPos += 4;
+          url =
+            url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
+          console.log('fixed URL to:', url);
         }
-      };
-    }
+        // History.pushState(null, title, url || window.location.href); // will trigger "statechange" => call loadPage()
+        setTimeout(loadPage, 0);
+      }
+    };
   }); // end onDomLoad
 })(window); // end closure
 
