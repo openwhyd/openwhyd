@@ -42,7 +42,9 @@ docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker contai
 	docker-compose restart web
 	docker-compose exec -T web ./scripts/wait-for-http-server.sh 8080
 
-test: node_modules public/js/bookmarklet.js lint ## Run tests against a local db
+test-all: lint test test-approval test-in-docker
+
+test: node_modules public/js/bookmarklet.js ## Run tests against a local db
 	# 1. tests that don't need a database
 	docker compose stop
 	npm run test:functional
@@ -58,7 +60,7 @@ test: node_modules public/js/bookmarklet.js lint ## Run tests against a local db
 	docker compose stop
 	@echo "ℹ️ To run approval tests: $ make test-approval"
 
-test-approval: node_modules public/js/bookmarklet.js lint ## Run approval tests against a local db
+test-approval: node_modules public/js/bookmarklet.js ## Run approval tests against a local db
 	docker compose stop
 	docker compose up --detach mongo
 	npm run test:approval:routes:start
@@ -89,4 +91,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build dev start restart restart-to-latest lint docker-seed test test-approval test-in-docker ci help
+.PHONY: install build dev start restart restart-to-latest lint docker-seed test-all test test-approval test-in-docker ci help
