@@ -25,17 +25,17 @@ exports.makeFeatures = function ({
    * @param {[user: User, playlist: Playlist]} params
    * @returns {Promise<Playlist>}
    */
-  const insertPlaylist = ([user, playlist]) =>
+  const insertPlaylist = async ([user, playlist]) =>
     userRepository
       .insertPlaylist(user.id, playlist)
-      .then(() => Promise.resolve(playlist));
+      .then(async () => Promise.resolve(playlist));
 
   return {
-    createPlaylist: (userId, playlistName) =>
+    createPlaylist: async (userId, playlistName) =>
       Promise.resolve(
         userRepository
           .getByUserId(userId)
-          .then((user) => user.addNewPlaylist(playlistName))
+          .then(async (user) => user.addNewPlaylist(playlistName))
           .then(insertPlaylist),
       ),
     deletePlaylist: async (userId, playlistId) => {

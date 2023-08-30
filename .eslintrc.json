@@ -1,12 +1,17 @@
 {
-  "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
     "prettier",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended" // Uses the recommended rules from the @typescript-eslint/eslint-plugin
   ],
-  "plugins": ["prettier", "@typescript-eslint", "deprecation"],
+  "plugins": [
+    "eslint-plugin-node",
+    "prettier",
+    "@typescript-eslint",
+    "deprecation"
+  ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "tsconfig.json",
     "ecmaVersion": 2019
@@ -16,13 +21,24 @@
     "public/press/js/sliderz.v1.js"
   ],
   "rules": {
-    "prefer-const": "warn",
-    "deprecation/deprecation": "warn",
     "prettier/prettier": "error",
-    "no-inner-declarations": ["warn", "functions"]
+    "deprecation/deprecation": "warn"
   },
   "overrides": [
+    // Multiple overrides within the same config are applied in order. That is, the last override block in a config file always has the highest precedence.
+    // cf https://eslint.org/docs/latest/use/configure/configuration-files#configuration-based-on-glob-patterns
     {
+      // Tolerate (as warnings) non critical issues on legacy JavaScript files, by default
+      "files": ["*.js"],
+      "rules": {
+        "prefer-const": "warn",
+        "no-inner-declarations": ["warn", "functions"],
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-var-requires": "off"
+      }
+    },
+    {
+      // Tolerate (as warnings) additional non critical issues on legacy front-end code and non-production code
       "files": [
         "config/**/*.js",
         "misc/**/*.js",
@@ -39,10 +55,24 @@
       }
     },
     {
-      "files": ["*.js"],
+      // Enforce stricter rules on domain / business logic
+      "files": ["app/domain/**/*.js", "app/domain/**/*.ts"],
+      "extends": ["async", "async/node", "async/typescript"],
       "rules": {
-        "@typescript-eslint/ban-ts-comment": "warn",
-        "@typescript-eslint/no-var-requires": "off"
+        "prefer-const": "error",
+        "no-async-promise-executor": "error",
+        "no-await-in-loop": "error",
+        "no-promise-executor-return": "error",
+        "max-nested-callbacks": "error",
+        "no-return-await": "error",
+        "prefer-promise-reject-errors": "error",
+        "node/handle-callback-err": "error",
+        "node/no-callback-literal": "error",
+        "node/no-sync": "error",
+        "@typescript-eslint/await-thenable": "error",
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/no-misused-promises": "error",
+        "@typescript-eslint/promise-function-async": "error"
       }
     }
   ],
