@@ -22,6 +22,7 @@ exports.controller = async function (request, getParams, response) {
 
     response.renderJSON({ ok: true });
   } catch (err) {
+    console.error(`unable to RESET: ${err.message}`);
     response.renderJSON({ error: err.message });
   }
 };

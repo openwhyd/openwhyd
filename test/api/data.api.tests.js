@@ -2,8 +2,8 @@ const vm = require('vm');
 const assert = require('assert');
 const request = require('request');
 
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { URL_PREFIX, DUMMY_USER, cleanup } = require('../fixtures.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
+const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 
 const reqGet = (url) =>
@@ -27,15 +27,21 @@ describe(`Data Export API`, function () {
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
-
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
+  let URL_PREFIX;
 
   before(async () => {
     await openwhyd.setup();
+    URL_PREFIX = openwhyd.getURL();
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    this.timeout(4000);
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
+    return addTrackToPlaylist(user, plName, track);
   });
 
   // add a playlist with one track
@@ -46,10 +52,6 @@ describe(`Data Export API`, function () {
     eId: '/yt/59MdiE1IsBY',
     url: '//youtube.com/watch?v=59MdiE1IsBY',
   };
-  before(function () {
-    this.timeout(4000);
-    return addTrackToPlaylist(user, plName, track);
-  });
 
   describe(`provides profile tracks`, () => {
     it(`of given user id, as JSON, using callback`, async () => {

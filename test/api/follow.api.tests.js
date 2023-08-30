@@ -3,12 +3,10 @@
 const querystring = require('querystring');
 const assert = require('assert');
 
-const { DUMMY_USER, ADMIN_USER, cleanup } = require('../fixtures.js');
+const { DUMMY_USER, ADMIN_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
-const {
-  OpenwhydTestEnv,
-  sortAndIndentAsJSON,
-} = require('../approval-tests-helpers.js');
+const { sortAndIndentAsJSON } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const { ObjectId } = require('../../app/models/mongodb.js');
 
 const getAsUser = (user, url, params) =>
@@ -32,14 +30,16 @@ describe(`follow api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
-
   before(async () => {
     await openwhyd.setup();
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   it(`allows a user to follow another user`, async function () {

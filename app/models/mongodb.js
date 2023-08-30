@@ -227,7 +227,10 @@ exports.initCollections = function ({ addTestData = false } = {}) {
   });
 };
 
-/** @param {{ mongoDbHost: string, mongoDbPort: string, mongoDbDatabase: string, mongoDbAuthUser?: string, mongoDbAuthPassword?: string }} connParams */
+/**
+ * @param {{ mongoDbHost: string, mongoDbPort: string, mongoDbDatabase: string, mongoDbAuthUser?: string, mongoDbAuthPassword?: string }} connParams
+ * @param {(err: null, db: mongodb.Db) => any} readyCallback
+ */
 exports.init = function (connParams, readyCallback) {
   isTesting = connParams.mongoDbDatabase === 'openwhyd_test';
   const dbName = connParams.mongoDbDatabase;
@@ -263,4 +266,5 @@ exports.init = function (connParams, readyCallback) {
 
   console.log(`[db] Successfully connected to ${publicURL}`);
   readyCallback.call(module.exports, null, exports._db);
+  return module.exports;
 };

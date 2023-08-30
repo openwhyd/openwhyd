@@ -3,6 +3,8 @@
 
 const util = require('util');
 
+const CLEANUP_TIMEOUT = 45 * 1000; // override jest timeout, to leave algolia enough time to apply requested changes
+
 const DUMMY_POST = {
   _id: 'xyz',
   name: 'a post',
@@ -23,11 +25,11 @@ describe('Algolia search wrapper', () => {
     expect(process.env).toHaveProperty('ALGOLIA_API_KEY');
     searchModel = require('../../app/models/searchAlgolia.js');
     await cleanUp();
-  }, 20 * 1000); // override jest timeout, to leave algolia enough time to apply requested changes
+  }, CLEANUP_TIMEOUT);
 
   afterAll(async function () {
     await cleanUp();
-  }, 10 * 1000); // override jest timeout, to leave algolia enough time to apply requested changes
+  }, CLEANUP_TIMEOUT);
 
   it('should fail to delete unknown type of documents', async () => {
     const promise = util.promisify(searchModel.deleteAllDocs)('whatever');

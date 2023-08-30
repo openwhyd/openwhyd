@@ -2,7 +2,7 @@ const util = require('util');
 const assert = require('assert');
 const request = require('request'); // TODO: promisify it
 
-const { URL_PREFIX } = require('./fixtures.js');
+const URL_PREFIX = 'http://localhost:8080';
 
 const EXPECTED_RTK = 7; // cf app/controllers/invite.js
 

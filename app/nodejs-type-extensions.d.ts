@@ -28,6 +28,8 @@ declare namespace NodeJS {
   export interface ProcessEnv {
     NODE_ENV: 'development' | 'production' | undefined;
     MONGODB_URL: string | undefined;
+    WHYD_PORT: string | undefined;
+    DEBUG: string | undefined;
   }
 
   export interface Process {

@@ -1,47 +1,57 @@
 const assert = require('assert');
 const util = require('util');
 const request = require('request');
-const { OpenwhydTestEnv, ObjectId } = require('../approval-tests-helpers.js');
+const { ObjectId } = require('../approval-tests-helpers.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 
-const {
-  ADMIN_USER,
-  cleanup,
-  URL_PREFIX,
-  DUMMY_USER,
-  FAKE_ID,
-} = require('../fixtures.js');
+const { ADMIN_USER, DUMMY_USER, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
 describe(`post api`, function () {
-  const loggedUser = ADMIN_USER;
-  const otherUser = DUMMY_USER;
-  let post;
+  const loggedUser = DUMMY_USER;
+  const otherUser = ADMIN_USER;
+  const post = Object.freeze({
+    eId: `/yt/${randomString()}`,
+    name: `Lullaby - Jack Johnson and Matt Costa`,
+  });
   let jar;
+  let URL_PREFIX;
+
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between test suites
+  const insertPost = (postId, props) =>
+    openwhyd.insertTestData({
+      post: [{ _id: ObjectId(postId), ...props }],
+    });
+
+  const callPostApi = (form) =>
+    new Promise((resolve, reject) =>
+      request.post(
+        {
+          jar,
+          form,
+          url: `${URL_PREFIX}/api/post`,
+        },
+        (error, response, body) =>
+          error ? reject(error) : resolve({ response, body }),
+      ),
+    );
 
   before(async () => {
     await openwhyd.setup();
+    URL_PREFIX = openwhyd.getURL();
   });
 
   after(async () => {
     await openwhyd.release();
   });
 
-  beforeEach(async () => {
-    post = {
-      eId: `/yt/${randomString()}`,
-      name: `Lullaby - Jack Johnson and Matt Costa`,
-    };
-
+  beforeEach(async function () {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
     ({ jar } = await util.promisify(api.loginAs)(loggedUser));
-    /* FIXME: We are forced to use the ADMIN_USER, since DUMMY_USER is mutated by user.api.tests.js and the db cleanup seems to not work for the users collection.
-     * May be initdb_testing.js is not up to date with the current schema?
-     */
   });
 
   it("should return a 404 for post that doesn't exist", async () => {
@@ -111,8 +121,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.equal(postedTrack.ctx, ctx);
     assert.equal(postedTrack.isNew, true);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.ok(postedTrack._id);
     assert.equal(postedTrack.pl, undefined);
   });
@@ -163,8 +173,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.pl.id, playlist.id);
     assert.equal(postedTrack.pl.name, playlist.name);
     assert.equal(postedTrack.text, description);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
   });
 
   it('should add a track to a new playlist', async function () {
@@ -194,10 +204,10 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.equal(postedTrack.ctx, ctx);
     assert.equal(postedTrack.isNew, true);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.ok(postedTrack._id);
-    assert.ok(postedTrack.pl.id);
+    assert.equal(postedTrack.pl.id, 0);
     assert.equal(postedTrack.pl.name, newPlayListName);
   });
 
@@ -241,8 +251,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.ctx, ctx);
     assert.equal(postedTrack.pl.name, newPlayListName);
     assert.equal(postedTrack.text, description);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
   });
 
   it('should re-add a track to a new playlist from the stream or from the Tracks in the user profile', async function () {
@@ -275,8 +285,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.notEqual(postedTrack.pl.id, undefined);
     assert.equal(postedTrack.pl.name, newPlayListName);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.deepEqual(postedTrack.lov, []);
     assert.equal(postedTrack.text, '');
     assert.equal(postedTrack.nbP, 0);
@@ -285,8 +295,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack._id, pId);
 
     assert.equal(postedTrack.repost.pId, pId);
-    assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.repost.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.repost.uNm, DUMMY_USER.name);
   });
 
   it('should re-add a track into an existing playlist', async function () {
@@ -325,8 +335,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack.pl.id, undefined);
     assert.equal(postedTrack.pl.id, playlist.id);
     assert.equal(postedTrack.pl.name, playlist.name);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.deepEqual(postedTrack.lov, []);
     assert.equal(postedTrack.text, '');
     assert.equal(postedTrack.nbP, 0);
@@ -335,8 +345,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack._id, pId);
 
     assert.equal(postedTrack.repost.pId, pId);
-    assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.repost.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.repost.uNm, DUMMY_USER.name);
   });
 
   it('should allow re-adding a track into another playlist', async function () {
@@ -374,8 +384,8 @@ describe(`post api`, function () {
     assert.equal(postedTrack.eId, post.eId);
     assert.ok(postedTrack.pl.id);
     assert.equal(postedTrack.pl.name, newPlaylistName);
-    assert.equal(postedTrack.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.uNm, DUMMY_USER.name);
     assert.deepEqual(postedTrack.lov, []);
     assert.equal(postedTrack.text, '');
     assert.equal(postedTrack.nbP, 0);
@@ -384,8 +394,8 @@ describe(`post api`, function () {
     assert.notEqual(postedTrack._id, pId);
 
     assert.equal(postedTrack.repost.pId, pId);
-    assert.equal(postedTrack.repost.uId, ADMIN_USER.id);
-    assert.equal(postedTrack.repost.uNm, ADMIN_USER.name);
+    assert.equal(postedTrack.repost.uId, DUMMY_USER.id);
+    assert.equal(postedTrack.repost.uNm, DUMMY_USER.name);
   });
 
   it('should fail to delete a comment that does not exist', async function () {
@@ -545,5 +555,82 @@ describe(`post api`, function () {
     assert(resBody?._id, '_id should be provided in response');
     assert.equal(typeof resBody._id, 'string');
     assert.notEqual(resBody._id, '', '_id should not be empty');
+  });
+
+  describe('`incrPlayCounter` action', () => {
+    it('should increase the number of plays of the post', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await insertPost(postId, { nbP: 0 });
+
+      // When requesting to increase the play counter for that post
+      await callPostApi({ action: 'incrPlayCounter', pId: postId });
+
+      // Then the number of plays of that post is 1
+      const [postAfter] = await openwhyd.dumpCollection('post');
+      assert.equal(postAfter.nbP, 1);
+    });
+
+    it('should increase the total number of plays of that track', async () => {
+      // Given a post with 0 plays
+      const postId = '000000000000000000000009';
+      await insertPost(postId, { nbP: 0, eId: '/yt/fake_video_id' });
+
+      // When requesting to increase the play counter for that post
+      await callPostApi({ action: 'incrPlayCounter', pId: postId });
+
+      // Then the number of plays of that track is 1
+      const [trackAfter] = await openwhyd.dumpCollection('track');
+      assert.equal(trackAfter.nbP, 1);
+    });
+  });
+
+  describe('`toggleLovePost` action', () => {
+    const postFromOtherUser = {
+      uId: otherUser.id,
+      lov: [],
+      eId: '/yt/fake_video_id',
+    };
+    it('should increase the number of loves of the post', async () => {
+      // Given a post with 0 loves
+      const postId = '000000000000000000000009';
+      await insertPost(postId, postFromOtherUser);
+
+      // When requesting to increase the love counter for that post
+      await callPostApi({ action: 'toggleLovePost', pId: postId });
+
+      // Then the user is included in the list of loves
+      const [postAfter] = await openwhyd.dumpCollection('post');
+      assert.deepEqual(postAfter.lov, [loggedUser.id]);
+    });
+
+    it('should increase the total number of loves of that track', async () => {
+      // Given a post with 0 loves
+      const postId = '000000000000000000000009';
+      await insertPost(postId, postFromOtherUser);
+
+      // When requesting to increase the love counter for that post
+      await callPostApi({ action: 'toggleLovePost', pId: postId });
+
+      // Then the number of loves of that track is 1
+      const [trackAfter] = await openwhyd.dumpCollection('track');
+      assert.equal(trackAfter.nbL, 1);
+    });
+
+    it('should list that action in the activity collection', async () => {
+      // Given a post with 0 loves
+      const postId = '000000000000000000000009';
+      await insertPost(postId, postFromOtherUser);
+
+      // When requesting to increase the love counter for that post
+      await callPostApi({ action: 'toggleLovePost', pId: postId });
+
+      // Then the number of loves of that track is 1
+      const activities = await openwhyd.dumpCollection('activity');
+      assert.equal(activities.length, 1);
+      assert.equal(activities[0]?.id, loggedUser.id);
+      assert.equal(activities[0]?.like?.id, otherUser.id);
+      assert.equal(activities[0]?.like?.pId, postId);
+    });
   });
 });

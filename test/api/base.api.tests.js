@@ -1,8 +1,7 @@
 const assert = require('assert');
 const util = require('util');
 
-const { OpenwhydTestEnv } = require('../approval-tests-helpers.js');
-const { cleanup } = require('../fixtures.js');
+const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const api = require('../api-client.js');
 
 describe('base api', function () {
@@ -10,14 +9,16 @@ describe('base api', function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  before(cleanup.bind(this, { silent: true })); // to prevent side effects between tests
-
   before(async () => {
     await openwhyd.setup();
   });
 
   after(async () => {
     await openwhyd.release();
+  });
+
+  beforeEach(async () => {
+    await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
   it("should return a 404 for URLs that don't exist", async () => {

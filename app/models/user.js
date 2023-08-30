@@ -324,7 +324,7 @@ exports.update = function (uid, update, handler) {
 /**
  *
  * @param {UserDocument} pUser
- * @param {(userDocument:UserDocument) => void} handler
+ * @param {(userDocument:UserDocument) => any} handler
  */
 exports.save = function (pUser, handler) {
   const uid = pUser._id || pUser.id;
@@ -538,14 +538,14 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
         break;
       }
     if (found) {
-      exports.save(user, function () {
-        if (handler) handler(found);
+      exports.save(user, async function () {
         if (upd.name) {
           searchModel.indexPlaylist(uId, plId, upd.name);
-          postModel.setPlaylist(uId, plId, upd.name, function () {
-            /* do nothing */
-          });
+          await new Promise((resolve) =>
+            postModel.setPlaylist(uId, plId, upd.name, () => resolve()),
+          );
         }
+        if (handler) handler(found);
       });
     } else if (handler) handler();
   });
