@@ -28,7 +28,7 @@ restart: node_modules public/js/bookmarklet.js ## Restart the production server 
 restart-to-latest: ## Restart the production server to its latest version, without downtime.
 	git pull
 	npm ci --omit=dev --prefer-offline --no-audit
-	cd scripts && ./restart.sh
+	make restart
 	# also don't forget to switch to the right version of nodejs, e.g. with "$ nvm use"
 
 lint: node_modules public/js/bookmarklet.js ## Run static code checks
