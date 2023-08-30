@@ -7,9 +7,11 @@ node_modules: .nvmrc package.json package-lock.json
 	npm install
 	touch node_modules # optimisation: prevents reinstallation of dependencies, until package files are updated
 
-build: node_modules ## Build runtime assets
+build: node_modules ## Build/transpile runtime assets.
+	make public/js/bookmarklet.js
+
+public/js/bookmarklet.js: public/js/bookmarklet*.ts
 	npm run build
-	git status
 
 dev: node_modules ## Start a local dev server.
 	docker compose stop
