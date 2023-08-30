@@ -35,7 +35,7 @@ ENV NODE_ENV production
 WORKDIR /usr/src/app
 COPY --chown=node:node --from=build /usr/src/app/node_modules /usr/src/app/node_modules
 COPY --chown=node:node ./ /usr/src/app
-RUN make build
+RUN npm run build
 
 # Allow openwhyd server (running as "node" user) to create files (e.g. playlog.json.log) in /usr/src/app
 RUN chown node:node /usr/src/app
