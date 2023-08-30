@@ -1,12 +1,17 @@
 {
-  "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
     "prettier",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended" // Uses the recommended rules from the @typescript-eslint/eslint-plugin
   ],
-  "plugins": ["prettier", "@typescript-eslint", "deprecation"],
+  "plugins": [
+    "eslint-plugin-node",
+    "prettier",
+    "@typescript-eslint",
+    "deprecation"
+  ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "tsconfig.json",
     "ecmaVersion": 2019
@@ -22,6 +27,25 @@
     "no-inner-declarations": ["warn", "functions"]
   },
   "overrides": [
+    {
+      "files": ["app/domain/**/*.js", "app/domain/**/*.ts"],
+      "extends": ["async", "async/node", "async/typescript"],
+      "rules": {
+        "no-async-promise-executor": "error",
+        "no-await-in-loop": "error",
+        "no-promise-executor-return": "error",
+        "max-nested-callbacks": "error",
+        "no-return-await": "error",
+        "prefer-promise-reject-errors": "error",
+        "node/handle-callback-err": "error",
+        "node/no-callback-literal": "error",
+        "node/no-sync": "error",
+        "@typescript-eslint/await-thenable": "error",
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/no-misused-promises": "error",
+        "@typescript-eslint/promise-function-async": "error"
+      }
+    },
     {
       "files": [
         "config/**/*.js",
