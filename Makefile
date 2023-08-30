@@ -42,7 +42,7 @@ docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker contai
 	docker-compose restart web
 	docker-compose exec -T web ./scripts/wait-for-http-server.sh 8080
 
-test-all: lint test test-approval test-in-docker
+test-all: lint test test-approval test-in-docker ## Run all checks and tests
 
 test: node_modules public/js/bookmarklet.js ## Run tests against a local db
 	# 1. tests that don't need a database
