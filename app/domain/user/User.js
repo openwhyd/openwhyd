@@ -23,7 +23,7 @@ module.exports = class User {
    * @param {string} playlistName
    * @returns {Promise<[User,Playlist]>}
    */
-  addNewPlaylist = (playlistName) => {
+  addNewPlaylist = async (playlistName) => {
     const newPlaylist = {
       id: nextAvailablePlaylistId(this.playlists),
       name: playlistName,
@@ -35,7 +35,7 @@ module.exports = class User {
   };
 
   /** @type {UserInterface["deletePlaylist"]} */
-  deletePlaylist = (playlistId) => {
+  deletePlaylist = async (playlistId) => {
     const playlist = this.playlists.find((pl) => pl.id === playlistId);
     const otherPlaylists = this.playlists.filter((pl) => pl.id !== playlistId);
     if (!playlist) throw new Error('playlist not found');
