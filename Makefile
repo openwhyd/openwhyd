@@ -1,9 +1,17 @@
 .DEFAULT_GOAL := help
 
-fetch-deps: ## Fetch JS dependencies.
-	@npm install
+install: node_modules ## Fetch JS dependencies.
+	make node_modules
 
-dev: fetch-deps ## Start a local dev server.
+node_modules: .nvmrc package.json package-lock.json
+	npm install
+	touch node_modules # optimisation: prevents reinstallation of dependencies, until package files are updated
+
+build: node_modules ## Build runtime assets
+	npm run build
+	git status
+
+dev: node_modules ## Start a local dev server.
 	docker compose stop
 	docker compose up --detach mongo
 	npm run start:localdb
@@ -21,11 +29,7 @@ restart-to-latest: ## Restart the production server to its latest version, witho
 	cd scripts && ./restart.sh
 	# also don't forget to switch to the right version of nodejs, e.g. with "$ nvm use"
 
-build: fetch-deps ## Build runtime assets
-	npm run build
-	git status
-
-lint: fetch-deps build ## Run static code checks
+lint: node_modules build ## Run static code checks
 	npm run lint:jsdoc-typing
 	npm run lint:typescript
 	npm run lint:format
@@ -36,7 +40,7 @@ docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker contai
 	docker-compose restart web
 	docker-compose exec -T web ./scripts/wait-for-http-server.sh 8080
 
-test: fetch-deps build lint ## Run tests against a local db
+test: node_modules build lint ## Run tests against a local db
 	# 1. tests that don't need a database
 	docker compose stop
 	npm run test:functional
@@ -50,9 +54,9 @@ test: fetch-deps build lint ## Run tests against a local db
 	CYPRESS_SKIP_APPLITOOLS_TESTS=true npm run test:cypress
 	# 4. release services
 	docker compose stop
-	echo "ℹ️ To run approval tests: $ make test-approval"
+	@echo "ℹ️ To run approval tests: $ make test-approval"
 
-test-approval: fetch-deps build lint ## Run approval tests against a local db
+test-approval: node_modules build lint ## Run approval tests against a local db
 	docker compose stop
 	docker compose up --detach mongo
 	npm run test:approval:routes:start
@@ -67,7 +71,7 @@ test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker-compose exec web npm run test:unit
 	docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:integration
 	docker-compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:api:raw
-	echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
+	@echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
 	. ./.env-docker && npm run test:cypress
 	docker compose stop
 
@@ -83,4 +87,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: fetch-deps dev start restart restart-to-latest build lint docker-seed test test-approval test-in-docker ci help
+.PHONY: install build dev start restart restart-to-latest lint docker-seed test test-approval test-in-docker ci help
