@@ -42,23 +42,23 @@ docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker contai
 	docker-compose restart web
 	docker-compose exec -T web ./scripts/wait-for-http-server.sh 8080
 
-test-all: lint test test-approval test-in-docker ## Run all checks and tests
+test: lint test-unit test-integration test-e2e test-approval test-in-docker ## Run all checks and tests
 
-test: node_modules public/js/bookmarklet.js ## Run tests against a local db
-	# 1. tests that don't need a database
-	docker compose stop
+test-unit: node_modules public/js/bookmarklet.js ## Run tests that don't need a database
 	npm run test:functional
 	npm run test:unit
-	# 2. tests that need a database
+
+test-integration: node_modules public/js/bookmarklet.js ## Run tests against a local database
+	docker compose stop
 	docker compose up --detach mongo
 	npm run test:integration:localdb
 	npm run test:api
-	# 3. tests that need a database and Openwhyd server running
+	docker compose stop
+
+test-e2e: node_modules public/js/bookmarklet.js ## Run tests against a local database + Openwhyd server
 	docker compose up --detach --build mongo web
 	CYPRESS_SKIP_APPLITOOLS_TESTS=true npm run test:cypress
-	# 4. release services
 	docker compose stop
-	@echo "ℹ️ To run approval tests: $ make test-approval"
 
 test-approval: node_modules public/js/bookmarklet.js ## Run approval tests against a local db
 	docker compose stop
@@ -91,4 +91,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build dev start restart restart-to-latest lint docker-seed test-all test test-approval test-in-docker ci help
+.PHONY: install build dev start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-in-docker ci help
