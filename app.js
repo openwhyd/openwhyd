@@ -144,33 +144,33 @@ function start() {
 
   const myHttp = require('./app/lib/my-http-wrapper/http');
 
+  // Legacy user auth and session management
+  const session = require('express-session');
+  const MongoStore = require('connect-mongo')(session);
+  const legacySessionMiddleware = session({
+    secret: process.env.WHYD_SESSION_SECRET,
+    store: new MongoStore({
+      url: makeMongoUrl(dbCreds),
+    }),
+    cookie: {
+      maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
+      // secure: process.appParams.urlPrefix.startsWith('https://'), // if true, cookie will be accessible only when website if opened over HTTPS
+      sameSite: 'strict',
+    },
+    name: 'whydSid',
+    resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
+    saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
+  });
+
   const useAuth0AsIdentityProvider = process.env.AUTH0_ISSUER_BASE_URL;
 
-  const sessionMiddleware = useAuth0AsIdentityProvider
-    ? null
-    : (() => {
-        const session = require('express-session');
-        const MongoStore = require('connect-mongo')(session);
-        return session({
-          secret: process.env.WHYD_SESSION_SECRET,
-          store: new MongoStore({
-            url: makeMongoUrl(dbCreds),
-          }),
-          cookie: {
-            maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
-            // secure: process.appParams.urlPrefix.startsWith('https://'), // if true, cookie will be accessible only when website if opened over HTTPS
-            sameSite: 'strict',
-          },
-          name: 'whydSid',
-          resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
-          saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
-        });
-      })();
-  var serverOptions = {
+  const serverOptions = {
     urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
-    sessionMiddleware,
+    sessionMiddleware: useAuth0AsIdentityProvider
+      ? null
+      : legacySessionMiddleware,
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       require('./app/templates/error.js').renderErrorResponse(

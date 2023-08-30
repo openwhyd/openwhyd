@@ -153,37 +153,24 @@ exports.Application = class Application {
     } = process.env;
 
     if (AUTH0_ISSUER_BASE_URL) {
-      const { auth, requiresAuth } = require('express-openid-connect');
+      const { auth /*, requiresAuth*/ } = require('express-openid-connect');
 
       const config = {
-        // idpLogout: true,
         authRequired: false,
         auth0Logout: true,
         secret: AUTH0_SECRET,
-        // clientSecret: // get it from https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/applications/87WcUOdE9SGegwDcZfPRdl4Kw3T21pqs/settings
         baseURL: this._urlPrefix,
         clientID: AUTH0_CLIENT_ID,
         issuerBaseURL: AUTH0_ISSUER_BASE_URL,
-        // authorizationParams: {
-        //   response_type: 'code id_token',
-        //   response_mode: 'form_post',
-        //   scope: 'openid profile email', // to access the user_id thru userInfo()
-        // },
       };
 
       // auth router attaches /login, /logout, and /callback routes to the baseURL
       app.use(auth(config));
 
-      // provides user profile info to auth0, whenenever a user logs in
-      app.get('/profile', requiresAuth(), (req, res) => {
-        res.send(JSON.stringify(req.oidc.user));
-      });
-
-      // cf https://github.com/auth0/express-openid-connect/issues/197#issuecomment-999649799
-      // app.get('/userinfo', requiresAuth(), (req, res) => {
-      //   req.oidc
-      //     .fetchUserInfo()
-      //     .then((userInfo) => res.send(JSON.stringify(userInfo)));
+      // example of route that gets user profile info from auth0
+      // app.get('/profile', requiresAuth(), (req, res) => {
+      //   const user = req.oidc.user; // e.g. {"nickname":"admin","name":"admin","picture":"https://s.gravatar.com/avatar/xxxxxx.png","updated_at":"2023-08-30T15:02:17.071Z","email":"test@openwhyd.org","sub":"auth0|000000000000000000000001","sid":"XXXXXX-XXXXXX-XXXXXX"}
+      //   res.send(JSON.stringify(user));
       // });
     }
 
