@@ -21,10 +21,8 @@
     "public/press/js/sliderz.v1.js"
   ],
   "rules": {
-    "prefer-const": "warn",
-    "deprecation/deprecation": "warn",
     "prettier/prettier": "error",
-    "no-inner-declarations": ["warn", "functions"]
+    "deprecation/deprecation": "warn"
   },
   "overrides": [
     // Multiple overrides within the same config are applied in order. That is, the last override block in a config file always has the highest precedence.
@@ -33,12 +31,14 @@
       // Tolerate (as warnings) non critical issues on legacy JavaScript files, by default
       "files": ["*.js"],
       "rules": {
+        "prefer-const": "warn",
+        "no-inner-declarations": ["warn", "functions"],
         "@typescript-eslint/ban-ts-comment": "warn",
         "@typescript-eslint/no-var-requires": "off"
       }
     },
     {
-      // Tolerate (as warnings) additional non critical issues on legacy front-end code
+      // Tolerate (as warnings) additional non critical issues on legacy front-end code and non-production code
       "files": [
         "config/**/*.js",
         "misc/**/*.js",
@@ -59,6 +59,7 @@
       "files": ["app/domain/**/*.js", "app/domain/**/*.ts"],
       "extends": ["async", "async/node", "async/typescript"],
       "rules": {
+        "prefer-const": "error",
         "no-async-promise-executor": "error",
         "no-await-in-loop": "error",
         "no-promise-executor-return": "error",
