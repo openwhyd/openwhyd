@@ -1,3 +1,10 @@
+## [1.55.58](https://github.com/openwhyd/openwhyd/compare/v1.55.57...v1.55.58) (2023-08-31)
+
+
+### Bug Fixes
+
+* **search:** fix algolia error handling logic ([#703](https://github.com/openwhyd/openwhyd/issues/703)) ([14893ff](https://github.com/openwhyd/openwhyd/commit/14893ff6f7971aa6cc1cd7ed911d01fd72b16118))
+
 ## [1.55.57](https://github.com/openwhyd/openwhyd/compare/v1.55.56...v1.55.57) (2023-08-31)
 
 
