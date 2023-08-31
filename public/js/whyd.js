@@ -1282,11 +1282,12 @@ $(document).ready(function () {
       if (window.location.href === url) loadPage({ url });
       else {
         // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
-        let httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
+        let httpPos = url.substring(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
         if (httpPos != -1) {
           httpPos += 4;
           url =
-            url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
+            url.substring(0, httpPos) +
+            encodeURIComponent(url.substring(httpPos));
         }
         window.history.pushState({ ...opts, url }, title, url); // does not trigger popstate
         loadPage({ url });
