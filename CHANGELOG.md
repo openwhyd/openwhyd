@@ -1,3 +1,10 @@
+## [1.55.56](https://github.com/openwhyd/openwhyd/compare/v1.55.55...v1.55.56) (2023-08-31)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump typescript from 5.1.6 to 5.2.2 ([#700](https://github.com/openwhyd/openwhyd/issues/700)) ([b783050](https://github.com/openwhyd/openwhyd/commit/b7830507b1631cb6853dfc0740f07cb8c2cccec2))
+
 ## [1.55.55](https://github.com/openwhyd/openwhyd/compare/v1.55.54...v1.55.55) (2023-08-31)
 
 
