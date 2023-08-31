@@ -11,7 +11,6 @@ npx --yes code-complexity@v4.2.2 . \
   --format \
   | perl -pe 's/\x1b\[[0-9;]*[mG]//g' \
   > ${THIS_DIR}/code-complexity.txt
-cat ${THIS_DIR}/code-complexity.txt
 
 npx --yes arkit app/ -o ${THIS_DIR}/arkit.svg
 
@@ -26,11 +25,11 @@ $(npx dependency-cruiser app --config --exclude node_modules --output-type markd
 
 ## DDot graph
 
-![](${THIS_DIR}/dependency-ddot.svg)
+![](./${THIS_DIR}/dependency-ddot.svg)
 
 ## Archi graph
 
-![](${THIS_DIR}/dependency-archi.svg)
+![](./${THIS_DIR}/dependency-archi.svg)
 
 ## Full dependency graph
 
