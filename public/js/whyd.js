@@ -7,7 +7,7 @@ const urlPrefix = wlh.substr(0, wlh.indexOf('/', 8));
 const urlDomain = urlPrefix.split('//').pop();
 
 window.goToPage = function (url) {
-  console.log('goToPage (no history)', url);
+  console.warn('goToPage without ajaxify', url); // indicates that ajaxify is not active yet
   window.location.href = url || window.location.href;
 };
 
@@ -51,7 +51,7 @@ function extractPostData($post, defaults = {}) {
   try {
     text = text.trim(); // trim() not supported on IE8
   } catch (e) {
-    console.error(e);
+    console.trace(e);
   }
   return {
     id: $post.attr('data-pid'), // for askPostShareFB
@@ -217,7 +217,7 @@ window.toggleLovePost = function (pId) {
         try {
           window.Whyd.tracking.log('Liked track', result.post._id);
         } catch (e) {
-          console.log('error', e, e.stack);
+          console.trace('error');
         }
       } else $button.removeClass('selected').text('Like');
       const $counter = $post.find('.nbLoves > span');
@@ -271,7 +271,7 @@ function onNewPost(whydPost) {
 
   if (!p) {
     showMessage('Oops; an error occurred... Please try again!');
-    return console.log(whydPost);
+    return console.trace(whydPost);
   }
 
   showMessage(
@@ -289,7 +289,7 @@ function onNewPost(whydPost) {
     if (p.pl && whydPost.postData.pl && whydPost.postData.pl.id == 'create')
       window.Whyd.tracking.log('Created playlist', p.pl.id);
   } catch (e) {
-    console.log('error', e, e.stack);
+    console.trace('error');
   }
 
   if (window.location.href.indexOf('/playlist/create') != -1 && p.pl)
@@ -473,7 +473,6 @@ function toggleComments(pId, toggle) {
         $textField.mentionsInput('val', function (text) {
           if ((text.trim ? text.trim() : text).length == 0) return false;
           addComment(pId, text, function (c) {
-            console.log('response', c);
             c = (c || {}).responseJSON || { error: 'null response' };
             if (c.error) showMessage('Error: ' + c.error, true);
             else {
@@ -788,7 +787,7 @@ window.sharePost = function (pId) {
       post = extractPostData($post);
       window.Whyd.tracking.log('Clicked share button', post.id);
     } catch (e) {
-      console.log('error', e, e.stack);
+      console.trace('error', e);
     }
   });
 };
@@ -1023,14 +1022,8 @@ $(document).ready(function () {
 // AJAXIFY https://gist.github.com/854622
 (function (window /*, undefined*/) {
   // Prepare our Variables
-  const History = window.History,
-    $ = window.jQuery,
+  const $ = window.jQuery,
     document = window.document;
-
-  // Check to see if History.js is enabled for our Browser
-  if (!History.enabled) {
-    return false;
-  }
 
   // Wait for Document
   $(function () {
@@ -1043,7 +1036,7 @@ $(document).ready(function () {
       menuChildrenSelector = '> li,> ul > li',
       /* Application Generic Variables */
       $body = $(document.body) /*.find(contentSelector).first()*/,
-      rootUrl = History.getRootUrl();
+      rootUrl = window.location.origin;
     let newState = false; // HACK to restore scroll position on previous page of history
 
     let $content = $(contentSelector).filter(':first');
@@ -1105,8 +1098,7 @@ $(document).ready(function () {
           return true;
         }
 
-        // Ajaxify this link
-        History.pushState({ streamToTop: true }, title, url);
+        goToPage(url, title, { streamToTop: true });
         event.preventDefault();
         return false;
       });
@@ -1118,11 +1110,8 @@ $(document).ready(function () {
     // Ajaxify our Internal Links
     $body.ajaxify();
 
-    function loadPage() {
-      // Prepare Variables
-      const State = History.getState(),
-        url = State.url,
-        relativeUrl = url.replace(rootUrl, '');
+    function loadPage({ url }) {
+      const relativeUrl = url.replace(rootUrl, '');
 
       window.getCurrentUrl = function () {
         return url;
@@ -1139,8 +1128,6 @@ $(document).ready(function () {
       }
 
       $('div.tipsy').remove(); // bug fix: make sure to remove tooltips on ajax page change
-
-      //console.log("AJAX URL", url);
 
       // Ajax Request the Traditional Page
       $.ajax({
@@ -1197,7 +1184,7 @@ $(document).ready(function () {
               document.title,
             ); // use underscore.js to encode html entities
           } catch (err) {
-            console.error(err);
+            console.trace(err);
           }
 
           // Add the scripts
@@ -1205,9 +1192,6 @@ $(document).ready(function () {
             const $script = $(this),
               src = $script.attr('src'),
               scriptNode = document.createElement('script');
-            //if ($script.hasClass("no-ajaxy"))
-            //	return console.log("skipping script", $script);
-            //console.log("add script", src || $script);
             if (src) scriptNode.src = src;
             else
               scriptNode.appendChild(
@@ -1259,7 +1243,7 @@ $(document).ready(function () {
             // inform analytics
             window.Whyd.tracking.sendPageview();
           } catch (e) {
-            console.error(e);
+            console.trace(e);
           }
           if (newState) {
             window.scrollTo(0, 0);
@@ -1267,7 +1251,7 @@ $(document).ready(function () {
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          console.error(errorThrown /*.stack*/);
+          console.trace(errorThrown);
           setTimeout(function () {
             document.location.href = url;
           }, 300);
@@ -1277,25 +1261,35 @@ $(document).ready(function () {
     }
 
     // Hook into State Changes
-    $(window).bind('statechange', loadPage); // end onStateChange
+    window.addEventListener('popstate', (event) => {
+      // Note: properties like window.location will already reflect the state change (if it affected the current URL),
+      // but document might still not.
+      // => to catch the moment when the new document state is already fully in place, use a zero-delay setTimeout().
+      // cf https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack
+      setTimeout(
+        () =>
+          loadPage(
+            event.state ?? history.state ?? { url: document.location.href },
+          ),
+        0,
+      );
+    });
 
-    if (History.enabled) {
-      window.goToPage = function (url, title) {
-        console.log('goToPage (history)', url, !!window.onPageLeave);
-        if (window.location.href == url) loadPage({});
-        else {
-          // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
-          let httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
-          if (httpPos != -1) {
-            httpPos += 4;
-            url =
-              url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
-            console.log('fixed URL to:', url);
-          }
-          History.pushState(null, title, url || window.location.href); // will trigger "statechange" => call loadPage()
+    window.goToPage = function (url, title, opts) {
+      if (window.location.href === url) loadPage({ url });
+      else {
+        // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
+        let httpPos = url.substring(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
+        if (httpPos != -1) {
+          httpPos += 4;
+          url =
+            url.substring(0, httpPos) +
+            encodeURIComponent(url.substring(httpPos));
         }
-      };
-    }
+        window.history.pushState({ ...opts, url }, title, url); // does not trigger popstate
+        loadPage({ url });
+      }
+    };
   }); // end onDomLoad
 })(window); // end closure
 

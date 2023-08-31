@@ -60,6 +60,11 @@ test-e2e: node_modules public/js/bookmarklet.js ## Run tests against a local dat
 	CYPRESS_SKIP_APPLITOOLS_TESTS=true npm run test:cypress
 	docker compose stop
 
+test-e2e-dev: node_modules public/js/bookmarklet.js ## Open Cypress test runner against a local database + Openwhyd server
+	docker compose up --detach --build mongo web
+	CYPRESS_SKIP_APPLITOOLS_TESTS=true npm run test:cypress:dev
+	docker compose stop
+
 test-approval: node_modules public/js/bookmarklet.js ## Run approval tests against a local db
 	docker compose stop
 	docker compose up --detach mongo

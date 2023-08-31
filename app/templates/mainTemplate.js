@@ -214,14 +214,8 @@ exports.renderWhydFrame = function (html, params) {
     );
 
   out.push(
-    //	'    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>',
-    //	'    <script type="text/javascript" src="'+render.urlPrefix+'/js/jquery-1.10.2.min.js"></script>',
     '    <script src="/js/jquery-1.10.2.min.js"></script>',
     '    <script src="/js/jquery-migrate-1.2.1.js"></script>',
-    '    <script type="text/javascript" src="' +
-      render.urlPrefix +
-      '/js/jquery.history.js"></script>',
-    //	'    <script src="/js/soundmanager2.js"></script>',
     '    <script src="/js/soundmanager2-nodebug-jsmin.js"></script>',
     '    <script>soundManager.setup({url: "/swf/", flashVersion: 9, onready: function() {soundManager.isReady=true;}});</script>',
   );
@@ -353,33 +347,25 @@ exports.renderWhydPage = function (params = {}) {
       ? ''
       : ' – Discover and collect the best music tracks from the web');
 
-  params.js = (
-    params.noDefaultJs
-      ? []
-      : [
-          'jquery.avgrund.js',
-          'jquery.tipsy.js', // replaces tooltip.js
-          'quickSearch.js',
-          //	"md5.js",
-
-          'jquery.iframe-post-form.min.js',
-          'jquery.placeholder.min.js',
-          'underscore-min.js', // for jquery.mentionsInput.js
-          'jquery.elastic.js', // for jquery.mentionsInput.js
-          'jquery.mentionsInput.js',
-          'ui.js',
-          'whyd.js', // topicBrowser.js
-        ]
-  )
-    .concat(['playem-' + playemFile + '.js'])
-    .concat([
-      'playem-youtube-iframe-patch.js',
-      'whydPlayer.js',
-      'dndUpload.js',
-      'WhydImgUpload.js',
-    ])
-    .concat(params.js || [])
-    .concat(params.noDefaultJs ? [] : ['facebook.js']);
+  params.js = [
+    'jquery.avgrund.js',
+    'jquery.tipsy.js', // replaces tooltip.js
+    'quickSearch.js',
+    //	"md5.js",
+    'jquery.iframe-post-form.min.js',
+    'jquery.placeholder.min.js',
+    'underscore-min.js', // for jquery.mentionsInput.js
+    'jquery.elastic.js', // for jquery.mentionsInput.js
+    'jquery.mentionsInput.js',
+    'ui.js',
+    'whyd.js', // topicBrowser.js
+    'playem-' + playemFile + '.js',
+    'playem-youtube-iframe-patch.js',
+    'whydPlayer.js',
+    'dndUpload.js',
+    'WhydImgUpload.js',
+    'facebook.js',
+  ].concat(params.js || []);
 
   params.css = [
     'browse.css',
