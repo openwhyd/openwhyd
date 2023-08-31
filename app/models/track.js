@@ -93,11 +93,16 @@ exports.fetch = function (params, handler) {
   mongodb.collections['track']
     .find({}, params)
     .toArray()
-    .catch(() => handler())
-    .then(function (results) {
-      // console.log('=> fetched ' + results.length + ' tracks');
-      if (handler) handler(results);
-    });
+    .then(
+      function (results) {
+        // console.log('=> fetched ' + results.length + ' tracks');
+        if (handler) handler(results);
+      },
+      (err) => {
+        console.trace('trackModel.fetch', err);
+        handler();
+      },
+    );
 };
 
 exports.fetchTrackByEid = function (eId, cb) {
@@ -161,8 +166,13 @@ function fetchPostsByEid(eId, cb) {
   mongodb.collections['post']
     .find(criteria, POST_FETCH_OPTIONS)
     .toArray()
-    .catch(() => cb())
-    .then((posts) => cb(posts));
+    .then(
+      (posts) => cb(posts),
+      (err) => {
+        console.trace('fetchPostsByEid', err);
+        cb();
+      },
+    );
 }
 
 // called when a track is updated/deleted by a user

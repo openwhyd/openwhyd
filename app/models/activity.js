@@ -28,11 +28,13 @@ exports.fetch = function (q, options, callback) {
   getCol()
     .find(q, options)
     .toArray()
-    .catch((err) => {
-      console.trace('error in activity.fetch:', err);
-      callback();
-    })
-    .then((res) => callback(res));
+    .then(
+      (res) => callback(res),
+      (err) => {
+        console.trace('error in activity.fetch:', err);
+        callback();
+      },
+    );
 };
 
 exports.add = async function (d, callback) {

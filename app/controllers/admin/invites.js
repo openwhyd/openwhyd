@@ -15,8 +15,10 @@ const fetchUsers = function (table, handler, options) {
   mongodb.collections[table]
     .find({}, options)
     .toArray()
-    .catch(handler)
-    .then((res) => handler(null, res));
+    .then(
+      (res) => handler(null, res),
+      (err) => handler(err),
+    );
 };
 
 const inviteUser = function (email, handler) {
