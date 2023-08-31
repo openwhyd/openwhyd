@@ -1,6 +1,5 @@
 /* global $, _, openRemoteDialog, whydPlayer, goToPage, showMessage, openJqueryDialog, htmlEntities, avgrundClose, QuickSearch */
 
-console.log('whyd.js');
 const MAX_NB_MENTIONS = 6;
 
 const wlh = window.location.href;
@@ -8,7 +7,6 @@ const urlPrefix = wlh.substr(0, wlh.indexOf('/', 8));
 const urlDomain = urlPrefix.split('//').pop();
 
 window.goToPage = function (url) {
-  console.log('goToPage (no history)', url);
   window.location.href = url || window.location.href;
 };
 
@@ -52,7 +50,7 @@ function extractPostData($post, defaults = {}) {
   try {
     text = text.trim(); // trim() not supported on IE8
   } catch (e) {
-    console.error(e);
+    console.trace(e);
   }
   return {
     id: $post.attr('data-pid'), // for askPostShareFB
@@ -218,7 +216,7 @@ window.toggleLovePost = function (pId) {
         try {
           window.Whyd.tracking.log('Liked track', result.post._id);
         } catch (e) {
-          console.log('error', e, e.stack);
+          console.trace('error');
         }
       } else $button.removeClass('selected').text('Like');
       const $counter = $post.find('.nbLoves > span');
@@ -272,7 +270,7 @@ function onNewPost(whydPost) {
 
   if (!p) {
     showMessage('Oops; an error occurred... Please try again!');
-    return console.log(whydPost);
+    return console.trace(whydPost);
   }
 
   showMessage(
@@ -290,7 +288,7 @@ function onNewPost(whydPost) {
     if (p.pl && whydPost.postData.pl && whydPost.postData.pl.id == 'create')
       window.Whyd.tracking.log('Created playlist', p.pl.id);
   } catch (e) {
-    console.log('error', e, e.stack);
+    console.trace('error');
   }
 
   if (window.location.href.indexOf('/playlist/create') != -1 && p.pl)
@@ -474,7 +472,6 @@ function toggleComments(pId, toggle) {
         $textField.mentionsInput('val', function (text) {
           if ((text.trim ? text.trim() : text).length == 0) return false;
           addComment(pId, text, function (c) {
-            console.log('response', c);
             c = (c || {}).responseJSON || { error: 'null response' };
             if (c.error) showMessage('Error: ' + c.error, true);
             else {
@@ -789,7 +786,7 @@ window.sharePost = function (pId) {
       post = extractPostData($post);
       window.Whyd.tracking.log('Clicked share button', post.id);
     } catch (e) {
-      console.log('error', e, e.stack);
+      console.trace('error', e);
     }
   });
 };
@@ -1079,7 +1076,6 @@ $(document).ready(function () {
 
     // Ajaxify Helper
     $.fn.ajaxify = function () {
-      console.log('AJAXIFY');
       // Prepare
       const $this = $(this);
 
@@ -1089,7 +1085,6 @@ $(document).ready(function () {
         const $this = $(this),
           url = $this.attr('href'),
           title = $this.attr('title') || null;
-        console.log('AJAXIFied link clicked', $this, url);
 
         newState = true;
         //url = decodeURIComponent(url); // fix for non-latin characters
@@ -1103,10 +1098,10 @@ $(document).ready(function () {
           return true;
         }
 
-        // Ajaxify this link
-        console.log(`History.pushState({ streamToTop: true }, title, ${url});`);
+        // Note: we could probably call goToPage() here, instead of:
         History.pushState({ url, streamToTop: true }, title, url);
         setTimeout(() => loadPage({ url }), 0);
+
         event.preventDefault();
         return false;
       });
@@ -1116,12 +1111,9 @@ $(document).ready(function () {
     };
 
     // Ajaxify our Internal Links
-    console.log('Ajaxify our Internal Links');
-
     $body.ajaxify();
 
     function loadPage({ url }) {
-      console.log('loadPage', { url });
       const relativeUrl = url.replace(rootUrl, '');
 
       window.getCurrentUrl = function () {
@@ -1139,8 +1131,6 @@ $(document).ready(function () {
       }
 
       $('div.tipsy').remove(); // bug fix: make sure to remove tooltips on ajax page change
-
-      //console.log("AJAX URL", url);
 
       // Ajax Request the Traditional Page
       $.ajax({
@@ -1197,7 +1187,7 @@ $(document).ready(function () {
               document.title,
             ); // use underscore.js to encode html entities
           } catch (err) {
-            console.error(err);
+            console.trace(err);
           }
 
           // Add the scripts
@@ -1205,8 +1195,8 @@ $(document).ready(function () {
             const $script = $(this),
               src = $script.attr('src'),
               scriptNode = document.createElement('script');
-            //if ($script.hasClass("no-ajaxy"))
-            //	return console.log("skipping script", $script);
+            if ($script.hasClass('no-ajaxy'))
+              return console.log('skipping script', $script);
             //console.log("add script", src || $script);
             if (src) scriptNode.src = src;
             else
@@ -1259,7 +1249,7 @@ $(document).ready(function () {
             // inform analytics
             window.Whyd.tracking.sendPageview();
           } catch (e) {
-            console.error(e);
+            console.trace(e);
           }
           if (newState) {
             window.scrollTo(0, 0);
@@ -1267,7 +1257,7 @@ $(document).ready(function () {
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          console.error(errorThrown /*.stack*/);
+          console.trace(errorThrown);
           setTimeout(function () {
             document.location.href = url;
           }, 300);
@@ -1277,13 +1267,7 @@ $(document).ready(function () {
     }
 
     // Hook into State Changes
-    // $(window).bind('statechange', loadPage); // end onStateChange
-
     window.addEventListener('popstate', (event) => {
-      console.log('on popstate', {
-        eventState: event.state,
-        historyState: history.state,
-      });
       setTimeout(
         () =>
           loadPage(
@@ -1294,7 +1278,6 @@ $(document).ready(function () {
     });
 
     window.goToPage = function (url, title) {
-      console.log('goToPage (history)', url, !!window.onPageLeave);
       if (window.location.href == url) loadPage({ url });
       else {
         // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
@@ -1303,7 +1286,6 @@ $(document).ready(function () {
           httpPos += 4;
           url =
             url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
-          console.log('fixed URL to:', url);
         }
         History.pushState({ url }, title, url || window.location.href); // will trigger "statechange" => call loadPage()
         setTimeout(() => loadPage({ url }), 0);
