@@ -1,3 +1,11 @@
+## [1.55.57](https://github.com/openwhyd/openwhyd/compare/v1.55.56...v1.55.57) (2023-08-31)
+
+
+### Bug Fixes
+
+* **build:** prevent `This is not the tsc command you are looking for` ([71cefd4](https://github.com/openwhyd/openwhyd/commit/71cefd48674011b0c2503e7eb4e7715e4ecb0451)), closes [#563](https://github.com/openwhyd/openwhyd/issues/563) [#662](https://github.com/openwhyd/openwhyd/issues/662) [#702](https://github.com/openwhyd/openwhyd/issues/702)
+* **docker:** `This is not the tsc command you are looking for` ([80a542d](https://github.com/openwhyd/openwhyd/commit/80a542df40bd0e12a3774bc1061631d385482029)), closes [#702](https://github.com/openwhyd/openwhyd/issues/702)
+
 ## [1.55.56](https://github.com/openwhyd/openwhyd/compare/v1.55.55...v1.55.56) (2023-08-31)
 
 
