@@ -1,8 +1,8 @@
-[![Build Status](https://github.com/openwhyd/openwhyd/workflows/GitHub%20Actions%20Workflow/badge.svg)](https://github.com/openwhyd/openwhyd/actions) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/) [![Follow Openwhyd on Twitter](https://img.shields.io/twitter/follow/open_whyd.svg?style=flat-square&label=Follow)](https://twitter.com/open_whyd)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/b7fd412cbffb44afac147eb28f1082c0)](https://app.codacy.com/gh/openwhyd/openwhyd/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage) [![OpenCollective](https://opencollective.com/openwhyd/backers/badge.svg?style=flat-square)](#backers) [![Contributors](https://img.shields.io/badge/all_contributors-23-brightgreen.svg?style=flat-square)](#contributors) [![frequently asked questions](https://img.shields.io/badge/help-FAQ-ff69b4.svg?style=flat-square)](docs/FAQ.md) [![Music lover club on Facebook](https://img.shields.io/badge/chat-music%20lover%20club-blue.svg?style=flat-square)](https://facebook.com/groups/openwhyd/)
 
 # Openwhyd
 
-> 💎 Like Pinterest, for Music. Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
+> 💎 Like Pinterest, but for Music. Discover, collect and play music from Youtube, Soundcloud, Bandcamp, Deezer and other streaming platforms.
 
 Openwhyd is a music curation service freely available at [openwhyd.org](https://openwhyd.org). It was designed for music lovers who enjoy taking their time to find the best tracks and videos for their collection, including:
 
