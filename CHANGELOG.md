@@ -1,3 +1,10 @@
+## [1.55.60](https://github.com/openwhyd/openwhyd/compare/v1.55.59...v1.55.60) (2023-08-31)
+
+
+### Bug Fixes
+
+* **domain:** remove links to whyd.com => fix unsubscribe link ([67ef678](https://github.com/openwhyd/openwhyd/commit/67ef678c00254f2cae4bb33ddd8bc5060e202908))
+
 ## [1.55.59](https://github.com/openwhyd/openwhyd/compare/v1.55.58...v1.55.59) (2023-08-31)
 
 
