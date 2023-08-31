@@ -1097,10 +1097,7 @@ $(document).ready(function () {
           return true;
         }
 
-        // Note: we could probably call goToPage() here, instead of:
-        window.history.pushState({ url, streamToTop: true }, title, url);
-        setTimeout(() => loadPage({ url }), 0);
-
+        goToPage(url, title, { streamToTop: true });
         event.preventDefault();
         return false;
       });
@@ -1276,8 +1273,8 @@ $(document).ready(function () {
       );
     });
 
-    window.goToPage = function (url, title) {
-      if (window.location.href == url) loadPage({ url });
+    window.goToPage = function (url = window.location.href, title, opts) {
+      if (window.location.href === url) loadPage({ url });
       else {
         // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
         let httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
@@ -1286,7 +1283,7 @@ $(document).ready(function () {
           url =
             url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
         }
-        window.history.pushState({ url }, title, url || window.location.href); // will trigger "statechange" => call loadPage()
+        window.history.pushState({ ...opts, url }, title, url);
         setTimeout(() => loadPage({ url }), 0);
       }
     };
