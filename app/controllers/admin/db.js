@@ -96,8 +96,10 @@ var fileGenerators = {
       col
         .find(p, { limit: limit })
         .toArray()
-        .catch((error) => cb({ error: error }))
-        .then((items) => cb(items));
+        .then(
+          (items) => cb(items),
+          (error) => cb({ error: error }),
+        );
     }
   },
   'find.txt': wrapJsonGeneratorToText('find.json'),
