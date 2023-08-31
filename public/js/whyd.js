@@ -1192,8 +1192,8 @@ $(document).ready(function () {
             const $script = $(this),
               src = $script.attr('src'),
               scriptNode = document.createElement('script');
-            if ($script.hasClass('no-ajaxy'))
-              return console.log('skipping script', $script);
+            // if ($script.hasClass('no-ajaxy'))
+            //   return console.log('skipping script', $script);
             //console.log("add script", src || $script);
             if (src) scriptNode.src = src;
             else
