@@ -1,3 +1,10 @@
+## [1.55.59](https://github.com/openwhyd/openwhyd/compare/v1.55.58...v1.55.59) (2023-08-31)
+
+
+### Bug Fixes
+
+* **error-handling:** don't callback twice upon rejection ([#704](https://github.com/openwhyd/openwhyd/issues/704)) ([0a13423](https://github.com/openwhyd/openwhyd/commit/0a134235b93b408979829e7b3e323f9e536bc135)), closes [#703](https://github.com/openwhyd/openwhyd/issues/703)
+
 ## [1.55.58](https://github.com/openwhyd/openwhyd/compare/v1.55.57...v1.55.58) (2023-08-31)
 
 
