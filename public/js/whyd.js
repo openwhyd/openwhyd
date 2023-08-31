@@ -1265,6 +1265,10 @@ $(document).ready(function () {
 
     // Hook into State Changes
     window.addEventListener('popstate', (event) => {
+      // Note: properties like window.location will already reflect the state change (if it affected the current URL),
+      // but document might still not.
+      // => to catch the moment when the new document state is already fully in place, use a zero-delay setTimeout().
+      // cf https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack
       setTimeout(
         () =>
           loadPage(
@@ -1274,7 +1278,7 @@ $(document).ready(function () {
       );
     });
 
-    window.goToPage = function (url = window.location.href, title, opts) {
+    window.goToPage = function (url, title, opts) {
       if (window.location.href === url) loadPage({ url });
       else {
         // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
@@ -1284,8 +1288,8 @@ $(document).ready(function () {
           url =
             url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
         }
-        window.history.pushState({ ...opts, url }, title, url);
-        setTimeout(() => loadPage({ url }), 0);
+        window.history.pushState({ ...opts, url }, title, url); // does not trigger popstate
+        loadPage({ url });
       }
     };
   }); // end onDomLoad
