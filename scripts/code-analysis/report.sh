@@ -25,11 +25,11 @@ $(npx dependency-cruiser app --config --exclude node_modules --output-type markd
 
 ## DDot graph
 
-![](./${THIS_DIR}/dependency-ddot.svg)
+![](./dependency-ddot.svg)
 
 ## Archi graph
 
-![](./${THIS_DIR}/dependency-archi.svg)
+![](./dependency-archi.svg)
 
 ## Full dependency graph
 

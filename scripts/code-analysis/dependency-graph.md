@@ -44,15 +44,15 @@
 </details>
 
 ---
-[dependency-cruiser@13.1.5](https://www.github.com/sverweij/dependency-cruiser) / 2023-08-31T07:06:20.642Z
+[dependency-cruiser@13.1.5](https://www.github.com/sverweij/dependency-cruiser) / 2023-08-31T07:08:25.418Z
 
 ## DDot graph
 
-![](./scripts/code-analysis/dependency-ddot.svg)
+![](./dependency-ddot.svg)
 
 ## Archi graph
 
-![](./scripts/code-analysis/dependency-archi.svg)
+![](./dependency-archi.svg)
 
 ## Full dependency graph
 
