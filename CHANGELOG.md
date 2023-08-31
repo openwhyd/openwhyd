@@ -1,3 +1,10 @@
+## [1.55.54](https://github.com/openwhyd/openwhyd/compare/v1.55.53...v1.55.54) (2023-08-31)
+
+
+### Bug Fixes
+
+* **formatting:** `$ make lint` ([fb2eb8a](https://github.com/openwhyd/openwhyd/commit/fb2eb8aec6dc7ee4a39d6c7da6bc16b91546b86b))
+
 ## [1.55.53](https://github.com/openwhyd/openwhyd/compare/v1.55.52...v1.55.53) (2023-08-31)
 
 
