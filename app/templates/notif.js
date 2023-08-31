@@ -157,7 +157,8 @@ exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
         hotUsers2: hotUsers.slice(0, 2),
         urlPrefix: config.urlPrefix, //"http://proto.whyd.com";
         imgPath: config.urlPrefix + '/images/email',
-        unsubUrl: 'http://dev.whyd.com/unsuscribe-emails-welcome/' + user.id, // TODO: fix the unsubscribe URL
+        unsubUrl:
+          config.urlPrefix + '/api/unsubscribe?type=emSub&uId=' + user.id,
       };
       cb({
         subject: 'Welcome to Openwhyd, ' + user.name + '!',

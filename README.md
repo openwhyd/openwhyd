@@ -13,7 +13,7 @@ Openwhyd is a music curation service freely available at [openwhyd.org](https://
 
 [![Openwhyd Demo Video](./docs/img/openwhyd-demo-thumb.png)](https://www.youtube.com/watch?v=aZT8VlTV1YY 'Openwhyd Demo Video')
 
-Initially known as [whyd.com](https://whyd.com), the development of this product started in 2012. It became open-source in 2016. Read the full story [from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
+Initially known as "Whyd", the development of this product started in 2012. It became open-source in 2016. Read the full story [from Whyd to Openwhyd](https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d).
 
 ## Features
 
@@ -160,7 +160,7 @@ Support us with a monthly donation and help us keep Openwhyd alive. [[Become a b
 
 Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/openwhyd#sponsor)]
 
-<a href="https://whyd.com/" target="_blank"><img alt="Whyd is the company that founded this service, donated the source code and still pays for distribution on Apple's App Store" src="docs/img/sponsor-whyd-smaller.png"></a>
+<a href="https://medium.com/openwhyd/music-amongst-other-topics-a4f41657d6d" target="_blank"><img alt="Whyd is the company that founded this service and donated the source code" src="docs/img/sponsor-whyd-smaller.png"></a>
 <a href="https://www.digitalocean.com/" target="_blank"><img alt="DigitalOcean has kindly offered us one year worth of hosting, to help us maintain our open-source development effort" src="docs/img/sponsor-digitalocean.png"></a>
 <a href="https://www.algolia.com/" target="_blank"><img alt="Algolia has been kindly providing our users with blazing-fast track search for years" src="docs/img/sponsor-algolia.png"></a>
 <a href="https://opencollective.com/openwhyd/sponsor/0/website" target="_blank"><img src="https://opencollective.com/openwhyd/sponsor/0/avatar.svg"></a>
