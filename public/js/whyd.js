@@ -1106,7 +1106,7 @@ $(document).ready(function () {
         // Ajaxify this link
         console.log(`History.pushState({ streamToTop: true }, title, ${url});`);
         History.pushState({ url, streamToTop: true }, title, url);
-        setTimeout(loadPage, 0);
+        setTimeout(() => loadPage({ url }), 0);
         event.preventDefault();
         return false;
       });
@@ -1120,11 +1120,8 @@ $(document).ready(function () {
 
     $body.ajaxify();
 
-    function loadPage() {
-      // Prepare Variables
-      const State = history.state;
-      console.log('loadPage', { State });
-      const url = State.url;
+    function loadPage({ url }) {
+      console.log('loadPage', { url });
       const relativeUrl = url.replace(rootUrl, '');
 
       window.getCurrentUrl = function () {
@@ -1282,17 +1279,23 @@ $(document).ready(function () {
     // Hook into State Changes
     // $(window).bind('statechange', loadPage); // end onStateChange
 
-    console.log('addEventListener');
     window.addEventListener('popstate', (event) => {
-      console.log(
-        `location: ${document.location}, state: ${JSON.stringify(event.state)}`,
+      console.log('on popstate', {
+        eventState: event.state,
+        historyState: history.state,
+      });
+      setTimeout(
+        () =>
+          loadPage(
+            event.state ?? history.state ?? { url: document.location.href },
+          ),
+        0,
       );
-      setTimeout(loadPage, 0);
     });
 
     window.goToPage = function (url, title) {
       console.log('goToPage (history)', url, !!window.onPageLeave);
-      if (window.location.href == url) loadPage({});
+      if (window.location.href == url) loadPage({ url });
       else {
         // fix mp3/audiofile track URLs (which eId/path contain an HTTP URL => not accepted as-is by router)
         let httpPos = url.substr(4).search(/https?:\/\//); // 4 because it could be a relative URL prefixed by /fi/
@@ -1302,8 +1305,8 @@ $(document).ready(function () {
             url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
           console.log('fixed URL to:', url);
         }
-        // History.pushState(null, title, url || window.location.href); // will trigger "statechange" => call loadPage()
-        setTimeout(loadPage, 0);
+        History.pushState({ url }, title, url || window.location.href); // will trigger "statechange" => call loadPage()
+        setTimeout(() => loadPage({ url }), 0);
       }
     };
   }); // end onDomLoad
