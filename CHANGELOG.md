@@ -1,3 +1,10 @@
+## [1.55.55](https://github.com/openwhyd/openwhyd/compare/v1.55.54...v1.55.55) (2023-08-31)
+
+
+### Bug Fixes
+
+* bump version to release ([eb8a90f](https://github.com/openwhyd/openwhyd/commit/eb8a90f8ee1eb0166deb864f802621d68e3518eb))
+
 ## [1.55.54](https://github.com/openwhyd/openwhyd/compare/v1.55.53...v1.55.54) (2023-08-31)
 
 
