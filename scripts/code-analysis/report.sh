@@ -7,7 +7,7 @@ THIS_DIR=$(dirname "$0")
 
 npx --yes code-complexity@v4.2.2 . \
   --filter 'app/**/*.js' \
-  --sort score \
+  --sort name \
   --format \
   | perl -pe 's/\x1b\[[0-9;]*[mG]//g' \
   > ${THIS_DIR}/code-complexity.txt
