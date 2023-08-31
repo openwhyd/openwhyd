@@ -212,7 +212,7 @@ jobs:
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
           cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
