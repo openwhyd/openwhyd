@@ -9,3 +9,4 @@ public/js/soundmanager2.js
 public/press/js/sliderz.v1.js
 coverage/
 .nyc_output/
+scripts/code-analysis/*.md
