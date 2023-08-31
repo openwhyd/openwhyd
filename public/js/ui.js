@@ -34,8 +34,8 @@ function openHtmlDialog(html) {
 }
 
 function overflowPopin() {
-  var avgrund = $('.avgrund-popin');
-  var child = $('.avgrund-popin').children().eq(1);
+  const avgrund = $('.avgrund-popin');
+  const child = $('.avgrund-popin').children().eq(1);
 
   if (child.innerHeight() > avgrund.height()) {
     avgrund.css('overflow-y', 'scroll');
@@ -46,21 +46,21 @@ function overflowPopin() {
 }
 
 function openJqueryDialog($element, dlgClass, title) {
-  var dlg = $('<div>')
+  const dlg = $('<div>')
     .attr('class', 'dlg ' + (dlgClass || ''))
     .append($element);
   if (title) dlg.prepend('<h1>' + title + '</h1>');
   openHtmlDialog(dlg);
 }
 
-function openRemoteDialog(url, dlgClass, callback) {
+window.openRemoteDialog = function (url, dlgClass, callback) {
   openJqueryDialog('', (dlgClass || '') + ' loading');
 
   $.ajax({
     type: 'GET',
     url: url,
     complete: function (data) {
-      var $ajaxFrame = $('.dlg');
+      const $ajaxFrame = $('.dlg');
       $ajaxFrame.html(data.responseText).ready(function () {
         //$(this).find("a").click(function(){$.modal.close();});
         $ajaxFrame.removeClass('loading');
@@ -68,27 +68,27 @@ function openRemoteDialog(url, dlgClass, callback) {
       });
     },
   });
-}
+};
 
-function showMessage(txt, isError) {
-  if (txt && typeof txt == 'object') {
-    isError = isError || txt.error;
-    txt = txt.error || txt.message || txt.result || txt;
+window.showMessage = function (txt, isError) {
+  if (txt && typeof txt === 'object') {
+    isError = isError || txt?.error;
+    txt = txt?.error || txt?.message || txt?.result || txt;
   }
   $('#whydMessageContainer').remove();
-  var $container = $(
+  const $container = $(
     '<div id="whydMessageContainer" class="' +
       (isError ? 'error' : '') +
       '"><div>' +
       txt +
-      '</div></div>'
+      '</div></div>',
   );
   $container.css('zIndex', 1002);
   $('body').append($container);
   function disappear() {
     $container.animate(
       { height: '0px' },
-      300 /*, function(){ $(this).hide(); }*/
+      300 /*, function(){ $(this).hide(); }*/,
     ); //.fadeOut();
   }
   $container
@@ -100,68 +100,11 @@ function showMessage(txt, isError) {
   } catch (e) {
     console.log(e, e.stack);
   }
-}
+};
 
 // for WhydCanvas app, when embedded in a Facebook page tab
 function adaptToWindowSize() {
   $('body').toggleClass('fbIframe', $(window).width() < 820);
-}
-
-// LOGGING FUNCTIONS
-
-function WhydLogging() {
-  var emailCheck =
-    /^[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
-  //var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/;
-
-  this.validateField = {
-    name: function ($name) {
-      if (!$name.val() /*.trim()*/)
-        return /*! $name.each(error(*/ 'Please enter your name. E.g. John Smith' /*))*/;
-      else return null; //$name.each(ok);
-    },
-    email: function ($email) {
-      if (!emailCheck.test($email.val() /*.trim()*/))
-        // trim not supported by IE8-
-        return /*! $name.each(error(*/ 'Your email address looks wrong...' /*))*/;
-      else return null; //$name.each(ok);
-    },
-    password: function ($password) {
-      var pwd = $password.val(); /*.trim()*/
-      if (pwd.length < 4 || pwd.length > 32)
-        return /*! $password.each(error(*/ 'Please enter a password between 4 and 32 characters' /*))*/;
-      //else if (!pwdRegex.test(pwd))
-      //	return /*! $password.each(error(*/"Your password contains invalid characters"/*))*/;
-      else return null; //$password.each(ok);
-    },
-  };
-
-  this.validateFields = function (fieldSetList) {
-    // [{name:$name},{password:$password}...] // old name: signIn()
-    var results = [];
-    for (let i in fieldSetList)
-      for (let key in fieldSetList[i]) {
-        var $elt = fieldSetList[i][key];
-        var error = this.validateField[key]($elt);
-        if (error) {
-          var errorObj = {};
-          errorObj[key] = error;
-          results.push(errorObj);
-        }
-        $elt.toggleClass('ok', !error).toggleClass('error', error);
-      }
-    /*
-		var err = this.validateName($name);
-		if (err) return err;
-		err = this.validateEmail($email);
-		if (err) return err;
-		err = this.validatePassword($validatePassword);
-		if (err) return err;
-		*/
-    return results; // => [{name:"error 1"},{password:"error 2"}...]
-  };
-
-  return this;
 }
 
 $(window).resize(adaptToWindowSize);

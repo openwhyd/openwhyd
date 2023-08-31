@@ -1,4 +1,4 @@
-ALL    /                               -> controllers.userLibrary
+GET    /                               -> controllers.userLibrary
 GET    /home                           -> controllers.userLibrary
 POST   /home                           -> controllers.userLibrary
 
@@ -11,7 +11,6 @@ GET    /privacy                        -> controllers.static
 GET    /investors                      -> controllers.static
 GET    /concertvenue                   -> controllers.static
 GET    /mobile                         -> controllers.static
-GET    /iphone                         -> controllers.static
 POST   /fbcanvas/                      -> controllers.static
 
 GET    /fbCanvas                       -> controllers.private.fbCanvas
@@ -42,7 +41,6 @@ GET    /uCoverImg/{uCoverImg}          -> controllers.uploadedFile
 GET    /uPlaylistImg/{uPlaylistImg}    -> controllers.uploadedFile
 GET    /img/{type}/{id}                -> controllers.uploadedFile
 
-GET    /config.json                    -> controllers.private.config
 GET    /search                         -> controllers.private.search
 POST   /search                         -> controllers.private.search
 
@@ -77,16 +75,10 @@ GET    /facebookLogin                  -> controllers.api.facebookLogin
 POST   /facebookLogin                  -> controllers.api.facebookLogin
 
 GET    /digest                         -> controllers.private.digest
-GET    /contentType                    -> controllers.private.contentType
-POST   /contentType                    -> controllers.private.contentType
-GET    /getResourceMetadata            -> controllers.private.getResourceMetadata
-POST   /getResourceMetadata            -> controllers.private.getResourceMetadata
 GET    /password                       -> controllers.private.password
 POST   /password                       -> controllers.private.password
 GET    /upload                         -> controllers.private.upload
 POST   /upload                         -> controllers.private.upload
-GET    /visit                          -> controllers.private.visit
-POST   /visit                          -> controllers.private.visit
 
 GET    /post                           -> controllers.api.postEdit
 GET    /post/add                       -> controllers.api.postEdit
@@ -122,11 +114,6 @@ POST   /admin/{_subCtr}                -> controllers.subdir
 GET    /admin/{_subCtr}/{action}       -> controllers.subdir
 
 POST   /testing/{_subCtr}              -> controllers.subdir
-
-GET    /app                            -> controllers.pgApp
-GET    /apps                           -> controllers.pgApp
-GET    /app/{appId}                    -> controllers.pgApp
-GET    /app/{appId}/{action}           -> controllers.pgApp
 
 GET    /me                             -> controllers.userLibrary
 GET    /u/{id}                         -> controllers.userLibrary

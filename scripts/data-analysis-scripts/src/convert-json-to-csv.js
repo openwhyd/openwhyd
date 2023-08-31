@@ -21,36 +21,36 @@ function* generateCsvLines(object, opts = {}) {
     Object.keys(object).reduce((fieldSet, _id) => {
       Object.keys(object[_id]).forEach((field) => fieldSet.add(field));
       return fieldSet;
-    }, new Set())
+    }, new Set()),
   );
   if (fields.length === 0) {
     const header = ['_id', 'value'];
     yield renderRow(header);
-    for (let _id in object) {
+    for (const _id in object) {
       yield renderRow([_id, object[_id]]);
     }
   } else {
     const header = [].concat.apply(
       ['_id'],
-      fields.map((field) => `value.${field}`)
+      fields.map((field) => `value.${field}`),
     );
     yield renderRow(header);
-    for (let _id in object) {
+    for (const _id in object) {
       yield renderRow(
         [].concat.apply(
           [_id],
           fields.map((field) => {
             const value = object[_id][field];
             return value === undefined || value === null ? defaultValue : value;
-          })
-        )
+          }),
+        ),
       );
     }
   }
 }
 
-var csvLineGenerator = generateCsvLines(object, { defaultValue: 0 });
+const csvLineGenerator = generateCsvLines(object, { defaultValue: 0 });
 
-for (let csvLine of csvLineGenerator) {
+for (const csvLine of csvLineGenerator) {
   console.log(csvLine);
 }

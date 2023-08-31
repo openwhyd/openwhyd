@@ -4,11 +4,11 @@
  * @author adrienjoly, whyd
  */
 
-var https = require('https');
-var userModel = require('./user.js');
-var querystring = require('querystring');
+const https = require('https');
+const userModel = require('./user.js');
+const querystring = require('querystring');
 
-var host = 'graph.facebook.com';
+const host = 'graph.facebook.com';
 
 const DUMMY_FBFRIENDS = {
   whydFriends: [],
@@ -32,16 +32,16 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
   params.access_token = fbAccessToken;
   params.metadata = !!params.metadata;
   params.method = params.method || 'GET';
-  var url = path + '?' + querystring.stringify(params);
+  const url = path + '?' + querystring.stringify(params);
   https
     .request(
       { path: url, host: host, port: 443, method: params.method },
       function (res) {
         res.addListener('error', function (err) {
-          console.log('facebook request error: ', err);
           if (handler) handler({ error: err });
+          else console.trace('facebook request error', err);
         });
-        var json = '';
+        let json = '';
         res.addListener('data', function (chunk) {
           json += chunk.toString();
         });
@@ -52,7 +52,7 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
             if (json && json.error)
               console.log(
                 'facebookModel.graphApiRequest => ERROR:',
-                json.error
+                json.error,
               );
             //var results = (json || {}).data || [];
             handler(json);
@@ -60,7 +60,7 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
             handler();
           }
         });
-      }
+      },
     )
     .on('error', function (err) {
       console.log('[ERR] facebook.graphApiRequest ', err);
@@ -73,7 +73,7 @@ exports.graphApiRequest = function (fbAccessToken, path, params, handler) {
 exports.fetchMe = function (fbAccessToken, handler) {
   exports.graphApiRequest(fbAccessToken, '/me', {}, function (json) {
     //console.log("facebookModel.fetchMe => json: ", Object.keys(json || {}));
-    var fbUser = (json || {}).data || json;
+    const fbUser = (json || {}).data || json;
     //console.log("facebookModel.fetchMe => fbUser: ", fbUser);
     handler(fbUser);
   });

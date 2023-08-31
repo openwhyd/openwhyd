@@ -357,7 +357,6 @@ Allowed Parameters (one or many can be passed):
 - **twId**: (string) Twitter handle connected to this openwhyd account (set to empty string to disconnect)
 - **twTok**: (string) last session token received from connecting to Twitter (to send with **twId**)
 - **twSec**: (string) last session secret received from connecting to Twitter (to send with **twId**)
-- **apTok**: (string) user's Apple Push Notification token (string of 64 hexadecimal chars)
 - **bio**: (string) user's biography / description, to be displayed publicly on Openwhyd
 - **loc**: (string) user's location. freeform, no format restrictions apply.
 - **lnk_home**: (string) url of user's homepage, to be displayed as is on his profile
@@ -605,10 +604,6 @@ _Parameters:_
 - **action**="`incrPlayCounter`"
 - **pId** : (string) id of the post played
 - **logData**: (object, optional), as described in [this spec](https://whyd.hackpad.com/Track-performance-log-AF7pRadBNrU)
-
-Return:
-
-- **result**: (object) the post object
 
 #### Scrobble a play to Last.fm
 
@@ -878,7 +873,6 @@ Example of use:
 Parameters:
 
 - **file**: (standard HTML-compliant file upload field)
-- **keepOriginal**: (boolean, optional) if this parameter is set, the uploaded image will be stored as is, without resize.
 - **thumbDims**: (string, optional) comma-separated list of dimensions to which the provided image must be resized (e.g. for creating thumbs). Format of a dimension: `[width]x[height]` (both width and height are optional)
 
 Triggers the following standard events:

@@ -21,7 +21,6 @@ Cypress.Commands.add('resetDb', () => {
     retryOnStatusCodeFailure: true,
     retryOnNetworkFailure: true,
   });
-  cy.wait(1000);
 });
 
 Cypress.Commands.add('logout', () => {
@@ -38,18 +37,32 @@ Cypress.Commands.add('loginAsAdmin', () => {
   });
 });
 
-Cypress.Commands.add('postDummyTracks', (count) => {
+Cypress.Commands.add('postDummyTracks', (count, propOverrides = {}) => {
   const makeTrack = (i) => ({
     name: `Fake track #${i}`,
     eId: '/fi/https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3',
     img: '/images/cover-track.png',
+    ...propOverrides,
   });
   for (let i = 0; i < count; ++i) {
     const params = { action: 'insert', ...makeTrack(i) };
-    const querystring = Object.keys(params)
+    const flattened = Object.entries(params).reduce((acc, [key, value]) => {
+      if (typeof value !== 'object')
+        return {
+          ...acc,
+          [key]: value,
+        };
+      else {
+        Object.entries(value).forEach(([subKey, subVal]) => {
+          acc[`${key}[${subKey}]`] = subVal;
+        });
+        return acc;
+      }
+    }, {});
+    const querystring = Object.entries(flattened)
       .map(
-        (param) =>
-          `${encodeURIComponent(param)}=${encodeURIComponent(params[param])}`
+        ([param, value]) =>
+          `${encodeURIComponent(param)}=${encodeURIComponent('' + value)}`,
       )
       .join('&');
     cy.request('GET', `/api/post?${querystring}`);

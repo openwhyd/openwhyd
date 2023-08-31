@@ -4,12 +4,12 @@
  * @author adrienjoly, whyd
  **/
 
-var postModel = require('../models/post.js');
-var followModel = require('../models/follow.js');
-var activityModel = require('../models/activity.js');
-var feedTemplate = require('../templates/feed.js');
+const postModel = require('../models/post.js');
+const followModel = require('../models/follow.js');
+const activityModel = require('../models/activity.js');
+const feedTemplate = require('../templates/feed.js');
 
-var HISTORY_LIMIT = 3;
+const HISTORY_LIMIT = 3;
 
 function fetchSubscriptions(uid, callback) {
   //console.time("LibFriends.fetchSubscriptions");
@@ -27,15 +27,27 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 		}}
 	]);
 	return;*/
-  var subscribers = [];
-  for (let i in uidList)
+  const subscribers = [];
+  for (const i in uidList)
     if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
+
+  if (subscribers.length > 5000) {
+    console.trace(
+      `potential expensive activity query, for user ${loggedUid}, uidList length: ${subscribers.length}`,
+    );
+    console.time(`fetchRecentActivity_${loggedUid}`);
+  }
+
   activityModel.fetchHistoryFromUidList(
     /*uidList*/ subscribers,
     { limit: HISTORY_LIMIT },
     function (activities) {
+      if (uidList.length > 5000) {
+        console.timeEnd(`fetchRecentActivity_${loggedUid}`);
+      }
+
       cb(activities /*.slice(0, HISTORY_LIMIT)*/);
-    }
+    },
   );
 }
 
@@ -44,9 +56,10 @@ function prepareSidebar(uidList, options, cb) {
     feedTemplate.shouldRenderWholeProfilePage(options) &&
     options.format != 'json'
   ) {
-    //console.time("fetchRecentActivity");
+    const loggedUser = uidList[uidList.length - 1];
+    console.time(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
     fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
-      //console.timeEnd("fetchRecentActivity");
+      console.timeEnd(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
       if (activities && activities.length)
         options.recentActivity = { items: activities };
       //console.time("fetchLast");
@@ -56,7 +69,7 @@ function prepareSidebar(uidList, options, cb) {
 }
 
 function renderFriendsFeed(options, callback) {
-  var params = {
+  const params = {
     after: options.after,
     before: options.before,
     //limit:limit
@@ -75,7 +88,7 @@ function renderFriendsFeed(options, callback) {
 }
 
 function renderFriendsLibrary(lib) {
-  var options = lib.options;
+  const options = lib.options;
   options.bodyClass = 'pgStream pgWithSideBar';
   options.homeFeed = true;
   options.displayPlaylistName = true;
@@ -85,7 +98,7 @@ function renderFriendsLibrary(lib) {
     else if (!feedTemplate.shouldRenderWholeProfilePage(options))
       lib.render({ html: res });
     else {
-      var /*options.mixpanelCode*/ feedHtml =
+      const /*options.mixpanelCode*/ feedHtml =
           [
             '<script>',
             ' window.Whyd.tracking.log("Visit home");',

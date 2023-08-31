@@ -3,13 +3,13 @@
  * renders a gallery/feed/timeline of posts, for a given user's category
  * @author adrienjoly, whyd
  **/
-var snip = require('../snip.js');
-var config = require('../models/config.js');
-var postsTemplate = require('../templates/posts.js');
-var mainTemplate = require('../templates/mainTemplate.js');
-var templateLoader = require('../templates/templateLoader.js');
+const snip = require('../snip.js');
+const config = require('../models/config.js');
+const postsTemplate = require('../templates/posts.js');
+const mainTemplate = require('../templates/mainTemplate.js');
+const templateLoader = require('../templates/templateLoader.js');
 
-var FUNNY_EMAILS = [
+const FUNNY_EMAILS = [
   'steve.jobs@heaven.org',
   'isaac@asimov.com',
   'jimi.hendrix@woodstock.com',
@@ -35,7 +35,7 @@ var FUNNY_EMAILS = [
   'love@firstsight.com',
 ];
 
-var templates = {};
+let templates = {};
 
 const loadTemplate = (path) =>
   new Promise((resolve) => templateLoader.loadTemplate(path, resolve));
@@ -55,7 +55,7 @@ function prepareFeedVars(posts, options) {
   options.bodyClass =
     (options.bodyClass || '') + (options.ownProfile ? ' ownProfile' : '');
 
-  var feedVars = {
+  const feedVars = {
     sideBox: templates['sideBox'].render(),
     user: options.user,
     userPrefs: (options.loggedUser || {}).pref || {},
@@ -93,7 +93,7 @@ function prepareFeedVars(posts, options) {
     feedVars.playlist = options.playlist || {};
     if (feedVars.playlist.name)
       feedVars.playlist._js_name = snip.sanitizeJsStringInHtml(
-        feedVars.playlist.name
+        feedVars.playlist.name,
       );
     feedVars.playlist.url =
       config.urlPrefix +
@@ -103,7 +103,7 @@ function prepareFeedVars(posts, options) {
       feedVars.playlist.id;
     feedVars.playlist.urlEncoded = encodeURIComponent(feedVars.playlist.url);
     feedVars.playlist.urlEncodedTweet = encodeURIComponent(
-      '♫ ' + feedVars.playlist.name /*+ ' ' + feedVars.playlist.url*/
+      '♫ ' + feedVars.playlist.name /*+ ' ' + feedVars.playlist.url*/,
     );
     feedVars.playlist.nbTracks =
       feedVars.playlist.nbTracks || (posts ? posts.length : 'no');
@@ -165,11 +165,11 @@ function prepareFeedVars(posts, options) {
 
 exports.renderFeedAsync = function (posts, options, callback) {
   postsTemplate.renderPostsAsync(posts, options, function (postsHtml) {
-    var feedVars = prepareFeedVars(posts, options);
+    const feedVars = prepareFeedVars(posts, options);
     feedVars.posts = postsHtml;
 
     //loadTemplates(function(){
-    var format = options.format
+    const format = options.format
       ? options.format.toLowerCase()
       : options.embedW
       ? 'embed'
@@ -182,7 +182,7 @@ exports.renderFeedAsync = function (posts, options, callback) {
           options.customFeedTemplate ||
           templates[format] ||
           templates['html']
-        ).render(feedVars)
+        ).render(feedVars),
       );
     // console.log('renderFeedAsync => ' + posts.length + ' posts');
     //});
@@ -204,7 +204,7 @@ exports.renderFeedEmbed = function (feedHtml, options) {
   options.css.push(
     (options.format || '').toLowerCase() == 'embedv2'
       ? 'feedEmbedV2.css'
-      : 'feedEmbed.css'
+      : 'feedEmbed.css',
   );
   options.js.push('playem-min.js');
   options.js.push('playem-youtube-iframe-patch.js');

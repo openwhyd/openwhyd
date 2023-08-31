@@ -1,9 +1,9 @@
 // inspired by http://html5demos.com/dnd-upload#view-source
 
-function DndUpload(options) {
-  var options = options || {};
+window.DndUpload = function (options) {
+  options = options || {};
 
-  var handler =
+  const handler =
     options.handler ||
     function (eventName, eventData) {
       if (options[eventName]) options[eventName](eventData, this);
@@ -19,20 +19,15 @@ function DndUpload(options) {
   )
     return handler(
       'error',
-      'drag&drop, formdata and upload progress are not supported'
+      'drag&drop, formdata and upload progress are not supported',
     );
 
   if (!options.url) return handler('error', 'missing url parameter');
 
   if (!options.holder) return handler('error', 'missing holder parameter');
 
-  var url = options.url;
-  var holder = options.holder;
-  var acceptedTypes = options.acceptedTypes || {
-    'image/png': true,
-    'image/jpeg': true,
-    'image/gif': true,
-  };
+  const url = options.url;
+  const holder = options.holder;
 
   holder.ondragover = function () {
     //this.className += ' hover';
@@ -45,16 +40,16 @@ function DndUpload(options) {
   holder.ondrop = function (e) {
     //this.className = this.className.replace(' hover', '');
     e.preventDefault();
-    var files = e.dataTransfer.files;
-    var formData = new FormData();
-    var formFields = (options.form || {}).elements;
+    const files = e.dataTransfer.files;
+    const formData = new FormData();
+    const formFields = (options.form || {}).elements;
     if (formFields)
       for (let i = formFields.length - 1; i >= 0; --i)
         if (formFields[i].type != 'file')
           formData.append(formFields[i].name, formFields[i].value);
     formData.append('file', files[0]);
     handler('post', files[0]);
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function (e2) {
       handler('progress', 1);
@@ -68,4 +63,4 @@ function DndUpload(options) {
     };
     xhr.send(formData);
   };
-}
+};

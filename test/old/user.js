@@ -1,19 +1,17 @@
 // Info: moved from app/controllers/admin/tests, for security reasons.
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var snip = require('../../app/snip.js');
-var config = require('../../app/models/config.js'); // {urlPrefix:"http://localhost:8000"};
-var userModel = require('../../app/models/user.js');
+const snip = require('../../app/snip.js');
+const config = require('../../app/models/config.js'); // {urlPrefix:"http://localhost:8000"};
+const userModel = require('../../app/models/user.js');
 
-var TEST_USER = {
+const TEST_USER = {
   name: 'test user',
   email: process.env.WHYD_ADMIN_EMAIL,
   password: 'coco',
   // additional fields:
   handle: 'testvaliduserhandl',
   fbId: '1',
-  apTok:
-    '00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000',
 };
 
 function log() {
@@ -40,7 +38,7 @@ function makeJsonRequest(method, cookie) {
     snip.httpRequestWithParams(
       config.urlPrefix + url,
       options,
-      makeJsonResponseHandler(cb)
+      makeJsonResponseHandler(cb),
     );
   };
 }
@@ -48,9 +46,9 @@ function makeJsonRequest(method, cookie) {
 exports.makeTests = function (p) {
   p.stopOnFail = true;
 
-  var testVars = {};
-  var jsonGet = makeJsonRequest('GET', p.cookie);
-  var jsonPost = makeJsonRequest('POST', p.cookie);
+  const testVars = {};
+  const jsonGet = makeJsonRequest('GET', p.cookie);
+  const jsonPost = makeJsonRequest('POST', p.cookie);
 
   // api helpers
 
@@ -63,7 +61,7 @@ exports.makeTests = function (p) {
           email: email,
         },
       },
-      cb
+      cb,
     );
   }
   /*
@@ -78,7 +76,7 @@ exports.makeTests = function (p) {
 	*/
   function fetchTestUser(cb) {
     fetchUsersByEmail(TEST_USER.email, function (res) {
-      var testUser = res && res[0];
+      const testUser = res && res[0];
       testVars.registeredUid = (testUser || {})._id;
       if (!testUser) delete testVars.cookie;
       cb(testUser);
@@ -102,7 +100,7 @@ exports.makeTests = function (p) {
         testVars.registeredUid = res.uId;
         testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
         cb(res.redirect && res.uId);
-      }
+      },
     );
   }
 
@@ -121,7 +119,7 @@ exports.makeTests = function (p) {
           log('user deleted:', !testUser);
           cb(!testUser);
         });
-      }
+      },
     );
   }
 
@@ -138,10 +136,10 @@ exports.makeTests = function (p) {
     jsonGet('/api/user', { cookie: testVars.cookie }, cb);
   }
 
-  var BEGIN_TEST = ['(init test user)', makeSureTestUserExists],
+  const BEGIN_TEST = ['(init test user)', makeSureTestUserExists],
     END_TEST = ['(delete test user)', deleteTestUser];
 
-  var TESTS_SIGNUP = [
+  const TESTS_SIGNUP = [
     BEGIN_TEST, // CREATE TEST USER
     END_TEST, // DELETE TEST USER
     [
@@ -151,7 +149,7 @@ exports.makeTests = function (p) {
           if (testUser)
             log(
               'please delete the test user before running this test => /admin/users?action=delete&_id=' +
-                testUser._id
+                testUser._id,
             );
           cb(!testUser);
         });
@@ -169,7 +167,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Please enter your name');
-          }
+          },
         );
       },
     ],
@@ -187,7 +185,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Please enter a password');
-          }
+          },
         );
       },
     ],
@@ -205,7 +203,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Please enter your email');
-          }
+          },
         );
       },
     ],
@@ -225,7 +223,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error == 'Invalid Facebook id');
-          }
+          },
         );
       },
     ],
@@ -234,7 +232,7 @@ exports.makeTests = function (p) {
     END_TEST,
   ];
 
-  var TESTS_FETCH = [
+  const TESTS_FETCH = [
     BEGIN_TEST,
     [
       'fetch user using API (logged as admin)',
@@ -245,7 +243,7 @@ exports.makeTests = function (p) {
             {},
             function (apiUser) {
               cb(testUser._id === apiUser._id);
-            }
+            },
           );
         });
       },
@@ -261,7 +259,7 @@ exports.makeTests = function (p) {
             cb(
               testUser._id === apiUser._id &&
                 testUser.email === apiUser.email &&
-                testUser.pref.emAdd === apiUser.pref.emAdd
+                testUser.pref.emAdd === apiUser.pref.emAdd,
             );
           });
         });
@@ -270,7 +268,7 @@ exports.makeTests = function (p) {
     END_TEST,
   ];
 
-  var TESTS_USERDATA = [
+  const TESTS_USERDATA = [
     BEGIN_TEST,
     [
       'check default prefs',
@@ -295,7 +293,7 @@ exports.makeTests = function (p) {
             getUser(function (user) {
               cb(user.pref['emLik'] == 0);
             });
-          }
+          },
         );
       },
     ],
@@ -312,7 +310,7 @@ exports.makeTests = function (p) {
           },
           function (res) {
             cb(res.error);
-          }
+          },
         );
       },
     ],
@@ -333,36 +331,7 @@ exports.makeTests = function (p) {
               getUser(function (user) {
                 cb(user.handle == TEST_USER.handle);
               });
-          }
-        );
-      },
-    ],
-    [
-      'set invalid apple push notification token',
-      function (cb) {
-        jsonPost(
-          '/api/user',
-          { cookie: testVars.cookie, body: { apTok: 'pouet' } },
-          function () {
-            getUser(function (user) {
-              cb(!user.apTok);
-            });
-          }
-        );
-      },
-    ],
-    [
-      'set valid apple push notification token',
-      function (cb) {
-        jsonPost(
-          '/api/user',
-          { cookie: testVars.cookie, body: { apTok: TEST_USER.apTok } },
-          function () {
-            getUser(function (user) {
-              //log("user", user);
-              cb(user.apTok[0].tok === TEST_USER.apTok.replace(/ /g, ''));
-            });
-          }
+          },
         );
       },
     ],
@@ -383,7 +352,7 @@ exports.makeTests = function (p) {
             getUser(function (user) {
               cb(user.twId && user.twTok && user.twSec);
             });
-          }
+          },
         );
       },
     ],
@@ -402,21 +371,21 @@ exports.makeTests = function (p) {
             getUser(function (user) {
               cb(!user.twId && !user.twTok && !user.twSec);
             });
-          }
+          },
         );
       },
     ],
     END_TEST,
   ];
 
-  var TESTS_LOGIN = [
+  const TESTS_LOGIN = [
     BEGIN_TEST,
     [
       'get logged user => testUser',
       function (cb) {
         getUser(function (user, response) {
           //log("response headers", response.headers);
-          var cookie = response.headers['set-cookie'][0].split(';')[0];
+          const cookie = response.headers['set-cookie'][0].split(';')[0];
           log('cookie', cookie);
           log('expected cookie', testVars.cookie);
           cb(cookie === testVars.cookie);
@@ -433,7 +402,7 @@ exports.makeTests = function (p) {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
-          }
+          },
         );
       },
     ],
@@ -454,7 +423,7 @@ exports.makeTests = function (p) {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
-          }
+          },
         );
       },
     ],
@@ -474,17 +443,17 @@ exports.makeTests = function (p) {
           function (data, response) {
             testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
             getUser(function (user, response) {
-              var cookie = response.headers['set-cookie'][0].split(';')[0];
+              const cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
-          }
+          },
         );
       },
     ],
     END_TEST,
   ];
 
-  var TESTS_RESETPASSWORD = [
+  const TESTS_RESETPASSWORD = [
     BEGIN_TEST,
     [
       'try to reset password with wrong initial password',
@@ -500,7 +469,7 @@ exports.makeTests = function (p) {
           },
           function (data) {
             cb(!!data.error);
-          }
+          },
         );
       },
     ],
@@ -529,7 +498,7 @@ exports.makeTests = function (p) {
           function (data) {
             log('response', data);
             cb(!data.error);
-          }
+          },
         );
       },
     ],
@@ -550,7 +519,7 @@ exports.makeTests = function (p) {
             getUser(function (user, response) {
               cb(!response.headers['set-cookie']);
             });
-          }
+          },
         );
       },
     ],
@@ -570,33 +539,15 @@ exports.makeTests = function (p) {
           function (data, response) {
             testVars.cookie = response.headers['set-cookie'][0].split(';')[0];
             getUser(function (user, response) {
-              var cookie = response.headers['set-cookie'][0].split(';')[0];
+              const cookie = response.headers['set-cookie'][0].split(';')[0];
               cb(cookie === testVars.cookie);
             });
-          }
+          },
         );
       },
     ],
     END_TEST,
   ];
-
-  /*
-		["set adrien's apple push notification token", function(cb){
-			jsonPost("/api/user", { body: { "apTok": "07e3570a 8393f53e b868f627 766ea900 88c243a2 4f842051 769ad757 4ed10d7b" } }, function(res){
-				cb(!!res);
-			});
-		}],
-		["set adrien's apple push preferences", function(cb){
-			jsonPost("/api/user", { body: { "pref[mnLik]": 0 } }, function(res){
-				cb(!!res);
-			});
-		}],
-		["disable adrien's apple push preferences", function(cb){
-			jsonPost("/api/user", { body: { "pref[mnLik]": -1 } }, function(res){
-				cb(!!res);
-			});
-		}],
-	*/
 
   return [
     TESTS_SIGNUP,

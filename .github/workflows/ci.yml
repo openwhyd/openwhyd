@@ -9,9 +9,37 @@ on:
       - main
 
 env:
+  CI: true
   FORCE_COLOR: '3' # asks Chalk to use colors in logs of Yarn, Jest, ESLint and many others
 
 jobs:
+  dependencies:
+    name: Check dependencies (with audit)
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci
+
+  decommission:
+    name: Decommission of user cache
+    timeout-minutes: 5
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci --prefer-offline --no-audit
+      - name: count references to usernames cache
+        shell: bash
+        run: ./scripts/legacy-refs/check-refs.sh
+
   code-checks:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -23,37 +51,17 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
-      - name: npm run build
+      - run: npm ci --prefer-offline --no-audit
+      - name: make build
         run: |
-          npm run build
-          git status
-          echo ℹ️  If this test fails, run `npm run build` and commit the changes.
+          make build
+          echo 'ℹ️  If this test fails, run `$ npm run build` and commit the changes.'
           exit $(git diff | wc -l)
-      - name: npm run lint:typescript
+      - name: make lint
         run: |
-          npm run lint:typescript
-          git status
-          echo ℹ️  If this test fails, run `npm run lint:typescript` and commit the changes.
+          make lint
+          echo 'ℹ️  If this test fails, run `$ make lint` and commit the changes.'
           exit $(git diff | wc -l)
-      - name: npm run lint:fix
-        run: |
-          npm run lint:fix
-          git status
-          echo ℹ️  If this test fails, run `npm run lint:fix` and commit the changes.
-          exit $(git diff | wc -l)
-      - name: npm run lint:format
-        run: |
-          npm run lint:format
-          git status
-          echo ℹ️  If this test fails, run `npm run lint:format` and commit the changes.
-          exit $(git diff | wc -l)
-      - name: JSDoc type checks
-        run: |
-          npx tsc --target es2015 --moduleResolution node --noEmit --allowJs `find app/ -name "*.js"`
 
   approval-tests:
     name: Approval tests
@@ -62,64 +70,7 @@ jobs:
     runs-on: ubuntu-20.04
     services:
       mongodb:
-        image: docker://mongo:3.4
-        ports:
-          - 27017:27017
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
-      - name: Initialize database
-        env:
-          CI: true
-        run: npm run test-reset
-      - name: Start Openwhyd server
-        run: |
-          npm run start:coverage --mongoDbDatabase openwhyd_test &
-          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: Approval tests
-        env:
-          PORT: '8080'
-          DONT_KILL: '1'
-          MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
-        run: npx ava test/approval.tests.js
-      - name: Approval tests for Hot Tracks
-        env:
-          PORT: '8080'
-          DONT_KILL: '1'
-          MONGODB_URL: 'mongodb://localhost:27017/openwhyd_test'
-        run: npx jest --runInBand test/approval-hot-tracks.jest.test.js
-      - name: Get coverage data
-        run: |
-          sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
-          killall node
-          sleep 2 # give some time for nyc (npm run start:coverage) to save coverage info
-          npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
-      - name: Save code coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: approval-code-coverage-report
-          path: |
-            .nyc_output
-            coverage
-
-  approval-tests-2:
-    name: Approval tests for /api/post
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    timeout-minutes: 5
-    runs-on: ubuntu-20.04
-    services:
-      mongodb:
-        image: docker://mongo:3.4
+        image: docker://mongo:3.6
         ports:
           - 27117:27017
     steps:
@@ -128,15 +79,13 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
-      - name: Approval tests
-        run: npm run test:approval
+      - run: npm ci --prefer-offline --no-audit
+      - name: Approval tests on Hot Tracks
+        run: npm run test:approval:hot-tracks:start
+      - name: Approval tests on posting tracks
+        run: npm run test:approval:posting:start
+      - name: Approval tests on main routes
+        run: npm run test:approval:routes:start
 
   unit-tests:
     name: Unit tests
@@ -149,14 +98,18 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Unit tests
-        env:
-          CI: true
-        run: npm run test:unit
+        run: npm run test:unit:coverage
+      - name: Get coverage data
+        run: npm run coverage:report
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit-tests-code-coverage-report
+          path: |
+            .nyc_output
+            coverage
 
   functional-tests:
     name: Functional tests
@@ -169,14 +122,18 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Functional tests
-        env:
-          CI: true
-        run: npm run test:functional
+        run: npm run test:functional:coverage
+      - name: Get coverage data
+        run: npm run coverage:report
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: functional-tests-code-coverage-report
+          path: |
+            .nyc_output
+            coverage
 
   integration-tests:
     name: Integration tests
@@ -185,43 +142,7 @@ jobs:
     runs-on: ubuntu-20.04
     services:
       mongodb:
-        image: docker://mongo:3.4
-        ports:
-          - 27017:27017
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
-      - name: Initialize database
-        env:
-          CI: true
-        run: npm run test-reset
-      - name: Start Openwhyd server
-        run: |
-          npm start --mongoDbDatabase openwhyd_test &
-          ./scripts/wait-for-http-server.sh 8080 # give openwhyd's server some time to start
-      - name: API tests
-        env:
-          CI: true
-        run: npm run test:integration
-
-  refactor-coverage:
-    name: Send test coverage of the `post` API to Codacy
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    timeout-minutes: 5
-    runs-on: ubuntu-20.04
-    services:
-      mongodb:
-        image: docker://mongo:3.4
+        image: docker://mongo:3.6@sha256:146c1fd999a660e697aac40bc6da842b005c7868232eb0b7d8996c8f3545b05d
         ports:
           - 27117:27017
     steps:
@@ -230,36 +151,46 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
-        with:
-          env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
-      - run: npm run test:post:coverage
-        env:
-          CI: true
-          MONGODB_HOST: localhost
-          MONGODB_PORT: 27117
+      - run: npm ci --prefer-offline --no-audit
+      - run: npm run test:api:coverage
+      - run: npm run test:integration:coverage
+      - name: Get coverage data
+        run: npm run coverage:report
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
-          name: refactor-code-coverage-report
+          name: integration-tests-code-coverage-report
           path: |
             .nyc_output
             coverage
 
-  cypress-tests:
-    name: Cypress E2E tests
+  third-party-tests:
+    name: 3rd-party tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
     runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - run: npm ci --prefer-offline --no-audit
+      - env:
+          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
+        run: npm run test:3rd-party
+
+  cypress-tests:
+    name: Cypress E2E tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 8
+    runs-on: ubuntu-20.04
     services:
       mongodb:
-        image: docker://mongo:3.4
+        image: docker://mongo:3.6
         ports:
-          - 27017:27017
+          - 27117:27017
     strategy:
       # when one test fails, DO NOT cancel the other
       # containers, because this will kill Cypress processes
@@ -270,6 +201,12 @@ jobs:
         # run 3 copies of the current job in parallel
         containers: [1, 2, 3]
     steps:
+      # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
+      - uses: browser-actions/setup-chrome@latest
+      - run: |
+          echo "Chrome version: $(chrome --version)"
+          echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
+
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -278,21 +215,18 @@ jobs:
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: env-vars-testing.conf
-      - name: npm install
-        env:
-          CI: true
-        run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
         uses: cypress-io/github-action@v5.0.2
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
           config-file: cypress.config.ts
-          browser: 'chromium' # to include browser console in cypress logs
+          browser: '${{ env.BROWSER_PATH }}' # chromium/chrome is required to include browser console in cypress logs
+          install: false
           record: true
           parallel: true
         env:
-          CI: true
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -300,10 +234,10 @@ jobs:
           # determine the unique run id necessary to re-run the checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # DEBUG: 'cypress:server:socket-base'
+          # ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
+          # ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Get coverage data
-        run: |
-          # npm run test:coverage
-          npx nyc report --reporter=lcov # stores the coverage report in coverage/lcov.info
+        run: npm run coverage:report # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
         uses: actions/upload-artifact@v3
         with:
@@ -329,8 +263,8 @@ jobs:
     needs:
       - cypress-tests
       - approval-tests
-      - refactor-coverage
-      # TODO: add coverage for unit and integration tests too
+      - unit-tests
+      - functional-tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -340,21 +274,26 @@ jobs:
           path: coverage-cypress/
       - uses: actions/download-artifact@v3
         with:
-          name: approval-code-coverage-report
-          path: coverage-approval/
+          name: unit-tests-code-coverage-report
+          path: coverage-unit-tests/
       - uses: actions/download-artifact@v3
         with:
-          name: refactor-code-coverage-report
-          path: coverage-refactor/
+          name: functional-tests-code-coverage-report
+          path: coverage-functional-tests/
+      - uses: actions/download-artifact@v3
+        with:
+          name: integration-tests-code-coverage-report
+          path: coverage-integration-tests/
       - name: Merge coverage reports
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
           cp coverage-cypress/.nyc_output/*.json coverage-reports
-          cp coverage-approval/.nyc_output/*.json coverage-reports
-          cp coverage-refactor/.nyc_output/*.json coverage-reports
-          npx nyc merge coverage-reports .nyc_output/merged-coverage.json
-          npx nyc report --reporter=lcov --reporter=text  # stores the coverage report in coverage/lcov.info
+          cp coverage-unit-tests/.nyc_output/*.json coverage-reports
+          cp coverage-functional-tests/.nyc_output/*.json coverage-reports
+          cp coverage-integration-tests/.nyc_output/*.json coverage-reports
+          npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
+          npm run coverage:report  # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
         with:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
@@ -366,6 +305,7 @@ jobs:
       - unit-tests
       - integration-tests
       - cypress-tests
+      - third-party-tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-20.04
     steps:
@@ -377,9 +317,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm install --prefer-offline --no-audit
+      - run: npm ci --prefer-offline --no-audit
         if: github.event_name == 'push'
-      - name: npx semantic-release
+      - name: npx --yes semantic-release
         run: |
           # we install just semantic-release and its plugins, without considering package.json
           mkdir "tmp-release"
@@ -387,10 +327,9 @@ jobs:
             "semantic-release@17.3.1" \
             "@semantic-release/changelog@5.0.1" \
             "@semantic-release/git@9.0.0" \
-            && $(npm --prefix "tmp-release" bin)/semantic-release
+            && tmp-release/node_modules/.bin/semantic-release
           rm -rf "tmp-release"
         env:
-          CI: true
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Create Docker tags
         id: create_docker_tags
@@ -414,15 +353,19 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build and start services
         run: docker-compose up --build --detach
+        # env:
+        #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
+        #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Init database for tests
-        run: |
-          docker-compose exec -T web npm run test-reset
-          docker-compose restart web
-          docker-compose exec -T web sh -c './scripts/wait-for-http-server.sh 8080'
-      - name: Run unit tests
-        run: docker-compose exec -T web npm run test:unit
+        run: make docker-seed
+      - name: Run integration tests
+        run: docker-compose exec -T --env MONGODB_URL web npm run test:integration
+        env:
+          MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test' # needed by mongodb integration tests (user.repository.tests.js)
       - name: Run API tests
-        run: docker-compose exec -T web npm run test:integration
+        run: docker-compose exec -T --env MONGODB_URL web npm run test:api:raw
+        env:
+          MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test'
       - name: Logs from docker-compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker-compose logs

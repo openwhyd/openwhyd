@@ -1,50 +1,51 @@
 //@ts-check
+
 /**
  * @typedef {import('../../app/domain/user/types').User} User
  * @typedef {import('../../app/domain/user/types').Playlist} Playlist
  * @typedef {import('../../app/domain/spi/UserRepository').UserRepository} UserRepository
+ * @typedef {import('../../app/domain/spi/ImageRepository').ImageRepository} ImageRepository
  * @typedef {import('./api/Features').Features} Features
- * @typedef {import('./api/Features').CreatePlaylist} CreatePlaylist
+ * @typedef {(userId: User["id"], playlistId: Playlist["id"]) => Promise<void>} ReleasePlaylistPosts
  */
 
 /**
- *
- * @param {UserRepository} userRepository
+ * @param {object} adapters
+ * @param {UserRepository} adapters.userRepository
+ * @param {ImageRepository} adapters.imageRepository
+ * @param {ReleasePlaylistPosts} adapters.releasePlaylistPosts
  * @returns {Features}
  */
-exports.features = function (userRepository) {
+exports.makeFeatures = function ({
+  userRepository,
+  imageRepository,
+  releasePlaylistPosts,
+}) {
   /**
-   * @type {([User, Playlist]) => Promise<Playlist>}
+   * @param {[user: User, playlist: Playlist]} params
+   * @returns {Promise<Playlist>}
    */
-  const insertPlaylist = ([user, playlist]) =>
+  const insertPlaylist = async ([user, playlist]) =>
     userRepository
       .insertPlaylist(user.id, playlist)
-      .then(() => Promise.resolve(playlist));
-
-  /**
-   * @param {string} playlistName
-   * @returns {(user: User) =>  Promise<[User, Playlist]>}
-   */
-  function addNewPlayListToUser(playlistName) {
-    /**
-     * @param {User} user
-     * @returns { Promise<[User, Playlist]>}
-     */
-
-    return (user) => user.addNewPlaylist(playlistName);
-  }
+      .then(async () => Promise.resolve(playlist));
 
   return {
-    /**
-     * @type {CreatePlaylist}
-     * @returns {Promise<Playlist>}
-     */
-    createPlaylist: (userId, playlistName) =>
+    createPlaylist: async (userId, playlistName) =>
       Promise.resolve(
         userRepository
           .getByUserId(userId)
-          .then(addNewPlayListToUser(playlistName))
-          .then(insertPlaylist)
+          .then(async (user) => user.addNewPlaylist(playlistName))
+          .then(insertPlaylist),
       ),
+    deletePlaylist: async (userId, playlistId) => {
+      const user = await userRepository.getByUserId(userId);
+      await user.deletePlaylist(playlistId); // validates the operation, by checking that this playlist does exist => may throw "playlist not found"
+      await Promise.all([
+        userRepository.removePlaylist(userId, playlistId), // removes from mongodb + search index
+        imageRepository.deletePlaylistImage(userId, playlistId),
+        releasePlaylistPosts(userId, playlistId), // --> postModel.unsetPlaylist()
+      ]);
+    },
   };
 };

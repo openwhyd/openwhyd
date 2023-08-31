@@ -26,7 +26,7 @@ const promoteObject = (object) => ({
 const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
   new Promise((resolve) => {
     let ignoreTheRest = false;
-    let reduced = {};
+    const reduced = {};
     const limitReached = !opts.limit
       ? () => false
       : (
@@ -43,7 +43,7 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
     function finalizeAndResolve() {
       if (opts.finalize) {
         Object.keys(reduced).forEach(
-          (key) => (reduced[key] = opts.finalize(key, reduced[key]))
+          (key) => (reduced[key] = opts.finalize(key, reduced[key])),
         );
       }
       opts.out = opts.out || {};
@@ -57,7 +57,7 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
         });
       } else {
         console.error(
-          'ℹ️  opts.out.inline == false => printing resulting collection to stdout'
+          'ℹ️  opts.out.inline == false => printing resulting collection to stdout',
         );
         console.log(JSON.stringify(reduced, null, 2));
       }
@@ -79,7 +79,7 @@ const mapReduceFromJsonLines = (filePath, map, reduce, opts = {}) =>
             err.message,
             'at',
             line,
-            '=> skipping line'
+            '=> skipping line',
           );
           return;
         }

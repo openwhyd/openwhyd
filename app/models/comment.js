@@ -4,12 +4,12 @@
  * @author: adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var notifModel = require('../models/notif.js');
+const snip = require('../snip.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
+const notifModel = require('../models/notif.js');
 
-var MIN_COMMENT_DELAY = 2000; // min 2 seconds between comments
+const MIN_COMMENT_DELAY = 2000; // min 2 seconds between comments
 
 function getCol() {
   return mongodb.collections['comment'];
@@ -21,20 +21,19 @@ function stringify(a) {
 
 function combineResult(cb) {
   return function (err, res) {
-    (cb || console.log)(err ? { error: err } : res);
-  };
-}
-
-function combineInsertedResult(cb) {
-  return function (err, res) {
-    (cb || console.log)(err ? { error: err } : res.ops[0]);
+    if (cb) cb(err ? { error: err } : res);
+    else if (err) console.trace('error in comment.combineResult', err);
   };
 }
 
 function combineResultArray(cb) {
   return function (err, res) {
-    if (err) (cb || console.log)({ error: err });
-    else res.toArray(combineResult(cb));
+    if (err) {
+      if (cb) cb({ error: err });
+      else console.trace('error in comment.combineResultArray', err);
+    } else {
+      res.toArray(combineResult(cb));
+    }
   };
 }
 
@@ -42,14 +41,12 @@ exports.fetchLast = function (p, cb) {
   p = p || {};
   if (!p.pId) cb({ error: 'missing field: pId' });
   else
-    getCol().findOne(
-      { pId: '' + p.pId },
-      { sort: [['_id', 'desc']] },
-      combineResult(cb)
-    );
+    getCol()
+      .findOne({ pId: '' + p.pId }, { sort: [['_id', 'desc']] })
+      .then(cb, (err) => cb({ error: err }));
 };
 
-exports.fetch = function (q, p, cb) {
+exports.fetch = async function (q, p, cb) {
   q = q || {};
   p = p || {};
   p.sort = p.sort || [['_id', 'asc']];
@@ -63,16 +60,22 @@ exports.fetch = function (q, p, cb) {
     q.pId = {
       $in: (q.pId.push ? q.pId : [q.pId]).map(/*mongodb.ObjectId*/ stringify),
     };
-  getCol().find(q, p, combineResultArray(cb));
+  const { fields } = p ?? {};
+  delete p.fields;
+  const results = await getCol()
+    .find(q, p)
+    .project(fields ?? {})
+    .toArray();
+  combineResultArray(cb)(results);
 };
 
 function notifyUsers(comment) {
   postModel.fetchPostById(comment.pId, function (post = {}) {
     if (post.error || !post.uId) return;
-    var notifiedUidSet = {};
-    var todo = [];
+    const notifiedUidSet = {};
+    const todo = [];
     // notif mentioned users
-    var mentionedUsers = snip.extractMentions(comment.text);
+    const mentionedUsers = snip.extractMentions(comment.text);
     if (mentionedUsers.length)
       todo.push(function (cb) {
         console.log('notif mentioned users');
@@ -82,7 +85,7 @@ function notifyUsers(comment) {
             notifiedUidSet[mentionedUid] = true;
             notifModel.mention(post, comment, mentionedUid, next);
           },
-          cb
+          cb,
         );
       });
     // notify post author
@@ -102,9 +105,9 @@ function notifyUsers(comment) {
         { pId: comment.pId, _id: { $lt: comment._id } },
         { fields: { uId: 1 } },
         function (comments = []) {
-          var commentsByUid = snip.excludeKeys(
+          const commentsByUid = snip.excludeKeys(
             snip.groupObjectsBy(comments, 'uId'),
-            notifiedUidSet
+            notifiedUidSet,
           );
           snip.forEachArrayItem(
             Object.keys(commentsByUid),
@@ -112,9 +115,9 @@ function notifyUsers(comment) {
               notifiedUidSet[uId] = true;
               notifModel.commentReply(post, comment, uId, next);
             },
-            cb
+            cb,
           );
-        }
+        },
       );
     });
     snip.forEachArrayItem(todo, function (fct, next) {
@@ -125,14 +128,14 @@ function notifyUsers(comment) {
 
 exports.insert = function (p, cb) {
   p = p || {};
-  var comment = {
+  const comment = {
     uId: p.uId,
     uNm: mongodb.getUserNameFromId(p.uId) /*p.uNm*/,
     pId: /*mongodb.ObjectId*/ '' + p.pId,
     text: (p.text || '').trim(),
   };
   // checking parameters
-  for (let f in comment)
+  for (const f in comment)
     if (!comment[f]) {
       cb({ error: 'missing field: ' + f });
       return;
@@ -150,40 +153,43 @@ exports.insert = function (p, cb) {
       });
     // actual insert
     else
-      getCol().insertOne(
-        comment,
-        combineInsertedResult(function (res) {
-          cb && cb(res);
-          if (res && !res.error) notifyUsers(comment);
-        })
-      );
+      getCol()
+        .insertOne(comment)
+        .then(
+          async function (res) {
+            cb?.(await getCol().findOne({ _id: res.insertedId }));
+            notifyUsers(comment);
+          },
+          (err) => cb({ error: err }),
+        );
   });
 };
 
 exports.delete = function (p, cb) {
   p = p || {};
-  var q = { _id: mongodb.ObjectId('' + p._id) };
-  getCol().findOne(
-    q,
-    combineResult(function (comment = { error: 'comment not found' }) {
-      if (comment.error) {
-        cb && cb(comment);
-        return;
-      }
-      postModel.fetchPostById(
-        comment.pId,
-        (post = { error: 'post not found' }) => {
-          if (post.error) {
-            cb && cb(post);
+  const q = { _id: mongodb.ObjectId('' + p._id) };
+  getCol()
+    .findOne(q)
+    .then(
+      function (comment) {
+        if (!comment) {
+          cb?.({ error: 'comment not found' });
+          return;
+        }
+        postModel.fetchPostById(comment.pId, (post) => {
+          if (!post || post.error) {
+            cb && cb({ error: post ? post.error : 'post not found' });
             return;
           }
           if (p.uId != post.uId && comment.uId != p.uId) {
             cb && cb({ error: 'you are not allowed to delete this comment' });
             return;
           }
-          getCol().deleteOne(q, combineResult(cb));
-        }
-      );
-    })
-  );
+          getCol()
+            .deleteOne(q)
+            .then(cb, (err) => cb({ error: err }));
+        });
+      },
+      (err) => cb({ error: err }),
+    );
 };

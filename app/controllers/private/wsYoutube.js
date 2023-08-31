@@ -1,9 +1,9 @@
-var http = require('http');
+const http = require('http');
 
-var maxResults = 20;
+const maxResults = 20;
 
-var renderTemplate = function (results) {
-  for (let i in results)
+const renderTemplate = function (results) {
+  for (const i in results)
     results[i] = { id: '/yt/' + results[i].id, name: results[i].title };
 
   return results;
@@ -11,8 +11,8 @@ var renderTemplate = function (results) {
 
 exports.requestVideos = function (query, handler) {
   //console.log("querying youtube for: "+query);
-  var host = 'gdata.youtube.com';
-  var url =
+  const host = 'gdata.youtube.com';
+  const url =
     '/feeds/api/videos?v=2&alt=jsonc&first-index=0&max-results=' +
     maxResults +
     '&q=' +
@@ -22,23 +22,23 @@ exports.requestVideos = function (query, handler) {
     .request(
       { path: url, host: host, port: 80, method: 'GET' },
       function (res) {
-        var json = '';
+        let json = '';
         res.addListener('data', function (chunk) {
           json += chunk.toString();
         });
         res.addListener('end', function () {
           json = JSON.parse(json);
-          var results = json.data.items || [];
+          const results = json.data.items || [];
           console.log(
             'wsYoutube: ' +
               query +
               ' => ' +
               (results ? results.length : 0) +
-              ' videos'
+              ' videos',
           );
           handler(results);
         });
-      }
+      },
     )
     .on('error', function (err) {
       console.log('[ERR] wsYoutube.requestVideos ', err);
@@ -53,7 +53,7 @@ exports.render = function (q, callback) {
     callback(
       results
         ? renderTemplate(results)
-        : 'Sorry, no videos were found about this topic...'
+        : 'Sorry, no videos were found about this topic...',
     );
   });
 };

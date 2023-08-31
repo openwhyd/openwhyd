@@ -3,21 +3,21 @@
  * @author: adrienjoly, whyd
  **/
 
-var templateLoader = require('../templates/templateLoader.js');
-var mainTemplate = require('../templates/mainTemplate.js');
-var postsTemplate = require('../templates/posts.js');
+const templateLoader = require('../templates/templateLoader.js');
+const mainTemplate = require('../templates/mainTemplate.js');
+const postsTemplate = require('../templates/posts.js');
 
-var TEMPLATE_SEARCH_PAGE = 'app/templates/searchPage.html';
-var TEMPLATE_RESULTS_BOX = 'app/templates/searchResultsBox.html';
+const TEMPLATE_SEARCH_PAGE = 'app/templates/searchPage.html';
+const TEMPLATE_RESULTS_BOX = 'app/templates/searchResultsBox.html';
 
-var cats = [
+const cats = [
   { name: 'Tracks', _type: 'track' },
   { name: 'Posts', _type: 'post' },
   { name: 'People', _type: 'user' },
   { name: 'Playlists', _type: 'playlist' },
 ];
 
-var makeLink = {
+const makeLink = {
   track: function (item) {
     return '/c/' + item._id;
   }, // in algolia index only
@@ -32,7 +32,7 @@ var makeLink = {
   },
 };
 
-var makeImg = {
+const makeImg = {
   track: function (item) {
     return item.img;
   }, // in algolia index only
@@ -65,14 +65,14 @@ exports.renderPosts = function (posts, loggedUser, cb) {
       loggedUser: loggedUser,
       displayPlaylistName: true,
     },
-    cb
+    cb,
   );
 };
 
 exports.renderSearchPage = function (results, reqParams, cb) {
   function render() {
     templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, function (template) {
-      var templateParams = {
+      const templateParams = {
         q: reqParams.q,
         results: results,
         isUserLogged: !!reqParams.loggedUser,
@@ -93,16 +93,16 @@ exports.renderSearchPage = function (results, reqParams, cb) {
         function (postsHtml) {
           results.postsHtml = postsHtml;
           render();
-        }
+        },
       );
   } else render();
 };
 
 exports.renderResultBox = function (q, resultsPerType, cb) {
-  var templateParams = { q: q, categories: [] };
-  for (let i in cats) {
-    var cat = cats[i];
-    var res = resultsPerType[cat._type];
+  const templateParams = { q: q, categories: [] };
+  for (const i in cats) {
+    const cat = cats[i];
+    const res = resultsPerType[cat._type];
     if (res)
       templateParams.categories.push({
         name: cat.name,

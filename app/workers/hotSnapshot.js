@@ -5,15 +5,15 @@
  * @author adrienjoly, whyd
  **/
 
-var trackModel = require('../models/track.js');
+const trackModel = require('../models/track.js');
 
-var CHECK_INTERVAL = 60000; // check every minute
-var DAY = 0,
+const CHECK_INTERVAL = 60000; // check every minute
+const DAY = 0,
   HOUR = 8,
   MIN = 0; // activate every sunday at 8am
 
 function check() {
-  var now = new Date();
+  const now = new Date();
   if (
     now.getDay() == DAY &&
     now.getHours() == HOUR &&

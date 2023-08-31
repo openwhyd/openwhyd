@@ -10,20 +10,20 @@ const map = makeMapWith(renderDate, function mapTemplate() {
 
 function reduce(day, count) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
-  var sum = (a, b) => a + b;
+  const sum = (a, b) => a + b;
   return count.reduce(sum);
 }
 
-var opts = {
+const opts = {
   out: { inline: 1 },
   //limit: 1000
 };
 
-var res = db.post.mapReduce(map, reduce, opts);
+const res = db.post.mapReduce(map, reduce, opts);
 //print(res.results.map(res => [ res._id, res.value ]).join('\n'));
 print(
   res.results
     .sort((a, b) => new Date(a._id) - new Date(b._id))
     .map((res) => [res._id, res.value])
-    .join('\n')
+    .join('\n'),
 );

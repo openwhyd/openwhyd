@@ -9,15 +9,14 @@ window.Whyd.tracking =
   (function (options) {
     options = options || {};
 
-    var runsLocally =
-      window.location.href.split('/')[2].indexOf('openwhyd.org') == -1;
-    var loggedUser = options.loggedUser || {};
-    var uId = loggedUser._id || loggedUser.id;
+    const runsLocally = window.location.hostname !== 'openwhyd.org';
+    let loggedUser = options.loggedUser || {};
+    let uId = loggedUser._id || loggedUser.id;
 
     // tools
 
-    var getWeekNumber = (function () {
-      var MUL = 1000 * 60 * 60 * 24 * 7,
+    const getWeekNumber = (function () {
+      const MUL = 1000 * 60 * 60 * 24 * 7,
         FIRST_WEEK_DATE = new Date('Monday January 3, 2011 08:00');
       return function (date) {
         return date && Math.floor(1 + (date - FIRST_WEEK_DATE) / MUL);
@@ -50,12 +49,12 @@ window.Whyd.tracking =
         document,
         'script',
         '//www.google-analytics.com/analytics.js',
-        'ga'
+        'ga',
       );
       ga('create', 'UA-83857066-1', /*'auto',*/ { alwaysSendReferrer: true });
-      var electron = navigator.userAgent.match(/openwhyd-electron\/[^ ]*/);
+      const electron = navigator.userAgent.match(/openwhyd-electron\/[^ ]*/);
       if (electron) {
-        var electronVer = electron[0];
+        const electronVer = electron[0];
         console.log('running on', electronVer);
         ga('set', 'dataSource', electronVer);
         ga('set', 'appId', 'org.openwhyd.electron');
@@ -78,7 +77,7 @@ window.Whyd.tracking =
       gaSet('dimension1', !!uId);
       // https://developers.google.com/analytics/devguides/collection/analyticsjs/field-reference
       if (uId) {
-        var genDate = getDateFromObjectId(uId);
+        const genDate = getDateFromObjectId(uId);
         gaSet('userId', uId); // standard ga property
         gaSet('dimension2', uId);
         gaSet('hasFb', !!loggedUser.fbId);
@@ -120,8 +119,8 @@ window.Whyd.tracking =
 
     this.sendPageview = function () {
       setTimeout(function () {
-        var wlh = window.location.href;
-        var path = wlh.substr(wlh.indexOf('/', 10));
+        const wlh = window.location.href;
+        const path = wlh.substr(wlh.indexOf('/', 10));
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
         //ga('send', 'pageview', path);
         ga('send', 'pageview', {

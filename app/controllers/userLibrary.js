@@ -1,28 +1,29 @@
+//@ts-check
+
 /**
  * userLibrary controller
  * shows an organized view of posts (user's and friends' library)
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
-var userModel = require('../models/user.js');
-var analytics = require('../models/analytics.js');
-var feedTemplate = require('../templates/feed.js');
-var errorTemplate = require('../templates/error.js');
-var loggingTemplate = require('../templates/logging.js');
+const mongodb = require('../models/mongodb.js');
+const userModel = require('../models/user.js');
+const feedTemplate = require('../templates/feed.js');
+const errorTemplate = require('../templates/error.js');
+const loggingTemplate = require('../templates/logging.js');
 
-var renderAllLibrary = require('./LibAll.js').render;
-var renderUserLibrary = require('./LibUser.js').render;
-var renderFriendsLibrary = require('./LibFriends.js').render;
+const renderAllLibrary = require('./LibAll.js').render;
+const renderUserLibrary = require('./LibUser.js').render;
+const renderFriendsLibrary = require('./LibFriends.js').render;
 
-var tabParams = [
+const tabParams = [
   'showPlaylists',
   'showLikes',
   'showActivity',
   'showSubscribers',
   'showSubscriptions',
 ];
-var paramsToInclude = [
+const paramsToInclude = [
   'after',
   'before',
   'limit',
@@ -37,20 +38,16 @@ var paramsToInclude = [
 function LibraryController(reqParams, render) {
   reqParams = reqParams || {};
   this.render = render;
+  /** @type import('./LibUser.js').FetchAndRenderOptions */
   this.options = {
-    loggedUser: reqParams.loggedUser || {} /*,
-		after: reqParams.after,
-		before: reqParams.before,
-		limit: reqParams.limit,
-		playlistId: reqParams.playlistId,
-		showPlaylists: reqParams.showPlaylists,
-		showLikes: reqParams.showLikes,
-		embedW: reqParams.embedW,
-		format: reqParams.format,
-		pageUrl: reqParams.pageUrl*/,
+    loggedUser: reqParams.loggedUser || {},
   };
-  for (let i in paramsToInclude)
-    this.options[paramsToInclude[i]] = reqParams[paramsToInclude[i]];
+  for (const paramName of paramsToInclude) {
+    const value = reqParams[paramName];
+    if (typeof value === 'object')
+      throw new Error(`invalid parameter value: ${paramName}`);
+    this.options[paramName] = value;
+  }
   if (typeof this.options.limit == 'string')
     this.options.limit = parseInt(this.options.limit);
   if (this.options.callback) this.options.format = 'json';
@@ -59,16 +56,16 @@ function LibraryController(reqParams, render) {
 LibraryController.prototype.renderPage = function (
   user,
   sidebarHtml,
-  feedHtml
+  feedHtml,
 ) {
   if (!this.options.embedW) {
     this.options.content = feedHtml;
     let html = feedTemplate.renderFeedPage(user, this.options);
-    var loggedUserId = (this.options.loggedUser || {}).id;
+    const loggedUserId = (this.options.loggedUser || {}).id;
     if (loggedUserId) {
       userModel.fetchByUid(loggedUserId, (user) => {
         if (user && !user.consent) {
-          var thisUrl = encodeURIComponent(this.options.pageUrl || '/');
+          const thisUrl = encodeURIComponent(this.options.pageUrl || '/');
           html = loggingTemplate.htmlRedirect('/consent?redirect=' + thisUrl);
         }
         this.render({ html });
@@ -91,11 +88,11 @@ exports.controller = function (request, reqParams, response) {
   request.logToConsole('userLibrary.controller', reqParams);
 
   reqParams = reqParams || {};
-  var loggedInUser = (reqParams.loggedUser = request.getUser() || {});
+  const loggedInUser = (reqParams.loggedUser = request.getUser() || {});
   if (loggedInUser && loggedInUser.id)
     reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
 
-  var path = request.url.split('?')[0];
+  const path = request.url.split('?')[0];
   //console.log("path", path)
   reqParams.showPlaylists = path.endsWith('/playlists');
   reqParams.showLikes = path.endsWith('/likes');
@@ -118,7 +115,7 @@ exports.controller = function (request, reqParams, response) {
         data,
         response,
         reqParams.format,
-        loggedInUser
+        loggedInUser,
       );
     } else if (data.error) {
       console.error('userLibrary ERROR: ', data.error);
@@ -127,26 +124,24 @@ exports.controller = function (request, reqParams, response) {
         data,
         response,
         reqParams.format,
-        loggedInUser
+        loggedInUser,
       );
     } else if (data.html) {
       response.renderHTML(data.html);
-      // console.log('rendering done!');
-      if (
-        loggedInUser &&
-        loggedInUser.id &&
-        !reqParams.after &&
-        !reqParams.before
-      )
-        analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
     } else if (typeof data == 'object') response.renderJSON(data.json || data);
     else response.legacyRender(data.error);
   }
 
-  var lib = new LibraryController(reqParams, render);
+  let lib;
+  try {
+    lib = new LibraryController(reqParams, render);
+  } catch (err) {
+    response.badRequest({ error: err.message });
+    return;
+  }
 
   function redirectTo(path) {
-    var paramsObj = {},
+    const paramsObj = {},
       paramsToKeep = [
         'after',
         'before',
@@ -156,7 +151,7 @@ exports.controller = function (request, reqParams, response) {
         'wholePage',
         'callback',
       ];
-    for (let i in paramsToKeep)
+    for (const i in paramsToKeep)
       if (reqParams[paramsToKeep[i]])
         paramsObj[paramsToKeep[i]] = reqParams[paramsToKeep[i]];
     response.temporaryRedirect(path, paramsObj);
@@ -178,8 +173,8 @@ exports.controller = function (request, reqParams, response) {
           redirectTo(
             path.replace(
               '/me',
-              user.handle ? '/' + user.handle : '/u/' + user.id
-            )
+              user.handle ? '/' + user.handle : '/u/' + user.id,
+            ),
           );
       });
   } else if (path == '/all') {

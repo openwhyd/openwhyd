@@ -1,8 +1,7 @@
-var fs = require('fs');
-var config = require('../models/config.js');
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var userModel = require('../models/user.js');
+const fs = require('fs');
+const config = require('../models/config.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
 
 exports.config = {
   whydPath: config.paths.whydPath, // "../"
@@ -24,14 +23,14 @@ exports.config.uPlaylistPath =
 const NO_IMAGE_PATH = exports.config.whydPath + '/public/images/no_image.png';
 
 // create upload dirs
-var dirMode = 0o755;
-var dirsToCreate = [
+const dirMode = 0o755;
+const dirsToCreate = [
   exports.config.uploadPath,
   exports.config.uAvatarImgPath,
   exports.config.uCoverImgPath,
   exports.config.uPlaylistPath,
 ];
-for (let i in dirsToCreate)
+for (const i in dirsToCreate)
   try {
     fs.mkdirSync(dirsToCreate[i], dirMode);
     console.log('Created directory:', dirsToCreate[i]);
@@ -39,13 +38,16 @@ for (let i in dirsToCreate)
     //console.log("Did not create directory:", dirsToCreate[i]);
   }
 
+exports.getPlaylistImagePath = ({ uId, id }) =>
+  exports.config.uPlaylistDir + '/' + uId + '_' + id;
+
 // separate file prefix (path & name) and extension from file.path
 exports.splitFilePath = function (filepath) {
-  var path = filepath.split('/');
-  var name = path.pop();
+  let path = filepath.split('/');
+  const name = path.pop();
   path = path.length > 0 ? path.join('/') + '/' : '';
-  var prefix = name.split('.');
-  var ext = prefix.length > 1 ? '.' + prefix.pop() : '';
+  let prefix = name.split('.');
+  const ext = prefix.length > 1 ? '.' + prefix.pop() : '';
   prefix = path + prefix.join('.'); // path + filename without extension
   return {
     filepath: filepath,
@@ -71,38 +73,26 @@ exports.actualFilePath = function (filepath) {
 exports.deleteFile = function (_filepath) {
   const filepath = exports.actualFilePath(_filepath);
   console.log('deleting ' + filepath);
-  return fs.promises
-    .unlink(filepath)
-    .catch((err) => console.log(err, err.stack));
+  return fs.promises.unlink(filepath);
 };
 
 exports.renameTo = function (filename, toFilename, callback) {
   //console.log("uploadedFile.renameTo", filename, toFilename);
   function error(e) {
     if (callback) callback();
-    console.log('ERROR:', e);
+    console.trace('renameTo ERROR:', e);
   }
   if (!filename || !toFilename)
     return error(
-      'invalid filename or toFilename: ' + filename + ', ' + toFilename
+      'invalid filename or toFilename: ' + filename + ', ' + toFilename,
     );
   try {
-    var actualFilename = exports.actualFilePath(filename);
-    var actualToFilename = exports.actualFilePath(toFilename);
+    const actualFilename = exports.actualFilePath(filename);
+    const actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
     fs.rename(actualFilename, actualToFilename, function () {
       callback && callback(toFilename);
     });
-    /*
-		var is = fs.createReadStream(actualFilename)
-		var os = fs.createWriteStream(actualToFilename);
-		util.pump(is, os, function(x) {
-			console.log("result", x);
-			exports.deleteFile(filename);
-			if (callback)
-				callback(toFilename);
-		});
-		*/
   } catch (e) {
     error(e);
   }
@@ -113,78 +103,71 @@ exports.moveTo = function (filename, toPath, callback) {
   if (!filename || !toPath) {
     if (callback) callback();
     console.log(
-      'ERROR: invalid filename or toPath: ' + filename + ', ' + toPath
+      'ERROR: invalid filename or toPath: ' + filename + ', ' + toPath,
     );
     return filename;
   }
-  var newFilename = toPath + '/' + filename.split('/').pop();
+  const newFilename = toPath + '/' + filename.split('/').pop();
   exports.renameTo(filename, newFilename, callback);
   return newFilename;
 };
 
 exports.controller = function (request, reqParams, response) {
   function renderNoImage() {
-    response.sendFile(NO_IMAGE_PATH);
+    response.status(404).sendFile(NO_IMAGE_PATH);
   }
 
   function renderFile(path, defaultImg) {
-    //console.log("uploadedFile Path:", path);
     response.sendFile('' + path, function (error) {
       if (!error) return;
-      //console.log("uploadedFile error: ", error, exports.config.whydPath + "/public" + defaultImg);
-      if (defaultImg)
-        response.sendFile(
-          exports.config.whydPath + '/public' + defaultImg,
-          (err) => err && renderNoImage()
-        );
-      else renderNoImage();
+      if (defaultImg) {
+        const defaultImagePath =
+          exports.config.whydPath + '/public' + defaultImg;
+        response.status(404).sendFile(defaultImagePath, (err) => {
+          if (!err) return;
+          renderNoImage();
+        });
+      } else {
+        renderNoImage();
+      }
     });
   }
 
   function renderImg(uri, defaultImg) {
     if (uri && ('' + uri).indexOf('//') != -1) {
-      var args = request.url.indexOf('?');
+      const args = request.url.indexOf('?');
       response.temporaryRedirect(
-        uri.replace('http:', '') + (args > -1 ? request.url.substr(args) : '')
+        uri.replace('http:', '') + (args > -1 ? request.url.substr(args) : ''),
       );
     } else renderFile(uri, defaultImg);
   }
 
   function renderUserImg(id) {
-    var user = mongodb.usernames[id];
+    const user = mongodb.usernames[id];
     if (user && user.img) {
       //var isSmallFb = user.img.indexOf("graph.facebook.com") > -1 && user.img.split("/").pop() == "picture";
       //console.log(user.img, isSmallFb, user.img + (isSmallFb ? "?type=large" : ""));
       //response.temporaryRedirect(user.img + (isSmallFb ? "?type=large" : ""));
-      var args = request.url.indexOf('?');
+      const args = request.url.indexOf('?');
       response.temporaryRedirect(
         user.img.replace('http:', '') +
-          (args > -1 ? request.url.substr(args) : '')
+          (args > -1 ? request.url.substr(args) : ''),
       );
     } else
       renderFile(
         exports.config.uAvatarImgPath + '/' + id,
-        '/images/blank_user.gif'
+        '/images/blank_user.gif',
       );
   }
 
-  var renderTypedImg = {
+  const renderTypedImg = {
     u: renderUserImg,
     user: renderUserImg,
-    userCover: function (id) {
-      if (id.indexOf('.') > -1)
-        return renderFile(
-          exports.config.uCoverImgPath + '/' + id,
-          '/images/1x1-pixel.png'
-        );
-      userModel.fetchByUid(id, function (user) {
-        if (user && user.cvrImg) {
-          var args = request.url.indexOf('?');
-          response.temporaryRedirect(
-            user.cvrImg + (args > -1 ? request.url.substr(args) : '')
-          );
-        } else renderFile(exports.config.uCoverImgPath + '/' + id, '/images/1x1-pixel.png');
-      });
+    userCover: function (filename) {
+      return renderFile(
+        exports.config.uCoverImgPath + '/' + filename,
+        '/images/1x1-pixel.png',
+      );
     },
     post: function (id) {
       postModel.fetchPostById(id, function (post) {
@@ -192,23 +175,23 @@ exports.controller = function (request, reqParams, response) {
       });
     },
     playlist: function (id, reqParams) {
-      var filePath = exports.config.uPlaylistPath + '/' + id;
+      const filePath = exports.config.uPlaylistPath + '/' + id;
       function renderLastPostImg() {
-        var parts = ('' + id).split('_');
+        const parts = ('' + id).split('_');
         postModel.fetchPlaylistPosts(
           parts[0],
           parts[1],
           { limit: 1 },
           function (posts) {
-            for (let i in posts) {
-              var img = (posts[i] || {}).img;
+            for (const i in posts) {
+              const img = (posts[i] || {}).img;
               if (img) {
                 renderImg(img);
                 return;
               }
             }
             response.notFound();
-          }
+          },
         );
       }
       if (reqParams.remoteOnly)

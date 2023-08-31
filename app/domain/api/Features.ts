@@ -5,9 +5,15 @@ import { Playlist } from '../user/types';
  */
 export interface Features {
   createPlaylist: CreatePlaylist;
+  deletePlaylist: DeletePlaylist;
 }
 
 export type CreatePlaylist = (
   userId: string,
-  playlistName: string
+  playlistName: string,
 ) => Promise<Playlist>;
+
+export type DeletePlaylist = (
+  userId: string,
+  playlistId: number,
+) => Promise<void>;

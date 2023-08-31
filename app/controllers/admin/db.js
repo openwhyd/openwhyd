@@ -3,10 +3,10 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
-var trackModel = require('../../models/track.js');
-var snip = require('../../snip.js');
-var FileController = require('./FileController.js');
+const mongodb = require('../../models/mongodb.js');
+const trackModel = require('../../models/track.js');
+const snip = require('../../snip.js');
+const FileController = require('./FileController.js');
 
 function wrapJsonGeneratorToText(name) {
   return function (p, cb) {
@@ -19,22 +19,20 @@ function wrapJsonGeneratorToText(name) {
 function wrapJsonGeneratorToCsv(name) {
   return function (p, cb) {
     fileGenerators[name](p, function (items) {
-      var table = new snip.DataTable().fromMap(items);
+      const table = new snip.DataTable().fromMap(items);
       //table.header = ["source", "tracks added", "unique users"];
       cb({ csv: table.toCsv() });
     });
   };
 }
 
-function fetchUidList(cb) {
-  mongodb.collections['post'].distinct('uId', {}, function (err, uidList) {
-    cb(uidList);
-  });
+async function fetchUidList() {
+  return await mongodb.collections['post'].distinct('uId', {});
 }
 
 function cleanUidList(uidList) {
-  var uids = [];
-  for (let i in uidList)
+  const uids = [];
+  for (const i in uidList)
     if (mongodb.isObjectId(uidList[i]))
       try {
         uids.push(mongodb.ObjectId('' + uidList[i]));
@@ -46,7 +44,7 @@ function cleanUidList(uidList) {
 }
 
 function listMissingUsers(uids, cb) {
-  var users = [];
+  const users = [];
   mongodb.forEach(
     'user',
     { q: { _id: { $nin: uids } }, fields: { _id: 1, name: 1 } },
@@ -54,7 +52,7 @@ function listMissingUsers(uids, cb) {
       users.push(user);
     },
     cb,
-    users
+    users,
   );
 }
 
@@ -71,39 +69,35 @@ var fileGenerators = {
     });
     cb('refreshing track trends...');
   },
-  'listUsersWithoutPosts.html': function (p, cb) {
-    fetchUidList(function (uidList) {
-      listMissingUsers(cleanUidList(uidList), function (users) {
-        cb({
-          html: new snip.DataTable().fromMap(users).toHtml(true),
-        });
+  'listUsersWithoutPosts.html': async function (p, cb) {
+    const uidList = await fetchUidList();
+    listMissingUsers(cleanUidList(uidList), function (users) {
+      cb({
+        html: new snip.DataTable().fromMap(users).toHtml(true),
       });
     });
   },
   'find.json': function (p, cb) {
-    var col = mongodb.collections[p.col];
+    const col = mongodb.collections[p.col];
     delete p.col;
     if (!col) cb({ error: 'invalid col parameter' });
     else {
       // clean query (from GET parameters) first
-      var limit = p.limit || 100;
+      const limit = p.limit || 100;
       if (p.limit) delete p.limit;
       if (p._subCtr) delete p._subCtr;
       if (p.action) delete p.action;
       if (p.loggedUser) delete p.loggedUser;
       if (p._id) p._id = mongodb.ObjectId(p._id);
-      for (let i in p) {
+      for (const i in p) {
         if (p[i] == '$exists') p[i] = { $exists: true };
       }
       console.log('query:', p);
-      col.find(p, { limit: limit }, function (error, cursor) {
-        if (error) cb({ error: error });
-        else
-          cursor.toArray(function (error, items) {
-            if (error) cb({ error: error });
-            else cb(items);
-          });
-      });
+      col
+        .find(p, { limit: limit })
+        .toArray()
+        .catch((error) => cb({ error: error }))
+        .then((items) => cb(items));
     }
   },
   'find.txt': wrapJsonGeneratorToText('find.json'),

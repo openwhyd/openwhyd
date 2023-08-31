@@ -4,18 +4,23 @@
  * @author adrienjoly, whyd
  */
 
-var crypto = require('crypto');
-var querystring = require('querystring');
+const crypto = require('crypto');
+const querystring = require('querystring');
 
-var userModel = require('../../models/user.js');
-var snip = require('../../snip.js');
-var uiSnip = require('../../templates/uiSnippets.js');
+const userModel = require('../../models/user.js');
+const snip = require('../../snip.js');
+const uiSnip = require('../../templates/uiSnippets.js');
 
-var API_KEY = process.env.LAST_FM_API_KEY.substr();
-var API_SECRET = process.env.LAST_FM_API_SECRET.substr();
+if (process.env['LAST_FM_API_KEY'] === undefined)
+  throw new Error(`missing env var: LAST_FM_API_KEY`);
+if (process.env['LAST_FM_API_SECRET'] === undefined)
+  throw new Error(`missing env var: LAST_FM_API_SECRET`);
 
-var API_HOST = 'ws.audioscrobbler.com';
-var API_PREFIX = '/2.0/';
+const API_KEY = process.env.LAST_FM_API_KEY;
+const API_SECRET = process.env.LAST_FM_API_SECRET;
+
+const API_HOST = 'ws.audioscrobbler.com';
+const API_PREFIX = '/2.0/';
 
 function md5(data) {
   return crypto.createHash('md5').update(data).digest('hex');
@@ -25,10 +30,10 @@ function LastFM(apiKey, apiSecret) {
   // http://www.lastfm.fr/api/webauth
   function sign(p) {
     p.api_key = apiKey;
-    var keys = Object.keys(p);
+    const keys = Object.keys(p);
     keys.sort();
-    var chain = '';
-    for (let i in keys) chain += keys[i] + p[keys[i]];
+    let chain = '';
+    for (const i in keys) chain += keys[i] + p[keys[i]];
     p.api_sig = md5(chain + apiSecret);
     return p;
   }
@@ -39,8 +44,8 @@ function LastFM(apiKey, apiSecret) {
     p.api_key = apiKey;
     p.format = 'json';
 
-    var path = 'http://' + API_HOST + API_PREFIX;
-    var body = querystring.stringify(p);
+    let path = 'http://' + API_HOST + API_PREFIX;
+    const body = querystring.stringify(p);
 
     if ((options.method || '').toLowerCase() == 'post') {
       options.body = body;
@@ -50,10 +55,9 @@ function LastFM(apiKey, apiSecret) {
       };
     } else path += '?' + body;
 
-    console.log('submitting ' + path + ' request to last.fm ...', options);
+    console.log('[lastFm] submitting to ' + path + '...');
 
     snip.httpRequestJSON(path, options, function (err, data) {
-      //console.log("-> last.fm response status code", (res || {}).statusCode)
       cb(data || err);
     });
   };
@@ -69,7 +73,7 @@ function LastFM(apiKey, apiSecret) {
       {},
       function (res) {
         cb((res || {}).session);
-      }
+      },
     );
   };
 
@@ -83,7 +87,7 @@ function LastFM(apiKey, apiSecret) {
       {},
       function (res) {
         cb && cb((res || {}).user);
-      }
+      },
     );
   };
 
@@ -95,9 +99,9 @@ function LastFM(apiKey, apiSecret) {
 
   this.updateNowPlaying2 = function (post, lastFmSessionKey, cb) {
     post = post || {};
-    var splitted = ('' + post.name).split(' - ');
+    const splitted = ('' + post.name).split(' - ');
     if (lastFmSessionKey && splitted.length > 1) {
-      var scrobbleData = {
+      const scrobbleData = {
         sk: lastFmSessionKey,
         artist: splitted[0], //"Man is not a Bird", //"Finnebassen", //"Maybeshewill",
         track: splitted[1], //"Bringer of rain and seed" //"Touching Me (Original Mix)" //"Opening"
@@ -118,9 +122,9 @@ function LastFM(apiKey, apiSecret) {
     lastFmSessionKey,
     chosenByUser,
     timestamp,
-    cb
+    cb,
   ) {
-    var splitted = (trackName || '').split(' - ');
+    const splitted = (trackName || '').split(' - ');
     if (lastFmSessionKey && splitted.length > 1)
       this.scrobble(
         {
@@ -131,7 +135,7 @@ function LastFM(apiKey, apiSecret) {
           timestamp: timestamp,
           chosenByUser: !!chosenByUser,
         },
-        cb
+        cb,
       );
     else if (cb) cb({ error: 'unable to scrobble track' });
   };
@@ -143,7 +147,7 @@ exports.controller = function (request, p, response) {
   request.logToConsole('api.lastFm.controller', p);
   p = p || {};
 
-  var loggedUser = request.checkLogin(response);
+  const loggedUser = request.checkLogin(response);
   if (!loggedUser) return;
 
   if (p.token) {
@@ -159,12 +163,12 @@ exports.controller = function (request, p, response) {
         message +
           '<script>window.opener.lastFmCallback(' +
           session +
-          ');</script>'
+          ');</script>',
       );
     };
     exports.lastFm.fetchSession(p.token, function (session) {
       if (session) {
-        var userUpdate = {
+        const userUpdate = {
           id: loggedUser.id,
           lastFm: {
             sk: session.key,

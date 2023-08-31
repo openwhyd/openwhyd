@@ -3,8 +3,8 @@
  * @author adrienjoly, whyd
  **/
 
-var version = require('../../models/version.js');
-var FileController = require('./FileController.js');
+const config = require('../../models/config.js');
+const FileController = require('./FileController.js');
 
 function wrapJsonGeneratorToText(name) {
   return function (p, cb) {
@@ -16,8 +16,10 @@ function wrapJsonGeneratorToText(name) {
 
 var fileGenerators = {
   'version.json': function (p, cb) {
-    version.updateVersions(function (versions) {
-      cb({ json: versions });
+    cb({
+      json: {
+        openwhydServerVersion: config.version,
+      },
     });
   },
   'version.txt': wrapJsonGeneratorToText('version.json'),

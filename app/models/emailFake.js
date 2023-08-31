@@ -5,7 +5,7 @@
  **/
 
 // for when config.emailModule is not specified:
-var fakeDeliveryDuration = 2000; // ms
+const fakeDeliveryDuration = 2000; // ms
 
 //console.log("FAKE EMAIL ENABLED, duration: ", fakeDeliveryDuration, " milliseconds");
 
@@ -15,7 +15,7 @@ exports.email = function (
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
   /*
   console.log('FAKE EMAIL', {
@@ -26,7 +26,7 @@ exports.email = function (
   });
   */
   setTimeout(function () {
-    var result = 'FAKE EMAIL => success';
+    const result = 'FAKE EMAIL => success';
     if (callback) callback(result);
   }, fakeDeliveryDuration);
 };

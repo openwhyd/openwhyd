@@ -1,4 +1,11 @@
 {
-  "files": ["./node_modules/@applitools/eyes-cypress/index.d.ts"],
+  "compilerOptions": {
+    "target": "es2015",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
   "include": ["**/*.ts", "**/*.d.ts", "**/*.js"]
 }

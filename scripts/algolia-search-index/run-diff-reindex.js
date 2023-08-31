@@ -12,8 +12,13 @@ const mongo = require('./mongodb-wrapper.js');
 
 const MONGODB_PARAMS = {}; //{ mongoDbPort: 27117 }; // can be used to override environment variables
 
-const appId = process.env.ALGOLIA_APP_ID.substr();
-const apiKey = process.env.ALGOLIA_API_KEY.substr();
+if (process.env['ALGOLIA_APP_ID'] === undefined)
+  throw new Error(`missing env var: ALGOLIA_APP_ID`);
+if (process.env['ALGOLIA_API_KEY'] === undefined)
+  throw new Error(`missing env var: ALGOLIA_API_KEY`);
+
+const appId = process.env.ALGOLIA_APP_ID;
+const apiKey = process.env.ALGOLIA_API_KEY;
 
 const COLLECTIONS = [
   {
@@ -58,8 +63,8 @@ const runSeq = (functions) =>
 const getCollCounts = ({ name, coll }) =>
   new Promise((resolve, reject) =>
     coll.countDocuments((err, count) =>
-      err ? reject(err) : resolve({ name, count })
-    )
+      err ? reject(err) : resolve({ name, count }),
+    ),
   );
 
 const getIndexCounts = ({ indexName }) =>
@@ -113,7 +118,7 @@ const indexMissingObjects = ({ coll, indexName, missingObjectHandler }) =>
 const reindexAndDisplay = (collection, indexer = dryRunIndexer) => {
   console.log(`- collection: ${collection.name} ...`);
   return indexMissingObjects(
-    Object.assign({ missingObjectHandler: indexer }, collection)
+    Object.assign({ missingObjectHandler: indexer }, collection),
   ).then((diffIndexer) => console.log('  =>', renderResults(diffIndexer)));
 };
 
@@ -132,7 +137,7 @@ const displayCounts = () =>
   Promise.all(cols.map(getCollCounts)).then((results) => {
     console.log('___\nindexable collections:');
     results.forEach((result) =>
-      console.log(`- ${result.name} (${result.count} objects)`)
+      console.log(`- ${result.name} (${result.count} objects)`),
     );
   });
 
@@ -140,7 +145,7 @@ const displayIndexCounts = () =>
   Promise.all(cols.map(getIndexCounts)).then((results) => {
     console.log('___\ncurrent indexes:');
     results.forEach((result) =>
-      console.log(`- ${result.name} (${result.count} objects)`)
+      console.log(`- ${result.name} (${result.count} objects)`),
     );
   });
 
@@ -151,7 +156,7 @@ const dryRun = () => {
 
 const askConfirmation = () =>
   confirm(
-    '___\nstart the actual reindexing of this collection now? [y|N] '
+    '___\nstart the actual reindexing of this collection now? [y|N] ',
   ).then((res) => !res && process.exit(0));
 
 const reindex = () => {
@@ -168,7 +173,7 @@ const reindex = () => {
         batcher.addObject(coll.objTransform(dbObj));
       return () =>
         reindexAndDisplay(coll, processObject).then(() => batcher.flush());
-    })
+    }),
   );
 };
 
@@ -189,17 +194,17 @@ let steps = defaultSteps;
 switch (process.argv[2]) {
   case null:
     console.warn(
-      'no parameter => will dry run and ask for confirmation before reindexing'
+      'no parameter => will dry run and ask for confirmation before reindexing',
     );
   case 'dry-run' /* eslint-disable-line no-fallthrough */:
     console.warn(
-      'dry-run mode => will dry run and exit without updating indexes'
+      'dry-run mode => will dry run and exit without updating indexes',
     );
     steps = dryRunSteps;
     break;
   case 'sync-now':
     console.warn(
-      'sync-now mode => will update algolia index without asking for confirmation'
+      'sync-now mode => will update algolia index without asking for confirmation',
     );
     steps = syncNowSteps;
     break;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html
   xmlns:og="http://opengraphprotocol.org/schema/"
@@ -1499,12 +1499,7 @@ Recherche d’artiste, d’album ou de piste
             <!-- /ko -->
 
             <li
-              class="
-                you-autocomplete-me
-                menubar-item
-                hidden-while-loading
-                hoverable
-              "
+              class="you-autocomplete-me menubar-item hidden-while-loading hoverable"
               data-bind="click: showAltSearch, visible: !altSearch()"
             >
               <a
@@ -1525,12 +1520,7 @@ Recherche d’artiste, d’album ou de piste
 
             <li
               id="feed-main"
-              class="
-                signup-tooltip-parent
-                menubar-item
-                hoverable
-                hidden-while-loading
-              "
+              class="signup-tooltip-parent menubar-item hoverable hidden-while-loading"
               data-tooltip-id="f"
             >
               <a href="" title="flux">
@@ -1548,12 +1538,7 @@ Recherche d’artiste, d’album ou de piste
 
             <li
               id="collection-main"
-              class="
-                menubar-item
-                hoverable
-                signup-tooltip-parent
-                hidden-while-loading
-              "
+              class="menubar-item hoverable signup-tooltip-parent hidden-while-loading"
               data-tooltip-id="c"
             >
               <a href="" title="collection">
@@ -1565,11 +1550,7 @@ Recherche d’artiste, d’album ou de piste
                 ></svg>
               </a>
               <div
-                class="
-                  signup-tooltip-outer
-                  collection-tooltip-outer
-                  header-2018
-                "
+                class="signup-tooltip-outer collection-tooltip-outer header-2018"
               ></div>
             </li>
 
@@ -1675,12 +1656,7 @@ Recherche d’artiste, d’album ou de piste
                   <!-- LABEL ARTISTS -->
                   <!-- ko if: loggedInLabelMemberBands() && loggedInLabelMemberBands().length > 0 -->
                   <li
-                    class="
-                      menu-switch
-                      ui-menu-item
-                      submenu-item
-                      ui-state-disabled
-                    "
+                    class="menu-switch ui-menu-item submenu-item ui-state-disabled"
                     data-bind="visible: !showLinkedBands()"
                   >
                     <span
@@ -1689,11 +1665,7 @@ Recherche d’artiste, d’album ou de piste
                   </li>
 
                   <ol
-                    class="
-                      label-artist-menu
-                      no-pro-badges
-                      ui-state-disabled ui-menu-item
-                    "
+                    class="label-artist-menu no-pro-badges ui-state-disabled ui-menu-item"
                     data-bind="visible: !showLinkedBands()"
                   >
                     <input
@@ -1726,13 +1698,7 @@ Recherche d’artiste, d’album ou de piste
                   <!-- ko if: linkedNonLabelMemberBands().length > 1 -->
                   <ol class="linked-accounts-wrapper">
                     <li
-                      class="
-                        menu-switch
-                        ui-menu-item
-                        submenu-item
-                        linked-accounts-menu
-                        ui-state-disabled
-                      "
+                      class="menu-switch ui-menu-item submenu-item linked-accounts-menu ui-state-disabled"
                       data-bind="click: () => showLinkedBands(!showLinkedBands())"
                     >
                       <span
@@ -1790,13 +1756,7 @@ Recherche d’artiste, d’album ou de piste
 
             <li
               data-bind="visible: hasCart"
-              class="
-                menubar-item
-                hoverable
-                cart-wrapper
-                hidden-while-loading
-                svg-icon
-              "
+              class="menubar-item hoverable cart-wrapper hidden-while-loading svg-icon"
             >
               <a
                 href="https://bandcamp.com/cart"
@@ -2351,7 +2311,7 @@ Recherche d’artiste, d’album ou de piste
                         .bcTruncate(
                           TruncateProfile.get('buyItem'),
                           'afficher plus',
-                          'afficher moins'
+                          'afficher moins',
                         );
                     </script>
 
@@ -2474,7 +2434,7 @@ Recherche d’artiste, d’album ou de piste
                         .bcTruncate(
                           TruncateProfile.get('buyItem'),
                           'afficher plus',
-                          'afficher moins'
+                          'afficher moins',
                         );
                     </script>
 

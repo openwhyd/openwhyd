@@ -1,4 +1,5 @@
 //@ts-check
+
 /**
  * @typedef {import('../../../app/domain/spi/UserRepository').UserRepository} UserRepository
  * @typedef {import('./types').UserDocument} UserDocument
@@ -8,8 +9,12 @@
 
 const User = require('../../domain/user/User');
 const mongodb = require('../../models/mongodb');
+// const searchModel = require('../../models/search');
 
 /**
+ * MongoDB implementation of the UserRepository interface.
+ * Persists User instances in the "user" collection.
+ * Tests: test/integration/user.repository.tests.js
  * @type {UserRepository}
  */
 exports.userCollection = {
@@ -18,11 +23,19 @@ exports.userCollection = {
       .findOne({ _id: mongodb.ObjectId(userId) })
       .then(checkUserIsValid)
       .then(mapToDomainUser),
-  insertPlaylist: (userId, playlist) =>
-    mongodb.collections['user'].updateOne(
+  insertPlaylist: async (userId, playlist) => {
+    await mongodb.collections['user'].updateOne(
       { _id: mongodb.ObjectId(userId) },
-      { $push: { pl: playlist } }
-    ),
+      { $push: { pl: playlist } },
+    );
+  },
+  removePlaylist: async (userId, playlistId) => {
+    await mongodb.collections['user'].updateOne(
+      { _id: mongodb.ObjectId(userId) },
+      { $pull: { pl: { id: playlistId } } },
+    );
+    // searchModel.deletePlaylist(userId, playlistId); // TODO: implement this with Algolia search provider
+  },
 };
 
 /**

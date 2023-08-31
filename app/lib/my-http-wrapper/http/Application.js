@@ -6,22 +6,23 @@ const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
-const { features: makeFeatures } = require('../../../domain/OpenWhydFeatures');
+const { makeFeatures } = require('../../../domain/OpenWhydFeatures');
 const {
   userCollection: userRepository,
 } = require('../../../infrastructure/mongodb/UserCollection');
+const { ImageStorage } = require('../../../infrastructure/ImageStorage.js');
+const { unsetPlaylist } = require('../../../models/post.js');
 
-const LOG_THRESHOLD = process.env.LOG_REQ_THRESHOLD_MS || 500;
+const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
 // From Response.js
 
 // @ts-ignore
 http.ServerResponse.prototype.legacyRender = function (
   view,
-  // @ts-ignore
   data,
   headers = {},
-  statusCode
+  statusCode,
 ) {
   const isString = typeof view === 'string';
   if (!headers['content-type']) {
@@ -35,29 +36,25 @@ http.ServerResponse.prototype.legacyRender = function (
 
 // Middlewares
 
-// @ts-ignore
 function noCache(req, res, next) {
   res.set(
     'Cache-Control',
-    'max-age=0,no-cache,no-store,post-check=0,pre-check=0'
+    'max-age=0,no-cache,no-store,post-check=0,pre-check=0',
   );
   next();
 }
 
 const makeBodyParser = (uploadSettings) =>
-  // @ts-ignore
   function bodyParser(req, res, callback) {
-    var form = new formidable.IncomingForm();
-    // @ts-ignore
+    const form = new formidable.IncomingForm();
     form.uploadDir = uploadSettings.uploadDir;
-    // @ts-ignore
     form.keepExtensions = uploadSettings.keepExtensions;
     form.parse(req, function (err, postParams, files) {
-      if (err) console.error('formidable parsing error:', err);
+      // if (err) console.error('formidable parsing error:', err);
       // using qset to parse fields with brackets [] for url-encoded form data:
       // https://github.com/felixge/node-formidable/issues/386#issuecomment-274315370
-      var parsedParams = {};
-      for (let key in postParams) {
+      const parsedParams = {};
+      for (const key in postParams) {
         qset.deep(parsedParams, key, postParams[key]);
       }
       req.body = { ...postParams, ...parsedParams };
@@ -72,6 +69,10 @@ const makeStatsUpdater = () =>
     const userId = (req.session || {}).whydUid;
     const userAgent = req.headers['user-agent'];
 
+    if (userId) {
+      sendUserIdToDataDog(userId);
+    }
+
     sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
 
     // log whenever a request is slow to respond
@@ -79,20 +80,22 @@ const makeStatsUpdater = () =>
       const reqId = `${startDate.toISOString()} ${req.method} ${req.path}`;
       // @ts-ignore
       const duration = Date.now() - startDate;
-      console.log(`◀ ${reqId} responds ${res.statusCode} after ${duration} ms`);
-      appendSlowQueryToAccessLog({
-        startDate,
-        req,
-        userId,
-        // @ts-ignore
-        userAgent,
-      });
+      console.log(
+        `◀ ${reqId} responds ${res.statusCode} after ${duration} ms`,
+      );
+      if (duration >= LOG_THRESHOLD) {
+        logSlowRequest({
+          startDate,
+          req,
+          userId,
+          userAgent,
+        });
+      }
     });
 
     next();
   };
 
-// @ts-ignore
 function defaultErrorHandler(req, reqParams, res, statusCode) {
   res.sendStatus(statusCode);
 }
@@ -119,10 +122,15 @@ exports.Application = class Application {
     this._expressApp = null; // will be lazy-loaded by getExpressApp()
     this._uploadSettings = options.uploadSettings;
 
-    /**
-     * @type {Features}
-     */
-    this._features = makeFeatures(userRepository);
+    const imageRepository = new ImageStorage();
+    const releasePlaylistPosts = async (userId, playlistId) =>
+      new Promise((resolve) => unsetPlaylist(userId, playlistId, resolve));
+
+    this._features = makeFeatures({
+      userRepository,
+      imageRepository,
+      releasePlaylistPosts,
+    });
   }
 
   getExpressApp() {
@@ -147,7 +155,7 @@ exports.Application = class Application {
       app,
       this._appDir,
       this._routeFile,
-      this._features
+      this._features,
     );
     app.use(makeNotFound(this._errorHandler));
     return (this._expressApp = app);
@@ -173,8 +181,8 @@ exports.Application = class Application {
 // returns a list of { pattern, name } from the provided file (e.g. app.route)
 function loadRoutesFromFile(file) {
   const lines = fs.readFileSync(file, 'utf8').split('\n');
-  var routeArray = [];
-  var line;
+  const routeArray = [];
+  let line;
   for (let i = 0, len = lines.length; i < len; i++) {
     line = lines[i].split('->');
     if (line.length >= 2)
@@ -191,7 +199,7 @@ function parseExpressRoute({ pattern }) {
   const path = (pathParams || []).reduce(
     (path, param) =>
       path.replace(param, `:${param.substring(1, param.length - 1)}`),
-    legacyPath
+    legacyPath,
   );
   return { method, path };
 }
@@ -218,8 +226,7 @@ function attachLegacyRoute({
 
 function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
   loadRoutesFromFile(routeFile).forEach(({ pattern, name }) => {
-    // @ts-ignore
-    const { method, path } = parseExpressRoute({ pattern, name });
+    const { method, path } = parseExpressRoute({ pattern });
     attachLegacyRoute({
       expressApp,
       method,
@@ -230,9 +237,8 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
   });
 }
 
-function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
+function logSlowRequest({ startDate, req, userId, userAgent }) {
   const duration = Date.now() - startDate;
-  if (duration < LOG_THRESHOLD) return;
   const logLine = [
     startDate.toUTCString(),
     req.method,
@@ -242,4 +248,19 @@ function appendSlowQueryToAccessLog({ startDate, req, userId, userAgent }) {
   if (userId) logLine.push('uid=' + userId);
   if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
   console.error('slow request:', logLine.join(' '));
+}
+
+/**
+ * Push the request's user ID to Datadog APM, to help us reproduce performance issues.
+ * cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
+ */
+function sendUserIdToDataDog(userId) {
+  try {
+    process.datadogTracer?.setUser({ id: userId }); // cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#user-identification
+  } catch (err) {
+    console.error(`datadog error: ${err.message}`);
+    console.error({ datadogTracer: typeof process.datadogTracer });
+    console.error({ scope: typeof process.datadogTracer?.scope() });
+    console.error({ active: typeof process.datadogTracer?.scope().active() });
+  }
 }

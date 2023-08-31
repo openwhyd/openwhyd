@@ -12,30 +12,29 @@
 // http://localhost:8080/api/user
 // http://localhost:8080/admin/users?action=delete&_id=<...>
 
-var snip = require('../../snip.js');
-var mongodb = require('../../models/mongodb.js');
-var postModel = require('../../models/post.js');
-var userModel = require('../../models/user.js');
-var emailModel = require('../../models/email.js');
-var followModel = require('../../models/follow.js');
-var versionModel = require('../../models/version.js');
-var notifEmails = require('../../models/notifEmails.js');
-var uploadCtr = require('../uploadedFile.js');
+const snip = require('../../snip.js');
+const mongodb = require('../../models/mongodb.js');
+const postModel = require('../../models/post.js');
+const userModel = require('../../models/user.js');
+const emailModel = require('../../models/email.js');
+const followModel = require('../../models/follow.js');
+const notifEmails = require('../../models/notifEmails.js');
+const uploadCtr = require('../uploadedFile.js');
 
 // for when called through subdir controller
-var SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
+const SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
 
 function addUserInfo(userSub, mySub) {
-  var mySubIdSet = {};
-  if (mySub) for (let i in mySub) mySubIdSet[mySub[i].id] = true;
-  for (let i in userSub) {
-    var user = userSub[i];
+  const mySubIdSet = {};
+  if (mySub) for (const i in mySub) mySubIdSet[mySub[i].id] = true;
+  for (const i in userSub) {
+    const user = userSub[i];
     user.subscribed = mySubIdSet[user.id];
   }
   return userSub;
 }
 
-var publicActions = {
+const publicActions = {
   subscriptions: function (p, cb) {
     if (!p || !p.id) cb({ error: 'user not found' });
     else
@@ -49,20 +48,20 @@ var publicActions = {
                   sub
                     ? addUserInfo(
                         sub.subscriptions,
-                        mySub ? mySub.subscriptions : []
+                        mySub ? mySub.subscriptions : [],
                       )
-                    : null
+                    : null,
                 );
-              }
+              },
             );
           else
             cb(
               sub
                 ? addUserInfo(
                     sub.subscriptions,
-                    p.loggedUser ? sub.subscriptions : []
+                    p.loggedUser ? sub.subscriptions : [],
                   )
-                : null
+                : null,
             );
         });
       });
@@ -80,20 +79,20 @@ var publicActions = {
                   sub
                     ? addUserInfo(
                         sub.subscribers,
-                        mySub ? mySub.subscriptions : []
+                        mySub ? mySub.subscriptions : [],
                       )
-                    : null
+                    : null,
                 );
-              }
+              },
             );
           else
             cb(
               sub
                 ? addUserInfo(
                     sub.subscribers,
-                    p.loggedUser ? sub.subscriptions : []
+                    p.loggedUser ? sub.subscriptions : [],
                   )
-                : null
+                : null,
             );
         });
       });
@@ -126,40 +125,50 @@ var publicActions = {
 
 function defaultSetter(fieldName) {
   return function (p, cb) {
-    var u = { _id: p._id };
+    const u = { _id: p._id };
     u[fieldName.replace('_', '.')] = p[fieldName];
     userModel.save(u, cb);
   };
 }
 
-var fieldSetters = {
+const fieldSetters = {
   name: function (p, cb) {
     userModel.renameUser(p._id, p.name, cb);
   },
   img: function (p, cb) {
-    userModel.fetchByUid(p._id, function (user) {
-      if (user.img && user.img.indexOf('blank_user.gif') == -1) {
+    userModel.fetchByUid(p._id, async function (user) {
+      if (hasProfileImage(user)) {
         console.log('deleting previous profile pic: ' + user.img);
-        uploadCtr.deleteFile(user.img);
+        await uploadCtr
+          .deleteFile(user.img)
+          .catch((err) =>
+            console.log(
+              'failed to delete existing profile image in fieldSetters.img',
+              err,
+              err.stack,
+            ),
+          );
       }
-      function actualUpdate(newFilename) {
-        defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
-      }
-      if (p.img.indexOf('blank_user.gif') == -1)
-        uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, actualUpdate);
-      else actualUpdate(p.img);
+      const newFilename = hasProfileImage(p)
+        ? await new Promise((resolve) =>
+            uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, resolve),
+          )
+        : p.img;
+      defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
     });
   },
   cvrImg: function (p, cb) {
     userModel.fetchByUid(p._id, function (user) {
       if (user.cvrImg && user.cvrImg.indexOf('blank') == -1) {
         console.log('deleting previous cover image: ' + user.cvrImg);
-        uploadCtr.deleteFile(user.cvrImg);
+        uploadCtr
+          .deleteFile(user.cvrImg)
+          .catch((err) => console.log(err, err.stack));
       }
       function actualUpdate(newFilename) {
         defaultSetter('cvrImg')(
           { _id: p._id, cvrImg: newFilename || p.cvrImg },
-          cb
+          cb,
         );
       }
       if (p.cvrImg.indexOf('blank') == -1)
@@ -195,7 +204,7 @@ var fieldSetters = {
   },
   pref: function (p, cb) {
     // type each provided pref value accordingly to defaults. "true" boolean was translated to "1"
-    for (let i in p.pref)
+    for (const i in p.pref)
       p.pref[i] =
         typeof userModel.DEFAULT_PREF[i] == 'boolean'
           ? p.pref[i] == 1
@@ -208,10 +217,6 @@ var fieldSetters = {
   twId: function (p, cb) {
     userModel.setTwitterId(p._id, p.twId, p.twTok, p.twSec, cb);
   },
-  apTok: function (p, cb) {
-    if (p.apTok === '') userModel.clearApTok(p._id, cb);
-    else userModel.setApTok(p._id, p.apTok, cb);
-  },
   //"fbId": defaultSetter("fbId"),
   bio: defaultSetter('bio'),
   loc: defaultSetter('loc'),
@@ -223,9 +228,13 @@ var fieldSetters = {
   lnk_igrm: defaultSetter('lnk_igrm'),
 };
 
+function hasProfileImage(user) {
+  return user.img?.indexOf('blank_user.gif') == -1;
+}
+
 function hasSubscribed(loggedUser, user, cb) {
   user = user || {};
-  var uId = user.id || user._id;
+  const uId = user.id || user._id;
   if (uId && loggedUser)
     followModel.get({ uId: loggedUser.id, tId: uId }, function (err, res) {
       user.isSubscribing = !!res;
@@ -235,7 +244,7 @@ function hasSubscribed(loggedUser, user, cb) {
 }
 
 function countUserSubscr(user, cb) {
-  var uId = '' + user._id;
+  const uId = '' + user._id;
   followModel.countSubscriptions(uId, function (res) {
     user.nbSubscriptions = res;
     followModel.countSubscribers(uId, function (res) {
@@ -259,14 +268,8 @@ function countUserLikes(user, cb) {
   });
 }
 
-function appendVersions(user, cb) {
-  var versions = versionModel.getVersions();
-  for (let i in versions) user[i] = versions[i];
-  cb();
-}
-
 exports.fetchUserData = function (user, cb) {
-  var ops = [countUserSubscr, countUserPosts, countUserLikes, appendVersions];
+  const ops = [countUserSubscr, countUserPosts, countUserLikes];
   (function next() {
     if (!ops.length) cb(user);
     else ops.pop().apply(null, [user, next]);
@@ -285,16 +288,12 @@ function fetchUserById(uId, options, cb) {
         delete user.lastFm;
         delete user.pref;
         delete user.fbTok;
-        delete user.apTok;
         delete user.twTok;
         delete user.twSec;
       }
-      var getters = [
-        ['getVersion', appendVersions],
-        ['includeSubscr', countUserSubscr],
-      ];
+      const getters = [['includeSubscr', countUserSubscr]];
       (function next() {
-        var item = getters.shift();
+        const item = getters.shift();
         if (!item) cb(user);
         else {
           if (options[item[0]]) item[1](user, next);
@@ -307,11 +306,11 @@ function fetchUserById(uId, options, cb) {
 
 function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
   function returnUser(u) {
-    var uId = (u || {}).id;
+    const uId = (u || {}).id;
     if (!uId) cb({ error: 'user not found' });
     else fetchUserById(uId, options, cb);
   }
-  var u = mongodb.getUserFromId(uidOrHandle) || {};
+  const u = mongodb.getUserFromId(uidOrHandle) || {};
   if (u.id) returnUser(u);
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
@@ -320,7 +319,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
   // transforming sequential parameters to named parameters
   reqParams = snip.translateFields(reqParams, SEQUENCED_PARAMETERS);
 
-  var handler = publicActions[reqParams.action];
+  const handler = publicActions[reqParams.action];
   if (handler) {
     reqParams.loggedUser = loggedUser;
     handler(reqParams, localRendering);
@@ -328,7 +327,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
   } else if (reqParams.id) {
     reqParams.excludePrivateFields = true;
     fetchUserByIdOrHandle(reqParams.id, reqParams, function (u) {
-      var tasks = [localRendering];
+      const tasks = [localRendering];
       if (reqParams.isSubscr)
         tasks.push(function (u, next) {
           hasSubscribed(loggedUser, u, next);
@@ -336,7 +335,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
       if (reqParams.countPosts) tasks.push(countUserPosts);
       if (reqParams.countLikes) tasks.push(countUserLikes);
       (function next() {
-        var fct = tasks.pop();
+        const fct = tasks.pop();
         fct && fct(u, next);
       })();
     });
@@ -351,17 +350,18 @@ function handleAuthRequest(loggedUser, reqParams, localRendering) {
 
   reqParams._id = loggedUser._id;
 
-  var toUpdate = [];
-  for (let i in fieldSetters) if (reqParams[i] !== undefined) toUpdate.push(i);
+  const toUpdate = [];
+  for (const i in fieldSetters)
+    if (reqParams[i] !== undefined) toUpdate.push(i);
 
   if (toUpdate.length) {
-    var result = {};
+    const result = {};
     (function setNextField(prevResult) {
       if (prevResult)
-        for (let i in prevResult) result[i] = prevResult[i] || result[i];
+        for (const i in prevResult) result[i] = prevResult[i] || result[i];
       if (!toUpdate.length) localRendering(result);
       else {
-        var fieldName = toUpdate.pop();
+        const fieldName = toUpdate.pop();
         console.log('calling field setter: ', fieldName);
         reqParams._id = loggedUser._id; // force the logged user id
         fieldSetters[fieldName](reqParams, setNextField);
@@ -383,27 +383,39 @@ function handleRequest(loggedUser, reqParams, localRendering) {
   return handleAuthRequest(loggedUser, reqParams, localRendering);
 }
 
+// these error messages are displayed to the user, we don't need to log them
+const USER_ERRORS = [
+  'Special characters are not allowed',
+  'This username is taken by another user',
+];
+
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
 
   function localRendering(r) {
     if (r) delete r.pwd;
-    if (!r || r.error)
-      console.log(
-        'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
-        (r || {}).error || r
-      );
+    if (!r || r.error) {
+      const errMessage = (r || {}).error || r;
+      const isUserError =
+        typeof errMessage === 'string' &&
+        USER_ERRORS.some((userError) => errMessage.includes(userError));
+      if (!isUserError)
+        console.log(
+          'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
+          errMessage,
+        );
+    }
     response.renderJSON(
-      reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r
+      reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r,
     );
   }
 
-  var loggedUser = request.checkLogin(/*response*/);
+  const loggedUser = request.checkLogin(/*response*/);
   handleRequest(
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,
-    localRendering
+    localRendering,
   );
 };
 

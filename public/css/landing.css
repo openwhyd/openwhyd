@@ -11,7 +11,10 @@ a:hover {
 
 body {
   background: black url(/images/background.png);
-  font: 14px normal Helvetica, Arial, sans-serif;
+  font:
+    14px normal Helvetica,
+    Arial,
+    sans-serif;
   color: white;
 }
 
@@ -91,9 +94,15 @@ input.box {
   width: 140px;
   font-size: 14px;
   color: #464646;
-  -webkit-box-shadow: inset 0px 1px 2px #555, 0px 1px 0px #666666;
-  -moz-box-shadow: inset 0px 1px 2px #555, 0px 1px 0px #666666;
-  box-shadow: inset 0px 1px 2px #555, 0px 1px 0px #666666;
+  -webkit-box-shadow:
+    inset 0px 1px 2px #555,
+    0px 1px 0px #666666;
+  -moz-box-shadow:
+    inset 0px 1px 2px #555,
+    0px 1px 0px #666666;
+  box-shadow:
+    inset 0px 1px 2px #555,
+    0px 1px 0px #666666;
 }
 
 .placeholder {

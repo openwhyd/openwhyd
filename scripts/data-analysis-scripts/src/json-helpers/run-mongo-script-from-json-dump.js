@@ -14,7 +14,7 @@ const script = [
     .readFileSync(MONGO_SCRIPT_FILE)
     .toString()
     .replace(/load\(['"]([^)]+)['"]\)/g, (instr, file) =>
-      fs.readFileSync(file).toString()
+      fs.readFileSync(file).toString(),
     )
     .replace(/emit\(/g, `return (${emit})(`)
     .replace(/db\.([^.]+)\.mapReduce\(/g, `await mapReduceFromJsonLines(`),

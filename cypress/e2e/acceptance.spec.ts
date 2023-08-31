@@ -29,7 +29,7 @@ context('Openwhyd', () => {
       name: url.split('/').pop(),
       eId: '/fi/' + encodeURIComponent(url),
     }))(
-      'https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3'
+      'https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3',
     );
     cy.get('#q').type(track.url);
     cy.get('#searchResults').contains(track.name);
@@ -46,7 +46,6 @@ context('Openwhyd', () => {
     cy.get('.dlgPostBox').should('be.visible');
 
     // should show a link to the post after adding the track
-    cy.wait(500); // TODO: we should not have to wait for the "Add" link to be clickable
     cy.get('.dlgPostBox span').contains('Add').click();
     cy.contains('your tracks'); // notification bar with link to "your tracks"
 
@@ -223,7 +222,7 @@ context('Openwhyd', () => {
     cy.get('#q')
       .click()
       .type(
-        'https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3'
+        'https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3',
       );
     const searchResult = `a[onclick="window.goToPage('/fi/https://github.com/openwhyd/openwhyd/raw/241a6f1025ba601a4f63d730d41690474db6a8c2/public/html/test-resources/sample-15s.mp3');return false;"]`;
     cy.get(searchResult)

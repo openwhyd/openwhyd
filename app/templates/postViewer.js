@@ -4,12 +4,12 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
-var mainTemplate = require('./mainTemplate.js');
-var uiSnippets = require('../templates/uiSnippets.js');
-var postsTemplate = require('../templates/posts.js');
+const config = require('../models/config.js');
+const mainTemplate = require('./mainTemplate.js');
+const uiSnippets = require('../templates/uiSnippets.js');
+const postsTemplate = require('../templates/posts.js');
 
-var fbAppNs = 'whydapp'; // or whyd-dev
+const fbAppNs = 'whydapp'; // or whyd-dev
 
 // TO TEST, try to play and add from these urls:
 // http://localhost:8080/yt/-hHpSlEz73k
@@ -17,8 +17,8 @@ var fbAppNs = 'whydapp'; // or whyd-dev
 
 exports.renderPostPage = function (p, cb) {
   p = p || {};
-  var post = p.post;
-  var options = {
+  const post = p.post;
+  const options = {
     loggedUser: p.loggedUser,
     bodyClass: 'pgPost',
     pageType: fbAppNs + ':track', // "music.song"

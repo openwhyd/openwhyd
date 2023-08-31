@@ -1,0 +1,455 @@
+[
+  {
+    "_id": {
+      "_bsontype": "ObjectID",
+      "id": "4d94501d1f78ac091dbc9b4d"
+    },
+    "bio": "Picky but diverse: indie/post/angry rock, fusion jazz, synthwave, chiptune...\nAlso, I lead the development of openwhyd.org",
+    "consent": {
+      "date": "2018-05-29T09:43:46.984Z",
+      "lang": "fr"
+    },
+    "cvrImg": "/uCoverImg/6664b7078abc88281847e617eb8d3e4a_960x.jpg",
+    "email": "dummy@openwhyd.org",
+    "handle": "adrien",
+    "id": "4d94501d1f78ac091dbc9b4d",
+    "img": "/uAvatarImg/upload_945ec85f203b3251d4adb1cd6ec0fb43_180x.jpg",
+    "lnk": {
+      "home": "https://adrienjoly.com/now",
+      "tw": "adrienjoly"
+    },
+    "loc": "Montreuil / Paris, France",
+    "md5": "21232f297a57a5a743894a0e4a801fc3",
+    "mid": "/u/4d94501d1f78ac091dbc9b4d",
+    "n": "adrien joly",
+    "name": "Adrien Joly",
+    "pl": [
+      {
+        "id": 64,
+        "name": "🌍 Voyage",
+        "nbTracks": 4,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/64"
+      },
+      {
+        "id": 63,
+        "name": "👾 Chiptune",
+        "nbTracks": 5,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/63"
+      },
+      {
+        "id": 62,
+        "name": "#NotOnSpotify",
+        "nbTracks": 2,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/62"
+      },
+      {
+        "id": 61,
+        "name": "🎺 Jazz meets World",
+        "nbTracks": 29,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/61"
+      },
+      {
+        "id": 60,
+        "name": "2016-10-16 - Juste des sons",
+        "nbTracks": 14,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/60"
+      },
+      {
+        "id": 59,
+        "name": "🥁 Inspiring Drumming",
+        "nbTracks": 8,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/59"
+      },
+      {
+        "id": 58,
+        "name": "💀 Hangover",
+        "nbTracks": 5,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/58"
+      },
+      {
+        "id": 57,
+        "name": "🇹🇭 Sawadee Krap / Relaxing tunes heard in Thailand",
+        "nbTracks": 6,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/57"
+      },
+      {
+        "id": 56,
+        "name": "Février 2015",
+        "nbTracks": 21,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/56"
+      },
+      {
+        "id": 55,
+        "name": "🦙 Lama Land",
+        "nbTracks": 25,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/55"
+      },
+      {
+        "id": 54,
+        "name": "Jamendo Playlist Contest",
+        "nbTracks": 10,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/54"
+      },
+      {
+        "id": 53,
+        "name": "👨‍💻 epic coding session soundtrack",
+        "nbTracks": 101,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/53"
+      },
+      {
+        "id": 52,
+        "name": "🍻 Apéro !",
+        "nbTracks": 26,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/52"
+      },
+      {
+        "id": 51,
+        "name": "🌅 Slow down",
+        "nbTracks": 48,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/51"
+      },
+      {
+        "id": 50,
+        "name": "Emerging rock talent from Paris",
+        "nbTracks": 19,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/50"
+      },
+      {
+        "id": 49,
+        "name": "Whyd Spring Playlist",
+        "nbTracks": 4,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/49"
+      },
+      {
+        "id": 48,
+        "name": "Testing speakers",
+        "nbTracks": 13,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/48"
+      },
+      {
+        "id": 47,
+        "name": "Fluff Fest 2013 - HxC discoveries",
+        "nbTracks": 7,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/47"
+      },
+      {
+        "id": 46,
+        "name": "🧨 Sales gosses !",
+        "nbTracks": 21,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/46"
+      },
+      {
+        "id": "45",
+        "name": "🌚 Still awake at night",
+        "nbTracks": 82,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/45"
+      },
+      {
+        "id": "44",
+        "name": "red hot tracks",
+        "nbTracks": 34,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/44"
+      },
+      {
+        "id": "43",
+        "name": "🚬 Mesmerizing tracks (a.k.a musical weed)",
+        "nbTracks": 65,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/43"
+      },
+      {
+        "id": "42",
+        "name": "🎙 Words + music",
+        "nbTracks": 5,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/42"
+      },
+      {
+        "id": "41",
+        "name": "🍹 The lounge",
+        "nbTracks": 31,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/41"
+      },
+      {
+        "id": "40",
+        "name": "🎸 Women & guitars",
+        "nbTracks": 5,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/40"
+      },
+      {
+        "id": "39",
+        "name": "🎟  aLIVE",
+        "nbTracks": 75,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/39"
+      },
+      {
+        "id": "38",
+        "name": "on va tout mettre en vrac!",
+        "nbTracks": 20,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/38"
+      },
+      {
+        "id": "37",
+        "name": "🌠 Lullabies",
+        "nbTracks": 25,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/37"
+      },
+      {
+        "id": "36",
+        "name": "🤯 Brainf*ck",
+        "nbTracks": 9,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/36"
+      },
+      {
+        "id": "35",
+        "name": "👽 Aliens are coming!",
+        "nbTracks": 45,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/35"
+      },
+      {
+        "id": "34",
+        "name": "👟 Indie rock / Shoegaze",
+        "nbTracks": 175,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/34"
+      },
+      {
+        "id": "33",
+        "name": "🎉 Celebration!",
+        "nbTracks": 31,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/33"
+      },
+      {
+        "id": "32",
+        "name": "Man Is Not A Bird",
+        "nbTracks": 14,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/32"
+      },
+      {
+        "id": "31",
+        "name": "🌄 Today's the day",
+        "nbTracks": 73,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/31"
+      },
+      {
+        "id": "30",
+        "name": "🛣 Hit the road",
+        "nbTracks": 61,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/30"
+      },
+      {
+        "id": "29",
+        "name": "👩‍🎤 music = art, a.k.a wtf?!",
+        "nbTracks": 12,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/29"
+      },
+      {
+        "id": "28",
+        "name": "🧛‍♂️ indus / cold",
+        "nbTracks": 21,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/28"
+      },
+      {
+        "id": "27",
+        "name": "🔊 r4ve p4rtY",
+        "nbTracks": 12,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/27"
+      },
+      {
+        "id": "26",
+        "name": "🥖 Bien de chez nous",
+        "nbTracks": 17,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/26"
+      },
+      {
+        "id": "25",
+        "name": "🥃 Calage",
+        "nbTracks": 33,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/25"
+      },
+      {
+        "id": "24",
+        "name": "🏕 Acoustic delight",
+        "nbTracks": 47,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/24"
+      },
+      {
+        "id": "23",
+        "name": "🥺 Paranormal intensity",
+        "nbTracks": 79,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/23"
+      },
+      {
+        "id": "22",
+        "name": "beautiful songs",
+        "nbTracks": 21,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/22"
+      },
+      {
+        "id": "21",
+        "name": "We Are The Lions #53",
+        "nbTracks": 4,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/21"
+      },
+      {
+        "id": "20",
+        "name": "☔️ Rainy day",
+        "nbTracks": 44,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/20"
+      },
+      {
+        "id": "19",
+        "name": "🍺 Bar tunes",
+        "nbTracks": 116,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/19"
+      },
+      {
+        "id": "18",
+        "name": "🎈 Music in wonderland",
+        "nbTracks": 102,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/18"
+      },
+      {
+        "id": "17",
+        "name": "💵 fat bass / this is a trap, mothafucka!",
+        "nbTracks": 43,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/17"
+      },
+      {
+        "id": "14",
+        "name": "👶 Nostalgia",
+        "nbTracks": 39,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/14"
+      },
+      {
+        "id": "13",
+        "name": "🧔 hipster, fresh, trendy & vintage keyboards",
+        "nbTracks": 127,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/13"
+      },
+      {
+        "id": "12",
+        "name": "☁️  Post-rock / progressive",
+        "nbTracks": 121,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/12"
+      },
+      {
+        "id": "11",
+        "name": "🕶 soul / funk / jazz / etc...",
+        "nbTracks": 70,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/11"
+      },
+      {
+        "id": "10",
+        "name": "🛸 electronica",
+        "nbTracks": 69,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/10"
+      },
+      {
+        "id": "9",
+        "name": "📻 urban / hip-hop",
+        "nbTracks": 42,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/9"
+      },
+      {
+        "id": "8",
+        "name": "🧶 Chill out",
+        "nbTracks": 97,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/8"
+      },
+      {
+        "id": "7",
+        "name": "📸 pop rock",
+        "nbTracks": 51,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/7"
+      },
+      {
+        "id": "6",
+        "name": "🍔 Covers + fun",
+        "nbTracks": 43,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/6"
+      },
+      {
+        "id": "5",
+        "name": "🤘 Post-punk / post-hardcore",
+        "nbTracks": 153,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/5"
+      },
+      {
+        "id": "4",
+        "name": "🤓  Math-rock / indie-rock",
+        "nbTracks": 142,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/4"
+      },
+      {
+        "id": "3",
+        "name": "💪 Metal & violence",
+        "nbTracks": 96,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/3"
+      },
+      {
+        "id": "2",
+        "name": "🎸 Rock",
+        "nbTracks": 181,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/2"
+      },
+      {
+        "id": "1",
+        "name": "🎼  Classical & epic",
+        "nbTracks": 39,
+        "url": "/u/4d94501d1f78ac091dbc9b4d/playlist/1"
+      }
+    ],
+    "pref": {
+      "emAcc": 0,
+      "emAdd": 0,
+      "emCom": 0,
+      "emFrd": 0,
+      "emLik": -1,
+      "emMen": 0,
+      "emRep": 0,
+      "emSam": 1,
+      "emSub": 0,
+      "hideBkAd": false,
+      "mnAcc": -1,
+      "mnAdd": -1,
+      "mnCom": -1,
+      "mnFrd": -1,
+      "mnLik": -1,
+      "mnMen": -1,
+      "mnRep": -1,
+      "mnSam": -1,
+      "mnSnp": -1,
+      "mnSnt": -1,
+      "mnSub": -1,
+      "pendEN": 0
+    },
+    "pwd": "21232f297a57a5a743894a0e4a801fc3"
+  },
+  {
+    "_id": {
+      "_bsontype": "ObjectID",
+      "id": "000000000000000000000001"
+    },
+    "name": "Admin"
+  },
+  {
+    "_id": {
+      "_bsontype": "ObjectID",
+      "id": "000000000000000000000002"
+    },
+    "name": "A Subscriber"
+  },
+  {
+    "_id": {
+      "_bsontype": "ObjectID",
+      "id": "000000000000000000000003"
+    },
+    "consent": {
+      "date": "2018-05-29T09:43:46.984Z",
+      "lang": "fr"
+    },
+    "email": "dummy+newuser@openwhyd.org",
+    "handle": "anewuser",
+    "md5": "21232f297a57a5a743894a0e4a801fc3",
+    "name": "A New User",
+    "pwd": "21232f297a57a5a743894a0e4a801fc3"
+  }
+]

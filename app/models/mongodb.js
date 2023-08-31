@@ -1,24 +1,28 @@
+// @ts-check
+
 /**
  * mongodb model
  * wraps a accessor to collections of a mongodb database
  * @author adrienjoly, whyd
  **/
 
-var fs = require('fs');
-var mongodb = require('mongodb');
-var async = require('async');
-var shellRunner = require('./mongodb-shell-runner.js');
-var userModel = null; // require("./user.js") will be lazy-loaded here
+const fs = require('fs');
+const mongodb = require('mongodb');
+const async = require('async');
+const shellRunner = require('./mongodb-shell-runner.js');
+let userModel = null; // require("./user.js") will be lazy-loaded here
 
 const DB_INIT_SCRIPT = './config/initdb.js';
 const DB_TEST_SCRIPT = './config/initdb_testing.js';
+
+let isTesting = false;
 
 exports.isObjectId = function (i) {
   //return isNaN(i);
   return ('' + i).length == 24;
 };
 
-var USER_CACHE_FIELDS = {
+const USER_CACHE_FIELDS = {
   _id: 1,
   fbId: 1,
   name: 1,
@@ -31,24 +35,19 @@ var USER_CACHE_FIELDS = {
   lastFm: 1, // needed by mainTemplate
 };
 
+/** @type Record<string, import("mongodb").Collection> */
 exports.collections = {};
+
+/** @deprecated */
 exports.usernames = {};
 
-exports.ObjectID = mongodb.ObjectID; //exports.ObjectID = require('bson').BSONPure.ObjectID;
-
-exports.ObjectId = function (v) {
-  try {
-    return exports.ObjectID.createFromHexString('' + v);
-  } catch (e) {
-    console.warn(`[db] invalid mongodb object id: ${v} (${typeof v})`);
-    return 'invalid_id';
-  }
-};
+/** @param { ConstructorParameters<typeof mongodb.ObjectId>[0] } inputId */
+exports.ObjectId = (inputId) => new mongodb.ObjectId(inputId);
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
-  var t = Math.round(date.getTime() / 1000); // turn into seconds
-  t = t.toString(16); // translate into hexadecimal representation
+  const seconds = Math.round(date.getTime() / 1000);
+  let t = seconds.toString(16); // translate into hexadecimal representation
   t = t + '0000000000000000'; // add null values for 8 other bytes
   while (
     t.length <
@@ -69,7 +68,7 @@ exports.getUserNameFromId = function (uid) {
 };
 
 exports.getPublicProfileFromId = function (uid) {
-  var user = exports.usernames['' + uid];
+  const user = exports.usernames['' + uid];
   return !user
     ? undefined
     : {
@@ -83,7 +82,7 @@ exports.cacheUser = function (user) {
   user.id = '' + (user._id || user.id);
   exports.usernames[user.id] = exports.usernames[user.id] || {};
   exports.usernames[user.id].id = user.id;
-  for (let i in user)
+  for (const i in user)
     if (USER_CACHE_FIELDS[i])
       exports.usernames[user.id][i] = user[i] || exports.usernames[user.id][i];
 };
@@ -94,33 +93,34 @@ exports.cacheUsers = function (callback) {
     {},
     { projection: USER_CACHE_FIELDS },
     function (results) {
-      for (let i in results) exports.cacheUser(results[i]);
+      for (const i in results) exports.cacheUser(results[i]);
       if (callback) callback();
-    }
+    },
   );
 };
 
-exports.forEach = function (colName, params, handler, cb, cbParam) {
-  var q = {};
+exports.forEach = async function (colName, params, handler, cb, cbParam) {
+  let q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 1000;
   if (params.q) {
     q = params.q;
     delete params.q;
   }
-  exports.collections[colName].find(q, params, function (err, cursor) {
-    cursor.forEach(
-      (err, item) => {
-        if (item) handler(item);
-      },
-      cb ? () => cb(cbParam) : undefined
-    );
-  });
+  const { fields } = params ?? {};
+  if (params) delete params.fields;
+  const cursor = await exports.collections[colName]
+    .find(q, params)
+    .project(fields ?? {});
+  for await (const item of cursor) {
+    if (item) handler(item);
+  }
+  cb && cb(cbParam);
 };
 
 // handler is responsible for calling the provided "next" function
-exports.forEach2 = function (colName, params, handler) {
-  var q = {};
+exports.forEach2 = async function (colName, params, handler) {
+  let q = {};
   params = params || {};
   if (!params.batchSize) params.batchSize = 100;
   if (params.q) {
@@ -129,19 +129,27 @@ exports.forEach2 = function (colName, params, handler) {
   }
   if (params.after != null && exports.isObjectId(params.after))
     q._id = { $lt: exports.ObjectId('' + params.after) };
-  exports.collections[colName].find(q, params, function (err, cursor) {
-    (function next() {
-      cursor.next(function (err, item) {
-        if (err) {
-          console.error('[db] mongodb.forEach2 ERROR', err);
-          handler({ error: err }, undefined, cursor.close.bind(cursor));
-          cursor.close();
-        } else {
-          handler(item, item ? next : undefined, cursor.close.bind(cursor));
-        }
-      });
-    })();
-  });
+
+  const { fields } = params ?? {};
+  if (params) delete params.fields;
+  const cursor = exports.collections[colName]
+    .find(q, params)
+    .project(fields ?? {});
+  (function next() {
+    cursor.next().then(
+      (item) => {
+        handler(item, item ? next : undefined, (cb) =>
+          cursor.close().then(cb, cb),
+        );
+        // TODO: close the cursor whenever we've run out of documents?
+      },
+      (err) => {
+        console.error('[db] mongodb.forEach2 ERROR', err);
+        handler({ error: err }, undefined, (cb) => cursor.close().then(cb, cb));
+        cursor.close(); // TODO: prevent closing twice?
+      },
+    );
+  })();
 };
 
 exports.cacheCollections = function (callback) {
@@ -149,27 +157,25 @@ exports.cacheCollections = function (callback) {
     callback.call(module.exports, null, exports._db);
   }
   // diagnostics and collection caching
-  exports._db.collections(function (err, collections) {
-    if (err) console.log('[db] MongoDB Error : ' + err);
-    else {
+  exports._db.collections().then(
+    function (collections) {
       if (0 == collections.length) finishInit();
-      var remaining = collections.length;
-      for (let i in collections) {
-        var queryHandler = (function () {
-          var table = collections[i].collectionName;
+      let remaining = collections.length;
+      for (const i in collections) {
+        const queryHandler = (function () {
+          const table = collections[i].collectionName;
           return function (err) {
             if (err) console.error(`[db] cacheCollections error:`, err);
             // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
-            exports._db.collection(table, function (err, col) {
-              exports.collections[table] = col;
-              if (0 == --remaining) finishInit();
-            });
+            exports.collections[table] = exports._db.collection(table);
+            if (0 == --remaining) finishInit();
           };
         })();
         collections[i].countDocuments(queryHandler);
       }
-    }
-  });
+    },
+    (err) => console.trace('[db] MongoDB Error : ' + err),
+  );
 };
 
 // this method runs the commands of a mongo shell script (e.g. initdb.js)
@@ -178,20 +184,20 @@ exports.runShellScript = function (script, callback) {
 };
 
 exports.clearCollections = async function () {
-  if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+  if (!isTesting) {
     throw new Error('allowed on test database only');
   } else {
     for (const name in exports.collections) {
-      await exports.collections[name].deleteMany({}, { multi: true });
+      await exports.collections[name].deleteMany({});
     }
   }
 };
 
-exports.initCollections = function ({ addTestData } = {}) {
+exports.initCollections = function ({ addTestData = false } = {}) {
   return new Promise((resolve, reject) => {
     const dbInitScripts = [DB_INIT_SCRIPT];
     if (addTestData) {
-      if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+      if (!isTesting) {
         return reject(new Error('allowed on test database only'));
       } else {
         dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
@@ -216,19 +222,24 @@ exports.initCollections = function ({ addTestData } = {}) {
             resolve();
           });
         });
-      }
+      },
     );
   });
 };
 
-exports.init = function (readyCallback) {
-  var dbName = process.appParams.mongoDbDatabase;
-  var host = process.appParams.mongoDbHost;
-  var port = process.appParams.mongoDbPort;
-  var authUser = process.appParams.mongoDbAuthUser;
-  var authPassword = process.appParams.mongoDbAuthPassword;
+/**
+ * @param {{ mongoDbHost: string, mongoDbPort: string, mongoDbDatabase: string, mongoDbAuthUser?: string, mongoDbAuthPassword?: string }} connParams
+ * @param {(err: null, db: mongodb.Db) => any} readyCallback
+ */
+exports.init = function (connParams, readyCallback) {
+  isTesting = connParams.mongoDbDatabase === 'openwhyd_test';
+  const dbName = connParams.mongoDbDatabase;
+  const host = connParams.mongoDbHost;
+  const port = connParams.mongoDbPort;
+  const authUser = connParams.mongoDbAuthUser;
+  const authPassword = connParams.mongoDbAuthPassword;
 
-  var authStr = '';
+  let authStr = '';
   if (authUser && authPassword)
     authStr =
       encodeURIComponent(authUser) +
@@ -236,30 +247,24 @@ exports.init = function (readyCallback) {
       encodeURIComponent(authPassword) +
       '@';
 
-  var url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
+  const url = 'mongodb://' + authStr + host + ':' + port + '/' + dbName; // + "?w=1";
 
-  console.log(
-    `[db] Connecting to mongodb://${authUser}:***@${host}:${port}/${dbName} ...`
-  );
+  const publicURL = authPassword ? url.replace(authPassword, '***') : url;
 
-  var options = {
-    native_parser: true,
-    useNewUrlParser: true,
-    //strict: false,
-    //safe: false,
-    w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+  console.log(`[db] Connecting to ${publicURL} ...`);
+
+  /** @type mongodb.MongoClientOptions */
+  const options = {
+    writeConcern: {
+      w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+    },
   };
 
-  mongodb.MongoClient.connect(url, options, function (err, client) {
-    if (err) throw err;
+  const client = new mongodb.MongoClient(url, options);
 
-    exports._db = client.db(dbName);
+  exports._db = client.db(dbName);
 
-    exports._db.addListener('error', function (e) {
-      console.log('[db] MongoDB model async error: ', e);
-    });
-
-    console.log('[db] Successfully connected to ' + url);
-    readyCallback.call(module.exports, null, exports._db);
-  });
+  console.log(`[db] Successfully connected to ${publicURL}`);
+  readyCallback.call(module.exports, null, exports._db);
+  return module.exports;
 };

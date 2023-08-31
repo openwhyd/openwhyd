@@ -3,17 +3,17 @@
  * @author adrienjoly, whyd
  **/
 
-var templateLoader = require('../../templates/templateLoader.js');
+const templateLoader = require('../../templates/templateLoader.js');
 
-var notifTemplates = require('../../templates/notif.js');
+const notifTemplates = require('../../templates/notif.js');
 
 exports.controller = function (request, reqParams = {}, response) {
   request.logToConsole('emailTemplate.controller', reqParams);
 
-  var user = request.checkAdmin(response);
+  const user = request.checkAdmin(response);
   if (false == user) return;
 
-  var templateFile = reqParams.file;
+  const templateFile = reqParams.file;
   try {
     if (!templateFile)
       notifTemplates.generateRegWelcomeAsync(
@@ -21,7 +21,7 @@ exports.controller = function (request, reqParams = {}, response) {
         { name: 'coco', id: '7' },
         function (email) {
           response.renderHTML(email.bodyHtml);
-        }
+        },
       );
     else
       templateLoader.loadTemplate(
@@ -29,10 +29,10 @@ exports.controller = function (request, reqParams = {}, response) {
         function (templateHtml) {
           reqParams.urlPrefix = ''; //"http://proto.whyd.com";
           reqParams.userName = user.name;
-          var html = templateHtml.render(reqParams);
+          const html = templateHtml.render(reqParams);
           console.log('\n' + html /*.replace(/\n/g, " ")*/ + '\n');
           response.legacyRender(html, null, { 'content-type': 'text/html' });
-        }
+        },
       );
   } catch (e) {
     response.legacyRender(e);

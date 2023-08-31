@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.49.2",
+  "version": "1.55.51",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -11,45 +11,47 @@
   },
   "scripts": {
     "build": "scripts/transpile-bookmarklet.sh",
-    "semantic-release": "semantic-release",
-    "postinstall": "npm run -s donate; cp node_modules/playemjs/dist/playem-*.js public/js/",
-    "donate": "echo \"\n   *** Thanks for downloading Openwhyd! ***\nPlease consider donating to our open collective\n\n => https://opencollective.com/openwhyd/donate\n\"",
+    "postinstall": "cp node_modules/playemjs/dist/playem-*.js public/js/",
     "start": "node app.js --fakeEmail --digestInterval -1 $@",
-    "start:coverage": "npx nyc --silent node app.js --fakeEmail --digestInterval -1 $@",
-    "start:coverage:no-clean": "npx nyc --silent --no-clean node app.js $@",
-    "start:localdb": "node app.js $@ --mongoDbDatabase openwhyd_test --mongoDbHost localhost --mongoDbPort 27117",
+    "start:localdb": ". ./env-vars-testing.sh && npm start -- $@",
+    "start:coverage": "npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts.start') $@",
+    "start:coverage:no-clean": "npx --yes nyc --silent --no-clean $(node -p 'require(`./package.json`).scripts.start') $@",
+    "stop": "npx --yes kill-port --port 8080 >/dev/null",
     "test-reset": "node test/reset-test-db.js",
-    "test:functional": "npx mocha test/functional/*.js --exit",
-    "test:integration": "npx mocha test/integration/*.js --serial --exit",
-    "test:integration:legacy-post": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/legacy.post.api.tests.js $@",
-    "test:integration:legacy-post:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:integration:legacy-post -- --serial --timeout 10000 && npx nyc report --reporter=lcov && npx nyc report | grep post",
-    "test:integration:post": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/integration/*post.api.tests.js test/integration/playlist.api.tests.js $@",
-    "test:integration:post:coverage": "rm -rf .nyx_output coverage && COVERAGE=true npm run test:integration:post -- --serial --timeout 10000 && npx nyc report --reporter=lcov && npx nyc report | grep post",
-    "test:integration:mongodb": "WITHOUT_CONSOLE_LOG=true npx mocha test/integration/mongodb/*tests.js --no-deprecation --serial --exit ",
-    "test:unit": "npx mocha test/unit/*.js --exit",
-    "test-approval": "npx kill-port --port 8080 >/dev/null; DONT_KILL=1 START_WITH_ENV_FILE='./env-vars-testing.conf' ava test/approval.tests.js $@",
-    "test-approval-docker": "PORT=8080 DONT_KILL=1 WHYD_GENUINE_SIGNUP_SECRET='' ava test/approval.tests.js $@",
-    "test-approval-docker-update": "npm run test-approval-docker -- --update-snapshots",
-    "test-approval-hot-tracks": "npx kill-port --port 8080 >/dev/null; START_WITH_ENV_FILE='./env-vars-testing.conf' npx jest --runInBand test/approval-hot-tracks.jest.test.js $@",
-    "test:approval": "START_WITH_ENV_FILE='./env-vars-testing.conf' mocha test/approval/approval.tests.js $@",
-    "test:approval:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:approval -- --serial --timeout 10000 $@ && npx nyc report --reporter=lcov && npx nyc report | grep post",
-    "test:post:coverage": "rm -rf .nyc_output coverage && COVERAGE=true npm run test:unit -- --serial && COVERAGE=true npm run test:functional -- --serial && COVERAGE=true npm run test:approval -- --serial --timeout 10000 && COVERAGE=true npm run test:integration:post -- --serial --timeout 10000 && npx nyc report --reporter=lcov && npx nyc report | grep post",
-    "test:cypress:dev": "node_modules/.bin/cypress open",
-    "test:cypress": "node_modules/.bin/cypress run",
-    "test": ". ./env-vars-testing.sh && npm run test:unit && npm run test:integration && npm run test:cypress",
-    "test:coverage": "npx nyc report --reporter=text-summary  --reporter=lcov",
-    "docker:seed": "docker-compose exec web npm run test-reset && docker-compose restart web && ./scripts/wait-for-http-server.sh 8080",
-    "docker:run": "npm run docker:seed && docker-compose exec web npm run $@",
-    "docker:test:cypress:dev": ". ./.env-docker && npm run test:cypress:dev",
-    "docker:test:cypress": ". ./.env-docker && npm run test:cypress",
-    "docker:test": "npm run docker:run test:unit && npm run docker:run test:integration && npm run docker:test:cypress",
-    "docker:test-approval": "DONT_KILL=1 PORT=8080 ava test/approval.tests.js $@",
-    "docker:test-approval-hot-tracks": "DONT_KILL=1 PORT=8080 npx jest --runInBand test/approval-hot-tracks.jest.test.js $@",
-    "docker:test:approval": "DONT_KILL=1 PORT=8080 mocha test/approval/approval.tests.js $@",
-    "lint:typescript": "npx tsc --noEmit --moduleResolution node --skipLibCheck",
-    "lint:format": "prettier . --write",
+    "test": "make test",
+    "test:functional": "npx --yes mocha test/functional/*.js --exit",
+    "test:functional:coverage": "npm run coverage:clear && npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts[`test:functional`]') $@",
+    "test:integration": "npx --yes mocha test/integration/*.js --serial --exit",
+    "test:integration:localdb": "MONGODB_HOST=localhost MONGODB_PORT=27117 npm run test:integration -- $@",
+    "test:integration:coverage": "npx --yes nyc --silent --no-clean npm run test:integration:localdb -- $@",
+    "test:api": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:api:raw -- $@",
+    "test:api:raw": "npx --yes mocha test/api/*.tests.js",
+    "test:api:coverage": "npm run coverage:clear && COVERAGE=true npm run test:api -- --timeout 10000 && npm run coverage:report | grep api",
+    "test:unit": "npx --yes mocha test/unit/*.js --exit",
+    "test:unit:coverage": "npm run coverage:clear && npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts[`test:unit`]') $@",
+    "test:approval:routes": "ava test/approval/routes/routes.approval.tests.js $@",
+    "test:approval:routes:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:routes -- $@",
+    "test:approval:routes:start:update": "npm run test:approval:routes:start -- --update-snapshots",
+    "test:approval:hot-tracks:raw": "npx --yes jest --runInBand test/approval/hot-tracks/hot-tracks.approval.test.js $@",
+    "test:approval:hot-tracks": "PORT=8080 npm run test:approval:hot-tracks:raw -- $@",
+    "test:approval:hot-tracks:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:hot-tracks:raw -- $@",
+    "test:approval:hot-tracks:start:approve": "npm run test:approval:hot-tracks:start -- --updateSnapshot",
+    "test:approval:posting": "mocha test/approval/posting/posting.approval.tests.js $@",
+    "test:approval:posting:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:posting -- $@",
+    "test:approval:posting:coverage": "npm run coverage:clear && COVERAGE=true npm run test:approval:posting:start -- --serial --timeout 10000 $@ && npm run coverage:report | grep post",
+    "test:cypress:dev": "node_modules/.bin/cypress open --e2e --browser electron",
+    "test:cypress": "node_modules/.bin/cypress run --browser electron",
+    "test:3rd-party": "jest test/3rd-party/*.test.js",
+    "coverage:clear": "rm -rf .nyc_output coverage",
+    "coverage:report": "npx --yes nyc report --reporter=text --reporter=lcov # stores the coverage report in coverage/lcov.info",
+    "coverage:summary": "npx --yes nyc report --reporter=text-summary --reporter=lcov # stores the coverage report in coverage/lcov.info",
+    "lint:full": "make lint",
+    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "lint": "eslint ."
+    "lint:errors": "eslint . --quiet",
+    "lint:format": "prettier . --write",
+    "lint:typescript": "npx --yes tsc --noEmit --moduleResolution node --skipLibCheck",
+    "lint:jsdoc-typing": "npx --yes tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`"
   },
   "directories": {
     "src": "./app",
@@ -58,111 +60,44 @@
     "test": "./test"
   },
   "dependencies": {
-    "algoliasearch": "^3.35.1",
-    "apn": "1.5.2",
-    "argon2": "^0.30.2",
+    "algoliasearch": "4.19.1",
+    "argon2": "^0.31.0",
     "async": "*",
     "colors": "*",
     "connect-mongo": "^3.2.0",
-    "dd-trace": "^3.9.3",
-    "emailjs": "3.4.0",
-    "ent": "2.2.0",
-    "express": "^4.17.3",
-    "express-session": "^1.17.1",
-    "formidable": "^1.2.2",
+    "dd-trace": "^4.12.0",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "formidable": "^2.1.1",
     "hogan.js": "3.0.2",
     "htmlparser": "*",
-    "iconv": ">=3.0.0",
-    "mongodb": "3.6.3",
+    "mongodb": "4.17.0",
     "playemjs": "1.2.2",
     "q-set": "^2.0.8",
     "request": "2.88.2",
-    "wait-on": "^6.0.0"
+    "wait-on": "^7.0.1"
   },
   "devDependencies": {
-    "@applitools/eyes-cypress": "^3.28.0",
-    "@cypress/code-coverage": "^3.10.0",
-    "@types/node": "^18.11.18",
-    "@typescript-eslint/eslint-plugin": "^5.1.0",
-    "@typescript-eslint/parser": "^5.1.0",
-    "approvals": "^6.0.0",
-    "ava": "^5.1.0",
-    "chai": "^4.3.6",
-    "chai-exclude": "^2.1.0",
-    "cypress": "^12.2.0",
+    "@applitools/eyes-cypress": "^3.37.0",
+    "@cypress/code-coverage": "^3.11.0",
+    "@types/node": "^20.5.1",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
+    "approvals": "^6.2.1",
+    "ava": "^5.3.1",
+    "cypress": "^12.17.4",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
-    "eslint": "^8.1.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "mocha": "9.2.2",
+    "eslint": "^8.47.0",
+    "eslint-config-async": "^2.0.2",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-deprecation": "^1.5.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "mocha": "10.2.0",
     "nyc": "^15.1.0",
-    "prettier": "^2.4.1",
-    "typescript": "^4.4.4"
-  },
-  "resolutions": {
-    "istanbul-lib-coverage": "^3.2.0"
-  },
-  "release": {
-    "branch": "main",
-    "branches": [
-      "main"
-    ],
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "angular",
-          "releaseRules": [
-            {
-              "type": "docs",
-              "scope": "README",
-              "release": "patch"
-            },
-            {
-              "type": "refactor",
-              "release": "patch"
-            },
-            {
-              "type": "style",
-              "release": "patch"
-            }
-          ],
-          "parserOpts": {
-            "noteKeywords": [
-              "BREAKING CHANGE",
-              "BREAKING CHANGES"
-            ]
-          }
-        }
-      ],
-      "@semantic-release/changelog",
-      "@semantic-release/git",
-      "@semantic-release/npm",
-      "@semantic-release/github"
-    ],
-    "verifyConditions": [
-      "@semantic-release/github"
-    ],
-    "prepare": [
-      {
-        "path": "@semantic-release/changelog",
-        "changelogFile": "CHANGELOG.md"
-      },
-      "@semantic-release/npm",
-      {
-        "path": "@semantic-release/git",
-        "assets": [
-          "package.json",
-          "package-lock.json",
-          "CHANGELOG.md"
-        ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ],
-    "publish": "@semantic-release/github",
-    "success": [],
-    "fail": [],
-    "npmPublish": false
+    "prettier": "^3.0.2",
+    "ts-morph": "^19.0.0",
+    "typescript": "^5.1.6"
   }
 }

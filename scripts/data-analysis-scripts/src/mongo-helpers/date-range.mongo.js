@@ -1,6 +1,9 @@
+/* globals ObjectId */
+
 try {
   ObjectId;
 } catch (err) {
+  // eslint-disable-next-line no-global-assign
   ObjectId = {
     fromDate: (date) => date, // will be handled by mapReduceFromJsonLines()
   };

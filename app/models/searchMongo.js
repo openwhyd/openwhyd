@@ -1,4 +1,4 @@
-var util = require('util');
+const util = require('util');
 
 // search functions -- not a controller
 
@@ -12,18 +12,18 @@ function noaccent(chaine) {
 }
 
 // must be executed on a name search query before submitting to mongodb
-var normalizeNameSearchQuery = function (queryString) {
-  var q = noaccent(queryString.trim().toLowerCase());
-  var words = q.split(/\W+/);
-  var result = [];
+const normalizeNameSearchQuery = function (queryString) {
+  const q = noaccent(queryString.trim().toLowerCase());
+  const words = q.split(/\W+/);
+  const result = [];
 
   // remove empty items
-  for (let i in words) if (words[i].length > 0) result.push(words[i]);
+  for (const i in words) if (words[i].length > 0) result.push(words[i]);
 
   return result;
 };
 
-var timeout;
+let timeout;
 
 exports.topicNameSearch = function (
   q,
@@ -31,7 +31,7 @@ exports.topicNameSearch = function (
   mongodbModel,
   timeoutDuration,
   maxCycles,
-  limit
+  limit,
 ) {
   function mongodb(collection, cb) {
     cb(null, mongodbModel.collections[collection]);
@@ -40,17 +40,17 @@ exports.topicNameSearch = function (
   if (!timeoutDuration) timeoutDuration = 1000; //msecs
   if (!maxCycles) maxCycles = 2; // number of times the timeout can be extended for gettings results
   if (!limit) limit = 5;
-  var limitExact = 3,
+  const limitExact = 3,
     limitUsers = 3;
 
   if (timeout) clearTimeout(timeout);
 
-  var userResults = [];
+  const userResults = [];
 
   mongodb('user', function (err, usercol) {
-    var query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
+    const query = { name: new RegExp(q, 'i') /*{"$regex":q}*/ }; // case insensitive search
     console.log('user search query: ' + util.inspect(query));
-    usercol.find(query, { limit: limitUsers }, function (err, cursor) {
+    usercol.find(query, { limit: limitUsers }).then(function (cursor) {
       cursor.forEach((err, item) => {
         if (!item) return;
         userResults.push({ _id: '/u/' + item.fbId, name: item.name });
@@ -60,26 +60,25 @@ exports.topicNameSearch = function (
             ' : ' +
             item.name +
             ', ' +
-            item.img
+            item.img,
         );
       });
 
       mongodb('topic', function (err, collection) {
-        var cycles = maxCycles;
-        var exactResults = [],
+        let cycles = maxCycles;
+        const exactResults = [],
           quickResults = [];
 
-        var words = normalizeNameSearchQuery(q);
+        const words = normalizeNameSearchQuery(q);
 
-        var query = { n: { $all: words } };
+        let query = { n: { $all: words } };
         console.log('search exact query: ' + util.inspect(query));
-        collection.find(
-          query,
-          { sort: [['s', 'desc']], limit: limitExact },
-          function (err, cursor) {
-            var remaining = limitExact;
+        collection
+          .find(query, { sort: [['s', 'desc']], limit: limitExact })
+          .then(function (cursor) {
+            let remaining = limitExact;
 
-            var handleNextResult = function (err, item) {
+            const handleNextResult = function (err, item) {
               //console.log("handleNextResult()");
               if (item != null) {
                 console.log(
@@ -88,7 +87,7 @@ exports.topicNameSearch = function (
                     ') ' +
                     item._id +
                     ' : ' +
-                    item.name /* + ", " + item.t*/
+                    item.name /* + ", " + item.t*/,
                 );
                 exactResults.push(item);
                 --remaining;
@@ -97,18 +96,16 @@ exports.topicNameSearch = function (
             };
 
             cursor.next(handleNextResult); // start gathering results
-          }
-        );
+          });
 
         query = { n: words[0] /*{"$regex":q}*/ };
         console.log('search quick query: ' + util.inspect(query));
-        collection.find(
-          query,
-          { /*sort:[['$natural','asc']],*/ limit: limit },
-          function (err, cursor) {
-            var remaining = limit;
+        collection
+          .find(query, { limit /*sort: [['$natural', 'asc']]*/ })
+          .then(function (cursor) {
+            let remaining = limit;
 
-            var handleNextResult = function (err, item) {
+            const handleNextResult = function (err, item) {
               //console.log("handleNextResult()");
               if (item != null) {
                 console.log(
@@ -117,7 +114,7 @@ exports.topicNameSearch = function (
                     ') ' +
                     item._id +
                     ' : ' +
-                    item.name /* + ", " + item.t*/
+                    item.name /* + ", " + item.t*/,
                 );
                 quickResults.push(item);
                 --remaining;
@@ -126,18 +123,17 @@ exports.topicNameSearch = function (
             };
 
             cursor.next(handleNextResult); // start gathering results
-          }
-        );
+          });
 
-        var renderer = function () {
+        const renderer = function () {
           clearTimeout(timeout);
-          var results = exactResults;
+          let results = exactResults;
 
           // combine exact and quick results without duplicates
           if (exactResults.length > 0 && quickResults.length > 0)
-            for (let j in quickResults) {
-              var found = false;
-              for (let i in exactResults)
+            for (const j in quickResults) {
+              let found = false;
+              for (const i in exactResults)
                 if (exactResults[i]._id === quickResults[j]._id) {
                   //console.log("found dup " + exactResults[i].name);
                   found = true;

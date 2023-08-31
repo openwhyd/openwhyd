@@ -4,8 +4,8 @@
  * @author adrienjoly, whyd
  **/
 
-var sendgrid = require('./emailSendgrid.js');
-var fake = require('./emailFake.js');
+const sendgrid = require('./emailSendgrid.js');
+const fake = require('./emailFake.js');
 
 //console.log("EMAIL ADMINS ONLY");
 
@@ -15,14 +15,14 @@ exports.email = function (
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
-  var isAdmin =
+  const isAdmin =
     emailAddr.indexOf(process.env.WHYD_ADMIN_EMAIL.split('@')[0]) > -1;
 
   console.log('email address is admin? ', isAdmin);
 
-  var emailImpl = (isAdmin ? sendgrid : fake)['email'];
+  const emailImpl = (isAdmin ? sendgrid : fake)['email'];
 
   return emailImpl(
     emailAddr,
@@ -30,7 +30,7 @@ exports.email = function (
     textContent,
     htmlContent,
     userName,
-    callback
+    callback,
   );
 };
 // when config.emailModule is set, this method will be overidden (see at bottom)

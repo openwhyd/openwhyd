@@ -4,16 +4,18 @@
  * @author adrienjoly, whyd
  */
 
-var users = require('../models/user.js');
-var analytics = require('../models/analytics.js');
-var invitePage = require('../templates/invitePage.js');
-var inviteFormTemplate = require('../templates/inviteForm.js');
-var templateLoader = require('../templates/templateLoader.js');
-var makeSignupToken = require('../genuine.js').makeSignupToken;
+const users = require('../models/user.js');
+const invitePage = require('../templates/invitePage.js');
+const inviteFormTemplate = require('../templates/inviteForm.js');
+const templateLoader = require('../templates/templateLoader.js');
+const makeSignupToken = require('../genuine.js').makeSignupToken;
 
 // genuine signup V1
-var EXPECTED_RTK = '7', // rTk = request token (necessary to fetch sTk)
-  INVALID_STK = makeSignupToken({ connection: { remoteAddress: '' } }); // fake sTk, to be returned when requested using wrong rTk
+const { genuineSignupSecret } = process.appParams;
+const EXPECTED_RTK = '7'; // rTk = request token (necessary to fetch sTk)
+const INVALID_STK = makeSignupToken(genuineSignupSecret, {
+  connection: { remoteAddress: '' },
+}); // fake sTk, to be returned when requested using wrong rTk
 // TODO: replace constants by dynamic values, according to https://quip.com/YmOJAl8OIOaM
 
 // only used to generate the signup token indirectly from the web ui
@@ -33,7 +35,7 @@ exports.checkInviteCode = function (request, reqParams, response, okCallback) {
           console.log(
             'found user from inviteCode (fake invite):',
             user._id,
-            user.name
+            user.name,
           );
           if (okCallback)
             okCallback({
@@ -68,15 +70,15 @@ exports.renderRegisterPage = function (request, reqParams, response) {
 
   function render(user = {}) {
     //invitePage.refreshTemplates(function() {
-    var sender = request.getUserFromId(user.iBy);
-    var registrationPage = invitePage.renderInvitePage(
+    const sender = request.getUserFromId(user.iBy);
+    const registrationPage = invitePage.renderInvitePage(
       sender,
       request.getUser(),
       user._id,
       user.pId,
       reqParams.email || user.email || '',
       user.fbRequestIds,
-      reqParams.redirect
+      reqParams.redirect,
     );
     response.legacyRender(registrationPage, null, {
       'content-type': 'text/html',
@@ -91,9 +93,9 @@ exports.renderRegisterPage = function (request, reqParams, response) {
     templateLoader.loadTemplate(
       'app/templates/popinSignup.html',
       function (template) {
-        var page = template.render(reqParams);
+        const page = template.render(reqParams);
         response.renderHTML(page);
-      }
+      },
     );
   } else {
     //console.log("inviteCode parameter is required");
@@ -102,22 +104,20 @@ exports.renderRegisterPage = function (request, reqParams, response) {
   }
 };
 
-var renderInviteForm = function (request, reqParams, response) {
+const renderInviteForm = function (request, reqParams, response) {
   request.logToConsole('invite.renderInviteForm', reqParams);
   if (!reqParams) reqParams = {};
 
   reqParams.loggedUser = request.checkLogin(response); //getUser();
   if (!reqParams.loggedUser) return;
 
-  var html = inviteFormTemplate.renderInviteFormPage(reqParams);
+  const html = inviteFormTemplate.renderInviteFormPage(reqParams);
   response.legacyRender(html, null, { 'content-type': 'text/html' });
-
-  analytics.addVisit(reqParams.loggedUser, request.url /*"/u/"+uid*/);
 };
 
-var submitInvites = function (request, reqParams, response) {
+const submitInvites = function (request, reqParams, response) {
   console.log('POST params', reqParams);
-  var loggedUser = request.getUser();
+  const loggedUser = request.getUser();
   if (!loggedUser || !reqParams) response.badRequest();
   else if (reqParams.email && reqParams.email.join && reqParams.email.length) {
     // === invite by email
@@ -176,9 +176,9 @@ var submitInvites = function (request, reqParams, response) {
         response.legacyRender(
           !invite
             ? null
-            : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id }
+            : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id },
         );
-      }
+      },
     );
   else response.badRequest();
 };
@@ -200,10 +200,10 @@ exports.controller = function (request, reqParams, response, error) {
   else if (reqParams.rTk) {
     // GET /api/signup/rTk/{rTk}
     // check validity of request token => generate a signup token
-    var sTk = checkRequestToken(reqParams.rTk)
-      ? makeSignupToken(request)
+    const sTk = checkRequestToken(reqParams.rTk)
+      ? makeSignupToken(genuineSignupSecret, request)
       : INVALID_STK;
-    var js =
+    const js =
       '$(\'<input type="hidden" name="sTk" value="' +
       sTk +
       '" />\').appendTo("form");';

@@ -1,13 +1,13 @@
 // usage: run from http://localhost:8080/admin/test
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var querystring = require('querystring');
-var snip = require('../../../snip.js');
-var config = require('../../../models/config.js'); // {urlPrefix:"http://localhost:8000"};
+const querystring = require('querystring');
+const snip = require('../../../snip.js');
+const config = require('../../../models/config.js'); // {urlPrefix:"http://localhost:8000"};
 
 function makeResponseHandler(cb) {
   return function (err, res, responseData) {
-    var result = {
+    const result = {
       statusCode: responseData.statusCode,
     };
     if (err) result.error = err;
@@ -40,8 +40,8 @@ function makeRequest(cookie) {
 }
 
 exports.makeTests = function (p) {
-  var req = makeRequest(p.cookie);
-  var testVars = {};
+  const req = makeRequest(p.cookie);
+  const testVars = {};
   return [
     //["/me should redirect", "/me?format=json", {}, function(res, cb){ cb(res.statusCode == 307); }],
     //["/api/user provides user data", "/api/user?format=json", {}, function(res, cb){ cb(res.response.name == "Adrien Joly"); }],
@@ -54,7 +54,7 @@ exports.makeTests = function (p) {
           function (res) {
             testVars.pl = res.response;
             cb(testVars.pl.id > -1);
-          }
+          },
         );
       },
     ],
@@ -62,7 +62,7 @@ exports.makeTests = function (p) {
       'check that playlist exists',
       function (cb) {
         req('/api/user?format=json', {}, function (res) {
-          var lastPl = {};
+          let lastPl = {};
           try {
             lastPl = res.response.pl.shift();
           } catch (e) {
@@ -78,7 +78,7 @@ exports.makeTests = function (p) {
         req(
           '/api/playlist',
           { body: { action: 'delete', id: testVars.pl.id } },
-          () => cb(true)
+          () => cb(true),
         );
       },
     ],
@@ -86,7 +86,7 @@ exports.makeTests = function (p) {
       'check that playlist does not exists',
       function (cb) {
         req('/api/user?format=json', {}, function (res) {
-          var lastPl = {};
+          let lastPl = {};
           try {
             lastPl = res.response.pl.shift();
           } catch (e) {

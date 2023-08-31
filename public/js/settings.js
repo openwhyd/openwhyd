@@ -29,7 +29,7 @@ $(function () {
   }
 
   function submitFieldChange(data, $field, cb) {
-    var $btn = $field
+    const $btn = $field
       .closest('form')
       .find('input[type=submit]')
       .addClass('loading');
@@ -43,7 +43,7 @@ $(function () {
           .text(
             res.error && typeof res.error == 'string'
               ? res.error
-              : 'An unknown error occured, please try again'
+              : 'An unknown error occured, please try again',
           )
           .show();
       cb && cb(res);
@@ -52,8 +52,8 @@ $(function () {
 
   // == "account" tab ==
 
-  var $handle = $('input[name=handle]');
-  var $email = $('input[name=email]');
+  const $handle = $('input[name=handle]');
+  const $email = $('input[name=email]');
 
   $('input[data-checked=true]').each(function () {
     $(this).attr('checked', 'checked');
@@ -69,12 +69,12 @@ $(function () {
 
   $('#deleteAccount').click(function (e) {
     e.preventDefault();
-    var $html = $(
+    const $html = $(
       '<div>' +
         '<img src="/images/fun-y_u_no_use_whyd.jpg" style="float:left;margin:15px;">' +
         '<span style="line-height:30px;">Are you sure?</span><br>' +
         '<span style="font-weight:normal;">If you have a question or problem,<br>we\'re happy to help at contact@openwhyd.org.</span>' +
-        '</div><span class="redButton">Delete my account</span>'
+        '</div><span class="redButton">Delete my account</span>',
     );
     $html.last().click(function () {
       $html
@@ -91,13 +91,13 @@ $(function () {
     globals.openJqueryDialog(
       $html,
       'dlgDeletePost',
-      'Delete your openwhyd account'
+      'Delete your openwhyd account',
     );
   });
 
   function validateUsername() {
     $handle.parent().find('.msg').hide();
-    var val = $handle.val();
+    let val = $handle.val();
     val = val.toLowerCase();
     try {
       val = val.trim();
@@ -106,7 +106,7 @@ $(function () {
     }
     $handle.val(val);
     if (val == '') return 0;
-    var valid = /^[a-z0-9]+[a-z0-9_\-.]+[a-z0-9]+$/i.test(val);
+    const valid = /^[a-z0-9]+[a-z0-9_\-.]+[a-z0-9]+$/i.test(val);
     if (valid) $('#url > span').text(val);
     return valid ? 1 : -1;
   }
@@ -115,7 +115,7 @@ $(function () {
 
   $handle.bind('keydown keypress change', function () {
     setTimeout(function () {
-      var valid = validateUsername();
+      /*var valid =*/ validateUsername();
       $handle
         .parent()
         .toggleClass('ok', false) //valid == 1)
@@ -124,10 +124,10 @@ $(function () {
   });
 
   function submitHandle(cb) {
-    var handle = $handle.val();
+    const handle = $handle.val();
     if (handle)
       submitFieldChange({ handle: handle }, $handle.parent(), function (res) {
-        var ok = handle == res.handle;
+        const ok = handle == res.handle;
         $handle.parent().toggleClass(ok ? 'ok' : 'error');
         if (res.handle) $handle.val(res.handle);
         cb && cb(ok);
@@ -136,9 +136,9 @@ $(function () {
   }
 
   function submitEmail(cb) {
-    var email = $email.val();
+    const email = $email.val();
     submitFieldChange({ email: email }, $email.parent(), function (res) {
-      var ok = email == res.email;
+      const ok = email == res.email;
       $email.parent().toggleClass(ok ? 'ok' : 'error');
       if (res.email) $email.val(res.email);
       cb && cb(ok);
@@ -146,14 +146,14 @@ $(function () {
   }
 
   function submitPref(cb) {
-    var pref = {};
-    var $pref = $('#pref');
+    const pref = {};
+    const $pref = $('#pref');
     $pref.find('input').each(function () {
       pref[$(this).attr('name')] = $(this).attr('checked') ? 1 : 0;
     });
     console.log('pref', pref);
     submitFieldChange({ pref: pref }, $pref, function (res) {
-      var ok = res && res.pref;
+      const ok = res && res.pref;
       $pref.toggleClass(ok ? 'ok' : 'error');
       if (res && res.pref && globals.user) globals.user.pref = res.pref;
       cb && cb(ok);
@@ -164,23 +164,23 @@ $(function () {
     event.preventDefault();
     backtonormal();
     validateUsername();
-    var accountSteps = [submitHandle, submitEmail, submitPref];
-    var allOk = true;
+    const accountSteps = [submitHandle, submitEmail, submitPref];
+    let allOk = true;
     (function next(ok) {
       allOk = allOk && ok;
-      var step = accountSteps.shift();
+      const step = accountSteps.shift();
       if (step) step(next);
       else
         globals.showMessage(
           allOk
             ? 'Your changes were successfully applied'
             : 'Please fix your settings and try again',
-          !allOk
+          !allOk,
         );
     })(true);
   });
 
-  var $fbConn = $('#fbConn').addClass('loading');
+  const $fbConn = $('#fbConn').addClass('loading');
   globals.whenFbReady(function () {
     function toggleFbPrefs(connected) {
       $fbConn
@@ -205,9 +205,9 @@ $(function () {
 
   // lastfm
   (function () {
-    var $lastFmConn = $('#lastFmConn');
-    var $lastFmPref = $('#lastFmPref');
-    var href = window.location.href;
+    const $lastFmConn = $('#lastFmConn');
+    const $lastFmPref = $('#lastFmPref');
+    let href = window.location.href;
     href = href.substr(0, href.indexOf('/', 10)) + '/api/lastFm';
     href = $lastFmConn.attr('href') + '&cb=' + encodeURIComponent(href);
     $lastFmConn.attr('href', href);
@@ -235,10 +235,10 @@ $(function () {
           e.preventDefault();
           globals.showMessage('Still loading, please wait...');
         });
-      var popup = window.open(
+      const popup = window.open(
         href,
         'whyd_lastFmConn',
-        'height=600,width=800,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no'
+        'height=600,width=800,location=no,menubar=no,resizable=no,scrollbars=no,toolbar=no',
       );
       popup.focus();
       globals.lastFmCallback = function (session) {
@@ -257,7 +257,7 @@ $(function () {
     $lastFmConn.click(lastFmConn);
 
     toggleLastFmConnection(
-      globals.user.lastFm && globals.user.lastFm.name && globals.user.lastFm.sk
+      globals.user.lastFm && globals.user.lastFm.name && globals.user.lastFm.sk,
     );
   })();
 
@@ -265,13 +265,13 @@ $(function () {
   (function () {
     const $deezerConBtn = $('#deezerProfile');
 
-    var SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js',
-      IS_LOGGED = false,
+    const SDK_URL = 'https://cdns-files.deezer.com/js/min/dz.js';
+    let IS_LOGGED = false,
       IS_READY = false;
 
     // setup DOM unless existing
     if (!document.getElementById('dz-root')) {
-      var dz = document.createElement('div');
+      const dz = document.createElement('div');
       dz.id = 'dz-root';
       document.getElementsByTagName('body')[0].appendChild(dz);
     }
@@ -298,7 +298,7 @@ $(function () {
       if (IS_READY == false) {
         globals.showMessage(
           'Something went wrong.. Please try again, reload your page.',
-          IS_LOGGED
+          IS_LOGGED,
         );
       } else {
         globals.DZ.init({
@@ -311,7 +311,7 @@ $(function () {
             IS_LOGGED = true;
             globals.showMessage(
               'You are already logged into your Deezer account.',
-              !IS_LOGGED
+              !IS_LOGGED,
             );
           }
         });
@@ -326,16 +326,16 @@ $(function () {
               IS_LOGGED = true;
               globals.showMessage(
                 'Login successful. Your Deezer tracks will be full length from now on!',
-                !IS_LOGGED
+                !IS_LOGGED,
               );
             } else {
               globals.showMessage(
                 'We could not establish a connection to a Deezer Account, please try again.',
-                IS_LOGGED
+                IS_LOGGED,
               );
             }
           },
-          { perms: 'email' }
+          { perms: 'email' },
         );
       }
     }
@@ -346,9 +346,9 @@ $(function () {
   // == "password" tab ==
 
   //var pwdRegex = /^[a-zA-Z0-9!@#$%^&*]{4,32}$/; // http://stackoverflow.com/questions/5822413/password-validation-javascript
-  var $old = $('input[name=old]');
-  var $new1 = $('input[name=new1]');
-  var $new2 = $('input[name=new2]');
+  const $old = $('input[name=old]');
+  const $new1 = $('input[name=new1]');
+  const $new2 = $('input[name=new2]');
 
   var $pwdForm = $('#tabPassword form').submit(function (e) {
     e.preventDefault();
@@ -389,9 +389,9 @@ $(function () {
           $pwdForm.find('.fld').toggleClass(!res.error ? 'ok' : 'error');
           globals.showMessage(
             res.error || 'Your password was successfully set',
-            !!res.error
+            !!res.error,
           );
-        }
+        },
       );
       /*
 			$(this).closest("input[type=submit]").addClass("loading");
@@ -426,7 +426,7 @@ $(function () {
   // == "notifications" tab ==
 
   $('#tabNotif input[data-checked]').each(function () {
-    var freq = $(this).attr('data-checked');
+    const freq = $(this).attr('data-checked');
     if (freq != '-1') {
       $(this).attr('checked', 'checked');
       $('input[name=emFreq][value=' + freq + ']').attr('checked', 'checked');
@@ -442,14 +442,14 @@ $(function () {
   $('#tabNotif form').submit(function (event) {
     event.preventDefault();
     backtonormal();
-    var pref = {};
-    var $pref = $('#tabNotif');
+    const pref = {};
+    const $pref = $('#tabNotif');
     /*
 		$pref.find("input:radio:checked").each(function() {
 			pref[this.name] = this.value;
 		});
 		*/
-    var freq = $pref.find('input:radio:checked').val();
+    const freq = $pref.find('input:radio:checked').val();
 
     $pref.find('input').each(function () {
       pref[$(this).attr('name')] = $(this).attr('checked') ? freq : -1;
@@ -457,14 +457,14 @@ $(function () {
     console.log('pref', pref);
 
     submitFieldChange({ pref: pref }, $pref, function (res) {
-      var ok = res && res.pref;
+      const ok = res && res.pref;
       $pref.toggleClass(ok ? 'ok' : 'error');
       if (ok && globals.user) globals.user.pref = res.pref;
       globals.showMessage(
         ok
           ? 'Your changes were successfully applied'
           : 'Oops, something went wrong! Please try again',
-        !ok
+        !ok,
       );
     });
   });

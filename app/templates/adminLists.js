@@ -3,25 +3,25 @@
  * @author adrienjoly, whyd
  **/
 
-var mainTemplate = require('../templates/mainTemplate.js');
-var uiSnippets = require('../templates/uiSnippets.js');
+const mainTemplate = require('../templates/mainTemplate.js');
+const uiSnippets = require('../templates/uiSnippets.js');
 
 function cleanInfoArray(_info) {
-  var result = [];
-  var info = _info && _info.join ? _info : [_info];
-  for (let i in info)
+  const result = [];
+  const info = _info && _info.join ? _info : [_info];
+  for (const i in info)
     if (info[i]) result.push(/*uiSnippets.htmlEntities*/ info[i]);
   return result;
 }
 
 exports.AdminLists = function () {
-  var lists = [];
+  const lists = [];
 
-  var renderList = function (items, title, actionNames, formParams) {
-    var html = [];
-    for (let i in items) {
-      var u = items[i];
-      var info = cleanInfoArray(u.info);
+  const renderList = function (items, title, actionNames, formParams) {
+    let html = [];
+    for (const i in items) {
+      const u = items[i];
+      const info = cleanInfoArray(u.info);
       html.push(
         '<p>' +
           (u.img
@@ -45,14 +45,14 @@ exports.AdminLists = function () {
               '</small>'
             : '') +
           '</div>' +
-          '</p>'
+          '</p>',
       );
     }
     html = html.join('\n');
 
     if (actionNames) {
       if (formParams)
-        for (let i in formParams)
+        for (const i in formParams)
           if (formParams[i])
             // prevent null values
             html +=
@@ -61,8 +61,8 @@ exports.AdminLists = function () {
               '" value="' +
               formParams[i] +
               '" />';
-      var buttons = '';
-      for (let i in actionNames)
+      let buttons = '';
+      for (const i in actionNames)
         buttons +=
           '<input type="submit" name="action" value="' +
           actionNames[i] +
@@ -82,11 +82,11 @@ exports.AdminLists = function () {
     );
   };
 
-  var renderWideList = function (items, title, actionNames, formParams) {
-    var html = [];
-    for (let i in items) {
-      var u = items[i];
-      var info = cleanInfoArray(u.info);
+  const renderWideList = function (items, title, actionNames, formParams) {
+    let html = [];
+    for (const i in items) {
+      const u = items[i];
+      const info = cleanInfoArray(u.info);
       html.push(
         '<li>' +
           (u.img
@@ -110,14 +110,14 @@ exports.AdminLists = function () {
               '</small>'
             : '') +
           '</div>' +
-          '</li>'
+          '</li>',
       );
     }
     html = '<ul>' + html.join('\n') + '</ul>';
 
     if (actionNames) {
       if (formParams)
-        for (let i in formParams)
+        for (const i in formParams)
           if (formParams[i])
             // prevent null values
             html +=
@@ -126,8 +126,8 @@ exports.AdminLists = function () {
               '" value="' +
               formParams[i] +
               '" />';
-      var buttons = '';
-      for (let i in actionNames)
+      let buttons = '';
+      for (const i in actionNames)
         buttons +=
           '<input type="submit" name="action" value="' +
           actionNames[i] +
@@ -162,14 +162,14 @@ exports.AdminLists = function () {
 
     addScript: function (html) {
       lists.push(
-        ['<script>', '/*<![CDATA[*/', html, '/*]]>*/', '</script>'].join('\n')
+        ['<script>', '/*<![CDATA[*/', html, '/*]]>*/', '</script>'].join('\n'),
       );
     },
     renderPage: function (params = {}) {
       if (params.css) params.css.unshift('admin.css');
       else params.css = ['admin.css'];
 
-      var out = [
+      const out = [
         '<h1>' + params.title + '</h1>',
         '► <a href="/">home</a>',
         '► <a href="?' + new Date().getTime() + '">REFRESH</a>',

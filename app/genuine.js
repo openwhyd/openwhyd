@@ -1,17 +1,16 @@
 /**
  * genuine signup token compiler and checker
- * tools to make sure that accounts can be created only from official openwhyd clients (iOS and web ui)
+ * tools to make sure that accounts can be created only from official openwhyd clients
  * @author adrienjoly, whyd
  */
 
-var crypto = require('crypto');
+const crypto = require('crypto');
 
-var GENUINE_SIGNUP_SECRET = process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(), // secret key (only known by secure openwhyd clients), used to hash sTk
-  TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
+const TOKEN_EXPIRY = 1000 * 60 * 10; // 10 minutes
 
 // hack caused by proxy on openwhyd server
 function realIP(request) {
-  var realIP = (request.headers || {})['x-real-ip'];
+  const realIP = (request.headers || {})['x-real-ip'];
   return realIP ? { connection: { remoteAddress: realIP } } : request;
 }
 
@@ -28,7 +27,7 @@ function hashRequest(req, date) {
     .createHash('md5')
     .update(
       /*crypto.randomBytes(4).toString('hex') +*/ req.connection.remoteAddress +
-        date
+        date,
     ) // remoteAddress: '74.125.127.100' or '2001:4860:a005::68'
     .digest('base64')
     .replace(/==$/, '');
@@ -48,53 +47,35 @@ function parseSignupToken(sTk) {
 //var hexDate = date.toString(16) => "14a7cabae02" // 11 hexadecimal chars
 //parseInt(hexDate, 16)
 
-// used directly by iOS app, indirectly by web ui (through request token validation)
-exports.makeSignupToken = function (request, date) {
+// used indirectly by web ui (through request token validation)
+/** @param {string} genuineSignupSecret - secret key (only known by secure openwhyd clients), used to hash sTk */
+exports.makeSignupToken = function (genuineSignupSecret, request, date) {
   request = realIP(request);
-  //console.log("[genuine.makeSignupToken] request IP:", request.connection.remoteAddress);
   date = date ? new Date(date).getTime() : Date.now();
-  var requestHash = hashRequest(request, date);
-  var hash = date.toString(16) + requestHash;
-
-  //console.log('date =>',  date.toString(16));
-  //console.log('')
-  var sign = signature(hash, GENUINE_SIGNUP_SECRET);
-  /*
-	console.log({
-		hash: hash,
-		date: new Date(date),
-		requestHash: requestHash,
-		signature: sign,
-	});
-	*/
+  const requestHash = hashRequest(request, date);
+  const hash = date.toString(16) + requestHash;
+  const sign = signature(hash, genuineSignupSecret);
   return hash + sign;
 };
 
-exports.validateSignupToken = function (sTk, request) {
+/** @param {string} genuineSignupSecret - secret key (only known by secure openwhyd clients), used to hash sTk */
+exports.validateSignupToken = function (genuineSignupSecret, sTk, request) {
   request = realIP(request);
-  // console.log(
-  //   '[genuine.validateSignupToken] request IP:',
-  //   request.connection.remoteAddress
-  // );
-  var token = parseSignupToken(sTk);
+  const token = parseSignupToken(sTk);
   return {
-    authentic: token.signature === signature(token.hash, GENUINE_SIGNUP_SECRET),
+    authentic: token.signature === signature(token.hash, genuineSignupSecret),
     notExpired: Date.now() - token.date < TOKEN_EXPIRY,
     sameAddr: token.requestHash === hashRequest(request, token.date.getTime()),
   };
   // TODO: check request's referer
 };
 
-// used by iOS app and backend of web ui
-exports.checkSignupToken = function (sTk, request) {
+// used by backend of web ui
+/** @param {string} genuineSignupSecret - secret key (only known by secure openwhyd clients), used to hash sTk */
+exports.checkSignupToken = function (genuineSignupSecret, sTk, request) {
   request = realIP(request);
-
-  // console.log(
-  //   '[genuine.checkSignupToken] request IP:',
-  //   request.connection.remoteAddress
-  // );
-  var valid = exports.validateSignupToken(sTk, request);
-  for (let i in valid) {
+  const valid = exports.validateSignupToken(genuineSignupSecret, sTk, request);
+  for (const i in valid) {
     // valid contains the following keys: authentic, notExpired, sameAddr
     if (!valid[i]) {
       return false;

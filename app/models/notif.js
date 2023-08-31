@@ -1,19 +1,19 @@
+// @ts-check
+
 /**
  * notif model
  * stores and retrieves user notifications, and send emails when required
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var mongodb = require('./mongodb.js');
-var config = require('../models/config.js');
-var userModel = require('../models/user.js');
-var notifEmails = require('../models/notifEmails.js');
-var applenotif = require('../models/applenotif.js');
+const snip = require('../snip.js');
+const mongodb = require('./mongodb.js');
+const config = require('../models/config.js');
+const notifEmails = require('../models/notifEmails.js');
 
 exports.userNotifsCache = {}; // uId -> { t, notifs: [pId, topic, t, lastAuthor, n] }
 
-var db = mongodb.collections;
+const db = mongodb.collections;
 
 /**
   NOTIF COLLECTION MODEL
@@ -45,68 +45,20 @@ var db = mongodb.collections;
 
 // private functions
 
-function pushToMobileTokens(toUser, text, payload) {
-  payload = payload || {};
-  exports.getUserNotifs(toUser.id || '' + toUser._id, function (notifs) {
-    payload.badge = countUserNotifs(notifs);
-    (toUser.apTok || []).map(function (device) {
-      console.log(
-        '[notif] sending to iOS user',
-        toUser.id || '' + toUser._id,
-        'tok:',
-        device.tok
-      );
-      applenotif.pushToDevice(device.tok, text, payload);
-    });
-  });
-}
-
-function getUser(u) {
-  return u && mongodb.usernames['' + (u.id || u._id || u)];
-}
-
-function pushToMobile(code, initialToUser, text, payload) {
-  var toUser = getUser(initialToUser);
-  if (!(toUser || {}).pref)
-    return console.error(
-      'push notif prefs not found for user: ',
-      initialToUser
-    );
-  if (parseInt('' + toUser.pref['mn' + code]) > -1) {
-    if (toUser.apTok) pushToMobileTokens(toUser, text, payload);
-    else
-      userModel.fetchUserFields([toUser], ['apTok'], function (toUsers) {
-        pushToMobileTokens(toUsers[0], text, payload);
-      });
-  }
-}
-
-function pushToMobiles(code, toUsers, text, payload) {
-  for (let i in toUsers) pushToMobile(code, toUsers[i], text, payload);
-}
-
 function cacheUserNotifs(uId, notifs) {
   exports.userNotifsCache[uId] = { t: new Date(), notifs: notifs };
 }
 
 function invalidateUserNotifsCache(uId) {
   if (uId.splice)
-    for (let i in uId) delete exports.userNotifsCache['' + uId[i]];
+    for (const i in uId) delete exports.userNotifsCache['' + uId[i]];
   else delete exports.userNotifsCache['' + uId]; // => force fetch on next request
 }
 
-function logErrors(cb) {
-  return function (err, res) {
-    res = res || { error: err };
-    if (res.error) console.log(res);
-    cb && cb(res);
-  };
-}
-
 function detectTo(p) {
-  for (let i in p) {
-    var uId = (p[i] || {}).uId;
-    var to = ((uId || {}).$each || [uId])[0];
+  for (const i in p) {
+    const uId = (p[i] || {}).uId;
+    const to = ((uId || {}).$each || [uId])[0];
     if (to) return to;
   }
 }
@@ -116,50 +68,56 @@ function updateNotif(q, p, cb) {
   p = p || {};
   p.$set = p.$set || {};
   p.$set.t = Math.round(new Date().getTime() / 1000);
-  var to = detectTo(p);
-  db['notif'].updateOne(
-    q,
-    p,
-    { upsert: true, /*w:0*/ safe: true },
-    logErrors(function (res) {
+  const to = detectTo(p);
+  db['notif']
+    .updateOne(q, p, { upsert: true })
+    .then(
+      (res) => cb?.(res),
+      (err) => cb?.({ error: err }) ?? console.trace('updateNotif', err),
+    )
+    .finally(() => {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res);
-    })
-  );
+    });
 }
 
 function insertNotif(to, p, cb) {
   p = p || {};
   p.t = Math.round(new Date().getTime() / 1000);
   p.uId = to.splice ? to : ['' + to];
-  db['notif'].insertOne(
-    p,
-    { /*w:0*/ safe: true },
-    logErrors(function (res) {
-      invalidateUserNotifsCache(to); // author(s) will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res && res.ops[0]);
-    })
-  );
+  db['notif']
+    .insertOne(p)
+    .then(
+      async (res) =>
+        cb?.(
+          res?.insertedId &&
+            (await db['notif'].findOne({ _id: res.insertedId })),
+        ),
+      (err) => cb?.({ error: err }) ?? console.trace('insertNotif', err),
+    )
+    .finally(() => {
+      invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
+    });
 }
 
 function pushNotif(to, q, set, push, cb) {
   set = set || {};
   set.t = Math.round(new Date().getTime() / 1000);
   if (!(push || {}).uId) set.uId = ['' + to];
-  var p = { $set: set };
+  const p = { $set: set };
   if (push) p.$push = push;
-  db['notif'].updateOne(
-    q,
-    p,
-    { upsert: true, /*w:0*/ safe: true },
-    logErrors(function (res) {
+  db['notif']
+    .updateOne(q, p, { upsert: true })
+    .then(
+      (res) => cb?.(res),
+      (err) => cb?.({ error: err }) ?? console.trace('pushNotif', err),
+    )
+    .finally(() => {
       invalidateUserNotifsCache(to); // author will be invalidated later by clearUserNotifsForPost()
-      cb && cb(res);
-    })
-  );
+    });
 }
 
-function makeLink(text /*, url*/) {
+function makeLink(text, url) {
+  url; // just to ignore ts(6133): 'url' is declared but its value is never read.
   //return "<a href='" + url + "'>" + snip.htmlEntities(text) + "</a>";
   return '<span>' + snip.htmlEntities(text) + '</span>';
 }
@@ -168,199 +126,156 @@ function makeLink(text /*, url*/) {
 
 const extractObjectID = (str) => str.match(/[0-9a-f]{24}/)[0];
 
-exports.clearUserNotifsForPost = function (uId, pId) {
+exports.clearUserNotifsForPost = async function (uId, pId) {
   if (!uId || !pId) return;
-  var idList = [pId];
+  const idList = [pId];
   try {
     idList.push(
-      mongodb.ObjectID.createFromHexString(
+      mongodb.ObjectId(
         typeof pId === 'string'
           ? extractObjectID(pId) // strip the eventual "/u/" prefix or "/reposts" suffix (e.g. in notif-tests.js)
-          : pId
-      )
+          : pId,
+      ),
     );
   } catch (e) {
-    console.error('error in clearUserNotifsForPost:', e);
+    console.trace('error in clearUserNotifsForPost:', e);
   }
-  db['notif'].updateOne(
-    { _id: { $in: idList } },
-    { $pull: { uId: uId } },
-    { safe: true /*w:0*/ },
-    function (err) {
-      if (err) console.log(err);
+  db['notif']
+    .updateOne({ _id: { $in: idList } }, { $pull: { uId: uId } })
+    .catch((err) => console.trace('clearUserNotifsForPost', err))
+    .finally(() => {
       // remove documents with empty uid
-      db['notif'].deleteMany(
-        { _id: { $in: idList }, uId: { $size: 0 } },
-        { multi: true /*w: 0*/ },
-        () => invalidateUserNotifsCache(uId)
-      );
-    }
-  );
+      db['notif']
+        .deleteMany({ _id: { $in: idList }, uId: { $size: 0 } })
+        .finally(() => invalidateUserNotifsCache(uId));
+    });
 };
 
+/** WARNING: for automated tests only. */
 exports.clearAllNotifs = () =>
-  db['notif'].deleteMany().then(() => {
+  db['notif'].deleteMany({}).then(() => {
     exports.userNotifsCache = {}; // => force fetch on next request
   });
 
-exports.clearUserNotifs = function (uId, cb) {
-  if (!uId) return;
-  db['notif'].find(
-    { uId: uId },
-    { projection: { uId: 1 }, limit: 1000 },
-    function (err, cursor) {
-      var idsToRemove = [];
-      function whenDone() {
-        // delete records that were only associated to that user
-        db['notif'].deleteMany(
-          { _id: { $in: idsToRemove } },
-          { multi: true, safe: true },
-          function () {
-            // ...then, remove the user from remaining records
-            db['notif'].updateMany(
-              { uId: uId },
-              { $pull: { uId: uId } },
-              { multi: true, w: 0 },
-              () => {
-                invalidateUserNotifsCache(uId);
-                cb && cb();
-              }
-            );
-          }
-        );
-      }
-      cursor.forEach(
-        (err, item) => {
-          if (item && item.uId.length === 1) idsToRemove.push(item._id);
-        },
-        () => whenDone()
-      );
-    }
-  );
+/** @param {string} uId */
+exports.clearUserNotifs = async function (uId, cb) {
+  if (!uId) return cb?.({ error: 'missing uId' });
+  const idsToRemove = [];
+  // delete records that were only associated to that user
+  // note: we may delete those in one command, using https://www.mongodb.com/docs/manual/tutorial/query-arrays/#query-an-array-by-array-length
+  await db['notif']
+    .find({ uId: uId }, { limit: 1000 })
+    .project({ uId: 1 })
+    .forEach((item) => {
+      // reminder: item.uId is an array of user ids
+      if (item && item.uId.length === 1) idsToRemove.push(item._id);
+    });
+  await db['notif'].deleteMany({ _id: { $in: idsToRemove } });
+  // ...then, remove the user from remaining records
+  // @ts-ignore ts(2322), Type 'string' is not assignable to type 'never', cf https://www.mongodb.com/community/forums/t/type-objectid-is-not-assignable-to-type-never/139699
+  await db['notif'].updateMany({ uId: uId }, { $pull: { uId: uId } });
+  invalidateUserNotifsCache(uId);
+  cb && cb();
 };
 
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
 
 exports.fetchUserNotifs = function (uId, handler) {
-  db['notif'].find(
-    { uId: uId },
-    { sort: ['t', 'desc'] },
-    function (err, cursor) {
-      cursor.toArray(function (err, results) {
-        var notifs = [];
-        for (let i in results) {
-          var n = 0;
-          if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
-          else for (let j in results[i].uId) if (results[i].uId[j] == uId) n++;
-          var lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
-          notifs.push({
-            type: results[i].type,
-            pId: '' + results[i]._id,
-            track: {
-              eId: results[i].eId,
-              name: results[i].name,
-              img: config.imgUrl(results[i].img),
-            },
-            t: new Date(results[i].t * 1000),
-            lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
-            n: n,
-            img: results[i].img,
-            html: results[i].html,
-            href: results[i].href,
-          });
-        }
-        cacheUserNotifs(uId, notifs);
-        if (handler) handler(notifs);
-      });
-    }
-  );
+  db['notif']
+    .find({ uId: uId }, { sort: ['t', 'desc'] })
+    .toArray()
+    .then(function (results) {
+      const notifs = [];
+      for (const i in results) {
+        let n = 0;
+        if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
+        else for (const j in results[i].uId) if (results[i].uId[j] == uId) n++;
+        const lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
+        notifs.push({
+          type: results[i].type,
+          pId: '' + results[i]._id,
+          track: {
+            eId: results[i].eId,
+            name: results[i].name,
+            img: config.imgUrl(results[i].img),
+          },
+          t: new Date(results[i].t * 1000),
+          lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
+          n: n,
+          img: results[i].img,
+          html: results[i].html,
+          href: results[i].href,
+        });
+      }
+      cacheUserNotifs(uId, notifs);
+      if (handler) handler(notifs);
+    });
 };
 
 exports.getUserNotifs = function (uid, handler) {
-  var cachedNotifs = exports.userNotifsCache[uid];
+  const cachedNotifs = exports.userNotifsCache[uid];
   if (cachedNotifs) handler(cachedNotifs.notifs, cachedNotifs.t);
   else exports.fetchUserNotifs(uid, handler);
 };
 
-function countUserNotifs(notifs) {
-  var total = 0;
-  for (let i in notifs) total += notifs[i].n || 1;
-  return total;
-}
-
 // generation notification method
 
 exports.html = function (uId, html, href, img) {
-  db['notif'].insertOne(
-    {
-      t: Math.round(new Date().getTime() / 1000),
-      uId: [uId],
-      html: html,
-      href: href,
-      img: img,
-    },
-    { w: 0 }
-  );
+  db['notif'].insertOne({
+    t: Math.round(new Date().getTime() / 1000),
+    uId: [uId],
+    html: html,
+    href: href,
+    img: img,
+  });
   invalidateUserNotifsCache(uId);
 };
 
 // specific notification methods
 
 exports.love = function (loverUid, post, callback) {
-  var user = mongodb.usernames['' + loverUid];
-  var author = mongodb.usernames['' + post.uId];
-  if (!user || !author) return;
-  db['notif'].updateOne(
-    { _id: post._id + '/loves' },
-    {
-      $set: {
-        eId: post.eId,
-        name: post.name,
-        t: Math.round(new Date().getTime() / 1000),
-        uIdLast: loverUid, // last lover of this post
-        uId: [post.uId],
+  const user = mongodb.usernames['' + loverUid];
+  const author = mongodb.usernames['' + post.uId];
+  if (!user) throw new Error('user not found');
+  if (!author) throw new Error(`post author not found`);
+  db['notif']
+    .updateOne(
+      { _id: post._id + '/loves' },
+      {
+        $set: {
+          eId: post.eId,
+          name: post.name,
+          t: Math.round(new Date().getTime() / 1000),
+          uIdLast: loverUid, // last lover of this post
+          uId: [post.uId],
+        },
+        $push: { lov: loverUid },
+        $inc: { n: 1 },
       },
-      $push: { lov: loverUid },
-      $inc: { n: 1 },
-    },
-    { upsert: true, w: 0 },
-    callback
-  );
+      { upsert: true },
+    )
+    .then(
+      (res) => callback?.(null, res),
+      (err) => callback?.(err) ?? console.trace('love error:', err),
+    );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendLike(user, post, author);
-  pushToMobile('Lik', author, user.name + ' liked one of your tracks', {
-    href: '/c/' + post._id,
-  });
 };
 
-exports.unlove = function (loverUid, pId) {
-  var criteria = { _id: pId + '/loves' };
-  var col = db['notif'];
-  col.updateOne(
-    criteria,
-    { $inc: { n: -1 }, $pull: { lov: loverUid } },
-    { safe: true },
-    function () {
-      col.findOne(criteria, function (err, res) {
-        if (res) {
-          if (!res.lov || res.lov.length == 0 || res.n < 1)
-            col.deleteOne(criteria, { w: 0 });
-          else
-            col.updateOne(
-              criteria,
-              { $set: { uIdLast: res.lov[res.lov.length - 1] } },
-              { w: 0 }
-            );
-          invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
-        }
-      });
-    }
-  );
+exports.unlove = async function (loverUid, pId) {
+  const criteria = { _id: pId + '/loves' };
+  const col = db['notif'];
+  await col.updateOne(criteria, { $inc: { n: -1 }, $pull: { lov: loverUid } });
+  const res = await col.findOne(criteria);
+  if (!res.lov || res.lov.length === 0 || res.n < 1) col.deleteOne(criteria);
+  else
+    col.updateOne(criteria, { $set: { uIdLast: res.lov[res.lov.length - 1] } });
+  invalidateUserNotifsCache(res.uId); // author will be invalidated later by clearUserNotifsForPost()
 };
 
 exports.post = function (post) {
   if (!post || !post.eId || !post.uId) return;
-  var query = {
+  const query = {
     q: {
       eId: post.eId,
       uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
@@ -369,7 +284,7 @@ exports.post = function (post) {
     projection: { uId: true },
   };
   mongodb.forEach2('post', query, function (sameTrack, next) {
-    var author =
+    const author =
       sameTrack && !sameTrack.error && mongodb.usernames[sameTrack.uId];
     if (author) {
       notifEmails.sendPostedSameTrack(author, next);
@@ -380,8 +295,8 @@ exports.post = function (post) {
 };
 
 exports.repost = function (reposterUid, post) {
-  var reposter = mongodb.usernames['' + reposterUid];
-  var author = mongodb.usernames['' + post.uId];
+  const reposter = mongodb.usernames['' + reposterUid];
+  const author = mongodb.usernames['' + post.uId];
   if (!reposter || !author) return;
   db['notif'].updateOne(
     { _id: post._id + '/reposts' },
@@ -396,13 +311,10 @@ exports.repost = function (reposterUid, post) {
       $push: { reposters: reposterUid },
       $inc: { n: 1 },
     },
-    { upsert: true, w: 0 }
+    { upsert: true },
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
   notifEmails.sendRepost(reposter, post, author /*.email*/);
-  pushToMobile('Add', author, reposter.name + ' re-added your track', {
-    href: '/c/' + post._id,
-  });
 };
 /*
 exports.unrepost = function (reposterUid, pId) {
@@ -422,8 +334,8 @@ exports.unrepost = function (reposterUid, pId) {
 };
 */
 exports.subscribedToUser = function (senderId, favoritedId, cb) {
-  var sender = mongodb.usernames['' + senderId];
-  var favorited = mongodb.usernames['' + favoritedId];
+  const sender = mongodb.usernames['' + senderId];
+  const favorited = mongodb.usernames['' + favoritedId];
   if (sender && favorited) {
     db['notif'].updateOne(
       { _id: '/u/' + sender.id },
@@ -435,18 +347,15 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
         },
         $push: { uId: favoritedId },
       },
-      { upsert: true, w: 0 }
+      { upsert: true },
     );
     invalidateUserNotifsCache(favoritedId);
-    notifEmails.sendSubscribedToUser(sender, favorited, cb);
-    pushToMobile('Sub', favorited, sender.name + ' subscribed to you', {
-      href: '/u/' + senderId,
-    });
+    notifEmails.sendSubscribedToUser(sender, favorited, cb); // may reject with "Permission denied, wrong credentials"
   }
 };
 
 exports.comment = function (post = {}, comment = {}, cb) {
-  var commentUser = mongodb.usernames['' + comment.uId];
+  const commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.comment' });
   else if (commentUser.id == post.uId)
@@ -466,21 +375,13 @@ exports.comment = function (post = {}, comment = {}, cb) {
       null,
       function () {
         notifEmails.sendComment(post, comment, cb);
-        pushToMobile(
-          'Com',
-          post.uId,
-          commentUser.name + ' commented on one of your tracks',
-          {
-            href: '/c/' + post._id,
-          }
-        );
-      }
+      },
     );
   }
 };
 
 exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
-  var commentUser = mongodb.usernames['' + comment.uId];
+  const commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !mentionedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.mention' });
   else {
@@ -496,21 +397,13 @@ exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
       },
       function () {
         notifEmails.sendMention(mentionedUid, post, comment, cb);
-        pushToMobile(
-          'Men',
-          mongodb.usernames['' + mentionedUid],
-          commentUser.name + ' mentionned you',
-          {
-            href: '/c/' + post._id,
-          }
-        );
-      }
+      },
     );
   }
 };
 
 exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
-  var commentUser = mongodb.usernames['' + comment.uId];
+  const commentUser = mongodb.usernames['' + comment.uId];
   if (!commentUser || !repliedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.commentReply' });
   else if (commentUser.id == repliedUid)
@@ -531,15 +424,7 @@ exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
       },
       function () {
         notifEmails.sendCommentReply(post, comment, repliedUid, cb);
-        pushToMobile(
-          'Rep',
-          mongodb.usernames['' + repliedUid],
-          commentUser.name + ' replied to your comment',
-          {
-            href: '/c/' + post._id,
-          }
-        );
-      }
+      },
     );
   }
 };
@@ -556,22 +441,13 @@ exports.inviteAccepted = function (inviterId, newUser) {
       img: '/img/u/' + newUser.id,
       href: '/u/' + newUser.id,
     },
-    function () {
-      pushToMobile(
-        'Acc',
-        { id: inviterId },
-        'Your friend ' + newUser.name + ' accepted your invite',
-        {
-          href: '/u/' + newUser.id,
-        }
-      );
-    }
+    function () {},
   );
   notifEmails.sendInviteAccepted(inviterId, newUser);
 };
 
 exports.sendTrackToUsers = function (p, cb) {
-  var fieldCheck = snip.checkMistypedFields(p, {
+  const fieldCheck = snip.checkMistypedFields(p, {
     uId: 'string', // id of the sender
     uNm: 'string', // name of the sender
     pId: 'string', // id of the post to share
@@ -581,7 +457,7 @@ exports.sendTrackToUsers = function (p, cb) {
     cb(fieldCheck); // {error:"..."}
     return;
   }
-  var payload = {
+  const payload = {
     type: 'Snt',
     href: '/c/' + p.pId,
     img: '/img/post/' + p.pId,
@@ -590,16 +466,13 @@ exports.sendTrackToUsers = function (p, cb) {
   };
   //updateNotif({_id: p.pId+"/sent"}, { $set: payload, $addToSet: {uId:{$each:p.uidList}} }, function(res){
   insertNotif(p.uidList, payload, function (res) {
-    pushToMobiles(payload.type, p.uidList, p.uNm + ' sent you a track', {
-      href: payload.href,
-    });
     // no email to send
     cb && cb(res);
   });
 };
 
 exports.sendPlaylistToUsers = function (p, cb) {
-  var fieldCheck = snip.checkMistypedFields(p, {
+  const fieldCheck = snip.checkMistypedFields(p, {
     uId: 'string', // id of the sender
     uNm: 'string', // name of the sender
     plId: 'string', // id of the playlist to share (format: <uid>_<number>)
@@ -609,8 +482,8 @@ exports.sendPlaylistToUsers = function (p, cb) {
     cb(fieldCheck); // {error:"..."}
     return;
   }
-  var plUri = p.plId.replace('_', '/playlist/');
-  var payload = {
+  const plUri = p.plId.replace('_', '/playlist/');
+  const payload = {
     type: 'Snp',
     href: '/u/' + plUri,
     img: '/img/playlist/' + p.plId,
@@ -618,9 +491,6 @@ exports.sendPlaylistToUsers = function (p, cb) {
     html: makeLink(p.uNm, '/u/' + p.uId) + ' sent you a playlist',
   };
   insertNotif(p.uidList, payload, function (res) {
-    pushToMobiles(payload.type, p.uidList, p.uNm + ' sent you a playlist', {
-      href: payload.href,
-    });
     // no email to send
     cb && cb(res);
   });

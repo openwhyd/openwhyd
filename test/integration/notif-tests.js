@@ -1,53 +1,41 @@
-process.appParams = {
-  urlPrefix: '',
-  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
-  mongoDbAuthUser: process.env['MONGODB_USER'],
-  mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
-};
+//@ts-check
 
-const consoleBackup = console.log;
-console.log = () => {
-  // prevent mongodb from adding noise to stdout
-};
-
-const util = require('util');
 const assert = require('assert');
-const { ObjectId, ...mongodb } = require('../../app/models/mongodb.js');
 const notifModel = require('../../app/models/notif.js');
 
-const { ADMIN_USER } = require('../fixtures.js');
+const { ObjectId } = require('mongodb');
+const { initMongoDb } = require('../mongodb-client.js'); // uses MONGODB_HOST, MONGODB_PORT, MONGODB_USER, MONGODB_PASS, MONGODB_DATABASE env vars
+const { ADMIN_USER, resetTestDb } = require('../fixtures.js');
+
+let mongodb, db;
 
 const POLL_TIMEOUT = 4000;
-
-const db = mongodb.collections;
 
 // test data
 
 const USERS = [
   {
     id: '4d7fc1969aa9db130e000003',
-    _id: ObjectId('4d7fc1969aa9db130e000003'),
+    _id: new ObjectId('4d7fc1969aa9db130e000003'),
     name: 'Gilles (test)',
   },
   {
     id: '4dd4060ddb28e240e8508c28',
-    _id: ObjectId('4dd4060ddb28e240e8508c28'),
+    _id: new ObjectId('4dd4060ddb28e240e8508c28'),
     name: 'Loick (test)',
   },
 ];
 
-var FAKE_POST = {
-  _id: ObjectId('4fe3428e9f2ec28c92000024'),
+const FAKE_POST = {
+  _id: new ObjectId('4fe3428e9f2ec28c92000024'),
   uId: ADMIN_USER.id,
   name: 'Knust hjerte by Casiokids (test)',
   eId: '/sc/casiokids/knust-hjerte#http://api.soundcloud.com/tracks/35802590',
 };
 
-var COMMENTS = USERS.map(function (u) {
+const COMMENTS = USERS.map(function (u) {
   return {
-    _id: ObjectId('4ed3de428fed15d73c00001f'),
+    _id: new ObjectId('4ed3de428fed15d73c00001f'),
     pId: '' + FAKE_POST._id,
     uId: u.id,
     uNm: u.name,
@@ -58,12 +46,9 @@ var COMMENTS = USERS.map(function (u) {
 // test helpers
 
 async function initDb() {
-  await util.promisify(mongodb.init)();
-  // const initScript = './config/initdb.js';
-  // await mongodb.runShellScript(require('fs').readFileSync(initScript))
-  await util.promisify(mongodb.cacheCollections)();
-  await util.promisify(mongodb.cacheUsers)();
-  console.log = consoleBackup; // now that we're done with db init => re-enable logging to stdout
+  mongodb = await initMongoDb({ silent: true });
+  db = mongodb.collections;
+  USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
 }
 
 const countEmptyNotifs = (cb) =>
@@ -107,7 +92,7 @@ function testAllNotifs(u) {
     ADMIN_USER.id,
     'coucou <small>html</small>',
     'http://www.facebook.com',
-    '/images/logo-s.png'
+    '/images/logo-s.png',
   );
   notifModel.mention(FAKE_POST, COMMENTS[u], ADMIN_USER.id);
 
@@ -119,8 +104,8 @@ function testAllNotifs(u) {
 }
 
 async function addAllNotifs() {
-  var NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
-  for (let u in USERS) /*nbNotifs =*/ testAllNotifs(u);
+  const NOTIF_COUNT = USERS.length * 3 + 4; // 3 individual records per user + 4 common records (see testAllNotifs())
+  for (const u in USERS) /*nbNotifs =*/ testAllNotifs(u);
   await pollUntil(makeNotifChecker(NOTIF_COUNT));
 }
 
@@ -129,13 +114,14 @@ async function addAllNotifs() {
 describe('notifications', function () {
   this.timeout(5000);
 
-  USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
+  // reset database state and seed fixtures (including ADMIN_USER)
+  before(async () => await resetTestDb({ env: process.env, silent: true }));
 
-  it('initiatialises db', initDb);
+  before(initDb);
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid
-    await db['notif'].deleteMany({ uId: { $size: 0 } }, { multi: true });
+    await db['notif'].deleteMany({ uId: { $size: 0 } });
     const count = await countEmptyNotifs();
     assert(count === 0, 'failed to remove notifs with empty uid');
   });
@@ -157,7 +143,7 @@ describe('notifications', function () {
     await addAllNotifs();
     // action: clear individual notifications
     const notifs = await fetchNotifs(ADMIN_USER.id);
-    for (let i in notifs)
+    for (const i in notifs)
       notifModel.clearUserNotifsForPost(ADMIN_USER.id, notifs[i].pId);
     await pollUntil(makeNotifChecker(0));
     // expect: db is clean
@@ -167,7 +153,7 @@ describe('notifications', function () {
 
   it('fails when calling notif.sendTrackToUsers() with no parameters', async () => {
     const res = await new Promise((resolve) =>
-      notifModel.sendTrackToUsers(null, resolve)
+      notifModel.sendTrackToUsers(null, resolve),
     );
     assert.equal(res.error, 'object is null');
   });
@@ -176,8 +162,8 @@ describe('notifications', function () {
     const res = await new Promise((resolve) =>
       notifModel.sendTrackToUsers(
         { uId: USERS[0].id, uNm: USERS[0].name, uidList: [ADMIN_USER.id] },
-        resolve
-      )
+        resolve,
+      ),
     );
     assert.equal(res.error, 'missing field: pId');
   });
@@ -191,8 +177,8 @@ describe('notifications', function () {
           uidList: [ADMIN_USER.id],
           pId: FAKE_POST,
         },
-        resolve
-      )
+        resolve,
+      ),
     );
     assert.equal(res.error, 'mistyped field: pId');
   });
@@ -200,14 +186,14 @@ describe('notifications', function () {
   it('can receive a track notification from Gilles', async () => {
     await clearAllNotifs();
     // action: send the notif
-    var p = {
+    const p = {
       uId: USERS[0].id,
       uNm: USERS[0].name,
       uidList: [ADMIN_USER.id],
       pId: '' + FAKE_POST._id,
     };
     const res = await new Promise((resolve) =>
-      notifModel.sendTrackToUsers(p, resolve)
+      notifModel.sendTrackToUsers(p, resolve),
     );
     // expect: the notif is received by recipient
     await pollUntil(makeNotifChecker(1));
@@ -227,13 +213,13 @@ describe('notifications', function () {
   it('can receive a playlist notification from Gilles', async () => {
     await clearAllNotifs();
     // action: send the notif
-    var p = {
+    const p = {
       uId: USERS[0].id,
       uNm: USERS[0].name,
       uidList: [ADMIN_USER.id],
       plId: USERS[0].id + '_' + 0, // gilles' 1st playlist
     };
-    var plUri = p.plId.replace('_', '/playlist/');
+    const plUri = p.plId.replace('_', '/playlist/');
     await new Promise((resolve) => notifModel.sendPlaylistToUsers(p, resolve));
     // expect: the notif is received by recipient
     await pollUntil(makeNotifChecker(1));
@@ -246,7 +232,7 @@ describe('notifications', function () {
     assert.strictEqual(n.img, n.track.img);
     assert(
       n.track.img.indexOf(p.plId) > -1,
-      'track.img should include the plId'
+      'track.img should include the plId',
     );
     assert(n.href.indexOf(plUri) > -1, 'href should include the plUri');
   });

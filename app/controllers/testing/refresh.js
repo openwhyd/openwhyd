@@ -7,7 +7,7 @@ exports.controller = async function (request, getParams, response) {
   if (request.method.toLowerCase() !== 'post') {
     return response.badRequest();
   }
-  if (process.appParams.mongoDbDatabase !== 'openwhyd_test') {
+  if (!process.appParams.isOnTestDatabase) {
     return response.forbidden(new Error('allowed on test database only'));
   }
   try {

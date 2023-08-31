@@ -3,12 +3,12 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
-var snip = require('../../snip.js');
-var FileController = require('./FileController.js');
+const mongodb = require('../../models/mongodb.js');
+const snip = require('../../snip.js');
+const FileController = require('./FileController.js');
 
 function listBestContributors(cb) {
-  var users = {};
+  const users = {};
   mongodb.forEach(
     'post',
     { fields: { _id: 0, uId: 1, uNm: 1 } },
@@ -18,14 +18,14 @@ function listBestContributors(cb) {
     },
     function () {
       cb(
-        snip.mapToObjArray(users).sort(snip.makeFieldSort('c', snip.descSort))
+        snip.mapToObjArray(users).sort(snip.makeFieldSort('c', snip.descSort)),
       );
-    }
+    },
   );
 }
 
 function listTracksFromBookmarklet(p, cb) {
-  var bkPosts = [];
+  const bkPosts = [];
   mongodb.forEach(
     'post',
     {
@@ -42,20 +42,20 @@ function listTracksFromBookmarklet(p, cb) {
       //else console.log("[WARNING] invalid post", post)
     },
     cb,
-    bkPosts
+    bkPosts,
   );
 }
 
 function listBookmarkletSources(p, cb) {
   listTracksFromBookmarklet(p, function (bkPosts) {
-    var sources = {};
+    let sources = {};
     bkPosts.map(function (post) {
       //sources[post.src] = (sources[post.src] || 0) + 1;
-      var s = (sources[post.src] = sources[post.src] || { c: 0, u: {} });
+      const s = (sources[post.src] = sources[post.src] || { c: 0, u: {} });
       ++s.c;
       s.u[post.uNm] = (s.u[post.uNm] || 0) + 1;
     });
-    for (let i in sources) sources[i].u = Object.keys(sources[i].u).length;
+    for (const i in sources) sources[i].u = Object.keys(sources[i].u).length;
     sources = snip.mapToObjArray(sources, 'src' /*, "c"*/);
     sources = sources.sort(snip.makeFieldSort('c', snip.descSort));
     sources = sources.sort(snip.makeFieldSort('u', snip.descSort));
@@ -63,10 +63,10 @@ function listBookmarkletSources(p, cb) {
   });
 }
 
-var fileGenerators = {
+const fileGenerators = {
   'bestContributors.html': function (p, cb) {
     listBestContributors(function (users) {
-      var table = new snip.DataTable().fromMap(users);
+      const table = new snip.DataTable().fromMap(users);
       table.header = ['user id', 'user name', 'number of tracks'];
       cb({ html: table.toHtml() });
     });
@@ -84,14 +84,14 @@ var fileGenerators = {
   },
   'bookmarkletSources.html': function (p, cb) {
     listBookmarkletSources(p, function (sources) {
-      var table = new snip.DataTable().fromMap(sources);
+      const table = new snip.DataTable().fromMap(sources);
       table.header = ['source', 'tracks added', 'unique users'];
       cb({ html: table.toHtml() });
     });
   },
   'bookmarkletSources.csv': function (p, cb) {
     listBookmarkletSources(p, function (sources) {
-      var table = new snip.DataTable().fromMap(sources);
+      const table = new snip.DataTable().fromMap(sources);
       table.header = ['source', 'tracks added', 'unique users'];
       cb({ csv: table.toCsv() });
     });

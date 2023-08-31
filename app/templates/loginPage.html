@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -17,7 +17,7 @@
 
     <script src="/js/jquery-1.10.2.min.js"></script>
     <script src="/js/jquery-migrate-1.2.1.js"></script>
-    <!--<script src="/js/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>-->
+    <!--<script src="/js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>-->
     <script src="/js/md5.js" type="text/javascript" charset="utf-8"></script>
 
     <style type="text/css">
@@ -260,7 +260,7 @@
         redirect(
           this.href +
             '?email=' +
-            encodeURIComponent($('input[name=email]').val())
+            encodeURIComponent($('input[name=email]').val()),
         );
         return false;
       });
@@ -275,7 +275,7 @@
           } else {
             console.log('error', res);
             alert(
-              'Sorry, this Facebook account is not recognized by Openwhyd. Please sign up from the home page.'
+              'Sorry, this Facebook account is not recognized by Openwhyd. Please sign up from the home page.',
             );
           }
         });

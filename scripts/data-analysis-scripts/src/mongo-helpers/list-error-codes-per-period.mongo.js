@@ -1,4 +1,4 @@
-/* globals db, load, makeMapWith, emit, RENDER_FCT, WEEK, OUTPUT_COLLECTION, makeDateRangeQuery, today */
+/* globals db, load, makeMapWith, emit, PERIOD, RENDER_FCT, WEEK, OUTPUT_COLLECTION, makeDateRangeQuery, today */
 
 // usage: $ mongo openwhyd_dump --eval "const RENDER_FCT = renderDate, OUTPUT_COLLECTION = 'list-error-codes-per-day';" list-error-codes-per-period.mongo.js
 
@@ -11,18 +11,20 @@ load('./mongo-helpers/period-aggregator.mongo.js'); // exports makeMapWith()
 // - PERIOD: (optional) range in milliseconds from today, e.g. 'YEAR', 'MONTH'
 
 try {
+  // eslint-disable-next-line no-global-assign
   PERIOD = eval(PERIOD);
 } catch (e) {
+  // eslint-disable-next-line no-global-assign
   PERIOD = WEEK; // default value: 7 days
 }
 
-var renderFct = eval(RENDER_FCT); // => e.g. renderDate() or renderWeek()
+const renderFct = eval(RENDER_FCT); // => e.g. renderDate() or renderWeek()
 
 // notice: MongoDB will not call the reduce function for a key that has only a single value
 function mapTemplate() {
   //var failed = this.err ? 1 : 0;
-  var val = { total: 1 }; //, total_err: failed
-  var error = this.err
+  const val = { total: 1 }; //, total_err: failed
+  const error = this.err
     ? this.err.code || this.err.error || this.err.data
     : undefined;
   if (error !== undefined) val[error] = 1;
@@ -31,22 +33,22 @@ function mapTemplate() {
 
 const map = makeMapWith(
   renderFct,
-  mapTemplate.toString().replace('renderFct', RENDER_FCT)
+  mapTemplate.toString().replace('renderFct', RENDER_FCT),
 );
 
 function reduce(day, vals) {
   // notice: MongoDB can invoke the reduce function more than once for the same key
-  var finalVal = {};
+  const finalVal = {};
   // sum counts for each period
   vals.forEach((val) =>
     Object.keys(val).forEach(
-      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key])
-    )
+      (key) => (finalVal[key] = (finalVal[key] || 0) + val[key]),
+    ),
   );
   return finalVal;
 }
 
-var opts = {
+const opts = {
   finalize: function (key, reduced) {
     // list of player ids from https://github.com/openwhyd/openwhyd/blob/d27fb71220cbd29e9e418bd767426e3b4a2187f3/public/js/whydPlayer.js#L559
     Object.keys(reduced)
@@ -68,7 +70,7 @@ var opts = {
 print('PERIOD: ' + PERIOD / (24 * 60 * 60 * 1000) + ' days');
 print('RENDER_FCT: ' + RENDER_FCT);
 print('generating data, date: ' + new Date());
-var result = db.playlog.mapReduce(map, reduce, opts);
+const result = db.playlog.mapReduce(map, reduce, opts);
 print('⏲  ' + Math.round(result.timeMillis / 1000) + ' seconds');
 print('=> results on stored in db collection: ' + OUTPUT_COLLECTION);
 //printjson(db[OUTPUT_COLLECTION].find().toArray());

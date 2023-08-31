@@ -1,18 +1,18 @@
 // usage: run from http://localhost:8080/admin/test
 // TODO: turn this script into a proper integration test and move it outside of the app
 
-var postModel = require('../../../models/post.js');
-var followModel = require('../../../models/follow.js');
+const postModel = require('../../../models/post.js');
+const followModel = require('../../../models/follow.js');
 
 function hashPosts(posts) {
-  var hash = '';
-  for (let i in posts) hash += posts[i]._id;
+  let hash = '';
+  for (const i in posts) hash += posts[i]._id;
   //console.log("HASH", hash);
   return hash;
 }
 
 exports.makeTests = function (p) {
-  var testVars = {},
+  const testVars = {},
     OPTIONS = {
       limit: 1000,
     };
@@ -27,7 +27,7 @@ exports.makeTests = function (p) {
             testVars.uidList = subscriptions.concat([p.loggedUser.id]);
             //console.timeEnd("fetchSubscriptionArray");
             cb(true);
-          }
+          },
         );
       },
     ],

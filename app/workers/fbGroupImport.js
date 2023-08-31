@@ -4,24 +4,24 @@
  * @author adrienjoly, whyd
  */
 
-var util = require('util');
+const util = require('util');
 
-var path = '../..';
-var config = require(path + '/app/models/config.js');
-var mongodb = require(path + '/app/models/mongodb.js');
-var fbModel = require(path + '/app/models/facebook.js');
-var snip = require(path + '/app/snip.js');
+const path = '../..';
+const config = require(path + '/app/models/config.js');
+const mongodb = require(path + '/app/models/mongodb.js');
+const fbModel = require(path + '/app/models/facebook.js');
+const snip = require(path + '/app/snip.js');
 
 // constants
 
-var LIMIT_PAGE = 100;
-var LIMIT_FIRST = 20;
-var LIMIT_GROUPS = 20;
+const LIMIT_PAGE = 100;
+const LIMIT_FIRST = 20;
+const LIMIT_GROUPS = 20;
 
 // class-scope attributes
 
-var jobs = {};
-var lastJobId = 0;
+const jobs = {};
+let lastJobId = 0;
 
 // main functions
 
@@ -30,7 +30,7 @@ exports.fetchGroups = function (fbUserId, fbAccessToken, cb) {
     fbAccessToken,
     '/' + fbUserId + '/groups',
     { limit: LIMIT_GROUPS },
-    cb
+    cb,
   );
 };
 
@@ -39,7 +39,7 @@ exports.fetchGroupInfo = function (fbGroupId, fbAccessToken, cb) {
 };
 
 exports.startJob = function (fbGroupId, fbAccessToken) {
-  var job = new FbGroupImport(fbAccessToken, fbGroupId);
+  const job = new FbGroupImport(fbAccessToken, fbGroupId);
   process.nextTick(() => {
     job.start();
   });
@@ -60,7 +60,7 @@ function translateFacebookPostToWhydPostSync(post) {
     ? null
     : {
         _id: mongodb.ObjectId(
-          mongodb.dateToHexObjectId(new Date(post.created_time))
+          mongodb.dateToHexObjectId(new Date(post.created_time)),
         ), //updated_time
         eId: config.translateUrlToEid(post.link),
         name: post.name,
@@ -115,14 +115,14 @@ FbGroupImport.prototype.processJsonPages = function (json) {
   process.nextTick(() => {
     console.log(
       'processing facebook group data, length=',
-      json && json.data && json.data.length
+      json && json.data && json.data.length,
     );
     this.processJsonPage(json, () => {
       if (json.paging && json.paging.next) {
         console.log('requesting page #' + this.stats.page + '...');
         json.paging.next = json.paging.next.replace(
           'limit=20',
-          'limit=' + LIMIT_PAGE
+          'limit=' + LIMIT_PAGE,
         );
         console.log('NEXT PAGE: ', json.paging.next);
         snip.httpRequestJSON(json.paging.next, {}, (err, json) => {
@@ -155,7 +155,7 @@ FbGroupImport.prototype.start = function () {
           message: (json || {}).error || 'first facebook request failed',
         });
       } else this.processJsonPages(json); // recursive call
-    }
+    },
   );
   return this;
 };

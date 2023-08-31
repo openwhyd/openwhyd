@@ -9,9 +9,9 @@
     "sync:now": "node run-diff-reindex.js sync-now # will go straight to updating algolia index"
   },
   "dependencies": {
-    "algoliasearch": "^3.24.11",
+    "algoliasearch": "^4.17.2",
     "dotenv": "^5.0.0",
-    "mongodb": "^3.1.13",
+    "mongodb": "^3.7.4",
     "node-ask": "^1.0.1"
   },
   "devDependencies": {

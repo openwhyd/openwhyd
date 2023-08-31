@@ -4,48 +4,48 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
-var mongodb = require('../models/mongodb.js'); // for getting user data
-var trackModel = require('../models/track.js');
-var templateLoader = require('../templates/templateLoader.js');
-var NotifDigest = require('../templates/notifDigest.js').NotifDigest;
+const config = require('../models/config.js');
+const mongodb = require('../models/mongodb.js'); // for getting user data
+const trackModel = require('../models/track.js');
+const templateLoader = require('../templates/templateLoader.js');
+const NotifDigest = require('../templates/notifDigest.js').NotifDigest;
 const { getSuggestedUsers } = require('../models/featuredUsers.js');
 
 // CONSTANTS
 
-var urlPrefix = config.urlPrefix;
-var FEEDBACK_EMAIL = config.feedbackEmail;
-var FEEDBACK_FOOTER =
+const urlPrefix = config.urlPrefix;
+const FEEDBACK_EMAIL = config.feedbackEmail;
+const FEEDBACK_FOOTER =
   "P.S  : We'd love your feedback! We're all ears at " +
   FEEDBACK_EMAIL +
   ', and you can follow @open_whyd on twitter.';
 
-var MAX_HOT_TRACKS = 3,
+const MAX_HOT_TRACKS = 3,
   MAX_RECOM_USERS = 4,
   MAX_BIO_LENGTH = 72; //  for RegWelcomeAsync
 
-var TEMPLATE_PATH = 'app/emails/';
-var TEMPLATES = {
+const TEMPLATE_PATH = 'app/emails/';
+const TEMPLATES = {
   welcome: { file: 'welcome.html' }, // previously: welcome_old.html
   comment: { file: 'notifComment.html' },
   mention: { file: 'notifMention.html' },
   commentReply: { file: 'notifCommentReply.html' },
 };
-var TEMPLATE_DEFAULTS = {
+const TEMPLATE_DEFAULTS = {
   urlPrefix: config.urlPrefix,
 };
 
 // rendering functions
 
-var renderTemplateFile = (function () {
-  for (let i in TEMPLATES)
+const renderTemplateFile = (function () {
+  for (const i in TEMPLATES)
     TEMPLATES[i].template = templateLoader.loadTemplate(
-      TEMPLATE_PATH + TEMPLATES[i].file
+      TEMPLATE_PATH + TEMPLATES[i].file,
     );
   return function (templateName, p = {}) {
-    for (let i in TEMPLATE_DEFAULTS)
+    for (const i in TEMPLATE_DEFAULTS)
       if (p[i] == undefined) p[i] = TEMPLATE_DEFAULTS[i];
-    var template = (TEMPLATES[templateName] || {}).template;
+    const template = (TEMPLATES[templateName] || {}).template;
     if (template) return template.render(p);
   };
 })();
@@ -87,7 +87,7 @@ function renderEmailTemplate(title, body) {
 
 exports.generateAcceptedInvite = function (user) {
   // called from controllers/admin/invites.js
-  var inviteUrl = urlPrefix + '/invite/' + user._id;
+  const inviteUrl = urlPrefix + '/invite/' + user._id;
   //var body = acceptedInviteText.replace("{{inviteUrl}}", inviteUrl).replace("{{whydUrl}}", urlPrefix);
   return renderEmailTemplate('Your invitation to Openwhyd', [
     'Hey,',
@@ -124,7 +124,7 @@ exports.generateRegWelcome = function (user, inviteSender) {
       ? 'By the way, take a look at the stream of your friend ' +
         renderLink(
           inviteSender.name,
-          '/u/' + (inviteSender._id || inviteSender.id)
+          '/u/' + (inviteSender._id || inviteSender.id),
         )
       : '',
     'Never stop jamming!',
@@ -141,7 +141,7 @@ exports.generateRegWelcome = function (user, inviteSender) {
 
 exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
   getSuggestedUsers().then((suggestedUsers) => {
-    trackModel.fetchPosts({ limit: MAX_HOT_TRACKS }, (hotPosts) => {
+    trackModel.getHotTracksFromDb({ limit: MAX_HOT_TRACKS }, (hotPosts) => {
       const hotUsers = suggestedUsers
         .slice(0, MAX_RECOM_USERS)
         .map((user = {}) => ({
@@ -151,7 +151,7 @@ exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
               ? user.bio.substr(0, MAX_BIO_LENGTH) + '...'
               : user.bio,
         }));
-      var p = {
+      const p = {
         hotTracks: hotPosts,
         hotUsers1: hotUsers.splice(0, 2),
         hotUsers2: hotUsers.slice(0, 2),
@@ -169,7 +169,7 @@ exports.generateRegWelcomeAsync = function (user, inviteSender, cb) {
 };
 
 exports.generateInviteBy = function (senderName, inviteId, message) {
-  var inviteUrl = urlPrefix + '/invite/' + inviteId;
+  const inviteUrl = urlPrefix + '/invite/' + inviteId;
   return {
     subject: senderName + ' invited you to join Openwhyd',
     bodyText:
@@ -210,7 +210,7 @@ exports.generateInviteAccepted = function (user) {
 
 exports.generatePasswordReset = function (user, options) {
   options = options || {};
-  var href =
+  let href =
     urlPrefix + '/password?uid=' + user.id + '&resetCode=' + options.resetCode;
   if (options.redirect)
     href += '&redirect=' + encodeURIComponent(options.redirect);
@@ -263,7 +263,7 @@ exports.generateNotifDigest = function (p) {
   p = p || {};
   p.notifType = 'digest';
   return new NotifDigest(p).renderNotifEmailObj(
-    'Your ' + p.digestFrequency + ' digest'
+    'Your ' + p.digestFrequency + ' digest',
   );
 };
 
@@ -274,7 +274,7 @@ exports.generateRepost = function (reposter, post) {
   })
     .addRepostedTrack(post, reposter)
     .renderNotifEmailObj(
-      reposter.name + ' has added one of your tracks on Openwhyd!'
+      reposter.name + ' has added one of your tracks on Openwhyd!',
     );
 };
 
@@ -293,7 +293,7 @@ exports.generateLike = function (user, post) {
   })
     .addLikedTrack(post, user)
     .renderNotifEmailObj(
-      user.name + ' has liked one of your tracks on Openwhyd!'
+      user.name + ' has liked one of your tracks on Openwhyd!',
     );
 };
 

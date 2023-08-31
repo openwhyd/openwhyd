@@ -9,7 +9,7 @@ describe('email validation', function () {
   });
 
   it('should not allow a non-string value', function () {
-    var backup = console.error;
+    const backup = console.error;
     console.error = function () {}; // eslint-disable-line @typescript-eslint/no-empty-function
     assert(!email.validate(function () {})); // eslint-disable-line @typescript-eslint/no-empty-function
     console.error = backup;

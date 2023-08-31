@@ -3,16 +3,10 @@
  * @author adrienjoly, whyd
  **/
 
-var fs = require('fs');
-var snip = require('../snip.js');
+const fs = require('fs');
+const snip = require('../snip.js');
 
-var playlogStream = fs.createWriteStream('./playlog.json.log', {
-  flags: 'a', // append
-  encoding: 'utf8',
-  autoClose: true,
-});
-
-var visitStream = fs.createWriteStream('./visits.json.log', {
+const playlogStream = fs.createWriteStream('./playlog.json.log', {
   flags: 'a', // append
   encoding: 'utf8',
   autoClose: true,
@@ -28,7 +22,7 @@ var visitStream = fs.createWriteStream('./visits.json.log', {
  * - fbk: (object, optional) structure provided by the fallback mechanism, in case of error while trying to play the track. may contain the status of connection with Deezer (not connected /  connected / premium), a Deezer track id (in case of lookup success), an error code and/or message.
  **/
 exports.addPlay = (function () {
-  var MANDATORY = { eId: 'string', pId: 'string', uId: 'string' },
+  const MANDATORY = { eId: 'string', pId: 'string', uId: 'string' },
     OPTIONAL = {
       own: 'boolean',
       err: 'object',
@@ -38,7 +32,7 @@ exports.addPlay = (function () {
     };
   return function (obj) {
     try {
-      var cleanObj = snip.checkParams(obj, MANDATORY, OPTIONAL);
+      const cleanObj = snip.checkParams(obj, MANDATORY, OPTIONAL);
       cleanObj.eId = cleanObj.eId.split('#')[0];
       //console.log(("addPlay: " + JSON.stringify(cleanObj)).cyan);
       //mongodb.collections["playlog"].insertOne(cleanObj, {w:0});
@@ -62,36 +56,3 @@ var tests = [
 	console.log("TEST", test, " => ", exports.addPlay(test));
 });
 */
-
-exports.addVisit = function (uId, tId, request) {
-  var orig = request;
-
-  if (uId) {
-    if ((typeof uId).toLowerCase() == 'object' && uId.id) uId = uId.id;
-    uId = uId.replace('/u/', '');
-  }
-
-  /*if (reqParams && reqParams.orig)
-		orig = reqParams.orig;
-	else*/
-  if (
-    request &&
-    (typeof request).toLowerCase() == 'object' &&
-    request.headers &&
-    request.headers.referer
-  )
-    // request
-    orig = request.headers.referer;
-
-  if (orig) {
-    if (orig.includes('facebook.com')) orig = 'fb';
-    else if (orig.includes('twitter.com')) orig = 'tw';
-    else if (orig.includes('http')) orig = null;
-  }
-
-  var visit = { uId, tId };
-  if (orig) visit.orig = orig;
-
-  visit._t = new Date().getTime();
-  visitStream.write(JSON.stringify(visit) + '\n');
-};

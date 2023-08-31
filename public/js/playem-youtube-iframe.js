@@ -6,22 +6,22 @@ function YoutubeIframePlayer() {
 }
 
 (function () {
-  var //IFRAME_HOST = "http://box.jie.fr", IFRAME_PATH = "/track.html",
+  const //IFRAME_HOST = "http://box.jie.fr", IFRAME_PATH = "/track.html",
     //IFRAME_HOST = "http://bestofmusics.tumblr.com", IFRAME_PATH = "",
     //IFRAME_HOST =  window.location.protocol + "//discman2k.appspot.com", IFRAME_PATH = "/prod.html",
     IFRAME_HOST = window.location.protocol + '//d3gnsloen4jask.cloudfront.net',
     IFRAME_PATH = '/html/YoutubePlayerIframe.html';
 
   function Player(eventHandlers, embedVars) {
-    var that = this;
+    const that = this;
     this.iframeReady = false;
     this.eventHandlers = eventHandlers || {};
     this.embedVars = embedVars || {};
     this.label = 'Youtube';
     window.addEventListener('message', function (e) {
       if (e.origin === IFRAME_HOST) {
-        var message = JSON.parse(e.data);
-        var param = message.data[0];
+        const message = JSON.parse(e.data);
+        let param = message.data[0];
         that.iframeReady = true;
         //for (let i in message.data)
         //	if (message.data[i] == "(object)")
@@ -41,10 +41,10 @@ function YoutubeIframePlayer() {
     if (!this.iframeReady)
       return console.warn('YT-iframe not ready => ignoring call to', fctName);
     try {
-      var args = Array.apply(null, arguments).slice(1); // exclude first arg (fctName)
+      const args = Array.apply(null, arguments).slice(1); // exclude first arg (fctName)
       this.iframe.contentWindow.postMessage(
         JSON.stringify({ code: fctName, data: args }),
-        IFRAME_HOST + IFRAME_PATH
+        IFRAME_HOST + IFRAME_PATH,
       );
     } catch (e) {
       console.error('YT safecall error', e, e.stack);
@@ -62,7 +62,7 @@ function YoutubeIframePlayer() {
   Player.prototype.getEid = function (url) {
     if (
       /(youtube\.com\/(v\/|embed\/|(?:.+)?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]+)/.test(
-        url
+        url,
       ) ||
       /\/yt\/([a-zA-Z0-9_-]+)/.test(url) ||
       /youtube\.com\/attribution_link\?.*v%3D([^ %]+)/.test(url)
@@ -71,13 +71,13 @@ function YoutubeIframePlayer() {
   };
 
   Player.prototype.play = function (id) {
-    var that = this;
+    const that = this;
     this.iframeReady = false;
     this.embedVars.videoId = id;
     this.embedVars.playerId = this.embedVars.playerId || 'ytplayer';
     this.iframe = document.createElement('iframe');
     this.iframe.id = this.embedVars.playerId;
-    var settings = {
+    const settings = {
       width: this.embedVars.width || '200',
       height: this.embedVars.height || '200',
       //origin: this.embedVars.origin
@@ -97,7 +97,7 @@ function YoutubeIframePlayer() {
           .map(function (p) {
             return p + '=' + encodeURIComponent(settings[p]);
           })
-          .join('&')
+          .join('&'),
     );
     this.embedVars.playerContainer.appendChild(this.iframe);
   };

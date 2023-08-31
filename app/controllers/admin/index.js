@@ -3,16 +3,16 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
-var searchModel = require('../../models/search.js');
+const mongodb = require('../../models/mongodb.js');
+const searchModel = require('../../models/search.js');
 
-var indexCol = {
+const indexCol = {
   user: 'user',
   post: 'post',
   playlist: 'user',
 };
 
-var indexFields = {
+const indexFields = {
   // different from the one from search.js model
   user: { _id: 1, name: 1, email: 1, handle: 1 },
   post: { _id: 1, name: 1, text: 1, uId: 1, eId: 1, pl: 1 },
@@ -27,9 +27,9 @@ function deleteIndex(type, cb) {
   });
 }
 
-function refreshIndex(type, cb, preprocess) {
-  var BULK_SIZE = 1000,
-    bulkDocs = [],
+async function refreshIndex(type, cb, preprocess) {
+  const BULK_SIZE = 1000;
+  let bulkDocs = [],
     fetched = 0,
     indexed = 0;
   console.log('Indexing ' + type + 's ...');
@@ -39,7 +39,7 @@ function refreshIndex(type, cb, preprocess) {
       if (r.errors || r.error)
         console.error(
           '[ERR] (BULK) admin.index.refreshIndex, searchModel.index: ' +
-            (r.errors || r.error)
+            (r.errors || r.error),
         );
       indexed += (r.items || []).length || 0;
       cb();
@@ -55,48 +55,50 @@ function refreshIndex(type, cb, preprocess) {
     if (bulkDocs.length >= BULK_SIZE) flush(cb);
     else cb();
   }
-  var process = !preprocess
+  const process = !preprocess
     ? index
     : function (obj, fetchAndProcessNextObject) {
         preprocess(obj, fetchAndProcessNextObject, index);
       };
-  var options = {
-    fields: indexFields[type],
+  const options = {
     //limit: 9999999,
     sort: [['_id', 'desc']],
     batchSize: 1000,
   };
+  const fields = indexFields[type];
   console.log('index: iterating on collection:', indexCol[type]);
-  mongodb.collections[indexCol[type]].find({}, options, function (err, cursor) {
-    (function next() {
-      cursor.next(function (err, u) {
-        if (err)
-          console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err);
-        if (u != null) {
-          ++fetched;
-          process(u, function () {
-            if (fetched % 100 == 0)
-              console.warn('=> last (BULK) indexed document: ', u._id);
-            setTimeout(next /*, 100*/);
-          });
-        } else {
-          flush(function () {
-            console.log(
-              'admin.index.refreshIndex DONE! => indexed',
-              indexed,
-              'documents from',
-              fetched,
-              'fetched db records'
-            );
-            cb && cb();
-          });
-        }
+  const cursor = await mongodb.collections[indexCol[type]]
+    .find({}, options)
+    .project(fields);
+  (async function next() {
+    const u = await cursor
+      .next()
+      .catch((err) =>
+        console.log('[ERR] admin.index.refreshIndex, db.nextObject: ', err),
+      );
+    if (u != null) {
+      ++fetched;
+      process(u, function () {
+        if (fetched % 100 == 0)
+          console.warn('=> last (BULK) indexed document: ', u._id);
+        setTimeout(next /*, 100*/);
       });
-    })();
-  });
+    } else {
+      flush(function () {
+        console.log(
+          'admin.index.refreshIndex DONE! => indexed',
+          indexed,
+          'documents from',
+          fetched,
+          'fetched db records',
+        );
+        cb && cb();
+      });
+    }
+  })();
 }
 
-var indexFcts = {
+const indexFcts = {
   deleteUserIndex: function (cb) {
     deleteIndex('user', cb);
   },
@@ -115,7 +117,7 @@ var indexFcts = {
   refreshPlaylistIndex: function (cb) {
     refreshIndex('playlist', cb, function (user, nextUser, index) {
       function nextPlaylist() {
-        var p = user.pl.pop();
+        const p = user.pl.pop();
         if (!p) nextUser();
         // no more playlists for this user => process next user
         else {
@@ -130,43 +132,37 @@ var indexFcts = {
   },
 };
 
-function countDbUsersAndPlaylists(cb) {
-  var result = {
+async function countDbUsersAndPlaylists(cb) {
+  const result = {
     dbUsers: 0,
     dbPlaylists: 0,
   };
-  mongodb.collections[indexCol['user']].find(
-    {},
-    { fields: { pl: 1 } },
-    function (err, cursor) {
-      (function nextUser() {
-        cursor.next(function (err, user) {
-          if (!user) cb(result);
-          else {
-            ++result.dbUsers;
-            if (user.pl) result.dbPlaylists += user.pl.length;
-            setImmediate(nextUser);
-          }
-        });
-      })();
+  const cursor = await mongodb.collections[indexCol['user']]
+    .find()
+    .project({ pl: 1 });
+  (async function nextUser() {
+    const user = await cursor.next();
+    if (!user) cb(result);
+    else {
+      ++result.dbUsers;
+      if (user.pl) result.dbPlaylists += user.pl.length;
+      setImmediate(nextUser);
     }
-  );
+  })();
 }
 
 function countItems(cb) {
   countDbUsersAndPlaylists(function (p) {
-    mongodb.collections[indexCol['post']].countDocuments(function (
-      err,
-      dbPosts
-    ) {
-      p.dbPosts = dbPosts;
-      searchModel.countDocs('user', function (idxUsers) {
-        p.idxUsers = idxUsers;
-        searchModel.countDocs('post', function (idxPosts) {
-          p.idxPosts = idxPosts;
-          searchModel.countDocs('playlist', function (idxPlaylists) {
-            p.idxPlaylists = idxPlaylists;
-            /*
+    mongodb.collections[indexCol['post']].countDocuments(
+      function (err, dbPosts) {
+        p.dbPosts = dbPosts;
+        searchModel.countDocs('user', function (idxUsers) {
+          p.idxUsers = idxUsers;
+          searchModel.countDocs('post', function (idxPosts) {
+            p.idxPosts = idxPosts;
+            searchModel.countDocs('playlist', function (idxPlaylists) {
+              p.idxPlaylists = idxPlaylists;
+              /*
 						p = {
 							idxUsers: idxUsers,
 							idxPosts: idxPosts,
@@ -175,11 +171,12 @@ function countItems(cb) {
 							dbPosts: dbPosts,
 							dbPlaylists: dbPlaylists
 						};*/
-            cb(p);
+              cb(p);
+            });
           });
         });
-      });
-    });
+      },
+    );
   });
 }
 
@@ -211,7 +208,7 @@ exports.controller = function (request, reqParams = {}, response) {
   if (!reqParams.loggedUser) return;
 
   if (request.method.toLowerCase() === 'post') {
-    for (let i in indexFcts)
+    for (const i in indexFcts)
       if (request.body[i])
         return indexFcts[i](function (r) {
           response.legacyRender(r || { ok: 'done' });

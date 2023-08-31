@@ -29,7 +29,6 @@
 <!-- Check all that apply -->
 
 - [ ] Openwhyd Desktop (downloadable electron app)
-- [ ] Openwhyd for iPhone/iPad (please provide version of iOS)
 - [ ] Google Chrome
 - [ ] Firefox
 - [ ] Edge

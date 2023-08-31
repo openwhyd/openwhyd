@@ -5,12 +5,12 @@
  **/
 
 //var https = require('https');
-var config = require('./config');
-var users = require('./user');
+const config = require('./config');
+const users = require('./user');
 
-var emailModule = config.emailModule || 'emailFake.js';
+const emailModule = config.emailModule || 'emailFake.js';
 // console.log('loading EMAIL module: ' + emailModule + '...');
-var emailImpl = require('./' + emailModule);
+const emailImpl = require('./' + emailModule);
 
 exports.validate = require('./email-validation.js').validate;
 
@@ -29,7 +29,7 @@ exports.email = function (
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
   return emailImpl.email(
     emailAddr,
@@ -37,13 +37,13 @@ exports.email = function (
     textContent,
     htmlContent,
     userName,
-    callback
+    callback,
   );
 };
 
 exports.notif = function (toUid, subject, text /*, fbAccessToken*/) {
   if (!toUid) {
-    console.log('ERROR: unable to send email to user ' + toUid);
+    console.trace('ERROR: unable to send email to user ' + toUid);
     return;
   }
 
@@ -51,7 +51,7 @@ exports.notif = function (toUid, subject, text /*, fbAccessToken*/) {
     if (!user || !user.email) {
       console.log(
         'ERROR: found no email address for user ' + toUid + ' : ',
-        user
+        user,
       );
       return;
     } else {
@@ -69,7 +69,7 @@ exports.notif = function (toUid, subject, text /*, fbAccessToken*/) {
 			//console.log("requesting: "+host+path+"...");
 			https.get({ host: host, path: path }, logResponse);
 		} */
-      var to = user.email;
+      const to = user.email;
       //var to = user.name + " <" + user.email + ">";
       //console.log("sending email to " + to);
       exports.email(to, subject, text, null, user.name);

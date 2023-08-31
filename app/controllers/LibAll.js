@@ -4,19 +4,19 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var feedTemplate = require('../templates/feed.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
+const feedTemplate = require('../templates/feed.js');
 
 function makeUserList() {
-  var userList = [];
-  for (let i in mongodb.usernames /*.slice(0,9)*/)
+  const userList = [];
+  for (const i in mongodb.usernames /*.slice(0,9)*/)
     userList.push(mongodb.usernames[i]);
   return userList;
 }
 
 function renderAllLibrary(lib) {
-  var options = lib.options;
+  const options = lib.options;
   //options.displayAuthors = true;
   options.displayPlaylistName = true;
   options.follows = { people: makeUserList(), followers: [] };
@@ -33,7 +33,7 @@ function renderAllLibrary(lib) {
       { repost: { $exists: false } },
       null,
       { after: options.after, before: options.before },
-      process
+      process,
     );
   }
 
@@ -49,7 +49,7 @@ function renderAllLibrary(lib) {
           /*name:"Whyd"*/
         },
         null /*sidebarHtml*/,
-        feedHtml
+        feedHtml,
       );
       //});
     });

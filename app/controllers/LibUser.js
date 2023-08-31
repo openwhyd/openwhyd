@@ -1,26 +1,36 @@
+//@ts-check
+
+// WIP: Type definitions are incomplete and some may be wrong
+/** @typedef {{ loggedUser: any, pageUrl?: string }} RequestContext */
+/** @typedef {{ uid?: string, user?: { lnk: string, pl: unknown } }} RequestedUserData */
+/** @typedef {{ playlistId?: string }} RequestedPlaylistData */
+/** @typedef {{ after?: number | string, limit?: number | string }} PaginationParameters */
+/** @typedef {{ bodyClass?: string, format?: string, displayPlaylistName?: boolean, embedW?: unknown, content?: string, callback?: string }} RenderingAttributes */
+/** @typedef { RequestContext & RequestedUserData & RequestedPlaylistData & PaginationParameters & RenderingAttributes } FetchAndRenderOptions */
+
 /**
  * LibUser class
  * fetchs and renders a user's library
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
-var userModel = require('../models/user.js');
-var followModel = require('../models/follow.js');
-var postModel = require('../models/post.js');
-var feedTemplate = require('../templates/feed.js');
+const config = require('../models/config.js');
+const userModel = require('../models/user.js');
+const followModel = require('../models/follow.js');
+const postModel = require('../models/post.js');
+const feedTemplate = require('../templates/feed.js');
 
 const playlistRenderer = require('./LibUserPlaylist.js');
 const profileRenderer = require('./LibUserProfile.js');
 
 // DATA FETCHING HELPERS
 
-function fetchPlaylists(options) {
-  return new Promise((resolve) =>
+async function fetchPlaylists(options) {
+  return new Promise((resolve) => {
     userModel.fetchPlaylists(options.user, {}, function (playlists) {
       resolve(playlists);
-    })
-  );
+    });
+  });
 }
 
 function fetchLikes(options, callback) {
@@ -42,7 +52,7 @@ function fetchStats(options, callback) {
         function (err, res) {
           options.user.isSubscribed = !!res;
           callback();
-        }
+        },
       );
     });
   });
@@ -66,8 +76,9 @@ function generateMixpanelCode(options) {
   ].join('\n');
 }
 
-var bareFormats = new Set(['json', 'links']);
+const bareFormats = new Set(['json', 'links']);
 
+/** @param {FetchAndRenderOptions} options */
 function fetchAndRender(options, callback) {
   options.bodyClass = '';
 
@@ -86,7 +97,7 @@ function fetchAndRender(options, callback) {
 
 // MAIN FUNCTION
 
-var LNK_URL_PREFIX = {
+const LNK_URL_PREFIX = {
   fb: 'facebook.com/',
   tw: 'twitter.com/',
   sc: 'soundcloud.com/',
@@ -101,7 +112,7 @@ function populatePaginationParameters(options) {
     limit: options.limit,
   };
   if (options.embedW)
-    options.fetchParams.limit = config.nbTracksPerPlaylistEmbed;
+    options.fetchParams.limit = process.appParams.nbTracksPerPlaylistEmbed;
   else if (options.limit && typeof options.limit !== 'number') {
     if (typeof options.limit === 'string')
       options.fetchParams.limit = parseInt(options.limit);
@@ -114,14 +125,14 @@ function populatePaginationParameters(options) {
 
 function renderUserLinks(lnk) {
   // clean social links
-  for (let i in lnk) lnk[i] = ('' + lnk[i]).trim();
+  for (const i in lnk) lnk[i] = ('' + lnk[i]).trim();
 
   // for each social link, detect username and rebuild URL
-  for (let i in LNK_URL_PREFIX)
+  for (const i in LNK_URL_PREFIX)
     if (lnk[i]) {
-      var parts = lnk[i].split('?').shift().split('/');
+      const parts = lnk[i].split('?').shift().split('/');
       lnk[i] = ''; // by default, if no username was found
-      var username = '';
+      let username = '';
       while (!(username = parts.pop()));
       //for (let j=parts.length-1; j>-1; --j)
       //	if (parts[j]) {
@@ -131,11 +142,11 @@ function renderUserLinks(lnk) {
     }
 
   // make sure URLs are valid
-  for (let i in lnk)
+  for (const i in lnk)
     if (lnk[i]) {
-      var lnkBody = '//' + lnk[i].split('//').pop();
+      const lnkBody = '//' + lnk[i].split('//').pop();
       if (i == 'home') {
-        var isHttps = lnk[i].match(/^https:\/\//);
+        const isHttps = lnk[i].match(/^https:\/\//);
         lnk[i] = (isHttps ? 'https' : 'http') + ':' + lnkBody;
       } else {
         lnk[i] = lnkBody;
@@ -151,11 +162,11 @@ function renderUserLinks(lnk) {
 
 function renderResponse(feed, options, lib, user) {
   if (options.callback) {
-    var safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
+    const safeCallback = options.callback.replace(/[^a-z0-9_]/gi, '');
     const data = options.showPlaylists ? options.playlists : feed;
     lib.renderOther(
       safeCallback + '(' + JSON.stringify(data) + ')',
-      'application/javascript'
+      'application/javascript',
     );
   } else if (options.format == 'links') {
     lib.renderOther(
@@ -164,7 +175,7 @@ function renderResponse(feed, options, lib, user) {
           return config.translateEidToUrl((p || {}).eId);
         })
         .join('\n'),
-      'text/text'
+      'text/text',
     );
   } else if (options.showPlaylists && options.format == 'json') {
     lib.renderJson(options.playlists);
@@ -176,18 +187,19 @@ function renderResponse(feed, options, lib, user) {
     lib.renderPage(
       user,
       null /*sidebarHtml*/,
-      generateMixpanelCode(options) + feed
+      generateMixpanelCode(options) + feed,
     );
 }
 
+/** @param {{ options: FetchAndRenderOptions, render: (unknown) => void }} lib */
 async function renderUserLibrary(lib, user) {
-  var options = lib.options;
+  const options = lib.options;
 
   if (user == null) return lib.render({ errorCode: 'USER_NOT_FOUND' });
 
   options.pageUrl = options.pageUrl.replace(
     '/' + user.handle,
-    '/u/' + user._id
+    '/u/' + user._id,
   );
 
   options.uid = '' + user._id;

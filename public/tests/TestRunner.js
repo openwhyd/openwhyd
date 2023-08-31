@@ -6,15 +6,15 @@
 function forEachAsync(fcts, cb) {
   fcts = fcts || [];
   (function next() {
-    var fct = fcts.shift();
+    const fct = fcts.shift();
     if (!fct) cb();
     else fct(next);
   })();
 }
 
-function TestRunner() {
-  var tests = [];
-  var finalCallback = null;
+window.TestRunner = function () {
+  const tests = [];
+  let finalCallback = null;
 
   function wrapTest(testFct, title) {
     return function (nextTestFct) {
@@ -22,7 +22,7 @@ function TestRunner() {
       testFct(function (res) {
         console.log(
           '%c[TEST]=> ' + (res ? 'OK' : 'FAIL: ' + title),
-          'color:' + (res ? 'green' : 'red')
+          'color:' + (res ? 'green' : 'red'),
         );
         if (res) setTimeout(nextTestFct);
         else finalCallback({ ok: false, title: title });
@@ -31,7 +31,7 @@ function TestRunner() {
   }
 
   this.addTests = function (testMap) {
-    for (let title in testMap) tests.push(wrapTest(testMap[title], title));
+    for (const title in testMap) tests.push(wrapTest(testMap[title], title));
     return this;
   };
 
@@ -43,4 +43,4 @@ function TestRunner() {
     });
     return this;
   };
-}
+};

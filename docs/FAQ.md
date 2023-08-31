@@ -36,7 +36,6 @@ Démo: https://www.youtube.com/watch?v=aZT8VlTV1YY
 So far, Openwhyd can be used from the following devices only:
 
 - use the [web version](https://openwhyd.org) on your computer.
-- use our [iOS app](https://openwhyd.org) on your iPhone or iPad.
 - if you have another kind of smartphone or tablet, you can only use our experimental [Mobile Track Finder](https://openwhyd.org/mobile/) in order to search and play individual tracks from your Openwhyd profile.
 
 Many users are hoping for an Android app. We'd love to make it, but it would take us a whole lot of time. So far, nobody from our community of users volunteered for this, unfortunately.

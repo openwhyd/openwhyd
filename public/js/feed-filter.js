@@ -16,9 +16,9 @@ $(function () {
     window.whydPlayer.refresh();
   }
 
-  var $box = $('#filterBox');
+  const $box = $('#filterBox');
 
-  var quickSearch = new QuickSearch($box, {
+  const quickSearch = new QuickSearch($box, {
     noMoreResults: true,
     noMoreResultsOnEnter: true,
     submitQuery: function (query, display) {
@@ -31,11 +31,11 @@ $(function () {
         function (resultsHtml) {
           if (!resultsHtml || typeof resultsHtml == 'object') resultsHtml = ''; // '<a href="#" class="noResults"><p>' + query + ' was not found</p></a>';
           applyFilter(true);
-          var $results = $(resultsHtml).appendTo('.posts');
+          const $results = $(resultsHtml).appendTo('.posts');
           $('.post:visible').addClass('filtered');
           display(resultsHtml, false); // stop the searching animation
           $results.ajaxify();
-        }
+        },
       );
     },
     onEmpty: function () {

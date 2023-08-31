@@ -8,13 +8,13 @@
  * @author adrienjoly, whyd
  */
 
-var facebookModel = require('../../models/facebook.js');
+const facebookModel = require('../../models/facebook.js');
 
 exports.handleRequest = function (request, reqParams, response) {
   request.logToConsole('fbfriends.handleRequest', reqParams);
   reqParams = reqParams || {};
 
-  var loggedUser = request.checkLogin();
+  const loggedUser = request.checkLogin();
   if (!loggedUser) return response.legacyRender({ error: 'must be logged in' });
 
   facebookModel.fetchAccessToken(loggedUser.id, function (fbTok) {
@@ -25,9 +25,9 @@ exports.handleRequest = function (request, reqParams, response) {
         loggedUser.id,
         fbTok,
         function (fbfriends) {
-          var list = (fbfriends || {}).notOnWhyd || [];
+          const list = (fbfriends || {}).notOnWhyd || [];
           response.legacyRender({ fbfriends: list });
-        }
+        },
       );
     } else
       facebookModel.fetchFbFriendsWithSub(
@@ -35,7 +35,7 @@ exports.handleRequest = function (request, reqParams, response) {
         reqParams.fbAccessToken || fbTok,
         function (result) {
           response.legacyRender(result);
-        }
+        },
       );
   });
 };

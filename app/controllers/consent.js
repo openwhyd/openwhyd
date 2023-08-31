@@ -4,14 +4,13 @@
  * @author adrienjoly, openwhyd
  */
 
-var fs = require('fs');
-var snip = require('../snip.js');
-var mongodb = require('../models/mongodb.js');
-var userModel = require('../models/user.js');
-var analytics = require('../models/analytics.js');
-var mainTemplate = require('../templates/mainTemplate.js');
+const fs = require('fs');
+const snip = require('../snip.js');
+const mongodb = require('../models/mongodb.js');
+const userModel = require('../models/user.js');
+const mainTemplate = require('../templates/mainTemplate.js');
 
-var filePerLang = {
+const filePerLang = {
   en: 'config/gdpr-consent-en.md',
   fr: 'config/gdpr-consent-fr.md',
 };
@@ -27,7 +26,7 @@ function renderMarkdownLine(mdLine) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
     .replace(
       /^<p>- \[ \] (.*)/g,
-      '<div class="consent-box"><input class="checkbox" type="checkbox"><p>$1</div>'
+      '<div class="consent-box"><input class="checkbox" type="checkbox"><p>$1</div>',
     )
     .replace(/^<p>- (.*)/g, '<li>$1</li>')
     .replace(/^<p>#+ (.*)/g, '<h1>$1</h1>')
@@ -44,18 +43,18 @@ const promisedTemplatePerLang = Object.entries(filePerLang).reduce(
           .split('\n')
           .filter(removeEmptyLine)
           .map(renderMarkdownLine)
-          .join('\n')
+          .join('\n'),
       );
     return {
       ...acc,
       [langId]: promisedHtml,
     };
   },
-  {}
+  {},
 );
 
 async function renderPageContent(params) {
-  var safeRedirect = snip.sanitizeJsStringInHtml(params.redirect || '/');
+  const safeRedirect = snip.sanitizeJsStringInHtml(params.redirect || '/');
   // credits: flag icons by Freepik, https://www.flaticon.com/packs/countrys-flags
   return [
     '<div class="container" id="consent-container" data-lang="lang-en">',
@@ -97,8 +96,8 @@ async function renderPageContent(params) {
 }
 
 exports.controller = async function (request, getParams, response) {
-  var isPost = request.method.toLowerCase() === 'post';
-  var p = (isPost ? request.body : getParams) || {};
+  const isPost = request.method.toLowerCase() === 'post';
+  const p = (isPost ? request.body : getParams) || {};
   request.logToConsole('consent.controller ' + request.method, p);
   // make sure user is logged in
   if (!(p.loggedUser = request.checkLogin(response))) return;
@@ -107,7 +106,7 @@ exports.controller = async function (request, getParams, response) {
     // content or error
     if (!r || r.error) {
       r = r || {};
-      console.log(r.error);
+      console.trace('in consent.render:', r.error);
     } else if (r.content) {
       r.html = mainTemplate.renderWhydPage(r);
     }
@@ -115,8 +114,6 @@ exports.controller = async function (request, getParams, response) {
     if (r.redirect) response.safeRedirect(r.redirect);
     else if (r.html) response.renderHTML(r.html);
     else response.renderJSON(r);
-    // and track visit to that page
-    analytics.addVisit(p.loggedUser, request.url);
   }
 
   if (isPost) {
@@ -137,10 +134,10 @@ exports.controller = async function (request, getParams, response) {
             'user id',
             p.loggedUser.id,
             'consented to gdpr notice =>',
-            user.consent
+            user.consent,
           );
         render(err ? { error: err } : p); // should redirect to p.redirect, or display error
-      }
+      },
     );
   } else {
     (p.css = p.css || []).push('consent.css');

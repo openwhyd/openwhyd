@@ -1,20 +1,21 @@
+// @ts-check
+
 const mongodb = require('mongodb');
 const Progress = require('./Progress');
 
-var MONGO_OPTIONS = {
-  native_parser: true,
-  useNewUrlParser: true,
-  //strict: false,
-  //safe: false,
-  w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+/** @type mongodb.MongoClientOptions */
+const MONGO_OPTIONS = {
+  writeConcern: {
+    w: 'majority', // write concern: (value of > -1 or the string 'majority'), where < 1 means no write acknowlegement
+  },
 };
 
 const makeConnUrl = (params) => {
-  var host = params.mongoDbHost || process.env.MONGODB_HOST;
-  var port = params.mongoDbPort || process.env.MONGODB_PORT;
-  var authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
-  var authPassword = params.mongoDbAuthPassword || process.env.MONGODB_PASS;
-  var authStr =
+  const host = params.mongoDbHost || process.env.MONGODB_HOST;
+  const port = params.mongoDbPort || process.env.MONGODB_PORT;
+  const authUser = params.mongoDbAuthUser || process.env.MONGODB_USER;
+  const authPassword = params.mongoDbAuthPassword || process.env.MONGODB_PASS;
+  const authStr =
     authUser && authPassword
       ? encodeURIComponent(authUser) +
         ':' +
@@ -31,13 +32,12 @@ const cacheCollections = function (db, callback) {
       callback(err, db);
       return;
     }
-    var remaining = collections.length;
-    const cacheCollection = (colName) =>
-      db.collection(colName, function (err, col) {
-        db.collections[colName] = col;
-        if (0 == --remaining) callback(null, db);
-      });
-    for (let i in collections) {
+    let remaining = collections.length;
+    const cacheCollection = (colName) => {
+      db.collections[colName] = db.collection(colName);
+      if (0 == --remaining) callback(null, db);
+    };
+    for (const i in collections) {
       cacheCollection(collections[i].collectionName);
       // cacheCollection will mutate remaining, and callback when remaining == 0
     }
@@ -45,20 +45,12 @@ const cacheCollections = function (db, callback) {
 };
 
 const initMongo = (params, callback) => {
-  var url = makeConnUrl(params) + '/' + dbName;
+  const url = makeConnUrl(params) + '/' + dbName;
   var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
   console.log('Connecting to ' + url + '...');
-  mongodb.MongoClient.connect(url, MONGO_OPTIONS, (err, client) => {
-    if (err) {
-      callback(err);
-    } else {
-      const db = client.db(dbName);
-      db.addListener('error', function (err) {
-        console.log('MongoDB model async error: ', err);
-      });
-      cacheCollections(db, callback); // will mutate db and callback
-    }
-  });
+  const client = new mongodb.MongoClient(url, MONGO_OPTIONS);
+  const db = client.db(dbName);
+  cacheCollections(db, callback); // will mutate db and callback
 };
 
 const init = (params) =>
@@ -78,7 +70,7 @@ const forEachObject = (coll, handler, options = {}) =>
     const progress = new Progress({ label: 'fetching from mongodb...' });
     // options.batchSize = options.batchSize || 100;
     // options.cursorDelay = options.cursorDelay || 0;
-    coll.find({}, options, function (err, cursor) {
+    coll.find({}, options).then(function (cursor) {
       const onObject = (err, obj) => {
         if (err) {
           progress.done();

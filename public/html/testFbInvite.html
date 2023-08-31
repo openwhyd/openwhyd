@@ -8,7 +8,7 @@
 
   <body>
     <div id="fb-root"></div>
-    <script src="/js/jquery-1.8.2.min.js"></script>
+    <script src="/js/jquery-1.10.2.min.js"></script>
     <script src="/js/topicBrowser.js"></script>
     <script src="http://connect.facebook.net/en_US/sdk.js"></script>
     <input type="button" onclick="FB.login(); return false;" value="login" />
@@ -58,7 +58,7 @@
             message: 'Show me your interests on Openwhyd!',
             to: user_id,
           },
-          requestCallback
+          requestCallback,
         );
       }
 
@@ -68,7 +68,7 @@
             method: 'apprequests',
             message: 'Show me your interests on Openwhyd!',
           },
-          requestCallback
+          requestCallback,
         );
       }
 
@@ -82,7 +82,7 @@
             window.user.name + ' invited you to join Openwhyd',
             function (params) {
               console.log('sent!');
-            }
+            },
           );
         else if (response && response.request && response.to)
           invitedToConversation(
@@ -91,7 +91,7 @@
             window.user.name + ' invited you to join Openwhyd',
             function (params) {
               console.log('sent!');
-            }
+            },
           );
         else console.log('invalid response');
       }

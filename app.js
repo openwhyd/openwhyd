@@ -1,17 +1,37 @@
-var /*consoleWarn = console.warn,*/ consoleError = console.error;
+//@ts-check
+
+const /*consoleWarn = console.warn,*/ consoleError = console.error;
 
 if (!process.env.DISABLE_DATADOG) {
-  require('dd-trace').init(); // datadog APM
+  const { DD_GIT_COMMIT_SHA, DD_GIT_REPOSITORY_URL } = process.env;
+  console.log('Init Datadog APM with:', {
+    DD_GIT_COMMIT_SHA,
+    DD_GIT_REPOSITORY_URL,
+  });
+  // Initialize Datadog APM
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore // cf https://docs.datadoghq.com/fr/tracing/trace_collection/dd_libraries/nodejs/?tab=autresenvironnements
+  process.datadogTracer = require('dd-trace').init({
+    profiling: true, // cf https://docs.datadoghq.com/fr/profiler/enabling/nodejs/?tab=incode
+  });
+  process.datadogTracer.use('express', {
+    hooks: {
+      request: (span, req) => {
+        // @ts-ignore ts(2339): Property 'session' does not exist on type 'IncomingMessage'. // it's added by a middleware
+        const userId = req.session?.whydUid;
+        span.setTag('customer.id', userId);
+      },
+    },
+  });
 }
 
-var util = require('util');
-var mongodb = require('mongodb');
+const util = require('util');
 
-var openwhydVersion = require('./package.json').version;
+const openwhydVersion = require('./package.json').version;
 
 function makeColorConsole(fct, color) {
   return function () {
-    for (let i in arguments)
+    for (const i in arguments)
       if (arguments[i] instanceof Object || arguments[i] instanceof Array)
         arguments[i] = util.inspect(arguments[i]);
     fct(Array.prototype.join.call(arguments, ' ')[color]);
@@ -25,7 +45,7 @@ function makeErrorLog(fct, type) {
       type,
       '--',
       new Date().toUTCString(),
-      ...arguments
+      ...arguments,
     );
   };
 }
@@ -35,21 +55,30 @@ console.error = makeErrorLog(consoleError, 'Error');
 
 // app configuration
 
-var params = (process.appParams = {
+if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
+  throw new Error(`missing env var: WHYD_GENUINE_SIGNUP_SECRET`);
+if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
+  throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
+
+const dbCreds = {
+  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
+  mongoDbPort: process.env['MONGODB_PORT'] || '27017',
+  mongoDbAuthUser: process.env['MONGODB_USER'],
+  mongoDbAuthPassword: process.env['MONGODB_PASS'],
+  mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
+};
+
+const params = (process.appParams = {
   // server level
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
   urlPrefix:
     process.env['WHYD_URL_PREFIX'] ||
     `http://localhost:${process.env['WHYD_PORT'] || 8080}`, // base URL of the app
-  mongoDbHost: process.env['MONGODB_HOST'] || 'localhost',
-  mongoDbPort: process.env['MONGODB_PORT'] || mongodb.Connection.DEFAULT_PORT, // 27017
-  mongoDbAuthUser: process.env['MONGODB_USER'],
-  mongoDbAuthPassword: process.env['MONGODB_PASS'],
-  mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
+  isOnTestDatabase: dbCreds.mongoDbDatabase === 'openwhyd_test',
   color: true,
 
   // secrets
-  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET.substr(),
+  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET,
 
   // workers and general site logic
   searchModule:
@@ -62,7 +91,7 @@ var params = (process.appParams = {
   emailModule: 'emailSendgrid', // "DISABLED"/"null" => fake email sending
   digestInterval: 60 * 1000, // digest worker checks for pending notifications every 60 seconds
   digestImmediate: false, // when true, digests are sent at every interval, if any notifications are pending
-  feedbackEmail: process.env.WHYD_CONTACT_EMAIL.substr(), // mandatory
+  feedbackEmail: process.env.WHYD_CONTACT_EMAIL, // mandatory
 
   // rendering preferences
   version: openwhydVersion,
@@ -79,7 +108,7 @@ var params = (process.appParams = {
   },
 });
 
-var FLAGS = {
+const FLAGS = {
   '--no-color': function () {
     process.appParams.color = false;
   },
@@ -110,13 +139,16 @@ function makeMongoUrl(params) {
 }
 
 function start() {
+  if (process.env['WHYD_SESSION_SECRET'] === undefined)
+    throw new Error(`missing env var: WHYD_SESSION_SECRET`);
+
   const myHttp = require('./app/lib/my-http-wrapper/http');
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
   const sessionMiddleware = session({
-    secret: process.env.WHYD_SESSION_SECRET.substr(),
+    secret: process.env.WHYD_SESSION_SECRET,
     store: new MongoStore({
-      url: makeMongoUrl(params),
+      url: makeMongoUrl(dbCreds),
     }),
     cookie: {
       maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
@@ -127,16 +159,13 @@ function start() {
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
-  var serverOptions = {
+  const serverOptions = {
     urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
     sessionMiddleware,
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
-      console.log(
-        `[app] rendering server error page ${statusCode} for ${req.method} ${req.path}`
-      );
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
         response,
@@ -146,7 +175,7 @@ function start() {
             : req.accepts('json')
             ? 'json'
             : 'text'),
-        req.getUser()
+        req.getUser(),
       );
     },
     uploadSettings: {
@@ -181,29 +210,29 @@ async function main() {
   if (process.argv.length > 2) {
     // ignore "node" and the filepath of this script
     for (let i = 2; i < process.argv.length; ++i) {
-      var flag = process.argv[i];
-      var flagFct = FLAGS[flag];
+      const flag = process.argv[i];
+      const flagFct = FLAGS[flag];
       if (flagFct) flagFct();
       else if (flag.indexOf('--') == 0)
-        params[flag.substr(2)] = process.argv[++i];
+        params[flag.substring(2)] = process.argv[++i];
     }
   }
   if (params.color == true) {
     require('colors'); // populates .grey, .cyan, etc... on strings, for logging.js and MyController.js
     console.warn = makeErrorLog(
       makeColorConsole(consoleError, 'yellow'),
-      'Warning'
+      'Warning',
     );
     console.error = makeErrorLog(
       makeColorConsole(consoleError, 'red'),
-      'Error'
+      'Error',
     );
   } else {
     process.appParams.color = false;
   }
   console.log(`[app] Starting Openwhyd v${params.version}`);
   const mongodb = require('./app/models/mongodb.js'); // we load it from here, so that process.appParams are initialized
-  await util.promisify(mongodb.init)();
+  await util.promisify(mongodb.init)(dbCreds);
   await mongodb.initCollections();
   start();
 }

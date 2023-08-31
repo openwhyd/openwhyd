@@ -1,15 +1,17 @@
+// @ts-check
+
 /**
  * activity model
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var followModel = require('../models/follow.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
+const followModel = require('../models/follow.js');
 
-var ObjectId = mongodb.ObjectID.createFromHexString;
+const ObjectId = mongodb.ObjectId;
 
-var DEFAULT_LIMIT_HISTORY = 10;
+const DEFAULT_LIMIT_HISTORY = 10;
 
 function getCol() {
   return mongodb.collections['activity'];
@@ -23,24 +25,23 @@ exports.fetch = function (q, options, callback) {
   if (options.until)
     q._id = { $gt: mongodb.ObjectId(mongodb.dateToHexObjectId(options.until)) };
   options.sort = options.sort || [['_id', 'desc']];
-  getCol().find(q, options, function (err, results) {
-    results.toArray(function (err, results) {
-      callback(results);
-    });
-  });
+  getCol()
+    .find(q, options)
+    .toArray()
+    .catch((err) => {
+      console.trace('error in activity.fetch:', err);
+      callback();
+    })
+    .then((res) => callback(res));
 };
 
-exports.add = function (d, callback) {
+exports.add = async function (d, callback) {
   if (d && d.like && d.like.pId) d.like.pId = '' + d.like.pId;
-  getCol().insertOne(d, function (err, result) {
-    callback && callback(result || err);
-  });
+  return getCol().insertOne(d).then(callback, callback);
 };
 
 exports.remove = function (q, callback) {
-  getCol().deleteOne(q, function (err, result) {
-    callback && callback(result || err);
-  });
+  getCol().deleteOne(q).then(callback, callback);
 };
 
 // fetch helpers
@@ -59,16 +60,16 @@ exports.fetchLikersOfUser = function (uid, options, callback) {
 
 exports.fetchHistoryFromUidList = function (uidList, options, callback) {
   options = options || {};
-  var limit = options.limit || DEFAULT_LIMIT_HISTORY;
+  const limit = options.limit || DEFAULT_LIMIT_HISTORY;
   options.limit = limit + 1;
-  var q = { id: { $in: uidList } };
+  const q = { id: { $in: uidList } };
   if (options.likesOnly) q.like = { $exists: true };
   function whenDone(activities) {
     activities = activities.sort(function (a, b) {
       return b._id.getTimestamp() - a._id.getTimestamp(); // sort by _id
     });
     //console.log("sorted likes with subscr:", activities);
-    var hasMore = activities && activities.length > limit;
+    const hasMore = activities && activities.length > limit;
     if (hasMore) activities = activities.slice(0, limit);
     //console.log("filtered likes with subscr:", activities);
     // console.log(
@@ -84,9 +85,8 @@ exports.fetchHistoryFromUidList = function (uidList, options, callback) {
     // console.log('=> fetched', activities.length, 'likes');
     if (options.likesOnly) return whenDone(activities);
     options.fromUId = uidList;
-    //followModel.fetchUsersSubscriptionsHistory(uidList, options, function(subscriptions) {
     followModel.fetchSubscriptionHistory(options, function (subscriptions) {
-      for (let i in subscriptions)
+      for (const i in subscriptions)
         activities.push({
           _id: subscriptions[i]._id,
           id: subscriptions[i].uId,
@@ -112,7 +112,7 @@ exports.addLikeByPost = function (post, liker, callback) {
         name: liker.name,
         like: { pId: post._id, id: post.uId, name: post.uNm },
       },
-      callback
+      callback,
     );
   else callback && callback({ error: 'post not found' });
 };

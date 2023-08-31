@@ -4,19 +4,19 @@
  * @author adrienjoly, whyd
  */
 
-var postModel = require('../../models/post.js');
-var templateLoader = require('../../templates/templateLoader.js');
-var postsTemplate = require('../../templates/posts.js');
-var mainTemplate = require('../../templates/mainTemplate.js');
+const postModel = require('../../models/post.js');
+const templateLoader = require('../../templates/templateLoader.js');
+const postsTemplate = require('../../templates/posts.js');
+const mainTemplate = require('../../templates/mainTemplate.js');
 
-var MAX_TRACKS = 1000;
+const MAX_TRACKS = 1000;
 
 function renderTemplate(params, callback) {
   templateLoader.loadTemplate(
     'app/templates/feed-trackorder.html',
     function (template) {
       callback(template.render(params));
-    }
+    },
   );
 }
 
@@ -24,7 +24,7 @@ exports.controller = function (request, getParams, response) {
   request.logToConsole('playlistOrder.controller', getParams);
 
   function renderWhydPage(html) {
-    var options = {};
+    const options = {};
     options.js = options.js || [];
     options.css = options.css || [];
     options.bodyClass = 'pgPlaylistOrder';
@@ -52,7 +52,7 @@ exports.controller = function (request, getParams, response) {
   if (!getParams.uId || !getParams.plId)
     return render('what the hell are you trying to do?'); // unlikely to happen ^^
 
-  var loggedUser = null;
+  let loggedUser = null;
   if (!(loggedUser = request.checkLogin(response))) return;
 
   if (loggedUser.id != getParams.uId)
@@ -63,13 +63,13 @@ exports.controller = function (request, getParams, response) {
     getParams.plId,
     { limit: MAX_TRACKS },
     function (posts) {
-      for (let i in posts) posts[i] = postsTemplate.preparePost(posts[i]);
-      var params = {
+      for (const i in posts) posts[i] = postsTemplate.preparePost(posts[i]);
+      const params = {
         uId: getParams.uId,
         plId: getParams.plId,
         posts: posts,
       };
       renderTemplate(params, render);
-    }
+    },
   );
 };

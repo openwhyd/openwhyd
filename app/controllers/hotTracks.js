@@ -4,36 +4,27 @@
  * @author adrienjoly, whyd
  **/
 
-var snip = require('../snip.js');
-var config = require('../models/config.js');
-var analytics = require('../models/analytics.js');
-var trackModel = require('../models/track.js');
-var postsTemplate = require('../templates/posts.js');
-var templateLoader = require('../templates/templateLoader.js');
-var mainTemplate = require('../templates/mainTemplate.js');
+const snip = require('../snip.js');
+const config = require('../models/config.js');
+const trackModel = require('../models/track.js');
+const postsTemplate = require('../templates/posts.js');
+const templateLoader = require('../templates/templateLoader.js');
+const mainTemplate = require('../templates/mainTemplate.js');
 
-var template;
+let template;
 (function loadTemplates(callback) {
   template = templateLoader.loadTemplate(
     'app/templates/hotTracks.html',
-    callback
+    callback,
   );
 })();
 
 exports.controller = function (request, reqParams, response) {
   reqParams = reqParams || {};
-  var loggedInUser = request.getUser() || {};
+  const loggedInUser = request.getUser() || {};
 
   function render(html) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
-
-    if (
-      loggedInUser &&
-      loggedInUser.id &&
-      !reqParams.after &&
-      !reqParams.before
-    )
-      analytics.addVisit(loggedInUser, request.url /*"/u/"+uid*/);
   }
 
   reqParams.limit =
@@ -41,11 +32,11 @@ exports.controller = function (request, reqParams, response) {
     config.nbPostsPerNewsfeedPage;
 
   function renderHotTracks(posts) {
-    var firstIndex = parseInt(reqParams.skip || 0);
-    var hasMore = posts && posts.length > reqParams.limit;
+    const firstIndex = parseInt(reqParams.skip || 0);
+    const hasMore = posts && posts.length > reqParams.limit;
     if (hasMore) posts = posts.slice(0, reqParams.limit);
     if (loggedInUser.id)
-      for (let i in posts)
+      for (const i in posts)
         posts[i].isLoved = snip.arrayHas(posts[i].lov, '' + loggedInUser.id);
     if (reqParams.format == 'json')
       response.legacyRender({
@@ -54,19 +45,19 @@ exports.controller = function (request, reqParams, response) {
       });
     else {
       // html rendering
-      for (let i in posts)
+      for (const i in posts)
         if (posts[i].rankIncr < 0) posts[i].cssClass = 'rankingUp';
         else if (posts[i].rankIncr > 0) posts[i].cssClass = 'rankingDown';
       postsTemplate.renderPostsAsync(
         posts,
         { loggedUser: loggedInUser },
         function (postsHtml) {
-          var pageVars = {
+          const pageVars = {
             hasMore: hasMore ? { skip: firstIndex + reqParams.limit } : null, // to do before renderPosts
             rawFeed: !!reqParams.skip, //reqParams.after || reqParams.before,
             posts: postsHtml,
           };
-          var html = template.render(pageVars);
+          let html = template.render(pageVars);
           if (!pageVars.rawFeed)
             html = mainTemplate.renderWhydPage({
               bodyClass: 'pgHotTracks', // pgWithSideBar
@@ -74,11 +65,11 @@ exports.controller = function (request, reqParams, response) {
               content: html,
             });
           render(html);
-        }
+        },
       );
     }
   }
 
-  var params = { skip: reqParams.skip, limit: reqParams.limit + 1 };
-  trackModel.fetchPosts(params, renderHotTracks);
+  const params = { skip: reqParams.skip, limit: reqParams.limit + 1 };
+  trackModel.getHotTracksFromDb(params, renderHotTracks);
 };

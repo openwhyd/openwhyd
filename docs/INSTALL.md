@@ -42,9 +42,7 @@ After making changes to the source code, don't forget to stop and re-start it us
 Commands to run all automated tests against the Docker container:
 
 ```sh
-$ docker-compose up --build --detach  # to have openwhyd's web server and database running in the background
-$ npm install                         # will install the necessary test runners
-$ npm run docker:test                 # will run the automated tests: unit and end-to-end
+$ make test
 ```
 
 ### Sample data
@@ -52,8 +50,9 @@ $ npm run docker:test                 # will run the automated tests: unit and e
 If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
 
 ```sh
-$ npm run docker:seed                   # will clear the database
-$ node scripts/import-from-prod.js test # will import 21 posts from https://openwhyd.org/test
+$ docker-compose up --build --detach    # starts openwhyd's web server and database in the background
+$ make docker-seed                      # clears the database and restarts openwhyd's container
+$ node scripts/import-from-prod.js test # imports 21 posts from https://openwhyd.org/test
 ```
 
 After that, you will be able to sign in as an administrator using the credentials returned by the script.
@@ -88,7 +87,6 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 - Make sure that the necessary environment variables are defined (see below)
 - Make sure that the database is initialized (by running `mongo openwhyd_data config/initdb.js` and `mongo openwhyd_data config/initdb_testing.js`)
 - Make sure that dependencies are installed (`npm install`)
-- If you want notifications to be pushed to your iPhone app, make sure that Apple Push Notification Service (APNS) certificates are copied to `/config/apns` with the following filenames: `aps_dev.cert.pem`, `aps_dev.key.pem`, `aps_prod.cert.pem`, `aps_prod.key.pem`, and `Dev_Whyd.mobileprovision`. (you can test them using `test_apns.sh`)
 
 ### Usage (advanced)
 
@@ -104,13 +102,11 @@ Run unit tests only:
 $ npm run test:unit
 ```
 
-Run all tests, including acceptance tests (Cypress-based):
+Run all tests, including approval tests:
 
 ```sh
-# in a terminal session, start Openwhyd's application server
-$ . ./env-vars-testing.sh && npm start
-# in another terminal session, run the tests
-$ npm test
+$ make test
+$ make test-approval
 ```
 
 ---
@@ -147,8 +143,6 @@ If you want to test Deezer Connect, you will need your server to be reachable th
 
 - `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
 - `WHYD_SESSION_SECRET` (mandatory. a secret key used to sign session cookies)
-- `WHYD_DEV_APNS_PASSPHRASE` (mandatory. the passphrase used to de-cypher APNS certificate and key, for iOS push notifications in DEV mode)
-- `WHYD_APNS_PASSPHRASE` (mandatory. the passphrase used to de-cypher APNS certificate and key, for iOS push notifications in PRODUCTION mode)
 - `WHYD_ADMIN_OBJECTID` (ObjectId of the user that can access to admin endpoints)
 - `WHYD_ADMIN_NAME` (Full-text name of the user that can access to admin endpoints)
 - `WHYD_ADMIN_EMAIL` (mandatory. Email address of the user that can access to admin endpoints)

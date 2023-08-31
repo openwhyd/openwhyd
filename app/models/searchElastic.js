@@ -4,13 +4,13 @@
  * @deprecated because this code has not been used for years
  **/
 
-var http = require('http');
+const http = require('http');
 
-var INDEX_NAME = 'whyd'; // "test";
-var INDEX_HOST = 'localhost';
-var INDEX_PORT = 9200;
+const INDEX_NAME = 'whyd'; // "test";
+const INDEX_HOST = 'localhost';
+const INDEX_PORT = 9200;
 
-var INDEX_FIELDS = {
+const INDEX_FIELDS = {
   user: { _id: 1, name: 1, email: 1, handle: 1 },
   post: { _id: 1, name: 1, text: 1, uId: 1 },
   playlist: { _id: 1, name: 1 },
@@ -28,7 +28,7 @@ function buildReq(method, pathSuffix) {
 function getJson(pathSuffix, cb) {
   return http
     .request(buildReq('GET', pathSuffix), function (res) {
-      var json = '';
+      let json = '';
       res.addListener('data', function (chunk) {
         json += chunk.toString();
       });
@@ -45,7 +45,7 @@ function getJson(pathSuffix, cb) {
     .addListener('error', function (err) {
       console.error(
         '[search] elasticsearch index getJson() socket error:',
-        err
+        err,
       );
       cb({ error: err });
     })
@@ -53,7 +53,7 @@ function getJson(pathSuffix, cb) {
 }
 
 function postJson(data = {}, cb) {
-  var pathSuffix = '';
+  let pathSuffix = '';
   if (data._type && data._id) {
     pathSuffix += '/' + data._type + '/' + data._id;
     delete data._type;
@@ -67,7 +67,7 @@ function postJson(data = {}, cb) {
       pathSuffix,
       ':',
       data.length,
-      'bytes...'
+      'bytes...',
     );
   } else {
     if (data.query) pathSuffix += '/_search';
@@ -79,7 +79,7 @@ function postJson(data = {}, cb) {
 
   return http
     .request(buildReq('POST', pathSuffix), function (res) {
-      var json = '';
+      let json = '';
       res.addListener('data', function (chunk) {
         json += chunk.toString();
       });
@@ -98,7 +98,7 @@ function postJson(data = {}, cb) {
     .addListener('error', function (err) {
       console.error(
         '[search] elasticsearch index postJson() socket error:',
-        err
+        err,
       );
       cb({ error: err });
     })
@@ -158,7 +158,7 @@ exports.query = function(q, handler) {
 }
 */
 exports.query = function (q = {}, handler) {
-  var filter = [];
+  const filter = [];
 
   if (q.uId) filter.push({ term: { uId: q.uId } });
   if (q.excludeUid) filter.push({ not: { term: { uId: q.excludeUid } } });
@@ -177,7 +177,7 @@ exports.query = function (q = {}, handler) {
 		}
 	};
 	*/
-  var query = {
+  let query = {
     bool: {
       should: [
         { match: { name: { query: q.q, operator: 'AND' } } },
@@ -207,10 +207,10 @@ exports.query = function (q = {}, handler) {
     //console.log("[search] json response", response);
     if (response && response.hits) {
       //console.log("[search] hits", response.hits.hits);
-      var hits = (response.hits || {}).hits;
-      for (let i in hits) {
+      const hits = (response.hits || {}).hits;
+      for (const i in hits) {
         if (hits[i] && hits[i]._source) {
-          for (let j in hits[i]._source) hits[i][j] = hits[i]._source[j];
+          for (const j in hits[i]._source) hits[i][j] = hits[i]._source[j];
           delete hits[i]._source;
         }
       }
@@ -222,23 +222,23 @@ exports.query = function (q = {}, handler) {
 exports.index = function (doc, handler) {
   //console.log("[search] index():", doc);
   postJson(doc, function (response) {
-    console.log('[search] index() => ', (response || {}).ok ? 'OK' : 'ERROR');
+    console.trace('[search] index() => ', (response || {}).ok ? 'OK' : 'ERROR');
     handler && handler(response);
   });
 };
 
 exports.indexBulk = function (docs, cb) {
   console.log('[search] indexBulk', docs.length, '...');
-  var bulkStr = '';
-  for (let i in docs) {
-    var u = docs[i],
+  let bulkStr = '';
+  for (const i in docs) {
+    const u = docs[i],
       meta = {},
       data = {};
     if (!u) {
       console.warn('[search] ignoring empty doc from being indexed in BULK');
       continue;
     }
-    for (let field in u)
+    for (const field in u)
       if (field[0] == '_') meta[field] = u[field];
       else data[field] = u[field];
     bulkStr +=
@@ -248,7 +248,7 @@ exports.indexBulk = function (docs, cb) {
 };
 
 function logToConsole(e) {
-  console.log('[search] INDEX ERROR: ' + (e || {}).error);
+  console.trace('[search] INDEX ERROR: ' + (e || {}).error);
 }
 
 exports.indexTyped = function (type, item, handler) {
@@ -258,14 +258,14 @@ exports.indexTyped = function (type, item, handler) {
   else if (!item || !item._id || !item.name)
     handler || logToConsole({ error: 'indexTyped: missing parameters' });
   else {
-    var doc = { _type: type };
-    for (let f in INDEX_FIELDS[type]) doc[f] = item[f];
+    const doc = { _type: type };
+    for (const f in INDEX_FIELDS[type]) doc[f] = item[f];
     this.index(doc, handler);
   }
 };
 
 exports.indexPlaylist = function (uid, plId, plName, handler) {
-  var item = {
+  const item = {
     //	_type: "playlist",
     _id: '' + uid + '_' + plId,
     name: plName,
@@ -287,7 +287,7 @@ exports.init = function () {
   console.log(
     '[search] initializing ElasticSearch index:',
     INDEX_HOST + ':' + INDEX_PORT + '/' + INDEX_NAME,
-    '...'
+    '...',
   );
   try {
     exports.countDocs('user', function (c) {

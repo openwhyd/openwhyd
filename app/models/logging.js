@@ -1,6 +1,6 @@
-var http = require('http');
-var querystring = require('querystring');
-var errorTemplate = require('../templates/error.js');
+const http = require('http');
+const querystring = require('querystring');
+const errorTemplate = require('../templates/error.js');
 const snip = require('../snip.js');
 
 const genReqLogLine = ({ head, method, path, params, suffix }) =>
@@ -32,14 +32,14 @@ http.IncomingMessage.prototype.logToConsole = function (suffix, params) {
           ? JSON.stringify(snip.formatPrivateFields(params))
           : '',
       suffix: suffix ? '(' + suffix + ')' : '',
-    })
+    }),
   );
 };
 
-var config = require('./config.js');
-var mongodb = require('./mongodb.js');
-var loggingTemplate = require('../templates/logging.js');
-var renderUnauthorizedPage = loggingTemplate.renderUnauthorizedPage;
+const config = require('./config.js');
+const mongodb = require('./mongodb.js');
+const loggingTemplate = require('../templates/logging.js');
+const renderUnauthorizedPage = loggingTemplate.renderUnauthorizedPage;
 
 // ========= USER AGENT STUFF
 
@@ -71,17 +71,17 @@ http.IncomingMessage.prototype.getCookies = (function () {
   return function () {
     //console.log("cookies raw:", this.headers.cookie);
     if (!this.headers.cookie) return null;
-    var cookiesArray = this.headers.cookie.split(';');
+    const cookiesArray = this.headers.cookie.split(';');
     //console.log("cookies array:", cookiesArray);
-    var cookies = {};
+    const cookies = {};
     for (let i = 0; i < cookiesArray.length; i++) {
       //var match = cookiesArray[i].trim().match(cookieReg);
       //if (match)
       cookiesArray[i] = cookiesArray[i].trim();
-      var separ = cookiesArray[i].indexOf('=');
+      const separ = cookiesArray[i].indexOf('=');
       if (separ > 0)
         cookies[cookiesArray[i].substr(0, separ)] = cookiesArray[i].substring(
-          separ + 1
+          separ + 1,
         );
     }
     //console.log("cookies object:", cookies);
@@ -93,14 +93,14 @@ http.IncomingMessage.prototype.getCookies = (function () {
  * Return facebook's "fbs_" cookie object from the request
  */
 http.IncomingMessage.prototype.getFacebookCookie = function () {
-  var cookies = this.getCookies();
+  const cookies = this.getCookies();
   //console.log("cookies:", cookies);
-  for (let i in cookies)
+  for (const i in cookies)
     if (i.startsWith('fbs_')) {
       const cookie = {},
         cookieArray = cookies[i].split('&');
-      for (let j in cookieArray) {
-        var cookieItem = cookieArray[j].split('=');
+      for (const j in cookieArray) {
+        const cookieItem = cookieArray[j].split('=');
         cookie[cookieItem[0]] = cookieItem[1];
       }
       console.log('found facebook cookie'); //, cookie);
@@ -114,7 +114,7 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
         console.log('found secure facebook cookie'); //, cookie);
         return cookie;
       } catch (e) {
-        console.log('secure facebook connect error: ', e);
+        console.trace('secure facebook connect error: ', e);
       }
     }
   return null;
@@ -126,7 +126,7 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
  * Returns the logged in user's facebook uid, from its cookie
  */
 http.IncomingMessage.prototype.getFbUid = function () {
-  var fbCookie = this.getFacebookCookie();
+  const fbCookie = this.getFacebookCookie();
   if (fbCookie && fbCookie.uid)
     this.getFbUid = function () {
       return fbCookie.uid;
@@ -156,9 +156,9 @@ http.IncomingMessage.prototype.getUid = function () {
  * Returns the logged in user as an object {_id, id, fbId, name, img}
  */
 http.IncomingMessage.prototype.getUser = function () {
-  var uid = this.getUid();
+  const uid = this.getUid();
   if (uid) {
-    var user = mongodb.usernames[uid];
+    const user = mongodb.usernames[uid];
     if (user) user.id = '' + user._id;
     return user;
   } else return null;
@@ -176,7 +176,7 @@ http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId;
  * Checks that a registered user is logged in, and return that user, or show an error page
  */
 http.IncomingMessage.prototype.checkLogin = function (response, format) {
-  var user = this.getUser();
+  const user = this.getUser();
   //console.log("checkLogin, cached record for logged in user: ", user);
   if (!user /*|| !user.name*/) {
     if (response) {
@@ -184,7 +184,7 @@ http.IncomingMessage.prototype.checkLogin = function (response, format) {
         errorTemplate.renderErrorResponse(
           { errorCode: 'REQ_LOGIN' },
           response,
-          'json'
+          'json',
         );
       else response.renderHTML(renderUnauthorizedPage());
     }
@@ -194,7 +194,7 @@ http.IncomingMessage.prototype.checkLogin = function (response, format) {
 };
 
 http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin = function (
-  user
+  user,
 ) {
   return user.email && config.adminEmails[user.email];
 };
@@ -204,12 +204,12 @@ http.IncomingMessage.prototype.isAdmin = function () {
 };
 
 http.IncomingMessage.prototype.checkAdmin = function (response, format) {
-  var user = this.checkLogin(response, format);
+  const user = this.checkLogin(response, format);
   if (!user) return false;
   else if (!exports.isUserAdmin(user)) {
     console.log(
       'access restricted, user is not an admin: ',
-      user._id || user.id
+      user._id || user.id,
     );
     response && response.legacyRender('nice try! ;-)');
     return false;
@@ -224,7 +224,7 @@ http.ServerResponse.prototype.renderHTML = function (html, statusCode) {
     html,
     null,
     { 'content-type': 'text/html; charset=utf-8' },
-    statusCode
+    statusCode,
   );
 };
 
@@ -233,7 +233,7 @@ http.ServerResponse.prototype.renderJSON = function (json, statusCode) {
     json,
     null,
     { 'content-type': 'application/json; charset=utf-8' },
-    statusCode
+    statusCode,
   );
 };
 
@@ -242,7 +242,7 @@ http.ServerResponse.prototype.renderWrappedJSON = function (json, statusCode) {
     '<!DOCTYPE html><html><body><textarea>' +
       JSON.stringify(json) +
       '</textarea></body></html>',
-    statusCode
+    statusCode,
   );
 };
 
@@ -251,7 +251,7 @@ http.ServerResponse.prototype.renderText = function (json, statusCode) {
     json,
     null,
     { 'content-type': 'text/text; charset=utf-8' },
-    statusCode
+    statusCode,
   );
 };
 
@@ -268,7 +268,7 @@ http.ServerResponse.prototype.safeRedirect = function (url) {
 
 http.ServerResponse.prototype.redirectWithTracking = function (url, title) {
   return this.renderHTML(
-    loggingTemplate.renderRedirectPageWithTracking(url, title)
+    loggingTemplate.renderRedirectPageWithTracking(url, title),
   );
 };
 
@@ -286,7 +286,10 @@ http.ServerResponse.prototype.temporaryRedirect = function (_url, _reqParams) {
 };
 
 http.ServerResponse.prototype.badRequest = function (error) {
-  this.status(400).send(error ? '' + error : 'BAD REQUEST');
+  this.status(400).send(
+    (typeof error === 'object' ? JSON.stringify(error) : error) ??
+      'BAD REQUEST',
+  );
 };
 
 http.ServerResponse.prototype.forbidden = function (error) {

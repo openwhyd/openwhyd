@@ -1,6 +1,6 @@
 // uiSnippets => moved to snip.js
 
-var snip = require('../snip.js');
+const snip = require('../snip.js');
 
 exports.replaceURLWithHTMLLinks = snip.replaceURLWithHTMLLinks;
 exports.replaceURLWithFullHTMLLinks = snip.replaceURLWithFullHTMLLinks;

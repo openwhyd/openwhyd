@@ -4,11 +4,10 @@
  * @author adrienjoly, whyd
  */
 
-var mongodb = require('../models/mongodb.js');
-var postModel = require('../models/post.js');
-var analytics = require('../models/analytics.js');
-var errorTemplate = require('../templates/error.js');
-var template = require('../templates/postViewer.js');
+const mongodb = require('../models/mongodb.js');
+const postModel = require('../models/post.js');
+const errorTemplate = require('../templates/error.js');
+const template = require('../templates/postViewer.js');
 
 exports.controller = function (request, reqParams, response) {
   request.logToConsole('postViewer.controller', reqParams);
@@ -17,20 +16,14 @@ exports.controller = function (request, reqParams, response) {
 
   function render(p) {
     if (p && p.errorCode) {
-      console.log('postViewer error:', p.errorCode, 'on', request.url);
       errorTemplate.renderErrorResponse(
         p,
         response,
         reqParams.format,
-        request.getUser()
+        request.getUser(),
       );
     } else if (p && p.html) {
       response.renderHTML(p.html);
-      analytics.addVisit(
-        request.getUid(),
-        /*"/c/" + pId*/ request.url,
-        reqParams.orig
-      );
     } else if (p && p.data) response.renderJSON(p);
     // TODO: or p.data?
     else response.legacyRender(p);
@@ -46,7 +39,7 @@ exports.controller = function (request, reqParams, response) {
           format: reqParams.format,
           loggedUser: request.getUser(),
         },
-        render
+        render,
       );
   }
 
@@ -56,14 +49,14 @@ exports.controller = function (request, reqParams, response) {
         eId: decodeURIComponent(request.url),
         img: '/images/cover-track.png', // by default => changed by postViewerDynamic.js
       },
-      true
+      true,
     );
   else if (!mongodb.isObjectId(reqParams.id))
     errorTemplate.renderErrorResponse(
       { errorCode: 'POST_NOT_FOUND' },
       response,
       reqParams.format,
-      request.getUser()
+      request.getUser(),
     );
   else postModel.fetchPostById(reqParams.id || reqParams.pId, renderPost);
 };

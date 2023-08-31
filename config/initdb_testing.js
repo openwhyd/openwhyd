@@ -1,13 +1,12 @@
 /* globals db, ObjectId */
 
-// Usage: this file should be run by runShellScript() or by mongo's CLI:
-// $ mongo openwhyd_data initdb_testing.js
+// Usage: this file should be run by mongodb-shell-runner.js, on startup
 
 //db = db.getSiblingDB("openwhyd_data"); //connect("localhost:27017/whyd_music");
 
 print('upserting openwhyd testing users ...');
 
-db.user.updateOne(
+await db.collection('user').updateOne(
   { _id: ObjectId('000000000000000000000001') },
   {
     $set: {
@@ -22,10 +21,10 @@ db.user.updateOne(
       'consent.date': true, // => mongodb will store a ISODate in consent.date
     },
   },
-  { upsert: true }
+  { upsert: true },
 );
 
-db.user.updateOne(
+await db.collection('user').updateOne(
   { _id: ObjectId('000000000000000000000002') },
   {
     $set: {
@@ -40,7 +39,7 @@ db.user.updateOne(
       'consent.date': true, // => mongodb will store a ISODate in consent.date
     },
   },
-  { upsert: true }
+  { upsert: true },
 );
 
 print('done! :-)');

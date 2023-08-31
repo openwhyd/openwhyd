@@ -3,29 +3,38 @@
  * to send emails through Sendgrid API.
  **/
 
-var https = require('https');
-var snip = require('./../snip.js');
-var querystring = require('querystring');
+const https = require('https');
+const snip = require('./../snip.js');
+const querystring = require('querystring');
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY.substr();
+if (process.env['SENDGRID_API_KEY'] === undefined)
+  throw new Error(`missing env var: SENDGRID_API_KEY`);
 
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+
+/** may reject with "Permission denied, wrong credentials" */
 exports.email = function (
   emailAddr,
   subject,
   textContent,
   htmlContent,
   userName,
-  callback
+  callback,
 ) {
   console.log('[EMAIL] about to send:', snip.formatEmail(emailAddr), subject);
 
   if (!emailAddr)
     return callback && callback({ error: 'no email address was provided' });
 
+  if (process.env['SENDGRID_API_FROM_EMAIL'] === undefined)
+    throw new Error(`missing env var: SENDGRID_API_FROM_EMAIL`);
+  if (process.env['SENDGRID_API_FROM_NAME'] === undefined)
+    throw new Error(`missing env var: SENDGRID_API_FROM_NAME`);
+
   // Set up message
-  var content = {
-    from: process.env.SENDGRID_API_FROM_EMAIL.substr(), // e.g. "no-reply@whyd.org",
-    fromname: process.env.SENDGRID_API_FROM_NAME.substr(), // e.g. "whyd",
+  let content = {
+    from: process.env.SENDGRID_API_FROM_EMAIL, // e.g. "no-reply@whyd.org",
+    fromname: process.env.SENDGRID_API_FROM_NAME, // e.g. "whyd",
     to: emailAddr,
     subject: subject,
     text: textContent,
@@ -37,7 +46,7 @@ exports.email = function (
   content = querystring.stringify(content);
 
   // Initiate REST request
-  var request = https
+  const request = https
     .request(
       {
         method: 'POST',
@@ -51,7 +60,7 @@ exports.email = function (
         },
       },
       function (response) {
-        var data = '';
+        let data = '';
         response.on('data', function (chunk) {
           data += chunk;
         });
@@ -59,10 +68,9 @@ exports.email = function (
           console.log('[EMAIL] response:', data);
           if (callback) callback(data);
         });
-      }
+      },
     )
     .on('error', function (err) {
-      console.log('[EMAIL] send error:', err);
       console.error('[EMAIL] send error:', err);
       if (callback) callback({ error: err });
     });

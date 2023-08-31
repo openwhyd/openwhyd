@@ -1,8 +1,10 @@
+// @ts-check
+
 /**
  * track model
  * - maintained by post model: updateByEid()
- * - read by hot tracks controller: fetchPosts()
- * - read by notif template: fetchPosts()
+ * - read by hot tracks controller: getHotTracksFromDb()
+ * - read by notif template: getHotTracksFromDb()
  * @author adrienjoly, whyd
  **/
 
@@ -33,185 +35,157 @@
   -> the score of a track will only be updated on a (re-)post, like, or play operation on that track
 */
 
-var mongodb = require('./mongodb.js');
-var ObjectId = mongodb.ObjectId;
-var snip = require('../snip.js');
+const config = require('./config.js');
+const mongodb = require('./mongodb.js');
+const ObjectId = mongodb.ObjectId;
+const feature = require('../features/hot-tracks.js');
 
-var FIELDS_TO_SUM = {
-  nbP: true, // number of plays
-  nbL: true, // number of likes (from lov[] field)
-  nbR: true, // number of posts/reposts
-};
+const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
 
-var FIELDS_TO_COPY = {
-  name: true,
-  img: true,
-  score: true,
-};
+const COEF_REPOST = 100;
+const COEF_LIKE = 50;
+const COEF_PLAY = 1;
 
-var COEF_REPOST = 100;
-var COEF_LIKE = 50;
-var COEF_PLAY = 1;
-
-var HOT_TRACK_TIME_WINDOW = 7 * 24 * 60 * 60 * 1000; // count (re)posts that are less than 1 week old, for ranking
+const HOT_TRACK_TIME_WINDOW = 7 * 24 * 60 * 60 * 1000; // count (re)posts that are less than 1 week old, for ranking
 
 function scorePost(post) {
   return COEF_REPOST * post.nbR + COEF_LIKE * post.nbL + COEF_PLAY * post.nbP;
 }
 
-var POST_FETCH_OPTIONS = {
+const POST_FETCH_OPTIONS = {
   limit: 10000,
-  sort: [['_id', 'desc']],
+  sort: ['_id', 'desc'],
 };
 
 // core methods
 
 function save(track, cb, replace) {
-  var op = replace ? track : { $set: track };
-  mongodb.collections['track'].updateOne(
-    { eId: track.eId },
-    op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
-    { upsert: true },
-    function (error, result) {
-      //console.log("=> saved hot track:", result);
-      if (error) console.error('track.save() db error:', error);
-      if (cb) cb(result);
-    }
-  );
+  const op = replace ? track : { $set: track };
+  mongodb.collections['track']
+    .updateOne(
+      { eId: track.eId },
+      op, // TODO: always use $set operator, to prevent "Update document requires atomic operators" ? (see https://github.com/openwhyd/openwhyd/issues/441#issuecomment-774697717)
+      { upsert: true },
+    )
+    .then(cb, (error) => console.trace('track.save() db error:', error));
 }
 
+/** Delete a "hot track". */
 function remove(q, cb) {
-  mongodb.collections['track'].deleteOne(q, function (error, result) {
-    console.log('=> removed hot track:', q);
-    if (error) console.error('track.remove() error: ' + error.stack);
-    if (cb) cb(result);
-  });
+  mongodb.collections['track']
+    .deleteOne(q)
+    .then(cb, (error) => console.trace('track.remove() error:', error));
 }
 
 exports.countTracksWithField = function (fieldName, cb) {
-  var q = {};
+  const q = {};
   q[fieldName] = { $exists: 1 };
-  mongodb.collections['track'].countDocuments(q, cb);
+  mongodb.collections['track'].countDocuments(q).then(
+    (res) => cb(null, res),
+    (err) => cb(err),
+  );
 };
 
 /* fetch top hot tracks, without processing */
 exports.fetch = function (params, handler) {
   params = params || {};
   params.sort = params.sort || [['score', 'desc']];
-  mongodb.collections['track'].find({}, params, function (err, cursor) {
-    cursor.toArray(function (err, results) {
+  mongodb.collections['track']
+    .find({}, params)
+    .toArray()
+    .catch(() => handler())
+    .then(function (results) {
       // console.log('=> fetched ' + results.length + ' tracks');
       if (handler) handler(results);
     });
-  });
 };
 
 exports.fetchTrackByEid = function (eId, cb) {
   // in order to allow requests of soundcloud eId without hash (#):
-  var eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
-  mongodb.collections['track'].findOne({ eId: eId }, function (err, track) {
-    if (!err && !track && eidPrefix)
-      mongodb.collections['track'].findOne(
-        { eId: new RegExp('^' + eidPrefix + '.*') },
-        function (err, track) {
-          if (track && track.eId.split('#')[0] != eidPrefix) track = null;
-          cb(err ? { error: err } : track);
-        }
-      );
-    else cb(err ? { error: err } : track);
-  });
+  const eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
+  mongodb.collections['track'].findOne({ eId: eId }).then(
+    function (track) {
+      if (!track && eidPrefix)
+        mongodb.collections['track']
+          .findOne({ eId: new RegExp('^' + eidPrefix + '.*') })
+          .then(
+            (track) => {
+              if (track && track.eId.split('#')[0] != eidPrefix) track = null;
+              cb(track);
+            },
+            (err) => cb(err ? { error: err } : track),
+          );
+      else cb(track);
+    },
+    (err) => cb({ error: err }),
+  );
 };
 
 // functions for fetching tracks and corresponding posts
 
-var fieldList = Object.keys(FIELDS_TO_COPY)
-  .concat(Object.keys(FIELDS_TO_SUM))
-  .concat(['prev']);
-
-function mergePostData(track, post) {
-  for (let f in fieldList) post[fieldList[f]] = track[fieldList[f]];
-  post.trackId = track._id;
-  post.rankIncr = track.prev - track.score;
-  return post;
-}
-
-function fetchPostsByPid(pId, cb) {
-  var pidList = (pId && Array.isArray(pId) ? pId : []).map(function (id) {
+const makeObjectIdList = (pId) =>
+  (pId && Array.isArray(pId) ? pId : []).map(function (id) {
     return ObjectId('' + id);
   });
-  //for (let i in pidList) pidList[i] = ObjectId("" + pidList[i]);
-  mongodb.collections['post'].find(
-    { _id: { $in: pidList } },
-    POST_FETCH_OPTIONS,
-    function (err, cursor) {
-      cursor.toArray(function (err, posts) {
-        cb(posts);
-      });
-    }
-  );
+
+function fetchPostsByPid(pId) {
+  return mongodb.collections['post']
+    .find({ _id: { $in: makeObjectIdList(pId) } }, POST_FETCH_OPTIONS)
+    .toArray();
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
-exports.fetchPosts = function (params, handler) {
-  params = params || {};
+exports.getHotTracksFromDb = function (params, handler) {
   params.skip = parseInt(params.skip || 0);
-  exports.fetch(params, function (tracks) {
-    var pidList = snip.objArrayToValueArray(tracks, 'pId');
-    fetchPostsByPid(pidList, function (posts) {
-      var postsByEid = snip.objArrayToSet(posts, 'eId');
-      for (let i in tracks) {
-        var track = tracks[i];
-        if (!track) {
-          console.error('warning: skipping null track in track.fetchPosts()');
-          continue;
-        }
-        var post = postsByEid[tracks[i].eId];
-        if (!post) {
-          //console.error("warning: skipping null post in track.fetchPosts()");
-          continue;
-        }
-        tracks[i] = mergePostData(track, post);
-      }
+  const getTracksByDescendingScore = () =>
+    new Promise((resolve) => {
+      exports.fetch(params, resolve);
+    });
+  feature
+    .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
+    .then((tracks) =>
+      tracks.map((track) => ({
+        ...track,
+        trackUrl: config.translateEidToUrl(track.eId),
+      })),
+    )
+    .then((tracks) => {
       handler(tracks);
     });
-  });
 };
 
 // update function
 
 function fetchPostsByEid(eId, cb) {
-  var criteria = { eId: eId && Array.isArray(eId) ? { $in: eId } : eId };
-  mongodb.collections['post'].find(
-    criteria,
-    POST_FETCH_OPTIONS,
-    function (err, cursor) {
-      cursor.toArray(function (err, posts) {
-        cb(posts);
-      });
-    }
-  );
+  const criteria = { eId: eId && Array.isArray(eId) ? { $in: eId } : eId };
+  mongodb.collections['post']
+    .find(criteria, POST_FETCH_OPTIONS)
+    .toArray()
+    .catch(() => cb())
+    .then((posts) => cb(posts));
 }
 
 // called when a track is updated/deleted by a user
 exports.updateByEid = function (eId, cb, replace, additionalFields) {
-  var since = Date.now() - HOT_TRACK_TIME_WINDOW;
+  if (!eId) throw new Error('eId is not defined');
+  const since = Date.now() - HOT_TRACK_TIME_WINDOW;
   console.log('track.updateByEid: ', eId);
   fetchPostsByEid(eId, function (posts) {
     if (!posts || !posts.length) return remove({ eId: eId }, cb);
     // 0) init track objects (one for storage and display, one for scoring over the selected period of time)
-    var freshTrackStats = {},
+    const freshTrackStats = {},
       track = {
         eId: eId,
         nbR: posts.length,
       };
-    for (let f in FIELDS_TO_SUM) {
+    for (const f in FIELDS_TO_SUM) {
       track[f] = track[f] || 0;
       freshTrackStats[f] = freshTrackStats[f] || 0;
     }
     // 1) score posts, to select which user will be featured for this track
-    for (let p in posts) {
+    for (const p in posts) {
       posts[p].nbL = (posts[p].lov || []).length;
-      for (let f in FIELDS_TO_SUM) posts[p][f] = posts[p][f] || 0;
+      for (const f in FIELDS_TO_SUM) posts[p][f] = posts[p][f] || 0;
       posts[p].score = scorePost(posts[p]);
       track.nbP += posts[p].nbP;
       track.nbL += posts[p].nbL;
@@ -227,70 +201,67 @@ exports.updateByEid = function (eId, cb, replace, additionalFields) {
     });
     // 2) populate and save track object, based on best-scored post
     track.pId = posts[0]._id;
-    for (let f in FIELDS_TO_COPY) track[f] = posts[0][f];
+    for (const f in FIELDS_TO_COPY) track[f] = posts[0][f];
     track.score = scorePost(freshTrackStats);
     if (additionalFields) {
       console.log(
         'storing additional fields',
         Object.keys(additionalFields),
-        '...'
+        '...',
       );
-      for (let f in additionalFields) track[f] = additionalFields[f];
+      for (const f in additionalFields) track[f] = additionalFields[f];
     }
-    console.log('saving track', track);
     save(track, cb, replace);
   });
 };
 
 // maintenance functions
 
-exports.snapshotTrackScores = function (cb) {
-  mongodb.collections['track'].countDocuments(function (err, count) {
-    var i = 0;
-    mongodb.forEach2(
-      'track',
-      { fields: { score: 1 } },
-      function (track, next, closeCursor) {
-        if (!track || track.error) {
-          cb();
-          closeCursor();
-        } else {
-          if (count < 1000) {
-            console.log(`snapshotTrackScores ${i + 1} / ${count}`);
-          } else if (count % 1000 === 0) {
-            console.log(
-              `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`
-            );
-          }
-          ++i;
-          mongodb.collections['track'].updateOne(
-            { _id: track._id },
-            { $set: { prev: track.score } },
-            next
+exports.snapshotTrackScores = async function (cb) {
+  const count = await mongodb.collections['track'].countDocuments();
+  let i = 0;
+  mongodb.forEach2(
+    'track',
+    { fields: { score: 1 } },
+    async function (track, next, closeCursor) {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
+        if (count < 1000) {
+          console.log(`snapshotTrackScores ${i + 1} / ${count}`);
+        } else if (count % 1000 === 0) {
+          console.log(
+            `snapshotTrackScores ${i / 1000}k / ${Math.floor(count / 1000)}k`,
           );
         }
+        ++i;
+        await mongodb.collections['track'].updateOne(
+          { _id: track._id },
+          { $set: { prev: track.score } },
+        );
+        next();
       }
-    );
-  });
+    },
+  );
 };
 
-exports.refreshTrackCollection = function (cb) {
-  mongodb.collections['track'].countDocuments(function (err, count) {
-    var i = 0;
-    mongodb.forEach2(
-      'track',
-      { fields: { _id: 0, eId: 1 } },
-      function (track, next, closeCursor) {
-        if (!track || track.error) {
-          cb();
-          closeCursor();
-        } else {
-          console.log('refreshHotTracksCache', ++i, '/', count);
-          exports.updateByEid(track.eId, next, true);
-        }
+exports.refreshTrackCollection = async function (cb) {
+  const count = await mongodb.collections['track'].countDocuments();
+  let i = 0;
+  mongodb.forEach2(
+    'track',
+    { fields: { _id: 0, eId: 1 } },
+    function (track, next, closeCursor) {
+      if (!track || track.error) {
+        cb();
+        closeCursor();
+      } else {
+        console.log('refreshHotTracksCache', ++i, '/', count);
+        exports.updateByEid(track.eId, next, true);
       }
-    );
-  });
+    },
+  );
 };
 
 exports.model = exports;

@@ -1,20 +1,20 @@
-/* global $ */
+/* global $, DndUpload */
 
-function WhydImgUpload(options) {
+window.WhydImgUpload = function (options) {
   options = options || {};
   options.onError = options.onError || console.log;
 
-  var lastAvatarUrl = null,
+  let lastAvatarUrl = null,
     lastUploadUrl = null;
-  var $dlg = options.holder;
-  var $boxes = options.$boxes || $dlg.find('.uploadBox');
-  var $img = $dlg.find('.dlgImgPane > img');
-  var $input = $dlg.find('input[type=file]');
-  var $avatarForm = $input.closest('form');
-  var uploadUrl = options.url || $avatarForm.attr('action');
-  var defaultImgUrl = options.defaultImgUrl || '/images/blank_user.gif';
+  const $dlg = options.holder;
+  const $boxes = options.$boxes || $dlg.find('.uploadBox');
+  const $img = $dlg.find('.dlgImgPane > img');
+  const $input = $dlg.find('input[type=file]');
+  const $avatarForm = $input.closest('form');
+  const uploadUrl = options.url || $avatarForm.attr('action');
+  const defaultImgUrl = options.defaultImgUrl || '/images/blank_user.gif';
 
-  var self = this;
+  const self = this;
 
   this.activate = function () {
     console.log('legacy upload activation');
@@ -67,11 +67,11 @@ function WhydImgUpload(options) {
         };
       else
         data = JSON.parse(
-          data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1)
+          data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1),
         );
     }
     try {
-      var img = data.postImg || data.file;
+      const img = data.postImg || data.file;
       lastUploadUrl = (img.path[0] != '/' ? '/' : '') + img.path;
       if (img.mime && img.mime.indexOf('image/') == 0) {
         lastAvatarUrl = lastUploadUrl;
@@ -81,7 +81,7 @@ function WhydImgUpload(options) {
     } catch (e) {
       options.onError(
         data.error || 'Upload did not work... Please try again!',
-        e
+        e,
       );
     }
     setAvatar(lastAvatarUrl);
@@ -102,10 +102,10 @@ function WhydImgUpload(options) {
 
   if (DndUpload) {
     console.log('this browser accepts drag&drop uploads :-)');
-    var destination;
-    var $avatarDrop = $dlg.find('#avatarDrop');
-    var $progress = $dlg.find('.progress');
-    var $progressLevel = $progress.find('div');
+    let destination;
+    const $avatarDrop = $dlg.find('#avatarDrop');
+    const $progress = $dlg.find('.progress');
+    const $progressLevel = $progress.find('div');
     this.activate = function () {
       console.log('html5 upload activation');
       $boxes.hide();
@@ -114,24 +114,24 @@ function WhydImgUpload(options) {
     $avatarDrop.find('button').click(function () {
       $input.click();
     });
-    $avatarDrop.on('dragenter', function (e) {
+    $avatarDrop.on('dragenter', function (event) {
       destination = event.target;
       $(this).addClass('hover');
     });
-    $avatarDrop.on('dragleave', function (e) {
+    $avatarDrop.on('dragleave', function (event) {
       if (
         !$(this).find(destination).size() &&
         !$(this).find(event.target).size()
       )
         $(this).removeClass('hover');
     });
-    var handlers = {
-      error: function (eventData) {
+    const handlers = {
+      error: function () {
         $boxes.hide();
         $avatarForm.show();
         $progress.hide();
       },
-      post: function (eventData) {
+      post: function () {
         onImageUpload();
         $progressLevel.css('width', '0px');
         $progress.show();
@@ -144,13 +144,13 @@ function WhydImgUpload(options) {
         onImageUploadComplete(eventData);
       },
     };
-    var dndUpload = new DndUpload({
+    DndUpload({
       form: $avatarForm[0],
       holder: $avatarDrop[0],
       url: uploadUrl,
       handler: function (eventName, eventData) {
         $(this).removeClass('hover');
-        var handler = handlers[eventName];
+        const handler = handlers[eventName];
         if (handler) handler(eventData);
         else console.log('DndUpload handler', eventName, eventData);
       },
@@ -158,4 +158,4 @@ function WhydImgUpload(options) {
   }
 
   this.activate();
-}
+};

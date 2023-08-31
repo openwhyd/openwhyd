@@ -1,47 +1,47 @@
-var fs = require('fs');
-var async = require('async');
+//@ts-check
 
-var DB_INIT_SCRIPTS = [
+const fs = require('fs');
+const util = require('util');
+const mongodb = require('../app/models/mongodb.js');
+const { ImageStorage } = require('../app/infrastructure/ImageStorage.js');
+
+const { DEBUG } = process.env;
+
+const DB_INIT_SCRIPTS = [
   './config/initdb.js',
   './config/initdb_testing.js', // creates an admin user => should not be run on production!
 ];
 
-if (process.env['WITHOUT_CONSOLE_LOG'] == 'true') {
-  console.log = () => {
-    /* In order to have nice console summary */
-  };
-}
+if (process.env['MONGODB_HOST'] === undefined)
+  throw new Error(`missing env var: MONGODB_HOST`);
+if (process.env['MONGODB_PORT'] === undefined)
+  throw new Error(`missing env var: MONGODB_PORT`);
 
-process.appParams = {
-  mongoDbHost: process.env['MONGODB_HOST'].substr(),
-  mongoDbPort: process.env['MONGODB_PORT'].substr(), // 27017
+const dbCreds = {
+  mongoDbHost: process.env['MONGODB_HOST'],
+  mongoDbPort: process.env['MONGODB_PORT'], // 27017
   mongoDbAuthUser: process.env['MONGODB_USER'],
   mongoDbAuthPassword: process.env['MONGODB_PASS'],
   mongoDbDatabase: 'openwhyd_test', //process.env['MONGODB_DATABASE'],
 };
 
-console.log('[test-db-init.js] Connecting to db ...');
-require('../app/models/mongodb.js').init(function (err, db) {
+if (DEBUG) console.log('[test-db-init.js] Connecting to db ...');
+mongodb.init(dbCreds, async (err, db) => {
   if (err) throw err;
-  var mongodb = this;
-  console.log('[test-db-init.js] Clearing test database ...');
-  db.dropDatabase(function (err) {
-    if (err) throw err;
-    async.eachSeries(
-      DB_INIT_SCRIPTS,
-      function (initScript, nextScript) {
-        console.log(
-          '[test-db-init.js] Applying db init script:',
-          initScript,
-          '...'
-        );
-        mongodb.runShellScript(fs.readFileSync(initScript), nextScript);
-      },
-      function (err) {
-        if (err) throw err;
-        console.log('[test-db-init.js] => done.');
-        process.exit();
-      }
-    );
-  });
+  if (DEBUG) console.log('[test-db-init.js] Clearing test database ...');
+  await db.dropDatabase({ writeConcern: { w: 'majority', fsync: true } }); // intends to prevent occasional `E11000 duplicate key error collection: openwhyd_test.user`
+  for await (const initScript of DB_INIT_SCRIPTS) {
+    if (DEBUG)
+      console.log(`[test-db-init.js] Applying script: ${initScript} ...`);
+    const script = await fs.promises.readFile(initScript);
+    // @ts-ignore
+    await util.promisify(mongodb.runShellScript)(script);
+  }
+  // delete uploaded files
+  await new ImageStorage()
+    .deleteAllFiles()
+    .catch((err) => console.warn(`[test-db-init.js] ${err.message}`));
+
+  if (DEBUG) console.log('[test-db-init.js] => done.');
+  process.exit();
 });

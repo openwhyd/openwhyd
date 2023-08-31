@@ -4,22 +4,22 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
-var mainTemplate = require('./mainTemplate.js');
+const config = require('../models/config.js');
+const mainTemplate = require('./mainTemplate.js');
 
-var templateLoader = require('../templates/templateLoader.js');
-var pageTemplate = null;
+const templateLoader = require('../templates/templateLoader.js');
+let pageTemplate = null;
 
 exports.refreshTemplates = function (callback) {
   pageTemplate = templateLoader.loadTemplate(
     'app/templates/invitePage.html',
-    callback
+    callback,
   );
 };
 
 exports.refreshTemplates();
 
-var FIELDS = [
+const FIELDS = [
   'inviteCode',
   'iPo', // post/track from which user was invited
   'fbRequest', // id of facebook request used to invite
@@ -30,7 +30,7 @@ var FIELDS = [
 // TODO : verify usefullness
 exports.renderSignupPage = function (p) {
   p = p || {}; // FIELDS + loggedUser
-  var params = {
+  const params = {
     title: 'Join Openwhyd',
     pageDesc: !p.sender
       ? mainTemplate.defaultPageMeta.desc
@@ -70,9 +70,9 @@ exports.renderInvitePage = function (
   iPo,
   email,
   fbRequest,
-  redirect
+  redirect,
 ) {
-  var params = {};
+  const params = {};
   params.title = !inviteCode ? 'Join Openwhyd' : 'Your invitation to Openwhyd';
   params.pageDesc = !sender
     ? mainTemplate.defaultPageMeta.desc
@@ -110,6 +110,6 @@ exports.renderInvitePage = function (
   if (redirect)
     params.redirect = (redirect[0] == '/' ? config.urlPrefix : '') + redirect;
 
-  var html = pageTemplate.render(params);
+  const html = pageTemplate.render(params);
   return html;
 };

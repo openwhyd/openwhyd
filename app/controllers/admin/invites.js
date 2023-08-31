@@ -3,21 +3,23 @@
  * @author adrienjoly, whyd
  **/
 
-var mongodb = require('../../models/mongodb.js');
-var userModel = require('../../models/user.js');
-var notifEmails = require('../../models/notifEmails.js');
-var mainTemplate = require('../../templates/mainTemplate.js');
+const mongodb = require('../../models/mongodb.js');
+const userModel = require('../../models/user.js');
+const notifEmails = require('../../models/notifEmails.js');
+const mainTemplate = require('../../templates/mainTemplate.js');
 
-var callWhenDone = require('../../snip.js').callWhenDone;
+const callWhenDone = require('../../snip.js').callWhenDone;
 
-var fetchUsers = function (table, handler, options) {
+const fetchUsers = function (table, handler, options) {
   console.log('fetching users from ' + table + '...');
-  mongodb.collections[table].find({}, options, function (err, cursor) {
-    cursor.toArray(handler);
-  });
+  mongodb.collections[table]
+    .find({}, options)
+    .toArray()
+    .catch(handler)
+    .then((res) => handler(null, res));
 };
 
-var inviteUser = function (email, handler) {
+const inviteUser = function (email, handler) {
   console.log('invite user ', email);
   userModel.inviteUser(email, function (storedUser) {
     if (storedUser) notifEmails.sendAcceptedInvite(storedUser);
@@ -27,10 +29,10 @@ var inviteUser = function (email, handler) {
 };
 
 function renderUserList(users, title, actionNames) {
-  var userList = '<h2>' + title + ' (' + users.length + ')</h2>';
+  let userList = '<h2>' + title + ' (' + users.length + ')</h2>';
 
   if (users && users.length) {
-    var fieldName = users[0].email ? 'email' : 'fbId';
+    const fieldName = users[0].email ? 'email' : 'fbId';
     userList +=
       '<p style="position:relative;top:-5px;color:gray;">' +
       '<input type="checkbox" onClick="toggle(\'' +
@@ -41,15 +43,15 @@ function renderUserList(users, title, actionNames) {
   }
   //<input type="hidden" name="list" value="'+name+'" />';
 
-  for (let i in users) {
-    var u = users[i];
-    var date = u.date || u._id.getTimestamp();
+  for (const i in users) {
+    const u = users[i];
+    let date = u.date || u._id.getTimestamp();
     date =
       date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
     const fieldName = u.email ? 'email' : 'fbId'; //(u.fbId ? "fbId" : "email");
-    var userId = u.email || u.fbId;
+    const userId = u.email || u.fbId;
 
-    var img =
+    const img =
       u.img ||
       (u.fbId
         ? '//graph.facebook.com/v2.3/' + u.fbId + '/picture?type=square'
@@ -111,7 +113,7 @@ function renderUserList(users, title, actionNames) {
 
   if (actionNames) {
     userList += '<input type="hidden" name="title" value="' + title + '" />';
-    for (let i in actionNames)
+    for (const i in actionNames)
       userList +=
         '<input type="submit" name="action" value="' +
         actionNames[i] +
@@ -128,9 +130,9 @@ function renderUserList(users, title, actionNames) {
 }
 
 function renderTemplate(requests, invites) {
-  var params = { title: 'whyd invites', css: ['admin.css'], js: [] };
+  const params = { title: 'whyd invites', css: ['admin.css'], js: [] };
 
-  var out = [
+  const out = [
     '<h1>whyd invites management console</h1>',
     '► <a href="/">home</a>',
     //	'► this page was generated on '+(new Date()),
@@ -186,11 +188,11 @@ exports.handleRequest = function (request, reqParams, response) {
   request.logToConsole('invites.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
-  var user = request.checkAdmin(response);
+  const user = request.checkAdmin(response);
   if (!user /*|| !(user.fbId == "510739408" || user.fbId == "577922742")*/)
     return /*response.legacyRender("you're not an admin!")*/;
 
-  var fetchAndRender = function () {
+  const fetchAndRender = function () {
     fetchUsers(
       'user',
       function (err, users) {
@@ -200,7 +202,7 @@ exports.handleRequest = function (request, reqParams, response) {
             fetchUsers(
               'email',
               function (err, requests) {
-                for (let i in requests)
+                for (const i in requests)
                   requests[i] = {
                     _id: requests[i]._id,
                     email: requests[i]._id,
@@ -210,30 +212,30 @@ exports.handleRequest = function (request, reqParams, response) {
                 response.legacyRender(
                   renderTemplate(requests, invites, users, reqParams),
                   null,
-                  { 'content-type': 'text/html' }
+                  { 'content-type': 'text/html' },
                 );
                 // console.log('rendering done!');
               },
-              { sort: [['date', 'desc']] }
+              { sort: [['date', 'desc']] },
             );
           },
-          { sort: [['_id', 'desc']] }
+          { sort: [['_id', 'desc']] },
         );
       },
-      { sort: [['_id', 'desc']] }
+      { sort: [['_id', 'desc']] },
     );
   };
 
   reqParams = reqParams || {};
 
   if (reqParams.action && reqParams.title) {
-    var emails = reqParams.email || [];
+    let emails = reqParams.email || [];
     if (typeof emails == 'string') emails = [emails];
     if (reqParams.title == 'requests') {
       if (reqParams.action == 'invite') {
-        var sync = callWhenDone(fetchAndRender);
-        for (let i in emails) {
-          var processing = inviteUser(emails[i], function () {
+        const sync = callWhenDone(fetchAndRender);
+        for (const i in emails) {
+          const processing = inviteUser(emails[i], function () {
             sync(-1);
           });
           if (processing) sync(+1);

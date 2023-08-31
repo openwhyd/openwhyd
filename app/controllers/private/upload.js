@@ -1,3 +1,5 @@
+//@ts-check
+
 /**
  * Upload controller
  * @author jie, whyd
@@ -5,72 +7,78 @@
  */
 
 //var formidable = require('formidable');
-var img = require('../../lib/my-img');
-var uploadCtr = require('../uploadedFile.js');
+const img = require('../../lib/my-img');
+const uploadCtr = require('../uploadedFile.js');
 
 // hosting settings
-var settings = {
+const settings = {
   uploadDir: uploadCtr.config.uploadPath, //'../upload_data',
   keepExtensions: true,
 };
 
-var defaults = {
+const defaultOptions = {
   keepOriginal: false,
   thumbDims: '180x', // image resize settings (optimized for profile/topic pictures)
 };
 
+/**
+ * @param {{ filepath: string, mimetype:string, name: string }} file
+ * @param {{ thumbDims?: string}} options
+ */
 function processFile(file, options, callback) {
-  console.log('processFile', file, options);
-  if (!file || !file.path)
+  const { filepath, mimetype, name } = file ?? {};
+  console.log(
+    '[upload] processFile',
+    { filepath, mimetype, name },
+    { thumbDims: options.thumbDims },
+  );
+  if (!file || !filepath)
     return callback({ error: 'Error during file upload, please try again.' });
-  else if (!file.type || file.type.indexOf('image/') != 0) {
-    console.log('uploaded a file that is not an image => deleting file');
-    uploadCtr.deleteFile(file.path);
+  else if (!mimetype || mimetype.indexOf('image/') != 0) {
+    console.log('[upload] file is not an image => deleting file');
+    uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
     return callback({
       error: 'Only images are supported for upload, for now.',
     });
   } else {
-    var result = {
-      name: file.name,
-      mime: file.type,
-      path: uploadCtr.cleanFilePath(file.path),
+    const result = {
+      name: name,
+      mime: mimetype,
+      path: uploadCtr.cleanFilePath(filepath),
       thumbs: {},
     };
 
-    var thumbDims = options.thumbDims ? options.thumbDims.split(',') : [];
-
-    console.log('thumbDims', thumbDims);
+    const thumbDims = options.thumbDims ? options.thumbDims.split(',') : [];
 
     const whenDone = () => {
-      console.log('whendone');
-      if (!options.keepOriginal) uploadCtr.deleteFile(file.path);
+      console.log('[upload] done');
+      uploadCtr.deleteFile(filepath).catch(/* nothing to do */);
       callback(result);
     };
 
     if (thumbDims.length > 0) {
       // create thumbs
-      var f = uploadCtr.splitFilePath(file.path);
-      var genThumb = function (thumbWidth, thumbHeight, callback) {
-        var dims = (thumbWidth || '') + 'x' + (thumbHeight || '');
-        var newPath = f.prefix + '_' + dims + f.ext;
-        img.makeThumb(file.path, newPath, thumbWidth, thumbHeight, function () {
+      const f = uploadCtr.splitFilePath(filepath);
+      const genThumb = function (thumbWidth, thumbHeight, callback) {
+        const dims = (thumbWidth || '') + 'x' + (thumbHeight || '');
+        const newPath = f.prefix + '_' + dims + f.ext;
+        img.makeThumb(filepath, newPath, thumbWidth, thumbHeight, function () {
           if (callback) callback(newPath, thumbWidth, thumbHeight, dims);
         });
       };
 
-      var remaining = thumbDims.length; //thumbWidths.length;
-      for (let i in thumbDims) {
+      let remaining = thumbDims.length; //thumbWidths.length;
+      for (const i in thumbDims) {
         var thumbDim = thumbDims[i];
-        var thumbWidthHeight = thumbDim.split('x');
-        var thumbWidth =
+        const thumbWidthHeight = thumbDim.split('x');
+        const thumbWidth =
           thumbWidthHeight.length > 0 ? thumbWidthHeight[0] : null;
-        var thumbHeight =
+        const thumbHeight =
           thumbWidthHeight.length > 1 ? thumbWidthHeight[1] : null;
         genThumb(thumbWidth, thumbHeight, function (thumbFile) {
-          console.log('generated thumb', thumbDim, thumbFile);
+          console.log('[upload] generated thumb', { thumbDim, thumbFile });
           result.thumbs[/*dims*/ thumbDim] = uploadCtr.cleanFilePath(thumbFile);
-          if (!options.keepOriginal)
-            result.path = result.thumbs[/*dims*/ thumbDim];
+          result.path = result.thumbs[/*dims*/ thumbDim];
           if (--remaining == 0) whenDone();
         });
       }
@@ -83,46 +91,36 @@ function processFile(file, options, callback) {
 exports.controller = function (req, requestParams, res) {
   req.logToConsole('upload.controller', requestParams);
 
-  var user = req.checkLogin(res);
-  if (!user) return;
+  const user = req.checkLogin(res);
+  if (!user) return; // Note: we may want to send a response in that case too
 
-  //var form = new formidable.IncomingForm();
-  //form.uploadDir = settings.uploadDir;
-  //form.keepExtensions = settings.keepExtensions;
-  //form.parse(req, function(err, postParams, files) {
-  var postParams = req.body;
-  var files = req.files;
-  console.log('postParams', postParams);
-  //if (err) {
-  //	console.log("upload.controller error", err.stack);
-  //	return res.legacyRender({error:err});
-  //}
+  const postParams = req.body;
+  const files = req.files;
+  console.log('[upload] postParams', postParams);
 
-  if (postParams && postParams.id && postParams.action == 'delete')
-    return uploadCtr.deleteFile(settings.uploadDir + '/' + postParams.id);
+  if (postParams && postParams.id && postParams.action == 'delete') {
+    return uploadCtr
+      .deleteFile(settings.uploadDir + '/' + postParams.id)
+      .catch((err) => console.log(err, err.stack));
+    // Note: we may want to send a response in that case too
+  }
 
-  console.log('upload.controller completed', files);
-  var results = {},
-    remaining = Object.keys(files).length;
+  const results = {};
+  let remaining = Object.keys(files).length;
 
-  var options = {};
-  for (let i in defaults) options[i] = defaults[i];
-  for (let i in postParams) options[i] = postParams[i];
+  const options = {};
+  for (const i in defaultOptions) options[i] = defaultOptions[i];
+  for (const i in postParams) options[i] = postParams[i];
 
-  var processAndPushFile = function (i) {
+  const processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
-      if (result && result.error) console.log(result.error);
       results[i] = result;
       if (--remaining == 0) {
-        console.log('upload.controller completed', result);
+        console.log('[upload] controller completed', result);
         res.legacyRender(results, null, { 'content-type': 'text/plain' });
-        /*
-					res.writeHead(200, {'content-type': 'text/plain'});
-					res.end('received upload\nreceived\n');*/
       }
     });
   };
 
-  for (let i in files) processAndPushFile(i);
-  //});
+  for (const i in files) processAndPushFile(i);
 };

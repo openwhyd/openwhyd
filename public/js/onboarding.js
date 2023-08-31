@@ -14,7 +14,7 @@
       {
         scrollTop: $(id).offset().top,
       },
-      scrollTime
+      scrollTime,
     );
   }
 
@@ -48,7 +48,7 @@
           console.log('failed => opening chrome web store in a new tab...');
           //goToPage(e.href);
           window.open(e.target.href, '_blank').focus();
-        }
+        },
       );
       return false;
     });
@@ -58,8 +58,8 @@
 
   // adapt instructions to web browser in use
   $('li.instr').hide();
-  var b = ['Opera', 'MSIE 8.', 'MSIE', 'Chrome', 'Safari', 'Firefox'];
-  for (let i in b)
+  const b = ['Opera', 'MSIE 8.', 'MSIE', 'Chrome', 'Safari', 'Firefox'];
+  for (const i in b)
     if (navigator.userAgent.indexOf(b[i]) != -1) {
       $('.instr.' + b[i].toLowerCase().replace(/[^a-z0-9]+/g, '')).show();
       $('.browserIcon').attr('class', 'browserIcon ' + b[i].toLowerCase());

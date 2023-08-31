@@ -4,25 +4,25 @@
  * @author adrienjoly, whyd
  **/
 
-var config = require('../models/config.js');
-var userModel = require('../models/user.js');
-var emailModel = require('../models/email.js');
-var digest = require('../controllers/private/digest.js');
+const config = require('../models/config.js');
+const userModel = require('../models/user.js');
+const emailModel = require('../models/email.js');
+const digest = require('../controllers/private/digest.js');
 
-var DIGEST_INTERVAL = parseInt(config.digestInterval) || -1;
-var timer = null;
+const DIGEST_INTERVAL = parseInt(config.digestInterval) || -1;
+let timer = null;
 
 function processUser(u, cb) {
-  var freq = 0,
-    cleanPref = {}; // daily (by default)
-  for (let i in u.pref)
+  let freq = 0;
+  const cleanPref = {}; // daily (by default)
+  for (const i in u.pref)
     if (i.indexOf('em') == 0 && u.pref[i] > 0) {
       freq = u.pref[i];
       cleanPref[i] = u.pref[i];
     }
 
   // generate digest
-  var options = {
+  const options = {
     until: u.pref['prevEN'],
     frequency: userModel.EM_FREQ_LABEL[freq], // e.g. "weekly"
     includeLikes: !!cleanPref['emLik'],
@@ -38,7 +38,7 @@ function processUser(u, cb) {
     userModel.setPref(u._id, cleanPref, function (updatedUser) {
       console.log(
         '[notif] ' + u._id + ' => next digest date: ',
-        ((updatedUser || {}).pref || {}).nextEN
+        ((updatedUser || {}).pref || {}).nextEN,
       );
       cb();
     });
@@ -46,7 +46,7 @@ function processUser(u, cb) {
 
   // render and send digest (if not empty)
   if (freq > 0) {
-    var renderingLabel = '[notif] ' + u._id + ' rendering';
+    const renderingLabel = '[notif] ' + u._id + ' rendering';
     console.log(renderingLabel, '...');
     console.time(renderingLabel);
     digest.fetchAndGenerateNotifDigest(u, options, function (email) {
@@ -61,11 +61,11 @@ function processUser(u, cb) {
           function (r) {
             console.log('[notif] ' + u._id + ' => digest email result:', r);
             done();
-          }
+          },
         );
       else {
         console.log(
-          '[notif] ' + u._id + ' => NO NEW NOTIFICATION since last digest'
+          '[notif] ' + u._id + ' => NO NEW NOTIFICATION since last digest',
         );
         done();
       }
@@ -74,8 +74,8 @@ function processUser(u, cb) {
 }
 
 function worker(cb) {
-  var now = new Date();
-  var label = '[notif] notifEmails.worker #' + now.getTime();
+  const now = new Date();
+  const label = '[notif] notifEmails.worker #' + now.getTime();
   console.time(label);
   userModel.fetchEmailNotifsToSend(now, function (users) {
     console.timeEnd(label);
@@ -99,12 +99,12 @@ worker(function(){
 */
 
 function oneAtATime(fct, msg) {
-  var running = false;
+  let running = false;
   return function () {
     if (running)
       console.error(
         msg ||
-          'WARNING: [OneAtATime] fct is trying to start before last call has ended'
+          'WARNING: [OneAtATime] fct is trying to start before last call has ended',
       );
     else {
       running = true;
@@ -117,7 +117,7 @@ function oneAtATime(fct, msg) {
 
 if (DIGEST_INTERVAL < 0)
   console.log(
-    '[notif] config.digestInterval is NULL or NEGATIVE => digest worker is disabled'
+    '[notif] config.digestInterval is NULL or NEGATIVE => digest worker is disabled',
   );
 else if (!timer) {
   console.log('[notif] Starting with interval', DIGEST_INTERVAL, '...');
