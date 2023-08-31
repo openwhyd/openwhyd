@@ -91,14 +91,14 @@ ci: ## Run automated tests defined in GitHub Actions CI workflow.
 	# TODO: run other CI jobs too.
 	@rm -f github_event.tmp
 
-release: ## Release a new version of Openwhyd.
+release: ## Release a new version of Openwhyd. (To run on CI)
 	# we install just semantic-release and its plugins, without considering package.json
-	mkdir "tmp-release"
+	mkdir -p "tmp-release"
 	npm --prefix "tmp-release" install --no-save \
-		"semantic-release@17.3.1" \
+		"semantic-release@21.1.1" \
 		"@semantic-release/release-notes-generator@11.0.7" \
-		"@semantic-release/changelog@5.0.1" \
-		"@semantic-release/git@9.0.0" \
+		"@semantic-release/changelog@6.0.3" \
+		"@semantic-release/git@10.0.1" \
 		&& tmp-release/node_modules/.bin/semantic-release
 	rm -rf "tmp-release"
 
