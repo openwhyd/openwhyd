@@ -317,8 +317,6 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci --prefer-offline --no-audit
-        if: github.event_name == 'push'
       - run: make release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
