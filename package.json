@@ -96,7 +96,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "mocha": "10.2.0",
     "nyc": "^15.1.0",
-    "prettier": "^3.0.2",
+    "prettier": "^3.0.3",
     "ts-morph": "^19.0.0",
     "typescript": "^5.1.6"
   }
