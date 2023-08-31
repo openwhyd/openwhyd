@@ -50,8 +50,8 @@
     "lint:fix": "eslint . --fix",
     "lint:errors": "eslint . --quiet",
     "lint:format": "prettier . --write",
-    "lint:typescript": "npx --yes tsc --noEmit --moduleResolution node --skipLibCheck",
-    "lint:jsdoc-typing": "npx --yes tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`"
+    "lint:typescript": "npx --yes --package typescript tsc --noEmit --moduleResolution node --skipLibCheck",
+    "lint:jsdoc-typing": "npx --yes --package typescript tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`"
   },
   "directories": {
     "src": "./app",
