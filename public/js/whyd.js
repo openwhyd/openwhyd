@@ -1021,8 +1021,7 @@ $(document).ready(function () {
 // AJAXIFY https://gist.github.com/854622
 (function (window /*, undefined*/) {
   // Prepare our Variables
-  const History = window.history,
-    $ = window.jQuery,
+  const $ = window.jQuery,
     document = window.document;
 
   // Wait for Document
@@ -1099,7 +1098,7 @@ $(document).ready(function () {
         }
 
         // Note: we could probably call goToPage() here, instead of:
-        History.pushState({ url, streamToTop: true }, title, url);
+        window.history.pushState({ url, streamToTop: true }, title, url);
         setTimeout(() => loadPage({ url }), 0);
 
         event.preventDefault();
@@ -1287,7 +1286,7 @@ $(document).ready(function () {
           url =
             url.substr(0, httpPos) + encodeURIComponent(url.substr(httpPos));
         }
-        History.pushState({ url }, title, url || window.location.href); // will trigger "statechange" => call loadPage()
+        window.history.pushState({ url }, title, url || window.location.href); // will trigger "statechange" => call loadPage()
         setTimeout(() => loadPage({ url }), 0);
       }
     };
