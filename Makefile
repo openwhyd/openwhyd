@@ -91,9 +91,20 @@ ci: ## Run automated tests defined in GitHub Actions CI workflow.
 	# TODO: run other CI jobs too.
 	@rm -f github_event.tmp
 
+release: ## Release a new version of Openwhyd. (To run on CI)
+	# we install just semantic-release and its plugins, without considering package.json
+	mkdir -p "tmp-release"
+	npm --prefix "tmp-release" install --no-save \
+		"semantic-release@21.1.1" \
+		"@semantic-release/release-notes-generator@11.0.7" \
+		"@semantic-release/changelog@6.0.3" \
+		"@semantic-release/git@10.0.1" \
+		&& tmp-release/node_modules/.bin/semantic-release
+	rm -rf "tmp-release"
+
 help: ## This help.
 	@echo 'Available targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build dev start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-in-docker ci help
+.PHONY: install build dev start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-in-docker ci release help
