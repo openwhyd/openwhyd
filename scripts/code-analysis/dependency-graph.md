@@ -44,15 +44,15 @@
 </details>
 
 ---
-[dependency-cruiser@13.1.5](https://www.github.com/sverweij/dependency-cruiser) / 2023-08-31T07:08:25.418Z
+[dependency-cruiser@13.1.5](https://www.github.com/sverweij/dependency-cruiser) / 2023-08-31T08:45:01.791Z
 
 ## DDot graph
 
-![](./dependency-ddot.svg)
+![](./assets/dependency-ddot.svg)
 
 ## Archi graph
 
-![](./dependency-archi.svg)
+![](./assets/dependency-archi.svg)
 
 ## Full dependency graph
 
@@ -579,3 +579,7 @@ Y-->Z
 44-->B
 44-->9
 ```
+
+## Full dependency graph by arkit
+
+![](./assets/arkit.svg)
