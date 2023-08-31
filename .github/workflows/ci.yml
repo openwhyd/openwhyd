@@ -319,17 +319,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --prefer-offline --no-audit
         if: github.event_name == 'push'
-      - name: npx --yes semantic-release
-        run: |
-          # we install just semantic-release and its plugins, without considering package.json
-          mkdir "tmp-release"
-          npm --prefix "tmp-release" install --no-save \
-            "semantic-release@17.3.1" \
-            "@semantic-release/release-notes-generator@11.0.7" \
-            "@semantic-release/changelog@5.0.1" \
-            "@semantic-release/git@9.0.0" \
-            && tmp-release/node_modules/.bin/semantic-release
-          rm -rf "tmp-release"
+      - run: make release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Create Docker tags
