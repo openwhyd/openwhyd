@@ -1,3 +1,10 @@
+## [1.55.53](https://github.com/openwhyd/openwhyd/compare/v1.55.52...v1.55.53) (2023-08-31)
+
+
+### Bug Fixes
+
+* **ci:** update `CHANGELOG.md` on release ([#692](https://github.com/openwhyd/openwhyd/issues/692)) ([61e284e](https://github.com/openwhyd/openwhyd/commit/61e284e0b5b8c2b4724ac343c4dc231e74649251))
+
 ## [1.44.55](https://github.com/openwhyd/openwhyd/compare/v1.44.54...v1.44.55) (2021-10-09)
 
 
