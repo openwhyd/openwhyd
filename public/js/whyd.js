@@ -7,6 +7,7 @@ const urlPrefix = wlh.substr(0, wlh.indexOf('/', 8));
 const urlDomain = urlPrefix.split('//').pop();
 
 window.goToPage = function (url) {
+  console.warn('goToPage without ajaxify', url); // indicates that ajaxify is not active yet
   window.location.href = url || window.location.href;
 };
 
@@ -1034,8 +1035,8 @@ $(document).ready(function () {
       activeSelector = '.active,.selected,.current,.youarehere',
       menuChildrenSelector = '> li,> ul > li',
       /* Application Generic Variables */
-      $body = $(document.body); /*.find(contentSelector).first()*/
-    const rootUrl = 'http://localhost:8080';
+      $body = $(document.body) /*.find(contentSelector).first()*/,
+      rootUrl = window.location.origin;
     let newState = false; // HACK to restore scroll position on previous page of history
 
     let $content = $(contentSelector).filter(':first');
