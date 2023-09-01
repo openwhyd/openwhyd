@@ -104,8 +104,10 @@ Search.prototype.search = function (index, query, options, cb) {
   }
   getIndex(index)
     .search(q, options)
-    .catch(cb)
-    .then((success) => cb(null, success));
+    .then(
+      (res) => cb(null, res),
+      (err) => cb(err),
+    );
 
   return this;
 };
@@ -248,9 +250,9 @@ exports.query = function (q = {}, cb) {
         } else {
           console.error(
             '[search] algolia error for ' +
-              JSON.stringify(q, null, 2) +
+              JSON.stringify(q) +
               ' => ' +
-              JSON.stringify(res, null, 2),
+              JSON.stringify(res?.error?.message ?? res),
           );
         }
         next();
@@ -282,25 +284,27 @@ function indexTypedDocs(type, items, callback) {
     getIndex(INDEX_NAME_BY_TYPE[type])
       .saveObjects(docs, { autoGenerateObjectIDIfNotExist: true })
       .wait()
-      .catch((err) => {
-        console.error(
-          '[search] algolia error when indexing ' +
-            items.length +
-            ' ' +
-            type +
-            ' items => ' +
-            err.toString(),
-        );
-        callback && callback(err);
-      })
-      .then(() => {
-        console.log(
-          '[search] algolia indexTyped ' + type + ' => indexed',
-          items.length,
-          'documents',
-        );
-        callback && callback(null, { items: items });
-      });
+      .then(
+        () => {
+          console.log(
+            '[search] algolia indexTyped ' + type + ' => indexed',
+            items.length,
+            'documents',
+          );
+          callback?.(null, { items });
+        },
+        (err) => {
+          console.error(
+            '[search] algolia error when indexing ' +
+              items.length +
+              ' ' +
+              type +
+              ' items => ' +
+              err.toString(),
+          );
+          callback?.(err);
+        },
+      );
   }
 }
 
@@ -319,20 +323,15 @@ exports.indexTyped = function (type, item, handler) {
 exports.countDocs = function (type, callback) {
   client
     .listIndices()
+    .then(function (content) {
+      const count = content.items.find(function (index) {
+        return index.name === INDEX_NAME_BY_TYPE[type];
+      }).entries;
+      callback(count);
+    })
     .catch((err) => {
       console.error('[search]', err);
       callback(null);
-    })
-    .then(function (content) {
-      try {
-        const count = content.items.find(function (index) {
-          return index.name === INDEX_NAME_BY_TYPE[type];
-        }).entries;
-        callback(count);
-      } catch (e) {
-        console.error('[search]', e);
-        callback(null);
-      }
     });
 };
 
@@ -344,12 +343,14 @@ exports.deleteAllDocs = function (type, callback) {
   getIndex(INDEX_NAME_BY_TYPE[type])
     .clearObjects()
     .wait()
-    .catch((err) => {
-      callback && callback(err);
-    })
-    .then(() => {
-      callback && callback(); // TODO: check if parameters are required or not
-    });
+    .then(
+      () => {
+        callback?.(); // TODO: check if parameters are required or not
+      },
+      (err) => {
+        callback?.(err);
+      },
+    );
 };
 
 exports.indexBulk = function (docs, callback) {

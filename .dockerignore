@@ -1,3 +1,4 @@
+# Ref: https://docs.docker.com/engine/reference/builder/#dockerignore-file
 .dockerignore
 .gitignore
 .git
@@ -6,12 +7,18 @@
 .DS_Store
 Dockerfile
 npm-debug.log
-/.nyc_output
-/coverage
-/node_modules
-*/*/node_modules
-*/*/*.log
-*/*/db
+.nyc_output
+.github
+.vscode
+.dependency-cruiser.js
+.editorconfig
+applitools.config.js
+/cypress*
+/coverage/
+/misc/
+**/node_modules/
+**/*.log
+**/db/
 /*.log
 /*.out
 /*.pid
@@ -23,6 +30,8 @@ npm-debug.log
 /uCoverImg
 /uPlaylistImg
 /upload_data
+/scripts/code-analysis
+/scripts/data-analysis-scripts
+/scripts/legacy-refs
 /scripts/mongodb-scripts/db
 /scripts/mongodb-scripts/*.gz
-/misc

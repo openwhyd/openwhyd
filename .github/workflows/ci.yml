@@ -212,12 +212,12 @@ jobs:
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
           cache: 'npm'
-      - uses: c-py/action-dotenv-to-setenv@v2
+      - uses: c-py/action-dotenv-to-setenv@v4
         with:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v5.0.2
+        uses: cypress-io/github-action@v6.2.0
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
@@ -317,18 +317,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - run: npm ci --prefer-offline --no-audit
-        if: github.event_name == 'push'
-      - name: npx --yes semantic-release
-        run: |
-          # we install just semantic-release and its plugins, without considering package.json
-          mkdir "tmp-release"
-          npm --prefix "tmp-release" install --no-save \
-            "semantic-release@17.3.1" \
-            "@semantic-release/changelog@5.0.1" \
-            "@semantic-release/git@9.0.0" \
-            && tmp-release/node_modules/.bin/semantic-release
-          rm -rf "tmp-release"
+      - run: make release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Create Docker tags
@@ -338,7 +327,7 @@ jobs:
           # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
       - name: Publish to Docker Hub registry
         if: github.event_name == 'push'
-        uses: jerray/publish-docker-action@v1.0.3
+        uses: jerray/publish-docker-action@v1.0.5
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}

@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.55.47",
+  "version": "1.55.60",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -30,8 +30,8 @@
     "test:unit": "npx --yes mocha test/unit/*.js --exit",
     "test:unit:coverage": "npm run coverage:clear && npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts[`test:unit`]') $@",
     "test:approval:routes": "ava test/approval/routes/routes.approval.tests.js $@",
-    "test:approval:routes:update": "npm run test:approval:routes -- --update-snapshots",
     "test:approval:routes:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:routes -- $@",
+    "test:approval:routes:start:update": "npm run test:approval:routes:start -- --update-snapshots",
     "test:approval:hot-tracks:raw": "npx --yes jest --runInBand test/approval/hot-tracks/hot-tracks.approval.test.js $@",
     "test:approval:hot-tracks": "PORT=8080 npm run test:approval:hot-tracks:raw -- $@",
     "test:approval:hot-tracks:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:hot-tracks:raw -- $@",
@@ -50,8 +50,8 @@
     "lint:fix": "eslint . --fix",
     "lint:errors": "eslint . --quiet",
     "lint:format": "prettier . --write",
-    "lint:typescript": "npx --yes tsc --noEmit --moduleResolution node --skipLibCheck",
-    "lint:jsdoc-typing": "npx --yes tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`"
+    "lint:typescript": "npx --yes --package typescript tsc --noEmit --moduleResolution node --skipLibCheck",
+    "lint:jsdoc-typing": "npx --yes --package typescript tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`"
   },
   "directories": {
     "src": "./app",
@@ -72,7 +72,7 @@
     "formidable": "^2.1.1",
     "hogan.js": "3.0.2",
     "htmlparser": "*",
-    "mongodb": "4.16.0",
+    "mongodb": "4.17.0",
     "playemjs": "1.2.2",
     "q-set": "^2.0.8",
     "request": "2.88.2",
@@ -81,7 +81,7 @@
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.37.0",
     "@cypress/code-coverage": "^3.11.0",
-    "@types/node": "^20.5.1",
+    "@types/node": "^20.5.7",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
     "approvals": "^6.2.1",
@@ -89,14 +89,16 @@
     "cypress": "^12.17.4",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
-    "eslint": "^8.47.0",
+    "eslint": "^8.48.0",
+    "eslint-config-async": "^2.0.2",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-deprecation": "^1.5.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "mocha": "10.2.0",
     "nyc": "^15.1.0",
-    "prettier": "^3.0.2",
+    "prettier": "^3.0.3",
     "ts-morph": "^19.0.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   }
 }

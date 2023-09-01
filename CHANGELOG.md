@@ -1,3 +1,60 @@
+## [1.55.60](https://github.com/openwhyd/openwhyd/compare/v1.55.59...v1.55.60) (2023-08-31)
+
+
+### Bug Fixes
+
+* **domain:** remove links to whyd.com => fix unsubscribe link ([67ef678](https://github.com/openwhyd/openwhyd/commit/67ef678c00254f2cae4bb33ddd8bc5060e202908))
+
+## [1.55.59](https://github.com/openwhyd/openwhyd/compare/v1.55.58...v1.55.59) (2023-08-31)
+
+
+### Bug Fixes
+
+* **error-handling:** don't callback twice upon rejection ([#704](https://github.com/openwhyd/openwhyd/issues/704)) ([0a13423](https://github.com/openwhyd/openwhyd/commit/0a134235b93b408979829e7b3e323f9e536bc135)), closes [#703](https://github.com/openwhyd/openwhyd/issues/703)
+
+## [1.55.58](https://github.com/openwhyd/openwhyd/compare/v1.55.57...v1.55.58) (2023-08-31)
+
+
+### Bug Fixes
+
+* **search:** fix algolia error handling logic ([#703](https://github.com/openwhyd/openwhyd/issues/703)) ([14893ff](https://github.com/openwhyd/openwhyd/commit/14893ff6f7971aa6cc1cd7ed911d01fd72b16118))
+
+## [1.55.57](https://github.com/openwhyd/openwhyd/compare/v1.55.56...v1.55.57) (2023-08-31)
+
+
+### Bug Fixes
+
+* **build:** prevent `This is not the tsc command you are looking for` ([71cefd4](https://github.com/openwhyd/openwhyd/commit/71cefd48674011b0c2503e7eb4e7715e4ecb0451)), closes [#563](https://github.com/openwhyd/openwhyd/issues/563) [#662](https://github.com/openwhyd/openwhyd/issues/662) [#702](https://github.com/openwhyd/openwhyd/issues/702)
+* **docker:** `This is not the tsc command you are looking for` ([80a542d](https://github.com/openwhyd/openwhyd/commit/80a542df40bd0e12a3774bc1061631d385482029)), closes [#702](https://github.com/openwhyd/openwhyd/issues/702)
+
+## [1.55.56](https://github.com/openwhyd/openwhyd/compare/v1.55.55...v1.55.56) (2023-08-31)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump typescript from 5.1.6 to 5.2.2 ([#700](https://github.com/openwhyd/openwhyd/issues/700)) ([b783050](https://github.com/openwhyd/openwhyd/commit/b7830507b1631cb6853dfc0740f07cb8c2cccec2))
+
+## [1.55.55](https://github.com/openwhyd/openwhyd/compare/v1.55.54...v1.55.55) (2023-08-31)
+
+
+### Bug Fixes
+
+* bump version to release ([eb8a90f](https://github.com/openwhyd/openwhyd/commit/eb8a90f8ee1eb0166deb864f802621d68e3518eb))
+
+## [1.55.54](https://github.com/openwhyd/openwhyd/compare/v1.55.53...v1.55.54) (2023-08-31)
+
+
+### Bug Fixes
+
+* **formatting:** `$ make lint` ([fb2eb8a](https://github.com/openwhyd/openwhyd/commit/fb2eb8aec6dc7ee4a39d6c7da6bc16b91546b86b))
+
+## [1.55.53](https://github.com/openwhyd/openwhyd/compare/v1.55.52...v1.55.53) (2023-08-31)
+
+
+### Bug Fixes
+
+* **ci:** update `CHANGELOG.md` on release ([#692](https://github.com/openwhyd/openwhyd/issues/692)) ([61e284e](https://github.com/openwhyd/openwhyd/commit/61e284e0b5b8c2b4724ac343c4dc231e74649251))
+
 ## [1.44.55](https://github.com/openwhyd/openwhyd/compare/v1.44.54...v1.44.55) (2021-10-09)
 
 

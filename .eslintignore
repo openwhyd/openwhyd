@@ -1,8 +1,9 @@
-public/js/*-min.js
-public/js/*.min.js
-public/js/*jquery*.js
+public/**/*-min.js
+public/**/*.min.js
+public/**/*jquery*.js
 public/js/dropzone.js
 public/js/md5.js
 public/js/mustache.js
 public/js/playem-all.js
 public/js/soundmanager2*.js
+public/press/js/sliderz.v1.js
