@@ -6,10 +6,10 @@
 
 const postModel = require('../models/post.js');
 const followModel = require('../models/follow.js');
-const activityModel = require('../models/activity.js');
+// const activityModel = require('../models/activity.js');
 const feedTemplate = require('../templates/feed.js');
 
-const HISTORY_LIMIT = 3;
+// const HISTORY_LIMIT = 3;
 
 function fetchSubscriptions(uid, callback) {
   //console.time("LibFriends.fetchSubscriptions");
@@ -19,37 +19,37 @@ function fetchSubscriptions(uid, callback) {
   });
 }
 
-function fetchRecentActivity(uidList, loggedUid, cb) {
-  /* // test case
-	cb([
-		{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly", subscription: {
-			id:"4fb118c368b1a410ecdc0058", name:"Tony Hymes"
-		}}
-	]);
-	return;*/
-  const subscribers = [];
-  for (const i in uidList)
-    if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
+// function fetchRecentActivity(uidList, loggedUid, cb) {
+//   /* // test case
+// 	cb([
+// 		{id:"4d94501d1f78ac091dbc9b4d", name:"Adrien Joly", subscription: {
+// 			id:"4fb118c368b1a410ecdc0058", name:"Tony Hymes"
+// 		}}
+// 	]);
+// 	return;*/
+//   const subscribers = [];
+//   for (const i in uidList)
+//     if (uidList[i] != loggedUid) subscribers.push(uidList[i]);
 
-  if (subscribers.length > 5000) {
-    console.trace(
-      `potential expensive activity query, for user ${loggedUid}, uidList length: ${subscribers.length}`,
-    );
-    console.time(`fetchRecentActivity_${loggedUid}`);
-  }
+//   if (subscribers.length > 5000) {
+//     console.trace(
+//       `potential expensive activity query, for user ${loggedUid}, uidList length: ${subscribers.length}`,
+//     );
+//     console.time(`fetchRecentActivity_${loggedUid}`);
+//   }
 
-  activityModel.fetchHistoryFromUidList(
-    /*uidList*/ subscribers,
-    { limit: HISTORY_LIMIT },
-    function (activities) {
-      if (uidList.length > 5000) {
-        console.timeEnd(`fetchRecentActivity_${loggedUid}`);
-      }
+//   activityModel.fetchHistoryFromUidList(
+//     /*uidList*/ subscribers,
+//     { limit: HISTORY_LIMIT },
+//     function (activities) {
+//       if (uidList.length > 5000) {
+//         console.timeEnd(`fetchRecentActivity_${loggedUid}`);
+//       }
 
-      cb(activities /*.slice(0, HISTORY_LIMIT)*/);
-    },
-  );
-}
+//       cb(activities /*.slice(0, HISTORY_LIMIT)*/);
+//     },
+//   );
+// }
 
 function prepareSidebar(uidList, options, cb) {
   cb(); // fetchRecentActivity() cause performance problems => we disable it for now.
