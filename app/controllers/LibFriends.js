@@ -52,20 +52,22 @@ function fetchRecentActivity(uidList, loggedUid, cb) {
 }
 
 function prepareSidebar(uidList, options, cb) {
-  if (
-    feedTemplate.shouldRenderWholeProfilePage(options) &&
-    options.format != 'json'
-  ) {
-    const loggedUser = uidList[uidList.length - 1];
-    console.time(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
-    fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
-      console.timeEnd(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
-      if (activities && activities.length)
-        options.recentActivity = { items: activities };
-      //console.time("fetchLast");
-      cb();
-    });
-  } else cb();
+  cb(); // fetchRecentActivity() cause performance problems => we disable it for now.
+
+  // if (
+  //   feedTemplate.shouldRenderWholeProfilePage(options) &&
+  //   options.format != 'json'
+  // ) {
+  //   const loggedUser = uidList[uidList.length - 1];
+  //   console.time(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
+  //   fetchRecentActivity(uidList, options.loggedUser.id, function (activities) {
+  //     console.timeEnd(`prepareSidebar_fetchRecentActivity_${loggedUser}`);
+  //     if (activities && activities.length)
+  //       options.recentActivity = { items: activities };
+  //     //console.time("fetchLast");
+  //     cb();
+  //   });
+  // } else cb();
 }
 
 function renderFriendsFeed(options, callback) {
