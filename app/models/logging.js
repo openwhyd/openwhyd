@@ -136,9 +136,8 @@ const useAuth0AsIdentityProvider = process.env.AUTH0_ISSUER_BASE_URL;
 http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
   ? function () {
       const userId = this.oidc.isAuthenticated()
-        ? this.oidc.user?.sub.replace('auth0|', '') // we assume that the Auth0 tenant fetched the openwhyd user's id upon login, from our database
+        ? this.oidc.user?.sub.replace('auth0|', '')
         : null;
-      console.warn(`getUid --> ${userId}` /*, this.oidc.user*/);
       if (userId) {
         this.session = this.session || {};
         this.session.whydUid = userId;
@@ -155,11 +154,11 @@ http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
  */
 http.IncomingMessage.prototype.getUser = function () {
   const uid = this.getUid();
-  if (uid) {
-    const user = mongodb.usernames[uid];
-    if (user) user.id = '' + user._id;
-    return user;
-  } else return null;
+  if (!uid) return null;
+  const user = mongodb.usernames[uid];
+  if (!user) console.trace(`logged user ${uid} not found in user cache`);
+  else user.id = '' + user._id;
+  return user ?? null;
 };
 
 //http.IncomingMessage.prototype.getUserFromFbUid = mongodb.getUserFromFbUid;

@@ -153,22 +153,22 @@ exports.Application = class Application {
     } = process.env;
 
     if (AUTH0_ISSUER_BASE_URL) {
-      const { auth /*, requiresAuth*/ } = require('express-openid-connect');
-
-      const config = {
-        authRequired: false,
-        auth0Logout: true,
-        secret: AUTH0_SECRET,
-        baseURL: this._urlPrefix,
-        clientID: AUTH0_CLIENT_ID,
-        issuerBaseURL: AUTH0_ISSUER_BASE_URL,
-      };
+      const openId = require('express-openid-connect');
 
       // auth router attaches /login, /logout, and /callback routes to the baseURL
-      app.use(auth(config));
+      app.use(
+        openId.auth({
+          authRequired: false,
+          auth0Logout: true,
+          secret: AUTH0_SECRET,
+          baseURL: this._urlPrefix,
+          clientID: AUTH0_CLIENT_ID,
+          issuerBaseURL: AUTH0_ISSUER_BASE_URL,
+        }),
+      );
 
       // example of route that gets user profile info from auth0
-      // app.get('/profile', requiresAuth(), (req, res) => {
+      // app.get('/profile', openId.requiresAuth(), (req, res) => {
       //   const user = req.oidc.user; // e.g. {"nickname":"admin","name":"admin","picture":"https://s.gravatar.com/avatar/xxxxxx.png","updated_at":"2023-08-30T15:02:17.071Z","email":"test@openwhyd.org","sub":"auth0|000000000000000000000001","sid":"XXXXXX-XXXXXX-XXXXXX"}
       //   res.send(JSON.stringify(user));
       // });
