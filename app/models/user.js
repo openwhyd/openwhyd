@@ -15,6 +15,7 @@ const emailModel = require('../models/email.js');
 const postModel = require('../models/post.js');
 const searchModel = require('../models/search.js');
 const snip = require('../snip.js');
+const auth0 = require('../lib/auth0');
 
 const crypto = require('crypto');
 
@@ -746,18 +747,8 @@ exports.renameUser = function (uid, name, callback) {
     callback({}); // nothing to do
   } else {
     if (process.appParams.useAuth0AsIdentityProvider) {
-      // Prerequisite: this API call requires
-      // - that Machine-to-machine API is enabled for this app
-      // - and that "update:users" permission is granted.
-      // See https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients
-      const { ManagementClient } = require('auth0');
-      new ManagementClient({
-        domain: process.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
-        clientId: process.env.AUTH0_CLIENT_ID,
-        clientSecret: process.env.AUTH0_CLIENT_SECRET,
-        scope: 'update:users',
-      })
-        .updateUser({ id: `auth0|${uid}` }, { name })
+      auth0
+        .updateUserName(uid, name)
         .catch((err) =>
           console.trace('failed to forward user rename to Auth0:', err),
         );
