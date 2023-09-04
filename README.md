@@ -41,8 +41,9 @@ You just need Docker and `git` installed on your computer:
 ```sh
 $ git clone https://github.com/openwhyd/openwhyd.git
 $ cd openwhyd
-$ docker-compose up
+$ make dev
 $ open localhost:8080
+$ make down # to stop the server and database
 ```
 
 More info about **Setup and Usage**: [INSTALL.md](docs/INSTALL.md).
