@@ -23,12 +23,20 @@ exports.getAuthenticatedUserId = (request) => {
     : null;
 };
 
+/** @typedef {{ sub: string, name: string, email: string, picture: string }} OidcUser */
+
 /**
  * @param {import('express').Request} request
- * @returns {unknown | null} User who is logged in, or null.
+ * @returns {OidcUser | null} User who is logged in, or null.
  */
 exports.getAuthenticatedUser = (request) => {
-  return request.oidc?.isAuthenticated() ? request.oidc.user : null;
+  if (!request.oidc?.isAuthenticated()) return null;
+  const { sub, name, email, picture } = request.oidc.user;
+  if (typeof sub !== 'string') throw new Error('invalid sub');
+  if (typeof name !== 'string') throw new Error('invalid name');
+  if (typeof email !== 'string') throw new Error('invalid email');
+  if (typeof picture !== 'string') throw new Error('invalid picture');
+  return { sub, name, email, picture };
 };
 
 exports.Auth0Wrapper = class Auth0Wrapper {
