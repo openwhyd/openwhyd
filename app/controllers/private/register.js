@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * register controller (derived from facebookLogin)
  * register new users coming from the /invite form
@@ -118,7 +120,7 @@ exports.registerInvitedUser = function (request, user, response) {
   if (user.name == 'Your Name' || user.name.trim() == '')
     return error(request, user, response, "Don't you have a name, dude ?");
 
-  if (user.fbId && isNaN('' + user.fbId))
+  if (user.fbId && isNaN(user.fbId))
     return error(request, user, response, 'Invalid Facebook id');
 
   if (user.password == 'password')
@@ -152,7 +154,7 @@ exports.registerInvitedUser = function (request, user, response) {
         name: user.name,
         email: user.email,
         pwd: userModel.md5(user.password),
-        arPwd: argon2.hash(user.password).toString('hex'),
+        arPwd: argon2.hash(user.password).toString(), // should convert to hex first?
         img: '/images/blank_user.gif', //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
       };
 
@@ -182,16 +184,15 @@ exports.registerInvitedUser = function (request, user, response) {
         'Oops, your registration failed... Please try again!',
       );
 
-    if (user.fbRequest) userModel.removeInviteByFbRequestIds(user.fbRequest);
-    else userModel.removeInvite(user.inviteCode);
+    userModel.removeInvite(user.inviteCode);
 
     function loginAndRedirectTo(url) {
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       if (user.ajax) {
         const json = { redirect: url, uId: '' + storedUser._id };
-        const renderJSON = () => {
+        const renderJSON = (jsonData) => {
           response[user.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
-            json,
+            jsonData,
           );
         };
         if (user.includeUser) {
