@@ -48,7 +48,7 @@ function renderError(request, getParams, response, errorMsg) {
 async function persistNewUserFromAuth0(oidcUser) {
   const dbUser = {
     _id: oidcUser.sub.replace(/^auth0\|/, ''),
-    name: oidcUser.username ?? oidcUser.name, // note: for some reason, the username provided during signup is not included in oidcUser
+    name: oidcUser.username ?? oidcUser.name.split('@')[0], // note: for some reason, the username provided during signup is not included in oidcUser
     // handle: oidcUser.username, // TODO: check that it complies with our rules, first
     email: oidcUser.email,
     img: oidcUser.picture,
