@@ -150,9 +150,15 @@ exports.Application = class Application {
       AUTH0_ISSUER_BASE_URL,
       AUTH0_SECRET, // to generate with $ openssl rand -hex 32
       AUTH0_CLIENT_ID,
+      AUTH0_CLIENT_SECRET, // to connect to (User) Management API
     } = process.env;
 
     if (AUTH0_ISSUER_BASE_URL) {
+      if (!AUTH0_SECRET) throw new Error('missing env var: AUTH0_SECRET');
+      if (!AUTH0_CLIENT_ID) throw new Error('missing env var: AUTH0_CLIENT_ID');
+      if (!AUTH0_CLIENT_SECRET)
+        throw new Error('missing env var: AUTH0_CLIENT_SECRET');
+
       const openId = require('express-openid-connect');
 
       // auth router attaches /login, /logout, and /callback routes to the baseURL
