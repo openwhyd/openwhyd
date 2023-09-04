@@ -8,6 +8,7 @@ const users = require('../models/user.js');
 const invitePage = require('../templates/invitePage.js');
 const inviteFormTemplate = require('../templates/inviteForm.js');
 const templateLoader = require('../templates/templateLoader.js');
+const mainTemplate = require('../templates/mainTemplate.js');
 const makeSignupToken = require('../genuine.js').makeSignupToken;
 
 // genuine signup V1
@@ -88,8 +89,8 @@ exports.renderRegisterPage = function (request, reqParams, response) {
 
   if (reqParams.inviteCode)
     exports.checkInviteCode({ url: request.url }, reqParams, response, render);
-  // signup pop-in
   else if (reqParams.popin) {
+    // signup popin
     templateLoader.loadTemplate(
       'app/templates/popinSignup.html',
       function (template) {
@@ -98,9 +99,26 @@ exports.renderRegisterPage = function (request, reqParams, response) {
       },
     );
   } else {
-    //console.log("inviteCode parameter is required");
-    response.redirect('/#signup');
-    return false;
+    // signup page => render a page with a minimal header
+    const whydHeaderContent = `
+      <div id="headCenter">
+        <a target="_top" class="homeLink" href="/">
+          <img id="logo" src="/images/logo-s.png"/>
+        </a>
+      </div>
+    `;
+    templateLoader.loadTemplate(
+      'app/templates/popinSignup.html',
+      function (template) {
+        response.renderHTML(
+          mainTemplate.renderWhydPage({
+            pageTitle: 'Sign up',
+            whydHeaderContent,
+            content: template.render(reqParams),
+          }),
+        );
+      },
+    );
   }
 };
 

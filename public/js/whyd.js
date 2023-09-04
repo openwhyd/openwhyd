@@ -16,9 +16,10 @@ if (undefined == window.console) window.console = { log: function () {} }; // es
 
 /* utility functions */
 
+// actually, this function is bound to "signup" links, so it should probably be renamed accordingly
 function login() {
-  openRemoteDialog(urlPrefix + '/signup?popin=true', 'dlgSignup');
-  // goToPage("/signup");
+  // openRemoteDialog(urlPrefix + '/signup?popin=true', 'dlgSignup'); // Causes a CORS error when Auth0 is active, unless Auth0's signup page is attached to our domain
+  goToPage('/signup');
 }
 
 function decodeHtmlEntities(str) {
