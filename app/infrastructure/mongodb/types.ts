@@ -47,6 +47,10 @@ export interface UserDocument {
     pendEN: number;
   };
   pwd: string;
+  lastFm: unknown;
+  fbTok: unknown;
+  twTok: unknown;
+  twSec: unknown;
 }
 
 /** To be completed */
