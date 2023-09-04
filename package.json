@@ -82,7 +82,7 @@
     "@cypress/code-coverage": "^3.11.0",
     "@types/node": "^20.5.7",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
+    "@typescript-eslint/parser": "^6.5.0",
     "approvals": "^6.2.1",
     "ava": "^5.3.1",
     "cypress": "^12.17.4",
