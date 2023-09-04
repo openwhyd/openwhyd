@@ -17,6 +17,7 @@ const genuine = require('../../genuine.js');
 const argon2 = require('argon2');
 const notifEmails = require('../../models/notifEmails.js');
 const mongodb = require('../../models/mongodb.js');
+const auth0 = require('../../lib/auth0');
 
 const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
 const { genuineSignupSecret } = process.appParams;
@@ -233,14 +234,13 @@ exports.registerInvitedUser = function (request, user, response) {
 
 exports.controller = async function (request, getParams, response) {
   request.logToConsole('register.controller', request.method);
-  const callbackFromAuth0 =
-    !!process.appParams.useAuth0AsIdentityProvider && request.oidc?.user;
+  const newUserFromAuth0 = auth0.getAuthenticatedUser(request);
   if (request.method.toLowerCase() === 'post')
     // sent by (new) register form
     exports.registerInvitedUser(request, request.body, response);
-  else if (callbackFromAuth0) {
+  else if (newUserFromAuth0) {
     // finalize user signup from Auth0, by persisting them into our database
-    const storedUser = await persistNewUserFromAuth0(request.oidc.user);
+    const storedUser = await persistNewUserFromAuth0(newUserFromAuth0);
     if (!storedUser) {
       renderError(
         request,

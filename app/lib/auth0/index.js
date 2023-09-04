@@ -11,6 +11,26 @@ const findMissingEnvVars = (env) => {
   return missing;
 };
 
+const getUserIdFromOidcUser = (user) => user?.sub.replace('auth0|', '');
+
+/**
+ * @param {import('express').Request} request
+ * @returns {string | null} ID of the user who is logged in, or null.
+ */
+exports.getAuthenticatedUserId = (request) => {
+  return request.oidc?.isAuthenticated()
+    ? getUserIdFromOidcUser(request.oidc.user)
+    : null;
+};
+
+/**
+ * @param {import('express').Request} request
+ * @returns {unknown | null} User who is logged in, or null.
+ */
+exports.getAuthenticatedUser = (request) => {
+  return request.oidc?.isAuthenticated() ? request.oidc.user : null;
+};
+
 exports.Auth0Wrapper = class Auth0Wrapper {
   constructor(env) {
     const missing = findMissingEnvVars(env);

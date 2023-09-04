@@ -2,6 +2,7 @@ const http = require('http');
 const querystring = require('querystring');
 const errorTemplate = require('../templates/error.js');
 const snip = require('../snip.js');
+const auth0 = require('../lib/auth0');
 
 const genReqLogLine = ({ head, method, path, params, suffix }) =>
   !process.appParams.color
@@ -135,12 +136,10 @@ const { useAuth0AsIdentityProvider } = process.appParams;
  */
 http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
   ? function () {
-      const userId = this.oidc.isAuthenticated()
-        ? this.oidc.user?.sub.replace('auth0|', '')
-        : null;
+      const userId = auth0.getAuthenticatedUserId(this);
       if (userId) {
         this.session = this.session || {};
-        this.session.whydUid = userId;
+        this.session.whydUid = userId; // TODO: is this session variable still necessary?
       }
       return userId;
     }
