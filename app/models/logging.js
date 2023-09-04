@@ -128,7 +128,7 @@ http.IncomingMessage.prototype.getFbUid = function () {
   return this.getFbUid();
 };
 
-const useAuth0AsIdentityProvider = process.env.AUTH0_ISSUER_BASE_URL;
+const { useAuth0AsIdentityProvider } = process.appParams;
 
 /**
  * Returns the logged in user's uid

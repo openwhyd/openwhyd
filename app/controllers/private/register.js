@@ -233,10 +233,12 @@ exports.registerInvitedUser = function (request, user, response) {
 
 exports.controller = async function (request, getParams, response) {
   request.logToConsole('register.controller', request.method);
+  const callbackFromAuth0 =
+    !!process.appParams.useAuth0AsIdentityProvider && request.oidc?.user;
   if (request.method.toLowerCase() === 'post')
     // sent by (new) register form
     exports.registerInvitedUser(request, request.body, response);
-  else if (!!process.env.AUTH0_SECRET && request.oidc.user) {
+  else if (callbackFromAuth0) {
     // finalize user signup from Auth0, by persisting them into our database
     const storedUser = await persistNewUserFromAuth0(request.oidc.user);
     if (!storedUser) {
