@@ -1,5 +1,7 @@
 // @ts-check
 
+// This file provides wrappers for authentication provider "Auth0".
+
 const findMissingEnvVars = (env) => {
   const missing = [];
   if (!env.AUTH0_SECRET) missing.push('AUTH0_SECRET');
@@ -24,23 +26,26 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     return openId.auth({
       authRequired: false,
       auth0Logout: true,
-      secret: this.env.AUTH0_SECRET,
       baseURL: urlPrefix,
+      secret: this.env.AUTH0_SECRET,
       clientID: this.env.AUTH0_CLIENT_ID,
       issuerBaseURL: this.env.AUTH0_ISSUER_BASE_URL,
       // cf https://auth0.github.io/express-openid-connect/interfaces/ConfigParams.html#afterCallback
       // afterCallback: async (req, res, session, decodedState) => {
-      //   const userProfile = await request(
-      //     `${AUTH0_ISSUER_BASE_URL}/userinfo`,
-      //   );
-      //   console.warn('afterCallback', {
-      //     session,
-      //     decodedState,
-      //     userProfile,
-      //   });
+      //   const userProfile = await request(`${AUTH0_ISSUER_BASE_URL}/userinfo`);
       //   return { ...session, userProfile }; // access using req.appSession.userProfile
       // },
     });
+  }
+
+  /** @returns Express.js route handler that redirects to Auth0's sign up dialog. */
+  makeSignupRoute({ returnTo }) {
+    return (req, res) => {
+      res.oidc.login({
+        authorizationParams: { screen_hint: 'signup' },
+        returnTo,
+      });
+    };
   }
 };
 
@@ -57,3 +62,9 @@ exports.updateUserName = async (userId, name) => {
     scope: 'update:users',
   }).updateUser({ id: `auth0|${userId}` }, { name });
 };
+
+// example of route that gets user profile info from auth0
+// app.get('/profile', openId.requiresAuth(), (req, res) => {
+//   const user = req.oidc.user; // e.g. {"nickname":"admin","name":"admin","picture":"https://s.gravatar.com/avatar/xxxxxx.png","updated_at":"2023-08-30T15:02:17.071Z","email":"test@openwhyd.org","sub":"auth0|000000000000000000000001","sid":"XXXXXX-XXXXXX-XXXXXX"}
+//   res.send(JSON.stringify(user));
+// });

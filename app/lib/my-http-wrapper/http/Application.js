@@ -153,19 +153,13 @@ exports.Application = class Application {
       // attach /login, /logout, and /callback routes to the baseURL
       app.use(auth0.makeExpressAuthMiddleware(this._urlPrefix));
 
-      // example of route that gets user profile info from auth0
-      // app.get('/profile', openId.requiresAuth(), (req, res) => {
-      //   const user = req.oidc.user; // e.g. {"nickname":"admin","name":"admin","picture":"https://s.gravatar.com/avatar/xxxxxx.png","updated_at":"2023-08-30T15:02:17.071Z","email":"test@openwhyd.org","sub":"auth0|000000000000000000000001","sid":"XXXXXX-XXXXXX-XXXXXX"}
-      //   res.send(JSON.stringify(user));
-      // });
-
       // redirects to Auth0's sign up dialog
-      app.get('/signup', (req, res) => {
-        res.oidc.login({
-          authorizationParams: { screen_hint: 'signup' },
+      app.get(
+        '/signup',
+        auth0.makeSignupRoute({
           returnTo: '/register', // so we can create the user in our database too
-        });
-      });
+        }),
+      );
     }
 
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
