@@ -12,6 +12,7 @@ const {
 } = require('../../../infrastructure/mongodb/UserCollection');
 const { ImageStorage } = require('../../../infrastructure/ImageStorage.js');
 const { unsetPlaylist } = require('../../../models/post.js');
+const { Auth0Wrapper } = require('../../auth0');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -146,44 +147,11 @@ exports.Application = class Application {
       });
     }
 
-    const {
-      AUTH0_ISSUER_BASE_URL,
-      AUTH0_SECRET, // to generate with $ openssl rand -hex 32
-      AUTH0_CLIENT_ID,
-      AUTH0_CLIENT_SECRET, // to connect to (User) Management API
-    } = process.env;
+    if (process.appParams.useAuth0AsIdentityProvider) {
+      const auth0 = new Auth0Wrapper(process.env); // throws if required env vars are missing
 
-    if (AUTH0_ISSUER_BASE_URL) {
-      if (!AUTH0_SECRET) throw new Error('missing env var: AUTH0_SECRET');
-      if (!AUTH0_CLIENT_ID) throw new Error('missing env var: AUTH0_CLIENT_ID');
-      if (!AUTH0_CLIENT_SECRET)
-        throw new Error('missing env var: AUTH0_CLIENT_SECRET');
-
-      const openId = require('express-openid-connect');
-
-      // auth router attaches /login, /logout, and /callback routes to the baseURL
-      app.use(
-        openId.auth({
-          authRequired: false,
-          auth0Logout: true,
-          secret: AUTH0_SECRET,
-          baseURL: this._urlPrefix,
-          clientID: AUTH0_CLIENT_ID,
-          issuerBaseURL: AUTH0_ISSUER_BASE_URL,
-          // cf https://auth0.github.io/express-openid-connect/interfaces/ConfigParams.html#afterCallback
-          // afterCallback: async (req, res, session, decodedState) => {
-          //   const userProfile = await request(
-          //     `${AUTH0_ISSUER_BASE_URL}/userinfo`,
-          //   );
-          //   console.warn('afterCallback', {
-          //     session,
-          //     decodedState,
-          //     userProfile,
-          //   });
-          //   return { ...session, userProfile }; // access using req.appSession.userProfile
-          // },
-        }),
-      );
+      // attach /login, /logout, and /callback routes to the baseURL
+      app.use(auth0.makeExpressAuthMiddleware(this._urlPrefix));
 
       // example of route that gets user profile info from auth0
       // app.get('/profile', openId.requiresAuth(), (req, res) => {
