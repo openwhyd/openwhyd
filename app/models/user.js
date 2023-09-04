@@ -734,17 +734,35 @@ exports.setHandle = function (uId, username, handler) {
 exports.renameUser = function (uid, name, callback) {
   function whenDone() {
     console.log('renameUser last step: save the actual user record');
-    //@ts-ignore
     exports.save({ _id: uid, name: name }, callback);
   }
   const cols = ['follow', 'post'];
   uid = '' + uid;
   const user = mongodb.getUserFromId(uid);
   const oldName = (user || {}).name;
-  if (!user) callback({ error: 'renameUser error: user not found' });
-  else if (oldName == name) callback({});
-  // nothing to do
-  else
+  if (!user) {
+    callback({ error: 'renameUser error: user not found' });
+  } else if (oldName == name) {
+    callback({}); // nothing to do
+  } else {
+    if (process.appParams.useAuth0AsIdentityProvider) {
+      // Prerequisite: this API call requires
+      // - that Machine-to-machine API is enabled for this app
+      // - and that "update:users" permission is granted.
+      // See https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients
+      const { ManagementClient } = require('auth0');
+      new ManagementClient({
+        domain: process.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
+        clientId: process.env.AUTH0_CLIENT_ID,
+        clientSecret: process.env.AUTH0_CLIENT_SECRET,
+        scope: 'update:users',
+      })
+        .updateUser({ id: `auth0|${uid}` }, { name })
+        .catch((err) =>
+          console.trace('failed to forward user rename to Auth0:', err),
+        );
+    }
+    // update user name in other collections where it's mentionned
     (function next() {
       let col;
       if (!(col = cols.pop())) return whenDone();
@@ -776,6 +794,7 @@ exports.renameUser = function (uid, name, callback) {
         },
       );
     })();
+  }
 };
 
 exports.fetchUserFields = function (subList, attrToCopy, cb) {

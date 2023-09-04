@@ -63,6 +63,7 @@
     "algoliasearch": "4.19.1",
     "argon2": "^0.31.0",
     "async": "*",
+    "auth0": "^3.7.0",
     "colors": "*",
     "connect-mongo": "^3.2.0",
     "dd-trace": "^4.12.0",

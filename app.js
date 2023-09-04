@@ -68,6 +68,8 @@ const dbCreds = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
 };
 
+const useAuth0AsIdentityProvider = !!process.env.AUTH0_ISSUER_BASE_URL;
+
 const params = (process.appParams = {
   // server level
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
@@ -77,8 +79,9 @@ const params = (process.appParams = {
   isOnTestDatabase: dbCreds.mongoDbDatabase === 'openwhyd_test',
   color: true,
 
-  // secrets
-  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET,
+  // authentication
+  useAuth0AsIdentityProvider,
+  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET, // used by legacy auth
 
   // workers and general site logic
   searchModule:
@@ -161,8 +164,6 @@ function start() {
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
-
-  const useAuth0AsIdentityProvider = process.env.AUTH0_ISSUER_BASE_URL;
 
   const serverOptions = {
     urlPrefix: params.urlPrefix,
