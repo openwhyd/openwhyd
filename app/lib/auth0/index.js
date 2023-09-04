@@ -39,6 +39,23 @@ exports.getAuthenticatedUser = (request) => {
   return { sub, name, email, picture };
 };
 
+/** @typedef {{ id: string, name: string, email: string, img: string }} OpenwhydUser */
+
+/**
+ * @param {OidcUser} oidcUser
+ * @returns {OpenwhydUser}
+ */
+exports.mapToOpenwhydUser = (oidcUser) => {
+  // note: for some reason, the username provided during signup is not included in oidcUser
+  return {
+    id: getUserIdFromOidcUser(oidcUser.sub),
+    name: oidcUser.name.split('@')[0], // while we tested signups, name===email. => extract the user name from email address
+    email: oidcUser.email,
+    img: oidcUser.picture,
+    // handle: oidcUser.username, // TODO: check that it complies with our rules, first
+  };
+};
+
 exports.Auth0Wrapper = class Auth0Wrapper {
   constructor(env) {
     const missing = findMissingEnvVars(env);

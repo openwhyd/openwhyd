@@ -46,14 +46,11 @@ function renderError(request, getParams, response, errorMsg) {
   );
 }
 
+/**
+ * @param {import('../../lib/auth0').OidcUser} oidcUser
+ */
 async function persistNewUserFromAuth0(oidcUser) {
-  const dbUser = {
-    _id: oidcUser.sub.replace(/^auth0\|/, ''),
-    name: oidcUser.username ?? oidcUser.name.split('@')[0], // note: for some reason, the username provided during signup is not included in oidcUser
-    // handle: oidcUser.username, // TODO: check that it complies with our rules, first
-    email: oidcUser.email,
-    img: oidcUser.picture,
-  };
+  const dbUser = auth0.mapToOpenwhydUser(oidcUser);
   const stored = await new Promise((resolve) =>
     userModel.save(dbUser, resolve),
   );
