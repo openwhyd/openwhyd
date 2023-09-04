@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * user api
  * retrieve and update user info
@@ -155,6 +157,7 @@ const fieldSetters = {
           )
         : p.img;
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
+      // TODO: inform Auth0, if applicable
     });
   },
   cvrImg: function (p, cb) {
@@ -181,11 +184,13 @@ const fieldSetters = {
       if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
         defaultSetter('pwd')({ _id: p._id, pwd: userModel.md5(p.pwd) }, cb);
         notifEmails.sendPasswordUpdated(p._id, item.email);
+        // TODO: inform Auth0, if applicable
       } else cb({ error: 'Your current password is incorrect' });
     });
   },
   handle: function (p, cb) {
     userModel.setHandle(p._id, p.handle, cb);
+    // TODO: inform Auth0, if applicable
   },
   email: function (p, cb) {
     p.email = emailModel.normalize(p.email);
@@ -195,6 +200,7 @@ const fieldSetters = {
       userModel.fetchByEmail(p.email, function (existingUser) {
         if (!existingUser) {
           notifEmails.sendEmailUpdated(p._id, p.email);
+          // TODO: inform Auth0, if applicable
           defaultSetter('email')(p, cb);
         } else if ('' + existingUser._id == p._id)
           // no change
@@ -279,8 +285,8 @@ exports.fetchUserData = function (user, cb) {
 function fetchUserById(uId, options, cb) {
   options = options || {};
   userModel.fetchByUid(uId, function (user) {
-    user = user || {};
-    userModel.fetchPlaylists(user, {}, function (playlists) {
+    if (!user) return cb();
+    userModel.fetchPlaylists(user, {}, async function (playlists) {
       user.pl = playlists || user.pl;
       if (options.excludePrivateFields) {
         delete user.pwd;
@@ -291,15 +297,10 @@ function fetchUserById(uId, options, cb) {
         delete user.twTok;
         delete user.twSec;
       }
-      const getters = [['includeSubscr', countUserSubscr]];
-      (function next() {
-        const item = getters.shift();
-        if (!item) cb(user);
-        else {
-          if (options[item[0]]) item[1](user, next);
-          else next();
-        }
-      })();
+      if (options.includeSubscr) {
+        await new Promise((resolve) => countUserSubscr(user, resolve));
+      }
+      cb(user);
     });
   });
 }
