@@ -15,7 +15,7 @@ const emailModel = require('../models/email.js');
 const postModel = require('../models/post.js');
 const searchModel = require('../models/search.js');
 const snip = require('../snip.js');
-const auth0 = require('../lib/auth0');
+const { Auth0Wrapper } = require('../lib/auth0');
 
 const crypto = require('crypto');
 
@@ -747,7 +747,7 @@ exports.renameUser = function (uid, name, callback) {
     callback({}); // nothing to do
   } else {
     if (process.appParams.useAuth0AsIdentityProvider) {
-      auth0
+      new Auth0Wrapper(process.env)
         .updateUserName(uid, name)
         .catch((err) =>
           console.trace('failed to forward user rename to Auth0:', err),
