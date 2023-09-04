@@ -99,6 +99,7 @@ exports.cacheUsers = function (callback) {
   );
 };
 
+/** @deprecated because the cursor cannot be released until results are exhausted. */
 exports.forEach = async function (colName, params, handler, cb, cbParam) {
   let q = {};
   params = params || {};
