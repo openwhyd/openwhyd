@@ -16,8 +16,11 @@ public/js/bookmarklet.js: public/js/bookmarklet*.ts
 dev: node_modules public/js/bookmarklet.js ## Start a local dev server.
 	docker compose stop
 	docker compose up --detach mongo
+	@(sleep 2; echo "\nℹ️  Press Ctrl-C when you're done.\n❎ Command to stop and clean-up: $ make down";)&
 	npm run start:localdb
-	docker compose stop
+
+down: ## Stop the local dev server and clean up left-overs from Docker.
+	docker compose down --rmi local --remove-orphans
 
 start: node_modules public/js/bookmarklet.js ## Start the production server without downtime.
 	@cd scripts && ./start.sh
@@ -107,4 +110,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build dev start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-in-docker ci release help
+.PHONY: install build dev down start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-in-docker ci release help

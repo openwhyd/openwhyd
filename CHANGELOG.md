@@ -1,3 +1,11 @@
+## [1.55.61](https://github.com/openwhyd/openwhyd/compare/v1.55.60...v1.55.61) (2023-09-02)
+
+
+### Bug Fixes
+
+* linter issues caused by previous commit ([17998a1](https://github.com/openwhyd/openwhyd/commit/17998a178a661c688781f91b40e5a558a270fa49))
+* **perf:** disable history on home page ([52536d3](https://github.com/openwhyd/openwhyd/commit/52536d3a0c5377bd0208a51b5408f8c412c0b3c4)), closes [#681](https://github.com/openwhyd/openwhyd/issues/681) [#682](https://github.com/openwhyd/openwhyd/issues/682) [#630](https://github.com/openwhyd/openwhyd/issues/630) [#634](https://github.com/openwhyd/openwhyd/issues/634)
+
 ## [1.55.60](https://github.com/openwhyd/openwhyd/compare/v1.55.59...v1.55.60) (2023-08-31)
 
 

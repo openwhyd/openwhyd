@@ -30,12 +30,12 @@ Commands to type in your shell:
 ```sh
 $ git clone https://github.com/openwhyd/openwhyd.git
 $ cd openwhyd
-$ docker-compose up --build --detach  # will start openwhyd's web server and database in the background
-$ open http://localhost:8080          # ... in your web browser => you should see Openwhyd's home page! 🎉
-$ docker-compose down                 # when you're done: will stop openwhyd's web server and database
+$ make dev                    # starts openwhyd's web server and database in the background
+$ open http://localhost:8080  # ... in your web browser => you should see Openwhyd's home page! 🎉
+$ make down                   # when you're done: stop openwhyd's web server and database
 ```
 
-After making changes to the source code, don't forget to stop and re-start it using `docker-compose`.
+After making changes to the source code, don't forget to restart with `make dev`.
 
 ### Run automated tests
 
@@ -50,7 +50,7 @@ $ make test
 If you want to import some user data from openwhyd.org into your local/test database, you can use the following script:
 
 ```sh
-$ docker-compose up --build --detach    # starts openwhyd's web server and database in the background
+$ make dev                              # starts openwhyd's web server and database in the background
 $ make docker-seed                      # clears the database and restarts openwhyd's container
 $ node scripts/import-from-prod.js test # imports 21 posts from https://openwhyd.org/test
 ```
