@@ -2,6 +2,8 @@
 
 // This file provides wrappers for authentication provider "Auth0".
 
+const DATABASE_CONNECTION_NAME = 'Username-Password-Authentication';
+
 const findMissingEnvVars = (env) => {
   const missing = [];
   if (!env.AUTH0_SECRET) missing.push('AUTH0_SECRET');
@@ -96,23 +98,30 @@ exports.Auth0Wrapper = class Auth0Wrapper {
   }
 
   /**
-   * Ask Auth0 to update a user's name.
-   * Prerequisite: this API call requires
-   * - that Machine-to-machine API is enabled for this app
-   * - and that "update:users" permission is granted.
-   * See https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients
+   * Ask Auth0 to update a user's name or email.
+   * Prerequisites:
+   * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
+   * - "update:users" permission must be granted on that API client;
+   * - "Import Users to Auth0" toggle must remain ON, to update email addresses; (cf https://community.auth0.com/t/updateasync-throws-user-with-old-email-does-not-exist-in-auth0-database/94445/3)
+   * See
    * @param {string} userId
-   * @param {string} name
+   * @param {{name: string} | {email: string}} patch
    * @returns Promise<void>
    */
-  async updateUserName(userId, name) {
+  async patchUser(userId, patch) {
+    console.debug(
+      `[auth0] patching ${Object.keys(patch).join(', ')} on user ${userId}`,
+    );
     const { ManagementClient } = require('auth0');
     return await new ManagementClient({
       domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
       clientId: this.env.AUTH0_CLIENT_ID,
       clientSecret: this.env.AUTH0_CLIENT_SECRET,
       scope: 'update:users',
-    }).updateUser({ id: makeAuth0UserId(userId) }, { name });
+    }).updateUser(
+      { id: makeAuth0UserId(userId) },
+      { connection: DATABASE_CONNECTION_NAME, ...patch }, // connection is needed when updating email address, cf https://auth0.com/docs/api/management/v2/users/patch-users-by-id
+    );
   }
 };
 

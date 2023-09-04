@@ -748,7 +748,7 @@ exports.renameUser = function (uid, name, callback) {
   } else {
     if (process.appParams.useAuth0AsIdentityProvider) {
       new Auth0Wrapper(process.env)
-        .updateUserName(uid, name)
+        .patchUser(uid, { name })
         .catch((err) =>
           console.trace('failed to forward user rename to Auth0:', err),
         );

@@ -22,6 +22,7 @@ const emailModel = require('../../models/email.js');
 const followModel = require('../../models/follow.js');
 const notifEmails = require('../../models/notifEmails.js');
 const uploadCtr = require('../uploadedFile.js');
+const { Auth0Wrapper } = require('../../lib/auth0/index.js');
 
 // for when called through subdir controller
 const SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
@@ -197,11 +198,26 @@ const fieldSetters = {
     if (!emailModel.validate(p.email))
       cb({ error: 'This email address is invalid' });
     else
-      userModel.fetchByEmail(p.email, function (existingUser) {
+      userModel.fetchByEmail(p.email, async function (existingUser) {
         if (!existingUser) {
           notifEmails.sendEmailUpdated(p._id, p.email);
-          // TODO: inform Auth0, if applicable
-          defaultSetter('email')(p, cb);
+          const savedUser = await new Promise((resolve) =>
+            defaultSetter('email')(p, resolve),
+          );
+          if (savedUser && process.appParams.useAuth0AsIdentityProvider) {
+            new Auth0Wrapper(process.env)
+              .patchUser(p._id, { email: p.email })
+              .catch((err) => {
+                if (
+                  !err.message.endsWith(
+                    'User with old email does not exist in Auth0 database', // this happens when the email address has already been updated <= workaround to cover a bug in our settings page
+                  )
+                ) {
+                  console.trace('failed to pass new user email to Auth0:', err);
+                }
+              });
+          }
+          cb(savedUser);
         } else if ('' + existingUser._id == p._id)
           // no change
           cb({ email: p.email });
