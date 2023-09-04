@@ -323,7 +323,7 @@ exports.update = function (uid, update, handler) {
 
 /**
  *
- * @param {UserDocument} pUser
+ * @param {Partial<UserDocument> & ({_id: string} | {id: string} | {email: string})} pUser
  * @param {(userDocument:UserDocument) => any} handler
  */
 exports.save = function (pUser, handler) {
