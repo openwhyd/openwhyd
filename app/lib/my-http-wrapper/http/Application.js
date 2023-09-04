@@ -164,6 +164,18 @@ exports.Application = class Application {
           baseURL: this._urlPrefix,
           clientID: AUTH0_CLIENT_ID,
           issuerBaseURL: AUTH0_ISSUER_BASE_URL,
+          // cf https://auth0.github.io/express-openid-connect/interfaces/ConfigParams.html#afterCallback
+          // afterCallback: async (req, res, session, decodedState) => {
+          //   const userProfile = await request(
+          //     `${AUTH0_ISSUER_BASE_URL}/userinfo`,
+          //   );
+          //   console.warn('afterCallback', {
+          //     session,
+          //     decodedState,
+          //     userProfile,
+          //   });
+          //   return { ...session, userProfile }; // access using req.appSession.userProfile
+          // },
         }),
       );
 
@@ -172,6 +184,14 @@ exports.Application = class Application {
       //   const user = req.oidc.user; // e.g. {"nickname":"admin","name":"admin","picture":"https://s.gravatar.com/avatar/xxxxxx.png","updated_at":"2023-08-30T15:02:17.071Z","email":"test@openwhyd.org","sub":"auth0|000000000000000000000001","sid":"XXXXXX-XXXXXX-XXXXXX"}
       //   res.send(JSON.stringify(user));
       // });
+
+      // redirects to Auth0's sign up dialog
+      app.get('/signup', (req, res) => {
+        res.oidc.login({
+          authorizationParams: { screen_hint: 'signup' },
+          returnTo: '/register', // so we can create the user in our database too
+        });
+      });
     }
 
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called

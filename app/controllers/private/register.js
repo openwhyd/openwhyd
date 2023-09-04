@@ -43,6 +43,21 @@ function renderError(request, getParams, response, errorMsg) {
   );
 }
 
+async function persistNewUserFromAuth0(oidcUser) {
+  const dbUser = {
+    _id: oidcUser.sub.replace(/^auth0\|/, ''),
+    name: oidcUser.username ?? oidcUser.name, // note: for some reason, the username provided during signup is not included in oidcUser
+    // handle: oidcUser.username, // TODO: check that it complies with our rules, first
+    email: oidcUser.email,
+    img: oidcUser.picture,
+  };
+  const stored = await new Promise((resolve) =>
+    userModel.save(dbUser, resolve),
+  );
+  if (stored) notifEmails.sendRegWelcomeAsync(stored);
+  return stored;
+}
+
 /**
  * called when user submits the form from register.html
  */
@@ -215,10 +230,23 @@ exports.registerInvitedUser = function (request, user, response) {
   else registerUser();
 };
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   request.logToConsole('register.controller', request.method);
   if (request.method.toLowerCase() === 'post')
     // sent by (new) register form
     exports.registerInvitedUser(request, request.body, response);
-  else inviteController.renderRegisterPage(request, getParams, response);
+  else if (!!process.env.AUTH0_SECRET && request.oidc.user) {
+    // finalize user signup from Auth0, by persisting them into our database
+    const storedUser = await persistNewUserFromAuth0(request.oidc.user);
+    if (!storedUser) {
+      renderError(
+        request,
+        storedUser,
+        response,
+        'Oops, your registration failed... Please reach out to contact@openwhyd.org',
+      );
+    } else {
+      response.renderHTML(htmlRedirect('/')); // in reality, this ends up redirecting to the consent request page
+    }
+  } else inviteController.renderRegisterPage(request, getParams, response);
 };
