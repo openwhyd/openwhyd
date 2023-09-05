@@ -41,5 +41,18 @@ exports.makeAuthFeatures = (env) => {
           console.trace('failed to send username change to Auth0:', err),
         );
     },
+
+    setUserEmail(userId, email) {
+      return auth0.patchUser(userId, { email }).catch((err) => {
+        if (
+          !err.message.endsWith(
+            'User with old email does not exist in Auth0 database',
+          )
+        ) {
+          // this happens when the email address has already been updated <= workaround to cover a bug in our settings page
+          console.trace('failed to pass new user email to Auth0:', err);
+        }
+      });
+    },
   };
 };
