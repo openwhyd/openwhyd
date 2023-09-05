@@ -1,3 +1,10 @@
+## [1.55.62](https://github.com/openwhyd/openwhyd/compare/v1.55.61...v1.55.62) (2023-09-05)
+
+
+### Bug Fixes
+
+* **auth:** we need to create a /signup route for Auth0 => make it work with the legacy signup page ([d3e2592](https://github.com/openwhyd/openwhyd/commit/d3e2592beb1cf14372024e92a4ba6e7f1f7f2199)), closes [#705](https://github.com/openwhyd/openwhyd/issues/705)
+
 ## [1.55.61](https://github.com/openwhyd/openwhyd/compare/v1.55.60...v1.55.61) (2023-09-02)
 
 
