@@ -12,7 +12,7 @@ const {
 } = require('../../../infrastructure/mongodb/UserCollection');
 const { ImageStorage } = require('../../../infrastructure/ImageStorage.js');
 const { unsetPlaylist } = require('../../../models/post.js');
-const { Auth0Wrapper } = require('../../auth0');
+const { makeAuthFeatures } = require('../../auth0/features.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -127,11 +127,16 @@ exports.Application = class Application {
     const releasePlaylistPosts = async (userId, playlistId) =>
       new Promise((resolve) => unsetPlaylist(userId, playlistId, resolve));
 
+    /** @type {Features & Partial<{auth: import('./AuthFeatures.js').AuthFeatures}>} */
     this._features = makeFeatures({
       userRepository,
       imageRepository,
       releasePlaylistPosts,
     });
+
+    if (process.appParams.useAuth0AsIdentityProvider) {
+      this._features.auth = makeAuthFeatures();
+    }
   }
 
   getExpressApp() {
@@ -147,20 +152,7 @@ exports.Application = class Application {
       });
     }
 
-    if (process.appParams.useAuth0AsIdentityProvider) {
-      const auth0 = new Auth0Wrapper(process.env); // throws if required env vars are missing
-
-      // attach /login, /logout, and /callback routes to the baseURL
-      app.use(auth0.makeExpressAuthMiddleware(this._urlPrefix));
-
-      // redirects to Auth0's sign up dialog
-      app.get(
-        '/signup',
-        auth0.makeSignupRoute({
-          returnTo: '/register', // so we can create the user in our database too
-        }),
-      );
-    }
+    this._features.auth?.injectExpressRoutes(app, this._urlPrefix);
 
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
