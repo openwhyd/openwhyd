@@ -135,7 +135,7 @@ exports.Application = class Application {
     });
 
     if (process.appParams.useAuth0AsIdentityProvider) {
-      this._features.auth = makeAuthFeatures();
+      this._features.auth = makeAuthFeatures(process.env);
     }
   }
 
