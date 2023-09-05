@@ -100,6 +100,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
 
   /**
    * Instanciate a client to send requests to Auth0 Management API.
+   * @private
    * @param {object} param
    * @param {'update:users' | 'create:user_tickets' | 'delete:users'} param.scope
    * @returns {ManagementClient}
@@ -111,6 +112,19 @@ exports.Auth0Wrapper = class Auth0Wrapper {
       clientId: this.env.AUTH0_CLIENT_ID,
       clientSecret: this.env.AUTH0_CLIENT_SECRET,
       scope,
+    });
+  }
+
+  /**
+   * Instanciate a client to send requests to Auth0 Authentication API.
+   * @private
+   * @returns {AuthenticationClient}
+   */
+  getAuthenticationClient() {
+    const { AuthenticationClient } = require('auth0');
+    return new AuthenticationClient({
+      domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
+      clientId: this.env.AUTH0_CLIENT_ID,
     });
   }
 
@@ -145,11 +159,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     console.debug(
       `[auth0] requesting password change for user ${email.split('@')[0]}@...`,
     );
-    const { AuthenticationClient } = require('auth0');
-    return await new AuthenticationClient({
-      domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
-      clientId: this.env.AUTH0_CLIENT_ID,
-    }).requestChangePasswordEmail({
+    return await this.getAuthenticationClient().requestChangePasswordEmail({
       connection: DATABASE_CONNECTION_NAME,
       email,
     });
