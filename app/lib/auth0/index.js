@@ -13,7 +13,8 @@ const findMissingEnvVars = (env) => {
   return missing;
 };
 
-const getUserIdFromOidcUser = (user) => user?.sub.replace('auth0|', '');
+/**@param {Record<string, any>} user */
+const getUserIdFromOidcUser = (user) => user?.sub?.replace('auth0|', '');
 
 const makeAuth0UserId = (userId) => `auth0|${userId}`;
 
@@ -52,7 +53,7 @@ exports.getAuthenticatedUser = (request) => {
 exports.mapToOpenwhydUser = (oidcUser) => {
   // note: for some reason, the username provided during signup is not included in oidcUser
   return {
-    id: getUserIdFromOidcUser(oidcUser.sub),
+    id: getUserIdFromOidcUser(oidcUser),
     name: oidcUser.name.split('@')[0], // while we tested signups, name===email. => extract the user name from email address
     email: oidcUser.email,
     img: oidcUser.picture,
