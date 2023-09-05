@@ -146,6 +146,28 @@ function start() {
     throw new Error(`missing env var: WHYD_SESSION_SECRET`);
 
   const myHttp = require('./app/lib/my-http-wrapper/http');
+  const { makeFeatures } = require('./app/domain/OpenWhydFeatures');
+  const {
+    userCollection,
+  } = require('./app/infrastructure/mongodb/UserCollection');
+  const { ImageStorage } = require('./app/infrastructure/ImageStorage.js');
+  const { unsetPlaylist } = require('./app/models/post.js');
+  const { makeAuthFeatures } = require('./app/lib/auth0/features.js');
+
+  // Initialize features
+  /** @typedef {import('./app/domain/api/Features').Features} Features*/
+  /** @type {Features & Partial<{auth: import('./app/lib/my-http-wrapper/http/AuthFeatures').AuthFeatures}>} */
+  const features = makeFeatures({
+    userRepository: userCollection,
+    imageRepository: new ImageStorage(),
+    releasePlaylistPosts: async (userId, playlistId) =>
+      new Promise((resolve) => unsetPlaylist(userId, playlistId, resolve)),
+  });
+
+  // Inject Auth0 user auth and management features, if enabled
+  if (process.appParams.useAuth0AsIdentityProvider) {
+    features.auth = makeAuthFeatures(process.env);
+  }
 
   // Legacy user auth and session management
   const session = require('express-session');
@@ -166,6 +188,7 @@ function start() {
   });
 
   const serverOptions = {
+    features,
     urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
