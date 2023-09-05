@@ -351,6 +351,7 @@ exports.save = function (pUser, handler) {
   );
 };
 
+/** Delete a user account. */
 exports.delete = function (criteria, handler) {
   criteria = criteria || {};
   if (criteria._id) {
@@ -378,6 +379,13 @@ exports.delete = function (criteria, handler) {
         searchModel.deleteDoc('user', '' + criteria._id);
         delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
+        if (process.appParams.useAuth0AsIdentityProvider) {
+          new Auth0Wrapper(process.env)
+            .deleteUser(criteria._id.toString())
+            .catch((err) =>
+              console.trace('failed to delete user from Auth0:', err),
+            );
+        }
         // todo: delete user avatar file
       });
       // TODO: delete tracks

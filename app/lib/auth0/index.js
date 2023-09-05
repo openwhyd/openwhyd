@@ -102,8 +102,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
    * Ask Auth0 to update a user's username/handle, name or email.
    * Prerequisites:
    * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
-   * - "update:users" permission must be granted on that API client.
-   * See
+   * - "delete:users" permission must be granted on that API client.
    * @param {string} userId
    * @param {{username: string} | {name: string} | {email: string}} patch
    * @returns Promise<void>
@@ -129,7 +128,6 @@ exports.Auth0Wrapper = class Auth0Wrapper {
    * Prerequisites:
    * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
    * - "create:user_tickets" permission must be granted on that API client.
-   * See
    * @param {string} email
    * @returns Promise<void>
    */
@@ -144,6 +142,27 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     }).requestChangePasswordEmail({
       connection: DATABASE_CONNECTION_NAME,
       email,
+    });
+  }
+
+  /**
+   * Ask Auth0 to delete a user.
+   * Prerequisites:
+   * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
+   * - "create:user_tickets" permission must be granted on that API client.
+   * @param {string} userId
+   * @returns Promise<void>
+   */
+  async deleteUser(userId) {
+    console.debug(`[auth0] deleting user ${userId}...`);
+    const { ManagementClient } = require('auth0');
+    return await new ManagementClient({
+      domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
+      clientId: this.env.AUTH0_CLIENT_ID,
+      clientSecret: this.env.AUTH0_CLIENT_SECRET,
+      scope: 'delete:users',
+    }).deleteUser({
+      id: makeAuth0UserId(userId),
     });
   }
 };
