@@ -71,5 +71,13 @@ exports.makeAuthFeatures = (env) => {
           console.trace('failed to forward user rename to Auth0:', err),
         );
     },
+
+    deleteUser(userId) {
+      return auth0
+        .deleteUser(userId)
+        .catch((err) =>
+          console.trace('failed to delete user from Auth0:', err),
+        );
+    },
   };
 };

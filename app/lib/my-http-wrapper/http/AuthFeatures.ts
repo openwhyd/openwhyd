@@ -14,4 +14,5 @@ export interface AuthFeatures {
   setUserHandle(userId: string, username: string): Promise<void>;
   setUserEmail(userId: string, email: string): Promise<void>;
   setUserProfileName(userId: string, email: string): Promise<void>;
+  deleteUser(userId: string): Promise<void>;
 }

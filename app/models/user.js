@@ -15,7 +15,6 @@ const emailModel = require('../models/email.js');
 const postModel = require('../models/post.js');
 const searchModel = require('../models/search.js');
 const snip = require('../snip.js');
-const { Auth0Wrapper } = require('../lib/auth0');
 
 const crypto = require('crypto');
 
@@ -352,7 +351,7 @@ exports.save = function (pUser, handler) {
 };
 
 /** Delete a user account. */
-exports.delete = function (criteria, handler) {
+exports.delete = function (features, criteria, handler) {
   criteria = criteria || {};
   if (criteria._id) {
     criteria._id = ObjectId('' + criteria._id);
@@ -379,13 +378,7 @@ exports.delete = function (criteria, handler) {
         searchModel.deleteDoc('user', '' + criteria._id);
         delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
-        if (process.appParams.useAuth0AsIdentityProvider) {
-          new Auth0Wrapper(process.env)
-            .deleteUser(criteria._id.toString())
-            .catch((err) =>
-              console.trace('failed to delete user from Auth0:', err),
-            );
-        }
+        features.auth?.deleteUser(criteria._id.toString());
         // todo: delete user avatar file
       });
       // TODO: delete tracks

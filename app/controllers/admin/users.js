@@ -24,11 +24,11 @@ const handlers = {
       });
     else cb({ error: 'missing arguments' });
   },
-  delete: function (p, cb) {
+  delete: function (p, cb, features) {
     const id = p._id && p._id.join ? p._id[0] : p._id;
     if (id) {
       console.log('delete user ', id);
-      userModel.delete({ _id: id }, function (res) {
+      userModel.delete(features, { _id: id }, function (res) {
         res = res || {};
         res.json = JSON.parse(JSON.stringify(res));
         cb(res);

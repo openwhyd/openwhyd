@@ -36,6 +36,9 @@ function addUserInfo(userSub, mySub) {
   return userSub;
 }
 
+/** @typedef {{auth?: import('../../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} Features */
+
+/** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const publicActions = {
   subscriptions: function (p, cb) {
     if (!p || !p.id) cb({ error: 'user not found' });
@@ -99,12 +102,12 @@ const publicActions = {
         });
       });
   },
-  delete: function (p, cb) {
+  delete: function (p, cb, features) {
     if (!p || !p.loggedUser || !p.loggedUser.id)
       cb({ error: 'Please log in first' });
     else {
       console.log('deleting user... ', p.loggedUser.id);
-      userModel.delete({ _id: p.loggedUser.id }, function (r) {
+      userModel.delete(features, { _id: p.loggedUser.id }, function (r) {
         console.log('deleted user', p.loggedUser.id, r);
       });
       notifEmails.sendUserDeleted(p.loggedUser.id, p.loggedUser.name);
@@ -132,8 +135,6 @@ function defaultSetter(fieldName) {
     userModel.save(u, cb);
   };
 }
-
-/** @typedef {{auth?: import('../../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} Features */
 
 /** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const fieldSetters = {
@@ -322,14 +323,14 @@ function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
 
-function handlePublicRequest(loggedUser, reqParams, localRendering) {
+function handlePublicRequest(loggedUser, reqParams, localRendering, features) {
   // transforming sequential parameters to named parameters
   reqParams = snip.translateFields(reqParams, SEQUENCED_PARAMETERS);
 
   const handler = publicActions[reqParams.action];
   if (handler) {
     reqParams.loggedUser = loggedUser;
-    handler(reqParams, localRendering);
+    handler(reqParams, localRendering, features);
     return true;
   } else if (reqParams.id) {
     reqParams.excludePrivateFields = true;
@@ -382,7 +383,8 @@ function handleAuthRequest(loggedUser, reqParams, localRendering, features) {
 // old name: setUserFields()
 function handleRequest(loggedUser, reqParams, localRendering, features) {
   try {
-    if (handlePublicRequest(loggedUser, reqParams, localRendering)) return true;
+    if (handlePublicRequest(loggedUser, reqParams, localRendering, features))
+      return true;
   } catch (e) {
     console.error('user api error', e, e.stack);
     return localRendering({ error: e });
