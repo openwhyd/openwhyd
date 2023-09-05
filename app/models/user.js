@@ -736,7 +736,7 @@ exports.setHandle = function (features, uId, username, handler) {
         user.handle = username;
         exports.save(user, function () {
           handler({ ok: 1, user: user, username: username, handle: username });
-          features.auth?.setUsername(uId, username);
+          features.auth?.setUserHandle(uId, username);
         });
       });
   });

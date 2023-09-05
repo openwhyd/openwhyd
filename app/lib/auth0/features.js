@@ -43,7 +43,7 @@ exports.makeAuthFeatures = (env) => {
       });
     },
 
-    setUsername(userId, username) {
+    setUserHandle(userId, username) {
       return auth0
         .patchUser(userId, { username })
         .catch((err) =>
