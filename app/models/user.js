@@ -742,7 +742,8 @@ exports.setHandle = function (features, uId, username, handler) {
   });
 };
 
-exports.renameUser = function (uid, name, callback) {
+/** @param {{auth?: import('../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} features */
+exports.renameUser = function (features, uid, name, callback) {
   function whenDone() {
     console.log('renameUser last step: save the actual user record');
     exports.save({ _id: uid, name: name }, callback);
@@ -756,13 +757,7 @@ exports.renameUser = function (uid, name, callback) {
   } else if (oldName == name) {
     callback({}); // nothing to do
   } else {
-    if (process.appParams.useAuth0AsIdentityProvider) {
-      new Auth0Wrapper(process.env)
-        .patchUser(uid, { name })
-        .catch((err) =>
-          console.trace('failed to forward user rename to Auth0:', err),
-        );
-    }
+    features.auth?.setUserFullName(uid, name);
     // update user name in other collections where it's mentionned
     (function next() {
       let col;

@@ -63,5 +63,13 @@ exports.makeAuthFeatures = (env) => {
         }
       });
     },
+
+    setUserFullName(userId, name) {
+      return auth0
+        .patchUser(userId, { name })
+        .catch((err) =>
+          console.trace('failed to forward user rename to Auth0:', err),
+        );
+    },
   };
 };

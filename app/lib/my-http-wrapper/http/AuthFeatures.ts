@@ -13,4 +13,5 @@ export interface AuthFeatures {
   sendPasswordChangeRequest(email: string): Promise<void>;
   setUsername(userId: string, username: string): Promise<void>;
   setUserEmail(userId: string, email: string): Promise<void>;
+  setUserFullName(userId: string, email: string): Promise<void>;
 }

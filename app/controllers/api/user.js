@@ -137,8 +137,8 @@ function defaultSetter(fieldName) {
 
 /** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const fieldSetters = {
-  name: function (p, cb) {
-    userModel.renameUser(p._id, p.name, cb);
+  name: function (p, cb, features) {
+    userModel.renameUser(features, p._id, p.name, cb);
   },
   img: function (p, cb) {
     userModel.fetchByUid(p._id, async function (user) {
