@@ -99,10 +99,26 @@ exports.Auth0Wrapper = class Auth0Wrapper {
   }
 
   /**
+   * Instanciate a client to send requests to Auth0 Management API.
+   * @param {object} param
+   * @param {'update:users' | 'create:user_tickets' | 'delete:users'} param.scope
+   * @returns {ManagementClient}
+   */
+  getManagementClient({ scope }) {
+    const { ManagementClient } = require('auth0');
+    return new ManagementClient({
+      domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
+      clientId: this.env.AUTH0_CLIENT_ID,
+      clientSecret: this.env.AUTH0_CLIENT_SECRET,
+      scope,
+    });
+  }
+
+  /**
    * Ask Auth0 to update a user's username/handle, name or email.
    * Prerequisites:
    * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
-   * - "delete:users" permission must be granted on that API client.
+   * - "update:users" permission must be granted on that API client.
    * @param {string} userId
    * @param {{username: string} | {name: string} | {email: string}} patch
    * @returns Promise<void>
@@ -111,13 +127,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     console.debug(
       `[auth0] patching ${Object.keys(patch).join(', ')} on user ${userId}`,
     );
-    const { ManagementClient } = require('auth0');
-    return await new ManagementClient({
-      domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
-      clientId: this.env.AUTH0_CLIENT_ID,
-      clientSecret: this.env.AUTH0_CLIENT_SECRET,
-      scope: 'update:users',
-    }).updateUser(
+    return await this.getManagementClient({ scope: 'update:users' }).updateUser(
       { id: makeAuth0UserId(userId) },
       { connection: DATABASE_CONNECTION_NAME, ...patch }, // connection is needed when updating email address, cf https://auth0.com/docs/api/management/v2/users/patch-users-by-id
     );
@@ -149,21 +159,15 @@ exports.Auth0Wrapper = class Auth0Wrapper {
    * Ask Auth0 to delete a user.
    * Prerequisites:
    * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
-   * - "create:user_tickets" permission must be granted on that API client.
+   * - "delete:users" permission must be granted on that API client.
    * @param {string} userId
    * @returns Promise<void>
    */
   async deleteUser(userId) {
     console.debug(`[auth0] deleting user ${userId}...`);
-    const { ManagementClient } = require('auth0');
-    return await new ManagementClient({
-      domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
-      clientId: this.env.AUTH0_CLIENT_ID,
-      clientSecret: this.env.AUTH0_CLIENT_SECRET,
-      scope: 'delete:users',
-    }).deleteUser({
-      id: makeAuth0UserId(userId),
-    });
+    return await this.getManagementClient({ scope: 'delete:users' }).deleteUser(
+      { id: makeAuth0UserId(userId) },
+    );
   }
 };
 
