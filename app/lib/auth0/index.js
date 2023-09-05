@@ -80,11 +80,6 @@ exports.Auth0Wrapper = class Auth0Wrapper {
       secret: this.env.AUTH0_SECRET,
       clientID: this.env.AUTH0_CLIENT_ID,
       issuerBaseURL: this.env.AUTH0_ISSUER_BASE_URL,
-      // cf https://auth0.github.io/express-openid-connect/interfaces/ConfigParams.html#afterCallback
-      // afterCallback: async (req, res, session, decodedState) => {
-      //   const userProfile = await request(`${AUTH0_ISSUER_BASE_URL}/userinfo`);
-      //   return { ...session, userProfile }; // access using req.appSession.userProfile
-      // },
     });
   }
 
@@ -180,9 +175,3 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     );
   }
 };
-
-// example of route that gets user profile info from auth0
-// app.get('/profile', openId.requiresAuth(), (req, res) => {
-//   const user = req.oidc.user; // e.g. {"nickname":"admin","name":"admin","picture":"https://s.gravatar.com/avatar/xxxxxx.png","updated_at":"2023-08-30T15:02:17.071Z","email":"test@openwhyd.org","sub":"auth0|000000000000000000000001","sid":"XXXXXX-XXXXXX-XXXXXX"}
-//   res.send(JSON.stringify(user));
-// });
