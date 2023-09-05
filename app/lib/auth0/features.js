@@ -33,5 +33,13 @@ exports.makeAuthFeatures = (env) => {
         console.trace('failed to pass new user password to Auth0:', err);
       });
     },
+
+    setUsername(userId, username) {
+      return auth0
+        .patchUser(userId, { username })
+        .catch((err) =>
+          console.trace('failed to send username change to Auth0:', err),
+        );
+    },
   };
 };

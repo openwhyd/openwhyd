@@ -706,7 +706,8 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
     });
 };
 
-exports.setHandle = function (uId, username, handler) {
+/** @param {{auth?: import('../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} features */
+exports.setHandle = function (features, uId, username, handler) {
   function res(result) {
     handler && handler(result);
   }
@@ -735,13 +736,7 @@ exports.setHandle = function (uId, username, handler) {
         user.handle = username;
         exports.save(user, function () {
           handler({ ok: 1, user: user, username: username, handle: username });
-          if (process.appParams.useAuth0AsIdentityProvider) {
-            new Auth0Wrapper(process.env)
-              .patchUser(uId, { username })
-              .catch((err) =>
-                console.trace('failed to send username change to Auth0:', err),
-              );
-          }
+          features.auth?.setUsername(uId, username);
         });
       });
   });

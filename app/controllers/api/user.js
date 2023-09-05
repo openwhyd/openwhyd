@@ -193,8 +193,8 @@ const fieldSetters = {
       } else cb({ error: 'Your current password is incorrect' });
     });
   },
-  handle: function (p, cb) {
-    userModel.setHandle(p._id, p.handle, cb);
+  handle: function (p, cb, features) {
+    userModel.setHandle(features, p._id, p.handle, cb);
   },
   email: function (p, cb) {
     p.email = emailModel.normalize(p.email);
