@@ -1,3 +1,12 @@
+## [1.55.63](https://github.com/openwhyd/openwhyd/compare/v1.55.62...v1.55.63) (2023-09-05)
+
+
+### Bug Fixes
+
+* **tests:** reduce chance of `The play() request was interrupted by a call to pause` error ([eb996ac](https://github.com/openwhyd/openwhyd/commit/eb996ac05e7a50739536d12bd45098e74b9ddc8d)), closes [#714](https://github.com/openwhyd/openwhyd/issues/714)
+* **typing:** TS errors in api/user.js ([6f1b03b](https://github.com/openwhyd/openwhyd/commit/6f1b03bb92f88cd3e096c4b36958eb59acda028a))
+* **typing:** TS errors in register.js and models/user.js ([a0b92fa](https://github.com/openwhyd/openwhyd/commit/a0b92fa481f8e4f28f8b473ac0599d0b5df96a7a))
+
 ## [1.55.62](https://github.com/openwhyd/openwhyd/compare/v1.55.61...v1.55.62) (2023-09-05)
 
 
