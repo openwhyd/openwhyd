@@ -757,7 +757,7 @@ exports.renameUser = function (features, uid, name, callback) {
   } else if (oldName == name) {
     callback({}); // nothing to do
   } else {
-    features.auth?.setUserFullName(uid, name);
+    features.auth?.setUserProfileName(uid, name);
     // update user name in other collections where it's mentionned
     (function next() {
       let col;

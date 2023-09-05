@@ -64,7 +64,7 @@ exports.makeAuthFeatures = (env) => {
       });
     },
 
-    setUserFullName(userId, name) {
+    setUserProfileName(userId, name) {
       return auth0
         .patchUser(userId, { name })
         .catch((err) =>
