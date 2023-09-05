@@ -44,11 +44,9 @@ exports.getAuthenticatedUser = (request) => {
   return { sub, name, email, picture };
 };
 
-/** @typedef {{ id: string, name: string, email: string, img: string }} OpenwhydUser */
-
 /**
  * @param {OidcUser} oidcUser
- * @returns {OpenwhydUser}
+ * @returns {import('../my-http-wrapper/http/AuthFeatures').OpenwhydUser}
  */
 exports.mapToOpenwhydUser = (oidcUser) => {
   // note: for some reason, the username provided during signup is not included in oidcUser

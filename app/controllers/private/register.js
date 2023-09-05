@@ -17,7 +17,6 @@ const genuine = require('../../genuine.js');
 const argon2 = require('argon2');
 const notifEmails = require('../../models/notifEmails.js');
 const mongodb = require('../../models/mongodb.js');
-const auth0 = require('../../lib/auth0');
 
 const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
 const { genuineSignupSecret } = process.appParams;
@@ -44,18 +43,6 @@ function renderError(request, getParams, response, errorMsg) {
   response[getParams.ajax == 'iframe' ? 'renderWrappedJSON' : 'renderJSON'](
     json,
   );
-}
-
-/**
- * @param {import('../../lib/auth0').OidcUser} oidcUser
- */
-async function persistNewUserFromAuth0(oidcUser) {
-  const dbUser = auth0.mapToOpenwhydUser(oidcUser);
-  const stored = await new Promise((resolve) =>
-    userModel.save(dbUser, resolve),
-  );
-  if (stored) notifEmails.sendRegWelcomeAsync(stored);
-  return stored;
 }
 
 /**
@@ -229,24 +216,27 @@ exports.registerInvitedUser = function (request, user, response) {
   else registerUser();
 };
 
-exports.controller = async function (request, getParams, response) {
+exports.controller = async function (request, getParams, response, features) {
   request.logToConsole('register.controller', request.method);
-  const newUserFromAuth0 = auth0.getAuthenticatedUser(request);
-  if (request.method.toLowerCase() === 'post')
-    // sent by (new) register form
-    exports.registerInvitedUser(request, request.body, response);
-  else if (newUserFromAuth0) {
+  const newUserFromAuth0 = features.auth?.getAuthenticatedUser(request);
+  if (newUserFromAuth0) {
     // finalize user signup from Auth0, by persisting them into our database
-    const storedUser = await persistNewUserFromAuth0(newUserFromAuth0);
-    if (!storedUser) {
+    const storedUser = await new Promise((resolve) =>
+      userModel.save(newUserFromAuth0, resolve),
+    );
+    if (storedUser) {
+      notifEmails.sendRegWelcomeAsync(storedUser);
+      response.renderHTML(htmlRedirect('/')); // in reality, this ends up redirecting to the consent request page
+    } else {
       renderError(
         request,
         storedUser,
         response,
         'Oops, your registration failed... Please reach out to contact@openwhyd.org',
       );
-    } else {
-      response.renderHTML(htmlRedirect('/')); // in reality, this ends up redirecting to the consent request page
     }
-  } else inviteController.renderRegisterPage(request, getParams, response);
+  } else if (request.method.toLowerCase() === 'post')
+    // sent by (new) register form
+    exports.registerInvitedUser(request, request.body, response);
+  else inviteController.renderRegisterPage(request, getParams, response);
 };

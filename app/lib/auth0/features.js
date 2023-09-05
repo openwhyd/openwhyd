@@ -5,7 +5,11 @@
  * @returns {import('../my-http-wrapper/http/AuthFeatures').AuthFeatures}
  */
 exports.makeAuthFeatures = (env) => {
-  const { Auth0Wrapper } = require('.');
+  const {
+    Auth0Wrapper,
+    getAuthenticatedUser,
+    mapToOpenwhydUser,
+  } = require('.');
 
   const auth0 = new Auth0Wrapper(env); // throws if required env vars are missing
 
@@ -26,6 +30,11 @@ exports.makeAuthFeatures = (env) => {
           returnTo: '/register', // so we can create the user in our database too
         }),
       );
+    },
+
+    getAuthenticatedUser(request) {
+      const oidcUser = getAuthenticatedUser(request);
+      return oidcUser ? mapToOpenwhydUser(oidcUser) : null;
     },
 
     sendPasswordChangeRequest(email) {
