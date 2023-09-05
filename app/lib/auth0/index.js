@@ -101,8 +101,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
    * Ask Auth0 to update a user's name or email.
    * Prerequisites:
    * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
-   * - "update:users" permission must be granted on that API client;
-   * - "Import Users to Auth0" toggle must remain ON, to update email addresses; (cf https://community.auth0.com/t/updateasync-throws-user-with-old-email-does-not-exist-in-auth0-database/94445/3)
+   * - "update:users" permission must be granted on that API client.
    * See
    * @param {string} userId
    * @param {{name: string} | {email: string}} patch
@@ -122,6 +121,29 @@ exports.Auth0Wrapper = class Auth0Wrapper {
       { id: makeAuth0UserId(userId) },
       { connection: DATABASE_CONNECTION_NAME, ...patch }, // connection is needed when updating email address, cf https://auth0.com/docs/api/management/v2/users/patch-users-by-id
     );
+  }
+
+  /**
+   * Ask Auth0 to send a password change request by email.
+   * Prerequisites:
+   * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
+   * - "create:user_tickets" permission must be granted on that API client.
+   * See
+   * @param {string} email
+   * @returns Promise<void>
+   */
+  async sendPasswordChangeRequest(email) {
+    console.debug(
+      `[auth0] requesting password change for user ${email.split('@')[0]}@...`,
+    );
+    const { AuthenticationClient } = require('auth0');
+    return await new AuthenticationClient({
+      domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
+      clientId: this.env.AUTH0_CLIENT_ID,
+    }).requestChangePasswordEmail({
+      connection: DATABASE_CONNECTION_NAME,
+      email,
+    });
   }
 };
 

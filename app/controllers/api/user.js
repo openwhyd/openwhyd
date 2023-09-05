@@ -181,11 +181,17 @@ const fieldSetters = {
     });
   },
   pwd: function (p, cb) {
-    userModel.fetchByUid(p._id, function (item) {
-      if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
+    userModel.fetchByUid(p._id, async function (item) {
+      if (process.appParams.useAuth0AsIdentityProvider) {
+        new Auth0Wrapper(process.env)
+          .sendPasswordChangeRequest(item.email)
+          .catch((err) => {
+            console.trace('failed to pass new user password to Auth0:', err);
+          });
+        cb({ error: 'We sent you an email to change your password.' });
+      } else if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
         defaultSetter('pwd')({ _id: p._id, pwd: userModel.md5(p.pwd) }, cb);
         notifEmails.sendPasswordUpdated(p._id, item.email);
-        // TODO: inform Auth0, if applicable
       } else cb({ error: 'Your current password is incorrect' });
     });
   },
