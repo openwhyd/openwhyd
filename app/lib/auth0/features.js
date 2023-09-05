@@ -24,5 +24,13 @@ exports.makeAuthFeatures = () => {
         }),
       );
     },
+
+    sendPasswordChangeRequest(email) {
+      return new Auth0Wrapper(process.env) // TODO: re-use Auth0Wrapper instance
+        .sendPasswordChangeRequest(email)
+        .catch((err) => {
+          console.trace('failed to pass new user password to Auth0:', err);
+        });
+    },
   };
 };

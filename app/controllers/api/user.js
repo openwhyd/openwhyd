@@ -134,6 +134,9 @@ function defaultSetter(fieldName) {
   };
 }
 
+/** @typedef {{auth?: import('../../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} Features */
+
+/** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const fieldSetters = {
   name: function (p, cb) {
     userModel.renameUser(p._id, p.name, cb);
@@ -180,14 +183,9 @@ const fieldSetters = {
       else userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
     });
   },
-  pwd: function (p, cb) {
+  pwd: function (p, cb, features) {
     userModel.fetchByUid(p._id, async function (item) {
-      if (process.appParams.useAuth0AsIdentityProvider) {
-        new Auth0Wrapper(process.env)
-          .sendPasswordChangeRequest(item.email)
-          .catch((err) => {
-            console.trace('failed to pass new user password to Auth0:', err);
-          });
+      if (features.auth?.sendPasswordChangeRequest(item.email)) {
         cb({ error: 'We sent you an email to change your password.' });
       } else if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
         defaultSetter('pwd')({ _id: p._id, pwd: userModel.md5(p.pwd) }, cb);
@@ -365,7 +363,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
   }
 }
 
-function handleAuthRequest(loggedUser, reqParams, localRendering) {
+function handleAuthRequest(loggedUser, reqParams, localRendering, features) {
   // make sure a registered user is logged, or return an error page
   if (false == loggedUser)
     return localRendering({ error: 'user not logged in' });
@@ -386,7 +384,7 @@ function handleAuthRequest(loggedUser, reqParams, localRendering) {
         const fieldName = toUpdate.pop();
         console.log('calling field setter: ', fieldName);
         reqParams._id = loggedUser._id; // force the logged user id
-        fieldSetters[fieldName](reqParams, setNextField);
+        fieldSetters[fieldName](reqParams, setNextField, features);
       }
     })();
   } else {
@@ -395,14 +393,14 @@ function handleAuthRequest(loggedUser, reqParams, localRendering) {
 }
 
 // old name: setUserFields()
-function handleRequest(loggedUser, reqParams, localRendering) {
+function handleRequest(loggedUser, reqParams, localRendering, features) {
   try {
     if (handlePublicRequest(loggedUser, reqParams, localRendering)) return true;
   } catch (e) {
     console.error('user api error', e, e.stack);
     return localRendering({ error: e });
   }
-  return handleAuthRequest(loggedUser, reqParams, localRendering);
+  return handleAuthRequest(loggedUser, reqParams, localRendering, features);
 }
 
 // these error messages are displayed to the user, we don't need to log them
@@ -411,7 +409,8 @@ const USER_ERRORS = [
   'This username is taken by another user',
 ];
 
-exports.controller = function (request, reqParams, response) {
+/** @param {Features} features */
+exports.controller = function (request, reqParams, response, features) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
 
@@ -438,6 +437,7 @@ exports.controller = function (request, reqParams, response) {
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,
     localRendering,
+    features,
   );
 };
 
