@@ -1,4 +1,5 @@
 .env
+.token
 .port
 .idea
 .DS_Store
