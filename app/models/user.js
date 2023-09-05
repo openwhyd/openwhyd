@@ -727,6 +727,13 @@ exports.setHandle = function (uId, username, handler) {
         user.handle = username;
         exports.save(user, function () {
           handler({ ok: 1, user: user, username: username, handle: username });
+          if (process.appParams.useAuth0AsIdentityProvider) {
+            new Auth0Wrapper(process.env)
+              .patchUser(uId, { username })
+              .catch((err) =>
+                console.trace('failed to send username change to Auth0:', err),
+              );
+          }
         });
       });
   });

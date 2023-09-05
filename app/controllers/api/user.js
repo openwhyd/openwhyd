@@ -197,7 +197,6 @@ const fieldSetters = {
   },
   handle: function (p, cb) {
     userModel.setHandle(p._id, p.handle, cb);
-    // TODO: inform Auth0, if applicable
   },
   email: function (p, cb) {
     p.email = emailModel.normalize(p.email);

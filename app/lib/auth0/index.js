@@ -99,13 +99,13 @@ exports.Auth0Wrapper = class Auth0Wrapper {
   }
 
   /**
-   * Ask Auth0 to update a user's name or email.
+   * Ask Auth0 to update a user's username/handle, name or email.
    * Prerequisites:
    * - Machine-to-machine API must be enabled for this app; (cf https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/63d3adf22b7622d7aaa45805/authorized-clients)
    * - "update:users" permission must be granted on that API client.
    * See
    * @param {string} userId
-   * @param {{name: string} | {email: string}} patch
+   * @param {{username: string} | {name: string} | {email: string}} patch
    * @returns Promise<void>
    */
   async patchUser(userId, patch) {
