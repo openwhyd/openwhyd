@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "algoliasearch": "4.19.1",
-    "argon2": "^0.31.0",
+    "argon2": "^0.31.1",
     "async": "*",
     "colors": "*",
     "connect-mongo": "^3.2.0",
