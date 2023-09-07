@@ -1,3 +1,10 @@
+## [1.56.1](https://github.com/openwhyd/openwhyd/compare/v1.56.0...v1.56.1) (2023-09-07)
+
+
+### Bug Fixes
+
+* **hot-tracks:** improves scoring, using mongo aggregate ([e6a966d](https://github.com/openwhyd/openwhyd/commit/e6a966d6db16e49ad63fb38aedf42dd3b2068733)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+
 # [1.56.0](https://github.com/openwhyd/openwhyd/compare/v1.55.65...v1.56.0) (2023-09-07)
 
 
