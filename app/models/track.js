@@ -91,7 +91,7 @@ exports.fetch = function (params, handler) {
   params = params || {};
   params.sort = params.sort || [['score', 'desc']];
   mongodb.collections['track']
-    .find({}, params)
+    .find({ eId: { $ne: '/sc/undefined' } }, params) // exclude invalid eId values, cf https://github.com/openwhyd/openwhyd/issues/718#issuecomment-1710359006
     .toArray()
     .then(
       function (results) {
