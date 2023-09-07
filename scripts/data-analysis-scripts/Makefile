@@ -1,7 +1,7 @@
 .PHONY: help
 
 # Before running these scripts:
-# 1. run /scripts/backup-remote.sh to download gzipped collections from production server
+# 1. run /scripts/mongodb-scripts/backup-remote.sh to download gzipped collections from production server
 # 2. run /scripts/mongodb-scripts/start-local-db.sh to create and run a local database
 # 3. run /scripts/mongodb-scripts/restore-ugc.sh to restore collections to local database
 # 4. run /scripts/mongodb-scripts/export-ugc-to-json-lines.sh to generate JSON dumps
