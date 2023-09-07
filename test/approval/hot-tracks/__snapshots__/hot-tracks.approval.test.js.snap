@@ -16,7 +16,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       pId: '61e19a3f078b4c9934e72ce5',
       pl: null,
       score: 3,
-      trackUrl: '//youtube.com/watch?v=track_B'
+      trackUrl: '//youtube.com/watch?v=track_B',
+      uId: null,
+      uNm: null
     }
   ]
 }"
@@ -377,7 +379,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       pId: '61e19a3f078b4c9934e72ce5',
       pl: null,
       score: 3,
-      trackUrl: '//youtube.com/watch?v=track_B'
+      trackUrl: '//youtube.com/watch?v=track_B',
+      uId: null,
+      uNm: null
     },
     {
       _id: '61e19a3f078b4c9934e72ce4',
@@ -392,7 +396,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
         name: 'soundtrack of my life'
       },
       score: 2,
-      trackUrl: '//youtube.com/watch?v=track_A'
+      trackUrl: '//youtube.com/watch?v=track_A',
+      uId: null,
+      uNm: null
     }
   ]
 }"
@@ -843,7 +849,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       pId: '61e19a3f078b4c9934e72ce4',
       pl: null,
       score: 2,
-      trackUrl: '//youtube.com/watch?v=track_A'
+      trackUrl: '//youtube.com/watch?v=track_A',
+      uId: null,
+      uNm: null
     }
   ]
 }"
