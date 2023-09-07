@@ -1,3 +1,13 @@
+## [1.55.64](https://github.com/openwhyd/openwhyd/compare/v1.55.63...v1.55.64) (2023-09-07)
+
+
+### Bug Fixes
+
+* **scripts:** 🧹 remove old git script ([4147195](https://github.com/openwhyd/openwhyd/commit/414719582a8010da223f335d3d96b98495c814c4))
+* **scripts:** 🧹 remove useless .editorconfig file ([981c697](https://github.com/openwhyd/openwhyd/commit/981c6971ad71bef0ada4a806a0c5562815f775e4))
+* **scripts:** add script to run mongo shell in prod ([14eb574](https://github.com/openwhyd/openwhyd/commit/14eb574484b3d64f606fbd155ad231afa0facd47))
+* **scripts:** move db backup script ([0ba10a3](https://github.com/openwhyd/openwhyd/commit/0ba10a3746b241496f2ec97199dd2431018ea020))
+
 ## [1.55.63](https://github.com/openwhyd/openwhyd/compare/v1.55.62...v1.55.63) (2023-09-05)
 
 
