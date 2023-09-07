@@ -1,3 +1,10 @@
+# [1.56.0](https://github.com/openwhyd/openwhyd/compare/v1.55.65...v1.56.0) (2023-09-07)
+
+
+### Features
+
+* **hot-tracks:** try list of recent posts sorted by number of reposts ([#720](https://github.com/openwhyd/openwhyd/issues/720)) ([7b870c3](https://github.com/openwhyd/openwhyd/commit/7b870c38aa1a0ae796b2c3210d326922cf118f12)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+
 ## [1.55.65](https://github.com/openwhyd/openwhyd/compare/v1.55.64...v1.55.65) (2023-09-07)
 
 
