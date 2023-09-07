@@ -1,3 +1,5 @@
+// $ npx mocha test/unit/hot-tracks.tests.js
+
 const assert = require('assert');
 const { getHotTracks } = require('../../app/features/hot-tracks.js');
 
