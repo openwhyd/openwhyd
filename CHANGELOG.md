@@ -1,3 +1,11 @@
+## [1.56.2](https://github.com/openwhyd/openwhyd/compare/v1.56.1...v1.56.2) (2023-09-07)
+
+
+### Bug Fixes
+
+* **hot-tracks:** add missing image ([62e63a8](https://github.com/openwhyd/openwhyd/commit/62e63a8aea19a2804a36b50b083eccb43136f32d)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+* **hot-tracks:** add missing user info ([952d0f4](https://github.com/openwhyd/openwhyd/commit/952d0f42510d6b45e95c43bc980ef379c58df5fa)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+
 ## [1.56.1](https://github.com/openwhyd/openwhyd/compare/v1.56.0...v1.56.1) (2023-09-07)
 
 
