@@ -8,10 +8,14 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   tracks: [
     {
       _id: '61e19a3f078b4c9934e72ce5',
+      eId: '/yt/track_B',
       name: 'a popular track',
-      nbR: 2,
+      nbL: 0,
+      nbR: 3,
       pId: '61e19a3f078b4c9934e72ce5',
-      score: 2
+      pl: null,
+      score: 3,
+      trackUrl: '//youtube.com/watch?v=track_B'
     }
   ]
 }"
@@ -147,7 +151,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
        <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce5"
-  data-score="2"
+  data-score="3"
   data-order=""
   data-initialpid=""
   data-loved=""
@@ -157,9 +161,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 
   <a
     class="thumb"
-    href=""
+    href="//youtube.com/watch?v=track_B"
     target="_blank"
-    data-eid=""
+    data-eid="/yt/track_B"
     onclick="return playTrack(this);"
     style="background-image:url('/images/cover-track.png');"
   >
@@ -191,7 +195,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce5')"
     >
-      <span>2</span>
+      <span>3</span>
     </span>
     <span
       class="nbLoves"
@@ -234,7 +238,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 
   <div class="ext hidden">
     <p>
-      15:43 - 14 Jan 2022      </p>
+      15:43 - 14 Jan 2022  &middot; Via
+      <a class="via youtube" href="//youtube.com/watch?v=track_B">YouTube</a>
+           </p>
 
     <form class="comments">
     </form>
@@ -363,22 +369,26 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     {
       _id: '61e19a3f078b4c9934e72ce5',
       eId: '/yt/track_B',
-      nbR: 2,
+      name: 'a popular track',
+      nbL: 0,
+      nbR: 3,
       pId: '61e19a3f078b4c9934e72ce5',
-      score: 2,
-      text: 'my favorite track ever!',
+      pl: null,
+      score: 3,
       trackUrl: '//youtube.com/watch?v=track_B'
     },
     {
       _id: '61e19a3f078b4c9934e72ce4',
       eId: '/yt/track_A',
-      nbR: 1,
+      name: 'a regular track',
+      nbL: 0,
+      nbR: 2,
       pId: '61e19a3f078b4c9934e72ce4',
       pl: {
         id: 0,
         name: 'soundtrack of my life'
       },
-      score: 1,
+      score: 2,
       trackUrl: '//youtube.com/watch?v=track_A'
     }
   ]
@@ -515,7 +525,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
        <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce5"
-  data-score="2"
+  data-score="3"
   data-order=""
   data-initialpid=""
   data-loved=""
@@ -540,7 +550,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       href="/c/61e19a3f078b4c9934e72ce5"
       class="no-ajaxy"
       onclick="toggleComments('61e19a3f078b4c9934e72ce5');return false;"
-      >-</a
+      >a popular track</a
     >
   </h2>
 
@@ -559,7 +569,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce5')"
     >
-      <span>2</span>
+      <span>3</span>
     </span>
     <span
       class="nbLoves"
@@ -570,10 +580,10 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     </span>
     <span
       class="nbComments"
-      style=""
+      style="display:none;"
       onclick="toggleComments('61e19a3f078b4c9934e72ce5');"
     >
-      <span>1</span>
+      <span>0</span>
     </span>
   </div>
 
@@ -607,24 +617,13 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
            </p>
 
     <form class="comments">
-      <div class="comment " data-cid="61e19a3f078b4c9934e72ce5">
-        <a class="author" href="/u/">
-          <span style="background-image:url('/img/u/');"></span>
-          <p>
-            
-            <span class="t">(age)</span>
-          </p>
-        </a>
-        <p class="text">my favorite track ever!</p>
-        <div class="delete"></div>
-      </div>
     </form>
   </div>
 </div>
 <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce4"
-  data-score="1"
+  data-score="2"
   data-order=""
   data-initialpid=""
   data-loved=""
@@ -649,7 +648,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       href="/c/61e19a3f078b4c9934e72ce4"
       class="no-ajaxy"
       onclick="toggleComments('61e19a3f078b4c9934e72ce4');return false;"
-      >-</a
+      >a regular track</a
     >
   </h2>
 
@@ -668,7 +667,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce4')"
     >
-      <span>1</span>
+      <span>2</span>
     </span>
     <span
       class="nbLoves"
@@ -833,10 +832,14 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   tracks: [
     {
       _id: '61e19a3f078b4c9934e72ce4',
+      eId: '/yt/track_A',
       name: 'a regular track',
-      nbR: 1,
+      nbL: 0,
+      nbR: 2,
       pId: '61e19a3f078b4c9934e72ce4',
-      score: 1
+      pl: null,
+      score: 2,
+      trackUrl: '//youtube.com/watch?v=track_A'
     }
   ]
 }"
@@ -846,7 +849,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 " <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce4"
-  data-score="1"
+  data-score="2"
   data-order=""
   data-initialpid=""
   data-loved=""
@@ -856,9 +859,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 
   <a
     class="thumb"
-    href=""
+    href="//youtube.com/watch?v=track_A"
     target="_blank"
-    data-eid=""
+    data-eid="/yt/track_A"
     onclick="return playTrack(this);"
     style="background-image:url('/images/cover-track.png');"
   >
@@ -890,7 +893,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
       style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce4')"
     >
-      <span>1</span>
+      <span>2</span>
     </span>
     <span
       class="nbLoves"
@@ -933,7 +936,9 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 
   <div class="ext hidden">
     <p>
-      15:43 - 14 Jan 2022      </p>
+      15:43 - 14 Jan 2022  &middot; Via
+      <a class="via youtube" href="//youtube.com/watch?v=track_A">YouTube</a>
+           </p>
 
     <form class="comments">
     </form>

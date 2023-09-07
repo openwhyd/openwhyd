@@ -104,22 +104,24 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     await db.collection('post').insertMany([
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        eId: tracks[0].eId,
         name: 'a regular track',
         nbR: 1,
       },
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        eId: tracks[1].eId,
         name: 'a popular track',
         nbR: 2,
       },
     ]);
     await openwhyd.refreshCache();
     const json = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?limit=1&format=json`,
+      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&limit=1&format=json`,
     });
     expect(indentJSON(json.body)).toMatchSnapshot();
     const html = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?limit=1&`,
+      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&limit=1`,
     });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
@@ -128,22 +130,24 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     await db.collection('post').insertMany([
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce4'),
+        eId: tracks[0].eId,
         name: 'a regular track',
         nbR: 1,
       },
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce5'),
+        eId: tracks[1].eId,
         name: 'a popular track',
         nbR: 2,
       },
     ]);
     await openwhyd.refreshCache();
     const json = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?skip=1&format=json`,
+      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&skip=1&format=json`,
     });
     expect(indentJSON(json.body)).toMatchSnapshot();
     const html = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?skip=1&`,
+      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&skip=1&`,
     });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
@@ -153,12 +157,14 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce4'),
         eId: tracks[0].eId,
+        name: 'a regular track',
         nbR: 1,
         pl: { name: 'soundtrack of my life', id: 0 }, // metadata from the post that will be included in the list of hot tracks
       },
       {
         _id: ObjectId('61e19a3f078b4c9934e72ce5'),
         eId: tracks[1].eId,
+        name: 'a popular track',
         nbR: 2,
         text: 'my favorite track ever!', // metadata from the post that will be included in the list of hot tracks
       },
@@ -166,10 +172,12 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
     await db.collection('post').insertMany(posts);
     await openwhyd.refreshCache();
     const json = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?format=json`,
+      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&format=json`,
     });
     expect(indentJSON(json.body)).toMatchSnapshot();
-    const html = await httpClient.get({ url: `${openwhyd.getURL()}/hot` });
+    const html = await httpClient.get({
+      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001`,
+    });
     expect(getCleanedPageBody(html.body)).toMatchSnapshot();
   });
 });

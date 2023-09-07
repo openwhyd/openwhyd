@@ -108,32 +108,80 @@ exports.fetchTrackByEid = function (eId, cb) {
 
 // functions for fetching tracks and corresponding posts
 
+/**
+ * @param {object} params
+ * @param {number | undefined} params.limit
+ * @param {number | undefined} params.skip
+ * @param {mongodb.ObjectId | undefined} params.sinceId
+ */
 async function getRecentPostsByDescendingNumberOfReposts(params) {
+  const sinceId =
+    params.sinceId ??
+    mongodb.ObjectId(
+      mongodb.dateToHexObjectId(
+        new Date(new Date().getTime() - HOT_TRACK_TIME_WINDOW),
+      ),
+    );
   return (
     await mongodb.collections['post']
-      .find(
+      .aggregate([
         {
-          eId: { $ne: '/sc/undefined' }, // exclude invalid eId values, cf https://github.com/openwhyd/openwhyd/issues/718#issuecomment-1710359006
-          nbR: { $gte: 1 },
+          $match: {
+            _id: { $gte: sinceId },
+            eId: { $ne: '/sc/undefined' },
+          },
         },
-        params,
-      )
-      .sort({ _id: -1 })
-      .limit(20)
+        {
+          $addFields: {
+            nbLoves: {
+              $cond: {
+                if: { $isArray: '$lov' },
+                then: { $size: '$lov' },
+                else: 0,
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$eId',
+            pId: { $first: '$_id' },
+            pl: { $first: '$pl' },
+            name: { $first: '$name' },
+            nbLoves: { $sum: '$nbLoves' },
+            nbReposts: { $sum: '$nbR' },
+            posts: { $push: '$_id' },
+          },
+        },
+        { $addFields: { nbPosts: { $size: '$posts' } } },
+        {
+          $addFields: {
+            score: { $sum: ['$nbPosts', '$nbReposts', '$nbLoves'] },
+          },
+        },
+        { $sort: { score: -1 } },
+        { $skip: params?.skip ?? 0 },
+        { $limit: params.limit },
+      ])
       .toArray()
-  )
-    .sort((a, b) => b.nbR - a.nbR) // sort posts by number of times they were reposted by other users
-    .map((post) => ({
-      ...post,
-      eId: post.eId,
-      pId: post._id.toString(),
-      score: post.nbR,
-    }));
+  ).map((result) => ({
+    _id: result.posts[0],
+    eId: result._id,
+    name: result.name,
+    score: result.score,
+    nbR: result.nbPosts + result.nbReposts,
+    nbL: result.nbLoves,
+    pId: result.pId,
+    pl: result.pl,
+  }));
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
 exports.getHotTracksFromDb = function (params, handler) {
   params.skip = parseInt(params.skip || 0);
+  params.sinceId = params.sinceId
+    ? mongodb.ObjectId(params.sinceId)
+    : undefined;
   feature
     .getHotTracks(() => getRecentPostsByDescendingNumberOfReposts(params))
     .then((tracks) =>
