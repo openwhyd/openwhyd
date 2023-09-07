@@ -1,7 +1,5 @@
 // @ts-check
 
-const snip = require('../../app/snip.js');
-
 const FIELDS_TO_SUM = {
   nbP: true, // number of plays
   nbL: true, // number of likes (from lov[] field)
@@ -18,30 +16,9 @@ const FIELDS_TO_COPY = {
 
 exports.FIELDS_TO_COPY = FIELDS_TO_COPY;
 
-const fieldList = Object.keys(FIELDS_TO_COPY)
-  .concat(Object.keys(FIELDS_TO_SUM))
-  .concat(['prev']);
-
-function mergePostData(track, post) {
-  for (const f in fieldList) post[fieldList[f]] = track[fieldList[f]];
-  post.trackId = track._id;
-  post.rankIncr = track.prev - track.score;
-  return post;
-}
-
 /**
  * @param {() => Promise<{pId: string, eId: string}[]>} getTracksByDescendingScore (partial type definition, just to check usage of objArrayToValueArray)
  */
-exports.getHotTracks = async function (
-  getTracksByDescendingScore,
-  fetchPostsByPid,
-) {
-  const tracks = await getTracksByDescendingScore();
-  const pidList = snip.objArrayToValueArray(tracks, 'pId');
-  const posts = await fetchPostsByPid(pidList);
-  // complete track items with additional metadata (from posts)
-  return tracks.map((track) => {
-    const post = posts.find(({ eId }) => eId === track.eId);
-    return post ? mergePostData(track, post) : track;
-  });
+exports.getHotTracks = async function (getTracksByDescendingScore) {
+  return await getTracksByDescendingScore();
 };

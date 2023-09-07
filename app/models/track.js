@@ -37,7 +37,6 @@
 
 const config = require('./config.js');
 const mongodb = require('./mongodb.js');
-const ObjectId = mongodb.ObjectId;
 const feature = require('../features/hot-tracks.js');
 
 const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
@@ -109,36 +108,34 @@ exports.fetchTrackByEid = function (eId, cb) {
 
 // functions for fetching tracks and corresponding posts
 
-const makeObjectIdList = (pId) =>
-  (pId && Array.isArray(pId) ? pId : []).map(function (id) {
-    return ObjectId('' + id);
-  });
-
-function fetchPostsByPid(pId) {
-  return mongodb.collections['post']
-    .find({ _id: { $in: makeObjectIdList(pId) } }, POST_FETCH_OPTIONS)
-    .toArray();
-}
-
-async function getRecentPostsByDescendingNumberOfReposts() {
+async function getRecentPostsByDescendingNumberOfReposts(params) {
   return (
     await mongodb.collections['post']
-      .find({
-        eId: { $ne: '/sc/undefined' }, // exclude invalid eId values, cf https://github.com/openwhyd/openwhyd/issues/718#issuecomment-1710359006
-        nbR: { $gte: 1 },
-      })
+      .find(
+        {
+          eId: { $ne: '/sc/undefined' }, // exclude invalid eId values, cf https://github.com/openwhyd/openwhyd/issues/718#issuecomment-1710359006
+          nbR: { $gte: 1 },
+        },
+        params,
+      )
       .sort({ _id: -1 })
       .limit(20)
       .toArray()
   )
     .sort((a, b) => b.nbR - a.nbR) // sort posts by number of times they were reposted by other users
-    .map((post) => ({ pId: post._id.toString(), eId: post.eId }));
+    .map((post) => ({
+      ...post,
+      eId: post.eId,
+      pId: post._id.toString(),
+      score: post.nbR,
+    }));
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
 exports.getHotTracksFromDb = function (params, handler) {
+  params.skip = parseInt(params.skip || 0);
   feature
-    .getHotTracks(getRecentPostsByDescendingNumberOfReposts, fetchPostsByPid)
+    .getHotTracks(() => getRecentPostsByDescendingNumberOfReposts(params))
     .then((tracks) =>
       tracks.map((track) => ({
         ...track,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked tracks 1`] = `
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked posts 1`] = `
 "{
   hasMore: {
     skip: 1
@@ -9,13 +9,15 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     {
       _id: '61e19a3f078b4c9934e72ce5',
       name: 'a popular track',
+      nbR: 2,
+      pId: '61e19a3f078b4c9934e72ce5',
       score: 2
     }
   ]
 }"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked tracks 2`] = `
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked posts 2`] = `
 "<!DOCTYPE html>
 <html lang="en">
   <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">
@@ -186,10 +188,10 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   <div class="stats">
     <span
       class="nbReposts"
-      style="display:none;"
+      style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce5')"
     >
-      <span>0</span>
+      <span>2</span>
     </span>
     <span
       class="nbLoves"
@@ -361,22 +363,22 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     {
       _id: '61e19a3f078b4c9934e72ce5',
       eId: '/yt/track_B',
-      rankIncr: null,
-      score: 1,
+      nbR: 2,
+      pId: '61e19a3f078b4c9934e72ce5',
+      score: 2,
       text: 'my favorite track ever!',
-      trackId: '61e19a3f078b4c9934e72ce7',
       trackUrl: '//youtube.com/watch?v=track_B'
     },
     {
       _id: '61e19a3f078b4c9934e72ce4',
       eId: '/yt/track_A',
+      nbR: 1,
+      pId: '61e19a3f078b4c9934e72ce4',
       pl: {
         id: 0,
         name: 'soundtrack of my life'
       },
-      rankIncr: null,
-      score: 0,
-      trackId: '61e19a3f078b4c9934e72ce6',
+      score: 1,
       trackUrl: '//youtube.com/watch?v=track_A'
     }
   ]
@@ -513,7 +515,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
        <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce5"
-  data-score="1"
+  data-score="2"
   data-order=""
   data-initialpid=""
   data-loved=""
@@ -554,10 +556,10 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   <div class="stats">
     <span
       class="nbReposts"
-      style="display:none;"
+      style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce5')"
     >
-      <span>0</span>
+      <span>2</span>
     </span>
     <span
       class="nbLoves"
@@ -622,7 +624,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce4"
-  data-score="0"
+  data-score="1"
   data-order=""
   data-initialpid=""
   data-loved=""
@@ -663,10 +665,10 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   <div class="stats">
     <span
       class="nbReposts"
-      style="display:none;"
+      style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce4')"
     >
-      <span>0</span>
+      <span>1</span>
     </span>
     <span
       class="nbLoves"
@@ -825,20 +827,22 @@ var JAMENDO_CLIENT_ID = "2c9a11b9";
 </html>"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks, starting at a given index 1`] = `
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked posts, starting at a given index 1`] = `
 "{
   hasMore: false,
   tracks: [
     {
       _id: '61e19a3f078b4c9934e72ce4',
       name: 'a regular track',
+      nbR: 1,
+      pId: '61e19a3f078b4c9934e72ce4',
       score: 1
     }
   ]
 }"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked tracks, starting at a given index 2`] = `
+exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked posts, starting at a given index 2`] = `
 " <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce4"
@@ -883,10 +887,10 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   <div class="stats">
     <span
       class="nbReposts"
-      style="display:none;"
+      style=""
       onclick="javascript:showReposts('61e19a3f078b4c9934e72ce4')"
     >
-      <span>0</span>
+      <span>1</span>
     </span>
     <span
       class="nbLoves"
@@ -936,109 +940,4 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
   </div>
 </div>
  "
-`;
-
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's liked 1`] = `
-"{
-  hasMore: false,
-  tracks: [
-    {
-      _id: '__posted_track_id__',
-      eId: '/yt/track_A',
-      img: null,
-      lov: [
-        '61e19a3f078b4c9934e72ce2'
-      ],
-      name: null,
-      nbL: 1,
-      nbP: 0,
-      nbR: 1,
-      rankIncr: null,
-      score: 100,
-      text: '',
-      trackId: '61e19a3f078b4c9934e72ce6',
-      trackUrl: '//youtube.com/watch?v=track_A',
-      uId: '61e19a3f078b4c9934e72ce1',
-      uNm: 'user 0'
-    },
-    {
-      _id: '61e19a3f078b4c9934e72ce7',
-      eId: '/yt/track_B',
-      score: 0,
-      trackUrl: '//youtube.com/watch?v=track_B'
-    }
-  ]
-}"
-`;
-
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's liked 2`] = `
-"[
-  {
-    _id: new ObjectId("61e19a3f078b4c9934e72ce6"),
-    eId: '/yt/track_A',
-    img: null,
-    name: null,
-    nbL: 1,
-    nbP: 0,
-    nbR: 1,
-    pId: new ObjectId("__posted_track_id__"),
-    score: 100
-  },
-  {
-    _id: new ObjectId("61e19a3f078b4c9934e72ce7"),
-    eId: '/yt/track_B',
-    score: 0
-  }
-]"
-`;
-
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 1`] = `
-"{
-  hasMore: false,
-  tracks: [
-    {
-      _id: '__posted_track_id__',
-      eId: '/yt/track_A',
-      img: null,
-      name: null,
-      nbL: 0,
-      nbP: 0,
-      nbR: 2,
-      rankIncr: null,
-      score: 200,
-      text: '',
-      trackId: '61e19a3f078b4c9934e72ce6',
-      trackUrl: '//youtube.com/watch?v=track_A',
-      uId: '61e19a3f078b4c9934e72ce1',
-      uNm: 'user 0'
-    },
-    {
-      _id: '61e19a3f078b4c9934e72ce7',
-      eId: '/yt/track_B',
-      score: 0,
-      trackUrl: '//youtube.com/watch?v=track_B'
-    }
-  ]
-}"
-`;
-
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) updates the score of a track when it's reposted 2`] = `
-"[
-  {
-    _id: new ObjectId("61e19a3f078b4c9934e72ce6"),
-    eId: '/yt/track_A',
-    img: null,
-    name: null,
-    nbL: 0,
-    nbP: 0,
-    nbR: 2,
-    pId: new ObjectId("__posted_track_id__"),
-    score: 200
-  },
-  {
-    _id: new ObjectId("61e19a3f078b4c9934e72ce7"),
-    eId: '/yt/track_B',
-    score: 0
-  }
-]"
 `;
