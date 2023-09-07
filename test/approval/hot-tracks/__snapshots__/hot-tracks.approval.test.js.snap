@@ -9,6 +9,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     {
       _id: '61e19a3f078b4c9934e72ce5',
       eId: '/yt/track_B',
+      img: null,
       name: 'a popular track',
       nbL: 0,
       nbR: 3,
@@ -369,6 +370,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     {
       _id: '61e19a3f078b4c9934e72ce5',
       eId: '/yt/track_B',
+      img: null,
       name: 'a popular track',
       nbL: 0,
       nbR: 3,
@@ -380,6 +382,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     {
       _id: '61e19a3f078b4c9934e72ce4',
       eId: '/yt/track_A',
+      img: null,
       name: 'a regular track',
       nbL: 0,
       nbR: 2,
@@ -833,6 +836,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
     {
       _id: '61e19a3f078b4c9934e72ce4',
       eId: '/yt/track_A',
+      img: null,
       name: 'a regular track',
       nbL: 0,
       nbR: 2,

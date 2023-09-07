@@ -146,8 +146,9 @@ async function getRecentPostsByDescendingNumberOfReposts(params) {
           $group: {
             _id: '$eId',
             pId: { $first: '$_id' },
-            pl: { $first: '$pl' },
             name: { $first: '$name' },
+            img: { $first: '$img' },
+            pl: { $first: '$pl' },
             nbLoves: { $sum: '$nbLoves' },
             nbReposts: { $sum: '$nbR' },
             posts: { $push: '$_id' },
@@ -168,11 +169,12 @@ async function getRecentPostsByDescendingNumberOfReposts(params) {
     _id: result.posts[0],
     eId: result._id,
     name: result.name,
-    score: result.score,
+    img: result.img,
+    pl: result.pl,
+    pId: result.pId,
     nbR: result.nbPosts + result.nbReposts,
     nbL: result.nbLoves,
-    pId: result.pId,
-    pl: result.pl,
+    score: result.score,
   }));
 }
 
