@@ -86,25 +86,6 @@ exports.countTracksWithField = function (fieldName, cb) {
   );
 };
 
-/* fetch top hot tracks, without processing */
-exports.fetch = function (params, handler) {
-  params = params || {};
-  params.sort = params.sort || [['score', 'desc']];
-  mongodb.collections['track']
-    .find({ eId: { $ne: '/sc/undefined' } }, params) // exclude invalid eId values, cf https://github.com/openwhyd/openwhyd/issues/718#issuecomment-1710359006
-    .toArray()
-    .then(
-      function (results) {
-        // console.log('=> fetched ' + results.length + ' tracks');
-        if (handler) handler(results);
-      },
-      (err) => {
-        console.trace('trackModel.fetch', err);
-        handler();
-      },
-    );
-};
-
 exports.fetchTrackByEid = function (eId, cb) {
   // in order to allow requests of soundcloud eId without hash (#):
   const eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
@@ -139,15 +120,25 @@ function fetchPostsByPid(pId) {
     .toArray();
 }
 
+async function getRecentPostsByDescendingNumberOfReposts() {
+  return (
+    await mongodb.collections['post']
+      .find({
+        eId: { $ne: '/sc/undefined' }, // exclude invalid eId values, cf https://github.com/openwhyd/openwhyd/issues/718#issuecomment-1710359006
+        nbR: { $gte: 1 },
+      })
+      .sort({ _id: -1 })
+      .limit(20)
+      .toArray()
+  )
+    .sort((a, b) => b.nbR - a.nbR) // sort posts by number of times they were reposted by other users
+    .map((post) => ({ pId: post._id.toString(), eId: post.eId }));
+}
+
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
 exports.getHotTracksFromDb = function (params, handler) {
-  params.skip = parseInt(params.skip || 0);
-  const getTracksByDescendingScore = () =>
-    new Promise((resolve) => {
-      exports.fetch(params, resolve);
-    });
   feature
-    .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
+    .getHotTracks(getRecentPostsByDescendingNumberOfReposts, fetchPostsByPid)
     .then((tracks) =>
       tracks.map((track) => ({
         ...track,
