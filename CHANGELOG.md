@@ -1,3 +1,10 @@
+## [1.55.65](https://github.com/openwhyd/openwhyd/compare/v1.55.64...v1.55.65) (2023-09-07)
+
+
+### Bug Fixes
+
+* **hot-tracks:** don't include invalid SoundCloud `eId` ([#719](https://github.com/openwhyd/openwhyd/issues/719)) ([9b25e3d](https://github.com/openwhyd/openwhyd/commit/9b25e3d152cbb539c724bdc30d12e721097e4c97)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718) [#614](https://github.com/openwhyd/openwhyd/issues/614) [#03](https://github.com/openwhyd/openwhyd/issues/03) [#614](https://github.com/openwhyd/openwhyd/issues/614)
+
 ## [1.55.64](https://github.com/openwhyd/openwhyd/compare/v1.55.63...v1.55.64) (2023-09-07)
 
 
