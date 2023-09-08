@@ -37,6 +37,30 @@ Cypress.Commands.add('loginAsAdmin', () => {
   });
 });
 
+function postTrack(track) {
+  const params = { action: 'insert', ...track };
+  const flattened = Object.entries(params).reduce((acc, [key, value]) => {
+    if (typeof value !== 'object')
+      return {
+        ...acc,
+        [key]: value,
+      };
+    else {
+      Object.entries(value).forEach(([subKey, subVal]) => {
+        acc[`${key}[${subKey}]`] = subVal;
+      });
+      return acc;
+    }
+  }, {});
+  const querystring = Object.entries(flattened)
+    .map(
+      ([param, value]) =>
+        `${encodeURIComponent(param)}=${encodeURIComponent('' + value)}`,
+    )
+    .join('&');
+  return cy.request('GET', `/api/post?${querystring}`);
+}
+
 Cypress.Commands.add('postDummyTracks', (count, propOverrides = {}) => {
   const makeTrack = (i) => ({
     name: `Fake track #${i}`,
@@ -44,28 +68,10 @@ Cypress.Commands.add('postDummyTracks', (count, propOverrides = {}) => {
     img: '/images/cover-track.png',
     ...propOverrides,
   });
+
   for (let i = 0; i < count; ++i) {
-    const params = { action: 'insert', ...makeTrack(i) };
-    const flattened = Object.entries(params).reduce((acc, [key, value]) => {
-      if (typeof value !== 'object')
-        return {
-          ...acc,
-          [key]: value,
-        };
-      else {
-        Object.entries(value).forEach(([subKey, subVal]) => {
-          acc[`${key}[${subKey}]`] = subVal;
-        });
-        return acc;
-      }
-    }, {});
-    const querystring = Object.entries(flattened)
-      .map(
-        ([param, value]) =>
-          `${encodeURIComponent(param)}=${encodeURIComponent('' + value)}`,
-      )
-      .join('&');
-    cy.request('GET', `/api/post?${querystring}`);
+    const track = makeTrack(i);
+    postTrack(track);
   }
 });
 

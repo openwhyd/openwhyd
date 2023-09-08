@@ -28,7 +28,7 @@ declare namespace Cypress {
     loginAsAdmin(): Chainable;
 
     /**
-     * Login as the admin user defined in initdb_testing.js
+     * Post a given number of tracks.
      */
     postDummyTracks(
       count: number,
