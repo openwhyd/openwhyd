@@ -1,3 +1,10 @@
+## [1.56.5](https://github.com/openwhyd/openwhyd/compare/v1.56.4...v1.56.5) (2023-09-08)
+
+
+### Bug Fixes
+
+* **tests:** add tracks for hot-tracks visual e2e test ([433b9ca](https://github.com/openwhyd/openwhyd/commit/433b9cae9eb749a601a5ba5bd6f9679346f4dbfb))
+
 ## [1.56.4](https://github.com/openwhyd/openwhyd/compare/v1.56.3...v1.56.4) (2023-09-08)
 
 
