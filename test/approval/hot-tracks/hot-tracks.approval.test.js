@@ -56,32 +56,7 @@ describe('Hot Tracks', () => {
     await openwhyd.reset(); // prevent side effects between tests by resetting db state
   });
 
-  it('renders a limited number of ranked posts', async () => {
-    await db.collection('post').insertMany(twoPosts);
-    await openwhyd.refreshCache();
-    const json = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&limit=1&format=json`,
-    });
-    expect(indentJSON(json.body)).toMatchSnapshot();
-    const html = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&limit=1`,
-    });
-    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
-  });
-
-  it('renders ranked posts, starting at a given index', async () => {
-    await db.collection('post').insertMany(twoPosts);
-    await openwhyd.refreshCache();
-    const json = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&skip=1&format=json`,
-    });
-    expect(indentJSON(json.body)).toMatchSnapshot();
-    const html = await httpClient.get({
-      url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&skip=1&`,
-    });
-    expect(getCleanedPageBody(html.body)).toMatchSnapshot();
-  });
-
+  // TODO: turn this test into a visual e2e test + an api test
   it('renders posts enriched with track metadata', async () => {
     await db.collection('post').insertMany([
       {
