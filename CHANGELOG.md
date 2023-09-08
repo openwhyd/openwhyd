@@ -1,3 +1,11 @@
+## [1.56.4](https://github.com/openwhyd/openwhyd/compare/v1.56.3...v1.56.4) (2023-09-08)
+
+
+### Bug Fixes
+
+* **hot-tracks:** for each track, feature the user who posted it early ([3a7a718](https://github.com/openwhyd/openwhyd/commit/3a7a718cbf5dd8a7d9ab94cd3bae8a447f59e8a1)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+* **tests:** extract api tests for hot tracks ([f8e4f74](https://github.com/openwhyd/openwhyd/commit/f8e4f746cde0af969dba6dfa8ec868feccfd6be9))
+
 ## [1.56.3](https://github.com/openwhyd/openwhyd/compare/v1.56.2...v1.56.3) (2023-09-08)
 
 
