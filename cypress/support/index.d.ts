@@ -36,5 +36,10 @@ declare namespace Cypress {
         import('../../app/infrastructure/mongodb/types.js').PostDocument
       >,
     ): Chainable;
+
+    /**
+     * Post a few real tracks from production.
+     */
+    postRealTracks(): Chainable;
   }
 }
