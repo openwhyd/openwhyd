@@ -131,6 +131,7 @@ async function getRecentPostsByDescendingNumberOfReposts(params) {
             eId: { $ne: '/sc/undefined' },
           },
         },
+        { $sort: { _id: 1 } },
         {
           $addFields: {
             nbLoves: {

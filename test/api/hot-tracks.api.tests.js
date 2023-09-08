@@ -109,4 +109,21 @@ describe('Hot Tracks', () => {
       .then(({ body }) => JSON.parse(body));
     assert.equal(response.tracks.length, 1);
   });
+
+  it('returns information about the first user who posted each track', async () => {
+    await db.collection('post').insertMany([
+      {
+        ...popularPost,
+        uId: 'late_poster',
+        _id: ObjectId('61e19a3f078b4c9934e72ce6'), // posted after popularPost
+      },
+      { ...popularPost, uId: 'first_poster' },
+    ]);
+    const response = await httpClient
+      .get({
+        url: `${openwhyd.getURL()}/hot?sinceId=${aLongTimeAgo}&format=json`,
+      })
+      .then(({ body }) => JSON.parse(body));
+    assert.equal(response.tracks[0].uId, 'first_poster');
+  });
 });
