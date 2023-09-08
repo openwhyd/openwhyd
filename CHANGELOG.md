@@ -1,3 +1,10 @@
+## [1.56.3](https://github.com/openwhyd/openwhyd/compare/v1.56.2...v1.56.3) (2023-09-08)
+
+
+### Bug Fixes
+
+* **tests:** clean up hot-tracks approval tests ([12e9385](https://github.com/openwhyd/openwhyd/commit/12e9385dfa4e0deeb7953ad39f7cf099499daaba))
+
 ## [1.56.2](https://github.com/openwhyd/openwhyd/compare/v1.56.1...v1.56.2) (2023-09-07)
 
 
