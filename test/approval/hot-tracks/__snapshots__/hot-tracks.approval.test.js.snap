@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked posts 1`] = `
+exports[`Hot Tracks renders a limited number of ranked posts 1`] = `
 "{
   hasMore: {
     skip: 1
@@ -24,7 +24,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 }"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders a limited number of ranked posts 2`] = `
+exports[`Hot Tracks renders a limited number of ranked posts 2`] = `
 "<!DOCTYPE html>
 <html lang="en">
   <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">
@@ -365,7 +365,7 @@ var JAMENDO_CLIENT_ID = "2c9a11b9";
 </html>"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders posts enriched with track metadata 1`] = `
+exports[`Hot Tracks renders posts enriched with track metadata 1`] = `
 "{
   hasMore: false,
   tracks: [
@@ -404,7 +404,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 }"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders posts enriched with track metadata 2`] = `
+exports[`Hot Tracks renders posts enriched with track metadata 2`] = `
 "<!DOCTYPE html>
 <html lang="en">
   <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">
@@ -835,7 +835,7 @@ var JAMENDO_CLIENT_ID = "2c9a11b9";
 </html>"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked posts, starting at a given index 1`] = `
+exports[`Hot Tracks renders ranked posts, starting at a given index 1`] = `
 "{
   hasMore: false,
   tracks: [
@@ -857,7 +857,7 @@ exports[`Hot Tracks (approval tests - to be replaced later by unit tests) render
 }"
 `;
 
-exports[`Hot Tracks (approval tests - to be replaced later by unit tests) renders ranked posts, starting at a given index 2`] = `
+exports[`Hot Tracks renders ranked posts, starting at a given index 2`] = `
 " <div
   class="post "
   data-pid="61e19a3f078b4c9934e72ce4"

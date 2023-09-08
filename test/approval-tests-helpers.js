@@ -20,6 +20,12 @@ function extractCookieJar(headers, origin) {
 }
 
 const httpClient = {
+  /**
+   * @param {object} params
+   * @param {string} params.url
+   * @param {string} [params.cookies]
+   * @returns {Promise<{ body: string, headers: Record<string, string> }>}
+   */
   get({ url, cookies }) {
     return promisify(request.get)({ uri: url, jar: cookies }).then(
       ({ body, headers }) => ({
@@ -28,6 +34,15 @@ const httpClient = {
       }),
     );
   },
+
+  /**
+   * @param {object} params
+   * @param {string} params.url
+   * @param {object | string} params.body
+   * @param {*} [params.headers]
+   * @param {string} [params.cookies]
+   * @returns {Promise<{ body: string, cookies: unknown }>}
+   */
   post({ url, body, headers, cookies }) {
     if (typeof body === 'object') {
       body = JSON.stringify(body);

@@ -1,11 +1,13 @@
+// @ts-check
+
 // Run with: $ npm run test:approval:hot-tracks
 //   ... or: $ npm run test:approval:hot-tracks -- --updateSnapshot
 
-const waitOn = require('wait-on');
+const { beforeAll, afterAll, expect } = require('@jest/globals');
+
 const {
   httpClient,
   ObjectId,
-  connectToMongoDB,
   indentJSON,
   getCleanedPageBody,
 } = require('../../approval-tests-helpers');
@@ -22,99 +24,40 @@ const openwhyd = new OpenwhydTestEnv({
   port: PORT,
 });
 
-const MONGODB_URL =
-  process.env.MONGODB_URL || 'mongodb://localhost:27117/openwhyd_test';
-
-const users = [
+const twoPosts = [
   {
-    _id: ObjectId('61e19a3f078b4c9934e72ce1'),
-    name: 'user 0',
-    email: 'users[0]@test.com',
-    pwd: '21232f297a57a5a743894a0e4a801fc3',
-  },
-  {
-    _id: ObjectId('61e19a3f078b4c9934e72ce2'),
-    name: 'user 1',
-    email: 'users[1]@test.com',
-    pwd: '21232f297a57a5a743894a0e4a801fc3',
-  },
-];
-
-const tracks = [
-  {
-    _id: ObjectId('61e19a3f078b4c9934e72ce6'),
+    _id: ObjectId('61e19a3f078b4c9934e72ce4'),
     eId: '/yt/track_A',
-    score: 0,
+    name: 'a regular track',
+    nbR: 1,
   },
   {
-    _id: ObjectId('61e19a3f078b4c9934e72ce7'),
+    _id: ObjectId('61e19a3f078b4c9934e72ce5'),
     eId: '/yt/track_B',
-    score: 0,
+    name: 'a popular track',
+    nbR: 2,
   },
 ];
 
-const loginUsers = (server, users) =>
-  Promise.all(
-    users.map(({ email, pwd }) =>
-      httpClient.get({
-        url: `${server.getURL()}/login?action=login&ajax=1&email=${email}&md5=${pwd}`,
-      }),
-    ),
-  );
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function postTrack(server, userSession, { _id, ...trackData }) {
-  const { body } = await httpClient.post({
-    url: `${server.getURL()}/api/post`,
-    body: { action: 'insert', ...trackData },
-    cookies: userSession.cookies,
-  });
-  return JSON.parse(body);
-}
-
-describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () => {
-  /** @type import('mongodb').MongoClient */
-  let mongoClient;
+describe('Hot Tracks', () => {
   /** @type import('mongodb').Db */
   let db;
 
   beforeAll(async () => {
     await openwhyd.setup();
-    if (PORT) {
-      await waitOn({ resources: [`http://localhost:${PORT}`], timeout: 1000 });
-    }
-    // if this test times out, make sure to start MongoDB first: $ docker-compose up -d mongo
-    mongoClient = await connectToMongoDB(MONGODB_URL);
-    db = await mongoClient.db();
+    db = openwhyd.getMongoClient().db();
   });
 
   afterAll(async () => {
-    if (mongoClient) await mongoClient.close();
     if (!DONT_KILL) await openwhyd.release();
   });
 
   beforeEach(async () => {
     await openwhyd.reset(); // prevent side effects between tests by resetting db state
-    await db.collection('user').deleteMany({}); // clear users
-    await db.collection('post').deleteMany({}); // clear posts
-    await db.collection('track').deleteMany({}); // clear tracks
   });
 
   it('renders a limited number of ranked posts', async () => {
-    await db.collection('post').insertMany([
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
-        eId: tracks[0].eId,
-        name: 'a regular track',
-        nbR: 1,
-      },
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
-        eId: tracks[1].eId,
-        name: 'a popular track',
-        nbR: 2,
-      },
-    ]);
+    await db.collection('post').insertMany(twoPosts);
     await openwhyd.refreshCache();
     const json = await httpClient.get({
       url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&limit=1&format=json`,
@@ -127,20 +70,7 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   it('renders ranked posts, starting at a given index', async () => {
-    await db.collection('post').insertMany([
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
-        eId: tracks[0].eId,
-        name: 'a regular track',
-        nbR: 1,
-      },
-      {
-        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
-        eId: tracks[1].eId,
-        name: 'a popular track',
-        nbR: 2,
-      },
-    ]);
+    await db.collection('post').insertMany(twoPosts);
     await openwhyd.refreshCache();
     const json = await httpClient.get({
       url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&skip=1&format=json`,
@@ -153,23 +83,16 @@ describe('Hot Tracks (approval tests - to be replaced later by unit tests)', () 
   });
 
   it('renders posts enriched with track metadata', async () => {
-    const posts = [
+    await db.collection('post').insertMany([
       {
-        _id: ObjectId('61e19a3f078b4c9934e72ce4'),
-        eId: tracks[0].eId,
-        name: 'a regular track',
-        nbR: 1,
+        ...twoPosts[0],
         pl: { name: 'soundtrack of my life', id: 0 }, // metadata from the post that will be included in the list of hot tracks
       },
       {
-        _id: ObjectId('61e19a3f078b4c9934e72ce5'),
-        eId: tracks[1].eId,
-        name: 'a popular track',
-        nbR: 2,
+        ...twoPosts[1],
         text: 'my favorite track ever!', // metadata from the post that will be included in the list of hot tracks
       },
-    ];
-    await db.collection('post').insertMany(posts);
+    ]);
     await openwhyd.refreshCache();
     const json = await httpClient.get({
       url: `${openwhyd.getURL()}/hot?sinceId=000000000000000000000001&format=json`,

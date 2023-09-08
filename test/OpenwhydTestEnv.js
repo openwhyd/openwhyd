@@ -7,6 +7,7 @@ const { loadEnvVars, resetTestDb } = require('./fixtures');
 const {
   dumpMongoCollection,
   insertTestData,
+  connectToMongoDB,
 } = require('./approval-tests-helpers');
 
 const { promisify } = util;
@@ -89,6 +90,7 @@ class OpenwhydTestEnv {
     this.options = options;
     this.env = null;
     this.serverProcess = null;
+    this.mongoClient = null;
   }
 
   /**
@@ -117,6 +119,9 @@ class OpenwhydTestEnv {
 
   /** Stop Openwhyd, if startWithEnv was provided at time of instanciation. */
   async release() {
+    if (this.mongoClient) {
+      await this.mongoClient.close();
+    }
     if (this.serverProcess) {
       await stopOpenwhyd(this.serverProcess);
     }
@@ -131,6 +136,13 @@ class OpenwhydTestEnv {
   /** Return the URL of the Openwhyd server. */
   getURL() {
     return `http://localhost:${this.getEnv().WHYD_PORT}`;
+  }
+
+  getMongoClient() {
+    if (!this.mongoClient) {
+      this.mongoClient = connectToMongoDB(this.getEnv().MONGODB_URL);
+    }
+    return this.mongoClient;
   }
 
   /** Return the documents of the provided MongoDB collection. */
