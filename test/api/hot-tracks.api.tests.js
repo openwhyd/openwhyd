@@ -3,7 +3,6 @@
 // Run with: $ START_WITH_ENV_FILE='./env-vars-testing.conf' npx --yes mocha test/api/hot-tracks.api.tests.js
 
 const assert = require('assert');
-const { before, after, beforeEach, describe, it } = require('mocha');
 const { httpClient, ObjectId } = require('../approval-tests-helpers');
 const { OpenwhydTestEnv } = require('../OpenwhydTestEnv');
 
