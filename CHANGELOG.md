@@ -1,3 +1,11 @@
+## [1.56.6](https://github.com/openwhyd/openwhyd/compare/v1.56.5...v1.56.6) (2023-09-08)
+
+
+### Bug Fixes
+
+* **tests:** `Cannot find module 'mocha'` in production docker container ([8c48cf1](https://github.com/openwhyd/openwhyd/commit/8c48cf16d212efdaeb2cbde1d589030313fb703e))
+* **tests:** update approval snapshots ([73178bd](https://github.com/openwhyd/openwhyd/commit/73178bd8de9d519ef3606c0a363fbaaff5c49e6b))
+
 ## [1.56.5](https://github.com/openwhyd/openwhyd/compare/v1.56.4...v1.56.5) (2023-09-08)
 
 
