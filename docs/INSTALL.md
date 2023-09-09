@@ -1,8 +1,18 @@
-# Install instructions
+# Deploy Openwhyd to a DigitalOcean instance
 
-## Run with Docker (simple)
+Read [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md).
+
+---
+
+# Install and run Openwhyd locally
+
+## Using Docker (simple)
 
 Docker makes it easy and safe to install and start the two servers required for Openwhyd: the MongoDB database server, and the web/application server (formerly called _whydJS_).
+
+With this approach, you don't need to have Node.js installed on your computer.
+
+If you intend to make changes to Openwhyd's source code, skip to the "Setup for development" section. Otherwise, don't forget to rebuild Openwhyd' Docker container after every change. (e.g. `docker compose up --build`)
 
 ### Prerequisites
 
@@ -12,7 +22,7 @@ All you need is:
 - to have [Docker](https://www.docker.com/products/docker-desktop);
 - and to have [Git](https://www.atlassian.com/git/tutorials/install-git) installed on your machine.
 
-### Docker for Windows Home
+#### Note for users of Windows Home
 
 Docker for Windows Home runs on a virtual box, so localhost may not work. For all the instructions below, if localhost is not working, replace it with your docker ip. You can find your docker ip with :
 
@@ -30,20 +40,63 @@ Commands to type in your shell:
 ```sh
 $ git clone https://github.com/openwhyd/openwhyd.git
 $ cd openwhyd
+$ docker compose up --build --detach                # starts openwhyd's web server and database in the background
+$ open http://localhost:8080                        # ... in your web browser => you should see Openwhyd's home page! 🎉
+$ docker compose down --rmi local --remove-orphans  # when you're done: stop openwhyd's web server and database
+```
+
+After making changes to the source code, don't forget to restart with `docker compose up --build --detach`, so the containers are rebuilt with the changes.
+
+### Run automated tests
+
+Commands to run all automated tests in Docker containers:
+
+```sh
+$ make test-in-docker
+```
+
+### Connect to the database
+
+If you want to connect to the MongoDB database with the `mongo` shell using `docker-compose` container:
+
+```sh
+$ docker-compose exec mongo mongo mongodb://localhost:27117/openwhyd_test
+```
+
+---
+
+## Setup for development
+
+### Clone and run
+
+Type these shell commands to run Openwhyd on your computer, against a MongoDB database running in a Docker container:
+
+```sh
+$ git clone https://github.com/openwhyd/openwhyd.git
+$ cd openwhyd
+$ nvm use                     # picks the expected version of Node.js, assuming it's installed
 $ make dev                    # starts openwhyd's web server and database in the background
 $ open http://localhost:8080  # ... in your web browser => you should see Openwhyd's home page! 🎉
 $ make down                   # when you're done: stop openwhyd's web server and database
 ```
 
-After making changes to the source code, don't forget to restart with `make dev`.
+This approach makes it more efficient than the one above to iterate on the code, because there is not need to rebuild a Docker container after every change.
 
-### Run automated tests
+### Testing
 
-Commands to run all automated tests against the Docker container:
+Run all tests, including approval tests:
 
 ```sh
 $ make test
 ```
+
+To see what other scripts are available, run:
+
+```sh
+$ make
+```
+
+And check out the list of `scripts` provided in `package.json`.
 
 ### Sample data
 
@@ -58,20 +111,6 @@ $ node scripts/import-from-prod.js test # imports 21 posts from https://openwhyd
 After that, you will be able to sign in as an administrator using the credentials returned by the script.
 
 The data imported can be seen from http://localhost:8080/all
-
-### Connect to the database
-
-If you want to connect to the MongoDB database with the `mongo` shell using `docker-compose` container:
-
-```sh
-$ docker-compose exec mongo mongo mongodb://localhost:27117/openwhyd_test
-```
-
----
-
-## Deploy to a DigitalOcean instance
-
-Read [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md).
 
 ---
 
@@ -93,21 +132,6 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 - Run `npm start`, or `npx pm2 start app.js` (auto-restart daemon)
 - Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 - During development, you may have to restart the server to have your changes taken into account.
-
-### Testing (advanced)
-
-Run unit tests only:
-
-```sh
-$ npm run test:unit
-```
-
-Run all tests, including approval tests:
-
-```sh
-$ make test
-$ make test-approval
-```
 
 ---
 
