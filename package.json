@@ -83,7 +83,7 @@
     "@types/node": "^20.5.7",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
-    "approvals": "^6.2.1",
+    "approvals": "^6.2.2",
     "ava": "^5.3.1",
     "cypress": "^12.17.4",
     "cypress-file-upload": "^5.0.8",
