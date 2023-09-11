@@ -70,6 +70,10 @@ exports.controller = function (request, reqParams, response) {
     }
   }
 
-  const params = { skip: reqParams.skip, limit: reqParams.limit + 1 };
+  const params = {
+    skip: reqParams.skip,
+    limit: reqParams.limit + 1,
+    sinceId: reqParams.sinceId,
+  };
   trackModel.getHotTracksFromDb(params, renderHotTracks);
 };

@@ -1,3 +1,79 @@
+## [1.56.7](https://github.com/openwhyd/openwhyd/compare/v1.56.6...v1.56.7) (2023-09-11)
+
+
+### Bug Fixes
+
+* **deps:** update most dependencies ([#729](https://github.com/openwhyd/openwhyd/issues/729)) ([f471732](https://github.com/openwhyd/openwhyd/commit/f4717321ad09b2098b132956d08bb068fe3d2453))
+
+## [1.56.6](https://github.com/openwhyd/openwhyd/compare/v1.56.5...v1.56.6) (2023-09-08)
+
+
+### Bug Fixes
+
+* **tests:** `Cannot find module 'mocha'` in production docker container ([8c48cf1](https://github.com/openwhyd/openwhyd/commit/8c48cf16d212efdaeb2cbde1d589030313fb703e))
+* **tests:** update approval snapshots ([73178bd](https://github.com/openwhyd/openwhyd/commit/73178bd8de9d519ef3606c0a363fbaaff5c49e6b))
+
+## [1.56.5](https://github.com/openwhyd/openwhyd/compare/v1.56.4...v1.56.5) (2023-09-08)
+
+
+### Bug Fixes
+
+* **tests:** add tracks for hot-tracks visual e2e test ([433b9ca](https://github.com/openwhyd/openwhyd/commit/433b9cae9eb749a601a5ba5bd6f9679346f4dbfb))
+
+## [1.56.4](https://github.com/openwhyd/openwhyd/compare/v1.56.3...v1.56.4) (2023-09-08)
+
+
+### Bug Fixes
+
+* **hot-tracks:** for each track, feature the user who posted it early ([3a7a718](https://github.com/openwhyd/openwhyd/commit/3a7a718cbf5dd8a7d9ab94cd3bae8a447f59e8a1)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+* **tests:** extract api tests for hot tracks ([f8e4f74](https://github.com/openwhyd/openwhyd/commit/f8e4f746cde0af969dba6dfa8ec868feccfd6be9))
+
+## [1.56.3](https://github.com/openwhyd/openwhyd/compare/v1.56.2...v1.56.3) (2023-09-08)
+
+
+### Bug Fixes
+
+* **tests:** clean up hot-tracks approval tests ([12e9385](https://github.com/openwhyd/openwhyd/commit/12e9385dfa4e0deeb7953ad39f7cf099499daaba))
+
+## [1.56.2](https://github.com/openwhyd/openwhyd/compare/v1.56.1...v1.56.2) (2023-09-07)
+
+
+### Bug Fixes
+
+* **hot-tracks:** add missing image ([62e63a8](https://github.com/openwhyd/openwhyd/commit/62e63a8aea19a2804a36b50b083eccb43136f32d)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+* **hot-tracks:** add missing user info ([952d0f4](https://github.com/openwhyd/openwhyd/commit/952d0f42510d6b45e95c43bc980ef379c58df5fa)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+
+## [1.56.1](https://github.com/openwhyd/openwhyd/compare/v1.56.0...v1.56.1) (2023-09-07)
+
+
+### Bug Fixes
+
+* **hot-tracks:** improves scoring, using mongo aggregate ([e6a966d](https://github.com/openwhyd/openwhyd/commit/e6a966d6db16e49ad63fb38aedf42dd3b2068733)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+
+# [1.56.0](https://github.com/openwhyd/openwhyd/compare/v1.55.65...v1.56.0) (2023-09-07)
+
+
+### Features
+
+* **hot-tracks:** try list of recent posts sorted by number of reposts ([#720](https://github.com/openwhyd/openwhyd/issues/720)) ([7b870c3](https://github.com/openwhyd/openwhyd/commit/7b870c38aa1a0ae796b2c3210d326922cf118f12)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718)
+
+## [1.55.65](https://github.com/openwhyd/openwhyd/compare/v1.55.64...v1.55.65) (2023-09-07)
+
+
+### Bug Fixes
+
+* **hot-tracks:** don't include invalid SoundCloud `eId` ([#719](https://github.com/openwhyd/openwhyd/issues/719)) ([9b25e3d](https://github.com/openwhyd/openwhyd/commit/9b25e3d152cbb539c724bdc30d12e721097e4c97)), closes [#718](https://github.com/openwhyd/openwhyd/issues/718) [#614](https://github.com/openwhyd/openwhyd/issues/614) [#03](https://github.com/openwhyd/openwhyd/issues/03) [#614](https://github.com/openwhyd/openwhyd/issues/614)
+
+## [1.55.64](https://github.com/openwhyd/openwhyd/compare/v1.55.63...v1.55.64) (2023-09-07)
+
+
+### Bug Fixes
+
+* **scripts:** 🧹 remove old git script ([4147195](https://github.com/openwhyd/openwhyd/commit/414719582a8010da223f335d3d96b98495c814c4))
+* **scripts:** 🧹 remove useless .editorconfig file ([981c697](https://github.com/openwhyd/openwhyd/commit/981c6971ad71bef0ada4a806a0c5562815f775e4))
+* **scripts:** add script to run mongo shell in prod ([14eb574](https://github.com/openwhyd/openwhyd/commit/14eb574484b3d64f606fbd155ad231afa0facd47))
+* **scripts:** move db backup script ([0ba10a3](https://github.com/openwhyd/openwhyd/commit/0ba10a3746b241496f2ec97199dd2431018ea020))
+
 ## [1.55.63](https://github.com/openwhyd/openwhyd/compare/v1.55.62...v1.55.63) (2023-09-05)
 
 

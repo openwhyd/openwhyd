@@ -28,7 +28,7 @@ declare namespace Cypress {
     loginAsAdmin(): Chainable;
 
     /**
-     * Login as the admin user defined in initdb_testing.js
+     * Post a given number of tracks.
      */
     postDummyTracks(
       count: number,
@@ -36,5 +36,10 @@ declare namespace Cypress {
         import('../../app/infrastructure/mongodb/types.js').PostDocument
       >,
     ): Chainable;
+
+    /**
+     * Post a few real tracks from production.
+     */
+    postRealTracks(): Chainable;
   }
 }

@@ -11,7 +11,6 @@ context('Visual Snapshots', () => {
     cy.eyesOpen({
       testName: 'Visual Snapshots',
     });
-    // TODO: insert a few tracks, to also check regressions on the rendering of those tracks
   });
 
   after(() => {
@@ -27,6 +26,11 @@ context('Visual Snapshots', () => {
   });
 
   it('visitor on hot tracks', () => {
+    // insert a few tracks, to also check regressions on the rendering of those tracks
+    cy.loginAsAdmin();
+    cy.postRealTracks();
+    cy.logout();
+
     cy.visit('/hot');
     cy.contains('Got it!').click(); // Remove cookie banner
 

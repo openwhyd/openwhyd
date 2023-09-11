@@ -37,7 +37,6 @@
 
 const config = require('./config.js');
 const mongodb = require('./mongodb.js');
-const ObjectId = mongodb.ObjectId;
 const feature = require('../features/hot-tracks.js');
 
 const { FIELDS_TO_SUM, FIELDS_TO_COPY } = feature;
@@ -86,25 +85,6 @@ exports.countTracksWithField = function (fieldName, cb) {
   );
 };
 
-/* fetch top hot tracks, without processing */
-exports.fetch = function (params, handler) {
-  params = params || {};
-  params.sort = params.sort || [['score', 'desc']];
-  mongodb.collections['track']
-    .find({}, params)
-    .toArray()
-    .then(
-      function (results) {
-        // console.log('=> fetched ' + results.length + ' tracks');
-        if (handler) handler(results);
-      },
-      (err) => {
-        console.trace('trackModel.fetch', err);
-        handler();
-      },
-    );
-};
-
 exports.fetchTrackByEid = function (eId, cb) {
   // in order to allow requests of soundcloud eId without hash (#):
   const eidPrefix = ('' + eId).indexOf('/sc/') == 0 && ('' + eId).split('#')[0];
@@ -128,26 +108,89 @@ exports.fetchTrackByEid = function (eId, cb) {
 
 // functions for fetching tracks and corresponding posts
 
-const makeObjectIdList = (pId) =>
-  (pId && Array.isArray(pId) ? pId : []).map(function (id) {
-    return ObjectId('' + id);
-  });
-
-function fetchPostsByPid(pId) {
-  return mongodb.collections['post']
-    .find({ _id: { $in: makeObjectIdList(pId) } }, POST_FETCH_OPTIONS)
-    .toArray();
+/**
+ * @param {object} params
+ * @param {number | undefined} params.limit
+ * @param {number | undefined} params.skip
+ * @param {mongodb.ObjectId | undefined} params.sinceId
+ */
+async function getRecentPostsByDescendingNumberOfReposts(params) {
+  const sinceId =
+    params.sinceId ??
+    mongodb.ObjectId(
+      mongodb.dateToHexObjectId(
+        new Date(new Date().getTime() - HOT_TRACK_TIME_WINDOW),
+      ),
+    );
+  return (
+    await mongodb.collections['post']
+      .aggregate([
+        {
+          $match: {
+            _id: { $gte: sinceId },
+            eId: { $ne: '/sc/undefined' },
+          },
+        },
+        { $sort: { _id: 1 } },
+        {
+          $addFields: {
+            nbLoves: {
+              $cond: {
+                if: { $isArray: '$lov' },
+                then: { $size: '$lov' },
+                else: 0,
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$eId',
+            pId: { $first: '$_id' },
+            name: { $first: '$name' },
+            img: { $first: '$img' },
+            uId: { $first: '$uId' },
+            uNm: { $first: '$uNm' },
+            pl: { $first: '$pl' },
+            nbLoves: { $sum: '$nbLoves' },
+            nbReposts: { $sum: '$nbR' },
+            posts: { $push: '$_id' },
+          },
+        },
+        { $addFields: { nbPosts: { $size: '$posts' } } },
+        {
+          $addFields: {
+            score: { $sum: ['$nbPosts', '$nbReposts', '$nbLoves'] },
+          },
+        },
+        { $sort: { score: -1 } },
+        { $skip: params?.skip ?? 0 },
+        { $limit: params.limit },
+      ])
+      .toArray()
+  ).map((result) => ({
+    _id: result.posts[0],
+    eId: result._id,
+    name: result.name,
+    img: result.img,
+    uId: result.uId,
+    uNm: result.uNm,
+    pl: result.pl,
+    pId: result.pId,
+    nbR: result.nbPosts + result.nbReposts,
+    nbL: result.nbLoves,
+    score: result.score,
+  }));
 }
 
 /* fetch top hot tracks, and include complete post data (from the "post" collection), score, and rank increment */
 exports.getHotTracksFromDb = function (params, handler) {
   params.skip = parseInt(params.skip || 0);
-  const getTracksByDescendingScore = () =>
-    new Promise((resolve) => {
-      exports.fetch(params, resolve);
-    });
+  params.sinceId = params.sinceId
+    ? mongodb.ObjectId(params.sinceId)
+    : undefined;
   feature
-    .getHotTracks(getTracksByDescendingScore, fetchPostsByPid)
+    .getHotTracks(() => getRecentPostsByDescendingNumberOfReposts(params))
     .then((tracks) =>
       tracks.map((track) => ({
         ...track,
