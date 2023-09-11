@@ -217,7 +217,7 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v6.4.0
+        uses: cypress-io/github-action@v6.5.0
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
