@@ -1,3 +1,10 @@
+## [1.56.7](https://github.com/openwhyd/openwhyd/compare/v1.56.6...v1.56.7) (2023-09-11)
+
+
+### Bug Fixes
+
+* **deps:** update most dependencies ([#729](https://github.com/openwhyd/openwhyd/issues/729)) ([f471732](https://github.com/openwhyd/openwhyd/commit/f4717321ad09b2098b132956d08bb068fe3d2453))
+
 ## [1.56.6](https://github.com/openwhyd/openwhyd/compare/v1.56.5...v1.56.6) (2023-09-08)
 
 
