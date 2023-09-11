@@ -78,7 +78,7 @@
     "wait-on": "^7.0.1"
   },
   "devDependencies": {
-    "@applitools/eyes-cypress": "^3.37.0",
+    "@applitools/eyes-cypress": "^3.38.0",
     "@cypress/code-coverage": "^3.11.0",
     "@types/node": "^20.5.7",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
