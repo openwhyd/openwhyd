@@ -60,7 +60,7 @@
     "test": "./test"
   },
   "dependencies": {
-    "algoliasearch": "4.19.1",
+    "algoliasearch": "4.20.0",
     "argon2": "^0.31.0",
     "async": "*",
     "colors": "*",
