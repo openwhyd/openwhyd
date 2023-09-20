@@ -399,34 +399,33 @@ const USER_ERRORS = [
   'This username is taken by another user',
 ];
 
+function localRendering(reqParams, r) {
+  if (r) delete r.pwd;
+  if (!r || r.error) {
+    const errMessage = (r || {}).error || r;
+    const isUserError =
+      typeof errMessage === 'string' &&
+      USER_ERRORS.some((userError) => errMessage.includes(userError));
+    if (!isUserError)
+      console.log(
+        'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
+        errMessage,
+      );
+  }
+
+  return reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r;
+}
+
 /** @param {Features} features */
 exports.controller = function (request, reqParams, response, features) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
 
-  function localRendering(r) {
-    if (r) delete r.pwd;
-    if (!r || r.error) {
-      const errMessage = (r || {}).error || r;
-      const isUserError =
-        typeof errMessage === 'string' &&
-        USER_ERRORS.some((userError) => errMessage.includes(userError));
-      if (!isUserError)
-        console.log(
-          'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
-          errMessage,
-        );
-    }
-    response.renderJSON(
-      reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r,
-    );
-  }
-
   const loggedUser = request.checkLogin(/*response*/);
   handleRequest(
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,
-    localRendering,
+    (result) => response.renderJSON(localRendering(reqParams, result)),
     features,
   );
 };
