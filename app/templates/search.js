@@ -11,16 +11,12 @@ const TEMPLATE_SEARCH_PAGE = 'app/templates/searchPage.html';
 const TEMPLATE_RESULTS_BOX = 'app/templates/searchResultsBox.html';
 
 const cats = [
-  { name: 'Tracks', _type: 'track' },
   { name: 'Posts', _type: 'post' },
   { name: 'People', _type: 'user' },
   { name: 'Playlists', _type: 'playlist' },
 ];
 
 const makeLink = {
-  track: function (item) {
-    return '/c/' + item._id;
-  }, // in algolia index only
   post: function (item) {
     return '/c/' + item._id;
   },
@@ -33,9 +29,6 @@ const makeLink = {
 };
 
 const makeImg = {
-  track: function (item) {
-    return item.img;
-  }, // in algolia index only
   post: function (item) {
     return '/img/post/' + item._id;
   },
