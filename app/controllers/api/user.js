@@ -184,8 +184,9 @@ const fieldSetters = {
     });
   },
   pwd: function (p, cb, features) {
-    userModel.fetchByUid(p._id, function (item) {
-      if (features.auth?.sendPasswordChangeRequest(item.email)) {
+    userModel.fetchByUid(p._id, async function (item) {
+      if (features.auth?.sendPasswordChangeRequest) {
+        await features.auth.sendPasswordChangeRequest(item.email);
         cb({ error: 'We sent you an email to change your password.' });
       } else if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
         defaultSetter('pwd')({ _id: p._id, pwd: userModel.md5(p.pwd) }, cb);
