@@ -190,7 +190,6 @@ function start() {
     console.log(`[app] Server running at ${url}`);
   });
   require('./app/workers/notifEmails.js'); // start digest worker
-  require('./app/workers/hotSnapshot.js'); // start hot tracks snapshot worker
 
   function closeGracefully(signal) {
     console.warn(`[app] ${signal} signal received: closing server...`);

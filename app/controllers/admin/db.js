@@ -4,7 +4,6 @@
  **/
 
 const mongodb = require('../../models/mongodb.js');
-const trackModel = require('../../models/track.js');
 const snip = require('../../snip.js');
 const FileController = require('./FileController.js');
 
@@ -57,18 +56,6 @@ function listMissingUsers(uids, cb) {
 }
 
 var fileGenerators = {
-  refreshTrackCollection: function (p, cb) {
-    trackModel.refreshTrackCollection(function (r) {
-      console.log('refreshTrackCollection => ', r || { ok: 'done' });
-    });
-    cb('refreshing track collection...');
-  },
-  snapshotTrackScores: function (p, cb) {
-    trackModel.snapshotTrackScores(function (r) {
-      console.log('snapshotTrackScores => ', r || { ok: 'done' });
-    });
-    cb('refreshing track trends...');
-  },
   'listUsersWithoutPosts.html': async function (p, cb) {
     const uidList = await fetchUidList();
     listMissingUsers(cleanUidList(uidList), function (users) {
