@@ -1,3 +1,10 @@
+# [1.57.0](https://github.com/openwhyd/openwhyd/compare/v1.56.8...v1.57.0) (2023-09-21)
+
+
+### Features
+
+* **hot-tracks:** 🧹 remove computation of relative ranking trends ([#737](https://github.com/openwhyd/openwhyd/issues/737)) ([1eed523](https://github.com/openwhyd/openwhyd/commit/1eed523396ff5dc13d9e1f3c1023b59827ba3fc0))
+
 ## [1.56.8](https://github.com/openwhyd/openwhyd/compare/v1.56.7...v1.56.8) (2023-09-20)
 
 
