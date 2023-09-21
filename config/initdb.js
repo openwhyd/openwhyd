@@ -19,7 +19,7 @@ await Promise.all([
   db.createCollection('follow').catch(tolerateError('already exists')),
   db.createCollection('post').catch(tolerateError('already exists')),
   db.createCollection('activity').catch(tolerateError('already exists')),
-  db.createCollection('track').catch(tolerateError('already exists')),
+  db.dropCollection('track').catch(tolerateError('ns not found')),
   db.createCollection('comment').catch(tolerateError('already exists')),
 ]);
 
@@ -63,10 +63,6 @@ await db.collection('activity').createIndex({ 'like.id': 1 }, { sparse: true });
 await db
   .collection('activity')
   .createIndex({ 'like.pId': 1 }, { sparse: true });
-
-// print('indexing track collection...');
-await db.collection('track').createIndex({ eId: 1 });
-await db.collection('track').createIndex({ score: 1 });
 
 // print('indexing comment collection...');
 await db.collection('comment').createIndex({ pId: 1 });

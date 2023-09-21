@@ -570,19 +570,6 @@ describe(`post api`, function () {
       const [postAfter] = await openwhyd.dumpCollection('post');
       assert.equal(postAfter.nbP, 1);
     });
-
-    it('should increase the total number of plays of that track', async () => {
-      // Given a post with 0 plays
-      const postId = '000000000000000000000009';
-      await insertPost(postId, { nbP: 0, eId: '/yt/fake_video_id' });
-
-      // When requesting to increase the play counter for that post
-      await callPostApi({ action: 'incrPlayCounter', pId: postId });
-
-      // Then the number of plays of that track is 1
-      const [trackAfter] = await openwhyd.dumpCollection('track');
-      assert.equal(trackAfter.nbP, 1);
-    });
   });
 
   describe('`toggleLovePost` action', () => {
@@ -602,19 +589,6 @@ describe(`post api`, function () {
       // Then the user is included in the list of loves
       const [postAfter] = await openwhyd.dumpCollection('post');
       assert.deepEqual(postAfter.lov, [loggedUser.id]);
-    });
-
-    it('should increase the total number of loves of that track', async () => {
-      // Given a post with 0 loves
-      const postId = '000000000000000000000009';
-      await insertPost(postId, postFromOtherUser);
-
-      // When requesting to increase the love counter for that post
-      await callPostApi({ action: 'toggleLovePost', pId: postId });
-
-      // Then the number of loves of that track is 1
-      const [trackAfter] = await openwhyd.dumpCollection('track');
-      assert.equal(trackAfter.nbL, 1);
     });
 
     it('should list that action in the activity collection', async () => {
