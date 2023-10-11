@@ -1,3 +1,10 @@
+## [1.57.1](https://github.com/openwhyd/openwhyd/compare/v1.57.0...v1.57.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* **logs:** reduce error logs from fieldSetters ([#747](https://github.com/openwhyd/openwhyd/issues/747)) ([68b3ab3](https://github.com/openwhyd/openwhyd/commit/68b3ab3bb4d3b160ee1cd62f4844c1456c0cf0a5))
+
 # [1.57.0](https://github.com/openwhyd/openwhyd/compare/v1.56.8...v1.57.0) (2023-09-21)
 
 
