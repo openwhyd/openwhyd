@@ -216,9 +216,26 @@ exports.registerInvitedUser = function (request, user, response) {
   else registerUser();
 };
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response, features) {
   request.logToConsole('register.controller', request.method);
-  if (request.method.toLowerCase() === 'post')
+  const newUserFromAuth0 = features.auth?.getAuthenticatedUser(request);
+  if (newUserFromAuth0) {
+    // finalize user signup from Auth0, by persisting them into our database
+    const storedUser = await new Promise((resolve) =>
+      userModel.save(newUserFromAuth0, resolve),
+    );
+    if (storedUser) {
+      notifEmails.sendRegWelcomeAsync(storedUser);
+      response.renderHTML(htmlRedirect('/')); // in reality, this ends up redirecting to the consent request page
+    } else {
+      renderError(
+        request,
+        storedUser,
+        response,
+        'Oops, your registration failed... Please reach out to contact@openwhyd.org',
+      );
+    }
+  } else if (request.method.toLowerCase() === 'post')
     // sent by (new) register form
     exports.registerInvitedUser(request, request.body, response);
   else inviteController.renderRegisterPage(request, getParams, response);

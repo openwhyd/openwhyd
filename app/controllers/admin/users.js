@@ -10,10 +10,13 @@ const AdminLists = require('../../templates/adminLists.js').AdminLists;
 
 // ACTION HANDLERS
 
+/** @typedef {{auth?: import('../../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} Features */
+
+/** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const handlers = {
-  rename: function (p, cb) {
+  rename: function (p, cb, features) {
     if (p._id && p.name)
-      userModel.renameUser(p._id, p.name, function (result) {
+      userModel.renameUser(features, p._id, p.name, function (result) {
         result = result || {};
         if (result.error) console.trace('user rename error:', result.error);
         else result.message = 'The user name has been set to ' + p.name;
@@ -21,11 +24,11 @@ const handlers = {
       });
     else cb({ error: 'missing arguments' });
   },
-  delete: function (p, cb) {
+  delete: function (p, cb, features) {
     const id = p._id && p._id.join ? p._id[0] : p._id;
     if (id) {
       console.log('delete user ', id);
-      userModel.delete({ _id: id }, function (res) {
+      userModel.delete(features, { _id: id }, function (res) {
         res = res || {};
         res.json = JSON.parse(JSON.stringify(res));
         cb(res);
@@ -98,7 +101,7 @@ function renderTemplate(items) {
 
 // MAIN CONTROLLER / REQUEST HANDLING CODE
 
-exports.handleRequest = function (request, reqParams, response) {
+exports.handleRequest = function (request, reqParams, response, features) {
   request.logToConsole('admin/users.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
@@ -123,7 +126,7 @@ exports.handleRequest = function (request, reqParams, response) {
   reqParams = reqParams || {};
 
   if (reqParams.action && handlers[reqParams.action])
-    handlers[reqParams.action](reqParams, renderResult);
+    handlers[reqParams.action](reqParams, renderResult, features);
   else
     userModel.fetchMulti(
       {},
@@ -134,13 +137,19 @@ exports.handleRequest = function (request, reqParams, response) {
     );
 };
 
-exports.controller = function (request, getParams, response) {
+/** @param {Features} features */
+exports.controller = function (request, getParams, response, features) {
   //request.logToConsole("admin/users.controller", request.method);
   if (request.method.toLowerCase() === 'post') {
     //var form = new formidable.IncomingForm();
     //form.parse(request, function(err, postParams) {
     //	if (err) console.log(err);
-    exports.handleRequest(request, request.body /*postParams*/, response);
+    exports.handleRequest(
+      request,
+      request.body /*postParams*/,
+      response,
+      features,
+    );
     //});
-  } else exports.handleRequest(request, getParams, response);
+  } else exports.handleRequest(request, getParams, response, features);
 };
