@@ -4,7 +4,6 @@
  **/
 
 const snip = require('../snip.js');
-const mongodb = require('./mongodb.js');
 const algoliasearch = require('algoliasearch');
 
 if (process.env['ALGOLIA_APP_ID'] === undefined)
@@ -19,14 +18,12 @@ const client = algoliasearch(
 
 const INDEX_NAME_BY_TYPE = {
   user: 'users',
-  track: 'tracks',
   post: 'posts',
   playlist: 'playlists',
 };
 
 const INDEX_TYPE_BY_NAME = {
   users: 'user',
-  tracks: 'track',
   posts: 'post',
   playlists: 'playlist',
 };
@@ -153,23 +150,6 @@ const searchByType = {
     // tested http://localhost:8080/search?q=pouet&context=header
     //     => { q: 'pouet' }
   },
-  track: function (q, cb) {
-    console.log('[search] search tracks', q);
-    const options = extractOptions(q);
-    return searchIndex.search(
-      'tracks',
-      q.q,
-      options,
-      makeCallbackTranslator('track', function (res) {
-        (res.hits || []).map(function (h) {
-          h.eId = h._id;
-          h._id = mongodb.ObjectId(h.post);
-          delete h.post;
-        });
-        cb(res);
-      }),
-    );
-  },
   post: function (q, cb) {
     console.log('[search] search posts', q);
     const options = extractOptions(q);
@@ -233,7 +213,7 @@ exports.query = function (q = {}, cb) {
   let queue;
   if (q._type) queue = [q._type];
   else if (q.uId) queue = ['post'];
-  else queue = ['user', 'track', 'post', 'playlist']; //Object.keys(searchByType);
+  else queue = ['user', 'post', 'playlist']; //Object.keys(searchByType);
   delete q._type;
   (function next() {
     const type = queue.pop();

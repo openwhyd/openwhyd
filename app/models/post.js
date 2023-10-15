@@ -13,7 +13,6 @@ const snip = require('../snip.js');
 const notif = require('../models/notif.js');
 const searchModel = require('../models/search.js');
 const activityModel = require('../models/activity.js');
-const trackModel = require('../models/track.js');
 const notifModel = require('../models/notif.js');
 
 const NB_POSTS = process.appParams?.nbPostsPerNewsfeedPage;
@@ -202,7 +201,6 @@ async function setPostLove(collection, pId, uId, state, handler) {
   const post = await collection.findOne({ _id: ObjectId('' + pId) });
   if (post && uId != post.uId) notif[state ? 'love' : 'unlove'](uId, post);
   handler?.(post);
-  if (post) trackModel.updateByEid(post.eId);
   if (state)
     activityModel.addLikeByPost(post, {
       id: uId,
@@ -319,11 +317,10 @@ exports.rePost = function (pId, repostObj, handler) {
         if (repostObj.uId != repostObj.repost.uId) {
           notif.repost(repostObj.uId, postObj);
           notif.post(postObj);
-          collection
-            .updateOne({ _id: ObjectId('' + pId) }, { $inc: { nbR: 1 } })
-            .then(() => {
-              trackModel.updateByEid(postObj.eId);
-            });
+          collection.updateOne(
+            { _id: ObjectId('' + pId) },
+            { $inc: { nbR: 1 } },
+          );
         }
         const post = await mongodb.collections['post'].findOne({
           _id: ObjectId('' + result.insertedId),
@@ -366,7 +363,6 @@ exports.deletePost = function (pId, uId, handler) {
           { _id: ObjectId('' + postObj.repost.pId) },
           { $inc: { nbR: -1 } },
         );
-      trackModel.updateByEid(postObj.eId);
     } else {
       handler(new Error('post not found'));
     }
@@ -383,10 +379,7 @@ exports.incrPlayCounter = function (pId, cb) {
   }
   mongodb.collections['post'].updateOne({ _id }, { $inc: { nbP: 1 } }).then(
     async (/*updateRes*/) => {
-      const post = await new Promise((resolve) =>
-        exports.fetchPostById(pId, resolve),
-      );
-      if (post?.eId) trackModel.updateByEid(post.eId);
+      await new Promise((resolve) => exports.fetchPostById(pId, resolve));
       cb?.({});
     },
     (err) => cb?.(err) ?? console.trace('incrPlayCounter', err),

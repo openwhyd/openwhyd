@@ -248,7 +248,7 @@ function fetchTheirPosts(q, uid, cb) {
 function fetchSearchPage(myUid, q, cb) {
   fetchResultsPerType({ q: q }, function (resultsPerType) {
     followModel.fetchSubscriptionSet(myUid, function (followedUids) {
-      const types = ['track', 'user', 'playlist'];
+      const types = ['user', 'playlist'];
       const results = {};
       (function next() {
         if (!types.length) {

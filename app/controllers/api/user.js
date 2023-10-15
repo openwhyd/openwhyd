@@ -147,11 +147,9 @@ const fieldSetters = {
         console.log('deleting previous profile pic: ' + user.img);
         await uploadCtr
           .deleteFile(user.img)
-          .catch((err) =>
+          .catch(() =>
             console.log(
               'failed to delete existing profile image in fieldSetters.img',
-              err,
-              err.stack,
             ),
           );
       }
