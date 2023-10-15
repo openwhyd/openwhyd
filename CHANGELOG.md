@@ -1,3 +1,10 @@
+# [1.58.0](https://github.com/openwhyd/openwhyd/compare/v1.57.1...v1.58.0) (2023-10-15)
+
+
+### Features
+
+* **auth:** allow Auth0 as authentication server, after bulk user import ([#705](https://github.com/openwhyd/openwhyd/issues/705)) ([a65723f](https://github.com/openwhyd/openwhyd/commit/a65723ffd7fe954d045df7753cbcca9799ab8df8)), closes [#593](https://github.com/openwhyd/openwhyd/issues/593) [#669](https://github.com/openwhyd/openwhyd/issues/669) [#658](https://github.com/openwhyd/openwhyd/issues/658)
+
 ## [1.57.1](https://github.com/openwhyd/openwhyd/compare/v1.57.0...v1.57.1) (2023-10-11)
 
 
