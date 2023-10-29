@@ -14,7 +14,6 @@ const inviteController = require('../invite.js');
 const userApi = require('../../controllers/api/user.js');
 const htmlRedirect = require('../../templates/logging.js').htmlRedirect;
 const genuine = require('../../genuine.js');
-const argon2 = require('argon2');
 const notifEmails = require('../../models/notifEmails.js');
 const mongodb = require('../../models/mongodb.js');
 
@@ -139,7 +138,6 @@ exports.registerInvitedUser = function (request, user, response) {
         name: user.name,
         email: user.email,
         pwd: userModel.md5(user.password),
-        arPwd: argon2.hash(user.password).toString(), // should convert to hex first?
         img: '/images/blank_user.gif', //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
       };
 
