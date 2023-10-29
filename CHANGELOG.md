@@ -1,3 +1,11 @@
+## [1.58.1](https://github.com/openwhyd/openwhyd/compare/v1.58.0...v1.58.1) (2023-10-29)
+
+
+### Bug Fixes
+
+* **deps:** remove argon2 ([a13479b](https://github.com/openwhyd/openwhyd/commit/a13479bca4a049816bc81de0978a97c3451ab3ec)), closes [#751](https://github.com/openwhyd/openwhyd/issues/751)
+* **tests:** update approval test snapshots ([6c251bc](https://github.com/openwhyd/openwhyd/commit/6c251bc64d695e010d3804113cbe35dbae8fc459))
+
 # [1.58.0](https://github.com/openwhyd/openwhyd/compare/v1.57.1...v1.58.0) (2023-10-15)
 
 
