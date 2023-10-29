@@ -1,3 +1,12 @@
+## [1.58.2](https://github.com/openwhyd/openwhyd/compare/v1.58.1...v1.58.2) (2023-10-29)
+
+
+### Bug Fixes
+
+* **message:** invite users to prepare for account migration ([535412c](https://github.com/openwhyd/openwhyd/commit/535412ccb84f6e30dd1235eaddf030ecf617531a))
+* **security:** use `rel=noopener` on links ([fe64ced](https://github.com/openwhyd/openwhyd/commit/fe64ced12140bf27d87eba0257bf46b86fc2a057))
+* **security:** use `rel=noopener` on remaining link ([2278818](https://github.com/openwhyd/openwhyd/commit/22788185ed8f12d243807ab72222723ca960a996))
+
 ## [1.58.1](https://github.com/openwhyd/openwhyd/compare/v1.58.0...v1.58.1) (2023-10-29)
 
 
