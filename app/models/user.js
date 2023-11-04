@@ -249,7 +249,8 @@ exports.fetchMulti = async function (q, options, handler) {
     .project(fields ?? {})
     .toArray();
   processUsers(array);
-  handler(array);
+  handler?.(array);
+  return array;
 };
 
 /**
@@ -598,14 +599,14 @@ exports.getEmailNotifsFreq = function (user) {
   return freq;
 };
 
-exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
+exports.fetchEmailNotifsToSend = async function (now = new Date()) {
   const criteria = {
     'pref.pendEN': { $gt: 0 }, // number of pending email notifs
   };
   if (!TESTING_DIGEST)
     criteria['pref.nextEN'] = { $lte: msToDigestTimestamp(now) }; // next email notif date
 
-  exports.fetchMulti(criteria, {}, cb);
+  return await exports.fetchMulti(criteria, {});
 };
 
 exports.incrementNotificationCounter = function (uId, handler) {
