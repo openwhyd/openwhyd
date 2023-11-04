@@ -38,6 +38,7 @@
     "test:approval:hot-tracks:start:approve": "npm run test:approval:hot-tracks:start -- --updateSnapshot",
     "test:approval:posting": "mocha test/approval/posting/posting.approval.tests.js $@",
     "test:approval:posting:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:posting -- $@",
+    "test:approval:posting:start:approve": "AUTO_APPROVE=true npm run test:approval:posting:start",
     "test:approval:posting:coverage": "npm run coverage:clear && COVERAGE=true npm run test:approval:posting:start -- --serial --timeout 10000 $@ && npm run coverage:report | grep post",
     "test:cypress:dev": "node_modules/.bin/cypress open --e2e --browser electron",
     "test:cypress": "node_modules/.bin/cypress run --browser electron",
