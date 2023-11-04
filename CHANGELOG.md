@@ -1,3 +1,10 @@
+## [1.58.3](https://github.com/openwhyd/openwhyd/compare/v1.58.2...v1.58.3) (2023-11-04)
+
+
+### Bug Fixes
+
+* **digest:** end worker process in case of error ([#752](https://github.com/openwhyd/openwhyd/issues/752)) ([39ad323](https://github.com/openwhyd/openwhyd/commit/39ad323d29f12c32e6d0b5e337ff243c8e9d24d9)), closes [#634](https://github.com/openwhyd/openwhyd/issues/634)
+
 ## [1.58.2](https://github.com/openwhyd/openwhyd/compare/v1.58.1...v1.58.2) (2023-10-29)
 
 
