@@ -1,3 +1,10 @@
+# [1.59.0](https://github.com/openwhyd/openwhyd/compare/v1.58.3...v1.59.0) (2023-11-04)
+
+
+### Features
+
+* **spam:** don't link to user's homepage ([5d0bcde](https://github.com/openwhyd/openwhyd/commit/5d0bcdeb4d171fb47845bb0c6ea8286d22da7355))
+
 ## [1.58.3](https://github.com/openwhyd/openwhyd/compare/v1.58.2...v1.58.3) (2023-11-04)
 
 
