@@ -4,13 +4,13 @@
 
 ### :chart_with_upwards_trend: Summary
 
-**128** modules&nbsp;&nbsp;&nbsp;&nbsp;**348** dependencies&nbsp;&nbsp;&nbsp;&nbsp;**1** errors&nbsp;&nbsp;&nbsp;&nbsp;**18** warnings&nbsp;&nbsp;&nbsp;&nbsp;**0** informational&nbsp;&nbsp;&nbsp;&nbsp;**0** ignored
+**129** modules&nbsp;&nbsp;&nbsp;&nbsp;**341** dependencies&nbsp;&nbsp;&nbsp;&nbsp;**1** errors&nbsp;&nbsp;&nbsp;&nbsp;**18** warnings&nbsp;&nbsp;&nbsp;&nbsp;**0** informational&nbsp;&nbsp;&nbsp;&nbsp;**0** ignored
 
 
 |rule|violations|ignored|explanation
 |:---|:---:|:---:|:---|
-|:warning:&nbsp;_no-circular_|**13**|**0**|This dependency is part of a circular relationship. You might want to revise your solution (i.e. use dependency inversion, make sure the modules have a single responsibility) |
-|:warning:&nbsp;_no-orphans_|**5**|**0**|This is an orphan module - it's likely not used (anymore?). Either use it or remove it. If it's logical this module is an orphan (i.e. it's a config file), add an exception for it in your dependency-cruiser configuration. By default this rule does not scrutinize dot-files (e.g. .eslintrc.js), TypeScript declaration files (.d.ts), tsconfig.json and some of the babel and webpack configs.|
+|:warning:&nbsp;_no-circular_|**12**|**0**|This dependency is part of a circular relationship. You might want to revise your solution (i.e. use dependency inversion, make sure the modules have a single responsibility) |
+|:warning:&nbsp;_no-orphans_|**6**|**0**|This is an orphan module - it's likely not used (anymore?). Either use it or remove it. If it's logical this module is an orphan (i.e. it's a config file), add an exception for it in your dependency-cruiser configuration. By default this rule does not scrutinize dot-files (e.g. .eslintrc.js), TypeScript declaration files (.d.ts), tsconfig.json and some of the babel and webpack configs.|
 |:exclamation:&nbsp;_not-to-unresolvable_|**1**|**0**|This module depends on a module that cannot be found ('resolved to disk'). If it's an npm module: add it to your package.json. In all other cases you likely already know what to do.|
 
 
@@ -31,20 +31,20 @@
 |:warning:&nbsp;_no-circular_|app/models/notifEmails.js|app/models/mongodb.js &rightarrow;<br/>app/models/user.js &rightarrow;<br/>app/models/post.js &rightarrow;<br/>app/models/notif.js &rightarrow;<br/>app/models/notifEmails.js|
 |:warning:&nbsp;_no-circular_|app/models/notifEmails.js|app/templates/notif.js &rightarrow;<br/>app/models/featuredUsers.js &rightarrow;<br/>app/models/user.js &rightarrow;<br/>app/models/post.js &rightarrow;<br/>app/models/notif.js &rightarrow;<br/>app/models/notifEmails.js|
 |:warning:&nbsp;_no-circular_|app/models/post.js|app/models/mongodb.js &rightarrow;<br/>app/models/user.js &rightarrow;<br/>app/models/post.js|
-|:warning:&nbsp;_no-circular_|app/models/post.js|app/models/track.js &rightarrow;<br/>app/models/mongodb.js &rightarrow;<br/>app/models/user.js &rightarrow;<br/>app/models/post.js|
+|:warning:&nbsp;_no-circular_|app/models/track.js|app/models/mongodb.js &rightarrow;<br/>app/models/user.js &rightarrow;<br/>app/models/post.js &rightarrow;<br/>app/models/notif.js &rightarrow;<br/>app/models/notifEmails.js &rightarrow;<br/>app/templates/notif.js &rightarrow;<br/>app/models/track.js|
 |:warning:&nbsp;_no-circular_|app/templates/notif.js|app/models/mongodb.js &rightarrow;<br/>app/models/user.js &rightarrow;<br/>app/models/post.js &rightarrow;<br/>app/models/notif.js &rightarrow;<br/>app/models/notifEmails.js &rightarrow;<br/>app/templates/notif.js|
-|:warning:&nbsp;_no-circular_|app/templates/notif.js|app/models/track.js &rightarrow;<br/>app/models/mongodb.js &rightarrow;<br/>app/models/user.js &rightarrow;<br/>app/models/post.js &rightarrow;<br/>app/models/notif.js &rightarrow;<br/>app/models/notifEmails.js &rightarrow;<br/>app/templates/notif.js|
 |:warning:&nbsp;_no-orphans_|app/controllers/admin/testUpload.js||
 |:warning:&nbsp;_no-orphans_|app/controllers/iframe.js||
 |:warning:&nbsp;_no-orphans_|app/controllers/now.js||
 |:warning:&nbsp;_no-orphans_|app/controllers/subdir.js||
+|:warning:&nbsp;_no-orphans_|app/domain/OpenWhydFeatures.js||
 |:warning:&nbsp;_no-orphans_|app/models/htmlDom.js||
 
 
 </details>
 
 ---
-[dependency-cruiser@13.1.5](https://www.github.com/sverweij/dependency-cruiser) / 2023-08-31T08:45:01.791Z
+[dependency-cruiser@15.5.0](https://www.github.com/sverweij/dependency-cruiser) / 2023-12-23T17:10:39.358Z
 
 ## DDot graph
 
@@ -151,15 +151,15 @@ W["search.js"]
 11["comment.js"]
 21["facebook.js"]
 28["analytics.js"]
-3S["emailAdminsOnly.js"]
-3T["emailFake.js"]
-3U["emailSendgrid.js"]
-3V["htmlDom.js"]
-3W["logging.js"]
-3X["searchAlgolia.js"]
-3Y["searchElastic.js"]
-3Z["searchMongo.js"]
-40["solrIndex.js"]
+3V["emailAdminsOnly.js"]
+3W["emailFake.js"]
+3X["emailSendgrid.js"]
+3Y["htmlDom.js"]
+3Z["logging.js"]
+40["searchAlgolia.js"]
+41["searchElastic.js"]
+42["searchMongo.js"]
+43["solrIndex.js"]
 end
 H["snip.js"]
 subgraph O["templates"]
@@ -189,10 +189,14 @@ subgraph 32["my-img"]
 33["index.js"]
 35["node-magick.js"]
 end
-subgraph 3O["my-http-wrapper"]
-subgraph 3P["http"]
-3Q["Application.js"]
-3R["index.js"]
+subgraph 3O["auth0"]
+3P["features.js"]
+3Q["index.js"]
+end
+subgraph 3R["my-http-wrapper"]
+subgraph 3S["http"]
+3T["Application.js"]
+3U["index.js"]
 end
 end
 end
@@ -209,10 +213,9 @@ subgraph 3K["user"]
 3L["User.js"]
 end
 end
-subgraph 41["workers"]
-42["fbGroupImport.js"]
-43["hotSnapshot.js"]
-44["notifEmails.js"]
+subgraph 44["workers"]
+45["fbGroupImport.js"]
+46["notifEmails.js"]
 end
 end
 subgraph 6["fs"]
@@ -249,7 +252,6 @@ B-->9
 E-->F
 E-->M
 E-->W
-E-->R
 E-->H
 E-->5
 F-->G
@@ -280,7 +282,6 @@ Q-->9
 R-->T
 R-->C
 R-->5
-T-->H
 U-->C
 U-->V
 V-->6
@@ -304,7 +305,6 @@ Y-->Z
 11-->M
 11-->E
 11-->H
-12-->F
 12-->G
 12-->E
 12-->X
@@ -345,7 +345,6 @@ Y-->Z
 1B-->C
 1B-->19
 1C-->5
-1C-->R
 1C-->H
 1C-->19
 1D-->5
@@ -462,6 +461,7 @@ Y-->Z
 2K-->9
 2K-->2M
 2K-->2N
+2K-->Y
 2K-->V
 2L-->A
 2M-->H
@@ -547,37 +547,33 @@ Y-->Z
 3H-->13
 3N-->3L
 3N-->5
-3Q-->1F
-3Q-->3J
-3Q-->3F
-3Q-->3N
-3Q-->E
-3Q-->6
-3Q-->I
-3R-->3Q
-3S-->3T
-3S-->3U
-3U-->H
-3U-->J
-3U-->K
-3W-->H
-3W-->2R
-3W-->20
-3W-->C
-3W-->5
-3W-->I
-3W-->K
+3P-->3Q
+3T-->1F
+3T-->6
+3T-->I
+3U-->3T
+3V-->3W
+3V-->3X
 3X-->H
-3X-->5
-3Y-->I
-3Z-->Z
-40-->I
+3X-->J
+3X-->K
+3Z-->3Q
+3Z-->H
+3Z-->2R
+3Z-->20
+3Z-->C
+3Z-->5
+3Z-->I
+3Z-->K
+40-->H
+41-->I
 42-->Z
-43-->R
-44-->2U
-44-->C
-44-->B
-44-->9
+43-->I
+45-->Z
+46-->2U
+46-->C
+46-->B
+46-->9
 ```
 
 ## Full dependency graph by arkit
