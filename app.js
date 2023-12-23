@@ -68,6 +68,8 @@ const dbCreds = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
 };
 
+const useAuth0AsIdentityProvider = !!process.env.AUTH0_ISSUER_BASE_URL;
+
 const params = (process.appParams = {
   // server level
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
@@ -77,8 +79,9 @@ const params = (process.appParams = {
   isOnTestDatabase: dbCreds.mongoDbDatabase === 'openwhyd_test',
   color: true,
 
-  // secrets
-  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET,
+  // authentication
+  useAuth0AsIdentityProvider,
+  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET, // used by legacy auth
 
   // workers and general site logic
   searchModule:
@@ -143,9 +146,33 @@ function start() {
     throw new Error(`missing env var: WHYD_SESSION_SECRET`);
 
   const myHttp = require('./app/lib/my-http-wrapper/http');
+  const { makeFeatures } = require('./app/domain/OpenWhydFeatures');
+  const {
+    userCollection,
+  } = require('./app/infrastructure/mongodb/UserCollection');
+  const { ImageStorage } = require('./app/infrastructure/ImageStorage.js');
+  const { unsetPlaylist } = require('./app/models/post.js');
+  const { makeAuthFeatures } = require('./app/lib/auth0/features.js');
+
+  // Initialize features
+  /** @typedef {import('./app/domain/api/Features').Features} Features*/
+  /** @type {Features & Partial<{auth: import('./app/lib/my-http-wrapper/http/AuthFeatures').AuthFeatures}>} */
+  const features = makeFeatures({
+    userRepository: userCollection,
+    imageRepository: new ImageStorage(),
+    releasePlaylistPosts: async (userId, playlistId) =>
+      new Promise((resolve) => unsetPlaylist(userId, playlistId, resolve)),
+  });
+
+  // Inject Auth0 user auth and management features, if enabled
+  if (process.appParams.useAuth0AsIdentityProvider) {
+    features.auth = makeAuthFeatures(process.env);
+  }
+
+  // Legacy user auth and session management
   const session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
-  const sessionMiddleware = session({
+  const legacySessionMiddleware = session({
     secret: process.env.WHYD_SESSION_SECRET,
     store: new MongoStore({
       url: makeMongoUrl(dbCreds),
@@ -159,11 +186,15 @@ function start() {
     resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
     saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
   });
+
   const serverOptions = {
+    features,
     urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
-    sessionMiddleware,
+    sessionMiddleware: useAuth0AsIdentityProvider
+      ? null
+      : legacySessionMiddleware,
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       require('./app/templates/error.js').renderErrorResponse(

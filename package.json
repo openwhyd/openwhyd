@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.57.1",
+  "version": "1.59.1",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -38,6 +38,7 @@
     "test:approval:hot-tracks:start:approve": "npm run test:approval:hot-tracks:start -- --updateSnapshot",
     "test:approval:posting": "mocha test/approval/posting/posting.approval.tests.js $@",
     "test:approval:posting:start": "START_WITH_ENV_FILE='./env-vars-testing.conf' npm run test:approval:posting -- $@",
+    "test:approval:posting:start:approve": "AUTO_APPROVE=true npm run test:approval:posting:start",
     "test:approval:posting:coverage": "npm run coverage:clear && COVERAGE=true npm run test:approval:posting:start -- --serial --timeout 10000 $@ && npm run coverage:report | grep post",
     "test:cypress:dev": "node_modules/.bin/cypress open --e2e --browser electron",
     "test:cypress": "node_modules/.bin/cypress run --browser electron",
@@ -61,12 +62,13 @@
   },
   "dependencies": {
     "algoliasearch": "4.20.0",
-    "argon2": "^0.31.0",
     "async": "*",
+    "auth0": "^3.7.2",
     "colors": "*",
     "connect-mongo": "^3.2.0",
     "dd-trace": "^4.15.0",
     "express": "^4.18.2",
+    "express-openid-connect": "^2.12.0",
     "express-session": "^1.17.3",
     "formidable": "^2.1.1",
     "hogan.js": "3.0.2",
@@ -75,7 +77,7 @@
     "playemjs": "1.2.2",
     "q-set": "^2.0.8",
     "request": "2.88.2",
-    "wait-on": "^7.0.1"
+    "wait-on": "^7.2.0"
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.38.0",
@@ -85,10 +87,10 @@
     "@typescript-eslint/parser": "^6.7.2",
     "approvals": "^6.2.2",
     "ava": "^5.3.1",
-    "cypress": "^13.2.0",
+    "cypress": "^13.3.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
-    "eslint": "^8.49.0",
+    "eslint": "^8.51.0",
     "eslint-config-async": "^2.0.2",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-deprecation": "^2.0.0",
