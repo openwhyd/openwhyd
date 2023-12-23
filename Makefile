@@ -76,6 +76,14 @@ test-approval: node_modules public/js/bookmarklet.js ## Run approval tests again
 	npm run test:approval:posting:start
 	docker compose stop
 
+test-approval-update: node_modules public/js/bookmarklet.js ## Update snapshots of approval tests against a local db
+	docker compose stop
+	docker compose up --detach mongo
+	npm run test:approval:routes:start:update
+	npm run test:approval:hot-tracks:start:approve
+	npm run test:approval:posting:start:approve
+	docker compose stop
+
 test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker compose up --detach --build mongo web
 	make docker-seed
@@ -110,4 +118,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build dev down start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-in-docker ci release help
+.PHONY: install build dev down start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help

@@ -36,6 +36,9 @@ function addUserInfo(userSub, mySub) {
   return userSub;
 }
 
+/** @typedef {{auth?: import('../../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} Features */
+
+/** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const publicActions = {
   subscriptions: function (p, cb) {
     if (!p || !p.id) cb({ error: 'user not found' });
@@ -99,12 +102,12 @@ const publicActions = {
         });
       });
   },
-  delete: function (p, cb) {
+  delete: function (p, cb, features) {
     if (!p || !p.loggedUser || !p.loggedUser.id)
       cb({ error: 'Please log in first' });
     else {
       console.log('deleting user... ', p.loggedUser.id);
-      userModel.delete({ _id: p.loggedUser.id }, function (r) {
+      userModel.delete(features, { _id: p.loggedUser.id }, function (r) {
         console.log('deleted user', p.loggedUser.id, r);
       });
       notifEmails.sendUserDeleted(p.loggedUser.id, p.loggedUser.name);
@@ -133,9 +136,10 @@ function defaultSetter(fieldName) {
   };
 }
 
+/** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const fieldSetters = {
-  name: function (p, cb) {
-    userModel.renameUser(p._id, p.name, cb);
+  name: function (p, cb, features) {
+    userModel.renameUser(features, p._id, p.name, cb);
   },
   img: function (p, cb) {
     userModel.fetchByUid(p._id, async function (user) {
@@ -177,29 +181,36 @@ const fieldSetters = {
       else userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
     });
   },
-  pwd: function (p, cb) {
+  pwd: function (p, cb, features) {
     userModel.fetchByUid(p._id, function (item) {
-      if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
+      if (features.auth?.sendPasswordChangeRequest) {
+        features.auth
+          .sendPasswordChangeRequest(item.email)
+          .then(() =>
+            cb({ error: 'We sent you an email to change your password.' }),
+          );
+      } else if (item && item.pwd == userModel.md5(p.oldPwd || '')) {
         defaultSetter('pwd')({ _id: p._id, pwd: userModel.md5(p.pwd) }, cb);
         notifEmails.sendPasswordUpdated(p._id, item.email);
-        // TODO: inform Auth0, if applicable
       } else cb({ error: 'Your current password is incorrect' });
     });
   },
-  handle: function (p, cb) {
-    userModel.setHandle(p._id, p.handle, cb);
-    // TODO: inform Auth0, if applicable
+  handle: function (p, cb, features) {
+    userModel.setHandle(features, p._id, p.handle, cb);
   },
-  email: function (p, cb) {
+  email: function (p, cb, features) {
     p.email = emailModel.normalize(p.email);
     if (!emailModel.validate(p.email))
       cb({ error: 'This email address is invalid' });
     else
-      userModel.fetchByEmail(p.email, function (existingUser) {
+      userModel.fetchByEmail(p.email, async function (existingUser) {
         if (!existingUser) {
           notifEmails.sendEmailUpdated(p._id, p.email);
-          // TODO: inform Auth0, if applicable
-          defaultSetter('email')(p, cb);
+          const savedUser = await new Promise((resolve) =>
+            defaultSetter('email')(p, resolve),
+          );
+          if (savedUser) features.auth?.setUserEmail(p._id, p.email);
+          cb(savedUser);
         } else if ('' + existingUser._id == p._id)
           // no change
           cb({ email: p.email });
@@ -314,14 +325,14 @@ function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
 
-function handlePublicRequest(loggedUser, reqParams, localRendering) {
+function handlePublicRequest(loggedUser, reqParams, localRendering, features) {
   // transforming sequential parameters to named parameters
   reqParams = snip.translateFields(reqParams, SEQUENCED_PARAMETERS);
 
   const handler = publicActions[reqParams.action];
   if (handler) {
     reqParams.loggedUser = loggedUser;
-    handler(reqParams, localRendering);
+    handler(reqParams, localRendering, features);
     return true;
   } else if (reqParams.id) {
     reqParams.excludePrivateFields = true;
@@ -342,7 +353,7 @@ function handlePublicRequest(loggedUser, reqParams, localRendering) {
   }
 }
 
-function handleAuthRequest(loggedUser, reqParams, localRendering) {
+function handleAuthRequest(loggedUser, reqParams, localRendering, features) {
   // make sure a registered user is logged, or return an error page
   if (false == loggedUser)
     return localRendering({ error: 'user not logged in' });
@@ -363,7 +374,7 @@ function handleAuthRequest(loggedUser, reqParams, localRendering) {
         const fieldName = toUpdate.pop();
         console.log('calling field setter: ', fieldName);
         reqParams._id = loggedUser._id; // force the logged user id
-        fieldSetters[fieldName](reqParams, setNextField);
+        fieldSetters[fieldName](reqParams, setNextField, features);
       }
     })();
   } else {
@@ -372,14 +383,15 @@ function handleAuthRequest(loggedUser, reqParams, localRendering) {
 }
 
 // old name: setUserFields()
-function handleRequest(loggedUser, reqParams, localRendering) {
+function handleRequest(loggedUser, reqParams, localRendering, features) {
   try {
-    if (handlePublicRequest(loggedUser, reqParams, localRendering)) return true;
+    if (handlePublicRequest(loggedUser, reqParams, localRendering, features))
+      return true;
   } catch (e) {
     console.error('user api error', e, e.stack);
     return localRendering({ error: e });
   }
-  return handleAuthRequest(loggedUser, reqParams, localRendering);
+  return handleAuthRequest(loggedUser, reqParams, localRendering, features);
 }
 
 // these error messages are displayed to the user, we don't need to log them
@@ -388,33 +400,34 @@ const USER_ERRORS = [
   'This username is taken by another user',
 ];
 
-exports.controller = function (request, reqParams, response) {
+function localRendering(reqParams, r) {
+  if (r) delete r.pwd;
+  if (!r || r.error) {
+    const errMessage = (r || {}).error || r;
+    const isUserError =
+      typeof errMessage === 'string' &&
+      USER_ERRORS.some((userError) => errMessage.includes(userError));
+    if (!isUserError)
+      console.log(
+        'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
+        errMessage,
+      );
+  }
+
+  return reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r;
+}
+
+/** @param {Features} features */
+exports.controller = function (request, reqParams, response, features) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
-
-  function localRendering(r) {
-    if (r) delete r.pwd;
-    if (!r || r.error) {
-      const errMessage = (r || {}).error || r;
-      const isUserError =
-        typeof errMessage === 'string' &&
-        USER_ERRORS.some((userError) => errMessage.includes(userError));
-      if (!isUserError)
-        console.log(
-          'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
-          errMessage,
-        );
-    }
-    response.renderJSON(
-      reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r,
-    );
-  }
 
   const loggedUser = request.checkLogin(/*response*/);
   handleRequest(
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,
-    localRendering,
+    (result) => response.renderJSON(localRendering(reqParams, result)),
+    features,
   );
 };
 

@@ -2,6 +2,7 @@ const http = require('http');
 const querystring = require('querystring');
 const errorTemplate = require('../templates/error.js');
 const snip = require('../snip.js');
+const auth0 = require('../lib/auth0');
 
 const genReqLogLine = ({ head, method, path, params, suffix }) =>
   !process.appParams.color
@@ -51,17 +52,6 @@ http.IncomingMessage.prototype.getReferer = function () {
 };
 
 // ========= COOKIE STUFF
-
-/**
- * Generates a user session cookie string
- * that can be supplied to a Set-Cookie HTTP header.
- */
-/*
-exports.makeCookie = function(user) {
-	var date = new Date((new Date()).getTime() + 1000 * 60 * 60 * 24 * 365);
-	return 'whydUid="'+(user.id || '')+'"; Expires=' + date.toGMTString();
-};
-*/
 
 /**
  * Transforms cookies found in the request into an object
@@ -139,35 +129,43 @@ http.IncomingMessage.prototype.getFbUid = function () {
   return this.getFbUid();
 };
 
+const { useAuth0AsIdentityProvider } = process.appParams;
+
 /**
- * Returns the logged in user's uid, from its openwhyd session cookie
+ * Returns the logged in user's uid
  */
-http.IncomingMessage.prototype.getUid = function () {
-  /*
-	var uid = (this.getCookies() || {})["whydUid"];
-	if (uid) uid = uid.replace(/\"/g, "");
-	//if (uid) console.log("found openwhyd session cookie", uid);
-	return uid;
-	*/
-  return (this.session || {}).whydUid;
-};
+http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
+  ? function () {
+      const userId = auth0.getAuthenticatedUserId(this);
+      if (userId) {
+        this.session = this.session || {};
+        this.session.whydUid = userId; // TODO: is this session variable still necessary?
+      }
+      return userId;
+    }
+  : function () {
+      return (this.session || {}).whydUid;
+    };
 
 /**
  * Returns the logged in user as an object {_id, id, fbId, name, img}
+ * @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead.
  */
 http.IncomingMessage.prototype.getUser = function () {
   const uid = this.getUid();
-  if (uid) {
-    const user = mongodb.usernames[uid];
-    if (user) user.id = '' + user._id;
-    return user;
-  } else return null;
+  if (!uid) return null;
+  const user = mongodb.usernames[uid];
+  if (!user) console.trace(`logged user ${uid} not found in user cache`);
+  else user.id = '' + user._id;
+  return user ?? null;
 };
 
 //http.IncomingMessage.prototype.getUserFromFbUid = mongodb.getUserFromFbUid;
 
+/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
 http.IncomingMessage.prototype.getUserFromId = mongodb.getUserFromId;
 
+/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
 http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId;
 
 // ========= LOGIN/SESSION/PRIVILEGES STUFF

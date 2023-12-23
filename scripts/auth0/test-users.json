@@ -1,0 +1,28 @@
+[
+  {
+    "user_id": "000000000000000000000001",
+    "email": "test@openwhyd.org",
+    "username": "admin",
+    "name": "admin",
+    "custom_password_hash": {
+      "algorithm": "md5",
+      "hash": {
+        "encoding": "hex",
+        "value": "21232f297a57a5a743894a0e4a801fc3"
+      }
+    }
+  },
+  {
+    "user_id": "000000000000000000000002",
+    "email": "dummy@openwhyd.org",
+    "username": "dummy",
+    "name": "dummy",
+    "custom_password_hash": {
+      "algorithm": "md5",
+      "hash": {
+        "encoding": "hex",
+        "value": "21232f297a57a5a743894a0e4a801fc3"
+      }
+    }
+  }
+]

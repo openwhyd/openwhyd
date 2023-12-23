@@ -3,6 +3,7 @@
 .gitignore
 .git
 .env
+.token
 .port
 .DS_Store
 Dockerfile
