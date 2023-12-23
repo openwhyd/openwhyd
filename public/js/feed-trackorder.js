@@ -21,7 +21,7 @@ const init = function () {
       success: function (res) {
         cb(res);
       },
-      error: function (e) {
+      error: function () {
         cb();
       },
     });
@@ -29,7 +29,7 @@ const init = function () {
 
   $('#playlistTrackOrderSubmit').click(function () {
     const order = [];
-    const posts = $('.post').each(function () {
+    $('.post').each(function () {
       order.push($(this).attr('data-pid'));
     });
     submitTrackOrder(plId, order, function (res) {

@@ -39,7 +39,7 @@ test.before(async (t) => {
     testDataCollections.user.find(({ _id }) => id === _id.toString());
 });
 
-test.after(async (t) => {
+test.after(async () => {
   if (!DONT_KILL) await openwhyd.release();
 });
 

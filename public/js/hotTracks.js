@@ -164,20 +164,6 @@ global.timeAgoWithString = function (timestamp) {
     { 'year(s)': 12 },
   ];
 
-  const padNumber = function (str, n) {
-    let ret = '' + str;
-    while (ret.length < n) {
-      // pad with leading zeroes
-      ret = '0' + ret;
-    }
-    return ret;
-  };
-
-  const renderTime = function (t) {
-    var t = new Date(t);
-    return t.getHours() + ':' + padNumber(t.getMinutes(), 2);
-  };
-
   const renderTimestamp = function (timestamp) {
     let t = timestamp / 1000,
       lastScale = 'second(s)';
@@ -200,16 +186,6 @@ global.timeAgoWithString = function (timestamp) {
     const sameYear = false; //(new Date()).getFullYear() == t.getFullYear();
     return MONTHS_SHORT[t.getMonth()] + (sameYear ? '' : ' ' + t.getFullYear());
   };
-
-  let date = new Date(timestamp);
-  date =
-    renderTime(date) +
-    ' - ' +
-    date.getDate() +
-    ' ' +
-    MONTHS_SHORT[date.getMonth()] +
-    ' ' +
-    date.getFullYear();
 
   let ago = new Date() - timestamp;
   if (ago < 1000 * 60 * 60 * 24 * 32) {

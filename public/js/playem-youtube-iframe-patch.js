@@ -52,7 +52,7 @@ function YoutubeIframePlayer() {
     this.safeClientCall('onApiReady', this);
   }
 
-  Player.prototype.safeCall = function (fctName, param) {
+  Player.prototype.safeCall = function (fctName) {
     if (!this.iframeReady)
       return console.warn('YT-iframe not ready => ignoring call to', fctName);
     try {
@@ -137,7 +137,7 @@ function YoutubeIframePlayer() {
     }
   };
 
-  Player.prototype.getTrackPosition = function (callback) {
+  Player.prototype.getTrackPosition = function () {
     this.safeCall('getTrackPosition'); // -> will call onTrackInfo()
   };
 

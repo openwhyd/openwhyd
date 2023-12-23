@@ -9,7 +9,6 @@ const get = promisify(apiClient.get);
 const logout = promisify(apiClient.logout);
 const loginAs = promisify(apiClient.loginAs);
 const signupAs = promisify(apiClient.signupAs);
-const getUser = promisify(apiClient.getUser);
 
 const genSecureUser = (() => {
   let globalNumber = 0;

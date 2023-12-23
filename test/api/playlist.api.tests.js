@@ -2,7 +2,7 @@ const assert = require('assert');
 const util = require('util');
 const request = require('request');
 
-const { URL_PREFIX, DUMMY_USER } = require('../fixtures.js');
+const { DUMMY_USER } = require('../fixtures.js');
 const { ObjectId } = require('../approval-tests-helpers.js');
 const api = require('../api-client.js');
 const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
