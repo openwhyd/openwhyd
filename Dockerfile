@@ -1,4 +1,4 @@
-FROM node:18.17.1-slim AS build
+FROM node:20.10.0-slim AS build
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,7 +20,7 @@ RUN curl -sf https://gobinaries.com/tj/node-prune | sh
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
 # RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js
 
-FROM node:18.17.1-slim
+FROM node:20.10.0-slim
 # note: keep nodejs version above in sync with the one in .nvmrc + don't forget to append the corresponding sha256 hash
 
 # Install runtime dependencies

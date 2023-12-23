@@ -13,7 +13,7 @@
       "cwd": "${workspaceRoot}",
       "envFile": "${workspaceRoot}/env-vars-testing.conf",
       "program": "${workspaceRoot}/app.js",
-      "runtimeVersion": "18.17.1", // to keep in sync with .nvmrc
+      "runtimeVersion": "20.10.0", // to keep in sync with .nvmrc
       "args": [
         "--fakeEmail",
         "--digestInterval",
