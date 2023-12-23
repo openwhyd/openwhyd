@@ -6,7 +6,7 @@ Here's the login flow:
 - in the case of a successfull login, `renderRedirect()` will indirectly initiate a cookie session, by storing the user id in `request.session`
 - the cookie will be created by `express-session` which is attached to the web framework in the `start()` function of [`/app.js`](/app.js) (main entry point of the web app)
 - the session is stored in the mongodb database by `connect-mongo`
-- the session will be checked in all following HTTP requests received by openwhyd's web app, if they contain the `whydUid` cookie in their headers
+- the session will be checked in all following HTTP requests received by openwhyd's web app, if they contain the `whydUid` cookie in their headers, thru the `getUid()` or `getUser()` methods added by `logging.js` to `IncomingMessage.prototype`
 
 Notes:
 

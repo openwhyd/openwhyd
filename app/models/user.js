@@ -249,7 +249,8 @@ exports.fetchMulti = async function (q, options, handler) {
     .project(fields ?? {})
     .toArray();
   processUsers(array);
-  handler(array);
+  handler?.(array);
+  return array;
 };
 
 /**
@@ -350,7 +351,8 @@ exports.save = function (pUser, handler) {
   );
 };
 
-exports.delete = function (criteria, handler) {
+/** Delete a user account. */
+exports.delete = function (features, criteria, handler) {
   criteria = criteria || {};
   if (criteria._id) {
     criteria._id = ObjectId('' + criteria._id);
@@ -377,6 +379,7 @@ exports.delete = function (criteria, handler) {
         searchModel.deleteDoc('user', '' + criteria._id);
         delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
+        features.auth?.deleteUser(criteria._id.toString());
         // todo: delete user avatar file
       });
       // TODO: delete tracks
@@ -596,14 +599,14 @@ exports.getEmailNotifsFreq = function (user) {
   return freq;
 };
 
-exports.fetchEmailNotifsToSend = function (now = new Date(), cb) {
+exports.fetchEmailNotifsToSend = async function (now = new Date()) {
   const criteria = {
     'pref.pendEN': { $gt: 0 }, // number of pending email notifs
   };
   if (!TESTING_DIGEST)
     criteria['pref.nextEN'] = { $lte: msToDigestTimestamp(now) }; // next email notif date
 
-  exports.fetchMulti(criteria, {}, cb);
+  return await exports.fetchMulti(criteria, {});
 };
 
 exports.incrementNotificationCounter = function (uId, handler) {
@@ -697,7 +700,8 @@ exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
     });
 };
 
-exports.setHandle = function (uId, username, handler) {
+/** @param {{auth?: import('../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} features */
+exports.setHandle = function (features, uId, username, handler) {
   function res(result) {
     handler && handler(result);
   }
@@ -726,25 +730,29 @@ exports.setHandle = function (uId, username, handler) {
         user.handle = username;
         exports.save(user, function () {
           handler({ ok: 1, user: user, username: username, handle: username });
+          features.auth?.setUserHandle(uId, username);
         });
       });
   });
 };
 
-exports.renameUser = function (uid, name, callback) {
+/** @param {{auth?: import('../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} features */
+exports.renameUser = function (features, uid, name, callback) {
   function whenDone() {
     console.log('renameUser last step: save the actual user record');
-    //@ts-ignore
     exports.save({ _id: uid, name: name }, callback);
   }
   const cols = ['follow', 'post'];
   uid = '' + uid;
   const user = mongodb.getUserFromId(uid);
   const oldName = (user || {}).name;
-  if (!user) callback({ error: 'renameUser error: user not found' });
-  else if (oldName == name) callback({});
-  // nothing to do
-  else
+  if (!user) {
+    callback({ error: 'renameUser error: user not found' });
+  } else if (oldName == name) {
+    callback({}); // nothing to do
+  } else {
+    features.auth?.setUserProfileName(uid, name);
+    // update user name in other collections where it's mentionned
     (function next() {
       let col;
       if (!(col = cols.pop())) return whenDone();
@@ -776,6 +784,7 @@ exports.renameUser = function (uid, name, callback) {
         },
       );
     })();
+  }
 };
 
 exports.fetchUserFields = function (subList, attrToCopy, cb) {

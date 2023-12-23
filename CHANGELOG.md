@@ -1,3 +1,48 @@
+## [1.59.1](https://github.com/openwhyd/openwhyd/compare/v1.59.0...v1.59.1) (2023-12-23)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump cypress from 13.2.0 to 13.3.0 ([#742](https://github.com/openwhyd/openwhyd/issues/742)) ([684c0f0](https://github.com/openwhyd/openwhyd/commit/684c0f00f5b307612be31e78b2ad64b2b9f28d9a))
+
+# [1.59.0](https://github.com/openwhyd/openwhyd/compare/v1.58.3...v1.59.0) (2023-11-04)
+
+
+### Features
+
+* **spam:** don't link to user's homepage ([5d0bcde](https://github.com/openwhyd/openwhyd/commit/5d0bcdeb4d171fb47845bb0c6ea8286d22da7355))
+
+## [1.58.3](https://github.com/openwhyd/openwhyd/compare/v1.58.2...v1.58.3) (2023-11-04)
+
+
+### Bug Fixes
+
+* **digest:** end worker process in case of error ([#752](https://github.com/openwhyd/openwhyd/issues/752)) ([39ad323](https://github.com/openwhyd/openwhyd/commit/39ad323d29f12c32e6d0b5e337ff243c8e9d24d9)), closes [#634](https://github.com/openwhyd/openwhyd/issues/634)
+
+## [1.58.2](https://github.com/openwhyd/openwhyd/compare/v1.58.1...v1.58.2) (2023-10-29)
+
+
+### Bug Fixes
+
+* **message:** invite users to prepare for account migration ([535412c](https://github.com/openwhyd/openwhyd/commit/535412ccb84f6e30dd1235eaddf030ecf617531a))
+* **security:** use `rel=noopener` on links ([fe64ced](https://github.com/openwhyd/openwhyd/commit/fe64ced12140bf27d87eba0257bf46b86fc2a057))
+* **security:** use `rel=noopener` on remaining link ([2278818](https://github.com/openwhyd/openwhyd/commit/22788185ed8f12d243807ab72222723ca960a996))
+
+## [1.58.1](https://github.com/openwhyd/openwhyd/compare/v1.58.0...v1.58.1) (2023-10-29)
+
+
+### Bug Fixes
+
+* **deps:** remove argon2 ([a13479b](https://github.com/openwhyd/openwhyd/commit/a13479bca4a049816bc81de0978a97c3451ab3ec)), closes [#751](https://github.com/openwhyd/openwhyd/issues/751)
+* **tests:** update approval test snapshots ([6c251bc](https://github.com/openwhyd/openwhyd/commit/6c251bc64d695e010d3804113cbe35dbae8fc459))
+
+# [1.58.0](https://github.com/openwhyd/openwhyd/compare/v1.57.1...v1.58.0) (2023-10-15)
+
+
+### Features
+
+* **auth:** allow Auth0 as authentication server, after bulk user import ([#705](https://github.com/openwhyd/openwhyd/issues/705)) ([a65723f](https://github.com/openwhyd/openwhyd/commit/a65723ffd7fe954d045df7753cbcca9799ab8df8)), closes [#593](https://github.com/openwhyd/openwhyd/issues/593) [#669](https://github.com/openwhyd/openwhyd/issues/669) [#658](https://github.com/openwhyd/openwhyd/issues/658)
+
 ## [1.57.1](https://github.com/openwhyd/openwhyd/compare/v1.57.0...v1.57.1) (2023-10-11)
 
 

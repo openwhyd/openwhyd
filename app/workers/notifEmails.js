@@ -12,7 +12,7 @@ const digest = require('../controllers/private/digest.js');
 const DIGEST_INTERVAL = parseInt(config.digestInterval) || -1;
 let timer = null;
 
-function processUser(u, cb) {
+async function processUser(u) {
   let freq = 0;
   const cleanPref = {}; // daily (by default)
   for (const i in u.pref)
@@ -32,59 +32,61 @@ function processUser(u, cb) {
   };
   console.log('[notif] ' + u._id + ':', JSON.stringify(options));
 
-  function done() {
-    // set next digest date
-    cleanPref.pendEN = 0; // reset the notification counter
-    userModel.setPref(u._id, cleanPref, function (updatedUser) {
-      console.log(
-        '[notif] ' + u._id + ' => next digest date: ',
-        ((updatedUser || {}).pref || {}).nextEN,
-      );
-      cb();
-    });
-  }
-
   // render and send digest (if not empty)
   if (freq > 0) {
-    const renderingLabel = '[notif] ' + u._id + ' rendering';
+    const renderingLabel = '[notif] rendering for user ' + u._id;
     console.log(renderingLabel, '...');
     console.time(renderingLabel);
-    digest.fetchAndGenerateNotifDigest(u, options, function (email) {
-      console.timeEnd(renderingLabel);
-      if (email)
+    const email = await new Promise((resolve) =>
+      digest.fetchAndGenerateNotifDigest(u, options, resolve),
+    ); // TODO: catch errors from fetchAndGenerateNotifDigest
+    console.timeEnd(renderingLabel);
+    if (email) {
+      const res = await new Promise((resolve) =>
         emailModel.email(
           u.email,
           email.subject,
           email.bodyText,
           email.bodyHtml,
           u.name,
-          function (r) {
-            console.log('[notif] ' + u._id + ' => digest email result:', r);
-            done();
-          },
-        );
-      else {
-        console.log(
-          '[notif] ' + u._id + ' => NO NEW NOTIFICATION since last digest',
-        );
-        done();
-      }
-    });
-  } else done();
+          resolve,
+        ),
+      );
+      console.log('[notif] ' + u._id + ' => digest email result:', res);
+    } else {
+      console.log(
+        '[notif] ' + u._id + ' => NO NEW NOTIFICATION since last digest',
+      );
+    }
+  }
+
+  // set next digest date
+  cleanPref.pendEN = 0; // reset the notification counter
+  const updatedUser = await new Promise((resolve) =>
+    userModel.setPref(u._id, cleanPref, resolve),
+  );
+  console.log(
+    '[notif] ' + u._id + ' => next digest date: ',
+    ((updatedUser || {}).pref || {}).nextEN,
+  );
 }
 
-function worker(cb) {
+async function worker(cb) {
   const now = new Date();
   const label = '[notif] notifEmails.worker #' + now.getTime();
   console.time(label);
-  userModel.fetchEmailNotifsToSend(now, function (users) {
-    console.timeEnd(label);
+  try {
+    const users = await userModel.fetchEmailNotifsToSend(now);
     console.log('[notif] users to notify by email: ', users.length);
-    (function next() {
-      if (users && users.length) processUser(users.pop(), next);
-      else if (cb) cb();
-    })();
-  });
+    for await (const user of users) {
+      await processUser(user);
+    }
+    if (cb) cb();
+  } catch (err) {
+    cb?.(err) || console.trace('[notifyEmails.worker]', err);
+  } finally {
+    console.timeEnd(label);
+  }
 }
 
 // for testing
