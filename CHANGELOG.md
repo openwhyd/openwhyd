@@ -1,3 +1,10 @@
+## [1.59.3](https://github.com/openwhyd/openwhyd/compare/v1.59.2...v1.59.3) (2023-12-23)
+
+
+### Bug Fixes
+
+* upgrade to node 20 ([#754](https://github.com/openwhyd/openwhyd/issues/754)) ([6eadd53](https://github.com/openwhyd/openwhyd/commit/6eadd53b2ab993661ed82cb2d92509660469db52))
+
 ## [1.59.2](https://github.com/openwhyd/openwhyd/compare/v1.59.1...v1.59.2) (2023-12-23)
 
 
