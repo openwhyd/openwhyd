@@ -1,3 +1,10 @@
+## [1.59.2](https://github.com/openwhyd/openwhyd/compare/v1.59.1...v1.59.2) (2023-12-23)
+
+
+### Bug Fixes
+
+* basic eslint warnings ([2a38d20](https://github.com/openwhyd/openwhyd/commit/2a38d20b32b83c8da25ac67d673b5153a37e1b42))
+
 ## [1.59.1](https://github.com/openwhyd/openwhyd/compare/v1.59.0...v1.59.1) (2023-12-23)
 
 
