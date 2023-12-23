@@ -1,3 +1,10 @@
+## [1.59.1](https://github.com/openwhyd/openwhyd/compare/v1.59.0...v1.59.1) (2023-12-23)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump cypress from 13.2.0 to 13.3.0 ([#742](https://github.com/openwhyd/openwhyd/issues/742)) ([684c0f0](https://github.com/openwhyd/openwhyd/commit/684c0f00f5b307612be31e78b2ad64b2b9f28d9a))
+
 # [1.59.0](https://github.com/openwhyd/openwhyd/compare/v1.58.3...v1.59.0) (2023-11-04)
 
 
