@@ -16,7 +16,7 @@ TIMESTAMP="$( date +'%Y-%m-%d_%H-%M' )"
 DATABASE_CONNECTION_ID="con_Ilnbm841MAIXvpeS"
 
 echo "🔑 This script will read a token from scripts/auth0/.token ..."
-echo "=> Please get it from: https://manage.auth0.com/dashboard/eu/openwhyd/apis/management/explorer
+echo "=> Please get it from: https://manage.auth0.com/dashboard/eu/openwhyd/apis/management/explorer"
 read -p "Press any key to continue... " -n1 -s
 
 echo "🔑 Reading token from scripts/auth0/.token ..."
