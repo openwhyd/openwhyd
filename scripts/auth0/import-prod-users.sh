@@ -47,20 +47,21 @@ for USERS_FILE in prod-users-*.json; do
   echo "=> Response: ${RESPONSE}"
 
   echo "🧗‍♀️ Waiting for import..."
-  sleep 5
+  # sleep 5
 
-  echo "🔬 Fetching import status..."
-  JOB_ID=$( echo "${RESPONSE}" | jq --raw-output ".id" )
-  echo "=> Job id: ${JOB_ID}"
-  ERRORS=$( curl --request GET \
-    --url "${AUTH0_ISSUER_BASE_URL}/api/v2/jobs/${JOB_ID}/errors" \
-    --header "authorization: Bearer ${TOKEN}" \
-    --header "content-type: application/json" \
-    --form "connection_id=${DATABASE_CONNECTION_ID}" )
-  echo "=> Errors: ${ERRORS}"
-  echo "${ERRORS}" # | jq .
+  # echo "🔬 Fetching import status..."
+  # JOB_ID=$( echo "${RESPONSE}" | jq --raw-output ".id" )
+  # echo "=> Job id: ${JOB_ID}"
+  # ERRORS=$( curl --request GET \
+  #   --url "${AUTH0_ISSUER_BASE_URL}/api/v2/jobs/${JOB_ID}/errors" \
+  #   --header "authorization: Bearer ${TOKEN}" \
+  #   --header "content-type: application/json" \
+  #   --form "connection_id=${DATABASE_CONNECTION_ID}" )
+  # echo "=> Errors: ${ERRORS}"
+  # echo "${ERRORS}" # | jq .
 
-  read -p "Press any key to continue... " -n1 -s
+  # read -p "Press any key to continue... " -n1 -s
+  sleep 60
 
 done
 
