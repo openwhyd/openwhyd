@@ -16,19 +16,23 @@ let currentBatchBytes = 0;
 let currentBatchUsers = [];
 let nextGeneratedUsername = 0;
 
-const convertUser = (user) => ({
-  user_id: user._id.$oid,
-  email: user.email,
-  username: user.handle || `_auto_${nextGeneratedUsername++}`,
-  name: user.name,
-  custom_password_hash: {
-    algorithm: 'md5',
-    hash: {
-      encoding: 'hex',
-      value: user.pwd,
+const convertUser = (user) => {
+  const defaultUsername =
+    !user.handle || !user.name ? `_auto_${nextGeneratedUsername++}` : null;
+  return {
+    user_id: user._id.$oid,
+    email: user.email,
+    username: user.handle || defaultUsername,
+    name: user.name || defaultUsername,
+    custom_password_hash: {
+      algorithm: 'md5',
+      hash: {
+        encoding: 'hex',
+        value: user.pwd,
+      },
     },
-  },
-});
+  };
+};
 
 async function* readLinesGenerator(filePath) {
   const fileStream = fs.createReadStream(filePath);
