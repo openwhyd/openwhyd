@@ -9,7 +9,7 @@ const readline = require('readline');
 // Replace 'your-text-file.txt' with the path to your text file
 const inputFile = 'prod-users.json-lines';
 const outputFile = 'prod-users-NUMBER.for-auth0.json';
-const MAX_BYTES_PER_BATCH = 500 * 1000; // ≤ 500KB, file size limit for a bulk import
+const MAX_BYTES_PER_BATCH = 498 * 1000; // ≤ 500KB, file size limit for a bulk import
 
 const convertUser = (user) => ({
   user_id: user._id.$oid,
