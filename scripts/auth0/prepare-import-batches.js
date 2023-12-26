@@ -8,7 +8,8 @@ const readline = require('readline');
 
 // Replace 'your-text-file.txt' with the path to your text file
 const inputFile = 'prod-users.json-lines';
-const outputFile = 'prod-users.for-auth0.json';
+const outputFile = 'prod-users-NUMBER.for-auth0.json';
+const MAX_BYTES_PER_BATCH = 500 * 1000; // ≤ 500KB, file size limit for a bulk import
 
 const convertUser = (user) => ({
   user_id: user._id.$oid,
@@ -24,32 +25,57 @@ const convertUser = (user) => ({
   },
 });
 
-const users = [];
+let currentBatchNumber = 0;
+let currentBatchBytes = 0;
+let currentBatchUsers = [];
 
-// Create a readable stream from the text file
-const fileStream = fs.createReadStream(inputFile);
+async function* readLinesGenerator(filePath) {
+  const fileStream = fs.createReadStream(filePath);
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity,
+  });
 
-// Create a readline interface
-const rl = readline.createInterface({
-  input: fileStream,
-  crlfDelay: Infinity, // Recognize all instances of CR LF ('\r\n') as end-of-line input
-});
+  try {
+    for await (const line of rl) {
+      yield line;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    rl.close();
+  }
+}
 
-rl.on('line', (line) => {
-  const user = JSON.parse(line);
-  users.push(convertUser(user));
-});
+// Create the generator
+const linesGenerator = readLinesGenerator(inputFile);
 
-// Event listener for the end of the file
-rl.on('close', () => {
-  fs.promises
-    .writeFile(outputFile, JSON.stringify(users))
-    .then(() => console.warn(`✅ done: wrote ${outputFile}`));
-});
+// Use the generator to retrieve lines
+(async () => {
+  try {
+    for await (const line of linesGenerator) {
+      const user = JSON.parse(line);
+      if (
+        currentBatchBytes + JSON.stringify(user).length + 1 >=
+        MAX_BYTES_PER_BATCH
+      ) {
+        await dumpCurrentBatch();
+        currentBatchUsers = [];
+      }
+      currentBatchUsers.push(convertUser(user));
+      currentBatchBytes = JSON.stringify(currentBatchUsers).length;
+    }
 
-// Event listener for errors
-rl.on('error', (err) => {
-  console.error('❌ Error:', err);
-});
+    await dumpCurrentBatch();
+    console.warn(`✅ done`);
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+})();
 
-// TODO: The file size limit for a bulk import is 500KB
+async function dumpCurrentBatch() {
+  const filename = outputFile.replace('NUMBER', currentBatchNumber);
+  ++currentBatchNumber;
+  await fs.promises.writeFile(filename, JSON.stringify(currentBatchUsers));
+  console.warn(`🟢 wrote ${filename}`);
+}
