@@ -11,10 +11,15 @@ const inputFile = 'prod-users.json-lines';
 const outputFile = 'prod-users-NUMBER.for-auth0.json';
 const MAX_BYTES_PER_BATCH = 498 * 1000; // ≤ 500KB, file size limit for a bulk import
 
+let currentBatchNumber = 0;
+let currentBatchBytes = 0;
+let currentBatchUsers = [];
+let nextGeneratedUsername = 0;
+
 const convertUser = (user) => ({
   user_id: user._id.$oid,
   email: user.email,
-  username: user.handle,
+  username: user.handle || `_auto_${nextGeneratedUsername++}`,
   name: user.name,
   custom_password_hash: {
     algorithm: 'md5',
@@ -24,10 +29,6 @@ const convertUser = (user) => ({
     },
   },
 });
-
-let currentBatchNumber = 0;
-let currentBatchBytes = 0;
-let currentBatchUsers = [];
 
 async function* readLinesGenerator(filePath) {
   const fileStream = fs.createReadStream(filePath);
