@@ -56,14 +56,19 @@ const linesGenerator = readLinesGenerator(inputFile);
     for await (const line of linesGenerator) {
       const user = JSON.parse(line);
       if (
-        currentBatchBytes + JSON.stringify(user).length + 1 >=
+        currentBatchBytes +
+          Buffer.byteLength(JSON.stringify(user), 'utf8') +
+          1 >=
         MAX_BYTES_PER_BATCH
       ) {
         await dumpCurrentBatch();
         currentBatchUsers = [];
       }
       currentBatchUsers.push(convertUser(user));
-      currentBatchBytes = JSON.stringify(currentBatchUsers).length;
+      currentBatchBytes = Buffer.byteLength(
+        JSON.stringify(currentBatchUsers),
+        'utf8',
+      );
     }
 
     await dumpCurrentBatch();
