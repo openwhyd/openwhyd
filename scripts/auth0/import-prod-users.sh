@@ -15,19 +15,8 @@ source ./.env-prod # loads AUTH0_ISSUER_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_
 TIMESTAMP="$( date +'%Y-%m-%d_%H-%M' )"
 DATABASE_CONNECTION_ID="con_Ilnbm841MAIXvpeS"
 
-# echo "🔑 Generating a token..."
-# TOKEN=$( curl --request POST \
-#   --url "${AUTH0_ISSUER_BASE_URL}/oauth/token" \
-#   --header "content-type: application/x-www-form-urlencoded" \
-#   --data "grant_type=client_credentials" \
-#   --data "client_id=${AUTH0_CLIENT_ID}" \
-#   --data "client_secret=${AUTH0_CLIENT_SECRET}" \
-#   --data "audience=${AUTH0_ISSUER_BASE_URL}/api/v2/" \
-#   | jq --raw-output ".access_token" )
-# echo "=> ${TOKEN}" # note: this token causes "Insufficient scope, expected any of: create:users" when trying to import
-
 echo "🔑 This script will read a token from scripts/auth0/.token ..."
-echo "=> Please get it from: https://manage.auth0.com/dashboard/eu/dev-vh1nl8wh3gmzgnhp/apis/management/explorer"
+echo "=> Please get it from: https://manage.auth0.com/dashboard/eu/openwhyd/apis/management/explorer
 read -p "Press any key to continue... " -n1 -s
 
 echo "🔑 Reading token from scripts/auth0/.token ..."
