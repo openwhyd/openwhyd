@@ -32,7 +32,7 @@ for USERS_FILE in prod-users-*.json; do
   echo "=> Response: ${RESPONSE}"
 
   echo "\n🧗‍♀️ Waiting for import job to complete..."
-  sleep 180
+  sleep 240
 
   echo "\n🔬 Fetching import status..."
   JOB_ID=$( echo "${RESPONSE}" | jq --raw-output ".id" )
@@ -45,8 +45,8 @@ for USERS_FILE in prod-users-*.json; do
   echo "=> Errors: ${ERRORS}"
   echo "${ERRORS}" | jq .
 
-  echo \n"🧗‍♀️ Will start next import in 10 seconds..."
-  sleep 10
+  echo \n"🧗‍♀️ Will start next import in 30 seconds..."
+  sleep 30
 
 done
 
