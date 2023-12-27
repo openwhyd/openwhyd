@@ -1,3 +1,10 @@
+## [1.59.5](https://github.com/openwhyd/openwhyd/compare/v1.59.4...v1.59.5) (2023-12-27)
+
+
+### Bug Fixes
+
+* **pm2:** `Using --env [env] without passing the ecosystem.config.js does not work` ([6882aae](https://github.com/openwhyd/openwhyd/commit/6882aae2b83e7f47f9b408649d26dab49b683014))
+
 ## [1.59.4](https://github.com/openwhyd/openwhyd/compare/v1.59.3...v1.59.4) (2023-12-27)
 
 
