@@ -5,9 +5,9 @@ const childProcess = require('child_process');
 
 const readFile = (file) => fs.promises.readFile(file, 'utf-8');
 
-exports.loadEnvVars = async (file) => {
+exports.loadEnvVarsFromString = (str) => {
   const envVars = {};
-  (await readFile(file))
+  str
     .split(/[\r\n]+/)
     .map((line) => line.split('#')[0].trim()) // strip comments
     .forEach((envVar) => {
@@ -16,6 +16,10 @@ exports.loadEnvVars = async (file) => {
       envVars[key] = def.replace(/(^")|("$)/g, '');
     });
   return envVars;
+};
+
+exports.loadEnvVars = async (file) => {
+  return exports.loadEnvVarsFromString(await readFile(file));
 };
 
 exports.FAKE_ID = 'a0000000000000000000000a';
