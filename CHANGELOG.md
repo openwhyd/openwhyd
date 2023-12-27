@@ -1,3 +1,10 @@
+## [1.59.4](https://github.com/openwhyd/openwhyd/compare/v1.59.3...v1.59.4) (2023-12-27)
+
+
+### Bug Fixes
+
+* **auth:** add scripts to import users to auth0 ([#755](https://github.com/openwhyd/openwhyd/issues/755)) ([d55d0f3](https://github.com/openwhyd/openwhyd/commit/d55d0f3b4f11c0a83f07d2e1a2b22ac0eb02a353)), closes [#705](https://github.com/openwhyd/openwhyd/issues/705) [#669](https://github.com/openwhyd/openwhyd/issues/669)
+
 ## [1.59.3](https://github.com/openwhyd/openwhyd/compare/v1.59.2...v1.59.3) (2023-12-23)
 
 
