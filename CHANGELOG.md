@@ -1,3 +1,10 @@
+## [1.59.6](https://github.com/openwhyd/openwhyd/compare/v1.59.5...v1.59.6) (2023-12-27)
+
+
+### Bug Fixes
+
+* **pm2:** try to make pm2 reload/update all env vars ([b6662ee](https://github.com/openwhyd/openwhyd/commit/b6662ee11752d1060df93cbfaa577d0d6d16cccb))
+
 ## [1.59.5](https://github.com/openwhyd/openwhyd/compare/v1.59.4...v1.59.5) (2023-12-27)
 
 
