@@ -137,10 +137,8 @@ const { useAuth0AsIdentityProvider } = process.appParams;
 http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
   ? function () {
       const userId = auth0.getAuthenticatedUserId(this);
-      if (userId) {
-        this.session = this.session || {};
-        this.session.whydUid = userId; // TODO: is this session variable still necessary?
-      }
+      this.session = this.session || {};
+      this.session.whydUid = userId;
       return userId;
     }
   : function () {
