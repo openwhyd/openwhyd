@@ -34,6 +34,17 @@ exports.makeAuthFeatures = (env) => {
 
     getAuthenticatedUser(request) {
       const oidcUser = getAuthenticatedUser(request);
+      if (!oidcUser) {
+        // @ts-ignore // session should be provided by 'express-session'
+        request.session?.destroy(function (err) {
+          if (err) {
+            console.error(
+              '[getAuthenticatedUser] error from request.session.destroy()',
+              err,
+            );
+          }
+        });
+      }
       return oidcUser ? mapToOpenwhydUser(oidcUser) : null;
     },
 
