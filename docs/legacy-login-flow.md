@@ -1,4 +1,4 @@
-Here's the login flow:
+## Legacy (pre-Auth0) login flow
 
 - the user arrives on https://openwhyd.org/login
 - when the user submits the form with their email and password, that password is turned into a md5 hash, and the whole form is submitted through a HTTP POST request to the `/login` API endpoint

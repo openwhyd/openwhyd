@@ -119,7 +119,7 @@ The goal of the User API is to allow users to interact with their Openwhyd accou
 
 It can be used to read and update lists of tracks associated to the authenticated user.
 
-In order to allow this, a session must be initiated on Openwhyd's API, by providing the user's email and password. When a session is initiated properly, a cookie will be returned. This cookie will be required for the following API requests. If you want to know more about the authentication flow, read [login-flow.md](./login-flow.md).
+In order to allow this, a session must be initiated on Openwhyd's API, by providing the user's email and password. When a session is initiated properly, a cookie will be returned. This cookie will be required for the following API requests. If you want to know more about the authentication flow, read [legacy-login-flow.md](./legacy-login-flow.md).
 
 > Note: an API client for Node.js was written to handle the session-based authentication. It can be installed using [`npm install openwhyd-api-client`](https://www.npmjs.com/package/openwhyd-api-client).
 
