@@ -18,7 +18,7 @@ if (!process.env.DISABLE_DATADOG) {
     hooks: {
       request: (span, req) => {
         // @ts-ignore ts(2339): Property 'session' does not exist on type 'IncomingMessage'. // it's added by a middleware
-        const userId = req.session?.whydUid;
+        const userId = req.session?.whydUid; // from legacy auth/session
         span.setTag('customer.id', userId);
       },
     },

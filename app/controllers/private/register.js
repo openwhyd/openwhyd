@@ -170,6 +170,7 @@ exports.registerInvitedUser = function (request, user, response) {
     userModel.removeInvite(user.inviteCode);
 
     function loginAndRedirectTo(url) {
+      // legacy auth/session
       request.session = request.session || {};
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
       if (user.ajax) {

@@ -56,7 +56,7 @@ exports.controller = function (request, reqParams, response) {
       return response.renderText('test file not found: ' + reqParams.action);
     const p = {
       loggedUser: request.getUser(),
-      session: request.session,
+      session: request.session, // legacy auth/session
       cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'], // legacy auth/session
     };
     const tests = testFile.makeTests(p);

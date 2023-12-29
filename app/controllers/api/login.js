@@ -43,7 +43,7 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
   }
 
   function renderForm(form) {
-    delete request.session;
+    delete request.session; // legacy auth/session
     if (form.ajax) renderJSON(form);
     else response.renderHTML(loggingTemplate.renderLoginPage(form));
   }

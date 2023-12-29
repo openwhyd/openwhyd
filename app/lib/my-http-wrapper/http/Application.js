@@ -60,7 +60,7 @@ const makeBodyParser = (uploadSettings) =>
 const makeStatsUpdater = () =>
   function statsUpdater(req, res, next) {
     const startDate = new Date();
-    const userId = (req.session || {}).whydUid;
+    const userId = (req.session || {}).whydUid; // from legacy auth/session
     const userAgent = req.headers['user-agent'];
 
     if (userId) {
