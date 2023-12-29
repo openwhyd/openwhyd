@@ -1,3 +1,15 @@
+## [1.59.8](https://github.com/openwhyd/openwhyd/compare/v1.59.7...v1.59.8) (2023-12-29)
+
+
+### Bug Fixes
+
+* **auth:** logout local session after auth0 logout ([6e7299d](https://github.com/openwhyd/openwhyd/commit/6e7299ddeb2019df701fa0b013d194135e1e75fc)), closes [#756](https://github.com/openwhyd/openwhyd/issues/756)
+* comments ([21c0f23](https://github.com/openwhyd/openwhyd/commit/21c0f2383b2fe210eb0bed0429ed0f4b3da02146))
+* **env:** no need to expose local db, assuming that users were uploaded to auth0 "dev" tenant's db ([31b1019](https://github.com/openwhyd/openwhyd/commit/31b10190d3fabfeace156c1e06f41f6330b28d8f))
+* **env:** typo on required env var: `AUTH0_CLIENT_SECRET` ([eb54506](https://github.com/openwhyd/openwhyd/commit/eb5450678017fc0df462d416415cac8075a495ca))
+* **makefile:** `docker-seed` to start services ([998607b](https://github.com/openwhyd/openwhyd/commit/998607b674143013af9959455e73d8b041de1fe7))
+* **makefile:** `make dev` to start openwhyd against "dev" auth0 tenant ([4a1ae82](https://github.com/openwhyd/openwhyd/commit/4a1ae82ef5345f54856dee80207bd98f507ed8e5))
+
 ## [1.59.7](https://github.com/openwhyd/openwhyd/compare/v1.59.6...v1.59.7) (2023-12-29)
 
 
