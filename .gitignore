@@ -1,4 +1,5 @@
 .env
+.env-local
 .env-prod
 .token
 .port
