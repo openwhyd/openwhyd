@@ -68,7 +68,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     this.env = env;
   }
 
-  /** @returns Express.js middle with /login, /logout, and /callback routes. */
+  /** @returns Express.js middleware with /login, /logout, and /callback routes. */
   makeExpressAuthMiddleware(urlPrefix) {
     const openId = require('express-openid-connect');
     return openId.auth({

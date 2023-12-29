@@ -8,7 +8,7 @@
 
 set -e # stop an any error
 
-source ./env-vars-testing-local.sh # loads AUTH0_ISSUER_BASE_URL and AUTH0_ISSUER_BASE_URL
+source ./env-vars-testing-local.sh # loads AUTH0_ISSUER_BASE_URL
 
 USERS_FILE="scripts/auth0/test-users.json" # data export from config/initdb_testing.js
 TIMESTAMP="$( date +'%Y-%m-%d_%H-%M' )"
