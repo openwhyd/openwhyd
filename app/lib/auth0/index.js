@@ -78,11 +78,6 @@ exports.Auth0Wrapper = class Auth0Wrapper {
       secret: this.env.AUTH0_SECRET,
       clientID: this.env.AUTH0_CLIENT_ID,
       issuerBaseURL: this.env.AUTH0_ISSUER_BASE_URL,
-      session: {
-        cookie: {
-          domain: new URL(urlPrefix).hostname,
-        },
-      },
     });
   }
 
