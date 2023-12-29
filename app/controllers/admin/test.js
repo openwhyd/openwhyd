@@ -57,7 +57,7 @@ exports.controller = function (request, reqParams, response) {
     const p = {
       loggedUser: request.getUser(),
       session: request.session,
-      cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'],
+      cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'], // legacy auth/session
     };
     const tests = testFile.makeTests(p);
     runTests(tests, p, function (res) {

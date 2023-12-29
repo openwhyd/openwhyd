@@ -40,7 +40,7 @@ describe('auth api', function () {
     it('succeeds', async () => {
       const { response, body } = await loginAs(ADMIN_USER);
       const cookies = ((response.headers || {})['set-cookie'] || []).join(' ');
-      assert(/whydSid=/.test(cookies));
+      assert(/whydSid=/.test(cookies)); // legacy auth/session
       assert(body.redirect);
     });
 
