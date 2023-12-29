@@ -1,3 +1,11 @@
+## [1.59.9](https://github.com/openwhyd/openwhyd/compare/v1.59.8...v1.59.9) (2023-12-29)
+
+
+### Bug Fixes
+
+* **auth:** make sure that `request.session` is defined, even if auth0 is used ([79523d9](https://github.com/openwhyd/openwhyd/commit/79523d988a6b9b5e32431ef056ddfe50cd15f848)), closes [#756](https://github.com/openwhyd/openwhyd/issues/756)
+* **auth:** make sure that `whydUid` is cleared after logout from Auth0 ([9ab6305](https://github.com/openwhyd/openwhyd/commit/9ab6305a6594870e7815864acb56aa7da04b5a4d)), closes [#756](https://github.com/openwhyd/openwhyd/issues/756)
+
 ## [1.59.8](https://github.com/openwhyd/openwhyd/compare/v1.59.7...v1.59.8) (2023-12-29)
 
 
