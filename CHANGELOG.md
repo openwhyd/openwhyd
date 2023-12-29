@@ -1,3 +1,10 @@
+## [1.59.10](https://github.com/openwhyd/openwhyd/compare/v1.59.9...v1.59.10) (2023-12-29)
+
+
+### Bug Fixes
+
+* **auth:** make sure that legacy auth/session middleware is not initialize alongside Auth0 ([1ada22f](https://github.com/openwhyd/openwhyd/commit/1ada22f859dd179457460c7c8462006d750eeced)), closes [#756](https://github.com/openwhyd/openwhyd/issues/756)
+
 ## [1.59.9](https://github.com/openwhyd/openwhyd/compare/v1.59.8...v1.59.9) (2023-12-29)
 
 
