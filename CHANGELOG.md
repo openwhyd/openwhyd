@@ -1,3 +1,10 @@
+## [1.59.7](https://github.com/openwhyd/openwhyd/compare/v1.59.6...v1.59.7) (2023-12-29)
+
+
+### Bug Fixes
+
+* **auth:** `state missing from the response` ([d7bd77a](https://github.com/openwhyd/openwhyd/commit/d7bd77a0d6d1d7fac1f80e175fa99ea29bf75776)), closes [/github.com/auth0/express-openid-connect/issues/145#issuecomment-744188994](https://github.com//github.com/auth0/express-openid-connect/issues/145/issues/issuecomment-744188994) [/github.com/auth0/express-openid-connect/blob/8ade66846a1f041591e267d2296b02df2604f1f4/test/appSession.tests.js#L310](https://github.com//github.com/auth0/express-openid-connect/blob/8ade66846a1f041591e267d2296b02df2604f1f4/test/appSession.tests.js/issues/L310)
+
 ## [1.59.6](https://github.com/openwhyd/openwhyd/compare/v1.59.5...v1.59.6) (2023-12-27)
 
 
