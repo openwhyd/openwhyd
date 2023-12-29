@@ -141,6 +141,26 @@ function makeMongoUrl(params) {
   return `mongodb://${auth}${host}:${port}/${db}`;
 }
 
+// Legacy user auth and session management
+function getLegacySessionMiddleware() {
+  const session = require('express-session');
+  const MongoStore = require('connect-mongo')(session);
+  return session({
+    secret: process.env.WHYD_SESSION_SECRET,
+    store: new MongoStore({
+      url: makeMongoUrl(dbCreds),
+    }),
+    cookie: {
+      maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
+      // secure: process.appParams.urlPrefix.startsWith('https://'), // if true, cookie will be accessible only when website if opened over HTTPS
+      sameSite: 'strict',
+    },
+    name: 'whydSid',
+    resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
+    saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
+  });
+}
+
 function start() {
   if (process.env['WHYD_SESSION_SECRET'] === undefined)
     throw new Error(`missing env var: WHYD_SESSION_SECRET`);
@@ -169,24 +189,6 @@ function start() {
     features.auth = makeAuthFeatures(process.env);
   }
 
-  // Legacy user auth and session management
-  const session = require('express-session');
-  const MongoStore = require('connect-mongo')(session);
-  const legacySessionMiddleware = session({
-    secret: process.env.WHYD_SESSION_SECRET,
-    store: new MongoStore({
-      url: makeMongoUrl(dbCreds),
-    }),
-    cookie: {
-      maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
-      // secure: process.appParams.urlPrefix.startsWith('https://'), // if true, cookie will be accessible only when website if opened over HTTPS
-      sameSite: 'strict',
-    },
-    name: 'whydSid',
-    resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
-    saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
-  });
-
   const serverOptions = {
     features,
     urlPrefix: params.urlPrefix,
@@ -194,7 +196,7 @@ function start() {
     appDir: __dirname,
     sessionMiddleware: useAuth0AsIdentityProvider
       ? null
-      : legacySessionMiddleware,
+      : getLegacySessionMiddleware(),
     errorHandler: function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       require('./app/templates/error.js').renderErrorResponse(
