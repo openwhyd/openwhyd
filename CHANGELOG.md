@@ -1,3 +1,10 @@
+## [1.59.11](https://github.com/openwhyd/openwhyd/compare/v1.59.10...v1.59.11) (2023-12-29)
+
+
+### Bug Fixes
+
+* **auth:** delete `request.session` if user is not logged in from auth0 ([25e5e65](https://github.com/openwhyd/openwhyd/commit/25e5e6516d4171d3154b33df6cdb6105abf1f864))
+
 ## [1.59.10](https://github.com/openwhyd/openwhyd/compare/v1.59.9...v1.59.10) (2023-12-29)
 
 
