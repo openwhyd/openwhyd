@@ -27,6 +27,8 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
 
   // in case of successful login
   function renderRedirect(url, user) {
+    // useful for legacy auth/session only
+    request.session = request.session || {};
     request.session.whydUid = (user || {}).id;
     if (!form.ajax) response.renderHTML(loggingTemplate.htmlRedirect(url));
     else {
@@ -47,6 +49,7 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
   }
 
   if (form.action === 'logout') {
+    // useful for legacy auth/session only
     request.session.destroy(function (err) {
       if (err) {
         console.error('error from request.session.destroy()', err);
