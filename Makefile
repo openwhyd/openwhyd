@@ -41,9 +41,10 @@ lint: node_modules public/js/bookmarklet.js ## Run static code checks
 	npm run lint:fix
 
 docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker container
-	docker-compose exec -T web npm run test-reset
-	docker-compose restart web
-	docker-compose exec -T web ./scripts/wait-for-http-server.sh 8080
+	docker compose up --detach --build mongo web
+	docker compose exec -T web npm run test-reset
+	docker compose restart web
+	docker compose exec -T web ./scripts/wait-for-http-server.sh 8080
 
 test: lint test-unit test-integration test-e2e test-approval test-in-docker ## Run all checks and tests
 
