@@ -27,6 +27,7 @@ assert.ok(
 
 // Environment
 const {
+  URL_PREFIX,
   MONGODB_HOST,
   MONGODB_PORT,
   MONGODB_DATABASE,
@@ -50,7 +51,7 @@ const connectToDb = ({ url, dbName }) => {
 
 const fetchUserProfile = ({ userId }) =>
   new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/api/user/${userId}?format=json`;
+    const url = `${URL_PREFIX}/api/user/${userId}?format=json`;
     console.warn(`fetching profile from ${url} ...`);
     request(url, (err, _, body) =>
       err ? reject(err) : resolve(JSON.parse(body)),
@@ -68,7 +69,7 @@ const updateUser = ({ db, user }) => {
 const fetchUserPosts = ({ userId }) =>
   new Promise((resolve, reject) => {
     const limit = 99999999;
-    const url = `https://openwhyd.org/u/${userId}?format=json&limit=${limit}`;
+    const url = `${URL_PREFIX}/u/${userId}?format=json&limit=${limit}`;
     console.warn(`fetching posts from ${url} ...`);
     request(url, (err, _, body) =>
       err
