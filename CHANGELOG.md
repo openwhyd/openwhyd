@@ -1,3 +1,11 @@
+## [1.59.12](https://github.com/openwhyd/openwhyd/compare/v1.59.11...v1.59.12) (2024-01-04)
+
+
+### Bug Fixes
+
+* **import-posts:** `MongoServerError: Authentication failed.` ([50fa788](https://github.com/openwhyd/openwhyd/commit/50fa78879d953d1e7fa305cb1f85598fafc449ed))
+* **import-posts:** use WHYD_URL_PREFIX env var ([caa0816](https://github.com/openwhyd/openwhyd/commit/caa08163a389e4fe33be575f0064598e89f2400a))
+
 ## [1.59.11](https://github.com/openwhyd/openwhyd/compare/v1.59.10...v1.59.11) (2023-12-29)
 
 
