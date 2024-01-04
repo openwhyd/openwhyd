@@ -41,7 +41,7 @@ const authStr =
       encodeURIComponent(MONGODB_PASS) +
       '@'
     : '';
-const url = `mongodb://${authStr}${MONGODB_HOST}:${MONGODB_PORT}`;
+const url = `mongodb://${authStr}${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}`;
 const dbName = MONGODB_DATABASE;
 
 const connectToDb = ({ url, dbName }) => {
