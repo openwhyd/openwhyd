@@ -1,3 +1,10 @@
+## [1.59.13](https://github.com/openwhyd/openwhyd/compare/v1.59.12...v1.59.13) (2024-01-11)
+
+
+### Bug Fixes
+
+* **deps:** bump follow-redirects from 1.15.3 to 1.15.4 ([#760](https://github.com/openwhyd/openwhyd/issues/760)) ([c022137](https://github.com/openwhyd/openwhyd/commit/c0221372f3993bdeacdbc55ff8b3b58d3e58ea9c))
+
 ## [1.59.12](https://github.com/openwhyd/openwhyd/compare/v1.59.11...v1.59.12) (2024-01-04)
 
 
