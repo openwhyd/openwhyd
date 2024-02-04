@@ -22,6 +22,11 @@ exports.refreshTemplates = function (callback) {
 exports.refreshTemplates();
 
 exports.renderLoginPage = function (form) {
+  if (process.appParams.useAuth0AsIdentityProvider) {
+    console.log(`${process.env.WHYD_URL_PREFIX}/login`);
+    return exports.htmlRedirect(`${process.env.WHYD_URL_PREFIX}/login`);
+  }
+
   const params = {
     urlPrefix: config.urlPrefix,
     title: 'openwhyd',
