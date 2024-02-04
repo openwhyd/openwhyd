@@ -1,3 +1,10 @@
+## [1.59.14](https://github.com/openwhyd/openwhyd/compare/v1.59.13...v1.59.14) (2024-02-04)
+
+
+### Bug Fixes
+
+* admin routes should redirect to auth0 login page ([91dbb68](https://github.com/openwhyd/openwhyd/commit/91dbb68b99a062805a8ee49fd47da2659d03c569))
+
 ## [1.59.13](https://github.com/openwhyd/openwhyd/compare/v1.59.12...v1.59.13) (2024-01-11)
 
 
