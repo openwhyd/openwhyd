@@ -1,3 +1,10 @@
+## [1.59.16](https://github.com/openwhyd/openwhyd/compare/v1.59.15...v1.59.16) (2024-03-09)
+
+
+### Bug Fixes
+
+* **auth:** revert previous commit ([0b1a7a2](https://github.com/openwhyd/openwhyd/commit/0b1a7a26d4e3235733c4d44dd553752bc9609941))
+
 ## [1.59.15](https://github.com/openwhyd/openwhyd/compare/v1.59.14...v1.59.15) (2024-03-09)
 
 
