@@ -73,7 +73,6 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     const openId = require('express-openid-connect');
     return openId.auth({
       authRequired: false,
-      attemptSilentLogin: true,
       auth0Logout: true,
       baseURL: urlPrefix,
       secret: this.env.AUTH0_SECRET,
