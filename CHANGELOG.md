@@ -1,3 +1,10 @@
+## [1.59.15](https://github.com/openwhyd/openwhyd/compare/v1.59.14...v1.59.15) (2024-03-09)
+
+
+### Bug Fixes
+
+* **auth:** try to refresh auth0 session silently, without having to re-login everyday ([c8fb684](https://github.com/openwhyd/openwhyd/commit/c8fb684f7e0c8628fc2adf1889ad48ba4c8b63c3)), closes [#705](https://github.com/openwhyd/openwhyd/issues/705)
+
 ## [1.59.14](https://github.com/openwhyd/openwhyd/compare/v1.59.13...v1.59.14) (2024-02-04)
 
 
