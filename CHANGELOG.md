@@ -1,3 +1,10 @@
+## [1.59.17](https://github.com/openwhyd/openwhyd/compare/v1.59.16...v1.59.17) (2024-06-26)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump braces from 3.0.2 to 3.0.3 ([#771](https://github.com/openwhyd/openwhyd/issues/771)) ([4ad2203](https://github.com/openwhyd/openwhyd/commit/4ad2203aa5662a5d8a4ebff58dbf9251b59d45f8))
+
 ## [1.59.16](https://github.com/openwhyd/openwhyd/compare/v1.59.15...v1.59.16) (2024-03-09)
 
 
