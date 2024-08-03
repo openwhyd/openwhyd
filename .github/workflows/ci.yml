@@ -341,20 +341,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build and start services
-        run: docker-compose up --build --detach
+        run: docker compose up --build --detach
         # env:
         #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
         #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Init database for tests
         run: make docker-seed
       - name: Run integration tests
-        run: docker-compose exec -T --env MONGODB_URL web npm run test:integration
+        run: docker compose exec -T --env MONGODB_URL web npm run test:integration
         env:
           MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test' # needed by mongodb integration tests (user.repository.tests.js)
       - name: Run API tests
-        run: docker-compose exec -T --env MONGODB_URL web npm run test:api:raw
+        run: docker compose exec -T --env MONGODB_URL web npm run test:api:raw
         env:
           MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test'
-      - name: Logs from docker-compose
+      - name: Logs from docker compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
-        run: docker-compose logs
+        run: docker compose logs
