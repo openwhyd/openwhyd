@@ -39,7 +39,7 @@ $ ls -l
 Then run the containers.
 
 ```
-$ sudo docker-compose up -d
+$ sudo docker compose up -d
 ```
 
 This command will first pull the images from the registry and then run the containers in the background.

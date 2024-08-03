@@ -57,10 +57,10 @@ $ make test-in-docker
 
 ### Connect to the database
 
-If you want to connect to the MongoDB database with the `mongo` shell using `docker-compose` container:
+If you want to connect to the MongoDB database with the `mongo` shell using `docker compose` container:
 
 ```sh
-$ docker-compose exec mongo mongo mongodb://localhost:27117/openwhyd_test
+$ docker compose exec mongo mongo mongodb://localhost:27117/openwhyd_test
 ```
 
 ---
