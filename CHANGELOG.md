@@ -1,3 +1,10 @@
+## [1.59.19](https://github.com/openwhyd/openwhyd/compare/v1.59.18...v1.59.19) (2024-08-03)
+
+
+### Bug Fixes
+
+* **ci:** `docker-compose: command not found` ([#773](https://github.com/openwhyd/openwhyd/issues/773)) ([5844ab0](https://github.com/openwhyd/openwhyd/commit/5844ab0d8064628dd7bd50e083d52468fcf99e10))
+
 ## [1.59.18](https://github.com/openwhyd/openwhyd/compare/v1.59.17...v1.59.18) (2024-08-03)
 
 
