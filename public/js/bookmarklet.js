@@ -551,6 +551,16 @@
           return __awaiter(this, void 0, void 0, function* () {
             if (!('Playem' in window)) {
               yield new Promise((resolve) => include(playemUrl, resolve));
+            } else {
+              // wait for openwhydYouTubeExtractor to be loaded
+              yield new Promise((resolve) => {
+                const interval = setInterval(() => {
+                  if ('openwhydYouTubeExtractor' in window) {
+                    clearInterval(interval);
+                    resolve(window.openwhydYouTubeExtractor);
+                  }
+                }, 100);
+              });
             }
             return {
               yt: openwhydYouTubeExtractor,

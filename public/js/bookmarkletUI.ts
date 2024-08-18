@@ -286,6 +286,16 @@ if (typeof exports === 'undefined') {
     async function initPlayemPlayers(playemUrl) {
       if (!('Playem' in window)) {
         await new Promise((resolve) => include(playemUrl, resolve));
+      } else {
+        // wait for openwhydYouTubeExtractor to be loaded
+        await new Promise((resolve) => {
+          const interval = setInterval(() => {
+            if ('openwhydYouTubeExtractor' in window) {
+              clearInterval(interval);
+              resolve(window.openwhydYouTubeExtractor);
+            }
+          }, 100);
+        });
       }
       return {
         yt: openwhydYouTubeExtractor,
