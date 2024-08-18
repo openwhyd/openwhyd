@@ -33,7 +33,9 @@ context('Openwhyd bookmarklet', () => {
     });
   });
 
-  it('can detect a track from a soundcloud page', () => {
+  // disabled until we write an extactor that doesn't rely on Playem
+  // cf https://github.com/openwhyd/openwhyd/pull/774
+  it.skip('can detect a track from a soundcloud page', () => {
     cy.visit('/html/test-resources/soundcloud-tracks.html');
 
     cy.window().then(injectBookmarklet);
@@ -55,7 +57,9 @@ context('Openwhyd bookmarklet', () => {
     cy.get('.whydThumb').first().click();
   });
 
-  it('can import the cover art of a Bandcamp track', () => {
+  // disabled until we write an extactor that doesn't rely on Playem
+  // cf https://github.com/openwhyd/openwhyd/pull/774
+  it.skip('can import the cover art of a Bandcamp track', () => {
     // original URL: https://harissa.bandcamp.com/track/rooftop
     cy.visit('/html/test-resources/bandcamp-track-page.html');
 
