@@ -15,10 +15,7 @@
     "96": "icon-96.png",
     "152": "icon-152.png"
   },
-  "permissions": [
-    "scripting",
-    "activeTab"
-  ],
+  "permissions": ["scripting", "activeTab"],
   "version": "2.23",
   "manifest_version": 3
 }
