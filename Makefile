@@ -15,7 +15,6 @@ public/js/bookmarklet.js: public/js/bookmarklet*.ts
 
 chrome-extension: public/js/bookmarklet.js ## Build the Chrome Extension
 	cp public/js/bookmarklet.js misc/BrowserExt/Chrome/
-	cp public/js/playem-min.js misc/BrowserExt/Chrome/
 
 dev: node_modules public/js/bookmarklet.js ## Start a local dev server.
 	docker compose stop
