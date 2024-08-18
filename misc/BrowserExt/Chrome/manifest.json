@@ -1,6 +1,8 @@
 {
-  "background": { "scripts": ["chrome.js"] },
-  "browser_action": {
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
     "default_icon": "icon-96.png",
     "default_title": "Openwhyd ✚ track"
   },
@@ -13,7 +15,10 @@
     "96": "icon-96.png",
     "152": "icon-152.png"
   },
-  "permissions": ["activeTab"],
-  "version": "2.22",
-  "manifest_version": 2
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "version": "2.23",
+  "manifest_version": 3
 }
