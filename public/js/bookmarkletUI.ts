@@ -18,7 +18,7 @@ interface Document {
 
 if (typeof exports === 'undefined') {
   // running from web browser only, not from Node.js
-  (window._initWhydBk = function () {
+  (window._initWhydBk = async function () {
     // prevents bug in firefox 3
     if (undefined == window.console)
       window.console = {
@@ -283,19 +283,19 @@ if (typeof exports === 'undefined') {
 
     // Additional detectors
 
-    function initPlayemPlayers(playemUrl, callback) {
-      include(playemUrl, function () {
-        // playem-all.js must be loaded at that point
-        callback({
-          yt: openwhydYouTubeExtractor, // new YoutubePlayer(...) was replaced to save API quota (see #262)
-          sc: new window.SoundCloudPlayer({}),
-          vi: new window.VimeoPlayer({}),
-          dm: new window.DailymotionPlayer({}),
-          dz: new window.DeezerPlayer({}),
-          bc: new window.BandcampPlayer({}),
-          ja: new window.JamendoPlayer({}),
-        });
-      });
+    async function initPlayemPlayers(playemUrl) {
+      if (!('Playem' in window)) {
+        await new Promise((resolve) => include(playemUrl, resolve));
+      }
+      return {
+        yt: openwhydYouTubeExtractor,
+        sc: new window.SoundCloudPlayer({}),
+        vi: new window.VimeoPlayer({}),
+        dm: new window.DailymotionPlayer({}),
+        dz: new window.DeezerPlayer({}),
+        bc: new window.BandcampPlayer({}),
+        ja: new window.JamendoPlayer({}),
+      };
     }
 
     // Start up
@@ -310,16 +310,15 @@ if (typeof exports === 'undefined') {
       ? 'playem-min.js'
       : 'playem-all.js';
     const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
-    initPlayemPlayers(playemUrl, function (players) {
-      const bookmarklet = makeBookmarklet({
-        pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
-      });
-      bookmarklet.detectTracks({
-        window,
-        ui: BkUi(),
-        urlDetectors: [makeFileDetector(), makeStreamDetector(players)], // defined in bookmarkletUrlDetectors.ts
-        urlPrefix,
-      });
+    const players = await initPlayemPlayers(playemUrl);
+    const bookmarklet = makeBookmarklet({
+      pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
+    });
+    bookmarklet.detectTracks({
+      window,
+      ui: BkUi(),
+      urlDetectors: [makeFileDetector(), makeStreamDetector(players)], // defined in bookmarkletUrlDetectors.ts
+      urlPrefix,
     });
   })();
 }
