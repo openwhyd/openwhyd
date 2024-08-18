@@ -1,3 +1,10 @@
+## [1.59.20](https://github.com/openwhyd/openwhyd/compare/v1.59.19...v1.59.20) (2024-08-18)
+
+
+### Bug Fixes
+
+* **chrome-extension:** migrate to manifest version 3 ([#774](https://github.com/openwhyd/openwhyd/issues/774)) ([3a62bfb](https://github.com/openwhyd/openwhyd/commit/3a62bfbaac0e0772b6772db6f18ed477bd993199))
+
 ## [1.59.19](https://github.com/openwhyd/openwhyd/compare/v1.59.18...v1.59.19) (2024-08-03)
 
 
