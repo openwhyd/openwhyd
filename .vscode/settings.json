@@ -8,5 +8,8 @@
   "[html]": {
     // force prettier on html files specifically, to avoid issue #300
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

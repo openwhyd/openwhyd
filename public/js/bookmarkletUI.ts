@@ -1,11 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Window {
-  SoundCloudPlayer;
-  VimeoPlayer;
-  DailymotionPlayer;
-  DeezerPlayer;
-  BandcampPlayer;
-  JamendoPlayer;
   closeWhydBk;
   onkeydownBackup;
   _initWhydBk;
@@ -30,7 +24,7 @@ if (typeof exports === 'undefined') {
         warn: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
       };
 
-    console.log('-= openwhyd bookmarklet v2.6.1 =-');
+    console.log('-= openwhyd bookmarklet v2.23 =-');
 
     const FILENAME = '/js/bookmarklet.js';
     const CSS_FILEPATH = '/css/bookmarklet.css';
@@ -281,23 +275,6 @@ if (typeof exports === 'undefined') {
       return this;
     }
 
-    // Additional detectors
-
-    function initPlayemPlayers(playemUrl, callback) {
-      include(playemUrl, function () {
-        // playem-all.js must be loaded at that point
-        callback({
-          yt: openwhydYouTubeExtractor, // new YoutubePlayer(...) was replaced to save API quota (see #262)
-          sc: new window.SoundCloudPlayer({}),
-          vi: new window.VimeoPlayer({}),
-          dm: new window.DailymotionPlayer({}),
-          dz: new window.DeezerPlayer({}),
-          bc: new window.BandcampPlayer({}),
-          ja: new window.JamendoPlayer({}),
-        });
-      });
-    }
-
     // Start up
 
     const urlPrefix = findScriptHost(FILENAME) || 'https://openwhyd.org',
@@ -305,21 +282,23 @@ if (typeof exports === 'undefined') {
 
     console.info('loading bookmarklet stylesheet...');
     include(urlPrefix + CSS_FILEPATH + urlSuffix);
-    console.info('loading PlayemJS...');
-    const playemFile = /openwhyd\.org/.test(urlPrefix)
-      ? 'playem-min.js'
-      : 'playem-all.js';
-    const playemUrl = urlPrefix + '/js/' + playemFile + urlSuffix;
-    initPlayemPlayers(playemUrl, function (players) {
-      const bookmarklet = makeBookmarklet({
-        pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
-      });
-      bookmarklet.detectTracks({
-        window,
-        ui: BkUi(),
-        urlDetectors: [makeFileDetector(), makeStreamDetector(players)], // defined in bookmarkletUrlDetectors.ts
-        urlPrefix,
-      });
+    const extractors = {
+      yt: openwhydYouTubeExtractor,
+      // sc: new window.SoundCloudPlayer({}), // TODO: implement extractor that doesn't require Playem
+      // vi: new window.VimeoPlayer({}), // TODO: implement extractor that doesn't require Playem
+      // dm: new window.DailymotionPlayer({}), // TODO: implement extractor that doesn't require Playem
+      // dz: new window.DeezerPlayer({}), // TODO: implement extractor that doesn't require Playem
+      // bc: new window.BandcampPlayer({}), // TODO: implement extractor that doesn't require Playem
+      // ja: new window.JamendoPlayer({}), // TODO: implement extractor that doesn't require Playem
+    };
+    const bookmarklet = makeBookmarklet({
+      pageDetectors: openwhydBkPageDetectors, // defined in bookmarkletPageDetectors.ts
+    });
+    bookmarklet.detectTracks({
+      window,
+      ui: BkUi(),
+      urlDetectors: [makeFileDetector(), makeStreamDetector(extractors)], // defined in bookmarkletUrlDetectors.ts
+      urlPrefix,
     });
   })();
 }

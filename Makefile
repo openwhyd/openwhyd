@@ -7,11 +7,14 @@ node_modules: .nvmrc package.json package-lock.json
 	npm install
 	touch node_modules # optimisation: prevents reinstallation of dependencies, until package files are updated
 
-build: ## Build/transpile runtime assets.
+build: node_modules ## Build/transpile runtime assets.
 	make public/js/bookmarklet.js
 
 public/js/bookmarklet.js: public/js/bookmarklet*.ts
 	npm run build
+
+chrome-extension: public/js/bookmarklet.js ## Build the Chrome Extension
+	cp public/js/bookmarklet.js misc/BrowserExt/Chrome/
 
 dev: node_modules public/js/bookmarklet.js ## Start a local dev server.
 	docker compose stop
@@ -119,4 +122,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build dev down start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help
+.PHONY: install build chrome-extension dev down start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help
