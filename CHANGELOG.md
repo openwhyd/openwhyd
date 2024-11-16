@@ -1,3 +1,10 @@
+## [1.59.21](https://github.com/openwhyd/openwhyd/compare/v1.59.20...v1.59.21) (2024-11-16)
+
+
+### Bug Fixes
+
+* **bookmarklet:** safer way to trim whitespace from titles  ([#787](https://github.com/openwhyd/openwhyd/issues/787)) ([12f340a](https://github.com/openwhyd/openwhyd/commit/12f340aaa143112fa05af64eb20ceb30cf70b92f))
+
 ## [1.59.20](https://github.com/openwhyd/openwhyd/compare/v1.59.19...v1.59.20) (2024-08-18)
 
 
