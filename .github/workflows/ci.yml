@@ -262,9 +262,10 @@ jobs:
     name: Send coverage reports to Codacy
     needs:
       # - cypress-tests
-      - approval-tests
+      # - approval-tests
       - unit-tests
       - functional-tests
+      - integration-tests
     runs-on: ubuntu-20.04
     steps:
       # - uses: actions/checkout@v4
