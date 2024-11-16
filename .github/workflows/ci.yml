@@ -265,7 +265,7 @@ jobs:
   coverage:
     name: Send coverage reports to Codacy
     needs:
-      # - cypress-tests
+      - cypress-tests
       # - approval-tests
       - unit-tests
       - functional-tests
@@ -273,10 +273,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: cypress-code-coverage-report
-      #     path: coverage-cypress/
+      - uses: actions/download-artifact@v3
+        with:
+          name: cypress-code-coverage-report
+          path: coverage-cypress/
       - uses: actions/download-artifact@v3
         with:
           name: unit-tests-code-coverage-report
@@ -293,7 +293,7 @@ jobs:
         run: |
           mkdir .nyc_output
           mkdir coverage-reports
-          # cp coverage-cypress/.nyc_output/*.json coverage-reports
+          cp coverage-cypress/.nyc_output/*.json coverage-reports
           cp coverage-unit-tests/.nyc_output/*.json coverage-reports
           cp coverage-functional-tests/.nyc_output/*.json coverage-reports
           cp coverage-integration-tests/.nyc_output/*.json coverage-reports
