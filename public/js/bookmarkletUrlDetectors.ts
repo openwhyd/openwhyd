@@ -28,7 +28,7 @@ function makeFileDetector(): UrlDetector {
     eidSet[url] = true;
     cb({
       id: url,
-      title: title.replace(/^\s+|\s+$/g, ''),
+      title: title.trim(),
       img: '/images/cover-audiofile.png',
     });
   };
