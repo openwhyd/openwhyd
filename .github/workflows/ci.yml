@@ -107,6 +107,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: unit-tests-code-coverage-report
+          include-hidden-files: true
           path: |
             .nyc_output
             coverage
@@ -131,6 +132,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: functional-tests-code-coverage-report
+          include-hidden-files: true
           path: |
             .nyc_output
             coverage
@@ -160,6 +162,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: integration-tests-code-coverage-report
+          include-hidden-files: true
           path: |
             .nyc_output
             coverage
@@ -242,6 +245,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: cypress-code-coverage-report
+          include-hidden-files: true
           path: |
             .nyc_output
             coverage
