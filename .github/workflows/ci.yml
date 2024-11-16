@@ -298,7 +298,7 @@ jobs:
           cp coverage-functional-tests/.nyc_output/*.json coverage-reports
           cp coverage-integration-tests/.nyc_output/*.json coverage-reports
           npx --yes nyc merge coverage-reports .nyc_output/merged-coverage.json
-          npm run coverage:report  # stores the coverage report in coverage/lcov.info
+          npx --yes nyc report --reporter=text --reporter=lcov # stores the coverage report in coverage/lcov.info
       - uses: codacy/codacy-coverage-reporter-action@master
         with:
           project-token: ${{ secrets.CODACY_REPOSITORY_TOKEN_FOR_COVERAGE }}
