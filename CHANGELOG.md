@@ -1,3 +1,10 @@
+## [1.59.22](https://github.com/openwhyd/openwhyd/compare/v1.59.21...v1.59.22) (2024-12-07)
+
+
+### Bug Fixes
+
+* **soundcloud:** playback and lookup of soundcloud URLs ([#790](https://github.com/openwhyd/openwhyd/issues/790)) ([ad160a4](https://github.com/openwhyd/openwhyd/commit/ad160a41ddfd7a5e6b28d0e98dff5c81338727e6))
+
 ## [1.59.21](https://github.com/openwhyd/openwhyd/compare/v1.59.20...v1.59.21) (2024-11-16)
 
 
