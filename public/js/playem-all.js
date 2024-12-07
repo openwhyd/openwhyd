@@ -1,4 +1,4 @@
-/* playemjs 1.2.2, commit: 4bb031ea2d812d2c865d11fa15bff481a9f922b6 */
+/* playemjs 1.3.0, commit: fe1cbbaaa37fa9bde254e6be7bb899848615f3c1 */
 
 // configuration
 
@@ -190,6 +190,7 @@ function Playem (playemPrefs) {
     var players = [] // instanciated Player classes, added by client
     var i
     var exportedMethods
+    /** @type {TrackInfo | null} */
     var currentTrack = null
     var trackList = []
     var whenReady = null
@@ -1440,30 +1441,17 @@ function JamendoPlayer(){
 try{
   module.exports = JamendoPlayer;
 }catch(e){};
-//loader.includeJS("https://w.soundcloud.com/player/api.js");
-
-//please set SOUNDCLOUD_CLIENT_ID before instanciation
+/** @typedef { `snd.sc/{string}` | `/tracks/${number}` | `/{string}/{string}` | `/{string}/{string}#{string}` } SoundcloudId */ 
+// Examples SoundcloudId values: 
+// - /tracks/<number> (ready to stream)
+// - or /<artistname>/<tracktitle>
+// - or snd.sc/<hash>
 
 function SoundCloudPlayer(){
   return SoundCloudPlayer.super_.apply(this, arguments);
 };
 
 (function() {
-  var EVENT_MAP = {
-      "onplay": "onPlaying",
-      "onresume": "onPlaying",
-      "onpause": "onPaused",
-      "onstop": "onPaused",
-      "onfinish": "onEnded"
-    },
-    ERROR_EVENTS = [
-      "onerror",
-      "ontimeout",
-      "onfailure",
-      "ondataerror"
-    ],
-    RESOLVE_URL = "https://api.soundcloud.com/resolve.json";
-
   function Player(eventHandlers, embedVars) {  
     this.label = 'SoundCloud';
     this.eventHandlers = eventHandlers || {};
@@ -1472,7 +1460,7 @@ function SoundCloudPlayer(){
     this.widget = null;
     this.isReady = false;
     this.trackInfo = {};
-    this.soundOptions = {autoPlay:true};
+    this.soundOptions = {};
 
     var that = this;
 
@@ -1486,37 +1474,14 @@ function SoundCloudPlayer(){
     };
 
     function init() {
-      for (var i in EVENT_MAP)
-        (function(i) {
-          that.soundOptions[i] = function() {
-            //console.log("SC event:", i /*, this*/);
-            var handler = eventHandlers[EVENT_MAP[i]];
-            handler && handler(that);
-          }
-        })(i);
-      ERROR_EVENTS.map(function(evt){
-        that.soundOptions[evt] = function(e) {
-          console.error("SC error:", evt, e, e.stack);
-          that.eventHandlers.onError && that.eventHandlers.onError(that, {code:evt.substr(2), source:"SoundCloudPlayer"});
-        };
-      });
       that.isReady = true;
-      try {
-        window.soundManager.onready(function() {
-          that.callHandler("onApiReady", that);
-        });
-      }
-      catch(e){
-        console.warn("warning: soundManager was not found => playem-soundcloud will not be able to stream music");
-        that.callHandler("onApiReady", that);
-      }
+      that.callHandler("onApiReady", that);
     }
 
     if (window.SC)
       init();
     else {
-      loader.includeJS("https://connect.soundcloud.com/sdk.js", function(){
-        window.SC.initialize({client_id: window.SOUNDCLOUD_CLIENT_ID});
+      loader.includeJS("https://w.soundcloud.com/player/api.js", function(){
         init();
       });
     }
@@ -1537,7 +1502,12 @@ function SoundCloudPlayer(){
     return /(soundcloud\.com)\/player\/?\?.*url\=([^\&\?]+)/.test(url) ? decodeURIComponent(RegExp.lastParen) : url.replace(/^\/sc\//, "http://soundcloud.com/");
   }
 
+  /**
+   * @param {string} url 
+   * @returns {SoundcloudId | undefined}
+   */
   Player.prototype.getEid = function(url) {
+    // see test/test-detection/urls.txt for examples of urls to support
     url = unwrapUrl(url);
     if (/(soundcloud\.com)(\/[\w-_\/]+)/.test(url)) {
       var parts = RegExp.lastParen.split("/");
@@ -1545,11 +1515,6 @@ function SoundCloudPlayer(){
     }
     else if (/snd\.sc\/([\w-_]+)/.test(url))
       return RegExp.lastMatch;
-    // => returns:
-    // - /tracks/<number> (ready to stream)
-    // - or /<artistname>/<tracktitle>
-    // - or snd.sc/<hash>
-    // or null / false (if not a track)
   }
 
   function searchTracks(query, limit, cb){
@@ -1587,76 +1552,77 @@ function SoundCloudPlayer(){
     searchTracks(query, limit, cb); 
   }
 
-  function fetchMetadata(url, cb){
-    var splitted, params, trackId, method;
-    if (!window.SOUNDCLOUD_CLIENT_ID) {
-      console.error("error: SOUNDCLOUD_CLIENT_ID is not set => fetchMetadata() will not call Soundcloud's API");
-      cb();
-      return;
-    }
-    url = unwrapUrl(url);
-    splitted = url.split("?");
-    params = splitted.length > 1 ? splitted[1] + "&" : ""; // might include a secret_token
-    trackId = /\/tracks\/(\d+)/.test(splitted[0]) ? RegExp.lastParen : null;
-    method = (!!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)) ? "loadJSONP" : "loadJSON";
-    if (trackId)
-      loader[method]("https://api.soundcloud.com/tracks/" + trackId + ".json?" + params
-        + "client_id=" + window.SOUNDCLOUD_CLIENT_ID, cb);
-    else
-      loader[method](RESOLVE_URL + "?client_id=" + window.SOUNDCLOUD_CLIENT_ID
-        + "&url=" + encodeURIComponent("http://" + url.replace(/^(https?\:)?\/\//, "")), cb);
-  }
-
+  /**
+   * (requires an API key => not supported anymore)
+   */
   Player.prototype.fetchMetadata = function(url, cb){
-    var embed = {};
-    if (!this.getEid(url))
-      return cb();
-    fetchMetadata(url, function(data) {
-      if (data && data.kind == "track") {
-        embed.id = "" + data.id;
-        embed.eId = "/sc/" + data.permalink_url.substr(data.permalink_url.indexOf("/", 10) + 1)
-          + /*"/" + data.id +*/ "#" + data.stream_url;
-        embed.img = data.artwork_url || embed.img;
-        embed.title = data.title;
-        if (embed.title.indexOf(" - ") == -1 && (data.user || {}).username)
-          embed.title = data.user.username + " - " + embed.title;
-      }
-      cb(embed);
-    });
+    return cb();
   }
 
-  Player.prototype.getTrackPosition = function(callback) {
-    callback(this.trackInfo.position = this.widget.position / 1000);
-    if (this.widget.durationEstimate)
-      this.eventHandlers.onTrackInfo && this.eventHandlers.onTrackInfo({
-        duration: this.widget.duration / 1000
-      });
+  Player.prototype.getTrackPosition = async function(callback) {
+    const ms = this.widget ? await new Promise(resolve => this.widget.getPosition(resolve)) : null;
+    if (ms) {
+      this.trackInfo.position = ms / 1000;
+      callback(this.trackInfo.position);
+    }
   };
   
   Player.prototype.setTrackPosition = function(pos) {
-    this.safeCall("setPosition", pos * 1000);
+    this.safeCall("seekTo", pos * 1000);
   };
 
+  /**
+   * @param {SoundcloudId} id 
+   */
   Player.prototype.play = function(id) {
-    //console.log("sc PLAY id:", id)
+    console.log("sc PLAY id:", id);
     this.trackInfo = {};
-    var that = this;
-    function playId(id){
-      //console.log("=> sc PLAY id:", id)
-      that.embedVars.trackId = id;
-      //console.log("soundcloud play", this.embedVars);
-      window.SC.stream(id, that.soundOptions, function(sound){
-        that.widget = sound;
-        that.callHandler("onEmbedReady", that);
-        //that.safeCall("play");
-      });
+
+    let url;
+    if (id.startsWith('snd.sc')) {
+      console.error('cannot play soundcloud id:', id); // this kind of URL requires to follow a redirect, which can't be done in JS because of CORS
+      return;
+    } else if (id.startsWith("/tracks/")){
+      url = "https://api.soundcloud.com" + id;
+    } else {
+      url = "https://soundcloud.com" + id;
     }
-    if (id.indexOf("/tracks/") == 0)
-      return playId(id);
-    id = "http://" + (!id.indexOf("/") ? "soundcloud.com" : "") + id;
-    //console.log("sc resolve url:", id);
-    fetchMetadata(id, function(data){
-      playId((data || {}).id);
+    
+    console.log("=> sc PLAY url:", url);
+    this.embedVars.playerContainer.innerHTML = '';
+    this.element = document.createElement("iframe");
+    this.element.id = this.embedVars.playerId; // e.g. "soundcloud-widget"
+    this.element.setAttribute("width", "100%");
+    this.element.setAttribute("height", "100%");
+    this.element.setAttribute("scrolling", "no");
+    this.element.setAttribute("frameborder", "no");
+    this.element.setAttribute("allow", "autoplay");
+    console.log("=> sc PLAY url:", url);
+    this.element.setAttribute("src", `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=false`);
+    this.embedVars.playerContainer.appendChild(this.element);
+
+    this.embedVars.trackId = id;
+    const SC = window.SC;
+    this.widget = SC.Widget(this.element);
+  
+    this.widget.bind(SC.Widget.Events.ERROR, (evt) => {
+      console.error("SC error:", evt, e, e.stack);
+      this.callHandler("onError", {code:evt.substr(2), source:"SoundCloudPlayer"})
+    });
+    this.widget.bind(SC.Widget.Events.PLAY, () => this.callHandler("onPlaying", this));
+    this.widget.bind(SC.Widget.Events.PAUSE, () => this.callHandler("onPaused", this));
+    this.widget.bind(SC.Widget.Events.FINISH, () => this.callHandler("onEnded", this));
+    this.widget.bind(SC.Widget.Events.PLAY_PROGRESS, ({ currentPosition }) => {
+      this.trackInfo.position = currentPosition / 1000;
+      this.eventHandlers.onTrackInfo && this.eventHandlers.onTrackInfo(this.trackInfo);
+    });
+    this.widget.bind(SC.Widget.Events.READY, () => {
+      console.log("READY");
+      this.widget.getDuration((ms) => {
+        this.trackInfo.duration = ms / 1000;
+      });
+      this.widget.play();
+      this.callHandler("onEmbedReady", this);
     });
   }
 
@@ -1669,7 +1635,10 @@ function SoundCloudPlayer(){
   }
 
   Player.prototype.stop = function() {
-    this.safeCall("stop");
+    this.embedVars.playerContainer.innerHTML = '';
+    this.element = null;
+    this.widget = null;
+    this.trackInfo = {};
   }
 
   Player.prototype.setVolume = function(vol) {
