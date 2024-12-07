@@ -191,6 +191,5 @@ If you want to test Deezer Connect, you will need your server to be reachable th
 The value of following constants is required to connect to the corresponding APIs:
 
 - `YOUTUBE_API_KEY`
-- `SOUNDCLOUD_CLIENT_ID`
 - `JAMENDO_CLIENT_ID`
 - `DEEZER_APP_ID`

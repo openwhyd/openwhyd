@@ -205,8 +205,7 @@ context('Openwhyd', () => {
     // TODO: it(`should disappear after being deleted`, function() {
   });
 
-  // TODO: fix this test, cf https://github.com/openwhyd/openwhyd/pull/469#issue-974599017
-  it.skip('should allow users to lookup soundcloud tracks', function () {
+  it('should allow users to lookup soundcloud tracks', function () {
     cy.visit('/');
     cy.get('#q')
       .click()
@@ -214,7 +213,7 @@ context('Openwhyd', () => {
     const searchResult = `a[onclick="window.goToPage('/sc/harissaquartet/no-service');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')
-      .should('have.text', 'Harissa - No Service');
+      .should('have.text', 'harissaquartet - no service'); // best effort title detection from URL
   });
 
   it('should allow users to lookup mp3 tracks', function () {
