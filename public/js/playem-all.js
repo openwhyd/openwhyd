@@ -1,4 +1,4 @@
-/* playemjs 1.3.0, commit: 7b4d563fbfe934556baf62845757420bba090d35 */
+/* playemjs 1.3.1, commit: d880263d9a148c899767e9de68d05cde3e403015 */
 
 // configuration
 
