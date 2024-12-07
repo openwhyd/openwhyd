@@ -1,4 +1,4 @@
-/* playemjs 1.3.0, commit: fe1cbbaaa37fa9bde254e6be7bb899848615f3c1 */
+/* playemjs 1.3.0, commit: 7b4d563fbfe934556baf62845757420bba090d35 */
 
 // configuration
 
@@ -1441,7 +1441,7 @@ function JamendoPlayer(){
 try{
   module.exports = JamendoPlayer;
 }catch(e){};
-/** @typedef { `snd.sc/{string}` | `/tracks/${number}` | `/{string}/{string}` | `/{string}/{string}#{string}` } SoundcloudId */ 
+/** @typedef { `snd.sc/{string}` | `tracks/${number}` | `{string}/{string}` | `{string}/{string}#{string}` } SoundcloudId */ 
 // Examples SoundcloudId values: 
 // - /tracks/<number> (ready to stream)
 // - or /<artistname>/<tracktitle>
@@ -1509,12 +1509,10 @@ function SoundCloudPlayer(){
   Player.prototype.getEid = function(url) {
     // see test/test-detection/urls.txt for examples of urls to support
     url = unwrapUrl(url);
-    if (/(soundcloud\.com)(\/[\w-_\/]+)/.test(url)) {
+    if (/(soundcloud\.com)\/([\w-_\/]+)/.test(url)) {
       var parts = RegExp.lastParen.split("/");
-      return parts.length === 3 && /*parts[1] !== "pages" &&*/ RegExp.lastParen;
+      return parts.length === 2 && /*parts[0] !== "pages" &&*/ RegExp.lastParen;
     }
-    else if (/snd\.sc\/([\w-_]+)/.test(url))
-      return RegExp.lastMatch;
   }
 
   function searchTracks(query, limit, cb){
@@ -1553,10 +1551,19 @@ function SoundCloudPlayer(){
   }
 
   /**
-   * (requires an API key => not supported anymore)
+   * Best effort generation of metadata, based on URL.
    */
   Player.prototype.fetchMetadata = function(url, cb){
-    return cb();
+    const id = this.getEid(url);
+    const parts = (id ?? '').split('/');
+    return cb(parts.length === 2 && parts[0] !== 'tracks' ? {
+      id,
+      eId: "/sc/" + id,
+      img: undefined,
+      url: "https://soundcloud.com/" + id,
+      title: parts[0].replace(/[\-_]+/g, " ") + " - " + parts[1].replace(/[\-_]+/g, " "),
+      playerLabel: 'Soundcloud'
+    } : undefined);
   }
 
   Player.prototype.getTrackPosition = async function(callback) {
@@ -1582,10 +1589,10 @@ function SoundCloudPlayer(){
     if (id.startsWith('snd.sc')) {
       console.error('cannot play soundcloud id:', id); // this kind of URL requires to follow a redirect, which can't be done in JS because of CORS
       return;
-    } else if (id.startsWith("/tracks/")){
-      url = "https://api.soundcloud.com" + id;
+    } else if (id.startsWith("tracks/")){
+      url = "https://api.soundcloud.com/" + id;
     } else {
-      url = "https://soundcloud.com" + id;
+      url = "https://soundcloud.com/" + id;
     }
     
     console.log("=> sc PLAY url:", url);
@@ -1605,9 +1612,10 @@ function SoundCloudPlayer(){
     const SC = window.SC;
     this.widget = SC.Widget(this.element);
   
-    this.widget.bind(SC.Widget.Events.ERROR, (evt) => {
-      console.error("SC error:", evt, e, e.stack);
-      this.callHandler("onError", {code:evt.substr(2), source:"SoundCloudPlayer"})
+    this.widget.bind(SC.Widget.Events.ERROR, (err) => {
+      const error = 'error displayed in embed';
+      console.error("SC error: ", error);
+      this.callHandler("onError", { error, source:"SoundCloudPlayer" })
     });
     this.widget.bind(SC.Widget.Events.PLAY, () => this.callHandler("onPlaying", this));
     this.widget.bind(SC.Widget.Events.PAUSE, () => this.callHandler("onPaused", this));
