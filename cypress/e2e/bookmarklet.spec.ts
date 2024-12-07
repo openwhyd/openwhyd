@@ -35,7 +35,7 @@ context('Openwhyd bookmarklet', () => {
 
   // disabled until we write an extactor that doesn't rely on Playem
   // cf https://github.com/openwhyd/openwhyd/pull/774
-  it.skip('can detect a track from a soundcloud page', () => {
+  it('can detect a track from a soundcloud page', () => {
     cy.visit('/html/test-resources/soundcloud-tracks.html');
 
     cy.window().then(injectBookmarklet);
