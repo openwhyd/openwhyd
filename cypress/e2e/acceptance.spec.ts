@@ -213,7 +213,7 @@ context('Openwhyd', () => {
     const searchResult = `a[onclick="window.goToPage('/sc/harissaquartet/no-service');return false;"]`;
     cy.get(searchResult)
       .should('be.visible')
-      .should('have.text', 'Harissa - No Service');
+      .should('have.text', 'harissaquartet - no service'); // best effort title detection from URL
   });
 
   it('should allow users to lookup mp3 tracks', function () {
