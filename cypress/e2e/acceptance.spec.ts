@@ -205,8 +205,7 @@ context('Openwhyd', () => {
     // TODO: it(`should disappear after being deleted`, function() {
   });
 
-  // TODO: fix this test, cf https://github.com/openwhyd/openwhyd/pull/469#issue-974599017
-  it.skip('should allow users to lookup soundcloud tracks', function () {
+  it('should allow users to lookup soundcloud tracks', function () {
     cy.visit('/');
     cy.get('#q')
       .click()
