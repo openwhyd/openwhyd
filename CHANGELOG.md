@@ -1,3 +1,10 @@
+# [1.60.0](https://github.com/openwhyd/openwhyd/compare/v1.59.22...v1.60.0) (2024-12-08)
+
+
+### Features
+
+* **mobile:** promote mobile track finder on homepage ([#791](https://github.com/openwhyd/openwhyd/issues/791)) ([687a0b6](https://github.com/openwhyd/openwhyd/commit/687a0b6ee04c9d758b7f026cb039b65fec0cecfb))
+
 ## [1.59.22](https://github.com/openwhyd/openwhyd/compare/v1.59.21...v1.59.22) (2024-12-07)
 
 
