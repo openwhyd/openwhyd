@@ -56,13 +56,19 @@ window.$ =
     };
   })();
 
+const getLoggedInUserId = async function () {
+  const user = await new Promise((resolve) => $.getJSON('/api/user', resolve));
+  return user && user._id;
+};
+
 // main logic of mobile/index.html
 
-(function () {
-  $.getJSON('/api/user', function (user) {
-    if (user && user._id) {
-      // redirect to mobile web app, on glitch.com (see https://glitch.com/~openwhyd-mobile-client)
-      window.location.href = `https://openwhyd-mobile-client.glitch.me/?uId=${user._id}`;
-    }
-  });
+(async function () {
+  const uId =
+    new URL(window.location.href).searchParams.get('uId') ||
+    (await getLoggedInUserId());
+
+  if (uId) {
+    window.location.href = `https://openwhyd-mobile-client.glitch.me/?uId=${uId}`;
+  }
 })();
