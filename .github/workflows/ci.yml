@@ -104,7 +104,7 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: unit-tests-code-coverage-report
           include-hidden-files: true
@@ -129,7 +129,7 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: functional-tests-code-coverage-report
           include-hidden-files: true
@@ -159,7 +159,7 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: integration-tests-code-coverage-report
           include-hidden-files: true
@@ -242,7 +242,7 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-code-coverage-report
           include-hidden-files: true
@@ -250,13 +250,13 @@ jobs:
             .nyc_output
             coverage
       # NOTE: screenshots will be generated only if E2E test failed
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cypress-videos
