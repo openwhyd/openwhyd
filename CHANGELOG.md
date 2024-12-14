@@ -1,3 +1,10 @@
+## [1.60.1](https://github.com/openwhyd/openwhyd/compare/v1.60.0...v1.60.1) (2024-12-14)
+
+
+### Bug Fixes
+
+* **deps:** bump path-to-regexp and express ([#789](https://github.com/openwhyd/openwhyd/issues/789)) ([719a744](https://github.com/openwhyd/openwhyd/commit/719a744e21832e69800c27d8015a5a1808da3bda))
+
 # [1.60.0](https://github.com/openwhyd/openwhyd/compare/v1.59.22...v1.60.0) (2024-12-08)
 
 
