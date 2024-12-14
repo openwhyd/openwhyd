@@ -1,3 +1,24 @@
+# [1.60.0](https://github.com/openwhyd/openwhyd/compare/v1.59.22...v1.60.0) (2024-12-08)
+
+
+### Features
+
+* **mobile:** promote mobile track finder on homepage ([#791](https://github.com/openwhyd/openwhyd/issues/791)) ([687a0b6](https://github.com/openwhyd/openwhyd/commit/687a0b6ee04c9d758b7f026cb039b65fec0cecfb))
+
+## [1.59.22](https://github.com/openwhyd/openwhyd/compare/v1.59.21...v1.59.22) (2024-12-07)
+
+
+### Bug Fixes
+
+* **soundcloud:** playback and lookup of soundcloud URLs ([#790](https://github.com/openwhyd/openwhyd/issues/790)) ([ad160a4](https://github.com/openwhyd/openwhyd/commit/ad160a41ddfd7a5e6b28d0e98dff5c81338727e6))
+
+## [1.59.21](https://github.com/openwhyd/openwhyd/compare/v1.59.20...v1.59.21) (2024-11-16)
+
+
+### Bug Fixes
+
+* **bookmarklet:** safer way to trim whitespace from titles  ([#787](https://github.com/openwhyd/openwhyd/issues/787)) ([12f340a](https://github.com/openwhyd/openwhyd/commit/12f340aaa143112fa05af64eb20ceb30cf70b92f))
+
 ## [1.59.20](https://github.com/openwhyd/openwhyd/compare/v1.59.19...v1.59.20) (2024-08-18)
 
 
