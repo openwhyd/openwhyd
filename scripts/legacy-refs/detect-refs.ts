@@ -109,7 +109,7 @@ const render = (ref: Reference) => {
   const callee = ref.node.getText();
   const parentFct = findParentFunction(ref.node);
   const referrer = parentFct
-    ? parentFct.getName() ?? '[anonymous function]'
+    ? (parentFct.getName() ?? '[anonymous function]')
     : '[top level]';
   return `${filePath}:${lineNumber}, ${callee} referenced by ${referrer}`;
 };

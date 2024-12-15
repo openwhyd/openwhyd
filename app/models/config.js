@@ -116,8 +116,8 @@ exports.getPlayerMeta = function (eId, src) {
         contentUrl: player.urlPrefix
           ? eId.replace('/' + playerId + '/', player.urlPrefix)
           : player.urlMaker
-          ? player.urlMaker(eId, src)
-          : src || eId.replace('/fi/', ''), // for audio files
+            ? player.urlMaker(eId, src)
+            : src || eId.replace('/fi/', ''), // for audio files
       };
   }
 };

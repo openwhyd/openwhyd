@@ -63,8 +63,8 @@ function renderUserList(users, title, actionNames) {
       title == 'invites'
         ? '/invite/' + u._id
         : u.name
-        ? '/u/' + u._id
-        : /*u.email ? "mailto:" + u.email :*/ null;
+          ? '/u/' + u._id
+          : /*u.email ? "mailto:" + u.email :*/ null;
 
     if (u.fbRequestIds)
       u.fbInvites = u.fbRequestIds.join
