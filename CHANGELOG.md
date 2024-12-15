@@ -1,3 +1,10 @@
+## [1.60.2](https://github.com/openwhyd/openwhyd/compare/v1.60.1...v1.60.2) (2024-12-15)
+
+
+### Bug Fixes
+
+* **deps:** update auth deps + some devDeps ([#792](https://github.com/openwhyd/openwhyd/issues/792)) ([ab02b25](https://github.com/openwhyd/openwhyd/commit/ab02b250366efd2fab16a32437004573e0bd57af))
+
 ## [1.60.1](https://github.com/openwhyd/openwhyd/compare/v1.60.0...v1.60.1) (2024-12-14)
 
 
