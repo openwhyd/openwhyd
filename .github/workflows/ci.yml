@@ -244,7 +244,7 @@ jobs:
       - name: Save code coverage results
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-code-coverage-report-${{inputs.context}}-${{inputs.job-index}}
+          name: cypress-code-coverage-report-${{ strategy.job-index }}
           include-hidden-files: true
           path: |
             .nyc_output
@@ -253,13 +253,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots-${{inputs.context}}-${{inputs.job-index}}
+          name: cypress-screenshots-${{ strategy.job-index }}
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-videos-${{inputs.context}}-${{inputs.job-index}}
+          name: cypress-videos-${{ strategy.job-index }}
           path: cypress/videos
 
   coverage:
@@ -275,7 +275,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4.1.7
         with:
-          pattern: cypress-code-coverage-report-${{inputs.context}}*
+          pattern: cypress-code-coverage-report-*
           merge-multiple: true
           path: coverage-cypress/
       - uses: actions/download-artifact@v4.1.7
