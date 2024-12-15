@@ -765,14 +765,12 @@ exports.renameUser = function (features, uid, name, callback) {
           col.updateMany(
             { uId: uid /*, uNm: oldName*/ },
             { $set: { uNm: name } },
-            { multi: true },
             function (err) {
               if (err) console.log('err', err);
               //console.log("-> updated to ", result);
               col.updateMany(
                 { tId: uid /*, tNm: oldName*/ },
                 { $set: { tNm: name } },
-                { multi: true },
                 function (err) {
                   if (err) console.log('err', err);
                   //console.log("-> updated to ", result);
