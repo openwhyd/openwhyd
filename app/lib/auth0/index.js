@@ -103,13 +103,12 @@ exports.Auth0Wrapper = class Auth0Wrapper {
    * @param {'update:users' | 'create:user_tickets' | 'delete:users'} param.scope
    * @returns {ManagementClient}
    */
-  getManagementClient({ scope }) {
+  getManagementClient() {
     const { ManagementClient } = require('auth0');
     return new ManagementClient({
       domain: this.env.AUTH0_ISSUER_BASE_URL.split('//').pop(),
       clientId: this.env.AUTH0_CLIENT_ID,
       clientSecret: this.env.AUTH0_CLIENT_SECRET,
-      scope,
     });
   }
 
@@ -139,7 +138,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     console.debug(
       `[auth0] patching ${Object.keys(patch).join(', ')} on user ${userId}`,
     );
-    return await this.getManagementClient({ scope: 'update:users' }).updateUser(
+    return await this.getManagementClient().users.update(
       { id: makeAuth0UserId(userId) },
       { connection: DATABASE_CONNECTION_NAME, ...patch }, // connection is needed when updating email address, cf https://auth0.com/docs/api/management/v2/users/patch-users-by-id
     );
@@ -157,7 +156,7 @@ exports.Auth0Wrapper = class Auth0Wrapper {
     console.debug(
       `[auth0] requesting password change for user ${email.split('@')[0]}@...`,
     );
-    return await this.getAuthenticationClient().requestChangePasswordEmail({
+    return await this.getAuthenticationClient().database.changePassword({
       connection: DATABASE_CONNECTION_NAME,
       email,
     });
@@ -173,8 +172,8 @@ exports.Auth0Wrapper = class Auth0Wrapper {
    */
   async deleteUser(userId) {
     console.debug(`[auth0] deleting user ${userId}...`);
-    return await this.getManagementClient({ scope: 'delete:users' }).deleteUser(
-      { id: makeAuth0UserId(userId) },
-    );
+    return await this.getManagementClient().users.delete({
+      id: makeAuth0UserId(userId),
+    });
   }
 };

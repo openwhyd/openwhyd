@@ -6,9 +6,8 @@ context('Openwhyd bookmarklet', () => {
   };
 
   const injectBookmarklet = (win) => {
-    win.document.body.appendChild(
-      win.document.createElement('script'),
-    ).src = `${Cypress.config().baseUrl}/js/bookmarklet.js?${Date.now()}`;
+    win.document.body.appendChild(win.document.createElement('script')).src =
+      `${Cypress.config().baseUrl}/js/bookmarklet.js?${Date.now()}`;
   };
 
   beforeEach('login', () => {

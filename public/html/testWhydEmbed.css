@@ -58,7 +58,8 @@
   height: 14px;
   width: 12px;
   margin: 0px 6px;
-  background: transparent url('/images/icon-embedv2-play-pause.png') no-repeat 0 -14px;
+  background: transparent url('/images/icon-embedv2-play-pause.png') no-repeat
+    0 -14px;
 }
 
 .whydEmbed li:hover {

@@ -206,8 +206,8 @@ function start() {
           (req.accepts('html')
             ? 'html'
             : req.accepts('json')
-            ? 'json'
-            : 'text'),
+              ? 'json'
+              : 'text'),
         req.getUser(),
       );
     },

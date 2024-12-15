@@ -54,8 +54,8 @@ exports.fetch = async function (q, p, cb) {
     q._id = q._id.push
       ? { $in: q._id.map(mongodb.ObjectId) }
       : typeof q._id == 'string'
-      ? mongodb.ObjectId(q._id)
-      : q._id;
+        ? mongodb.ObjectId(q._id)
+        : q._id;
   if (q.pId)
     q.pId = {
       $in: (q.pId.push ? q.pId : [q.pId]).map(/*mongodb.ObjectId*/ stringify),

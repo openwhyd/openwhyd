@@ -172,8 +172,8 @@ exports.renderFeedAsync = function (posts, options, callback) {
     const format = options.format
       ? options.format.toLowerCase()
       : options.embedW
-      ? 'embed'
-      : 'html';
+        ? 'embed'
+        : 'html';
     //var t = (options.embedW ? templateEmbed[options.format || "oldEmbed"] : null) || template;
     if (format == 'json') callback(postsHtml);
     else
