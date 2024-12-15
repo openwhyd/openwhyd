@@ -253,13 +253,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-${{inputs.context}}-${{inputs.job-index}}
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-videos
+          name: cypress-videos-${{inputs.context}}-${{inputs.job-index}}
           path: cypress/videos
 
   coverage:
