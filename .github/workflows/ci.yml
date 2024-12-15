@@ -104,7 +104,7 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: unit-tests-code-coverage-report
           include-hidden-files: true
@@ -129,7 +129,7 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: functional-tests-code-coverage-report
           include-hidden-files: true
@@ -159,7 +159,7 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: integration-tests-code-coverage-report
           include-hidden-files: true
@@ -242,24 +242,24 @@ jobs:
       - name: Get coverage data
         run: npm run coverage:report # stores the coverage report in coverage/lcov.info
       - name: Save code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: cypress-code-coverage-report
+          name: cypress-code-coverage-report-${{ strategy.job-index }}
           include-hidden-files: true
           path: |
             .nyc_output
             coverage
       # NOTE: screenshots will be generated only if E2E test failed
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-${{ strategy.job-index }}
           path: cypress/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-videos
+          name: cypress-videos-${{ strategy.job-index }}
           path: cypress/videos
 
   coverage:
@@ -273,19 +273,20 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
-          name: cypress-code-coverage-report
+          pattern: cypress-code-coverage-report-*
+          merge-multiple: true
           path: coverage-cypress/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: unit-tests-code-coverage-report
           path: coverage-unit-tests/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: functional-tests-code-coverage-report
           path: coverage-functional-tests/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: integration-tests-code-coverage-report
           path: coverage-integration-tests/
