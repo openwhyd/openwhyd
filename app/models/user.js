@@ -203,8 +203,8 @@ function processUserPref(user) {
       user.pref[i] === undefined || user.pref[i] === null
         ? defaultPref[i] // default is better than null/undefined value
         : typeof defaultPref[i] == 'boolean'
-        ? !!user.pref[i]
-        : user.pref[i]; // type existing values accordingly to defaults
+          ? !!user.pref[i]
+          : user.pref[i]; // type existing values accordingly to defaults
   return user;
 }
 
