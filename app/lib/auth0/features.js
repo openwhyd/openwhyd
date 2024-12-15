@@ -41,22 +41,20 @@ exports.makeAuthFeatures = (env) => {
       return oidcUser ? mapToOpenwhydUser(oidcUser) : null;
     },
 
-    sendPasswordChangeRequest(email) {
-      return auth0.sendPasswordChangeRequest(email).catch((err) => {
-        console.trace('failed to pass new user password to Auth0:', err);
-      });
+    async sendPasswordChangeRequest(email) {
+      await auth0.sendPasswordChangeRequest(email);
     },
 
-    setUserHandle(userId, username) {
-      return auth0
+    async setUserHandle(userId, username) {
+      await auth0
         .patchUser(userId, { username })
         .catch((err) =>
           console.trace('failed to send username change to Auth0:', err),
         );
     },
 
-    setUserEmail(userId, email) {
-      return auth0.patchUser(userId, { email }).catch((err) => {
+    async setUserEmail(userId, email) {
+      await auth0.patchUser(userId, { email }).catch((err) => {
         if (
           !err.message.endsWith(
             'User with old email does not exist in Auth0 database',
@@ -68,16 +66,16 @@ exports.makeAuthFeatures = (env) => {
       });
     },
 
-    setUserProfileName(userId, name) {
-      return auth0
+    async setUserProfileName(userId, name) {
+      await auth0
         .patchUser(userId, { name })
         .catch((err) =>
           console.trace('failed to forward user rename to Auth0:', err),
         );
     },
 
-    deleteUser(userId) {
-      return auth0
+    async deleteUser(userId) {
+      await auth0
         .deleteUser(userId)
         .catch((err) =>
           console.trace('failed to delete user from Auth0:', err),
