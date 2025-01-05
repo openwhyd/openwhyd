@@ -66,12 +66,13 @@ exports.makeAuthFeatures = (env) => {
       });
     },
 
+    /**
+     * @param {string} userId
+     * @param {string} name
+     * @throws {ManagementApiError} e.g. if name is too short
+     */
     async setUserProfileName(userId, name) {
-      await auth0
-        .patchUser(userId, { name })
-        .catch((err) =>
-          console.trace('failed to forward user rename to Auth0:', err),
-        );
+      await auth0.patchUser(userId, { name });
     },
 
     async deleteUser(userId) {
