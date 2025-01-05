@@ -1,3 +1,10 @@
+## [1.60.4](https://github.com/openwhyd/openwhyd/compare/v1.60.3...v1.60.4) (2025-01-05)
+
+
+### Bug Fixes
+
+* don't allow user renaming in case of validation error ([#794](https://github.com/openwhyd/openwhyd/issues/794)) ([8843fb5](https://github.com/openwhyd/openwhyd/commit/8843fb5a8ac50acb40bb8a8c1bf738b560fa4e36))
+
 ## [1.60.3](https://github.com/openwhyd/openwhyd/compare/v1.60.2...v1.60.3) (2024-12-15)
 
 
