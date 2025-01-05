@@ -737,7 +737,7 @@ exports.setHandle = function (features, uId, username, handler) {
 };
 
 /** @param {{auth?: import('../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures}} features */
-exports.renameUser = function (features, uid, name, callback) {
+exports.renameUser = async function (features, uid, name, callback) {
   function whenDone() {
     console.log('renameUser last step: save the actual user record');
     exports.save({ _id: uid, name: name }, callback);
@@ -751,7 +751,12 @@ exports.renameUser = function (features, uid, name, callback) {
   } else if (oldName == name) {
     callback({}); // nothing to do
   } else {
-    features.auth?.setUserProfileName(uid, name);
+    try {
+      await features.auth?.setUserProfileName(uid, name); // validates the name
+    } catch (err) {
+      callback({ error: err.message }); // e.g. "String is too short (0 chars)"
+      return;
+    }
     // update user name in other collections where it's mentionned
     (function next() {
       let col;
