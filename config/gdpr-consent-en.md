@@ -6,6 +6,7 @@
 - Its [source code](https://github.com/openwhyd/openwhyd) is maintained by volunteers. Contributions are coordinated and approved by Adrien Joly (administrator of the openwhyd.org platform since August 2016), on his spare time.
 - The `openwhyd.org` domain name, the hosting server and the associated data are also managed by Adrien Joly.
 - Technical costs are covered by sponsors and donors. The corresponding invoices are published on [our Opencollective page](https://opencollective.com/openwhyd).
+- This website is intended for sharing and discovering music. Openwhyd way delete without warning any account that was created and/or used for other reasons.
 
 ## Use of cookies
 
@@ -16,7 +17,7 @@
 
 ## Data storage
 
-- We've been doing our best to reduce the risk of data leak, by encoding your password with the MD5 algorithm, enabling secure SSL/HTTPS access, and the use of a firewall on our server.
+- We've been doing our best to reduce the risk of data leak, by delegating user authentication to Auth0, enabling secure SSL/HTTPS access, and the use of a firewall on our server.
 - Access to our MongoDB database is restricted to Adrien Joly only.
 - The service and its data are hosted by [DigitalOcean](https://www.digitalocean.com/security/gdpr/).
 - Our Google Analytics account keeps anonymous usage data, for never more than 26 months.
