@@ -64,6 +64,9 @@ $(function () {
       console.log('response', response);
       globals.avgrundClose();
       globals.showMessage(response);
+      setTimeout(() => {
+        window.location.href = '/logout';
+      }, 2000);
     });
   }
 
