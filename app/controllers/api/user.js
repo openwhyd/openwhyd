@@ -186,6 +186,9 @@ const fieldSetters = {
       if (features.auth?.sendPasswordChangeRequest) {
         features.auth
           .sendPasswordChangeRequest(item.email)
+          .catch((err) => {
+            cb({ error: err.message });
+          })
           .then(() =>
             cb({ error: 'We sent you an email to change your password.' }),
           );
@@ -209,7 +212,7 @@ const fieldSetters = {
           const savedUser = await new Promise((resolve) =>
             defaultSetter('email')(p, resolve),
           );
-          if (savedUser) features.auth?.setUserEmail(p._id, p.email);
+          if (savedUser) await features.auth?.setUserEmail(p._id, p.email);
           cb(savedUser);
         } else if ('' + existingUser._id == p._id)
           // no change
