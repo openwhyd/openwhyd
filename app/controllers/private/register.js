@@ -216,18 +216,28 @@ exports.registerInvitedUser = function (request, user, response) {
   else registerUser();
 };
 
+/**
+ * Handler of API route used for user registration / signup.
+ * @param {*} request
+ * @param {*} getParams
+ * @param {*} response
+ * @param {{ auth: import('../../lib/my-http-wrapper/http/AuthFeatures.js').AuthFeatures }} features
+ */
 exports.controller = async function (request, getParams, response, features) {
   request.logToConsole('register.controller', request.method);
   const newUserFromAuth0 = features.auth?.getAuthenticatedUser(request);
   if (newUserFromAuth0) {
+    console.log(`New user from Auth0, id: ${newUserFromAuth0.id}`);
     // finalize user signup from Auth0, by persisting them into our database
     const storedUser = await new Promise((resolve) =>
       userModel.save(newUserFromAuth0, resolve),
     );
     if (storedUser) {
+      console.log(`New user from Auth0, stored with _id: ${storedUser._id}`);
       notifEmails.sendRegWelcomeAsync(storedUser);
       response.renderHTML(htmlRedirect('/')); // in reality, this ends up redirecting to the consent request page
     } else {
+      console.error(`New user from Auth0, failed to be stored in db`);
       renderError(
         request,
         storedUser,
