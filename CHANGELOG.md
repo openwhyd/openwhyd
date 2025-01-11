@@ -1,3 +1,10 @@
+## [1.61.1](https://github.com/openwhyd/openwhyd/compare/v1.61.0...v1.61.1) (2025-01-11)
+
+
+### Bug Fixes
+
+* **users:** logout after user deletion ([#797](https://github.com/openwhyd/openwhyd/issues/797)) ([eb54c64](https://github.com/openwhyd/openwhyd/commit/eb54c64a6738dbfddd2b0cd656c59037793bef35))
+
 # [1.61.0](https://github.com/openwhyd/openwhyd/compare/v1.60.4...v1.61.0) (2025-01-11)
 
 
