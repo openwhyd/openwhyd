@@ -16,7 +16,7 @@
 
 ## Data storage
 
-- We've been doing our best to reduce the risk of data leak, by encoding your password with the MD5 algorithm, enabling secure SSL/HTTPS access, and the use of a firewall on our server.
+- We've been doing our best to reduce the risk of data leak, by delegating user authentication to Auth0, enabling secure SSL/HTTPS access, and the use of a firewall on our server.
 - Access to our MongoDB database is restricted to Adrien Joly only.
 - The service and its data are hosted by [DigitalOcean](https://www.digitalocean.com/security/gdpr/).
 - Our Google Analytics account keeps anonymous usage data, for never more than 26 months.

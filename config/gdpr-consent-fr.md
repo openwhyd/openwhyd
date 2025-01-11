@@ -16,7 +16,7 @@
 
 ## Stockage des données
 
-- Nous faisons de notre mieux pour réduire les risques de fuites de données, notamment par: le chiffrage des mots de passe avec l'algorithme MD5, l'usage du protocole SSL/HTTPS, et l'usage d'un pare-feu.
+- Nous faisons de notre mieux pour réduire les risques de fuites de données, notamment par: l'usage de Auth0 pour sécuriser les sessions, l'usage du protocole SSL/HTTPS, et l'usage d'un pare-feu.
 - L'accès à notre base de données (MongoDB) est sécurisé par mot de passe dont Adrien Joly est le seul détenteur.
 - Le logiciel et les données du site sont hébergés par [DigitalOcean](https://www.digitalocean.com/security/gdpr/).
 - Notre compte Google Analytics stocke des données anonymes d'usage d'openwhyd.org avec une durée de rétention maximale de 26 mois.
