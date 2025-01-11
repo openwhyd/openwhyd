@@ -6,6 +6,7 @@
 - Its [source code](https://github.com/openwhyd/openwhyd) is maintained by volunteers. Contributions are coordinated and approved by Adrien Joly (administrator of the openwhyd.org platform since August 2016), on his spare time.
 - The `openwhyd.org` domain name, the hosting server and the associated data are also managed by Adrien Joly.
 - Technical costs are covered by sponsors and donors. The corresponding invoices are published on [our Opencollective page](https://opencollective.com/openwhyd).
+- This website is intended for sharing and discovering music. Openwhyd way delete without warning any account that was created and/or used for other reasons.
 
 ## Use of cookies
 
