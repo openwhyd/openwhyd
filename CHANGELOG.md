@@ -1,3 +1,10 @@
+# [1.61.0](https://github.com/openwhyd/openwhyd/compare/v1.60.4...v1.61.0) (2025-01-11)
+
+
+### Features
+
+* prevent search engines from indexing user profiles ([#796](https://github.com/openwhyd/openwhyd/issues/796)) ([2db7638](https://github.com/openwhyd/openwhyd/commit/2db763851ba07f2bfc870c468861a36daf9cca6e)), closes [#795](https://github.com/openwhyd/openwhyd/issues/795)
+
 ## [1.60.4](https://github.com/openwhyd/openwhyd/compare/v1.60.3...v1.60.4) (2025-01-05)
 
 
