@@ -174,6 +174,11 @@ exports.renderWhydFrame = function (html, params) {
 
   params.head = params.head || makeMetaHead(params);
 
+  // prevent search engines from indexing user profiles
+  if (params.bodyClass?.includes('userProfileV2')) {
+    params.head.push('<meta name="robots" content="noindex">');
+  }
+
   let out = htmlHeading
     .concat(params.head || [])
     .concat([
