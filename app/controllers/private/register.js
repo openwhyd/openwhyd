@@ -52,19 +52,19 @@ exports.registerInvitedUser = function (request, user, response) {
     'register.registerInvitedUser',
     user
       ? {
-          inviteCode: user.inviteCode,
-          email: user.email,
-          name: user.name,
-          fbUid: user.fbUid,
-          fbTok: user.fbTok,
-          iBy: user.iBy,
-          iPo: user.iPo,
-          iRf: user.iRf,
-          iPg: user.iPg,
-          sTk: user.sTk || '', // signup token (genuine client check)
-          ajax: user.ajax,
-          fbRequest: user.fbRequest,
-        }
+        inviteCode: user.inviteCode,
+        email: user.email,
+        name: user.name,
+        fbUid: user.fbUid,
+        fbTok: user.fbTok,
+        iBy: user.iBy,
+        iPo: user.iPo,
+        iRf: user.iRf,
+        iPg: user.iPg,
+        sTk: user.sTk || '', // signup token (genuine client check)
+        ajax: user.ajax,
+        fbRequest: user.fbRequest,
+      }
       : null,
   );
 
@@ -227,13 +227,17 @@ exports.controller = async function (request, getParams, response, features) {
   request.logToConsole('register.controller', request.method);
   const newUserFromAuth0 = features.auth?.getAuthenticatedUser(request);
   if (newUserFromAuth0) {
-    console.log(`New user from Auth0, id: ${newUserFromAuth0.id}`);
+    console.log(
+      `New user from Auth0, id: ${newUserFromAuth0.id}, hamdle: ${newUserFromAuth0.name}`,
+    );
     // finalize user signup from Auth0, by persisting them into our database
     const storedUser = await new Promise((resolve) =>
       userModel.save(newUserFromAuth0, resolve),
     );
     if (storedUser) {
-      console.log(`New user from Auth0, stored with _id: ${storedUser._id}`);
+      console.log(
+        `New user from Auth0, stored with _id: ${storedUser._id}, handle: ${storedUser.handle}`,
+      );
       notifEmails.sendRegWelcomeAsync(storedUser);
       response.renderHTML(htmlRedirect('/')); // in reality, this ends up redirecting to the consent request page
     } else {
