@@ -1,3 +1,10 @@
+## [1.61.2](https://github.com/openwhyd/openwhyd/compare/v1.61.1...v1.61.2) (2025-01-26)
+
+
+### Bug Fixes
+
+* **auth:** log handle on account signup and deletion ([7514065](https://github.com/openwhyd/openwhyd/commit/7514065e463ad12dc3f1b98100afcc267c95cd02))
+
 ## [1.61.1](https://github.com/openwhyd/openwhyd/compare/v1.61.0...v1.61.1) (2025-01-11)
 
 
