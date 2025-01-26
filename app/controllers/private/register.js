@@ -52,19 +52,19 @@ exports.registerInvitedUser = function (request, user, response) {
     'register.registerInvitedUser',
     user
       ? {
-        inviteCode: user.inviteCode,
-        email: user.email,
-        name: user.name,
-        fbUid: user.fbUid,
-        fbTok: user.fbTok,
-        iBy: user.iBy,
-        iPo: user.iPo,
-        iRf: user.iRf,
-        iPg: user.iPg,
-        sTk: user.sTk || '', // signup token (genuine client check)
-        ajax: user.ajax,
-        fbRequest: user.fbRequest,
-      }
+          inviteCode: user.inviteCode,
+          email: user.email,
+          name: user.name,
+          fbUid: user.fbUid,
+          fbTok: user.fbTok,
+          iBy: user.iBy,
+          iPo: user.iPo,
+          iRf: user.iRf,
+          iPg: user.iPg,
+          sTk: user.sTk || '', // signup token (genuine client check)
+          ajax: user.ajax,
+          fbRequest: user.fbRequest,
+        }
       : null,
   );
 

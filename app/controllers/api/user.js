@@ -52,9 +52,9 @@ const publicActions = {
                 cb(
                   sub
                     ? addUserInfo(
-                      sub.subscriptions,
-                      mySub ? mySub.subscriptions : [],
-                    )
+                        sub.subscriptions,
+                        mySub ? mySub.subscriptions : [],
+                      )
                     : null,
                 );
               },
@@ -63,9 +63,9 @@ const publicActions = {
             cb(
               sub
                 ? addUserInfo(
-                  sub.subscriptions,
-                  p.loggedUser ? sub.subscriptions : [],
-                )
+                    sub.subscriptions,
+                    p.loggedUser ? sub.subscriptions : [],
+                  )
                 : null,
             );
         });
@@ -83,9 +83,9 @@ const publicActions = {
                 cb(
                   sub
                     ? addUserInfo(
-                      sub.subscribers,
-                      mySub ? mySub.subscriptions : [],
-                    )
+                        sub.subscribers,
+                        mySub ? mySub.subscriptions : [],
+                      )
                     : null,
                 );
               },
@@ -94,9 +94,9 @@ const publicActions = {
             cb(
               sub
                 ? addUserInfo(
-                  sub.subscribers,
-                  p.loggedUser ? sub.subscriptions : [],
-                )
+                    sub.subscribers,
+                    p.loggedUser ? sub.subscriptions : [],
+                  )
                 : null,
             );
         });
@@ -157,8 +157,8 @@ const fieldSetters = {
       }
       const newFilename = hasProfileImage(p)
         ? await new Promise((resolve) =>
-          uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, resolve),
-        )
+            uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, resolve),
+          )
         : p.img;
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
       // TODO: inform Auth0, if applicable
