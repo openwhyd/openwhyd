@@ -1,3 +1,10 @@
+## [1.61.3](https://github.com/openwhyd/openwhyd/compare/v1.61.2...v1.61.3) (2025-01-26)
+
+
+### Bug Fixes
+
+* **auth:** redirect to home directly, if user signing up from auth0 already exists ([67e39b5](https://github.com/openwhyd/openwhyd/commit/67e39b56ced420963d886952749a661139f22727))
+
 ## [1.61.2](https://github.com/openwhyd/openwhyd/compare/v1.61.1...v1.61.2) (2025-01-26)
 
 
