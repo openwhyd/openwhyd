@@ -227,8 +227,19 @@ exports.controller = async function (request, getParams, response, features) {
   request.logToConsole('register.controller', request.method);
   const newUserFromAuth0 = features.auth?.getAuthenticatedUser(request);
   if (newUserFromAuth0) {
+    /** @type {import('../../infrastructure/mongodb/types.js').UserDocument} */
+    const existing = await new Promise((resolve) =>
+      userModel.fetchByUid(newUserFromAuth0.id, resolve),
+    );
+    if (existing?.id) {
+      console.error(
+        `User signing up from Auth0 already exists in our database: ${existing.id}, handle: ${existing.handle}`,
+      );
+      response.renderHTML(htmlRedirect('/'));
+      return;
+    }
     console.log(
-      `New user from Auth0, id: ${newUserFromAuth0.id}, hamdle: ${newUserFromAuth0.name}`,
+      `New user from Auth0, id: ${newUserFromAuth0.id}, handle: ${newUserFromAuth0.name}`,
     );
     // finalize user signup from Auth0, by persisting them into our database
     const storedUser = await new Promise((resolve) =>
