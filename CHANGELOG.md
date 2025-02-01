@@ -1,3 +1,10 @@
+## [1.61.4](https://github.com/openwhyd/openwhyd/compare/v1.61.3...v1.61.4) (2025-02-01)
+
+
+### Bug Fixes
+
+* **auth:** always check if logged in user needs to register/signup in our db ([#799](https://github.com/openwhyd/openwhyd/issues/799)) ([81ae75c](https://github.com/openwhyd/openwhyd/commit/81ae75ca28a14e0f7875858544e00ba5050ebb52))
+
 ## [1.61.3](https://github.com/openwhyd/openwhyd/compare/v1.61.2...v1.61.3) (2025-01-26)
 
 
