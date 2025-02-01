@@ -1,3 +1,10 @@
+## [1.61.5](https://github.com/openwhyd/openwhyd/compare/v1.61.4...v1.61.5) (2025-02-01)
+
+
+### Bug Fixes
+
+* **logs:** reduce noise from users that login via the /register endpoint ([fab0d1c](https://github.com/openwhyd/openwhyd/commit/fab0d1ca9afa75920a566f9257c0d74e47467ff0))
+
 ## [1.61.4](https://github.com/openwhyd/openwhyd/compare/v1.61.3...v1.61.4) (2025-02-01)
 
 
