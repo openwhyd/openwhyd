@@ -232,7 +232,7 @@ exports.controller = async function (request, getParams, response, features) {
       userModel.fetchByUid(newUserFromAuth0.id, resolve),
     );
     if (existing?.id) {
-      console.error(
+      console.log(
         `User signing up from Auth0 already exists in our database: ${existing.id}, handle: ${existing.handle}`,
       );
       response.renderHTML(htmlRedirect('/'));
