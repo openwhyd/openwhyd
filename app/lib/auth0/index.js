@@ -36,6 +36,7 @@ exports.getAuthenticatedUserId = (request) => {
  */
 exports.getAuthenticatedUser = (request) => {
   if (!request.oidc?.isAuthenticated()) return null;
+  /** @type {OidcUser} */
   const { sub, name, email, picture } = request.oidc.user;
   if (typeof sub !== 'string') throw new Error('invalid sub');
   if (typeof name !== 'string') throw new Error('invalid name');
@@ -78,6 +79,12 @@ exports.Auth0Wrapper = class Auth0Wrapper {
       secret: this.env.AUTH0_SECRET,
       clientID: this.env.AUTH0_CLIENT_ID,
       issuerBaseURL: this.env.AUTH0_ISSUER_BASE_URL,
+      // cf https://auth0.github.io/express-openid-connect/interfaces/ConfigParams.html#getLoginState
+      getLoginState() {
+        return {
+          returnTo: '/register',
+        };
+      },
       session: {
         cookie: {
           domain: new URL(urlPrefix).hostname,
