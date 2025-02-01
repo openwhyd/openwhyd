@@ -242,8 +242,9 @@ exports.controller = async function (request, getParams, response, features) {
       `New user from Auth0, id: ${newUserFromAuth0.id}, handle: ${newUserFromAuth0.name}`,
     );
     // finalize user signup from Auth0, by persisting them into our database
-    const storedUser = await new Promise((resolve) =>
-      userModel.save(newUserFromAuth0, resolve),
+    const storedUser = await new Promise(
+      (resolve) => userModel.save(newUserFromAuth0, resolve),
+      // TODO: save newUserFromAuth0.name as storedUser.handle?
     );
     if (storedUser) {
       console.log(
