@@ -69,12 +69,16 @@ exports.fetchPosts = async function (query, params, options, handler) {
   processAdvQuery(query, params, options);
   const { fields } = params ?? {};
   if (params) delete params.fields;
-  let results = [];
+
   try {
-    results = await mongodb.collections['post']
-      .find(query, params)
-      .project(fields ?? {})
-      .toArray();
+    const cursor = mongodb.collections['post'].find(query);
+    if (fields) cursor.project(fields);
+    if (params.sort) cursor.sort(params.sort);
+    if (params.limit) cursor.limit(params.limit);
+
+    const results = await cursor.toArray();
+    processPosts(results);
+    handler(results);
   } catch (err) {
     console.error(
       'model.fetchPosts ERROR on query',
@@ -84,9 +88,8 @@ exports.fetchPosts = async function (query, params, options, handler) {
       ':',
       err,
     );
+    handler([]);
   }
-  processPosts(results);
-  handler(results);
 };
 
 // more specific functions

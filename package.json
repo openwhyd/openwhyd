@@ -73,7 +73,7 @@
     "formidable": "^2.1.1",
     "hogan.js": "3.0.2",
     "htmlparser": "*",
-    "mongodb": "4.17.0",
+    "mongodb": "6.1.0",
     "playemjs": "1.3.2",
     "q-set": "^2.0.8",
     "request": "2.88.2",
