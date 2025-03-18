@@ -64,11 +64,15 @@ var fileGenerators = {
       });
     });
   },
-  'find.json': function (p, cb) {
+  'find.json': async function (p, cb) {
     const col = mongodb.collections[p.col];
     delete p.col;
-    if (!col) cb({ error: 'invalid col parameter' });
-    else {
+    if (!col) {
+      cb({ error: 'invalid col parameter' });
+      return;
+    }
+
+    try {
       // clean query (from GET parameters) first
       const limit = p.limit || 100;
       if (p.limit) delete p.limit;
@@ -80,13 +84,12 @@ var fileGenerators = {
         if (p[i] == '$exists') p[i] = { $exists: true };
       }
       console.log('query:', p);
-      col
-        .find(p, { limit: limit })
-        .toArray()
-        .then(
-          (items) => cb(items),
-          (error) => cb({ error: error }),
-        );
+
+      const cursor = col.find(p).limit(limit);
+      const items = await cursor.toArray();
+      cb(items);
+    } catch (error) {
+      cb({ error });
     }
   },
   'find.txt': wrapJsonGeneratorToText('find.json'),
