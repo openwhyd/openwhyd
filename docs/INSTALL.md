@@ -185,6 +185,10 @@ If you want to test Deezer Connect, you will need your server to be reachable th
 - `LAST_FM_API_SECRET` (mandatory. for lastfm scrobbling)
 - `ALGOLIA_APP_ID` (mandatory. for search index)
 - `ALGOLIA_API_KEY` (mandatory. for search index)
+- `AUTH0_ISSUER_BASE_URL` (optional, to be set if you want to use Auth0 as identity provider, instead of storing password hashes in our database)
+- `AUTH0_CLIENT_ID` (optional, to be set if you want to use Auth0 as identity provider, instead of storing password hashes in our database)
+- `AUTH0_CLIENT_SECRET` (optional, to be set if you want to use Auth0 as identity provider, instead of storing password hashes in our database)
+- `AUTH0_SECRET` (optional, to be set if you want to use Auth0 as identity provider, instead of storing password hashes in our database)
 
 ### Other variables to update
 
