@@ -228,6 +228,7 @@ jobs:
           browser: '${{ env.BROWSER_PATH }}' # chromium/chrome is required to include browser console in cypress logs
           install: false
           record: true
+          parallel: true
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           # pass the Dashboard record key as an environment variable
@@ -296,7 +297,6 @@ jobs:
           browser: '${{ env.BROWSER_PATH }}' # chromium/chrome is required to include browser console in cypress logs
           install: false
           record: true
-          parallel: true
         env:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
           # pass the Dashboard record key as an environment variable
