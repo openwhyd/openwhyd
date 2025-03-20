@@ -352,13 +352,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build and start services
         run: docker compose up --build --detach
-        env:
-          # ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
-          # ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
-          AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
-          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-          AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }}
+        # env:
+        #   ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_TEST_APP_ID }}
+        #   ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_TEST_API_KEY }}
       - name: Init database for tests
         run: make docker-seed
       - name: Run integration tests
