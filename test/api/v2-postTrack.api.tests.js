@@ -1,3 +1,4 @@
+const assert = require('node:assert');
 const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 
 describe(`[v2] postTrack`, function () {
@@ -24,6 +25,6 @@ describe(`[v2] postTrack`, function () {
     const res = await fetch(`${URL_PREFIX}/api/v2/postTrack`, {
       method: 'POST',
     });
-    expect(res.status).equals(401);
+    assert.equal(res.status, 401);
   });
 });
