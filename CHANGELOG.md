@@ -1,3 +1,10 @@
+# [1.62.0](https://github.com/openwhyd/openwhyd/compare/v1.61.5...v1.62.0) (2025-03-21)
+
+
+### Features
+
+* **api:** introduce a first API endpoint that supports access tokens ([#803](https://github.com/openwhyd/openwhyd/issues/803)) ([5989ea7](https://github.com/openwhyd/openwhyd/commit/5989ea7afb17c8a4ea2b6a534e084d93285acbc1)), closes [#55](https://github.com/openwhyd/openwhyd/issues/55)
+
 ## [1.61.5](https://github.com/openwhyd/openwhyd/compare/v1.61.4...v1.61.5) (2025-02-01)
 
 
