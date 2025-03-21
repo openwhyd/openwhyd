@@ -103,6 +103,19 @@ exports.actions = {
   deleteComment: commentModel.delete,
 
   /**
+   * Post/repost/edit a track.
+   * @param httpRequestParams {{
+   *  uId: string;
+   *  uNm: string;
+   *  text?: string;
+   *  name: string;
+   *  eId: string;
+   *  ctx?: string;
+   *  pId?: string;
+   *  _id?: string;
+   *  img?: string;
+   *  src?: unknown;
+   * }}
    * @param createPlaylist {import('../../domain/api/Features').CreatePlaylist}
    */
   insert: async function (httpRequestParams, callback, _, { createPlaylist }) {
@@ -266,6 +279,7 @@ exports.actions = {
 };
 
 /**
+ * @param reqParams {{ uId: string; uNm: string; action: string; name: string; eId: string }}
  * @param features {import('../../domain/api/Features').Features}
  */
 exports.handleRequest = function (request, reqParams, response, features) {
