@@ -68,6 +68,7 @@
     "connect-mongo": "^3.2.0",
     "dd-trace": "^5.28.0",
     "express": "^4.21.2",
+    "express-oauth2-jwt-bearer": "^1.6.1",
     "express-openid-connect": "^2.17.1",
     "express-session": "^1.18.1",
     "formidable": "^2.1.1",
@@ -82,6 +83,7 @@
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.47.1",
     "@cypress/code-coverage": "^3.13.9",
+    "@types/express": "^5.0.1",
     "@types/node": "^20.8.4",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",

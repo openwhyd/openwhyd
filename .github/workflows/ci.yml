@@ -262,10 +262,68 @@ jobs:
           name: cypress-videos-${{ strategy.job-index }}
           path: cypress/videos
 
+  auth-tests:
+    name: Auth tests
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    timeout-minutes: 8
+    runs-on: ubuntu-20.04
+    services:
+      mongodb:
+        image: docker://mongo:3.6
+        ports:
+          - 27117:27017
+    steps:
+      # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
+      - uses: browser-actions/setup-chrome@latest
+      - run: |
+          echo "Chrome version: $(chrome --version)"
+          echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.nvmrc.outputs.node_version }}'
+          cache: 'npm'
+      - uses: c-py/action-dotenv-to-setenv@v4
+        with:
+          env-file: env-vars-testing.conf
+      - run: npm ci --prefer-offline --no-audit
+      - name: Run Cypress tests against Openwhyd server
+        uses: cypress-io/github-action@v6.5.0
+        with:
+          start: npm run start:coverage --mongoDbDatabase openwhyd_test
+          wait-on: 'http://localhost:8080'
+          config-file: cypress-auth.config.ts
+          browser: '${{ env.BROWSER_PATH }}' # chromium/chrome is required to include browser console in cypress logs
+          install: false
+          record: true
+        env:
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # Recommended: pass the GitHub token lets this action correctly
+          # determine the unique run id necessary to re-run the checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # DEBUG: 'cypress:server:socket-base'
+          AUTH0_ISSUER_BASE_URL: ${{ secrets.AUTH0_ISSUER_BASE_URL }}
+          AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+          AUTH0_SECRET: ${{ secrets.AUTH0_SECRET }}
+      - name: Get coverage data
+        run: npm run coverage:report # stores the coverage report in coverage/lcov.info
+      - name: Save code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-code-coverage-report-${{ strategy.job-index }}
+          include-hidden-files: true
+          path: |
+            .nyc_output
+            coverage
+
   coverage:
     name: Send coverage reports to Codacy
     needs:
       - cypress-tests
+      - auth-tests
       # - approval-tests
       - unit-tests
       - functional-tests
@@ -276,6 +334,11 @@ jobs:
       - uses: actions/download-artifact@v4.1.7
         with:
           pattern: cypress-code-coverage-report-*
+          merge-multiple: true
+          path: coverage-cypress/
+      - uses: actions/download-artifact@v4.1.7
+        with:
+          pattern: auth-code-coverage-report-*
           merge-multiple: true
           path: coverage-cypress/
       - uses: actions/download-artifact@v4.1.7

@@ -18,12 +18,9 @@ export default defineConfig({
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       return require('./cypress/plugins/index.ts')(on, config);
     },
-    supportFile: 'cypress/support/e2e-with-applitools.ts',
+    supportFile: 'cypress/support/e2e.ts',
     baseUrl: 'http://localhost:8080',
     slowTestThreshold: 30000,
-    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+    specPattern: 'cypress/e2e-auth/**/*.{js,jsx,ts,tsx}',
   },
 });
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('@applitools/eyes-cypress')(module);

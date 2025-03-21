@@ -138,6 +138,55 @@ exports.Application = class Application {
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater());
+
+    // prototype: v2 API with Auth0
+    if (this._features.auth) {
+      const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
+      const useAuth = auth({
+        issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+        audience: `${process.env.URL_PREFIX}/api/v2`,
+      });
+      app.post('/api/v2/postTrack', useAuth, (request, response) => {
+        console.log(`/api/v2/postTrack`);
+        // require('./../../../controllers/api/post.js').handleRequest(
+        //   req,
+        //   req.body,
+        //   res,
+        //   this._features,
+        // );
+
+        // @ts-expect-error getUser is injected by us to the Request prototype
+        const user = request.getUser();
+        if (!user?.id) {
+          response.status(401).json({ error: 'unauthorized' });
+          return;
+        }
+
+        console.log(`/api/v2/postTrack, uId: ${user.id}`);
+        // const post = {
+        //   uId: user.id,
+        //   uNm: user.name,
+        //   text: request.body.text,
+        //   name: request.body.name,
+        //   eId: request.body.eId,
+        //   img: request.body.img,
+        // };
+        // const res = await new Promise((resolve) =>
+        //   require('./../../../controllers/api/post.js').actions.insert(
+        //     post,
+        //     resolve,
+        //     request,
+        //     this._features,
+        //   ),
+        // );
+        // response
+        //   .status(res?.error ? 400 : 200)
+        //   .json(res?.error ? { error: res.error } : { ok: true });
+
+        response.status(200).json({ message: `hello ${user.name}` });
+      });
+    }
+
     attachLegacyRoutesFromFile(
       app,
       this._appDir,
