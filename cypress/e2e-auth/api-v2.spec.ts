@@ -8,6 +8,6 @@ context('Openwhyd API v2, with auth0', () => {
       failOnStatusCode: false,
     })
       .its('status')
-      .should('be', 401);
+      .should('equal', 401);
   });
 });
