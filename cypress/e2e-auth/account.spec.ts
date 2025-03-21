@@ -6,7 +6,7 @@ context('Openwhyd with auth0', () => {
   });
 
   it('forbids legacy login', function () {
-    cy.loginAsAdmin();
-    cy.get('#signup').should('be.visible');
+    cy.loginAsAdmin(); // passes credentials to the legacy login endpoint
+    cy.url().should('include', 'auth0.com/');
   });
 });
