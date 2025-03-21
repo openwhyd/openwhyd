@@ -144,7 +144,7 @@ exports.Application = class Application {
       const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
       const useAuth = auth({
         issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
-        audience: `${process.env.URL_PREFIX}/api/v2`,
+        audience: `${process.env.AUTH0_ISSUER_BASE_URL}/api/v2/`,
       });
       app.post('/api/v2/postTrack', useAuth, (request, response) => {
         console.log(`/api/v2/postTrack`);
