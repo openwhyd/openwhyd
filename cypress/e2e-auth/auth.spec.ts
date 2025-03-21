@@ -1,8 +1,8 @@
 context('Openwhyd with auth0', () => {
   it('redirects to a auth0 domain to sign up', function () {
     cy.visit('/');
-    cy.get('#signup').click();
-    cy.url({ timeout: 30000 }).should('include', 'auth0.com/');
+    cy.get('#signup').click({ timeout: 30000 });
+    cy.url().should('include', 'auth0.com/');
   });
 
   // TODO: fix and unskip
