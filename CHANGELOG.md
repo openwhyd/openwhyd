@@ -1,3 +1,10 @@
+## [1.62.1](https://github.com/openwhyd/openwhyd/compare/v1.62.0...v1.62.1) (2025-03-21)
+
+
+### Bug Fixes
+
+* **auth:** fix `audience` to match existing Auth0 API ([4c573da](https://github.com/openwhyd/openwhyd/commit/4c573da24f5729879d4431b4336b2381063fc813))
+
 # [1.62.0](https://github.com/openwhyd/openwhyd/compare/v1.61.5...v1.62.0) (2025-03-21)
 
 
