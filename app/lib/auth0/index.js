@@ -36,8 +36,9 @@ exports.getAuthenticatedUserId = (request) => {
  */
 exports.getAuthenticatedUser = (request) => {
   if (!request.oidc?.isAuthenticated()) return null;
-  /** @type {OidcUser} */
-  const { sub, name, email, picture } = request.oidc.user;
+  const { sub, name, email, picture } = /** @type {OidcUser} */ (
+    request.oidc.user
+  );
   if (typeof sub !== 'string') throw new Error('invalid sub');
   if (typeof name !== 'string') throw new Error('invalid name');
   if (typeof email !== 'string') throw new Error('invalid email');
