@@ -47,7 +47,7 @@ export function changePlaylistImage({ imagePath }) {
 }
 
 export function goToPlaylist({ userId, playlistId }) {
-  return cy.visit(`/u/${userId}/playlist/${playlistId}`, { timeout: 20000 });
+  return cy.visit(`/u/${userId}/playlist/${playlistId}`);
 }
 
 export function deletePlaylist({ userId, playlistId }) {
