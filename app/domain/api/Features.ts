@@ -17,3 +17,11 @@ export type DeletePlaylist = (
   userId: string,
   playlistId: number,
 ) => Promise<void>;
+
+// expected payload/body of requests to `POST /api/v2/postTrack`
+export type PostTrackRequest = {
+  url: string;
+  title: string;
+  thumbnail?: string;
+  description?: string;
+};
