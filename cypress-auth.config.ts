@@ -8,7 +8,7 @@ export default defineConfig({
   defaultCommandTimeout: 4000,
   execTimeout: 5000,
   taskTimeout: 5000,
-  pageLoadTimeout: 20000, // auth0 pages can take some time to load
+  pageLoadTimeout: 10000,
   requestTimeout: 5000,
   responseTimeout: 5000,
   e2e: {
