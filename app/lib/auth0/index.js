@@ -14,7 +14,7 @@ const findMissingEnvVars = (env) => {
 };
 
 /**@param {Record<string, any>} user */
-const getUserIdFromOidcUser = (user) => user?.sub?.replace('auth0|', '');
+export const getUserIdFromOidcUser = (user) => user?.sub?.replace('auth0|', '');
 
 const makeAuth0UserId = (userId) => `auth0|${userId}`;
 

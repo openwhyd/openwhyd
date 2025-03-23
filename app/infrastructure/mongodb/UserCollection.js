@@ -62,5 +62,5 @@ function mapToDomainUser(userDocument) {
     id: parseInt(id),
     name,
   }));
-  return new User(userDocument._id.toString(), playlists);
+  return new User(userDocument._id.toString(), userDocument.name, playlists);
 }

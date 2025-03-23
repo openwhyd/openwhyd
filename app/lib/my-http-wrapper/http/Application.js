@@ -8,6 +8,10 @@ const qset = require('q-set'); // instead of body-parser, for form fields with b
 const sessionTracker = require('../../../controllers/admin/session.js');
 const postModel = require('../../../models/post.js');
 const config = require('../../../models/config.js');
+const { getUserIdFromOidcUser } = require('../../auth0/index.js');
+const {
+  userCollection,
+} = require('../../../infrastructure/mongodb/UserCollection');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -157,8 +161,9 @@ exports.Application = class Application {
         // - auth.header: The decoded JWT header.
         // - auth.payload: The decoded JWT payload.
         // cf https://github.com/auth0/node-oauth2-jwt-bearer/blob/main/packages/express-oauth2-jwt-bearer/src/index.ts#L73
-        const user = this._features.auth.getAuthenticatedUser(request);
-        if (!user?.id) {
+        const userId = getUserIdFromOidcUser(request.auth?.payload ?? {});
+        const user = await userCollection.getByUserId(userId);
+        if (!user) {
           response.status(401).json({ error: 'unauthorized' });
           return;
         }
