@@ -6,6 +6,8 @@ const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
+const postModel = require('../../../models/post.js');
+const config = require('../../../models/config.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -143,47 +145,73 @@ exports.Application = class Application {
     if (this._features.auth) {
       const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
       const useAuth = auth({
-        issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
-        audience: `${process.env.URL_PREFIX}/api/v2/`,
+        issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL, // identifier of the Auth0 account
+        audience: `${process.env.URL_PREFIX}/api/v2/`, // identifier of Openwhyd API v2, as set on Auth0
+        tokenSigningAlg: 'RS256', // as provided by Auth0's quickstart, after creating the API
       });
-      app.post('/api/v2/postTrack', useAuth, (request, response) => {
+      app.post('/api/v2/postTrack', useAuth, async (request, response) => {
         console.log(`/api/v2/postTrack`);
-        // require('./../../../controllers/api/post.js').handleRequest(
-        //   req,
-        //   req.body,
-        //   res,
-        //   this._features,
-        // );
 
-        // @ts-expect-error getUser is injected by us to the Request prototype
-        const user = request.getUser();
+        // Successful requests will have the following properties added to them:
+        // - auth.token: The raw JWT token.
+        // - auth.header: The decoded JWT header.
+        // - auth.payload: The decoded JWT payload.
+        // cf https://github.com/auth0/node-oauth2-jwt-bearer/blob/main/packages/express-oauth2-jwt-bearer/src/index.ts#L73
+        const user = this._features.auth.getAuthenticatedUser(request);
         if (!user?.id) {
           response.status(401).json({ error: 'unauthorized' });
           return;
         }
+        console.log(`/api/v2/postTrack, user id: ${user.id}`);
 
-        console.log(`/api/v2/postTrack, uId: ${user.id}`);
-        // const post = {
-        //   uId: user.id,
-        //   uNm: user.name,
-        //   text: request.body.text,
-        //   name: request.body.name,
-        //   eId: request.body.eId,
-        //   img: request.body.img,
-        // };
-        // const res = await new Promise((resolve) =>
-        //   require('./../../../controllers/api/post.js').actions.insert(
-        //     post,
-        //     resolve,
-        //     request,
-        //     this._features,
-        //   ),
-        // );
-        // response
-        //   .status(res?.error ? 400 : 200)
-        //   .json(res?.error ? { error: res.error } : { ok: true });
+        // extract url of the track to post
+        const { url, title, thumbnail, description } = request.body ?? {};
+        console.log(`/api/v2/postTrack, embed url: ${url}`);
 
-        response.status(200).json({ message: `hello ${user.name}` });
+        // extract the youtube video id from the URL
+        const eId = config.translateUrlToEid(url);
+        if (!eId || !eId.startsWith('/yt/')) {
+          response.status(400).json({ error: `unsupported url: ${url}` });
+          return;
+        }
+        console.log(`/api/v2/postTrack, embed id: ${eId}`);
+
+        // parse track from request's payload/body
+        /** @type {import('../../../domain/api/Features').PostTrackRequest} */
+        const postTrackRequest = { url, title, thumbnail, description };
+        for (const [key, value] of Object.entries(postTrackRequest)) {
+          if (typeof value !== 'string') {
+            response
+              .status(400)
+              .json({ error: `${key} must be a string, got: ${typeof value}` });
+            return;
+          }
+        }
+        console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
+
+        // create document to be stored in DB
+        const postDocument = {
+          uId: user.id,
+          uNm: user.name,
+          eId,
+          text: postTrackRequest.description,
+          name: postTrackRequest.title,
+        };
+        console.log(`/api/v2/postTrack doc:`, JSON.stringify(postDocument));
+
+        // store the post in DB + search index
+        const posted = await new Promise((resolve) =>
+          postModel.savePost(postDocument, resolve),
+        );
+
+        // respond to request, based on result
+        response
+          .status(posted ? 200 : 400)
+          .json(
+            posted
+              ? { url: `${process.env.URL_PREFIX}/c/${posted._id}` }
+              : { error: 'failed to post the track in database' },
+          );
       });
     }
 
