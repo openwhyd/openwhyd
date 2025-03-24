@@ -1,3 +1,10 @@
+# [1.63.0](https://github.com/openwhyd/openwhyd/compare/v1.62.1...v1.63.0) (2025-03-24)
+
+
+### Features
+
+* **api:** `POST /api/v2/postTrack` endpoint to post YouTube tracks ([#806](https://github.com/openwhyd/openwhyd/issues/806)) ([177caff](https://github.com/openwhyd/openwhyd/commit/177caffa5683faae09b8cf608d5deec351daee3d))
+
 ## [1.62.1](https://github.com/openwhyd/openwhyd/compare/v1.62.0...v1.62.1) (2025-03-21)
 
 
