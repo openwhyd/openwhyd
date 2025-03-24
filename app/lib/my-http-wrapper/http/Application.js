@@ -219,7 +219,7 @@ exports.Application = class Application {
           .status(posted ? 200 : 400)
           .json(
             posted
-              ? { url: `${process.env.URL_PREFIX}/c/${posted._id}` }
+              ? { url: `${process.env.WHYD_URL_PREFIX}/c/${posted._id}` }
               : { error: 'failed to post the track in database' },
           );
       });
