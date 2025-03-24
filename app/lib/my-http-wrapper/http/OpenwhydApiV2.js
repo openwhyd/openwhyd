@@ -13,6 +13,10 @@ const {
  * Custom error class to include status codes.
  */
 class ErrorWithStatusCode extends Error {
+  /**
+   * @param {number} statusCode
+   * @param {string} message
+   */
   constructor(statusCode, message) {
     super(message);
     this.statusCode = statusCode;
@@ -32,6 +36,25 @@ async function getUserFromAuthorizationHeader(request) {
   return user;
 }
 
+/** @param {import('express').Request['body']} requestBody */
+function validatePostTrackRequest(requestBody) {
+  // parse track data from request's payload/body
+  const { url, title, thumbnail, description } = requestBody ?? {};
+
+  // crude validation of PostTrackRequest
+  /** @type {import('../../../domain/api/Features').PostTrackRequest} */
+  const postTrackRequest = { url, title, thumbnail, description };
+  for (const [key, value] of Object.entries(postTrackRequest)) {
+    assert.equal(
+      typeof value,
+      'string',
+      `${key} must be a string, got: ${typeof value}`,
+    );
+    // TODO: use a schema to validate, e.g. https://gist.github.com/adrienjoly/412c283b72dd648b256ed590283caa0c
+  }
+  return postTrackRequest;
+}
+
 /** @param {import('express').Express} app */
 exports.injectOpenwhydAPIV2 = (app) => {
   const useAuth = auth({
@@ -45,26 +68,13 @@ exports.injectOpenwhydAPIV2 = (app) => {
     try {
       const user = await getUserFromAuthorizationHeader(request);
 
-      // parse track data from request's payload/body
-      const { url, title, thumbnail, description } = request.body ?? {};
-      console.log(`/api/v2/postTrack, embed url: ${url}`);
-
-      // crude validation of PostTrackRequest
-      /** @type {import('../../../domain/api/Features').PostTrackRequest} */
-      const postTrackRequest = { url, title, thumbnail, description };
-      for (const [key, value] of Object.entries(postTrackRequest)) {
-        assert.equal(
-          typeof value,
-          'string',
-          `${key} must be a string, got: ${typeof value}`,
-        );
-      }
+      const postTrackRequest = validatePostTrackRequest(request.body);
       console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
 
       // extract the youtube video id from the URL
-      const eId = config.translateUrlToEid(url);
+      const eId = config.translateUrlToEid(postTrackRequest.url);
       if (!eId || !eId.startsWith('/yt/'))
-        throw new Error(`unsupported url: ${url}`);
+        throw new Error(`unsupported url: ${postTrackRequest.url}`);
       console.log(`/api/v2/postTrack, embed id: ${eId}`);
 
       // create document to be stored in DB
