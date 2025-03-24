@@ -148,11 +148,14 @@ exports.Application = class Application {
     // prototype: v2 API with Auth0
     if (this._features.auth) {
       const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
+
       const useAuth = auth({
         issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL, // identifier of the Auth0 account
-        audience: `${process.env.URL_PREFIX}/api/v2/`, // identifier of Openwhyd API v2, as set on Auth0
+        audience: `${process.env.WHYD_URL_PREFIX}/api/v2/`, // identifier of Openwhyd API v2, as set on Auth0
         tokenSigningAlg: 'RS256', // as provided by Auth0's quickstart, after creating the API
       });
+      // TODO: on API routes, report errors (e.g. InvalidTokenError) in JSON format: { error: string }
+
       app.post('/api/v2/postTrack', useAuth, async (request, response) => {
         console.log(`/api/v2/postTrack`);
 
