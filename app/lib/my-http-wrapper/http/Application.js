@@ -173,14 +173,6 @@ exports.Application = class Application {
         const { url, title, thumbnail, description } = request.body ?? {};
         console.log(`/api/v2/postTrack, embed url: ${url}`);
 
-        // extract the youtube video id from the URL
-        const eId = config.translateUrlToEid(url);
-        if (!eId || !eId.startsWith('/yt/')) {
-          response.status(400).json({ error: `unsupported url: ${url}` });
-          return;
-        }
-        console.log(`/api/v2/postTrack, embed id: ${eId}`);
-
         // parse track from request's payload/body
         /** @type {import('../../../domain/api/Features').PostTrackRequest} */
         const postTrackRequest = { url, title, thumbnail, description };
@@ -193,6 +185,14 @@ exports.Application = class Application {
           }
         }
         console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
+
+        // extract the youtube video id from the URL
+        const eId = config.translateUrlToEid(url);
+        if (!eId || !eId.startsWith('/yt/')) {
+          response.status(400).json({ error: `unsupported url: ${url}` });
+          return;
+        }
+        console.log(`/api/v2/postTrack, embed id: ${eId}`);
 
         // create document to be stored in DB
         const postDocument = {
