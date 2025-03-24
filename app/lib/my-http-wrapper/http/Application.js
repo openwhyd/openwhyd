@@ -199,8 +199,9 @@ exports.Application = class Application {
           uId: user.id,
           uNm: user.name,
           eId,
-          text: postTrackRequest.description,
           name: postTrackRequest.title,
+          img: postTrackRequest.thumbnail,
+          text: postTrackRequest.description,
         };
         console.log(`/api/v2/postTrack doc:`, JSON.stringify(postDocument));
 
