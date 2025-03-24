@@ -1,3 +1,10 @@
+## [1.63.1](https://github.com/openwhyd/openwhyd/compare/v1.63.0...v1.63.1) (2025-03-24)
+
+
+### Bug Fixes
+
+* **api:** `InvalidTokenError: Unexpected "aud" value` ([#807](https://github.com/openwhyd/openwhyd/issues/807)) ([b0bda6c](https://github.com/openwhyd/openwhyd/commit/b0bda6c940df337760c7358a5ab5baeaf040568a)), closes [#806](https://github.com/openwhyd/openwhyd/issues/806)
+
 # [1.63.0](https://github.com/openwhyd/openwhyd/compare/v1.62.1...v1.63.0) (2025-03-24)
 
 
