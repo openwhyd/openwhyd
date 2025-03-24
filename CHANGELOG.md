@@ -1,3 +1,10 @@
+## [1.63.2](https://github.com/openwhyd/openwhyd/compare/v1.63.1...v1.63.2) (2025-03-24)
+
+
+### Bug Fixes
+
+* **api:** `/api/v2/postTrack` to return a valid URL ([d8f77c7](https://github.com/openwhyd/openwhyd/commit/d8f77c71b6b7d319fd27825e9805f7bb20d8763c))
+
 ## [1.63.1](https://github.com/openwhyd/openwhyd/compare/v1.63.0...v1.63.1) (2025-03-24)
 
 
