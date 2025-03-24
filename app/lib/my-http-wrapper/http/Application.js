@@ -162,18 +162,19 @@ exports.Application = class Application {
         // - auth.payload: The decoded JWT payload.
         // cf https://github.com/auth0/node-oauth2-jwt-bearer/blob/main/packages/express-oauth2-jwt-bearer/src/index.ts#L73
         const userId = getUserIdFromOidcUser(request.auth?.payload ?? {});
-        const user = await userCollection.getByUserId(userId);
+        console.log(`/api/v2/postTrack, user id: ${userId}`);
+
+        const user = userId ? await userCollection.getByUserId(userId) : null;
         if (!user) {
           response.status(401).json({ error: 'unauthorized' });
           return;
         }
-        console.log(`/api/v2/postTrack, user id: ${user.id}`);
 
-        // extract url of the track to post
+        // parse track data from request's payload/body
         const { url, title, thumbnail, description } = request.body ?? {};
         console.log(`/api/v2/postTrack, embed url: ${url}`);
 
-        // parse track from request's payload/body
+        // crude validation of PostTrackRequest
         /** @type {import('../../../domain/api/Features').PostTrackRequest} */
         const postTrackRequest = { url, title, thumbnail, description };
         for (const [key, value] of Object.entries(postTrackRequest)) {
