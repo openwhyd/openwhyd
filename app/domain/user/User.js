@@ -12,10 +12,12 @@
 module.exports = class User {
   /**
    * @param {string} id
+   * @param {string} name
    * @param {Playlist[]} playlists
    */
-  constructor(id, playlists) {
+  constructor(id, name, playlists) {
     this.id = id;
+    this.name = name;
     this.playlists = playlists || [];
   }
 
@@ -29,7 +31,7 @@ module.exports = class User {
       name: playlistName,
     };
     return Promise.resolve([
-      new User(this.id, [...this.playlists, newPlaylist]),
+      new User(this.id, this.name, [...this.playlists, newPlaylist]),
       newPlaylist,
     ]);
   };
@@ -39,7 +41,7 @@ module.exports = class User {
     const playlist = this.playlists.find((pl) => pl.id === playlistId);
     const otherPlaylists = this.playlists.filter((pl) => pl.id !== playlistId);
     if (!playlist) throw new Error('playlist not found');
-    return Promise.resolve(new User(this.id, otherPlaylists));
+    return Promise.resolve(new User(this.id, this.name, otherPlaylists));
   };
 };
 

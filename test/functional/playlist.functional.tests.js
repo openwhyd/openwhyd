@@ -19,8 +19,8 @@ const randomString = () => Math.random().toString(36).substring(2, 9);
 describe('playlist', () => {
   // test data
   const lastExistingPlaylistId = 42;
-  const userNoPlaylist = new User('userNoPlaylist', []);
-  const userWithPlaylist = new User('userWithPlaylist', [
+  const userNoPlaylist = new User('userNoPlaylist', 'userNoPlaylist', []);
+  const userWithPlaylist = new User('userWithPlaylist', 'userWithPlaylist', [
     { id: lastExistingPlaylistId, name: 'existingPlaylist' },
   ]);
 
