@@ -55,7 +55,42 @@ function validatePostTrackRequest(requestBody) {
   return postTrackRequest;
 }
 
-/** @param {import('express').Express} app */
+/**
+ * @param {import('../../../domain/user/types.ts').User} user
+ * @param {import('../../../domain/api/Features.ts').PostTrackRequest} postTrackRequest
+ */
+async function postTrack(user, postTrackRequest) {
+  // extract the youtube video id from the URL
+  const eId = config.translateUrlToEid(postTrackRequest.url);
+  if (!eId || !eId.startsWith('/yt/'))
+    throw new Error(`unsupported url: ${postTrackRequest.url}`);
+  console.log(`/api/v2/postTrack, embed id: ${eId}`);
+
+  // create document to be stored in DB
+  const postDocument = {
+    uId: user.id,
+    uNm: user.name,
+    eId,
+    name: postTrackRequest.title,
+    img: postTrackRequest.thumbnail,
+    text: postTrackRequest.description,
+  };
+  console.log(`/api/v2/postTrack doc:`, JSON.stringify(postDocument));
+
+  // store the post in DB + search index
+  const posted = await new Promise((resolve, reject) =>
+    postModel.savePost(postDocument, (res) =>
+      res
+        ? resolve(res)
+        : reject(new Error('failed to post the track in database')),
+    ),
+  );
+  return { url: `${process.env.WHYD_URL_PREFIX}/c/${posted._id}` };
+}
+
+/**
+ * @param {import('express').Express} app
+ */
 exports.injectOpenwhydAPIV2 = (app) => {
   const useAuth = auth({
     issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL, // identifier of the Auth0 account
@@ -71,35 +106,8 @@ exports.injectOpenwhydAPIV2 = (app) => {
       const postTrackRequest = validatePostTrackRequest(request.body);
       console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
 
-      // extract the youtube video id from the URL
-      const eId = config.translateUrlToEid(postTrackRequest.url);
-      if (!eId || !eId.startsWith('/yt/'))
-        throw new Error(`unsupported url: ${postTrackRequest.url}`);
-      console.log(`/api/v2/postTrack, embed id: ${eId}`);
-
-      // create document to be stored in DB
-      const postDocument = {
-        uId: user.id,
-        uNm: user.name,
-        eId,
-        name: postTrackRequest.title,
-        img: postTrackRequest.thumbnail,
-        text: postTrackRequest.description,
-      };
-      console.log(`/api/v2/postTrack doc:`, JSON.stringify(postDocument));
-
-      // store the post in DB + search index
-      const posted = await new Promise((resolve, reject) =>
-        postModel.savePost(postDocument, (res) =>
-          res
-            ? resolve(res)
-            : reject(new Error('failed to post the track in database')),
-        ),
-      );
-
-      response
-        .status(200)
-        .json({ url: `${process.env.WHYD_URL_PREFIX}/c/${posted._id}` });
+      const { url } = await postTrack(user, postTrackRequest);
+      response.status(200).json({ url });
     } catch (err) {
       response
         .status(err instanceof ErrorWithStatusCode ? err.statusCode : 400)
