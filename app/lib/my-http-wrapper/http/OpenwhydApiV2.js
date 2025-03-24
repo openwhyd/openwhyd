@@ -1,9 +1,13 @@
 // @ts-check
 
+const assert = require('assert');
 const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
-const postModel = require('../../../models/post.js');
-const config = require('../../../models/config.js');
 const { getUserIdFromOidcUser } = require('../../auth0/index.js');
+const config = require('../../../models/config.js');
+const postModel = require('../../../models/post.js');
+const {
+  userCollection,
+} = require('../../../infrastructure/mongodb/UserCollection');
 
 /**
  * Custom error class to include status codes.
@@ -14,10 +18,6 @@ class ErrorWithStatusCode extends Error {
     this.statusCode = statusCode;
   }
 }
-const {
-  userCollection,
-} = require('../../../infrastructure/mongodb/UserCollection');
-const assert = require('assert');
 
 /** @param {import('express').Request} request */
 async function getUserFromAuthorizationHeader(request) {
