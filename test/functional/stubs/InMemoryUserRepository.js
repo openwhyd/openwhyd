@@ -57,6 +57,7 @@ function deepCopyUsers(users) {
 function deepCopyUser(user) {
   return new User(
     user.id,
+    user.name,
     user.playlists.map((playlist) => {
       return { id: playlist.id, name: playlist.name };
     }),
