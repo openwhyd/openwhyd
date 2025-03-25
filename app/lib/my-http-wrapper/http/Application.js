@@ -141,7 +141,10 @@ exports.Application = class Application {
 
     if (this._features.auth) {
       // Openwhyd API V2 relies on OAuth/Auth0
-      require('./OpenwhydApiV2.js').injectOpenwhydAPIV2(app);
+      require('./OpenwhydApiV2.js').injectOpenwhydAPIV2(app, {
+        issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL, // identifier of the Auth0 account
+        urlPrefix: process.env.WHYD_URL_PREFIX, // identifier of Openwhyd API v2, as set on Auth0
+      });
     }
 
     attachLegacyRoutesFromFile(

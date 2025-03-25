@@ -90,11 +90,12 @@ async function postTrack(user, postTrackRequest) {
 
 /**
  * @param {import('express').Express} app with json body parser
+ * @param {{ issuerBaseURL: string, urlPrefix: string }} authParams
  */
-exports.injectOpenwhydAPIV2 = (app) => {
+exports.injectOpenwhydAPIV2 = (app, authParams) => {
   const useAuth = auth({
-    issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL, // identifier of the Auth0 account
-    audience: `${process.env.WHYD_URL_PREFIX}/api/v2/`, // identifier of Openwhyd API v2, as set on Auth0
+    issuerBaseURL: authParams.issuerBaseURL, // identifier of the Auth0 account
+    audience: `${authParams.urlPrefix}/api/v2/`, // identifier of Openwhyd API v2, as set on Auth0
     tokenSigningAlg: 'RS256', // as provided by Auth0's quickstart, after creating the API
   });
   // TODO: on API routes, report errors (e.g. InvalidTokenError) in JSON format: { error: string }
