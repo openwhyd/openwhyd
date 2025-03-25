@@ -89,7 +89,7 @@ async function postTrack(user, postTrackRequest) {
 }
 
 /**
- * @param {import('express').Express} app
+ * @param {import('express').Express} app with json body parser
  */
 exports.injectOpenwhydAPIV2 = (app) => {
   const useAuth = auth({
