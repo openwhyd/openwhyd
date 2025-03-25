@@ -98,10 +98,27 @@ exports.injectOpenwhydAPIV2 = (app, authParams) => {
     audience: `${authParams.urlPrefix}/api/v2/`, // identifier of Openwhyd API v2, as set on Auth0
     tokenSigningAlg: 'RS256', // as provided by Auth0's quickstart, after creating the API
   });
-  // TODO: on API routes, report errors (e.g. InvalidTokenError) in JSON format: { error: string }
 
-  app.post('/api/v2/postTrack', useAuth, async (request, response) => {
+  /**
+   * Call the auth middleware programmatically to check the token, and intercept errors
+   * (e.g. InvalidTokenError), so they can be handled by caller, instead of by Express.
+   * In case of success, request.auth will be populated with the following props:
+   * - request.auth.token: The raw JWT token
+   * - request.auth.header: The decoded JWT header
+   * - request.auth.payload: The decoded JWT payload
+   * @param {import('express').Request} request
+   * @throws {ErrorWithStatusCode} if token is invalid
+   */
+  const checkAuthOrThrow = async (request) =>
+    await new Promise((resolve, reject) =>
+      useAuth(request, null, (err) =>
+        err ? reject(new ErrorWithStatusCode(401, err.message)) : resolve,
+      ),
+    );
+
+  app.post('/api/v2/postTrack', async (request, response) => {
     try {
+      await checkAuthOrThrow(request); // populates request.auth, or throws a 401 error
       const user = await getUserFromAuthorizationHeader(request);
 
       const postTrackRequest = validatePostTrackRequest(request.body);

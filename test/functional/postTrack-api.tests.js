@@ -38,7 +38,7 @@ describe('postTrack API', () => {
       .expect('Content-Type', /json/)
       .send({}) // no token
       .then((response) => {
-        assert.equal(response.body.error, 'unauthorized');
+        assert.equal(response.body.error, 'Unauthorized'); // thrown by checkAuthOrThrow()
       });
   });
 });
