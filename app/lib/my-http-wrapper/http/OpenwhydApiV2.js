@@ -2,6 +2,8 @@
 
 const assert = require('assert');
 const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
+const { rateLimit } = require('express-rate-limit');
+
 const { getUserIdFromOidcUser } = require('../../auth0/index.js');
 const config = require('../../../models/config.js');
 const postModel = require('../../../models/post.js');
@@ -116,7 +118,16 @@ exports.injectOpenwhydAPIV2 = (app, authParams) => {
       ),
     );
 
-  app.post('/api/v2/postTrack', async (request, response) => {
+  const rateLimiter = rateLimit({
+    windowMs: 1000, // 1 second
+    limit: 1, // Limit each IP to 1 request per `window`
+    message: { error: 'Too many requests, please try again later' },
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+    // store: ... , // by default, the memory store is used
+  });
+
+  app.post('/api/v2/postTrack', rateLimiter, async (request, response) => {
     try {
       await checkAuthOrThrow(request); // populates request.auth, or throws a 401 error
       const user = await getUserFromAuthorizationHeader(request);
