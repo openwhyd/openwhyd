@@ -1,3 +1,10 @@
+## [1.63.3](https://github.com/openwhyd/openwhyd/compare/v1.63.2...v1.63.3) (2025-03-26)
+
+
+### Bug Fixes
+
+* **api-v2:** add rate limiter + add tests + refactor ([#808](https://github.com/openwhyd/openwhyd/issues/808)) ([349b73b](https://github.com/openwhyd/openwhyd/commit/349b73b90586dc6be7206a5b6af46e3b245757db)), closes [/github.com/openwhyd/openwhyd/pull/808#discussion_r2012476188](https://github.com//github.com/openwhyd/openwhyd/pull/808/issues/discussion_r2012476188)
+
 ## [1.63.2](https://github.com/openwhyd/openwhyd/compare/v1.63.1...v1.63.2) (2025-03-24)
 
 
