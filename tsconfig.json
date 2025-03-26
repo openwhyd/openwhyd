@@ -6,6 +6,7 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true
+    // "strictNullChecks": true // required by ajv's JSONSchemaType, for validation with type inferrence
   },
   "include": ["**/*.ts", "**/*.d.ts", "**/*.js"]
 }
