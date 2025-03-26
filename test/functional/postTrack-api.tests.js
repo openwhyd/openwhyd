@@ -10,7 +10,7 @@ const {
 const assert = require('assert');
 
 describe('postTrack API', () => {
-  it('should respond with a 401 status code when trying to post a track without token', async () => {
+  it('should return a 401 with a JSON error message when trying to post a track without token', async () => {
     const app = express();
     injectOpenwhydAPIV2(app, {
       issuerBaseURL:
@@ -18,27 +18,13 @@ describe('postTrack API', () => {
       urlPrefix: `http://localhost`, // identifier of Openwhyd API v2, as set on Auth0
     });
 
-    await request(app)
-      .post('/api/v2/postTrack')
-      .send({}) // no token
-      .expect(401);
-  });
-
-  it('should respond with an error message when trying to post a track without token', async () => {
-    const app = express();
-    injectOpenwhydAPIV2(app, {
-      issuerBaseURL:
-        process.env.AUTH0_ISSUER_BASE_URL ?? 'https://dummy.eu.auth0.com', // identifier of the Auth0 account
-      urlPrefix: `http://localhost`, // identifier of Openwhyd API v2, as set on Auth0
-    });
-
-    await request(app)
+    const response = await request(app)
       .post('/api/v2/postTrack')
       .set('Accept', 'application/json')
+      .send({})
       .expect('Content-Type', /json/)
-      .send({}) // no token
-      .then((response) => {
-        assert.equal(response.body.error, 'Unauthorized'); // thrown by checkAuthOrThrow()
-      });
+      .expect(401); // thrown by checkAuthOrThrow()
+
+    assert.equal(response.body.error, 'Unauthorized'); // thrown by checkAuthOrThrow()
   });
 });
