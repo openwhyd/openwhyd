@@ -3,7 +3,7 @@
 # Fail if the number of (indirect) references to "usernames" has increased.
 # Don't forget to update EXPECTED_REFS_COUNT whenever references are removed.
 
-EXPECTED_REFS_COUNT=998
+EXPECTED_REFS_COUNT=958
 REFS=$(npx --yes tsx scripts/legacy-refs/detect-refs.ts app/models/mongodb.js usernames)
 REFS_COUNT=$(echo "${REFS}" | wc -l)
 echo "ℹ️  Found ${REFS_COUNT} (indirect) references to 'usernames'"
