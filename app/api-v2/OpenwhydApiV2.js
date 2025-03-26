@@ -58,8 +58,7 @@ function validatePostTrackRequest(requestBody) {
 }
 
 /**
- * @param {import('../domain/user/types.js').User} user
- * @param {import('../domain/api/Features.js').PostTrackRequest} postTrackRequest
+ * @type {import('../domain/api/Features.js').PostTrack}
  */
 async function postTrack(user, postTrackRequest) {
   // extract the youtube video id from the URL
