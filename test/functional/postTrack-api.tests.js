@@ -10,11 +10,17 @@ const assert = require('assert');
 describe('postTrack API', () => {
   it('should return a 401 with a JSON error message when trying to post a track without token', async () => {
     const app = express();
-    injectOpenwhydAPIV2(app, {
-      issuerBaseURL:
-        process.env.AUTH0_ISSUER_BASE_URL ?? 'https://dummy.eu.auth0.com', // identifier of the Auth0 account
-      urlPrefix: `http://localhost`, // identifier of Openwhyd API v2, as set on Auth0
-    });
+    injectOpenwhydAPIV2(
+      app,
+      {
+        issuerBaseURL:
+          process.env.AUTH0_ISSUER_BASE_URL ?? 'https://dummy.eu.auth0.com', // identifier of the Auth0 account
+        urlPrefix: `http://localhost`, // identifier of Openwhyd API v2, as set on Auth0
+      },
+      {
+        postTrack: () => Promise.resolve({ url: 'dummy' }),
+      },
+    );
 
     const response = await request(app)
       .post('/api/v2/postTrack')

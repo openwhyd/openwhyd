@@ -5,8 +5,6 @@ const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization
 const { rateLimit } = require('express-rate-limit');
 
 const { getUserIdFromOidcUser } = require('../lib/auth0/index.js');
-const config = require('../models/config.js');
-const postModel = require('../models/post.js');
 const {
   userCollection,
 } = require('../infrastructure/mongodb/UserCollection.js');
@@ -58,42 +56,11 @@ function validatePostTrackRequest(requestBody) {
 }
 
 /**
- * @type {import('../domain/api/Features.js').PostTrack}
- */
-async function postTrack(user, postTrackRequest) {
-  // extract the youtube video id from the URL
-  const eId = config.translateUrlToEid(postTrackRequest.url);
-  if (!eId || !eId.startsWith('/yt/'))
-    throw new Error(`unsupported url: ${postTrackRequest.url}`);
-  console.log(`/api/v2/postTrack, embed id: ${eId}`);
-
-  // create document to be stored in DB
-  const postDocument = {
-    uId: user.id,
-    uNm: user.name,
-    eId,
-    name: postTrackRequest.title,
-    img: postTrackRequest.thumbnail,
-    text: postTrackRequest.description,
-  };
-  console.log(`/api/v2/postTrack doc:`, JSON.stringify(postDocument));
-
-  // store the post in DB + search index
-  const posted = await new Promise((resolve, reject) =>
-    postModel.savePost(postDocument, (res) =>
-      res
-        ? resolve(res)
-        : reject(new Error('failed to post the track in database')),
-    ),
-  );
-  return { url: `${process.env.WHYD_URL_PREFIX}/c/${posted._id}` };
-}
-
-/**
  * @param {import('express').Express} app with json body parser
  * @param {{ issuerBaseURL: string, urlPrefix: string }} authParams
+ * @param {{ postTrack: import('../domain/api/Features.js').PostTrack }} features
  */
-exports.injectOpenwhydAPIV2 = (app, authParams) => {
+exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
   const useAuth = auth({
     issuerBaseURL: authParams.issuerBaseURL, // identifier of the Auth0 account
     audience: `${authParams.urlPrefix}/api/v2/`, // identifier of Openwhyd API v2, as set on Auth0
@@ -134,7 +101,7 @@ exports.injectOpenwhydAPIV2 = (app, authParams) => {
       const postTrackRequest = validatePostTrackRequest(request.body);
       console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
 
-      const { url } = await postTrack(user, postTrackRequest);
+      const { url } = await features.postTrack(user, postTrackRequest);
       response.status(200).json({ url });
     } catch (err) {
       response
