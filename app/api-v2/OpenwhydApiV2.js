@@ -10,19 +10,6 @@ const {
 } = require('../infrastructure/mongodb/UserCollection.js');
 const { ErrorWithStatusCode } = require('../lib/ErrorWithStatusCode.js');
 
-/** @param {import('express').Request} request */
-async function getUserFromAuthorizationHeader(request) {
-  // Successful requests will have the following properties added to them:
-  // - auth.token: The raw JWT token.
-  // - auth.header: The decoded JWT header.
-  // - auth.payload: The decoded JWT payload.
-  // cf https://github.com/auth0/node-oauth2-jwt-bearer/blob/main/packages/express-oauth2-jwt-bearer/src/index.ts#L73
-  const userId = getUserIdFromOidcUser(request.auth?.payload ?? {});
-  const user = userId ? await userCollection.getByUserId(userId) : null;
-  if (!user) throw new ErrorWithStatusCode(401, 'unauthorized');
-  return user;
-}
-
 /** @param {import('express').Request['body']} requestBody */
 function validatePostTrackRequest(requestBody) {
   // parse track data from request's payload/body
@@ -55,21 +42,28 @@ exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
   });
 
   /**
-   * Call the auth middleware programmatically to check the token, and intercept errors
-   * (e.g. InvalidTokenError), so they can be handled by caller, instead of by Express.
-   * In case of success, request.auth will be populated with the following props:
-   * - request.auth.token: The raw JWT token
-   * - request.auth.header: The decoded JWT header
-   * - request.auth.payload: The decoded JWT payload
+   * Read the JWT Access Token from the Authorization header and return the corresponding user, if valid.
    * @param {import('express').Request} request
    * @throws {ErrorWithStatusCode} if token is invalid
    */
-  const checkAuthOrThrow = async (request) =>
+  async function getUserFromAuthorizationHeader(request) {
+    // Call the auth middleware programmatically to check the access token, and intercept errors
+    // (e.g. InvalidTokenError), so they can be handled by caller, instead of by Express.
     await new Promise((resolve, reject) =>
       useAuth(request, null, (err) =>
         err ? reject(new ErrorWithStatusCode(401, err.message)) : resolve,
       ),
     );
+    // Successful requests will have the following properties added to them:
+    // - auth.token: The raw JWT token.
+    // - auth.header: The decoded JWT header.
+    // - auth.payload: The decoded JWT payload.
+    // cf https://github.com/auth0/node-oauth2-jwt-bearer/blob/main/packages/express-oauth2-jwt-bearer/src/index.ts#L73
+    const userId = getUserIdFromOidcUser(request.auth?.payload ?? {});
+    const user = userId ? await userCollection.getByUserId(userId) : null;
+    if (!user) throw new ErrorWithStatusCode(401, 'unauthorized');
+    return user;
+  }
 
   const rateLimiter = rateLimit({
     windowMs: 1000, // 1 second
@@ -82,8 +76,7 @@ exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
 
   app.post('/api/v2/postTrack', rateLimiter, async (request, response) => {
     try {
-      await checkAuthOrThrow(request); // populates request.auth, or throws a 401 error
-      const user = await getUserFromAuthorizationHeader(request);
+      const user = await getUserFromAuthorizationHeader(request); // may throws a 401 error
 
       const postTrackRequest = validatePostTrackRequest(request.body);
       console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
