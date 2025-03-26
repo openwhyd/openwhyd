@@ -8,20 +8,7 @@ const { getUserIdFromOidcUser } = require('../lib/auth0/index.js');
 const {
   userCollection,
 } = require('../infrastructure/mongodb/UserCollection.js');
-
-/**
- * Custom error class to include status codes.
- */
-class ErrorWithStatusCode extends Error {
-  /**
-   * @param {number} statusCode
-   * @param {string} message
-   */
-  constructor(statusCode, message) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
+const { ErrorWithStatusCode } = require('../lib/ErrorWithStatusCode.js');
 
 /** @param {import('express').Request} request */
 async function getUserFromAuthorizationHeader(request) {
