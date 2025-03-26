@@ -4,9 +4,7 @@
 
 const express = require('express');
 const request = require('supertest');
-const {
-  injectOpenwhydAPIV2,
-} = require('../../app/lib/my-http-wrapper/http/OpenwhydApiV2.js');
+const { injectOpenwhydAPIV2 } = require('../../app/api-v2/OpenwhydApiV2.js');
 const assert = require('assert');
 
 describe('postTrack API', () => {

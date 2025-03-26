@@ -4,12 +4,12 @@ const assert = require('assert');
 const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
 const { rateLimit } = require('express-rate-limit');
 
-const { getUserIdFromOidcUser } = require('../../auth0/index.js');
-const config = require('../../../models/config.js');
-const postModel = require('../../../models/post.js');
+const { getUserIdFromOidcUser } = require('../lib/auth0/index.js');
+const config = require('../models/config.js');
+const postModel = require('../models/post.js');
 const {
   userCollection,
-} = require('../../../infrastructure/mongodb/UserCollection');
+} = require('../infrastructure/mongodb/UserCollection.js');
 
 /**
  * Custom error class to include status codes.
@@ -44,7 +44,7 @@ function validatePostTrackRequest(requestBody) {
   const { url, title, thumbnail, description } = requestBody ?? {};
 
   // crude validation of PostTrackRequest
-  /** @type {import('../../../domain/api/Features').PostTrackRequest} */
+  /** @type {import('../domain/api/Features.js').PostTrackRequest} */
   const postTrackRequest = { url, title, thumbnail, description };
   for (const [key, value] of Object.entries(postTrackRequest)) {
     assert.equal(
@@ -58,8 +58,8 @@ function validatePostTrackRequest(requestBody) {
 }
 
 /**
- * @param {import('../../../domain/user/types.ts').User} user
- * @param {import('../../../domain/api/Features.ts').PostTrackRequest} postTrackRequest
+ * @param {import('../domain/user/types.js').User} user
+ * @param {import('../domain/api/Features.js').PostTrackRequest} postTrackRequest
  */
 async function postTrack(user, postTrackRequest) {
   // extract the youtube video id from the URL
