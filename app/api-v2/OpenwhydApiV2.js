@@ -1,6 +1,7 @@
 // @ts-check
 
 const assert = require('assert');
+const { Ajv } = require('ajv');
 const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
 const { rateLimit } = require('express-rate-limit');
 
@@ -10,24 +11,39 @@ const {
 } = require('../infrastructure/mongodb/UserCollection.js');
 const { ErrorWithStatusCode } = require('../lib/ErrorWithStatusCode.js');
 
-/** @param {import('express').Request['body']} requestBody */
-function validatePostTrackRequest(requestBody) {
-  // parse track data from request's payload/body
-  const { url, title, thumbnail, description } = requestBody ?? {};
+/** @type {import('ajv').JSONSchemaType<import('../domain/api/Features.js').PostTrackRequest>} */
+// @ts-ignore type checking for JSONSchemaType can only work if strictNullChecks is enabled
+const schema = {
+  type: 'object',
+  properties: {
+    url: { type: 'string' },
+    title: { type: 'string' },
+    thumbnail: { type: 'string', nullable: true },
+    description: { type: 'string', nullable: true },
+  },
+  required: ['url', 'title'],
+  additionalProperties: false,
+};
 
-  // crude validation of PostTrackRequest
-  /** @type {import('../domain/api/Features.js').PostTrackRequest} */
-  const postTrackRequest = { url, title, thumbnail, description };
-  for (const [key, value] of Object.entries(postTrackRequest)) {
-    assert.equal(
-      typeof value,
-      'string',
-      `${key} must be a string, got: ${typeof value}`,
-    );
-    // TODO: use a schema to validate, e.g. https://gist.github.com/adrienjoly/412c283b72dd648b256ed590283caa0c
-  }
-  return postTrackRequest;
+/**
+ * Parse track data from request's payload/body.
+ * @param {import('express').Request['body']} requestBody
+ */
+function validatePostTrackRequest(requestBody) {
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  const postTrackRequest = validate(requestBody);
+  assert.ok(
+    postTrackRequest,
+    `Invalid postTrack request: ${ajv.errorsText(validate.errors)}`,
+  );
+  // The type assertion below can be removed after enabling strictNullChecks and removing the ts-ignore above
+  return /** @type {import('../domain/api/Features.js').PostTrackRequest} */ (
+    requestBody
+  );
 }
+
+exports.validatePostTrackRequest = validatePostTrackRequest;
 
 /**
  * @param {import('express').Express} app with json body parser

@@ -61,6 +61,7 @@
     "test": "./test"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
     "algoliasearch": "4.20.0",
     "async": "*",
     "auth0": "^4.15.0",
