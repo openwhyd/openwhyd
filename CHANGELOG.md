@@ -1,3 +1,11 @@
+## [1.63.5](https://github.com/openwhyd/openwhyd/compare/v1.63.4...v1.63.5) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** disable rate limit we until we find out why some requests don't respond ([4020def](https://github.com/openwhyd/openwhyd/commit/4020def534a2b3199b07d8123fb9b80d8c45ee57))
+* **ci:** skip 2nd algolia test that times out ([4a2f5a8](https://github.com/openwhyd/openwhyd/commit/4a2f5a806789f8a9f8ba8f6773bea108cc4be8ea))
+
 ## [1.63.4](https://github.com/openwhyd/openwhyd/compare/v1.63.3...v1.63.4) (2025-03-28)
 
 
