@@ -3,7 +3,7 @@
 const assert = require('assert');
 const { Ajv } = require('ajv');
 const { auth } = require('express-oauth2-jwt-bearer'); // to check Authorization Bearer tokens
-const { rateLimit } = require('express-rate-limit');
+// const { rateLimit } = require('express-rate-limit');
 
 const { getUserIdFromOidcUser } = require('../lib/auth0/index.js');
 const {
@@ -81,28 +81,32 @@ exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
     return user;
   }
 
-  const rateLimiter = rateLimit({
-    windowMs: 1000, // 1 second
-    limit: 1, // Limit each IP to 1 request per `window`
-    message: { error: 'Too many requests, please try again later' },
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-    // store: ... , // by default, the memory store is used
-  });
+  // TODO: re-enable rate limiting, after finding out why some requests don't respond
+  // const rateLimiter = rateLimit({
+  //   windowMs: 1000, // 1 second
+  //   limit: 1, // Limit each IP to 1 request per `window`
+  //   message: { error: 'Too many requests, please try again later' },
+  //   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  //   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  //   // store: ... , // by default, the memory store is used
+  // });
 
-  app.post('/api/v2/postTrack', rateLimiter, async (request, response) => {
-    try {
-      const user = await getUserFromAuthorizationHeader(request); // may throws a 401 error
+  app.post(
+    '/api/v2/postTrack',
+    /*rateLimiter,*/ async (request, response) => {
+      try {
+        const user = await getUserFromAuthorizationHeader(request); // may throws a 401 error
 
-      const postTrackRequest = validatePostTrackRequest(request.body);
-      console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
+        const postTrackRequest = validatePostTrackRequest(request.body);
+        console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
 
-      const { url } = await features.postTrack(user, postTrackRequest);
-      response.status(200).json({ url });
-    } catch (err) {
-      response
-        .status(err instanceof ErrorWithStatusCode ? err.statusCode : 400)
-        .json({ error: err.message });
-    }
-  });
+        const { url } = await features.postTrack(user, postTrackRequest);
+        response.status(200).json({ url });
+      } catch (err) {
+        response
+          .status(err instanceof ErrorWithStatusCode ? err.statusCode : 400)
+          .json({ error: err.message });
+      }
+    },
+  );
 };
