@@ -68,7 +68,7 @@ exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
     // (e.g. InvalidTokenError), so they can be handled by caller, instead of by Express.
     await new Promise((resolve, reject) =>
       useAuth(request, response, (err) =>
-        err ? reject(new ErrorWithStatusCode(401, err.message)) : resolve,
+        err ? reject(new ErrorWithStatusCode(401, err.message)) : resolve(),
       ),
     );
     // Successful requests will have the following properties added to them:
