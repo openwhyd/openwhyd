@@ -1,3 +1,11 @@
+## [1.63.4](https://github.com/openwhyd/openwhyd/compare/v1.63.3...v1.63.4) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** make rate limiter work with HTTP proxy (cloudflare and/or nginx) ([#809](https://github.com/openwhyd/openwhyd/issues/809)) ([f6be99f](https://github.com/openwhyd/openwhyd/commit/f6be99fa11a565d1be8f15017df00088061161ec)), closes [/github.com/openwhyd/openwhyd/pull/808#issuecomment-2754369261](https://github.com//github.com/openwhyd/openwhyd/pull/808/issues/issuecomment-2754369261)
+* **ci:** skip algolia test that times out ([62a3c51](https://github.com/openwhyd/openwhyd/commit/62a3c51633abaf281484690e759df25a80347d9d))
+
 ## [1.63.3](https://github.com/openwhyd/openwhyd/compare/v1.63.2...v1.63.3) (2025-03-26)
 
 
