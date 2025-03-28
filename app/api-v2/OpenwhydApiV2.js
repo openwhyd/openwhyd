@@ -60,13 +60,14 @@ exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
   /**
    * Read the JWT Access Token from the Authorization header and return the corresponding user, if valid.
    * @param {import('express').Request} request
+   * @param {import('express').Response} response
    * @throws {ErrorWithStatusCode} if token is invalid
    */
-  async function getUserFromAuthorizationHeader(request) {
+  async function getUserFromAuthorizationHeader(request, response) {
     // Call the auth middleware programmatically to check the access token, and intercept errors
     // (e.g. InvalidTokenError), so they can be handled by caller, instead of by Express.
     await new Promise((resolve, reject) =>
-      useAuth(request, null, (err) =>
+      useAuth(request, response, (err) =>
         err ? reject(new ErrorWithStatusCode(401, err.message)) : resolve,
       ),
     );
@@ -95,7 +96,8 @@ exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
     '/api/v2/postTrack',
     /*rateLimiter,*/ async (request, response) => {
       try {
-        const user = await getUserFromAuthorizationHeader(request); // may throws a 401 error
+        console.log(`/api/v2/postTrack`);
+        const user = await getUserFromAuthorizationHeader(request, response); // may throws a 401 error
 
         const postTrackRequest = validatePostTrackRequest(request.body);
         console.log(`/api/v2/postTrack req:`, JSON.stringify(postTrackRequest));
@@ -103,6 +105,7 @@ exports.injectOpenwhydAPIV2 = (app, authParams, features) => {
         const { url } = await features.postTrack(user, postTrackRequest);
         response.status(200).json({ url });
       } catch (err) {
+        console.warn(`/api/v2/postTrack err:`, err);
         response
           .status(err instanceof ErrorWithStatusCode ? err.statusCode : 400)
           .json({ error: err.message });
