@@ -1,3 +1,10 @@
+## [1.63.8](https://github.com/openwhyd/openwhyd/compare/v1.63.7...v1.63.8) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** Revert "disable rate limit we until we find out why some requests don't respond" ([1b513f8](https://github.com/openwhyd/openwhyd/commit/1b513f870949844a793f6efca8d60d4fd7bda359))
+
 ## [1.63.7](https://github.com/openwhyd/openwhyd/compare/v1.63.6...v1.63.7) (2025-03-28)
 
 
