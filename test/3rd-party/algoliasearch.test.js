@@ -50,9 +50,7 @@ describe('Algolia search wrapper', () => {
     await expect(count).toBe(0);
   });
 
-  // TODO: unskip this test after fixing "Exceeded timeout of 5000 ms"
-  // cf https://github.com/openwhyd/openwhyd/actions/runs/14125478004/job/39573746496#step:5:133
-  it.skip('should hit an indexed post, when searching posts', async () => {
+  it('should hit an indexed post, when searching posts', async () => {
     const post = DUMMY_POST;
     const result = await util.promisify(searchModel.indexTyped)('post', post);
     expect(result).toMatchObject({ items: [post] });
@@ -63,9 +61,7 @@ describe('Algolia search wrapper', () => {
     expect(posts).toMatchObject({ hits: [post] });
   });
 
-  // TODO: unskip this test after fixing "Exceeded timeout of 5000 ms"
-  // cf https://github.com/openwhyd/openwhyd/actions/runs/14126047048/job/39575265487#step:5:98
-  it.skip('should hit an indexed post, when searching all types of documents', async () => {
+  it('should hit an indexed post, when searching all types of documents', async () => {
     const post = DUMMY_POST;
     const result = await util.promisify(searchModel.indexTyped)('post', post);
     expect(result).toMatchObject({ items: [post] });
