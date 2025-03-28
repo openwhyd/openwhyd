@@ -1,3 +1,10 @@
+## [1.63.7](https://github.com/openwhyd/openwhyd/compare/v1.63.6...v1.63.7) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** fix call to resolve(), api-v2 requests can respond ([8796c17](https://github.com/openwhyd/openwhyd/commit/8796c17bd308d185b4b8fd9d150f11346cf3d2f1))
+
 ## [1.63.6](https://github.com/openwhyd/openwhyd/compare/v1.63.5...v1.63.6) (2025-03-28)
 
 
