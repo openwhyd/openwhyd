@@ -233,6 +233,12 @@ exports.html = function (uId, html, href, img) {
 
 // specific notification methods
 
+/** @typedef {{_id: import('mongodb').ObjectId | string, eId?: string, name?: string, uId?: string}} LovablePost */
+
+/**
+ * @param {import('mongodb').ObjectId | string} loverUid
+ * @param {LovablePost} post
+ */
 exports.love = function (loverUid, post, callback) {
   const user = mongodb.usernames['' + loverUid];
   const author = mongodb.usernames['' + post.uId];
@@ -262,7 +268,12 @@ exports.love = function (loverUid, post, callback) {
   notifEmails.sendLike(user, post, author);
 };
 
-exports.unlove = async function (loverUid, pId) {
+/**
+ * @param {import('mongodb').ObjectId | string} loverUid
+ * @param {LovablePost} post
+ */
+exports.unlove = async function (loverUid, post) {
+  const pId = post._id;
   const criteria = { _id: pId + '/loves' };
   const col = db['notif'];
   await col.updateOne(criteria, { $inc: { n: -1 }, $pull: { lov: loverUid } });
