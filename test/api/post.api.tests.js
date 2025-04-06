@@ -606,5 +606,18 @@ describe(`post api`, function () {
       assert.equal(activities[0]?.like?.id, otherUser.id);
       assert.equal(activities[0]?.like?.pId, postId);
     });
+
+    // it('should decrease the number of loves of a post that was previously loved', async () => {
+    //   // Given a post with 1 loves
+    //   const postId = '000000000000000000000009';
+    //   await insertPost(postId, { ...postFromOtherUser, lov: [loggedUser.id] });
+
+    //   // When requesting to decrease the love counter for that post
+    //   await callPostApi({ action: 'toggleLovePost', pId: postId });
+
+    //   // Then the user is not included anymore in the list of loves
+    //   const [postAfter] = await openwhyd.dumpCollection('post');
+    //   assert.deepEqual(postAfter.lov, []);
+    // });
   });
 });
