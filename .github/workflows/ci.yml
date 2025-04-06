@@ -407,8 +407,17 @@ jobs:
     name: Docker tests
     timeout-minutes: 5
     runs-on: ubuntu-20.04
+    services:
+      docker:
+        options: --memory=4g
     steps:
       - uses: actions/checkout@v4
+      - name: Monitor Memory Usage
+        run: |
+          while true; do
+            free -m
+            sleep 5
+          done &
       - name: Build and start services
         run: docker compose up --build --detach
         # env:
