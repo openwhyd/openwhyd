@@ -1,3 +1,11 @@
+## [1.63.9](https://github.com/openwhyd/openwhyd/compare/v1.63.8...v1.63.9) (2025-04-06)
+
+
+### Bug Fixes
+
+* **notif:** uncaught error when unloving a post ([#811](https://github.com/openwhyd/openwhyd/issues/811)) ([8ae9c9b](https://github.com/openwhyd/openwhyd/commit/8ae9c9bf5bdb0679eef428c4762f53d76d3fc0bd))
+* reactivate algolia tests + remove `/ip` endpoint ([#810](https://github.com/openwhyd/openwhyd/issues/810)) ([4b36f87](https://github.com/openwhyd/openwhyd/commit/4b36f87726aa48c81b93418a9391a129a98e20e5))
+
 ## [1.63.8](https://github.com/openwhyd/openwhyd/compare/v1.63.7...v1.63.8) (2025-03-28)
 
 
