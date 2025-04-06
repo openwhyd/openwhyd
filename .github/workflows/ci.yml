@@ -421,9 +421,10 @@ jobs:
         env:
           MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test' # needed by mongodb integration tests (user.repository.tests.js)
       - name: Run API tests
-        run: docker compose exec -T --env MONGODB_URL web npm run test:api:raw
+        run: docker compose exec -T --env MONGODB_URL --env NODE_OPTIONS web npm run test:api:raw
         env:
           MONGODB_URL: 'mongodb://mongo:27017/openwhyd_test'
+          NODE_OPTIONS: '--max-old-space-size=4096'
       - name: Logs from docker compose
         if: ${{ always() }} # this step is useful to troubleshoot the execution of openwhyd when tests fail
         run: docker compose logs
