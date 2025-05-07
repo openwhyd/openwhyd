@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-const mongodb = require('../models/mongodb.js');
 const emailModel = require('../models/email.js');
 const userModel = require('../models/user.js');
 const notifTemplate = require('../templates/notif.js');

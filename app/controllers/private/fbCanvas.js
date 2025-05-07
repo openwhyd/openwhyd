@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-const mongodb = require('../../models/mongodb');
 const userModel = require('../../models/user');
 const invitePage = require('../../templates/invitePage.js');
 
@@ -13,7 +12,7 @@ function inviteByRequestId(reqIds, response) {
 
   const checkInvite = async function (reqId) {
     try {
-      const invite = await new Promise((resolve, reject) => {
+      const invite = await new Promise((resolve) => {
         userModel.fetchInviteByFbRequestId(reqId, (invite) => resolve(invite));
       });
       console.log('found invite:', invite);

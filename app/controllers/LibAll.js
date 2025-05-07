@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  **/
 
-const mongodb = require('../models/mongodb.js');
 const postModel = require('../models/post.js');
 const feedTemplate = require('../templates/feed.js');
 

@@ -4,7 +4,6 @@
  **/
 
 const snip = require('../../snip.js');
-const mongodb = require('../../models/mongodb.js');
 const userModel = require('../../models/user.js');
 const AdminLists = require('../../templates/adminLists.js').AdminLists;
 

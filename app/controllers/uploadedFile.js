@@ -1,6 +1,5 @@
 const fs = require('fs');
 const config = require('../models/config.js');
-const mongodb = require('../models/mongodb.js');
 const postModel = require('../models/post.js');
 
 exports.config = {
