@@ -316,13 +316,13 @@ function fetchUserById(uId, options, cb) {
   });
 }
 
-function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
+async function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
   function returnUser(u) {
     const uId = (u || {}).id;
     if (!uId) cb({ error: 'user not found' });
     else fetchUserById(uId, options, cb);
   }
-  const u = mongodb.getUserFromId(uidOrHandle) || {};
+  const u = (await mongodb.getUserFromId(uidOrHandle)) || {};
   if (u.id) returnUser(u);
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
