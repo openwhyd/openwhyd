@@ -13,12 +13,13 @@ const SEND_USER_DELETION_EMAILS = false;
 
 // helpers
 
-function getUserPrefs(uId) {
-  return (mongodb.usernames['' + uId] || {}).pref || {};
+async function getUserPrefs(uId) {
+  const user = await userModel.fetchAndProcessUserById(uId);
+  return (user || {}).pref || {};
 }
 
-function sendEmail(toUid, emailObj, cb) {
-  const to = mongodb.usernames['' + toUid];
+async function sendEmail(toUid, emailObj, cb) {
+  const to = await userModel.fetchAndProcessUserById(toUid);
   if (!to || !emailObj) cb && cb({ error: 'invalid call to sendEmail()' });
   else
     emailModel.email(
@@ -73,9 +74,10 @@ exports.sendRegWelcomeAsync = function (storedUser, inviteSender, cb) {
 };
 
 // 5) when the friend registered => "Your friend just accepted your invitation to whyd"
-exports.sendInviteAccepted = function (senderId, storedUser) {
-  if (getUserPrefs(senderId)['emAcc'] != -1)
-    sendEmail(senderId, notifTemplate.generateInviteAccepted(storedUser));
+exports.sendInviteAccepted = async function (senderId, storedUser) {
+  const prefs = await getUserPrefs(senderId);
+  if (prefs['emAcc'] != -1)
+    await sendEmail(senderId, notifTemplate.generateInviteAccepted(storedUser));
 };
 
 // 6) when wants to delete their account => notify team
@@ -141,7 +143,12 @@ exports.sendEmailUpdated = function (uid, emailAddr) {
 
 // USER-TO-USER ACTION NOTIFICATIONS
 
-function submitNotif(recipient, type, immediateNotifHandler, noNotifHandler) {
+async function submitNotif(
+  recipient,
+  type,
+  immediateNotifHandler,
+  noNotifHandler,
+) {
   if (!recipient)
     return console.error(
       'NULL recipient in models/notifEmails.js/submitNotif()',
@@ -154,12 +161,12 @@ function submitNotif(recipient, type, immediateNotifHandler, noNotifHandler) {
     userModel.incrementNotificationCounter(recipient._id, noNotifHandler);
   } else if (immediateNotifHandler)
     // recipient.pref[type] == 0 (call handler to send immediate email)
-    immediateNotifHandler();
+    await immediateNotifHandler();
 }
 
 // 1) when reposter reposts a post => "XXX has added one of your tracks on whyd"
-exports.sendRepost = function (reposter, post, postAuthor /*Email*/) {
-  submitNotif(postAuthor, 'emAdd', function () {
+exports.sendRepost = async function (reposter, post, postAuthor /*Email*/) {
+  await submitNotif(postAuthor, 'emAdd', async function () {
     const temp = notifTemplate.generateRepost(reposter, post);
     emailModel.email(
       postAuthor.email /*Email*/,
@@ -171,11 +178,11 @@ exports.sendRepost = function (reposter, post, postAuthor /*Email*/) {
 };
 
 // 2) when subscriber subscribes to selectedUser => "XXX has subscribed to you on Openwhyd!"
-exports.sendSubscribedToUser = function (subscriber, selectedUser, cb) {
-  submitNotif(
+exports.sendSubscribedToUser = async function (subscriber, selectedUser, cb) {
+  await submitNotif(
     selectedUser,
     'emSub',
-    function () {
+    async function () {
       const temp = notifTemplate.generateSubscribedToUser(
         subscriber,
         selectedUser._id,
@@ -194,8 +201,8 @@ exports.sendSubscribedToUser = function (subscriber, selectedUser, cb) {
 };
 
 // 3) when user likes a post
-exports.sendLike = function (user, post, postAuthor) {
-  submitNotif(postAuthor, 'emLik', function () {
+exports.sendLike = async function (user, post, postAuthor) {
+  await submitNotif(postAuthor, 'emLik', async function () {
     if (postAuthor.pref && postAuthor.pref['emLik'] == 0) {
       // user explicitely chose to receive immediate notifications
       const temp = notifTemplate.generateLike(user, post, postAuthor);
@@ -210,23 +217,26 @@ exports.sendLike = function (user, post, postAuthor) {
 };
 
 // 4) "XXX has added the same track(s) as you"
-exports.sendPostedSameTrack = function (postAuthor, cb) {
-  submitNotif(postAuthor, 'emSam', null, cb);
+exports.sendPostedSameTrack = async function (postAuthor, cb) {
+  await submitNotif(postAuthor, 'emSam', null, cb);
 };
 
 // 5) "XXX commented your track"
-exports.sendComment = function (post, comment, cb) {
-  if (getUserPrefs(post.uId)['emCom'] == -1)
+exports.sendComment = async function (post, comment, cb) {
+  const prefs = await getUserPrefs(post.uId);
+  if (prefs['emCom'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
-  else sendEmail(post.uId, notifTemplate.generateComment(post, comment), cb);
+  else
+    await sendEmail(post.uId, notifTemplate.generateComment(post, comment), cb);
 };
 
 // 6) "XXX mentioned you"
-exports.sendMention = function (mentionedUid, post, comment, cb) {
-  if (getUserPrefs(post.uId)['emMen'] == -1)
+exports.sendMention = async function (mentionedUid, post, comment, cb) {
+  const prefs = await getUserPrefs(post.uId);
+  if (prefs['emMen'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
   else
-    sendEmail(
+    await sendEmail(
       mentionedUid,
       notifTemplate.generateMention(mentionedUid, post, comment),
       cb,
@@ -234,11 +244,12 @@ exports.sendMention = function (mentionedUid, post, comment, cb) {
 };
 
 // 7) "XXX replied to your comment"
-exports.sendCommentReply = function (post, comment, repliedUid, cb) {
-  if (getUserPrefs(post.uId)['emRep'] == -1)
+exports.sendCommentReply = async function (post, comment, repliedUid, cb) {
+  const prefs = await getUserPrefs(post.uId);
+  if (prefs['emRep'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
   else
-    sendEmail(
+    await sendEmail(
       repliedUid,
       notifTemplate.generateCommentReply(post, comment, repliedUid),
       cb,

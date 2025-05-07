@@ -266,6 +266,21 @@ exports.fetchByUid = exports.model = function (uid, handler) {
   );
 };
 
+/**
+ * @type {(uid : import('mongodb').ObjectId | string) => Promise<Partial<UserDocument>> }
+ */
+exports.fetchAndProcessUserById = async function (uid) {
+  const user = await mongodb.collections['user'].findOne({
+    _id: typeof uid == 'string' ? ObjectId(uid) : uid,
+  });
+  if (user) {
+    user.id = '' + user._id;
+    user.mid = '/u/' + user.id;
+    processUsers([user]);
+  }
+  return user;
+};
+
 exports.fetchByHandle = function (handle, handler) {
   fetch({ handle: handle }, function (err, user) {
     if (err) console.error('fetchByHandle error:', err);
@@ -303,7 +318,6 @@ exports.updateAndFetch = function (criteria, update, opts, cb) {
     opts || {},
     function (err) {
       fetch(criteria, function (err2, user) {
-        if (user) mongodb.cacheUser(user);
         cb && cb(err || err2, user);
       });
     },
@@ -344,7 +358,6 @@ exports.save = function (pUser, handler) {
       fetch(criteria, function (err, user) {
         if (err) console.error('user.save error 2:', err);
         if (user) searchModel.indexTyped('user', user);
-        mongodb.cacheUser(user);
         if (handler) handler(user);
       });
     },
@@ -377,7 +390,6 @@ exports.delete = function (features, criteria, handler) {
       mongodb.collections['user'].deleteOne(criteria, function (err, item) {
         if (err) console.error('user.delete error:', err);
         searchModel.deleteDoc('user', '' + criteria._id);
-        delete mongodb.usernames['' + criteria._id];
         if (handler) handler(criteria, item);
         features.auth?.deleteUser(criteria._id.toString());
         // todo: delete user avatar file
@@ -744,7 +756,7 @@ exports.renameUser = async function (features, uid, name, callback) {
   }
   const cols = ['follow', 'post'];
   uid = '' + uid;
-  const user = mongodb.getUserFromId(uid);
+  const user = await mongodb.getUserFromId(uid);
   const oldName = (user || {}).name;
   if (!user) {
     callback({ error: 'renameUser error: user not found' });

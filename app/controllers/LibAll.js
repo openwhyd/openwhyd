@@ -8,11 +8,9 @@ const mongodb = require('../models/mongodb.js');
 const postModel = require('../models/post.js');
 const feedTemplate = require('../templates/feed.js');
 
-function makeUserList() {
-  const userList = [];
-  for (const i in mongodb.usernames /*.slice(0,9)*/)
-    userList.push(mongodb.usernames[i]);
-  return userList;
+async function makeUserList() {
+  const userModel = require('../models/user.js');
+  return await userModel.fetchMulti({}, {});
 }
 
 function renderAllLibrary(lib) {

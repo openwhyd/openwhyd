@@ -88,8 +88,9 @@ const fetchDataByType = {
     function next() {
       if (!idList.length) return cb(userList);
       const uid = '' + idList.shift();
-      postModel.fetchByAuthors([uid], { limit: 1 }, function (posts) {
-        const user = mongodb.usernames[uid];
+      postModel.fetchByAuthors([uid], { limit: 1 }, async function (posts) {
+        const userModel = require('../../models/user.js');
+        const user = await userModel.fetchAndProcessUserById(uid);
         if (user)
           userList.push({
             _id: uid,

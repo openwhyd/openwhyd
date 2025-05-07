@@ -147,13 +147,14 @@ http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
 
 /**
  * Returns the logged in user as an object {_id, id, fbId, name, img}
- * @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead.
+ * @deprecated because it relies on a database call, call fetchByUid() instead.
  */
-http.IncomingMessage.prototype.getUser = function () {
+http.IncomingMessage.prototype.getUser = async function () {
   const uid = this.getUid();
   if (!uid) return null;
-  const user = mongodb.usernames[uid];
-  if (!user) console.trace(`logged user ${uid} not found in user cache`);
+  const userModel = require('./user.js');
+  const user = await userModel.fetchAndProcessUserById(uid);
+  if (!user) console.trace(`logged user ${uid} not found in database`);
   else user.id = '' + user._id;
   return user ?? null;
 };
