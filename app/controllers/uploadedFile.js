@@ -142,8 +142,9 @@ exports.controller = function (request, reqParams, response) {
     } else renderFile(uri, defaultImg);
   }
 
-  function renderUserImg(id) {
-    const user = mongodb.usernames[id];
+  async function renderUserImg(id) {
+    const userModel = require('../models/user.js');
+    const user = await userModel.fetchAndProcessUserById(id);
     if (user && user.img) {
       //var isSmallFb = user.img.indexOf("graph.facebook.com") > -1 && user.img.split("/").pop() == "picture";
       //console.log(user.img, isSmallFb, user.img + (isSmallFb ? "?type=large" : ""));

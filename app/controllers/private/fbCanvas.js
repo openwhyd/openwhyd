@@ -11,14 +11,17 @@ const invitePage = require('../../templates/invitePage.js');
 function inviteByRequestId(reqIds, response) {
   let remaining = reqIds.length;
 
-  const checkInvite = function (reqId) {
-    userModel.fetchInviteByFbRequestId(reqId, function (invite) {
+  const checkInvite = async function (reqId) {
+    try {
+      const invite = await new Promise((resolve, reject) => {
+        userModel.fetchInviteByFbRequestId(reqId, (invite) => resolve(invite));
+      });
       console.log('found invite:', invite);
       if (invite && invite.fbRequestIds) {
         //return response.redirect("/invite/" + invite._id);
         //return response.redirect("/fbinvite/" + invite.fbRequestIds);
         //var sender = request.getUserFromId(invite.iBy); // TODO: test case when there is no sender
-        const sender = mongodb.usernames['' + invite.iBy]; // TODO: test case when there is no sender
+        const sender = await userModel.fetchAndProcessUserById(invite.iBy); // TODO: test case when there is no sender
         const registrationPage = invitePage.renderInvitePage(
           sender,
           null /*request.getUser()*/,
@@ -35,7 +38,13 @@ function inviteByRequestId(reqIds, response) {
         console.log('invitation token not found => redirect to /');
         response.redirect('/');
       }
-    });
+    } catch (error) {
+      console.error('Error in checkInvite:', error);
+      if (--remaining == 0) {
+        console.log('invitation token not found => redirect to /');
+        response.redirect('/');
+      }
+    }
   };
 
   for (const i in reqIds) checkInvite(reqIds[i]);

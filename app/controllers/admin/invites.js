@@ -96,7 +96,11 @@ function renderUserList(users, title, actionNames) {
       '<small>' +
       (u.name ? '<br/>&nbsp;' + u.email : '') +
       (u.iBy
-        ? '<br/>&nbsp;invited by ' + (mongodb.usernames[u.iBy] || {}).name
+        ? '<br/>&nbsp;invited by ' +
+            (async () => {
+              const inviter = await userModel.fetchAndProcessUserById(u.iBy);
+              return (inviter || {}).name;
+            })() || 'unknown'
         : '') +
       (u.iPo
         ? '<br/>&nbsp;from post #<a href="/c/' + u.iPo + '">' + u.iPo + '</a>'

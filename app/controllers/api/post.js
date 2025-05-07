@@ -52,13 +52,15 @@ const publicActions = {
     postModel.fetchPostById(p.pId, function (post) {
       const lovers = [];
       if (post && post.lov)
-        fetchSubscribedUsers(post.lov, p.uId, function (subscrUidSet) {
-          for (const i in post.lov)
+        fetchSubscribedUsers(post.lov, p.uId, async function (subscrUidSet) {
+          for (const i in post.lov) {
+            const user = await userModel.fetchAndProcessUserById(post.lov[i]);
             lovers.push({
               id: /*"/u/"+*/ post.lov[i],
-              name: (mongodb.usernames[post.lov[i]] || {}).name,
+              name: (user || {}).name,
               subscribed: !!subscrUidSet[post.lov[i]],
             });
+          }
           console.log('lovers', lovers);
           userModel.fetchUserBios(lovers, function () {
             callback(lovers);
@@ -78,17 +80,25 @@ const publicActions = {
         if (results) {
           const repostUids = [];
           for (const i in results) repostUids.push(results[i].uId);
-          fetchSubscribedUsers(repostUids, p.uId, function (subscrUidSet) {
-            for (const i in results)
-              reposts.push({
-                id: /*"/u/"+*/ results[i].uId,
-                name: (mongodb.usernames[results[i].uId] || {}).name,
-                subscribed: !!subscrUidSet[results[i].uId],
+          fetchSubscribedUsers(
+            repostUids,
+            p.uId,
+            async function (subscrUidSet) {
+              for (const i in results) {
+                const user = await userModel.fetchAndProcessUserById(
+                  results[i].uId,
+                );
+                reposts.push({
+                  id: /*"/u/"+*/ results[i].uId,
+                  name: (user || {}).name,
+                  subscribed: !!subscrUidSet[results[i].uId],
+                });
+              }
+              userModel.fetchUserBios(reposts, function () {
+                callback(reposts);
               });
-            userModel.fetchUserBios(reposts, function () {
-              callback(reposts);
-            });
-          });
+            },
+          );
         } else callback(reposts);
       },
     );
@@ -247,14 +257,15 @@ exports.actions = {
         foc: anyBrowserExceptElectron ? p.logData.foc : undefined, // result of document.hasFocus(), for https://github.com/openwhyd/openwhyd/issues/88#issuecomment-341404204
       });
       if (p.duration > 0) post.duration = p.duration;
-      if (!p.logData.err)
-        lastFm.updateNowPlaying2(
-          post,
-          (mongodb.usernames[p.uId].lastFm || {}).sk,
-          function () {
+      if (!p.logData.err) {
+        userModel.fetchAndProcessUserById(p.uId).then((user) => {
+          // @ts-ignore
+          const lastFmSessionKey = user && user.lastFm ? user.lastFm.sk : null;
+          lastFm.updateNowPlaying2(post, lastFmSessionKey, function () {
             //console.log("-> last fm response", res);
-          },
-        );
+          });
+        });
+      }
     }
     if (p.logData.err) postModel.fetchPostById(p.pId, callbackAndLogPlay);
     else postModel.incrPlayCounter(p.pId, callbackAndLogPlay);
@@ -263,17 +274,20 @@ exports.actions = {
     if (!p.uId) return cb && cb({ error: 'not logged in' });
     postModel.fetchPostById(p.pId, function (r) {
       if (!r) return cb && cb({ error: 'missing track' });
-      const lastFmSessionKey = (mongodb.usernames[p.uId].lastFm || {}).sk;
-      lastFm.scrobble2(
-        r && r.name,
-        lastFmSessionKey,
-        p.uId == r.uId,
-        p.timestamp,
-        function (res) {
-          //console.log("-> last fm response", res);
-          cb && cb(res);
-        },
-      );
+      userModel.fetchAndProcessUserById(p.uId).then((user) => {
+        // @ts-ignore
+        const lastFmSessionKey = user && user.lastFm ? user.lastFm.sk : null;
+        lastFm.scrobble2(
+          r && r.name,
+          lastFmSessionKey,
+          p.uId == r.uId,
+          p.timestamp,
+          function (res) {
+            //console.log("-> last fm response", res);
+            cb && cb(res);
+          },
+        );
+      });
     });
   },
 };

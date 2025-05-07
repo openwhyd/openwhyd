@@ -61,7 +61,12 @@ function renderItem(item) {
           : ''),
       (item.iBy
         ? 'invited by ' +
-          snip.htmlEntities((mongodb.usernames[item.iBy] || {}).name)
+          snip.htmlEntities(
+            (async () => {
+              const inviter = await userModel.fetchAndProcessUserById(item.iBy);
+              return (inviter || {}).name;
+            })() || 'unknown',
+          )
         : '') +
         (item.iPo ? ' from <a href="/c/' + item.iPo + '">post</a>' : '') +
         (item.iPg ? ' from <a href="' + item.iPg + '">page</a>' : '') +
