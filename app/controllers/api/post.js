@@ -54,15 +54,14 @@ const publicActions = {
       if (post && post.lov)
         fetchSubscribedUsers(post.lov, p.uId, async function (subscrUidSet) {
           for (const i in post.lov) {
-            const user = await userModel.fetchAndProcessUserById(post.lov[i]);
             lovers.push({
               id: /*"/u/"+*/ post.lov[i],
-              name: (user || {}).name,
+              // name: await userModel.fetchUserNameById(post.lov[i]), // added by fetchUserBios()
               subscribed: !!subscrUidSet[post.lov[i]],
             });
           }
-          console.log('lovers', lovers);
           userModel.fetchUserBios(lovers, function () {
+            console.log('lovers', lovers);
             callback(lovers);
           });
         });
@@ -85,12 +84,9 @@ const publicActions = {
             p.uId,
             async function (subscrUidSet) {
               for (const i in results) {
-                const user = await userModel.fetchAndProcessUserById(
-                  results[i].uId,
-                );
                 reposts.push({
                   id: /*"/u/"+*/ results[i].uId,
-                  name: (user || {}).name,
+                  // name: await userModel.fetchUserNameById(results[i].uId), // added by fetchUserBios()
                   subscribed: !!subscrUidSet[results[i].uId],
                 });
               }
