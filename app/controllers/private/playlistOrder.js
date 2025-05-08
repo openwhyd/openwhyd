@@ -20,17 +20,17 @@ function renderTemplate(params, callback) {
   );
 }
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   request.logToConsole('playlistOrder.controller', getParams);
 
-  function renderWhydPage(html) {
+  async function renderWhydPage(html) {
     const options = {};
     options.js = options.js || [];
     options.css = options.css || [];
     options.bodyClass = 'pgPlaylistOrder';
     options.pageTitle = 'set order';
     options.content = html;
-    options.loggedUser = request.getUser();
+    options.loggedUser = await request.getUser();
     return mainTemplate.renderWhydPage(options);
   }
 

@@ -1,11 +1,11 @@
 exports.buildController = function (params) {
   let logPrefix = params.controllerName + '.controller';
   if (process.appParams.color) logPrefix = logPrefix.yellow;
-  return function (request, reqParams = {}, response) {
+  return async function (request, reqParams = {}, response) {
     request.logToConsole(logPrefix, reqParams);
 
     // make sure an admin is logged, or return an error page
-    reqParams.loggedUser = request.getUser();
+    reqParams.loggedUser = await request.getUser();
     if (params.adminOnly && !request.checkAdmin(response)) {
       console.log(logPrefix, 'must be logged as admin');
       return;

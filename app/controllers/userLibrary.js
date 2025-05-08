@@ -84,11 +84,11 @@ LibraryController.prototype.renderOther = function (data, mimeType) {
   this.render(data, mimeType);
 };
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('userLibrary.controller', reqParams);
 
   reqParams = reqParams || {};
-  const loggedInUser = (reqParams.loggedUser = request.getUser() || {});
+  const loggedInUser = (reqParams.loggedUser = (await request.getUser()) || {});
   if (loggedInUser && loggedInUser.id)
     reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
 

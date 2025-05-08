@@ -7,9 +7,9 @@ const TEMPLATE_FILE = 'app/templates/onboarding.html';
 const mainTemplate = require('../templates/mainTemplate.js');
 const templateLoader = require('../templates/templateLoader.js');
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   request.logToConsole('onboarding.controller', getParams);
-  const loggedUser = request.getUser() || {};
+  const loggedUser = (await request.getUser()) || {};
   templateLoader.loadTemplate(TEMPLATE_FILE, function (template) {
     const p = {
       pageUrl: request.url,

@@ -296,7 +296,12 @@ exports.actions = {
  * @param reqParams {{ uId: string; uNm: string; action: string; name: string; eId: string }}
  * @param features {import('../../domain/api/Features').Features}
  */
-exports.handleRequest = function (request, reqParams, response, features) {
+exports.handleRequest = async function (
+  request,
+  reqParams,
+  response,
+  features,
+) {
   request.logToConsole('api.post.handleRequest', reqParams);
 
   function resultHandler(res, args) {
@@ -308,7 +313,7 @@ exports.handleRequest = function (request, reqParams, response, features) {
     );
   }
 
-  const user = request.getUser() || {}; //checkLogin(response);
+  const user = (await request.getUser()) || {}; //checkLogin(response);
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
 
@@ -331,7 +336,7 @@ exports.handleRequest = function (request, reqParams, response, features) {
 /**
  * @param features {import('../../domain/api/Features').Features}
  */
-exports.controller = function (request, getParams, response, features) {
+exports.controller = async function (request, getParams, response, features) {
   //request.logToConsole("api.post", getParams);
   const params = snip.translateFields(getParams || {}, sequencedParameters);
 

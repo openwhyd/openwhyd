@@ -172,8 +172,8 @@ http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId;
 /**
  * Checks that a registered user is logged in, and return that user, or show an error page
  */
-http.IncomingMessage.prototype.checkLogin = function (response, format) {
-  const user = this.getUser();
+http.IncomingMessage.prototype.checkLogin = async function (response, format) {
+  const user = await this.getUser();
   //console.log("checkLogin, cached record for logged in user: ", user);
   if (!user /*|| !user.name*/) {
     if (response) {
