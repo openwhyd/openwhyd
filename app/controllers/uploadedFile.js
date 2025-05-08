@@ -141,6 +141,9 @@ exports.controller = function (request, reqParams, response) {
     } else renderFile(uri, defaultImg);
   }
 
+  /**
+   * @param {string} id - can be a userId or an image name, e.g. "<userId>_<nbpixels>px"
+   */
   async function renderUserImg(id) {
     const userModel = require('../models/user.js');
     const user = await userModel.fetchAndProcessUserById(id);
