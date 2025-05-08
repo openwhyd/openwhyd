@@ -47,7 +47,7 @@ function renderError(request, getParams, response, errorMsg) {
 /**
  * called when user submits the form from register.html
  */
-exports.registerInvitedUser = function (request, user, response) {
+exports.registerInvitedUser = async function (request, user, response) {
   request.logToConsole(
     'register.registerInvitedUser',
     user
@@ -158,7 +158,7 @@ exports.registerInvitedUser = function (request, user, response) {
     });
   }
 
-  function afterSave(storedUser) {
+  async function afterSave(storedUser) {
     if (!storedUser)
       return error(
         request,
@@ -169,7 +169,7 @@ exports.registerInvitedUser = function (request, user, response) {
 
     userModel.removeInvite(user.inviteCode);
 
-    function loginAndRedirectTo(url) {
+    async function loginAndRedirectTo(url) {
       // legacy auth/session
       request.session = request.session || {};
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
@@ -206,14 +206,14 @@ exports.registerInvitedUser = function (request, user, response) {
       notifModel.inviteAccepted(user.iBy, storedUser);
     }
 
-    loginAndRedirectTo(onboardingUrl || '/');
+    await loginAndRedirectTo(onboardingUrl || '/');
   }
 
   if (user.iBy || checkInvites)
     inviteController.checkInviteCode(request, user, response, function () {
-      registerUser();
+      registerUser(); // no await because we're in a (sync) callback
     });
-  else registerUser();
+  else await registerUser();
 };
 
 /**
