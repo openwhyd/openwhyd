@@ -10,7 +10,7 @@
  */
 
 const mongodb = require('../models/mongodb.js');
-const ObjectId = mongodb.ObjectId;
+const { ObjectId, isObjectId } = mongodb;
 const emailModel = require('../models/email.js');
 const postModel = require('../models/post.js');
 const searchModel = require('../models/search.js');
@@ -271,7 +271,7 @@ exports.fetchByUid = exports.model = function (uid, handler) {
  */
 exports.fetchAndProcessUserById = async function (uid) {
   const user = await mongodb.collections['user'].findOne({
-    _id: typeof uid == 'string' ? ObjectId(uid) : uid,
+    _id: typeof uid == 'string' && isObjectId(uid) ? ObjectId(uid) : uid,
   });
   if (user) {
     user.id = '' + user._id;
