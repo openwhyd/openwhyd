@@ -38,7 +38,7 @@ const handlers = {
 
 // ADMIN CONSOLE TEMPLATES
 
-function renderItem(item) {
+async function renderItem(item) {
   let date = item.date || item._id.getTimestamp();
   date =
     date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
@@ -61,10 +61,7 @@ function renderItem(item) {
       (item.iBy
         ? 'invited by ' +
           snip.htmlEntities(
-            (async () => {
-              const inviter = await userModel.fetchAndProcessUserById(item.iBy);
-              return (inviter || {}).name;
-            })() || 'unknown',
+            (await userModel.fetchUserNameById(item.iBy)) || 'unknown',
           )
         : '') +
         (item.iPo ? ' from <a href="/c/' + item.iPo + '">post</a>' : '') +
@@ -74,9 +71,9 @@ function renderItem(item) {
   };
 }
 
-function renderTemplate(items) {
+async function renderTemplate(items) {
   const users = [];
-  for (const i in items) users.push(renderItem(items[i]));
+  for (const i in items) users.push(await renderItem(items[i]));
 
   const console = new AdminLists();
   console.addWideList(users, 'Users', ['rename', 'delete'], {});
@@ -140,8 +137,10 @@ exports.handleRequest = async function (
     userModel.fetchMulti(
       {},
       { sort: [['_id', 'desc']], limit: 600 },
-      function (users) {
-        renderResult({ html: renderTemplate(/*mongodb.usernames*/ users) });
+      async function (users) {
+        renderResult({
+          html: await renderTemplate(/*mongodb.usernames*/ users),
+        });
       },
     );
 };
