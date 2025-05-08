@@ -7,16 +7,11 @@
 const postModel = require('../models/post.js');
 const feedTemplate = require('../templates/feed.js');
 
-async function makeUserList() {
-  const userModel = require('../models/user.js');
-  return await userModel.fetchMulti({}, {});
-}
-
 function renderAllLibrary(lib) {
   const options = lib.options;
   //options.displayAuthors = true;
   options.displayPlaylistName = true;
-  options.follows = { people: makeUserList(), followers: [] };
+  options.follows = { people: [], followers: [] }; // TODO: fix the /all page without having to fetch all users
   options.bodyClass =
     'pgStream pgFullStream pgWithSideBar ' + (options.bodyClass || '');
   options.globalFeed = true;
