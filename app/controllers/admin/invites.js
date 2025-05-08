@@ -190,11 +190,11 @@ function renderTemplate(requests, invites) {
   return mainTemplate.renderWhydFrame(out, params);
 }
 
-exports.handleRequest = function (request, reqParams, response) {
+exports.handleRequest = async function (request, reqParams, response) {
   request.logToConsole('invites.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
-  const user = request.checkAdmin(response);
+  const user = await request.checkAdmin(response);
   if (!user /*|| !(user.fbId == "510739408" || user.fbId == "577922742")*/)
     return /*response.legacyRender("you're not an admin!")*/;
 
@@ -266,12 +266,12 @@ exports.handleRequest = function (request, reqParams, response) {
   } else fetchAndRender();
 };
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   if (request.method.toLowerCase() === 'post') {
     //var form = new formidable.IncomingForm();
     //form.parse(request, function(err, postParams) {
     //	if (err) console.log(err);
-    exports.handleRequest(request, request.body /*postParams*/, response);
+    await exports.handleRequest(request, request.body /*postParams*/, response);
     //});
-  } else exports.handleRequest(request, getParams, response);
+  } else await exports.handleRequest(request, getParams, response);
 };

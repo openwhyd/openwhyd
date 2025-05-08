@@ -47,7 +47,7 @@ const runTests = (function () {
 
 exports.controller = async function (request, reqParams, response) {
   request.logToConsole('test.controller', (reqParams = reqParams || {}));
-  const user = request.checkAdmin(response);
+  const user = await request.checkAdmin(response);
   if (false == user) return;
 
   if (reqParams.action) {

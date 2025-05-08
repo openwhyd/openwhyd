@@ -7,10 +7,10 @@ const templateLoader = require('../../templates/templateLoader.js');
 
 const notifTemplates = require('../../templates/notif.js');
 
-exports.controller = function (request, reqParams = {}, response) {
+exports.controller = async function (request, reqParams = {}, response) {
   request.logToConsole('emailTemplate.controller', reqParams);
 
-  const user = request.checkAdmin(response);
+  const user = await request.checkAdmin(response);
   if (false == user) return;
 
   const templateFile = reqParams.file;

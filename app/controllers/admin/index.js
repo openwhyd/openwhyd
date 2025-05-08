@@ -200,11 +200,11 @@ function renderForm(p) {
   ].join('\n');
 }
 
-exports.controller = function (request, reqParams = {}, response) {
+exports.controller = async function (request, reqParams = {}, response) {
   request.logToConsole('admin.index.controller', request.body || reqParams);
 
   // make sure an admin is logged, or return an error page
-  reqParams.loggedUser = request.checkAdmin(response);
+  reqParams.loggedUser = await request.checkAdmin(response);
   if (!reqParams.loggedUser) return;
 
   if (request.method.toLowerCase() === 'post') {

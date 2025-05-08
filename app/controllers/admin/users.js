@@ -105,11 +105,16 @@ function renderTemplate(items) {
 
 // MAIN CONTROLLER / REQUEST HANDLING CODE
 
-exports.handleRequest = function (request, reqParams, response, features) {
+exports.handleRequest = async function (
+  request,
+  reqParams,
+  response,
+  features,
+) {
   request.logToConsole('admin/users.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
-  const user = request.checkAdmin(response);
+  const user = await request.checkAdmin(response);
   if (!user) return;
 
   function renderResult(result) {
@@ -142,18 +147,18 @@ exports.handleRequest = function (request, reqParams, response, features) {
 };
 
 /** @param {Features} features */
-exports.controller = function (request, getParams, response, features) {
+exports.controller = async function (request, getParams, response, features) {
   //request.logToConsole("admin/users.controller", request.method);
   if (request.method.toLowerCase() === 'post') {
     //var form = new formidable.IncomingForm();
     //form.parse(request, function(err, postParams) {
     //	if (err) console.log(err);
-    exports.handleRequest(
+    await exports.handleRequest(
       request,
       request.body /*postParams*/,
       response,
       features,
     );
     //});
-  } else exports.handleRequest(request, getParams, response, features);
+  } else await exports.handleRequest(request, getParams, response, features);
 };

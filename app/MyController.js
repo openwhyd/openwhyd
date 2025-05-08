@@ -6,7 +6,7 @@ exports.buildController = function (params) {
 
     // make sure an admin is logged, or return an error page
     reqParams.loggedUser = await request.getUser();
-    if (params.adminOnly && !request.checkAdmin(response)) {
+    if (params.adminOnly && !(await request.checkAdmin(response))) {
       console.log(logPrefix, 'must be logged as admin');
       return;
     }
