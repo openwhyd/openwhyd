@@ -198,7 +198,7 @@ exports.registerInvitedUser = async function (request, user, response) {
     if (user.iBy) {
       const inviteSender = {
         id: user.iBy,
-        name: await request.getUserNameFromId(user.iBy),
+        name: await userModel.fetchUserNameById(user.iBy),
       };
       follow(storedUser, inviteSender, 'invite');
       follow(inviteSender, storedUser, 'invite');

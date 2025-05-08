@@ -47,12 +47,6 @@ exports.dateToHexObjectId = function (date) {
 
 // other way around: _id.getTimestamp() // _id.generationTime IS DEPRECATED;
 
-exports.getUserNameFromId = async function (uid) {
-  userModel = userModel || require('./user.js');
-  const user = await userModel.fetchAndProcessUserById(uid);
-  return user ? user.name : undefined;
-};
-
 exports.getPublicProfileFromId = async function (uid) {
   userModel = userModel || require('./user.js');
   const user = await userModel.fetchAndProcessUserById(uid);

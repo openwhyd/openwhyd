@@ -38,7 +38,6 @@ http.IncomingMessage.prototype.logToConsole = function (suffix, params) {
 };
 
 const config = require('./config.js');
-const mongodb = require('./mongodb.js');
 const loggingTemplate = require('../templates/logging.js');
 const renderUnauthorizedPage = loggingTemplate.renderUnauthorizedPage;
 
@@ -157,8 +156,6 @@ http.IncomingMessage.prototype.getUser = async function () {
   else user.id = '' + user._id;
   return user ?? null;
 };
-
-http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId; // TODO: remove
 
 // ========= LOGIN/SESSION/PRIVILEGES STUFF
 

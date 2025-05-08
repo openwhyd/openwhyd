@@ -8,9 +8,8 @@ const config = require('../models/config.js');
 const postModel = require('../models/post.js');
 const commentModel = require('../models/comment.js');
 const templateLoader = require('../templates/templateLoader.js');
+const { fetchUserNameById } = require('../models/user.js');
 const template = templateLoader.loadTemplate('app/templates/posts.html');
-
-const getUserNameFromId = require('../models/mongodb.js').getUserNameFromId;
 
 const MAX_POSTS = config.nbPostsPerNewsfeedPage;
 const MAX_POSTS_EMBED = config.nbTracksPerPlaylistEmbed;
@@ -204,7 +203,7 @@ exports.preparePost = async function (post, options) {
   const userPromises = (post.reposts || [])
     .concat(post.lov || [])
     .map(async function (u) {
-      return { id: u.id || u, name: await getUserNameFromId(u.id || u) };
+      return { id: u.id || u, name: await fetchUserNameById(u.id || u) };
     });
 
   // Wait for all promises to resolve
