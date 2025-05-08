@@ -15,7 +15,6 @@ const userApi = require('../../controllers/api/user.js');
 const htmlRedirect = require('../../templates/logging.js').htmlRedirect;
 const genuine = require('../../genuine.js');
 const notifEmails = require('../../models/notifEmails.js');
-const mongodb = require('../../models/mongodb.js');
 
 const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
 const { genuineSignupSecret } = process.appParams;
@@ -190,7 +189,7 @@ exports.registerInvitedUser = async function (request, user, response) {
 
       console.log('sending welcome email', storedUser.email, storedUser.iBy);
       const inviteSender = storedUser.iBy
-        ? await mongodb.getUserFromId(storedUser.iBy)
+        ? await userModel.fetchAndProcessUserById(storedUser.iBy)
         : null;
       notifEmails.sendRegWelcomeAsync(storedUser, inviteSender);
     }

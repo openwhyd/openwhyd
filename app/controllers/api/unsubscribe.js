@@ -95,7 +95,7 @@ exports.controller = async function (request, reqParams, response) {
     return render(); // missing uId parameter => let's redirect to /settings
   }
 
-  const user = await request.getUserFromId(reqParams.uId);
+  const user = await userModel.fetchAndProcessUserById(reqParams.uId);
   if (!user) {
     return render({ error: 'user not found' });
   }

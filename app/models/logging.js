@@ -147,7 +147,6 @@ http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
 
 /**
  * Returns the logged in user as an object {_id, id, fbId, name, img}
- * @deprecated because it relies on a database call, call fetchByUid() instead.
  */
 http.IncomingMessage.prototype.getUser = async function () {
   const uid = this.getUid();
@@ -159,12 +158,6 @@ http.IncomingMessage.prototype.getUser = async function () {
   return user ?? null;
 };
 
-//http.IncomingMessage.prototype.getUserFromFbUid = mongodb.getUserFromFbUid;
-
-/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
-http.IncomingMessage.prototype.getUserFromId = mongodb.getUserFromId; // TODO: remove
-
-/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
 http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId; // TODO: remove
 
 // ========= LOGIN/SESSION/PRIVILEGES STUFF

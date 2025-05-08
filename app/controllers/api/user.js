@@ -15,7 +15,6 @@
 // http://localhost:8080/admin/users?action=delete&_id=<...>
 
 const snip = require('../../snip.js');
-const mongodb = require('../../models/mongodb.js');
 const postModel = require('../../models/post.js');
 const userModel = require('../../models/user.js');
 const emailModel = require('../../models/email.js');
@@ -322,7 +321,7 @@ async function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
     if (!uId) cb({ error: 'user not found' });
     else fetchUserById(uId, options, cb);
   }
-  const u = (await mongodb.getUserFromId(uidOrHandle)) || {};
+  const u = (await userModel.fetchAndProcessUserById(uidOrHandle)) || {};
   if (u.id) returnUser(u);
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }

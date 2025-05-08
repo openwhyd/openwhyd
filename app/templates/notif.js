@@ -5,8 +5,8 @@
  **/
 
 const config = require('../models/config.js');
-const mongodb = require('../models/mongodb.js'); // for getting user data
 const trackModel = require('../models/track.js');
+const userModel = require('../models/user.js');
 const templateLoader = require('../templates/templateLoader.js');
 const NotifDigest = require('../templates/notifDigest.js').NotifDigest;
 const { getSuggestedUsers } = require('../models/featuredUsers.js');
@@ -270,7 +270,7 @@ exports.generateNotifDigest = function (p) {
 
 exports.generateRepost = async function (reposter, post) {
   return new NotifDigest({
-    recipient: await mongodb.getUserFromId(post.uId),
+    recipient: await userModel.fetchAndProcessUserById(post.uId),
     notifType: 'emAdd',
   })
     .addRepostedTrack(post, reposter)
@@ -281,7 +281,7 @@ exports.generateRepost = async function (reposter, post) {
 
 exports.generateSubscribedToUser = async function (sender, favoritedId) {
   return new NotifDigest({
-    recipient: await mongodb.getUserFromId(favoritedId),
+    recipient: await userModel.fetchAndProcessUserById(favoritedId),
     subscriptions: [sender],
     notifType: 'emSub',
   }).renderNotifEmailObj(sender.name + ' has subscribed to you on Openwhyd!');
@@ -289,7 +289,7 @@ exports.generateSubscribedToUser = async function (sender, favoritedId) {
 
 exports.generateLike = async function (user, post) {
   return new NotifDigest({
-    recipient: await mongodb.getUserFromId(post.uId),
+    recipient: await userModel.fetchAndProcessUserById(post.uId),
     notifType: 'emLik',
   })
     .addLikedTrack(post, user)
@@ -304,7 +304,7 @@ exports.generateComment = async function (post, comment) {
     renderTemplateFile('comment', {
       unsubUrl:
         config.urlPrefix + '/api/unsubscribe?type=emCom&uId=' + post.uId,
-      user: await mongodb.getUserFromId('' + comment.uId),
+      user: await userModel.fetchAndProcessUserById('' + comment.uId),
       track: post,
     }),
   ]);
@@ -316,7 +316,7 @@ exports.generateMention = async function (mentionedUid, post, comment) {
     renderTemplateFile('mention', {
       unsubUrl:
         config.urlPrefix + '/api/unsubscribe?type=emMen&uId=' + mentionedUid,
-      user: await mongodb.getUserFromId('' + comment.uId),
+      user: await userModel.fetchAndProcessUserById('' + comment.uId),
       track: post,
     }),
   ]);
@@ -328,7 +328,7 @@ exports.generateCommentReply = async function (post, comment, repliedUid) {
     renderTemplateFile('commentReply', {
       unsubUrl:
         config.urlPrefix + '/api/unsubscribe?type=emRep&uId=' + repliedUid,
-      user: await mongodb.getUserFromId('' + comment.uId),
+      user: await userModel.fetchAndProcessUserById('' + comment.uId),
       track: post,
     }),
   ]);

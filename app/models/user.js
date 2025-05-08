@@ -767,7 +767,7 @@ exports.renameUser = async function (features, uid, name, callback) {
   }
   const cols = ['follow', 'post'];
   uid = '' + uid;
-  const user = await mongodb.getUserFromId(uid);
+  const user = await exports.fetchAndProcessUserById(uid);
   const oldName = (user || {}).name;
   if (!user) {
     callback({ error: 'renameUser error: user not found' });
