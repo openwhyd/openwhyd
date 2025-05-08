@@ -281,6 +281,17 @@ exports.fetchAndProcessUserById = async function (uid) {
   return user;
 };
 
+/**
+ * @type {(uid : import('mongodb').ObjectId | string) => Promise<Partial<UserDocument>> }
+ */
+exports.fetchUserNameById = async function (uid) {
+  const user = await mongodb.collections['user'].findOne(
+    { _id: typeof uid == 'string' && isObjectId(uid) ? ObjectId(uid) : uid },
+    { projection: { name: 1 } },
+  );
+  return user?.name;
+};
+
 exports.fetchByHandle = function (handle, handler) {
   fetch({ handle: handle }, function (err, user) {
     if (err) console.error('fetchByHandle error:', err);

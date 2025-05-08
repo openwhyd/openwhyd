@@ -30,7 +30,7 @@ const inviteUser = function (email, handler) {
   return true;
 };
 
-function renderUserList(users, title, actionNames) {
+async function renderUserList(users, title, actionNames) {
   let userList = '<h2>' + title + ' (' + users.length + ')</h2>';
 
   if (users && users.length) {
@@ -97,10 +97,7 @@ function renderUserList(users, title, actionNames) {
       (u.name ? '<br/>&nbsp;' + u.email : '') +
       (u.iBy
         ? '<br/>&nbsp;invited by ' +
-            (async () => {
-              const inviter = await userModel.fetchAndProcessUserById(u.iBy);
-              return (inviter || {}).name;
-            })() || 'unknown'
+            (await userModel.fetchUserNameById(u.iBy)) || 'unknown'
         : '') +
       (u.iPo
         ? '<br/>&nbsp;from post #<a href="/c/' + u.iPo + '">' + u.iPo + '</a>'
@@ -135,7 +132,7 @@ function renderUserList(users, title, actionNames) {
   return '<div class="userList">' + userList + '</div>';
 }
 
-function renderTemplate(requests, invites) {
+async function renderTemplate(requests, invites) {
   const params = { title: 'whyd invites', css: ['admin.css'], js: [] };
 
   const out = [
@@ -152,8 +149,10 @@ function renderTemplate(requests, invites) {
     '<input type="submit" name="action" value="invite">',
     '</form>',
     //'params = ' + util.inspect(reqParams),
-    renderUserList(requests, /*"req",*/ 'requests', ['invite', 'delete']),
-    renderUserList(invites, /*"inv",*/ 'invites', [/*"resend",*/ 'delete']),
+    await renderUserList(requests, /*"req",*/ 'requests', ['invite', 'delete']),
+    await renderUserList(invites, /*"inv",*/ 'invites', [
+      /*"resend",*/ 'delete',
+    ]),
     //	renderUserList(users, /*"usr",*/ "registered users", ["delete"]),
     '<script>',
     'function getSelectedCheckbox(buttonGroup) {',
@@ -207,7 +206,7 @@ exports.handleRequest = async function (request, reqParams, response) {
           function (err, invites) {
             fetchUsers(
               'email',
-              function (err, requests) {
+              async function (err, requests) {
                 for (const i in requests)
                   requests[i] = {
                     _id: requests[i]._id,
@@ -216,7 +215,7 @@ exports.handleRequest = async function (request, reqParams, response) {
                   };
 
                 response.legacyRender(
-                  renderTemplate(requests, invites, users, reqParams),
+                  await renderTemplate(requests, invites, users, reqParams),
                   null,
                   { 'content-type': 'text/html' },
                 );
