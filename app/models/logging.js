@@ -190,18 +190,34 @@ http.IncomingMessage.prototype.checkLogin = async function (response, format) {
   return user;
 };
 
-http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin = function (
-  user,
-) {
+/**
+ * @param {{ email: string }} user
+ * @returns {boolean}
+ */
+exports.isUserAdmin = function (user) {
   return user.email && config.adminEmails[user.email];
 };
 
-http.IncomingMessage.prototype.isAdmin = function () {
-  return this.isUserAdmin(this.getUser());
+/**
+ * @param {{ email: string }} user
+ * @returns {boolean}
+ */
+http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin;
+
+/**
+ * @returns {Promise<boolean>}
+ */
+http.IncomingMessage.prototype.isAdmin = async function () {
+  return this.isUserAdmin(await this.getUser());
 };
 
-http.IncomingMessage.prototype.checkAdmin = function (response, format) {
-  const user = this.checkLogin(response, format);
+/**
+ * @param {http.ServerResponse} response
+ * @param {'json' | unknown} format
+ * @returns {Promise<boolean>}
+ */
+http.IncomingMessage.prototype.checkAdmin = async function (response, format) {
+  const user = await this.checkLogin(response, format);
   if (!user) return false;
   else if (!exports.isUserAdmin(user)) {
     console.log(
