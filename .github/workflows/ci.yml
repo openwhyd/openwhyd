@@ -16,7 +16,7 @@ jobs:
   dependencies:
     name: Check dependencies (with audit)
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -28,7 +28,7 @@ jobs:
   decommission:
     name: Decommission of user cache
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -44,7 +44,7 @@ jobs:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -67,7 +67,7 @@ jobs:
     name: Approval tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     services:
       mongodb:
         image: docker://mongo:3.6
@@ -91,7 +91,7 @@ jobs:
     name: Unit tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -116,7 +116,7 @@ jobs:
     name: Functional tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -141,7 +141,7 @@ jobs:
     name: Integration tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     services:
       mongodb:
         image: docker://mongo:3.6@sha256:146c1fd999a660e697aac40bc6da842b005c7868232eb0b7d8996c8f3545b05d
@@ -149,6 +149,8 @@ jobs:
           - 27117:27017
     steps:
       - uses: actions/checkout@v4
+      - name: Install GraphicsMagick
+        run: sudo apt-get update && sudo apt-get install -y graphicsmagick
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
@@ -171,7 +173,7 @@ jobs:
     name: 3rd-party tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
@@ -188,7 +190,7 @@ jobs:
     name: Cypress E2E tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 8
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     services:
       mongodb:
         image: docker://mongo:3.6
@@ -211,6 +213,8 @@ jobs:
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
+      - name: Install GraphicsMagick
+        run: sudo apt-get update && sudo apt-get install -y graphicsmagick
       - uses: actions/setup-node@v3
         with:
           node-version: '${{ steps.nvmrc.outputs.node_version }}'
@@ -266,7 +270,7 @@ jobs:
     name: Auth tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     timeout-minutes: 8
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     services:
       mongodb:
         image: docker://mongo:3.6
@@ -328,7 +332,7 @@ jobs:
       - unit-tests
       - functional-tests
       - integration-tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4.1.7
@@ -376,7 +380,7 @@ jobs:
       - cypress-tests
       - third-party-tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -406,7 +410,7 @@ jobs:
     # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
     name: Docker tests
     timeout-minutes: 5
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Build and start services
