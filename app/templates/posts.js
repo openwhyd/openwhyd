@@ -84,7 +84,7 @@ function renderCommentDate(when) {
   else return snip.renderTimestamp(ago) + ' ago';
 }
 
-exports.preparePost = function (post, options) {
+exports.preparePost = async function (post, options) {
   if (!post) return null;
   post._id = post._id || post.id;
   const when = post._id ? post._id.getTimestamp().getTime() : undefined;
@@ -200,12 +200,18 @@ exports.preparePost = function (post, options) {
 
   // rendering "faces"
 
-  newPost.faces = snip.removeDuplicates(
-    (post.reposts || []).concat(post.lov || []).map(function (u) {
-      return { id: u.id || u, name: getUserNameFromId(u.id || u) };
-    }),
-    'id',
-  );
+  // Create an array of promises for each user
+  const userPromises = (post.reposts || [])
+    .concat(post.lov || [])
+    .map(async function (u) {
+      return { id: u.id || u, name: await getUserNameFromId(u.id || u) };
+    });
+
+  // Wait for all promises to resolve
+  const resolvedUsers = await Promise.all(userPromises);
+
+  // Remove duplicates
+  newPost.faces = snip.removeDuplicates(resolvedUsers, 'id');
 
   // rendering "via" source
 
@@ -239,13 +245,13 @@ options = options || {};
 return !posts || posts.length == 0 ? options.defaultHtml || '' : exports.renderPosts(posts, options);
 };
 */
-exports.renderPosts = function (posts, options) {
+exports.renderPosts = async function (posts, options) {
   posts = posts || [];
   options = options || {};
   console.log('_ _ _ _ _ _ _ _PREPAREEE');
 
   for (const p in posts)
-    posts[p] = exports.preparePost(posts[p], options || {});
+    posts[p] = await exports.preparePost(posts[p], options || {});
 
   return exports.render({
     posts: posts,
@@ -276,11 +282,15 @@ exports.renderPostsAsync = function (posts, options, callback) {
     exports.populateNextPageUrl(options, lastPid);
   }
 
-  function prepareAndRender(posts, options, cb) {
+  async function prepareAndRender(posts, options, cb) {
     const templateVars = options.templateVars || {};
-    templateVars.posts = posts.map(function (post) {
-      return exports.preparePost(post, options || {});
-    });
+
+    // Process posts sequentially to avoid race conditions
+    templateVars.posts = [];
+    for (const post of posts) {
+      templateVars.posts.push(await exports.preparePost(post, options || {}));
+    }
+
     if (options.customTemplateFile)
       templateLoader.loadTemplate(options.customTemplateFile, function (tmpl) {
         cb(tmpl.render(templateVars));

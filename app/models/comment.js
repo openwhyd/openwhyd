@@ -126,11 +126,11 @@ function notifyUsers(comment) {
   });
 }
 
-exports.insert = function (p, cb) {
+exports.insert = async function (p, cb) {
   p = p || {};
   const comment = {
     uId: p.uId,
-    uNm: mongodb.getUserNameFromId(p.uId) /*p.uNm*/,
+    uNm: await mongodb.getUserNameFromId(p.uId) /*p.uNm*/,
     pId: /*mongodb.ObjectId*/ '' + p.pId,
     text: (p.text || '').trim(),
   };

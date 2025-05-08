@@ -204,7 +204,7 @@ async function setPostLove(collection, pId, uId, state, handler) {
   if (state)
     activityModel.addLikeByPost(post, {
       id: uId,
-      name: mongodb.getUserNameFromId(uId),
+      name: await mongodb.getUserNameFromId(uId),
     });
   else activityModel.removeLike(pId, uId);
 }
