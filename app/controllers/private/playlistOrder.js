@@ -34,8 +34,8 @@ exports.controller = async function (request, getParams, response) {
     return mainTemplate.renderWhydPage(options);
   }
 
-  function render(html) {
-    response.legacyRender(renderWhydPage(html), null, {
+  async function render(html) {
+    response.legacyRender(await renderWhydPage(html), null, {
       'content-type': 'text/html',
     });
   }
