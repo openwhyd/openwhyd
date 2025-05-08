@@ -37,9 +37,9 @@ exports.handlePostRequest = function (request, postParams, response) {
   }
 };
 
-exports.controller = function (req, reqParams, res) {
+exports.controller = async function (req, reqParams, res) {
   //req.logToConsole("notif.controller", reqParams);
-  const user = req.checkLogin(/*res*/);
+  const user = await req.checkLogin(/*res*/);
   if (!user) return res.legacyRender(); // replace by render(null) if user not logged
 
   if (req.method.toLowerCase() === 'post') {
