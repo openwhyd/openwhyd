@@ -1,3 +1,10 @@
+## [1.63.10](https://github.com/openwhyd/openwhyd/compare/v1.63.9...v1.63.10) (2025-05-08)
+
+
+### Bug Fixes
+
+* **ci:** use more recent ubuntu version ([#815](https://github.com/openwhyd/openwhyd/issues/815)) ([08e28ec](https://github.com/openwhyd/openwhyd/commit/08e28ec0c8c9c0d5ce47600b541aa6e2caa02b6d))
+
 ## [1.63.9](https://github.com/openwhyd/openwhyd/compare/v1.63.8...v1.63.9) (2025-04-06)
 
 
