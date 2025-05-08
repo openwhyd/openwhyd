@@ -166,7 +166,7 @@ exports.controller = async function (request, reqParams, response) {
       return renderAllLibrary(lib);
     }
   } else if (path == '/me') {
-    if (request.checkLogin(response, reqParams.format))
+    if (await request.checkLogin(response, reqParams.format))
       userModel.fetchByUid(loggedInUser.id, function (user) {
         if (!user) render({ errorCode: 'USER_NOT_FOUND' });
         else

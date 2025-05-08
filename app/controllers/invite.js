@@ -123,11 +123,11 @@ exports.renderRegisterPage = function (request, reqParams, response) {
   }
 };
 
-const renderInviteForm = function (request, reqParams, response) {
+const renderInviteForm = async function (request, reqParams, response) {
   request.logToConsole('invite.renderInviteForm', reqParams);
   if (!reqParams) reqParams = {};
 
-  reqParams.loggedUser = request.checkLogin(response); //getUser();
+  reqParams.loggedUser = await request.checkLogin(response); //getUser();
   if (!reqParams.loggedUser) return;
 
   const html = inviteFormTemplate.renderInviteFormPage(reqParams);
@@ -210,7 +210,7 @@ exports.controller = async function (request, reqParams, response, error) {
   else if (
     request.method.toLowerCase() === 'delete' &&
     reqParams.inviteCode &&
-    request.checkLogin()
+    (await request.checkLogin())
   )
     users.removeInvite(reqParams.inviteCode, function (i) {
       console.log('deleted invite', i);
@@ -229,5 +229,5 @@ exports.controller = async function (request, reqParams, response, error) {
     response.legacyRender(js, null, { 'content-type': 'text/javascript' });
   } else if (reqParams.inviteCode || request.url.startsWith('/signup'))
     exports.renderRegisterPage(request, reqParams, response, error);
-  else renderInviteForm(request, reqParams, response);
+  else await renderInviteForm(request, reqParams, response);
 };

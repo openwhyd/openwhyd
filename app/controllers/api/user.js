@@ -420,11 +420,11 @@ function localRendering(reqParams, r) {
 }
 
 /** @param {Features} features */
-exports.controller = function (request, reqParams, response, features) {
+exports.controller = async function (request, reqParams, response, features) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
 
-  const loggedUser = request.checkLogin(/*response*/);
+  const loggedUser = await request.checkLogin(/*response*/);
   handleRequest(
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,

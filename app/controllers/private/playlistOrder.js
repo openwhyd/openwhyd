@@ -53,7 +53,7 @@ exports.controller = async function (request, getParams, response) {
     return render('what the hell are you trying to do?'); // unlikely to happen ^^
 
   let loggedUser = null;
-  if (!(loggedUser = request.checkLogin(response))) return;
+  if (!(loggedUser = await request.checkLogin(response))) return;
 
   if (loggedUser.id != getParams.uId)
     return render('what the hell are you doing here, mate?');
