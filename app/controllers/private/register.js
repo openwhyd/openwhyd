@@ -124,7 +124,7 @@ exports.registerInvitedUser = function (request, user, response) {
   //else if (!pwdRegex.test(user.password))
   //	return error(request, user, response, "Your password contains invalid characters");
 
-  function registerUser() {
+  async function registerUser() {
     userModel.fetchByEmail(user.email, function (item) {
       if (item)
         return error(
@@ -190,7 +190,7 @@ exports.registerInvitedUser = function (request, user, response) {
 
       console.log('sending welcome email', storedUser.email, storedUser.iBy);
       const inviteSender = storedUser.iBy
-        ? mongodb.getUserFromId(storedUser.iBy)
+        ? await mongodb.getUserFromId(storedUser.iBy)
         : null;
       notifEmails.sendRegWelcomeAsync(storedUser, inviteSender);
     }
@@ -199,7 +199,7 @@ exports.registerInvitedUser = function (request, user, response) {
     if (user.iBy) {
       const inviteSender = {
         id: user.iBy,
-        name: request.getUserNameFromId(user.iBy),
+        name: await request.getUserNameFromId(user.iBy),
       };
       follow(storedUser, inviteSender, 'invite');
       follow(inviteSender, storedUser, 'invite');

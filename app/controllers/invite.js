@@ -71,7 +71,7 @@ exports.renderRegisterPage = function (request, reqParams, response) {
 
   async function render(user = {}) {
     //invitePage.refreshTemplates(function() {
-    const sender = request.getUserFromId(user.iBy);
+    const sender = await request.getUserFromId(user.iBy);
     const loggedUser = await request.getUser();
     const registrationPage = invitePage.renderInvitePage(
       sender,
