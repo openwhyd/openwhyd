@@ -266,7 +266,7 @@ function fetchSearchPage(myUid, q, cb) {
   });
 }
 
-exports.controller = function (request, reqParams = {}, response) {
+exports.controller = async function (request, reqParams = {}, response) {
   function renderSearchPage(q, cb) {
     fetchSearchPage(request.getUid(), q, function (results) {
       results.posts = results.tracks; // since algolia integration
@@ -360,7 +360,7 @@ exports.controller = function (request, reqParams = {}, response) {
   }
 
   request.logToConsole('search.controller', reqParams);
-  reqParams.loggedUser = request.getUser();
+  reqParams.loggedUser = await request.getUser();
 
   // track filter (from user profile)
   if (reqParams.q && reqParams.uid)
