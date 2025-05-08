@@ -102,7 +102,7 @@ test-in-docker: ## Run tests in the Openwhyd's docker container
 ci: ## Run automated tests defined in GitHub Actions CI workflow.
 	@echo 'ℹ️  Prerequisite: https://github.com/nektos/act#installation-through-package-managers'
 	@echo '{"head_commit": {"message": "build latest"}}' >github_event.tmp
-	@act --job tests --platform "ubuntu-20.04=lucasalt/act_base:latest" --container-architecture linux/amd64 -s GITHUB_TOKEN=${GITHUB_TOKEN} -e github_event.tmp
+	@act --job tests --platform "ubuntu-24.04=lucasalt/act_base:latest" --container-architecture linux/amd64 -s GITHUB_TOKEN=${GITHUB_TOKEN} -e github_event.tmp
 	# TODO: run other CI jobs too.
 	@rm -f github_event.tmp
 
