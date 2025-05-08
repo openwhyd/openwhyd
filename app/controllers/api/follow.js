@@ -89,7 +89,7 @@ exports.controller = async function (request, reqParams, response) {
     else response.renderJSON(result);
   };
 
-  const user = request.checkLogin(/*response*/);
+  const user = await request.checkLogin(/*response*/);
   if (
     ranPublicAction(user, reqParams, function (res) {
       response.renderJSON(res);

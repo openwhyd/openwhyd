@@ -24,10 +24,10 @@ exports.renderSettingsForm = function (p, cb) {
   /*});*/
 };
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('settings.controller', request.method);
   reqParams = reqParams || {};
-  reqParams.loggedUser = request.checkLogin(response);
+  reqParams.loggedUser = await request.checkLogin(response);
   if (!reqParams.loggedUser) return;
 
   exports.renderSettingsForm(reqParams, function (res) {

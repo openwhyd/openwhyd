@@ -30,7 +30,7 @@ const inviteUser = function (email, handler) {
   return true;
 };
 
-function renderUserList(users, title, actionNames) {
+async function renderUserList(users, title, actionNames) {
   let userList = '<h2>' + title + ' (' + users.length + ')</h2>';
 
   if (users && users.length) {
@@ -96,7 +96,8 @@ function renderUserList(users, title, actionNames) {
       '<small>' +
       (u.name ? '<br/>&nbsp;' + u.email : '') +
       (u.iBy
-        ? '<br/>&nbsp;invited by ' + (mongodb.usernames[u.iBy] || {}).name
+        ? '<br/>&nbsp;invited by ' +
+            (await userModel.fetchUserNameById(u.iBy)) || 'unknown'
         : '') +
       (u.iPo
         ? '<br/>&nbsp;from post #<a href="/c/' + u.iPo + '">' + u.iPo + '</a>'
@@ -131,7 +132,7 @@ function renderUserList(users, title, actionNames) {
   return '<div class="userList">' + userList + '</div>';
 }
 
-function renderTemplate(requests, invites) {
+async function renderTemplate(requests, invites) {
   const params = { title: 'whyd invites', css: ['admin.css'], js: [] };
 
   const out = [
@@ -148,8 +149,10 @@ function renderTemplate(requests, invites) {
     '<input type="submit" name="action" value="invite">',
     '</form>',
     //'params = ' + util.inspect(reqParams),
-    renderUserList(requests, /*"req",*/ 'requests', ['invite', 'delete']),
-    renderUserList(invites, /*"inv",*/ 'invites', [/*"resend",*/ 'delete']),
+    await renderUserList(requests, /*"req",*/ 'requests', ['invite', 'delete']),
+    await renderUserList(invites, /*"inv",*/ 'invites', [
+      /*"resend",*/ 'delete',
+    ]),
     //	renderUserList(users, /*"usr",*/ "registered users", ["delete"]),
     '<script>',
     'function getSelectedCheckbox(buttonGroup) {',
@@ -186,11 +189,11 @@ function renderTemplate(requests, invites) {
   return mainTemplate.renderWhydFrame(out, params);
 }
 
-exports.handleRequest = function (request, reqParams, response) {
+exports.handleRequest = async function (request, reqParams, response) {
   request.logToConsole('invites.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
-  const user = request.checkAdmin(response);
+  const user = await request.checkAdmin(response);
   if (!user /*|| !(user.fbId == "510739408" || user.fbId == "577922742")*/)
     return /*response.legacyRender("you're not an admin!")*/;
 
@@ -203,7 +206,7 @@ exports.handleRequest = function (request, reqParams, response) {
           function (err, invites) {
             fetchUsers(
               'email',
-              function (err, requests) {
+              async function (err, requests) {
                 for (const i in requests)
                   requests[i] = {
                     _id: requests[i]._id,
@@ -212,7 +215,7 @@ exports.handleRequest = function (request, reqParams, response) {
                   };
 
                 response.legacyRender(
-                  renderTemplate(requests, invites, users, reqParams),
+                  await renderTemplate(requests, invites, users, reqParams),
                   null,
                   { 'content-type': 'text/html' },
                 );
@@ -262,12 +265,12 @@ exports.handleRequest = function (request, reqParams, response) {
   } else fetchAndRender();
 };
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   if (request.method.toLowerCase() === 'post') {
     //var form = new formidable.IncomingForm();
     //form.parse(request, function(err, postParams) {
     //	if (err) console.log(err);
-    exports.handleRequest(request, request.body /*postParams*/, response);
+    await exports.handleRequest(request, request.body /*postParams*/, response);
     //});
-  } else exports.handleRequest(request, getParams, response);
+  } else await exports.handleRequest(request, getParams, response);
 };

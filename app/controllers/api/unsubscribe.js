@@ -46,7 +46,7 @@ function withLink(html) {
   return '<p>' + html + "</p><p><a href='/settings'>Edit your settings</a></p>";
 }
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('unsubscribe.controller', reqParams);
 
   function render(r) {
@@ -95,7 +95,7 @@ exports.controller = function (request, reqParams, response) {
     return render(); // missing uId parameter => let's redirect to /settings
   }
 
-  const user = request.getUserFromId(reqParams.uId);
+  const user = await userModel.fetchAndProcessUserById(reqParams.uId);
   if (!user) {
     return render({ error: 'user not found' });
   }

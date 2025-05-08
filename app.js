@@ -197,7 +197,7 @@ function start() {
     sessionMiddleware: useAuth0AsIdentityProvider
       ? null
       : getLegacySessionMiddleware(),
-    errorHandler: function (req, params = {}, response, statusCode) {
+    errorHandler: async function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       require('./app/templates/error.js').renderErrorResponse(
         { errorCode: statusCode },
@@ -208,7 +208,7 @@ function start() {
             : req.accepts('json')
               ? 'json'
               : 'text'),
-        req.getUser(),
+        await req.getUser(),
       );
     },
     uploadSettings: {

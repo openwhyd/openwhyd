@@ -19,9 +19,9 @@ let template;
   );
 })();
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   reqParams = reqParams || {};
-  const loggedInUser = request.getUser() || {};
+  const loggedInUser = (await request.getUser()) || {};
 
   function render(html) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });

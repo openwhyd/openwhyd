@@ -4,10 +4,10 @@ const mongodb = require('../../models/mongodb.js');
 const ObjectId = mongodb.ObjectId;
 const notifModel = require('../../models/notif.js');
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('admin.testNotifs', reqParams);
 
-  const user = request.checkLogin(response);
+  const user = await request.checkLogin(response);
   if (!user) return;
 
   // reset prefs: db.user.updateOne({_id:ObjectId("4d94501d1f78ac091dbc9b4d")},{$unset:{"pref":1}});

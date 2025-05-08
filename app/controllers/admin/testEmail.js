@@ -36,10 +36,10 @@ function sendEmails(user, template, cb) {
   );
 }
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   console.log('test email notif');
 
-  const user = request.checkLogin(response);
+  const user = await request.checkLogin(response);
   if (!user) return;
 
   function send(email) {

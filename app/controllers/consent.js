@@ -100,7 +100,7 @@ exports.controller = async function (request, getParams, response) {
   const p = (isPost ? request.body : getParams) || {};
   request.logToConsole('consent.controller ' + request.method, p);
   // make sure user is logged in
-  if (!(p.loggedUser = request.checkLogin(response))) return;
+  if (!(p.loggedUser = await request.checkLogin(response))) return;
 
   function render(r) {
     // content or error

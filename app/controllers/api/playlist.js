@@ -72,11 +72,16 @@ exports.actions = {
   },
 };
 
-exports.handlePostRequest = function (request, reqParams, response, features) {
+exports.handlePostRequest = async function (
+  request,
+  reqParams,
+  response,
+  features,
+) {
   request.logToConsole('aoi.playlist.handleRequest', reqParams);
 
   // make sure a registered user is logged, or return an error page
-  const user = request.checkLogin(/*response*/);
+  const user = await request.checkLogin(/*response*/);
   if (
     false == user ||
     !reqParams ||

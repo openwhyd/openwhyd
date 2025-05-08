@@ -20,22 +20,22 @@ function renderTemplate(params, callback) {
   );
 }
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   request.logToConsole('playlistOrder.controller', getParams);
 
-  function renderWhydPage(html) {
+  async function renderWhydPage(html) {
     const options = {};
     options.js = options.js || [];
     options.css = options.css || [];
     options.bodyClass = 'pgPlaylistOrder';
     options.pageTitle = 'set order';
     options.content = html;
-    options.loggedUser = request.getUser();
+    options.loggedUser = await request.getUser();
     return mainTemplate.renderWhydPage(options);
   }
 
-  function render(html) {
-    response.legacyRender(renderWhydPage(html), null, {
+  async function render(html) {
+    response.legacyRender(await renderWhydPage(html), null, {
       'content-type': 'text/html',
     });
   }
@@ -53,7 +53,7 @@ exports.controller = function (request, getParams, response) {
     return render('what the hell are you trying to do?'); // unlikely to happen ^^
 
   let loggedUser = null;
-  if (!(loggedUser = request.checkLogin(response))) return;
+  if (!(loggedUser = await request.checkLogin(response))) return;
 
   if (loggedUser.id != getParams.uId)
     return render('what the hell are you doing here, mate?');

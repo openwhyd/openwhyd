@@ -35,10 +35,10 @@ function renderTemplate(report) {
   return mainTemplate.renderWhydFrame(out, params);
 }
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('analytics.controller', reqParams);
 
-  if (!request.checkAdmin(response)) return;
+  if (!(await request.checkAdmin(response))) return;
 
   let users;
   const userIndex = {};
@@ -59,7 +59,7 @@ exports.controller = function (request, reqParams, response) {
     });
   };
 
-  /*	
+  /*
 	var countRecomFollows = function (callback) {
 		mongodb.collections['follow'].countDocuments({recom:true}, function(err,count) {
 			report["Number of recommended topics followed"] = count;
@@ -67,14 +67,14 @@ exports.controller = function (request, reqParams, response) {
 			callback();
 		});
 	};
-	
+
 	var follows = null;
-	
+
 	var fetchFollows = function (callback) {
 		if (follows) return callback(follows);
-		
+
 		console.log("fetching follow collection...");
-		
+
 		mongodb.collections['follow'].find({recom:{$exists:false}}, function(err, cursor) {
 			console.log("done fetching follow collection.");
 			cursor.toArray( function(err, items) {
@@ -83,7 +83,7 @@ exports.controller = function (request, reqParams, response) {
 			});
 		});
 	}
-	
+
 	var countPeriodFollows = function (t1, t2, nameSuffix) {
 		return function(callback) {
 			var counter = 0;
@@ -99,7 +99,7 @@ exports.controller = function (request, reqParams, response) {
 			callback();
 		};
 	};
-	
+
 	var countFirstDayFollows = countPeriodFollows(0, 24*60*60*1000, "on their first day");
 	var countFirstWeekFollows = countPeriodFollows(0, 7*24*60*60*1000, "on their first week");
 	var countFirstMonthFollows = countPeriodFollows(0, 30*24*60*60*1000, "on their first month");
@@ -107,12 +107,12 @@ exports.controller = function (request, reqParams, response) {
 
   /*
 	var posts = null;
-	
+
 	var fetchPosts = function (callback) {
 		if (posts) return callback(posts);
-		
+
 		console.log("fetching status/post collection...");
-		
+
 		mongodb.collections['post'].find({}, function(err, cursor) {
 			console.log("done fetching status/post collection.");
 			cursor.toArray( function(err, items) {
@@ -121,7 +121,7 @@ exports.controller = function (request, reqParams, response) {
 			});
 		});
 	}
-	
+
 	var countPeriodActiveUsers = function (t1, t2, nameSuffix) {
 		return function(callback) {
 			var counter = 0, activeUsers = {};
@@ -140,7 +140,7 @@ exports.controller = function (request, reqParams, response) {
 			callback();
 		};
 	};
-	
+
 	var countFirstDayPosts = countPeriodActiveUsers(0, 24*60*60*1000, "on their first day");
 
 	var countPeriodPosts = function (t1, t2, nameSuffix) {
@@ -159,7 +159,7 @@ exports.controller = function (request, reqParams, response) {
 			callback();
 		};
 	};
-	
+
 	var countTodayPosts = countPeriodPosts(24*60*60*1000, 0, "in the last 24 hours");
 	var countWeekPosts = countPeriodPosts(7*24*60*60*1000, 0, "in the last 7 days");
 	var countMonthPosts = countPeriodPosts(30*24*60*60*1000, 0, "in the last 30 days");

@@ -10,11 +10,11 @@
 
 const facebookModel = require('../../models/facebook.js');
 
-exports.handleRequest = function (request, reqParams, response) {
+exports.handleRequest = async function (request, reqParams, response) {
   request.logToConsole('fbfriends.handleRequest', reqParams);
   reqParams = reqParams || {};
 
-  const loggedUser = request.checkLogin();
+  const loggedUser = await request.checkLogin();
   if (!loggedUser) return response.legacyRender({ error: 'must be logged in' });
 
   facebookModel.fetchAccessToken(loggedUser.id, function (fbTok) {

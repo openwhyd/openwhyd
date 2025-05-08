@@ -1,6 +1,5 @@
 const fs = require('fs');
 const config = require('../models/config.js');
-const mongodb = require('../models/mongodb.js');
 const postModel = require('../models/post.js');
 
 exports.config = {
@@ -142,8 +141,12 @@ exports.controller = function (request, reqParams, response) {
     } else renderFile(uri, defaultImg);
   }
 
-  function renderUserImg(id) {
-    const user = mongodb.usernames[id];
+  /**
+   * @param {string} id - can be a userId or an image name, e.g. "<userId>_<nbpixels>px"
+   */
+  async function renderUserImg(id) {
+    const userModel = require('../models/user.js');
+    const user = await userModel.fetchAndProcessUserById(id);
     if (user && user.img) {
       //var isSmallFb = user.img.indexOf("graph.facebook.com") > -1 && user.img.split("/").pop() == "picture";
       //console.log(user.img, isSmallFb, user.img + (isSmallFb ? "?type=large" : ""));

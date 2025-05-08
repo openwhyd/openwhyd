@@ -88,8 +88,9 @@ const fetchDataByType = {
     function next() {
       if (!idList.length) return cb(userList);
       const uid = '' + idList.shift();
-      postModel.fetchByAuthors([uid], { limit: 1 }, function (posts) {
-        const user = mongodb.usernames[uid];
+      postModel.fetchByAuthors([uid], { limit: 1 }, async function (posts) {
+        const userModel = require('../../models/user.js');
+        const user = await userModel.fetchAndProcessUserById(uid);
         if (user)
           userList.push({
             _id: uid,
@@ -265,7 +266,7 @@ function fetchSearchPage(myUid, q, cb) {
   });
 }
 
-exports.controller = function (request, reqParams = {}, response) {
+exports.controller = async function (request, reqParams = {}, response) {
   function renderSearchPage(q, cb) {
     fetchSearchPage(request.getUid(), q, function (results) {
       results.posts = results.tracks; // since algolia integration
@@ -359,7 +360,7 @@ exports.controller = function (request, reqParams = {}, response) {
   }
 
   request.logToConsole('search.controller', reqParams);
-  reqParams.loggedUser = request.getUser();
+  reqParams.loggedUser = await request.getUser();
 
   // track filter (from user profile)
   if (reqParams.q && reqParams.uid)

@@ -124,11 +124,11 @@ function makeAddDlg(reqParams, playlists, user, cb) {
 /**
  * called by bookmarklet, when user selects a resource to share from an external web page
  */
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('bookmarklet.controller', reqParams);
   if (!reqParams) reqParams = {};
 
-  const user = request.checkLogin();
+  const user = await request.checkLogin();
   if (!user) {
     const html = renderLoginForm({ redirect: request.url });
     return response.renderHTML(html);

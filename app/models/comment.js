@@ -8,6 +8,7 @@ const snip = require('../snip.js');
 const mongodb = require('../models/mongodb.js');
 const postModel = require('../models/post.js');
 const notifModel = require('../models/notif.js');
+const { fetchUserNameById } = require('./user.js');
 
 const MIN_COMMENT_DELAY = 2000; // min 2 seconds between comments
 
@@ -126,11 +127,11 @@ function notifyUsers(comment) {
   });
 }
 
-exports.insert = function (p, cb) {
+exports.insert = async function (p, cb) {
   p = p || {};
   const comment = {
     uId: p.uId,
-    uNm: mongodb.getUserNameFromId(p.uId) /*p.uNm*/,
+    uNm: await fetchUserNameById(p.uId) /*p.uNm*/,
     pId: /*mongodb.ObjectId*/ '' + p.pId,
     text: (p.text || '').trim(),
   };

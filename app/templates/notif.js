@@ -5,8 +5,8 @@
  **/
 
 const config = require('../models/config.js');
-const mongodb = require('../models/mongodb.js'); // for getting user data
 const trackModel = require('../models/track.js');
+const userModel = require('../models/user.js');
 const templateLoader = require('../templates/templateLoader.js');
 const NotifDigest = require('../templates/notifDigest.js').NotifDigest;
 const { getSuggestedUsers } = require('../models/featuredUsers.js');
@@ -268,9 +268,9 @@ exports.generateNotifDigest = function (p) {
   );
 };
 
-exports.generateRepost = function (reposter, post) {
+exports.generateRepost = async function (reposter, post) {
   return new NotifDigest({
-    recipient: mongodb.getUserFromId(post.uId),
+    recipient: await userModel.fetchAndProcessUserById(post.uId),
     notifType: 'emAdd',
   })
     .addRepostedTrack(post, reposter)
@@ -279,17 +279,17 @@ exports.generateRepost = function (reposter, post) {
     );
 };
 
-exports.generateSubscribedToUser = function (sender, favoritedId) {
+exports.generateSubscribedToUser = async function (sender, favoritedId) {
   return new NotifDigest({
-    recipient: mongodb.getUserFromId(favoritedId),
+    recipient: await userModel.fetchAndProcessUserById(favoritedId),
     subscriptions: [sender],
     notifType: 'emSub',
   }).renderNotifEmailObj(sender.name + ' has subscribed to you on Openwhyd!');
 };
 
-exports.generateLike = function (user, post) {
+exports.generateLike = async function (user, post) {
   return new NotifDigest({
-    recipient: mongodb.getUserFromId(post.uId),
+    recipient: await userModel.fetchAndProcessUserById(post.uId),
     notifType: 'emLik',
   })
     .addLikedTrack(post, user)
@@ -298,37 +298,37 @@ exports.generateLike = function (user, post) {
     );
 };
 
-exports.generateComment = function (post, comment) {
+exports.generateComment = async function (post, comment) {
   return renderEmailTemplate(comment.uNm + ' commented on your track', [
     //renderLink("See the comment", "/c/"+post._id),
     renderTemplateFile('comment', {
       unsubUrl:
         config.urlPrefix + '/api/unsubscribe?type=emCom&uId=' + post.uId,
-      user: mongodb.getUserFromId('' + comment.uId),
+      user: await userModel.fetchAndProcessUserById('' + comment.uId),
       track: post,
     }),
   ]);
 };
 
-exports.generateMention = function (mentionedUid, post, comment) {
+exports.generateMention = async function (mentionedUid, post, comment) {
   return renderEmailTemplate(comment.uNm + ' mentioned you on a track', [
     //renderLink("See the comment", "/c/"+post._id),
     renderTemplateFile('mention', {
       unsubUrl:
         config.urlPrefix + '/api/unsubscribe?type=emMen&uId=' + mentionedUid,
-      user: mongodb.getUserFromId('' + comment.uId),
+      user: await userModel.fetchAndProcessUserById('' + comment.uId),
       track: post,
     }),
   ]);
 };
 
-exports.generateCommentReply = function (post, comment, repliedUid) {
+exports.generateCommentReply = async function (post, comment, repliedUid) {
   return renderEmailTemplate(comment.uNm + ' replied to one of your comments', [
     //renderLink("See the comment", "/c/"+post._id),
     renderTemplateFile('commentReply', {
       unsubUrl:
         config.urlPrefix + '/api/unsubscribe?type=emRep&uId=' + repliedUid,
-      user: mongodb.getUserFromId('' + comment.uId),
+      user: await userModel.fetchAndProcessUserById('' + comment.uId),
       track: post,
     }),
   ]);

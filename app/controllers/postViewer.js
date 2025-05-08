@@ -9,18 +9,18 @@ const postModel = require('../models/post.js');
 const errorTemplate = require('../templates/error.js');
 const template = require('../templates/postViewer.js');
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('postViewer.controller', reqParams);
 
   reqParams = reqParams || {};
 
-  function render(p) {
+  async function render(p) {
     if (p && p.errorCode) {
       errorTemplate.renderErrorResponse(
         p,
         response,
         reqParams.format,
-        request.getUser(),
+        await request.getUser(),
       );
     } else if (p && p.html) {
       response.renderHTML(p.html);
@@ -29,7 +29,7 @@ exports.controller = function (request, reqParams, response) {
     else response.legacyRender(p);
   }
 
-  function renderPost(post, isDynamic) {
+  async function renderPost(post, isDynamic) {
     if (!post && !isDynamic) render({ errorCode: 'POST_NOT_FOUND' });
     else
       template.renderPostPage(
@@ -37,7 +37,7 @@ exports.controller = function (request, reqParams, response) {
           isDynamic: isDynamic,
           post: post,
           format: reqParams.format,
-          loggedUser: request.getUser(),
+          loggedUser: await request.getUser(),
         },
         render,
       );
@@ -51,12 +51,13 @@ exports.controller = function (request, reqParams, response) {
       },
       true,
     );
-  else if (!mongodb.isObjectId(reqParams.id))
+  else if (!mongodb.isObjectId(reqParams.id)) {
+    const loggedUser = await request.getUser();
     errorTemplate.renderErrorResponse(
       { errorCode: 'POST_NOT_FOUND' },
       response,
       reqParams.format,
-      request.getUser(),
+      loggedUser,
     );
-  else postModel.fetchPostById(reqParams.id || reqParams.pId, renderPost);
+  } else postModel.fetchPostById(reqParams.id || reqParams.pId, renderPost);
 };

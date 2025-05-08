@@ -48,7 +48,14 @@ const COMMENTS = USERS.map(function (u) {
 async function initDb() {
   mongodb = await initMongoDb({ silent: true });
   db = mongodb.collections;
-  USERS.forEach((user) => mongodb.cacheUser(user)); // populate mongodb.usernames for notif endpoints
+  // Insert users directly into the database instead of using cacheUser
+  for (const user of USERS) {
+    await db['user'].updateOne(
+      { _id: user._id },
+      { $set: user },
+      { upsert: true },
+    );
+  }
 }
 
 const countEmptyNotifs = (cb) =>
