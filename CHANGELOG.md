@@ -1,3 +1,10 @@
+## [1.63.11](https://github.com/openwhyd/openwhyd/compare/v1.63.10...v1.63.11) (2025-05-21)
+
+
+### Bug Fixes
+
+* **tech-debt:** replace legacy `usernames` in-memory cache by DB queries ([#814](https://github.com/openwhyd/openwhyd/issues/814)) ([5c3ff18](https://github.com/openwhyd/openwhyd/commit/5c3ff18ab34efe335574746e48882ef32939dd5f)), closes [/github.com/openwhyd/openwhyd/pull/814/files#r2080047911](https://github.com//github.com/openwhyd/openwhyd/pull/814/files/issues/r2080047911) [/github.com/openwhyd/openwhyd/pull/814/files#r2080051308](https://github.com//github.com/openwhyd/openwhyd/pull/814/files/issues/r2080051308)
+
 ## [1.63.10](https://github.com/openwhyd/openwhyd/compare/v1.63.9...v1.63.10) (2025-05-08)
 
 
