@@ -225,6 +225,6 @@ exports.controller = async function (request, reqParams, response) {
   } else if (reqParams.uAvatarImg)
     await renderTypedImg['user'](reqParams.uAvatarImg);
   else if (reqParams.uCoverImg)
-    await renderTypedImg['userCover'](reqParams.uCoverImg);
+    renderTypedImg['userCover'](reqParams.uCoverImg);
   else response.badRequest();
 };
