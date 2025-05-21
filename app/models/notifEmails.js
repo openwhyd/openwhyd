@@ -231,7 +231,7 @@ exports.sendComment = async function (post, comment, cb) {
 
 // 6) "XXX mentioned you"
 exports.sendMention = async function (mentionedUid, post, comment, cb) {
-  const prefs = await getUserPrefs(post.uId); // TODO: there may be a bug here => replace by mentionedUid?
+  const prefs = await getUserPrefs(mentionedUid);
   if (prefs['emMen'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
   else
