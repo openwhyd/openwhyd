@@ -222,36 +222,42 @@ exports.handleRequest = async function (request, reqParams, response) {
 
   reqParams = reqParams || {};
 
-  if (reqParams.action && reqParams.title) {
-    let emails = reqParams.email || [];
-    if (typeof emails == 'string') emails = [emails];
-    if (reqParams.title == 'requests') {
-      if (reqParams.action == 'invite') {
-        const sync = callWhenDone(fetchAndRender);
-        for (const i in emails) {
-          const processing = inviteUser(emails[i], function () {
-            sync(-1);
-          });
-          if (processing) sync(+1);
-        }
-      } else if (reqParams.action == 'delete' && emails.length) {
-        console.log('delete emails ', emails);
-        userModel.deleteEmails(emails, fetchAndRender);
-        return true;
+  if (!reqParams.action || !reqParams.title) {
+    fetchAndRender();
+    return;
+  }
+
+  const emails =
+    typeof reqParams.email == 'string'
+      ? [reqParams.email]
+      : reqParams.email || [];
+
+  if (reqParams.title == 'requests') {
+    if (reqParams.action == 'invite') {
+      const sync = callWhenDone(fetchAndRender);
+      for (const i in emails) {
+        const processing = inviteUser(emails[i], function () {
+          sync(-1);
+        });
+        if (processing) sync(+1);
       }
-    } else if (
-      reqParams.title == 'invites' &&
-      reqParams.action == 'delete' &&
-      emails.length
-    ) {
-      console.log('delete invites ', emails);
-      userModel.removeInviteByEmail(emails, fetchAndRender);
-    } /*
+    } else if (reqParams.action == 'delete' && emails.length) {
+      console.log('delete emails ', emails);
+      userModel.deleteEmails(emails, fetchAndRender);
+      return true;
+    }
+  } else if (
+    reqParams.title == 'invites' &&
+    reqParams.action == 'delete' &&
+    emails.length
+  ) {
+    console.log('delete invites ', emails);
+    userModel.removeInviteByEmail(emails, fetchAndRender);
+  } /*
 		else if (reqParams.title == "registered users" && reqParams.action == "delete" && emails.length) {
 			console.log("delete user ", emails[0]);
 			userModel.delete({email:emails[0]}, fetchAndRender);
 		}*/ else response.badRequest();
-  } else fetchAndRender();
 };
 
 exports.controller = async function (request, getParams, response) {
