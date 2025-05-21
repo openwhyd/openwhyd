@@ -25,21 +25,6 @@ jobs:
           cache: 'npm'
       - run: npm ci
 
-  decommission:
-    name: Decommission of user cache
-    timeout-minutes: 5
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - run: npm ci --prefer-offline --no-audit
-      - name: count references to usernames cache
-        shell: bash
-        run: ./scripts/legacy-refs/check-refs.sh
-
   code-checks:
     name: Code checks
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
