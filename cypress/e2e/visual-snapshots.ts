@@ -19,6 +19,7 @@ context('Visual Snapshots', () => {
 
   it('visitor on home page', () => {
     cy.visit('/'); // Home page (full stream)
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.eyesCheckWindow('visitor on /');
 
     cy.contains('Got it!').click(); // Remove cookie banner
@@ -32,6 +33,7 @@ context('Visual Snapshots', () => {
     cy.logout();
 
     cy.visit('/hot');
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.contains('Got it!').click(); // Remove cookie banner
 
     // cy.get('#pageLoader').should('have.css', { opacity: 0.5 });
@@ -43,6 +45,7 @@ context('Visual Snapshots', () => {
 
   it('visitor signs up then logs in from hot tracks', () => {
     cy.visit('/hot');
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('Sign up').click();
@@ -58,6 +61,7 @@ context('Visual Snapshots', () => {
 
   it('visitor on a new user profile', () => {
     cy.visit('/dummy');
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('No tracks yet...');
@@ -66,6 +70,7 @@ context('Visual Snapshots', () => {
 
   it('visitor on the button install page', () => {
     cy.visit('/button');
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('Openwhyd "add track" button');
