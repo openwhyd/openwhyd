@@ -20,7 +20,7 @@ function inviteByRequestId(reqIds, response) {
         //return response.redirect("/invite/" + invite._id);
         //return response.redirect("/fbinvite/" + invite.fbRequestIds);
         //var sender = request.getUserFromId(invite.iBy); // TODO: test case when there is no sender
-        const sender = await userModel.fetchAndProcessUserById(invite.iBy); // TODO: test case when there is no sender
+        const sender = await userModel.fetchAndProcessUserById(invite.iBy);
         const registrationPage = invitePage.renderInvitePage(
           sender,
           null /*request.getUser()*/,
