@@ -378,7 +378,9 @@ exports.subscribedToUser = async function (senderId, favoritedId, cb) {
   }
 };
 
-exports.comment = async function (post = {}, comment = {}, cb) {
+exports.comment = async function (post, comment, cb) {
+  post = post ?? {};
+  comment = comment ?? {};
   const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.comment' });
@@ -404,7 +406,9 @@ exports.comment = async function (post = {}, comment = {}, cb) {
   }
 };
 
-exports.mention = async function (post = {}, comment = {}, mentionedUid, cb) {
+exports.mention = async function (post, comment, mentionedUid, cb) {
+  post = post ?? {};
+  comment = comment ?? {};
   const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !mentionedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.mention' });
@@ -426,12 +430,9 @@ exports.mention = async function (post = {}, comment = {}, mentionedUid, cb) {
   }
 };
 
-exports.commentReply = async function (
-  post = {},
-  comment = {},
-  repliedUid,
-  cb,
-) {
+exports.commentReply = async function (post, comment, repliedUid, cb) {
+  post = post ?? {};
+  comment = comment ?? {};
   const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !repliedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.commentReply' });
