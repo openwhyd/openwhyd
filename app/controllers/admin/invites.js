@@ -194,40 +194,24 @@ exports.handleRequest = async function (request, reqParams, response) {
 
   // make sure an admin is logged, or return an error page
   const user = await request.checkAdmin(response);
-  if (!user /*|| !(user.fbId == "510739408" || user.fbId == "577922742")*/)
-    return /*response.legacyRender("you're not an admin!")*/;
+  if (!user) return;
 
-  const fetchAndRender = function () {
-    fetchUsers(
-      'user',
-      function (err, users) {
-        fetchUsers(
-          'invite',
-          function (err, invites) {
-            fetchUsers(
-              'email',
-              async function (err, requests) {
-                for (const i in requests)
-                  requests[i] = {
-                    _id: requests[i]._id,
-                    email: requests[i]._id,
-                    date: requests[i].date,
-                  };
-
-                response.legacyRender(
-                  await renderTemplate(requests, invites, users, reqParams),
-                  null,
-                  { 'content-type': 'text/html' },
-                );
-                // console.log('rendering done!');
-              },
-              { sort: [['date', 'desc']] },
-            );
-          },
-          { sort: [['_id', 'desc']] },
-        );
-      },
-      { sort: [['_id', 'desc']] },
+  const fetchAndRender = async function () {
+    const [users, invites, requests] = await Promise.all([
+      fetchUsers('user', (err, res) => res, { sort: [['_id', 'desc']] }),
+      fetchUsers('invite', (err, res) => res, { sort: [['_id', 'desc']] }),
+      fetchUsers('email', (err, res) => res, { sort: [['date', 'desc']] }),
+    ]);
+    for (const i in requests)
+      requests[i] = {
+        _id: requests[i]._id,
+        email: requests[i]._id,
+        date: requests[i].date,
+      };
+    response.legacyRender(
+      await renderTemplate(requests, invites, users, reqParams),
+      null,
+      { 'content-type': 'text/html' },
     );
   };
 
