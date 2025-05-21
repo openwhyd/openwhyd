@@ -234,13 +234,10 @@ exports.handleRequest = async function (request, reqParams, response) {
 
   if (reqParams.title == 'requests') {
     if (reqParams.action == 'invite') {
-      const sync = callWhenDone(fetchAndRender);
       for (const i in emails) {
-        const processing = inviteUser(emails[i], function () {
-          sync(-1);
-        });
-        if (processing) sync(+1);
+        await new Promise((resolve) => inviteUser(emails[i], resolve));
       }
+      fetchAndRender();
     } else if (reqParams.action == 'delete' && emails.length) {
       console.log('delete emails ', emails);
       userModel.deleteEmails(emails, fetchAndRender);
@@ -253,11 +250,9 @@ exports.handleRequest = async function (request, reqParams, response) {
   ) {
     console.log('delete invites ', emails);
     userModel.removeInviteByEmail(emails, fetchAndRender);
-  } /*
-		else if (reqParams.title == "registered users" && reqParams.action == "delete" && emails.length) {
-			console.log("delete user ", emails[0]);
-			userModel.delete({email:emails[0]}, fetchAndRender);
-		}*/ else response.badRequest();
+  } else {
+    response.badRequest();
+  }
 };
 
 exports.controller = async function (request, getParams, response) {
