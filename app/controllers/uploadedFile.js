@@ -118,9 +118,12 @@ exports.controller = async function (request, reqParams, response) {
     response.status(404).sendFile(NO_IMAGE_PATH);
   }
 
-  function renderFile(path, defaultImg) {
-    response.sendFile('' + path, function (error) {
-      if (!error) return;
+  async function renderFile(path, defaultImg) {
+    try {
+      await new Promise((resolve, reject) =>
+        response.sendFile('' + path, (err) => (err ? reject(err) : resolve())),
+      );
+    } catch (error) {
       if (defaultImg) {
         const defaultImagePath =
           exports.config.whydPath + '/public' + defaultImg;
@@ -131,16 +134,16 @@ exports.controller = async function (request, reqParams, response) {
       } else {
         renderNoImage();
       }
-    });
+    }
   }
 
-  function renderImg(uri, defaultImg) {
+  async function renderImg(uri, defaultImg) {
     if (uri && ('' + uri).indexOf('//') != -1) {
       const args = request.url.indexOf('?');
       response.temporaryRedirect(
         uri.replace('http:', '') + (args > -1 ? request.url.substr(args) : ''),
       );
-    } else renderFile(uri, defaultImg);
+    } else await renderFile(uri, defaultImg);
   }
 
   /**
@@ -160,7 +163,7 @@ exports.controller = async function (request, reqParams, response) {
           (args > -1 ? request.url.substr(args) : ''),
       );
     } else
-      renderFile(
+      await renderFile(
         exports.config.uAvatarImgPath + '/' + id,
         '/images/blank_user.gif',
       );
@@ -169,12 +172,11 @@ exports.controller = async function (request, reqParams, response) {
   const renderTypedImg = {
     u: renderUserImg,
     user: renderUserImg,
-    userCover: function (filename) {
-      return renderFile(
+    userCover: (filename) =>
+      renderFile(
         exports.config.uCoverImgPath + '/' + filename,
         '/images/1x1-pixel.png',
-      );
-    },
+      ),
     post: function (id) {
       postModel.fetchPostById(id, function (post) {
         renderImg((post || {}).img || NO_IMAGE_PATH);
@@ -221,10 +223,10 @@ exports.controller = async function (request, reqParams, response) {
   if (reqParams.id) {
     if (reqParams.type && renderTypedImg[reqParams.type])
       await renderTypedImg[reqParams.type](reqParams.id, reqParams);
-    else renderFile(exports.config.uploadPath + '/' + reqParams.id);
+    else await renderFile(exports.config.uploadPath + '/' + reqParams.id);
   } else if (reqParams.uAvatarImg)
     await renderTypedImg['user'](reqParams.uAvatarImg);
   else if (reqParams.uCoverImg)
-    renderTypedImg['userCover'](reqParams.uCoverImg);
+    await renderTypedImg['userCover'](reqParams.uCoverImg);
   else response.badRequest();
 };
