@@ -11,7 +11,7 @@ function renderAllLibrary(lib) {
   const options = lib.options;
   //options.displayAuthors = true;
   options.displayPlaylistName = true;
-  options.follows = { people: [], followers: [] }; // TODO: fix the /all page without having to fetch all users
+  options.follows = { people: [], followers: [] }; // it seems that the /all page works without having to fetch all users
   options.bodyClass =
     'pgStream pgFullStream pgWithSideBar ' + (options.bodyClass || '');
   options.globalFeed = true;
