@@ -3,6 +3,7 @@ const querystring = require('querystring');
 const errorTemplate = require('../templates/error.js');
 const snip = require('../snip.js');
 const auth0 = require('../lib/auth0');
+const userModel = require('./user.js');
 
 const genReqLogLine = ({ head, method, path, params, suffix }) =>
   !process.appParams.color
@@ -38,7 +39,6 @@ http.IncomingMessage.prototype.logToConsole = function (suffix, params) {
 };
 
 const config = require('./config.js');
-const mongodb = require('./mongodb.js');
 const loggingTemplate = require('../templates/logging.js');
 const renderUnauthorizedPage = loggingTemplate.renderUnauthorizedPage;
 
@@ -147,32 +147,23 @@ http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
 
 /**
  * Returns the logged in user as an object {_id, id, fbId, name, img}
- * @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead.
  */
-http.IncomingMessage.prototype.getUser = function () {
+http.IncomingMessage.prototype.getUser = async function () {
   const uid = this.getUid();
   if (!uid) return null;
-  const user = mongodb.usernames[uid];
-  if (!user) console.trace(`logged user ${uid} not found in user cache`);
+  const user = await userModel.fetchAndProcessUserById(uid);
+  if (!user) console.trace(`logged user ${uid} not found in database`);
   else user.id = '' + user._id;
   return user ?? null;
 };
-
-//http.IncomingMessage.prototype.getUserFromFbUid = mongodb.getUserFromFbUid;
-
-/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
-http.IncomingMessage.prototype.getUserFromId = mongodb.getUserFromId;
-
-/** @deprecated because it relies on a in-memory cache of users, call fetchByUid() instead. */
-http.IncomingMessage.prototype.getUserNameFromId = mongodb.getUserNameFromId;
 
 // ========= LOGIN/SESSION/PRIVILEGES STUFF
 
 /**
  * Checks that a registered user is logged in, and return that user, or show an error page
  */
-http.IncomingMessage.prototype.checkLogin = function (response, format) {
-  const user = this.getUser();
+http.IncomingMessage.prototype.checkLogin = async function (response, format) {
+  const user = await this.getUser();
   //console.log("checkLogin, cached record for logged in user: ", user);
   if (!user /*|| !user.name*/) {
     if (response) {
@@ -189,18 +180,34 @@ http.IncomingMessage.prototype.checkLogin = function (response, format) {
   return user;
 };
 
-http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin = function (
-  user,
-) {
+/**
+ * @param {{ email: string }} user
+ * @returns {boolean}
+ */
+exports.isUserAdmin = function (user) {
   return user.email && config.adminEmails[user.email];
 };
 
-http.IncomingMessage.prototype.isAdmin = function () {
-  return this.isUserAdmin(this.getUser());
+/**
+ * @param {{ email: string }} user
+ * @returns {boolean}
+ */
+http.IncomingMessage.prototype.isUserAdmin = exports.isUserAdmin;
+
+/**
+ * @returns {Promise<boolean>}
+ */
+http.IncomingMessage.prototype.isAdmin = async function () {
+  return this.isUserAdmin(await this.getUser());
 };
 
-http.IncomingMessage.prototype.checkAdmin = function (response, format) {
-  const user = this.checkLogin(response, format);
+/**
+ * @param {http.ServerResponse} response
+ * @param {'json' | unknown} format
+ * @returns {Promise<boolean>}
+ */
+http.IncomingMessage.prototype.checkAdmin = async function (response, format) {
+  const user = await this.checkLogin(response, format);
   if (!user) return false;
   else if (!exports.isUserAdmin(user)) {
     console.log(

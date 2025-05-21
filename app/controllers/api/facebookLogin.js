@@ -12,7 +12,7 @@ const loggingCtr = require('../../controllers/api/login.js');
 // $ curl --cookie "whydSid=rFfJv52ZkDe5CGViKR16PgXasUZuW8YWgYjsWj76iLGcDwA35kCXTtod2Q+X3Uhsg" http://localhost:8080/api/user
 // $ curl --data "action=link&fbUid=510739408&fbAccessToken=CAABrVGSZBH1gBAO774iaYNoCB9SI6HCZCYTZAgumdn6MNING1iqGwwZB3ZBPkZCTJVjBqwaomXCBH0ZBe9ZAf89xSHVKAmehHgL5jjPLjjjZB44ocdlajBzpZCtMrmSA2nDXqePCuBmgO1T34lWBEJxMKyu2Oe863BULqzmOA0MbDSxt2JpHaU1VEG6bac7yBsBaQZD" --cookie "whydSid=rFfJv52ZkDe5CGViKR16PgXasUZuW8YWgYjsWj76iLGcDwA35kCXTtod2Q+X3Uhsg" http://localhost:8080/facebookLogin
 
-exports.handleRequest = function (request, reqParams, response) {
+exports.handleRequest = async function (request, reqParams, response) {
   request.logToConsole('facebookLogin.handleRequest', reqParams);
 
   function renderJSON(json) {
@@ -37,8 +37,8 @@ exports.handleRequest = function (request, reqParams, response) {
   }
 
   // check validity of the token by making a graph api request
-  facebookModel.fetchMe(reqParams.fbAccessToken, function (fbUser) {
-    const loggedUser = request.getUser();
+  facebookModel.fetchMe(reqParams.fbAccessToken, async function (fbUser) {
+    const loggedUser = await request.getUser();
     console.log('fb session returned user id', (fbUser || {}).id);
     if (!fbUser || fbUser.id != reqParams.fbUid)
       renderError('facebook session token does not match user id', fbUser);
@@ -87,8 +87,8 @@ exports.handleRequest = function (request, reqParams, response) {
   });
 };
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   if (request.method.toLowerCase() === 'post')
-    exports.handleRequest(request, request.body, response);
-  else exports.handleRequest(request, getParams, response);
+    await exports.handleRequest(request, request.body, response);
+  else await exports.handleRequest(request, getParams, response);
 };

@@ -88,10 +88,10 @@ function processFile(file, options, callback) {
   }
 }
 
-exports.controller = function (req, requestParams, res) {
+exports.controller = async function (req, requestParams, res) {
   req.logToConsole('upload.controller', requestParams);
 
-  const user = req.checkLogin(res);
+  const user = await req.checkLogin(res);
   if (!user) return; // Note: we may want to send a response in that case too
 
   const postParams = req.body;

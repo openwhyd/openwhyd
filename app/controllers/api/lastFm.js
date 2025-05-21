@@ -143,11 +143,11 @@ function LastFM(apiKey, apiSecret) {
 
 exports.lastFm = new LastFM(API_KEY, API_SECRET);
 
-exports.controller = function (request, p, response) {
+exports.controller = async function (request, p, response) {
   request.logToConsole('api.lastFm.controller', p);
   p = p || {};
 
-  const loggedUser = request.checkLogin(response);
+  const loggedUser = await request.checkLogin(response);
   if (!loggedUser) return;
 
   if (p.token) {

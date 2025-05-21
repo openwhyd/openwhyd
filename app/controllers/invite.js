@@ -69,12 +69,13 @@ exports.renderRegisterPage = function (request, reqParams, response) {
     iPo: reqParams.iPo, // from post iPo (legacy)
   });
 
-  function render(user = {}) {
+  async function render(user = {}) {
     //invitePage.refreshTemplates(function() {
-    const sender = request.getUserFromId(user.iBy);
+    const sender = await users.fetchAndProcessUserById(user.iBy);
+    const loggedUser = await request.getUser();
     const registrationPage = invitePage.renderInvitePage(
       sender,
-      request.getUser(),
+      loggedUser,
       user._id,
       user.pId,
       reqParams.email || user.email || '',
@@ -122,20 +123,20 @@ exports.renderRegisterPage = function (request, reqParams, response) {
   }
 };
 
-const renderInviteForm = function (request, reqParams, response) {
+const renderInviteForm = async function (request, reqParams, response) {
   request.logToConsole('invite.renderInviteForm', reqParams);
   if (!reqParams) reqParams = {};
 
-  reqParams.loggedUser = request.checkLogin(response); //getUser();
+  reqParams.loggedUser = await request.checkLogin(response);
   if (!reqParams.loggedUser) return;
 
   const html = inviteFormTemplate.renderInviteFormPage(reqParams);
   response.legacyRender(html, null, { 'content-type': 'text/html' });
 };
 
-const submitInvites = function (request, reqParams, response) {
+const submitInvites = async function (request, reqParams, response) {
   console.log('POST params', reqParams);
-  const loggedUser = request.getUser();
+  const loggedUser = await request.getUser();
   if (!loggedUser || !reqParams) response.badRequest();
   else if (reqParams.email && reqParams.email.join && reqParams.email.length) {
     // === invite by email
@@ -201,15 +202,15 @@ const submitInvites = function (request, reqParams, response) {
   else response.badRequest();
 };
 
-exports.controller = function (request, reqParams, response, error) {
+exports.controller = async function (request, reqParams, response, error) {
   request.logToConsole('invite.controller' /*, request.method*/);
   reqParams = reqParams || {};
   if (request.method.toLowerCase() === 'post')
-    submitInvites(request, request.body, response);
+    await submitInvites(request, request.body, response);
   else if (
     request.method.toLowerCase() === 'delete' &&
     reqParams.inviteCode &&
-    request.checkLogin()
+    (await request.checkLogin())
   )
     users.removeInvite(reqParams.inviteCode, function (i) {
       console.log('deleted invite', i);
@@ -228,5 +229,5 @@ exports.controller = function (request, reqParams, response, error) {
     response.legacyRender(js, null, { 'content-type': 'text/javascript' });
   } else if (reqParams.inviteCode || request.url.startsWith('/signup'))
     exports.renderRegisterPage(request, reqParams, response, error);
-  else renderInviteForm(request, reqParams, response);
+  else await renderInviteForm(request, reqParams, response);
 };

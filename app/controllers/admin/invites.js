@@ -8,17 +8,9 @@ const userModel = require('../../models/user.js');
 const notifEmails = require('../../models/notifEmails.js');
 const mainTemplate = require('../../templates/mainTemplate.js');
 
-const callWhenDone = require('../../snip.js').callWhenDone;
-
-const fetchUsers = function (table, handler, options) {
+const fetchUsers = function (table, options) {
   console.log('fetching users from ' + table + '...');
-  mongodb.collections[table]
-    .find({}, options)
-    .toArray()
-    .then(
-      (res) => handler(null, res),
-      (err) => handler(err),
-    );
+  return mongodb.collections[table].find({}, options);
 };
 
 const inviteUser = function (email, handler) {
@@ -30,7 +22,7 @@ const inviteUser = function (email, handler) {
   return true;
 };
 
-function renderUserList(users, title, actionNames) {
+async function renderUserList(users, title, actionNames) {
   let userList = '<h2>' + title + ' (' + users.length + ')</h2>';
 
   if (users && users.length) {
@@ -96,7 +88,8 @@ function renderUserList(users, title, actionNames) {
       '<small>' +
       (u.name ? '<br/>&nbsp;' + u.email : '') +
       (u.iBy
-        ? '<br/>&nbsp;invited by ' + (mongodb.usernames[u.iBy] || {}).name
+        ? '<br/>&nbsp;invited by ' +
+            (await userModel.fetchUserNameById(u.iBy)) || 'unknown'
         : '') +
       (u.iPo
         ? '<br/>&nbsp;from post #<a href="/c/' + u.iPo + '">' + u.iPo + '</a>'
@@ -131,7 +124,7 @@ function renderUserList(users, title, actionNames) {
   return '<div class="userList">' + userList + '</div>';
 }
 
-function renderTemplate(requests, invites) {
+async function renderTemplate(requests, invites) {
   const params = { title: 'whyd invites', css: ['admin.css'], js: [] };
 
   const out = [
@@ -148,8 +141,10 @@ function renderTemplate(requests, invites) {
     '<input type="submit" name="action" value="invite">',
     '</form>',
     //'params = ' + util.inspect(reqParams),
-    renderUserList(requests, /*"req",*/ 'requests', ['invite', 'delete']),
-    renderUserList(invites, /*"inv",*/ 'invites', [/*"resend",*/ 'delete']),
+    await renderUserList(requests, /*"req",*/ 'requests', ['invite', 'delete']),
+    await renderUserList(invites, /*"inv",*/ 'invites', [
+      /*"resend",*/ 'delete',
+    ]),
     //	renderUserList(users, /*"usr",*/ "registered users", ["delete"]),
     '<script>',
     'function getSelectedCheckbox(buttonGroup) {',
@@ -186,88 +181,75 @@ function renderTemplate(requests, invites) {
   return mainTemplate.renderWhydFrame(out, params);
 }
 
-exports.handleRequest = function (request, reqParams, response) {
+const fetchInviteRequests = async function () {
+  const [invites, requests] = await Promise.all([
+    fetchUsers('invite', { sort: [['_id', 'desc']] }),
+    fetchUsers('email', { sort: [['date', 'desc']] }),
+  ]);
+  for (const i in requests)
+    requests[i] = {
+      _id: requests[i]._id,
+      email: requests[i]._id,
+      date: requests[i].date,
+    };
+  return { invites, requests };
+};
+
+exports.handleRequest = async function (request, reqParams, response) {
   request.logToConsole('invites.controller', reqParams);
 
   // make sure an admin is logged, or return an error page
-  const user = request.checkAdmin(response);
-  if (!user /*|| !(user.fbId == "510739408" || user.fbId == "577922742")*/)
-    return /*response.legacyRender("you're not an admin!")*/;
+  const user = await request.checkAdmin(response);
+  if (!user) return;
 
-  const fetchAndRender = function () {
-    fetchUsers(
-      'user',
-      function (err, users) {
-        fetchUsers(
-          'invite',
-          function (err, invites) {
-            fetchUsers(
-              'email',
-              function (err, requests) {
-                for (const i in requests)
-                  requests[i] = {
-                    _id: requests[i]._id,
-                    email: requests[i]._id,
-                    date: requests[i].date,
-                  };
-
-                response.legacyRender(
-                  renderTemplate(requests, invites, users, reqParams),
-                  null,
-                  { 'content-type': 'text/html' },
-                );
-                // console.log('rendering done!');
-              },
-              { sort: [['date', 'desc']] },
-            );
-          },
-          { sort: [['_id', 'desc']] },
-        );
-      },
-      { sort: [['_id', 'desc']] },
-    );
+  const fetchAndRender = async function () {
+    const { invites, requests } = await fetchInviteRequests();
+    response.legacyRender(await renderTemplate(requests, invites), null, {
+      'content-type': 'text/html',
+    });
   };
 
   reqParams = reqParams || {};
 
-  if (reqParams.action && reqParams.title) {
-    let emails = reqParams.email || [];
-    if (typeof emails == 'string') emails = [emails];
-    if (reqParams.title == 'requests') {
-      if (reqParams.action == 'invite') {
-        const sync = callWhenDone(fetchAndRender);
-        for (const i in emails) {
-          const processing = inviteUser(emails[i], function () {
-            sync(-1);
-          });
-          if (processing) sync(+1);
-        }
-      } else if (reqParams.action == 'delete' && emails.length) {
-        console.log('delete emails ', emails);
-        userModel.deleteEmails(emails, fetchAndRender);
-        return true;
+  if (!reqParams.action || !reqParams.title) {
+    fetchAndRender();
+    return;
+  }
+
+  const emails =
+    typeof reqParams.email == 'string'
+      ? [reqParams.email]
+      : reqParams.email || [];
+
+  if (reqParams.title == 'requests') {
+    if (reqParams.action == 'invite') {
+      for (const i in emails) {
+        await new Promise((resolve) => inviteUser(emails[i], resolve));
       }
-    } else if (
-      reqParams.title == 'invites' &&
-      reqParams.action == 'delete' &&
-      emails.length
-    ) {
-      console.log('delete invites ', emails);
-      userModel.removeInviteByEmail(emails, fetchAndRender);
-    } /*
-		else if (reqParams.title == "registered users" && reqParams.action == "delete" && emails.length) {
-			console.log("delete user ", emails[0]);
-			userModel.delete({email:emails[0]}, fetchAndRender);
-		}*/ else response.badRequest();
-  } else fetchAndRender();
+      fetchAndRender();
+    } else if (reqParams.action == 'delete' && emails.length) {
+      console.log('delete emails ', emails);
+      userModel.deleteEmails(emails, fetchAndRender);
+      return true;
+    }
+  } else if (
+    reqParams.title == 'invites' &&
+    reqParams.action == 'delete' &&
+    emails.length
+  ) {
+    console.log('delete invites ', emails);
+    userModel.removeInviteByEmail(emails, fetchAndRender);
+  } else {
+    response.badRequest();
+  }
 };
 
-exports.controller = function (request, getParams, response) {
+exports.controller = async function (request, getParams, response) {
   if (request.method.toLowerCase() === 'post') {
     //var form = new formidable.IncomingForm();
     //form.parse(request, function(err, postParams) {
     //	if (err) console.log(err);
-    exports.handleRequest(request, request.body /*postParams*/, response);
+    await exports.handleRequest(request, request.body /*postParams*/, response);
     //});
-  } else exports.handleRequest(request, getParams, response);
+  } else await exports.handleRequest(request, getParams, response);
 };

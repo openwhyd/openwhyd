@@ -10,6 +10,7 @@ const snip = require('../snip.js');
 const mongodb = require('./mongodb.js');
 const config = require('../models/config.js');
 const notifEmails = require('../models/notifEmails.js');
+const userModel = require('./user.js');
 
 exports.userNotifsCache = {}; // uId -> { t, notifs: [pId, topic, t, lastAuthor, n] }
 
@@ -38,7 +39,7 @@ const db = mongodb.collections;
   .name: post's content name
   .img: post's content thumb image url
 
-  .html: html code of the notification 
+  .html: html code of the notification
   .href: href url of the notification
 
 **/
@@ -180,42 +181,51 @@ exports.clearUserNotifs = async function (uId, cb) {
 
 exports.fetchAllNotifs = () => db['notif'].find().toArray();
 
-exports.fetchUserNotifs = function (uId, handler) {
-  db['notif']
+exports.fetchUserNotifs = async function (uId, handler) {
+  const results = await db['notif']
     .find({ uId: uId }, { sort: ['t', 'desc'] })
-    .toArray()
-    .then(function (results) {
-      const notifs = [];
-      for (const i in results) {
-        let n = 0;
-        if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
-        else for (const j in results[i].uId) if (results[i].uId[j] == uId) n++;
-        const lastAuthor = mongodb.usernames[results[i].uIdLast] || {};
-        notifs.push({
-          type: results[i].type,
-          pId: '' + results[i]._id,
-          track: {
-            eId: results[i].eId,
-            name: results[i].name,
-            img: config.imgUrl(results[i].img),
-          },
-          t: new Date(results[i].t * 1000),
-          lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
-          n: n,
-          img: results[i].img,
-          html: results[i].html,
-          href: results[i].href,
-        });
-      }
-      cacheUserNotifs(uId, notifs);
-      if (handler) handler(notifs);
+    .toArray();
+
+  const notifs = [];
+
+  for (const i in results) {
+    let n = 0;
+    if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
+    else for (const j in results[i].uId) if (results[i].uId[j] == uId) n++;
+    const lastAuthor = await userModel.fetchAndProcessUserById(
+      results[i].uIdLast,
+    );
+    notifs.push({
+      type: results[i].type,
+      pId: '' + results[i]._id,
+      track: {
+        eId: results[i].eId,
+        name: results[i].name,
+        img: config.imgUrl(results[i].img),
+      },
+      t: new Date(results[i].t * 1000),
+      lastAuthor: { id: lastAuthor?.id, name: lastAuthor?.name },
+      n: n,
+      img: results[i].img,
+      html: results[i].html,
+      href: results[i].href,
     });
+  }
+
+  cacheUserNotifs(uId, notifs);
+  if (handler) handler(notifs);
+  return notifs;
 };
 
-exports.getUserNotifs = function (uid, handler) {
+exports.getUserNotifs = async function (uid, handler) {
   const cachedNotifs = exports.userNotifsCache[uid];
-  if (cachedNotifs) handler(cachedNotifs.notifs, cachedNotifs.t);
-  else exports.fetchUserNotifs(uid, handler);
+  if (cachedNotifs) {
+    handler?.(cachedNotifs.notifs, cachedNotifs.t);
+    return cachedNotifs.notifs;
+  } else {
+    const notifs = await exports.fetchUserNotifs(uid, handler);
+    return notifs;
+  }
 };
 
 // generation notification method
@@ -239,9 +249,9 @@ exports.html = function (uId, html, href, img) {
  * @param {import('mongodb').ObjectId | string} loverUid
  * @param {LovablePost} post
  */
-exports.love = function (loverUid, post, callback) {
-  const user = mongodb.usernames['' + loverUid];
-  const author = mongodb.usernames['' + post.uId];
+exports.love = async function (loverUid, post, callback) {
+  const user = await userModel.fetchAndProcessUserById(loverUid);
+  const author = await userModel.fetchAndProcessUserById(post.uId);
   if (!user) throw new Error('user not found');
   if (!author) throw new Error(`post author not found`);
   db['notif']
@@ -265,7 +275,7 @@ exports.love = function (loverUid, post, callback) {
       (err) => callback?.(err) ?? console.trace('love error:', err),
     );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
-  notifEmails.sendLike(user, post, author);
+  await notifEmails.sendLike(user, post, author);
 };
 
 /**
@@ -294,20 +304,23 @@ exports.post = function (post) {
     limit: 100,
     projection: { uId: true },
   };
-  mongodb.forEach2('post', query, function (sameTrack, next) {
-    const author =
-      sameTrack && !sameTrack.error && mongodb.usernames[sameTrack.uId];
-    if (author) {
-      notifEmails.sendPostedSameTrack(author, next);
+  mongodb.forEach2('post', query, async function (sameTrack, next) {
+    if (sameTrack && !sameTrack.error) {
+      const author = await userModel.fetchAndProcessUserById(sameTrack.uId);
+      if (author) {
+        await notifEmails.sendPostedSameTrack(author, next);
+      } else if (next) {
+        next();
+      }
     } else if (next) {
       next();
     }
   });
 };
 
-exports.repost = function (reposterUid, post) {
-  const reposter = mongodb.usernames['' + reposterUid];
-  const author = mongodb.usernames['' + post.uId];
+exports.repost = async function (reposterUid, post) {
+  const reposter = await userModel.fetchAndProcessUserById(reposterUid);
+  const author = await userModel.fetchAndProcessUserById(post.uId);
   if (!reposter || !author) return;
   db['notif'].updateOne(
     { _id: post._id + '/reposts' },
@@ -325,7 +338,7 @@ exports.repost = function (reposterUid, post) {
     { upsert: true },
   );
   invalidateUserNotifsCache(post.uId); // author will be invalidated later by clearUserNotifsForPost()
-  notifEmails.sendRepost(reposter, post, author /*.email*/);
+  await notifEmails.sendRepost(reposter, post, author /*.email*/);
 };
 /*
 exports.unrepost = function (reposterUid, pId) {
@@ -344,9 +357,9 @@ exports.unrepost = function (reposterUid, pId) {
 	});
 };
 */
-exports.subscribedToUser = function (senderId, favoritedId, cb) {
-  const sender = mongodb.usernames['' + senderId];
-  const favorited = mongodb.usernames['' + favoritedId];
+exports.subscribedToUser = async function (senderId, favoritedId, cb) {
+  const sender = await userModel.fetchAndProcessUserById(senderId);
+  const favorited = await userModel.fetchAndProcessUserById(favoritedId);
   if (sender && favorited) {
     db['notif'].updateOne(
       { _id: '/u/' + sender.id },
@@ -361,12 +374,14 @@ exports.subscribedToUser = function (senderId, favoritedId, cb) {
       { upsert: true },
     );
     invalidateUserNotifsCache(favoritedId);
-    notifEmails.sendSubscribedToUser(sender, favorited, cb); // may reject with "Permission denied, wrong credentials"
+    await notifEmails.sendSubscribedToUser(sender, favorited, cb); // may reject with "Permission denied, wrong credentials"
   }
 };
 
-exports.comment = function (post = {}, comment = {}, cb) {
-  const commentUser = mongodb.usernames['' + comment.uId];
+exports.comment = async function (post, comment, cb) {
+  post = post ?? {};
+  comment = comment ?? {};
+  const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.comment' });
   else if (commentUser.id == post.uId)
@@ -384,15 +399,17 @@ exports.comment = function (post = {}, comment = {}, cb) {
         href: '/c/' + post._id,
       },
       null,
-      function () {
-        notifEmails.sendComment(post, comment, cb);
+      async function () {
+        await notifEmails.sendComment(post, comment, cb);
       },
     );
   }
 };
 
-exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
-  const commentUser = mongodb.usernames['' + comment.uId];
+exports.mention = async function (post, comment, mentionedUid, cb) {
+  post = post ?? {};
+  comment = comment ?? {};
+  const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !mentionedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.mention' });
   else {
@@ -406,15 +423,17 @@ exports.mention = function (post = {}, comment = {}, mentionedUid, cb) {
         img: '/img/u/' + comment.uId,
         href: '/c/' + post._id,
       },
-      function () {
-        notifEmails.sendMention(mentionedUid, post, comment, cb);
+      async function () {
+        await notifEmails.sendMention(mentionedUid, post, comment, cb);
       },
     );
   }
 };
 
-exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
-  const commentUser = mongodb.usernames['' + comment.uId];
+exports.commentReply = async function (post, comment, repliedUid, cb) {
+  post = post ?? {};
+  comment = comment ?? {};
+  const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !repliedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.commentReply' });
   else if (commentUser.id == repliedUid)
@@ -433,8 +452,8 @@ exports.commentReply = function (post = {}, comment = {}, repliedUid, cb) {
         },
         $addToSet: { uId: repliedUid },
       },
-      function () {
-        notifEmails.sendCommentReply(post, comment, repliedUid, cb);
+      async function () {
+        await notifEmails.sendCommentReply(post, comment, repliedUid, cb);
       },
     );
   }

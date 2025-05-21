@@ -19,7 +19,7 @@ context('Visual Snapshots', () => {
 
   it('visitor on home page', () => {
     cy.visit('/'); // Home page (full stream)
-    cy.eyesCheckWindow('visitor on /');
+    cy.eyesCheckWindow({ name: 'visitor on /', lazyLoad: true });
 
     cy.contains('Got it!').click(); // Remove cookie banner
     cy.eyesCheckWindow('visitor on / (discarded cookie banner)');
@@ -38,16 +38,17 @@ context('Visual Snapshots', () => {
     cy.location('pathname').should('equal', '/hot');
     // cy.get('#pageLoader').should('have.css', { opacity: 0 });
     cy.contains('/ All'); // in the header of the list of tracks
-    cy.eyesCheckWindow('visitor on /hot');
+    cy.eyesCheckWindow({ name: 'visitor on /hot', lazyLoad: true });
   });
 
   it('visitor signs up then logs in from hot tracks', () => {
     cy.visit('/hot');
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('Sign up').click();
     cy.contains('Create an account').should('be.visible'); // title of the modal dialog
-    cy.eyesCheckWindow('visitor on /#signup');
+    cy.eyesCheckWindow({ name: 'visitor on /#signup', lazyLoad: true });
     cy.get('body').type('{esc}'); // press "escape", to close the modal
 
     cy.contains('Login').click();
@@ -58,18 +59,26 @@ context('Visual Snapshots', () => {
 
   it('visitor on a new user profile', () => {
     cy.visit('/dummy');
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('No tracks yet...');
-    cy.eyesCheckWindow('visitor on /dummy (user profile)');
+    cy.eyesCheckWindow({
+      name: 'visitor on /dummy (user profile)',
+      lazyLoad: true,
+    });
   });
 
   it('visitor on the button install page', () => {
     cy.visit('/button');
+    cy.wait(1000); // wait for images to load, especially on CI
     cy.contains('Got it!').click(); // Remove cookie banner
 
     cy.contains('Openwhyd "add track" button');
-    cy.eyesCheckWindow('visitor on /button (bookmarklet)');
+    cy.eyesCheckWindow({
+      name: 'visitor on /button (bookmarklet)',
+      lazyLoad: true,
+    });
 
     // TODO: make the following test work: navigate back to home page, from the login page
     // cy.go('back'); // does not work, for some reason...

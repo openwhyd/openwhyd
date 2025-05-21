@@ -21,7 +21,12 @@ export interface UserDocument {
   mid: string;
   n: string;
   name: string;
-  pl: { id: string; name: string; nbTracks: number; url: string }[];
+  pl: {
+    id: string | number;
+    name: string;
+    nbTracks?: number;
+    url?: string;
+  }[];
   pref: {
     emAcc: number;
     emAdd: number;
@@ -47,7 +52,9 @@ export interface UserDocument {
     pendEN: number;
   };
   pwd: string;
+  iBy: unknown; // invited by (user id)
   lastFm: unknown;
+  fbId: unknown; // deprecated - will probably be removed at some point
   fbTok: unknown;
   twTok: unknown;
   twSec: unknown;

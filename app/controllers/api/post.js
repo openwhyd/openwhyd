@@ -52,15 +52,16 @@ const publicActions = {
     postModel.fetchPostById(p.pId, function (post) {
       const lovers = [];
       if (post && post.lov)
-        fetchSubscribedUsers(post.lov, p.uId, function (subscrUidSet) {
-          for (const i in post.lov)
+        fetchSubscribedUsers(post.lov, p.uId, async function (subscrUidSet) {
+          for (const i in post.lov) {
             lovers.push({
               id: /*"/u/"+*/ post.lov[i],
-              name: (mongodb.usernames[post.lov[i]] || {}).name,
+              // name: await userModel.fetchUserNameById(post.lov[i]), // added by fetchUserBios()
               subscribed: !!subscrUidSet[post.lov[i]],
             });
-          console.log('lovers', lovers);
+          }
           userModel.fetchUserBios(lovers, function () {
+            console.log('lovers', lovers);
             callback(lovers);
           });
         });
@@ -78,17 +79,22 @@ const publicActions = {
         if (results) {
           const repostUids = [];
           for (const i in results) repostUids.push(results[i].uId);
-          fetchSubscribedUsers(repostUids, p.uId, function (subscrUidSet) {
-            for (const i in results)
-              reposts.push({
-                id: /*"/u/"+*/ results[i].uId,
-                name: (mongodb.usernames[results[i].uId] || {}).name,
-                subscribed: !!subscrUidSet[results[i].uId],
+          fetchSubscribedUsers(
+            repostUids,
+            p.uId,
+            async function (subscrUidSet) {
+              for (const i in results) {
+                reposts.push({
+                  id: /*"/u/"+*/ results[i].uId,
+                  // name: await userModel.fetchUserNameById(results[i].uId), // added by fetchUserBios()
+                  subscribed: !!subscrUidSet[results[i].uId],
+                });
+              }
+              userModel.fetchUserBios(reposts, function () {
+                callback(reposts);
               });
-            userModel.fetchUserBios(reposts, function () {
-              callback(reposts);
-            });
-          });
+            },
+          );
         } else callback(reposts);
       },
     );
@@ -247,14 +253,15 @@ exports.actions = {
         foc: anyBrowserExceptElectron ? p.logData.foc : undefined, // result of document.hasFocus(), for https://github.com/openwhyd/openwhyd/issues/88#issuecomment-341404204
       });
       if (p.duration > 0) post.duration = p.duration;
-      if (!p.logData.err)
-        lastFm.updateNowPlaying2(
-          post,
-          (mongodb.usernames[p.uId].lastFm || {}).sk,
-          function () {
+      if (!p.logData.err) {
+        userModel.fetchAndProcessUserById(p.uId).then((user) => {
+          // @ts-ignore
+          const lastFmSessionKey = user && user.lastFm ? user.lastFm.sk : null;
+          lastFm.updateNowPlaying2(post, lastFmSessionKey, function () {
             //console.log("-> last fm response", res);
-          },
-        );
+          });
+        });
+      }
     }
     if (p.logData.err) postModel.fetchPostById(p.pId, callbackAndLogPlay);
     else postModel.incrPlayCounter(p.pId, callbackAndLogPlay);
@@ -263,17 +270,20 @@ exports.actions = {
     if (!p.uId) return cb && cb({ error: 'not logged in' });
     postModel.fetchPostById(p.pId, function (r) {
       if (!r) return cb && cb({ error: 'missing track' });
-      const lastFmSessionKey = (mongodb.usernames[p.uId].lastFm || {}).sk;
-      lastFm.scrobble2(
-        r && r.name,
-        lastFmSessionKey,
-        p.uId == r.uId,
-        p.timestamp,
-        function (res) {
-          //console.log("-> last fm response", res);
-          cb && cb(res);
-        },
-      );
+      userModel.fetchAndProcessUserById(p.uId).then((user) => {
+        // @ts-ignore
+        const lastFmSessionKey = user && user.lastFm ? user.lastFm.sk : null;
+        lastFm.scrobble2(
+          r && r.name,
+          lastFmSessionKey,
+          p.uId == r.uId,
+          p.timestamp,
+          function (res) {
+            //console.log("-> last fm response", res);
+            cb && cb(res);
+          },
+        );
+      });
     });
   },
 };
@@ -282,7 +292,12 @@ exports.actions = {
  * @param reqParams {{ uId: string; uNm: string; action: string; name: string; eId: string }}
  * @param features {import('../../domain/api/Features').Features}
  */
-exports.handleRequest = function (request, reqParams, response, features) {
+exports.handleRequest = async function (
+  request,
+  reqParams,
+  response,
+  features,
+) {
   request.logToConsole('api.post.handleRequest', reqParams);
 
   function resultHandler(res, args) {
@@ -294,7 +309,7 @@ exports.handleRequest = function (request, reqParams, response, features) {
     );
   }
 
-  const user = request.getUser() || {}; //checkLogin(response);
+  const user = (await request.getUser()) || {};
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
 
@@ -317,7 +332,7 @@ exports.handleRequest = function (request, reqParams, response, features) {
 /**
  * @param features {import('../../domain/api/Features').Features}
  */
-exports.controller = function (request, getParams, response, features) {
+exports.controller = async function (request, getParams, response, features) {
   //request.logToConsole("api.post", getParams);
   const params = snip.translateFields(getParams || {}, sequencedParameters);
 

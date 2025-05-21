@@ -160,10 +160,10 @@ exports.fetchAndGenerateNotifDigest = function (user, options, cb) {
   });
 };
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('digest.controller', reqParams);
 
-  const user = request.checkLogin(response); //request.checkAdmin(response);
+  const user = await request.checkLogin(response); //request.checkAdmin(response);
   if (!user) return;
 
   const options = {

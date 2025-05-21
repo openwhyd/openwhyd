@@ -5,10 +5,10 @@
 
 const mainTemplate = require('../../templates/mainTemplate.js');
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('mainTemplate.controller', reqParams);
 
-  const loggedUser = request.checkAdmin(response);
+  const loggedUser = await request.checkAdmin(response);
   if (false == loggedUser) return;
 
   const html = mainTemplate.renderWhydPage({
