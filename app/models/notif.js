@@ -220,7 +220,7 @@ exports.fetchUserNotifs = async function (uId, handler) {
 exports.getUserNotifs = async function (uid, handler) {
   const cachedNotifs = exports.userNotifsCache[uid];
   if (cachedNotifs) {
-    handler && handler(cachedNotifs.notifs, cachedNotifs.t);
+    handler?.(cachedNotifs.notifs, cachedNotifs.t);
     return cachedNotifs.notifs;
   } else {
     const notifs = await exports.fetchUserNotifs(uid, handler);
