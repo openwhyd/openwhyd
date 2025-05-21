@@ -4,7 +4,6 @@
  * @author adrienjoly, whyd
  */
 
-const mongodb = require('../../models/mongodb.js');
 const notifModel = require('../../models/notif');
 //var formidable = require('formidable'); // for POST request handling
 
@@ -18,9 +17,7 @@ exports.handlePostRequest = function (request, postParams, response) {
         id: '000000000000',
         name: 'test user',
       };
-      mongodb.usernames[TEST_USER.id] = TEST_USER;
       notifModel.subscribedToUser(TEST_USER.id, request.getUid(), function () {
-        delete mongodb.usernames[TEST_USER.id];
         response.renderJSON({ ok: true });
       });
       break;
