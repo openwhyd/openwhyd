@@ -127,7 +127,7 @@ const renderInviteForm = async function (request, reqParams, response) {
   request.logToConsole('invite.renderInviteForm', reqParams);
   if (!reqParams) reqParams = {};
 
-  reqParams.loggedUser = await request.checkLogin(response); //getUser();
+  reqParams.loggedUser = await request.checkLogin(response);
   if (!reqParams.loggedUser) return;
 
   const html = inviteFormTemplate.renderInviteFormPage(reqParams);

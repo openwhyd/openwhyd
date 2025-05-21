@@ -309,7 +309,7 @@ exports.handleRequest = async function (
     );
   }
 
-  const user = (await request.getUser()) || {}; //checkLogin(response);
+  const user = (await request.getUser()) || {};
   reqParams.uId = user.id;
   reqParams.uNm = user.name;
 
