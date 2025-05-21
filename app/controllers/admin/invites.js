@@ -8,8 +8,6 @@ const userModel = require('../../models/user.js');
 const notifEmails = require('../../models/notifEmails.js');
 const mainTemplate = require('../../templates/mainTemplate.js');
 
-const callWhenDone = require('../../snip.js').callWhenDone;
-
 const fetchUsers = function (table, handler, options) {
   console.log('fetching users from ' + table + '...');
   mongodb.collections[table]
@@ -190,8 +188,7 @@ async function renderTemplate(requests, invites) {
 }
 
 const fetchInviteRequests = async function () {
-  const [users, invites, requests] = await Promise.all([
-    fetchUsers('user', (err, res) => res, { sort: [['_id', 'desc']] }),
+  const [invites, requests] = await Promise.all([
     fetchUsers('invite', (err, res) => res, { sort: [['_id', 'desc']] }),
     fetchUsers('email', (err, res) => res, { sort: [['date', 'desc']] }),
   ]);
@@ -201,7 +198,7 @@ const fetchInviteRequests = async function () {
       email: requests[i]._id,
       date: requests[i].date,
     };
-  return { users, invites, requests };
+  return { invites, requests };
 };
 
 exports.handleRequest = async function (request, reqParams, response) {
@@ -212,12 +209,10 @@ exports.handleRequest = async function (request, reqParams, response) {
   if (!user) return;
 
   const fetchAndRender = async function () {
-    const { users, invites, requests } = await fetchInviteRequests();
-    response.legacyRender(
-      await renderTemplate(requests, invites, users, reqParams),
-      null,
-      { 'content-type': 'text/html' },
-    );
+    const { invites, requests } = await fetchInviteRequests();
+    response.legacyRender(await renderTemplate(requests, invites), null, {
+      'content-type': 'text/html',
+    });
   };
 
   reqParams = reqParams || {};
