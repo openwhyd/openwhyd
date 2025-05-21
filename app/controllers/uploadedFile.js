@@ -1,6 +1,7 @@
 const fs = require('fs');
 const config = require('../models/config.js');
 const postModel = require('../models/post.js');
+const { isObjectId } = require('../models/mongodb.js');
 
 exports.config = {
   whydPath: config.paths.whydPath, // "../"
@@ -146,7 +147,9 @@ exports.controller = async function (request, reqParams, response) {
    */
   async function renderUserImg(id) {
     const userModel = require('../models/user.js');
-    const user = await userModel.fetchAndProcessUserById(id);
+    const user = isObjectId(id)
+      ? await userModel.fetchAndProcessUserById(id)
+      : null;
     if (user && user.img) {
       //var isSmallFb = user.img.indexOf("graph.facebook.com") > -1 && user.img.split("/").pop() == "picture";
       //console.log(user.img, isSmallFb, user.img + (isSmallFb ? "?type=large" : ""));
