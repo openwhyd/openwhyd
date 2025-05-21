@@ -10,6 +10,7 @@ const snip = require('../snip.js');
 const mongodb = require('./mongodb.js');
 const config = require('../models/config.js');
 const notifEmails = require('../models/notifEmails.js');
+const userModel = require('./user.js');
 
 exports.userNotifsCache = {}; // uId -> { t, notifs: [pId, topic, t, lastAuthor, n] }
 
@@ -186,7 +187,6 @@ exports.fetchUserNotifs = async function (uId, handler) {
     .toArray();
 
   const notifs = [];
-  const userModel = require('./user.js');
 
   for (const i in results) {
     let n = 0;
@@ -250,7 +250,6 @@ exports.html = function (uId, html, href, img) {
  * @param {LovablePost} post
  */
 exports.love = async function (loverUid, post, callback) {
-  const userModel = require('./user.js');
   const user = await userModel.fetchAndProcessUserById(loverUid);
   const author = await userModel.fetchAndProcessUserById(post.uId);
   if (!user) throw new Error('user not found');
@@ -307,7 +306,6 @@ exports.post = function (post) {
   };
   mongodb.forEach2('post', query, async function (sameTrack, next) {
     if (sameTrack && !sameTrack.error) {
-      const userModel = require('./user.js');
       const author = await userModel.fetchAndProcessUserById(sameTrack.uId);
       if (author) {
         await notifEmails.sendPostedSameTrack(author, next);
@@ -321,7 +319,6 @@ exports.post = function (post) {
 };
 
 exports.repost = async function (reposterUid, post) {
-  const userModel = require('./user.js');
   const reposter = await userModel.fetchAndProcessUserById(reposterUid);
   const author = await userModel.fetchAndProcessUserById(post.uId);
   if (!reposter || !author) return;
@@ -361,7 +358,6 @@ exports.unrepost = function (reposterUid, pId) {
 };
 */
 exports.subscribedToUser = async function (senderId, favoritedId, cb) {
-  const userModel = require('./user.js');
   const sender = await userModel.fetchAndProcessUserById(senderId);
   const favorited = await userModel.fetchAndProcessUserById(favoritedId);
   if (sender && favorited) {
@@ -383,7 +379,6 @@ exports.subscribedToUser = async function (senderId, favoritedId, cb) {
 };
 
 exports.comment = async function (post = {}, comment = {}, cb) {
-  const userModel = require('./user.js');
   const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.comment' });
@@ -410,7 +405,6 @@ exports.comment = async function (post = {}, comment = {}, cb) {
 };
 
 exports.mention = async function (post = {}, comment = {}, mentionedUid, cb) {
-  const userModel = require('./user.js');
   const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !mentionedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.mention' });
@@ -438,7 +432,6 @@ exports.commentReply = async function (
   repliedUid,
   cb,
 ) {
-  const userModel = require('./user.js');
   const commentUser = await userModel.fetchAndProcessUserById(comment.uId);
   if (!commentUser || !repliedUid || !post.name)
     cb && cb({ error: 'incomplete call parameters to notif.commentReply' });
