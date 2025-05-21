@@ -266,7 +266,8 @@ function fetchSearchPage(myUid, q, cb) {
   });
 }
 
-exports.controller = async function (request, reqParams = {}, response) {
+exports.controller = async function (request, reqParams, response) {
+  reqParams = reqParams || {};
   function renderSearchPage(q, cb) {
     fetchSearchPage(request.getUid(), q, function (results) {
       results.posts = results.tracks; // since algolia integration
