@@ -2,6 +2,7 @@ const fs = require('fs');
 const config = require('../models/config.js');
 const postModel = require('../models/post.js');
 const { isObjectId } = require('../models/mongodb.js');
+const userModel = require('../models/user.js');
 
 exports.config = {
   whydPath: config.paths.whydPath, // "../"
@@ -146,7 +147,6 @@ exports.controller = async function (request, reqParams, response) {
    * @param {string} id - can be a userId or an image name, e.g. "<userId>_<nbpixels>px"
    */
   async function renderUserImg(id) {
-    const userModel = require('../models/user.js');
     const user = isObjectId(id)
       ? await userModel.fetchAndProcessUserById(id)
       : null;

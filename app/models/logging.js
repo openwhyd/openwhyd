@@ -3,6 +3,7 @@ const querystring = require('querystring');
 const errorTemplate = require('../templates/error.js');
 const snip = require('../snip.js');
 const auth0 = require('../lib/auth0');
+const userModel = require('./user.js');
 
 const genReqLogLine = ({ head, method, path, params, suffix }) =>
   !process.appParams.color
@@ -150,7 +151,6 @@ http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
 http.IncomingMessage.prototype.getUser = async function () {
   const uid = this.getUid();
   if (!uid) return null;
-  const userModel = require('./user.js');
   const user = await userModel.fetchAndProcessUserById(uid);
   if (!user) console.trace(`logged user ${uid} not found in database`);
   else user.id = '' + user._id;

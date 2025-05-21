@@ -9,6 +9,7 @@ const mongodb = require('../../models/mongodb.js');
 const searchModel = require('../../models/search.js');
 const postModel = require('../../models/post.js');
 const followModel = require('../../models/follow.js');
+const userModel = require('../../models/user.js');
 const template = require('../../templates/search.js');
 
 const ObjectId = mongodb.ObjectId;
@@ -89,7 +90,6 @@ const fetchDataByType = {
       if (!idList.length) return cb(userList);
       const uid = '' + idList.shift();
       postModel.fetchByAuthors([uid], { limit: 1 }, async function (posts) {
-        const userModel = require('../../models/user.js');
         const user = await userModel.fetchAndProcessUserById(uid);
         if (user)
           userList.push({
