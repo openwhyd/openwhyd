@@ -8,15 +8,9 @@ const userModel = require('../../models/user.js');
 const notifEmails = require('../../models/notifEmails.js');
 const mainTemplate = require('../../templates/mainTemplate.js');
 
-const fetchUsers = function (table, handler, options) {
+const fetchUsers = function (table, options) {
   console.log('fetching users from ' + table + '...');
-  mongodb.collections[table]
-    .find({}, options)
-    .toArray()
-    .then(
-      (res) => handler(null, res),
-      (err) => handler(err),
-    );
+  return mongodb.collections[table].find({}, options);
 };
 
 const inviteUser = function (email, handler) {
@@ -189,8 +183,8 @@ async function renderTemplate(requests, invites) {
 
 const fetchInviteRequests = async function () {
   const [invites, requests] = await Promise.all([
-    fetchUsers('invite', (err, res) => res, { sort: [['_id', 'desc']] }),
-    fetchUsers('email', (err, res) => res, { sort: [['date', 'desc']] }),
+    fetchUsers('invite', { sort: [['_id', 'desc']] }),
+    fetchUsers('email', { sort: [['date', 'desc']] }),
   ]);
   for (const i in requests)
     requests[i] = {
