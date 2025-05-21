@@ -22,9 +22,10 @@ exports.isObjectId = function (i) {
   return ('' + i).length == 24;
 };
 
-// USER_CACHE_FIELDS removed - no longer needed for caching
+// used to be called USER_CACHE_FIELDS renamed and moved to models/user.js
 
-/** @type Record<string, import("mongodb").Collection> */
+/** @typedef {import('../infrastructure/mongodb/types.js').UserDocument} UserDocument */
+/** @type {{ user?: import("mongodb").Collection<UserDocument> } & Record<string, import("mongodb").Collection>} */
 exports.collections = {};
 
 // usernames export removed - use fetchAndProcessUserById from user.js instead

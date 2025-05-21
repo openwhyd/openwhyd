@@ -299,7 +299,7 @@ function fetchUserById(uId, options, cb) {
     userModel.fetchPlaylists(user, {}, async function (playlists) {
       user.pl = playlists || user.pl;
       if (options.excludePrivateFields) {
-        delete user.pwd; // TODO: also do that in fetchAndProcessUserById
+        delete user.pwd;
         delete user.email;
         delete user.lastFm;
         delete user.pref;

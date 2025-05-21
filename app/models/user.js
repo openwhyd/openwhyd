@@ -39,6 +39,20 @@ const USERNAME_RESERVED = {
   'favicon.png': true,
 };
 
+// used to be called USER_CACHE_FIELDS
+const PARTIAL_USER_FIELDS = {
+  _id: 1,
+  fbId: 1,
+  name: 1,
+  img: 1,
+  email: 1,
+  // digest: 1, // probably not needed anymore
+  iBy: 1,
+  handle: 1,
+  pref: 1, // needed by mainTemplate
+  lastFm: 1, // needed by mainTemplate
+};
+
 /*
 var USER_FIELDS = {
   _id: true,
@@ -266,17 +280,23 @@ exports.fetchByUid = exports.model = function (uid, handler) {
   );
 };
 
+/** @typedef {Pick<UserDocument, keyof typeof PARTIAL_USER_FIELDS> & { id: string, mid: string }} PartialUserDocument */
+
 /**
- * @type {(uid : import('mongodb').ObjectId | string) => Promise<Partial<UserDocument>> }
+ * Fetch a partial user document by id.
+ * Function written to replace the in-memory users cache.
+ * @type {(uid : import('mongodb').ObjectId | string) => Promise<PartialUserDocument | null> }
  */
 exports.fetchAndProcessUserById = async function (uid) {
-  const user = await mongodb.collections['user'].findOne({
-    _id: typeof uid == 'string' && isObjectId(uid) ? ObjectId(uid) : uid,
-  });
+  /** @satisfies {PartialUserDocument | null} */
+  const user = await mongodb.collections['user'].findOne(
+    { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
+    { projection: PARTIAL_USER_FIELDS },
+  );
   if (user) {
     user.id = '' + user._id;
     user.mid = '/u/' + user.id;
-    processUsers([user]);
+    processUserPref(user);
   }
   return user;
 };

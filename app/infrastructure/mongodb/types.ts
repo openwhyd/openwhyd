@@ -47,7 +47,9 @@ export interface UserDocument {
     pendEN: number;
   };
   pwd: string;
+  iBy: unknown; // invited by (user id)
   lastFm: unknown;
+  fbId: unknown; // deprecated - will probably be removed at some point
   fbTok: unknown;
   twTok: unknown;
   twSec: unknown;
