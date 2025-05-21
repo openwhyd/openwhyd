@@ -247,7 +247,6 @@ return !posts || posts.length == 0 ? options.defaultHtml || '' : exports.renderP
 exports.renderPosts = async function (posts, options) {
   posts = posts || [];
   options = options || {};
-  console.log('_ _ _ _ _ _ _ _PREPAREEE');
 
   for (const p in posts)
     posts[p] = await exports.preparePost(posts[p], options || {});

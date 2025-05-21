@@ -11,7 +11,7 @@ exports.controller = async function (request, reqParams = {}, response) {
   request.logToConsole('emailTemplate.controller', reqParams);
 
   const user = await request.checkAdmin(response);
-  if (false == user) return;
+  if (!user) return;
 
   const templateFile = reqParams.file;
   try {
