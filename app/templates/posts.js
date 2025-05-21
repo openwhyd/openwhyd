@@ -8,7 +8,7 @@ const config = require('../models/config.js');
 const postModel = require('../models/post.js');
 const commentModel = require('../models/comment.js');
 const templateLoader = require('../templates/templateLoader.js');
-const { fetchUserNameById } = require('../models/user.js');
+const { fetchUserNamesByIds } = require('../models/user.js');
 const template = templateLoader.loadTemplate('app/templates/posts.html');
 
 const MAX_POSTS = config.nbPostsPerNewsfeedPage;
@@ -199,18 +199,10 @@ exports.preparePost = async function (post, options) {
 
   // rendering "faces"
 
-  // Create an array of promises for each user
-  const userPromises = (post.reposts || [])
+  const facesUids = (post.reposts || [])
     .concat(post.lov || [])
-    .map(async function (u) {
-      return { id: u.id || u, name: await fetchUserNameById(u.id || u) };
-    });
-
-  // Wait for all promises to resolve
-  const resolvedUsers = await Promise.all(userPromises);
-
-  // Remove duplicates
-  newPost.faces = snip.removeDuplicates(resolvedUsers, 'id');
+    .map((u) => u.id || u);
+  newPost.faces = await fetchUserNamesByIds([...new Set(facesUids)]);
 
   // rendering "via" source
 

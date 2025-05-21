@@ -312,6 +312,29 @@ exports.fetchUserNameById = async function (uid) {
   return user?.name;
 };
 
+/**
+ * @type {(uids: (import('mongodb').ObjectId | string)[]) => Promise<{ id: string, name: string }[]> }
+ */
+exports.fetchUserNamesByIds = async function (uids) {
+  return (
+    await mongodb.collections['user']
+      .find(
+        {
+          _id: {
+            $in: uids.map((uid) =>
+              typeof uid == 'string' ? ObjectId(uid) : uid,
+            ),
+          },
+        },
+        { projection: { _id: 1, name: 1 } },
+      )
+      .toArray()
+  ).map((userDocument) => ({
+    id: '' + userDocument._id,
+    name: userDocument.name,
+  }));
+};
+
 exports.fetchByHandle = function (handle, handler) {
   fetch({ handle: handle }, function (err, user) {
     if (err) console.error('fetchByHandle error:', err);
