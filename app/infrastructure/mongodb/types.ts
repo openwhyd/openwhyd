@@ -22,7 +22,7 @@ export interface UserDocument {
   n: string;
   name: string;
   pl: {
-    id: string;
+    id: string | number;
     name: string;
     nbTracks?: number;
     url?: string;
