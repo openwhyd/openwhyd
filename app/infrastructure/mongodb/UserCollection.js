@@ -26,13 +26,13 @@ exports.userCollection = {
   insertPlaylist: async (userId, playlist) => {
     await mongodb.collections['user'].updateOne(
       { _id: mongodb.ObjectId(userId) },
-      { $push: { pl: playlist } },
+      { $push: { pl: { ...playlist, id: '' + playlist.id } } },
     );
   },
   removePlaylist: async (userId, playlistId) => {
     await mongodb.collections['user'].updateOne(
       { _id: mongodb.ObjectId(userId) },
-      { $pull: { pl: { id: playlistId } } },
+      { $pull: { pl: { id: '' + playlistId } } },
     );
     // searchModel.deletePlaylist(userId, playlistId); // TODO: implement this with Algolia search provider
   },

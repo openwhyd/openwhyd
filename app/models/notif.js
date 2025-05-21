@@ -192,8 +192,9 @@ exports.fetchUserNotifs = async function (uId, handler) {
     let n = 0;
     if (('' + results[i]._id).endsWith('/loves')) n = results[i].n;
     else for (const j in results[i].uId) if (results[i].uId[j] == uId) n++;
-    const lastAuthor =
-      (await userModel.fetchAndProcessUserById(results[i].uIdLast)) || {};
+    const lastAuthor = await userModel.fetchAndProcessUserById(
+      results[i].uIdLast,
+    );
     notifs.push({
       type: results[i].type,
       pId: '' + results[i]._id,
@@ -203,7 +204,7 @@ exports.fetchUserNotifs = async function (uId, handler) {
         img: config.imgUrl(results[i].img),
       },
       t: new Date(results[i].t * 1000),
-      lastAuthor: { id: lastAuthor.id, name: lastAuthor.name },
+      lastAuthor: { id: lastAuthor?.id, name: lastAuthor?.name },
       n: n,
       img: results[i].img,
       html: results[i].html,

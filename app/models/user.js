@@ -10,7 +10,7 @@
  */
 
 const mongodb = require('../models/mongodb.js');
-const { ObjectId, isObjectId } = mongodb;
+const { ObjectId } = mongodb;
 const emailModel = require('../models/email.js');
 const postModel = require('../models/post.js');
 const searchModel = require('../models/search.js');
@@ -302,11 +302,11 @@ exports.fetchAndProcessUserById = async function (uid) {
 };
 
 /**
- * @type {(uid : import('mongodb').ObjectId | string) => Promise<Partial<UserDocument>> }
+ * @type {(uid : import('mongodb').ObjectId | string) => Promise<string | undefined> }
  */
 exports.fetchUserNameById = async function (uid) {
   const user = await mongodb.collections['user'].findOne(
-    { _id: typeof uid == 'string' && isObjectId(uid) ? ObjectId(uid) : uid },
+    { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
     { projection: { name: 1 } },
   );
   return user?.name;

@@ -321,8 +321,8 @@ async function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
     if (!uId) cb({ error: 'user not found' });
     else fetchUserById(uId, options, cb);
   }
-  const u = (await userModel.fetchAndProcessUserById(uidOrHandle)) || {};
-  if (u.id) returnUser(u);
+  const u = await userModel.fetchAndProcessUserById(uidOrHandle);
+  if (u?.id) returnUser(u);
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
 
