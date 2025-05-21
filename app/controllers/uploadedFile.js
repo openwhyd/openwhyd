@@ -111,7 +111,7 @@ exports.moveTo = function (filename, toPath, callback) {
   return newFilename;
 };
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   function renderNoImage() {
     response.status(404).sendFile(NO_IMAGE_PATH);
   }
@@ -217,10 +217,11 @@ exports.controller = function (request, reqParams, response) {
   reqParams = reqParams || {};
   if (reqParams.id) {
     if (reqParams.type && renderTypedImg[reqParams.type])
-      renderTypedImg[reqParams.type](reqParams.id, reqParams);
+      await renderTypedImg[reqParams.type](reqParams.id, reqParams);
     else renderFile(exports.config.uploadPath + '/' + reqParams.id);
-  } else if (reqParams.uAvatarImg) renderTypedImg['user'](reqParams.uAvatarImg);
+  } else if (reqParams.uAvatarImg)
+    await renderTypedImg['user'](reqParams.uAvatarImg);
   else if (reqParams.uCoverImg)
-    renderTypedImg['userCover'](reqParams.uCoverImg);
+    await renderTypedImg['userCover'](reqParams.uCoverImg);
   else response.badRequest();
 };
