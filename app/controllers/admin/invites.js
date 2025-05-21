@@ -189,6 +189,21 @@ async function renderTemplate(requests, invites) {
   return mainTemplate.renderWhydFrame(out, params);
 }
 
+const fetchInviteRequests = async function () {
+  const [users, invites, requests] = await Promise.all([
+    fetchUsers('user', (err, res) => res, { sort: [['_id', 'desc']] }),
+    fetchUsers('invite', (err, res) => res, { sort: [['_id', 'desc']] }),
+    fetchUsers('email', (err, res) => res, { sort: [['date', 'desc']] }),
+  ]);
+  for (const i in requests)
+    requests[i] = {
+      _id: requests[i]._id,
+      email: requests[i]._id,
+      date: requests[i].date,
+    };
+  return { users, invites, requests };
+};
+
 exports.handleRequest = async function (request, reqParams, response) {
   request.logToConsole('invites.controller', reqParams);
 
@@ -197,17 +212,7 @@ exports.handleRequest = async function (request, reqParams, response) {
   if (!user) return;
 
   const fetchAndRender = async function () {
-    const [users, invites, requests] = await Promise.all([
-      fetchUsers('user', (err, res) => res, { sort: [['_id', 'desc']] }),
-      fetchUsers('invite', (err, res) => res, { sort: [['_id', 'desc']] }),
-      fetchUsers('email', (err, res) => res, { sort: [['date', 'desc']] }),
-    ]);
-    for (const i in requests)
-      requests[i] = {
-        _id: requests[i]._id,
-        email: requests[i]._id,
-        date: requests[i].date,
-      };
+    const { users, invites, requests } = await fetchInviteRequests();
     response.legacyRender(
       await renderTemplate(requests, invites, users, reqParams),
       null,
