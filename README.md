@@ -42,7 +42,7 @@ You just need Docker and `git` installed on your computer:
 $ git clone https://github.com/openwhyd/openwhyd.git
 $ cd openwhyd
 $ docker compose up --build --detach
-$ open localhost:8080
+$ open http://localhost:8080
 $ docker compose down --rmi local --remove-orphans # to stop the server and database + clean-up
 ```
 
