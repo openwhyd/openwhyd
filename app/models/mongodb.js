@@ -31,7 +31,14 @@ exports.collections = {};
 // usernames export removed - use fetchAndProcessUserById from user.js instead
 
 /** @param { ConstructorParameters<typeof mongodb.ObjectId>[0] } inputId */
-exports.ObjectId = (inputId) => new mongodb.ObjectId(inputId);
+exports.ObjectId = (inputId) => {
+  try {
+    return new mongodb.ObjectId(inputId);
+  } catch (err) {
+    err.message += ` (value: ${inputId})`;
+    throw err;
+  }
+};
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {

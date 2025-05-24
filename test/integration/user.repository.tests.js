@@ -34,9 +34,9 @@ describe('MongoDB User Repository', function () {
     try {
       await userRepository.getByUserId('invalidUserId');
     } catch (err) {
-      assert.deepEqual(
+      assert.match(
         err.message,
-        'Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer',
+        /Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer/,
       );
     }
   });
