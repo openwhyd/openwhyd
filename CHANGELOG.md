@@ -1,3 +1,10 @@
+## [1.63.12](https://github.com/openwhyd/openwhyd/compare/v1.63.11...v1.63.12) (2025-05-24)
+
+
+### Bug Fixes
+
+* **api:** `BSONTypeError` errors on `GET /api/user/` calls ([#819](https://github.com/openwhyd/openwhyd/issues/819)) ([74e25de](https://github.com/openwhyd/openwhyd/commit/74e25dec6c185c3b83c39cb048994aa84d3493fb))
+
 ## [1.63.11](https://github.com/openwhyd/openwhyd/compare/v1.63.10...v1.63.11) (2025-05-21)
 
 
