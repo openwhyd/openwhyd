@@ -18,8 +18,7 @@ const DB_TEST_SCRIPT = './config/initdb_testing.js';
 let isTesting = false;
 
 exports.isObjectId = function (i) {
-  //return isNaN(i);
-  return ('' + i).length == 24;
+  return mongodb.ObjectId.isValid('' + i);
 };
 
 // used to be called USER_CACHE_FIELDS renamed and moved to models/user.js
