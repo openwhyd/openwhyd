@@ -18,8 +18,7 @@ const DB_TEST_SCRIPT = './config/initdb_testing.js';
 let isTesting = false;
 
 exports.isObjectId = function (i) {
-  //return isNaN(i);
-  return ('' + i).length == 24;
+  return mongodb.ObjectId.isValid('' + i);
 };
 
 // used to be called USER_CACHE_FIELDS renamed and moved to models/user.js
@@ -31,7 +30,14 @@ exports.collections = {};
 // usernames export removed - use fetchAndProcessUserById from user.js instead
 
 /** @param { ConstructorParameters<typeof mongodb.ObjectId>[0] } inputId */
-exports.ObjectId = (inputId) => new mongodb.ObjectId(inputId);
+exports.ObjectId = (inputId) => {
+  try {
+    return new mongodb.ObjectId(inputId);
+  } catch (err) {
+    err.message += ` (value: ${inputId})`;
+    throw err;
+  }
+};
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {

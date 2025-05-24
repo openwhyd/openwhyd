@@ -51,6 +51,34 @@ describe('user api', function () {
       });
     });
 
+    it(`gets public profile data of a given user by id`, function (done) {
+      const url = `/api/user/${DUMMY_USER.id}?format=json`;
+      api.loginAs(DUMMY_USER, function (error, { jar }) {
+        api.get(jar, url, function (err, { body, ...res }) {
+          assert.ifError(err);
+          assert.equal(res.response.statusCode, 200);
+          assert(!body.error);
+          assert.equal(body.name, DUMMY_USER.name);
+          assert.equal(body.email, undefined);
+          done();
+        });
+      });
+    });
+
+    it(`gets public profile data of a given user by handle`, function (done) {
+      const url = `/api/user/${DUMMY_USER.handle}?format=json`;
+      api.loginAs(DUMMY_USER, function (error, { jar }) {
+        api.get(jar, url, function (err, { body, ...res }) {
+          assert.ifError(err);
+          assert.equal(res.response.statusCode, 200);
+          assert(!body.error);
+          assert.equal(body.name, DUMMY_USER.name);
+          assert.equal(body.email, undefined);
+          done();
+        });
+      });
+    });
+
     it("should provide user's avatar thru /uAvatarImg/{uid}", async () => {
       // given a user with a custom avatar / user image
       const { jar } = await util.promisify(api.loginAs)(DUMMY_USER);

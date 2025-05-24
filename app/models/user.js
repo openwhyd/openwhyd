@@ -284,10 +284,12 @@ exports.fetchByUid = exports.model = function (uid, handler) {
 
 /**
  * Fetch a partial user document by id.
+ * Returns null if the user is not found, or if the id is not a valid ObjectId.
  * Function written to replace the in-memory users cache.
  * @type {(uid : import('mongodb').ObjectId | string) => Promise<PartialUserDocument | null> }
  */
 exports.fetchAndProcessUserById = async function (uid) {
+  if (typeof uid === 'string' && !mongodb.isObjectId(uid)) return null;
   /** @satisfies {PartialUserDocument | null} */
   const user = await mongodb.collections['user'].findOne(
     { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
