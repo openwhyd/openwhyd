@@ -27,7 +27,7 @@ function include(src, callback) {
   }
 }
 
-function fetch(url, cb) {
+const fetch = function (url, cb) {
   console.info('fetching data from ' + url + '...');
   const cbName =
     '_whyd_callback_' +
@@ -39,7 +39,7 @@ function fetch(url, cb) {
     delete window[cbName];
   };
   include(url + (url.indexOf('?') == -1 ? '?' : '&') + 'callback=' + cbName);
-}
+};
 
 fetch('/api/user', function (res) {
   const loggedUser = !!(res || {})._id && res;

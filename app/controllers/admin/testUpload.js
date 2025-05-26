@@ -36,9 +36,9 @@ function renderTemplate() {
   ].join('\n');
 }
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('testUpload.controller', reqParams);
-  const user = request.checkLogin(response);
+  const user = await request.checkLogin(response);
   if (!user) return;
   response.legacyRender(renderTemplate(), null, {
     'content-type': 'text/html',

@@ -15,7 +15,6 @@ const userApi = require('../../controllers/api/user.js');
 const htmlRedirect = require('../../templates/logging.js').htmlRedirect;
 const genuine = require('../../genuine.js');
 const notifEmails = require('../../models/notifEmails.js');
-const mongodb = require('../../models/mongodb.js');
 
 const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
 const { genuineSignupSecret } = process.appParams;
@@ -47,7 +46,7 @@ function renderError(request, getParams, response, errorMsg) {
 /**
  * called when user submits the form from register.html
  */
-exports.registerInvitedUser = function (request, user, response) {
+exports.registerInvitedUser = async function (request, user, response) {
   request.logToConsole(
     'register.registerInvitedUser',
     user
@@ -124,7 +123,7 @@ exports.registerInvitedUser = function (request, user, response) {
   //else if (!pwdRegex.test(user.password))
   //	return error(request, user, response, "Your password contains invalid characters");
 
-  function registerUser() {
+  async function registerUser() {
     userModel.fetchByEmail(user.email, function (item) {
       if (item)
         return error(
@@ -158,7 +157,7 @@ exports.registerInvitedUser = function (request, user, response) {
     });
   }
 
-  function afterSave(storedUser) {
+  async function afterSave(storedUser) {
     if (!storedUser)
       return error(
         request,
@@ -169,7 +168,7 @@ exports.registerInvitedUser = function (request, user, response) {
 
     userModel.removeInvite(user.inviteCode);
 
-    function loginAndRedirectTo(url) {
+    async function loginAndRedirectTo(url) {
       // legacy auth/session
       request.session = request.session || {};
       request.session.whydUid = storedUser.id || storedUser._id; // CREATING SESSION
@@ -190,7 +189,7 @@ exports.registerInvitedUser = function (request, user, response) {
 
       console.log('sending welcome email', storedUser.email, storedUser.iBy);
       const inviteSender = storedUser.iBy
-        ? mongodb.getUserFromId(storedUser.iBy)
+        ? await userModel.fetchAndProcessUserById(storedUser.iBy)
         : null;
       notifEmails.sendRegWelcomeAsync(storedUser, inviteSender);
     }
@@ -199,21 +198,21 @@ exports.registerInvitedUser = function (request, user, response) {
     if (user.iBy) {
       const inviteSender = {
         id: user.iBy,
-        name: request.getUserNameFromId(user.iBy),
+        name: await userModel.fetchUserNameById(user.iBy),
       };
       follow(storedUser, inviteSender, 'invite');
       follow(inviteSender, storedUser, 'invite');
       notifModel.inviteAccepted(user.iBy, storedUser);
     }
 
-    loginAndRedirectTo(onboardingUrl || '/');
+    await loginAndRedirectTo(onboardingUrl || '/');
   }
 
   if (user.iBy || checkInvites)
     inviteController.checkInviteCode(request, user, response, function () {
-      registerUser();
+      registerUser(); // no await because we're in a (sync) callback
     });
-  else registerUser();
+  else await registerUser();
 };
 
 /**

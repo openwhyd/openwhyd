@@ -33,6 +33,5 @@ applitools.config.js
 /upload_data
 /scripts/code-analysis
 /scripts/data-analysis-scripts
-/scripts/legacy-refs
 /scripts/mongodb-scripts/db
 /scripts/mongodb-scripts/*.gz

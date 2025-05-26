@@ -18,31 +18,26 @@ const DB_TEST_SCRIPT = './config/initdb_testing.js';
 let isTesting = false;
 
 exports.isObjectId = function (i) {
-  //return isNaN(i);
-  return ('' + i).length == 24;
+  return mongodb.ObjectId.isValid('' + i);
 };
 
-const USER_CACHE_FIELDS = {
-  _id: 1,
-  fbId: 1,
-  name: 1,
-  img: 1,
-  email: 1,
-  digest: 1,
-  iBy: 1,
-  handle: 1,
-  pref: 1, // needed by mainTemplate
-  lastFm: 1, // needed by mainTemplate
-};
+// used to be called USER_CACHE_FIELDS renamed and moved to models/user.js
 
-/** @type Record<string, import("mongodb").Collection> */
+/** @typedef {import('../infrastructure/mongodb/types.js').UserDocument} UserDocument */
+/** @type {{ user?: import("mongodb").Collection<UserDocument> } & Record<string, import("mongodb").Collection>} */
 exports.collections = {};
 
-/** @deprecated */
-exports.usernames = {};
+// usernames export removed - use fetchAndProcessUserById from user.js instead
 
 /** @param { ConstructorParameters<typeof mongodb.ObjectId>[0] } inputId */
-exports.ObjectId = (inputId) => new mongodb.ObjectId(inputId);
+exports.ObjectId = (inputId) => {
+  try {
+    return new mongodb.ObjectId(inputId);
+  } catch (err) {
+    err.message += ` (value: ${inputId})`;
+    throw err;
+  }
+};
 
 // http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
@@ -59,16 +54,9 @@ exports.dateToHexObjectId = function (date) {
 
 // other way around: _id.getTimestamp() // _id.generationTime IS DEPRECATED;
 
-exports.getUserFromId = function (uid) {
-  return exports.usernames['' + uid];
-};
-
-exports.getUserNameFromId = function (uid) {
-  return (exports.usernames['' + uid] || {}).name;
-};
-
-exports.getPublicProfileFromId = function (uid) {
-  const user = exports.usernames['' + uid];
+exports.getPublicProfileFromId = async function (uid) {
+  userModel = userModel || require('./user.js');
+  const user = await userModel.fetchAndProcessUserById(uid);
   return !user
     ? undefined
     : {
@@ -77,27 +65,7 @@ exports.getPublicProfileFromId = function (uid) {
       };
 };
 
-exports.cacheUser = function (user) {
-  if (!user) return console.log('[db] WARNING: trying to cache a null user!');
-  user.id = '' + (user._id || user.id);
-  exports.usernames[user.id] = exports.usernames[user.id] || {};
-  exports.usernames[user.id].id = user.id;
-  for (const i in user)
-    if (USER_CACHE_FIELDS[i])
-      exports.usernames[user.id][i] = user[i] || exports.usernames[user.id][i];
-};
-
-exports.cacheUsers = function (callback) {
-  userModel = userModel || require('./user.js');
-  userModel.fetchMulti(
-    {},
-    { projection: USER_CACHE_FIELDS },
-    function (results) {
-      for (const i in results) exports.cacheUser(results[i]);
-      if (callback) callback();
-    },
-  );
-};
+// cacheUser and cacheUsers functions removed - use fetchAndProcessUserById from user.js instead
 
 /** @deprecated because the cursor cannot be released until results are exhausted. */
 exports.forEach = async function (colName, params, handler, cb, cbParam) {
@@ -231,11 +199,8 @@ exports.initCollections = function ({ addTestData = false } = {}) {
         if (err) reject(err);
         // all db init scripts were interpreted => continue app init
         exports.cacheCollections(function () {
-          console.log('[db] ready for queries => now caching users...');
-          exports.cacheUsers(function () {
-            console.log('[db] done caching users');
-            resolve();
-          });
+          console.log('[db] ready for queries');
+          resolve();
         });
       },
     );

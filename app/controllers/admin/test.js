@@ -45,9 +45,9 @@ const runTests = (function () {
   };
 })();
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('test.controller', (reqParams = reqParams || {}));
-  const user = request.checkAdmin(response);
+  const user = await request.checkAdmin(response);
   if (false == user) return;
 
   if (reqParams.action) {
@@ -55,7 +55,7 @@ exports.controller = function (request, reqParams, response) {
     if (!testFile)
       return response.renderText('test file not found: ' + reqParams.action);
     const p = {
-      loggedUser: request.getUser(),
+      loggedUser: await request.getUser(),
       session: request.session, // legacy auth/session
       cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'], // legacy auth/session
     };

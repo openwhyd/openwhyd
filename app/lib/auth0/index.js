@@ -14,7 +14,7 @@ const findMissingEnvVars = (env) => {
 };
 
 /**@param {Record<string, any>} user */
-const getUserIdFromOidcUser = (user) => user?.sub?.replace('auth0|', '');
+exports.getUserIdFromOidcUser = (user) => user?.sub?.replace('auth0|', '');
 
 const makeAuth0UserId = (userId) => `auth0|${userId}`;
 
@@ -24,7 +24,7 @@ const makeAuth0UserId = (userId) => `auth0|${userId}`;
  */
 exports.getAuthenticatedUserId = (request) => {
   return request.oidc?.isAuthenticated()
-    ? getUserIdFromOidcUser(request.oidc.user)
+    ? exports.getUserIdFromOidcUser(request.oidc.user)
     : null;
 };
 
@@ -36,8 +36,9 @@ exports.getAuthenticatedUserId = (request) => {
  */
 exports.getAuthenticatedUser = (request) => {
   if (!request.oidc?.isAuthenticated()) return null;
-  /** @type {OidcUser} */
-  const { sub, name, email, picture } = request.oidc.user;
+  const { sub, name, email, picture } = /** @type {OidcUser} */ (
+    request.oidc.user
+  );
   if (typeof sub !== 'string') throw new Error('invalid sub');
   if (typeof name !== 'string') throw new Error('invalid name');
   if (typeof email !== 'string') throw new Error('invalid email');
@@ -52,7 +53,7 @@ exports.getAuthenticatedUser = (request) => {
 exports.mapToOpenwhydUser = (oidcUser) => {
   // note: for some reason, the username provided during signup is not included in oidcUser
   return {
-    id: getUserIdFromOidcUser(oidcUser),
+    id: exports.getUserIdFromOidcUser(oidcUser),
     name: oidcUser.name.split('@')[0], // while we tested signups, name===email. => extract the user name from email address
     email: oidcUser.email,
     img: oidcUser.picture,

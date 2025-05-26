@@ -1,3 +1,111 @@
+## [1.63.12](https://github.com/openwhyd/openwhyd/compare/v1.63.11...v1.63.12) (2025-05-24)
+
+
+### Bug Fixes
+
+* **api:** `BSONTypeError` errors on `GET /api/user/` calls ([#819](https://github.com/openwhyd/openwhyd/issues/819)) ([74e25de](https://github.com/openwhyd/openwhyd/commit/74e25dec6c185c3b83c39cb048994aa84d3493fb))
+
+## [1.63.11](https://github.com/openwhyd/openwhyd/compare/v1.63.10...v1.63.11) (2025-05-21)
+
+
+### Bug Fixes
+
+* **tech-debt:** replace legacy `usernames` in-memory cache by DB queries ([#814](https://github.com/openwhyd/openwhyd/issues/814)) ([5c3ff18](https://github.com/openwhyd/openwhyd/commit/5c3ff18ab34efe335574746e48882ef32939dd5f)), closes [/github.com/openwhyd/openwhyd/pull/814/files#r2080047911](https://github.com//github.com/openwhyd/openwhyd/pull/814/files/issues/r2080047911) [/github.com/openwhyd/openwhyd/pull/814/files#r2080051308](https://github.com//github.com/openwhyd/openwhyd/pull/814/files/issues/r2080051308)
+
+## [1.63.10](https://github.com/openwhyd/openwhyd/compare/v1.63.9...v1.63.10) (2025-05-08)
+
+
+### Bug Fixes
+
+* **ci:** use more recent ubuntu version ([#815](https://github.com/openwhyd/openwhyd/issues/815)) ([08e28ec](https://github.com/openwhyd/openwhyd/commit/08e28ec0c8c9c0d5ce47600b541aa6e2caa02b6d))
+
+## [1.63.9](https://github.com/openwhyd/openwhyd/compare/v1.63.8...v1.63.9) (2025-04-06)
+
+
+### Bug Fixes
+
+* **notif:** uncaught error when unloving a post ([#811](https://github.com/openwhyd/openwhyd/issues/811)) ([8ae9c9b](https://github.com/openwhyd/openwhyd/commit/8ae9c9bf5bdb0679eef428c4762f53d76d3fc0bd))
+* reactivate algolia tests + remove `/ip` endpoint ([#810](https://github.com/openwhyd/openwhyd/issues/810)) ([4b36f87](https://github.com/openwhyd/openwhyd/commit/4b36f87726aa48c81b93418a9391a129a98e20e5))
+
+## [1.63.8](https://github.com/openwhyd/openwhyd/compare/v1.63.7...v1.63.8) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** Revert "disable rate limit we until we find out why some requests don't respond" ([1b513f8](https://github.com/openwhyd/openwhyd/commit/1b513f870949844a793f6efca8d60d4fd7bda359))
+
+## [1.63.7](https://github.com/openwhyd/openwhyd/compare/v1.63.6...v1.63.7) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** fix call to resolve(), api-v2 requests can respond ([8796c17](https://github.com/openwhyd/openwhyd/commit/8796c17bd308d185b4b8fd9d150f11346cf3d2f1))
+
+## [1.63.6](https://github.com/openwhyd/openwhyd/compare/v1.63.5...v1.63.6) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** troubleshoot lack of response from `/api/v2/postTrack` ([2122980](https://github.com/openwhyd/openwhyd/commit/212298059499f6803a6a122c20c7f1098b8123f1))
+
+## [1.63.5](https://github.com/openwhyd/openwhyd/compare/v1.63.4...v1.63.5) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** disable rate limit we until we find out why some requests don't respond ([4020def](https://github.com/openwhyd/openwhyd/commit/4020def534a2b3199b07d8123fb9b80d8c45ee57))
+* **ci:** skip 2nd algolia test that times out ([4a2f5a8](https://github.com/openwhyd/openwhyd/commit/4a2f5a806789f8a9f8ba8f6773bea108cc4be8ea))
+
+## [1.63.4](https://github.com/openwhyd/openwhyd/compare/v1.63.3...v1.63.4) (2025-03-28)
+
+
+### Bug Fixes
+
+* **api:** make rate limiter work with HTTP proxy (cloudflare and/or nginx) ([#809](https://github.com/openwhyd/openwhyd/issues/809)) ([f6be99f](https://github.com/openwhyd/openwhyd/commit/f6be99fa11a565d1be8f15017df00088061161ec)), closes [/github.com/openwhyd/openwhyd/pull/808#issuecomment-2754369261](https://github.com//github.com/openwhyd/openwhyd/pull/808/issues/issuecomment-2754369261)
+* **ci:** skip algolia test that times out ([62a3c51](https://github.com/openwhyd/openwhyd/commit/62a3c51633abaf281484690e759df25a80347d9d))
+
+## [1.63.3](https://github.com/openwhyd/openwhyd/compare/v1.63.2...v1.63.3) (2025-03-26)
+
+
+### Bug Fixes
+
+* **api-v2:** add rate limiter + add tests + refactor ([#808](https://github.com/openwhyd/openwhyd/issues/808)) ([349b73b](https://github.com/openwhyd/openwhyd/commit/349b73b90586dc6be7206a5b6af46e3b245757db)), closes [/github.com/openwhyd/openwhyd/pull/808#discussion_r2012476188](https://github.com//github.com/openwhyd/openwhyd/pull/808/issues/discussion_r2012476188)
+
+## [1.63.2](https://github.com/openwhyd/openwhyd/compare/v1.63.1...v1.63.2) (2025-03-24)
+
+
+### Bug Fixes
+
+* **api:** `/api/v2/postTrack` to return a valid URL ([d8f77c7](https://github.com/openwhyd/openwhyd/commit/d8f77c71b6b7d319fd27825e9805f7bb20d8763c))
+
+## [1.63.1](https://github.com/openwhyd/openwhyd/compare/v1.63.0...v1.63.1) (2025-03-24)
+
+
+### Bug Fixes
+
+* **api:** `InvalidTokenError: Unexpected "aud" value` ([#807](https://github.com/openwhyd/openwhyd/issues/807)) ([b0bda6c](https://github.com/openwhyd/openwhyd/commit/b0bda6c940df337760c7358a5ab5baeaf040568a)), closes [#806](https://github.com/openwhyd/openwhyd/issues/806)
+
+# [1.63.0](https://github.com/openwhyd/openwhyd/compare/v1.62.1...v1.63.0) (2025-03-24)
+
+
+### Features
+
+* **api:** `POST /api/v2/postTrack` endpoint to post YouTube tracks ([#806](https://github.com/openwhyd/openwhyd/issues/806)) ([177caff](https://github.com/openwhyd/openwhyd/commit/177caffa5683faae09b8cf608d5deec351daee3d))
+
+## [1.62.1](https://github.com/openwhyd/openwhyd/compare/v1.62.0...v1.62.1) (2025-03-21)
+
+
+### Bug Fixes
+
+* **auth:** fix `audience` to match existing Auth0 API ([4c573da](https://github.com/openwhyd/openwhyd/commit/4c573da24f5729879d4431b4336b2381063fc813))
+
+# [1.62.0](https://github.com/openwhyd/openwhyd/compare/v1.61.5...v1.62.0) (2025-03-21)
+
+
+### Features
+
+* **api:** introduce a first API endpoint that supports access tokens ([#803](https://github.com/openwhyd/openwhyd/issues/803)) ([5989ea7](https://github.com/openwhyd/openwhyd/commit/5989ea7afb17c8a4ea2b6a534e084d93285acbc1)), closes [#55](https://github.com/openwhyd/openwhyd/issues/55)
+
 ## [1.61.5](https://github.com/openwhyd/openwhyd/compare/v1.61.4...v1.61.5) (2025-02-01)
 
 

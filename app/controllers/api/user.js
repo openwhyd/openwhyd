@@ -15,7 +15,6 @@
 // http://localhost:8080/admin/users?action=delete&_id=<...>
 
 const snip = require('../../snip.js');
-const mongodb = require('../../models/mongodb.js');
 const postModel = require('../../models/post.js');
 const userModel = require('../../models/user.js');
 const emailModel = require('../../models/email.js');
@@ -316,14 +315,14 @@ function fetchUserById(uId, options, cb) {
   });
 }
 
-function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
+async function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
   function returnUser(u) {
     const uId = (u || {}).id;
     if (!uId) cb({ error: 'user not found' });
     else fetchUserById(uId, options, cb);
   }
-  const u = mongodb.getUserFromId(uidOrHandle) || {};
-  if (u.id) returnUser(u);
+  const u = await userModel.fetchAndProcessUserById(uidOrHandle);
+  if (u?.id) returnUser(u);
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
 
@@ -420,11 +419,11 @@ function localRendering(reqParams, r) {
 }
 
 /** @param {Features} features */
-exports.controller = function (request, reqParams, response, features) {
+exports.controller = async function (request, reqParams, response, features) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
 
-  const loggedUser = request.checkLogin(/*response*/);
+  const loggedUser = await request.checkLogin(/*response*/);
   handleRequest(
     loggedUser,
     request.method.toLowerCase() === 'post' ? request.body : reqParams,

@@ -6,6 +6,9 @@ const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
 const sessionTracker = require('../../../controllers/admin/session.js');
+const {
+  postTrack,
+} = require('../../../api-v2/provisional-features/postTrack.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -134,10 +137,24 @@ exports.Application = class Application {
 
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
+    app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater());
+
+    if (this._features.auth) {
+      // Openwhyd API V2 relies on OAuth/Auth0
+      require('../../../api-v2/OpenwhydApiV2.js').injectOpenwhydAPIV2(
+        app,
+        {
+          issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL, // identifier of the Auth0 account
+          urlPrefix: process.env.WHYD_URL_PREFIX, // identifier of Openwhyd API v2, as set on Auth0
+        },
+        { postTrack },
+      );
+    }
+
     attachLegacyRoutesFromFile(
       app,
       this._appDir,

@@ -32,7 +32,7 @@ exports.userCollection = {
   removePlaylist: async (userId, playlistId) => {
     await mongodb.collections['user'].updateOne(
       { _id: mongodb.ObjectId(userId) },
-      { $pull: { pl: { id: playlistId } } },
+      { $pull: { pl: { id: { $in: [playlistId, '' + playlistId] } } } },
     );
     // searchModel.deletePlaylist(userId, playlistId); // TODO: implement this with Algolia search provider
   },
@@ -59,8 +59,8 @@ function mapToDomainUser(userDocument) {
   userDocument.pl = userDocument.pl || [];
 
   const playlists = userDocument.pl.map(({ id, name }) => ({
-    id: parseInt(id),
+    id: typeof id === 'number' ? id : parseInt(id),
     name,
   }));
-  return new User(userDocument._id.toString(), playlists);
+  return new User(userDocument._id.toString(), userDocument.name, playlists);
 }

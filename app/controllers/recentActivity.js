@@ -163,10 +163,10 @@ exports.generateActivityFeed = function (
   );
 };
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   request.logToConsole('recentActivity.controller', reqParams);
   reqParams = reqParams || {};
-  const loggedInUser = request.getUser() || {};
+  const loggedInUser = (await request.getUser()) || {};
   if (!loggedInUser.id) return response.temporaryRedirect('/');
 
   //reqParams.loggedUser.isAdmin = request.isUserAdmin(loggedInUser);
