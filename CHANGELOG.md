@@ -1,3 +1,24 @@
+## [1.63.12](https://github.com/openwhyd/openwhyd/compare/v1.63.11...v1.63.12) (2025-05-24)
+
+
+### Bug Fixes
+
+* **api:** `BSONTypeError` errors on `GET /api/user/` calls ([#819](https://github.com/openwhyd/openwhyd/issues/819)) ([74e25de](https://github.com/openwhyd/openwhyd/commit/74e25dec6c185c3b83c39cb048994aa84d3493fb))
+
+## [1.63.11](https://github.com/openwhyd/openwhyd/compare/v1.63.10...v1.63.11) (2025-05-21)
+
+
+### Bug Fixes
+
+* **tech-debt:** replace legacy `usernames` in-memory cache by DB queries ([#814](https://github.com/openwhyd/openwhyd/issues/814)) ([5c3ff18](https://github.com/openwhyd/openwhyd/commit/5c3ff18ab34efe335574746e48882ef32939dd5f)), closes [/github.com/openwhyd/openwhyd/pull/814/files#r2080047911](https://github.com//github.com/openwhyd/openwhyd/pull/814/files/issues/r2080047911) [/github.com/openwhyd/openwhyd/pull/814/files#r2080051308](https://github.com//github.com/openwhyd/openwhyd/pull/814/files/issues/r2080051308)
+
+## [1.63.10](https://github.com/openwhyd/openwhyd/compare/v1.63.9...v1.63.10) (2025-05-08)
+
+
+### Bug Fixes
+
+* **ci:** use more recent ubuntu version ([#815](https://github.com/openwhyd/openwhyd/issues/815)) ([08e28ec](https://github.com/openwhyd/openwhyd/commit/08e28ec0c8c9c0d5ce47600b541aa6e2caa02b6d))
+
 ## [1.63.9](https://github.com/openwhyd/openwhyd/compare/v1.63.8...v1.63.9) (2025-04-06)
 
 

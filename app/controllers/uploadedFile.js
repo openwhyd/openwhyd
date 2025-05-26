@@ -1,7 +1,8 @@
 const fs = require('fs');
 const config = require('../models/config.js');
-const mongodb = require('../models/mongodb.js');
 const postModel = require('../models/post.js');
+const { isObjectId } = require('../models/mongodb.js');
+const userModel = require('../models/user.js');
 
 exports.config = {
   whydPath: config.paths.whydPath, // "../"
@@ -112,7 +113,7 @@ exports.moveTo = function (filename, toPath, callback) {
   return newFilename;
 };
 
-exports.controller = function (request, reqParams, response) {
+exports.controller = async function (request, reqParams, response) {
   function renderNoImage() {
     response.status(404).sendFile(NO_IMAGE_PATH);
   }
@@ -142,8 +143,13 @@ exports.controller = function (request, reqParams, response) {
     } else renderFile(uri, defaultImg);
   }
 
-  function renderUserImg(id) {
-    const user = mongodb.usernames[id];
+  /**
+   * @param {string} id - can be a userId or an image name, e.g. "<userId>_<nbpixels>px"
+   */
+  async function renderUserImg(id) {
+    const user = isObjectId(id)
+      ? await userModel.fetchAndProcessUserById(id)
+      : null;
     if (user && user.img) {
       //var isSmallFb = user.img.indexOf("graph.facebook.com") > -1 && user.img.split("/").pop() == "picture";
       //console.log(user.img, isSmallFb, user.img + (isSmallFb ? "?type=large" : ""));
@@ -214,9 +220,10 @@ exports.controller = function (request, reqParams, response) {
   reqParams = reqParams || {};
   if (reqParams.id) {
     if (reqParams.type && renderTypedImg[reqParams.type])
-      renderTypedImg[reqParams.type](reqParams.id, reqParams);
+      await renderTypedImg[reqParams.type](reqParams.id, reqParams);
     else renderFile(exports.config.uploadPath + '/' + reqParams.id);
-  } else if (reqParams.uAvatarImg) renderTypedImg['user'](reqParams.uAvatarImg);
+  } else if (reqParams.uAvatarImg)
+    await renderTypedImg['user'](reqParams.uAvatarImg);
   else if (reqParams.uCoverImg)
     renderTypedImg['userCover'](reqParams.uCoverImg);
   else response.badRequest();

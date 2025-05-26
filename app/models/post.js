@@ -14,6 +14,7 @@ const notif = require('../models/notif.js');
 const searchModel = require('../models/search.js');
 const activityModel = require('../models/activity.js');
 const notifModel = require('../models/notif.js');
+const { fetchUserNameById } = require('./user.js');
 
 const NB_POSTS = process.appParams?.nbPostsPerNewsfeedPage;
 
@@ -204,7 +205,7 @@ async function setPostLove(collection, pId, uId, state, handler) {
   if (state)
     activityModel.addLikeByPost(post, {
       id: uId,
-      name: mongodb.getUserNameFromId(uId),
+      name: await fetchUserNameById(uId),
     });
   else activityModel.removeLike(pId, uId);
 }

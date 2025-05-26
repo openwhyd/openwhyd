@@ -4,22 +4,14 @@
  * @author adrienjoly, whyd
  **/
 
-const mongodb = require('../models/mongodb.js');
 const postModel = require('../models/post.js');
 const feedTemplate = require('../templates/feed.js');
-
-function makeUserList() {
-  const userList = [];
-  for (const i in mongodb.usernames /*.slice(0,9)*/)
-    userList.push(mongodb.usernames[i]);
-  return userList;
-}
 
 function renderAllLibrary(lib) {
   const options = lib.options;
   //options.displayAuthors = true;
   options.displayPlaylistName = true;
-  options.follows = { people: makeUserList(), followers: [] };
+  options.follows = { people: [], followers: [] }; // it seems that the /all page works without having to fetch all users
   options.bodyClass =
     'pgStream pgFullStream pgWithSideBar ' + (options.bodyClass || '');
   options.globalFeed = true;
