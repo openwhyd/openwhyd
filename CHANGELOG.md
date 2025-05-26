@@ -1,3 +1,10 @@
+## [1.63.13](https://github.com/openwhyd/openwhyd/compare/v1.63.12...v1.63.13) (2025-05-26)
+
+
+### Bug Fixes
+
+* **deps:** bump axios from 1.7.9 to 1.9.0 ([#816](https://github.com/openwhyd/openwhyd/issues/816)) ([2a8017c](https://github.com/openwhyd/openwhyd/commit/2a8017c07a81a2263ac9d3527f1fc73f7fa8fa7d))
+
 ## [1.63.12](https://github.com/openwhyd/openwhyd/compare/v1.63.11...v1.63.12) (2025-05-24)
 
 
