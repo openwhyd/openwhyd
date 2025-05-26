@@ -1,3 +1,10 @@
+## [1.63.14](https://github.com/openwhyd/openwhyd/compare/v1.63.13...v1.63.14) (2025-05-26)
+
+
+### Bug Fixes
+
+* **deps:** bump cookie and express-openid-connect ([#804](https://github.com/openwhyd/openwhyd/issues/804)) ([4e95c4e](https://github.com/openwhyd/openwhyd/commit/4e95c4e4d52768431273e4e4ff67f0236353e206))
+
 ## [1.63.13](https://github.com/openwhyd/openwhyd/compare/v1.63.12...v1.63.13) (2025-05-26)
 
 
