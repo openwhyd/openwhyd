@@ -78,13 +78,20 @@ exports.forEach = async function (colName, params, handler, cb, cbParam) {
   }
   const { fields } = params ?? {};
   if (params) delete params.fields;
-  const cursor = await exports.collections[colName]
-    .find(q, params)
-    .project(fields ?? {});
-  for await (const item of cursor) {
-    if (item) handler(item);
+
+  try {
+    const cursor = exports.collections[colName].find(q);
+    if (fields) cursor.project(fields);
+    if (params.batchSize) cursor.batchSize(params.batchSize);
+
+    for await (const item of cursor) {
+      if (item) handler(item);
+    }
+    cb?.(cbParam);
+  } catch (err) {
+    console.error('[db] forEach error:', err);
+    cb?.(cbParam);
   }
-  cb && cb(cbParam);
 };
 
 // handler is responsible for calling the provided "next" function
@@ -96,55 +103,62 @@ exports.forEach2 = async function (colName, params, handler) {
     q = params.q;
     delete params.q;
   }
-  if (params.after != null && exports.isObjectId(params.after))
+  if (params.after != null && exports.isObjectId(params.after)) {
     q._id = { $lt: exports.ObjectId('' + params.after) };
+  }
 
   const { fields } = params ?? {};
   if (params) delete params.fields;
-  const cursor = exports.collections[colName]
-    .find(q, params)
-    .project(fields ?? {});
-  (function next() {
-    cursor.next().then(
-      (item) => {
-        handler(item, item ? next : undefined, (cb) =>
-          cursor.close().then(cb, cb),
-        );
-        // TODO: close the cursor whenever we've run out of documents?
-      },
-      (err) => {
-        console.trace('[db] mongodb.forEach2 ERROR', err);
-        handler({ error: err }, undefined, (cb) => cursor.close().then(cb, cb));
-        cursor.close(); // TODO: prevent closing twice?
-      },
-    );
-  })();
+
+  try {
+    const cursor = exports.collections[colName].find(q);
+    if (fields) cursor.project(fields);
+    if (params.batchSize) cursor.batchSize(params.batchSize);
+
+    let item;
+    while ((item = await cursor.next())) {
+      await new Promise((resolve) => {
+        handler(item, resolve, async (cb) => {
+          await cursor.close();
+          cb?.();
+        });
+      });
+    }
+    await cursor.close();
+  } catch (err) {
+    console.error('[db] forEach2 error:', err);
+    handler({ error: err }, undefined, (cb) => cb?.());
+  }
 };
 
-exports.cacheCollections = function (callback) {
-  function finishInit() {
-    callback.call(module.exports, null, exports._db);
-  }
-  // diagnostics and collection caching
-  exports._db.collections().then(
-    function (collections) {
-      if (0 == collections.length) finishInit();
-      let remaining = collections.length;
-      for (const i in collections) {
-        const queryHandler = (function () {
-          const table = collections[i].collectionName;
-          return function (err) {
-            if (err) console.error(`[db] cacheCollections error:`, err);
-            // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
-            exports.collections[table] = exports._db.collection(table);
-            if (0 == --remaining) finishInit();
-          };
-        })();
-        collections[i].countDocuments(queryHandler);
+exports.cacheCollections = async function (callback) {
+  try {
+    const collections = await exports._db.collections();
+    if (collections.length === 0) {
+      callback.call(module.exports, null, exports._db);
+      return;
+    }
+
+    let remaining = collections.length;
+    for (const collection of collections) {
+      const table = collection.collectionName;
+      try {
+        await collection.countDocuments();
+        exports.collections[table] = exports._db.collection(table);
+        if (--remaining === 0) {
+          callback.call(module.exports, null, exports._db);
+        }
+      } catch (err) {
+        console.error(`[db] cacheCollections error for ${table}:`, err);
+        if (--remaining === 0) {
+          callback.call(module.exports, null, exports._db);
+        }
       }
-    },
-    (err) => console.trace('[db] MongoDB Error : ' + err),
-  );
+    }
+  } catch (err) {
+    console.error('[db] cacheCollections error:', err);
+    callback.call(module.exports, err);
+  }
 };
 
 // this method runs the commands of a mongo shell script (e.g. initdb.js)
