@@ -1,3 +1,10 @@
+## [1.63.17](https://github.com/openwhyd/openwhyd/compare/v1.63.16...v1.63.17) (2025-05-29)
+
+
+### Bug Fixes
+
+* **mobile:** use mobile track finder from github pages instead of glitch.me ([#823](https://github.com/openwhyd/openwhyd/issues/823)) ([08e1b0e](https://github.com/openwhyd/openwhyd/commit/08e1b0e7380ceb2dad9b9e9627c44478eb39589f))
+
 ## [1.63.16](https://github.com/openwhyd/openwhyd/compare/v1.63.15...v1.63.16) (2025-05-29)
 
 
