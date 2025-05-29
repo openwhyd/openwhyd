@@ -1,3 +1,10 @@
+## [1.63.16](https://github.com/openwhyd/openwhyd/compare/v1.63.15...v1.63.16) (2025-05-29)
+
+
+### Bug Fixes
+
+* **facebook:** remove facebook connect + link to iOS/iPhone app ([#822](https://github.com/openwhyd/openwhyd/issues/822)) ([6d5b1ac](https://github.com/openwhyd/openwhyd/commit/6d5b1accad5664be0ee22910e3ccd0b1a13d0701))
+
 ## [1.63.15](https://github.com/openwhyd/openwhyd/compare/v1.63.14...v1.63.15) (2025-05-29)
 
 
