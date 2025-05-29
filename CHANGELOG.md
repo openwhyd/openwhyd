@@ -1,3 +1,10 @@
+## [1.63.15](https://github.com/openwhyd/openwhyd/compare/v1.63.14...v1.63.15) (2025-05-29)
+
+
+### Bug Fixes
+
+* **api:** validate parameters of post api ([#821](https://github.com/openwhyd/openwhyd/issues/821)) ([e307fe7](https://github.com/openwhyd/openwhyd/commit/e307fe7301ab4376a8546deef179d215c0e7d928))
+
 ## [1.63.14](https://github.com/openwhyd/openwhyd/compare/v1.63.13...v1.63.14) (2025-05-26)
 
 
