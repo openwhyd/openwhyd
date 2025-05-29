@@ -45,7 +45,6 @@ exports[`Hot Tracks renders posts enriched with track metadata 2`] = `
   <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# whydapp: http://ogp.me/ns/fb/whydapp#">
     <meta charset="utf-8" />
 <meta name="google-site-verification" content="mmqzgEU1bjTfJ__nW6zioi7O9vuur1SyYfW44DH6ozg" />
-<meta name="apple-itunes-app" content="app-id=874380201">
 <link rel="image_src" href="http://localhost:8080/images/logo-black-square-smaller.png"/>
 <meta name="description" content="Discover and collect music gems from Youtube, Soundcloud, Deezer and more" />
 <meta name="keywords" content="discover, music, curation, streaming, tracks, youtube, soundcloud, bandcamp, playlists, play, free" />
@@ -53,8 +52,6 @@ exports[`Hot Tracks renders posts enriched with track metadata 2`] = `
 <meta name="twitter:site" content="@open_whyd" />
 <meta property="og:image" content="http://localhost:8080/images/logo-black-square-smaller.png" />
 <meta property="og:description" content="Discover and collect music gems from Youtube, Soundcloud, Deezer and more" />
-<meta property="fb:app_id" content="1573219269412628" />
-<meta property="fb:admins" content="510739408" />
 <meta property="og:type" content="website" />
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link href="/favicon.png" rel="icon" type="image/png" />
@@ -64,13 +61,7 @@ exports[`Hot Tracks renders posts enriched with track metadata 2`] = `
     <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk">
 
 <script>
-  window.user = {
-  id: undefined,
-  name: '',
-  handle: '',
-  pref: {},
-  lastFm: undefined
-};
+  window.user = { id: undefined, name: '', handle: '', pref: {}, lastFm: undefined };
   window.playTrack = window.playTrack || function(){};
 </script>
 <script src="/js/whydtr.js"></script>
