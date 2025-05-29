@@ -141,12 +141,20 @@ exports.actions = {
    * @param createPlaylist {import('../../domain/api/Features').CreatePlaylist}
    */
   insert: async function (httpRequestParams, callback, _, { createPlaylist }) {
-    if (!httpRequestParams.pId || !mongodb.isObjectId(httpRequestParams.pId)) {
-      callback?.({ error: 'invalid parameter: pId' });
-      return;
-    }
     if (!httpRequestParams.uId || !mongodb.isObjectId(httpRequestParams.uId)) {
       callback?.({ error: 'invalid parameter: uId' });
+      return;
+    }
+    if (
+      !mongodb.isObjectId(httpRequestParams._id) &&
+      !mongodb.isObjectId(httpRequestParams.pId) &&
+      !httpRequestParams.eId
+    ) {
+      // either _id, pId or eId must be provided:
+      // - _id, to edit an existing post
+      // - pId, to repost an existing track
+      // - eId, to post a new track
+      callback?.({ error: 'invalid parameter: eId or pId' });
       return;
     }
 
