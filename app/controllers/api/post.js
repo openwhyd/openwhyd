@@ -49,6 +49,14 @@ function fetchSubscribedUsers(uidList, uid, cb) {
 
 const publicActions = {
   lovers: function (p, callback) {
+    if (!p.pId || !mongodb.isObjectId(p.pId)) {
+      callback?.({ error: 'invalid parameter: pId' });
+      return;
+    }
+    if (!p.uId || !mongodb.isObjectId(p.uId)) {
+      callback?.({ error: 'invalid parameter: uId' });
+      return;
+    }
     postModel.fetchPostById(p.pId, function (post) {
       const lovers = [];
       if (post && post.lov)
@@ -70,6 +78,14 @@ const publicActions = {
   },
 
   reposts: function (p, callback) {
+    if (!p.pId || !mongodb.isObjectId(p.pId)) {
+      callback?.({ error: 'invalid parameter: pId' });
+      return;
+    }
+    if (!p.uId || !mongodb.isObjectId(p.uId)) {
+      callback?.({ error: 'invalid parameter: uId' });
+      return;
+    }
     postModel.fetchPosts(
       { 'repost.pId': p.pId },
       null,
@@ -125,6 +141,15 @@ exports.actions = {
    * @param createPlaylist {import('../../domain/api/Features').CreatePlaylist}
    */
   insert: async function (httpRequestParams, callback, _, { createPlaylist }) {
+    if (!httpRequestParams.pId || !mongodb.isObjectId(httpRequestParams.pId)) {
+      callback?.({ error: 'invalid parameter: pId' });
+      return;
+    }
+    if (!httpRequestParams.uId || !mongodb.isObjectId(httpRequestParams.uId)) {
+      callback?.({ error: 'invalid parameter: uId' });
+      return;
+    }
+
     const postRequest = {
       uId: httpRequestParams.uId,
       uNm: httpRequestParams.uNm,
@@ -199,15 +224,27 @@ exports.actions = {
     actualInsert();
   },
   delete: function (p, callback) {
-    if (p.uId) {
-      postModel.deletePost(p._id, p.uId, function (err, result) {
-        callback(err ? { error: err } : (result || {}).pop ? result.pop() : {});
-      });
-    } else {
-      callback({ error: 'please login first' });
+    if (!p._id || !mongodb.isObjectId(p._id)) {
+      callback?.({ error: 'invalid parameter: _id' });
+      return;
     }
+    if (!p.uId || !mongodb.isObjectId(p.uId)) {
+      callback?.({ error: 'please login first' });
+      return;
+    }
+    postModel.deletePost(p._id, p.uId, function (err, result) {
+      callback(err ? { error: err } : (result || {}).pop ? result.pop() : {});
+    });
   },
   toggleLovePost: function (p, callback) {
+    if (!p.pId || !mongodb.isObjectId(p.pId)) {
+      callback?.({ error: 'invalid parameter: pId' });
+      return;
+    }
+    if (!p.uId || !mongodb.isObjectId(p.uId)) {
+      callback?.({ error: 'invalid parameter: uId' });
+      return;
+    }
     postModel.isPostLovedByUid(p.pId, p.uId, function (loved, post) {
       if (!post) callback({ loved: false, lovers: 0 });
       // to prevent crash when trying to love a repost
@@ -268,6 +305,10 @@ exports.actions = {
   },
   scrobble: function (p, cb) {
     if (!p.uId) return cb && cb({ error: 'not logged in' });
+    if (!p.pId || !mongodb.isObjectId(p.pId)) {
+      cb?.({ error: 'invalid parameter: pId' });
+      return;
+    }
     postModel.fetchPostById(p.pId, function (r) {
       if (!r) return cb && cb({ error: 'missing track' });
       userModel.fetchAndProcessUserById(p.uId).then((user) => {

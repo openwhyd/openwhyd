@@ -385,6 +385,9 @@ function handleAuthRequest(loggedUser, reqParams, localRendering, features) {
 
 // old name: setUserFields()
 function handleRequest(loggedUser, reqParams, localRendering, features) {
+  console.log('api.user.handleRequest', {
+    action: reqParams.action ?? '(EDIT)',
+  });
   try {
     if (handlePublicRequest(loggedUser, reqParams, localRendering, features))
       return true;
