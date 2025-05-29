@@ -69,6 +69,6 @@ const getLoggedInUserId = async function () {
     (await getLoggedInUserId());
 
   if (uId) {
-    window.location.href = `https://openwhyd-mobile-client.glitch.me/?uId=${uId}`;
+    window.location.href = `https://openwhyd.github.io/openwhyd-mobile-web-client/?uId=${uId}`;
   }
 })();
