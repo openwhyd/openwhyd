@@ -54,8 +54,8 @@ export interface UserDocument {
   pwd: string;
   iBy: unknown; // invited by (user id)
   lastFm: unknown;
-  fbId: unknown; // deprecated - will probably be removed at some point
-  fbTok: unknown;
+  fbId: unknown; // deprecated - to be removed
+  fbTok: unknown; // deprecated - to be removed
   twTok: unknown;
   twSec: unknown;
 }

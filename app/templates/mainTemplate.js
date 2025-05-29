@@ -14,15 +14,12 @@ const render = { urlPrefix: '' };
 const includeSuffix = '?' + config.version;
 
 let playemFile;
-let fbId;
 const isProduction = config.urlPrefix.indexOf('openwhyd.org') > 0;
 if (isProduction) {
   //console.log('- Production - ');
-  fbId = '169250156435902';
   playemFile = 'min';
 } else {
   //console.log('- Local - ');
-  fbId = '1573219269412628';
   playemFile = 'all';
 }
 
@@ -36,14 +33,6 @@ exports.defaultPageMeta = {
 };
 
 function makeMetaHead(options = {}) {
-  const appUrl =
-    options.pageUrl &&
-    'whyd://app?href=' +
-      snip.addSlashes(
-        options.pageUrl
-          .replace('https:', 'http:')
-          .replace(config.urlPrefix, ''),
-      );
   const pageImg = uiSnippets.htmlEntities(
     options.pageImage || exports.defaultPageMeta.img,
   );
@@ -52,9 +41,6 @@ function makeMetaHead(options = {}) {
   );
   const meta = [
     '<meta name="google-site-verification" content="mmqzgEU1bjTfJ__nW6zioi7O9vuur1SyYfW44DH6ozg" />',
-    '<meta name="apple-itunes-app" content="app-id=874380201' +
-      (appUrl ? ', app-argument=' + appUrl : '') +
-      '">',
     '<link rel="image_src" href="' + pageImg + '"/>',
     '<meta name="description" content="' + pageDesc + '" />',
     '<meta name="keywords" content="discover, music, curation, streaming, tracks, youtube, soundcloud, bandcamp, playlists, play, free" />',
@@ -62,8 +48,6 @@ function makeMetaHead(options = {}) {
     '<meta name="twitter:site" content="@open_whyd" />',
     '<meta property="og:image" content="' + pageImg + '" />',
     '<meta property="og:description" content="' + pageDesc + '" />',
-    '<meta property="fb:app_id" content="' + fbId + '" />',
-    '<meta property="fb:admins" content="510739408" />',
     '<meta property="og:type" content="' +
       uiSnippets.htmlEntities(options.pageType || 'website') +
       '" />',
@@ -126,7 +110,6 @@ exports.makeAnalyticsHeading = function (user) {
         : util.inspect({
             id: user.id,
             name: uiSnippets.htmlEntities(user.name),
-            fbId: user.fbId,
             handle: uiSnippets.htmlEntities(user.handle),
             pref: userPrefs,
             lastFm: user.lastFm,
@@ -368,7 +351,6 @@ exports.renderWhydPage = function (params = {}) {
     'whydPlayer.js',
     'dndUpload.js',
     'WhydImgUpload.js',
-    'facebook.js',
   ].concat(params.js || []);
 
   params.css = [

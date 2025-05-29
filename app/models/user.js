@@ -42,7 +42,6 @@ const USERNAME_RESERVED = {
 // used to be called USER_CACHE_FIELDS
 const PARTIAL_USER_FIELDS = {
   _id: 1,
-  fbId: 1,
   name: 1,
   img: 1,
   email: 1,
@@ -58,8 +57,6 @@ var USER_FIELDS = {
   _id: true,
   bio: true,
   email: true,
-  fbId: true,
-  fbTok: true,
   handle: true,
   img: true,
   name: true,
@@ -344,13 +341,6 @@ exports.fetchByHandle = function (handle, handler) {
   });
 };
 
-exports.fetchByFbUid = function (fbUid, handler) {
-  if (typeof fbUid != 'string') fbUid = fbUid.toString();
-  fetch({ fbId: fbUid }, function (err, user) {
-    handler(user);
-  });
-};
-
 exports.fetchByEmail = function (email, handler) {
   fetch({ email: emailModel.normalize(email) }, function (err, user) {
     if (err) console.error('fetchByEmail error:', err);
@@ -507,8 +497,6 @@ function insertInvite(obj, handler) {
       return handler ? handler(null) : null;
     }
     criteria = { email: (obj.email = normalized) };
-  } else if (obj.fbId) {
-    criteria = { fbId: obj.fbId };
   } else {
     return handler && handler();
   }
@@ -540,11 +528,6 @@ exports.inviteUser = function (email, handler) {
 
 exports.inviteUserBy = function (email, senderId, handler) {
   insertInvite({ email: email, iBy: senderId }, handler);
-};
-
-exports.inviteFbUserBy = function (fbId, senderId, handler) {
-  // formerly inviteToJoinConversation()
-  insertInvite({ fbId: fbId, iBy: senderId }, handler);
 };
 
 exports.removeInvite = function (inviteCode, handler) {
@@ -605,7 +588,6 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
       if ('' + user.pl[i].id == '' + plId) {
         found = user.pl[i]; // = {id:plId, name:plName};
         if (upd.name) user.pl[i].name = upd.name;
-        if (upd.fbId) user.pl[i].fbId = upd.fbId;
         break;
       }
     if (found) {
@@ -718,29 +700,6 @@ exports.setPref = function (uId, pref, handler) {
 };
 
 // === OTHER METHODS
-
-exports.setFbId = function (uId, fbId, cb, fbTok) {
-  exports.fetchByFbUid(fbId, function (user) {
-    if (user) {
-      if (user._id != uId) {
-        cb &&
-          cb({
-            error:
-              'This Facebook account is already associated to another user',
-          });
-      } else
-        cb &&
-          cb({
-            error: 'This Facebook account is already associated to this user',
-          });
-    } else {
-      const u = { _id: uId, fbId: fbId };
-      if (fbTok) u.fbTok = fbTok;
-      // @ts-ignore
-      exports.save(u, cb);
-    }
-  });
-};
 
 exports.setTwitterId = function (uId, twId, twTok, twSec, cb) {
   if (!uId) return cb && cb({ error: 'invalid parameters' });

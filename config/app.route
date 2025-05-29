@@ -11,10 +11,6 @@ GET    /privacy                        -> controllers.static
 GET    /investors                      -> controllers.static
 GET    /concertvenue                   -> controllers.static
 GET    /mobile                         -> controllers.static
-POST   /fbcanvas/                      -> controllers.static
-
-GET    /fbCanvas                       -> controllers.private.fbCanvas
-POST   /fbCanvas                       -> controllers.private.fbCanvas
 
 GET    /download                       -> controllers.iframe
 
@@ -71,8 +67,6 @@ POST   /consent                        -> controllers.consent
 
 GET    /login                          -> controllers.api.login
 POST   /login                          -> controllers.api.login
-GET    /facebookLogin                  -> controllers.api.facebookLogin
-POST   /facebookLogin                  -> controllers.api.facebookLogin
 
 GET    /digest                         -> controllers.private.digest
 GET    /password                       -> controllers.private.password

@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * register controller (derived from facebookLogin)
+ * register controller
  * register new users coming from the /invite form
  * @author adrienjoly, whyd
  */
@@ -54,15 +54,12 @@ exports.registerInvitedUser = async function (request, user, response) {
           inviteCode: user.inviteCode,
           email: user.email,
           name: user.name,
-          fbUid: user.fbUid,
-          fbTok: user.fbTok,
           iBy: user.iBy,
           iPo: user.iPo,
           iRf: user.iRf,
           iPg: user.iPg,
           sTk: user.sTk || '', // signup token (genuine client check)
           ajax: user.ajax,
-          fbRequest: user.fbRequest,
         }
       : null,
   );
@@ -103,9 +100,6 @@ exports.registerInvitedUser = async function (request, user, response) {
   if (user.name == 'Your Name' || user.name.trim() == '')
     return error(request, user, response, "Don't you have a name, dude ?");
 
-  if (user.fbId && isNaN(user.fbId))
-    return error(request, user, response, 'Invalid Facebook id');
-
   if (user.password == 'password')
     return error(
       request,
@@ -144,14 +138,6 @@ exports.registerInvitedUser = async function (request, user, response) {
       if (user.iPo) dbUser.iPo = user.iPo; // invited on post (id)
       if (user.iRf) dbUser.iRf = user.iRf; // referer of invite page (for analytics)
       if (user.iPg) dbUser.iPg = user.iPg; // invite page (e.g. user profile)
-      if (user.fbRequest) dbUser.fbR = user.fbRequest; // fb invite request id
-      if (user.fbUid) {
-        dbUser.fbId = user.fbUid; // fb user id
-        dbUser.img = '//graph.facebook.com/v2.3/' + user.fbUid + '/picture';
-      }
-      if (user.fbTok) {
-        dbUser.fbTok = user.fbTok;
-      }
 
       userModel.save(dbUser, afterSave);
     });

@@ -112,23 +112,6 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
 
 // ========= USER ACCESSORS
 
-/**
- * Returns the logged in user's facebook uid, from its cookie
- */
-http.IncomingMessage.prototype.getFbUid = function () {
-  const fbCookie = this.getFacebookCookie();
-  if (fbCookie && fbCookie.uid)
-    this.getFbUid = function () {
-      return fbCookie.uid;
-    };
-  else if (fbCookie && fbCookie.user_id)
-    this.getFbUid = function () {
-      return fbCookie.user_id;
-    };
-  else return null;
-  return this.getFbUid();
-};
-
 const { useAuth0AsIdentityProvider } = process.appParams;
 
 /**
@@ -146,7 +129,7 @@ http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
     };
 
 /**
- * Returns the logged in user as an object {_id, id, fbId, name, img}
+ * Returns the logged in user as an object {_id, id, name, img}
  */
 http.IncomingMessage.prototype.getUser = async function () {
   const uid = this.getUid();

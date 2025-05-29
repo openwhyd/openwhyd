@@ -80,8 +80,6 @@ window.Whyd.tracking =
         const genDate = getDateFromObjectId(uId);
         gaSet('userId', uId); // standard ga property
         gaSet('dimension2', uId);
-        gaSet('hasFb', !!loggedUser.fbId);
-        gaSet('dimension3', !!loggedUser.fbId);
         gaSet('joinWeek', getWeekNumber(genDate));
         gaSet('dimension4', getWeekNumber(genDate));
         if (loggedUser && loggedUser.iRf) {

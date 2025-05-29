@@ -67,7 +67,6 @@ exports[`Hot Tracks renders posts enriched with track metadata 2`] = `
   window.user = {
   id: undefined,
   name: '',
-  fbId: undefined,
   handle: '',
   pref: {},
   lastFm: undefined
@@ -464,7 +463,6 @@ var JAMENDO_CLIENT_ID = "2c9a11b9";
     <script src="/js/whydPlayer.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/dndUpload.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/WhydImgUpload.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/js/facebook.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>"
 `;
