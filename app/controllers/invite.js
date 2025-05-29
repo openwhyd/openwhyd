@@ -79,7 +79,6 @@ exports.renderRegisterPage = function (request, reqParams, response) {
       user._id,
       user.pId,
       reqParams.email || user.email || '',
-      user.fbRequestIds,
       reqParams.redirect,
     );
     response.legacyRender(registrationPage, null, {
@@ -186,20 +185,7 @@ const submitInvites = async function (request, reqParams, response) {
       ok: false,
       error: 'email invites were disabled (#178)',
     });
-  } else if (reqParams.fbId)
-    // === invite facebook friend
-    users.inviteFbUserBy(
-      reqParams.fbId,
-      '' + loggedUser._id,
-      function (invite) {
-        response.legacyRender(
-          !invite
-            ? null
-            : { ok: 1, fbId: reqParams.fbId, inviteCode: invite._id },
-        );
-      },
-    );
-  else response.badRequest();
+  } else response.badRequest();
 };
 
 exports.controller = async function (request, reqParams, response, error) {

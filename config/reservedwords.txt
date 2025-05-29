@@ -39,6 +39,10 @@
 ## "less", which is listed both as a term, and the name of a
 ## language.)
 
+## historical controllers
+facebookLogin
+fbCanvas
+
 ## Service
 api
 embed

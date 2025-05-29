@@ -1563,22 +1563,6 @@ h2 {
   height: 30px;
 }
 
-#settingsPanel #fbConn {
-  background-image: url(/images/fb-connect.png);
-  width: 352px;
-  height: 53px;
-  cursor: pointer;
-  margin-bottom: 40px;
-}
-
-#settingsPanel #fbConn:hover {
-  background-position: 0 -54px;
-}
-
-#settingsPanel #fbConn:active {
-  background-position: 0 -108px;
-}
-
 #settingsPanel #pref {
   display: none;
 }

@@ -22,7 +22,6 @@ exports.refreshTemplates();
 const FIELDS = [
   'inviteCode',
   'iPo', // post/track from which user was invited
-  'fbRequest', // id of facebook request used to invite
   'email',
   'redirect',
 ];
@@ -69,7 +68,6 @@ exports.renderInvitePage = function (
   inviteCode,
   iPo,
   email,
-  fbRequest,
   redirect,
 ) {
   const params = {};
@@ -102,8 +100,6 @@ exports.renderInvitePage = function (
   if (inviteCode) params.inviteCode = inviteCode;
 
   if (iPo) params.iPo = iPo;
-
-  if (fbRequest) params.fbRequest = fbRequest;
 
   if (email) params.email = email; // TODO
 

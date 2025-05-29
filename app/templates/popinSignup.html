@@ -43,28 +43,7 @@
     },
 
     facebookButton: function () {
-      fbRegister('email', function (res) {
-        if (!res) {
-          console.log('no fb login');
-        } else if (res.redirect) {
-          //console.log("redirect to ", res.redirect);
-          window.location.href = signup.redirect || res.redirect;
-        } else if (res.fbUser) {
-          // new user
-          const accessToken = res.fbAuthResponse.accessToken;
-
-          signup.fields['name'].val(res.fbUser.name);
-          signup.fields['email'].val(res.fbUser.email);
-
-          // Mandatory for signup but will never be used by
-          // user to login so we setup a password that is impossible
-          // to guess
-          signup.fields['password'].val(accessToken.slice(0, 31));
-          $('input[name=fbUid]').val(res.fbUser.id);
-          $('input[name=fbTok]').val(accessToken);
-          $('#btnSignUp').click();
-        }
-      });
+      alert('Facebook is not supported anymore');
     },
   };
 
@@ -87,8 +66,6 @@
 
     <form action="/register" method="post" accept-charset="utf-8">
       <input type="hidden" name="ajax" value="iframe" />
-      <input type="hidden" name="fbUid" value="" />
-      <input type="hidden" name="fbTok" value="" />
       <input type="hidden" name="iRf" value="{{iRf}}" />
       <input type="hidden" name="iPg" value="{{iPg}}" />
       {{#redirect}}<input

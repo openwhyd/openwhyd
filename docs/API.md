@@ -183,8 +183,6 @@ Parameters: (GET or POST)
 - **ajax**: (boolean) response will be sent in JSON instead of rendering the form in HTML
 - **email**: email address (or username) of the user account
 - **md5**: md5-hashed password
-- **fbUid**: (optional) Facebook id of the user
-- **fbTok**: (optional) Access token returned by using Facebook Connect button
 - **includeUser**: (boolean, optional) adds `user` object to the ajax response, with following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions`
 
 Response: (HTML form or JSON, depends of the ajax parameter)
@@ -193,54 +191,6 @@ Response: (HTML form or JSON, depends of the ajax parameter)
 - **wrongPassword**: (optional) set to 1 if the password does not match
 - **redirect** (optional): URL to redirect the user to, if login succeeded
 - **user**: (object, if `includeUser` is set to true): complete db object about the logged in user, containing following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions`
-
-#### LOGIN WITH FACEBOOK
-
-Initializes the user session and corresponding cookie (via Login API), using provided FB authorization.
-
-Updates the user's Facebook access token in the database.
-
-`html : (GET /facebookLogin?action=login&fbUid&fbAccessToken)`
-
-Parameters: (GET or POST)
-
-- **fbUid**: Facebook id of the user
-- **fbAccessToken**: Access token returned by using Facebook Connect button
-- **includeUser**: (boolean, optional) adds `user` object to the response, with following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions`
-
-Cookies: (initialized by facebook SDK, one of these must be set in the headers of the HTTP request)
-
-- fbs\_\* (Facebook's legacy cookie)
-- fbsr\_\* (Facebook's secure cookie)
-
-Response: (JSON)
-
-- **error**: (string, optional) error message, if any
-- **redirect**: (string, optional) url to redirect to, if login succeeded
-- **fbUser**: (object, optional) contains Facebook user data {id, name, email}, if this Facebook user is not connected to a Openwhyd account
-- **user**: (object, if `includeUser` is set to true): complete db object about the logged in user, containing following additional fields: `nbLikes`, `nbPosts`, `nbSubscribers` and `nbSubscriptions`
-
-#### CONNECT FACEBOOK ACCOUNT TO OPENWHYD ACCOUNT
-
-Enables:
-
-- Possibility to log in to Openwhyd using Facebook connect
-
-This endpoint is called when a Openwhyd user (that is already logged in) clicks on a Facebook Connect button, and this Facebook account is not yet connected to another Openwhyd account.
-
-`html : (GET /facebookLogin/action=link&fbUid&fbAccessToken)`
-
-Parameters: (GET or POST)
-
-- fbUid: Facebook id of the user
-- fbAccessToken: Access token returned by using Facebook Connect button
-
-Cookies: (initialized by facebook SDK, one of these must be set in the headers of the HTTP request)
-
-- fbs\_\* (Facebook's legacy cookie)
-- fbsr\_\* (Facebook's secure cookie)
-
-Response: (None)
 
 #### Register / sign up a new user
 
@@ -257,9 +207,6 @@ Parameters:
 - **password**: (string) password (to be used for logging in)
 - **redirect**: (string, optional) URL to be redirected to, if sign up succeeds
 - **ajax**: (string ,optional) set to "true" if response is to be given in JSON format, instead of redirects
-- **fbUid**: (string, optional) Facebook user id (if using FB connect)
-- **fbTok**: (string, optional) Facebook access token (if using FB connect)
-- **<s>fbRequest</s>**<s>: (string, deprecated) Facebook request id. Used when the visitor was invited through a Facebook request, so that the request could be cleared after the visitor successfully signed up.</s>
 - **<s>inviteCode</s>**<s>: (string, deprecated) code given by another user who invited the current visitor to signup. can be the user id of that user. this code was used for validation, when openwhyd was still in closed beta.</s>
 - **iBy**: (string, optional) id of the user who invited the visitor to sign up to Openwhyd. the invited visitor will be automatically subscribed to the inviter, and the inviter will be notified upon his friend's sign up.
 - **iPg:** (string, optional) URL of the page from which the sign up was initiated (for analytics)
@@ -300,8 +247,6 @@ Response: (JSON)
 - nbLikes: (if `countLikes` set to true and `id` provided) number of tracks liked by this user
 - nbSubscriptions: (if `includeSubscr` set to true) number of subscriptions of this user
 - **lastArtists**: (if `includeTags` set to true) an array of artist names, extracted from the user's last posts
-- fbId: id of the facebook user connected to this account
-- fbTok: last session token received from connecting to facebook (used for fb requests)
 - **twId**: Twitter handle connected to this openwhyd account
 - **twTok**: last session token received from connecting to Twitter
 - **twSec**: last session secret received from connecting to Twitter
@@ -352,8 +297,6 @@ Allowed Parameters (one or many can be passed):
 - **oldPwd**: (string) old password (plain, no md5), to be provided if intending to change password using `pwd`
 - **handle**: (string) user's handle / username / profile custom URL -- will be validated against a list of reserved words
 - **email**: (string) user's email address (for openwhyd use only, not displayed publicly)
-- **fbId**: (integer) user's Facebook user id, after a successful Facebook connect / auth. **fbTok** must be provided too.
-- **fbTok**: (string, mandatory if **fbId** was set) user's Facebook auth token, after a successful Facebook connect / auth.
 - **twId**: (string) Twitter handle connected to this openwhyd account (set to empty string to disconnect)
 - **twTok**: (string) last session token received from connecting to Twitter (to send with **twId**)
 - **twSec**: (string) last session secret received from connecting to Twitter (to send with **twId**)

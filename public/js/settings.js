@@ -183,29 +183,6 @@ $(function () {
     })(true);
   });
 
-  const $fbConn = $('#fbConn').addClass('loading');
-  globals.whenFbReady(function () {
-    function toggleFbPrefs(connected) {
-      $fbConn
-        .toggle(!connected)
-        .removeClass('loading')
-        .unbind()
-        .click(fbConnect);
-      $('#pref').toggle(connected);
-    }
-    function fbConnect() {
-      $fbConn
-        .addClass('loading')
-        .unbind()
-        .click(function (e) {
-          e.preventDefault();
-          globals.showMessage('Still loading, please wait...');
-        });
-      globals.fbAuth('', toggleFbPrefs);
-    }
-    globals.fbIsLogged(toggleFbPrefs);
-  });
-
   // lastfm
   (function () {
     const $lastFmConn = $('#lastFmConn');

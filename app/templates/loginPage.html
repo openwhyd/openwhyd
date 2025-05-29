@@ -179,8 +179,6 @@
           <div id="or">Or</div>
           <form id="withoutFb" action="/login" method="post">
             <input type="hidden" name="action" value="login" />
-            <input type="hidden" name="fbRequest" value="{{fbRequest}}" />
-            <input type="hidden" name="fbUid" value="" />
             <!--<input type="hidden" name="ajax" value="true" />-->
             <input
               type="hidden"
@@ -233,11 +231,6 @@
       type="text/javascript"
       charset="utf-8"
     ></script>
-    <script
-      src="/js/facebook.js"
-      type="text/javascript"
-      charset="utf-8"
-    ></script>
     <script src="/js/ui.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -266,19 +259,7 @@
       });
 
       $('a.fbButton').click(function () {
-        fbLogin('', function (res) {
-          // 'email'
-          var formRedirect = '{{redirect}}{{convUrl}}';
-          if (res && res.redirect) {
-            if (formRedirect == 'closeWindow') window.close();
-            else window.location.href = formRedirect || res.redirect;
-          } else {
-            console.log('error', res);
-            alert(
-              'Sorry, this Facebook account is not recognized by Openwhyd. Please sign up from the home page.',
-            );
-          }
-        });
+        alert('Facebook is not supported anymore');
       });
 
       $('.dlgLogIn form').submit(function () {

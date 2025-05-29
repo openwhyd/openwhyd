@@ -198,7 +198,6 @@
       </h1>
       <div id="registerBox">
         <h2>Join Openwhyd</h2>
-        <a class="fbConnect" href="#"></a>
         <div class="emailReg dlgSignIn">
           <div id="or">Or</div>
           <span onclick="$(this).hide().parent().find('form').show();">
@@ -206,9 +205,6 @@
           </span>
           <form id="withoutFb" action="/register" method="post">
             <input type="hidden" name="inviteCode" value="{{inviteCode}}" />
-            <input type="hidden" name="fbRequest" value="{{fbRequest}}" />
-            <input type="hidden" name="fbUid" value="" />
-            <input type="hidden" name="fbTok" value="" />
             <input
               type="hidden"
               name="iBy"
@@ -272,11 +268,6 @@
       type="text/javascript"
       charset="utf-8"
     ></script>
-    <script
-      src="/js/facebook.js"
-      type="text/javascript"
-      charset="utf-8"
-    ></script>
     <script src="/js/ui.js" type="text/javascript" charset="utf-8"></script>
 
     <script>
@@ -307,26 +298,7 @@
         if ($.fn.placeholder()) $('[placeholder]').placeholder();
 
         $('a.fbConnect').click(function () {
-          fbLogin('email', function (res) {
-            if (!res) console.log('no fb login');
-            else if (res.redirect)
-              //console.log("redirect to ", res.redirect);
-              window.location.href = redirect || res.redirect;
-            else if (res.fbUser) {
-              // new user
-              $('input[name=fbUid]').val(res.fbUser.id);
-              $('input[name=fbTok]').val(
-                (res.fbAuthResponse || {}).accessToken,
-              );
-              $name.val(res.fbUser.name);
-              $email.val(res.fbUser.email);
-              $('.emailReg > span[onclick]').click();
-
-              $('.fbConnect').hide();
-              $('#or').hide();
-              $('.emailReg').css('border-top', 'none');
-            }
-          });
+          alert('Facebook is not supported anymore');
         });
 
         $form.iframePostForm({

@@ -47,17 +47,10 @@ async function renderItem(item) {
     name: item.name,
     nameSuffix: item.handle ? ' (' + item.handle + ')' : '',
     href: '/u/' + (item.id || item._id),
-    //	img: item.img  || (item.fbId ? 'http://graph.facebook.com/v2.3/'+item.fbId+'/picture?type=square' : null),
     info: [
       /*"Email: " +*/ item.email,
       //	(item.handle ? "handle: " + item.handle : null),
-      'Registered on ' +
-        date +
-        (item.fbId
-          ? ', using <a href="https://www.facebook.com/profile.php?id=' +
-            item.fbId +
-            '">FB</a>'
-          : ''),
+      'Registered on ' + date,
       (item.iBy
         ? 'invited by ' +
           snip.htmlEntities(

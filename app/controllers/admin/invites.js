@@ -26,7 +26,7 @@ async function renderUserList(users, title, actionNames) {
   let userList = '<h2>' + title + ' (' + users.length + ')</h2>';
 
   if (users && users.length) {
-    const fieldName = users[0].email ? 'email' : 'fbId';
+    const fieldName = 'email';
     userList +=
       '<p style="position:relative;top:-5px;color:gray;">' +
       '<input type="checkbox" onClick="toggle(\'' +
@@ -42,14 +42,10 @@ async function renderUserList(users, title, actionNames) {
     let date = u.date || u._id.getTimestamp();
     date =
       date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
-    const fieldName = u.email ? 'email' : 'fbId'; //(u.fbId ? "fbId" : "email");
-    const userId = u.email || u.fbId;
+    const fieldName = 'email';
+    const userId = u.email;
 
-    const img =
-      u.img ||
-      (u.fbId
-        ? '//graph.facebook.com/v2.3/' + u.fbId + '/picture?type=square'
-        : null);
+    const img = u.img || null;
 
     const link =
       title == 'invites'
@@ -57,11 +53,6 @@ async function renderUserList(users, title, actionNames) {
         : u.name
           ? '/u/' + u._id
           : /*u.email ? "mailto:" + u.email :*/ null;
-
-    if (u.fbRequestIds)
-      u.fbInvites = u.fbRequestIds.join
-        ? u.fbRequestIds.length + ' fb invites'
-        : '1 fb invite';
 
     userList +=
       '<p style="clear:both;">' +
@@ -80,11 +71,6 @@ async function renderUserList(users, title, actionNames) {
       (link ? '<a href="' + link + '">' : '') +
       (u.fbInvites || u.name || u.email) +
       (link ? '</a>' : '') +
-      (u.fbId
-        ? '&nbsp;(<a href="//www.facebook.com/profile.php?id=' +
-          u.fbId +
-          '">FB</a>)'
-        : '') +
       '<small>' +
       (u.name ? '<br/>&nbsp;' + u.email : '') +
       (u.iBy
