@@ -53,7 +53,7 @@ const COLLECTIONS = [
 
 const bindCollectionToDB = (db) => (coll) =>
   Object.assign({}, coll, {
-    coll: db.collections[coll.name],
+    coll: db.collection(coll.name),
   });
 
 // to run a list of functions (promise factories) one after another
