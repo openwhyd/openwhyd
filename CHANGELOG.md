@@ -1,3 +1,10 @@
+## [1.63.21](https://github.com/openwhyd/openwhyd/compare/v1.63.20...v1.63.21) (2025-06-07)
+
+
+### Bug Fixes
+
+* **start-up:** remove old db migrations + count documents per collection ([#828](https://github.com/openwhyd/openwhyd/issues/828)) ([397e9df](https://github.com/openwhyd/openwhyd/commit/397e9dfa1f2c4846528ea2974eb5060e6f160168)), closes [/github.com/openwhyd/openwhyd/pull/828#discussion_r2133648973](https://github.com//github.com/openwhyd/openwhyd/pull/828/issues/discussion_r2133648973) [/github.com/openwhyd/openwhyd/pull/828#discussion_r2133648976](https://github.com//github.com/openwhyd/openwhyd/pull/828/issues/discussion_r2133648976)
+
 ## [1.63.20](https://github.com/openwhyd/openwhyd/compare/v1.63.19...v1.63.20) (2025-06-07)
 
 

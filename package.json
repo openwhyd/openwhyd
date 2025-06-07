@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.63.20",
+  "version": "1.63.21",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
