@@ -1,3 +1,10 @@
+## [1.63.20](https://github.com/openwhyd/openwhyd/compare/v1.63.19...v1.63.20) (2025-06-07)
+
+
+### Bug Fixes
+
+* **search:** redirect to home, when going to search page without query ([#827](https://github.com/openwhyd/openwhyd/issues/827)) ([3950b29](https://github.com/openwhyd/openwhyd/commit/3950b29f37c1d82e85903d4c0e168fb6276f6582))
+
 ## [1.63.19](https://github.com/openwhyd/openwhyd/compare/v1.63.18...v1.63.19) (2025-06-07)
 
 
