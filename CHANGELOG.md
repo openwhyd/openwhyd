@@ -1,3 +1,10 @@
+## [1.63.18](https://github.com/openwhyd/openwhyd/compare/v1.63.17...v1.63.18) (2025-06-07)
+
+
+### Bug Fixes
+
+* **search:** make search controller respond with posts ([#825](https://github.com/openwhyd/openwhyd/issues/825)) ([0695183](https://github.com/openwhyd/openwhyd/commit/0695183ce6bda4d858ece190009fe4fbbc64dd28))
+
 ## [1.63.17](https://github.com/openwhyd/openwhyd/compare/v1.63.16...v1.63.17) (2025-05-29)
 
 
