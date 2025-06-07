@@ -6,18 +6,9 @@ const Progress = require('./Progress');
 const getIndex = ({ indexName, appId, apiKey }) =>
   algoliasearch(appId, apiKey).initIndex(indexName);
 
-const forEachRecord = ({ indexName, appId, apiKey }, recordHandler) =>
-  new Promise((resolve, reject) => {
-    const browser = getIndex({ indexName, appId, apiKey }).browseAll();
-    browser.on('result', (content) =>
-      content.hits.forEach((hit) => recordHandler(hit)),
-    );
-    browser.on('end', () => {
-      resolve();
-    });
-    browser.on('error', (err) => {
-      reject(err);
-    });
+const forEachRecord = async ({ indexName, appId, apiKey }, recordHandler) =>
+  await getIndex({ indexName, appId, apiKey }).browseObjects({
+    batch: (hits) => hits.forEach(recordHandler),
   });
 
 const makeSetFromIndex = ({ indexName, appId, apiKey }) =>

@@ -7,7 +7,6 @@
  **/
 
 const fs = require('fs');
-const util = require('node:util');
 const mongodb = require('mongodb');
 const shellRunner = require('./mongodb-shell-runner.js');
 let userModel = null; // require("./user.js") will be lazy-loaded here
@@ -121,30 +120,16 @@ exports.forEach2 = async function (colName, params, handler) {
   })();
 };
 
-exports.cacheCollections = function (callback) {
-  function finishInit() {
-    callback.call(module.exports, null, exports._db);
-  }
+exports.cacheCollections = async function () {
   // diagnostics and collection caching
-  exports._db.collections().then(
-    function (collections) {
-      if (0 == collections.length) finishInit();
-      let remaining = collections.length;
-      for (const i in collections) {
-        const queryHandler = (function () {
-          const table = collections[i].collectionName;
-          return function (err) {
-            if (err) console.error(`[db] cacheCollections error:`, err);
-            // console.log('[db]  - found table: ' + table + ' : ' + result + ' rows');
-            exports.collections[table] = exports._db.collection(table);
-            if (0 == --remaining) finishInit();
-          };
-        })();
-        collections[i].countDocuments(queryHandler);
-      }
-    },
-    (err) => console.trace('[db] MongoDB Error : ' + err),
-  );
+  const collections = await exports._db.collections();
+  for (const coll of collections) {
+    const name = coll.collectionName;
+    const nbRows = await coll.estimatedDocumentCount();
+    console.log(`[db]  - found table: ${name} : ${nbRows} rows`);
+    exports.collections[name] = exports._db.collection(name);
+  }
+  return exports._db;
 };
 
 // this method runs the commands of a mongo shell script (e.g. initdb.js)
@@ -178,7 +163,7 @@ exports.initCollections = async function ({ addTestData = false } = {}) {
     );
   }
   // all db init scripts were interpreted => continue app init
-  await util.promisify(exports.cacheCollections)();
+  await exports.cacheCollections();
   console.log('[db] ready for queries');
 };
 
