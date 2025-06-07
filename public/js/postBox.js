@@ -47,10 +47,9 @@ function WhydPost(/*embedRef*/) {
   this.setContext = function (ctx) {
     this.postData.ctx = ctx;
   };
-  this.setPlaylist = function (id, name, collabId) {
+  this.setPlaylist = function (id, name) {
     this.postData.pl = { name: name };
-    if (collabId) this.postData.pl.collabId = collabId;
-    else this.postData.pl.id = id;
+    this.postData.pl.id = id;
   };
   this.submit = function (onPostComplete) {
     //console.log("submitting post: ", postData);
@@ -99,9 +98,8 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
   }
   $playlistHead.click(showMenu);
 
-  function addPlaylist(name, id, collabId) {
+  function addPlaylist(name, id) {
     const $li = $('<li>').attr('data-plid', id).text(name).appendTo($ul);
-    if (collabId) $li.attr('data-collabid', collabId);
     $ul.find('li').unbind().click(selectPlaylist);
     return $li;
   }
@@ -110,11 +108,7 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
     const $li = $(this);
     $ul.find('li').removeClass('selected');
     $li.addClass('selected');
-    globals.whydPost.setPlaylist(
-      $li.attr('data-plid'),
-      $li.text(),
-      $li.attr('data-collabid'),
-    );
+    globals.whydPost.setPlaylist($li.attr('data-plid'), $li.text());
     $head.text($li.text()).append($arrow);
     hideMenu();
   }
@@ -129,37 +123,15 @@ function WhydPlaylistSelector(whydPost, $selPlaylist, defaultPlaylist) {
 
   function bindItems() {
     if (defaultPlaylist) {
-      let $li = $ul.find(
-        defaultPlaylist.collabId
-          ? "li[data-collabid='" + defaultPlaylist.collabId + "']"
-          : "li[data-plid='" + defaultPlaylist.id + "']",
-      );
+      let $li = $ul.find("li[data-plid='" + defaultPlaylist.id + "']");
       if ($li.length == 0)
-        $li = addPlaylist(
-          defaultPlaylist.name,
-          defaultPlaylist.id,
-          defaultPlaylist.collabId,
-        );
+        $li = addPlaylist(defaultPlaylist.name, defaultPlaylist.id);
       $li.each(selectPlaylist);
     }
     $ul.find('li').unbind().click(selectPlaylist);
   }
 
   return {
-    /*
-		populate: function() {
-			$.ajax({
-				type: "GET",
-				url: "/api/user",
-				success: function(user){
-					if (user && user.pl)
-						for (let i in user.pl)
-							addPlaylist(user.pl[i].name, user.pl[i].id, user.pl[i].collabId);
-					bindItems();
-				}
-			});
-		},
-		*/
     bindItems: bindItems,
   };
 }
@@ -253,8 +225,7 @@ window.initPostBox = function (params) {
       }
       var url = '/u/' + posted.uId;
       if (posted.pl) {
-        if (posted.pl.collabId != null) url = '/playlist/' + posted.pl.collabId;
-        else url += '/playlist/' + posted.pl.id;
+        url += '/playlist/' + posted.pl.id;
       }
       if (window.showMessage) {
         const plName = posted.pl ? posted.pl.name : 'your tracks';
@@ -278,11 +249,7 @@ window.initPostBox = function (params) {
     if (reposting) globals.whydPost.setRepostPid(params.pId);
     else if (editingPost) {
       globals.whydPost.set_id(params.pId);
-      if (params.pl)
-        globals.whydPost.setPlaylist(
-          params.pl.id,
-          params.pl.name /*, "{{collabId}}"*/,
-        );
+      if (params.pl) globals.whydPost.setPlaylist(params.pl.id, params.pl.name);
     }
 
     new WhydPlaylistSelector(
