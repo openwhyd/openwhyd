@@ -47,17 +47,6 @@ await db.collection('user').createIndex({ 'pref.pendEN': 1 }, { sparse: true });
 await db.collection('user').createIndex({ 'pref.nextEN': 1 }, { sparse: true });
 await db.collection('user').createIndex({ 'sp.id': 1 }, { sparse: true }); // spotify id
 
-print('removing legacy fields on user collection...');
-await db
-  .collection('user')
-  .dropIndex({ fbId: 1 })
-  .catch(tolerateError("can't find index"));
-await db
-  .collection('user')
-  .dropIndex({ apTok: 1 })
-  .catch(tolerateError("can't find index"));
-await db.collection('user').updateMany({}, { $unset: { apTok: 1 } });
-
 print('indexing activity collection...');
 await db
   .collection('activity')
