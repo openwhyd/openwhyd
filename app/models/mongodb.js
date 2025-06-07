@@ -123,9 +123,9 @@ exports.forEach2 = async function (colName, params, handler) {
 exports.cacheCollections = async function () {
   // diagnostics and collection caching
   const collections = await exports._db.collections();
-  for (const i in collections) {
-    const name = collections[i].collectionName;
-    const nbRows = await collections[i].countDocuments();
+  for (const coll of collections) {
+    const name = coll.collectionName;
+    const nbRows = await coll.countDocuments();
     console.log(`[db]  - found table: ${name} : ${nbRows} rows`);
     exports.collections[name] = exports._db.collection(name);
   }
