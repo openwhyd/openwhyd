@@ -34,8 +34,7 @@ mongodb.init(dbCreds, async (err, db) => {
     if (DEBUG)
       console.log(`[test-db-init.js] Applying script: ${initScript} ...`);
     const script = await fs.promises.readFile(initScript);
-    // @ts-ignore
-    await util.promisify(mongodb.runShellScript)(script);
+    await mongodb.runShellScript(script);
   }
   // delete uploaded files
   await new ImageStorage()

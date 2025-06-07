@@ -122,9 +122,10 @@ describe('notifications', function () {
   this.timeout(5000);
 
   // reset database state and seed fixtures (including ADMIN_USER)
-  before(async () => await resetTestDb({ env: process.env, silent: true }));
-
-  before(initDb);
+  before(async () => {
+    await resetTestDb({ env: process.env, silent: true });
+    await initDb();
+  });
 
   it('can clean notifications db', async () => {
     // remove documents with empty uid

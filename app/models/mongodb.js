@@ -173,7 +173,9 @@ exports.initCollections = async function ({ addTestData = false } = {}) {
   }
   for (const initScript of dbInitScripts) {
     console.log('[db] Applying db init script:', initScript, '...');
-    await exports.runShellScript(await fs.promises.readFile(initScript, 'utf8'));
+    await exports.runShellScript(
+      await fs.promises.readFile(initScript, 'utf8'),
+    );
   }
   // all db init scripts were interpreted => continue app init
   await util.promisify(exports.cacheCollections)();
