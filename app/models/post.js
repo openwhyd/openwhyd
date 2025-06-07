@@ -15,6 +15,7 @@ const searchModel = require('../models/search.js');
 const activityModel = require('../models/activity.js');
 const notifModel = require('../models/notif.js');
 const { fetchUserNameById } = require('./user.js');
+const assert = require('node:assert');
 
 const NB_POSTS = process.appParams?.nbPostsPerNewsfeedPage;
 
@@ -268,7 +269,7 @@ exports.savePost = function (postObj, handler) {
   if (pId) {
     delete postObj._id;
     const update = { $set: postObj };
-    if (postObj.pl == null || (isNaN(postObj.pl.id) && !postObj.pl.collabId)) {
+    if (postObj.pl == null || isNaN(postObj.pl.id)) {
       delete update.$set.pl;
       update.$unset = { pl: 1 };
     }
@@ -403,25 +404,14 @@ exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
   );
 };
 
-exports.countPlaylistPosts = function (uId, plId, handler) {
-  function handle(err, result) {
-    if (err) console.trace('post.countPlaylistPosts =>', err);
-    handler(result);
-  }
-  if (uId)
-    db['post'].countDocuments({ uId: uId, 'pl.id': parseInt(plId, 10) }).then(
-      (res) => handle(null, res),
-      (err) => handle(err),
-    );
-  else
-    db['post']
-      .countDocuments({
-        'pl.collabId': { $in: ['' + plId, ObjectId('' + plId)] },
-      })
-      .then(
-        (res) => handle(null, res),
-        (err) => handle(err),
-      );
+exports.countPlaylistPosts = async function (uId, plId, handler) {
+  assert.ok(uId, 'countPlaylistPosts: uId is required');
+  const nbPosts = await db['post'].countDocuments({
+    uId,
+    'pl.id': parseInt(plId, 10),
+  });
+  console.trace('post.countPlaylistPosts =>', nbPosts);
+  handler(nbPosts);
 };
 
 exports.setPlaylist = function (uId, plId, plName, handler) {

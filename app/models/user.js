@@ -864,29 +864,4 @@ exports.fetchPlaylists = async function (user, params, cb) {
       return p;
     }),
   );
-  /*
-	function handlePlaylist(playlist, countNext) {
-		var plUid = playlist.collabId ? null : uId;
-		var plId = playlist.collabId || playlist.id;
-		postModel.countPlaylistPosts(plUid, plId, function(count) {
-			playlist.nbTracks = count;
-			// if (count && count > 0)
-			// 	postModel.fetchPlaylistPosts(plUid, plId, {limit:2}, function(posts) {
-			// 		playlist.lastPosts = posts;
-			// 		countNext();
-			// 	});
-			// else
-				countNext();
-		});
-	}
-	// collabModel.fetchPlaylistsByUid(uId, function(playlists){
-	// 	for(var i in playlists)
-	// 		pl.push({
-	// 			collabId: playlists[i]._id,
-	// 			name: playlists[i].name,
-	// 			url: "/playlist/" + playlists[i]._id
-	// 		});
-		snip.forEachArrayItem((pl || []).reverse(), handlePlaylist, cb);
-	//});
-	*/
 };
