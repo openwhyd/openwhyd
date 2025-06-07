@@ -48,14 +48,6 @@ exports.remove = function (q, callback) {
 
 // fetch helpers
 
-/*
-exports.countUserLikes = function(uid, callback) {
-	getCol().countDocuments({"like.pId":{$exists: true}, "id":""+uid}, function(err, count) {
-		callback(count);
-	});
-}
-*/
-
 exports.fetchLikersOfUser = function (uid, options, callback) {
   exports.fetch({ 'like.id': '' + uid }, options, callback);
 };
