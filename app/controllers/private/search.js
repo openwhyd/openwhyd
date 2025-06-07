@@ -382,5 +382,5 @@ exports.controller = async function (request, reqParams, response) {
   // main search (triggered from header bar)
   else if (reqParams.q) renderSearchPage(reqParams.q, render);
   // main search page (default case)
-  else template.renderSearchPage(null, reqParams, renderHTML);
+  else renderHTML(await template.renderSearchPage(null, reqParams));
 };
