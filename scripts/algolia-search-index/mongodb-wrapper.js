@@ -26,44 +26,32 @@ const makeConnUrl = (params) => {
 };
 
 // populates db.<collection_name>, for each collection
-const cacheCollections = function (db, callback) {
-  db.collections(function (err, collections) {
-    if (err || 0 == collections.length) {
-      callback(err, db);
-      return;
-    }
-    let remaining = collections.length;
-    const cacheCollection = (colName) => {
-      db.collections[colName] = db.collection(colName);
-      if (0 == --remaining) callback(null, db);
-    };
-    for (const i in collections) {
-      cacheCollection(collections[i].collectionName);
-      // cacheCollection will mutate remaining, and callback when remaining == 0
-    }
-  });
+const cacheCollections = async function (db) {
+  // diagnostics and collection caching
+  const collections = await db.collections();
+  for (const i in collections) {
+    const name = collections[i].collectionName;
+    const nbRows = await collections[i].countDocuments();
+    console.log(`[db]  - found table: ${name} : ${nbRows} rows`);
+    db[name] = db.collection(name);
+  }
+  return db;
 };
 
-const initMongo = (params, callback) => {
+const initMongo = (params) => {
   const url = makeConnUrl(params) + '/' + dbName;
   var dbName = params.mongoDbDatabase || process.env.MONGODB_DATABASE;
   console.log('Connecting to ' + url + '...');
   const client = new mongodb.MongoClient(url, MONGO_OPTIONS);
   const db = client.db(dbName);
-  cacheCollections(db, callback); // will mutate db and callback
+  cacheCollections(db); // mutates db
 };
 
-const init = (params) =>
-  new Promise((resolve, reject) => {
-    initMongo(params, function (err, db) {
-      if (err) {
-        reject(err);
-      } else {
-        console.log('MongoDB model is now ready for queries!');
-        resolve(db);
-      }
-    });
-  });
+const init = async (params) => {
+  const db = await initMongo(params);
+  console.log('MongoDB model is now ready for queries!');
+  return db;
+};
 
 const forEachObject = (coll, handler, options = {}) =>
   new Promise((resolve, reject) => {
