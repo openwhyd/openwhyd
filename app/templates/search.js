@@ -62,7 +62,7 @@ exports.renderPosts = function (posts, loggedUser, cb) {
   );
 };
 
-exports.renderSearchPage = function (results, reqParams, cb) {
+exports.renderSearchPage = async function (results, reqParams, cb) {
   function render() {
     templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, function (template) {
       const templateParams = {
@@ -79,16 +79,13 @@ exports.renderSearchPage = function (results, reqParams, cb) {
     results.nbPosts = (results.posts || []).length;
     results.nbUsers = (results.users || []).length;
     results.nbPlaylists = (results.playlists || []).length;
-    if (results.posts)
-      exports.renderPosts(
-        results.posts,
-        reqParams.loggedUser,
-        function (postsHtml) {
-          results.postsHtml = postsHtml;
-          render();
-        },
+    if (results.posts) {
+      results.postsHtml = await new Promise((res) =>
+        exports.renderPosts(results.posts, reqParams.loggedUser, res),
       );
-  } else render();
+    }
+  }
+  render();
 };
 
 exports.renderResultBox = function (q, resultsPerType, cb) {
