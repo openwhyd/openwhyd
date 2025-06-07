@@ -269,10 +269,10 @@ function fetchSearchPage(myUid, q, cb) {
 exports.controller = async function (request, reqParams, response) {
   reqParams = reqParams || {};
   function renderSearchPage(q, cb) {
-    fetchSearchPage(request.getUid(), q, function (results) {
+    fetchSearchPage(request.getUid(), q, async function (results) {
       results.posts = results.posts ?? results.tracks;
       if (reqParams.format == 'json') cb({ q: q, results: results });
-      else template.renderSearchPage(results, reqParams, cb);
+      else cb(await template.renderSearchPage(results, reqParams));
     });
   }
 

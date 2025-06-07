@@ -62,7 +62,7 @@ exports.renderPosts = function (posts, loggedUser, cb) {
   );
 };
 
-exports.renderSearchPage = async function (results, reqParams, cb) {
+exports.renderSearchPage = async function (results, reqParams) {
   if (results) {
     results.nbPosts = (results.posts || []).length;
     results.nbUsers = (results.users || []).length;
@@ -83,7 +83,7 @@ exports.renderSearchPage = async function (results, reqParams, cb) {
   };
   reqParams.content = template.render(templateParams);
   reqParams.bodyClass = 'pgSearch';
-  cb(mainTemplate.renderWhydPage(reqParams));
+  return mainTemplate.renderWhydPage(reqParams);
 };
 
 exports.renderResultBox = function (q, resultsPerType, cb) {
