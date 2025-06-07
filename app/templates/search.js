@@ -73,16 +73,17 @@ exports.renderSearchPage = async function (results, reqParams, cb) {
       );
     }
   }
-  templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, function (template) {
-    const templateParams = {
-      q: reqParams.q,
-      results: results,
-      isUserLogged: !!reqParams.loggedUser,
-    };
-    reqParams.content = template.render(templateParams);
-    reqParams.bodyClass = 'pgSearch';
-    cb(mainTemplate.renderWhydPage(reqParams));
-  });
+  const template = await new Promise((res) =>
+    templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, res),
+  );
+  const templateParams = {
+    q: reqParams.q,
+    results: results,
+    isUserLogged: !!reqParams.loggedUser,
+  };
+  reqParams.content = template.render(templateParams);
+  reqParams.bodyClass = 'pgSearch';
+  cb(mainTemplate.renderWhydPage(reqParams));
 };
 
 exports.renderResultBox = function (q, resultsPerType, cb) {
