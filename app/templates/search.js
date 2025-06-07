@@ -62,33 +62,28 @@ exports.renderPosts = function (posts, loggedUser, cb) {
   );
 };
 
-exports.renderSearchPage = function (results, reqParams, cb) {
-  function render() {
-    templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, function (template) {
-      const templateParams = {
-        q: reqParams.q,
-        results: results,
-        isUserLogged: !!reqParams.loggedUser,
-      };
-      reqParams.content = template.render(templateParams);
-      reqParams.bodyClass = 'pgSearch';
-      cb(mainTemplate.renderWhydPage(reqParams));
-    });
-  }
+exports.renderSearchPage = async function (results, reqParams) {
   if (results) {
     results.nbPosts = (results.posts || []).length;
     results.nbUsers = (results.users || []).length;
     results.nbPlaylists = (results.playlists || []).length;
-    if (results.posts)
-      exports.renderPosts(
-        results.posts,
-        reqParams.loggedUser,
-        function (postsHtml) {
-          results.postsHtml = postsHtml;
-          render();
-        },
+    if (results.posts) {
+      results.postsHtml = await new Promise((res) =>
+        exports.renderPosts(results.posts, reqParams.loggedUser, res),
       );
-  } else render();
+    }
+  }
+  const template = await new Promise((res) =>
+    templateLoader.loadTemplate(TEMPLATE_SEARCH_PAGE, res),
+  );
+  const templateParams = {
+    q: reqParams.q,
+    results: results,
+    isUserLogged: !!reqParams.loggedUser,
+  };
+  reqParams.content = template.render(templateParams);
+  reqParams.bodyClass = 'pgSearch';
+  return mainTemplate.renderWhydPage(reqParams);
 };
 
 exports.renderResultBox = function (q, resultsPerType, cb) {
