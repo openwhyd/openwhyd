@@ -1,3 +1,10 @@
+## [1.63.19](https://github.com/openwhyd/openwhyd/compare/v1.63.18...v1.63.19) (2025-06-07)
+
+
+### Bug Fixes
+
+* **start-up:** print steps of db initialization + use promises ([#826](https://github.com/openwhyd/openwhyd/issues/826)) ([f2f5545](https://github.com/openwhyd/openwhyd/commit/f2f5545b35040c317d9deae4fe34cd3aca556746))
+
 ## [1.63.18](https://github.com/openwhyd/openwhyd/compare/v1.63.17...v1.63.18) (2025-06-07)
 
 
