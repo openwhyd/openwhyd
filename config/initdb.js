@@ -23,7 +23,7 @@ await Promise.all([
   db.createCollection('comment').catch(tolerateError('already exists')),
 ]);
 
-// print('indexing post collection...');
+print('indexing post collection...');
 await db.collection('post').createIndex({ uId: 1 });
 await db
   .collection('post')
@@ -35,11 +35,11 @@ await db.collection('post').createIndex({ lov: 1 }, { sparse: true });
 await db.collection('post').createIndex({ 'repost.pId': 1 }, { sparse: true });
 await db.collection('post').createIndex({ 'repost.uId': 1 }, { sparse: true });
 
-// print('indexing follow collection...');
+print('indexing follow collection...');
 await db.collection('follow').createIndex({ uId: 1 });
 await db.collection('follow').createIndex({ tId: 1 });
 
-// print('indexing user collection...');
+print('indexing user collection...');
 await db.collection('user').createIndex({ email: 1 });
 await db.collection('user').createIndex({ handle: 1 }, { sparse: true });
 await db.collection('user').createIndex({ n: 1 }, { sparse: true });
@@ -47,7 +47,7 @@ await db.collection('user').createIndex({ 'pref.pendEN': 1 }, { sparse: true });
 await db.collection('user').createIndex({ 'pref.nextEN': 1 }, { sparse: true });
 await db.collection('user').createIndex({ 'sp.id': 1 }, { sparse: true }); // spotify id
 
-// print('removing legacy fields on user collection...');
+print('removing legacy fields on user collection...');
 await db
   .collection('user')
   .dropIndex({ fbId: 1 })
@@ -58,7 +58,7 @@ await db
   .catch(tolerateError("can't find index"));
 await db.collection('user').updateMany({}, { $unset: { apTok: 1 } });
 
-// print('indexing activity collection...');
+print('indexing activity collection...');
 await db
   .collection('activity')
   .createIndex({ id: 1 }, { sparse: true }); /*poster.id*/
@@ -67,10 +67,10 @@ await db
   .collection('activity')
   .createIndex({ 'like.pId': 1 }, { sparse: true });
 
-// print('indexing comment collection...');
+print('indexing comment collection...');
 await db.collection('comment').createIndex({ pId: 1 });
 
-// print('indexing notif collection...');
+print('indexing notif collection...');
 await db.collection('notif').createIndex({ uId: 1 });
 
 print('done! :-)');

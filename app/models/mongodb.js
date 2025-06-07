@@ -7,8 +7,8 @@
  **/
 
 const fs = require('fs');
+const util = require('node:util');
 const mongodb = require('mongodb');
-const async = require('async');
 const shellRunner = require('./mongodb-shell-runner.js');
 let userModel = null; // require("./user.js") will be lazy-loaded here
 
@@ -148,8 +148,8 @@ exports.cacheCollections = function (callback) {
 };
 
 // this method runs the commands of a mongo shell script (e.g. initdb.js)
-exports.runShellScript = function (script, callback) {
-  return shellRunner.runScriptOnDatabase(script, exports._db, callback);
+exports.runShellScript = async function (script) {
+  return await shellRunner.runScriptOnDatabase(script, exports._db);
 };
 
 exports.clearCollections = async function () {
@@ -162,35 +162,22 @@ exports.clearCollections = async function () {
   }
 };
 
-exports.initCollections = function ({ addTestData = false } = {}) {
-  return new Promise((resolve, reject) => {
-    const dbInitScripts = [DB_INIT_SCRIPT];
-    if (addTestData) {
-      if (!isTesting) {
-        return reject(new Error('allowed on test database only'));
-      } else {
-        dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
-      }
+exports.initCollections = async function ({ addTestData = false } = {}) {
+  const dbInitScripts = [DB_INIT_SCRIPT];
+  if (addTestData) {
+    if (!isTesting) {
+      throw new Error('allowed on test database only');
+    } else {
+      dbInitScripts.push(DB_TEST_SCRIPT); // will create the admin user + some fake data for automated tests
     }
-    async.eachSeries(
-      dbInitScripts,
-      function (initScript, nextScript) {
-        console.log('[db] Applying db init script:', initScript, '...');
-        exports.runShellScript(fs.readFileSync(initScript), function (err) {
-          if (err) console.error(err);
-          nextScript(err);
-        });
-      },
-      function (err) {
-        if (err) reject(err);
-        // all db init scripts were interpreted => continue app init
-        exports.cacheCollections(function () {
-          console.log('[db] ready for queries');
-          resolve();
-        });
-      },
-    );
-  });
+  }
+  for (const initScript of dbInitScripts) {
+    console.log('[db] Applying db init script:', initScript, '...');
+    await exports.runShellScript(await fs.promises.readFile(initScript));
+  }
+  // all db init scripts were interpreted => continue app init
+  await util.promisify(exports.cacheCollections)();
+  console.log('[db] ready for queries');
 };
 
 /**
