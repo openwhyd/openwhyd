@@ -1,3 +1,10 @@
+## [1.63.22](https://github.com/openwhyd/openwhyd/compare/v1.63.21...v1.63.22) (2025-06-07)
+
+
+### Bug Fixes
+
+* **cleanup:** remove old code: `collabId` (collaborative playlists) ([#829](https://github.com/openwhyd/openwhyd/issues/829)) ([564fe4a](https://github.com/openwhyd/openwhyd/commit/564fe4a912544b1ef15039020bcdffca354f5ff2))
+
 ## [1.63.21](https://github.com/openwhyd/openwhyd/compare/v1.63.20...v1.63.21) (2025-06-07)
 
 
