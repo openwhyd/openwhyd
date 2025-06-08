@@ -1,3 +1,10 @@
+## [1.63.23](https://github.com/openwhyd/openwhyd/compare/v1.63.22...v1.63.23) (2025-06-08)
+
+
+### Bug Fixes
+
+* **posts:** remove logs on `countPlaylistPosts` ([c041750](https://github.com/openwhyd/openwhyd/commit/c041750a769c573a3fd07c8138097e447cf422e7))
+
 ## [1.63.22](https://github.com/openwhyd/openwhyd/compare/v1.63.21...v1.63.22) (2025-06-07)
 
 
