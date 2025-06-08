@@ -410,7 +410,6 @@ exports.countPlaylistPosts = async function (uId, plId, handler) {
     uId,
     'pl.id': parseInt(plId, 10),
   });
-  console.trace('post.countPlaylistPosts =>', nbPosts);
   handler(nbPosts);
 };
 
