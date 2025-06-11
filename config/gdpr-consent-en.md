@@ -24,7 +24,7 @@
 
 ## Data processing
 
-- Your email address is private and is never disclosed to anyone, except [SendGrid](https://sendgrid.com/policies/tos/) which is used to send you emails from the Openwhyd platform. You can change it anytime using your [settings page](https://openwhyd.org/settings), as well as your name, your password, the photos, description and social links displayed on your public profile.
+- Your email address is private and is never disclosed to anyone, except [MailerSend](https://www.mailersend.com/legal/privacy-policy) which is used to send you emails from the Openwhyd platform. You can change it anytime using your [settings page](https://openwhyd.org/settings), as well as your name, your password, the photos, description and social links displayed on your public profile.
 - We don't spam. You can toggle notification emails from your [settings page](https://openwhyd.org/settings). Other emails from us are either expected (e.g. sign up, password reset request), mandatory (e.g. changes in our privacy policy) or particularly important otherwise (e.g. critical news about openwhyd.org or it's community of users).
 - Our database is backed-up weekly by DigitalOcean, to prevent data loss.
 - Usage data (e.g. sign-ups, visit logs, playback history) can be downloaded by Adrien Joly, in order to better understand anomalies and usage trends. Adrien can decide to share this anonymous data with selected tiers, for research or educational purposes.
