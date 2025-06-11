@@ -36,22 +36,24 @@ function sendEmails(user, template, cb) {
   );
 }
 
+exports.sendTestEmail = async function (user) {
+  const email = notifModel.generateRegWelcome(user);
+  // const email = await new Promise((resolve) =>
+  //   notifModel.generateRegWelcomeAsync(
+  //     user,
+  //     { name: 'inviteSender', id: '7' },
+  //     resolve,
+  //   ),
+  // );
+  return await new Promise((resolve) => sendEmails(user, email, resolve));
+};
+
 exports.controller = async function (request, reqParams, response) {
   console.log('test email notif');
 
   const user = await request.checkLogin(response);
   if (!user) return;
 
-  function send(email) {
-    sendEmails(user, email, function (res) {
-      response.legacyRender(res);
-    });
-  }
-
-  //send(notifModel.generateRegWelcome(user));
-  notifModel.generateRegWelcomeAsync(
-    user,
-    { name: 'inviteSender', id: '7' },
-    send,
-  );
+  const res = await exports.sendTestEmail(user);
+  response.legacyRender(res);
 };
