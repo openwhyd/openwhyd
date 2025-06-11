@@ -49,9 +49,20 @@ exports.email = function (
       text: textContent,
     }),
   })
-    .then((response) => response.text())
+    .then((response) => {
+      // Check if response is ok before trying to parse JSON
+      if (!response.ok) {
+        console.error(`[EMAIL] error status: ${response.status}`);
+      }
+      // Only try to parse JSON for successful responses
+      return response.text();
+    })
+    .then((text) => {
+      console.log('[EMAIL] raw response:', text);
+      return text ? JSON.parse(text) : {}; // Handle empty responses
+    })
     .then((res) => {
-      console.log('[EMAIL] response:', res);
+      if (res.message) throw new Error(res.message);
       callback?.({ ok: true });
     })
     .catch((error) => {
