@@ -1,3 +1,10 @@
+## [1.63.24](https://github.com/openwhyd/openwhyd/compare/v1.63.23...v1.63.24) (2025-06-11)
+
+
+### Bug Fixes
+
+* playlist ordering ([#832](https://github.com/openwhyd/openwhyd/issues/832)) ([4a6d2a9](https://github.com/openwhyd/openwhyd/commit/4a6d2a9b9775ec8c5a6ff13b9c9623b8239855b4))
+
 ## [1.63.23](https://github.com/openwhyd/openwhyd/compare/v1.63.22...v1.63.23) (2025-06-08)
 
 
