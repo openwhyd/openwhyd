@@ -62,8 +62,9 @@ exports.controller = async function (request, getParams, response) {
     getParams.uId,
     getParams.plId,
     { limit: MAX_TRACKS },
-    function (posts) {
-      for (const i in posts) posts[i] = postsTemplate.preparePost(posts[i]);
+    async function (posts) {
+      for (const i in posts)
+        posts[i] = await postsTemplate.preparePost(posts[i]);
       const params = {
         uId: getParams.uId,
         plId: getParams.plId,
