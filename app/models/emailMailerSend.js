@@ -49,11 +49,35 @@ exports.email = async function (
       text: textContent,
     }),
   })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error('[EMAIL] send error:', error);
-      callback?.({ error });
+    try {
+    const response = await fetch('https://api.mailersend.com/v1/email', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${MAILERSEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: {
+          email: process.env.MAILERSEND_API_FROM_EMAIL, // e.g. "no-reply@whyd.org",
+          name: process.env.MAILERSEND_API_FROM_NAME, // e.g. "whyd",
+        },
+        to: [
+          {
+            email: emailAddr,
+            ...(userName ? { name: userName } : {}),
+          },
+        ],
+        subject,
+        html: htmlContent,
+        text: textContent,
+      }),
     });
+    const res = await response.json();
+  } catch (error) {
+    console.error('[EMAIL] send error:', error);
+    callback?.({ error });
+    return;
+  }
 
   console.log('[EMAIL] response:', res);
   callback?.({ ok: true });
