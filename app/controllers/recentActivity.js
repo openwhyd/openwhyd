@@ -122,11 +122,13 @@ function aggregateActivities(acts) {
   return aggrs;
 }
 
-function renderLikedPosts(activity, cb) {
+async function renderLikedPosts(activity, cb) {
   if (activity.type == 'like') {
-    const posts = activity.likes.aggregatedItems.map(function (aggr) {
-      return postsTemplate.preparePost(aggr.post);
-    });
+    const posts = await Promise.all(
+      activity.likes.aggregatedItems.map(function (aggr) {
+        return postsTemplate.preparePost(aggr.post);
+      }),
+    );
     //if (!posts.length) continue;
     activity.likes.nbTracks =
       posts.length > 1 ? posts.length + ' tracks' : 'one track';
