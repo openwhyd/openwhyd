@@ -9,7 +9,7 @@ const config = require('./config');
 const users = require('./user');
 
 const emailModule = config.emailModule || 'emailFake.js';
-// console.log('loading EMAIL module: ' + emailModule + '...');
+console.log('loading EMAIL module: ' + emailModule + '...');
 const emailImpl = require('./' + emailModule);
 
 exports.validate = require('./email-validation.js').validate;

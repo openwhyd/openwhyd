@@ -1,11 +1,10 @@
 /**
  * module that emails only admins
- * relies on sendgrid email module
  * @author adrienjoly, whyd
  **/
 
-const sendgrid = require('./emailSendgrid.js');
-const fake = require('./emailFake.js');
+const emailSender = require('./emailMailerSend.js');
+const fakeEmailSender = require('./emailFake.js');
 
 //console.log("EMAIL ADMINS ONLY");
 
@@ -22,7 +21,7 @@ exports.email = function (
 
   console.log('email address is admin? ', isAdmin);
 
-  const emailImpl = (isAdmin ? sendgrid : fake)['email'];
+  const emailImpl = (isAdmin ? emailSender : fakeEmailSender)['email'];
 
   return emailImpl(
     emailAddr,

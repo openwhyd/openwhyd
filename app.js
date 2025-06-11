@@ -91,7 +91,7 @@ const params = (process.appParams = {
   //	recomPopulation: true, // populate recommendation index at startup
 
   // email notification preferences
-  emailModule: 'emailSendgrid', // "DISABLED"/"null" => fake email sending
+  emailModule: 'emailMailerSend', // "DISABLED"/"null" => fake email sending
   digestInterval: 60 * 1000, // digest worker checks for pending notifications every 60 seconds
   digestImmediate: false, // when true, digests are sent at every interval, if any notifications are pending
   feedbackEmail: process.env.WHYD_CONTACT_EMAIL, // mandatory
