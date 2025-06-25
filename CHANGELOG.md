@@ -1,3 +1,10 @@
+## [1.63.27](https://github.com/openwhyd/openwhyd/compare/v1.63.26...v1.63.27) (2025-06-25)
+
+
+### Bug Fixes
+
+* **db:** decommission `forEach2` function ([#833](https://github.com/openwhyd/openwhyd/issues/833)) ([a59d25e](https://github.com/openwhyd/openwhyd/commit/a59d25ea520240f870bdb0fab47a26bfb85e9b3b))
+
 ## [1.63.26](https://github.com/openwhyd/openwhyd/compare/v1.63.25...v1.63.26) (2025-06-25)
 
 
