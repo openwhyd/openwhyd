@@ -66,26 +66,6 @@ exports.getPublicProfileFromId = async function (uid) {
 
 // cacheUser and cacheUsers functions removed - use fetchAndProcessUserById from user.js instead
 
-/** @deprecated because the cursor cannot be released until results are exhausted. */
-exports.forEach = async function (colName, params, handler, cb, cbParam) {
-  let q = {};
-  params = params || {};
-  if (!params.batchSize) params.batchSize = 1000;
-  if (params.q) {
-    q = params.q;
-    delete params.q;
-  }
-  const { fields } = params ?? {};
-  if (params) delete params.fields;
-  const cursor = await exports.collections[colName]
-    .find(q, params)
-    .project(fields ?? {});
-  for await (const item of cursor) {
-    if (item) handler(item);
-  }
-  cb && cb(cbParam);
-};
-
 exports.cacheCollections = async function () {
   // diagnostics and collection caching
   const collections = await exports._db.collections();
