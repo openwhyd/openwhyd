@@ -19,6 +19,7 @@
     "stop": "npx --yes kill-port --port 8080 >/dev/null",
     "test-reset": "node test/reset-test-db.js",
     "test": "make test",
+    "test:email": ". ./env-vars-testing-local.sh && node -e \"process.appParams = { emailModule: 'emailMailerSend' }; require('./app/controllers/admin/testEmail.js').sendTestEmail({ email: 'contact@openwhyd.org' })\"",
     "test:functional": "npx --yes mocha test/functional/*.js --exit",
     "test:functional:coverage": "npm run coverage:clear && npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts[`test:functional`]') $@",
     "test:integration": "npx --yes mocha test/integration/*.js --serial --exit",
