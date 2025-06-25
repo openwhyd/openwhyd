@@ -1,3 +1,10 @@
+## [1.63.28](https://github.com/openwhyd/openwhyd/compare/v1.63.27...v1.63.28) (2025-06-25)
+
+
+### Bug Fixes
+
+* **db:** decommission legacy `forEach` mongodb helper ([#834](https://github.com/openwhyd/openwhyd/issues/834)) ([eca52af](https://github.com/openwhyd/openwhyd/commit/eca52afb6cb7b015aef3798737bacfffaeff1e0d))
+
 ## [1.63.27](https://github.com/openwhyd/openwhyd/compare/v1.63.26...v1.63.27) (2025-06-25)
 
 
