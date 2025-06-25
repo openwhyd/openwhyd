@@ -64,9 +64,10 @@ const getLoggedInUserId = async function () {
 // main logic of mobile/index.html
 
 (async function () {
-  const uId =
-    new URL(window.location.href).searchParams.get('uId') ||
-    (await getLoggedInUserId());
+  const urlUid = new URL(window.location.href).searchParams.get('uId');
+  // Validate that uId matches MongoDB ObjectId format (24 hex chars)
+  const isValidObjectId = (id) => /^[0-9a-f]{24}$/i.test(id);
+  const uId = isValidObjectId(urlUid) ? urlUid : await getLoggedInUserId();
 
   if (uId) {
     window.location.href = `https://openwhyd.github.io/openwhyd-mobile-web-client/?uId=${uId}`;
