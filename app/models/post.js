@@ -121,8 +121,8 @@ exports.fetchByAuthors = function (uidList, options, cb) {
   const loggedUser = uidList[uidList.length - 1];
   console.time(`fetchByAuthors>arrayToSet_${loggedUser}`);
   const posts = [],
-    query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
-    uidSet = snip.arrayToSet(uidList);
+    query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] };
+  // uidSet = snip.arrayToSet(uidList);
   console.timeEnd(`fetchByAuthors>arrayToSet_${loggedUser}`);
   const params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
   processAdvQuery(query, params, {
@@ -130,20 +130,21 @@ exports.fetchByAuthors = function (uidList, options, cb) {
     before: options.before,
     limit: options.limit,
   });
-  const limit = params.limit;
-  params.limit = undefined; // prevent forEach2 from limiting cursor
-  params.q = query;
-  mongodb.forEach2('post', params, function (post, next, closeCursor) {
-    if (post && !post.error && !uidSet[(post.repost || {}).uId]) {
-      posts.push(post);
-    }
-    if (!post || !next || posts.length == limit) {
-      cb(processPosts(posts));
-      closeCursor();
-    } else {
-      next();
-    }
-  });
+  // const limit = params.limit;
+  // params.limit = undefined; // prevent forEach2 from limiting cursor
+  // params.q = query;
+  // mongodb.forEach2('post', params, function (post, next, closeCursor) {
+  //   if (post && !post.error && !uidSet[(post.repost || {}).uId]) {
+  //     posts.push(post);
+  //   }
+  //   if (!post || !next || posts.length == limit) {
+  //     cb(processPosts(posts));
+  //     closeCursor();
+  //   } else {
+  //     next();
+  //   }
+  // });
+  cb(processPosts(posts));
 };
 
 exports.fetchRepostsFromMe = function (uid, options, handler) {

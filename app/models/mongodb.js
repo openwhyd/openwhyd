@@ -86,40 +86,6 @@ exports.forEach = async function (colName, params, handler, cb, cbParam) {
   cb && cb(cbParam);
 };
 
-// handler is responsible for calling the provided "next" function
-exports.forEach2 = async function (colName, params, handler) {
-  let q = {};
-  params = params || {};
-  if (!params.batchSize) params.batchSize = 100;
-  if (params.q) {
-    q = params.q;
-    delete params.q;
-  }
-  if (params.after != null && exports.isObjectId(params.after))
-    q._id = { $lt: exports.ObjectId('' + params.after) };
-
-  const { fields } = params ?? {};
-  if (params) delete params.fields;
-  const cursor = exports.collections[colName]
-    .find(q, params)
-    .project(fields ?? {});
-  (function next() {
-    cursor.next().then(
-      (item) => {
-        handler(item, item ? next : undefined, (cb) =>
-          cursor.close().then(cb, cb),
-        );
-        // TODO: close the cursor whenever we've run out of documents?
-      },
-      (err) => {
-        console.trace('[db] mongodb.forEach2 ERROR', err);
-        handler({ error: err }, undefined, (cb) => cursor.close().then(cb, cb));
-        cursor.close(); // TODO: prevent closing twice?
-      },
-    );
-  })();
-};
-
 exports.cacheCollections = async function () {
   // diagnostics and collection caching
   const collections = await exports._db.collections();

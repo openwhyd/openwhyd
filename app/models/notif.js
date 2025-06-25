@@ -296,26 +296,26 @@ exports.unlove = async function (loverUid, post) {
 
 exports.post = function (post) {
   if (!post || !post.eId || !post.uId) return;
-  const query = {
-    q: {
-      eId: post.eId,
-      uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
-    },
-    limit: 100,
-    projection: { uId: true },
-  };
-  mongodb.forEach2('post', query, async function (sameTrack, next) {
-    if (sameTrack && !sameTrack.error) {
-      const author = await userModel.fetchAndProcessUserById(sameTrack.uId);
-      if (author) {
-        await notifEmails.sendPostedSameTrack(author, next);
-      } else if (next) {
-        next();
-      }
-    } else if (next) {
-      next();
-    }
-  });
+  // const query = {
+  //   q: {
+  //     eId: post.eId,
+  //     uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
+  //   },
+  //   limit: 100,
+  //   projection: { uId: true },
+  // };
+  // mongodb.forEach2('post', query, async function (sameTrack, next) {
+  //   if (sameTrack && !sameTrack.error) {
+  //     const author = await userModel.fetchAndProcessUserById(sameTrack.uId);
+  //     if (author) {
+  //       await notifEmails.sendPostedSameTrack(author, next);
+  //     } else if (next) {
+  //       next();
+  //     }
+  //   } else if (next) {
+  //     next();
+  //   }
+  // });
 };
 
 exports.repost = async function (reposterUid, post) {
