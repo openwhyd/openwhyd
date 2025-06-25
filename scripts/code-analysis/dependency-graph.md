@@ -4,7 +4,7 @@
 
 ### :chart_with_upwards_trend: Summary
 
-**128** modules&nbsp;&nbsp;&nbsp;&nbsp;**336** dependencies&nbsp;&nbsp;&nbsp;&nbsp;**1** errors&nbsp;&nbsp;&nbsp;&nbsp;**18** warnings&nbsp;&nbsp;&nbsp;&nbsp;**0** informational&nbsp;&nbsp;&nbsp;&nbsp;**0** ignored
+**129** modules&nbsp;&nbsp;&nbsp;&nbsp;**338** dependencies&nbsp;&nbsp;&nbsp;&nbsp;**1** errors&nbsp;&nbsp;&nbsp;&nbsp;**18** warnings&nbsp;&nbsp;&nbsp;&nbsp;**0** informational&nbsp;&nbsp;&nbsp;&nbsp;**0** ignored
 
 
 |rule|violations|ignored|explanation
@@ -44,7 +44,7 @@
 </details>
 
 ---
-[dependency-cruiser@16.10.2](https://www.github.com/sverweij/dependency-cruiser) / 2025-05-29T12:38:19.591Z
+[dependency-cruiser@16.10.3](https://www.github.com/sverweij/dependency-cruiser) / 2025-06-25T13:11:36.199Z
 
 ## DDot graph
 
@@ -98,13 +98,14 @@ Y["track.js"]
 2K["analytics.js"]
 3X["emailAdminsOnly.js"]
 3Y["emailFake.js"]
-3Z["emailSendgrid.js"]
-40["htmlDom.js"]
-41["logging.js"]
-42["searchAlgolia.js"]
-43["searchElastic.js"]
-44["searchMongo.js"]
-45["solrIndex.js"]
+3Z["emailMailerSend.js"]
+40["emailSendgrid.js"]
+41["htmlDom.js"]
+42["logging.js"]
+43["searchAlgolia.js"]
+44["searchElastic.js"]
+45["searchMongo.js"]
+46["solrIndex.js"]
 end
 O["snip.js"]
 subgraph V["templates"]
@@ -216,8 +217,8 @@ end
 3Q["userLibrary.js"]
 end
 2W["genuine.js"]
-subgraph 46["workers"]
-47["notifEmails.js"]
+subgraph 47["workers"]
+48["notifEmails.js"]
 end
 end
 4["assert"]
@@ -261,6 +262,7 @@ L-->13
 L-->O
 L-->C
 L-->G
+L-->4
 M-->N
 M-->C
 M-->L
@@ -554,24 +556,25 @@ Y-->C
 3X-->3Y
 3X-->3Z
 3Z-->O
-3Z-->Q
-3Z-->R
-41-->16
-41-->O
-41-->32
-41-->2G
-41-->J
-41-->G
-41-->P
-41-->R
+40-->O
+40-->Q
+40-->R
+42-->16
 42-->O
-43-->P
-44-->1E
-45-->P
-47-->35
-47-->J
-47-->I
-47-->G
+42-->32
+42-->2G
+42-->J
+42-->G
+42-->P
+42-->R
+43-->O
+44-->P
+45-->1E
+46-->P
+48-->35
+48-->J
+48-->I
+48-->G
 ```
 
 ## Full dependency graph by arkit

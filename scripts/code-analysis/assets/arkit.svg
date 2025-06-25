@@ -80,32 +80,12 @@
 
   <main>
     <h1>403 Forbidden</h1>
-    <p id="status-page">Please visit <a href="https://status.squarespace.com">status.squarespace.com</a> for updates</p>
+    
   </main>
 
   <footer>
-    <span><strong>8PRJjP4h/7qPQiR6V @ Thu, 29 May 2025 12:38:16 UTC</strong></span>
+    <span><strong>yLOWXBaG/JMr88Nps @ Wed, 25 Jun 2025 13:11:33 UTC</strong></span>
     <span></span>
   </footer>
-
-  <script>
-    function showStatusPage(){
-      var statusCode =  403 ;
-      var statusPageEl = document.getElementById('status-page');
-
-      if(!statusPageEl) { return; }
-
-      if (statusCode && statusCode >= 500 && statusCode <= 599) {
-        statusPageEl.style.display = 'block';
-      } else {
-        statusPageEl.style.display = 'none';
-      }
-    };
-    try {
-      showStatusPage();
-    } catch (error) {
-      console.log(error)
-    }
-  </script>
 </body>
 </html>
