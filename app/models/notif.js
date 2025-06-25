@@ -296,27 +296,34 @@ exports.unlove = async function (loverUid, post) {
 
 exports.post = function (post) {
   if (!post || !post.eId || !post.uId) return;
-  // const query = {
-  //   q: {
-  //     eId: post.eId,
-  //     uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
-  //   },
-  //   limit: 100,
-  //   projection: { uId: true },
-  // };
-  // mongodb.forEach2('post', query, async function (sameTrack, next) {
-  //   if (sameTrack && !sameTrack.error) {
-  //     const author = await userModel.fetchAndProcessUserById(sameTrack.uId);
-  //     if (author) {
-  //       await notifEmails.sendPostedSameTrack(author, next);
-  //     } else if (next) {
-  //       next();
-  //     }
-  //   } else if (next) {
-  //     next();
-  //   }
-  // });
+  notifyUsersWhoPostedTheSameTrack(post); // let the promise run in the background => no await
 };
+
+async function notifyUsersWhoPostedTheSameTrack(post) {
+  const cursor = db['post'].find(
+    {
+      eId: post.eId,
+      uId: { $nin: ['' + post.uId, mongodb.ObjectId('' + post.uId)] },
+    },
+    {
+      projection: { uId: true },
+      limit: 100,
+    },
+  );
+  try {
+    while (await cursor.hasNext()) {
+      const sameTrack = await cursor.next();
+      if (sameTrack) {
+        const author = await userModel.fetchAndProcessUserById(sameTrack.uId);
+        if (author) {
+          await notifEmails.sendPostedSameTrack(author);
+        }
+      }
+    }
+  } finally {
+    await cursor.close();
+  }
+}
 
 exports.repost = async function (reposterUid, post) {
   const reposter = await userModel.fetchAndProcessUserById(reposterUid);
