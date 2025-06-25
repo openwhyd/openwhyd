@@ -296,7 +296,7 @@ exports.unlove = async function (loverUid, post) {
 
 exports.post = function (post) {
   if (!post || !post.eId || !post.uId) return;
-  notifyUsersWhoPostedTheSameTrack(post); // let the promise run in the background => no await
+  notifyUsersWhoPostedTheSameTrack(post).catch((err) => console.error('Error in notifyUsersWhoPostedTheSameTrack:', err)); // let the promise run in the background => no await
 };
 
 async function notifyUsersWhoPostedTheSameTrack(post) {
