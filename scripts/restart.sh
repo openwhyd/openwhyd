@@ -17,7 +17,7 @@ GIT_REPOSITORY_URL="git@github.com:openwhyd/openwhyd.git"
 
 echo "👋  Restarting Openwhyd server ${VERSION} on port ${PORT}, with ${NODE}..."
 cd ${ROOT_DIR}
-source env-vars-local.sh
+source env-vars-local.sh # Note: after adding new env vars, you may need to delete the pm2 instance then re-run "make restart-to-latest"
 echo "AUTH0_ISSUER_BASE_URL=${AUTH0_ISSUER_BASE_URL}"
 DD_GIT_COMMIT_SHA="${GIT_COMMIT_SHA}" \
 DD_GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
