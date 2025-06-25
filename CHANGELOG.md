@@ -1,3 +1,10 @@
+## [1.63.25](https://github.com/openwhyd/openwhyd/compare/v1.63.24...v1.63.25) (2025-06-25)
+
+
+### Bug Fixes
+
+* **email:** send emails using mailersend instead of sendgrid ([#830](https://github.com/openwhyd/openwhyd/issues/830)) ([8bdb020](https://github.com/openwhyd/openwhyd/commit/8bdb020fbc693aec46bc78f39ae0dcec0b5b1fbc))
+
 ## [1.63.24](https://github.com/openwhyd/openwhyd/compare/v1.63.23...v1.63.24) (2025-06-11)
 
 
