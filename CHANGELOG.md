@@ -1,3 +1,10 @@
+## [1.63.26](https://github.com/openwhyd/openwhyd/compare/v1.63.25...v1.63.26) (2025-06-25)
+
+
+### Bug Fixes
+
+* **security:** prevent malicious redirection ([13fa45d](https://github.com/openwhyd/openwhyd/commit/13fa45d38ce63cb947cadd88ab5e8eeeae645eac))
+
 ## [1.63.25](https://github.com/openwhyd/openwhyd/compare/v1.63.24...v1.63.25) (2025-06-25)
 
 
