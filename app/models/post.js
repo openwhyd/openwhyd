@@ -19,6 +19,8 @@ const assert = require('node:assert');
 
 const NB_POSTS = process.appParams?.nbPostsPerNewsfeedPage;
 
+const DEFAULT_SORT = /** @type const */ ({ _id: 'desc' }); // descending _id => antichronological order
+
 const playlistSort = {
   sort: [
     ['order', 'asc'],
@@ -123,18 +125,17 @@ exports.fetchByAuthors = async function (uidList, options, cb) {
   const posts = [],
     query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
     uidSet = snip.arrayToSet(uidList);
-  const params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
-  processAdvQuery(query, params, {
+  const _params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
+  processAdvQuery(query, _params, {
     after: options.after,
     before: options.before,
     limit: options.limit,
   });
 
   // we may exclude some documents from the cursor => don't pass limit to find()
-  const nbRequestedPosts = params.limit;
-  delete params.limit;
+  const nbRequestedPosts = (parseInt(options.limit) || NB_POSTS) + 1;
 
-  const cursor = mongodb.collections['post'].find(query, params);
+  const cursor = mongodb.collections['post'].find(query).sort(DEFAULT_SORT);
   try {
     while ((await cursor.hasNext()) && posts.length < nbRequestedPosts) {
       const post = await cursor.next();
