@@ -1,8 +1,9 @@
 // Import tracks from a user profile on openwhyd.org, to the local test db.
 //
 // Usage:
-//   $ make docker-seed                         # clears the database and creates the admin user
-//   $ node scripts/import-from-prod.js adrien  # imports 21 posts from https://openwhyd.org/adrien
+//   $ make docker-seed                          # clears the database and creates the admin user
+//   $ node scripts/import-from-prod.js adrien 5 # imports 5 posts from https://openwhyd.org/adrien
+//   $ node scripts/import-from-prod.js u/5911f8e098267ba4b34b8424 # ... or specify a user by id
 
 const request = require('request');
 const mongodb = require('mongodb');
@@ -18,6 +19,7 @@ const password = {
   plain: 'admin',
   md5: '21232f297a57a5a743894a0e4a801fc3',
 };
+const nbPosts = process.argv[3] ? parseInt(process.argv[3]) : 21;
 const importSubscribers = false;
 
 const connectToDb = ({ url, dbName }) => {
@@ -36,7 +38,7 @@ const fetchUserProfile = ({ username }) =>
 
 const fetchUserPosts = ({ username }) =>
   new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/${username}?format=json`;
+    const url = `https://openwhyd.org/${username}?format=json&limit=${nbPosts}`;
     console.log(`fetching tracks from ${url} ...`);
     request(url, (err, _, body) =>
       err

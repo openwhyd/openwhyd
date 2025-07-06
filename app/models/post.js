@@ -19,6 +19,8 @@ const assert = require('node:assert');
 
 const NB_POSTS = process.appParams?.nbPostsPerNewsfeedPage;
 
+const DEFAULT_SORT = /** @type const */ ({ _id: 'desc' }); // descending _id => antichronological order
+
 const playlistSort = {
   sort: [
     ['order', 'asc'],
@@ -66,6 +68,7 @@ function processAdvQuery(query, params, options) {
   if (!params.sort) params.sort = [/*['rTm','desc'],*/ ['_id', 'desc']]; // by default
 }
 
+// called by `/all` route, among others
 exports.fetchPosts = async function (query, params, options, handler) {
   params = params || {};
   processAdvQuery(query, params, options);
@@ -117,22 +120,24 @@ exports.fetchByAuthorsOld = function (uidList, options, handler) {
   );
 };
 
+// called by /stream endpoint, among others
 exports.fetchByAuthors = async function (uidList, options, cb) {
-  const loggedUser = uidList[uidList.length - 1];
-  console.time(`fetchByAuthors>arrayToSet_${loggedUser}`);
   const posts = [],
     query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
     uidSet = snip.arrayToSet(uidList);
-  console.timeEnd(`fetchByAuthors>arrayToSet_${loggedUser}`);
-  const params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
-  processAdvQuery(query, params, {
+  const _params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
+  processAdvQuery(query, _params, {
     after: options.after,
     before: options.before,
     limit: options.limit,
   });
-  const cursor = mongodb.collections['post'].find(query, params);
+
+  // we may exclude some documents from the cursor => don't pass limit to find()
+  const nbRequestedPosts = (parseInt(options.limit, 10) || NB_POSTS) + 1;
+
+  const cursor = mongodb.collections['post'].find(query).sort(DEFAULT_SORT);
   try {
-    while ((await cursor.hasNext()) && posts.length < params.limit) {
+    while ((await cursor.hasNext()) && posts.length < nbRequestedPosts) {
       const post = await cursor.next();
       if (post && !post.error && !uidSet[(post.repost || {}).uId]) {
         posts.push(post);
