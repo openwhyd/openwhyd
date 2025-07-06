@@ -166,7 +166,7 @@ async function submitNotif(
 // 1) when reposter reposts a post => "XXX has added one of your tracks on whyd"
 exports.sendRepost = async function (reposter, post, postAuthor /*Email*/) {
   await submitNotif(postAuthor, 'emAdd', async function () {
-    const temp = notifTemplate.generateRepost(reposter, post);
+    const temp = await notifTemplate.generateRepost(reposter, post);
     emailModel.email(
       postAuthor.email /*Email*/,
       temp.subject,
@@ -182,7 +182,7 @@ exports.sendSubscribedToUser = async function (subscriber, selectedUser, cb) {
     selectedUser,
     'emSub',
     async function () {
-      const temp = notifTemplate.generateSubscribedToUser(
+      const temp = await notifTemplate.generateSubscribedToUser(
         subscriber,
         selectedUser._id,
       );
@@ -204,7 +204,7 @@ exports.sendLike = async function (user, post, postAuthor) {
   await submitNotif(postAuthor, 'emLik', async function () {
     if (postAuthor.pref && postAuthor.pref['emLik'] == 0) {
       // user explicitely chose to receive immediate notifications
-      const temp = notifTemplate.generateLike(user, post, postAuthor);
+      const temp = await notifTemplate.generateLike(user, post, postAuthor);
       emailModel.email(
         postAuthor.email,
         temp.subject,
@@ -226,7 +226,11 @@ exports.sendComment = async function (post, comment, cb) {
   if (prefs['emCom'] == -1)
     cb && cb({ warn: 'no email notification will be sent (disabled by user)' });
   else
-    await sendEmail(post.uId, notifTemplate.generateComment(post, comment), cb);
+    await sendEmail(
+      post.uId,
+      await notifTemplate.generateComment(post, comment),
+      cb,
+    );
 };
 
 // 6) "XXX mentioned you"
@@ -237,7 +241,7 @@ exports.sendMention = async function (mentionedUid, post, comment, cb) {
   else
     await sendEmail(
       mentionedUid,
-      notifTemplate.generateMention(mentionedUid, post, comment),
+      await notifTemplate.generateMention(mentionedUid, post, comment),
       cb,
     );
 };
@@ -250,7 +254,7 @@ exports.sendCommentReply = async function (post, comment, repliedUid, cb) {
   else
     await sendEmail(
       repliedUid,
-      notifTemplate.generateCommentReply(post, comment, repliedUid),
+      await notifTemplate.generateCommentReply(post, comment, repliedUid),
       cb,
     );
 };
