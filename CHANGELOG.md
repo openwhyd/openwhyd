@@ -1,3 +1,10 @@
+## [1.63.30](https://github.com/openwhyd/openwhyd/compare/v1.63.29...v1.63.30) (2025-07-06)
+
+
+### Bug Fixes
+
+* **email:** `[EMAIL] send error: Error: The subject field is required. #MS42209 (and 3 more errors)` ([#836](https://github.com/openwhyd/openwhyd/issues/836)) ([7bfaa0f](https://github.com/openwhyd/openwhyd/commit/7bfaa0fed3598ecaeb10d8ab8d068d424fd47f78)), closes [#MS42209](https://github.com/openwhyd/openwhyd/issues/MS42209)
+
 ## [1.63.29](https://github.com/openwhyd/openwhyd/compare/v1.63.28...v1.63.29) (2025-07-06)
 
 
