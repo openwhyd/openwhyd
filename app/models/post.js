@@ -133,7 +133,7 @@ exports.fetchByAuthors = async function (uidList, options, cb) {
   });
 
   // we may exclude some documents from the cursor => don't pass limit to find()
-  const nbRequestedPosts = (parseInt(options.limit) || NB_POSTS) + 1;
+  const nbRequestedPosts = (parseInt(options.limit, 10) || NB_POSTS) + 1;
 
   const cursor = mongodb.collections['post'].find(query).sort(DEFAULT_SORT);
   try {
