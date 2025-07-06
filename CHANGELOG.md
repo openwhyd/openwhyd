@@ -1,3 +1,10 @@
+## [1.63.29](https://github.com/openwhyd/openwhyd/compare/v1.63.28...v1.63.29) (2025-07-06)
+
+
+### Bug Fixes
+
+* **stream:** home feed should not end prematurely + fix Cypress tests on CI ([#835](https://github.com/openwhyd/openwhyd/issues/835)) ([8abc963](https://github.com/openwhyd/openwhyd/commit/8abc9637baf83f9b1b9bc04c613d1243f8da1021)), closes [/github.com/openwhyd/openwhyd/pull/835#issuecomment-3042009010](https://github.com//github.com/openwhyd/openwhyd/pull/835/issues/issuecomment-3042009010)
+
 ## [1.63.28](https://github.com/openwhyd/openwhyd/compare/v1.63.27...v1.63.28) (2025-06-25)
 
 
