@@ -120,21 +120,23 @@ exports.fetchByAuthorsOld = function (uidList, options, handler) {
 
 // called by /stream endpoint, among others
 exports.fetchByAuthors = async function (uidList, options, cb) {
-  const loggedUser = uidList[uidList.length - 1];
-  console.time(`fetchByAuthors>arrayToSet_${loggedUser}`);
   const posts = [],
     query = { uId: uidList.length > 1 ? { $in: uidList } : uidList[0] },
     uidSet = snip.arrayToSet(uidList);
-  console.timeEnd(`fetchByAuthors>arrayToSet_${loggedUser}`);
   const params = {}; //{after:options.after, before:options.before, limit:(options.limit || NB_POSTS) + 1};
   processAdvQuery(query, params, {
     after: options.after,
     before: options.before,
     limit: options.limit,
   });
+
+  // we may exclude some documents from the cursor => don't pass limit to find()
+  const nbRequestedPosts = params.limit;
+  delete params.limit;
+
   const cursor = mongodb.collections['post'].find(query, params);
   try {
-    while ((await cursor.hasNext()) && posts.length < params.limit) {
+    while ((await cursor.hasNext()) && posts.length < nbRequestedPosts) {
       const post = await cursor.next();
       if (post && !post.error && !uidSet[(post.repost || {}).uId]) {
         posts.push(post);
