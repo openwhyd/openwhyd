@@ -66,6 +66,7 @@ function processAdvQuery(query, params, options) {
   if (!params.sort) params.sort = [/*['rTm','desc'],*/ ['_id', 'desc']]; // by default
 }
 
+// called by `/all` route, among others
 exports.fetchPosts = async function (query, params, options, handler) {
   params = params || {};
   processAdvQuery(query, params, options);
@@ -117,6 +118,7 @@ exports.fetchByAuthorsOld = function (uidList, options, handler) {
   );
 };
 
+// called by /stream endpoint, among others
 exports.fetchByAuthors = async function (uidList, options, cb) {
   const loggedUser = uidList[uidList.length - 1];
   console.time(`fetchByAuthors>arrayToSet_${loggedUser}`);
