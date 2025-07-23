@@ -322,19 +322,19 @@ async function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
   else userModel.fetchByHandle(uidOrHandle, returnUser);
 }
 
-function handlePublicRequest(loggedUser, reqParams, localRendering, features) {
+function handlePublicRequest(loggedUser, reqParams, callback, features) {
   // transforming sequential parameters to named parameters
   reqParams = snip.translateFields(reqParams, SEQUENCED_PARAMETERS);
 
   const handler = publicActions[reqParams.action];
   if (handler) {
     reqParams.loggedUser = loggedUser;
-    handler(reqParams, localRendering, features);
+    handler(reqParams, callback, features);
     return true;
   } else if (reqParams.id) {
     reqParams.excludePrivateFields = true;
     fetchUserByIdOrHandle(reqParams.id, reqParams, function (u) {
-      const tasks = [localRendering];
+      const tasks = [callback];
       if (reqParams.isSubscr)
         tasks.push(function (u, next) {
           hasSubscribed(loggedUser, u, next);
@@ -350,10 +350,9 @@ function handlePublicRequest(loggedUser, reqParams, localRendering, features) {
   }
 }
 
-function handleAuthRequest(loggedUser, reqParams, localRendering, features) {
+function handleAuthRequest(loggedUser, reqParams, callback, features) {
   // make sure a registered user is logged, or return an error page
-  if (false == loggedUser)
-    return localRendering({ error: 'user not logged in' });
+  if (false == loggedUser) return callback({ error: 'user not logged in' });
 
   reqParams._id = loggedUser._id;
 
@@ -366,7 +365,7 @@ function handleAuthRequest(loggedUser, reqParams, localRendering, features) {
     (function setNextField(prevResult) {
       if (prevResult)
         for (const i in prevResult) result[i] = prevResult[i] || result[i];
-      if (!toUpdate.length) localRendering(result);
+      if (!toUpdate.length) callback(result);
       else {
         const fieldName = toUpdate.pop();
         console.log('calling field setter: ', fieldName);
@@ -375,27 +374,28 @@ function handleAuthRequest(loggedUser, reqParams, localRendering, features) {
       }
     })();
   } else {
-    fetchUserById(loggedUser._id, reqParams, localRendering);
+    fetchUserById(loggedUser._id, reqParams, callback);
   }
 }
 
 // old name: setUserFields()
-function handleRequest(loggedUser, reqParams, localRendering, features) {
+function handleRequest(loggedUser, reqParams, callback, features) {
   console.log('api.user.handleRequest', {
     action: reqParams.action ?? '(EDIT)',
   });
   try {
-    if (handlePublicRequest(loggedUser, reqParams, localRendering, features))
+    if (handlePublicRequest(loggedUser, reqParams, callback, features))
       return true;
   } catch (e) {
     console.error('user api error', e, e.stack);
-    return localRendering({ error: e });
+    return callback({ error: e });
   }
-  return handleAuthRequest(loggedUser, reqParams, localRendering, features);
+  return handleAuthRequest(loggedUser, reqParams, callback, features);
 }
 
 // these error messages are displayed to the user, we don't need to log them
 const USER_ERRORS = [
+  'Must be less than 18 characters long', // from userModel.setHandle()
   'Special characters are not allowed',
   'This username is taken by another user',
 ];
