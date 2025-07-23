@@ -1,3 +1,10 @@
+## [1.63.31](https://github.com/openwhyd/openwhyd/compare/v1.63.30...v1.63.31) (2025-07-23)
+
+
+### Bug Fixes
+
+* **user-controller:** don't log error about handle validation ([#838](https://github.com/openwhyd/openwhyd/issues/838)) ([ccfaeb9](https://github.com/openwhyd/openwhyd/commit/ccfaeb950b9e29193c904a30e1d1fc5739bc8a65))
+
 ## [1.63.30](https://github.com/openwhyd/openwhyd/compare/v1.63.29...v1.63.30) (2025-07-06)
 
 
