@@ -396,6 +396,7 @@ function handleRequest(loggedUser, reqParams, localRendering, features) {
 
 // these error messages are displayed to the user, we don't need to log them
 const USER_ERRORS = [
+  'Must be less than 18 characters long', // from userModel.setHandle()
   'Special characters are not allowed',
   'This username is taken by another user',
 ];
