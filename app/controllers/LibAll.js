@@ -21,15 +21,21 @@ function renderAllLibrary(lib) {
       feedTemplate.renderFeedAsync(posts, options, callback);
     }
 
-    postModel.fetchPosts(
-      { repost: { $exists: false } },
-      null,
-      { after: options.after, before: options.before },
-      process,
-    );
+    const params = {
+      after: options.after,
+      before: options.before,
+    };
+    if (options.limit) params.limit = options.limit;
+
+    postModel.fetchPosts({ repost: { $exists: false } }, null, params, process);
   }
 
-  if (!feedTemplate.shouldRenderWholeProfilePage(options))
+  if (options.format == 'json')
+    renderFeed(function (feedHtml) {
+      lib.renderJson(feedHtml);
+      console.log(feedHtml);
+    });
+  else if (!feedTemplate.shouldRenderWholeProfilePage(options))
     renderFeed(function (feedHtml) {
       lib.render({ html: feedHtml });
     });
