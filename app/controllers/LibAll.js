@@ -33,7 +33,6 @@ function renderAllLibrary(lib) {
   if (options.format == 'json')
     renderFeed(function (feedHtml) {
       lib.renderJson(feedHtml);
-      console.log(feedHtml);
     });
   else if (!feedTemplate.shouldRenderWholeProfilePage(options))
     renderFeed(function (feedHtml) {
