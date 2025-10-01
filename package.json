@@ -101,8 +101,10 @@
     "eslint-plugin-deprecation": "^2.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "jose": "^6.1.0",
     "mocha": "11.0.1",
     "nyc": "^17.1.0",
+    "oauth2-mock-server": "^8.1.0",
     "prettier": "^3.4.2",
     "supertest": "^7.1.0",
     "typescript": "^5.7.2"
