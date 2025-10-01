@@ -27,9 +27,6 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
 
   // in case of successful login
   function renderRedirect(url, user) {
-    // useful for legacy auth/session only
-    request.session = request.session || {};
-    request.session.whydUid = (user || {}).id;
     if (!form.ajax) response.renderHTML(loggingTemplate.htmlRedirect(url));
     else {
       const json = { redirect: url };
@@ -43,21 +40,11 @@ exports.handleRequest = function (request, form, response, ignorePassword) {
   }
 
   function renderForm(form) {
-    delete request.session; // legacy auth/session
     if (form.ajax) renderJSON(form);
     else response.renderHTML(loggingTemplate.renderLoginPage(form));
   }
 
   if (form.action === 'logout') {
-    // useful for legacy auth/session only
-    request.session.destroy(function (err) {
-      if (err) {
-        console.error('error from request.session.destroy()', err);
-        form.error = err;
-      }
-      console.log('logout result', form.error);
-      renderForm(form);
-    });
     return;
   } else if (form.email) {
     form.email = emailModel.normalize(form.email);

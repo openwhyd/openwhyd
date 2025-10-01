@@ -5,8 +5,6 @@ type AppParams = {
   urlPrefix: string;
   isOnTestDatabase: boolean;
   color: boolean;
-  useAuth0AsIdentityProvider: boolean;
-  genuineSignupSecret: string;
   searchModule: string;
   emailModule: string;
   digestInterval: number;

@@ -34,10 +34,6 @@ exports.makeAuthFeatures = (env) => {
 
     getAuthenticatedUser(request) {
       const oidcUser = getAuthenticatedUser(request);
-      if (!oidcUser) {
-        // @ts-ignore // introduced for legacy auth/session, still used for whydUid
-        delete request.session;
-      }
       return oidcUser ? mapToOpenwhydUser(oidcUser) : null;
     },
 
