@@ -6,6 +6,7 @@
  */
 
 const userModel = require('../../models/user.js');
+const loggingTemplate = require('../../templates/logging.js');
 
 /**
  * Create mock OIDC user from Openwhyd user data
@@ -117,9 +118,26 @@ exports.makeMockAuthFeatures = (env) => {
         // Initialize mock OIDC context based on session data
         if (!req.oidc) {
           req.oidc = {
-            isAuthenticated: () => !!(req.session && req.session.oidcUser),
+            isAuthenticated: () => {
+              // Check for OIDC user first, then fall back to legacy whydUid
+              return !!(req.session && (req.session.oidcUser || req.session.whydUid));
+            },
             get user() {
-              return req.session?.oidcUser || null;
+              if (req.session?.oidcUser) {
+                return req.session.oidcUser;
+              }
+              // For legacy sessions that only have whydUid (e.g., from /register),
+              // return a minimal user object. The actual user data will be fetched
+              // from database when needed.
+              if (req.session?.whydUid) {
+                return {
+                  sub: `auth0|${req.session.whydUid}`,
+                  name: '',
+                  email: '',
+                  picture: '',
+                };
+              }
+              return null;
             },
             login: async (options = {}) => {
               const returnTo = options.returnTo || '/';
@@ -188,7 +206,8 @@ exports.makeMockAuthFeatures = (env) => {
             if (ajax) {
               res.json({ redirect });
             } else {
-              res.redirect(redirect);
+              // Return HTML redirect for non-ajax requests
+              res.send(loggingTemplate.htmlRedirect(redirect));
             }
           });
           return;
@@ -255,7 +274,8 @@ exports.makeMockAuthFeatures = (env) => {
             if (ajax) {
               res.json({ redirect });
             } else {
-              res.redirect(redirect);
+              // Return HTML redirect for non-ajax requests
+              res.send(loggingTemplate.htmlRedirect(redirect));
             }
           });
           return;
@@ -285,11 +305,27 @@ exports.makeMockAuthFeatures = (env) => {
 
     getAuthenticatedUser(request) {
       const oidcUser = getAuthenticatedUser(request);
-      if (!oidcUser) {
-        // @ts-ignore
-        delete request.session;
+      if (oidcUser) {
+        return mapToOpenwhydUser(oidcUser);
       }
-      return oidcUser ? mapToOpenwhydUser(oidcUser) : null;
+      
+      // Fallback: check for legacy session (whydUid) set by /register endpoint
+      // This allows newly registered users to be logged in even though /register
+      // doesn't set up the full OIDC session
+      if (request.session?.whydUid) {
+        // Create a temporary OIDC user from the legacy session
+        // This will be fetched from the database on next request
+        return {
+          id: request.session.whydUid,
+          name: '', // Will be populated from DB on actual use
+          email: '',
+          img: '',
+        };
+      }
+      
+      // Note: Do NOT delete request.session here for mock Auth0, 
+      // because we're using express-session middleware which needs the session object
+      return null;
     },
 
     async sendPasswordChangeRequest(email) {
