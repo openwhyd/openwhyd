@@ -31,8 +31,10 @@ class MockAuth0Wrapper {
   /**
    * Returns Express.js middleware that mocks Auth0 OIDC authentication.
    * Creates a mock /login endpoint that authenticates users from the database.
+   * @param {string} _urlPrefix - URL prefix (unused in mock implementation)
    */
-  makeExpressAuthMiddleware(urlPrefix) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  makeExpressAuthMiddleware(_urlPrefix) {
     // For the mock, we need to integrate with the existing session middleware
     // Return a middleware that adds the oidc interface to requests
     return (req, res, next) => {
@@ -111,7 +113,8 @@ exports.makeMockAuthFeatures = (env) => {
   const auth0 = new MockAuth0Wrapper(env);
 
   return {
-    injectExpressRoutes(app, urlPrefix) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    injectExpressRoutes(app, _urlPrefix) {
       // Attach mock OIDC middleware - this MUST be attached AFTER session middleware
       // So we defer the middleware attachment and let the mock login routes be defined here
       app.use((req, res, next) => {
@@ -120,7 +123,10 @@ exports.makeMockAuthFeatures = (env) => {
           req.oidc = {
             isAuthenticated: () => {
               // Check for OIDC user first, then fall back to legacy whydUid
-              return !!(req.session && (req.session.oidcUser || req.session.whydUid));
+              return !!(
+                req.session &&
+                (req.session.oidcUser || req.session.whydUid)
+              );
             },
             get user() {
               if (req.session?.oidcUser) {
@@ -173,13 +179,15 @@ exports.makeMockAuthFeatures = (env) => {
           }
 
           // Authenticate against database
-          const fetchUser = email.indexOf('@') > -1
-            ? userModel.fetchByEmail
-            : userModel.fetchByHandle;
+          const fetchUser =
+            email.indexOf('@') > -1
+              ? userModel.fetchByEmail
+              : userModel.fetchByHandle;
 
           fetchUser(email, (dbUser) => {
             if (!dbUser) {
-              const error = "Are you sure? We don't recognize your email address!";
+              const error =
+                "Are you sure? We don't recognize your email address!";
               if (ajax) {
                 res.json({ error });
               } else {
@@ -241,13 +249,15 @@ exports.makeMockAuthFeatures = (env) => {
           }
 
           // Authenticate against database
-          const fetchUser = email.indexOf('@') > -1
-            ? userModel.fetchByEmail
-            : userModel.fetchByHandle;
+          const fetchUser =
+            email.indexOf('@') > -1
+              ? userModel.fetchByEmail
+              : userModel.fetchByHandle;
 
           fetchUser(email, (dbUser) => {
             if (!dbUser) {
-              const error = "Are you sure? We don't recognize your email address!";
+              const error =
+                "Are you sure? We don't recognize your email address!";
               if (ajax) {
                 res.json({ error });
               } else {
@@ -308,7 +318,7 @@ exports.makeMockAuthFeatures = (env) => {
       if (oidcUser) {
         return mapToOpenwhydUser(oidcUser);
       }
-      
+
       // Fallback: check for legacy session (whydUid) set by /register endpoint
       // This allows newly registered users to be logged in even though /register
       // doesn't set up the full OIDC session
@@ -322,8 +332,8 @@ exports.makeMockAuthFeatures = (env) => {
           img: '',
         };
       }
-      
-      // Note: Do NOT delete request.session here for mock Auth0, 
+
+      // Note: Do NOT delete request.session here for mock Auth0,
       // because we're using express-session middleware which needs the session object
       return null;
     },
