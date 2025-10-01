@@ -127,10 +127,7 @@ exports.makeMockAuthFeatures = (env) => {
             isAuthenticated: () => {
               // Check for OIDC user first, then fall back to legacy whydUid
               // @ts-ignore - session is added by express-session middleware
-              return !!(
-                req.session &&
-                (req.session.oidcUser || req.session.whydUid)
-              );
+              return !!(req.session && (req.session.oidcUser || req.session.whydUid));
             },
             get user() {
               // @ts-ignore - session is added by express-session middleware
