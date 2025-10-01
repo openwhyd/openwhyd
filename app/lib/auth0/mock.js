@@ -225,13 +225,23 @@ exports.makeMockAuthFeatures = (env) => {
             // @ts-ignore
             req.session.whydUid = dbUser._id;
 
-            const redirect = req.query.redirect || '/';
-            if (ajax) {
-              res.json({ redirect });
-            } else {
-              // Return HTML redirect for non-ajax requests
-              res.send(loggingTemplate.htmlRedirect(redirect));
-            }
+            // Save session before sending response
+            // @ts-ignore
+            req.session.save((err) => {
+              if (err) {
+                console.error('Failed to save session:', err);
+                res.status(500).json({ error: 'Failed to save session' });
+                return;
+              }
+
+              const redirect = req.query.redirect || '/';
+              if (ajax) {
+                res.json({ redirect });
+              } else {
+                // Return HTML redirect for non-ajax requests
+                res.send(loggingTemplate.htmlRedirect(redirect));
+              }
+            });
           });
           return;
         }
@@ -300,13 +310,23 @@ exports.makeMockAuthFeatures = (env) => {
             // @ts-ignore
             req.session.whydUid = dbUser._id;
 
-            const redirect = req.body.redirect || '/';
-            if (ajax) {
-              res.json({ redirect });
-            } else {
-              // Return HTML redirect for non-ajax requests
-              res.send(loggingTemplate.htmlRedirect(redirect));
-            }
+            // Save session before sending response
+            // @ts-ignore
+            req.session.save((err) => {
+              if (err) {
+                console.error('Failed to save session:', err);
+                res.status(500).json({ error: 'Failed to save session' });
+                return;
+              }
+
+              const redirect = req.body.redirect || '/';
+              if (ajax) {
+                res.json({ redirect });
+              } else {
+                // Return HTML redirect for non-ajax requests
+                res.send(loggingTemplate.htmlRedirect(redirect));
+              }
+            });
           });
           return;
         }
