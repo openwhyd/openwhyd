@@ -5,6 +5,7 @@ This document explains how Openwhyd's automated tests use a mock Auth0 implement
 ## Overview
 
 Openwhyd supports Auth0 as an identity provider for authentication. However, automated tests need to run reliably without requiring:
+
 - Real Auth0 credentials
 - Network access to Auth0 servers
 - Test user accounts on Auth0
@@ -28,12 +29,14 @@ AUTH0_SECRET="mock_secret_for_testing_only_not_secure"
 ### Architecture
 
 1. **Mock Auth0 Features** (`app/lib/auth0/mock.js`)
+
    - Provides a drop-in replacement for Auth0 authentication features
    - Implements the same interface as the real Auth0 integration
    - Uses local database for user authentication
    - Manages sessions using express-session middleware
 
 2. **Feature Detection** (`app/lib/auth0/features.js`)
+
    - Automatically detects when to use mock Auth0
    - Falls back to mock when `AUTH0_ISSUER_BASE_URL="mock"` or credentials are missing
    - Returns compatible authentication features interface
@@ -72,11 +75,13 @@ AUTH0_SECRET="mock_secret_for_testing_only_not_secure"
 The mock Auth0 implementation includes several compatibility features:
 
 1. **Legacy Session Support**
+
    - Recognizes both `req.session.oidcUser` (Auth0) and `req.session.whydUid` (legacy)
    - Allows newly registered users to be authenticated
    - Maintains compatibility with existing `/register` endpoint
 
 2. **HTML vs JSON Responses**
+
    - Returns HTML redirects for non-AJAX requests (security tests)
    - Returns JSON for AJAX requests (API tests)
    - Validates redirect URLs using the same security checks as legacy auth
@@ -157,6 +162,7 @@ This means the session object was deleted or replaced. The mock Auth0 should nev
 ### Tests failing with "Please login first"
 
 The mock OIDC middleware needs to recognize the session as authenticated. Check that:
+
 - `req.session.oidcUser` is set (for login)
 - OR `req.session.whydUid` is set (for legacy/register)
 

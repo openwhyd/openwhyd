@@ -87,6 +87,7 @@ class MockAuth0Wrapper {
  * @returns {{sub: string, name: string, email: string, picture: string} | null}
  */
 const getAuthenticatedUser = (request) => {
+  // @ts-ignore - oidc is added by our mock middleware
   return request.oidc?.isAuthenticated() ? request.oidc.user : null;
 };
 
@@ -119,24 +120,31 @@ exports.makeMockAuthFeatures = (env) => {
       // So we defer the middleware attachment and let the mock login routes be defined here
       app.use((req, res, next) => {
         // Initialize mock OIDC context based on session data
+        // @ts-ignore - we're adding oidc to the request object
         if (!req.oidc) {
+          // @ts-ignore - we're adding oidc to the request object
           req.oidc = {
             isAuthenticated: () => {
               // Check for OIDC user first, then fall back to legacy whydUid
+              // @ts-ignore - session is added by express-session middleware
               return !!(
                 req.session &&
                 (req.session.oidcUser || req.session.whydUid)
               );
             },
             get user() {
+              // @ts-ignore - session is added by express-session middleware
               if (req.session?.oidcUser) {
+                // @ts-ignore
                 return req.session.oidcUser;
               }
               // For legacy sessions that only have whydUid (e.g., from /register),
               // return a minimal user object. The actual user data will be fetched
               // from database when needed.
+              // @ts-ignore - session is added by express-session middleware
               if (req.session?.whydUid) {
                 return {
+                  // @ts-ignore
                   sub: `auth0|${req.session.whydUid}`,
                   name: '',
                   email: '',
@@ -145,6 +153,7 @@ exports.makeMockAuthFeatures = (env) => {
               }
               return null;
             },
+            // @ts-ignore - login is part of our mock oidc interface
             login: async (options = {}) => {
               const returnTo = options.returnTo || '/';
               res.redirect(returnTo);
@@ -160,8 +169,11 @@ exports.makeMockAuthFeatures = (env) => {
         const { action, email, md5, ajax } = req.query;
 
         if (action === 'logout') {
+          // @ts-ignore - session is added by express-session middleware
           if (req.session) {
+            // @ts-ignore
             delete req.session.oidcUser;
+            // @ts-ignore
             delete req.session.whydUid;
           }
           if (ajax) {
@@ -180,6 +192,7 @@ exports.makeMockAuthFeatures = (env) => {
 
           // Authenticate against database
           const fetchUser =
+            // @ts-ignore - email is string from query
             email.indexOf('@') > -1
               ? userModel.fetchByEmail
               : userModel.fetchByHandle;
@@ -207,7 +220,9 @@ exports.makeMockAuthFeatures = (env) => {
             }
 
             // Create mock OIDC session - req.session exists from session middleware
+            // @ts-ignore - session is added by express-session middleware
             req.session.oidcUser = makeOidcUser(dbUser);
+            // @ts-ignore
             req.session.whydUid = dbUser._id;
 
             const redirect = req.query.redirect || '/';
@@ -230,8 +245,11 @@ exports.makeMockAuthFeatures = (env) => {
         const { action, email, md5, ajax } = req.body;
 
         if (action === 'logout') {
+          // @ts-ignore - session is added by express-session middleware
           if (req.session) {
+            // @ts-ignore
             delete req.session.oidcUser;
+            // @ts-ignore
             delete req.session.whydUid;
           }
           if (ajax) {
@@ -277,7 +295,9 @@ exports.makeMockAuthFeatures = (env) => {
             }
 
             // Create mock OIDC session - req.session exists from session middleware
+            // @ts-ignore - session is added by express-session middleware
             req.session.oidcUser = makeOidcUser(dbUser);
+            // @ts-ignore
             req.session.whydUid = dbUser._id;
 
             const redirect = req.body.redirect || '/';
@@ -305,8 +325,11 @@ exports.makeMockAuthFeatures = (env) => {
 
       // Mock logout route
       app.get('/logout', (req, res) => {
+        // @ts-ignore - session is added by express-session middleware
         if (req.session) {
+          // @ts-ignore
           delete req.session.oidcUser;
+          // @ts-ignore
           delete req.session.whydUid;
         }
         res.redirect('/');
@@ -322,10 +345,12 @@ exports.makeMockAuthFeatures = (env) => {
       // Fallback: check for legacy session (whydUid) set by /register endpoint
       // This allows newly registered users to be logged in even though /register
       // doesn't set up the full OIDC session
+      // @ts-ignore - session is added by express-session middleware
       if (request.session?.whydUid) {
         // Create a temporary OIDC user from the legacy session
         // This will be fetched from the database on next request
         return {
+          // @ts-ignore
           id: request.session.whydUid,
           name: '', // Will be populated from DB on actual use
           email: '',
