@@ -1,3 +1,10 @@
+## [1.63.32](https://github.com/openwhyd/openwhyd/compare/v1.63.31...v1.63.32) (2025-10-04)
+
+
+### Bug Fixes
+
+* **e2e-tests:** use chrome to support window.open() + remove useless scrolling ([#850](https://github.com/openwhyd/openwhyd/issues/850)) ([aea4ea9](https://github.com/openwhyd/openwhyd/commit/aea4ea93c8d7c70564558877323055cfa9a5e21f))
+
 ## [1.63.31](https://github.com/openwhyd/openwhyd/compare/v1.63.30...v1.63.31) (2025-07-23)
 
 
