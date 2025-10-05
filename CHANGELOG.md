@@ -1,3 +1,10 @@
+## [1.63.33](https://github.com/openwhyd/openwhyd/compare/v1.63.32...v1.63.33) (2025-10-05)
+
+
+### Bug Fixes
+
+* **api:** json response for /all endpoint ([#849](https://github.com/openwhyd/openwhyd/issues/849)) ([e254bd7](https://github.com/openwhyd/openwhyd/commit/e254bd73377ca35c51330e231491c48c552cff28))
+
 ## [1.63.32](https://github.com/openwhyd/openwhyd/compare/v1.63.31...v1.63.32) (2025-10-04)
 
 
