@@ -74,6 +74,7 @@ function renderFriendsFeed(options, callback) {
   const params = {
     after: options.after,
     before: options.before,
+    //limit:limit
   };
   if (options.limit) params.limit = options.limit;
 
