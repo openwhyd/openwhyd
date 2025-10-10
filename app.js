@@ -14,15 +14,15 @@ if (!process.env.DISABLE_DATADOG) {
   process.datadogTracer = require('dd-trace').init({
     profiling: true, // cf https://docs.datadoghq.com/fr/profiler/enabling/nodejs/?tab=incode
   });
-  process.datadogTracer.use('express', {
-    hooks: {
-      request: (span, req) => {
-        // @ts-ignore ts(2339): Property 'session' does not exist on type 'IncomingMessage'. // it's added by a middleware
-        const userId = req.session?.whydUid; // from legacy auth/session
-        span.setTag('customer.id', userId);
-      },
-    },
-  });
+  // process.datadogTracer.use('express', {
+  //   hooks: {
+  //     request: (span, req) => {
+  //       // @ts-ignore ts(2339): Property 'session' does not exist on type 'IncomingMessage'. // it's added by a middleware
+  //       const userId = req.session?.whydUid; // from legacy auth/session
+  //       span.setTag('customer.id', userId);
+  //     },
+  //   },
+  // });
 }
 
 const util = require('util');
@@ -55,8 +55,6 @@ console.error = makeErrorLog(consoleError, 'Error');
 
 // app configuration
 
-if (process.env['WHYD_GENUINE_SIGNUP_SECRET'] === undefined)
-  throw new Error(`missing env var: WHYD_GENUINE_SIGNUP_SECRET`);
 if (process.env['WHYD_CONTACT_EMAIL'] === undefined)
   throw new Error(`missing env var: WHYD_CONTACT_EMAIL`);
 
@@ -68,8 +66,6 @@ const dbCreds = {
   mongoDbDatabase: process.env['MONGODB_DATABASE'], // || "openwhyd_data",
 };
 
-const useAuth0AsIdentityProvider = !!process.env.AUTH0_ISSUER_BASE_URL;
-
 const params = (process.appParams = {
   // server level
   port: process.env['WHYD_PORT'] || 8080, // overrides app.conf
@@ -78,10 +74,6 @@ const params = (process.appParams = {
     `http://localhost:${process.env['WHYD_PORT'] || 8080}`, // base URL of the app
   isOnTestDatabase: dbCreds.mongoDbDatabase === 'openwhyd_test',
   color: true,
-
-  // authentication
-  useAuth0AsIdentityProvider,
-  genuineSignupSecret: process.env.WHYD_GENUINE_SIGNUP_SECRET, // used by legacy auth
 
   // workers and general site logic
   searchModule:
@@ -126,45 +118,7 @@ const FLAGS = {
   },
 };
 
-// when db is read
-
-function makeMongoUrl(params) {
-  const host = params.mongoDbHost;
-  const port = parseInt(params.mongoDbPort);
-  const user = params.mongoDbAuthUser;
-  const password = params.mongoDbAuthPassword;
-  const db = params.mongoDbDatabase; // ?w=0
-  const auth =
-    user || password
-      ? `${encodeURIComponent(user)}:${encodeURIComponent(password)}@`
-      : '';
-  return `mongodb://${auth}${host}:${port}/${db}`;
-}
-
-// Legacy user auth and session management
-function getLegacySessionMiddleware() {
-  const session = require('express-session');
-  const MongoStore = require('connect-mongo')(session);
-  return session({
-    secret: process.env.WHYD_SESSION_SECRET,
-    store: new MongoStore({
-      url: makeMongoUrl(dbCreds),
-    }),
-    cookie: {
-      maxAge: 365 * 24 * 60 * 60 * 1000, // cookies expire in 1 year (provided in milliseconds)
-      // secure: process.appParams.urlPrefix.startsWith('https://'), // if true, cookie will be accessible only when website if opened over HTTPS
-      sameSite: 'strict',
-    },
-    name: 'whydSid',
-    resave: false, // required, cf https://www.npmjs.com/package/express-session#resave
-    saveUninitialized: false, // required, cf https://www.npmjs.com/package/express-session#saveuninitialized
-  });
-}
-
 function start() {
-  if (process.env['WHYD_SESSION_SECRET'] === undefined)
-    throw new Error(`missing env var: WHYD_SESSION_SECRET`);
-
   const myHttp = require('./app/lib/my-http-wrapper/http');
   const { makeFeatures } = require('./app/domain/OpenWhydFeatures');
   const {
@@ -184,19 +138,14 @@ function start() {
       new Promise((resolve) => unsetPlaylist(userId, playlistId, resolve)),
   });
 
-  // Inject Auth0 user auth and management features, if enabled
-  if (process.appParams.useAuth0AsIdentityProvider) {
-    features.auth = makeAuthFeatures(process.env);
-  }
+  // Inject Auth0 user auth and management features
+  features.auth = makeAuthFeatures(process.env);
 
   const serverOptions = {
     features,
     urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
-    sessionMiddleware: useAuth0AsIdentityProvider
-      ? null
-      : getLegacySessionMiddleware(),
     errorHandler: async function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       require('./app/templates/error.js').renderErrorResponse(

@@ -112,21 +112,15 @@ http.IncomingMessage.prototype.getFacebookCookie = function () {
 
 // ========= USER ACCESSORS
 
-const { useAuth0AsIdentityProvider } = process.appParams;
-
 /**
  * Returns the logged in user's uid
  */
-http.IncomingMessage.prototype.getUid = useAuth0AsIdentityProvider
-  ? function () {
-      const userId = auth0.getAuthenticatedUserId(this);
-      this.session = this.session || {};
-      this.session.whydUid = userId;
-      return userId;
-    }
-  : function () {
-      return (this.session || {}).whydUid;
-    };
+http.IncomingMessage.prototype.getUid = function () {
+  const userId = auth0.getAuthenticatedUserId(this);
+  this.session = this.session || {};
+  this.session.whydUid = userId;
+  return userId;
+};
 
 /**
  * Returns the logged in user as an object {_id, id, name, img}

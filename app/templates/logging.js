@@ -9,41 +9,19 @@ const config = require('../models/config.js');
 const mainTemplate = require('../templates/mainTemplate.js');
 
 const templateLoader = require('../templates/templateLoader.js');
-let loginTemplate = null;
 let redirectTemplate = null;
 
 exports.refreshTemplates = function (callback) {
   const path = 'app/templates';
-  loginTemplate = templateLoader.loadTemplate(`${path}/loginPage.html`);
   redirectTemplate = templateLoader.loadTemplate(`${path}/redirectPage.html`);
   if (callback) callback();
 };
 
 exports.refreshTemplates();
 
-exports.renderLoginPage = function (form) {
-  if (process.appParams.useAuth0AsIdentityProvider) {
-    console.log(`${process.env.WHYD_URL_PREFIX}/login`);
-    return exports.htmlRedirect(`${process.env.WHYD_URL_PREFIX}/login`);
-  }
-
-  const params = {
-    urlPrefix: config.urlPrefix,
-    title: 'openwhyd',
-    email: '',
-    password: '',
-    pageThumb: mainTemplate.defaultPageMeta.img,
-    pageDesc: mainTemplate.defaultPageMeta.desc,
-    head: mainTemplate.analyticsHeading,
-  };
-
-  if (form) {
-    for (const i in form) // [error, email, password]
-      params[i] = form[i];
-    if (form.error) params.message = [{ text: form.error }];
-  }
-  //console.log("login form params:", params);
-  return loginTemplate.render(params);
+exports.renderLoginPage = function () {
+  console.log(`${process.env.WHYD_URL_PREFIX}/login`);
+  return exports.htmlRedirect(`${process.env.WHYD_URL_PREFIX}/login`);
 };
 
 exports.renderUnauthorizedPage = exports.renderLoginPage;

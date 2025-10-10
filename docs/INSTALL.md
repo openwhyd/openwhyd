@@ -165,8 +165,6 @@ If you want to test Deezer Connect, you will need your server to be reachable th
 
 ### Environment variables
 
-- `WHYD_GENUINE_SIGNUP_SECRET` (mandatory. a secret key that is used to make sure that sign-ups are legit)
-- `WHYD_SESSION_SECRET` (mandatory. a secret key used to sign session cookies)
 - `WHYD_ADMIN_OBJECTID` (ObjectId of the user that can access to admin endpoints)
 - `WHYD_ADMIN_NAME` (Full-text name of the user that can access to admin endpoints)
 - `WHYD_ADMIN_EMAIL` (mandatory. Email address of the user that can access to admin endpoints)
