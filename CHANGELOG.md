@@ -1,3 +1,10 @@
+## [1.63.34](https://github.com/openwhyd/openwhyd/compare/v1.63.33...v1.63.34) (2025-10-12)
+
+
+### Bug Fixes
+
+* **api:** report errors in response instead of logs ([#851](https://github.com/openwhyd/openwhyd/issues/851)) ([21eb90d](https://github.com/openwhyd/openwhyd/commit/21eb90daeae346cd5e657989e8c84ff12c6d01c1))
+
 ## [1.63.33](https://github.com/openwhyd/openwhyd/compare/v1.63.32...v1.63.33) (2025-10-05)
 
 
