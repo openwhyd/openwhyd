@@ -387,7 +387,6 @@ function handleRequest(loggedUser, reqParams, callback, features) {
     if (handlePublicRequest(loggedUser, reqParams, callback, features))
       return true;
   } catch (e) {
-    console.error('user api error', e, e.stack);
     return callback({ error: e });
   }
   return handleAuthRequest(loggedUser, reqParams, callback, features);
