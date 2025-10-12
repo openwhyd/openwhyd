@@ -218,13 +218,17 @@ exports.controller = async function (request, reqParams, response) {
 
   //request.logToConsole("uploadedFile.controller", request.method);
   reqParams = reqParams || {};
-  if (reqParams.id) {
-    if (reqParams.type && renderTypedImg[reqParams.type])
-      await renderTypedImg[reqParams.type](reqParams.id, reqParams);
-    else renderFileOrDefault(exports.config.uploadPath + '/' + reqParams.id);
-  } else if (reqParams.uAvatarImg)
-    await renderTypedImg['user'](reqParams.uAvatarImg);
-  else if (reqParams.uCoverImg)
-    renderTypedImg['userCover'](reqParams.uCoverImg);
-  else response.badRequest();
+  try {
+    if (reqParams.id) {
+      if (reqParams.type && renderTypedImg[reqParams.type])
+        await renderTypedImg[reqParams.type](reqParams.id, reqParams);
+      else renderFileOrDefault(exports.config.uploadPath + '/' + reqParams.id);
+    } else if (reqParams.uAvatarImg)
+      await renderTypedImg['user'](reqParams.uAvatarImg);
+    else if (reqParams.uCoverImg)
+      renderTypedImg['userCover'](reqParams.uCoverImg);
+    else response.badRequest();
+  } catch (err) {
+    renderNoImage();
+  }
 };
