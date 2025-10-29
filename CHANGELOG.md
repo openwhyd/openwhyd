@@ -1,3 +1,10 @@
+## [1.63.36](https://github.com/openwhyd/openwhyd/compare/v1.63.35...v1.63.36) (2025-10-29)
+
+
+### Bug Fixes
+
+* **public-api:** add endpoints to fetch public user info ([#853](https://github.com/openwhyd/openwhyd/issues/853)) ([fef2926](https://github.com/openwhyd/openwhyd/commit/fef2926547da86f2e13df7209f6a19fd45c110ea))
+
 ## [1.63.35](https://github.com/openwhyd/openwhyd/compare/v1.63.34...v1.63.35) (2025-10-29)
 
 
