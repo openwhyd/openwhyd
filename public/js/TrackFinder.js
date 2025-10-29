@@ -70,6 +70,6 @@ const getLoggedInUserId = async function () {
   const uId = isValidObjectId(urlUid) ? urlUid : await getLoggedInUserId();
 
   if (uId) {
-    window.location.href = `https://openwhyd.github.io/openwhyd-mobile-web-client/?uId=${uId}`;
+    window.location.href = `https://m.openwhyd.org/?uId=${uId}`;
   }
 })();
