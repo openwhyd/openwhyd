@@ -1,3 +1,10 @@
+## [1.63.35](https://github.com/openwhyd/openwhyd/compare/v1.63.34...v1.63.35) (2025-10-29)
+
+
+### Bug Fixes
+
+* **mobile:** lead to m.openwhyd.org instead of openwhyd.github.io/openwhyd-mobile-web-client ([86cc8c1](https://github.com/openwhyd/openwhyd/commit/86cc8c11aa0350b1ac0acbf1bf4819345080ff74))
+
 ## [1.63.34](https://github.com/openwhyd/openwhyd/compare/v1.63.33...v1.63.34) (2025-10-12)
 
 
