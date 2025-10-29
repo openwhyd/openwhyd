@@ -8,7 +8,7 @@
 const mongodb = require('../models/mongodb.js');
 const userModel = require('../models/user.js');
 
-exports.controller = async function (request, reqParams, response) {
+exports.controller = function (request, reqParams, response) {
   request.logToConsole('publicUserInfo.controller', reqParams);
 
   const { id, handle } = reqParams;
