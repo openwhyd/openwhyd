@@ -125,4 +125,7 @@ GET    /{handle}/activity              -> controllers.userLibrary
 GET    /{handle}/subscribers           -> controllers.userLibrary
 GET    /{handle}/subscriptions         -> controllers.userLibrary
 
+GET    /u/{id}/info                    -> controllers.publicUserInfo
+GET    /{handle}/info                  -> controllers.publicUserInfo
+
 GET    /u/{uId}/playlist/{plId}/edit   -> controllers.private.playlistOrder
