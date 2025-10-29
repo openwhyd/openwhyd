@@ -18,8 +18,9 @@ In order to satisfy these scenarios, we provide two APIs:
 
 The goal of the Data Export API is to give free access to data that users publicly posted on Openwhyd.
 
-This API can be used by anyone, without authentication, to download the list of tracks of:
+This API can be used by anyone, without authentication, to download:
 
+- a user's public info; (e.g. https://openwhyd.org/adrien/info)
 - a user's list of posts; (e.g. https://openwhyd.org/adrien)
 - a user's list of playlists (e.g. https://openwhyd.org/adrien/playlists)
 - a playlist; (e.g. https://openwhyd.org/adrien/playlist/61)
