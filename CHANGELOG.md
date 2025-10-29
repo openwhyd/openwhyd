@@ -1,3 +1,10 @@
+## [1.63.37](https://github.com/openwhyd/openwhyd/compare/v1.63.36...v1.63.37) (2025-10-29)
+
+
+### Bug Fixes
+
+* **api:** allow jsonp callback on public user info endpoints ([#854](https://github.com/openwhyd/openwhyd/issues/854)) ([0fa2aad](https://github.com/openwhyd/openwhyd/commit/0fa2aad592436f11651373a5389e210bc3c95418))
+
 ## [1.63.36](https://github.com/openwhyd/openwhyd/compare/v1.63.35...v1.63.36) (2025-10-29)
 
 
