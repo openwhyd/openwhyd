@@ -21,10 +21,12 @@ exports.controller = async function (request, reqParams, response) {
     if (reqParams.callback) {
       // the callback parameter is used for JSONP responses, for use from client-side JS
       const safeCallback = reqParams.callback.replace(/[^a-z0-9_]/gi, '');
+      if (!safeCallback) {
+        return response.badRequest({ error: 'Invalid callback parameter' });
+      }
       response
         .set({ 'content-type': 'application/javascript' })
         .send(safeCallback + '(' + JSON.stringify(responseBody) + ')');
-    } else {
       // regular JSON response
       response.renderJSON(responseBody);
     }
