@@ -258,6 +258,17 @@ That happens too, try refreshing the Openwhyd page.
 
 Yeah, that’s because of Flash. Please try again after activating the HTML5 mode of Youtube (http://youtube.com/html5), and contact us if you still experience this issue.
 
+### How to scrobble/track listening history to last.fm?
+
+For a audioscrobbling to work:
+
+1. Open openwhyd.org in your web browser
+2. Make sure your logged in
+3. In openwhyd settings, make sure that your lastfm account is connected 
+4. Go to your openwhyd profile page
+5. Play a song entirely, without skipping into the track 
+6. Go to your lastfm profile, check that the tracks appears in your listening history
+
 ### Other: I have a problem that you didn’t mention here, what should I do about it?
 
 Contact us at contact@openwhyd.org, or through our [Openwhyd Music Lovers Club, on Facebook](https://www.facebook.com/groups/openwhyd/). Our community of volunteers and users will do their best to help!
