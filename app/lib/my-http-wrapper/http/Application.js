@@ -5,12 +5,12 @@ const http = require('http');
 const express = require('express');
 const formidable = require('formidable');
 const qset = require('q-set'); // instead of body-parser, for form fields with brackets
-const sessionTracker = require('../../../controllers/admin/session.js');
+// const sessionTracker = require('../../../controllers/admin/session.js');
 const {
   postTrack,
 } = require('../../../api-v2/provisional-features/postTrack.js');
 
-const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
+// const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
 // From Response.js
 
@@ -63,14 +63,13 @@ const makeBodyParser = (uploadSettings) =>
 const makeStatsUpdater = () =>
   function statsUpdater(req, res, next) {
     const startDate = new Date();
-    const userId = (req.session || {}).whydUid; // from legacy auth/session
-    const userAgent = req.headers['user-agent'];
+    // const userAgent = req.headers['user-agent'];
 
-    if (userId) {
-      sendUserIdToDataDog(userId);
-    }
+    // if (userId) {
+    //   sendUserIdToDataDog(userId);
+    // }
 
-    sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
+    // sessionTracker.notifyUserActivity({ startDate, userId, userAgent }); // maintain lastAccessPerUA
 
     // log whenever a request is slow to respond
     res.on('finish', () => {
@@ -80,14 +79,14 @@ const makeStatsUpdater = () =>
       console.log(
         `◀ ${reqId} responds ${res.statusCode} after ${duration} ms`,
       );
-      if (duration >= LOG_THRESHOLD) {
-        logSlowRequest({
-          startDate,
-          req,
-          userId,
-          userAgent,
-        });
-      }
+      // if (duration >= LOG_THRESHOLD) {
+      //   logSlowRequest({
+      //     startDate,
+      //     req,
+      //     userId,
+      //     userAgent,
+      //   });
+      // }
     });
 
     next();
@@ -107,7 +106,6 @@ const makeNotFound = (errorHandler) =>
 exports.Application = class Application {
   constructor(options = {}) {
     this._errorHandler = options.errorHandler || defaultErrorHandler;
-    this._sessionMiddleware = options.sessionMiddleware;
     this._appDir = options.appDir + '/app';
     this._publicDir = options.appDir + '/public';
     this._routeFile = options.appDir + '/config/app.route';
@@ -140,7 +138,6 @@ exports.Application = class Application {
     app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
-    this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater());
 
     if (this._features.auth) {
@@ -241,30 +238,30 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
   });
 }
 
-function logSlowRequest({ startDate, req, userId, userAgent }) {
-  const duration = Date.now() - startDate;
-  const logLine = [
-    startDate.toUTCString(),
-    req.method,
-    req.path,
-    '(' + duration + 'ms)',
-  ];
-  if (userId) logLine.push('uid=' + userId);
-  if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
-  console.error('slow request:', logLine.join(' '));
-}
+// function logSlowRequest({ startDate, req, userId, userAgent }) {
+//   const duration = Date.now() - startDate;
+//   const logLine = [
+//     startDate.toUTCString(),
+//     req.method,
+//     req.path,
+//     '(' + duration + 'ms)',
+//   ];
+//   if (userId) logLine.push('uid=' + userId);
+//   if (userAgent) logLine.push('ua=' + sessionTracker.stripUserAgent(userAgent));
+//   console.error('slow request:', logLine.join(' '));
+// }
 
 /**
  * Push the request's user ID to Datadog APM, to help us reproduce performance issues.
  * cf https://docs.datadoghq.com/fr/tracing/guide/add_span_md_and_graph_it/
  */
-function sendUserIdToDataDog(userId) {
-  try {
-    process.datadogTracer?.setUser({ id: userId }); // cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#user-identification
-  } catch (err) {
-    console.error(`datadog error: ${err.message}`);
-    console.error({ datadogTracer: typeof process.datadogTracer });
-    console.error({ scope: typeof process.datadogTracer?.scope() });
-    console.error({ active: typeof process.datadogTracer?.scope().active() });
-  }
-}
+// function sendUserIdToDataDog(userId) {
+//   try {
+//     process.datadogTracer?.setUser({ id: userId }); // cf https://github.com/DataDog/dd-trace-js/blob/master/docs/API.md#user-identification
+//   } catch (err) {
+//     console.error(`datadog error: ${err.message}`);
+//     console.error({ datadogTracer: typeof process.datadogTracer });
+//     console.error({ scope: typeof process.datadogTracer?.scope() });
+//     console.error({ active: typeof process.datadogTracer?.scope().active() });
+//   }
+// }

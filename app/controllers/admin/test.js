@@ -56,8 +56,8 @@ exports.controller = async function (request, reqParams, response) {
       return response.renderText('test file not found: ' + reqParams.action);
     const p = {
       loggedUser: await request.getUser(),
-      session: request.session, // legacy auth/session
-      cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'], // legacy auth/session
+      // session: request.session, // legacy auth/session
+      // cookie: 'whydSid=' + (request.getCookies() || {})['whydSid'], // legacy auth/session
     };
     const tests = testFile.makeTests(p);
     runTests(tests, p, function (res) {
