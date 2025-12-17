@@ -264,9 +264,9 @@ For a audioscrobbling to work:
 
 1. Open openwhyd.org in your web browser
 2. Make sure your logged in
-3. In openwhyd settings, make sure that your lastfm account is connected 
+3. In openwhyd settings, make sure that your lastfm account is connected
 4. Go to your openwhyd profile page
-5. Play a song entirely, without skipping into the track 
+5. Play a song entirely, without skipping into the track
 6. Go to your lastfm profile, check that the tracks appears in your listening history
 
 ### Other: I have a problem that you didn’t mention here, what should I do about it?
