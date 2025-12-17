@@ -163,7 +163,7 @@ exports.renderWhydFrame = function (html, params) {
   }
 
   // prevent search engines from indexing track pages
-  if (params.isTrackPage) {
+  if (params.noIndex) {
     params.head.push('<meta name="robots" content="noindex">');
   }
 
