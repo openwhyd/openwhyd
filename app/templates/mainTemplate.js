@@ -162,6 +162,11 @@ exports.renderWhydFrame = function (html, params) {
     params.head.push('<meta name="robots" content="noindex">');
   }
 
+  // prevent search engines from indexing track pages
+  if (params.isTrackPage) {
+    params.head.push('<meta name="robots" content="noindex">');
+  }
+
   let out = htmlHeading
     .concat(params.head || [])
     .concat([
