@@ -1,3 +1,10 @@
+## [1.63.38](https://github.com/openwhyd/openwhyd/compare/v1.63.37...v1.63.38) (2025-12-20)
+
+
+### Bug Fixes
+
+* **deps:** bump on-headers and express-session ([#837](https://github.com/openwhyd/openwhyd/issues/837)) ([779ccbb](https://github.com/openwhyd/openwhyd/commit/779ccbb4337d51326f9b91fff295aa2fb2924274))
+
 ## [1.63.37](https://github.com/openwhyd/openwhyd/compare/v1.63.36...v1.63.37) (2025-10-29)
 
 
