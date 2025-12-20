@@ -82,7 +82,6 @@ exports.controller = async function (request, reqParams, response) {
     result = result && result._id ? { _id: result._id } : {};
     if (error) {
       result.error = error;
-      console.trace('follow API error', error);
     }
 
     if (reqParams.redirect) response.redirect(reqParams.redirect);

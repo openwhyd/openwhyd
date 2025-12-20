@@ -1,3 +1,66 @@
+## [1.63.37](https://github.com/openwhyd/openwhyd/compare/v1.63.36...v1.63.37) (2025-10-29)
+
+
+### Bug Fixes
+
+* **api:** allow jsonp callback on public user info endpoints ([#854](https://github.com/openwhyd/openwhyd/issues/854)) ([0fa2aad](https://github.com/openwhyd/openwhyd/commit/0fa2aad592436f11651373a5389e210bc3c95418))
+
+## [1.63.36](https://github.com/openwhyd/openwhyd/compare/v1.63.35...v1.63.36) (2025-10-29)
+
+
+### Bug Fixes
+
+* **public-api:** add endpoints to fetch public user info ([#853](https://github.com/openwhyd/openwhyd/issues/853)) ([fef2926](https://github.com/openwhyd/openwhyd/commit/fef2926547da86f2e13df7209f6a19fd45c110ea))
+
+## [1.63.35](https://github.com/openwhyd/openwhyd/compare/v1.63.34...v1.63.35) (2025-10-29)
+
+
+### Bug Fixes
+
+* **mobile:** lead to m.openwhyd.org instead of openwhyd.github.io/openwhyd-mobile-web-client ([86cc8c1](https://github.com/openwhyd/openwhyd/commit/86cc8c11aa0350b1ac0acbf1bf4819345080ff74))
+
+## [1.63.34](https://github.com/openwhyd/openwhyd/compare/v1.63.33...v1.63.34) (2025-10-12)
+
+
+### Bug Fixes
+
+* **api:** report errors in response instead of logs ([#851](https://github.com/openwhyd/openwhyd/issues/851)) ([21eb90d](https://github.com/openwhyd/openwhyd/commit/21eb90daeae346cd5e657989e8c84ff12c6d01c1))
+
+## [1.63.33](https://github.com/openwhyd/openwhyd/compare/v1.63.32...v1.63.33) (2025-10-05)
+
+
+### Bug Fixes
+
+* **api:** json response for /all endpoint ([#849](https://github.com/openwhyd/openwhyd/issues/849)) ([e254bd7](https://github.com/openwhyd/openwhyd/commit/e254bd73377ca35c51330e231491c48c552cff28))
+
+## [1.63.32](https://github.com/openwhyd/openwhyd/compare/v1.63.31...v1.63.32) (2025-10-04)
+
+
+### Bug Fixes
+
+* **e2e-tests:** use chrome to support window.open() + remove useless scrolling ([#850](https://github.com/openwhyd/openwhyd/issues/850)) ([aea4ea9](https://github.com/openwhyd/openwhyd/commit/aea4ea93c8d7c70564558877323055cfa9a5e21f))
+
+## [1.63.31](https://github.com/openwhyd/openwhyd/compare/v1.63.30...v1.63.31) (2025-07-23)
+
+
+### Bug Fixes
+
+* **user-controller:** don't log error about handle validation ([#838](https://github.com/openwhyd/openwhyd/issues/838)) ([ccfaeb9](https://github.com/openwhyd/openwhyd/commit/ccfaeb950b9e29193c904a30e1d1fc5739bc8a65))
+
+## [1.63.30](https://github.com/openwhyd/openwhyd/compare/v1.63.29...v1.63.30) (2025-07-06)
+
+
+### Bug Fixes
+
+* **email:** `[EMAIL] send error: Error: The subject field is required. #MS42209 (and 3 more errors)` ([#836](https://github.com/openwhyd/openwhyd/issues/836)) ([7bfaa0f](https://github.com/openwhyd/openwhyd/commit/7bfaa0fed3598ecaeb10d8ab8d068d424fd47f78)), closes [#MS42209](https://github.com/openwhyd/openwhyd/issues/MS42209)
+
+## [1.63.29](https://github.com/openwhyd/openwhyd/compare/v1.63.28...v1.63.29) (2025-07-06)
+
+
+### Bug Fixes
+
+* **stream:** home feed should not end prematurely + fix Cypress tests on CI ([#835](https://github.com/openwhyd/openwhyd/issues/835)) ([8abc963](https://github.com/openwhyd/openwhyd/commit/8abc9637baf83f9b1b9bc04c613d1243f8da1021)), closes [/github.com/openwhyd/openwhyd/pull/835#issuecomment-3042009010](https://github.com//github.com/openwhyd/openwhyd/pull/835/issues/issuecomment-3042009010)
+
 ## [1.63.28](https://github.com/openwhyd/openwhyd/compare/v1.63.27...v1.63.28) (2025-06-25)
 
 

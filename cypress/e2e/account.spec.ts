@@ -8,7 +8,6 @@ context('Openwhyd account', () => {
 
     cy.contains('Got it!').click(); // click on the cookie banner, so it does not hide the "Delete your account" link
 
-    cy.scrollTo('bottom');
     cy.contains('Delete your account').click({ force: true });
     cy.get('.dlg').should('be.visible');
 

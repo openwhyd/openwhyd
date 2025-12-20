@@ -192,7 +192,7 @@ jobs:
         containers: [1, 2, 3]
     steps:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
-      - uses: browser-actions/setup-chrome@latest
+      - uses: browser-actions/setup-chrome@v1
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
@@ -263,7 +263,7 @@ jobs:
           - 27117:27017
     steps:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
-      - uses: browser-actions/setup-chrome@latest
+      - uses: browser-actions/setup-chrome@v1
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
