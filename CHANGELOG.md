@@ -1,3 +1,10 @@
+## [1.63.39](https://github.com/openwhyd/openwhyd/compare/v1.63.38...v1.63.39) (2025-12-30)
+
+
+### Bug Fixes
+
+* **api:** Validate pagination parameters to prevent MongoDB skip errors ([#858](https://github.com/openwhyd/openwhyd/issues/858)) ([bfd837a](https://github.com/openwhyd/openwhyd/commit/bfd837a1948531c95567949c77903cfcbba7496e))
+
 ## [1.63.38](https://github.com/openwhyd/openwhyd/compare/v1.63.37...v1.63.38) (2025-12-20)
 
 
