@@ -60,8 +60,8 @@ exports.sanitizePaginationParams = function (params, defaultLimit = 50) {
   const limit = parseInt(params.limit, 10);
 
   return {
-    skip: !isNaN(skip) && skip >= 0 ? skip : 0,
-    limit: !isNaN(limit) && limit > 0 ? Math.min(limit, 1000) : defaultLimit,
+    skip: isFinite(skip) && skip >= 0 ? skip : 0,
+    limit: isFinite(limit) && limit > 0 ? Math.min(limit, 1000) : defaultLimit,
   };
 };
 

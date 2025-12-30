@@ -97,11 +97,7 @@ describe('snip.js', function () {
       const invalidSkipValues = ['invalid', 'NaN', 'Infinity', '-Infinity'];
       invalidSkipValues.forEach((skip) => {
         const result = snip.sanitizePaginationParams({ skip, limit: 20 });
-        assert.strictEqual(
-          result.skip,
-          0,
-          `Failed for skip value: ${skip}`,
-        );
+        assert.strictEqual(result.skip, 0, `Failed for skip value: ${skip}`);
       });
     });
 
