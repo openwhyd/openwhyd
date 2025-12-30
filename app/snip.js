@@ -46,6 +46,25 @@ exports.weekNumberToDate = function (weekNumber) {
   return new Date(firstWeek.getTime() + 7 * 24 * 60 * 60 * 1000 * weekNumber);
 };
 
+/**
+ * Sanitize pagination parameters for MongoDB queries
+ * Ensures skip and limit are valid non-negative integers
+ * @param {Object} params - Object containing pagination parameters
+ * @param {*} params.skip - Skip value to sanitize
+ * @param {*} params.limit - Limit value to sanitize
+ * @param {number} [defaultLimit=50] - Default limit if not provided or invalid
+ * @returns {Object} Object with sanitized skip and limit values
+ */
+exports.sanitizePaginationParams = function (params, defaultLimit = 50) {
+  const skip = parseInt(params.skip, 10);
+  const limit = parseInt(params.limit, 10);
+
+  return {
+    skip: !isNaN(skip) && skip >= 0 ? skip : 0,
+    limit: !isNaN(limit) && limit > 0 ? Math.min(limit, 1000) : defaultLimit,
+  };
+};
+
 exports.forEachFileLine = function (fileName, lineHandler) {
   let buffer = '';
   function processBuffer(flush) {

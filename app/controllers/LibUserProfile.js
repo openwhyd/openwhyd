@@ -197,11 +197,15 @@ exports.fetchAndRender = function (options, callback) {
 
     options.bodyClass += ' userSubscribers';
     options.pageTitle = options.user.name + "'s followers";
+    const sanitized = snip.sanitizePaginationParams(
+      { skip: options.after, limit: MAX_SUBSCRIPTIONS + 1 },
+      MAX_SUBSCRIPTIONS + 1,
+    );
     const params = {
       sort: { _id: -1 },
-      limit: MAX_SUBSCRIPTIONS + 1,
+      limit: sanitized.limit,
       fields: { _id: 0, uId: 1 },
-      skip: Number(options.after || 0),
+      skip: sanitized.skip,
     };
     followModel.fetch({ tId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
@@ -222,11 +226,15 @@ exports.fetchAndRender = function (options, callback) {
 
     options.bodyClass += ' userSubscriptions';
     options.pageTitle = options.user.name + "'s following";
+    const sanitized = snip.sanitizePaginationParams(
+      { skip: options.after, limit: MAX_SUBSCRIPTIONS + 1 },
+      MAX_SUBSCRIPTIONS + 1,
+    );
     const params = {
       sort: { _id: -1 },
-      limit: MAX_SUBSCRIPTIONS + 1,
+      limit: sanitized.limit,
       fields: { _id: 0, tId: 1 },
-      skip: Number(options.after || 0),
+      skip: sanitized.skip,
     };
     followModel.fetch({ uId: options.user.id }, params, function (subscr) {
       if (subscr.length > MAX_SUBSCRIPTIONS) {
