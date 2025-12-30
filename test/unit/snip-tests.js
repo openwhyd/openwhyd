@@ -132,5 +132,17 @@ describe('snip.js', function () {
       const result = snip.sanitizePaginationParams({ skip: 0, limit: -1 }, 100);
       assert.strictEqual(result.limit, 100);
     });
+
+    it('should handle null params', function () {
+      const result = snip.sanitizePaginationParams(null);
+      assert.strictEqual(result.skip, 0);
+      assert.strictEqual(result.limit, 50);
+    });
+
+    it('should handle undefined params', function () {
+      const result = snip.sanitizePaginationParams(undefined);
+      assert.strictEqual(result.skip, 0);
+      assert.strictEqual(result.limit, 50);
+    });
   });
 });

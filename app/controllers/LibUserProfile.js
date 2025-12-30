@@ -197,6 +197,7 @@ exports.fetchAndRender = function (options, callback) {
 
     options.bodyClass += ' userSubscribers';
     options.pageTitle = options.user.name + "'s followers";
+    // Fetch MAX_SUBSCRIPTIONS + 1 to determine if there are more results
     const sanitized = snip.sanitizePaginationParams(
       { skip: options.after, limit: MAX_SUBSCRIPTIONS + 1 },
       MAX_SUBSCRIPTIONS + 1,
@@ -226,6 +227,7 @@ exports.fetchAndRender = function (options, callback) {
 
     options.bodyClass += ' userSubscriptions';
     options.pageTitle = options.user.name + "'s following";
+    // Fetch MAX_SUBSCRIPTIONS + 1 to determine if there are more results
     const sanitized = snip.sanitizePaginationParams(
       { skip: options.after, limit: MAX_SUBSCRIPTIONS + 1 },
       MAX_SUBSCRIPTIONS + 1,

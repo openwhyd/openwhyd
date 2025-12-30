@@ -56,6 +56,7 @@ exports.weekNumberToDate = function (weekNumber) {
  * @returns {Object} Object with sanitized skip and limit values
  */
 exports.sanitizePaginationParams = function (params, defaultLimit = 50) {
+  params = params || {};
   const skip = parseInt(params.skip, 10);
   const limit = parseInt(params.limit, 10);
 
