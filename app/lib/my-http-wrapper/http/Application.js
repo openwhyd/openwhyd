@@ -14,6 +14,7 @@ const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
 // From Response.js
 
+// TODO: migrate to middleware/response.js
 // @ts-ignore
 http.ServerResponse.prototype.legacyRender = function (
   view,
@@ -141,6 +142,11 @@ exports.Application = class Application {
     app.use(express.static(this._publicDir));
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     this._sessionMiddleware && app.use(this._sessionMiddleware);
+
+    // Add Openwhyd request/response middleware (auth, logging, response helpers)
+    const { openwhydMiddleware } = require('../../../middleware/index.js');
+    app.use(openwhydMiddleware);
+
     app.use(makeStatsUpdater());
 
     if (this._features.auth) {

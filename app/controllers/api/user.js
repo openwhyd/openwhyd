@@ -416,7 +416,10 @@ function localRendering(reqParams, r) {
   return reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r;
 }
 
-/** @param {Features} features */
+/**
+ * @param {import('node:http').IncomingMessage} request
+ * @param {Features} features
+ */
 exports.controller = async function (request, reqParams, response, features) {
   request.logToConsole('api.user.controller', reqParams);
   reqParams = reqParams || {};
