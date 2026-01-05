@@ -77,10 +77,7 @@ function renderFriendsFeed(options, callback) {
     //limit:limit
   };
   if (options.limit) params.limit = options.limit;
-  params.id = options.id ? options.id : options.loggedUser.id;
-  console.log('options.id: ' + options.id);
-  console.log('options.loggedUser.id: ' + options.loggedUser.id);
-  console.log('params.id: ' + params.id);
+  params.id = options.uid ? options.uid : options.loggedUser.id;
 
   fetchSubscriptions(params.id, function (uidList, subscriptions) {
     options.subscriptions = subscriptions;
