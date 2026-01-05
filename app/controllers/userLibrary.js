@@ -159,11 +159,14 @@ exports.controller = async function (request, reqParams, response) {
 
   if (path == '/' || request.url.indexOf('/stream') > -1) {
     if (loggedInUser && loggedInUser.id) return renderFriendsLibrary(lib);
-    else if (reqParams.format == 'json')
-      return render({ errorCode: 'REQ_LOGIN' });
     else {
-      lib.options.bodyClass = 'home';
-      return renderAllLibrary(lib);
+      if (reqParams.id) return renderFriendsLibrary(lib);
+      else if (reqParams.format == 'json')
+        return render({ errorCode: 'REQ_LOGIN' });
+      else {
+        lib.options.bodyClass = 'home';
+        return renderAllLibrary(lib);
+      }
     }
   } else if (path == '/me') {
     if (await request.checkLogin(response, reqParams.format))
