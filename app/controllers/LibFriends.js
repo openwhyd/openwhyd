@@ -77,9 +77,9 @@ function renderFriendsFeed(options, callback) {
     //limit:limit
   };
   if (options.limit) params.limit = options.limit;
-  params.id = options.uid ? options.uid : options.loggedUser.id;
+  const uId = options.uid ? options.uid : options.loggedUser.id;
 
-  fetchSubscriptions(params.id, function (uidList, subscriptions) {
+  fetchSubscriptions(uId, function (uidList, subscriptions) {
     options.subscriptions = subscriptions;
     postModel.fetchByAuthors(uidList, params, function (posts) {
       prepareSidebar(uidList, options, function () {
