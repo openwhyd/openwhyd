@@ -1,3 +1,10 @@
+# [1.64.0](https://github.com/openwhyd/openwhyd/compare/v1.63.39...v1.64.0) (2026-01-13)
+
+
+### Features
+
+* **api:** get any user's personalised stream ([#861](https://github.com/openwhyd/openwhyd/issues/861)) ([6ab5f34](https://github.com/openwhyd/openwhyd/commit/6ab5f34a71104b873c900cc7b8a79192403a5080))
+
 ## [1.63.39](https://github.com/openwhyd/openwhyd/compare/v1.63.38...v1.63.39) (2025-12-30)
 
 
