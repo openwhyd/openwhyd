@@ -25,13 +25,13 @@ const noOpRateLimiter = (req, res, next) => next();
 
 /**
  * Global rate limiter for all routes
- * Allows 100 requests per minute per IP
+ * Allows 500 requests per minute per IP
  */
 exports.globalRateLimiter = isRateLimitingDisabled
   ? noOpRateLimiter
   : rateLimit({
       windowMs: 60 * 1000, // 1 minute
-      limit: 100, // Limit each IP to 100 requests per window
+      limit: 500, // Limit each IP to 500 requests per window
       message: { error: 'Too many requests, please try again later' },
       standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
       legacyHeaders: false, // Disable the `X-RateLimit-*` headers
@@ -39,13 +39,13 @@ exports.globalRateLimiter = isRateLimitingDisabled
 
 /**
  * API rate limiter for database-heavy operations
- * Allows 30 requests per minute per IP
+ * Allows 150 requests per minute per IP
  */
 exports.apiRateLimiter = isRateLimitingDisabled
   ? noOpRateLimiter
   : rateLimit({
       windowMs: 60 * 1000, // 1 minute
-      limit: 30, // Limit each IP to 30 requests per window
+      limit: 150, // Limit each IP to 150 requests per window
       message: { error: 'Too many API requests, please try again later' },
       standardHeaders: true,
       legacyHeaders: false,
@@ -68,13 +68,13 @@ exports.authRateLimiter = isRateLimitingDisabled
 
 /**
  * Moderate rate limiter for search and other resource-intensive operations
- * Allows 20 requests per minute per IP
+ * Allows 100 requests per minute per IP
  */
 exports.searchRateLimiter = isRateLimitingDisabled
   ? noOpRateLimiter
   : rateLimit({
       windowMs: 60 * 1000, // 1 minute
-      limit: 20, // Limit each IP to 20 requests per window
+      limit: 100, // Limit each IP to 100 requests per window
       message: { error: 'Too many search requests, please try again later' },
       standardHeaders: true,
       legacyHeaders: false,
