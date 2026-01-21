@@ -70,6 +70,22 @@ When a rate limit is active, the following HTTP headers are included in response
 - `RateLimit-Remaining`: Number of requests remaining in the current window
 - `RateLimit-Reset`: Time when the rate limit window resets (Unix timestamp)
 
+### Disabling Rate Limiting (for Testing)
+
+Rate limiting can be disabled by setting the `DISABLE_RATE_LIMIT` environment variable to `true`. This is automatically set in the test environment configuration (`env-vars-testing.conf` and `.env-docker`).
+
+```bash
+# Disable rate limiting temporarily
+DISABLE_RATE_LIMIT=true npm start
+```
+
+This is useful when:
+- Running automated tests that make many rapid requests
+- Debugging issues without hitting rate limits
+- Load testing with custom rate limiting tools
+
+**⚠️ Never disable rate limiting in production environments.**
+
 ### Testing Rate Limits Locally
 
 To test rate limiting locally:
