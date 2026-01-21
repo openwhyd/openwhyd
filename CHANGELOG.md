@@ -1,3 +1,10 @@
+## [1.64.1](https://github.com/openwhyd/openwhyd/compare/v1.64.0...v1.64.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* **rate-limiting:** tiered rate limiting to prevent resource exhaustion from traffic bursts ([#864](https://github.com/openwhyd/openwhyd/issues/864)) ([53acb35](https://github.com/openwhyd/openwhyd/commit/53acb356cc21792cfb9d70496a3811d6f6e07425))
+
 # [1.64.0](https://github.com/openwhyd/openwhyd/compare/v1.63.39...v1.64.0) (2026-01-13)
 
 
