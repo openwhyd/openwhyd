@@ -20,18 +20,21 @@ The application uses `express-rate-limit` to implement rate limiting at the appl
 Different endpoints have different rate limits based on their resource requirements:
 
 #### 1. Global Rate Limiter (All Routes)
+
 - **Limit**: 100 requests per minute per IP
 - **Window**: 1 minute
 - **Applies to**: All routes except static files
 - **Purpose**: General protection against abuse
 
 #### 2. API Rate Limiter (Database-Heavy Operations)
+
 - **Limit**: 30 requests per minute per IP
 - **Window**: 1 minute
 - **Applies to**: All `/api/*` endpoints
 - **Purpose**: Protect database from overload
 
 #### 3. Authentication Rate Limiter (Login/Registration)
+
 - **Limit**: 5 requests per 15 minutes per IP
 - **Window**: 15 minutes
 - **Applies to**: `/login`, `/register` endpoints
@@ -39,6 +42,7 @@ Different endpoints have different rate limits based on their resource requireme
 - **Special**: Successful login attempts don't count against the limit
 
 #### 4. Search Rate Limiter (Resource-Intensive)
+
 - **Limit**: 20 requests per minute per IP
 - **Window**: 1 minute
 - **Applies to**: `/search` endpoints
@@ -85,6 +89,7 @@ for i in {1..35}; do curl -s http://localhost:8080/api/user -o /dev/null -w "%{h
 ```
 
 Expected behavior:
+
 - First N requests return 200 (or endpoint-specific status)
 - Subsequent requests return 429 (Too Many Requests)
 
@@ -147,7 +152,7 @@ Create the following rules to match your application-level limits:
   - Action: `Block`
   - Duration: `1 minute`
 - **For**: `100 requests` per `1 minute` per `IP Address`
-- **Response**: 
+- **Response**:
   - Type: `Custom`
   - Status code: `429`
   - Content: `{"error": "Rate limit exceeded. Please try again later."}`
@@ -205,20 +210,20 @@ If you prefer infrastructure-as-code, you can use Cloudflare's Terraform provide
 
 resource "cloudflare_rate_limit" "global" {
   zone_id = var.cloudflare_zone_id
-  
+
   threshold = 100
   period    = 60
-  
+
   match {
     request {
       url_pattern = "*"
     }
   }
-  
+
   action {
     mode    = "simulate" # Change to "ban" when ready
     timeout = 60
-    
+
     response {
       content_type = "application/json"
       body         = jsonencode({
@@ -226,27 +231,27 @@ resource "cloudflare_rate_limit" "global" {
       })
     }
   }
-  
+
   disabled    = false
   description = "Global rate limit for openwhyd.org"
 }
 
 resource "cloudflare_rate_limit" "api" {
   zone_id = var.cloudflare_zone_id
-  
+
   threshold = 30
   period    = 60
-  
+
   match {
     request {
       url_pattern = "*/api/*"
     }
   }
-  
+
   action {
     mode    = "simulate" # Change to "ban" when ready
     timeout = 60
-    
+
     response {
       content_type = "application/json"
       body         = jsonencode({
@@ -254,7 +259,7 @@ resource "cloudflare_rate_limit" "api" {
       })
     }
   }
-  
+
   disabled    = false
   description = "API rate limit for openwhyd.org"
 }
@@ -318,6 +323,7 @@ if (process.datadogTracer) {
 **Application-level rate limiting**: Free (already implemented)
 
 **Cloudflare rate limiting**:
+
 - Pro plan: $20/month + $0.05 per 10,000 requests above the first 10,000
 - Business plan: $200/month + better limits
 - Enterprise plan: Custom pricing + DDoS protection
@@ -328,7 +334,8 @@ For most scenarios, the Pro plan is sufficient.
 
 #### Issue: Legitimate users are being rate limited
 
-**Solution**: 
+**Solution**:
+
 1. Check if they're behind a NAT/proxy that shares an IP with many users
 2. Consider using Cloudflare's "Managed Challenge" action instead of "Block" for less critical endpoints
 3. Increase the rate limit threshold for specific endpoints
@@ -337,6 +344,7 @@ For most scenarios, the Pro plan is sufficient.
 #### Issue: Rate limits aren't being enforced
 
 **Solution**:
+
 1. Verify `trust proxy` is set correctly in Application.js (already done)
 2. Check that Cloudflare proxy (orange cloud) is enabled for your domain
 3. Ensure rate limiting rules are not in "Simulate" mode
@@ -345,6 +353,7 @@ For most scenarios, the Pro plan is sufficient.
 #### Issue: Server still experiences high load despite rate limiting
 
 **Solution**:
+
 1. Check for sophisticated attacks that stay just under the rate limits
 2. Consider implementing additional protections (CAPTCHA, bot detection)
 3. Review your server resources and consider scaling
