@@ -1,0 +1,71 @@
+// @ts-check
+
+/**
+ * Rate limiting configuration for Openwhyd
+ * 
+ * This module provides different rate limiting strategies to protect against
+ * bursts of incoming HTTP calls that can overwhelm the server.
+ * 
+ * Strategy:
+ * - Global rate limit: Applies to all routes to prevent general abuse
+ * - API rate limit: Stricter limits for API endpoints that perform database operations
+ * - Login rate limit: Very strict limits for authentication endpoints to prevent brute force
+ * - Static content: More lenient limits for static assets
+ */
+
+const { rateLimit } = require('express-rate-limit');
+
+/**
+ * Global rate limiter for all routes
+ * Allows 100 requests per minute per IP
+ */
+exports.globalRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  limit: 100, // Limit each IP to 100 requests per window
+  message: { error: 'Too many requests, please try again later' },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  // Skip rate limiting for static assets that are served by express.static
+  skip: (req) => {
+    // Don't rate limit static files served by express.static middleware
+    // They are handled before this middleware runs
+    return false;
+  },
+});
+
+/**
+ * API rate limiter for database-heavy operations
+ * Allows 30 requests per minute per IP
+ */
+exports.apiRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  limit: 30, // Limit each IP to 30 requests per window
+  message: { error: 'Too many API requests, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+/**
+ * Strict rate limiter for authentication endpoints
+ * Allows 5 login attempts per 15 minutes per IP
+ */
+exports.authRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 5, // Limit each IP to 5 requests per window
+  message: { error: 'Too many login attempts, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true, // Don't count successful logins against the limit
+});
+
+/**
+ * Moderate rate limiter for search and other resource-intensive operations
+ * Allows 20 requests per minute per IP
+ */
+exports.searchRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  limit: 20, // Limit each IP to 20 requests per window
+  message: { error: 'Too many search requests, please try again later' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

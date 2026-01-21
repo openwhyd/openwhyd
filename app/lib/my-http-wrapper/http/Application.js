@@ -9,6 +9,12 @@ const sessionTracker = require('../../../controllers/admin/session.js');
 const {
   postTrack,
 } = require('../../../api-v2/provisional-features/postTrack.js');
+const {
+  globalRateLimiter,
+  apiRateLimiter,
+  authRateLimiter,
+  searchRateLimiter,
+} = require('../../rate-limiting.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
 
@@ -139,6 +145,10 @@ exports.Application = class Application {
     app.use(noCache); // called on all requests
     app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
     app.use(express.static(this._publicDir));
+    
+    // Apply global rate limiting to all routes (excluding static files)
+    app.use(globalRateLimiter);
+    
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater());
@@ -220,23 +230,42 @@ function attachLegacyRoute({
   path,
   controllerFile,
   features,
+  rateLimiter,
 }) {
-  expressApp[method](path, function endpointHandler(req, res) {
+  const middlewares = [];
+  if (rateLimiter) {
+    middlewares.push(rateLimiter);
+  }
+  middlewares.push(function endpointHandler(req, res) {
     req.mergedParams = { ...req.params, ...req.query };
 
     return controllerFile.controller(req, req.mergedParams, res, features);
   });
+  
+  expressApp[method](path, ...middlewares);
 }
 
 function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
   loadRoutesFromFile(routeFile).forEach(({ pattern, name }) => {
     const { method, path } = parseExpressRoute({ pattern });
+    
+    // Determine which rate limiter to apply based on the route
+    let rateLimiter = null;
+    if (path.startsWith('/api/') || path === '/api') {
+      rateLimiter = apiRateLimiter;
+    } else if (path === '/login' || path.startsWith('/register')) {
+      rateLimiter = authRateLimiter;
+    } else if (path === '/search' || path.startsWith('/search/')) {
+      rateLimiter = searchRateLimiter;
+    }
+    
     attachLegacyRoute({
       expressApp,
       method,
       path,
       controllerFile: loadControllerFile({ name, appDir }),
       features,
+      rateLimiter,
     });
   });
 }
