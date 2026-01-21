@@ -145,10 +145,10 @@ exports.Application = class Application {
     app.use(noCache); // called on all requests
     app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
     app.use(express.static(this._publicDir));
-    
+
     // Apply global rate limiting to all routes (excluding static files)
     app.use(globalRateLimiter);
-    
+
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
     this._sessionMiddleware && app.use(this._sessionMiddleware);
     app.use(makeStatsUpdater());
@@ -241,14 +241,14 @@ function attachLegacyRoute({
 
     return controllerFile.controller(req, req.mergedParams, res, features);
   });
-  
+
   expressApp[method](path, ...middlewares);
 }
 
 function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
   loadRoutesFromFile(routeFile).forEach(({ pattern, name }) => {
     const { method, path } = parseExpressRoute({ pattern });
-    
+
     // Determine which rate limiter to apply based on the route
     let rateLimiter = null;
     if (path.startsWith('/api/') || path === '/api') {
@@ -258,7 +258,7 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
     } else if (path === '/search' || path.startsWith('/search/')) {
       rateLimiter = searchRateLimiter;
     }
-    
+
     attachLegacyRoute({
       expressApp,
       method,

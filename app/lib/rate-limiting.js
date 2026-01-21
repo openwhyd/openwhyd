@@ -2,10 +2,10 @@
 
 /**
  * Rate limiting configuration for Openwhyd
- * 
+ *
  * This module provides different rate limiting strategies to protect against
  * bursts of incoming HTTP calls that can overwhelm the server.
- * 
+ *
  * Strategy:
  * - Global rate limit: Applies to all routes to prevent general abuse
  * - API rate limit: Stricter limits for API endpoints that perform database operations
@@ -25,12 +25,6 @@ exports.globalRateLimiter = rateLimit({
   message: { error: 'Too many requests, please try again later' },
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  // Skip rate limiting for static assets that are served by express.static
-  skip: (req) => {
-    // Don't rate limit static files served by express.static middleware
-    // They are handled before this middleware runs
-    return false;
-  },
 });
 
 /**
