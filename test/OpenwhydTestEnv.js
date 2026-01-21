@@ -84,28 +84,43 @@ class OpenwhydTestEnv {
    * If `startWithEnv` is provided, `setup()` will start Openwhyd's server programmatically,
    * by reading environment variables from the corresponding file.
    * Otherwise, please provide the `port` on which Openwhyd is currently running.
-   * @param {{ startWithEnv: string } | { port: string }} options
+   * @param {{ startWithEnv: string, withMockAuth0?: boolean } | { port: string, withMockAuth0?: boolean }} options
    */
   constructor(options) {
     this.options = options;
     this.env = null;
     this.serverProcess = null;
     this.mongoClient = null;
+    this.mockAuth0 = null;
   }
 
   /**
    * Start Openwhyd, if `startWithEnv` was provided at time of instanciation.
+   * If `withMockAuth0` option is true, also start a mock Auth0 server.
    * Don't forget:
    * - call `reset()` to clear and (re)initialize Openwhyd's database, before each test;
    * - call `refreshCache()` after every modification to the `user` collection;
    * - call `release()` to stop Openwhyd, when you're done testing.
    */
   async setup() {
+    // Start mock Auth0 server if requested
+    if (this.options.withMockAuth0) {
+      const { MockAuth0Server } = require('./MockAuth0Server.js');
+      this.mockAuth0 = new MockAuth0Server();
+      await this.mockAuth0.start(18082); // Use a fixed port for consistency
+    }
+
     if ('startWithEnv' in this.options && this.options.startWithEnv) {
       this.env = {
         ...(await loadEnvVars(this.options.startWithEnv)),
         ...process.env, // allow overrides
       };
+      
+      // If mock Auth0 is running, override Auth0 env vars
+      if (this.mockAuth0) {
+        Object.assign(this.env, this.mockAuth0.getEnvVars());
+      }
+      
       this.serverProcess = await startOpenwhydServerWith(this.env);
     } else {
       this.env = { ...process.env };
@@ -113,6 +128,12 @@ class OpenwhydTestEnv {
         this.env.WHYD_PORT = this.options.port;
       if (!this.env.WHYD_PORT)
         throw new Error('please provide startWithEnv or port');
+      
+      // If mock Auth0 is running, override Auth0 env vars
+      if (this.mockAuth0) {
+        Object.assign(this.env, this.mockAuth0.getEnvVars());
+      }
+      
       await refreshOpenwhydCache(this.getURL());
     }
   }
@@ -125,6 +146,9 @@ class OpenwhydTestEnv {
     if (this.serverProcess) {
       await stopOpenwhyd(this.serverProcess);
     }
+    if (this.mockAuth0) {
+      await this.mockAuth0.stop();
+    }
   }
 
   /** Return the environment variables used by Openwhyd. */
@@ -136,6 +160,11 @@ class OpenwhydTestEnv {
   /** Return the URL of the Openwhyd server. */
   getURL() {
     return `http://localhost:${this.getEnv().WHYD_PORT}`;
+  }
+
+  /** Return the mock Auth0 server instance, if it was started. */
+  getMockAuth0() {
+    return this.mockAuth0;
   }
 
   getMongoClient() {
