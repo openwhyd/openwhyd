@@ -80,6 +80,7 @@ DISABLE_RATE_LIMIT=true npm start
 ```
 
 This is useful when:
+
 - Running automated tests that make many rapid requests
 - Debugging issues without hitting rate limits
 - Load testing with custom rate limiting tools
