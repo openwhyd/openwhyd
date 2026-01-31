@@ -1,3 +1,10 @@
+## [1.64.2](https://github.com/openwhyd/openwhyd/compare/v1.64.1...v1.64.2) (2026-01-31)
+
+
+### Bug Fixes
+
+* **rate-limiting:** tolerate more image requests, fixes [#866](https://github.com/openwhyd/openwhyd/issues/866) ([55183b0](https://github.com/openwhyd/openwhyd/commit/55183b00ae9e39aa4b8aaacaa63e6b8ebe21bbe3))
+
 ## [1.64.1](https://github.com/openwhyd/openwhyd/compare/v1.64.0...v1.64.1) (2026-01-21)
 
 
