@@ -14,7 +14,7 @@ const ObjectId = (id) => mongodb.ObjectId(id);
 const { MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
 const url = `mongodb://${MONGODB_HOST || 'localhost'}:${MONGODB_PORT || 27117}`;
 const dbName = MONGODB_DATABASE || 'openwhyd_test';
-const username = process.argv[2] || 'test'; // default profile: https://openwhyd.org/test
+const userURI = process.argv[2] || 'test'; // default profile: https://openwhyd.org/test
 const password = {
   plain: 'admin',
   md5: '21232f297a57a5a743894a0e4a801fc3',
@@ -27,18 +27,18 @@ const connectToDb = ({ url, dbName }) => {
   return { db: client.db(dbName), client };
 };
 
-const fetchUserProfile = ({ username }) =>
+const fetchUserProfile = ({ userURI }) =>
   new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/api/user/${username}?format=json`;
+    const url = `https://openwhyd.org/api/user/${userURI.split('/').pop()}?format=json`;
     console.log(`fetching profile from ${url} ...`);
     request(url, (err, _, body) =>
       err ? reject(err) : resolve(JSON.parse(body)),
     );
   });
 
-const fetchUserPosts = ({ username }) =>
+const fetchUserPosts = ({ userId }) =>
   new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/${username}?format=json&limit=${nbPosts}`;
+    const url = `https://openwhyd.org/u/${userId}?format=json&limit=${nbPosts}`;
     console.log(`fetching tracks from ${url} ...`);
     request(url, (err, _, body) =>
       err
@@ -101,10 +101,10 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
 (async () => {
   console.log(`connecting to ${url}/${dbName} ...`);
   const { db, client } = await connectToDb({ url, dbName });
-  const user = await fetchUserProfile({ username });
+  const user = await fetchUserProfile({ userURI });
   await upsertUser({ db, user });
   const userId = '' + user._id;
-  const { posts } = await fetchUserPosts({ username }); // or require(`./../${username}.json`);
+  const { posts } = await fetchUserPosts({ userId }); // or require(`./../${username}.json`);
   console.log(`imported ${posts.length} posts`);
   await insertPosts({ db, posts });
   if (importSubscribers) {
@@ -119,8 +119,8 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
     ),
   );
   client.close();
-  console.log(`inserted user => http://localhost:8080/${username}`);
-  console.log(`login id: ${username}, password: ${password.plain}`);
+  console.log(`inserted user => http://localhost:8080/${userURI}`);
+  console.log(`login id: ${userURI}, password: ${password.plain}`);
 })().catch((err) => {
   console.error(err);
   process.exit(1);

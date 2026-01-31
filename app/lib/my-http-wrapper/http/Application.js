@@ -14,6 +14,7 @@ const {
   apiRateLimiter,
   authRateLimiter,
   searchRateLimiter,
+  imageRateLimiter,
 } = require('../../rate-limiting.js');
 
 const LOG_THRESHOLD = parseInt(process.env.LOG_REQ_THRESHOLD_MS ?? '1000', 10);
@@ -257,6 +258,8 @@ function attachLegacyRoutesFromFile(expressApp, appDir, routeFile, features) {
       rateLimiter = authRateLimiter;
     } else if (path === '/search' || path.startsWith('/search/')) {
       rateLimiter = searchRateLimiter;
+    } else if (path === '/img/:type/:id' && method.toLowerCase() === 'get') {
+      rateLimiter = imageRateLimiter;
     }
 
     attachLegacyRoute({

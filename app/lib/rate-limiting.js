@@ -35,6 +35,8 @@ exports.globalRateLimiter = isRateLimitingDisabled
       message: { error: 'Too many requests, please try again later' },
       standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
       legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+      skip: (req) =>
+        req.path?.startsWith('/img/') && req.method.toLowerCase() === 'get', // Skip static image requests (handled by imageRateLimiter)
     });
 
 /**
@@ -76,6 +78,22 @@ exports.searchRateLimiter = isRateLimitingDisabled
       windowMs: 60 * 1000, // 1 minute
       limit: 20, // Limit each IP to 20 requests per window
       message: { error: 'Too many search requests, please try again later' },
+      standardHeaders: true,
+      legacyHeaders: false,
+    });
+
+/**
+ * Lenient rate limiter for playlist cover images
+ * Allows 300 requests per minute per IP
+ */
+exports.imageRateLimiter = isRateLimitingDisabled
+  ? noOpRateLimiter
+  : rateLimit({
+      windowMs: 60 * 1000, // 1 minute
+      limit: 1000, // Limit each IP to 1000 requests per window
+      message: {
+        error: 'Too many image requests, please try again later',
+      },
       standardHeaders: true,
       legacyHeaders: false,
     });
