@@ -999,7 +999,7 @@ $(document).ready(function () {
                 display(noResultsFound(query), false); // Stop loading animation on error
                 return;
               }
-              
+
               resultsHtml =
                 (resultsHtml &&
                   typeof resultsHtml === 'string' &&
