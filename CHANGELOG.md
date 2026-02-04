@@ -1,3 +1,10 @@
+## [1.64.5](https://github.com/openwhyd/openwhyd/compare/v1.64.4...v1.64.5) (2026-02-04)
+
+
+### Bug Fixes
+
+* **rate-limiter:** increase limits for API calls and search requests ([033b0a6](https://github.com/openwhyd/openwhyd/commit/033b0a656992c3efaf00778df874106c6f59219a))
+
 ## [1.64.4](https://github.com/openwhyd/openwhyd/compare/v1.64.3...v1.64.4) (2026-02-04)
 
 
