@@ -1,3 +1,10 @@
+## [1.64.3](https://github.com/openwhyd/openwhyd/compare/v1.64.2...v1.64.3) (2026-02-04)
+
+
+### Bug Fixes
+
+* **rate-limiter:** check common IP hypothesis on rate limiter ([#872](https://github.com/openwhyd/openwhyd/issues/872)) ([88845e8](https://github.com/openwhyd/openwhyd/commit/88845e8ad0a680a31441933f0d28963e4f8e99c6))
+
 ## [1.64.2](https://github.com/openwhyd/openwhyd/compare/v1.64.1...v1.64.2) (2026-01-31)
 
 
