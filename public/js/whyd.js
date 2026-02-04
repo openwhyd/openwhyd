@@ -985,7 +985,9 @@ $(document).ready(function () {
               // Handle error response
               if (resultsHtml && typeof resultsHtml === 'object' && resultsHtml.error) {
                 console.error('Search error:', resultsHtml.error);
-                display(noResultsYet(query), false); // Stop loading animation on error
+                // Show "Show all results..." without loading animation
+                const errorResultsHtml = noResultsYet(query).replace(' loading', '');
+                display(errorResultsHtml, false); // Stop loading animation on error
                 return;
               }
               
