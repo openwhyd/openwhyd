@@ -1,3 +1,10 @@
+## [1.64.4](https://github.com/openwhyd/openwhyd/compare/v1.64.3...v1.64.4) (2026-02-04)
+
+
+### Bug Fixes
+
+* **rate-limiter:** delete `/ip` route ([7ac03f2](https://github.com/openwhyd/openwhyd/commit/7ac03f2a4882cbc16b2445152e031cc90d3c1e94)), closes [/github.com/openwhyd/openwhyd/issues/870#issuecomment-3847966999](https://github.com//github.com/openwhyd/openwhyd/issues/870/issues/issuecomment-3847966999)
+
 ## [1.64.3](https://github.com/openwhyd/openwhyd/compare/v1.64.2...v1.64.3) (2026-02-04)
 
 
