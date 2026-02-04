@@ -41,13 +41,12 @@ exports.globalRateLimiter = isRateLimitingDisabled
 
 /**
  * API rate limiter for database-heavy operations
- * Allows 30 requests per minute per IP
  */
 exports.apiRateLimiter = isRateLimitingDisabled
   ? noOpRateLimiter
   : rateLimit({
       windowMs: 60 * 1000, // 1 minute
-      limit: 30, // Limit each IP to 30 requests per window
+      limit: 90, // Limit each IP to 90 requests per window
       message: { error: 'Too many API requests, please try again later' },
       standardHeaders: true,
       legacyHeaders: false,
@@ -70,13 +69,12 @@ exports.authRateLimiter = isRateLimitingDisabled
 
 /**
  * Moderate rate limiter for search and other resource-intensive operations
- * Allows 20 requests per minute per IP
  */
 exports.searchRateLimiter = isRateLimitingDisabled
   ? noOpRateLimiter
   : rateLimit({
       windowMs: 60 * 1000, // 1 minute
-      limit: 20, // Limit each IP to 20 requests per window
+      limit: 40, // Limit each IP to 40 requests per window
       message: { error: 'Too many search requests, please try again later' },
       standardHeaders: true,
       legacyHeaders: false,
