@@ -76,6 +76,7 @@ function submitSearchQuery(q, cb) {
     type: 'GET',
     url: '/search',
     data: q,
+    timeout: 10000, // 10 second timeout
     complete: function (res, status) {
       try {
         if (status != 'success' || !res.responseText) throw 0;
@@ -981,6 +982,13 @@ $(document).ready(function () {
           submitSearchQuery(
             { q: query, format: 'html', context: 'header' },
             function (resultsHtml) {
+              // Handle error response
+              if (resultsHtml && typeof resultsHtml === 'object' && resultsHtml.error) {
+                console.error('Search error:', resultsHtml.error);
+                display(noResultsYet(query), false); // Stop loading animation on error
+                return;
+              }
+              
               resultsHtml =
                 (resultsHtml &&
                   typeof resultsHtml === 'string' &&
