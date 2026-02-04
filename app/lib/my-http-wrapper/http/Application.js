@@ -84,8 +84,9 @@ const makeStatsUpdater = () =>
       const reqId = `${startDate.toISOString()} ${req.method} ${req.path}`;
       // @ts-ignore
       const duration = Date.now() - startDate;
+      const suffix = res.statusCode === 429 ? ` (IP: ${req.ip})` : '';
       console.log(
-        `◀ ${reqId} responds ${res.statusCode} after ${duration} ms`,
+        `◀ ${reqId} responds ${res.statusCode} after ${duration} ms ${suffix}`,
       );
       if (duration >= LOG_THRESHOLD) {
         logSlowRequest({
@@ -146,6 +147,10 @@ exports.Application = class Application {
     app.use(noCache); // called on all requests
     app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
     app.use(express.static(this._publicDir));
+
+    app.get('/ip', (request, response) => {
+      response.send(request.ip);
+    });
 
     // Apply global rate limiting to all routes (excluding static files)
     app.use(globalRateLimiter);
