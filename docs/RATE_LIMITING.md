@@ -17,38 +17,7 @@ The application uses `express-rate-limit` to implement rate limiting at the appl
 
 ### Rate Limiting Tiers
 
-Different endpoints have different rate limits based on their resource requirements:
-
-#### 1. Global Rate Limiter (All Routes)
-
-- **Limit**: 100 requests per minute per IP
-- **Window**: 1 minute
-- **Applies to**: All routes except static files
-- **Purpose**: General protection against abuse
-
-#### 2. API Rate Limiter (Database-Heavy Operations)
-
-- **Limit**: 30 requests per minute per IP
-- **Window**: 1 minute
-- **Applies to**: All `/api/*` endpoints
-- **Purpose**: Protect database from overload
-
-#### 3. Authentication Rate Limiter (Login/Registration)
-
-- **Limit**: 5 requests per 15 minutes per IP
-- **Window**: 15 minutes
-- **Applies to**: `/login`, `/register` endpoints
-- **Purpose**: Prevent brute force attacks
-- **Special**: Successful login attempts don't count against the limit
-
-#### 4. Search Rate Limiter (Resource-Intensive)
-
-- **Limit**: 20 requests per minute per IP
-- **Window**: 1 minute
-- **Applies to**: `/search` endpoints
-- **Purpose**: Protect search infrastructure
-
-### Configuration
+Different endpoints have different rate limits based on their resource requirements.
 
 Rate limiting configuration is centralized in `/app/lib/rate-limiting.js`. You can adjust the limits by modifying the following parameters:
 
