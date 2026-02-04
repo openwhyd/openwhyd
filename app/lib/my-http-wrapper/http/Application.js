@@ -148,10 +148,6 @@ exports.Application = class Application {
     app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
     app.use(express.static(this._publicDir));
 
-    app.get('/ip', (request, response) => {
-      response.send(request.ip);
-    });
-
     // Apply global rate limiting to all routes (excluding static files)
     app.use(globalRateLimiter);
 
