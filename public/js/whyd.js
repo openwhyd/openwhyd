@@ -924,6 +924,17 @@ $(document).ready(function () {
     ].join('\n') /*).ajaxify()[0]*/;
   };
 
+  const noResultsFound = function (q) {
+    // Same as noResultsYet but without the loading class
+    return /*$(*/ [
+      '<ul class="showAllResults">',
+      '<li><a href="/search?q=' +
+        encodeURIComponent(q) +
+        '" target="_blank">Show all results...</a></li>',
+      '</ul>',
+    ].join('\n') /*).ajaxify()[0]*/;
+  };
+
   window.quickSearch =
     window.quickSearch ||
     new QuickSearch($('#searchBar'), {
@@ -982,12 +993,10 @@ $(document).ready(function () {
           submitSearchQuery(
             { q: query, format: 'html', context: 'header' },
             function (resultsHtml) {
-              // Handle error response
+              // Handle error response (timeouts, network errors, Algolia errors)
               if (resultsHtml && typeof resultsHtml === 'object' && resultsHtml.error) {
                 console.error('Search error:', resultsHtml.error);
-                // Show "Show all results..." without loading animation
-                const errorResultsHtml = noResultsYet(query).replace(' loading', '');
-                display(errorResultsHtml, false); // Stop loading animation on error
+                display(noResultsFound(query), false); // Stop loading animation on error
                 return;
               }
               
