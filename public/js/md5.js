@@ -230,7 +230,7 @@ function rstr2binl(input) {
   var output = Array(input.length >> 2);
   for (let i = 0; i < output.length; i++) output[i] = 0;
   for (let i = 0; i < input.length * 8; i += 8)
-    output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << i % 32;
+    output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << (i % 32);
   return output;
 }
 
@@ -240,7 +240,7 @@ function rstr2binl(input) {
 function binl2rstr(input) {
   var output = '';
   for (let i = 0; i < input.length * 32; i += 8)
-    output += String.fromCharCode((input[i >> 5] >>> i % 32) & 0xff);
+    output += String.fromCharCode((input[i >> 5] >>> (i % 32)) & 0xff);
   return output;
 }
 
@@ -249,7 +249,7 @@ function binl2rstr(input) {
  */
 function binl_md5(x, len) {
   /* append padding */
-  x[len >> 5] |= 0x80 << len % 32;
+  x[len >> 5] |= 0x80 << (len % 32);
   x[(((len + 64) >>> 9) << 4) + 14] = len;
 
   var a = 1732584193;

@@ -306,7 +306,8 @@ p#contentTitle {
   line-height: 15px;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif; /* make sure the font is the same in all children */
+  font-family:
+    'Helvetica Neue', Helvetica, Arial, Sans-serif; /* make sure the font is the same in all children */
 }
 
 textarea {

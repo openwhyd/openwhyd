@@ -62,10 +62,20 @@
       {{#isUserLogged}} {{#ownProfile}}
       <div class="userSubscribe btnEditProfile">Edit profile</div>
       <div id="popinEditProfile">
-        <div onclick="$('#popinEditProfile').hide();showEditProfileDlg();">
+        <div
+          onclick="
+            $('#popinEditProfile').hide();
+            showEditProfileDlg();
+          "
+        >
           Edit Profile Info
         </div>
-        <div onclick="$('#popinEditProfile').hide();showEditProfileCoverDlg();">
+        <div
+          onclick="
+            $('#popinEditProfile').hide();
+            showEditProfileCoverDlg();
+          "
+        >
           Edit Profile Cover
         </div>
       </div>
@@ -97,14 +107,18 @@
         class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
         data-uid="{{id}}"
         onclick="$(this).each(switchSubscription)"
-        onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
-        onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';"
+        onmouseover="
+          if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';
+        "
+        onmouseout="
+          if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';
+        "
       >
         {{#isSubscribed}}Following{{/isSubscribed}}
         {{^isSubscribed}}Follow{{/isSubscribed}}
       </div>
       {{/ownProfile}} {{/isUserLogged}} {{^isUserLogged}}
-      <div class="userSubscribe" onclick="login();">Follow</div>
+      <div class="userSubscribe" onclick="login()">Follow</div>
       {{/isUserLogged}}
     </div>
   </div>
@@ -277,7 +291,7 @@
               <div
                 class="thumb"
                 style="background-image:url('/img/u/{{id}}');"
-                onclick="$(this).parent().find('a.userName').click();"
+                onclick="$(this).parent().find('a.userName').click()"
               ></div>
               <a class="userName" href="/u/{{id}}">{{name}}</a>
               <div class="bio">{{bio}}</div>
@@ -390,7 +404,10 @@
       {{#hasMore}}
       <a
         class="btnLoadMore no-ajaxy"
-        onclick="event.preventDefault(); loadMore();"
+        onclick="
+          event.preventDefault();
+          loadMore();
+        "
         href="{{nextWholePageUrl}}"
       >
         <div>&nbsp;</div>

@@ -252,12 +252,10 @@ Response: (JSON)
 - **twTok**: last session token received from connecting to Twitter
 - **twSec**: last session secret received from connecting to Twitter
 - lastFm: (object)
-
   - name: username of the user's connected last.fm account
   - sk: session key provided by last.fm (used for last.fm api requests)
 
 - lnk: (object) links to the following websites / social networks of the user (for openwhyd profile):
-
   - fb: facebook profile
   - igrm: instagram handle
   - sc: soundcloud handle
@@ -266,11 +264,9 @@ Response: (JSON)
   - home: home page
 
 - ~onb: (object) onboarding data~
-
   - ~tags: (array) list of genre tags (e.g. "Rock") that the user selected~
 
 - pl: (array) list of user's playlist
-
   - id: number of the playlist (counting from 0 to ...)
   - name: (string)
   - url: (string)
@@ -356,7 +352,6 @@ Response: (JSON hierarchy)
 Returns a list of matching:
 
 - tracks posted by (in the following order):
-
   - the logged in user
   - followed users
   - other users
@@ -460,12 +455,10 @@ _Parameters:_
 - **text** : (string, optional) comment of the track
 - **img :** (string, optional) url of the image representing the track
 - **pl:** (object, optional), fields:
-
   - **id:** (int) number (starting at 0) of the user's playlist in which this track is posted. if set to **"create"**, a new playlist is created.
   - **name:** (string) name of the user's playlist in which this track is posted
 
 - **src** : (object, optional) describes where this track was found. fields:
-
   - **id: **(string) url of the website/page where the track was found
   - **name: **(string) name of the website/page where the track was found
 

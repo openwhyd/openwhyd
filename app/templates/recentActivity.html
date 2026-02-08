@@ -99,7 +99,7 @@
           <div
             class="thumb"
             style="background-image:url('/img/u/{{id}}');"
-            onclick="$(this).parent().find('a.userName').click();"
+            onclick="$(this).parent().find('a.userName').click()"
           ></div>
           <span class="activity">
             <a class="userName" href="/u/{{id}}">{{name}}</a>
@@ -113,7 +113,7 @@
               <div
                 class="thumb"
                 style="background-image:url('/img/u/{{id}}');"
-                onclick="$(this).parent().find('a.userName').click();"
+                onclick="$(this).parent().find('a.userName').click()"
               ></div>
               <a class="userName" href="/u/{{id}}">{{name}}</a>
               <div class="bio">{{bio}}</div>
