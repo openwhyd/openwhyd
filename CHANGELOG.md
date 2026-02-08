@@ -1,3 +1,59 @@
+## [1.64.5](https://github.com/openwhyd/openwhyd/compare/v1.64.4...v1.64.5) (2026-02-04)
+
+
+### Bug Fixes
+
+* **rate-limiter:** increase limits for API calls and search requests ([033b0a6](https://github.com/openwhyd/openwhyd/commit/033b0a656992c3efaf00778df874106c6f59219a))
+
+## [1.64.4](https://github.com/openwhyd/openwhyd/compare/v1.64.3...v1.64.4) (2026-02-04)
+
+
+### Bug Fixes
+
+* **rate-limiter:** delete `/ip` route ([7ac03f2](https://github.com/openwhyd/openwhyd/commit/7ac03f2a4882cbc16b2445152e031cc90d3c1e94)), closes [/github.com/openwhyd/openwhyd/issues/870#issuecomment-3847966999](https://github.com//github.com/openwhyd/openwhyd/issues/870/issues/issuecomment-3847966999)
+
+## [1.64.3](https://github.com/openwhyd/openwhyd/compare/v1.64.2...v1.64.3) (2026-02-04)
+
+
+### Bug Fixes
+
+* **rate-limiter:** check common IP hypothesis on rate limiter ([#872](https://github.com/openwhyd/openwhyd/issues/872)) ([88845e8](https://github.com/openwhyd/openwhyd/commit/88845e8ad0a680a31441933f0d28963e4f8e99c6))
+
+## [1.64.2](https://github.com/openwhyd/openwhyd/compare/v1.64.1...v1.64.2) (2026-01-31)
+
+
+### Bug Fixes
+
+* **rate-limiting:** tolerate more image requests, fixes [#866](https://github.com/openwhyd/openwhyd/issues/866) ([55183b0](https://github.com/openwhyd/openwhyd/commit/55183b00ae9e39aa4b8aaacaa63e6b8ebe21bbe3))
+
+## [1.64.1](https://github.com/openwhyd/openwhyd/compare/v1.64.0...v1.64.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* **rate-limiting:** tiered rate limiting to prevent resource exhaustion from traffic bursts ([#864](https://github.com/openwhyd/openwhyd/issues/864)) ([53acb35](https://github.com/openwhyd/openwhyd/commit/53acb356cc21792cfb9d70496a3811d6f6e07425))
+
+# [1.64.0](https://github.com/openwhyd/openwhyd/compare/v1.63.39...v1.64.0) (2026-01-13)
+
+
+### Features
+
+* **api:** get any user's personalised stream ([#861](https://github.com/openwhyd/openwhyd/issues/861)) ([6ab5f34](https://github.com/openwhyd/openwhyd/commit/6ab5f34a71104b873c900cc7b8a79192403a5080))
+
+## [1.63.39](https://github.com/openwhyd/openwhyd/compare/v1.63.38...v1.63.39) (2025-12-30)
+
+
+### Bug Fixes
+
+* **api:** Validate pagination parameters to prevent MongoDB skip errors ([#858](https://github.com/openwhyd/openwhyd/issues/858)) ([bfd837a](https://github.com/openwhyd/openwhyd/commit/bfd837a1948531c95567949c77903cfcbba7496e))
+
+## [1.63.38](https://github.com/openwhyd/openwhyd/compare/v1.63.37...v1.63.38) (2025-12-20)
+
+
+### Bug Fixes
+
+* **deps:** bump on-headers and express-session ([#837](https://github.com/openwhyd/openwhyd/issues/837)) ([779ccbb](https://github.com/openwhyd/openwhyd/commit/779ccbb4337d51326f9b91fff295aa2fb2924274))
+
 ## [1.63.37](https://github.com/openwhyd/openwhyd/compare/v1.63.36...v1.63.37) (2025-10-29)
 
 

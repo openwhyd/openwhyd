@@ -22,6 +22,7 @@ exports.renderPostPage = function (p, cb) {
     loggedUser: p.loggedUser,
     bodyClass: 'pgPost',
     pageType: fbAppNs + ':track', // "music.song"
+    noIndex: true, // Prevent search engines from indexing this page
   };
 
   if (p.isDynamic) {

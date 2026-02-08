@@ -62,6 +62,25 @@ describe(`post api`, function () {
     assert.equal(response.statusCode, 404);
   });
 
+  it('should include noindex meta tag in track page HTML', async function () {
+    // Given a track added by the user
+    const { body } = await api.addPost(jar, post);
+    const pId = body._id;
+
+    // When fetching the track page as HTML
+    const res = await new Promise((resolve, reject) =>
+      request.get(`${URL_PREFIX}/c/${pId}`, (error, response, body) =>
+        error ? reject(error) : resolve({ response, body }),
+      ),
+    );
+
+    // Then the HTML response should include the noindex meta tag
+    assert.ok(
+      res.body.includes('<meta name="robots" content="noindex">'),
+      'Track page should include noindex meta tag',
+    );
+  });
+
   it("should edit a track's name", async function () {
     const { body } = await api.addPost(jar, post);
     const pId = body._id;

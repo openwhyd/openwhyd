@@ -1,6 +1,6 @@
 {
   "name": "openwhyd",
-  "version": "1.63.37",
+  "version": "1.64.5",
   "description": "A web app for collecting, playing and sharing music from various streaming platforms: Youtube, Soundcloud, Bandcamp, Vimeo, Deezer...",
   "homepage": "https://openwhyd.org",
   "license": "MIT",
@@ -73,7 +73,7 @@
     "express-oauth2-jwt-bearer": "^1.6.1",
     "express-openid-connect": "^2.18.0",
     "express-rate-limit": "^7.5.0",
-    "express-session": "^1.18.1",
+    "express-session": "^1.18.2",
     "formidable": "^2.1.1",
     "hogan.js": "3.0.2",
     "htmlparser": "*",
