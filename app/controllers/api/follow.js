@@ -42,10 +42,18 @@ const follow = async function (reqParams, dbHandler) {
 
 const PUBLIC_ACTIONS = {
   fetchFollowers: function (p, cb) {
-    followModel.fetchFollowers(p.id, { skip: p.skip, limit: p.limit }, cb);
+    const sanitized = snip.sanitizePaginationParams(
+      { skip: p.skip, limit: p.limit },
+      50,
+    );
+    followModel.fetchFollowers(p.id, sanitized, cb);
   },
   fetchFollowing: function (p, cb) {
-    followModel.fetchFollowing(p.id, { skip: p.skip, limit: p.limit }, cb);
+    const sanitized = snip.sanitizePaginationParams(
+      { skip: p.skip, limit: p.limit },
+      50,
+    );
+    followModel.fetchFollowing(p.id, sanitized, cb);
   },
 };
 
@@ -82,7 +90,6 @@ exports.controller = async function (request, reqParams, response) {
     result = result && result._id ? { _id: result._id } : {};
     if (error) {
       result.error = error;
-      console.trace('follow API error', error);
     }
 
     if (reqParams.redirect) response.redirect(reqParams.redirect);

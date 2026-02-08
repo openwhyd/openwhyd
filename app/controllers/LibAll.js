@@ -24,12 +24,20 @@ function renderAllLibrary(lib) {
     postModel.fetchPosts(
       { repost: { $exists: false } },
       null,
-      { after: options.after, before: options.before },
+      {
+        after: options.after,
+        before: options.before,
+        ...(options.limit ? { limit: options.limit } : {}),
+      },
       process,
     );
   }
 
-  if (!feedTemplate.shouldRenderWholeProfilePage(options))
+  if (options.format === 'json')
+    renderFeed(function (feedJSON) {
+      lib.renderJson(feedJSON);
+    });
+  else if (!feedTemplate.shouldRenderWholeProfilePage(options))
     renderFeed(function (feedHtml) {
       lib.render({ html: feedHtml });
     });

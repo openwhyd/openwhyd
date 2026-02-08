@@ -118,7 +118,7 @@ exports.controller = async function (request, reqParams, response) {
     response.status(404).sendFile(NO_IMAGE_PATH);
   }
 
-  function renderFile(path, defaultImg) {
+  function renderFileOrDefault(path, defaultImg) {
     response.sendFile('' + path, function (error) {
       if (!error) return;
       if (defaultImg) {
@@ -140,7 +140,7 @@ exports.controller = async function (request, reqParams, response) {
       response.temporaryRedirect(
         uri.replace('http:', '') + (args > -1 ? request.url.substr(args) : ''),
       );
-    } else renderFile(uri, defaultImg);
+    } else renderFileOrDefault(uri, defaultImg);
   }
 
   /**
@@ -160,7 +160,7 @@ exports.controller = async function (request, reqParams, response) {
           (args > -1 ? request.url.substr(args) : ''),
       );
     } else
-      renderFile(
+      renderFileOrDefault(
         exports.config.uAvatarImgPath + '/' + id,
         '/images/blank_user.gif',
       );
@@ -170,7 +170,7 @@ exports.controller = async function (request, reqParams, response) {
     u: renderUserImg,
     user: renderUserImg,
     userCover: function (filename) {
-      return renderFile(
+      return renderFileOrDefault(
         exports.config.uCoverImgPath + '/' + filename,
         '/images/1x1-pixel.png',
       );
@@ -218,13 +218,17 @@ exports.controller = async function (request, reqParams, response) {
 
   //request.logToConsole("uploadedFile.controller", request.method);
   reqParams = reqParams || {};
-  if (reqParams.id) {
-    if (reqParams.type && renderTypedImg[reqParams.type])
-      await renderTypedImg[reqParams.type](reqParams.id, reqParams);
-    else renderFile(exports.config.uploadPath + '/' + reqParams.id);
-  } else if (reqParams.uAvatarImg)
-    await renderTypedImg['user'](reqParams.uAvatarImg);
-  else if (reqParams.uCoverImg)
-    renderTypedImg['userCover'](reqParams.uCoverImg);
-  else response.badRequest();
+  try {
+    if (reqParams.id) {
+      if (reqParams.type && renderTypedImg[reqParams.type])
+        await renderTypedImg[reqParams.type](reqParams.id, reqParams);
+      else renderFileOrDefault(exports.config.uploadPath + '/' + reqParams.id);
+    } else if (reqParams.uAvatarImg)
+      await renderTypedImg['user'](reqParams.uAvatarImg);
+    else if (reqParams.uCoverImg)
+      renderTypedImg['userCover'](reqParams.uCoverImg);
+    else response.badRequest();
+  } catch (err) {
+    renderNoImage();
+  }
 };

@@ -158,7 +158,13 @@ exports.controller = async function (request, reqParams, response) {
   }
 
   if (path == '/' || request.url.indexOf('/stream') > -1) {
-    if (loggedInUser && loggedInUser.id) return renderFriendsLibrary(lib);
+    if (reqParams.id && reqParams.format == 'json') {
+      if (!mongodb.isObjectId(reqParams.id))
+        return render({ errorCode: 'USER_NOT_FOUND' });
+      lib.options.uid = reqParams.id;
+      return renderFriendsLibrary(lib);
+    } else if (loggedInUser && loggedInUser.id)
+      return renderFriendsLibrary(lib);
     else if (reqParams.format == 'json')
       return render({ errorCode: 'REQ_LOGIN' });
     else {
