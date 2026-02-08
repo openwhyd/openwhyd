@@ -38,6 +38,33 @@ You can contribute to Openwhyd in various ways:
 - A PR must address just one Github issue. Any PR that address zero or more than one Github issue (e.g. "cleaned .gitignore and added installation guide" are two independant PR) will be rejected.
 - A PR must not break any functionality of the product. Every precaution (e.g. writing and running automated tests) must be taken to avoid that.
 
+## CI/CD and Automated Tests
+
+Our CI pipeline runs automatically on all pull requests and pushes to the main branch. Here's what you need to know:
+
+### Tests that run on all PRs
+
+These tests will run regardless of whether your PR comes from a fork or the main repository:
+- **Dependencies check**: Validates npm dependencies and runs `npm audit`
+- **Code checks**: Runs linting and build checks
+- **Unit tests**: Tests individual components and functions
+- **Functional tests**: Tests core functionality
+- **Integration tests**: Tests API endpoints and database interactions
+- **Approval tests**: Tests main routes, hot tracks, and posting
+- **Docker tests**: Validates the Docker setup
+
+### Tests that require secrets (may be skipped on fork PRs)
+
+For security reasons, some tests require secrets that are only available to PRs from the main repository or maintainer branches:
+- **Third-party tests**: Tests Algolia integration (requires API keys)
+- **Cypress E2E tests**: Full E2E tests run on all PRs, but recording to Cypress Dashboard only happens when secrets are available
+- **Auth tests**: Tests Auth0 authentication flow (requires Auth0 credentials)
+- **Coverage reporting**: Code coverage is reported to Codacy when secrets are available
+
+**For contributors from forks**: Don't worry if you see some tests skipped or if Cypress tests don't record to the dashboard. Maintainers will ensure these tests pass before merging your PR.
+
+**For maintainers**: When reviewing PRs from forks, you may want to create a branch in the main repository to run the full test suite with secrets.
+
 ## Core principles
 
 More generally, make sure to follow these three principles:

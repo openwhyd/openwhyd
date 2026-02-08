@@ -1,5 +1,19 @@
 name: CI
 
+# This workflow runs on:
+# - Push events to the main branch
+# - Pull requests targeting the main branch
+#
+# Some jobs require secrets and will be skipped on PRs from forks (including dependabot PRs):
+# - third-party-tests: Requires ALGOLIA_TEST_APP_ID and ALGOLIA_TEST_API_KEY
+# - cypress-tests: Runs but without recording to Cypress Dashboard when secrets unavailable
+# - auth-tests: Requires Auth0 secrets (AUTH0_ISSUER_BASE_URL, etc.)
+# - coverage: Requires CODACY_REPOSITORY_TOKEN_FOR_COVERAGE
+# - release: Only runs on push to main branch
+#
+# This is done by checking: github.event.pull_request.head.repo.full_name == github.repository
+# which returns true only if the PR is from a branch in the main repo (not a fork).
+
 on:
   push:
     branches:
