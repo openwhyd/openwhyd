@@ -377,10 +377,10 @@ exports[`Hot Tracks renders posts enriched with track metadata 2`] = `
   <div id="playerContainerSub">
     <div
       id="playerClose"
-      onclick="window.whydPlayer.toggleVideo();"
+      onclick="window.whydPlayer.toggleVideo()"
       title="Hide"
     ></div>
-    <div id="playBtnOverlay" onclick="window.whydPlayer.playPause();"></div>
+    <div id="playBtnOverlay" onclick="window.whydPlayer.playPause()"></div>
   </div>
 </div>
 <div id="whydPlayer">
