@@ -1,3 +1,10 @@
+## [1.64.6](https://github.com/openwhyd/openwhyd/compare/v1.64.5...v1.64.6) (2026-02-08)
+
+
+### Bug Fixes
+
+* **deps:** bump lodash from 4.17.21 to 4.17.23 ([#868](https://github.com/openwhyd/openwhyd/issues/868)) ([a389606](https://github.com/openwhyd/openwhyd/commit/a3896064f453e9118a722e24635188a2abaa7eaf))
+
 ## [1.64.5](https://github.com/openwhyd/openwhyd/compare/v1.64.4...v1.64.5) (2026-02-04)
 
 
