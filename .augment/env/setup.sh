@@ -8,11 +8,11 @@ echo "🔧 Setting up Openwhyd development environment..."
 # Update system packages
 sudo apt-get update
 
-# Install Node.js v20.10.0 using n (Node.js version manager)
-echo "📦 Installing Node.js v20.10.0..."
+# Install Node.js v24.13.0 using n (Node.js version manager)
+echo "📦 Installing Node.js v24.13.0..."
 sudo apt-get install -y curl
 curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
-sudo bash n 20.10.0
+sudo bash n 24.13.0
 sudo rm n
 
 # Add Node.js to PATH and refresh environment
