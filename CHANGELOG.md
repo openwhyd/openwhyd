@@ -1,3 +1,10 @@
+## [1.64.7](https://github.com/openwhyd/openwhyd/compare/v1.64.6...v1.64.7) (2026-02-08)
+
+
+### Bug Fixes
+
+* **deps:** Update to Node.js v24.13.0 LTS (Krypton) ([#876](https://github.com/openwhyd/openwhyd/issues/876)) ([826b4ad](https://github.com/openwhyd/openwhyd/commit/826b4ad1a4144a0947c540bd24d3303f170cba5a))
+
 ## [1.64.6](https://github.com/openwhyd/openwhyd/compare/v1.64.5...v1.64.6) (2026-02-08)
 
 
