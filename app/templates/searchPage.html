@@ -106,8 +106,13 @@
               class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
               onclick="{{#isUserLogged}}$(this).each(switchSubscription);{{/isUserLogged}}{{^isUserLogged}}window.location = '/signup';{{/isUserLogged}}"
               data-uid="{{_id}}"
-              onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
-              onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';"
+              onmouseover="
+                if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';
+              "
+              onmouseout="
+                if ($(this).hasClass('subscribed'))
+                  this.innerHTML = 'Following';
+              "
             >
               {{#isSubscribed}}Following{{/isSubscribed}}
               {{^isSubscribed}}Follow{{/isSubscribed}}

@@ -100,7 +100,14 @@
         <a
           id="bookmarklet"
           class="greenButton"
-          onclick="setTimeout(function(){alert('Please drag &amp; drop this button to your browser\'s bookmarks bar')},50); return false;"
+          onclick="
+            setTimeout(function () {
+              alert(
+                'Please drag &amp; drop this button to your browser\'s bookmarks bar',
+              );
+            }, 50);
+            return false;
+          "
           title="Drop this button to the bookmarks bar of your web browser"
           href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();"
         >
@@ -232,7 +239,14 @@
           <a
             id="bookmarklet"
             class="greenButton"
-            onclick="setTimeout(function(){alert('Please drag &amp; drop this button to your browser\'s bookmarks bar')},50); return false;"
+            onclick="
+              setTimeout(function () {
+                alert(
+                  'Please drag &amp; drop this button to your browser\'s bookmarks bar',
+                );
+              }, 50);
+              return false;
+            "
             title="Drop this button to the bookmarks bar of your web browser"
             href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://openwhyd.org/js/bookmarklet.js?'+(new Date()).getTime();;})();"
           >

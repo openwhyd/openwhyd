@@ -233,8 +233,8 @@
   color: #a5a5a5;
   padding: 10px 10px 10px 26px;
   background: url(/images/icon-see-all.png) no-repeat 0 8px;
-  font-family: 'HelveticaNeue-Medium', 'Helvetica Neue', Helvetica, Arial,
-    Sans-serif;
+  font-family:
+    'HelveticaNeue-Medium', 'Helvetica Neue', Helvetica, Arial, Sans-serif;
 }
 
 .userPlaylistV2 .container .btnBackToPlaylists:hover {

@@ -73,7 +73,7 @@
           <li data-uid="{{id}}">
             <div
               style="background-image:url('/img/u/{{id}}');"
-              onclick="$(this).parent().find('a.userName').click();"
+              onclick="$(this).parent().find('a.userName').click()"
             ></div>
             <a class="userName" href="/u/{{id}}">{{name}}</a>
             {{#subscription}} &nbsp;subscribed to
@@ -212,8 +212,12 @@
       <div
         class="userSubscribe {{#isSubscribed}}subscribed{{/isSubscribed}}"
         onclick="switchSubscription()"
-        onmouseover="if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';"
-        onmouseout="if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';"
+        onmouseover="
+          if ($(this).hasClass('subscribed')) this.innerHTML = 'Unfollow';
+        "
+        onmouseout="
+          if ($(this).hasClass('subscribed')) this.innerHTML = 'Following';
+        "
       >
         {{#isSubscribed}}Following{{/isSubscribed}}
         {{^isSubscribed}}Follow{{/isSubscribed}}

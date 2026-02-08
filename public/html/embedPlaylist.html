@@ -103,7 +103,11 @@
     <textarea
       id="embedCode"
       readonly="readonly"
-      onclick="this.focus();this.select();(this.innerText.createTextRange()).execCommand('Copy');"
+      onclick="
+        this.focus();
+        this.select();
+        this.innerText.createTextRange().execCommand('Copy');
+      "
     >
 if you see this, please select another size preference</textarea
     >
