@@ -330,11 +330,11 @@ jobs:
 
   coverage:
     name: Send coverage reports to Codacy
-    # Run coverage only when secrets are available
+    # Run coverage only when secrets are available (same condition as auth-tests)
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     needs:
       - cypress-tests
-      # auth-tests is optional since it may be skipped
+      - auth-tests
       - unit-tests
       - functional-tests
       - integration-tests
