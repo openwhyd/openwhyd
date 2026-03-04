@@ -342,7 +342,10 @@ window.globals.initPostBox = function (params) {
             eId: eId,
             playerLabel: player.label,
           }); // todo: add default metadata
-        if (eId.startsWith('/yt/') && typeof player.searchTracks === 'function') {
+        if (
+          eId.startsWith('/yt/') &&
+          typeof player.searchTracks === 'function'
+        ) {
           // use searchTracks to get access to API errors (e.g. YouTube quota exceeded)
           player.searchTracks(player.getEid(url), 1, function (tracks, error) {
             if (error) {
@@ -361,7 +364,8 @@ window.globals.initPostBox = function (params) {
           player.fetchMetadata(url, function (track) {
             track = track || {};
             track.playerLabel = player.label;
-            track.eId = track.eId || (track.id && eId.slice(0, 4) + track.id) || eId; // fallback to eId extracted from URL
+            track.eId =
+              track.eId || (track.id && eId.slice(0, 4) + track.id) || eId; // fallback to eId extracted from URL
             cb(track);
           });
         }
