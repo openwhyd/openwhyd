@@ -1,4 +1,4 @@
-/* playemjs 1.3.2, commit: 145ffbf9474cbf9518f8642660ca6cbd7407bc8e */
+/* playemjs 1.3.3, commit: b08423f5f692889960a00c112adbb098519ed22c */
 
 // configuration
 
@@ -2161,7 +2161,10 @@ function YoutubePlayer(){
           type : "video",
           maxResults : limit,
         }).execute(function(res){
-          if (res.error) throw res.error; // e.g. 403 / "quota exceeded" error
+          if (res.error) {
+            console.error('searchTracks - YouTube API error:', res.error); // e.g. 403 / "quota exceeded" error
+            return cb([], res.error);
+          }
           results = res.items.map(translateResult);
           cb(results);
         });
@@ -2171,7 +2174,10 @@ function YoutubePlayer(){
           'id': query,
           'part': 'snippet,contentDetails,statistics'
         }).execute(function(res){
-          if (res.error) throw res.error; // e.g. 403 / "quota exceeded" error
+          if (res.error) {
+            console.error('searchTracks - YouTube API error:', res.error); // e.g. 403 / "quota exceeded" error
+            return cb([], res.error);
+          }
           results = res.items.map(translateResult);
           cb(results);
         });

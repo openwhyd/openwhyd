@@ -342,12 +342,33 @@ window.globals.initPostBox = function (params) {
             eId: eId,
             playerLabel: player.label,
           }); // todo: add default metadata
-        player.fetchMetadata(url, function (track) {
-          track = track || {};
-          track.playerLabel = player.label;
-          track.eId = track.eId || eId.substr(0, 4) + track.id; // || eid;
-          cb(track);
-        });
+        if (
+          eId.startsWith('/yt/') &&
+          typeof player.searchTracks === 'function'
+        ) {
+          // use searchTracks to get access to API errors (e.g. YouTube quota exceeded)
+          player.searchTracks(player.getEid(url), 1, function (tracks, error) {
+            if (error) {
+              alert(
+                'Unable to fetch the track info. The YouTube API quota may have been exceeded.\n\n' +
+                  'Please try adding this track using the Openwhyd Button (Chrome extension) from the YouTube page, or try again later.',
+              );
+              return cb();
+            }
+            const track = (tracks && tracks[0]) || {};
+            track.playerLabel = player.label;
+            track.eId = track.eId || eId;
+            cb(track);
+          });
+        } else {
+          player.fetchMetadata(url, function (track) {
+            track = track || {};
+            track.playerLabel = player.label;
+            track.eId =
+              track.eId || (track.id && eId.slice(0, 4) + track.id) || eId; // fallback to eId extracted from URL
+            cb(track);
+          });
+        }
       });
     };
   }
