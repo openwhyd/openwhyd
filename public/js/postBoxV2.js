@@ -345,7 +345,7 @@ window.globals.initPostBox = function (params) {
         player.fetchMetadata(url, function (track) {
           track = track || {};
           track.playerLabel = player.label;
-          track.eId = track.eId || eId.substr(0, 4) + track.id; // || eid;
+          track.eId = track.eId || (track.id && eId.slice(0, 4) + track.id) || eId; // fallback to eId extracted from URL
           cb(track);
         });
       });
