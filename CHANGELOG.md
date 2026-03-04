@@ -1,3 +1,10 @@
+## [1.64.8](https://github.com/openwhyd/openwhyd/compare/v1.64.7...v1.64.8) (2026-03-04)
+
+
+### Bug Fixes
+
+* **posting:** Provide user feedback in case of API quota error when posting a YouTube track ([#881](https://github.com/openwhyd/openwhyd/issues/881)) ([2edc0a0](https://github.com/openwhyd/openwhyd/commit/2edc0a0ef9bf90817feeb6f555b86f101da110a4))
+
 ## [1.64.7](https://github.com/openwhyd/openwhyd/compare/v1.64.6...v1.64.7) (2026-02-08)
 
 
