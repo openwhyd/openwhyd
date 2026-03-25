@@ -84,7 +84,7 @@
     "wait-on": "^8.0.1"
   },
   "devDependencies": {
-    "@applitools/eyes-cypress": "^3.47.1",
+    "@applitools/eyes-cypress": "^3.58.11",
     "@cypress/code-coverage": "^3.13.9",
     "@types/express": "^5.0.1",
     "@types/node": "^24.0.0",
