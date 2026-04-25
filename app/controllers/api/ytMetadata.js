@@ -42,7 +42,7 @@ function fetchFromOembed(videoId, callback) {
     }
     try {
       const json = JSON.parse(body);
-      callback(null, {
+      return callback(null, {
         id: videoId,
         eId: '/yt/' + videoId,
         title: json.title || '',
@@ -52,7 +52,7 @@ function fetchFromOembed(videoId, callback) {
         url: 'https://www.youtube.com/watch?v=' + videoId,
       });
     } catch (e) {
-      callback(/** @type {Error} */ (e), null);
+      return callback(/** @type {Error} */ (e), null);
     }
   });
 }
@@ -86,6 +86,6 @@ exports.controller = function (req, reqParams, response) {
     if (data) {
       cache.set(safeVideoId, { data, expiresAt: now + CACHE_TTL_MS });
     }
-    response.renderJSON(data || { error: 'video not found' });
+    return response.renderJSON(data || { error: 'video not found' });
   });
 };

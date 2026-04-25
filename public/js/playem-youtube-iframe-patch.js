@@ -170,7 +170,7 @@ function YoutubeIframePlayer() {
       const item = JSON.parse(raw);
       if (item && item.ts && Date.now() - item.ts < CACHE_TTL_MS)
         return item.data;
-    } catch (e) {
+    } catch {
       // Ignore storage errors (e.g. private mode, storage full)
     }
     return null;
@@ -182,7 +182,7 @@ function YoutubeIframePlayer() {
         CACHE_KEY_PREFIX + videoId,
         JSON.stringify({ data, ts: Date.now() }),
       );
-    } catch (e) {
+    } catch {
       // Ignore storage errors
     }
   }
