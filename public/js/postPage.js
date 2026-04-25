@@ -38,9 +38,11 @@ const postPage = {
       $.getJSON('/api/ytMetadata?videoId=' + encodeURIComponent(videoId))
         .done(function (track) {
           if (track && track.title) {
-            $('.post h2 a')
-              .text(track.title)
-              .attr('href', track.url || eId);
+            const safeUrl =
+              typeof track.url === 'string' && /^https?:\/\//.test(track.url)
+                ? track.url
+                : eId;
+            $('.post h2 a').text(track.title).attr('href', safeUrl);
             $('.btnRepost')
               .attr(
                 'href',
