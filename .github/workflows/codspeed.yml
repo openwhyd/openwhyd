@@ -27,7 +27,7 @@ jobs:
         run: npm ci --prefer-offline --no-audit
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@v4
+        uses: CodSpeedHQ/action@658a901452bb54c799643e060733b7afe9121b8d
         with:
           mode: simulation
           run: npx vitest bench --run
