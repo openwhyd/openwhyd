@@ -156,3 +156,48 @@ function YoutubeIframePlayer() {
   YoutubeIframePlayer.prototype = Player.prototype;
   YoutubeIframePlayer.super_ = Player;
 })();
+
+// Add localStorage caching to YoutubeIframePlayer.fetchMetadata to reduce
+// YouTube Data API quota usage (each call costs 1 unit from the daily limit).
+(function () {
+  const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+  const CACHE_KEY_PREFIX = 'yt_meta_';
+
+  function getCachedMetadata(videoId) {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY_PREFIX + videoId);
+      if (!raw) return null;
+      const item = JSON.parse(raw);
+      if (item && item.ts && Date.now() - item.ts < CACHE_TTL_MS)
+        return item.data;
+    } catch (e) {
+      // Ignore storage errors (e.g. private mode, storage full)
+    }
+    return null;
+  }
+
+  function setCachedMetadata(videoId, data) {
+    try {
+      localStorage.setItem(
+        CACHE_KEY_PREFIX + videoId,
+        JSON.stringify({ data: data, ts: Date.now() }),
+      );
+    } catch (e) {
+      // Ignore storage errors
+    }
+  }
+
+  const originalFetchMetadata = YoutubeIframePlayer.prototype.fetchMetadata;
+  YoutubeIframePlayer.prototype.fetchMetadata = function (url, cb) {
+    const id = this.getEid(url);
+    if (!id) return cb();
+
+    const cached = getCachedMetadata(id);
+    if (cached) return cb(cached);
+
+    originalFetchMetadata.call(this, url, function (track) {
+      if (track && track.title) setCachedMetadata(id, track);
+      cb(track);
+    });
+  };
+})();

@@ -32,6 +32,30 @@ const postPage = {
     //preload image FROM EID
     if (this.eId.substr(1, 2) == 'yt') {
       this.imagesResolver('-');
+      // Use the server-side cached endpoint to avoid consuming the YouTube
+      // Data API quota on each page view (see /api/ytMetadata).
+      const videoId = eId.substr(4).split('?')[0];
+      $.getJSON('/api/ytMetadata?videoId=' + encodeURIComponent(videoId))
+        .done(function (track) {
+          if (track && track.title) {
+            $('.post h2 a')
+              .text(track.title)
+              .attr('href', track.url || eId);
+            $('.btnRepost')
+              .attr(
+                'href',
+                'javascript:publishPost(' + JSON.stringify(track) + ');',
+              )
+              .show();
+            cb(track.img);
+          } else {
+            cb();
+          }
+        })
+        .fail(function () {
+          cb();
+        });
+      return;
     }
 
     this.waitFor('whydPlayer', function (whydPlayer) {
