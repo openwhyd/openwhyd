@@ -57,8 +57,8 @@ function fetchFromOembed(videoId, callback) {
   });
 }
 
-exports.controller = function (request, reqParams, response) {
-  request.logToConsole('ytMetadata.controller', reqParams);
+exports.controller = function (req, reqParams, response) {
+  req.logToConsole('ytMetadata.controller', reqParams);
 
   const rawId = reqParams.videoId || reqParams.id || '';
   // Accept either a plain video ID or an eId like "/yt/VIDEO_ID"

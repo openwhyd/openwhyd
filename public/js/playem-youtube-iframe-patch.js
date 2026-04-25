@@ -180,7 +180,7 @@ function YoutubeIframePlayer() {
     try {
       localStorage.setItem(
         CACHE_KEY_PREFIX + videoId,
-        JSON.stringify({ data: data, ts: Date.now() }),
+        JSON.stringify({ data, ts: Date.now() }),
       );
     } catch (e) {
       // Ignore storage errors

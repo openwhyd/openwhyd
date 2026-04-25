@@ -38,11 +38,11 @@ const postPage = {
       $.getJSON('/api/ytMetadata?videoId=' + encodeURIComponent(videoId))
         .done(function (track) {
           if (track && track.title) {
-            const safeUrl =
-              typeof track.url === 'string' && /^https?:\/\//.test(track.url)
-                ? track.url
-                : eId;
-            $('.post h2 a').text(track.title).attr('href', safeUrl);
+            // Construct the YouTube URL directly from the trusted videoId
+            // rather than using track.url from the server response.
+            const youtubeUrl =
+              'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId);
+            $('.post h2 a').text(track.title).attr('href', youtubeUrl);
             $('.btnRepost')
               .attr(
                 'href',
