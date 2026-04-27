@@ -44,10 +44,11 @@ const postPage = {
               'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId);
             $('.post h2 a').text(track.title).attr('href', youtubeUrl);
             $('.btnRepost')
-              .attr(
-                'href',
-                'javascript:publishPost(' + JSON.stringify(track) + ');',
-              )
+              .off('click.ytRepost')
+              .on('click.ytRepost', function (e) {
+                e.preventDefault();
+                publishPost(track);
+              })
               .show();
             cb(track.img);
           } else {
