@@ -168,8 +168,7 @@ function YoutubeIframePlayer() {
       const raw = localStorage.getItem(CACHE_KEY_PREFIX + videoId);
       if (!raw) return null;
       const item = JSON.parse(raw);
-      if (item && item.ts && Date.now() - item.ts < CACHE_TTL_MS)
-        return item.data;
+      if (item?.ts && Date.now() - item.ts < CACHE_TTL_MS) return item.data;
     } catch {
       // Ignore storage errors (e.g. private mode, storage full)
     }
@@ -196,7 +195,7 @@ function YoutubeIframePlayer() {
     if (cached) return cb(cached);
 
     originalFetchMetadata.call(this, url, function (track) {
-      if (track && track.title) setCachedMetadata(id, track);
+      if (track?.title) setCachedMetadata(id, track);
       cb(track);
     });
   };
