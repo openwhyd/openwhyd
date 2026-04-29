@@ -11,6 +11,8 @@ const openwhyd = new OpenwhydTestEnv({
 });
 
 describe(`post api - legacy`, function () {
+  this.timeout(50000); // give more time for this test suite because the addPost API calls YouTube oEmbed endpoint, which can be slow to respond
+
   const post = {
     eId: '/yt/XdJVWSqb4Ck',
     name: 'Lullaby - Jack Johnson and Matt Costa',
