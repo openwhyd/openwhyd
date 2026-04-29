@@ -56,7 +56,6 @@ const postPage = {
               url: youtubeUrl,
             };
             $('.btnRepost')
-              .attr('href', '#' + youtubeUrl) // just to make the link findable in tests
               .off('click.ytRepost')
               .on('click.ytRepost', function (e) {
                 e.preventDefault();
@@ -83,7 +82,6 @@ const postPage = {
             .text(track.title)
             .attr('href', track.url || eId);
           $('.btnRepost')
-            .attr('href', '#' + (track.url || eId)) // just to make the link findable in tests
             .off('click.repost')
             .on('click.repost', function (e) {
               e.preventDefault();

@@ -39,7 +39,7 @@ context('Openwhyd', () => {
     cy.url().should('include', track.eId);
 
     // should display the name of the track
-    cy.get(`a.btnRepost[href*="${track.name}"]`).should('exist');
+    cy.get(`h2`).should('have.text', track.name);
 
     // should open a dialog after clicking on the "Add to" button
     cy.contains('Add to').click(); //$('a.btnRepost').click();
