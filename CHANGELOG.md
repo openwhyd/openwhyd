@@ -1,3 +1,10 @@
+## [1.64.9](https://github.com/openwhyd/openwhyd/compare/v1.64.8...v1.64.9) (2026-04-29)
+
+
+### Bug Fixes
+
+* YouTube API quota exhaustion with client-side oEmbed fetch + XSS protection ([#902](https://github.com/openwhyd/openwhyd/issues/902)) ([02348cd](https://github.com/openwhyd/openwhyd/commit/02348cd8f7f13cb69e18c6c2d5cbb5f046369f2c))
+
 ## [1.64.8](https://github.com/openwhyd/openwhyd/compare/v1.64.7...v1.64.8) (2026-03-04)
 
 
