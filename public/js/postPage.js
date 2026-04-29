@@ -32,17 +32,25 @@ const postPage = {
     //preload image FROM EID
     if (this.eId.substr(1, 2) == 'yt') {
       this.imagesResolver('-');
-      // Use the server-side cached endpoint to avoid consuming the YouTube
-      // Data API quota on each page view (see /api/ytMetadata).
       const videoId = eId.substr(4).split('?')[0];
-      $.getJSON('/api/ytMetadata?videoId=' + encodeURIComponent(videoId))
-        .done(function (track) {
-          if (track && track.title) {
-            // Construct the YouTube URL directly from the trusted videoId
-            // rather than using track.url from the server response.
-            const youtubeUrl =
-              'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId);
-            $('.post h2 a').text(track.title).attr('href', youtubeUrl);
+      const youtubeUrl =
+        'https://www.youtube.com/watch?v=' + encodeURIComponent(videoId);
+      const oEmbedUrl =
+        'https://www.youtube.com/oembed?format=json&url=' +
+        encodeURIComponent(youtubeUrl);
+      fetch(oEmbedUrl)
+        .then(function (res) {
+          return res.ok ? res.json() : Promise.reject(res.status);
+        })
+        .then(function (data) {
+          if (data && data.title) {
+            $('.post h2 a').text(data.title).attr('href', youtubeUrl);
+            const track = {
+              eId: '/yt/' + videoId,
+              title: data.title,
+              img: data.thumbnail_url || '',
+              url: youtubeUrl,
+            };
             $('.btnRepost')
               .off('click.ytRepost')
               .on('click.ytRepost', function (e) {
@@ -55,7 +63,7 @@ const postPage = {
             cb();
           }
         })
-        .fail(function () {
+        .catch(function () {
           cb();
         });
       return;
@@ -70,10 +78,11 @@ const postPage = {
             .text(track.title)
             .attr('href', track.url || eId);
           $('.btnRepost')
-            .attr(
-              'href',
-              'javascript:publishPost(' + JSON.stringify(track) + ');',
-            )
+            .off('click.repost')
+            .on('click.repost', function (e) {
+              e.preventDefault();
+              publishPost(track);
+            })
             .show();
           cb(track.img);
         } else {
