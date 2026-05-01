@@ -157,8 +157,8 @@ function YoutubeIframePlayer() {
   YoutubeIframePlayer.super_ = Player;
 })();
 
-// Add localStorage caching to YoutubeIframePlayer.fetchMetadata to reduce
-// YouTube Data API quota usage (each call costs 1 unit from the daily limit).
+// Replace YouTube Data API calls with YouTube oEmbed API to avoid quota usage.
+// oEmbed does not require an API key and has no daily quota limit.
 (function () {
   const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
   const CACHE_KEY_PREFIX = 'yt_meta_';
@@ -186,17 +186,65 @@ function YoutubeIframePlayer() {
     }
   }
 
-  const originalFetchMetadata = YoutubeIframePlayer.prototype.fetchMetadata;
-  YoutubeIframePlayer.prototype.fetchMetadata = function (url, cb) {
-    const id = this.getEid(url);
-    if (!id) return cb();
-
+  function fetchMetadataViaOEmbed(id, cb) {
     const cached = getCachedMetadata(id);
     if (cached) return cb(cached);
 
-    originalFetchMetadata.call(this, url, function (track) {
-      if (track?.title) setCachedMetadata(id, track);
-      cb(track);
-    });
-  };
+    const videoUrl =
+      'https://www.youtube.com/watch?v=' + encodeURIComponent(id);
+    const oEmbedUrl =
+      'https://www.youtube.com/oembed?format=json&url=' +
+      encodeURIComponent(videoUrl);
+    const track = {
+      id: id,
+      eId: '/yt/' + id,
+      img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
+      url: videoUrl,
+      playerLabel: 'Youtube',
+    };
+    fetch(oEmbedUrl)
+      .then(function (res) {
+        return res.ok
+          ? res.json()
+          : Promise.reject(new Error('HTTP ' + res.status));
+      })
+      .then(function (data) {
+        if (data && data.title) {
+          track.title = data.title;
+          if (data.thumbnail_url) track.img = data.thumbnail_url;
+        }
+        setCachedMetadata(id, track);
+        cb(track);
+      })
+      .catch(function (err) {
+        console.warn('oEmbed fetch failed for YouTube video', id, err);
+        cb(track); // return partial metadata on error
+      });
+  }
+
+  function fetchMetadata(url, cb) {
+    const id = this.getEid(url);
+    if (!id) return cb();
+    fetchMetadataViaOEmbed(id, cb);
+  }
+
+  function searchTracksViaOEmbed(query, limit, cb) {
+    if (!cb) return;
+    if (limit === 1) {
+      fetchMetadataViaOEmbed(query, function (track) {
+        cb(track ? [track] : []);
+      });
+    } else {
+      // Full-text search is not supported via oEmbed; return empty results.
+      console.warn(
+        'searchTracks: full-text search is not supported via oEmbed (limit > 1)',
+      );
+      cb([]);
+    }
+  }
+
+  YoutubePlayer.prototype.fetchMetadata = fetchMetadata;
+  YoutubePlayer.prototype.searchTracks = searchTracksViaOEmbed;
+  YoutubeIframePlayer.prototype.fetchMetadata = fetchMetadata;
+  YoutubeIframePlayer.prototype.searchTracks = searchTracksViaOEmbed;
 })();
