@@ -1,3 +1,10 @@
+## [1.64.10](https://github.com/openwhyd/openwhyd/compare/v1.64.9...v1.64.10) (2026-05-01)
+
+
+### Bug Fixes
+
+* replace YouTube Data API with oEmbed to eliminate quota exhaustion ([#906](https://github.com/openwhyd/openwhyd/issues/906)) ([def7d8f](https://github.com/openwhyd/openwhyd/commit/def7d8fd461ff8fe9c4927a881f7210b97f7a2d3))
+
 ## [1.64.9](https://github.com/openwhyd/openwhyd/compare/v1.64.8...v1.64.9) (2026-04-29)
 
 
