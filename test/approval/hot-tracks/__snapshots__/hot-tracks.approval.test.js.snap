@@ -436,7 +436,7 @@ exports[`Hot Tracks renders posts enriched with track metadata 2`] = `
 <script>
 var DEEZER_APP_ID = 190482;
 var DEEZER_CHANNEL_URL = window.location.href.substr(0, window.location.href.indexOf("/", 10)) + "/html/channel.html";
-var YOUTUBE_API_KEY = "AIzaSyBzqb519R--gKZ9cXgbqE5bMM85yNTXJfo";
+var YOUTUBE_API_KEY = "dummy_api_key";
 var JAMENDO_CLIENT_ID = "2c9a11b9";
 </script>
     <script src="/js/jquery.avgrund.js" type="text/javascript" charset="utf-8"></script>
