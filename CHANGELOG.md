@@ -1,3 +1,10 @@
+## [1.64.11](https://github.com/openwhyd/openwhyd/compare/v1.64.10...v1.64.11) (2026-05-02)
+
+
+### Bug Fixes
+
+* **youtube:** Replace all hardcoded YouTube API keys with `dummy_api_key` ([#908](https://github.com/openwhyd/openwhyd/issues/908)) ([9bd76cd](https://github.com/openwhyd/openwhyd/commit/9bd76cd1489bd1a61e96e60d04c9fb83f647d171))
+
 ## [1.64.10](https://github.com/openwhyd/openwhyd/compare/v1.64.9...v1.64.10) (2026-05-01)
 
 
