@@ -229,9 +229,7 @@ exports.renderWhydFrame = function (html, params) {
   if (!params.loggedUser || !params.loggedUser.id)
     params.bodyClass = (params.bodyClass || '') + ' visitor';
 
-  const YOUTUBE_API_KEY = isProduction
-    ? 'AIzaSyBAJTMmfL1dcLWil8l-rAQgpENVQ_bZ54Q' // associated to google project "openwhyd-2", see https://github.com/openwhyd/openwhyd/issues/262
-    : 'AIzaSyBzqb519R--gKZ9cXgbqE5bMM85yNTXJfo'; // associated to google project "openwhyd-dev"
+  const YOUTUBE_API_KEY = 'dummy_api_key';
 
   out = out.concat([
     '  </head>',

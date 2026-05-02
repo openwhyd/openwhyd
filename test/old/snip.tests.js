@@ -10,7 +10,7 @@ const assert = require('assert');
 describe('snip.httpRequest', function () {
   const snip = require('../../app/snip.js');
 
-  const YOUTUBE_API_KEY = 'AIzaSyDEkfynWx7RpE5Vd0EVubBvl1qq4a6vjio';
+  const YOUTUBE_API_KEY = 'dummy_api_key';
   const YOUTUBE_VIDEO_ID = 'aZT8VlTV1YY';
 
   const url =
