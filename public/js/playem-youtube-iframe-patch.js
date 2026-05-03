@@ -5,6 +5,15 @@
 // based on the domain name where openwhyd is running (local or production),
 // which will load whydRemotePlayer.js so that openwhyd can control the playback.
 //
+
+// Override window.initYT (defined by playem-min.js in production) to not require
+// YOUTUBE_API_KEY. The YouTube Data API is no longer needed; metadata is fetched
+// via oEmbed (see the oEmbed section below).
+window.initYT = function () {
+  // No-op: YouTube Data API loading is skipped.
+  // The YouTube iframe player API is loaded directly by playem-all.js (see update there).
+};
+
 function YoutubeIframePlayer() {
   return YoutubeIframePlayer.super_.apply(this, arguments);
 }
@@ -155,4 +164,96 @@ function YoutubeIframePlayer() {
   Player.prototype.searchTracks = YoutubePlayer.prototype.searchTracks;
   YoutubeIframePlayer.prototype = Player.prototype;
   YoutubeIframePlayer.super_ = Player;
+})();
+
+// Replace YouTube Data API calls with YouTube oEmbed API to avoid quota usage.
+// oEmbed does not require an API key and has no daily quota limit.
+(function () {
+  const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+  const CACHE_KEY_PREFIX = 'yt_meta_';
+
+  function getCachedMetadata(videoId) {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY_PREFIX + videoId);
+      if (!raw) return null;
+      const item = JSON.parse(raw);
+      if (item?.ts && Date.now() - item.ts < CACHE_TTL_MS) return item.data;
+    } catch {
+      // Ignore storage errors (e.g. private mode, storage full)
+    }
+    return null;
+  }
+
+  function setCachedMetadata(videoId, data) {
+    try {
+      localStorage.setItem(
+        CACHE_KEY_PREFIX + videoId,
+        JSON.stringify({ data, ts: Date.now() }),
+      );
+    } catch {
+      // Ignore storage errors
+    }
+  }
+
+  function fetchMetadataViaOEmbed(id, cb) {
+    const cached = getCachedMetadata(id);
+    if (cached) return cb(cached);
+
+    const videoUrl =
+      'https://www.youtube.com/watch?v=' + encodeURIComponent(id);
+    const oEmbedUrl =
+      'https://www.youtube.com/oembed?format=json&url=' +
+      encodeURIComponent(videoUrl);
+    const track = {
+      id: id,
+      eId: '/yt/' + id,
+      img: 'https://i.ytimg.com/vi/' + id + '/default.jpg',
+      url: videoUrl,
+      playerLabel: 'Youtube',
+    };
+    fetch(oEmbedUrl)
+      .then(function (res) {
+        return res.ok
+          ? res.json()
+          : Promise.reject(new Error('HTTP ' + res.status));
+      })
+      .then(function (data) {
+        if (data && data.title) {
+          track.title = data.title;
+          if (data.thumbnail_url) track.img = data.thumbnail_url;
+        }
+        setCachedMetadata(id, track);
+        cb(track);
+      })
+      .catch(function (err) {
+        console.warn('oEmbed fetch failed for YouTube video', id, err);
+        cb(track); // return partial metadata on error
+      });
+  }
+
+  function fetchMetadata(url, cb) {
+    const id = this.getEid(url);
+    if (!id) return cb();
+    fetchMetadataViaOEmbed(id, cb);
+  }
+
+  function searchTracksViaOEmbed(query, limit, cb) {
+    if (!cb) return;
+    if (limit === 1) {
+      fetchMetadataViaOEmbed(query, function (track) {
+        cb(track ? [track] : []);
+      });
+    } else {
+      // Full-text search is not supported via oEmbed; return empty results.
+      console.warn(
+        'searchTracks: full-text search is not supported via oEmbed (limit > 1)',
+      );
+      cb([]);
+    }
+  }
+
+  YoutubePlayer.prototype.fetchMetadata = fetchMetadata;
+  YoutubePlayer.prototype.searchTracks = searchTracksViaOEmbed;
+  YoutubeIframePlayer.prototype.fetchMetadata = fetchMetadata;
+  YoutubeIframePlayer.prototype.searchTracks = searchTracksViaOEmbed;
 })();

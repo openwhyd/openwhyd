@@ -1,3 +1,48 @@
+## [1.64.14](https://github.com/openwhyd/openwhyd/compare/v1.64.13...v1.64.14) (2026-05-03)
+
+
+### Bug Fixes
+
+* **deps:** bump @xmldom/xmldom and @applitools/eyes-cypress ([#900](https://github.com/openwhyd/openwhyd/issues/900)) ([3923ea2](https://github.com/openwhyd/openwhyd/commit/3923ea23120cdf6aef6ffca6cae0fc3b25419a87))
+* **deps:** bump axios from 1.13.4 to 1.16.0 ([#903](https://github.com/openwhyd/openwhyd/issues/903)) ([f7b5b3c](https://github.com/openwhyd/openwhyd/commit/f7b5b3c6b60e6f6e0b57eade89311f8102b03896))
+* **deps:** bump fast-xml-parser and @aws-sdk/xml-builder ([#904](https://github.com/openwhyd/openwhyd/issues/904)) ([6f460cd](https://github.com/openwhyd/openwhyd/commit/6f460cdcbbf29284f97981129a2bf5c89e471102))
+* sync package-lock.json with missing typescript@4.9.5 peer deps ([#915](https://github.com/openwhyd/openwhyd/issues/915)) ([a918d59](https://github.com/openwhyd/openwhyd/commit/a918d598017141516a6784fa41a6d29d80c2a6fb))
+
+## [1.64.13](https://github.com/openwhyd/openwhyd/compare/v1.64.12...v1.64.13) (2026-05-03)
+
+
+### Bug Fixes
+
+* **security:** Fix open redirect vulnerability in window.goToPage fallback (whyd.js) ([#913](https://github.com/openwhyd/openwhyd/issues/913)) ([ef472d3](https://github.com/openwhyd/openwhyd/commit/ef472d3a56ebc615532c9afc15541e8443209501))
+
+## [1.64.12](https://github.com/openwhyd/openwhyd/compare/v1.64.11...v1.64.12) (2026-05-03)
+
+
+### Bug Fixes
+
+* **youtube:** Remove YOUTUBE_API_KEY + update playemjs to v1.4.0 ([#910](https://github.com/openwhyd/openwhyd/issues/910)) ([8040890](https://github.com/openwhyd/openwhyd/commit/8040890c67064f0d55a094ea810d9876d4e1ac34)), closes [#911](https://github.com/openwhyd/openwhyd/issues/911) [adrienjoly/playemjs#v1](https://github.com/adrienjoly/playemjs/issues/v1)
+
+## [1.64.11](https://github.com/openwhyd/openwhyd/compare/v1.64.10...v1.64.11) (2026-05-02)
+
+
+### Bug Fixes
+
+* **youtube:** Replace all hardcoded YouTube API keys with `dummy_api_key` ([#908](https://github.com/openwhyd/openwhyd/issues/908)) ([9bd76cd](https://github.com/openwhyd/openwhyd/commit/9bd76cd1489bd1a61e96e60d04c9fb83f647d171))
+
+## [1.64.10](https://github.com/openwhyd/openwhyd/compare/v1.64.9...v1.64.10) (2026-05-01)
+
+
+### Bug Fixes
+
+* replace YouTube Data API with oEmbed to eliminate quota exhaustion ([#906](https://github.com/openwhyd/openwhyd/issues/906)) ([def7d8f](https://github.com/openwhyd/openwhyd/commit/def7d8fd461ff8fe9c4927a881f7210b97f7a2d3))
+
+## [1.64.9](https://github.com/openwhyd/openwhyd/compare/v1.64.8...v1.64.9) (2026-04-29)
+
+
+### Bug Fixes
+
+* YouTube API quota exhaustion with client-side oEmbed fetch + XSS protection ([#902](https://github.com/openwhyd/openwhyd/issues/902)) ([02348cd](https://github.com/openwhyd/openwhyd/commit/02348cd8f7f13cb69e18c6c2d5cbb5f046369f2c))
+
 ## [1.64.8](https://github.com/openwhyd/openwhyd/compare/v1.64.7...v1.64.8) (2026-03-04)
 
 
