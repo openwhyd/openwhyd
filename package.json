@@ -85,7 +85,7 @@
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.47.1",
-    "@cypress/code-coverage": "^3.13.9",
+    "@cypress/code-coverage": "^4.0.1",
     "@types/express": "^5.0.1",
     "@types/node": "^24.0.0",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
