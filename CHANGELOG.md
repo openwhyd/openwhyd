@@ -1,3 +1,10 @@
+## [1.64.13](https://github.com/openwhyd/openwhyd/compare/v1.64.12...v1.64.13) (2026-05-03)
+
+
+### Bug Fixes
+
+* **security:** Fix open redirect vulnerability in window.goToPage fallback (whyd.js) ([#913](https://github.com/openwhyd/openwhyd/issues/913)) ([ef472d3](https://github.com/openwhyd/openwhyd/commit/ef472d3a56ebc615532c9afc15541e8443209501))
+
 ## [1.64.12](https://github.com/openwhyd/openwhyd/compare/v1.64.11...v1.64.12) (2026-05-03)
 
 
