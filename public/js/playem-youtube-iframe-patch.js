@@ -5,6 +5,15 @@
 // based on the domain name where openwhyd is running (local or production),
 // which will load whydRemotePlayer.js so that openwhyd can control the playback.
 //
+
+// Override window.initYT (defined by playem-min.js in production) to not require
+// YOUTUBE_API_KEY. The YouTube Data API is no longer needed; metadata is fetched
+// via oEmbed (see the oEmbed section below).
+window.initYT = function () {
+  // No-op: YouTube Data API loading is skipped.
+  // The YouTube iframe player API is loaded directly by playem-all.js (see update there).
+};
+
 function YoutubeIframePlayer() {
   return YoutubeIframePlayer.super_.apply(this, arguments);
 }

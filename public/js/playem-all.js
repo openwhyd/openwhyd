@@ -2001,8 +2001,6 @@ function YoutubePlayer(){
   //  3: "onBuffering", // youtube state: buffering
   //  5: "onBuffering", // youtube state: cued
     },
-    SDK_URL = 'https://apis.google.com/js/client.js?onload=initYT',
-    SDK_LOADED = false,
     PLAYER_API_SCRIPT = 'https://www.youtube.com/iframe_api',
     PLAYER_API_LOADED = false,
     YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v=",
@@ -2025,7 +2023,7 @@ function YoutubePlayer(){
 
   function whenApiReady(cb){
     setTimeout(function(){
-      if (SDK_URL && apiReady && PLAYER_API_LOADED){
+      if (apiReady && PLAYER_API_LOADED){
         cb();
       }else{
         whenApiReady(cb);
@@ -2037,25 +2035,11 @@ function YoutubePlayer(){
     PLAYER_API_LOADED = true;
   };
 
-  // called by $.getScript(SDK_URL)
-  window.initYT = function() {
-    gapi.client.setApiKey(YOUTUBE_API_KEY);
-    gapi.client.load('youtube', 'v3', function() {
-      apiReady = true;
-      $.getScript(PLAYER_API_SCRIPT, function() {
-        // will call window.onYouTubeIframeAPIReady()
-      });
-    });
-  };
-
-  if (!SDK_LOADED) {
-    $.getScript(SDK_URL, function() {
-      // will call window.initYT()
-      SDK_LOADED = true;
-    });
-  } else if (!apiReady) {
-    window.initYT();
-  }
+  // Load the YouTube iframe player API directly (no YouTube Data API key needed)
+  apiReady = true;
+  $.getScript(PLAYER_API_SCRIPT, function() {
+    // will call window.onYouTubeIframeAPIReady()
+  });
 
   function Player(eventHandlers, embedVars) {
     this.eventHandlers = eventHandlers || {};
