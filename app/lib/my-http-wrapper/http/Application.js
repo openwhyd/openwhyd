@@ -141,8 +141,6 @@ exports.Application = class Application {
       });
     }
 
-    this._features.auth?.injectExpressRoutes(app, this._urlPrefix);
-
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
     app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
@@ -152,7 +150,13 @@ exports.Application = class Application {
     app.use(globalRateLimiter);
 
     app.use(makeBodyParser(this._uploadSettings)); // parse uploads and arrays from query params
+
+    // Session middleware must be attached BEFORE auth routes for mock Auth0
     this._sessionMiddleware && app.use(this._sessionMiddleware);
+
+    // Now inject auth routes (they will use the session)
+    this._features.auth?.injectExpressRoutes(app, this._urlPrefix);
+
     app.use(makeStatsUpdater());
 
     if (this._features.auth) {
