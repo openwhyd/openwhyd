@@ -8,7 +8,17 @@ const urlDomain = urlPrefix.split('//').pop();
 
 window.goToPage = function (url) {
   console.warn('goToPage without ajaxify', url); // indicates that ajaxify is not active yet
-  window.location.href = url || window.location.href;
+  const target = url || window.location.href;
+  try {
+    const parsed = new URL(target, window.location.origin);
+    if (parsed.origin === window.location.origin) {
+      window.location.href = parsed.href;
+    } else {
+      console.warn('goToPage: blocked navigation to external origin:', target);
+    }
+  } catch (e) {
+    // invalid URL, do not navigate
+  }
 };
 
 // prevents bug in firefox 3
