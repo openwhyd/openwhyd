@@ -1,3 +1,10 @@
+## [1.64.12](https://github.com/openwhyd/openwhyd/compare/v1.64.11...v1.64.12) (2026-05-03)
+
+
+### Bug Fixes
+
+* **youtube:** Remove YOUTUBE_API_KEY + update playemjs to v1.4.0 ([#910](https://github.com/openwhyd/openwhyd/issues/910)) ([8040890](https://github.com/openwhyd/openwhyd/commit/8040890c67064f0d55a094ea810d9876d4e1ac34)), closes [#911](https://github.com/openwhyd/openwhyd/issues/911) [adrienjoly/playemjs#v1](https://github.com/adrienjoly/playemjs/issues/v1)
+
 ## [1.64.11](https://github.com/openwhyd/openwhyd/compare/v1.64.10...v1.64.11) (2026-05-02)
 
 
