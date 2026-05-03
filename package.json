@@ -78,7 +78,7 @@
     "hogan.js": "3.0.2",
     "htmlparser": "*",
     "mongodb": "4.17.0",
-    "playemjs": "adrienjoly/playemjs#v1.3.3",
+    "playemjs": "adrienjoly/playemjs#v1.4.0",
     "q-set": "^2.0.8",
     "request": "2.88.2",
     "wait-on": "^8.0.1"
