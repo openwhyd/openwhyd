@@ -1,3 +1,13 @@
+## [1.64.14](https://github.com/openwhyd/openwhyd/compare/v1.64.13...v1.64.14) (2026-05-03)
+
+
+### Bug Fixes
+
+* **deps:** bump @xmldom/xmldom and @applitools/eyes-cypress ([#900](https://github.com/openwhyd/openwhyd/issues/900)) ([3923ea2](https://github.com/openwhyd/openwhyd/commit/3923ea23120cdf6aef6ffca6cae0fc3b25419a87))
+* **deps:** bump axios from 1.13.4 to 1.16.0 ([#903](https://github.com/openwhyd/openwhyd/issues/903)) ([f7b5b3c](https://github.com/openwhyd/openwhyd/commit/f7b5b3c6b60e6f6e0b57eade89311f8102b03896))
+* **deps:** bump fast-xml-parser and @aws-sdk/xml-builder ([#904](https://github.com/openwhyd/openwhyd/issues/904)) ([6f460cd](https://github.com/openwhyd/openwhyd/commit/6f460cdcbbf29284f97981129a2bf5c89e471102))
+* sync package-lock.json with missing typescript@4.9.5 peer deps ([#915](https://github.com/openwhyd/openwhyd/issues/915)) ([a918d59](https://github.com/openwhyd/openwhyd/commit/a918d598017141516a6784fa41a6d29d80c2a6fb))
+
 ## [1.64.13](https://github.com/openwhyd/openwhyd/compare/v1.64.12...v1.64.13) (2026-05-03)
 
 
