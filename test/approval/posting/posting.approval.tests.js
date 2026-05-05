@@ -366,3 +366,44 @@ describe('When reposting a track to an existing playlist', function () {
     this.verifyAsJSON(scrub(repostedTrack));
   });
 });
+
+describe('When a different user reposts a track', function () {
+  let context;
+  let originalTrack;
+  let repostedTrack;
+  let scrub;
+
+  before(async () => {
+    context = await setupTestEnv();
+    const originalPoster = context.testDataCollections.user[0]; // Adrien Joly
+    const reposter = context.testDataCollections.user[3]; // A New User
+    await context.insertTestData(MONGODB_URL, {
+      post: [makePostFromBk(originalPoster)],
+    });
+    originalTrack = (await context.dumpMongoCollection(MONGODB_URL, 'post'))[0];
+
+    const { jar } = await util.promisify(context.api.loginAs)(reposter);
+    repostedTrack = (
+      await context.api.addPost(jar, {
+        eId: originalTrack.eId,
+        name: originalTrack.name,
+        pId: originalTrack._id.toString(),
+      })
+    ).body;
+    scrub = context.makeJSONScrubber([
+      scrubObjectId(originalTrack._id),
+      scrubObjectId(repostedTrack._id),
+    ]);
+  });
+
+  after(() => teardownTestEnv());
+
+  it('should both be listed in the "post" db collection', async function () {
+    const dbPosts = await context.dumpMongoCollection(MONGODB_URL, 'post');
+    this.verifyAsJSON(scrub(dbPosts));
+  });
+
+  it('the repost should mention the original poster in the API response', async function () {
+    this.verifyAsJSON(scrub(repostedTrack));
+  });
+});
