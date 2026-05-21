@@ -391,7 +391,7 @@ function replaceURLWithHTMLLinks(text) {
   return String(text || '').replace(
     regexUrl2,
     (_, url, __, domain) =>
-      `<a href="${url.replace(/"/g, '&quot;')}">${domain}...</a>`,
+      `<a href="${url.replace(/"/g, '&quot;').replace(/'/g, '&#039;')}">${domain}...</a>`,
   );
 }
 

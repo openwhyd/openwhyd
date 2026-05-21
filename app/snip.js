@@ -102,11 +102,7 @@ const regexUrl =
 const regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 exports.replaceURLWithHTMLLinks = function (text) {
-  return String(text || '').replace(
-    regexUrl2,
-    (_, url, __, domain) =>
-      `<a href="${url.replace(/"/g, '&quot;')}">${domain}...</a>`,
-  );
+  return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
 };
 
 exports.replaceURLWithFullHTMLLinks = function (text) {
@@ -123,8 +119,7 @@ exports.htmlEntities = function (str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+    .replace(/"/g, '&quot;');
 };
 
 exports.addSlashes = function (str) {

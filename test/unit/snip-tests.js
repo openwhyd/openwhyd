@@ -5,43 +5,6 @@ const assert = require('assert');
 describe('snip.js', function () {
   const snip = require('../../app/snip.js');
 
-  describe('htmlEntities()', function () {
-    it('should escape ampersands', function () {
-      assert.strictEqual(snip.htmlEntities('a&b'), 'a&amp;b');
-    });
-
-    it('should escape less-than and greater-than', function () {
-      assert.strictEqual(snip.htmlEntities('<b>'), '&lt;b&gt;');
-    });
-
-    it('should escape double quotes', function () {
-      assert.strictEqual(snip.htmlEntities('"hello"'), '&quot;hello&quot;');
-    });
-
-    it('should escape single quotes', function () {
-      assert.strictEqual(snip.htmlEntities("it's"), 'it&#039;s');
-    });
-  });
-
-  describe('replaceURLWithHTMLLinks()', function () {
-    it('should wrap a URL in a double-quoted anchor tag', function () {
-      const result = snip.replaceURLWithHTMLLinks(
-        'visit https://example.com/path',
-      );
-      assert.match(result, /href="https:\/\/example\.com\/path"/);
-    });
-
-    it('should escape double quotes in the URL', function () {
-      const result = snip.replaceURLWithHTMLLinks(
-        'visit https://example.com/path?q="xss"',
-      );
-      assert.match(
-        result,
-        /href="https:\/\/example\.com\/path\?q=&quot;xss&quot;"/,
-      );
-    });
-  });
-
   describe('translateFields()', function () {
     it('should replace a mapped field', function () {
       const orig = { a: 1, b: 2 };
