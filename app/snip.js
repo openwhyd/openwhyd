@@ -102,7 +102,15 @@ const regexUrl =
 const regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 exports.replaceURLWithHTMLLinks = function (text) {
-  return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
+  return String(text || '').replace(regexUrl2, function (_, url, __, domain) {
+    return (
+      '<a href="' +
+      url.replace(/"/g, '&quot;').replace(/'/g, '&#039;') +
+      '">' +
+      domain +
+      '...</a>'
+    );
+  });
 };
 
 exports.replaceURLWithFullHTMLLinks = function (text) {
