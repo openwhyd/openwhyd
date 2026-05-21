@@ -35,7 +35,10 @@ describe('snip.js', function () {
       const result = snip.replaceURLWithHTMLLinks(
         'visit https://example.com/path?q="xss"',
       );
-      assert.match(result, /href="https:\/\/example\.com\/path\?q=&quot;xss&quot;"/);
+      assert.match(
+        result,
+        /href="https:\/\/example\.com\/path\?q=&quot;xss&quot;"/,
+      );
     });
   });
 
