@@ -388,7 +388,11 @@ const RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 const regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 function replaceURLWithHTMLLinks(text) {
-  return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
+  return String(text || '').replace(
+    regexUrl2,
+    (_, url, __, domain) =>
+      `<a href="${url.replace(/"/g, '&quot;').replace(/'/g, '&#039;')}">${domain}...</a>`,
+  );
 }
 
 function _renderCommentText(str) {

@@ -145,4 +145,21 @@ describe('snip.js', function () {
       assert.strictEqual(result.limit, 50);
     });
   });
+
+  describe('replaceURLWithHTMLLinks()', function () {
+    it('should escape single quotes in generated href attributes', function () {
+      const input = "https://evil.com/'onmouseover='alert(1)";
+      const output = snip.replaceURLWithHTMLLinks(input);
+      assert.strictEqual(
+        output,
+        '<a href="https://evil.com/&#039;onmouseover=&#039;alert(1)">evil.com...</a>',
+      );
+    });
+  });
+
+  describe('sanitizeJsStringInHtml()', function () {
+    it('should preserve apostrophes as escaped JS quotes', function () {
+      assert.strictEqual(snip.sanitizeJsStringInHtml("O'Brien"), "O\\'Brien");
+    });
+  });
 });
