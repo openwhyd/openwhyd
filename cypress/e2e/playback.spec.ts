@@ -9,12 +9,12 @@ context('Playback', () => {
     cy.get('#btnPlay').should('be.visible');
 
     // should play the track (auto-play can be delayed/flaky in CI)
-    cy.get('#btnPlay', { timeout: 20000 }).then(($btnPlay) => {
+    cy.get('#btnPlay').then(($btnPlay) => {
       if (!$btnPlay.hasClass('playing')) {
         cy.wrap($btnPlay).click();
       }
     });
-    cy.get('#btnPlay.playing', { timeout: 20000 }).should('be.visible');
+    cy.get('#btnPlay', { timeout: 20000 }).should('have.class', 'playing');
 
     cy.wait(1000); // TODO: get rid of this. cf https://github.com/openwhyd/openwhyd/pull/495/commits/7c0eddc9dc9e60fa163624d356837e1a111018d1
 
