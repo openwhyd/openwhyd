@@ -43,5 +43,8 @@ USER node
 
 EXPOSE 8080
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:8080/healthcheck', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+
 # dumb-init is invoked with PID 1, then spawns node as another process whilst ensuring that all signals are proxied to it
 CMD [ "dumb-init", "node", "app.js", "--fakeEmail", "--digestInterval", "-1" ]

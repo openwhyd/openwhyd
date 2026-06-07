@@ -143,6 +143,10 @@ exports.Application = class Application {
 
     this._features.auth?.injectExpressRoutes(app, this._urlPrefix);
 
+    app.get('/healthcheck', (_req, res) => {
+      res.status(200).type('text/plain').send('OK');
+    });
+
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
     app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
