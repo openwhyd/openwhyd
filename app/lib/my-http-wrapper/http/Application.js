@@ -110,6 +110,14 @@ const makeNotFound = (errorHandler) =>
     errorHandler(req, req.mergedParams, res, 404);
   };
 
+function attachHealthcheckRoute(app) {
+  app.get('/healthcheck', (_, res) => {
+    res.type('text/plain').send('OK');
+  });
+}
+
+exports.attachHealthcheckRoute = attachHealthcheckRoute;
+
 // Web Application class
 
 exports.Application = class Application {
@@ -142,6 +150,8 @@ exports.Application = class Application {
     }
 
     this._features.auth?.injectExpressRoutes(app, this._urlPrefix);
+
+    attachHealthcheckRoute(app);
 
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
