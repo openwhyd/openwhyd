@@ -43,4 +43,17 @@ describe('bandcampExtractor', function () {
       expectedSearchParams,
     );
   });
+
+  it('should extract stream URLs from escaped data-tralbum JSON', () => {
+    const expectedUrl =
+      'https://t4.bcbits.com/stream/d69e7e2cc061e30c53af531f985f66ef/mp3-128/1126664010?p=0&ts=1640167318&t=2077be6c34d80114d9601e0699c78ca56c4a6f01&token=1640167318_ad21225c5f3e4a1181377ff74cf649c167bec151';
+    const html = `<script data-tralbum='{"trackinfo":[{"file":{"mp3-128":"https:\\/\\/t4.bcbits.com\\/stream\\/d69e7e2cc061e30c53af531f985f66ef\\/mp3-128\\/1126664010?p=0\\u0026ts=1640167318\\u0026t=2077be6c34d80114d9601e0699c78ca56c4a6f01\\u0026token=1640167318_ad21225c5f3e4a1181377ff74cf649c167bec151"}}]}'></script>`;
+    const matches = extractBandcampStreamURLsFromHTML(html);
+    assert.deepStrictEqual(matches, [expectedUrl]);
+  });
+
+  it('should return no stream URL when none can be extracted', () => {
+    const matches = extractBandcampStreamURLsFromHTML('<html></html>');
+    assert.deepStrictEqual(matches, []);
+  });
 });
