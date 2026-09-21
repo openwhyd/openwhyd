@@ -2,16 +2,28 @@ const request = require('request');
 const config = require('../../models/config.js');
 
 const RE_EID = /^\/bc\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/;
-const RE_STREAM_URL = /https:\/\/[^.]+\.bcbits\.com\/stream\/[^;"]*/g;
+const RE_STREAM_URL = /https?:\/\/[^.]+\.bcbits\.com\/stream\/[^;"'<\s]*/g;
+const RE_DATA_TRALBUM = /data-tralbum=(["'])([\s\S]*?)\1/;
+const RE_STREAM_URL_SINGLE =
+  /^https?:\/\/[^.]+\.bcbits\.com\/stream\/[^;"'<\s]*$/;
 
-const dedup = (array) => [...new Set(array).keys()];
+const dedup = (array = []) => [...new Set(array).keys()];
+
+const decodeEscapedString = (string) =>
+  String(string)
+    .replace(/\\u002[fF]/g, '/')
+    .replace(/\\u0026/g, '&')
+    .replace(/\\\//g, '/');
 
 exports.extractBandcampStreamURLs = (plainText) =>
-  dedup(plainText.match(RE_STREAM_URL));
+  dedup(decodeEscapedString(plainText).match(RE_STREAM_URL) || []);
 
 exports.extractBandcampStreamURLsFromHTML = (html) => {
   const withDecodedEntities = htmlDecode(html);
-  return exports.extractBandcampStreamURLs(withDecodedEntities);
+  return dedup([
+    ...extractTrackInfoStreamURLs(withDecodedEntities),
+    ...exports.extractBandcampStreamURLs(withDecodedEntities),
+  ]);
 };
 
 function htmlDecode(str) {
@@ -20,6 +32,24 @@ function htmlDecode(str) {
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&');
+}
+
+function extractTrackInfoStreamURLs(html) {
+  const matched = String(html).match(RE_DATA_TRALBUM);
+  if (!matched) {
+    return [];
+  }
+  try {
+    const tralbumData = JSON.parse(decodeEscapedString(matched[2]));
+    return dedup(
+      (tralbumData.trackinfo || [])
+        .flatMap(({ file = {} }) => Object.values(file))
+        .map(decodeEscapedString)
+        .filter((url) => RE_STREAM_URL_SINGLE.test(url)),
+    );
+  } catch (err) {
+    return [];
+  }
 }
 
 exports.controller = async function (req, reqParams = {}, res) {
@@ -46,9 +76,13 @@ exports.controller = async function (req, reqParams = {}, res) {
     const { body } = await fetch(
       `https://${artist}.bandcamp.com/track/${track}`,
     );
+    const streamURL = exports.extractBandcampStreamURLsFromHTML(body)[0];
+    if (!streamURL) {
+      throw new Error('Could not extract Bandcamp stream URL from track page');
+    }
     res.json({
       eId,
-      streamURL: exports.extractBandcampStreamURLsFromHTML(body)[0],
+      streamURL,
     });
   } catch (err) {
     res.json({ error: err.message });
