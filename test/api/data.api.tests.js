@@ -38,8 +38,8 @@ describe(`Data Export API`, function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => {
-    this.timeout(4000);
+  beforeEach(async function () {
+    this.timeout(10000);
     await openwhyd.reset(); // prevent side effects between tests by resetting db state
     return addTrackToPlaylist(user, plName, track);
   });
