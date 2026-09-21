@@ -561,11 +561,48 @@ function WhydPlayer() {
   // var inTest = window.location.href.indexOf('//whyd.fr') > -1; // pre-production
 
   try {
+    const normalizeBandcampUrl = (url) =>
+      /^https?:\/\//.test(url)
+        ? url.replace(/^http:\/\//, 'https://')
+        : 'https://' + String(url).split('//').pop();
+
     window.BandcampPatchedPlayer = function () {
       console.info('init BandcampPatchedPlayer');
       return window.BandcampPlayer.apply(this, arguments);
     };
     window.BandcampPatchedPlayer.prototype = window.BandcampPlayer.prototype;
+    window.BandcampPatchedPlayer.prototype.playStreamUrl = function (url) {
+      if (!url) {
+        return this.clientCall('onError', this, {
+          source: 'BandcampPatchedPlayer',
+          code: 'no_stream',
+        });
+      }
+      this.sound = window.soundManager.createSound({
+        id: '_playem_bc_' + Date.now(),
+        url: normalizeBandcampUrl(url),
+        autoLoad: true,
+        autoPlay: true,
+        whileplaying: () => {
+          this.clientCall(
+            'onTrackInfo',
+            (this.currentTrack = {
+              position: this.sound.position / 1000,
+              duration: this.sound.duration / 1000,
+            }),
+          );
+        },
+        onplay: () => {
+          this.clientCall('onPlaying', this);
+        },
+        onresume: () => {
+          this.clientCall('onPlaying', this);
+        },
+        onfinish: () => {
+          this.clientCall('onEnded', this);
+        },
+      });
+    };
     window.BandcampPatchedPlayer.prototype.play = function (id) {
       $.ajax({
         type: 'GET',
