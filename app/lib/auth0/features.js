@@ -5,6 +5,21 @@
  * @returns {import('../my-http-wrapper/http/AuthFeatures').AuthFeatures}
  */
 exports.makeAuthFeatures = (env) => {
+  // Use mock Auth0 if explicitly set to "mock" or if credentials are not provided
+  const useMock =
+    env.AUTH0_ISSUER_BASE_URL === 'mock' ||
+    !(
+      env.AUTH0_SECRET &&
+      env.AUTH0_CLIENT_ID &&
+      env.AUTH0_CLIENT_SECRET &&
+      env.AUTH0_ISSUER_BASE_URL
+    );
+
+  if (useMock) {
+    console.log('[auth] Using mock Auth0 for testing');
+    return require('./mock').makeMockAuthFeatures(env);
+  }
+
   const {
     Auth0Wrapper,
     getAuthenticatedUser,
