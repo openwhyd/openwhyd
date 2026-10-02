@@ -11,6 +11,8 @@ const postsTemplate = require('../templates/posts.js');
 const templateLoader = require('../templates/templateLoader.js');
 const mainTemplate = require('../templates/mainTemplate.js');
 
+const MAX_LIMIT = 200; // prevents abusive requests from making the server aggregate/render too many tracks
+
 let template;
 (function loadTemplates(callback) {
   template = templateLoader.loadTemplate(
@@ -27,9 +29,11 @@ exports.controller = async function (request, reqParams, response) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
   }
 
-  reqParams.limit =
+  reqParams.limit = Math.min(
     (reqParams.limit ? parseInt(reqParams.limit) : 0) ||
-    config.nbPostsPerNewsfeedPage;
+      config.nbPostsPerNewsfeedPage,
+    MAX_LIMIT,
+  );
 
   function renderHotTracks(posts) {
     const firstIndex = parseInt(reqParams.skip || 0);

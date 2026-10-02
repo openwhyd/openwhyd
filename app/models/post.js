@@ -18,6 +18,11 @@ const { fetchUserNameById } = require('./user.js');
 const assert = require('node:assert');
 
 const NB_POSTS = process.appParams?.nbPostsPerNewsfeedPage;
+const MAX_NB_POSTS = 200; // upper bound for client-provided limits, to prevent memory/CPU exhaustion
+
+/** Parses a client-provided limit, and caps it to MAX_NB_POSTS. */
+const sanitizeLimit = (limit) =>
+  Math.min(parseInt(limit, 10) || NB_POSTS, MAX_NB_POSTS);
 
 const DEFAULT_SORT = /** @type const */ ({ _id: 'desc' }); // descending _id => antichronological order
 
@@ -46,7 +51,7 @@ function processAdvQuery(query, params, options) {
   query = query || {};
   params = params || {};
   options = options || {};
-  params.limit = (parseInt(options.limit) || NB_POSTS) + 1;
+  params.limit = sanitizeLimit(options.limit) + 1;
   if (options.before != null) {
     if (mongodb.isObjectId(options.before))
       query._id = { $gt: ObjectId('' + options.before) };
@@ -133,7 +138,7 @@ exports.fetchByAuthors = async function (uidList, options, cb) {
   });
 
   // we may exclude some documents from the cursor => don't pass limit to find()
-  const nbRequestedPosts = (parseInt(options.limit, 10) || NB_POSTS) + 1;
+  const nbRequestedPosts = sanitizeLimit(options.limit) + 1;
 
   const cursor = mongodb.collections['post'].find(query).sort(DEFAULT_SORT);
   try {

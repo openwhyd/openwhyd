@@ -6,6 +6,10 @@ const feature = require('../features/hot-tracks.js');
 
 const HOT_TRACK_TIME_WINDOW = 7 * 24 * 60 * 60 * 1000; // count (re)posts that are less than 1 week old, for ranking
 
+const HOT_TRACKS_CACHE_TTL = 60 * 1000; // the ranking is expensive to compute, and doesn't need to be real-time
+const MAX_HOT_TRACKS_LIMIT = 200;
+const hotTracksCache = new Map(); // key => { expires: number, promise: Promise }
+
 // functions for fetching hot tracks
 
 /**
@@ -85,12 +89,35 @@ async function getRecentPostsByDescendingNumberOfReposts(params) {
 
 /** Fetch top/hot tracks, and include complete post data (from the "post" collection), score, and rank increment. */
 exports.getHotTracksFromDb = function (params, handler) {
-  params.skip = parseInt(params.skip || 0);
+  params.skip = parseInt(params.skip || 0) || 0;
+  if (params.limit !== undefined)
+    params.limit = Math.min(params.limit, MAX_HOT_TRACKS_LIMIT + 1);
   params.sinceId = params.sinceId
     ? mongodb.ObjectId(params.sinceId)
     : undefined;
-  feature
-    .getHotTracks(() => getRecentPostsByDescendingNumberOfReposts(params))
+  // cache (and share between concurrent requests) the results for the default time window
+  const cacheKey = params.sinceId
+    ? undefined
+    : `${params.skip}/${params.limit}`;
+  const cached = cacheKey && hotTracksCache.get(cacheKey);
+  let promise;
+  if (cached && cached.expires > Date.now()) promise = cached.promise;
+  else {
+    promise = feature.getHotTracks(() =>
+      getRecentPostsByDescendingNumberOfReposts(params),
+    );
+    if (cacheKey) {
+      const entry = {
+        expires: Date.now() + HOT_TRACKS_CACHE_TTL,
+        promise,
+      };
+      for (const [key, { expires }] of hotTracksCache)
+        if (expires <= Date.now()) hotTracksCache.delete(key); // prevent unbounded growth
+      hotTracksCache.set(cacheKey, entry);
+      promise.catch(() => hotTracksCache.delete(cacheKey)); // don't cache failures
+    }
+  }
+  promise
     .then((tracks) =>
       tracks.map((track) => ({
         ...track,
