@@ -36,6 +36,10 @@ Double check if the `docker-compose` file is there.
 $ ls -l
 ```
 
+The deployment uses MongoDB 4.4, which supports ARM64. Do not point it directly at a MongoDB 3.6 data
+directory: MongoDB requires upgrades through 4.0 and 4.2 first. Back up existing data and follow
+MongoDB's upgrade procedure before migrating it.
+
 Then run the containers.
 
 ```

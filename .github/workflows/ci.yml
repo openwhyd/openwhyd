@@ -383,14 +383,26 @@ jobs:
       - name: Create Docker tags
         id: create_docker_tags
         run: |
-          echo "tags=latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_OUTPUT
-          # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
-      - name: Publish to Docker Hub registry
+          echo "tags=openwhyd/openwhyd:latest,openwhyd/openwhyd:$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_OUTPUT
+      - name: Set up QEMU
         if: github.event_name == 'push'
-        uses: jerray/publish-docker-action@v1.0.5
+        uses: docker/setup-qemu-action@v4.4.0
+      - name: Set up Docker Buildx
+        if: github.event_name == 'push'
+        uses: docker/setup-buildx-action@v4.4.1
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v4.6.0
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Build and publish multi-platform Docker image
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v7.4.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
           tags: ${{ steps.create_docker_tags.outputs.tags }}
 
   docker:
