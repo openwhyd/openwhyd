@@ -26,3 +26,8 @@ Closes #<!-- enter issue number here -->.
 ## How to test this PR?
 
 <!-- Provide steps that the reviewer can follow to quickly test your PR. -->
+
+## Author checklist
+
+- [ ] I ran `make lint` and committed formatting fixes.
+- [ ] I ran `AVA_FORCE_CI=not-ci make test-approval-update` and committed snapshot updates when relevant.
