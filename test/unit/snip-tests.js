@@ -159,7 +159,10 @@ describe('snip.js', function () {
 
   describe('sanitizeJsStringInHtml()', function () {
     it('should preserve apostrophes as escaped JS quotes', function () {
-      assert.strictEqual(snip.sanitizeJsStringInHtml("O'Brien"), "O\\'Brien");
+      assert.strictEqual(
+        snip.sanitizeJsStringInHtml("O'Brien"),
+        String.raw`O\'Brien`,
+      );
     });
   });
 });

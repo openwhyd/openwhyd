@@ -105,7 +105,7 @@ exports.replaceURLWithHTMLLinks = function (text) {
   return String(text || '').replace(regexUrl2, function (_, url, __, domain) {
     return (
       '<a href="' +
-      url.replace(/"/g, '&quot;').replace(/'/g, '&#039;') +
+      url.replaceAll('"', '&quot;').replaceAll("'", '&#039;') +
       '">' +
       domain +
       '...</a>'
