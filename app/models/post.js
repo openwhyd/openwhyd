@@ -18,6 +18,15 @@ const { fetchUserNameById } = require('./user.js');
 const assert = require('node:assert');
 
 const NB_POSTS = process.appParams?.nbPostsPerNewsfeedPage;
+const MAX_NB_POSTS = 200;
+const MAX_NB_POSTS_JSON = 200_000; // higher cap for JSON requests (e.g. m.openwhyd.org), which are cheap to serve // upper bound for client-provided limits, to prevent memory/CPU exhaustion
+
+/** Parses a client-provided limit, and caps it to MAX_NB_POSTS (or MAX_NB_POSTS_JSON if `isJson` is true). */
+const sanitizeLimit = (limit, isJson = false) =>
+  Math.min(
+    Number.parseInt(limit, 10) || NB_POSTS,
+    isJson ? MAX_NB_POSTS_JSON : MAX_NB_POSTS,
+  );
 
 const DEFAULT_SORT = /** @type const */ ({ _id: 'desc' }); // descending _id => antichronological order
 
@@ -46,7 +55,7 @@ function processAdvQuery(query, params, options) {
   query = query || {};
   params = params || {};
   options = options || {};
-  params.limit = (parseInt(options.limit) || NB_POSTS) + 1;
+  params.limit = sanitizeLimit(options.limit) + 1;
   if (options.before != null) {
     if (mongodb.isObjectId(options.before))
       query._id = { $gt: ObjectId('' + options.before) };
@@ -133,7 +142,7 @@ exports.fetchByAuthors = async function (uidList, options, cb) {
   });
 
   // we may exclude some documents from the cursor => don't pass limit to find()
-  const nbRequestedPosts = (parseInt(options.limit, 10) || NB_POSTS) + 1;
+  const nbRequestedPosts = sanitizeLimit(options.limit, options.isJson) + 1;
 
   const cursor = mongodb.collections['post'].find(query).sort(DEFAULT_SORT);
   try {
