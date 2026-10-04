@@ -112,7 +112,7 @@ const makeNotFound = (errorHandler) =>
 
 function attachHealthcheckRoute(app) {
   app.get('/healthcheck', (_, res) => {
-    res.type('text/plain').send('OK');
+    res.set('Cache-Control', 'no-store').type('text/plain').send('OK');
   });
 }
 
