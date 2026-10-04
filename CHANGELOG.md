@@ -1,3 +1,18 @@
+## [1.64.16](https://github.com/openwhyd/openwhyd/compare/v1.64.15...v1.64.16) (2026-10-04)
+
+
+### Bug Fixes
+
+* **stability:** Cap client-supplied feed limits and cache /hot ranking to prevent CPU/memory exhaustion ([#939](https://github.com/openwhyd/openwhyd/issues/939)) ([c9debeb](https://github.com/openwhyd/openwhyd/commit/c9debebecd85cfd5aad24c0a942a450042312ff4))
+
+## [1.64.15](https://github.com/openwhyd/openwhyd/compare/v1.64.14...v1.64.15) (2026-10-04)
+
+
+### Bug Fixes
+
+* **auth:** don't log "user not logged in" errors ([9db9783](https://github.com/openwhyd/openwhyd/commit/9db9783f5bd207d79f683b4a79106ba3e304d811))
+* **ci:** Stabilize Data Export API CI timing, pin bookmarklet TypeScript build, and replace Bandcamp test by MP3 test ([#937](https://github.com/openwhyd/openwhyd/issues/937)) ([f6a2133](https://github.com/openwhyd/openwhyd/commit/f6a21339f29a69043fe98f2d0e39142e047a17b8)), closes [#940](https://github.com/openwhyd/openwhyd/issues/940)
+
 ## [1.64.14](https://github.com/openwhyd/openwhyd/compare/v1.64.13...v1.64.14) (2026-05-03)
 
 
