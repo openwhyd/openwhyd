@@ -1,6 +1,21 @@
 // Tests to prevent regressions on playback of tracks.
 
+/**
+ * Forces the window to appear focused and visible, so that playback is not paused by Openwhyd's front-end.
+ */
+function forceFocus(win: Window) {
+  cy.stub(win.document, 'hasFocus').returns(true);
+  Object.defineProperty(win.document, 'visibilityState', {
+    get: () => 'visible',
+  });
+  Object.defineProperty(win.document, 'hidden', { get: () => false });
+}
+
 context('Playback', () => {
+  beforeEach(() => {
+    cy.on('window:before:load', forceFocus);
+  });
+
   it('should allow user to play a Youtube track', () => {
     cy.visit('/yt/jI3YrVfOksE');
 
