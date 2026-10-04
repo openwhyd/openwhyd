@@ -397,6 +397,7 @@ const USER_ERRORS = [
   'Must be less than 18 characters long', // from userModel.setHandle()
   'Special characters are not allowed',
   'This username is taken by another user',
+  'user not logged in',
 ];
 
 function localRendering(reqParams, r) {
