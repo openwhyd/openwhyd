@@ -1,7 +1,7 @@
 version: '3'
 services:
   mongo:
-    image: mongo:4.4.29
+    image: mongo:3.6 # may soon migrate to mongo:4.4.29
     command: mongod --port 27117
     volumes:
       - /data # Data Persistance
