@@ -1,3 +1,10 @@
+## [1.64.17](https://github.com/openwhyd/openwhyd/compare/v1.64.16...v1.64.17) (2026-10-04)
+
+
+### Bug Fixes
+
+* **docker:** Add Docker healthcheck endpoint ([#926](https://github.com/openwhyd/openwhyd/issues/926)) ([bd706ff](https://github.com/openwhyd/openwhyd/commit/bd706ffacda6963da9af8be231abecb711c25b3b))
+
 ## [1.64.16](https://github.com/openwhyd/openwhyd/compare/v1.64.15...v1.64.16) (2026-10-04)
 
 
