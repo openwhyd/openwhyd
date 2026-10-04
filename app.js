@@ -194,9 +194,10 @@ function start() {
     urlPrefix: params.urlPrefix,
     port: params.port,
     appDir: __dirname,
-    sessionMiddleware: useAuth0AsIdentityProvider
-      ? null
-      : getLegacySessionMiddleware(),
+    sessionMiddleware:
+      useAuth0AsIdentityProvider && process.env.AUTH0_ISSUER_BASE_URL !== 'mock'
+        ? null
+        : getLegacySessionMiddleware(),
     errorHandler: async function (req, params = {}, response, statusCode) {
       // to render 404 and 401 error pages from server/router
       require('./app/templates/error.js').renderErrorResponse(
