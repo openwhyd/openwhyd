@@ -1,3 +1,10 @@
+## [1.64.16](https://github.com/openwhyd/openwhyd/compare/v1.64.15...v1.64.16) (2026-10-04)
+
+
+### Bug Fixes
+
+* **stability:** Cap client-supplied feed limits and cache /hot ranking to prevent CPU/memory exhaustion ([#939](https://github.com/openwhyd/openwhyd/issues/939)) ([c9debeb](https://github.com/openwhyd/openwhyd/commit/c9debebecd85cfd5aad24c0a942a450042312ff4))
+
 ## [1.64.15](https://github.com/openwhyd/openwhyd/compare/v1.64.14...v1.64.15) (2026-10-04)
 
 
