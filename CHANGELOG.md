@@ -1,3 +1,10 @@
+## [1.64.18](https://github.com/openwhyd/openwhyd/compare/v1.64.17...v1.64.18) (2026-10-04)
+
+
+### Bug Fixes
+
+* **ci:** delete heathcheck test ([f847517](https://github.com/openwhyd/openwhyd/commit/f847517235caf015acbbbed785262113b56946f5))
+
 ## [1.64.17](https://github.com/openwhyd/openwhyd/compare/v1.64.16...v1.64.17) (2026-10-04)
 
 
