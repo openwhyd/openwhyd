@@ -30,13 +30,13 @@ exports.controller = async function (request, reqParams, response) {
   }
 
   reqParams.limit = Math.min(
-    (reqParams.limit ? parseInt(reqParams.limit) : 0) ||
+    (reqParams.limit ? Number.parseInt(reqParams.limit) : 0) ||
       config.nbPostsPerNewsfeedPage,
     MAX_LIMIT,
   );
 
   function renderHotTracks(posts) {
-    const firstIndex = parseInt(reqParams.skip || 0);
+    const firstIndex = Number.parseInt(reqParams.skip || 0);
     const hasMore = posts && posts.length > reqParams.limit;
     if (hasMore) posts = posts.slice(0, reqParams.limit);
     if (loggedInUser.id)
