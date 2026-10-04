@@ -3,7 +3,7 @@
 OUTPUT_FILE="public/js/bookmarklet.js"
 
 # Make sure that public/js/bookmarkletUI.ts is transpiled last, because it relies on variables from other files
-npx --yes --package typescript tsc --target ES2015 --module none --moduleResolution node --outFile "${OUTPUT_FILE}" public/js/bookmarkletUrlDetectors.ts public/js/bookmarkletPageDetectors.ts public/js/bookmarkletYouTube.ts public/js/bookmarkletLogic.ts public/js/bookmarkletUI.ts
+npx --yes --package typescript@5.7.2 tsc --target ES2015 --module none --moduleResolution node --outFile "${OUTPUT_FILE}" public/js/bookmarkletUrlDetectors.ts public/js/bookmarkletPageDetectors.ts public/js/bookmarkletYouTube.ts public/js/bookmarkletLogic.ts public/js/bookmarkletUI.ts
 TRANSPILED_CODE=$(cat "${OUTPUT_FILE}")
 
 cat >"${OUTPUT_FILE}" << CONTENT
