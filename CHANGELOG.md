@@ -1,3 +1,10 @@
+## [1.64.19](https://github.com/openwhyd/openwhyd/compare/v1.64.18...v1.64.19) (2026-10-04)
+
+
+### Bug Fixes
+
+* **security:** escape quotes in comment link href generation ([#922](https://github.com/openwhyd/openwhyd/issues/922)) ([8554b4c](https://github.com/openwhyd/openwhyd/commit/8554b4c1e71f63025becdc353be11ddfc33de727))
+
 ## [1.64.18](https://github.com/openwhyd/openwhyd/compare/v1.64.17...v1.64.18) (2026-10-04)
 
 
