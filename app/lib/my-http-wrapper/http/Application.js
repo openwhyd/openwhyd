@@ -151,7 +151,7 @@ exports.Application = class Application {
 
     this._features.auth?.injectExpressRoutes(app, this._urlPrefix);
 
-    attachHealthcheckRoute(app);
+    attachHealthcheckRoute(app); // globalRateLimiter and makeStatsUpdater don't apply for this, as intended
 
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
