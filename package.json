@@ -21,7 +21,7 @@
     "test": "make test",
     "test:email": ". ./env-vars-testing-local.sh && node -e \"process.appParams = { emailModule: 'emailMailerSend' }; require('./app/controllers/admin/testEmail.js').sendTestEmail({ email: 'contact@openwhyd.org' })\"",
     "test:functional": "npx --yes mocha test/functional/*.js --exit",
-    "test:functional:coverage": "npm run coverage:clear && npx --yes nyc --silent mocha test/functional/*.js --exit $@",
+    "test:functional:coverage": "npm run coverage:clear && npx --yes nyc --silent $(node -p 'require(`./package.json`).scripts[`test:functional`]') $@",
     "test:integration": "npx --yes mocha test/integration/*.js --serial --exit",
     "test:integration:localdb": "MONGODB_HOST=localhost MONGODB_PORT=27117 npm run test:integration -- $@",
     "test:integration:coverage": "npx --yes nyc --silent --no-clean npm run test:integration:localdb -- $@",
