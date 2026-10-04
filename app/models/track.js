@@ -87,14 +87,18 @@ async function getRecentPostsByDescendingNumberOfReposts(params) {
   }));
 }
 
+function pruneExpiredHotTracks(now) {
+  for (const [key, { expires }] of hotTracksCache)
+    if (expires <= now) hotTracksCache.delete(key); // prevent unbounded growth
+}
+
 function fetchAndCacheHotTracks(params, cacheKey) {
   const promise = feature.getHotTracks(() =>
     getRecentPostsByDescendingNumberOfReposts(params),
   );
   if (cacheKey) {
     const now = Date.now();
-    for (const [key, { expires }] of hotTracksCache)
-      if (expires <= now) hotTracksCache.delete(key); // prevent unbounded growth
+    pruneExpiredHotTracks(now);
     hotTracksCache.set(cacheKey, {
       expires: now + HOT_TRACKS_CACHE_TTL,
       promise,
@@ -104,24 +108,30 @@ function fetchAndCacheHotTracks(params, cacheKey) {
   return promise;
 }
 
-/** Fetch top/hot tracks, and include complete post data (from the "post" collection), score, and rank increment. */
-exports.getHotTracksFromDb = function (params, handler) {
+function getCachedOrFetchHotTracks(params) {
+  // cache (and share between concurrent requests) the results for the default time window
+  const cacheKey = params.sinceId
+    ? undefined
+    : `${params.skip}/${params.limit}`;
+  const cached = cacheKey ? hotTracksCache.get(cacheKey) : undefined;
+  return cached && cached.expires > Date.now()
+    ? cached.promise
+    : fetchAndCacheHotTracks(params, cacheKey);
+}
+
+function normalizeHotTracksParams(params) {
   params.skip = Number.parseInt(params.skip || 0) || 0;
   if (params.limit !== undefined)
     params.limit = Math.min(params.limit, MAX_HOT_TRACKS_LIMIT + 1);
   params.sinceId = params.sinceId
     ? mongodb.ObjectId(params.sinceId)
     : undefined;
-  // cache (and share between concurrent requests) the results for the default time window
-  const cacheKey = params.sinceId
-    ? undefined
-    : `${params.skip}/${params.limit}`;
-  const cached = cacheKey ? hotTracksCache.get(cacheKey) : undefined;
-  const promise =
-    cached && cached.expires > Date.now()
-      ? cached.promise
-      : fetchAndCacheHotTracks(params, cacheKey);
-  promise
+}
+
+/** Fetch top/hot tracks, and include complete post data (from the "post" collection), score, and rank increment. */
+exports.getHotTracksFromDb = function (params, handler) {
+  normalizeHotTracksParams(params);
+  getCachedOrFetchHotTracks(params)
     .then((tracks) =>
       tracks.map((track) => ({
         ...track,
