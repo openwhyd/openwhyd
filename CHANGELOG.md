@@ -1,3 +1,10 @@
+## [1.64.21](https://github.com/openwhyd/openwhyd/compare/v1.64.20...v1.64.21) (2026-10-04)
+
+
+### Bug Fixes
+
+* **deps:** bump the npm_and_yarn group across 1 directory with 3 updates ([#944](https://github.com/openwhyd/openwhyd/issues/944)) ([98f65c4](https://github.com/openwhyd/openwhyd/commit/98f65c4970d4fbea5d8dfd0a4a9821cd2437dfd1))
+
 ## [1.64.20](https://github.com/openwhyd/openwhyd/compare/v1.64.19...v1.64.20) (2026-10-04)
 
 
