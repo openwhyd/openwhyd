@@ -1,3 +1,10 @@
+## [1.64.24](https://github.com/openwhyd/openwhyd/compare/v1.64.23...v1.64.24) (2026-10-06)
+
+
+### Bug Fixes
+
+* **deps:** bump proxy-addr from 2.0.7 to 2.0.8 in the npm_and_yarn group across 1 directory ([#947](https://github.com/openwhyd/openwhyd/issues/947)) ([a566f22](https://github.com/openwhyd/openwhyd/commit/a566f2269d2154c3fc7538f8b2ab4679607e9d7e))
+
 ## [1.64.23](https://github.com/openwhyd/openwhyd/compare/v1.64.22...v1.64.23) (2026-10-06)
 
 
