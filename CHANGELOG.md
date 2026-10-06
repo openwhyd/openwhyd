@@ -1,3 +1,10 @@
+## [1.64.22](https://github.com/openwhyd/openwhyd/compare/v1.64.21...v1.64.22) (2026-10-06)
+
+
+### Bug Fixes
+
+* **db:** index playlist pages to stop full-playlist sorts ([#946](https://github.com/openwhyd/openwhyd/issues/946)) ([a53f17a](https://github.com/openwhyd/openwhyd/commit/a53f17ab1418576663c38f909ac63a7151972427))
+
 ## [1.64.21](https://github.com/openwhyd/openwhyd/compare/v1.64.20...v1.64.21) (2026-10-04)
 
 
