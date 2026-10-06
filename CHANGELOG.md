@@ -1,3 +1,10 @@
+## [1.64.23](https://github.com/openwhyd/openwhyd/compare/v1.64.22...v1.64.23) (2026-10-06)
+
+
+### Bug Fixes
+
+* **nginx:** rate-limit on the real client IP behind Cloudflare ([#945](https://github.com/openwhyd/openwhyd/issues/945)) ([24fe508](https://github.com/openwhyd/openwhyd/commit/24fe508b55d09575785a749b456b7ae0d0a69638))
+
 ## [1.64.22](https://github.com/openwhyd/openwhyd/compare/v1.64.21...v1.64.22) (2026-10-06)
 
 
