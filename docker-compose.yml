@@ -1,7 +1,7 @@
 version: '3'
 services:
   mongo:
-    image: mongo:3.6@sha256:146c1fd999a660e697aac40bc6da842b005c7868232eb0b7d8996c8f3545b05d
+    image: mongo:4.4.29@sha256:52c42cbab240b3c5b1748582cc13ef46d521ddacae002bbbda645cebed270ec0
     command: mongod --port 27017
     volumes:
       - target: /data
