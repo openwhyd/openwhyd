@@ -5,5 +5,6 @@ interface Window {
   DailymotionPlayer;
   DeezerPlayer;
   BandcampPlayer;
+  soundManager;
   JamendoPlayer;
 }
