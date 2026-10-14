@@ -5,7 +5,7 @@ On openwhyd.org, all authentication is delegated to Auth0. The legacy `POST /log
 ## What already exists
 
 - **Read-only access**: the [Data Export API](./API.md#openwhyd-data-export-api) needs no authentication.
-- **Write access (partial)**: `POST /api/v2/postTrack` (see `app/api-v2/OpenwhydApiV2.js`) accepts an Auth0 JWT access token in the `Authorization: ****** header, with audience `${WHYD_URL_PREFIX}/api/v2/`. It is currently the only API v2 endpoint, and it is rate-limited to 1 request / 5 seconds / IP.
+- **Write access (partial)**: `POST /api/v2/postTrack` (see `app/api-v2/OpenwhydApiV2.js`) accepts an Auth0 JWT access token in the `Authorization: ****** HTTP header, with audience `${WHYD_URL_PREFIX}/api/v2/`. It is currently the only API v2 endpoint, and it is rate-limited to 1 request / 5 seconds / IP.
 
 ## Options for write access from a native app
 
