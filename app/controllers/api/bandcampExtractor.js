@@ -56,13 +56,22 @@ exports.controller = async function (req, reqParams = {}, res) {
   try {
     const track = matched.pop();
     const artist = matched.pop();
-    const { body } = await fetch(
+    const { response, body } = await fetch(
       `https://${artist}.bandcamp.com/track/${track}`,
     );
-    res.json({
-      eId,
-      streamURL: exports.extractBandcampStreamURLsFromHTML(body)[0],
-    });
+    const streamURL = exports.extractBandcampStreamURLsFromHTML(body)[0];
+    if (!streamURL) {
+      const status = response && response.statusCode;
+      console.warn(
+        `bandcampExtractor: no stream URL found for ${eId} (HTTP status: ${status})`,
+      );
+      res.json({
+        eId,
+        error: `no stream URL found on Bandcamp page (HTTP status: ${status})`,
+      });
+      return;
+    }
+    res.json({ eId, streamURL });
   } catch (err) {
     res.json({ error: err.message });
   }

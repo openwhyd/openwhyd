@@ -54,7 +54,23 @@ context('Playback', () => {
   });
 
   it('should allow user to play a Bandcamp track', () => {
+    // diagnostics: check each step separately, to tell which one fails
     cy.visit('/bc/harissa/rooftop');
+    cy.request({
+      url: '/api/bandcampExtractor?eId=/bc/harissa/rooftop',
+      headers: { Referer: Cypress.config('baseUrl') + '/' },
+    }).then(({ body }) => {
+      cy.log('bandcampExtractor response', JSON.stringify(body));
+      expect(body.error, 'extractor error').to.be.undefined;
+      expect(body.streamURL, 'stream URL').to.be.a('string');
+      cy.request({
+        url: body.streamURL,
+        headers: { Range: 'bytes=0-1' },
+        failOnStatusCode: false,
+      }).then(({ status }) => {
+        expect(status, 'stream URL HTTP status').to.be.oneOf([200, 206]);
+      });
+    });
 
     // should open the playbar after the user clicks on the post
     cy.get(`.post a.thumb`).click();
