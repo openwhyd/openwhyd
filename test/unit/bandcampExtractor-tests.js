@@ -43,4 +43,14 @@ describe('bandcampExtractor', function () {
       expectedSearchParams,
     );
   });
+
+  it('should fall back to data-tralbum when the stream URL has an unexpected format', () => {
+    const tralbum = JSON.stringify({
+      trackinfo: [{ file: { 'mp3-128': 'https://example.com/audio/1.mp3' } }],
+    }).replace(/"/g, '&quot;');
+    const html = `<script data-tralbum="${tralbum}"></script>`;
+    assert.deepStrictEqual(extractBandcampStreamURLsFromHTML(html), [
+      'https://example.com/audio/1.mp3',
+    ]);
+  });
 });

@@ -13,9 +13,52 @@ const dedup = (array) => [...new Set(array).keys()];
 exports.extractBandcampStreamURLs = (plainText) =>
   dedup(plainText.match(RE_STREAM_URL));
 
+const RE_TRALBUM = /data-tralbum=(["'])(.*?)\1/s;
+
+const parseTralbum = (html) => {
+  const matched = String(html).match(RE_TRALBUM);
+  if (!matched) return null;
+  try {
+    return JSON.parse(htmlDecode(matched[2]));
+  } catch (err) {
+    return null;
+  }
+};
+
+// fallback: stream URLs listed in data-tralbum, whatever their host or path
+const extractStreamURLsFromTralbum = (html) => {
+  const trackinfo = (parseTralbum(html) || {}).trackinfo || [];
+  return dedup(
+    trackinfo
+      .flatMap((track) => Object.values((track && track.file) || {}))
+      .filter((url) => typeof url === 'string' && /^https?:\/\//.test(url)),
+  );
+};
+
 exports.extractBandcampStreamURLsFromHTML = (html) => {
   const withDecodedEntities = htmlDecode(html);
-  return exports.extractBandcampStreamURLs(withDecodedEntities);
+  const urls = exports.extractBandcampStreamURLs(withDecodedEntities);
+  return urls.length > 0 ? urls : extractStreamURLsFromTralbum(html);
+};
+
+// short description of a page that doesn't contain any stream URL, for debugging
+const describePage = (body) => {
+  const html = String(body);
+  const tralbum = parseTralbum(html);
+  const title = (html.match(/<title>([^<]*)<\/title>/i) || [])[1];
+  return JSON.stringify({
+    length: html.length,
+    title: title && title.trim().slice(0, 100),
+    hasTralbum: !!tralbum,
+    trackinfo: tralbum
+      ? JSON.stringify(tralbum.trackinfo).slice(0, 300)
+      : undefined,
+    bcbits: dedup(html.match(/[\w.-]*bcbits\.com[^"'\s<]{0,40}/g) || []).slice(
+      0,
+      5,
+    ),
+    start: tralbum ? undefined : html.slice(0, 200),
+  });
 };
 
 function htmlDecode(str) {
@@ -67,7 +110,7 @@ exports.controller = async function (req, reqParams = {}, res) {
       );
       res.json({
         eId,
-        error: `no stream URL found on Bandcamp page (HTTP status: ${status})`,
+        error: `no stream URL found on Bandcamp page (HTTP status: ${status}) ${describePage(body)}`,
       });
       return;
     }
