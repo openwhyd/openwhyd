@@ -5,6 +5,7 @@ const fs = require('fs');
 const {
   extractBandcampStreamURLs,
   extractBandcampStreamURLsFromHTML,
+  isBotChallengePage,
 } = require('./../../app/controllers/api/bandcampExtractor.js');
 
 describe('bandcampExtractor', function () {
@@ -42,5 +43,23 @@ describe('bandcampExtractor', function () {
       [...url.searchParams.keys()].sort(),
       expectedSearchParams,
     );
+  });
+
+  it('should fall back to data-tralbum when the stream URL has an unexpected format', () => {
+    const tralbum = JSON.stringify({
+      trackinfo: [{ file: { 'mp3-128': 'https://example.com/audio/1.mp3' } }],
+    }).replace(/"/g, '&quot;');
+    const html = `<script data-tralbum="${tralbum}"></script>`;
+    assert.deepStrictEqual(extractBandcampStreamURLsFromHTML(html), [
+      'https://example.com/audio/1.mp3',
+    ]);
+  });
+
+  it("should recognize Bandcamp's anti-bot challenge page", () => {
+    const html =
+      '<!DOCTYPE html><html><head><title>Client Challenge</title></head></html>';
+    assert.strictEqual(isBotChallengePage(html), true);
+    assert.deepStrictEqual(extractBandcampStreamURLsFromHTML(html), []);
+    assert.strictEqual(isBotChallengePage('<title>Rooftop</title>'), false);
   });
 });

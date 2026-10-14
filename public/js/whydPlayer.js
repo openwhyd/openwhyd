@@ -566,6 +566,47 @@ function WhydPlayer() {
       return window.BandcampPlayer.apply(this, arguments);
     };
     window.BandcampPatchedPlayer.prototype = window.BandcampPlayer.prototype;
+    // the original implementation downgrades stream URLs to http://, which Bandcamp's CDN no longer serves
+    window.BandcampPatchedPlayer.prototype.playStreamUrl = function (url) {
+      if (!url) {
+        return this.clientCall('onError', this, {
+          source: 'BandcampPatchedPlayer',
+          code: 'no_stream',
+        });
+      }
+      const self = this;
+      self.sound = window.soundManager.createSound({
+        id: '_playem_bc_' + Date.now(),
+        url: 'https://' + url.split('//').pop(),
+        autoLoad: true,
+        autoPlay: true,
+        whileplaying: function () {
+          self.clientCall(
+            'onTrackInfo',
+            (self.currentTrack = {
+              position: self.sound.position / 1000,
+              duration: self.sound.duration / 1000,
+            }),
+          );
+        },
+        onplay: function () {
+          self.clientCall('onPlaying', self);
+        },
+        onresume: function () {
+          self.clientCall('onPlaying', self);
+        },
+        onfinish: function () {
+          self.clientCall('onEnded', self);
+        },
+        onerror: function (code, description) {
+          self.clientCall('onError', self, {
+            source: 'BandcampPatchedPlayer',
+            code,
+            error: description,
+          });
+        },
+      });
+    };
     window.BandcampPatchedPlayer.prototype.play = function (id) {
       $.ajax({
         type: 'GET',
