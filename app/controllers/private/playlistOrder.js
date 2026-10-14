@@ -61,7 +61,7 @@ exports.controller = async function (request, getParams, response) {
   postModel.fetchPlaylistPosts(
     getParams.uId,
     getParams.plId,
-    { limit: MAX_TRACKS },
+    { limit: MAX_TRACKS, isJson: true }, // isJson lifts the default cap of 200 posts
     async function (posts) {
       for (const i in posts)
         posts[i] = await postsTemplate.preparePost(posts[i]);
