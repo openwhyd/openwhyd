@@ -4,7 +4,7 @@
  **/
 
 const snip = require('../snip.js');
-const algoliasearch = require('algoliasearch');
+const { algoliasearch } = require('algoliasearch');
 
 if (process.env['ALGOLIA_APP_ID'] === undefined)
   throw new Error(`missing env var: ALGOLIA_APP_ID`);
@@ -52,20 +52,24 @@ const FIELDS_BY_TYPE = {
 const getIndex = (function () {
   const INDEX = {}; // cache of indexes
   return function (indexName) {
-    let index = INDEX[indexName];
-    if (!index) {
-      index = INDEX[indexName] = client.initIndex(indexName);
+    if (!INDEX[indexName]) {
+      INDEX[indexName] = indexName;
       // init field indexing settings
       const fields = INDEX_FIELDS_BY_TYPE[INDEX_TYPE_BY_NAME[indexName]] || [];
-      index.setSettings({
-        attributesForFaceting: ['name'].concat(
-          fields.map(function (field) {
-            return 'filterOnly(' + field + ')';
-          }),
-        ),
-      });
+      client
+        .setSettings({
+          indexName,
+          indexSettings: {
+            attributesForFaceting: ['name'].concat(
+              fields.map(function (field) {
+                return 'filterOnly(' + field + ')';
+              }),
+            ),
+          },
+        })
+        .catch((err) => console.error('[search] algolia setSettings', err));
     }
-    return index;
+    return indexName;
   };
 })();
 
@@ -91,7 +95,7 @@ Search.prototype.search = function (index, query, options, cb) {
       facetFilters.push(i + ':' + query[i]);
     }
     options = options || {};
-    options.facets = facetAttrs.join(',');
+    options.facets = facetAttrs;
     options.facetFilters = facetFilters;
   }
   if (!cb) {
@@ -99,8 +103,11 @@ Search.prototype.search = function (index, query, options, cb) {
       'please pass a callback parameter when calling Search.prototype.search',
     );
   }
-  getIndex(index)
-    .search(q, options)
+  client
+    .searchSingleIndex({
+      indexName: getIndex(index),
+      searchParams: { ...options, query: q },
+    })
     .then(
       (res) => cb(null, res),
       (err) => cb(err),
@@ -261,9 +268,12 @@ function indexTypedDocs(type, items, callback) {
       return doc;
     });
 
-    getIndex(INDEX_NAME_BY_TYPE[type])
-      .saveObjects(docs, { autoGenerateObjectIDIfNotExist: true })
-      .wait()
+    client
+      .saveObjects({
+        indexName: getIndex(INDEX_NAME_BY_TYPE[type]),
+        objects: docs,
+        waitForTasks: true,
+      })
       .then(
         () => {
           console.log(
@@ -320,9 +330,10 @@ exports.deleteAllDocs = function (type, callback) {
     callback && callback(new Error('invalid type'));
     return;
   }
-  getIndex(INDEX_NAME_BY_TYPE[type])
-    .clearObjects()
-    .wait()
+  const indexName = getIndex(INDEX_NAME_BY_TYPE[type]);
+  client
+    .clearObjects({ indexName })
+    .then(({ taskID }) => client.waitForTask({ indexName, taskID }))
     .then(
       () => {
         callback?.(); // TODO: check if parameters are required or not
