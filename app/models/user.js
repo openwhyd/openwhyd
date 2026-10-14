@@ -77,14 +77,14 @@ const defaultPref = (exports.DEFAULT_PREF = {
 
   // email notification freq (7=weekly, 1=daily, 0=instantly, -1=never)
   emLik: -1, // "like" notif (default: never)
-  emAdd: 0, // "re-add" notif (default: immediate)
-  emSub: 0, // subscription notif (default: immediate)
-  emSam: 1, // added same track(s) (default: daily)
-  emCom: 0, // commented your track(s) (default: immediate)
-  emMen: 0, // mentioned you in a comment (default: immediate)
-  emRep: 0, // replied to your comment (default: immediate)
-  emFrd: 0, // a friend joined whyd
-  emAcc: 0, // a friend accepted your invite
+  emAdd: -1, // "re-add" notif (default: never)
+  emSub: -1, // subscription notif (default: never)
+  emSam: -1, // added same track(s) (default: never)
+  emCom: -1, // commented your track(s) (default: never)
+  emMen: -1, // mentioned you in a comment (default: never)
+  emRep: -1, // replied to your comment (default: never)
+  emFrd: -1, // a friend joined whyd (default: never)
+  emAcc: -1, // a friend accepted your invite (default: never)
   pendEN: 0, // pending email notifications
   //nextEN: Date()	// date of next digest
   //prevEN: Date()	// date of last digest
