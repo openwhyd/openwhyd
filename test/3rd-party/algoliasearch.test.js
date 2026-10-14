@@ -23,6 +23,7 @@ describe('Algolia search wrapper', () => {
   beforeAll(async function () {
     expect(process.env).toHaveProperty('ALGOLIA_APP_ID');
     expect(process.env).toHaveProperty('ALGOLIA_API_KEY');
+    process.env.ALGOLIA_INDEX_PREFIX = `test_${process.env.GITHUB_RUN_ID || process.pid}_${process.env.GITHUB_RUN_ATTEMPT || 1}_`;
     searchModel = require('../../app/models/searchAlgolia.js');
     await cleanUp();
   }, CLEANUP_TIMEOUT);
