@@ -92,7 +92,7 @@
     "@typescript-eslint/parser": "^6.7.2",
     "approvals": "^6.2.2",
     "ava": "^6.2.0",
-    "cypress": "^13.16.1",
+    "cypress": "^14.5.4",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
     "eslint": "^8.51.0",
