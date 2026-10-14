@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      # v4+ requires a newer Cypress than the 13.x we use
+      - dependency-name: '@cypress/code-coverage'
+        update-types: ['version-update:semver-major']
