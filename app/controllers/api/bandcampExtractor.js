@@ -8,6 +8,18 @@ const RE_STREAM_URL =
 const USER_AGENT =
   'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 
+const BROWSER_HEADERS = {
+  'User-Agent': USER_AGENT,
+  Accept:
+    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+  'Accept-Language': 'en-US,en;q=0.9',
+  'Upgrade-Insecure-Requests': '1',
+  'Sec-Fetch-Dest': 'document',
+  'Sec-Fetch-Mode': 'navigate',
+  'Sec-Fetch-Site': 'none',
+  'Sec-Fetch-User': '?1',
+};
+
 const dedup = (array) => [...new Set(array).keys()];
 
 exports.extractBandcampStreamURLs = (plainText) =>
@@ -138,7 +150,7 @@ exports.controller = async function (req, reqParams = {}, res) {
 const fetch = (url) =>
   new Promise((resolve, reject) =>
     request(
-      { url, headers: { 'User-Agent': USER_AGENT, Accept: 'text/html' } },
+      { url, gzip: true, headers: BROWSER_HEADERS },
       (error, response, body) =>
         error ? reject(error) : resolve({ response, body }),
     ),
