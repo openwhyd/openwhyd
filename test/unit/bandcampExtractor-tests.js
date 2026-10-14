@@ -5,6 +5,7 @@ const fs = require('fs');
 const {
   extractBandcampStreamURLs,
   extractBandcampStreamURLsFromHTML,
+  isBotChallengePage,
 } = require('./../../app/controllers/api/bandcampExtractor.js');
 
 describe('bandcampExtractor', function () {
@@ -52,5 +53,13 @@ describe('bandcampExtractor', function () {
     assert.deepStrictEqual(extractBandcampStreamURLsFromHTML(html), [
       'https://example.com/audio/1.mp3',
     ]);
+  });
+
+  it("should recognize Bandcamp's anti-bot challenge page", () => {
+    const html =
+      '<!DOCTYPE html><html><head><title>Client Challenge</title></head></html>';
+    assert.strictEqual(isBotChallengePage(html), true);
+    assert.deepStrictEqual(extractBandcampStreamURLsFromHTML(html), []);
+    assert.strictEqual(isBotChallengePage('<title>Rooftop</title>'), false);
   });
 });

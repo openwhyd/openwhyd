@@ -41,6 +41,11 @@ exports.extractBandcampStreamURLsFromHTML = (html) => {
   return urls.length > 0 ? urls : extractStreamURLsFromTralbum(html);
 };
 
+// Bandcamp serves an anti-bot "Client Challenge" page instead of the track page to some clients
+exports.isBotChallengePage = (html) =>
+  /<title>\s*Client Challenge\s*<\/title>/i.test(String(html)) &&
+  !RE_TRALBUM.test(String(html));
+
 // short description of a page that doesn't contain any stream URL, for debugging
 const describePage = (body) => {
   const html = String(body);
@@ -105,6 +110,16 @@ exports.controller = async function (req, reqParams = {}, res) {
     const streamURL = exports.extractBandcampStreamURLsFromHTML(body)[0];
     if (!streamURL) {
       const status = response && response.statusCode;
+      if (exports.isBotChallengePage(body)) {
+        console.warn(
+          `bandcampExtractor: Bandcamp returned an anti-bot challenge page for ${eId}`,
+        );
+        res.json({
+          eId,
+          error: `bandcamp_bot_challenge: Bandcamp served an anti-bot challenge instead of the track page (HTTP status: ${status})`,
+        });
+        return;
+      }
       console.warn(
         `bandcampExtractor: no stream URL found for ${eId} (HTTP status: ${status})`,
       );
