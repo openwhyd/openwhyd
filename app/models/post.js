@@ -55,7 +55,7 @@ function processAdvQuery(query, params, options) {
   query = query || {};
   params = params || {};
   options = options || {};
-  params.limit = sanitizeLimit(options.limit) + 1;
+  params.limit = sanitizeLimit(options.limit, options.isJson) + 1;
   if (options.before != null) {
     if (mongodb.isObjectId(options.before))
       query._id = { $gt: ObjectId('' + options.before) };
@@ -408,6 +408,7 @@ exports.fetchPlaylistPosts = function (uId, plId, options = {}, handler) {
     limit: options.limit,
     after: options.after,
     before: options.before,
+    isJson: options.isJson,
   };
   exports.fetchPosts(
     { uId, 'pl.id': parseInt(plId) },
