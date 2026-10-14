@@ -25,7 +25,7 @@ interface Playem {
 
 interface WhydPlayer {
   emit: (eventName: string, params: uknown) => void;
-  playAll: (node: unknown) => void;
+  playAll: (node?: unknown) => void;
   pause: () => void;
   playPause: () => void;
   refresh: () => void;
@@ -35,7 +35,7 @@ interface Window {
   jQuery: JQuery;
   Playem: (unknown) => void;
   playem: Playem;
-  playTrack: () => void;
+  playTrack: (embedLink?: HTMLElement) => boolean | void;
   showMessage: (message: string, isError?: boolean) => void;
   Whyd: {
     tracking: { logTrackPlay: (postId: string) => void };

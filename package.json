@@ -52,8 +52,8 @@
     "lint:fix": "eslint . --fix",
     "lint:errors": "eslint . --quiet",
     "lint:format": "prettier . --write",
-    "lint:typescript": "npx --yes --package typescript tsc --noEmit --moduleResolution node --skipLibCheck",
-    "lint:jsdoc-typing": "npx --yes --package typescript tsc --target es2015 --moduleResolution node --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`"
+    "lint:typescript": "node node_modules/typescript7/bin/tsc --noEmit --moduleResolution bundler --strict false --skipLibCheck",
+    "lint:jsdoc-typing": "node node_modules/typescript7/bin/tsc --target es2015 --moduleResolution bundler --strict false --noEmit --allowJs --skipLibCheck `find app/ -name '*.js' -name '*.d.ts'` `find test/ -name '*.js' -name '*.d.ts'`"
   },
   "directories": {
     "src": "./app",
@@ -105,7 +105,8 @@
     "nyc": "^17.1.0",
     "prettier": "^3.4.2",
     "supertest": "^7.1.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript7": "npm:typescript@^7.0.2"
   },
   "overrides": {
     "typescript": "$typescript"
