@@ -11,8 +11,8 @@ const uploadCtr = require('../uploadedFile.js');
 
 /** @typedef {import('../../domain/OpenWhydFeatures.js').Features} Features */
 /** @typedef {Record<string, unknown>} ReqParams */
-/** @typedef {{ error?: string } | undefined} ActionCallbackParam */
-/** @typedef {(ActionCallbackParam) => void} ActionCallback */
+/** @typedef {unknown} ActionCallbackParam */
+/** @typedef {(param: ActionCallbackParam, args?: Record<string, string>) => void} ActionCallback */
 
 /** @type {Record<string, (p: ReqParams, callback: ActionCallback, features: Features) => void>} */
 exports.actions = {
