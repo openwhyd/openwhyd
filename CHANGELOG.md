@@ -1,3 +1,10 @@
+## [1.64.26](https://github.com/openwhyd/openwhyd/compare/v1.64.25...v1.64.26) (2026-10-14)
+
+
+### Bug Fixes
+
+* **playlist:** Fix "Change order" page truncating playlists at 200 tracks ([#956](https://github.com/openwhyd/openwhyd/issues/956)) ([40ad444](https://github.com/openwhyd/openwhyd/commit/40ad4443c231088c073d3e3e16b124173be9e6cd))
+
 ## [1.64.25](https://github.com/openwhyd/openwhyd/compare/v1.64.24...v1.64.25) (2026-10-14)
 
 
