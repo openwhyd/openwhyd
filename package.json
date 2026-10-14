@@ -106,5 +106,8 @@
     "prettier": "^3.4.2",
     "supertest": "^7.1.0",
     "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "typescript": "$typescript"
   }
 }
