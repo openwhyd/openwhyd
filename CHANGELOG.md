@@ -1,3 +1,10 @@
+## [1.64.25](https://github.com/openwhyd/openwhyd/compare/v1.64.24...v1.64.25) (2026-10-14)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump handlebars from 4.7.9 to 4.7.10 in the npm_and_yarn group across 1 directory ([#949](https://github.com/openwhyd/openwhyd/issues/949)) ([3493d5e](https://github.com/openwhyd/openwhyd/commit/3493d5e3b94bf219710571e9e736fe3c9252a482))
+
 ## [1.64.24](https://github.com/openwhyd/openwhyd/compare/v1.64.23...v1.64.24) (2026-10-06)
 
 
