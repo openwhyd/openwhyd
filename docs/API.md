@@ -122,6 +122,8 @@ It can be used to read and update lists of tracks associated to the authenticate
 
 In order to allow this, a session must be initiated on Openwhyd's API, by providing the user's email and password. When a session is initiated properly, a cookie will be returned. This cookie will be required for the following API requests. If you want to know more about the authentication flow, read [legacy-login-flow.md](./legacy-login-flow.md).
 
+> Note: on openwhyd.org, authentication is delegated to Auth0, so this legacy session flow is not available there. Native / 3rd-party apps should read [native-clients-auth.md](./native-clients-auth.md).
+
 > Note: an API client for Node.js was written to handle the session-based authentication. It can be installed using [`npm install openwhyd-api-client`](https://www.npmjs.com/package/openwhyd-api-client).
 
 In this section, we will document all the API endpoints supported by Openwhyd.
