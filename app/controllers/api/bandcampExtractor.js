@@ -147,7 +147,7 @@ exports.controller = async function (req, reqParams = {}, res) {
   }
 };
 
-const fetch = (url) =>
+const fetchWithRequest = (url) =>
   new Promise((resolve, reject) =>
     request(
       { url, gzip: true, headers: BROWSER_HEADERS },
@@ -155,5 +155,25 @@ const fetch = (url) =>
         error ? reject(error) : resolve({ response, body }),
     ),
   );
+
+// Bandcamp's anti-bot challenge is triggered by Node's TLS fingerprint, so we retry
+// with a client that impersonates a browser's TLS/HTTP2 fingerprint (like yt-dlp does)
+const fetchWithBrowserImpersonation = async (url) => {
+  const { Impit } = require('impit');
+  const response = await new Impit({ browser: 'chrome' }).fetch(url, {
+    headers: BROWSER_HEADERS,
+  });
+  return {
+    response: { statusCode: response.status },
+    body: await response.text(),
+  };
+};
+
+const fetch = async (url) => {
+  const result = await fetchWithRequest(url);
+  if (!exports.isBotChallengePage(result.body)) return result;
+  console.warn('bandcampExtractor: got challenge page, retrying with impit');
+  return fetchWithBrowserImpersonation(url);
+};
 
 const sameDomain = (url1, url2) => new URL(url1).host === new URL(url2).host;
