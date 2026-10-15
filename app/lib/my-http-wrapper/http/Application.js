@@ -155,7 +155,7 @@ exports.Application = class Application {
 
     // app.set('view engine', 'hogan'); // TODO: use hogan.js to render "mustache" templates when res.render() is called
     app.use(noCache); // called on all requests
-    app.set('trust proxy', 1); // number of proxies between user and server, needed by express-rate-limit
+    app.set('trust proxy', 1); // number of proxies between user and server (Cloudflare), needed by express-rate-limit
     app.use(express.static(this._publicDir));
 
     // Apply global rate limiting to all routes (excluding static files)

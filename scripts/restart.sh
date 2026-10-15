@@ -10,11 +10,6 @@ NODE="$(which node)"
 GIT_COMMIT_SHA=$(git rev-parse HEAD)
 GIT_REPOSITORY_URL="git@github.com:openwhyd/openwhyd.git"
 
-# NGINX_ENBLD=/etc/nginx/sites-enabled
-# NGINX_TEMPLATE=$ROOT_DIR/config/nginx-site-template
-# sudo nginx -t # make sure that the configuration is valid
-# sudo service nginx restart
-
 echo "👋  Restarting Openwhyd server ${VERSION} on port ${PORT}, with ${NODE}..."
 cd ${ROOT_DIR}
 source env-vars-local.sh # Note: after adding new env vars, you may need to delete the pm2 instance then re-run "make restart-to-latest"
