@@ -193,6 +193,10 @@ jobs:
     steps:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
       - uses: browser-actions/setup-chrome@v1
+        with:
+          # default is "latest" (bleeding-edge Chromium snapshot), which can break Cypress,
+          # e.g. "Error: * is not a valid URL" with Chromium 158.0.8120.0 and Cypress 14.5.4
+          chrome-version: stable
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
@@ -264,6 +268,10 @@ jobs:
     steps:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
       - uses: browser-actions/setup-chrome@v1
+        with:
+          # default is "latest" (bleeding-edge Chromium snapshot), which can break Cypress,
+          # e.g. "Error: * is not a valid URL" with Chromium 158.0.8120.0 and Cypress 14.5.4
+          chrome-version: stable
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
