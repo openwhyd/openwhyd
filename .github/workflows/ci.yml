@@ -213,7 +213,7 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v7.4.6 # >= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24
+        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6 (>= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24)
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
@@ -288,7 +288,7 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v7.4.6 # >= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24
+        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6 (>= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24)
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
