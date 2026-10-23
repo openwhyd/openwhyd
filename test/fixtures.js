@@ -78,7 +78,9 @@ exports.resetTestDb = async (
     );
   resetDbProcess.stderr.on('data', (txt) => console.error(`[cleanup] ${txt}`));
   resetDbProcess.on('error', (err) => console.trace('[cleanup] error:', err));
-  return new Promise((resolve) => resetDbProcess.on('close', () => resolve()));
+  return new Promise((resolve) =>
+    resetDbProcess.on('close', () => resolve(undefined)),
+  );
 };
 
 /**

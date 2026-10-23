@@ -5,6 +5,7 @@
  * @author adrienjoly
  **/
 
+// @ts-ignore -- redeclaration of the global $ defined by @types/jquery
 const $ = window.jQuery;
 
 window.playTrack = function () {
@@ -745,7 +746,6 @@ function WhydPlayer() {
   for (const f in exports) this[f] = exports[f];
 
   //populateTracksFromPosts();
-  return this; //exports;
 }
 
 /*loader.whenReady*/ (function () {
