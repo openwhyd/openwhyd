@@ -1,6 +1,6 @@
 const assert = require('assert');
 const util = require('util');
-const request = require('request');
+const { fetchText } = require('../native-fetch');
 
 const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
@@ -15,17 +15,11 @@ describe(`playlistOrder api`, function () {
   });
 
   function callApi(method, path, form) {
-    return new Promise((resolve, reject) =>
-      request[method.toLowerCase()](
-        {
-          jar,
-          form,
-          url: `${openwhyd.getURL()}${path}`,
-        },
-        (error, response, body) =>
-          error ? reject(error) : resolve({ response, body }),
-      ),
-    );
+    return fetchText(`${openwhyd.getURL()}${path}`, {
+      method,
+      jar,
+      form,
+    });
   }
 
   before(async () => {

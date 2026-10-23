@@ -80,7 +80,6 @@
     "mongodb": "4.17.0",
     "playemjs": "adrienjoly/playemjs#v1.4.0",
     "q-set": "^2.0.8",
-    "request": "2.88.2",
     "wait-on": "^9.5.1"
   },
   "devDependencies": {

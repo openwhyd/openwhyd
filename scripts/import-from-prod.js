@@ -5,7 +5,6 @@
 //   $ node scripts/import-from-prod.js adrien 5 # imports 5 posts from https://openwhyd.org/adrien
 //   $ node scripts/import-from-prod.js u/5911f8e098267ba4b34b8424 # ... or specify a user by id
 
-const request = require('request');
 const mongodb = require('mongodb');
 
 const ObjectId = (id) => mongodb.ObjectId(id);
@@ -15,6 +14,10 @@ const { MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
 const url = `mongodb://${MONGODB_HOST || 'localhost'}:${MONGODB_PORT || 27117}`;
 const dbName = MONGODB_DATABASE || 'openwhyd_test';
 const userURI = process.argv[2] || 'test'; // default profile: https://openwhyd.org/test
+const userHandleOrId = userURI.split('/').pop();
+if (!/^[\w.-]+$/.test(userHandleOrId)) {
+  throw new Error(`invalid user handle or id: ${userHandleOrId}`);
+}
 const password = {
   plain: 'admin',
   md5: '21232f297a57a5a743894a0e4a801fc3',
@@ -27,39 +30,40 @@ const connectToDb = ({ url, dbName }) => {
   return { db: client.db(dbName), client };
 };
 
-const fetchUserProfile = ({ userURI }) =>
-  new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/api/user/${userURI.split('/').pop()}?format=json`;
-    console.log(`fetching profile from ${url} ...`);
-    request(url, (err, _, body) =>
-      err ? reject(err) : resolve(JSON.parse(body)),
-    );
-  });
+const OPENWHYD_ORIGIN = 'https://openwhyd.org';
 
-const fetchUserPosts = ({ userId }) =>
-  new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/u/${userId}?format=json&limit=${nbPosts}`;
-    console.log(`fetching tracks from ${url} ...`);
-    request(url, (err, _, body) =>
-      err
-        ? reject(err)
-        : resolve({
-            posts: JSON.parse(body).map((post) => ({
-              ...post,
-              _id: ObjectId(post._id),
-            })),
-          }),
-    );
-  });
+/** Fetches JSON from openwhyd.org, refusing any URL that would point to another host. */
+const fetchJsonFromOpenwhyd = async (path) => {
+  const url = new URL(path, OPENWHYD_ORIGIN);
+  if (url.origin !== OPENWHYD_ORIGIN) {
+    throw new Error(`refusing to fetch from another origin: ${url.origin}`);
+  }
+  console.log(`fetching ${url} ...`);
+  return JSON.parse(await (await fetch(url)).text());
+};
 
-const fetchSubscribers = ({ userId }) =>
-  new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/api/user/${userId}/subscribers`;
-    console.log(`fetching ${url} ...`);
-    request(url, (err, _, body) =>
-      err ? reject(err) : resolve({ subscribers: JSON.parse(body) }),
-    );
-  });
+const fetchUserProfile = ({ userHandleOrId }) =>
+  fetchJsonFromOpenwhyd(
+    `/api/user/${encodeURIComponent(userHandleOrId)}?format=json`,
+  );
+
+const fetchUserPosts = async ({ userId }) => {
+  const posts = await fetchJsonFromOpenwhyd(
+    `/u/${encodeURIComponent(userId)}?format=json&limit=${nbPosts}`,
+  );
+  return {
+    posts: posts.map((post) => ({
+      ...post,
+      _id: ObjectId(post._id),
+    })),
+  };
+};
+
+const fetchSubscribers = async ({ userId }) => ({
+  subscribers: await fetchJsonFromOpenwhyd(
+    `/api/user/${encodeURIComponent(userId)}/subscribers`,
+  ),
+});
 
 const upsertUser = ({ db, user }) =>
   new Promise((resolve, reject) => {
@@ -101,7 +105,7 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
 (async () => {
   console.log(`connecting to ${url}/${dbName} ...`);
   const { db, client } = await connectToDb({ url, dbName });
-  const user = await fetchUserProfile({ userURI });
+  const user = await fetchUserProfile({ userHandleOrId });
   await upsertUser({ db, user });
   const userId = '' + user._id;
   const { posts } = await fetchUserPosts({ userId }); // or require(`./../${username}.json`);
@@ -113,11 +117,7 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
     await insertSubscribers({ db, userId, subscribers });
   }
   // refresh openwhyd's in-memory cache of users, to allow this user to login
-  await new Promise((resolve, reject) =>
-    request.post('http://localhost:8080/testing/refresh', (err) =>
-      err ? reject(err) : resolve(),
-    ),
-  );
+  await fetch('http://localhost:8080/testing/refresh', { method: 'POST' });
   client.close();
   console.log(`inserted user => http://localhost:8080/${userURI}`);
   console.log(`login id: ${userURI}, password: ${password.plain}`);
