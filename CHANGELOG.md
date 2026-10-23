@@ -1,3 +1,10 @@
+## [1.64.29](https://github.com/openwhyd/openwhyd/compare/v1.64.28...v1.64.29) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** Replace `request` with native Node.js fetch ([#976](https://github.com/openwhyd/openwhyd/issues/976)) ([b4c5292](https://github.com/openwhyd/openwhyd/commit/b4c52921dfef35c9f673dd322be2caa159fd5499))
+
 ## [1.64.28](https://github.com/openwhyd/openwhyd/compare/v1.64.27...v1.64.28) (2026-10-23)
 
 
