@@ -15,14 +15,17 @@ function fetchRequest(method, options, callback) {
     form,
   } = typeof options === 'string' ? { url: options } : options;
   fetchWithJar(url, { method, jar: requestJar, form })
-    .then(async (response) =>
-      callback(
-        null,
-        { statusCode: response.status, headers: response.headers },
-        await response.text(),
-      ),
-    )
-    .catch(callback);
+    .then(async (response) => ({
+      statusCode: response.status,
+      headers: response.headers,
+      body: await response.text(),
+    }))
+    // call back outside of the promise chain, so that errors thrown by the
+    // callback are not caught and passed to it again
+    .then(
+      (response) => process.nextTick(callback, null, response, response.body),
+      (error) => process.nextTick(callback, error),
+    );
 }
 
 describe(`post api`, function () {

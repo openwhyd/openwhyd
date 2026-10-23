@@ -30,17 +30,18 @@ function fetchRequest(method, options, callback) {
         }
       }
       // mimic the shape of `request`'s response object
-      callback(
-        null,
-        {
-          statusCode: response.status,
-          headers: responseHeaders,
-          body: responseBody,
-        },
-        responseBody,
-      );
+      return {
+        statusCode: response.status,
+        headers: responseHeaders,
+        body: responseBody,
+      };
     })
-    .catch((error) => callback(error));
+    // call back outside of the promise chain, so that errors thrown by the
+    // callback (e.g. failed assertions) are not caught and passed to it again
+    .then(
+      (response) => process.nextTick(callback, null, response, response.body),
+      (error) => process.nextTick(callback, error),
+    );
 }
 
 // AUTH
