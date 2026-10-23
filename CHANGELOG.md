@@ -1,3 +1,10 @@
+## [1.64.27](https://github.com/openwhyd/openwhyd/compare/v1.64.26...v1.64.27) (2026-10-23)
+
+
+### Bug Fixes
+
+* **bandcamp:** send browser-like headers when fetching track pages + fix Cypress tests on CI ([#973](https://github.com/openwhyd/openwhyd/issues/973)) ([cdcd18f](https://github.com/openwhyd/openwhyd/commit/cdcd18fc5e2abe85eb309ca87a5fd91e2764286e)), closes [#940](https://github.com/openwhyd/openwhyd/issues/940)
+
 ## [1.64.26](https://github.com/openwhyd/openwhyd/compare/v1.64.25...v1.64.26) (2026-10-14)
 
 
