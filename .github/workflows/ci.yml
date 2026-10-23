@@ -209,13 +209,10 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v6.5.0
+        uses: cypress-io/github-action@v7.4.6 # >= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
-          # 127.0.0.1 instead of localhost: on Node 24, while the server is still starting, pinging
-          # localhost (::1 + 127.0.0.1) fails with "Socket closed before the connection was established",
-          # which the action does not retry => the step fails before the server is up.
-          wait-on: 'http://127.0.0.1:8080'
+          wait-on: 'http://localhost:8080'
           config-file: cypress.config.ts
           browser: '${{ env.BROWSER_PATH }}' # chromium/chrome is required to include browser console in cypress logs
           install: false
@@ -283,13 +280,10 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v6.5.0
+        uses: cypress-io/github-action@v7.4.6 # >= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
-          # 127.0.0.1 instead of localhost: on Node 24, while the server is still starting, pinging
-          # localhost (::1 + 127.0.0.1) fails with "Socket closed before the connection was established",
-          # which the action does not retry => the step fails before the server is up.
-          wait-on: 'http://127.0.0.1:8080'
+          wait-on: 'http://localhost:8080'
           config-file: cypress-auth.config.ts
           browser: '${{ env.BROWSER_PATH }}' # chromium/chrome is required to include browser console in cypress logs
           install: false
