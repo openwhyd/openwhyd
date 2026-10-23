@@ -16,10 +16,12 @@ const client = algoliasearch(
   process.env.ALGOLIA_API_KEY, // required ACLs: search, browse, addObject, deleteObject, listIndexes, editSettings, deleteIndex
 );
 
+const INDEX_PREFIX = process.env.ALGOLIA_INDEX_PREFIX || '';
+
 const INDEX_NAME_BY_TYPE = {
-  user: 'users',
-  post: 'posts',
-  playlist: 'playlists',
+  user: INDEX_PREFIX + 'users',
+  post: INDEX_PREFIX + 'posts',
+  playlist: INDEX_PREFIX + 'playlists',
 };
 
 const INDEX_TYPE_BY_NAME = {
