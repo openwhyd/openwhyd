@@ -53,8 +53,7 @@ context('Playback', () => {
     cy.get('#btnPlay').should('not.have.class', 'playing');
   });
 
-  // TODO: fix bandcamp playback (cf issue #940) => re-enable this test
-  it.skip('should allow user to play a Bandcamp track', () => {
+  it('should allow user to play a Bandcamp track', () => {
     cy.visit('/bc/harissa/rooftop');
 
     // should open the playbar after the user clicks on the post

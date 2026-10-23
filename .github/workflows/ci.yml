@@ -193,6 +193,10 @@ jobs:
     steps:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
       - uses: browser-actions/setup-chrome@v1
+        with:
+          # default is "latest" (bleeding-edge Chromium snapshot), which can break Cypress,
+          # e.g. "Error: * is not a valid URL" with Chromium 158.0.8120.0 and Cypress 14.5.4
+          chrome-version: stable
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
@@ -209,7 +213,7 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v6.5.0
+        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6 (>= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24)
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
@@ -264,6 +268,10 @@ jobs:
     steps:
       # to avoid browserVersion mismatch, cf https://github.com/cypress-io/github-action/issues/518#issuecomment-1210979047
       - uses: browser-actions/setup-chrome@v1
+        with:
+          # default is "latest" (bleeding-edge Chromium snapshot), which can break Cypress,
+          # e.g. "Error: * is not a valid URL" with Chromium 158.0.8120.0 and Cypress 14.5.4
+          chrome-version: stable
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
@@ -280,7 +288,7 @@ jobs:
           env-file: env-vars-testing.conf
       - run: npm ci --prefer-offline --no-audit
       - name: Run Cypress tests against Openwhyd server
-        uses: cypress-io/github-action@v6.5.0
+        uses: cypress-io/github-action@c541a95ea92d9239347a2355f2e895cd4b3f8060 # v7.4.6 (>= 7.4.4 required: older versions use got@11, whose wait-on retries crash on Node 24)
         with:
           start: npm run start:coverage --mongoDbDatabase openwhyd_test
           wait-on: 'http://localhost:8080'
