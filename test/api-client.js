@@ -25,11 +25,18 @@ function fetchRequest(method, options, callback) {
       if (json) {
         try {
           responseBody = JSON.parse(responseBody);
-        } catch {}
+        } catch {
+          // like `request`, keep the raw body when it is not valid JSON
+        }
       }
+      // mimic the shape of `request`'s response object
       callback(
         null,
-        { statusCode: response.status, headers: responseHeaders },
+        {
+          statusCode: response.status,
+          headers: responseHeaders,
+          body: responseBody,
+        },
         responseBody,
       );
     })
@@ -71,13 +78,15 @@ exports.loginAs = function loginAs(user, callback) {
 
 exports.signupAs = async function signupAs(user, callback) {
   const body = await new Promise((resolve, reject) =>
-    fetchRequest('GET',
+    fetchRequest(
+      'GET',
       { url: `${URL_PREFIX}/api/signup/rTk/${EXPECTED_RTK}` },
       (error, response, body) => (error ? reject(error) : resolve(body)),
     ),
   );
   const sTk = body.split('value="').pop().split('"')[0];
-  fetchRequest('POST',
+  fetchRequest(
+    'POST',
     {
       url: `${URL_PREFIX}/register`,
       json: true,
@@ -101,7 +110,8 @@ exports.signupAs = async function signupAs(user, callback) {
 // HTTP request wrappers
 
 exports.getRaw = function (jar, url, callback) {
-  fetchRequest('GET',
+  fetchRequest(
+    'GET',
     { jar, url: `${URL_PREFIX}${url}` },
     function (error, response, body) {
       callback(error, { response, body });
@@ -122,7 +132,8 @@ exports.get = function (jar, url, callback) {
 };
 
 exports.postRaw = function (jar, url, body, callback) {
-  fetchRequest('POST',
+  fetchRequest(
+    'POST',
     { jar, url: `${URL_PREFIX}${url}`, body, json: typeof body === 'object' },
     (error, response, body) => callback(error, { response, body }),
   );
@@ -131,7 +142,8 @@ exports.postRaw = function (jar, url, body, callback) {
 // USER
 
 exports.getMyPosts = function (jar, callback) {
-  fetchRequest('GET',
+  fetchRequest(
+    'GET',
     { jar, url: `${URL_PREFIX}/me?format=json` },
     function (error, response, body) {
       assert.ifError(error);
@@ -153,7 +165,8 @@ exports.getUser = function (jar, body, callback) {
 
 /** Documentation: https://openwhyd.github.io/openwhyd/API.html#set-user-data */
 exports.setUser = function (jar, body, callback) {
-  fetchRequest('POST',
+  fetchRequest(
+    'POST',
     {
       jar,
       url: `${URL_PREFIX}/api/user`,
@@ -172,7 +185,8 @@ exports.setUser = function (jar, body, callback) {
 
 exports.addPost = async function (jar, reqBody) {
   const { response, body } = await new Promise((resolve, reject) =>
-    fetchRequest('POST',
+    fetchRequest(
+      'POST',
       {
         jar,
         url: `${URL_PREFIX}/api/post`,
@@ -194,7 +208,8 @@ exports.addPost = async function (jar, reqBody) {
 };
 
 exports.addComment = function (jar, body, callback) {
-  fetchRequest('POST',
+  fetchRequest(
+    'POST',
     {
       jar,
       url: `${URL_PREFIX}/api/post`,
@@ -211,7 +226,8 @@ exports.addComment = function (jar, body, callback) {
 
 exports.deletePost = async function (jar, postId) {
   const { response, body } = await new Promise((resolve, reject) =>
-    fetchRequest('POST',
+    fetchRequest(
+      'POST',
       {
         jar,
         url: `${URL_PREFIX}/api/post`,

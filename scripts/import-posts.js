@@ -23,6 +23,10 @@ assert.ok(
   fromUserId && toUserId,
   'Usage: $ node scripts/import-posts.js <from_user_id> <to_user_id>',
 );
+assert.ok(
+  mongodb.ObjectId.isValid(fromUserId) && mongodb.ObjectId.isValid(toUserId),
+  'user ids must be valid ObjectIds',
+);
 
 // Environment
 const {
@@ -49,7 +53,7 @@ const connectToDb = ({ url, dbName }) => {
 };
 
 const fetchUserProfile = async ({ userId }) => {
-  const url = `${WHYD_URL_PREFIX}/api/user/${userId}?format=json`;
+  const url = `${WHYD_URL_PREFIX}/api/user/${encodeURIComponent(userId)}?format=json`;
   console.warn(`fetching profile from ${url} ...`);
   return JSON.parse(await (await fetch(url)).text());
 };
@@ -64,7 +68,7 @@ const updateUser = ({ db, user }) => {
 /** Returns list of posts, from most recent to oldest */
 const fetchUserPosts = async ({ userId }) => {
   const limit = 99999999;
-  const url = `${WHYD_URL_PREFIX}/u/${userId}?format=json&limit=${limit}`;
+  const url = `${WHYD_URL_PREFIX}/u/${encodeURIComponent(userId)}?format=json&limit=${limit}`;
   console.warn(`fetching posts from ${url} ...`);
   return { posts: JSON.parse(await (await fetch(url)).text()) };
 };

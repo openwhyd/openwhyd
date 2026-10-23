@@ -14,6 +14,10 @@ const { MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
 const url = `mongodb://${MONGODB_HOST || 'localhost'}:${MONGODB_PORT || 27117}`;
 const dbName = MONGODB_DATABASE || 'openwhyd_test';
 const userURI = process.argv[2] || 'test'; // default profile: https://openwhyd.org/test
+const userHandleOrId = userURI.split('/').pop();
+if (!/^[\w.-]+$/.test(userHandleOrId)) {
+  throw new Error(`invalid user handle or id: ${userHandleOrId}`);
+}
 const password = {
   plain: 'admin',
   md5: '21232f297a57a5a743894a0e4a801fc3',
@@ -26,14 +30,16 @@ const connectToDb = ({ url, dbName }) => {
   return { db: client.db(dbName), client };
 };
 
-const fetchUserProfile = async ({ userURI }) => {
-  const url = `https://openwhyd.org/api/user/${userURI.split('/').pop()}?format=json`;
+const OPENWHYD_URL = 'https://openwhyd.org';
+
+const fetchUserProfile = async ({ userHandleOrId }) => {
+  const url = `${OPENWHYD_URL}/api/user/${encodeURIComponent(userHandleOrId)}?format=json`;
   console.log(`fetching profile from ${url} ...`);
   return JSON.parse(await (await fetch(url)).text());
 };
 
 const fetchUserPosts = async ({ userId }) => {
-  const url = `https://openwhyd.org/u/${userId}?format=json&limit=${nbPosts}`;
+  const url = `${OPENWHYD_URL}/u/${encodeURIComponent(userId)}?format=json&limit=${nbPosts}`;
   console.log(`fetching tracks from ${url} ...`);
   return {
     posts: JSON.parse(await (await fetch(url)).text()).map((post) => ({
@@ -44,7 +50,7 @@ const fetchUserPosts = async ({ userId }) => {
 };
 
 const fetchSubscribers = async ({ userId }) => {
-  const url = `https://openwhyd.org/api/user/${userId}/subscribers`;
+  const url = `${OPENWHYD_URL}/api/user/${encodeURIComponent(userId)}/subscribers`;
   console.log(`fetching ${url} ...`);
   return { subscribers: JSON.parse(await (await fetch(url)).text()) };
 };
@@ -89,7 +95,7 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
 (async () => {
   console.log(`connecting to ${url}/${dbName} ...`);
   const { db, client } = await connectToDb({ url, dbName });
-  const user = await fetchUserProfile({ userURI });
+  const user = await fetchUserProfile({ userHandleOrId });
   await upsertUser({ db, user });
   const userId = '' + user._id;
   const { posts } = await fetchUserPosts({ userId }); // or require(`./../${username}.json`);

@@ -13,8 +13,8 @@ const httpClient = {
   /**
    * @param {object} params
    * @param {string} params.url
-   * @param {string} [params.cookies]
-   * @returns {Promise<{ body: string, headers: Record<string, string> }>}
+   * @param {import('./native-fetch').CookieJar} [params.cookies]
+   * @returns {Promise<{ body: string, cookies: import('./native-fetch').CookieJar }>}
    */
   get({ url, cookies }) {
     const jar = cookies || cookieJar();
@@ -29,8 +29,8 @@ const httpClient = {
    * @param {string} params.url
    * @param {object | string} params.body
    * @param {*} [params.headers]
-   * @param {string} [params.cookies]
-   * @returns {Promise<{ body: string, cookies: unknown }>}
+   * @param {import('./native-fetch').CookieJar} [params.cookies]
+   * @returns {Promise<{ body: string, cookies: import('./native-fetch').CookieJar }>}
    */
   post({ url, body, headers, cookies }) {
     if (typeof body === 'object') {

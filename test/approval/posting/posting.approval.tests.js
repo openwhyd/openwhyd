@@ -170,9 +170,7 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
     const { body } = await fetchText(
       `${openwhyd.getURL()}/api/post?action=insert&eId=${encodeURIComponent(
         post.eId,
-      )}&name=${encodeURIComponent(
-        post.name,
-      )}&src[id]=${encodeURIComponent(
+      )}&name=${encodeURIComponent(post.name)}&src[id]=${encodeURIComponent(
         post.src.id,
       )}&src[name]=${encodeURIComponent(
         post.src.name,

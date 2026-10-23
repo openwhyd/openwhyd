@@ -1,5 +1,14 @@
 const path = require('path');
 
+// like `request`, infer the content type of uploaded files from their extension
+const MIME_TYPES = {
+  '.gif': 'image/gif',
+  '.jpeg': 'image/jpeg',
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
+  '.webp': 'image/webp',
+};
+
 class CookieJar {
   constructor() {
     this.cookies = new Map();
@@ -16,7 +25,9 @@ class CookieJar {
   }
 
   getCookieString() {
-    return [...this.cookies].map(([name, value]) => `${name}=${value}`).join('; ');
+    return [...this.cookies]
+      .map(([name, value]) => `${name}=${value}`)
+      .join('; ');
   }
 }
 
@@ -40,7 +51,8 @@ function appendFormValue(params, key, value) {
 async function fetchWithJar(url, options = {}) {
   const { jar, form, json, formData, ...fetchOptions } = options;
   const headers = new Headers(fetchOptions.headers);
-  if (jar?.getCookieString()) headers.set('cookie', jar.getCookieString(url));
+  const cookies = jar instanceof CookieJar ? jar.getCookieString() : '';
+  if (cookies) headers.set('cookie', cookies);
 
   if (form && !['GET', 'HEAD'].includes(fetchOptions.method)) {
     const params = new URLSearchParams();
@@ -53,11 +65,9 @@ async function fetchWithJar(url, options = {}) {
     for (const [key, stream] of Object.entries(formData)) {
       const chunks = [];
       for await (const chunk of stream) chunks.push(chunk);
-      data.append(
-        key,
-        new Blob(chunks),
-        path.basename(stream.path || key),
-      );
+      const filename = path.basename(stream.path || key);
+      const type = MIME_TYPES[path.extname(filename).toLowerCase()] || '';
+      data.append(key, new Blob(chunks, { type }), filename);
     }
     fetchOptions.body = data;
   } else if (json && typeof fetchOptions.body !== 'string') {
@@ -66,8 +76,14 @@ async function fetchWithJar(url, options = {}) {
   }
 
   fetchOptions.headers = headers;
+  // like `request`, only follow redirects automatically for GET/HEAD requests
+  fetchOptions.redirect ??= ['GET', 'HEAD', undefined].includes(
+    fetchOptions.method,
+  )
+    ? 'follow'
+    : 'manual';
   const response = await globalThis.fetch(url, fetchOptions);
-  if (jar) {
+  if (jar instanceof CookieJar) {
     for (const cookie of response.headers.getSetCookie()) jar.setCookie(cookie);
   }
   return response;
@@ -82,4 +98,4 @@ function cookieJar() {
   return new CookieJar();
 }
 
-module.exports = { fetchWithJar, fetchText, cookieJar };
+module.exports = { CookieJar, fetchWithJar, fetchText, cookieJar };
