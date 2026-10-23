@@ -30,30 +30,40 @@ const connectToDb = ({ url, dbName }) => {
   return { db: client.db(dbName), client };
 };
 
-const OPENWHYD_URL = 'https://openwhyd.org';
+const OPENWHYD_ORIGIN = 'https://openwhyd.org';
 
-const fetchUserProfile = async ({ userHandleOrId }) => {
-  const url = `${OPENWHYD_URL}/api/user/${encodeURIComponent(userHandleOrId)}?format=json`;
-  console.log(`fetching profile from ${url} ...`);
+/** Fetches JSON from openwhyd.org, refusing any URL that would point to another host. */
+const fetchJsonFromOpenwhyd = async (path) => {
+  const url = new URL(path, OPENWHYD_ORIGIN);
+  if (url.origin !== OPENWHYD_ORIGIN) {
+    throw new Error(`refusing to fetch from another origin: ${url.origin}`);
+  }
+  console.log(`fetching ${url} ...`);
   return JSON.parse(await (await fetch(url)).text());
 };
 
+const fetchUserProfile = ({ userHandleOrId }) =>
+  fetchJsonFromOpenwhyd(
+    `/api/user/${encodeURIComponent(userHandleOrId)}?format=json`,
+  );
+
 const fetchUserPosts = async ({ userId }) => {
-  const url = `${OPENWHYD_URL}/u/${encodeURIComponent(userId)}?format=json&limit=${nbPosts}`;
-  console.log(`fetching tracks from ${url} ...`);
+  const posts = await fetchJsonFromOpenwhyd(
+    `/u/${encodeURIComponent(userId)}?format=json&limit=${nbPosts}`,
+  );
   return {
-    posts: JSON.parse(await (await fetch(url)).text()).map((post) => ({
+    posts: posts.map((post) => ({
       ...post,
       _id: ObjectId(post._id),
     })),
   };
 };
 
-const fetchSubscribers = async ({ userId }) => {
-  const url = `${OPENWHYD_URL}/api/user/${encodeURIComponent(userId)}/subscribers`;
-  console.log(`fetching ${url} ...`);
-  return { subscribers: JSON.parse(await (await fetch(url)).text()) };
-};
+const fetchSubscribers = async ({ userId }) => ({
+  subscribers: await fetchJsonFromOpenwhyd(
+    `/api/user/${encodeURIComponent(userId)}/subscribers`,
+  ),
+});
 
 const upsertUser = ({ db, user }) =>
   new Promise((resolve, reject) => {

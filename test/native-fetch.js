@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 
 // like `request`, infer the content type of uploaded files from their extension
 const MIME_TYPES = {
@@ -48,6 +48,21 @@ function appendFormValue(params, key, value) {
   }
 }
 
+async function makeFormData(formData) {
+  const data = new FormData();
+  const files = await Promise.all(
+    Object.entries(formData).map(async ([key, stream]) => {
+      const filename = path.basename(stream.path || key);
+      const type = MIME_TYPES[path.extname(filename).toLowerCase()] || '';
+      return { key, filename, blob: await new Response(stream).blob(), type };
+    }),
+  );
+  for (const { key, filename, blob, type } of files) {
+    data.append(key, new Blob([blob], { type }), filename);
+  }
+  return data;
+}
+
 async function fetchWithJar(url, options = {}) {
   const { jar, form, json, formData, ...fetchOptions } = options;
   const headers = new Headers(fetchOptions.headers);
@@ -61,15 +76,7 @@ async function fetchWithJar(url, options = {}) {
     );
     fetchOptions.body = params;
   } else if (formData) {
-    const data = new FormData();
-    for (const [key, stream] of Object.entries(formData)) {
-      const chunks = [];
-      for await (const chunk of stream) chunks.push(chunk);
-      const filename = path.basename(stream.path || key);
-      const type = MIME_TYPES[path.extname(filename).toLowerCase()] || '';
-      data.append(key, new Blob(chunks, { type }), filename);
-    }
-    fetchOptions.body = data;
+    fetchOptions.body = await makeFormData(formData);
   } else if (json && typeof fetchOptions.body !== 'string') {
     fetchOptions.body = JSON.stringify(fetchOptions.body);
     headers.set('content-type', 'application/json');
@@ -77,11 +84,10 @@ async function fetchWithJar(url, options = {}) {
 
   fetchOptions.headers = headers;
   // like `request`, only follow redirects automatically for GET/HEAD requests
-  fetchOptions.redirect ??= ['GET', 'HEAD', undefined].includes(
+  const followRedirects = ['GET', 'HEAD', undefined].includes(
     fetchOptions.method,
-  )
-    ? 'follow'
-    : 'manual';
+  );
+  fetchOptions.redirect ??= followRedirects ? 'follow' : 'manual';
   const response = await globalThis.fetch(url, fetchOptions);
   if (jar instanceof CookieJar) {
     for (const cookie of response.headers.getSetCookie()) jar.setCookie(cookie);

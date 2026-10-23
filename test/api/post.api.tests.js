@@ -8,6 +8,23 @@ const { ADMIN_USER, DUMMY_USER, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
 
+function fetchRequest(method, options, callback) {
+  const {
+    url,
+    jar: requestJar,
+    form,
+  } = typeof options === 'string' ? { url: options } : options;
+  fetchWithJar(url, { method, jar: requestJar, form })
+    .then(async (response) =>
+      callback(
+        null,
+        { statusCode: response.status, headers: response.headers },
+        await response.text(),
+      ),
+    )
+    .catch(callback);
+}
+
 describe(`post api`, function () {
   const loggedUser = DUMMY_USER;
   const otherUser = ADMIN_USER;
@@ -21,23 +38,6 @@ describe(`post api`, function () {
   const openwhyd = new OpenwhydTestEnv({
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
-
-  function fetchRequest(method, options, callback) {
-    const {
-      url,
-      jar: requestJar,
-      form,
-    } = typeof options === 'string' ? { url: options } : options;
-    fetchWithJar(url, { method, jar: requestJar, form })
-      .then(async (response) =>
-        callback(
-          null,
-          { statusCode: response.status, headers: response.headers },
-          await response.text(),
-        ),
-      )
-      .catch(callback);
-  }
 
   const insertPost = (postId, props) =>
     openwhyd.insertTestData({
