@@ -2,7 +2,7 @@
 
 const approvals = require('approvals').mocha();
 const util = require('util');
-const request = require('request');
+const { fetchText } = require('../../native-fetch');
 const {
   makeJSONScrubber,
   ObjectId,
@@ -167,27 +167,21 @@ describe('When posting a track using the bookmarklet, using a HTTP GET request',
     const user = context.testDataCollections.user[0];
     const post = makePostFromBk(user);
     const { jar } = await util.promisify(context.api.loginAs)(user);
-    postedTrack = JSON.parse(
-      await new Promise((resolve, reject) =>
-        request.get(
-          {
-            jar,
-            url: `${openwhyd.getURL()}/api/post?action=insert&eId=${encodeURIComponent(
-              post.eId,
-            )}&name=${encodeURIComponent(
-              post.name,
-            )}&src[id]=${encodeURIComponent(
-              post.src.id,
-            )}&src[name]=${encodeURIComponent(
-              post.src.name,
-            )}&pl[id]=${encodeURIComponent(
-              pl.id,
-            )}&pl[name]=${encodeURIComponent(pl.name)}`,
-          },
-          (error, response, body) => (error ? reject(error) : resolve(body)),
-        ),
-      ),
+    const { body } = await fetchText(
+      `${openwhyd.getURL()}/api/post?action=insert&eId=${encodeURIComponent(
+        post.eId,
+      )}&name=${encodeURIComponent(
+        post.name,
+      )}&src[id]=${encodeURIComponent(
+        post.src.id,
+      )}&src[name]=${encodeURIComponent(
+        post.src.name,
+      )}&pl[id]=${encodeURIComponent(
+        pl.id,
+      )}&pl[name]=${encodeURIComponent(pl.name)}`,
+      { jar },
     );
+    postedTrack = JSON.parse(body);
     scrub = context.makeJSONScrubber([scrubObjectId(postedTrack._id)]);
   });
 
@@ -217,23 +211,17 @@ describe('When renaming a track', function () {
     postedTrack = (await context.dumpMongoCollection(MONGODB_URL, 'post'))[0];
 
     const { jar } = await util.promisify(context.api.loginAs)(user);
-    const renameResponse = await new Promise((resolve, reject) =>
-      request.post(
-        {
-          jar,
-          form: {
-            action: 'insert',
-            eId: postedTrack.eId,
-            name: newName,
-            _id: postedTrack._id.toString(),
-            pl: { id: null, name: 'full stream' },
-          },
-          url: `${openwhyd.getURL()}/api/post`,
-        },
-        (error, response, body) =>
-          error ? reject(error) : resolve({ response, body }),
-      ),
-    );
+    const renameResponse = await fetchText(`${openwhyd.getURL()}/api/post`, {
+      method: 'POST',
+      jar,
+      form: {
+        action: 'insert',
+        eId: postedTrack.eId,
+        name: newName,
+        _id: postedTrack._id.toString(),
+        pl: { id: null, name: 'full stream' },
+      },
+    });
     renamedTrack = JSON.parse(renameResponse.body);
     scrub = context.makeJSONScrubber([
       scrubObjectId(postedTrack._id.toString()),

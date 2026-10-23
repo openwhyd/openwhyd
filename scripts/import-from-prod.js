@@ -5,7 +5,6 @@
 //   $ node scripts/import-from-prod.js adrien 5 # imports 5 posts from https://openwhyd.org/adrien
 //   $ node scripts/import-from-prod.js u/5911f8e098267ba4b34b8424 # ... or specify a user by id
 
-const request = require('request');
 const mongodb = require('mongodb');
 
 const ObjectId = (id) => mongodb.ObjectId(id);
@@ -27,39 +26,28 @@ const connectToDb = ({ url, dbName }) => {
   return { db: client.db(dbName), client };
 };
 
-const fetchUserProfile = ({ userURI }) =>
-  new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/api/user/${userURI.split('/').pop()}?format=json`;
-    console.log(`fetching profile from ${url} ...`);
-    request(url, (err, _, body) =>
-      err ? reject(err) : resolve(JSON.parse(body)),
-    );
-  });
+const fetchUserProfile = async ({ userURI }) => {
+  const url = `https://openwhyd.org/api/user/${userURI.split('/').pop()}?format=json`;
+  console.log(`fetching profile from ${url} ...`);
+  return JSON.parse(await (await fetch(url)).text());
+};
 
-const fetchUserPosts = ({ userId }) =>
-  new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/u/${userId}?format=json&limit=${nbPosts}`;
-    console.log(`fetching tracks from ${url} ...`);
-    request(url, (err, _, body) =>
-      err
-        ? reject(err)
-        : resolve({
-            posts: JSON.parse(body).map((post) => ({
-              ...post,
-              _id: ObjectId(post._id),
-            })),
-          }),
-    );
-  });
+const fetchUserPosts = async ({ userId }) => {
+  const url = `https://openwhyd.org/u/${userId}?format=json&limit=${nbPosts}`;
+  console.log(`fetching tracks from ${url} ...`);
+  return {
+    posts: JSON.parse(await (await fetch(url)).text()).map((post) => ({
+      ...post,
+      _id: ObjectId(post._id),
+    })),
+  };
+};
 
-const fetchSubscribers = ({ userId }) =>
-  new Promise((resolve, reject) => {
-    const url = `https://openwhyd.org/api/user/${userId}/subscribers`;
-    console.log(`fetching ${url} ...`);
-    request(url, (err, _, body) =>
-      err ? reject(err) : resolve({ subscribers: JSON.parse(body) }),
-    );
-  });
+const fetchSubscribers = async ({ userId }) => {
+  const url = `https://openwhyd.org/api/user/${userId}/subscribers`;
+  console.log(`fetching ${url} ...`);
+  return { subscribers: JSON.parse(await (await fetch(url)).text()) };
+};
 
 const upsertUser = ({ db, user }) =>
   new Promise((resolve, reject) => {
@@ -113,11 +101,7 @@ const insertSubscribers = async ({ db, userId, subscribers }) => {
     await insertSubscribers({ db, userId, subscribers });
   }
   // refresh openwhyd's in-memory cache of users, to allow this user to login
-  await new Promise((resolve, reject) =>
-    request.post('http://localhost:8080/testing/refresh', (err) =>
-      err ? reject(err) : resolve(),
-    ),
-  );
+  await fetch('http://localhost:8080/testing/refresh', { method: 'POST' });
   client.close();
   console.log(`inserted user => http://localhost:8080/${userURI}`);
   console.log(`login id: ${userURI}, password: ${password.plain}`);

@@ -2,22 +2,12 @@
 
 const util = require('util');
 const mongodb = require('mongodb');
-const request = require('request');
+const { fetchWithJar, cookieJar } = require('./native-fetch');
 const { loadEnvVars } = require('./fixtures');
-const { promisify } = util;
-
 const makeJSONScrubber = (scrubbers) => (obj) =>
   JSON.parse(
     scrubbers.reduce((data, scrub) => scrub(data), JSON.stringify(obj)),
   );
-
-function extractCookieJar(headers, origin) {
-  const jar = request.jar();
-  if (((headers || {})['set-cookie'] || []).length) {
-    jar.setCookie(request.cookie(headers['set-cookie'][0]), origin);
-  }
-  return jar;
-}
 
 const httpClient = {
   /**
@@ -27,12 +17,11 @@ const httpClient = {
    * @returns {Promise<{ body: string, headers: Record<string, string> }>}
    */
   get({ url, cookies }) {
-    return promisify(request.get)({ uri: url, jar: cookies }).then(
-      ({ body, headers }) => ({
-        body,
-        cookies: extractCookieJar(headers, new URL(url).origin),
-      }),
-    );
+    const jar = cookies || cookieJar();
+    return fetchWithJar(url, { jar }).then(async (response) => ({
+      body: await response.text(),
+      cookies: jar,
+    }));
   },
 
   /**
@@ -49,18 +38,15 @@ const httpClient = {
       headers = {
         ...headers,
         'content-type': 'application/json',
-        'content-length': body.length,
       };
     }
-    return promisify(request.post)({
-      uri: url,
-      body,
-      headers,
-      jar: cookies,
-    }).then(({ body, headers }) => ({
-      body,
-      cookies: extractCookieJar(headers, new URL(url).origin),
-    }));
+    const jar = cookies || cookieJar();
+    return fetchWithJar(url, { method: 'POST', body, headers, jar }).then(
+      async (response) => ({
+        body: await response.text(),
+        cookies: jar,
+      }),
+    );
   },
 };
 

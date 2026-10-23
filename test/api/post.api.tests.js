@@ -1,6 +1,6 @@
 const assert = require('assert');
 const util = require('util');
-const request = require('request');
+const { fetchWithJar } = require('../native-fetch');
 const { ObjectId } = require('../approval-tests-helpers.js');
 const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 
@@ -22,22 +22,28 @@ describe(`post api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
+  function fetchRequest(method, options, callback) {
+    const { url, jar: requestJar, form } =
+      typeof options === 'string' ? { url: options } : options;
+    fetchWithJar(url, { method, jar: requestJar, form })
+      .then(async (response) =>
+        callback(
+          null,
+          { statusCode: response.status, headers: response.headers },
+          await response.text(),
+        ),
+      )
+      .catch(callback);
+  }
+
   const insertPost = (postId, props) =>
     openwhyd.insertTestData({
       post: [{ _id: ObjectId(postId), ...props }],
     });
 
   const callPostApi = (form) =>
-    new Promise((resolve, reject) =>
-      request.post(
-        {
-          jar,
-          form,
-          url: `${URL_PREFIX}/api/post`,
-        },
-        (error, response, body) =>
-          error ? reject(error) : resolve({ response, body }),
-      ),
+    fetchWithJar(`${URL_PREFIX}/api/post`, { method: 'POST', jar, form }).then(
+      async (response) => ({ response, body: await response.text() }),
     );
 
   before(async () => {
@@ -69,7 +75,7 @@ describe(`post api`, function () {
 
     // When fetching the track page as HTML
     const res = await new Promise((resolve, reject) =>
-      request.get(`${URL_PREFIX}/c/${pId}`, (error, response, body) =>
+      fetchRequest('GET', `${URL_PREFIX}/c/${pId}`, (error, response, body) =>
         error ? reject(error) : resolve({ response, body }),
       ),
     );
@@ -86,7 +92,7 @@ describe(`post api`, function () {
     const pId = body._id;
     const newName = 'coucou';
     await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -103,7 +109,7 @@ describe(`post api`, function () {
       ),
     );
     const res = await new Promise((resolve, reject) =>
-      request.get(
+      fetchRequest('GET',
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -119,7 +125,7 @@ describe(`post api`, function () {
     const ctx = 'bk';
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -160,7 +166,7 @@ describe(`post api`, function () {
     const description = 'this is a description';
 
     await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -179,7 +185,7 @@ describe(`post api`, function () {
       ),
     );
     const res = await new Promise((resolve, reject) =>
-      request.get(
+      fetchRequest('GET',
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -202,7 +208,7 @@ describe(`post api`, function () {
     const newPlayListName = randomString();
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -239,7 +245,7 @@ describe(`post api`, function () {
     const description = 'this is a description';
 
     await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -258,7 +264,7 @@ describe(`post api`, function () {
       ),
     );
     const res = await new Promise((resolve, reject) =>
-      request.get(
+      fetchRequest('GET',
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -281,7 +287,7 @@ describe(`post api`, function () {
     const newPlayListName = randomString();
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -330,7 +336,7 @@ describe(`post api`, function () {
     const playlist = body.pl;
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -380,7 +386,7 @@ describe(`post api`, function () {
     const newPlaylistName = randomString();
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -419,7 +425,7 @@ describe(`post api`, function () {
 
   it('should fail to delete a comment that does not exist', async function () {
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -447,7 +453,7 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -474,7 +480,7 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -503,7 +509,7 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -530,7 +536,7 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {
@@ -556,7 +562,7 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest('POST',
         {
           jar,
           form: {

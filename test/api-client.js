@@ -1,20 +1,47 @@
 const util = require('util');
 const assert = require('assert');
-const request = require('request'); // TODO: promisify it
+const { fetchWithJar, cookieJar } = require('./native-fetch');
 
 const URL_PREFIX = 'http://localhost:8080';
 
 const EXPECTED_RTK = 7; // cf app/controllers/invite.js
 
+function fetchRequest(method, options, callback) {
+  const { url, uri, jar, form, json, body, formData, headers } =
+    typeof options === 'string' ? { url: options } : options;
+  fetchWithJar(url || uri, {
+    method,
+    jar,
+    form,
+    json,
+    body,
+    formData,
+    headers,
+  })
+    .then(async (response) => {
+      const responseHeaders = Object.fromEntries(response.headers);
+      responseHeaders['set-cookie'] = response.headers.getSetCookie();
+      let responseBody = await response.text();
+      if (json) {
+        try {
+          responseBody = JSON.parse(responseBody);
+        } catch {}
+      }
+      callback(
+        null,
+        { statusCode: response.status, headers: responseHeaders },
+        responseBody,
+      );
+    })
+    .catch((error) => callback(error));
+}
+
 // AUTH
 
 function extractCookieJar(response) {
-  const jar = request.jar();
+  const jar = cookieJar();
   if (((response.headers || {})['set-cookie'] || []).length) {
-    jar.setCookie(
-      request.cookie(response.headers['set-cookie'][0]),
-      URL_PREFIX,
-    );
+    jar.setCookie(response.headers['set-cookie'][0]);
   }
   return jar;
 }
@@ -44,13 +71,13 @@ exports.loginAs = function loginAs(user, callback) {
 
 exports.signupAs = async function signupAs(user, callback) {
   const body = await new Promise((resolve, reject) =>
-    request.get(
+    fetchRequest('GET',
       { url: `${URL_PREFIX}/api/signup/rTk/${EXPECTED_RTK}` },
       (error, response, body) => (error ? reject(error) : resolve(body)),
     ),
   );
   const sTk = body.split('value="').pop().split('"')[0];
-  request.post(
+  fetchRequest('POST',
     {
       url: `${URL_PREFIX}/register`,
       json: true,
@@ -74,7 +101,7 @@ exports.signupAs = async function signupAs(user, callback) {
 // HTTP request wrappers
 
 exports.getRaw = function (jar, url, callback) {
-  request.get(
+  fetchRequest('GET',
     { jar, url: `${URL_PREFIX}${url}` },
     function (error, response, body) {
       callback(error, { response, body });
@@ -95,7 +122,7 @@ exports.get = function (jar, url, callback) {
 };
 
 exports.postRaw = function (jar, url, body, callback) {
-  request.post(
+  fetchRequest('POST',
     { jar, url: `${URL_PREFIX}${url}`, body, json: typeof body === 'object' },
     (error, response, body) => callback(error, { response, body }),
   );
@@ -104,7 +131,7 @@ exports.postRaw = function (jar, url, body, callback) {
 // USER
 
 exports.getMyPosts = function (jar, callback) {
-  request.get(
+  fetchRequest('GET',
     { jar, url: `${URL_PREFIX}/me?format=json` },
     function (error, response, body) {
       assert.ifError(error);
@@ -126,7 +153,7 @@ exports.getUser = function (jar, body, callback) {
 
 /** Documentation: https://openwhyd.github.io/openwhyd/API.html#set-user-data */
 exports.setUser = function (jar, body, callback) {
-  request.post(
+  fetchRequest('POST',
     {
       jar,
       url: `${URL_PREFIX}/api/user`,
@@ -145,7 +172,7 @@ exports.setUser = function (jar, body, callback) {
 
 exports.addPost = async function (jar, reqBody) {
   const { response, body } = await new Promise((resolve, reject) =>
-    request.post(
+    fetchRequest('POST',
       {
         jar,
         url: `${URL_PREFIX}/api/post`,
@@ -167,7 +194,7 @@ exports.addPost = async function (jar, reqBody) {
 };
 
 exports.addComment = function (jar, body, callback) {
-  request.post(
+  fetchRequest('POST',
     {
       jar,
       url: `${URL_PREFIX}/api/post`,
@@ -184,7 +211,7 @@ exports.addComment = function (jar, body, callback) {
 
 exports.deletePost = async function (jar, postId) {
   const { response, body } = await new Promise((resolve, reject) =>
-    request.post(
+    fetchRequest('POST',
       {
         jar,
         url: `${URL_PREFIX}/api/post`,
@@ -219,6 +246,8 @@ exports.getPlaylistTracks = function (jar, uId, plId, callback) {
 exports.uploadImage = async function (jar, dataStream) {
   const formData = { postImg: dataStream };
   const url = `${URL_PREFIX}/upload`;
-  const res = await util.promisify(request.post)({ url, formData, jar });
+  const res = await util.promisify((options, callback) =>
+    fetchRequest('POST', options, callback),
+  )({ url, formData, jar });
   return JSON.parse(res.body).postImg;
 };

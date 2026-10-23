@@ -12,7 +12,6 @@
 //   $ node scripts/import-posts.js 5f0f0d701125f9d3afca1bcc 6591c8dd0890c870388d2508 # imports all posts from https://openwhyd.org/u/5f0f0d701125f9d3afca1bcc
 
 const assert = require('node:assert');
-const request = require('request');
 const mongodb = require('mongodb');
 
 const ObjectId = (id) => new mongodb.ObjectId(id);
@@ -49,14 +48,11 @@ const connectToDb = ({ url, dbName }) => {
   return { db: client.db(dbName), client };
 };
 
-const fetchUserProfile = ({ userId }) =>
-  new Promise((resolve, reject) => {
-    const url = `${WHYD_URL_PREFIX}/api/user/${userId}?format=json`;
-    console.warn(`fetching profile from ${url} ...`);
-    request(url, (err, _, body) =>
-      err ? reject(err) : resolve(JSON.parse(body)),
-    );
-  });
+const fetchUserProfile = async ({ userId }) => {
+  const url = `${WHYD_URL_PREFIX}/api/user/${userId}?format=json`;
+  console.warn(`fetching profile from ${url} ...`);
+  return JSON.parse(await (await fetch(url)).text());
+};
 
 const updateUser = ({ db, user }) => {
   const { _id, ...userData } = user;
@@ -66,19 +62,12 @@ const updateUser = ({ db, user }) => {
 };
 
 /** Returns list of posts, from most recent to oldest */
-const fetchUserPosts = ({ userId }) =>
-  new Promise((resolve, reject) => {
-    const limit = 99999999;
-    const url = `${WHYD_URL_PREFIX}/u/${userId}?format=json&limit=${limit}`;
-    console.warn(`fetching posts from ${url} ...`);
-    request(url, (err, _, body) =>
-      err
-        ? reject(err)
-        : resolve({
-            posts: JSON.parse(body),
-          }),
-    );
-  });
+const fetchUserPosts = async ({ userId }) => {
+  const limit = 99999999;
+  const url = `${WHYD_URL_PREFIX}/u/${userId}?format=json&limit=${limit}`;
+  console.warn(`fetching posts from ${url} ...`);
+  return { posts: JSON.parse(await (await fetch(url)).text()) };
+};
 
 const insertPosts = ({ db, posts, postOverrides }) => {
   const postsToImport = posts
