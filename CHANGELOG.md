@@ -1,3 +1,10 @@
+## [1.64.28](https://github.com/openwhyd/openwhyd/compare/v1.64.27...v1.64.28) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** update node to v24.22.1 ([#974](https://github.com/openwhyd/openwhyd/issues/974)) ([c2481f5](https://github.com/openwhyd/openwhyd/commit/c2481f5b79979d2b3c43af3dae35c4aa81b55eed))
+
 ## [1.64.27](https://github.com/openwhyd/openwhyd/compare/v1.64.26...v1.64.27) (2026-10-23)
 
 
