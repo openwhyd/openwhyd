@@ -67,7 +67,7 @@
     </div>
 
     <div class="btns">
-      <a class="btnRepost" href="javascript:publishPost('{{id}}');"> Add to </a>
+      <a class="btnRepost"{{#id}} href="javascript:publishPost('{{id}}');"{{/id}}{{^id}} style="display:none;"{{/id}}> Add to </a>
       <span>&middot;</span>
       <a
         class="btnLike {{#isLoved}}selected{{/isLoved}}"
