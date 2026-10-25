@@ -1,12 +1,32 @@
 const assert = require('assert');
 const util = require('util');
-const request = require('request');
+const { fetchWithJar } = require('../native-fetch');
 const { ObjectId } = require('../approval-tests-helpers.js');
 const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 
 const { ADMIN_USER, DUMMY_USER, FAKE_ID } = require('../fixtures.js');
 const api = require('../api-client.js');
 const randomString = () => Math.random().toString(36).substring(2, 9);
+
+function fetchRequest(method, options, callback) {
+  const {
+    url,
+    jar: requestJar,
+    form,
+  } = typeof options === 'string' ? { url: options } : options;
+  fetchWithJar(url, { method, jar: requestJar, form })
+    .then(async (response) => ({
+      statusCode: response.status,
+      headers: response.headers,
+      body: await response.text(),
+    }))
+    // call back outside of the promise chain, so that errors thrown by the
+    // callback are not caught and passed to it again
+    .then(
+      (response) => process.nextTick(callback, null, response, response.body),
+      (error) => process.nextTick(callback, error),
+    );
+}
 
 describe(`post api`, function () {
   const loggedUser = DUMMY_USER;
@@ -28,16 +48,8 @@ describe(`post api`, function () {
     });
 
   const callPostApi = (form) =>
-    new Promise((resolve, reject) =>
-      request.post(
-        {
-          jar,
-          form,
-          url: `${URL_PREFIX}/api/post`,
-        },
-        (error, response, body) =>
-          error ? reject(error) : resolve({ response, body }),
-      ),
+    fetchWithJar(`${URL_PREFIX}/api/post`, { method: 'POST', jar, form }).then(
+      async (response) => ({ response, body: await response.text() }),
     );
 
   before(async () => {
@@ -69,7 +81,7 @@ describe(`post api`, function () {
 
     // When fetching the track page as HTML
     const res = await new Promise((resolve, reject) =>
-      request.get(`${URL_PREFIX}/c/${pId}`, (error, response, body) =>
+      fetchRequest('GET', `${URL_PREFIX}/c/${pId}`, (error, response, body) =>
         error ? reject(error) : resolve({ response, body }),
       ),
     );
@@ -86,7 +98,8 @@ describe(`post api`, function () {
     const pId = body._id;
     const newName = 'coucou';
     await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -103,7 +116,8 @@ describe(`post api`, function () {
       ),
     );
     const res = await new Promise((resolve, reject) =>
-      request.get(
+      fetchRequest(
+        'GET',
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -119,7 +133,8 @@ describe(`post api`, function () {
     const ctx = 'bk';
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -160,7 +175,8 @@ describe(`post api`, function () {
     const description = 'this is a description';
 
     await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -179,7 +195,8 @@ describe(`post api`, function () {
       ),
     );
     const res = await new Promise((resolve, reject) =>
-      request.get(
+      fetchRequest(
+        'GET',
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -202,7 +219,8 @@ describe(`post api`, function () {
     const newPlayListName = randomString();
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -239,7 +257,8 @@ describe(`post api`, function () {
     const description = 'this is a description';
 
     await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -258,7 +277,8 @@ describe(`post api`, function () {
       ),
     );
     const res = await new Promise((resolve, reject) =>
-      request.get(
+      fetchRequest(
+        'GET',
         `${URL_PREFIX}/c/${pId}?format=json`,
         (error, response, body) =>
           error ? reject(error) : resolve({ response, body }),
@@ -281,7 +301,8 @@ describe(`post api`, function () {
     const newPlayListName = randomString();
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -330,7 +351,8 @@ describe(`post api`, function () {
     const playlist = body.pl;
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -380,7 +402,8 @@ describe(`post api`, function () {
     const newPlaylistName = randomString();
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -419,7 +442,8 @@ describe(`post api`, function () {
 
   it('should fail to delete a comment that does not exist', async function () {
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -447,7 +471,8 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -474,7 +499,8 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -503,7 +529,8 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -530,7 +557,8 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {
@@ -556,7 +584,8 @@ describe(`post api`, function () {
     });
 
     const res = await new Promise((resolve, reject) =>
-      request.post(
+      fetchRequest(
+        'POST',
         {
           jar,
           form: {

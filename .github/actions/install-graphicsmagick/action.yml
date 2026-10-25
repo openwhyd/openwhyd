@@ -1,0 +1,31 @@
+name: Install GraphicsMagick
+description: Installs GraphicsMagick from cached .deb packages, to avoid timeouts when the apt mirror is slow (cf #977)
+inputs:
+  cache-version:
+    description: Bump to invalidate the cached .deb packages
+    default: 'v1'
+runs:
+  using: composite
+  steps:
+    - name: Restore GraphicsMagick packages from cache
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: ~/graphicsmagick-debs
+        key: graphicsmagick-debs-${{ runner.os }}-${{ runner.arch }}-${{ inputs.cache-version }}
+    - name: Download GraphicsMagick packages
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --download-only graphicsmagick
+        mkdir -p ~/graphicsmagick-debs
+        cp /var/cache/apt/archives/*.deb ~/graphicsmagick-debs/
+    - name: Install GraphicsMagick packages
+      shell: bash
+      run: |
+        sudo dpkg -i ~/graphicsmagick-debs/*.deb || {
+          echo "Failed to install cached packages => falling back to apt-get"
+          sudo apt-get update && sudo apt-get install -y graphicsmagick
+        }
+        gm -version

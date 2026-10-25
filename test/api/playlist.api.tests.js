@@ -1,6 +1,6 @@
 const assert = require('assert');
 const util = require('util');
-const request = require('request');
+const { fetchText } = require('../native-fetch');
 
 const { DUMMY_USER } = require('../fixtures.js');
 const { ObjectId } = require('../approval-tests-helpers.js');
@@ -16,19 +16,12 @@ describe(`playlist api`, function () {
     startWithEnv: process.env.START_WITH_ENV_FILE,
   });
 
-  function callPlaylistApi(jar, form) {
-    return new Promise((resolve, reject) =>
-      request.post(
-        {
-          jar,
-          form,
-          url: `${openwhyd.getURL()}/api/playlist`,
-        },
-        (error, response, body) =>
-          error ? reject(error) : resolve({ response, body }),
-      ),
-    );
-  }
+  const callPlaylistApi = (jar, form) =>
+    fetchText(`${openwhyd.getURL()}/api/playlist`, {
+      method: 'POST',
+      jar,
+      form,
+    });
 
   before(async () => {
     await openwhyd.setup();

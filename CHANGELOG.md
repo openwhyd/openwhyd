@@ -1,3 +1,24 @@
+## [1.64.29](https://github.com/openwhyd/openwhyd/compare/v1.64.28...v1.64.29) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** Replace `request` with native Node.js fetch ([#976](https://github.com/openwhyd/openwhyd/issues/976)) ([b4c5292](https://github.com/openwhyd/openwhyd/commit/b4c52921dfef35c9f673dd322be2caa159fd5499))
+
+## [1.64.28](https://github.com/openwhyd/openwhyd/compare/v1.64.27...v1.64.28) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** update node to v24.22.1 ([#974](https://github.com/openwhyd/openwhyd/issues/974)) ([c2481f5](https://github.com/openwhyd/openwhyd/commit/c2481f5b79979d2b3c43af3dae35c4aa81b55eed))
+
+## [1.64.27](https://github.com/openwhyd/openwhyd/compare/v1.64.26...v1.64.27) (2026-10-23)
+
+
+### Bug Fixes
+
+* **bandcamp:** send browser-like headers when fetching track pages + fix Cypress tests on CI ([#973](https://github.com/openwhyd/openwhyd/issues/973)) ([cdcd18f](https://github.com/openwhyd/openwhyd/commit/cdcd18fc5e2abe85eb309ca87a5fd91e2764286e)), closes [#940](https://github.com/openwhyd/openwhyd/issues/940)
+
 ## [1.64.26](https://github.com/openwhyd/openwhyd/compare/v1.64.25...v1.64.26) (2026-10-14)
 
 

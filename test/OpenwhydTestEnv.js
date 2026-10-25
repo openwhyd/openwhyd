@@ -1,8 +1,7 @@
 // @ts-check
 
-const util = require('util');
 const childProcess = require('child_process');
-const request = require('request');
+const { fetchWithJar } = require('./native-fetch');
 const { loadEnvVars, resetTestDb } = require('./fixtures');
 const {
   dumpMongoCollection,
@@ -10,13 +9,12 @@ const {
   connectToMongoDB,
 } = require('./approval-tests-helpers');
 
-const { promisify } = util;
-
-/** Refresh openwhyd's in-memory cache of users, e.g. to allow freshly added users to login. */
+/** Refresh Openwhyd's in-memory cache of users, e.g. to allow freshly added users to login. */
 async function refreshOpenwhydCache(urlPrefix) {
-  const res = await promisify(request.post)(urlPrefix + '/testing/refresh');
-  if (res.statusCode !== 200)
-    throw new Error(res.body ?? 'non-200 status code');
+  const res = await fetchWithJar(urlPrefix + '/testing/refresh', {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error((await res.text()) || 'non-200 status code');
 }
 
 const errPrinter = ((blocklist) => {
