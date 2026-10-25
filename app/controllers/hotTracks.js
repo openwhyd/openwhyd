@@ -11,6 +11,8 @@ const postsTemplate = require('../templates/posts.js');
 const templateLoader = require('../templates/templateLoader.js');
 const mainTemplate = require('../templates/mainTemplate.js');
 
+const MAX_LIMIT = 20; // prevents abusive requests from making the server aggregate/render too many tracks
+
 let template;
 (function loadTemplates(callback) {
   template = templateLoader.loadTemplate(
@@ -27,12 +29,14 @@ exports.controller = async function (request, reqParams, response) {
     response.legacyRender(html, null, { 'content-type': 'text/html' });
   }
 
-  reqParams.limit =
-    (reqParams.limit ? parseInt(reqParams.limit) : 0) ||
-    config.nbPostsPerNewsfeedPage;
+  reqParams.limit = Math.min(
+    (reqParams.limit ? Number.parseInt(reqParams.limit) : 0) ||
+      config.nbPostsPerNewsfeedPage,
+    MAX_LIMIT,
+  );
 
   function renderHotTracks(posts) {
-    const firstIndex = parseInt(reqParams.skip || 0);
+    const firstIndex = 0; // pagination is not supported: only the first page of the ranking is available
     const hasMore = posts && posts.length > reqParams.limit;
     if (hasMore) posts = posts.slice(0, reqParams.limit);
     if (loggedInUser.id)
@@ -71,8 +75,7 @@ exports.controller = async function (request, reqParams, response) {
   }
 
   const params = {
-    skip: reqParams.skip,
-    limit: reqParams.limit + 1,
+    limit: reqParams.limit,
     sinceId: reqParams.sinceId,
   };
   trackModel.getHotTracksFromDb(params, renderHotTracks);

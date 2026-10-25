@@ -110,6 +110,8 @@ function populatePaginationParameters(options) {
     after: options.after,
     before: options.before,
     limit: options.limit,
+    // JSON lists of a user's posts are cheap to fetch, and clients (e.g. m.openwhyd.org) need to load many of them (up to a higher cap)
+    isJson: options.format === 'json',
   };
   if (options.embedW)
     options.fetchParams.limit = process.appParams.nbTracksPerPlaylistEmbed;

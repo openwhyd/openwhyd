@@ -28,6 +28,11 @@ await db.collection('post').createIndex({ uId: 1 });
 await db
   .collection('post')
   .createIndex({ uId: 1, 'pl.id': 1 }, { sparse: true });
+await db
+  .collection('post')
+  // serves playlist pages (uId + pl.id, sorted by order then _id) without an in-memory sort
+  // background: true => doesn't lock the database while built on an existing one (MongoDB < 4.2)
+  .createIndex({ uId: 1, 'pl.id': 1, order: 1, _id: -1 }, { background: true });
 await db.collection('post').createIndex({ 'pl.id': 1 }, { sparse: true });
 await db.collection('post').createIndex({ order: 1 }, { sparse: true });
 await db.collection('post').createIndex({ eId: 1 });

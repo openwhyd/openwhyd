@@ -1,3 +1,154 @@
+## [1.64.29](https://github.com/openwhyd/openwhyd/compare/v1.64.28...v1.64.29) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** Replace `request` with native Node.js fetch ([#976](https://github.com/openwhyd/openwhyd/issues/976)) ([b4c5292](https://github.com/openwhyd/openwhyd/commit/b4c52921dfef35c9f673dd322be2caa159fd5499))
+
+## [1.64.28](https://github.com/openwhyd/openwhyd/compare/v1.64.27...v1.64.28) (2026-10-23)
+
+
+### Bug Fixes
+
+* **deps:** update node to v24.22.1 ([#974](https://github.com/openwhyd/openwhyd/issues/974)) ([c2481f5](https://github.com/openwhyd/openwhyd/commit/c2481f5b79979d2b3c43af3dae35c4aa81b55eed))
+
+## [1.64.27](https://github.com/openwhyd/openwhyd/compare/v1.64.26...v1.64.27) (2026-10-23)
+
+
+### Bug Fixes
+
+* **bandcamp:** send browser-like headers when fetching track pages + fix Cypress tests on CI ([#973](https://github.com/openwhyd/openwhyd/issues/973)) ([cdcd18f](https://github.com/openwhyd/openwhyd/commit/cdcd18fc5e2abe85eb309ca87a5fd91e2764286e)), closes [#940](https://github.com/openwhyd/openwhyd/issues/940)
+
+## [1.64.26](https://github.com/openwhyd/openwhyd/compare/v1.64.25...v1.64.26) (2026-10-14)
+
+
+### Bug Fixes
+
+* **playlist:** Fix "Change order" page truncating playlists at 200 tracks ([#956](https://github.com/openwhyd/openwhyd/issues/956)) ([40ad444](https://github.com/openwhyd/openwhyd/commit/40ad4443c231088c073d3e3e16b124173be9e6cd))
+
+## [1.64.25](https://github.com/openwhyd/openwhyd/compare/v1.64.24...v1.64.25) (2026-10-14)
+
+
+### Bug Fixes
+
+* **deps-dev:** bump handlebars from 4.7.9 to 4.7.10 in the npm_and_yarn group across 1 directory ([#949](https://github.com/openwhyd/openwhyd/issues/949)) ([3493d5e](https://github.com/openwhyd/openwhyd/commit/3493d5e3b94bf219710571e9e736fe3c9252a482))
+
+## [1.64.24](https://github.com/openwhyd/openwhyd/compare/v1.64.23...v1.64.24) (2026-10-06)
+
+
+### Bug Fixes
+
+* **deps:** bump proxy-addr from 2.0.7 to 2.0.8 in the npm_and_yarn group across 1 directory ([#947](https://github.com/openwhyd/openwhyd/issues/947)) ([a566f22](https://github.com/openwhyd/openwhyd/commit/a566f2269d2154c3fc7538f8b2ab4679607e9d7e))
+
+## [1.64.23](https://github.com/openwhyd/openwhyd/compare/v1.64.22...v1.64.23) (2026-10-06)
+
+
+### Bug Fixes
+
+* **nginx:** rate-limit on the real client IP behind Cloudflare ([#945](https://github.com/openwhyd/openwhyd/issues/945)) ([24fe508](https://github.com/openwhyd/openwhyd/commit/24fe508b55d09575785a749b456b7ae0d0a69638))
+
+## [1.64.22](https://github.com/openwhyd/openwhyd/compare/v1.64.21...v1.64.22) (2026-10-06)
+
+
+### Bug Fixes
+
+* **db:** index playlist pages to stop full-playlist sorts ([#946](https://github.com/openwhyd/openwhyd/issues/946)) ([a53f17a](https://github.com/openwhyd/openwhyd/commit/a53f17ab1418576663c38f909ac63a7151972427))
+
+## [1.64.21](https://github.com/openwhyd/openwhyd/compare/v1.64.20...v1.64.21) (2026-10-04)
+
+
+### Bug Fixes
+
+* **deps:** bump the npm_and_yarn group across 1 directory with 3 updates ([#944](https://github.com/openwhyd/openwhyd/issues/944)) ([98f65c4](https://github.com/openwhyd/openwhyd/commit/98f65c4970d4fbea5d8dfd0a4a9821cd2437dfd1))
+
+## [1.64.20](https://github.com/openwhyd/openwhyd/compare/v1.64.19...v1.64.20) (2026-10-04)
+
+
+### Bug Fixes
+
+* **deps:** bump the npm_and_yarn group across 1 directory with 16 updates ([#943](https://github.com/openwhyd/openwhyd/issues/943)) ([f99e3d0](https://github.com/openwhyd/openwhyd/commit/f99e3d0b9cdbdc974d187a7b3006d5477f6adde7))
+
+## [1.64.19](https://github.com/openwhyd/openwhyd/compare/v1.64.18...v1.64.19) (2026-10-04)
+
+
+### Bug Fixes
+
+* **security:** escape quotes in comment link href generation ([#922](https://github.com/openwhyd/openwhyd/issues/922)) ([8554b4c](https://github.com/openwhyd/openwhyd/commit/8554b4c1e71f63025becdc353be11ddfc33de727))
+
+## [1.64.18](https://github.com/openwhyd/openwhyd/compare/v1.64.17...v1.64.18) (2026-10-04)
+
+
+### Bug Fixes
+
+* **ci:** delete heathcheck test ([f847517](https://github.com/openwhyd/openwhyd/commit/f847517235caf015acbbbed785262113b56946f5))
+
+## [1.64.17](https://github.com/openwhyd/openwhyd/compare/v1.64.16...v1.64.17) (2026-10-04)
+
+
+### Bug Fixes
+
+* **docker:** Add Docker healthcheck endpoint ([#926](https://github.com/openwhyd/openwhyd/issues/926)) ([bd706ff](https://github.com/openwhyd/openwhyd/commit/bd706ffacda6963da9af8be231abecb711c25b3b))
+
+## [1.64.16](https://github.com/openwhyd/openwhyd/compare/v1.64.15...v1.64.16) (2026-10-04)
+
+
+### Bug Fixes
+
+* **stability:** Cap client-supplied feed limits and cache /hot ranking to prevent CPU/memory exhaustion ([#939](https://github.com/openwhyd/openwhyd/issues/939)) ([c9debeb](https://github.com/openwhyd/openwhyd/commit/c9debebecd85cfd5aad24c0a942a450042312ff4))
+
+## [1.64.15](https://github.com/openwhyd/openwhyd/compare/v1.64.14...v1.64.15) (2026-10-04)
+
+
+### Bug Fixes
+
+* **auth:** don't log "user not logged in" errors ([9db9783](https://github.com/openwhyd/openwhyd/commit/9db9783f5bd207d79f683b4a79106ba3e304d811))
+* **ci:** Stabilize Data Export API CI timing, pin bookmarklet TypeScript build, and replace Bandcamp test by MP3 test ([#937](https://github.com/openwhyd/openwhyd/issues/937)) ([f6a2133](https://github.com/openwhyd/openwhyd/commit/f6a21339f29a69043fe98f2d0e39142e047a17b8)), closes [#940](https://github.com/openwhyd/openwhyd/issues/940)
+
+## [1.64.14](https://github.com/openwhyd/openwhyd/compare/v1.64.13...v1.64.14) (2026-05-03)
+
+
+### Bug Fixes
+
+* **deps:** bump @xmldom/xmldom and @applitools/eyes-cypress ([#900](https://github.com/openwhyd/openwhyd/issues/900)) ([3923ea2](https://github.com/openwhyd/openwhyd/commit/3923ea23120cdf6aef6ffca6cae0fc3b25419a87))
+* **deps:** bump axios from 1.13.4 to 1.16.0 ([#903](https://github.com/openwhyd/openwhyd/issues/903)) ([f7b5b3c](https://github.com/openwhyd/openwhyd/commit/f7b5b3c6b60e6f6e0b57eade89311f8102b03896))
+* **deps:** bump fast-xml-parser and @aws-sdk/xml-builder ([#904](https://github.com/openwhyd/openwhyd/issues/904)) ([6f460cd](https://github.com/openwhyd/openwhyd/commit/6f460cdcbbf29284f97981129a2bf5c89e471102))
+* sync package-lock.json with missing typescript@4.9.5 peer deps ([#915](https://github.com/openwhyd/openwhyd/issues/915)) ([a918d59](https://github.com/openwhyd/openwhyd/commit/a918d598017141516a6784fa41a6d29d80c2a6fb))
+
+## [1.64.13](https://github.com/openwhyd/openwhyd/compare/v1.64.12...v1.64.13) (2026-05-03)
+
+
+### Bug Fixes
+
+* **security:** Fix open redirect vulnerability in window.goToPage fallback (whyd.js) ([#913](https://github.com/openwhyd/openwhyd/issues/913)) ([ef472d3](https://github.com/openwhyd/openwhyd/commit/ef472d3a56ebc615532c9afc15541e8443209501))
+
+## [1.64.12](https://github.com/openwhyd/openwhyd/compare/v1.64.11...v1.64.12) (2026-05-03)
+
+
+### Bug Fixes
+
+* **youtube:** Remove YOUTUBE_API_KEY + update playemjs to v1.4.0 ([#910](https://github.com/openwhyd/openwhyd/issues/910)) ([8040890](https://github.com/openwhyd/openwhyd/commit/8040890c67064f0d55a094ea810d9876d4e1ac34)), closes [#911](https://github.com/openwhyd/openwhyd/issues/911) [adrienjoly/playemjs#v1](https://github.com/adrienjoly/playemjs/issues/v1)
+
+## [1.64.11](https://github.com/openwhyd/openwhyd/compare/v1.64.10...v1.64.11) (2026-05-02)
+
+
+### Bug Fixes
+
+* **youtube:** Replace all hardcoded YouTube API keys with `dummy_api_key` ([#908](https://github.com/openwhyd/openwhyd/issues/908)) ([9bd76cd](https://github.com/openwhyd/openwhyd/commit/9bd76cd1489bd1a61e96e60d04c9fb83f647d171))
+
+## [1.64.10](https://github.com/openwhyd/openwhyd/compare/v1.64.9...v1.64.10) (2026-05-01)
+
+
+### Bug Fixes
+
+* replace YouTube Data API with oEmbed to eliminate quota exhaustion ([#906](https://github.com/openwhyd/openwhyd/issues/906)) ([def7d8f](https://github.com/openwhyd/openwhyd/commit/def7d8fd461ff8fe9c4927a881f7210b97f7a2d3))
+
+## [1.64.9](https://github.com/openwhyd/openwhyd/compare/v1.64.8...v1.64.9) (2026-04-29)
+
+
+### Bug Fixes
+
+* YouTube API quota exhaustion with client-side oEmbed fetch + XSS protection ([#902](https://github.com/openwhyd/openwhyd/issues/902)) ([02348cd](https://github.com/openwhyd/openwhyd/commit/02348cd8f7f13cb69e18c6c2d5cbb5f046369f2c))
+
 ## [1.64.8](https://github.com/openwhyd/openwhyd/compare/v1.64.7...v1.64.8) (2026-03-04)
 
 

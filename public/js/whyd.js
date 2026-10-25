@@ -8,7 +8,17 @@ const urlDomain = urlPrefix.split('//').pop();
 
 window.goToPage = function (url) {
   console.warn('goToPage without ajaxify', url); // indicates that ajaxify is not active yet
-  window.location.href = url || window.location.href;
+  const target = url || window.location.href;
+  try {
+    const parsed = new URL(target, window.location.origin);
+    if (parsed.origin === window.location.origin) {
+      window.location.href = parsed.href;
+    } else {
+      console.warn('goToPage: blocked navigation to external origin:', target);
+    }
+  } catch (e) {
+    // invalid URL, do not navigate
+  }
 };
 
 // prevents bug in firefox 3
@@ -378,7 +388,11 @@ const RE_MENTION = /@\[([^\]]*)\]\(user:([^)]*)\)/gi;
 const regexUrl2 = /(\b(https?|ftp|file):\/\/([^/\s]*)[^\s]*)/gi;
 
 function replaceURLWithHTMLLinks(text) {
-  return String(text || '').replace(regexUrl2, "<a href='$1'>$3...</a>");
+  return String(text || '').replace(
+    regexUrl2,
+    (_, url, __, domain) =>
+      `<a href="${url.replaceAll('"', '&quot;').replaceAll("'", '&#039;')}">${domain}...</a>`,
+  );
 }
 
 function _renderCommentText(str) {

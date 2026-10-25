@@ -1,4 +1,4 @@
-/* playemjs 1.3.3, commit: b08423f5f692889960a00c112adbb098519ed22c */
+/* playemjs 1.3.3, commit: 7ee62713169a0ee48e1b63ae1999786bd461b22a */
 
 // configuration
 
@@ -2001,12 +2001,10 @@ function YoutubePlayer(){
   //  3: "onBuffering", // youtube state: buffering
   //  5: "onBuffering", // youtube state: cued
     },
-    SDK_URL = 'https://apis.google.com/js/client.js?onload=initYT',
-    SDK_LOADED = false,
     PLAYER_API_SCRIPT = 'https://www.youtube.com/iframe_api',
     PLAYER_API_LOADED = false,
+    NOEMBED_URL = 'https://noembed.com/embed',
     YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v=",
-    apiReady = false,
     DEFAULT_PARAMS = {
       width: '200',
       height: '200',
@@ -2025,7 +2023,7 @@ function YoutubePlayer(){
 
   function whenApiReady(cb){
     setTimeout(function(){
-      if (SDK_URL && apiReady && PLAYER_API_LOADED){
+      if (PLAYER_API_LOADED){
         cb();
       }else{
         whenApiReady(cb);
@@ -2037,25 +2035,9 @@ function YoutubePlayer(){
     PLAYER_API_LOADED = true;
   };
 
-  // called by $.getScript(SDK_URL)
-  window.initYT = function() {
-    gapi.client.setApiKey(YOUTUBE_API_KEY);
-    gapi.client.load('youtube', 'v3', function() {
-      apiReady = true;
-      $.getScript(PLAYER_API_SCRIPT, function() {
-        // will call window.onYouTubeIframeAPIReady()
-      });
-    });
-  };
-
-  if (!SDK_LOADED) {
-    $.getScript(SDK_URL, function() {
-      // will call window.initYT()
-      SDK_LOADED = true;
-    });
-  } else if (!apiReady) {
-    window.initYT();
-  }
+  $.getScript(PLAYER_API_SCRIPT, function() {
+    // will call window.onYouTubeIframeAPIReady()
+  });
 
   function Player(eventHandlers, embedVars) {
     this.eventHandlers = eventHandlers || {};
@@ -2141,48 +2123,8 @@ function YoutubePlayer(){
   }
 
   function searchTracks(query, limit, cb){
-    function translateResult(r){
-      var id = (typeof(r.id) !== 'string') ? r.id.videoId : r.id;
-      return {
-        id : id,
-        eId: "/yt/" + id,
-        img: r.snippet.thumbnails["default"].url,
-        url: YOUTUBE_VIDEO_URL + id,
-        title: r.snippet.title,
-        playerLabel: 'Youtube'
-      };
-    }
     if (!cb) return;
-    whenApiReady(function(){
-      if (limit !== 1) {
-        gapi.client.youtube.search.list({
-          part: 'snippet',
-          q: YOUTUBE_VIDEO_URL + query,
-          type : "video",
-          maxResults : limit,
-        }).execute(function(res){
-          if (res.error) {
-            console.error('searchTracks - YouTube API error:', res.error); // e.g. 403 / "quota exceeded" error
-            return cb([], res.error);
-          }
-          results = res.items.map(translateResult);
-          cb(results);
-        });
-      }
-      else {
-        gapi.client.youtube.videos.list({
-          'id': query,
-          'part': 'snippet,contentDetails,statistics'
-        }).execute(function(res){
-          if (res.error) {
-            console.error('searchTracks - YouTube API error:', res.error); // e.g. 403 / "quota exceeded" error
-            return cb([], res.error);
-          }
-          results = res.items.map(translateResult);
-          cb(results);
-        });
-      }
-    });
+    cb([], new Error('searchTracks is not supported without a YouTube API key. Please implement a custom search solution.'));
   }
 
   Player.prototype.searchTracks = function(query, limit, cb){
@@ -2190,9 +2132,41 @@ function YoutubePlayer(){
   }
 
   function fetchMetadata(id, cb){
-    searchTracks(id, 1, function(tracks) {
-      cb(tracks[0]);
-    });
+    var url = YOUTUBE_VIDEO_URL + id;
+    var noembedUrl = NOEMBED_URL + '?url=' + encodeURIComponent(url);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', noembedUrl);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          if (data.error) {
+            console.error('fetchMetadata - noembed error:', data.error);
+            cb();
+          } else {
+            cb({
+              id: id,
+              eId: '/yt/' + id,
+              img: data.thumbnail_url,
+              url: url,
+              title: data.title,
+              playerLabel: 'Youtube'
+            });
+          }
+        } catch(e) {
+          console.error('fetchMetadata - JSON parse error:', e);
+          cb();
+        }
+      } else {
+        console.error('fetchMetadata - HTTP error:', xhr.status);
+        cb();
+      }
+    };
+    xhr.onerror = function() {
+      console.error('fetchMetadata - network error');
+      cb();
+    };
+    xhr.send();
   }
 
   Player.prototype.fetchMetadata = function(url, cb){

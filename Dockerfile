@@ -1,4 +1,4 @@
-FROM node:24.13.0-slim AS build
+FROM node:24.22.1-slim AS build
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,7 +20,7 @@ RUN curl -sf https://gobinaries.com/tj/node-prune | sh
 # Fix Error: Cannot find module '../build/Release/bson' on newer node / MongoDB versions
 # RUN sed -i.backup 's/..\/build\/Release\/bson/bson/g' /usr/src/app/node_modules/bson/ext/index.js
 
-FROM node:24.13.0-slim
+FROM node:24.22.1-slim
 # note: keep nodejs version above in sync with the one in .nvmrc + don't forget to append the corresponding sha256 hash
 
 # Install runtime dependencies
@@ -44,4 +44,6 @@ USER node
 EXPOSE 8080
 
 # dumb-init is invoked with PID 1, then spawns node as another process whilst ensuring that all signals are proxied to it
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:8080/healthcheck', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 CMD [ "dumb-init", "node", "app.js", "--fakeEmail", "--digestInterval", "-1" ]

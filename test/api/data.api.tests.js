@@ -1,17 +1,12 @@
 const vm = require('vm');
 const assert = require('assert');
-const request = require('request');
+const { fetchText } = require('../native-fetch');
 
 const { OpenwhydTestEnv } = require('../OpenwhydTestEnv.js');
 const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
 
-const reqGet = (url) =>
-  new Promise((resolve, reject) =>
-    request.get({ url }, (err, response, body) =>
-      err ? reject(err) : resolve({ response, body }),
-    ),
-  );
+const reqGet = (url) => fetchText(url);
 
 const addTrackToPlaylist = (user, plName, post) =>
   new Promise((resolve, reject) => {
@@ -38,8 +33,8 @@ describe(`Data Export API`, function () {
     await openwhyd.release();
   });
 
-  beforeEach(async () => {
-    this.timeout(4000);
+  beforeEach(async function () {
+    this.timeout(10000);
     await openwhyd.reset(); // prevent side effects between tests by resetting db state
     return addTrackToPlaylist(user, plName, track);
   });

@@ -9,8 +9,6 @@ const global = window;
 
 const DEBUG = false, // for soundmanager
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used by Playem
-  YOUTUBE_API_KEY = 'AIzaSyCAZvC5tsGWWA2I2cKKsbfaqjwtXfr4bmg',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used by Playem
   JAMENDO_CLIENT_ID = '2c9a11b9',
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- used by Playem
   DEEZER_APP_ID = 190482,

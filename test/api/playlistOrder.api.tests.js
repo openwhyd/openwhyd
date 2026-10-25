@@ -1,6 +1,6 @@
 const assert = require('assert');
 const util = require('util');
-const request = require('request');
+const { fetchText } = require('../native-fetch');
 
 const { DUMMY_USER } = require('../fixtures.js');
 const api = require('../api-client.js');
@@ -15,17 +15,11 @@ describe(`playlistOrder api`, function () {
   });
 
   function callApi(method, path, form) {
-    return new Promise((resolve, reject) =>
-      request[method.toLowerCase()](
-        {
-          jar,
-          form,
-          url: `${openwhyd.getURL()}${path}`,
-        },
-        (error, response, body) =>
-          error ? reject(error) : resolve({ response, body }),
-      ),
-    );
+    return fetchText(`${openwhyd.getURL()}${path}`, {
+      method,
+      jar,
+      form,
+    });
   }
 
   before(async () => {
@@ -82,5 +76,34 @@ describe(`playlistOrder api`, function () {
     // Then the change is persisted in the playlist's posts too
     // const [post] = await openwhyd.dumpCollection('post');
     // assert.deepEqual(post.pl, { id: 0, name: 'coucou' });
+  });
+
+  it('should list more than 200 posts when asking to change order of a playlist', async function () {
+    // Given a user that has one playlist that contains 250 posts
+    const nbPosts = 250;
+    const playlist = { id: 0, name: 'my playlist' };
+    const user = {
+      ...DUMMY_USER,
+      _id: ObjectId(DUMMY_USER.id),
+      pl: [playlist],
+    };
+    const posts = Array.from({ length: nbPosts }, (_, i) => ({
+      _id: new ObjectId(),
+      uId: user.id,
+      pl: playlist,
+      name: `Song number ${i}.`,
+    }));
+    await openwhyd.insertTestData({ user: [user], post: posts });
+
+    // When the user edits their playlist
+    const res = await callApi(
+      'GET',
+      `/u/${user._id}/playlist/${playlist.id}/edit`,
+      {},
+    );
+
+    // Then all posts are displayed
+    for (let i = 0; i < nbPosts; ++i)
+      assert.ok(res.body.includes(`Song number ${i}.`), `missing post ${i}`);
   });
 });
