@@ -1,3 +1,10 @@
+## [1.64.30](https://github.com/openwhyd/openwhyd/compare/v1.64.29...v1.64.30) (2026-10-25)
+
+
+### Bug Fixes
+
+* **docs:** remove DigitalOcean from list of sponsors ([caa62ac](https://github.com/openwhyd/openwhyd/commit/caa62ac114676948d3d43f56055207e110b158e1))
+
 ## [1.64.29](https://github.com/openwhyd/openwhyd/compare/v1.64.28...v1.64.29) (2026-10-23)
 
 
