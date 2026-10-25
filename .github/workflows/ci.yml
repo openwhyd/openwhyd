@@ -373,6 +373,8 @@ jobs:
       - third-party-tests
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-24.04
+    outputs:
+      released: ${{ steps.create_docker_tags.outputs.released }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -382,16 +384,23 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
+      - name: Get latest version before release
+        id: version_before
+        run: echo "version=$(git ls-remote --tags --refs origin | sed 's|.*refs/tags/||' | sort -V | tail -1)" >> $GITHUB_OUTPUT
       - run: make release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Create Docker tags
         id: create_docker_tags
+        env:
+          VERSION_BEFORE: ${{ steps.version_before.outputs.version }}
         run: |
           echo "tags=latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_OUTPUT
+          # "released" is true only if semantic-release created a new version (i.e. a new tag) during this run
+          echo "released=$([ "$(git tag -l --sort=-v:refname | head -1)" != "$VERSION_BEFORE" ] && echo true || echo false)" >> $GITHUB_OUTPUT
           # from https://github.com/jerray/publish-docker-action/issues/11#issuecomment-607077257
       - name: Publish to Docker Hub registry
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && steps.create_docker_tags.outputs.released == 'true'
         uses: jerray/publish-docker-action@v1.0.5
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -403,8 +412,8 @@ jobs:
     # The SSH key is restricted on the server (authorized_keys "command=..."), so this job can only trigger that redeploy.
     name: Deploy to VPS
     needs: release
-    # same condition as the "Publish to Docker Hub registry" step above, so that we never deploy from a pull request
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # same condition as the "Publish to Docker Hub registry" step above: only deploy a new version, never from a pull request
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.release.outputs.released == 'true'
     timeout-minutes: 10
     runs-on: ubuntu-24.04
     environment: production # secrets below are defined in this GitHub environment
