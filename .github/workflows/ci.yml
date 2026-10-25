@@ -398,6 +398,43 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           tags: ${{ steps.create_docker_tags.outputs.tags }}
 
+  deploy:
+    # Pulls the image published by the "release" job and restarts the "web" service on the VPS.
+    # The SSH key is restricted on the server (authorized_keys "command=..."), so this job can only trigger that redeploy.
+    name: Deploy to VPS
+    needs: release
+    # same condition as the "Publish to Docker Hub registry" step above, so that we never deploy from a pull request
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 10
+    runs-on: ubuntu-24.04
+    environment: production # secrets below are defined in this GitHub environment
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false # let a running deployment finish
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+      - name: Deploy
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        # the command to run (docker compose pull + up) is enforced by the server, per the key's authorized_keys entry
+        run: ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes deploy@"$VPS_HOST"
+      - name: Smoke test
+        env:
+          # set the repository/environment variable SMOKE_TEST_URL to https://openwhyd.org/ once DNS points to the VPS
+          SMOKE_TEST_URL: ${{ vars.SMOKE_TEST_URL }}
+        run: |
+          curl --fail --silent --show-error \
+            --retry 15 --retry-delay 6 --retry-all-errors \
+            --output /dev/null "$SMOKE_TEST_URL"
+
   docker:
     # To publish the Docker image from here, see https://github.com/openwhyd/openwhyd/pull/308/commits/1eacaa98885789642ba0073c9bb4d822021f0d95#diff-12a86cef0c4707531fdbabac3e38cb2aR36
     name: Docker tests
