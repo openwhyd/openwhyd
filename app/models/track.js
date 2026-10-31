@@ -17,7 +17,7 @@ const hotTracksCache = new Map(); // key => { expires: number, promise: Promise 
  * @param {object} params
  * @param {number | undefined} params.limit
  * @param {number | undefined} params.skip
- * @param {mongodb.ObjectId | undefined} params.sinceId
+ * @param {import('mongodb').ObjectId | undefined} params.sinceId
  */
 async function getRecentPostsByDescendingNumberOfReposts(params) {
   const sinceId =
