@@ -63,7 +63,11 @@
     iframe.style.height = '42px';
     iframe.setAttribute('allow', 'autoplay');
     iframe.onload = () => {
-      if (this.iframe === iframe) this.clientCall('onPlaying', this);
+      if (this.iframe !== iframe) return;
+      // onBuffering cancels playem's "track did not start" timeout, which
+      // onPlaying doesn't, and we never get a duration from the iframe.
+      this.clientCall('onBuffering', this);
+      this.clientCall('onPlaying', this);
     };
     iframe.setAttribute(
       'src',
