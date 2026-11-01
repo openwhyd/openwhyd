@@ -7,7 +7,9 @@ const RE_EID = /^\/bc\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/;
 // (cf https://github.com/openwhyd/openwhyd/issues/940)
 const FETCH_HEADERS = {
   Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'User-Agent': 'Mozilla/5.0 (compatible; Openwhyd; +https://openwhyd.org)',
+  'Accept-Language': 'en-US,en;q=0.9',
+  'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
 };
 
 const RE_STREAM_URL = /https:\/\/[^.]+\.bcbits\.com\/stream\/[^;"]*/g;
@@ -27,7 +29,11 @@ function htmlDecode(str) {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
-    .replace(/&amp;/g, '&');
+    .replace(/&#0*39;/g, "'")
+    .replace(/&#x0*26;|&#0*38;/gi, '&')
+    .replace(/&amp;/g, '&')
+    .replace(/\\u0026/g, '&')
+    .replace(/\\\//g, '/');
 }
 
 exports.controller = async function (req, reqParams = {}, res) {
