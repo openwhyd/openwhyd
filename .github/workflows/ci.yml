@@ -395,6 +395,7 @@ jobs:
         env:
           VERSION_BEFORE: ${{ steps.version_before.outputs.version }}
         run: |
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "tags=latest,$(git tag -l --sort=-v:refname | head -1 | cut -c 2-)" >> $GITHUB_OUTPUT
           # "released" is true only if semantic-release created a new version (i.e. a new tag) during this run
           echo "released=$([ "$(git tag -l --sort=-v:refname | head -1)" != "$VERSION_BEFORE" ] && echo true || echo false)" >> $GITHUB_OUTPUT
@@ -406,6 +407,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           tags: ${{ steps.create_docker_tags.outputs.tags }}
+          build_args: GIT_COMMIT_SHA=${{ steps.create_docker_tags.outputs.sha }}
 
   deploy:
     # Pulls the image published by the "release" job and restarts the "web" service on the VPS.
