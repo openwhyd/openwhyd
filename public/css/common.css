@@ -3023,6 +3023,7 @@ body.fullscreenVideo #playerContainer > div > #genericholder > object > embed {
 
 /* end of fix */
 
+body.playing_Bandcamp #playerContainer,
 body.playing_SoundCloud #playerContainer,
 body.playing_Deezer #playerContainer,
 body.reduced #playerContainer {
@@ -3031,9 +3032,10 @@ body.reduced #playerContainer {
   opacity: 0.01;
 }
 
-/* Bandcamp's embedded player can't be controlled by openwhyd (cross-origin, no
-   autoplay), so it is displayed above the player bar, for the user to click on. */
-body.playing_Bandcamp #playerContainer {
+/* Bandcamp's embedded player (fallback) can't be controlled by openwhyd
+   (cross-origin, no autoplay), so it is displayed above the player bar, for the
+   user to click on. */
+body.playing_Bandcamp.bandcampEmbed #playerContainer {
   position: fixed;
   top: auto !important;
   left: auto !important;
@@ -3045,7 +3047,7 @@ body.playing_Bandcamp #playerContainer {
   z-index: 10001;
 }
 
-body.playing_Bandcamp #playerContainer > div > #playBtnOverlay {
+body.playing_Bandcamp.bandcampEmbed #playerContainer > div > #playBtnOverlay {
   display: none;
 }
 
