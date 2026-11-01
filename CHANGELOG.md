@@ -1,3 +1,10 @@
+## [1.64.32](https://github.com/openwhyd/openwhyd/compare/v1.64.31...v1.64.32) (2026-11-01)
+
+
+### Bug Fixes
+
+* **docker:** preserve runtime dependency cache on SHA changes ([#985](https://github.com/openwhyd/openwhyd/issues/985)) ([ae641b7](https://github.com/openwhyd/openwhyd/commit/ae641b7da9028c0e65dc7aca69ade6ad71eef147))
+
 ## [1.64.31](https://github.com/openwhyd/openwhyd/compare/v1.64.30...v1.64.31) (2026-11-01)
 
 
