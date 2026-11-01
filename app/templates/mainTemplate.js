@@ -348,6 +348,7 @@ exports.renderWhydPage = function (params = {}) {
     'whyd.js', // topicBrowser.js
     'playem-' + playemFile + '.js',
     'playem-youtube-iframe-patch.js',
+    'playem-bandcamp-patch.js',
     'whydPlayer.js',
     'dndUpload.js',
     'WhydImgUpload.js',
