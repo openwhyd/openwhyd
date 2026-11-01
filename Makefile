@@ -25,18 +25,6 @@ dev: node_modules public/js/bookmarklet.js ## Start a local dev server.
 down: ## Stop the local dev server and clean up left-overs from Docker.
 	docker compose down --rmi local --remove-orphans
 
-start: node_modules public/js/bookmarklet.js ## Start the production server without downtime.
-	@cd scripts && ./start.sh
-
-restart: node_modules public/js/bookmarklet.js ## Restart the production server without downtime.
-	@cd scripts && ./restart.sh
-
-restart-to-latest: ## Restart the production server to its latest version, without downtime.
-	git pull
-	npm ci --omit=dev --prefer-offline --no-audit
-	make restart
-	# also don't forget to switch to the right version of nodejs, e.g. with "$ nvm use"
-
 lint: node_modules public/js/bookmarklet.js ## Run static code checks
 	npm run lint:jsdoc-typing
 	npm run lint:typescript
