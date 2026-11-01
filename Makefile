@@ -40,7 +40,7 @@ docker-seed: ## (Re)initializes+clears the db and restart Openwhyd's docker cont
 docker-seed-adrien: node_modules ## (Re)initializes+clears the db, imports some prod data and restart Openwhyd's docker container for tests
 	@echo "⚠ This will clear your local database and import prod data for user 'adrien'"
 	@echo "Press ENTER to continue..."
-	@read
+	@read confirmation
 	make docker-seed
 	node scripts/import-from-prod.js adrien 5 # imports 5 posts from https://openwhyd.org/adrien
 
