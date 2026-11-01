@@ -16,7 +16,7 @@ const htmlRedirect = require('../../templates/logging.js').htmlRedirect;
 const genuine = require('../../genuine.js');
 const notifEmails = require('../../models/notifEmails.js');
 
-const ENFORCE_GENUINE_SIGNUP = true; // may require x-real-ip header from the nginx proxy
+const ENFORCE_GENUINE_SIGNUP = true;
 const { genuineSignupSecret } = process.appParams;
 const onboardingUrl = '/';
 const checkInvites = false;

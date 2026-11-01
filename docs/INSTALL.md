@@ -1,6 +1,6 @@
 # Deploy Openwhyd to a DigitalOcean instance
 
-Read [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md).
+Read [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md). (old)
 
 ---
 
@@ -129,7 +129,7 @@ If you don't want to use Docker (or can't), you can follow these instructions.
 
 ### Usage (advanced)
 
-- Run `npm start`, or `make start` (auto-restart daemon)
+- Run `npm start`
 - Open [http://localhost:8080](http://localhost:8080) (or `WHYD_URL_PREFIX`)
 - During development, you may have to restart the server to have your changes taken into account.
 

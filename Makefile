@@ -25,29 +25,24 @@ dev: node_modules public/js/bookmarklet.js ## Start a local dev server.
 down: ## Stop the local dev server and clean up left-overs from Docker.
 	docker compose down --rmi local --remove-orphans
 
-start: node_modules public/js/bookmarklet.js ## Start the production server without downtime.
-	@cd scripts && ./start.sh
-
-restart: node_modules public/js/bookmarklet.js ## Restart the production server without downtime.
-	@cd scripts && ./restart.sh
-
-restart-to-latest: ## Restart the production server to its latest version, without downtime.
-	git pull
-	npm ci --omit=dev --prefer-offline --no-audit
-	make restart
-	# also don't forget to switch to the right version of nodejs, e.g. with "$ nvm use"
-
 lint: node_modules public/js/bookmarklet.js ## Run static code checks
 	npm run lint:jsdoc-typing
 	npm run lint:typescript
 	npm run lint:format
 	npm run lint:fix
 
-docker-seed: ## (Re)initializes the test db and restart Openwhyd's docker container
+docker-seed: ## (Re)initializes+clears the db and restart Openwhyd's docker container for tests
 	docker compose up --detach --build mongo web
 	docker compose exec -T web npm run test-reset
 	docker compose restart web
-	docker compose exec -T web ./scripts/wait-for-http-server.sh 8080
+	./scripts/wait-for-http-server.sh 8080
+
+docker-seed-adrien: node_modules ## (Re)initializes+clears the db, imports some prod data and restart Openwhyd's docker container for tests
+	@echo "⚠ This will clear your local database and import prod data for user 'adrien'"
+	@echo "Press ENTER to continue..."
+	@read confirmation
+	make docker-seed
+	node scripts/import-from-prod.js adrien 5 # imports 5 posts from https://openwhyd.org/adrien
 
 test: lint test-unit test-integration test-e2e test-approval test-in-docker ## Run all checks and tests
 
@@ -122,4 +117,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build chrome-extension dev down start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help
+.PHONY: install build chrome-extension dev down lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help

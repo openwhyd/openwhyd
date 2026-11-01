@@ -79,8 +79,7 @@
     "htmlparser": "*",
     "mongodb": "4.17.0",
     "playemjs": "adrienjoly/playemjs#v1.4.0",
-    "q-set": "^2.0.8",
-    "wait-on": "^9.5.1"
+    "q-set": "^2.0.8"
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.61.9",
