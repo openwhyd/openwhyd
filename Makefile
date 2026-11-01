@@ -117,4 +117,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build chrome-extension dev down start restart restart-to-latest lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help
+.PHONY: install build chrome-extension dev down lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help
