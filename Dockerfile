@@ -22,13 +22,14 @@ RUN curl -sf https://gobinaries.com/tj/node-prune | sh
 
 FROM node:24.22.1-slim
 # note: keep nodejs version above in sync with the one in .nvmrc + don't forget to append the corresponding sha256 hash
-ARG GIT_COMMIT_SHA=unknown
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
   dumb-init \
   graphicsmagick \
   && rm -rf /var/lib/apt/lists/*
+
+ARG GIT_COMMIT_SHA=unknown
 
 ENV NODE_ENV=production \
   DD_GIT_COMMIT_SHA=${GIT_COMMIT_SHA} \
