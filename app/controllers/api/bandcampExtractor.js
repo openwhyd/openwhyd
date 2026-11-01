@@ -14,6 +14,7 @@ const RE_STREAM_URL = /https:\/\/[^.]+\.bcbits\.com\/stream\/[^;"]*/g;
 
 const RE_BAND_ID = /(?:&quot;|")band_id(?:&quot;|"):\s*(\d+)/;
 const RE_TRACK_ID = /EmbeddedPlayer\/(?:[^"'\s]*\/)?track=(\d+)/;
+const EMBED_URL_PREFIX = 'https://bandcamp.com/EmbeddedPlayer/url=';
 const MOBILE_API_URL = 'https://bandcamp.com/api/mobile/24/tralbum_details';
 
 const dedup = (array) => [...new Set(array).keys()];
@@ -30,7 +31,7 @@ exports.extractBandcampStreamURLsFromHTML = (html) => {
 exports.extractBandcampIdsFromHTML = (html) => {
   const bandId = String(html).match(RE_BAND_ID)?.[1];
   const trackId = String(html).match(RE_TRACK_ID)?.[1];
-  return bandId && trackId ? { bandId, trackId } : null;
+  return trackId ? { bandId, trackId } : null;
 };
 
 // picks the best stream URL from the response of Bandcamp's mobile API
@@ -48,10 +49,10 @@ exports.extractStreamURLFromMobileAPIResponse = (details, trackId) => {
 
 async function fetchStreamURLFromMobileAPI({ bandId, trackId }) {
   const query = new URLSearchParams({
-    band_id: bandId,
     tralbum_type: 't',
     tralbum_id: trackId,
   });
+  if (bandId) query.set('band_id', bandId);
   const response = await fetch(`${MOBILE_API_URL}?${query}`, {
     headers: FETCH_HEADERS,
   });
@@ -90,26 +91,42 @@ exports.controller = async function (req, reqParams = {}, res) {
   try {
     const track = matched.pop();
     const artist = matched.pop();
-    const response = await fetch(
-      `https://${artist}.bandcamp.com/track/${track}`,
-      { headers: FETCH_HEADERS },
-    );
-    const body = await response.text();
-    let streamURL = exports.extractBandcampStreamURLsFromHTML(body)[0];
-    if (!streamURL) {
-      // Bandcamp may hide stream URLs from its track pages => use its mobile API
-      const ids = exports.extractBandcampIdsFromHTML(body);
-      if (ids) {
-        try {
-          streamURL = await fetchStreamURLFromMobileAPI(ids);
-        } catch (err) {
-          req.logToConsole('bandcampExtractor mobile API error:', err.message);
-        }
+    const trackUrl = `https://${artist}.bandcamp.com/track/${track}`;
+    const attempts = [];
+    const fetchText = async (url) => {
+      const response = await fetch(url, { headers: FETCH_HEADERS });
+      attempts.push(`HTTP ${response.status} from ${new URL(url).pathname}`);
+      return response.text();
+    };
+    let streamURL;
+    let ids = null;
+    // Bandcamp may serve a "Client Challenge" instead of the track page, so we
+    // also try its embedded player page (whose HTML lists stream URLs and ids),
+    // and then its mobile API.
+    const pageUrls = [
+      trackUrl,
+      `${EMBED_URL_PREFIX}${encodeURIComponent(trackUrl)}/size=small/`,
+    ];
+    for (const pageUrl of pageUrls) {
+      try {
+        const body = await fetchText(pageUrl);
+        streamURL = exports.extractBandcampStreamURLsFromHTML(body)[0];
+        if (streamURL) break;
+        ids = ids || exports.extractBandcampIdsFromHTML(body);
+      } catch (err) {
+        req.logToConsole('bandcampExtractor fetch error:', err.message);
+      }
+    }
+    if (!streamURL && ids) {
+      try {
+        streamURL = await fetchStreamURLFromMobileAPI(ids);
+      } catch (err) {
+        req.logToConsole('bandcampExtractor mobile API error:', err.message);
       }
     }
     if (!streamURL) {
       throw new Error(
-        `no stream URL found in Bandcamp track page nor mobile API (HTTP ${response.status})`,
+        `no stream URL found in Bandcamp pages nor mobile API (${attempts.join(', ')})`,
       );
     }
     res.json({ eId, streamURL });
