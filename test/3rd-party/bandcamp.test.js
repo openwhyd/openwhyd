@@ -27,7 +27,9 @@ const callExtractorAPI = (reqParams) =>
   });
 
 describe('Bandcamp stream extractor', () => {
-  it(
+  // skipped: Bandcamp serves a "Client Challenge" page to servers/bots, so no
+  // stream URL can be extracted. cf https://github.com/openwhyd/openwhyd/issues/983
+  it.skip(
     'should return a playable stream URL for a Bandcamp track',
     async () => {
       const result = await callExtractorAPI({ eId: EID });

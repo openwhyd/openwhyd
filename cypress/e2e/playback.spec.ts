@@ -53,7 +53,9 @@ context('Playback', () => {
     cy.get('#btnPlay').should('not.have.class', 'playing');
   });
 
-  it('should allow user to play a Bandcamp track', () => {
+  // skipped: Bandcamp serves a "Client Challenge" page to servers/bots, so the
+  // stream URL can't be extracted. cf https://github.com/openwhyd/openwhyd/issues/983
+  it.skip('should allow user to play a Bandcamp track', () => {
     cy.visit('/bc/harissa/rooftop');
 
     // should open the playbar after the user clicks on the post

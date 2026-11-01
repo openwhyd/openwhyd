@@ -1,3 +1,24 @@
+## [1.64.32](https://github.com/openwhyd/openwhyd/compare/v1.64.31...v1.64.32) (2026-11-01)
+
+
+### Bug Fixes
+
+* **docker:** preserve runtime dependency cache on SHA changes ([#985](https://github.com/openwhyd/openwhyd/issues/985)) ([ae641b7](https://github.com/openwhyd/openwhyd/commit/ae641b7da9028c0e65dc7aca69ade6ad71eef147))
+
+## [1.64.31](https://github.com/openwhyd/openwhyd/compare/v1.64.30...v1.64.31) (2026-11-01)
+
+
+### Bug Fixes
+
+* **docker:** include commit metadata in images ([#982](https://github.com/openwhyd/openwhyd/issues/982)) ([a7038ce](https://github.com/openwhyd/openwhyd/commit/a7038ce7cf4d3f08b96cc93b375dd46f99733255))
+
+## [1.64.30](https://github.com/openwhyd/openwhyd/compare/v1.64.29...v1.64.30) (2026-10-25)
+
+
+### Bug Fixes
+
+* **docs:** remove DigitalOcean from list of sponsors ([caa62ac](https://github.com/openwhyd/openwhyd/commit/caa62ac114676948d3d43f56055207e110b158e1))
+
 ## [1.64.29](https://github.com/openwhyd/openwhyd/compare/v1.64.28...v1.64.29) (2026-10-23)
 
 

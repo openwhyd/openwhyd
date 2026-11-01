@@ -24,6 +24,7 @@ This API can be used by anyone, without authentication, to download:
 - a user's list of posts; (e.g. https://openwhyd.org/adrien)
 - a user's list of playlists (e.g. https://openwhyd.org/adrien/playlists)
 - a playlist; (e.g. https://openwhyd.org/adrien/playlist/61)
+- as user's feed/stream, based on who they follow (e.g. https://openwhyd.org/stream?id=4d94501d1f78ac091dbc9b4d)
 - or "hot tracks". (e.g. https://openwhyd.org/hot/electro)
 
 The list of tracks can be downloaded in several formats:
