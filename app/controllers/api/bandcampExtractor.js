@@ -1,3 +1,4 @@
+const bandcampFetch = require('bandcamp-fetch').default;
 const config = require('../../models/config.js');
 
 const RE_EID = /^\/bc\/([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+)/;
@@ -57,16 +58,24 @@ exports.controller = async function (req, reqParams = {}, res) {
   try {
     const track = matched.pop();
     const artist = matched.pop();
-    const response = await fetch(
-      `https://${artist}.bandcamp.com/track/${track}`,
-      { headers: FETCH_HEADERS },
-    );
-    const body = await response.text();
-    const streamURL = exports.extractBandcampStreamURLsFromHTML(body)[0];
+    const trackUrl = `https://${artist}.bandcamp.com/track/${track}`;
+    let streamURL;
+    try {
+      const info = await bandcampFetch.track.getInfo({ trackUrl });
+      streamURL = info.streamUrlHQ || info.streamUrl;
+    } catch (err) {
+      req.logToConsole('bandcampExtractor: bandcamp-fetch failed', err.message);
+    }
     if (!streamURL) {
-      throw new Error(
-        `no stream URL found in Bandcamp track page (HTTP ${response.status})`,
-      );
+      // fallback: extract the stream URL from the page, with browser-like headers
+      const response = await fetch(trackUrl, { headers: FETCH_HEADERS });
+      const body = await response.text();
+      streamURL = exports.extractBandcampStreamURLsFromHTML(body)[0];
+      if (!streamURL) {
+        throw new Error(
+          `no stream URL found in Bandcamp track page (HTTP ${response.status})`,
+        );
+      }
     }
     res.json({ eId, streamURL });
   } catch (err) {
