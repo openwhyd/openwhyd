@@ -48,10 +48,6 @@ $ docker compose down --rmi local --remove-orphans # to stop the server and data
 
 More info about **Setup and Usage**: [INSTALL.md](docs/INSTALL.md).
 
-<!-- If you want to run it directly with `docker compose`, checkout [Openwhyd on Docker Hub](https://hub.docker.com/r/openwhyd/openwhyd).
-
-If you want to deploy Openwhyd to a server, you can follow our guide: [How to deploy on DigitalOcean](docs/howto-deploy-on-digitalocean.md). -->
-
 🤗 The project is **open to contributions**. Check out [our FAQ](docs/FAQ.md#id-love-to-contribute-to-openwhyd-how-can-i-help) for more info.
 
 ## Contributors

@@ -1,6 +1,6 @@
 # Deploy Openwhyd to a DigitalOcean instance
 
-Read [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md).
+Read [How to deploy on DigitalOcean](./howto-deploy-on-digitalocean.md). (old)
 
 ---
 

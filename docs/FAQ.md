@@ -140,13 +140,9 @@ For all these reasons, I prefer to stick to donations and partnerships to suppor
 
 ### Why don’t we host Openwhyd on a cheaper hosting server, to reduce costs?
 
-DigitalOcean has been our hosting provider for years. It’s not cheap, but we picked an extremely performant and reliable solution to maintain an awesome quality of service without spending too much time caring about our infrastructure.
+DigitalOcean was our hosting provider and sponsor for years.
 
-When we decided to turn Whyd into an open-source project, it was running on a very powerful server that costed $150/month. With help from the team, I migrated it to a smaller instance, in order to reduce that cost to $48/month. This process was risky and tedious, because our codebase was getting old (i.e. relying on deprecated dependencies) and we were lacking internal documentation on how to do this migration properly.
-
-Sure, we could migrate to an even smaller server, but the platform may become slower. Or we could switch to a cheaper provider, but who is going to commit to maintain the infrastructure 24/7 in case of problems? In both cases, I’m not interested in spending time migrating anytime soon. ✋
-
-Moreover, DigitalOcean loves Openwhyd, so they offered us 1 year of free hosting! 😍
+Since they discontinued the sponsoring of open source projects like ours, we recently migrated over to [OVHcloud](https://www.ovhcloud.com/), which costs us less than €10/month.
 
 ### By doing XXX or ZZZ, Openwhyd can become a major player in the market and attract many more users
 
