@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   graphicsmagick \
   && rm -rf /var/lib/apt/lists/*
 
-ENV NODE_ENV production \
+ENV NODE_ENV=production \
   DD_GIT_COMMIT_SHA=${GIT_COMMIT_SHA} \
   DD_GIT_REPOSITORY_URL=https://github.com/openwhyd/openwhyd
 LABEL org.opencontainers.image.revision=${GIT_COMMIT_SHA} \
