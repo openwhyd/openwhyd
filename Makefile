@@ -35,7 +35,7 @@ docker-seed: ## (Re)initializes+clears the db and restart Openwhyd's docker cont
 	docker compose up --detach --build mongo web
 	docker compose exec -T web npm run test-reset
 	docker compose restart web
-	docker compose exec -T web ./scripts/wait-for-http-server.sh 8080
+	./scripts/wait-for-http-server.sh 8080
 
 docker-seed-adrien: ## (Re)initializes+clears the db, imports some prod data and restart Openwhyd's docker container for tests
 	@echo "⚠ This will clear your local database and import prod data for user 'adrien'"
