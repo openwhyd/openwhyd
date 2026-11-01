@@ -37,7 +37,7 @@ docker-seed: ## (Re)initializes+clears the db and restart Openwhyd's docker cont
 	docker compose restart web
 	./scripts/wait-for-http-server.sh 8080
 
-docker-seed-adrien: ## (Re)initializes+clears the db, imports some prod data and restart Openwhyd's docker container for tests
+docker-seed-adrien: node_modules ## (Re)initializes+clears the db, imports some prod data and restart Openwhyd's docker container for tests
 	@echo "⚠ This will clear your local database and import prod data for user 'adrien'"
 	@echo "Press ENTER to continue..."
 	@read
