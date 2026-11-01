@@ -8,6 +8,6 @@ PORT=$1
 
 curl --fail --silent --show-error \
   --retry 15 --retry-delay 1 --retry-all-errors \
-  --output /dev/null "http://localhost:$PORT"
+  --output /dev/null "http://localhost:$PORT" || exit $?
 
 >&2 echo "app is running on port $PORT!"
