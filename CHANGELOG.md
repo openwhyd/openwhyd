@@ -1,3 +1,10 @@
+## [1.64.33](https://github.com/openwhyd/openwhyd/compare/v1.64.32...v1.64.33) (2026-11-01)
+
+
+### Bug Fixes
+
+* openwhyd.org is now hosted on OVHcloud => update refs to hosting, nginx, pm2, wait-on ([#967](https://github.com/openwhyd/openwhyd/issues/967)) ([c365b19](https://github.com/openwhyd/openwhyd/commit/c365b1948c14ba47abadff1c5284e7f1e742a5ae)), closes [/github.com/openwhyd/openwhyd/pull/967#discussion_r4435222972](https://github.com//github.com/openwhyd/openwhyd/pull/967/issues/discussion_r4435222972) [/github.com/openwhyd/openwhyd/pull/967#discussion_r4435231902](https://github.com//github.com/openwhyd/openwhyd/pull/967/issues/discussion_r4435231902) [/github.com/openwhyd/openwhyd/pull/967#discussion_r4435231926](https://github.com//github.com/openwhyd/openwhyd/pull/967/issues/discussion_r4435231926) [/github.com/openwhyd/openwhyd/pull/967#discussion_r4435231939](https://github.com//github.com/openwhyd/openwhyd/pull/967/issues/discussion_r4435231939)
+
 ## [1.64.32](https://github.com/openwhyd/openwhyd/compare/v1.64.31...v1.64.32) (2026-11-01)
 
 
