@@ -1,3 +1,10 @@
+## [1.64.31](https://github.com/openwhyd/openwhyd/compare/v1.64.30...v1.64.31) (2026-11-01)
+
+
+### Bug Fixes
+
+* **docker:** include commit metadata in images ([#982](https://github.com/openwhyd/openwhyd/issues/982)) ([a7038ce](https://github.com/openwhyd/openwhyd/commit/a7038ce7cf4d3f08b96cc93b375dd46f99733255))
+
 ## [1.64.30](https://github.com/openwhyd/openwhyd/compare/v1.64.29...v1.64.30) (2026-10-25)
 
 
