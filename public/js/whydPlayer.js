@@ -560,6 +560,41 @@ function WhydPlayer() {
   // var inProduction = window.location.href.indexOf('//openwhyd.org') > -1;
   // var inTest = window.location.href.indexOf('//whyd.fr') > -1; // pre-production
 
+  try {
+    window.BandcampPatchedPlayer = function () {
+      console.info('init BandcampPatchedPlayer');
+      return window.BandcampPlayer.apply(this, arguments);
+    };
+    window.BandcampPatchedPlayer.prototype = window.BandcampPlayer.prototype;
+    window.BandcampPatchedPlayer.prototype.play = function (id) {
+      $.ajax({
+        type: 'GET',
+        url: '/api/bandcampExtractor',
+        data: { eId: `/bc/${id}` },
+        success: ({ streamURL, error } = {}) => {
+          if (error) {
+            console.warn('bandcampExtractor error response:', error);
+            this.clientCall('onError', self, {
+              source: 'BandcampPatchedPlayer',
+              error,
+            });
+          } else {
+            this.playStreamUrl(streamURL);
+          }
+        },
+        error: (err, textStatus, errorThrown) => {
+          console.error('bandcampExtractor error:', err);
+          this.clientCall('onError', self, {
+            source: 'BandcampPatchedPlayer',
+            error: 'message' in err ? err.message : errorThrown || textStatus,
+          });
+        },
+      });
+    };
+  } catch (err) {
+    console.warn('failed to initialize BandcampPatchedPlayer:', err);
+  }
+
   const PLAYERS = {
       // yt: inProduction ? 'YoutubeIframePlayer' : (inTest?'YoutubeIframePlayer':'YoutubeIframePlayer'),
       yt: 'YoutubeIframePlayer',

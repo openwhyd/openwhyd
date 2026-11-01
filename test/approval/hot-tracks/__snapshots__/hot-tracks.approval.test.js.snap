@@ -450,7 +450,6 @@ var JAMENDO_CLIENT_ID = "2c9a11b9";
     <script src="/js/whyd.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/playem-all.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/playem-youtube-iframe-patch.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/js/playem-bandcamp-patch.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/whydPlayer.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/dndUpload.js" type="text/javascript" charset="utf-8"></script>
     <script src="/js/WhydImgUpload.js" type="text/javascript" charset="utf-8"></script>

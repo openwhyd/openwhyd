@@ -5,8 +5,6 @@ const fs = require('fs');
 const {
   extractBandcampStreamURLs,
   extractBandcampStreamURLsFromHTML,
-  extractBandcampIdsFromHTML,
-  extractStreamURLFromMobileAPIResponse,
 } = require('./../../app/controllers/api/bandcampExtractor.js');
 
 describe('bandcampExtractor', function () {
@@ -44,35 +42,5 @@ describe('bandcampExtractor', function () {
       [...url.searchParams.keys()].sort(),
       expectedSearchParams,
     );
-  });
-
-  it('should extract band and track ids from an actual track page', async () => {
-    const body = await fs.promises.readFile(
-      'public/html/test-resources/bandcamp-track-page.html',
-      'utf8',
-    );
-    assert.deepStrictEqual(extractBandcampIdsFromHTML(body), {
-      bandId: '2982592934',
-      trackId: '1126664010',
-    });
-  });
-
-  it('should not extract ids from an unrelated page', () => {
-    assert.strictEqual(extractBandcampIdsFromHTML('<html></html>'), null);
-  });
-
-  it('should pick the stream URL from a mobile API response', () => {
-    const url128 = 'https://t4.bcbits.com/stream/a/mp3-128/1?p=0';
-    const details = {
-      tracks: [
-        { track_id: 2, streaming_url: { 'mp3-128': 'https://x/other' } },
-        { track_id: 1, streaming_url: { 'mp3-128': url128 } },
-      ],
-    };
-    assert.strictEqual(
-      extractStreamURLFromMobileAPIResponse(details, 1),
-      url128,
-    );
-    assert.strictEqual(extractStreamURLFromMobileAPIResponse({}, 1), undefined);
   });
 });

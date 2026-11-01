@@ -208,7 +208,6 @@ exports.renderFeedEmbed = function (feedHtml, options) {
   );
   options.js.push('playem-min.js');
   options.js.push('playem-youtube-iframe-patch.js');
-  options.js.push('playem-bandcamp-patch.js');
   options.js.push('whydPlayer.js');
   options.js.push('jquery.tinyscrollbar.min.js'); // http://baijs.nl/tinyscrollbar/
   return mainTemplate.renderWhydFrame(feedHtml, options);
