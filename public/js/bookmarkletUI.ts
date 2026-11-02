@@ -17,11 +17,10 @@ if (typeof exports === 'undefined') {
     if (undefined == window.console)
       window.console = {
         ...window.console,
-        log: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
-        info: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
-        error:
-          function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
-        warn: function () {} /* eslint-disable-line @typescript-eslint/no-empty-function */,
+        log: function () {},
+        info: function () {},
+        error: function () {},
+        warn: function () {},
       };
 
     console.log('-= openwhyd bookmarklet v2.23 =-');
