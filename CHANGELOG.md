@@ -1,3 +1,10 @@
+## [1.64.35](https://github.com/openwhyd/openwhyd/compare/v1.64.34...v1.64.35) (2026-11-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies within semver ranges and fix vulnerabilities ([#987](https://github.com/openwhyd/openwhyd/issues/987)) ([f2e5dda](https://github.com/openwhyd/openwhyd/commit/f2e5ddaa01902af7b944680ad6b53ddcbcc1e2a2))
+
 ## [1.64.34](https://github.com/openwhyd/openwhyd/compare/v1.64.33...v1.64.34) (2026-11-02)
 
 
