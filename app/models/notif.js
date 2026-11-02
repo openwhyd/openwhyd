@@ -248,6 +248,7 @@ exports.html = function (uId, html, href, img) {
 /**
  * @param {import('mongodb').ObjectId | string} loverUid
  * @param {LovablePost} post
+ * @param {(err: Error | null, res?: unknown) => void} [callback]
  */
 exports.love = async function (loverUid, post, callback) {
   const user = await userModel.fetchAndProcessUserById(loverUid);

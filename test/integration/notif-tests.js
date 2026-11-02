@@ -86,7 +86,7 @@ const pollUntil = (fct) =>
         if (!err || !inTime) {
           clearInterval(interv);
           if (!inTime) reject(new Error('timeout'));
-          else resolve();
+          else resolve(undefined);
         }
       });
     }, 500);

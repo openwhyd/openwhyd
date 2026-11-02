@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2015",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "strict": false,
     "allowJs": true,
     "noEmit": true,
     "resolveJsonModule": true,

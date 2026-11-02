@@ -64,7 +64,7 @@ const startOpenwhydServerWith = async (env) =>
  */
 const stopOpenwhyd = (serverProcess) =>
   new Promise((resolve) => {
-    if (serverProcess.exitCode !== null) return resolve();
+    if (serverProcess.exitCode !== null) return resolve(undefined);
     serverProcess.on('close', resolve);
     const killed =
       withCoverage() && serverProcess.pid

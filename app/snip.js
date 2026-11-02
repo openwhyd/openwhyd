@@ -626,7 +626,6 @@ function BasicCache() {
   this.restore = function (cacheDump) {
     return (cache = cacheDump);
   };
-  return this;
 }
 
 exports.HttpRequestCache = function (cache) {

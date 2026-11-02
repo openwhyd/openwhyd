@@ -595,7 +595,9 @@ exports.setPlaylist = function (uId, plId, upd, handler) {
         if (upd.name) {
           searchModel.indexPlaylist(uId, plId, upd.name);
           await new Promise((resolve) =>
-            postModel.setPlaylist(uId, plId, upd.name, () => resolve()),
+            postModel.setPlaylist(uId, plId, upd.name, () =>
+              resolve(undefined),
+            ),
           );
         }
         if (handler) handler(found);
