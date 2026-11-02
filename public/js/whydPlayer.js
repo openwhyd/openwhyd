@@ -197,23 +197,23 @@ function WhydPlayer() {
       wasPlaying = false;
     const updateFocusState = () => {
       const hasFocus = document.hasFocus();
-      //console.log('updateFocusState', hadFocus, '->', hasFocus);
       if (hasFocus !== hadFocus) {
         if (!hasFocus) {
           // user just left Openwhyd => page lost focus
           wasPlaying = isPlaying;
-          if (isPlaying) window.playem.pause();
+          // if (isPlaying) window.playem.pause();
         } else if (hasFocus) {
           // user just came back to Openwhyd
           if (wasPlaying) {
-            window.playem.resume();
-            window.showMessage &&
+            // window.playem.resume();
+            if (window.showMessage) {
               window.showMessage(
-                'Want to play music in the background?' +
-                  ' Please install <a href="https://openwhyd.org/download"' +
+                'Your web browser may prevent some tracks from playing in the background.' +
+                  ' For a better experience, consider installing <a href="https://openwhyd.org/download"' +
                   ' target="_blank">Openwhyd Desktop App</a> 👌',
-                true,
+                false,
               );
+            }
           }
         }
         hadFocus = hasFocus;
