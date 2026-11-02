@@ -1,3 +1,10 @@
+## [1.64.36](https://github.com/openwhyd/openwhyd/compare/v1.64.35...v1.64.36) (2026-11-02)
+
+
+### Bug Fixes
+
+* **deps:** override vulnerable transitive dependencies (ws, qs, js-yaml, uuid) ([#991](https://github.com/openwhyd/openwhyd/issues/991)) ([b4b2481](https://github.com/openwhyd/openwhyd/commit/b4b24819579232d2be0720053e2f3efdd099761b))
+
 ## [1.64.35](https://github.com/openwhyd/openwhyd/compare/v1.64.34...v1.64.35) (2026-11-02)
 
 
