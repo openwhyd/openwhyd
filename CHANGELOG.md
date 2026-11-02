@@ -1,3 +1,10 @@
+## [1.64.37](https://github.com/openwhyd/openwhyd/compare/v1.64.36...v1.64.37) (2026-11-02)
+
+
+### Bug Fixes
+
+* **web:** let web browser users (try to) play tracks in the background ([#992](https://github.com/openwhyd/openwhyd/issues/992)) ([4bfeb11](https://github.com/openwhyd/openwhyd/commit/4bfeb1109f250006e67c593c1c5bcb089b2d0a66))
+
 ## [1.64.36](https://github.com/openwhyd/openwhyd/compare/v1.64.35...v1.64.36) (2026-11-02)
 
 
