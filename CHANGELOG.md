@@ -1,3 +1,10 @@
+## [1.64.34](https://github.com/openwhyd/openwhyd/compare/v1.64.33...v1.64.34) (2026-11-02)
+
+
+### Bug Fixes
+
+* **deps:** Upgrade Node.js to v26.13.0 ([#986](https://github.com/openwhyd/openwhyd/issues/986)) ([1ed79ab](https://github.com/openwhyd/openwhyd/commit/1ed79ab8cdaa5d7a5ff82c067a7f74d302844393))
+
 ## [1.64.33](https://github.com/openwhyd/openwhyd/compare/v1.64.32...v1.64.33) (2026-11-01)
 
 
