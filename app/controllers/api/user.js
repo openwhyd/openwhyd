@@ -17,7 +17,7 @@
 const snip = require('../../snip.js');
 const postModel = require('../../models/post.js');
 const userModel = require('../../models/user.js');
-const emailModel = require('../../models/email.js');
+// const emailModel = require('../../models/email.js');
 const followModel = require('../../models/follow.js');
 const notifEmails = require('../../models/notifEmails.js');
 const uploadCtr = require('../uploadedFile.js');
