@@ -199,7 +199,12 @@ const fieldSetters = {
   handle: function (p, cb, features) {
     userModel.setHandle(features, p._id, p.handle, cb);
   },
-  email: function (p, cb, features) {
+  email: function (p, cb /*, features*/) {
+    cb({
+      error:
+        'Changing your email address is disabled. Please contact us if you need to update it.',
+    });
+    /*
     p.email = emailModel.normalize(p.email);
     if (!emailModel.validate(p.email))
       cb({ error: 'This email address is invalid' });
@@ -217,6 +222,7 @@ const fieldSetters = {
           cb({ email: p.email });
         else cb({ error: 'This email already belongs to another user' });
       });
+    */
   },
   pref: function (p, cb) {
     // type each provided pref value accordingly to defaults. "true" boolean was translated to "1"

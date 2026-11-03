@@ -53,7 +53,7 @@ $(function () {
   // == "account" tab ==
 
   const $handle = $('input[name=handle]');
-  const $email = $('input[name=email]');
+  // const $email = $('input[name=email]');
 
   $('input[data-checked=true]').each(function () {
     $(this).attr('checked', 'checked');
@@ -138,6 +138,7 @@ $(function () {
     else cb && cb();
   }
 
+  /*
   function submitEmail(cb) {
     const email = $email.val();
     submitFieldChange({ email: email }, $email.parent(), function (res) {
@@ -147,6 +148,7 @@ $(function () {
       cb && cb(ok);
     });
   }
+  */
 
   function submitPref(cb) {
     const pref = {};
@@ -167,7 +169,7 @@ $(function () {
     event.preventDefault();
     backtonormal();
     validateUsername();
-    const accountSteps = [submitHandle, submitEmail, submitPref];
+    const accountSteps = [submitHandle, /*submitEmail,*/ submitPref];
     let allOk = true;
     (function next(ok) {
       allOk = allOk && ok;
