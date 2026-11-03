@@ -1,3 +1,10 @@
+# [1.65.0](https://github.com/openwhyd/openwhyd/compare/v1.64.37...v1.65.0) (2026-11-03)
+
+
+### Features
+
+* **security:** disable email update ([#993](https://github.com/openwhyd/openwhyd/issues/993)) ([bc1db5e](https://github.com/openwhyd/openwhyd/commit/bc1db5e5b4adc02d78c54f6f3fb117e3e914e9e3))
+
 ## [1.64.37](https://github.com/openwhyd/openwhyd/compare/v1.64.36...v1.64.37) (2026-11-02)
 
 
