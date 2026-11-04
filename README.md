@@ -106,6 +106,7 @@ These are the wonderful people whose time and sweat have made Openwhyd's heart b
   <tr>
     <td align="center"><a href="https://github.com/JKratus"><img src="https://avatars.githubusercontent.com/u/7414857?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Jordan NOURRY</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=JKratus" title="Code">💻</a> <a href="#mentoring-JKratus" title="Mentoring">🧑‍🏫</a> <a href="#talk-JKratus" title="Talks">📢</a></td>
     <td align="center"><a href="https://beyondxscratch.com/"><img src="https://avatars.githubusercontent.com/u/52136235?v=4?s=98" width="98px;" alt=""/><br /><sub><b>Julien Topçu</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/commits?author=julien-topcu" title="Code">💻</a> <a href="#mentoring-julien-topcu" title="Mentoring">🧑‍🏫</a> <a href="#talk-julien-topcu" title="Talks">📢</a></td>
+    <td align="center"><a href="https://www.greysurface.co.uk/"><img src="" width="98px;" alt=""/><br /><sub><b>Nick / GreySurface</b></sub></a><br /><a href="https://github.com/openwhyd/openwhyd/pull/993" title="Security">🛡️</a></td>
   </tr>
 </table>
 
