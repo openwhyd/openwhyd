@@ -10,7 +10,7 @@
  */
 
 const mongodb = require('../models/mongodb.js');
-const { ObjectId } = mongodb;
+const { ObjectId, toObjectIdOrNull } = mongodb;
 const emailModel = require('../models/email.js');
 const postModel = require('../models/post.js');
 const searchModel = require('../models/search.js');
@@ -268,13 +268,12 @@ exports.fetchMulti = async function (q, options, handler) {
  * @type {(uid : string, handler : (user : UserDocument) => void) => void }
  */
 exports.fetchByUid = exports.model = function (uid, handler) {
-  fetch(
-    { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
-    function (err, user) {
-      if (err) console.error('fetchByUid error:', err);
-      handler(user);
-    },
-  );
+  const _id = toObjectIdOrNull(uid);
+  if (!_id) return handler(undefined);
+  fetch({ _id }, function (err, user) {
+    if (err) console.error('fetchByUid error:', err);
+    handler(user);
+  });
 };
 
 /** @typedef {Pick<UserDocument, keyof typeof PARTIAL_USER_FIELDS> & { id: string, mid: string }} PartialUserDocument */
@@ -286,10 +285,11 @@ exports.fetchByUid = exports.model = function (uid, handler) {
  * @type {(uid : import('mongodb').ObjectId | string) => Promise<PartialUserDocument | null> }
  */
 exports.fetchAndProcessUserById = async function (uid) {
-  if (typeof uid === 'string' && !mongodb.isObjectId(uid)) return null;
+  const _id = toObjectIdOrNull(uid);
+  if (!_id) return null;
   /** @satisfies {PartialUserDocument | null} */
   const user = await mongodb.collections['user'].findOne(
-    { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
+    { _id },
     { projection: PARTIAL_USER_FIELDS },
   );
   if (user) {
@@ -304,8 +304,10 @@ exports.fetchAndProcessUserById = async function (uid) {
  * @type {(uid : import('mongodb').ObjectId | string) => Promise<string | undefined> }
  */
 exports.fetchUserNameById = async function (uid) {
+  const _id = toObjectIdOrNull(uid);
+  if (!_id) return undefined;
   const user = await mongodb.collections['user'].findOne(
-    { _id: typeof uid == 'string' ? ObjectId(uid) : uid },
+    { _id },
     { projection: { name: 1 } },
   );
   return user?.name;
@@ -315,18 +317,10 @@ exports.fetchUserNameById = async function (uid) {
  * @type {(uids: (import('mongodb').ObjectId | string)[]) => Promise<{ id: string, name: string }[]> }
  */
 exports.fetchUserNamesByIds = async function (uids) {
+  const ids = uids.map(toObjectIdOrNull).filter((id) => id !== null);
   return (
     await mongodb.collections['user']
-      .find(
-        {
-          _id: {
-            $in: uids.map((uid) =>
-              typeof uid == 'string' ? ObjectId(uid) : uid,
-            ),
-          },
-        },
-        { projection: { _id: 1, name: 1 } },
-      )
+      .find({ _id: { $in: ids } }, { projection: { _id: 1, name: 1 } })
       .toArray()
   ).map((userDocument) => ({
     id: '' + userDocument._id,
@@ -335,6 +329,8 @@ exports.fetchUserNamesByIds = async function (uids) {
 };
 
 exports.fetchByHandle = function (handle, handler) {
+  // reject non-string values (e.g. { $ne: ... }), to prevent NoSQL injection
+  if (typeof handle !== 'string') return handler(undefined);
   fetch({ handle: handle }, function (err, user) {
     if (err) console.error('fetchByHandle error:', err);
     handler(user);

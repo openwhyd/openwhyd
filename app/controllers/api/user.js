@@ -318,6 +318,7 @@ function fetchUserById(uId, options, cb) {
 }
 
 async function fetchUserByIdOrHandle(uidOrHandle, options, cb) {
+  if (typeof uidOrHandle !== 'string') return cb({ error: 'user not found' });
   function returnUser(u) {
     const uId = (u || {}).id;
     if (!uId) cb({ error: 'user not found' });

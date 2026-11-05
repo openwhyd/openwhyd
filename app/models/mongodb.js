@@ -20,6 +20,20 @@ exports.isObjectId = function (i) {
   return mongodb.ObjectId.isValid('' + i);
 };
 
+/**
+ * Normalizes a user id into an ObjectId, or returns null.
+ * Only accepts an ObjectId instance or a valid ObjectId string: any other type
+ * (e.g. an object containing MongoDB operators such as { $ne: ... }, coming
+ * from a JSON request body) is rejected, to prevent NoSQL injection.
+ * @type {(uid: unknown) => import('mongodb').ObjectId | null}
+ */
+exports.toObjectIdOrNull = function (uid) {
+  if (uid instanceof mongodb.ObjectId) return uid;
+  if (typeof uid === 'string' && exports.isObjectId(uid))
+    return new mongodb.ObjectId(uid);
+  return null;
+};
+
 // used to be called USER_CACHE_FIELDS renamed and moved to models/user.js
 
 /** @typedef {import('../infrastructure/mongodb/types.js').UserDocument} UserDocument */
