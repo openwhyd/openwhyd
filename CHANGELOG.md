@@ -1,3 +1,10 @@
+## [1.65.1](https://github.com/openwhyd/openwhyd/compare/v1.65.0...v1.65.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* **security:** prevent NoSQL injection in POST /api/user ([ed0ff37](https://github.com/openwhyd/openwhyd/commit/ed0ff371daf4400e22baed10b6970b65209400aa))
+
 # [1.65.0](https://github.com/openwhyd/openwhyd/compare/v1.64.37...v1.65.0) (2026-11-03)
 
 
