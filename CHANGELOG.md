@@ -1,3 +1,10 @@
+## [1.65.2](https://github.com/openwhyd/openwhyd/compare/v1.65.1...v1.65.2) (2026-11-13)
+
+
+### Bug Fixes
+
+* **API:** Prevent user info requests from crashing the server ([#998](https://github.com/openwhyd/openwhyd/issues/998)) ([6d4dc1e](https://github.com/openwhyd/openwhyd/commit/6d4dc1ea2249a31c965f308db40053cced5b223e))
+
 ## [1.65.1](https://github.com/openwhyd/openwhyd/compare/v1.65.0...v1.65.1) (2026-11-05)
 
 
