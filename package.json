@@ -87,7 +87,7 @@
     "@eslint/js": "^9.39.5",
     "@types/express": "^5.0.1",
     "@types/node": "^26.0.0",
-    "approvals": "^6.2.2",
+    "approvals": "^7.3.0",
     "ava": "^6.2.0",
     "cypress": "^15.21.1",
     "cypress-file-upload": "^5.0.8",
