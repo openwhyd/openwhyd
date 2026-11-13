@@ -27,7 +27,7 @@ exports.controller = async function (request, reqParams, response) {
       response
         .set({ 'content-type': 'application/javascript' })
         .send(safeCallback + '(' + JSON.stringify(responseBody) + ')');
-      // regular JSON response
+    } else {
       response.renderJSON(responseBody);
     }
   };

@@ -94,6 +94,42 @@ describe(`Data Export API`, function () {
   });
 
   describe(`provides list of playlists`, () => {
+    it('serves playlists after a JSONP user info request', async () => {
+      const { body, response } = await reqGet(
+        `${URL_PREFIX}/${user.handle}/info?callback=callbackFct`,
+      );
+      assert.strictEqual(response.status, 200);
+      let info;
+      vm.runInNewContext(body, { callbackFct: (data) => (info = data) });
+      assert.strictEqual(info._id, user.id);
+
+      const playlists = await reqGet(
+        `${URL_PREFIX}/u/${user.id}/playlists?format=json&callback=callbackFct`,
+      );
+      assert.strictEqual(playlists.response.status, 200);
+      let result;
+      vm.runInNewContext(playlists.body, {
+        callbackFct: (data) => (result = data),
+      });
+      assert.strictEqual(result[0].name, plName);
+
+      const jsonInfo = await reqGet(`${URL_PREFIX}/${user.handle}/info`);
+      assert.strictEqual(jsonInfo.response.status, 200);
+      assert.strictEqual(JSON.parse(jsonInfo.body)._id, user.id);
+    });
+
+    it('handles missing users and invalid JSONP callbacks on user info', async () => {
+      const missing = await reqGet(`${URL_PREFIX}/nobody/info`);
+      assert.deepStrictEqual(JSON.parse(missing.body), {
+        error: 'User not found',
+      });
+
+      const invalid = await reqGet(
+        `${URL_PREFIX}/${user.handle}/info?callback=!!!`,
+      );
+      assert.strictEqual(invalid.response.status, 400);
+    });
+
     it(`of given user id, as JSON, using callback`, async () => {
       const { body } = await reqGet(
         `${URL_PREFIX}/u/${user.id}/playlists?callback=callbackFct`,
