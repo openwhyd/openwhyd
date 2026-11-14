@@ -83,6 +83,13 @@ test-approval-update: node_modules public/js/bookmarklet.js ## Update snapshots 
 	npm run test:approval:posting:start:approve
 	docker compose stop
 
+test-e2e-in-docker: ## Run end-to-end tests in the Openwhyd's docker container
+	docker compose up --detach --build mongo web
+	make docker-seed
+	@echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
+	npx cypress install && . ./.env-docker && npm run test:cypress:dev
+	docker compose stop
+
 test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker compose up --detach --build mongo web
 	make docker-seed
@@ -91,7 +98,7 @@ test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:integration
 	docker compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:api:raw
 	@echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
-	. ./.env-docker && npm run test:cypress
+	npx cypress install && . ./.env-docker && npm run test:cypress
 	docker compose stop
 
 ci: ## Run automated tests defined in GitHub Actions CI workflow.
@@ -117,4 +124,4 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # PHONY deps are task dependencies that are not represented by files
-.PHONY: install build chrome-extension dev down lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-in-docker ci release help
+.PHONY: install build chrome-extension dev down lint docker-seed test test-unit test-integration test-e2e test-approval test-approval-update test-e2e-in-docker test-in-docker ci release help
