@@ -83,14 +83,14 @@ test-approval-update: node_modules public/js/bookmarklet.js ## Update snapshots 
 	npm run test:approval:posting:start:approve
 	docker compose stop
 
-test-e2e-in-docker: ## Run end-to-end tests in the Openwhyd's docker container
+test-e2e-in-docker: node_modules ## Run end-to-end tests in the Openwhyd's docker container
 	docker compose up --detach --build mongo web
 	make docker-seed
 	@echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
 	npx cypress install && . ./.env-docker && npm run test:cypress:dev
 	docker compose stop
 
-test-in-docker: ## Run tests in the Openwhyd's docker container
+test-in-docker: node_modules ## Run tests in the Openwhyd's docker container
 	docker compose up --detach --build mongo web
 	make docker-seed
 	docker compose exec web npm run test:functional
@@ -98,7 +98,7 @@ test-in-docker: ## Run tests in the Openwhyd's docker container
 	docker compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:integration
 	docker compose exec --env MONGODB_URL='mongodb://mongo:27017/openwhyd_test' web npm run test:api:raw
 	@echo "ℹ️ Note: Cypress will be run on the host, because it's complicated to make it work from a Docker container"
-	npx cypress install && . ./.env-docker && npm run test:cypress
+	npx cypress install && . ./.env-docker && CYPRESS_SKIP_APPLITOOLS_TESTS=true npm run test:cypress
 	docker compose stop
 
 ci: ## Run automated tests defined in GitHub Actions CI workflow.
