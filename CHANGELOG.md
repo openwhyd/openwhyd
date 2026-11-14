@@ -1,3 +1,10 @@
+## [1.65.3](https://github.com/openwhyd/openwhyd/compare/v1.65.2...v1.65.3) (2026-11-14)
+
+
+### Bug Fixes
+
+* **deps:** upgrade node.js to v26.13.1 + add `make test-e2e-in-docker` ([#999](https://github.com/openwhyd/openwhyd/issues/999)) ([afd2dc2](https://github.com/openwhyd/openwhyd/commit/afd2dc2f075b6d1655c5dfc5b9bd0630f3453eff))
+
 ## [1.65.2](https://github.com/openwhyd/openwhyd/compare/v1.65.1...v1.65.2) (2026-11-13)
 
 
