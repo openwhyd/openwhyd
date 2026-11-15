@@ -130,7 +130,7 @@ exports.generateRegWelcome = function (user, inviteSender) {
     //FEEDBACK_FOOTER
     "PS: We'd love to hear your feedback, so feel free to email us! " +
       renderLink(FEEDBACK_EMAIL, 'mailto:' + FEEDBACK_EMAIL),
-    'Like ' + renderLink('our Facebook page!', 'http://facebook.com/openwhyd'),
+    'Like ' + renderLink('our Facebook page!', 'https://facebook.com/openwhyd'),
   ]);
 };
 

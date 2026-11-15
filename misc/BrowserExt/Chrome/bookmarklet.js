@@ -239,7 +239,7 @@
       // TODO: also use node.title and node.alt, like in makeFileDetector() and DetectEmbed() ?
     }
     function unwrapFacebookLink(src) {
-      // e.g. http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DKhXn0anD1lE&h=AAQFjMJBoAQFTPOP4HzFCv0agQUHB6Un31ArdmwvxzZxofA
+      // e.g. https://www.facebook.com/l.php?u=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DKhXn0anD1lE&h=AAQFjMJBoAQFTPOP4HzFCv0agQUHB6Un31ArdmwvxzZxofA
       let fbLink =
         src && typeof src.split === 'function'
           ? src.split('facebook.com/l.php?u=')

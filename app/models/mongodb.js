@@ -52,7 +52,7 @@ exports.ObjectId = (inputId) => {
   }
 };
 
-// http://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
+// https://www.mongodb.org/display/DOCS/Object+IDs#ObjectIDs-DocumentTimestamps
 exports.dateToHexObjectId = function (date) {
   const seconds = Math.round(date.getTime() / 1000);
   let t = seconds.toString(16); // translate into hexadecimal representation
