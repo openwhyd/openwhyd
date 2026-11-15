@@ -1,3 +1,10 @@
+## [1.65.4](https://github.com/openwhyd/openwhyd/compare/v1.65.3...v1.65.4) (2026-11-15)
+
+
+### Bug Fixes
+
+* **upload:** report errors + cleanup when moving a file failed ([#1000](https://github.com/openwhyd/openwhyd/issues/1000)) ([010a0c3](https://github.com/openwhyd/openwhyd/commit/010a0c3f54d40a95be4b0c0cfd74c27119336d70))
+
 ## [1.65.3](https://github.com/openwhyd/openwhyd/compare/v1.65.2...v1.65.3) (2026-11-14)
 
 
