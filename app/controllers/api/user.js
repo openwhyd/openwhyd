@@ -171,6 +171,7 @@ const fieldSetters = {
       } catch (e) {
         console.error('error handling profile image update:', e);
         cb({ error: 'profile image update failed' });
+        return;
       }
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
       // TODO: inform Auth0, if applicable
