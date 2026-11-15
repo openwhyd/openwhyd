@@ -64,9 +64,9 @@ exports.actions = {
           userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
         }*/
       if (img.indexOf('blank') == -1)
-        uploadCtr.renameTo(img, imgPath, function () {
-          cb(pl);
-        });
+        uploadCtr.renameTo(img, imgPath, (error) =>
+          error ? cb({ error: `failed to rename playlist image` }) : cb(pl),
+        );
       else cb(pl);
     });
   },
