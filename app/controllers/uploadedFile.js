@@ -113,6 +113,11 @@ exports.renameTo = function (filename, toFilename, callback) {
   try {
     const actualFilename = exports.actualFilePath(filename, uploadDirs);
     const actualToFilename = exports.actualFilePath(toFilename);
+    if (actualFilename === actualToFilename) {
+      console.warn('SKIP renaming/moving file to itself:', actualFilename);
+      callback?.(null, toFilename);
+      return;
+    }
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
 
     // Copy+delete instead of rename, so it works across different filesystems too
