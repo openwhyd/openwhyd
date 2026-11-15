@@ -212,22 +212,6 @@ body {
   margin: 0 auto;
 }
 
-#confirmationScreen > div > div > .twitter-share-button {
-  position: absolute;
-  left: 0px;
-}
-
-#confirmationScreen > div > div > .fb-like {
-  position: absolute;
-  right: 0px;
-  width: 50px;
-}
-
-/* remove fb like flyout, usually clipped by iframe */
-#confirmationScreen .fb_edge_widget_with_comment > span > iframe {
-  height: 20px !important;
-}
-
 /* query.mentionsInput.css */
 
 .mentions-input-box {

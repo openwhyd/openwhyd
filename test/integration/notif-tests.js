@@ -98,7 +98,7 @@ function testAllNotifs(u) {
   notifModel.html(
     ADMIN_USER.id,
     'coucou <small>html</small>',
-    'http://www.facebook.com',
+    'https://www.facebook.com',
     '/images/logo-s.png',
   );
   notifModel.mention(FAKE_POST, COMMENTS[u], ADMIN_USER.id);

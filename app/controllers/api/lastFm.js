@@ -27,7 +27,7 @@ function md5(data) {
 }
 
 function LastFM(apiKey, apiSecret) {
-  // http://www.lastfm.fr/api/webauth
+  // https://www.lastfm.fr/api/webauth
   function sign(p) {
     p.api_key = apiKey;
     const keys = Object.keys(p);
@@ -62,7 +62,7 @@ function LastFM(apiKey, apiSecret) {
     });
   };
 
-  // http://www.lastfm.fr/api/show/auth.getSession
+  // https://www.lastfm.fr/api/show/auth.getSession
   // Note: "Session keys have an infinite lifetime by default. You are recommended to store the key securely."
   this.fetchSession = function (token, cb) {
     this.submitRequest(
@@ -77,7 +77,7 @@ function LastFM(apiKey, apiSecret) {
     );
   };
 
-  // http://www.lastfm.fr/api/show/user.getInfo
+  // https://www.lastfm.fr/api/show/user.getInfo
   this.getUserInfo = function (handle, cb) {
     this.submitRequest(
       {
@@ -91,7 +91,7 @@ function LastFM(apiKey, apiSecret) {
     );
   };
 
-  // http://www.lastfm.fr/api/show/track.updateNowPlaying
+  // https://www.lastfm.fr/api/show/track.updateNowPlaying
   this.updateNowPlaying = function (data, cb) {
     data.method = 'track.updateNowPlaying';
     this.submitRequest(sign(data), { method: 'POST' }, cb);
@@ -111,7 +111,7 @@ function LastFM(apiKey, apiSecret) {
     } else if (cb) cb();
   };
 
-  // http://www.lastfm.fr/api/scrobbling
+  // https://www.lastfm.fr/api/scrobbling
   this.scrobble = function (data, cb) {
     data.method = 'track.scrobble';
     this.submitRequest(sign(data), { method: 'POST' }, cb);

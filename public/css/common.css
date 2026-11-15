@@ -3398,25 +3398,6 @@ body.playing_Deezer #whydPlayer #btnFullscreen > div {
   height: 20px;
 }
 
-.dlgVote .twitter-share-button {
-  margin-bottom: 10px;
-}
-
-#sharePopin .sharing .twitter-share-button {
-  float: left;
-  width: 90px;
-  height: 20px;
-  margin-left: 5px;
-}
-
-#sharePopin .sharing .fblikeBtn {
-  float: left;
-  border: none;
-  overflow: hidden;
-  width: 90px;
-  height: 21px;
-}
-
 #sharePopin p {
   margin: 5px;
   margin-top: 8px;

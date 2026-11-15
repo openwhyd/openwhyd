@@ -131,7 +131,7 @@ exports.registerInvitedUser = async function (request, user, response) {
         name: user.name,
         email: user.email,
         pwd: userModel.md5(user.password),
-        img: '/images/blank_user.gif', //"http://www.gravatar.com/avatar/" + userModel.md5(user.email)
+        img: '/images/blank_user.gif', //"https://www.gravatar.com/avatar/" + userModel.md5(user.email)
       };
 
       if (user.iBy) dbUser.iBy = user.iBy; // invited by (user id)

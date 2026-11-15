@@ -1,4 +1,4 @@
-// http://www.regular-expressions.info/email.html
+// https://www.regular-expressions.info/email.html
 const emailCheck =
   /^[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9\u007F-\uffff!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i;
 

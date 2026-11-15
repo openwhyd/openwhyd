@@ -39,7 +39,7 @@ exports.controller = async function (request, reqParams, response) {
   notifModel.html(
     user.id,
     'coucou <small>html</small>',
-    'http://www.facebook.com',
+    'https://www.facebook.com',
     '/images/logo-s.png',
   );
   notifModel.comment(fakePost, fakeComment);

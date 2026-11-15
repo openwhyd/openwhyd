@@ -1,6 +1,6 @@
 // Run with: $ npm run test:approval:routes
 
-const test = require('ava');
+const test = require('ava').default;
 const { promisify } = require('util');
 const {
   readMongoDocuments,

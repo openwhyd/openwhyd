@@ -186,7 +186,7 @@ exports.renderWhydFrame = function (html, params) {
       "    <link href='//fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>",
       '    <link rel="search" type="application/opensearchdescription+xml" title="Whyd" href="' +
         config.urlPrefix +
-        '/html/opensearch.xml">', // http://www.gravitywell.co.uk/blog/post/allow-google-chrome-and-other-browsers-to-search-your-site-directly-from-the-address-bar
+        '/html/opensearch.xml">', // https://www.gravitywell.co.uk/blog/post/allow-google-chrome-and-other-browsers-to-search-your-site-directly-from-the-address-bar
       '    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/foohaghobcolamikniehcnnijdjehfjk">', // https://developers.google.com/chrome/web-store/docs/inline_installation?hl=fr
     ])
     .concat(exports.makeAnalyticsHeading(params.loggedUser));
