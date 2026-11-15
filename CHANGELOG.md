@@ -1,3 +1,10 @@
+## [1.65.6](https://github.com/openwhyd/openwhyd/compare/v1.65.5...v1.65.6) (2026-11-15)
+
+
+### Bug Fixes
+
+* **socials:** remove facebook and twitter integrations + use HTTPS links + repair AVA approval tests ([#1004](https://github.com/openwhyd/openwhyd/issues/1004)) ([aaad062](https://github.com/openwhyd/openwhyd/commit/aaad062df862cf4989a517c8204ab8f97a7e8955))
+
 ## [1.65.5](https://github.com/openwhyd/openwhyd/compare/v1.65.4...v1.65.5) (2026-11-15)
 
 
