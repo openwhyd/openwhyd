@@ -165,7 +165,7 @@ const fieldSetters = {
         return;
       }
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
-      if (oldImageToDelete) {
+      if (oldImageToDelete && oldImageToDelete !== newFilename) {
         console.log('deleting previous profile pic: ' + oldImageToDelete);
         await uploadCtr
           .deleteFile(oldImageToDelete)
@@ -195,7 +195,7 @@ const fieldSetters = {
             cb,
           );
         }
-        if (oldImageToDelete) {
+        if (oldImageToDelete && oldImageToDelete !== newFilename) {
           console.log('deleting previous cover image: ' + oldImageToDelete);
           uploadCtr
             .deleteFile(oldImageToDelete)
