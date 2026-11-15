@@ -144,16 +144,7 @@ const fieldSetters = {
   },
   img: function (p, cb) {
     userModel.fetchByUid(p._id, async function (user) {
-      if (hasProfileImage(user)) {
-        console.log('deleting previous profile pic: ' + user.img);
-        await uploadCtr
-          .deleteFile(user.img)
-          .catch(() =>
-            console.log(
-              'failed to delete existing profile image in fieldSetters.img',
-            ),
-          );
-      }
+      const oldImageToDelete = hasProfileImage(user) ? user.img : null;
       let newFilename;
       try {
         newFilename = hasProfileImage(p)
@@ -174,22 +165,48 @@ const fieldSetters = {
         return;
       }
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
+      if (oldImageToDelete) {
+        console.log('deleting previous profile pic: ' + oldImageToDelete);
+        await uploadCtr
+          .deleteFile(oldImageToDelete)
+          .catch(() =>
+            console.trace(
+              'failed to delete existing profile image in fieldSetters.img: ',
+              oldImageToDelete,
+            ),
+          );
+      }
       // TODO: inform Auth0, if applicable
     });
   },
   cvrImg: function (p, cb) {
     userModel.fetchByUid(p._id, function (user) {
-      if (user.cvrImg && user.cvrImg.indexOf('blank') == -1) {
-        console.log('deleting previous cover image: ' + user.cvrImg);
-        uploadCtr
-          .deleteFile(user.cvrImg)
-          .catch((err) => console.log(err, err.stack));
-      }
+      const oldImageToDelete =
+        user.cvrImg && user.cvrImg.indexOf('blank') == -1 ? user.cvrImg : null;
+      /**
+       * @param {string|null} newFilename
+       */
       function actualUpdate(newFilename) {
-        defaultSetter('cvrImg')(
-          { _id: p._id, cvrImg: newFilename || p.cvrImg },
-          cb,
-        );
+        if (!newFilename) {
+          userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
+        } else {
+          defaultSetter('cvrImg')(
+            { _id: p._id, cvrImg: newFilename || p.cvrImg },
+            cb,
+          );
+        }
+        if (oldImageToDelete) {
+          console.log('deleting previous cover image: ' + oldImageToDelete);
+          uploadCtr
+            .deleteFile(oldImageToDelete)
+            .catch((err) =>
+              console.trace(
+                'failed to delete existing cover image in fieldSetters.cvrImg: ',
+                oldImageToDelete,
+                err,
+              ),
+            );
+        }
       }
       if (p.cvrImg.indexOf('blank') == -1)
         uploadCtr.moveTo(
@@ -200,7 +217,7 @@ const fieldSetters = {
               ? cb({ error: 'error moving cover image' })
               : actualUpdate(newFilename),
         );
-      else userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
+      else actualUpdate(null); // remove cvrImg attribute
     });
   },
   pwd: function (p, cb, features) {
