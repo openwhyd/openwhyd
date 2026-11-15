@@ -95,10 +95,10 @@ exports.renameTo = function (filename, toFilename, callback) {
     const actualFilename = exports.actualFilePath(filename);
     const actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
-    fs.promises
-      .rename(actualFilename, actualToFilename)
-      .then(() => callback?.(null, toFilename))
-      .catch(error);
+    fs.rename(actualFilename, actualToFilename, (err) => {
+      if (err) error(err);
+      else callback?.(null, toFilename);
+    });
   } catch (e) {
     error(e);
   }
