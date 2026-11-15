@@ -51,23 +51,17 @@ exports.actions = {
       return cb({ error: 'invalid id parameter' });
     }
     const imgPath = uploadCtr.getPlaylistImagePath({ uId, id });
-    uploadCtr.deleteFile(imgPath).catch(() => {
-      /* nothing to do if file did not exist */
-    });
     userModel.fetchPlaylist(uId, id, function (pl) {
-      /*
-        if (pl && pl.img && pl.img.indexOf("blank") == -1) {
-          console.log("deleting previous playlist pic: " + pl.img);
-          uploadCtr.deleteFile(pl.img).catch((err) => console.log(err, err.stack));
-        }
-        function actualUpdate(newFilename) {
-          userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
-        }*/
       if (img.indexOf('blank') == -1)
         uploadCtr.renameTo(img, imgPath, (error) =>
           error ? cb({ error: `failed to rename playlist image` }) : cb(pl),
         );
-      else cb(pl);
+      else {
+        cb(pl);
+        uploadCtr.deleteFile(imgPath).catch(() => {
+          /* nothing to do if file did not exist */
+        });
+      }
     });
   },
 };
