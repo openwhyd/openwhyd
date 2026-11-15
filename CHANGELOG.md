@@ -1,3 +1,10 @@
+## [1.65.5](https://github.com/openwhyd/openwhyd/compare/v1.65.4...v1.65.5) (2026-11-15)
+
+
+### Bug Fixes
+
+* **upload:** support user directories across different filesystems ([#1003](https://github.com/openwhyd/openwhyd/issues/1003)) ([dd030b1](https://github.com/openwhyd/openwhyd/commit/dd030b1220d774a8c70f8442a7fc54b61bd867a1))
+
 ## [1.65.4](https://github.com/openwhyd/openwhyd/compare/v1.65.3...v1.65.4) (2026-11-15)
 
 
