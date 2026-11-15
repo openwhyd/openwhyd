@@ -47,27 +47,21 @@ exports.actions = {
     if (typeof uId !== 'string') {
       return cb({ error: 'invalid uId parameter' });
     }
-    if (typeof id !== 'string') {
+    if (typeof id !== 'string' || !/^\d+$/.test(id)) {
       return cb({ error: 'invalid id parameter' });
     }
     const imgPath = uploadCtr.getPlaylistImagePath({ uId, id });
-    uploadCtr.deleteFile(imgPath).catch(() => {
-      /* nothing to do if file did not exist */
-    });
     userModel.fetchPlaylist(uId, id, function (pl) {
-      /*
-        if (pl && pl.img && pl.img.indexOf("blank") == -1) {
-          console.log("deleting previous playlist pic: " + pl.img);
-          uploadCtr.deleteFile(pl.img).catch((err) => console.log(err, err.stack));
-        }
-        function actualUpdate(newFilename) {
-          userModel.setPlaylistImg(p.uId, p.id, newFilename || p.img, cb);
-        }*/
       if (img.indexOf('blank') == -1)
-        uploadCtr.renameTo(img, imgPath, function () {
-          cb(pl);
+        uploadCtr.renameTo(img, imgPath, (error) =>
+          error ? cb({ error: `failed to rename playlist image` }) : cb(pl),
+        );
+      else {
+        cb(pl);
+        uploadCtr.deleteFile(imgPath).catch(() => {
+          /* nothing to do if file did not exist */
         });
-      else cb(pl);
+      }
     });
   },
 };

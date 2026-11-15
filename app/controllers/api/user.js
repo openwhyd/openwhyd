@@ -144,42 +144,80 @@ const fieldSetters = {
   },
   img: function (p, cb) {
     userModel.fetchByUid(p._id, async function (user) {
-      if (hasProfileImage(user)) {
-        console.log('deleting previous profile pic: ' + user.img);
+      const oldImageToDelete = hasProfileImage(user) ? user.img : null;
+      let newFilename;
+      try {
+        newFilename = hasProfileImage(p)
+          ? await new Promise((resolve, reject) =>
+              uploadCtr.moveTo(
+                p.img,
+                uploadCtr.config.uAvatarImgDir,
+                (err, newFilename) =>
+                  err
+                    ? reject(`error moving profile image`)
+                    : resolve(newFilename),
+              ),
+            )
+          : p.img;
+      } catch (e) {
+        console.error('error handling profile image update:', e);
+        cb({ error: 'profile image update failed' });
+        return;
+      }
+      defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
+      if (oldImageToDelete && oldImageToDelete !== newFilename) {
+        console.log('deleting previous profile pic: ' + oldImageToDelete);
         await uploadCtr
-          .deleteFile(user.img)
+          .deleteFile(oldImageToDelete)
           .catch(() =>
-            console.log(
-              'failed to delete existing profile image in fieldSetters.img',
+            console.trace(
+              'failed to delete existing profile image in fieldSetters.img: ',
+              oldImageToDelete,
             ),
           );
       }
-      const newFilename = hasProfileImage(p)
-        ? await new Promise((resolve) =>
-            uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, resolve),
-          )
-        : p.img;
-      defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
       // TODO: inform Auth0, if applicable
     });
   },
   cvrImg: function (p, cb) {
     userModel.fetchByUid(p._id, function (user) {
-      if (user.cvrImg && user.cvrImg.indexOf('blank') == -1) {
-        console.log('deleting previous cover image: ' + user.cvrImg);
-        uploadCtr
-          .deleteFile(user.cvrImg)
-          .catch((err) => console.log(err, err.stack));
-      }
+      const oldImageToDelete =
+        user.cvrImg && user.cvrImg.indexOf('blank') == -1 ? user.cvrImg : null;
+      /**
+       * @param {string|null} newFilename
+       */
       function actualUpdate(newFilename) {
-        defaultSetter('cvrImg')(
-          { _id: p._id, cvrImg: newFilename || p.cvrImg },
-          cb,
-        );
+        if (!newFilename) {
+          userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
+        } else {
+          defaultSetter('cvrImg')(
+            { _id: p._id, cvrImg: newFilename || p.cvrImg },
+            cb,
+          );
+        }
+        if (oldImageToDelete && oldImageToDelete !== newFilename) {
+          console.log('deleting previous cover image: ' + oldImageToDelete);
+          uploadCtr
+            .deleteFile(oldImageToDelete)
+            .catch((err) =>
+              console.trace(
+                'failed to delete existing cover image in fieldSetters.cvrImg: ',
+                oldImageToDelete,
+                err,
+              ),
+            );
+        }
       }
       if (p.cvrImg.indexOf('blank') == -1)
-        uploadCtr.moveTo(p.cvrImg, uploadCtr.config.uCoverImgDir, actualUpdate);
-      else userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
+        uploadCtr.moveTo(
+          p.cvrImg,
+          uploadCtr.config.uCoverImgDir,
+          (err, newFilename) =>
+            err
+              ? cb({ error: 'error moving cover image' })
+              : actualUpdate(newFilename),
+        );
+      else actualUpdate(null); // remove cvrImg attribute
     });
   },
   pwd: function (p, cb, features) {

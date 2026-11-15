@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const config = require('../models/config.js');
 const postModel = require('../models/post.js');
 const { isObjectId } = require('../models/mongodb.js');
@@ -39,6 +40,11 @@ for (const i in dirsToCreate)
     //console.log("Did not create directory:", dirsToCreate[i]);
   }
 
+// files can only be read, moved or deleted from these directories
+const userDataDirs = dirsToCreate.map((dir) => path.resolve(dir) + path.sep);
+// files can only be moved from this directory (i.e. freshly uploaded files)
+const uploadDirs = [path.resolve(exports.config.uploadPath) + path.sep];
+
 exports.getPlaylistImagePath = ({ uId, id }) =>
   exports.config.uPlaylistDir + '/' + uId + '_' + id;
 
@@ -63,49 +69,77 @@ exports.cleanFilePath = function (filepath) {
   return filepath.replace(exports.config.whydPath, '');
 };
 
-exports.actualFilePath = function (filepath) {
-  if (!filepath || filepath.indexOf(exports.config.whydPath) == 0)
-    return filepath;
-  else
-    return (filepath =
-      exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath);
+/**
+ * @param {string} filepath
+ * @param {string[]} [allowedDirs] absolute paths, ending with a path separator
+ * @returns {string} the resolved absolute path of the file
+ * @throws if the file is not located in one of the allowed directories
+ */
+exports.actualFilePath = function (filepath, allowedDirs = userDataDirs) {
+  if (typeof filepath !== 'string' || !filepath)
+    throw new Error(`invalid file path: ${filepath}`);
+  const actualPath =
+    filepath.indexOf(exports.config.whydPath) === 0
+      ? filepath
+      : exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath;
+  const resolvedPath = path.resolve(actualPath);
+  if (!allowedDirs.some((dir) => resolvedPath.startsWith(dir)))
+    throw new Error(`file path is not in an allowed directory: ${filepath}`);
+  return resolvedPath;
 };
 
-exports.deleteFile = function (_filepath) {
+exports.deleteFile = async function (_filepath) {
   const filepath = exports.actualFilePath(_filepath);
   console.log('deleting ' + filepath);
   return fs.promises.unlink(filepath);
 };
 
+/**
+ * Moves a freshly uploaded file (must be in the upload directory) to a user data directory.
+ * If the rename fails, the original file will be deleted to avoid leaving it behind.
+ * @param {string} filename
+ * @param {string} toFilename
+ * @param {(err: Error|null, newFilename?: string) => void} callback
+ */
 exports.renameTo = function (filename, toFilename, callback) {
-  //console.log("uploadedFile.renameTo", filename, toFilename);
   function error(e) {
-    if (callback) callback();
     console.trace('renameTo ERROR:', e);
+    if (callback) callback(e);
   }
   if (!filename || !toFilename)
     return error(
       'invalid filename or toFilename: ' + filename + ', ' + toFilename,
     );
   try {
-    const actualFilename = exports.actualFilePath(filename);
+    const actualFilename = exports.actualFilePath(filename, uploadDirs);
     const actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
-    fs.rename(actualFilename, actualToFilename, function () {
-      callback && callback(toFilename);
+    fs.rename(actualFilename, actualToFilename, (err) => {
+      if (err) {
+        // don't leave the uploaded file behind
+        exports.deleteFile(actualFilename).catch(() => {});
+        error(err);
+      } else {
+        callback?.(null, toFilename);
+      }
     });
   } catch (e) {
     error(e);
   }
 };
 
+/**
+ * @param {string} filename
+ * @param {string} toPath
+ * @param {(err: Error|null, newFilename?: string) => void} callback
+ */
 exports.moveTo = function (filename, toPath, callback) {
   //console.log("uploadedFile.moveTo", filename, toPath);
   if (!filename || !toPath) {
-    if (callback) callback();
     console.log(
       'ERROR: invalid filename or toPath: ' + filename + ', ' + toPath,
     );
+    callback?.(new Error(`invalid filename or toPath: ${filename}, ${toPath}`));
     return filename;
   }
   const newFilename = toPath + '/' + filename.split('/').pop();
