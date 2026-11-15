@@ -154,18 +154,24 @@ const fieldSetters = {
             ),
           );
       }
-      const newFilename = hasProfileImage(p)
-        ? await new Promise((resolve, reject) =>
-            uploadCtr.moveTo(
-              p.img,
-              uploadCtr.config.uAvatarImgDir,
-              (err, newFilename) =>
-                err
-                  ? reject(`error moving profile image`)
-                  : resolve(newFilename),
-            ),
-          )
-        : p.img;
+      let newFilename;
+      try {
+        newFilename = hasProfileImage(p)
+          ? await new Promise((resolve, reject) =>
+              uploadCtr.moveTo(
+                p.img,
+                uploadCtr.config.uAvatarImgDir,
+                (err, newFilename) =>
+                  err
+                    ? reject(`error moving profile image`)
+                    : resolve(newFilename),
+              ),
+            )
+          : p.img;
+      } catch (e) {
+        console.error('error handling profile image update:', e);
+        cb({ error: 'profile image update failed' });
+      }
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
       // TODO: inform Auth0, if applicable
     });
