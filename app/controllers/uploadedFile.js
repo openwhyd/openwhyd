@@ -76,7 +76,7 @@ exports.actualFilePath = function (filepath) {
   if (typeof filepath !== 'string' || !filepath)
     throw new Error(`invalid file path: ${filepath}`);
   const actualPath =
-    filepath.indexOf(exports.config.whydPath) == 0
+    filepath.indexOf(exports.config.whydPath) === 0
       ? filepath
       : exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath;
   const resolvedPath = path.resolve(actualPath);
