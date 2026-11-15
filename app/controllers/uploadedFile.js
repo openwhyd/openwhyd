@@ -78,6 +78,7 @@ exports.deleteFile = function (_filepath) {
 };
 
 /**
+ * If the rename fails, the original file will be deleted to avoid leaving it behind.
  * @param {string} filename
  * @param {string} toFilename
  * @param {(err: Error|null, newFilename?: string) => void} callback
@@ -96,8 +97,13 @@ exports.renameTo = function (filename, toFilename, callback) {
     const actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
     fs.rename(actualFilename, actualToFilename, (err) => {
-      if (err) error(err);
-      else callback?.(null, toFilename);
+      if (err) {
+        // don't leave the uploaded file behind
+        exports.deleteFile(filename).catch(() => {});
+        error(err);
+      } else {
+        callback?.(null, toFilename);
+      }
     });
   } catch (e) {
     error(e);
