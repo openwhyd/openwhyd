@@ -101,10 +101,6 @@ function prepareFeedVars(posts, options) {
       options.user.id +
       '/playlist/' +
       feedVars.playlist.id;
-    feedVars.playlist.urlEncoded = encodeURIComponent(feedVars.playlist.url);
-    feedVars.playlist.urlEncodedTweet = encodeURIComponent(
-      '♫ ' + feedVars.playlist.name /*+ ' ' + feedVars.playlist.url*/,
-    );
     feedVars.playlist.nbTracks =
       feedVars.playlist.nbTracks || (posts ? posts.length : 'no');
     feedVars.trackOrderUrl =

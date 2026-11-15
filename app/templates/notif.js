@@ -16,9 +16,7 @@ const { getSuggestedUsers } = require('../models/featuredUsers.js');
 const urlPrefix = config.urlPrefix;
 const FEEDBACK_EMAIL = config.feedbackEmail;
 const FEEDBACK_FOOTER =
-  "P.S  : We'd love your feedback! We're all ears at " +
-  FEEDBACK_EMAIL +
-  ', and you can follow @open_whyd on twitter.';
+  "P.S  : We'd love your feedback! We're all ears at " + FEEDBACK_EMAIL + '.';
 
 const MAX_HOT_TRACKS = 3,
   MAX_RECOM_USERS = 4,
@@ -130,12 +128,9 @@ exports.generateRegWelcome = function (user, inviteSender) {
     'Never stop jamming!',
     ' - Tony',
     //FEEDBACK_FOOTER
-    "PS: I'd love to hear all of your feedback, and I'm here to answer any questions, just email me! " +
-      renderLink('tony@openwhyd.org', 'mailto:tony@openwhyd.org'),
-    'Follow us ' +
-      renderLink('@open_whyd on Twitter', 'http://twitter.com/open_whyd') +
-      ' and definitely Like ' +
-      renderLink('our Facebook page!', 'http://facebook.com/openwhyd'),
+    "PS: We'd love to hear your feedback, so feel free to email us! " +
+      renderLink(FEEDBACK_EMAIL, 'mailto:' + FEEDBACK_EMAIL),
+    'Like ' + renderLink('our Facebook page!', 'http://facebook.com/openwhyd'),
   ]);
 };
 
