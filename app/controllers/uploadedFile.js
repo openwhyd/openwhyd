@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const config = require('../models/config.js');
 const postModel = require('../models/post.js');
 const { isObjectId } = require('../models/mongodb.js');
@@ -39,6 +40,9 @@ for (const i in dirsToCreate)
     //console.log("Did not create directory:", dirsToCreate[i]);
   }
 
+// files can only be read, moved or deleted from these directories
+const userDataDirs = dirsToCreate.map((dir) => path.resolve(dir) + path.sep);
+
 exports.getPlaylistImagePath = ({ uId, id }) =>
   exports.config.uPlaylistDir + '/' + uId + '_' + id;
 
@@ -63,15 +67,25 @@ exports.cleanFilePath = function (filepath) {
   return filepath.replace(exports.config.whydPath, '');
 };
 
+/**
+ * @param {string} filepath
+ * @returns {string} the path of the file, prefixed with whydPath if needed
+ * @throws if the file is not located in one of the user data directories
+ */
 exports.actualFilePath = function (filepath) {
-  if (!filepath || filepath.indexOf(exports.config.whydPath) == 0)
-    return filepath;
-  else
-    return (filepath =
-      exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath);
+  if (typeof filepath !== 'string' || !filepath)
+    throw new Error(`invalid file path: ${filepath}`);
+  const actualPath =
+    filepath.indexOf(exports.config.whydPath) == 0
+      ? filepath
+      : exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath;
+  const resolvedPath = path.resolve(actualPath);
+  if (!userDataDirs.some((dir) => resolvedPath.startsWith(dir)))
+    throw new Error(`file path is not in a user data directory: ${filepath}`);
+  return actualPath;
 };
 
-exports.deleteFile = function (_filepath) {
+exports.deleteFile = async function (_filepath) {
   const filepath = exports.actualFilePath(_filepath);
   console.log('deleting ' + filepath);
   return fs.promises.unlink(filepath);
