@@ -88,7 +88,7 @@
     "@types/express": "^5.0.1",
     "@types/node": "^26.0.0",
     "approvals": "^7.3.0",
-    "ava": "^6.2.0",
+    "ava": "^8.4.0",
     "cypress": "^15.21.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-log-to-output": "^1.1.2",
