@@ -77,11 +77,15 @@ exports.deleteFile = function (_filepath) {
   return fs.promises.unlink(filepath);
 };
 
+/**
+ * @param {string} filename
+ * @param {string} toFilename
+ * @param {(err: Error|null, newFilename?: string) => void} callback
+ */
 exports.renameTo = function (filename, toFilename, callback) {
-  //console.log("uploadedFile.renameTo", filename, toFilename);
   function error(e) {
-    if (callback) callback();
     console.trace('renameTo ERROR:', e);
+    if (callback) callback(e);
   }
   if (!filename || !toFilename)
     return error(
@@ -91,21 +95,27 @@ exports.renameTo = function (filename, toFilename, callback) {
     const actualFilename = exports.actualFilePath(filename);
     const actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
-    fs.rename(actualFilename, actualToFilename, function () {
-      callback && callback(toFilename);
-    });
+    fs.promises
+      .rename(actualFilename, actualToFilename)
+      .then(() => callback?.(null, toFilename))
+      .catch(error);
   } catch (e) {
     error(e);
   }
 };
 
+/**
+ * @param {string} filename
+ * @param {string} toPath
+ * @param {(err: Error|null, newFilename?: string) => void} callback
+ */
 exports.moveTo = function (filename, toPath, callback) {
   //console.log("uploadedFile.moveTo", filename, toPath);
   if (!filename || !toPath) {
-    if (callback) callback();
     console.log(
       'ERROR: invalid filename or toPath: ' + filename + ', ' + toPath,
     );
+    callback?.(new Error(`invalid filename or toPath: ${filename}, ${toPath}`));
     return filename;
   }
   const newFilename = toPath + '/' + filename.split('/').pop();

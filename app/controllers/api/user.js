@@ -155,8 +155,15 @@ const fieldSetters = {
           );
       }
       const newFilename = hasProfileImage(p)
-        ? await new Promise((resolve) =>
-            uploadCtr.moveTo(p.img, uploadCtr.config.uAvatarImgDir, resolve),
+        ? await new Promise((resolve, reject) =>
+            uploadCtr.moveTo(
+              p.img,
+              uploadCtr.config.uAvatarImgDir,
+              (err, newFilename) =>
+                err
+                  ? reject(`error moving profile image`)
+                  : resolve(newFilename),
+            ),
           )
         : p.img;
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
@@ -178,7 +185,14 @@ const fieldSetters = {
         );
       }
       if (p.cvrImg.indexOf('blank') == -1)
-        uploadCtr.moveTo(p.cvrImg, uploadCtr.config.uCoverImgDir, actualUpdate);
+        uploadCtr.moveTo(
+          p.cvrImg,
+          uploadCtr.config.uCoverImgDir,
+          (err, newFilename) =>
+            err
+              ? cb({ error: 'error moving cover image' })
+              : actualUpdate(newFilename),
+        );
       else userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
     });
   },
