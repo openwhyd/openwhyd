@@ -114,14 +114,16 @@ exports.renameTo = function (filename, toFilename, callback) {
     const actualFilename = exports.actualFilePath(filename, uploadDirs);
     const actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
-    fs.rename(actualFilename, actualToFilename, (err) => {
+
+    // Copy+delete instead of rename, so it works across different filesystems too
+    fs.copyFile(actualFilename, actualToFilename, (err) => {
       if (err) {
-        // don't leave the uploaded file behind
-        exports.deleteFile(actualFilename).catch(() => {});
         error(err);
       } else {
         callback?.(null, toFilename);
       }
+      // in both cases, don't leave the uploaded file behind
+      exports.deleteFile(actualFilename).catch(() => {});
     });
   } catch (e) {
     error(e);
