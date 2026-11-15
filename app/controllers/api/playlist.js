@@ -47,7 +47,7 @@ exports.actions = {
     if (typeof uId !== 'string') {
       return cb({ error: 'invalid uId parameter' });
     }
-    if (typeof id !== 'string') {
+    if (typeof id !== 'string' || !/^\d+$/.test(id)) {
       return cb({ error: 'invalid id parameter' });
     }
     const imgPath = uploadCtr.getPlaylistImagePath({ uId, id });

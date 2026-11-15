@@ -42,6 +42,8 @@ for (const i in dirsToCreate)
 
 // files can only be read, moved or deleted from these directories
 const userDataDirs = dirsToCreate.map((dir) => path.resolve(dir) + path.sep);
+// files can only be moved from this directory (i.e. freshly uploaded files)
+const uploadDirs = [path.resolve(exports.config.uploadPath) + path.sep];
 
 exports.getPlaylistImagePath = ({ uId, id }) =>
   exports.config.uPlaylistDir + '/' + uId + '_' + id;
@@ -69,10 +71,11 @@ exports.cleanFilePath = function (filepath) {
 
 /**
  * @param {string} filepath
- * @returns {string} the path of the file, prefixed with whydPath if needed
- * @throws if the file is not located in one of the user data directories
+ * @param {string[]} [allowedDirs] absolute paths, ending with a path separator
+ * @returns {string} the resolved absolute path of the file
+ * @throws if the file is not located in one of the allowed directories
  */
-exports.actualFilePath = function (filepath) {
+exports.actualFilePath = function (filepath, allowedDirs = userDataDirs) {
   if (typeof filepath !== 'string' || !filepath)
     throw new Error(`invalid file path: ${filepath}`);
   const actualPath =
@@ -80,9 +83,9 @@ exports.actualFilePath = function (filepath) {
       ? filepath
       : exports.config.whydPath + (filepath[0] != '/' ? '/' : '') + filepath;
   const resolvedPath = path.resolve(actualPath);
-  if (!userDataDirs.some((dir) => resolvedPath.startsWith(dir)))
-    throw new Error(`file path is not in a user data directory: ${filepath}`);
-  return actualPath;
+  if (!allowedDirs.some((dir) => resolvedPath.startsWith(dir)))
+    throw new Error(`file path is not in an allowed directory: ${filepath}`);
+  return resolvedPath;
 };
 
 exports.deleteFile = async function (_filepath) {
@@ -92,6 +95,7 @@ exports.deleteFile = async function (_filepath) {
 };
 
 /**
+ * Moves a freshly uploaded file (must be in the upload directory) to a user data directory.
  * If the rename fails, the original file will be deleted to avoid leaving it behind.
  * @param {string} filename
  * @param {string} toFilename
@@ -107,13 +111,13 @@ exports.renameTo = function (filename, toFilename, callback) {
       'invalid filename or toFilename: ' + filename + ', ' + toFilename,
     );
   try {
-    const actualFilename = exports.actualFilePath(filename);
+    const actualFilename = exports.actualFilePath(filename, uploadDirs);
     const actualToFilename = exports.actualFilePath(toFilename);
     console.log('renaming/moving', actualFilename, 'to', actualToFilename);
     fs.rename(actualFilename, actualToFilename, (err) => {
       if (err) {
         // don't leave the uploaded file behind
-        exports.deleteFile(filename).catch(() => {});
+        exports.deleteFile(actualFilename).catch(() => {});
         error(err);
       } else {
         callback?.(null, toFilename);
