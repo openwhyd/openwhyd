@@ -1,3 +1,10 @@
+## [1.65.7](https://github.com/openwhyd/openwhyd/compare/v1.65.6...v1.65.7) (2026-11-25)
+
+
+### Bug Fixes
+
+* **upload:** image ownership checks, generic API errors, less error log noise ([#1005](https://github.com/openwhyd/openwhyd/issues/1005)) ([563c685](https://github.com/openwhyd/openwhyd/commit/563c685f5ab57b206074abfcd0f22dfa4eab88dd))
+
 ## [1.65.6](https://github.com/openwhyd/openwhyd/compare/v1.65.5...v1.65.6) (2026-11-15)
 
 
