@@ -115,7 +115,8 @@ function processFile(file, options, callback) {
           if (error) thumbError = thumbError || error;
           result.thumbs[thumbDim] = uploadCtr.cleanFilePath(thumbFile);
           result.path = result.thumbs[thumbDim];
-          if (--remaining === 0) whenDone();
+          remaining -= 1;
+          if (remaining === 0) whenDone();
         });
       }
     } else whenDone();
@@ -171,7 +172,8 @@ exports.controller = async function (req, requestParams, res) {
   const processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
       results[i] = result;
-      if (--remaining === 0) {
+      remaining -= 1;
+      if (remaining === 0) {
         console.log('[upload] controller completed', result);
         res.legacyRender(results, null, { 'content-type': 'text/plain' });
       }
