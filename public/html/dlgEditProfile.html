@@ -196,9 +196,14 @@
     }
 
     var $profileForm = $dlg.find('#profileForm');
+    var $btnSave = $profileForm.find('.btnSave');
+    var submitting = false; // prevents duplicate requests, e.g. on double-click
 
     $profileForm.submit(function (e) {
       e.preventDefault();
+      if (submitting) return false;
+      submitting = true;
+      $btnSave.attr('disabled', 'disabled');
       var data = {};
       $profileForm.find('*[name]').each(function (i, elt) {
         data[elt.name] = elt.value;
@@ -211,6 +216,17 @@
         url: '/api/user',
         data: data,
         success: function (result) {
+          if (result && result.error) {
+            submitting = false;
+            $btnSave.removeAttr('disabled');
+            showMessage(
+              typeof result.error === 'string'
+                ? 'Oops! ' + result.error + '. Please try again!'
+                : 'Oops! something went wrong... Please try again!',
+              true,
+            );
+            return;
+          }
           // update user avatars on page
           if (changedAvatar)
             refreshBackgroundImg(
@@ -225,6 +241,8 @@
         },
         error: function (result) {
           console.log('error', result);
+          submitting = false;
+          $btnSave.removeAttr('disabled');
           showMessage('Oops! something went wrong... Please try again!', true);
         },
       });

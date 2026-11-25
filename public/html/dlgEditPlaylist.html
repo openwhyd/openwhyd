@@ -203,13 +203,18 @@
       $playlistForm.submit();
     });
 
+    var submitting = false; // prevents duplicate requests, e.g. on double-click
+
     $playlistForm.submit(function (e) {
+      e.preventDefault();
+      if (submitting) return false;
+      submitting = true;
+      $btnSave.attr('disabled', 'disabled');
       var data = {
         action: window.pagePlaylist ? 'rename' : 'create',
         name: $('input[name=name]').val(),
       };
       if (window.pagePlaylist) data.id = window.pagePlaylist.id;
-      e.preventDefault();
       $.ajax({
         type: 'POST',
         url: '/api/playlist',
@@ -244,6 +249,8 @@
         },
         error: function (result) {
           console.log('error', result);
+          submitting = false;
+          $btnSave.removeAttr('disabled');
           showMessage('Oops! something went wrong... Please try again!', true);
         },
       });

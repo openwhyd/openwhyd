@@ -106,7 +106,12 @@
 
     $('#uploadImage').click(switchToUploadPage);
 
+    var saving = false; // prevents duplicate requests, e.g. on double-click
+
     function save(url) {
+      if (saving) return;
+      saving = true;
+      $('#btnSave, #deleteImage').attr('disabled', 'disabled');
       if (url)
         $.ajax({
           type: 'POST',

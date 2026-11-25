@@ -103,7 +103,9 @@ exports.deleteFile = async function (_filepath) {
  */
 exports.renameTo = function (filename, toFilename, callback) {
   function error(e) {
-    console.trace('renameTo ERROR:', e);
+    console.error(
+      `[uploadedFile] renameTo ERROR: ${e?.message ?? e} (from: ${filename}, to: ${toFilename})`,
+    );
     if (callback) callback(e);
   }
   if (!filename || !toFilename)
@@ -122,13 +124,28 @@ exports.renameTo = function (filename, toFilename, callback) {
 
     // Copy+delete instead of rename, so it works across different filesystems too
     fs.copyFile(actualFilename, actualToFilename, (err) => {
-      if (err) {
-        error(err);
-      } else {
+      if (!err) {
         callback?.(null, toFilename);
+        // don't leave the uploaded file behind
+        exports.deleteFile(actualFilename).catch(() => {});
+      } else if (
+        err.code === 'ENOENT' &&
+        path.basename(actualFilename) === path.basename(actualToFilename) &&
+        fs.existsSync(actualToFilename)
+      ) {
+        // the uploaded file was already moved (with the same name), e.g. by a
+        // concurrent request caused by a double-click on a "save" button
+        // => consider it a success
+        console.warn(
+          '[uploadedFile] renameTo: source file not found, but destination already exists => skipping:',
+          actualToFilename,
+        );
+        callback?.(null, toFilename);
+      } else {
+        error(err);
+        // don't leave the uploaded file behind
+        exports.deleteFile(actualFilename).catch(() => {});
       }
-      // in both cases, don't leave the uploaded file behind
-      exports.deleteFile(actualFilename).catch(() => {});
     });
   } catch (e) {
     error(e);

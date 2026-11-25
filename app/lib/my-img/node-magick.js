@@ -40,9 +40,18 @@ var magickCommand = function (obj) {
   obj.__run = function (cmd, args, callback) {
     args.unshift(cmd);
     cmd = 'gm';
-    console.log('running command: ' + cmd + ' ' + args.join(' '));
-    childProcess.exec(cmd + ' ' + args.join(' '), function () {
-      callback();
+    const command = cmd + ' ' + args.join(' ');
+    console.log('running command: ' + command);
+    childProcess.exec(command, function (error, stdout, stderr) {
+      if (error) {
+        const details = `${stderr || error.message || error}`
+          .trim()
+          .replace(/\s+/g, ' ');
+        console.error(
+          `[my.img] ERROR: command failed (code: ${error.code}): ${command} => ${details}`,
+        );
+      }
+      callback(error);
     });
   };
   return obj;

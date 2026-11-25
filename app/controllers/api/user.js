@@ -25,6 +25,9 @@ const uploadCtr = require('../uploadedFile.js');
 // for when called through subdir controller
 const SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
 
+const PROFILE_IMAGE_UPDATE_FAILED = 'profile image update failed';
+const COVER_IMAGE_UPDATE_FAILED = 'error moving cover image';
+
 function addUserInfo(userSub, mySub) {
   const mySubIdSet = {};
   if (mySub) for (const i in mySub) mySubIdSet[mySub[i].id] = true;
@@ -153,15 +156,13 @@ const fieldSetters = {
                 p.img,
                 uploadCtr.config.uAvatarImgDir,
                 (err, newFilename) =>
-                  err
-                    ? reject(`error moving profile image`)
-                    : resolve(newFilename),
+                  err ? reject(err) : resolve(newFilename),
               ),
             )
           : p.img;
       } catch (e) {
-        console.error('error handling profile image update:', e);
-        cb({ error: 'profile image update failed' });
+        // Note: the error was already logged by uploadCtr.renameTo()
+        cb({ error: PROFILE_IMAGE_UPDATE_FAILED });
         return;
       }
       defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
@@ -214,7 +215,7 @@ const fieldSetters = {
           uploadCtr.config.uCoverImgDir,
           (err, newFilename) =>
             err
-              ? cb({ error: 'error moving cover image' })
+              ? cb({ error: COVER_IMAGE_UPDATE_FAILED })
               : actualUpdate(newFilename),
         );
       else actualUpdate(null); // remove cvrImg attribute
@@ -443,6 +444,8 @@ const USER_ERRORS = [
   'Special characters are not allowed',
   'This username is taken by another user',
   'user not logged in',
+  PROFILE_IMAGE_UPDATE_FAILED, // cause already logged by uploadCtr.renameTo()
+  COVER_IMAGE_UPDATE_FAILED, // cause already logged by uploadCtr.renameTo()
 ];
 
 function localRendering(reqParams, r) {
