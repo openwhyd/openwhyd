@@ -44,7 +44,7 @@ function processFile(file, options, callback) {
   if (!file || !filepath) {
     console.warn('[upload] no file received', { uId });
     return callback({ error: ERR_UPLOAD_FAILED });
-  } else if (!mimetype || mimetype.indexOf('image/') != 0) {
+  } else if (!mimetype || !mimetype.startsWith('image/')) {
     console.warn(`[upload] rejected non-image file`, { mimetype, name, uId });
     uploadCtr.deleteFile(filepath).catch(() => {});
     return callback({ error: ERR_NOT_AN_IMAGE });
@@ -115,7 +115,7 @@ function processFile(file, options, callback) {
           if (error) thumbError = thumbError || error;
           result.thumbs[thumbDim] = uploadCtr.cleanFilePath(thumbFile);
           result.path = result.thumbs[thumbDim];
-          if (--remaining == 0) whenDone();
+          if (--remaining === 0) whenDone();
         });
       }
     } else whenDone();
@@ -171,7 +171,7 @@ exports.controller = async function (req, requestParams, res) {
   const processAndPushFile = function (i) {
     processFile(files[i], options, function (result) {
       results[i] = result;
-      if (--remaining == 0) {
+      if (--remaining === 0) {
         console.log('[upload] controller completed', result);
         res.legacyRender(results, null, { 'content-type': 'text/plain' });
       }

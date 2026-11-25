@@ -195,7 +195,8 @@ jobs:
         with:
           # default is "latest" (bleeding-edge Chromium snapshot), which can break Cypress,
           # e.g. "Error: * is not a valid URL" with Chromium 158.0.8120.0 and Cypress 14.5.4
-          chrome-version: stable
+          # => pinned to 157, as Chrome 158 (stable since 2026-11) still breaks Cypress 15.21.1 the same way
+          chrome-version: 157
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV
@@ -269,7 +270,8 @@ jobs:
         with:
           # default is "latest" (bleeding-edge Chromium snapshot), which can break Cypress,
           # e.g. "Error: * is not a valid URL" with Chromium 158.0.8120.0 and Cypress 14.5.4
-          chrome-version: stable
+          # => pinned to 157, as Chrome 158 (stable since 2026-11) still breaks Cypress 15.21.1 the same way
+          chrome-version: 157
       - run: |
           echo "Chrome version: $(chrome --version)"
           echo "BROWSER_PATH=$(which chrome)" >> $GITHUB_ENV

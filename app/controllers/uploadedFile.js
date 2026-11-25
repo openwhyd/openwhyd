@@ -133,9 +133,14 @@ exports.renameTo = function (filename, toFilename, uploaderId, callback) {
     );
     if (callback) callback(e instanceof Error ? e : new Error(e));
   }
-  if (!filename || !toFilename) return error('invalid filename or toFilename');
-  if (!exports.isUploadedBy(uploaderId, filename))
-    return error('file was not uploaded by this user'); // and don't delete it!
+  if (!filename || !toFilename) {
+    error('invalid filename or toFilename');
+    return;
+  }
+  if (!exports.isUploadedBy(uploaderId, filename)) {
+    error('file was not uploaded by this user'); // and don't delete it!
+    return;
+  }
   try {
     const actualFilename = exports.actualFilePath(filename, uploadDirs);
     const actualToFilename = exports.actualFilePath(toFilename);
