@@ -95,21 +95,52 @@ exports.deleteFile = async function (_filepath) {
 };
 
 /**
- * Moves a freshly uploaded file (must be in the upload directory) to a user data directory.
+ * Returns the name to give to a file uploaded by a given user, so that we can
+ * check later that it is only used/manipulated by that user.
+ * @param {string} uploaderId
+ * @param {string} filename
+ */
+exports.makeUploadedFileName = (uploaderId, filename) =>
+  `${uploaderId}_${path.basename(filename)}`;
+
+/**
+ * @param {string} uploaderId
+ * @param {string} filepath
+ * @returns {boolean} true if the file is located in the upload directory, and was uploaded by that user
+ */
+exports.isUploadedBy = function (uploaderId, filepath) {
+  if (typeof uploaderId !== 'string' || !uploaderId) return false;
+  try {
+    const actualPath = exports.actualFilePath(filepath, uploadDirs);
+    return path.basename(actualPath).startsWith(`${uploaderId}_`);
+  } catch (err) {
+    return false;
+  }
+};
+
+/**
+ * Moves a freshly uploaded file (must be in the upload directory, and uploaded by `uploaderId`) to a user data directory.
  * If the rename fails, the original file will be deleted to avoid leaving it behind.
  * @param {string} filename
  * @param {string} toFilename
+ * @param {string} uploaderId - id of the user who is moving the file => must be the one who uploaded it
  * @param {(err: Error|null, newFilename?: string) => void} callback
  */
-exports.renameTo = function (filename, toFilename, callback) {
+exports.renameTo = function (filename, toFilename, uploaderId, callback) {
   function error(e) {
-    console.trace('renameTo ERROR:', e);
-    if (callback) callback(e);
-  }
-  if (!filename || !toFilename)
-    return error(
-      'invalid filename or toFilename: ' + filename + ', ' + toFilename,
+    console.error(
+      `[uploadedFile] renameTo ERROR: ${e?.message ?? e} (from: ${filename}, to: ${toFilename}, uId: ${uploaderId})`,
     );
+    if (callback) callback(e instanceof Error ? e : new Error(e));
+  }
+  if (!filename || !toFilename) {
+    error('invalid filename or toFilename');
+    return;
+  }
+  if (!exports.isUploadedBy(uploaderId, filename)) {
+    error('file was not uploaded by this user'); // and don't delete it!
+    return;
+  }
   try {
     const actualFilename = exports.actualFilePath(filename, uploadDirs);
     const actualToFilename = exports.actualFilePath(toFilename);
@@ -122,11 +153,8 @@ exports.renameTo = function (filename, toFilename, callback) {
 
     // Copy+delete instead of rename, so it works across different filesystems too
     fs.copyFile(actualFilename, actualToFilename, (err) => {
-      if (err) {
-        error(err);
-      } else {
-        callback?.(null, toFilename);
-      }
+      if (err) error(err);
+      else callback?.(null, toFilename);
       // in both cases, don't leave the uploaded file behind
       exports.deleteFile(actualFilename).catch(() => {});
     });
@@ -138,21 +166,29 @@ exports.renameTo = function (filename, toFilename, callback) {
 /**
  * @param {string} filename
  * @param {string} toPath
+ * @param {string} uploaderId - id of the user who is moving the file => must be the one who uploaded it
  * @param {(err: Error|null, newFilename?: string) => void} callback
  */
-exports.moveTo = function (filename, toPath, callback) {
-  //console.log("uploadedFile.moveTo", filename, toPath);
+exports.moveTo = function (filename, toPath, uploaderId, callback) {
   if (!filename || !toPath) {
-    console.log(
-      'ERROR: invalid filename or toPath: ' + filename + ', ' + toPath,
+    console.error(
+      `[uploadedFile] moveTo ERROR: invalid filename or toPath: ${filename}, ${toPath}`,
     );
-    callback?.(new Error(`invalid filename or toPath: ${filename}, ${toPath}`));
+    callback?.(new Error(`invalid filename or toPath`));
     return filename;
   }
-  const newFilename = toPath + '/' + filename.split('/').pop();
-  exports.renameTo(filename, newFilename, callback);
+  const newFilename = exports.getMovedFilePath(filename, toPath);
+  exports.renameTo(filename, newFilename, uploaderId, callback);
   return newFilename;
 };
+
+/**
+ * @param {string} filename
+ * @param {string} toPath
+ * @returns {string} the path that `filename` will have after being moved to `toPath` by `moveTo()`
+ */
+exports.getMovedFilePath = (filename, toPath) =>
+  toPath + '/' + filename.split('/').pop();
 
 exports.controller = async function (request, reqParams, response) {
   function renderNoImage() {

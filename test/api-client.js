@@ -255,6 +255,28 @@ exports.getPlaylistTracks = function (jar, uId, plId, callback) {
 };
 
 /**
+ * Requests the deletion of an uploaded file.
+ * @param {*} jar
+ * @param {string} id - name of the uploaded file
+ * @returns {Promise<{ response: { statusCode: number }, body: any }>}
+ */
+exports.deleteUploadedFile = function (jar, id) {
+  return new Promise((resolve, reject) =>
+    fetchRequest(
+      'POST',
+      {
+        jar,
+        url: `${URL_PREFIX}/upload`,
+        form: { action: 'delete', id },
+        json: true,
+      },
+      (error, response, body) =>
+        error ? reject(error) : resolve({ response, body }),
+    ),
+  );
+};
+
+/**
  * Uploads an image.
  * @param {*} jar
  * @param {import('fs').ReadStream} dataStream - e.g. fs.createReadStream(__dirname + '/attachment1.jpg')

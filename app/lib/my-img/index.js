@@ -69,8 +69,8 @@ if (USE_GRAPHICS_MAGICK) {
   ) {
     gm.createCommand(imgPath)
       .resize(width || '', height || '')
-      .write(thumbOutput, function () {
-        if (endListener) endListener();
+      .write(thumbOutput, function (error) {
+        if (endListener) endListener(error);
       });
   };
 } else {
@@ -83,7 +83,11 @@ if (USE_GRAPHICS_MAGICK) {
     endListener,
   ) {
     const execCallback = function (error, stdout, stderr) {
-      console.log('[my.img] exec convert => ', error, stdout, stderr);
+      if (error)
+        console.error(
+          `[my.img] ERROR: convert failed (code: ${error.code}): ${`${stderr || error.message}`.trim().replace(/\s+/g, ' ')}`,
+        );
+      else console.log('[my.img] exec convert => ', stdout, stderr);
       if (endListener) endListener(error, stdout, stderr);
     };
     if (width && height)
