@@ -79,8 +79,11 @@ window.WhydImgUpload = function (options) {
           options.onImageUploadComplete(lastAvatarUrl);
       } else options.onError('Invalid image. Please try with another image!');
     } catch (e) {
+      const img = (data || {}).postImg || (data || {}).file || {};
       options.onError(
-        data.error || 'Upload did not work... Please try again!',
+        (data || {}).error ||
+          img.error ||
+          'Upload did not work... Please try again!',
         e,
       );
     }

@@ -777,7 +777,10 @@ exports.renameUser = async function (features, uid, name, callback) {
     try {
       await features.auth?.setUserProfileName(uid, name); // validates the name
     } catch (err) {
-      callback({ error: err.message }); // e.g. "String is too short (0 chars)"
+      console.warn(
+        `[user] renameUser: invalid name for ${uid}: ${err.message}`,
+      ); // e.g. "String is too short (0 chars)"
+      callback({ error: 'Invalid name' });
       return;
     }
     // update user name in other collections where it's mentionned

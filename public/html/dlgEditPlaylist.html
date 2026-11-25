@@ -142,6 +142,8 @@
         try {
           data = JSON.parse(data);
           var img = data.postImg;
+          if (data.error || (img && img.error))
+            showMessage(data.error || img.error, true);
           img.path = '' + img.path;
           var imgPath = (img.path[0] != '/' ? '/' : '') + img.path;
           if (img.mime && img.mime.indexOf('image/') == 0)

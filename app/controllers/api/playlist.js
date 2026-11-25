@@ -8,6 +8,28 @@ const postModel = require('../../models/post.js');
 const userModel = require('../../models/user.js');
 const notifModel = require('../../models/notif.js');
 const uploadCtr = require('../uploadedFile.js');
+const { sanitizeApiResponse } = require('./safeApiErrors.js');
+
+const PLAYLIST_IMAGE_UPDATE_FAILED =
+  'Your playlist image could not be updated. Please try again.';
+
+// these error messages are intended to be displayed to the user, they can be
+// returned by the API => they must not contain technical details.
+// any other error will be logged, and replaced by a generic error message.
+const USER_FACING_ERRORS = [
+  'invalid uId',
+  'invalid playlist id',
+  'playlist not found', // from features.deletePlaylist()
+  'missing parameters',
+  'invalid order',
+  'invalid img parameter',
+  'invalid uId parameter',
+  'invalid id parameter',
+  'missing id parameter',
+  'object is null', // from snip.checkMistypedFields()
+  /^(missing|mistyped|forbidden) field: \w+$/, // from snip.checkMistypedFields()
+  PLAYLIST_IMAGE_UPDATE_FAILED, // cause already logged by uploadCtr.renameTo()
+];
 
 /** @typedef {import('../../domain/OpenWhydFeatures.js').Features} Features */
 /** @typedef {Record<string, unknown>} ReqParams */
@@ -22,7 +44,7 @@ exports.actions = {
    * @param createPlaylist {import ('../../domain/api/Features').CreatePlaylist}
    */
   create: function ({ uId: userId, name }, callback, { createPlaylist }) {
-    createPlaylist(userId, name).then(callback);
+    createPlaylist(userId, name).then(callback, (error) => callback({ error }));
   },
   rename: function (p, callback) {
     userModel.renamePlaylist(p.uId, p.id, p.name, callback);
@@ -53,8 +75,9 @@ exports.actions = {
     const imgPath = uploadCtr.getPlaylistImagePath({ uId, id });
     userModel.fetchPlaylist(uId, id, function (pl) {
       if (img.indexOf('blank') == -1)
-        uploadCtr.renameTo(img, imgPath, (error) =>
-          error ? cb({ error: `failed to rename playlist image` }) : cb(pl),
+        uploadCtr.renameTo(img, imgPath, uId, (error) =>
+          // Note: error was already logged by renameTo()
+          error ? cb({ error: PLAYLIST_IMAGE_UPDATE_FAILED }) : cb(pl),
         );
       else {
         cb(pl);
@@ -92,7 +115,11 @@ exports.handlePostRequest = async function (
     function (res, args) {
       console.log(reqParams, '=>', res);
       response.legacyRender(
-        res,
+        sanitizeApiResponse(
+          `api.playlist.${reqParams.action}`,
+          res,
+          USER_FACING_ERRORS,
+        ),
         null,
         args || { 'content-type': 'application/json' },
       );

@@ -21,12 +21,15 @@ const userModel = require('../../models/user.js');
 const followModel = require('../../models/follow.js');
 const notifEmails = require('../../models/notifEmails.js');
 const uploadCtr = require('../uploadedFile.js');
+const { sanitizeApiResponse } = require('./safeApiErrors.js');
 
 // for when called through subdir controller
 const SEQUENCED_PARAMETERS = { _1: 'id', _2: 'action' }; //[null, "id", "action"];
 
-const PROFILE_IMAGE_UPDATE_FAILED = 'profile image update failed';
-const COVER_IMAGE_UPDATE_FAILED = 'error moving cover image';
+const PROFILE_IMAGE_UPDATE_FAILED =
+  'Your profile image could not be updated. Please try again.';
+const COVER_IMAGE_UPDATE_FAILED =
+  'Your cover image could not be updated. Please try again.';
 
 function addUserInfo(userSub, mySub) {
   const mySubIdSet = {};
@@ -140,40 +143,69 @@ function defaultSetter(fieldName) {
   };
 }
 
+const DEFAULT_PROFILE_IMAGE = '/images/blank_user.gif';
+
+/**
+ * Moves an image uploaded by the user to a user data directory.
+ * @param {string} uploadedImg - path of the uploaded image, must have been uploaded by `uId`
+ * @param {string} toDir - e.g. uploadCtr.config.uAvatarImgDir
+ * @param {string} uId - id of the logged in user
+ * @param {string | undefined} currentImg - path of the user's current image, from the db
+ * @returns {Promise<string>} the new path of the image
+ */
+function moveUploadedImage(uploadedImg, toDir, uId, currentImg) {
+  const newFilename = uploadCtr.getMovedFilePath(uploadedImg, toDir);
+  // in case of duplicate request (e.g. double-click on "save"), the same
+  // uploaded image may have been moved already by a previous request from the
+  // same user => no need to move it again.
+  // Note: we can't just check that the destination file exists, because it
+  // could belong to another user. (Unlike the user's current image)
+  if (currentImg && currentImg === newFilename) {
+    console.warn(
+      `[api.user] image already moved to ${newFilename} => skipping`,
+    );
+    return Promise.resolve(newFilename);
+  }
+  return new Promise((resolve, reject) =>
+    uploadCtr.moveTo(uploadedImg, toDir, '' + uId, (err, newFilename) =>
+      err ? reject(err) : resolve(newFilename),
+    ),
+  );
+}
+
 /** @type {Record<string, (params: any, cb: (any) => void, features: Features) => void>} */
 const fieldSetters = {
   name: function (p, cb, features) {
     userModel.renameUser(features, p._id, p.name, cb);
   },
   img: function (p, cb) {
+    if (typeof p.img !== 'string')
+      return cb({ error: PROFILE_IMAGE_UPDATE_FAILED });
     userModel.fetchByUid(p._id, async function (user) {
       const oldImageToDelete = hasProfileImage(user) ? user.img : null;
       let newFilename;
       try {
-        newFilename = hasProfileImage(p)
-          ? await new Promise((resolve, reject) =>
-              uploadCtr.moveTo(
-                p.img,
-                uploadCtr.config.uAvatarImgDir,
-                (err, newFilename) =>
-                  err ? reject(err) : resolve(newFilename),
-              ),
-            )
-          : p.img;
+        newFilename = !hasProfileImage(p)
+          ? DEFAULT_PROFILE_IMAGE // don't store arbitrary values
+          : await moveUploadedImage(
+              p.img,
+              uploadCtr.config.uAvatarImgDir,
+              p._id,
+              user.img,
+            );
       } catch (e) {
         // Note: the error was already logged by uploadCtr.renameTo()
         cb({ error: PROFILE_IMAGE_UPDATE_FAILED });
         return;
       }
-      defaultSetter('img')({ _id: p._id, img: newFilename || p.img }, cb);
+      defaultSetter('img')({ _id: p._id, img: newFilename }, cb);
       if (oldImageToDelete && oldImageToDelete !== newFilename) {
         console.log('deleting previous profile pic: ' + oldImageToDelete);
         await uploadCtr
           .deleteFile(oldImageToDelete)
-          .catch(() =>
-            console.trace(
-              'failed to delete existing profile image in fieldSetters.img: ',
-              oldImageToDelete,
+          .catch((err) =>
+            console.warn(
+              `[api.user] failed to delete previous profile image ${oldImageToDelete}: ${err.message}`,
             ),
           );
       }
@@ -181,44 +213,41 @@ const fieldSetters = {
     });
   },
   cvrImg: function (p, cb) {
-    userModel.fetchByUid(p._id, function (user) {
+    if (typeof p.cvrImg !== 'string')
+      return cb({ error: COVER_IMAGE_UPDATE_FAILED });
+    userModel.fetchByUid(p._id, async function (user) {
       const oldImageToDelete =
         user.cvrImg && user.cvrImg.indexOf('blank') == -1 ? user.cvrImg : null;
-      /**
-       * @param {string|null} newFilename
-       */
-      function actualUpdate(newFilename) {
-        if (!newFilename) {
-          userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
-        } else {
-          defaultSetter('cvrImg')(
-            { _id: p._id, cvrImg: newFilename || p.cvrImg },
-            cb,
+      let newFilename = null; // null => remove cvrImg attribute
+      if (p.cvrImg.indexOf('blank') == -1) {
+        try {
+          newFilename = await moveUploadedImage(
+            p.cvrImg,
+            uploadCtr.config.uCoverImgDir,
+            p._id,
+            user.cvrImg,
           );
-        }
-        if (oldImageToDelete && oldImageToDelete !== newFilename) {
-          console.log('deleting previous cover image: ' + oldImageToDelete);
-          uploadCtr
-            .deleteFile(oldImageToDelete)
-            .catch((err) =>
-              console.trace(
-                'failed to delete existing cover image in fieldSetters.cvrImg: ',
-                oldImageToDelete,
-                err,
-              ),
-            );
+        } catch (e) {
+          // Note: the error was already logged by uploadCtr.renameTo()
+          cb({ error: COVER_IMAGE_UPDATE_FAILED });
+          return;
         }
       }
-      if (p.cvrImg.indexOf('blank') == -1)
-        uploadCtr.moveTo(
-          p.cvrImg,
-          uploadCtr.config.uCoverImgDir,
-          (err, newFilename) =>
-            err
-              ? cb({ error: COVER_IMAGE_UPDATE_FAILED })
-              : actualUpdate(newFilename),
-        );
-      else actualUpdate(null); // remove cvrImg attribute
+      if (!newFilename) {
+        userModel.update(p._id, { $unset: { cvrImg: 1 } }, cb); // remove cvrImg attribute
+      } else {
+        defaultSetter('cvrImg')({ _id: p._id, cvrImg: newFilename }, cb);
+      }
+      if (oldImageToDelete && oldImageToDelete !== newFilename) {
+        console.log('deleting previous cover image: ' + oldImageToDelete);
+        uploadCtr
+          .deleteFile(oldImageToDelete)
+          .catch((err) =>
+            console.warn(
+              `[api.user] failed to delete previous cover image ${oldImageToDelete}: ${err.message}`,
+            ),
+          );
+      }
     });
   },
   pwd: function (p, cb, features) {
@@ -438,30 +467,37 @@ function handleRequest(loggedUser, reqParams, callback, features) {
   return handleAuthRequest(loggedUser, reqParams, callback, features);
 }
 
-// these error messages are displayed to the user, we don't need to log them
-const USER_ERRORS = [
-  'Must be less than 18 characters long', // from userModel.setHandle()
-  'Special characters are not allowed',
-  'This username is taken by another user',
+// these error messages are intended to be displayed to the user, they can be
+// returned by the API => they must not contain technical details.
+// any other error will be logged, and replaced by a generic error message.
+const USER_FACING_ERRORS = [
+  'user not found',
+  'Please log in first',
   'user not logged in',
+  'You must enter a username', // from userModel.setHandle()
+  /^Must be at least \d+ characters long$/,
+  /^Must be less than \d+ characters long$/,
+  'Special characters are not allowed',
+  'Numbers are not allowed',
+  'This username is reserved',
+  'This username is taken by another user',
+  'Invalid name', // from userModel.renameUser()
+  'We sent you an email to change your password.',
+  'Your current password is incorrect',
+  'Changing your email address is disabled. Please contact us if you need to update it.',
+  'This email address is invalid',
+  'This email already belongs to another user',
   PROFILE_IMAGE_UPDATE_FAILED, // cause already logged by uploadCtr.renameTo()
   COVER_IMAGE_UPDATE_FAILED, // cause already logged by uploadCtr.renameTo()
 ];
 
-function localRendering(reqParams, r) {
-  if (r) delete r.pwd;
-  if (!r || r.error) {
-    const errMessage = (r || {}).error || r;
-    const isUserError =
-      typeof errMessage === 'string' &&
-      USER_ERRORS.some((userError) => errMessage.includes(userError));
-    if (!isUserError)
-      console.log(
-        'api.user.' + (reqParams._action || 'controller') + ' ERROR:',
-        errMessage,
-      );
-  }
-
+function localRendering(reqParams, result) {
+  if (result) delete result.pwd;
+  const r = sanitizeApiResponse(
+    'api.user.' + (reqParams._action || 'controller'),
+    result,
+    USER_FACING_ERRORS,
+  );
   return reqParams.callback ? snip.renderJsCallback(reqParams.callback, r) : r;
 }
 

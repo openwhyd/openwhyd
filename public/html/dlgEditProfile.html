@@ -221,7 +221,7 @@
             $btnSave.removeAttr('disabled');
             showMessage(
               typeof result.error === 'string'
-                ? 'Oops! ' + result.error + '. Please try again!'
+                ? result.error
                 : 'Oops! something went wrong... Please try again!',
               true,
             );
