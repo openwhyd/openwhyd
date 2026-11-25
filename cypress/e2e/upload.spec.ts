@@ -1,5 +1,6 @@
 import {
   createPlaylist,
+  goToPlaylist,
   playlistShouldHaveCustomImage,
   playlistShouldHaveNoImage,
   repeatRequest,
@@ -7,6 +8,9 @@ import {
 
 context('upload', () => {
   const SAMPLE_IMG_PATH = 'upload-resources/sample-avatar.jpg';
+  const INVALID_IMG_PATH = 'upload-resources/not-an-image.png'; // text file with an image extension
+  const IMAGE_PROCESSING_ERROR =
+    'This image could not be processed. Please try another one.';
   let userId;
 
   beforeEach('login', () => {
@@ -54,5 +58,74 @@ context('upload', () => {
     playlistShouldHaveCustomImage({ userId, playlistId: 1 });
 
     cy.visit(`/u/${userId}/playlists`); // user's playlists page
+  });
+
+  it('should keep the user profile image when uploading an invalid image', () => {
+    // given a user with a custom profile image
+    cy.visit(`/u/${userId}`);
+    cy.get('body').contains('Edit profile').click();
+    cy.get('body').contains('Edit Profile Info').click();
+    cy.get('body').contains('Drop your image file here');
+    cy.get('input[type="file"]').attachFile(SAMPLE_IMG_PATH);
+    cy.get('body').contains('Drop your image file here');
+    cy.get('body').contains('Save').click();
+    cy.get('#dlgEditProfile').should('not.exist');
+    let customImageLength;
+    cy.request(`/images/blank_user.gif`).then(({ body: defaultImage }) =>
+      repeatRequest({
+        url: `/img/u/${userId}?_t=${new Date().getTime()}`,
+        until: (resp) => {
+          customImageLength = resp.body.length;
+          return resp.body.length !== defaultImage.length;
+        },
+      }),
+    );
+
+    // when they upload an invalid image, then save their profile
+    cy.get('body').contains('Edit profile').click();
+    cy.get('body').contains('Edit Profile Info').click();
+    cy.get('body').contains('Drop your image file here');
+    cy.get('input[type="file"]').attachFile(INVALID_IMG_PATH);
+    cy.get('body').contains(IMAGE_PROCESSING_ERROR);
+    cy.get('textarea[name=bio]').clear().type('my new bio');
+    cy.get('body').contains('Save').click();
+    cy.get('#dlgEditProfile').should('not.exist');
+
+    // then their profile image should not have changed
+    cy.request(`/img/u/${userId}?_t=${new Date().getTime() + 1}`)
+      .its('body.length')
+      .should((length) => expect(length).to.equal(customImageLength));
+  });
+
+  it('should keep the playlist image when uploading an invalid image', () => {
+    // given a playlist with a custom image
+    const playlistId = 0;
+    createPlaylist({ userId, name: 'my playlist', imagePath: SAMPLE_IMG_PATH });
+    playlistShouldHaveCustomImage({ userId, playlistId });
+    let initialImageLength;
+    cy.request({
+      url: `/img/playlist/${userId}_${playlistId}`,
+      retryOnStatusCodeFailure: true,
+    }).then((response) => {
+      initialImageLength = response.body.length;
+    });
+
+    // when they upload an invalid image, then save the playlist
+    goToPlaylist({ userId, playlistId });
+    cy.get('.btnEditPlaylist').contains('Edit').click();
+    cy.get('body')
+      .contains('Add/set playlist cover image')
+      .should('be.visible')
+      .click();
+    cy.get('input[type="file"]').attachFile(INVALID_IMG_PATH);
+    cy.get('body').contains(IMAGE_PROCESSING_ERROR);
+    cy.get('body').contains('Save').click();
+    cy.get('body').should('not.contain.text', 'Save'); // wait for dialog to disappear
+
+    // then the playlist image should not have changed
+    playlistShouldHaveCustomImage({ userId, playlistId });
+    cy.request(`/img/playlist/${userId}_${playlistId}?_t=${Date.now()}`)
+      .its('body.length')
+      .should((length) => expect(length).to.equal(initialImageLength));
   });
 });

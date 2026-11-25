@@ -111,6 +111,8 @@
       lastUploadUrl = null;
     }
 
+    var selectionBeforeUpload = { url: null, src: $img.attr('src') };
+
     function setAvatar(url) {
       if (!url || typeof url != 'string') {
         url = '(blank)';
@@ -131,30 +133,42 @@
           ? 'Submitting form...'
           : 'Uploading file...';
         console.log(msg);
+        // to be restored if the upload fails
+        selectionBeforeUpload = { url: lastAvatarUrl, src: $img.attr('src') };
         $input.hide();
         $dlg.addClass('loading');
         $btnSave.hide();
       },
       complete: function (res) {
-        var data = res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1);
-        console.log('received', data);
-        lastAvatarUrl = null;
+        var data = {};
         try {
-          data = JSON.parse(data);
+          data = JSON.parse(
+            res.substring(res.indexOf('{'), res.lastIndexOf('}') + 1),
+          );
+          console.log('received', data);
           var img = data.postImg;
-          if (data.error || (img && img.error))
-            showMessage(data.error || img.error, true);
-          img.path = '' + img.path;
+          if (!img || img.error || !img.path) throw new Error('upload failed');
+          if (!img.mime || img.mime.indexOf('image/') != 0)
+            throw new Error('invalid image');
           var imgPath = (img.path[0] != '/' ? '/' : '') + img.path;
-          if (img.mime && img.mime.indexOf('image/') == 0)
-            lastAvatarUrl = imgPath;
-          else console.log('Invalid image. Please try with another image!');
           lastUploadUrl = imgPath;
+          setAvatar(imgPath);
         } catch (e) {
-          console.log(e);
-          console.log('Upload did not work... Please try again!');
+          console.log('upload error', e);
+          showMessage(
+            data.error ||
+              (data.postImg || {}).error ||
+              'Upload did not work... Please try again!',
+            true,
+          );
+          // a failed upload must not change the selected image, otherwise
+          // saving the form would delete the current playlist image
+          lastAvatarUrl = selectionBeforeUpload.url;
+          $img.attr('src', selectionBeforeUpload.src);
+          $input.show();
+          $dlg.removeClass('loading');
+          $btnSave.show();
         }
-        setAvatar(lastAvatarUrl);
       },
     });
 

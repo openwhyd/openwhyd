@@ -51,43 +51,65 @@ window.WhydImgUpload = function (options) {
 
   $dlg.find('.dlgImgPane > span').click(setAvatar);
 
+  // selection before the current upload, to be restored if that upload fails
+  let selectionBeforeUpload = null;
+
   function onImageUpload() {
     options.onImageUpload && options.onImageUpload();
     self.dispose(); //deleteTempAvatar();
+    selectionBeforeUpload = { url: lastAvatarUrl, src: $img.attr('src') };
     $dlg.addClass('loading');
   }
 
-  function onImageUploadComplete(data) {
-    lastAvatarUrl = null;
-    console.log('received', data);
-    if (typeof data == 'string') {
-      if (data.indexOf('{') == -1 && data.toLowerCase().indexOf('too large'))
-        data = {
-          error: 'Your file is too large. Please resize it and try again.',
-        };
-      else
-        data = JSON.parse(
-          data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1),
-        );
+  // a failed upload must not change the selected image, otherwise saving the
+  // form would replace (and delete) the user's current image by the default one
+  function restoreSelectionBeforeUpload() {
+    if (selectionBeforeUpload) {
+      lastAvatarUrl = selectionBeforeUpload.url;
+      $img.attr('src', selectionBeforeUpload.src);
     }
+    selectionBeforeUpload = null;
+    $dlg.removeClass('loading');
+  }
+
+  function parseUploadResponse(data) {
+    if (typeof data != 'string') return data;
+    if (data.indexOf('{') == -1)
+      return data.toLowerCase().indexOf('too large') != -1
+        ? { error: 'Your file is too large. Please resize it and try again.' }
+        : {};
+    return JSON.parse(
+      data.substring(data.indexOf('{'), data.lastIndexOf('}') + 1),
+    );
+  }
+
+  function onImageUploadComplete(rawData) {
+    console.log('received', rawData);
+    let data = {};
     try {
+      data = parseUploadResponse(rawData) || {};
       const img = data.postImg || data.file;
+      if (!img || img.error || !img.path) throw new Error('upload failed');
+      if (!img.mime || img.mime.indexOf('image/') != 0)
+        throw new Error('invalid image');
       lastUploadUrl = (img.path[0] != '/' ? '/' : '') + img.path;
-      if (img.mime && img.mime.indexOf('image/') == 0) {
-        lastAvatarUrl = lastUploadUrl;
-        options.onImageUploadComplete &&
-          options.onImageUploadComplete(lastAvatarUrl);
-      } else options.onError('Invalid image. Please try with another image!');
     } catch (e) {
-      const img = (data || {}).postImg || (data || {}).file || {};
+      const img = data.postImg || data.file || {};
       options.onError(
-        (data || {}).error ||
+        data.error ||
           img.error ||
-          'Upload did not work... Please try again!',
+          (e.message === 'invalid image'
+            ? 'Invalid image. Please try with another image!'
+            : 'Upload did not work... Please try again!'),
         e,
       );
+      restoreSelectionBeforeUpload();
+      return;
     }
-    setAvatar(lastAvatarUrl);
+    selectionBeforeUpload = null;
+    setAvatar(lastUploadUrl);
+    if (options.onImageUploadComplete)
+      options.onImageUploadComplete(lastAvatarUrl);
   }
 
   // LEGACY IMAGE UPLOAD FORM
