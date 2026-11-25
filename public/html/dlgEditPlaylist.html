@@ -128,7 +128,8 @@
 
     $imageForm.iframePostForm({
       post: function () {
-        deleteTempAvatar();
+        // note: the previously uploaded image (if any) will only be deleted if
+        // this upload succeeds, so that it can still be used if this upload fails
         var msg = !$input.val().length
           ? 'Submitting form...'
           : 'Uploading file...';
@@ -151,6 +152,7 @@
           if (!img.mime || img.mime.indexOf('image/') != 0)
             throw new Error('invalid image');
           var imgPath = (img.path[0] != '/' ? '/' : '') + img.path;
+          deleteTempAvatar(); // this upload replaces the previous one
           lastUploadUrl = imgPath;
           setAvatar(imgPath);
         } catch (e) {

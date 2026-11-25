@@ -28,17 +28,20 @@ window.WhydImgUpload = function (options) {
     return lastAvatarUrl;
   };
 
+  function deleteUploadedFile(url) {
+    $.ajax({
+      type: 'POST',
+      url: uploadUrl,
+      data: {
+        action: 'delete',
+        id: url.split('/').pop(),
+      },
+    });
+  }
+
+  // deletes the last uploaded image, if it was not used, e.g. when closing the dialog
   this.dispose = function () {
-    // deleteTempAvatar()
-    if (lastUploadUrl)
-      $.ajax({
-        type: 'POST',
-        url: uploadUrl,
-        data: {
-          action: 'delete',
-          id: lastUploadUrl.split('/').pop(),
-        },
-      });
+    if (lastUploadUrl) deleteUploadedFile(lastUploadUrl);
     lastUploadUrl = null;
   };
 
@@ -56,7 +59,8 @@ window.WhydImgUpload = function (options) {
 
   function onImageUpload() {
     options.onImageUpload && options.onImageUpload();
-    self.dispose(); //deleteTempAvatar();
+    // note: the previously uploaded image (if any) will only be deleted if
+    // this upload succeeds, so that it can still be used if this upload fails
     selectionBeforeUpload = { url: lastAvatarUrl, src: $img.attr('src') };
     $dlg.addClass('loading');
   }
@@ -92,6 +96,8 @@ window.WhydImgUpload = function (options) {
       if (!img || img.error || !img.path) throw new Error('upload failed');
       if (!img.mime || img.mime.indexOf('image/') != 0)
         throw new Error('invalid image');
+      // this upload replaces the previous one => delete it
+      self.dispose();
       lastUploadUrl = (img.path[0] != '/' ? '/' : '') + img.path;
     } catch (e) {
       const img = data.postImg || data.file || {};
